@@ -1,0 +1,200 @@
+\section{Functional and Type-Theoretic Readings}
+\label{sec:functional}
+
+A useful way to view the system is as the combination of two orthogonal ingredients. The first is an MPST-like, linear protocol part: a single global prefix that fixes the order of moves, the owner of each move, and the visibility/independence constraints between moves. This is the ``how the interaction must happen'' piece, and it is very close to the usual story for global types and their projections.
+
+The second ingredient is a many-truths outcome: instead of a single postcondition, the terminal of a formula is a $K$-indexed family of FO goals, one per participant. This is the ``what each party ultimately wants'' piece. MPST on its own does not tell you this — it gives you structure and safety, not per-role winning conditions. By putting the two together in the same object, we can say: ``here is a protocol that enforces this information pattern, and here are the (possibly incompatible) objectives of all the parties who follow it.''
+
+The game-theoretic readings (forceability, coalition success, thresholds) then 
+sit exactly at the junction of these two parts: they look at the 
+protocol-constrained runs, and they test which components of the multi-headed 
+outcome can actually be realized under those constraints. So the protocol half 
+limits what strategies can do; the outcome half tells us which truth we are 
+trying to extract from those limited strategies.
+
+To make these ideas concrete, we now present four equivalent computational 
+views of \KFOL expressions, each highlighting different aspects of the protocol 
+and outcome structure.
+
+\subsection{Procedural view: linear coroutine}
+
+Evaluation of a \KFOL\ formula can be understood procedurally as a
+single-threaded, linear walk over the prefix:
+
+\begin{enumerate}
+  \item start with an assignment $s$;
+  \item when you reach $P_i x.\,\Phi$, you must obtain a value for $x$
+        \emph{from player $i$}, subject to the current visible history;
+  \item extend $s$ with $x := a$;
+  \item proceed to the next binder;
+  \item at the terminal $\langle \fo_0,\ldots,\fo_{K-1}\rangle$, evaluate
+        each $\fo_j$ under the final assignment.
+\end{enumerate}
+
+There are two closely related ways to make the ``obtain a value'' step concrete:
+
+\begin{description}
+  \item[External, coroutine-style.] The formula is a generator that \emph{yields}
+        at $P_i x.\,\Phi$ to an external owner for player $i$, together with the
+        visible history (all previously bound variables, minus those in the
+        slash-set). Control resumes when that owner returns a value. This matches
+        the ``several stateful parties are talking'' intuition.
+
+  \item[Internal, pure-strategy-style.] The formula is evaluated against a fixed
+        strategy profile $\profile = (\profile_0,\dots,\profile_{K-1})$. At
+        $P_i x.\,\Phi$ we \emph{call} the pure function
+        $\profile_i(\text{current-prefix}, s)$ to obtain $a$. This keeps everything
+        inside the semantic function and is the version we use to define
+        $\llbracket \Phi \rrbracket_{\mathcal M, s, \profile}$.
+\end{description}
+
+Both readings are linear (no backtracking, no branching); they differ only in
+whether the ``player move'' is modeled as an external interaction or as a call to
+a known pure strategy. The object language is the same in both cases; only the
+operational account changes.
+
+\begin{remark}[Inductive vs.\ coinductive readings]
+The two operational accounts above are dual in the usual
+inductive/coinductive sense. In the internal, pure-strategy reading we
+assume all ingredients (structure, assignment, strategy profile) are given and
+we evaluate by structural recursion on the prefix; this is an inductive
+``fold over the game.'' In the external, coroutine-style reading we instead
+expose the next required move and wait for the environment to supply a value;
+here the behaviour is driven from the outside, which is closer to a
+coinductive process view. Both target the same linear prefix; a systematic
+comparison is left open.
+\end{remark}
+
+\subsection{Let-expression style: functional programs}
+We can render the same evaluation as a nested functional program:
+
+\begin{verbatim}
+(* P0 x. P1 y. <phi0, phi1> *)
+let
+  val x = player_0 ()          (* first move: empty history *)
+  val y = player_1 (x)         (* second move: sees x *)
+in
+  (phi0 x y, phi1 x y)
+end
+\end{verbatim}
+
+Independence-friendly visibility is just ``drop the hidden variables from the call'':
+
+\begin{verbatim}
+(* P0 x. P1 y \ {x}. P2 z. <...> *)
+let
+  val x = player_0 ()
+  val y = player_1 ()          (* / {x} => y does NOT see x *)
+  val z = player_2 (x, y)      (* later move can see both *)
+in
+  terminal (x, y, z)
+end
+\end{verbatim}
+
+In general, for a prefix
+\[
+  P_{0} x_0.\; P_{1} x_1 \setminus V_1.\; \dots.\; P_{n-1} x_{n-1} \setminus V_{n-1}.\; \langle \vec\fo \rangle
+\]
+we get the schematic program
+\begin{verbatim}
+let
+  val x0 = player_0 ()
+  val x1 = player_1 (visible_from [x0] minus V1)
+  ...
+  val xn = player_n (visible_from [...] minus Vn)
+in
+  (phi0 (x0,...,xn), ..., phi_{K-1} (x0,...,xn))
+end
+\end{verbatim}
+A \KFOL\ game is thus an open program with one hole per player move; a strategy profile is the tuple of functions that fill those holes.
+
+\subsection{Gallina-style: player-indexed dependent presentation}
+We can write the same shape in a Gallina-like pseudocode that makes player ownership and capture explicit:
+
+\begin{verbatim}
+Definition game :=
+  (* P0 move: sees nothing -> () *)
+  let a := P0 (_ ()) in
+
+  (* P1 move: sees a -> (a) *)
+  let b := P1 (_ (a)) in
+
+  (* P0 again, but / b: only sees (a, ()) *)
+  let c := P0 (_ (a, ())) in  (* b hidden *)
+
+  (* P2 move: sees everything so far *)
+  let d := P2 (_ (a, b, c)) in
+
+  {|
+    when (a = b)             : P0;
+    when (b <> c)            : P1;
+    when (a = b \/ a <> b)   : P2
+  |}.
+\end{verbatim}
+
+Interpretation:
+\begin{itemize}
+  \item each line \texttt{let x := Pi (\_ (history)) in} is a player-owned move with a strategy hole \texttt{\_};
+  \item the \texttt{history} tuple is exactly the visible prefix for that move (prefix minus the slash-set);
+  \item the final record is a $K$-indexed outcome: one logical objective per player.
+\end{itemize}
+
+\paragraph{Curry--Howard reading.}
+This looks like a partially constructed proof term with several heads. The outer \texttt{let} chain is the protocol skeleton. Each \texttt{Pi (\_ (history))} is a typed subgoal owned by player $i$, to be solved using only \emph{that} history. A strategy profile is the collection of inhabitants for all such subgoals. The difference from the usual CH story is that we do \emph{not} collapse to one \texttt{Prop}; we keep one per player.
+
+\subsection{Core calculus: first-order, indexed, success-parametric}
+For metatheory it is convenient to strip this down to a first-order core and make ``success'' a parameter.
+
+\paragraph{Syntax.} Let terms and FO formulas be standard:
+\[
+t ::= x \mid f(t_1,\dots,t_n)
+\]
+\[
+\alpha ::= R(\vec t) \mid t_1 = t_2 \mid \top \mid \bot
+  \mid \alpha \wedge \alpha \mid \alpha \vee \alpha
+  \mid \alpha \to \alpha \mid \neg \alpha.
+\]
+Game formulas:
+\[
+\Phi ::= \langle \alpha_0,\dots,\alpha_{K-1} \rangle
+  \mid P_i x:\tau.\ \Phi
+  \quad (i \in \{0,\dots,K-1\}).
+\]
+
+\paragraph{Formation.} With FO context $\Gamma$:
+\[
+\frac{\Gamma \vdash \alpha_0 \quad \dots \quad \Gamma \vdash \alpha_{K-1}}
+     {\Gamma \vdash \langle \alpha_0,\dots,\alpha_{K-1} \rangle}
+\qquad
+\frac{\Gamma, x:\tau \vdash \Phi}
+     {\Gamma \vdash P_i x:\tau.\ \Phi}.
+\]
+This gives a global, player-symmetric spec: a player-indexed prefix ending in a $K$-tuple of FO goals.
+
+\paragraph{Evaluation.} Given a structure $\mathcal M$, an assignment $s$, and a strategy profile $\profile$,
+\[
+\llbracket \langle \alpha_0,\dots,\alpha_{K-1} \rangle \rrbracket_{\mathcal M,s,\profile}
+  := \bigl(\Iverson{\mathcal M,s \models \alpha_0},\dots,\Iverson{\mathcal M,s \models \alpha_{K-1}}\bigr),
+\]
+\[
+\llbracket P_i x:\tau.\ \Phi \rrbracket_{\mathcal M,s,\profile}
+  := \llbracket \Phi \rrbracket_{\mathcal M, s[x \mapsto a], \profile}
+  \quad\text{where } a := \profile_i(P_i x:\tau.\ \Phi, s).
+\]
+So evaluation always produces a $K$-tuple of booleans (or $\mathsf{True}/\mathsf{False}$).
+
+\paragraph{Parametric success.}
+On top of this core we \emph{do not} fix a single success notion. Instead we admit judgments of the form
+\[
+\mathcal M, s \Vdash_{\mathsf{Succ}} \Phi
+\]
+where $\mathsf{Succ}$ specifies how we quantify over strategies. One instance is \emph{forceability}. Other instances (possibility, coalition winning, thresholds) are definable over the same evaluation.
+
+\paragraph{Separation.}
+This separates:
+\begin{enumerate}
+  \item structure: what is a well-formed, player-indexed game;
+  \item evaluation: given strategies, what outcome vector do we get;
+  \item success: which outcome patterns we count as ``good''.
+\end{enumerate}
+Only (1) and (2) belong to the core; (3) is meant to be chosen per application.

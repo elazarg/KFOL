@@ -1,0 +1,118 @@
+
+
+\section{Specialization to Two Players (\TFOL)}
+\label{sec:k-to-2}
+
+The case $K=2$ yields the two-player fragment \TFOL.
+This fragment is the natural target for defining a precise
+relationship with classical (prenex) \FOL. Working in fully prenex form is standard in logic: classical proof procedures such as resolution routinely assume a prenex presentation. We do the same, except that we keep the quantifiers/player-binders as a visible global script rather than pushing them into an implicit semantics. Extending the language to handle first-order intuitionistic logic would require additional constructs, which we defer to future work.
+
+The syntax and semantics are those of \KFOL\ specialized to $K=2$:
+\[
+\Phi \;::=\; \langle \fo_0,\fo_1\rangle \;\mid\; P_0 x.\,\Phi \;\mid\; P_1 x.\,\Phi.
+\]
+The semantics, forceability, and $S_2$ group action (rotation)
+are direct specializations of the definitions in
+\Cref{def:k-semantics}, \Cref{def:k-force}, and \Cref{def:permute-k}. Throughout this section, \(i\in\{0,1\}\) and \(\opp{i}\) denotes
+the opposite role.
+
+\subsection{Abstraction (2-player, one-hot)}
+\label{sec:abstraction}
+
+Let $\psi$ be a prenex classical formula
+$Q_1 x_1 \cdots Q_n x_n.\ \fo$
+with $\fo$ quantifier-free.
+We define \emph{abstraction} $\AbsOp_i$ compositionally on
+the prenex structure. Fix $i\in\{0,1\}$:
+\[
+\begin{aligned}
+\Abs{i}{\fo} &:= \langle \fo,\ \neg \fo \rangle
+  \quad (\text{for quantifier-free } \fo) \\
+\Abs{i}{\exists x.\,\psi} &:= P_i x.\,\Abs{i}{\psi} \\
+\Abs{i}{\forall x.\,\psi} &:= P_{\opp{i}} x.\,\Abs{i}{\psi}
+\end{aligned}
+\]
+This embeds prenex \FOL\ into the $K=2$ fragment as a one-hot game
+where seat $i$ pursues $\fo$ and the other seat pursues its negation.
+
+\begin{proposition}[Canonical 2-player embedding]
+In the two-player fragment, once we fix player for the adversarial projection, there is—up to swapping the two players—exactly one way to embed an ordinary FOL formula \(\fo\) as a 2-player game: it must be \(\AbsOp(\fo)=\langle \fo,\neg\fo\rangle\) on atoms, extended compositionally to the Boolean connectives and with \(\exists x.\fo\) mapped to the binder of the refining player and \(\forall x.\fo\) to the binder of the other player.
+
+Any alternative like \(\langle \fo,0\rangle\) breaks the requirement that the \emph{other} projection see \(\neg\fo\), and any alternative shape breaks the rotation-negation compatibility once adversarial projection is assumed to respect rotation; hence the embedding is unique under these conditions. (Proof in \Cref{app:proofs}).
+\end{proposition}
+
+\paragraph{Rotation.}
+Instead of general permutations, for $K=2$ the group $S_2 = \{ \mathrm{id}, (0\,1) \}$ has a single nontrivial element.
+We call the action of $(0\,1)$ \emph{rotation} and write $\RotOp$:
+\[
+\Rot{\langle \fo_0,\fo_1\rangle} := \langle \fo_1,\fo_0\rangle,
+\qquad
+\Rot{P_i x.\,\Phi} := P_{\opp{i}} x.\,\Rot{\Phi}.
+\]
+This is an involution: $\RotOp^2 = \ID$, and it is the $K=2$ instance of the general
+$S_K$-action. We will use $\RotOp$ explicitly in the 2-FOL algebra.
+
+\paragraph{Generated symmetry with complement.}
+Because $\CompOp$ commutes with every player permutation, the symmetries of the form
+``permute then (optionally) complement'' form a direct product $S_K \times \mathbb{Z}_2$
+acting on $\KFOL$:
+\[
+(\pi,0)\cdot\Phi := \pi \cdot \Phi,
+\qquad
+(\pi,1)\cdot\Phi := \pi \cdot \Comp{\Phi}.
+\]
+
+\subsection{Embedding Theorems and Algebraic Identities}
+
+\begin{theorem}[\FOL as retract]\label{thm:fol-retract}
+$\AdvOp_i \circ \AbsOp_i = \ID_{\FOL}$ and
+$\AdvOp_{\opp{i}} \circ \AbsOp_i = \neg$.
+\end{theorem}
+\begin{proof}[Proof sketch]
+Structural induction on prenex \FOL\ formulas.
+The base case $\Abs{i}{\fo} = \langle \fo, \neg\fo \rangle$
+gives $\AdvProj{i}{\cdot} = \fo$ and $\AdvProj{\opp{i}}{\cdot} = \neg\fo$.
+The inductive step maps $\exists / \forall$ to $P_i / P_{\opp{i}}$, which adversarial projection maps back to $\exists / \forall$
+and $\forall / \exists$ respectively.
+\end{proof}
+
+\begin{theorem}[Group action and intertwining]
+\label{thm:group-action}
+The operators satisfy the following intertwining laws:
+\[
+\RotOp\circ \AbsOp_i=\AbsOp_i\circ \neg,\qquad
+\AdvOp_i\circ \RotOp=\AdvOp_{\opp{i}}.
+\]
+\end{theorem}
+\begin{proof}[Proof sketch]
+For abstraction:
+$\Rot{\Abs{i}{\fo}} = \Rot{\langle\fo,\neg\fo\rangle} =
+\langle\neg\fo,\fo\rangle$.
+$\Abs{i}{\neg\fo} = \langle\neg\fo,\neg\neg\fo\rangle =
+\langle\neg\fo,\fo\rangle$.
+The inductive step for quantifiers follows similarly.
+For adversarial projection: $\AdvOp_i(\Rot{\langle\fo_0,\fo_1\rangle}) =
+\AdvOp_i(\langle\fo_1,\fo_0\rangle) = \fo_1 = \AdvOp_{\opp{i}}(\langle\fo_0,\fo_1\rangle)$.
+\end{proof}
+
+\begin{lemma}[Rotation as classical negation on one-hot]
+\label[lemma]{lem:rot-neg-onehot}
+If every terminal of $\Phi$ is one-hot (i.e., $\fo_1 \equiv \neg\fo_0$), then
+\[
+\AdvProj{i}{\Rot{\Phi}} \equiv \neg\,\AdvProj{i}{\Phi}.
+\]
+\end{lemma}
+\begin{proof}
+By induction. For the base case
+$\Phi = \langle\fo,\neg\fo\rangle$,
+$\AdvProj{i}{\Rot{\Phi}} = \AdvProj{i}{\langle\neg\fo,\fo\rangle} = \neg\fo$,
+which is $\neg\AdvProj{i}{\Phi}$.
+The inductive step for $P_i x.\Phi'$ follows from the
+IH: $\AdvProj{i}{\Rot{P_i x.\Phi'}} =
+\AdvProj{i}{P_{\opp{i}} x.\Rot{\Phi'}} =
+\forall x.\AdvProj{i}{\Rot{\Phi'}} \equiv
+\forall x.\neg\AdvProj{i}{\Phi'} \equiv
+\neg\exists x.\AdvProj{i}{\Phi'} =
+\neg\AdvProj{i}{P_i x.\Phi'}$.
+The $P_{\opp{i}}$ case is dual.
+\end{proof}

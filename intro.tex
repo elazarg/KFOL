@@ -1,0 +1,63 @@
+\section{Introduction}
+
+First-order logic (\FOL) admits a game-semantics reading: existential
+quantifiers are choices of a ``verifier,'' universal quantifiers are choices
+of a ``falsifier,'' and negation swaps the two roles. This is useful, but the
+two quantifiers encode only two adversarial roles and do not naturally
+extend to $K>2$ players with distinct objectives.
+
+We introduce \KFOL\ as a symmetric variation for $K$ players.
+Each choice is explicitly labeled by the player making it
+($P_0, \dots, P_{K-1}$), and the operators preserve this symmetry.
+A \KFOL\ formula denotes a finite perfect-information game:
+a prefix of player-labeled quantifiers $P_i x.\,\Phi$ indicates
+which player chooses each variable, and a terminal $K$-tuple of classical
+formulas $\langle \fo_0, \dots, \fo_{K-1} \rangle$
+determines the outcome $(v_0, \dots, v_{K-1})$, where $v_i = 1$
+means that player $i$ achieves its objective.
+
+Classical truth reappears only in the $K=2$ specialization by choosing
+a viewpoint: \emph{adversarial projection} at player $i \in \{0,1\}$ asks
+``can player $i$ force $v_i = 1$?'', yielding an ordinary truth value.
+Conversely, ordinary \FOL\ quantifiers are recovered by
+\emph{abstraction}, which embeds a classical formula $\fo$ as the
+zero-sum game $\langle \fo, \neg \fo \rangle$.
+In this fragment, \emph{rotation} (swapping the two players) behaves as
+classical negation.
+
+A useful way to situate our work is against refined multiparty session types (R-MPST)~\cite{vassor2024refinements}. In that line of work, one first writes a single global interaction script that says who communicates when and what each participant is allowed to see, and then refines individual steps with logical conditions so that standard operational questions (e.g.\ ``are the runs of this protocol admissible?'') can be asked. We adopt exactly this protocol/logic separation, but we keep the protocol in a broadcast-style linear prefix with IF-style hiding and we fix ordinary first-order logic as the default goal language --- choices made so that the same object can also be read as a finite, visibility-constrained game. Because the terminal of a \KFOL{} formula is a $K$-tuple of per-role goals, we can, in addition to the usual trace-validity questions, pose explicitly counterfactual, solution-concept questions over the very same script: who can force under these visibility restrictions, which coalitions can succeed together, whether a given profile is Nash-style stable, and so on. Our MPST translation shows that the interaction part can still be projected to a familiar session-typed view, while the abstraction–refinement embedding shows that per-player logical questions are recoverable. Thus the difference is not in rejecting the R-MPST pattern, but in exploiting it for both trace-level verification and game-theoretic analysis under one global description.
+
+The contributions of this paper are:
+\begin{itemize}
+  \item A symmetric $K$-player calculus (\KFOL) with outcomes given by
+        $K$ first-order goals evaluated to $\{0,1\}$ and a minimal prefix
+        (prenex-style) syntax.
+  \item A detailed algebraic analysis of the $K=2$ specialization,
+        including rotation and complement, and the \FOL\ retract via
+        abstraction–projection.
+  \item An extension with IF-style information-hiding binders
+        ($P_i x \setminus V.\,\Phi$) that make the visibility relation explicit.
+  \item A linear, non-branching translation from \KFOL\ prefixes to
+        MPST-style global protocols, including a visibility-restricting
+        variant that makes the $\setminus V$ constraints explicit.
+  \item A complexity analysis showing that the \KFOL\ core is
+        PSPACE-complete and the IF-extension is NEXPTIME-hard.
+\end{itemize}
+
+This is a \emph{horizontal} paper: our aim is to fix the core $K$-player calculus and situate it among neighbouring formalisms (game-semantics for FOL, IF-style binders, MPST-style global protocols, and structural combinators). We leave deeper treatments of each formalism to subsequent work.
+
+The remainder of this paper is organized as follows.
+\Cref{sec:k-core} defines the syntax, game-theoretic semantics,
+and forceability relation for the \KFOL\ core.
+\Cref{sec:symmetry} defines the $S_K$ group action.
+\Cref{sec:functional} presents multiple computational readings (procedural, functional, 
+Gallina-style dependent types, and a minimal core calculus with parametric 
+success notions) and explains how \KFOL combines MPST-like protocols with 
+multi-headed game-theoretic outcomes.
+\Cref{sec:k-to-2} analyzes the $K=2$ specialization in detail.
+\Cref{sec:extensions} introduces the IF-style extension and the structural
+operators (including tensor-like compositions and coalition projections).
+\Cref{sec:mpst-connection} relates \KFOL\ prefixes to MPST-style global
+protocols and presents the two translation schemes.
+\Cref{sec:k-complexity} establishes the complexity bounds.
+\Cref{sec:related} discusses related work.

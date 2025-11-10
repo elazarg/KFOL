@@ -1,0 +1,616 @@
+\section{Solution Concepts Beyond Forceability}
+\label{sec:solutions}
+
+The adversarial forceability predicate $F_i(\Phi,\mathcal M,s)$ from
+\Cref{sec:k-core} is intentionally strong: it asks whether player $i$ can
+guarantee her objective against \emph{all} behaviors of the other players,
+including behaviors that do not optimize their own objectives. This is useful
+as a safety or worst-case notion, but it is important to note that
+$F_i(\Phi,\mathcal M,s)$ is a \emph{game-level} statement: it shows that a
+decoupled implementation for $i$ \emph{exists}, but it does not, by itself,
+select a concrete joint strategy profile.
+
+Moreover, such a decoupled
+implementation for $i$ need not be admissible as a component of the particular
+joint implementation we care about (its local spec may be decoupled but too
+weak for the overall system we want to assemble). For example, player $i$ may force her objective by always choosing a default
+value that blocks all harmful continuations. This is a valid forcing strategy
+in the adversarial reading, but in a cooperative profile it prevents the other
+players from reaching $(1,\dots,1)$, so it is not a good component of the joint
+implementation.
+
+In this section we collect lighter---but still semantic---solution concepts.
+Some of them (feasibility, coalition guarantees) are also game-level and talk
+about what the specification \emph{admits}; others (rationality, stability) are
+\emph{profile-level} and talk about which joint choices we are willing to
+accept. We organize them in three layers:
+\begin{enumerate}
+  \item a \emph{feasibility layer} that asks what collections of objectives are
+    simultaneously realizable by some profile;
+  \item a \emph{rationality layer} that filters \emph{profiles} by stability or
+    minimal-safety requirements;
+  \item a \emph{guarantee layer} that generalizes individual forceability to
+    coalitions and explains why we mostly keep forceability at the game level.
+\end{enumerate}
+All notions are defined for a fixed closed formula $\Phi$, structure
+$\mathcal M$, and (implicit) initial assignment $s=\emptyset$; adding free
+variables back is routine.
+
+\subsection{Feasibility Layer}
+\label{subsec:feasible}
+
+The feasibility layer ignores adversarial behavior and asks only what the
+protocol \emph{permits}.
+
+\begin{definition}[Joint realizability]
+\label[definition]{def:joint-real}
+A formula $\Phi$ is \emph{jointly realizable} in $\mathcal M$ if
+\[
+  \exists \profile \;.\;
+  \llbracket \Phi \rrbracket_{\mathcal M, \profile} = (1,\dots,1).
+\]
+That is, there exists a single strategy profile under which every player’s
+objective holds.
+\end{definition}
+
+Joint realizability can be too strong when the terminal is conflicting. We
+therefore also consider support for arbitrary winning sets.
+
+\begin{definition}[Support for a player set]
+\label[definition]{def:profile-support}
+For $W \subseteq \{0,\dots,K-1\}$ we say that $\Phi$ \emph{supports} $W$ in
+$\mathcal M$ if
+\[
+  \exists \profile \;.\; \forall i \in W.\;
+  \bigl(\llbracket \Phi \rrbracket_{\mathcal M, \profile}\bigr)_i = 1.
+\]
+When $W = \{i\}$ is a singleton, we simply say that $\Phi$ \emph{supports} $i$.
+\end{definition}
+
+Thus we decouple the single-player query (``is there
+some run where $i$ succeeds?'') from the joint query (``is there some run where
+all of $W$ succeed?''). Note that
+\[
+  \text{joint realizability} \iff \text{support for } W = \{0,\dots,K-1\}.
+\]
+
+\subsection{Rationality Layer}
+\label{subsec:rationality}
+
+We now filter profiles not only by what they achieve, but also by whether they
+are stable under unilateral deviations. We work with the same pure strategies
+as in \Cref{sec:k-core}.
+
+\begin{definition}[Unilateral deviation]
+Let $\profile$ be a strategy profile and $i$ a player. For any alternative
+strategy $\profile_i'$ of player $i$, write
+\[
+  \profile[i \mapsto \profile_i'] := (\profile_0,\dots,\profile_{i-1},\profile_i',\profile_{i+1},\dots,\profile_{K-1})
+\]
+for the profile obtained by replacing only $i$’s component.
+\end{definition}
+
+\begin{definition}[Pure Nash outcome for $\Phi$]
+\label[definition]{def:pure-ne}
+A strategy profile $\profile$ is a \emph{pure Nash equilibrium} for $\Phi$ in
+$\mathcal M$ if for every player $i$ and every alternative strategy
+$\profile_i'$ we have
+\[
+  \bigl(\llbracket \Phi \rrbracket_{\mathcal M, \profile}\bigr)_i
+  \;\ge\;
+  \bigl(\llbracket \Phi \rrbracket_{\mathcal M, \profile[i \mapsto \profile_i']}\bigr)_i.
+\]
+\end{definition}
+
+Since outcomes are Boolean, the only strictly improving deviation is a change
+from $0$ to $1$. Thus the usual ``no profitable deviation'' clause specializes
+here to ``no player can unilaterally turn a $0$ into a $1$.''
+
+Forceability from \Cref{def:k-force} can now be reused as a \emph{baseline}
+rather than as the final notion.
+
+\begin{definition}[Individually rational profile]
+\label[definition]{def:indiv-rational}
+Let $F_i(\Phi,\mathcal M)$ be the individual forceability predicates from
+\Cref{def:k-force}. A profile $\profile$ is \emph{individually rational} if
+\[
+  \forall i.\;
+  \bigl(\llbracket \Phi \rrbracket_{\mathcal M, \profile}\bigr)_i
+  \;\ge\;
+  \Iverson{F_i(\Phi,\mathcal M)}.
+\]
+That is, no player obtains less than what she can guarantee in the
+adversarial reading.
+\end{definition}
+
+Individually rational profiles can be intersected with Nash profiles.
+
+\begin{definition}[IR-NE profile]
+A profile is an \emph{IR-NE} for $\Phi$ in $\mathcal M$ if it is both a pure
+Nash equilibrium (\Cref{def:pure-ne}) and individually rational
+(\Cref{def:indiv-rational}).
+\end{definition}
+
+This is a filtering notion: an IR-NE need not exist even when pure Nash
+equilibria exist and all $F_i(\Phi,\mathcal M)$ hold.
+
+\paragraph{Admissible strategies.}
+A further rationality filter is obtained by removing dominated strategies
+\emph{before} looking for equilibria.
+
+\begin{definition}[Dominance and admissibility]
+\label[definition]{def:admissible}
+Fix $\Phi$ and $\mathcal M$. For player $i$, a strategy $\tau_i$ \emph{dominates}
+a strategy $\profile_i$ if
+\[
+  \forall \profile_{-i}.\;
+  \bigl(\llbracket \Phi \rrbracket_{\mathcal M, (\tau_i,\profile_{-i})}\bigr)_i
+  \;\ge\;
+  \bigl(\llbracket \Phi \rrbracket_{\mathcal M, (\profile_i,\profile_{-i})}\bigr)_i
+\]
+and for some $\profile_{-i}$ the inequality is strict. A strategy is
+\emph{admissible} if it is not dominated by any other strategy of the same
+player.
+\end{definition}
+
+One may then define equilibria \emph{in admissible strategies} by restricting
+\Cref{def:pure-ne} to profiles all of whose components are admissible.
+
+\subsection{Guarantee Layer}
+\label{subsec:guarantee}
+
+The original $F_i$ treats every other player as an adversary. In a multi-player
+setting it is natural to extend this to coalitions.
+
+\begin{definition}[Coalition forceability]
+\label[definition]{def:coal-force}
+Let $C \subseteq \{0,\dots,K-1\}$ be a nonempty set of players. The coalition
+$C$ can \emph{force} their objectives in $\Phi$ over $\mathcal M$, written
+$F_C(\Phi,\mathcal M)$, if
+\[
+    \exists (\profile_i)_{i\in C}\;
+    \forall (\profile_j)_{j \notin C}\;
+    \text{let } \profile := ((\profile_i)_{i\in C},(\profile_j)_{j\notin C}) \text{ in }
+    \bigwedge_{i \in C} (\llbracket \Phi \rrbracket_{\mathcal M, \profile})_i = 1.
+\]
+\end{definition}
+Thus the coalition commits to one joint strategy profile for its members that
+succeeds uniformly against any behavior of the outsiders.
+
+This is again a game-level statement: it tells us that there \emph{exists} a
+joint strategy for $C$ that succeeds against all outsiders. One could try to
+assemble a \emph{profile} in which every player uses a forcing strategy (an
+``independently forcing profile''), but for $K>2$ and non-cooperative terminals
+such a profile typically does not exist. For this reason we mostly use
+forceability-style notions to describe the \emph{space of possible
+implementations}, and reserve the profile-level notions from
+\Cref{subsec:rationality} and \Cref{subsec:coupling-stability} for judging
+concrete joint choices.
+
+\subsection{Symmetry-Respecting Selections}
+\label{subsec:symmetry-solutions}
+
+Because $\KFOL$ is $S_K$-equivariant (\Cref{thm:k-equivariance}), we can speak
+of solution concepts that do not break player symmetry.
+
+\begin{definition}[Orbit-realizable outcome]
+\label[definition]{def:orbit-realizable}
+Let $v \in \{0,1\}^K$. We say that $v$ is \emph{orbit-realizable} for
+$\Phi$ in $\mathcal M$ if for every $\pi \in S_K$ there exists a strategy
+profile $\profile_\pi$ such that
+\[
+  \llbracket \Phi \rrbracket_{\mathcal M, \profile_\pi} = \pi \cdot v.
+\]
+\end{definition}
+
+Orbit-realizability says that realizable outcomes come in $S_K$-orbits; it is a
+way to select outcomes compatible with the nominal nature of player indices.
+
+Note that we do not require a single profile to realize the entire orbit.
+Different permutations may be realized by different profiles $\profile_\pi$.
+
+\subsection{Cheap-Talk-Aware Variants}
+\label{subsec:ct-aware}
+
+Recall from \Cref{sec:cheap-talk} that a bound variable is
+\emph{outcome-insensitive} if changing its value never changes the outcome
+vector. This suggests quotienting strategies by their behavior on such
+variables.
+
+\begin{definition}[Cheap-talk equivalence]
+\label[definition]{def:ct-eq}
+Two strategy profiles $\profile$ and $\profile'$ are \emph{cheap-talk equivalent}
+if, for every outcome-insensitive binder and for every history at which that
+binder is reached, the two profiles may choose different values, and for every
+other binder and every history they choose the same value.
+\end{definition}
+
+Any of the above notions (realizability, NE, IR-NE) can be turned into a
+cheap-talk-aware variant by replacing ``there exists a profile'' with ``there
+exists a cheap-talk equivalence class of profiles.'' This removes distinctions
+that the specification itself declared semantically irrelevant.
+
+\subsection{Solution Concepts as Lenses on Coupling}
+\label{subsec:solution-lens}
+
+The definitions above asked ``what does this specification admit?''; we now
+explain why the \emph{same} vocabulary is also useful for ``how tightly is this
+particular implementation tied together?''
+
+Traditionally, solution concepts such as forceability, best responses, and
+Nash-style stability answer questions of the form:
+\emph{``does this player (or this coalition) get what they want under this
+interaction?''} Our logic can already phrase such questions. In our setting,
+however, the same concepts also serve a second purpose: they expose
+\emph{how tightly the described system is tied together at a chosen profile.}
+
+\begin{itemize}
+  \item A forceability statement (game-level) says: ``this role can achieve its
+    component even if everyone else is adversarial.'' This witnesses
+    \emph{potential non-coupling}: the specification allows a decoupled
+    implementation.
+  \item A Nash-style statement (profile-level) says: ``there exists at least one
+    joint profile in which every role’s current move is justified by the others’
+    current moves.'' This witnesses \emph{actual coupling at that profile}: the
+    system currently leans on itself.
+  \item Stronger notions (pervasive dependence, brittleness) make this
+    manifest: not only does a mutually dependent point exist, but \emph{any}
+    local change will be detected in the outcome.
+\end{itemize}
+
+Thus the same object---a strategy profile over one linear interaction---can be
+read in two directions:
+\begin{enumerate}[nosep]
+  \item the \emph{goal} reading: ``can this player win at all?'' (existence);
+  \item the \emph{connection} reading: ``given this profile, how much do these
+        components lean on each other?'' (actual dependence).
+\end{enumerate}
+All of these are counterfactual in spirit: they talk about what \emph{would}
+have happened had some other player chosen a different strategy; the logic need
+not execute such runs, it only needs to name them.
+
+\subsection{Coupling and Stability of Profiles}
+\label{subsec:coupling-stability}
+It is useful to view unilateral deviations as a rewrite relation on strategy
+profiles: $\profile \to_i \profile[i \mapsto \profile_i']$. Local (Nash) stability
+then says a profile is a normal form for all such rewrites, while the
+dependence and brittleness notions measure how sensitive the outcome is to
+taking one rewrite step.
+
+Fix a closed $K$-player specification $\Phi$ and a structure $\mathcal M$.
+For a strategy profile $\profile = (\profile_0,\dots,\profile_{K-1})$ write
+\[
+  \mathsf{out}_\Phi(\profile)
+  \;:=\;
+  \llbracket \Phi \rrbracket_{\mathcal M, \profile}
+  \in \{0,1\}^K,
+\]
+i.e.\ evaluation in $\mathcal M$ with the empty assignment. For
+$i \in \{0,\dots,K-1\}$ and an alternative strategy $\profile_i'$, write
+\[
+  \profile[i \mapsto \profile_i']
+  :=
+  (\profile_0,\dots,\profile_{i-1},\profile_i',\profile_{i+1},\dots,\profile_{K-1}).
+\]
+We record three kinds of properties: (i) forceability-style robustness, (ii)
+actual dependence of outcomes on other players, and (iii) brittleness. These are
+not all mutually comparable, but together they delimit the range from weak
+sensitivity to extreme coupling (and we do not attempt to linearly order them).
+
+\paragraph{(1) Forceability / adversarial robustness.}
+Player $i$ is \emph{robust} if
+\[
+  \exists \profile_i\ \forall \profile_{-i}:\;
+  \bigl(\mathsf{out}_\Phi(\profile_i,\profile_{-i})\bigr)_i = 1.
+\]
+This is a property of the game w.r.t.\ player $i$, not of a particular profile,
+and it is the maximally \emph{decoupled} situation: player $i$ does not rely on
+the behaviour of others.
+
+\medskip
+We now turn to properties of a \emph{fixed} profile~$\profile$.
+
+\paragraph{(2) Pairwise outcome dependence.}
+The profile $\profile$ has \emph{pairwise dependence} if
+\[
+  \exists i \ne j\ \exists \profile_j':\;
+  \bigl(\mathsf{out}_\Phi(\profile)\bigr)_i
+  \ne
+  \bigl(\mathsf{out}_\Phi(\profile[j \mapsto \profile_j'])\bigr)_i.
+\]
+So at least one player’s outcome is sensitive to a unilateral change by some
+other player.
+
+\paragraph{(3) Pervasive dependence.}
+The profile $\profile$ is \emph{pervasively dependent} if
+\[
+  \forall i\ \exists j \ne i\ \exists \profile_j':\;
+  \bigl(\mathsf{out}_\Phi(\profile)\bigr)_i
+  \ne
+  \bigl(\mathsf{out}_\Phi(\profile[j \mapsto \profile_j'])\bigr)_i.
+\]
+Every player is sensitive to at least one other player. This strictly
+strengthens pairwise dependence.
+
+\medskip
+Because outcomes are binary, we order $0 < 1$ componentwise.
+
+\paragraph{(4) Local (Nash-style) stability.}
+The profile $\profile$ is \emph{locally stable} if
+\[
+  \forall i\ \forall \profile_i':\;
+  \bigl(\mathsf{out}_\Phi(\profile)\bigr)_i
+  \ge
+  \bigl(\mathsf{out}_\Phi(\profile[i \mapsto \profile_i'])\bigr)_i.
+\]
+In the $\{0,1\}$ setting this says: no player can unilaterally turn a $0$ into a
+$1$. This witnesses a \emph{locally self-supporting} point of the system, but it
+does not by itself guarantee robustness.
+
+\medskip
+We now isolate two upper-end notions that express actual brittleness.
+
+\paragraph{(5) Global brittleness.}
+The profile $\profile$ is \emph{globally brittle} if
+\[
+  \forall i\ \forall \profile_i' \ne \profile_i:\;
+  \mathsf{out}_\Phi(\profile[i \mapsto \profile_i'])
+  \ne
+  \mathsf{out}_\Phi(\profile).
+\]
+Any unilateral deviation by any player changes the outcome vector.
+
+\paragraph{(6) Maximal brittleness (extreme case).}
+\[
+  \forall i\ \forall \profile_i' \ne \profile_i:\;
+  \mathsf{out}_\Phi(\profile[i \mapsto \profile_i']) = (0,\dots,0).
+\]
+Every unilateral deviation collapses the behavior to the worst outcome, namely
+$(0,\dots,0)$. This is a conceptual upper bound.
+
+\paragraph{Counterfactual character.}
+All the above notions are inherently counterfactual: they talk about what would
+have happened \emph{if} some player had chosen a different strategy, even though
+in the given run they did not. This mirrors the style of the logic itself, where
+quantifiers describe possible moves that need not be taken in one particular
+execution.
+
+\subsection{Properties}
+
+Throughout this subsection we fix a structure $\mathcal M$ and consider only closed $K$-player formulas $\Phi$.
+All evaluations $\llbracket \Phi \rrbracket_{\profile}$ and solution concepts (support, realizability, Nash, etc.) are taken w.r.t.\ $\mathcal M$.
+
+\begin{proposition}[Downward closure of support]
+\label{prop:support-downward}
+Let $\Phi$ be a $K$-player formula. If $\Phi$ supports $W \subseteq \{0,\dots,K-1\}$, then for every $W' \subseteq W$ it also supports $W'$.
+\end{proposition}
+\begin{proof}
+By \Cref{def:profile-support}, there exists a strategy profile $\profile$ such that for all $i \in W$ we have $(\llbracket \Phi \rrbracket_{\mathcal M,\profile})_i = 1$. In particular this holds for every $i \in W' \subseteq W$, so the same $\profile$ witnesses support for $W'$.
+\end{proof}
+
+\begin{lemma}[Joint realizability as maximal support]
+\label{lem:joint-real-max-support}
+A formula $\Phi$ is jointly realizable iff it supports $W = \{0,\dots,K-1\}$.
+\end{lemma}
+\begin{proof}
+Immediate from \Cref{def:joint-real} and \Cref{def:profile-support}.
+\end{proof}
+
+\begin{lemma}[Equivariance of support]
+\label{lem:support-equivariant}
+Let $\pi \in S_K$. If $\Phi$ supports $W$, then $\pi \cdot \Phi$ supports $\pi(W)$.
+\end{lemma}
+\begin{proof}
+By assumption, there exists $\profile$ such that for all $i \in W$,
+$(\llbracket \Phi \rrbracket_{\mathcal M,\profile})_i = 1$.
+By $S_K$-equivariance of the semantics (\Cref{thm:k-equivariance}), we have
+\[
+  \llbracket \pi \cdot \Phi \rrbracket_{\mathcal M, \pi \cdot \profile}
+  = \pi \cdot \llbracket \Phi \rrbracket_{\mathcal M,\profile}.
+\]
+Hence for every $j \in \pi(W)$,
+\[
+  (\llbracket \pi \cdot \Phi \rrbracket_{\mathcal M, \pi \cdot \profile})_j
+  = (\pi \cdot \llbracket \Phi \rrbracket_{\mathcal M,\profile})_j
+  = (\llbracket \Phi \rrbracket_{\mathcal M,\profile})_{\pi^{-1}(j)} = 1,
+\]
+because $\pi^{-1}(j) \in W$. So $\pi \cdot \Phi$ supports $\pi(W)$.
+\end{proof}
+
+\begin{lemma}[Orbit-realizability is $S_K$-invariant]
+\label{lem:orbit-real-invariant}
+If $v \in \{0,1\}^K$ is orbit-realizable for $\Phi$, then for every $\pi \in S_K$, $v$ is also orbit-realizable for $\pi \cdot \Phi$.
+\end{lemma}
+\begin{proof}
+By \Cref{def:orbit-realizable}, for every $\rho \in S_K$ there is $\profile_\rho$ such that $\llbracket \Phi \rrbracket_{\mathcal M,\profile_\rho} = \rho \cdot v$. For $\pi \cdot \Phi$, take the family $(\pi \cdot \profile_\rho)_\rho$. By equivariance of semantics,
+\[
+  \llbracket \pi \cdot \Phi \rrbracket_{\mathcal M, \pi \cdot \profile_\rho}
+  = \pi \cdot \llbracket \Phi \rrbracket_{\mathcal M,\profile_\rho}
+  = \pi \cdot (\rho \cdot v)
+  = (\pi \rho) \cdot v,
+\]
+so every permutation of $v$ is realized.
+\end{proof}
+
+\begin{lemma}[IR-NE is a refinement of NE]
+\label{lem:irne-refines-ne}
+If $\profile$ is an IR-NE for $\Phi$, then $\profile$ is a pure Nash equilibrium for $\Phi$.
+\end{lemma}
+\begin{proof}
+By definition an IR-NE is the conjunction of individual rationality (\Cref{def:indiv-rational}) and pure NE (\Cref{def:pure-ne}). So the claim is immediate.
+\end{proof}
+
+\subsection{Syntax-Directed Dependence Analysis}
+\label{subsec:syntax-dependence}
+
+Our semantic notions of dependence and coupling in \Cref{subsec:coupling-stability} are phrased in terms of counterfactual strategy changes: a player $j$ ``matters'' for player $i$ at a profile $\profile$ if replacing only $j$'s strategy changes $i$'s outcome. This is precise but not directly checkable from the syntax of a \KFOL specification. In this subsection we describe a lightweight, syntax-directed analysis that over-approximates such semantic dependence.
+
+The construction follows a well-established pattern:
+(i) IF-logic–style independence annotations tell us which earlier choices a move is \emph{not} allowed to see;
+(ii) program-dependence graphs and backward slicing collect all syntactic sources that can, in principle, affect a given use site~\cite{Weiser1981Slicing};
+and (iii) noninterference-style results then relate such a static approximation to semantic, run-level security properties~\cite{goguen1982security}.
+Similar ideas have been developed for process calculi, in particular for the $\pi$-calculus and its variants, where type systems or dependency analyses are used to rule out illicit information flow between channels or security levels (see, e.g.,~\cite{honda2000secure}).
+Our setting is simpler than the general $\pi$-calculus case because our interaction structure is a single, finite, linear script; however, the underlying idea is the same: a \emph{static} dependence relation that is sound for the \emph{dynamic} semantics.
+
+\paragraph{Setup.}
+Fix a closed $K$-player formula
+\[
+  \Phi \;=\;
+  P_{k_1} x_1 \setminus V_1.\;
+  P_{k_2} x_2 \setminus V_2.\;
+  \dots.\;
+  P_{k_n} x_n \setminus V_n.\;
+  \langle \varphi_0,\dots,\varphi_{K-1} \rangle
+\]
+and a structure $\mathcal M$. (Plain binders $P_{k_r} x_r.\,$ are understood as $P_{k_r} x_r \setminus \emptyset.\,$.)
+We view the prefix as a linear sequence of \emph{positions} $1,\dots,n$, each owned by a player $k_r$, and each possibly hiding from a set of players $V_r$.
+
+\paragraph{Direct visibility edges.}
+For two positions $r < s$ let $p = k_r$ and $q = k_s$.
+We add a \emph{direct visibility edge} $p \to q$ from $r$ to $s$ iff $q \notin V_r$, i.e.\ player $q$ is not hidden from the choice made at position $r$.
+This is the $K$-player generalization of the way IF logic records independence at the quantifier level.
+
+\paragraph{Direct formula-level edges.}
+For each player $i$ let $\mathsf{vars}(i)$ be the set of binder positions whose variables occur free in $\varphi_i$.
+For every $r \in \mathsf{vars}(i)$, where position $r$ is owned by $k_r$, we add a \emph{direct formula-level edge} $k_r \to i$.
+This is the standard data-dependence edge as in program dependence graphs (PDGs)~\cite{ferrante1987program}.
+
+\paragraph{Combined dependence graph.}
+Let
+\[
+  G_\Phi := (\{0,\dots,K-1\},\; E^{\mathsf{vis}} \cup E^{\mathsf{term}})
+\]
+be the directed graph over player indices induced by all visibility and formula-level edges.
+Write $p \Rightarrow_\Phi q$ for the reachability relation in $G_\Phi$.
+
+\paragraph{Syntactic relevance.}
+For a fixed player $i$ we define the set of \emph{syntactically relevant positions} $\mathsf{Rel}_\Phi(i) \subseteq \{1,\dots,n\}$ by backward closure:
+\begin{align*}
+  R_0(i) &:= \{\, r \mid x_r \text{ occurs free in } \varphi_i \,\},\\
+  R_{t+1}(i) &:= R_t(i) \cup \{\, r < s \mid s \in R_t(i) \text{ and player } k_s \notin V_r \,\}.
+\end{align*}
+Because the prefix is finite, this construction stabilizes; let $\mathsf{Rel}_\Phi(i)$ be the limit.
+This is a direct analogue of backward slicing, adapted to our visibility discipline.
+
+\begin{lemma}[Soundness of syntax-directed dependence]
+\label{lem:syntax-sound}
+Fix $\Phi$ and $\mathcal M$, and let $i$ be a player.
+Let $r$ be a binder position owned by player $j\neq i$, and suppose $r \notin \mathsf{Rel}_\Phi(i)$.
+Then for every profile of valid strategies $\profile$ and every alternative valid strategy $\profile_j'$,
+\[
+  (\llbracket \Phi \rrbracket_{\mathcal M,\profile})_i
+  =
+  (\llbracket \Phi \rrbracket_{\mathcal M,\profile[j \mapsto \profile_j']})_i.
+\]
+\end{lemma}
+\begin{proof}[Proof sketch]
+Validity of strategies enforces that a player's move may not branch on hidden variables.
+The backward construction of $\mathsf{Rel}_\Phi(i)$ exactly collects all positions whose values can be made available, through a sequence of such admissible branches, to a variable that $\varphi_i$ actually reads.
+If $r$ is not collected, its value cannot affect any later admissible choice on this path, and hence cannot affect the valuation of $\varphi_i$.
+This is the same noninterference reasoning used for typed information-flow systems for process calculi, specialized to a single, linear interaction.
+\end{proof}
+
+\paragraph{On completeness.}
+As in classical slicing and information-flow analysis, the approximation is one-sided: absence of a path implies absence of semantic influence, but not conversely.
+Semantic influence can fail to materialize because the structure $\mathcal M$ identifies values or because actual strategies ignore visible information.
+Relative completeness can be recovered under standard richness assumptions (distinct domain elements, strategies that distinguish visible histories, and terminals that test for those distinctions), but we do not develop this variant here.
+
+
+\subsection{Querying Redundancy of a Specification}
+\label{subsec:redundancy-query}
+
+The solution concepts of \Cref{sec:solutions} let us ask whether a player, or a
+coalition, can \emph{force} its objective against arbitrary behavior of the
+others. We now repurpose the same vocabulary to phrase a software-engineering
+style question:
+
+\begin{quote}
+  does this $K$-player specification keep providing its service even if
+  (up to) some participants fail or are removed?
+\end{quote}
+
+Here ``providing the service'' is interpreted as keeping a designated outcome
+component at~$1$. This matches the informal notion of structural redundancy:
+the system was provisioned with more components than the minimum required to
+satisfy the service goal.
+
+\paragraph{Service component.}
+Fix a closed $K$-player specification $\Phi$ over a structure $\mathcal M$, and
+fix a \emph{service index} $s \in \{0,\dots,K-1\}$ whose outcome
+$(\llbracket \Phi \rrbracket_{\mathcal M,\sigma})_s$ we regard as the
+system-level requirement (``the service is up''). If the service is itself a
+conjunction of several players' objectives, we may introduce an auxiliary
+player whose terminal formula is that conjunction and take that player to be
+$s$.
+
+\paragraph{One-failure redundancy.}
+Intuitively, the system is 1-redundant for $s$ if \emph{every} single player
+can go arbitrary (fail, misbehave, be removed) and the remaining players can
+still force the service bit to~1.
+
+\begin{definition}[1-failure service redundancy]
+\label{def:1-redundancy}
+$\Phi$ is \emph{1-redundant for $s$ in $\mathcal M$} if
+\[
+  \forall j \in \{0,\dots,K-1\} \setminus \{s\}.\;
+  \exists (\sigma_i)_{i \ne j}\;
+  \forall \sigma_j.\;
+  \bigl(\llbracket \Phi \rrbracket_{\mathcal M, \, (\sigma_i)_{i \ne j}, \sigma_j}\bigr)_s = 1.
+\]
+That is, for every potentially failing participant $j$, the coalition of all the
+other participants can enforce the service component against $j$'s arbitrary
+behavior.
+\end{definition}
+
+This is exactly the coalition-forceability pattern of
+\Cref{subsec:guarantee}, specialized to the coalition
+$C = \{0,\dots,K-1\} \setminus \{j\}$ and to the single objective ``$s$ wins''.
+The failure is modeled as quantifying \emph{universally} over $j$'s strategy.
+
+\paragraph{General $k$-failure redundancy.}
+The same shape scales to multiple simultaneous failures.
+
+\begin{definition}[$k$-failure service redundancy]
+\label{def:k-redundancy}
+For $k \ge 0$, $\Phi$ is \emph{$k$-redundant for $s$ in $\mathcal M$} if for
+every $F \subseteq \{0,\dots,K-1\}$ with $|F|\le k$,
+\[
+  \exists (\sigma_i)_{i \notin F}\;
+  \forall (\sigma_j)_{j \in F}.\;
+  \bigl(\llbracket \Phi \rrbracket_{\mathcal M, \, (\sigma_i)_{i \notin F}, (\sigma_j)_{j \in F}}\bigr)_s = 1.
+\]
+In words: any subset of at most $k$ players may deviate arbitrarily, and the
+remaining players can still force the service.
+\end{definition}
+
+For $k=0$ this reduces to ordinary forceability of the service component by the
+grand coalition. For $k\ge 1$ it expresses ``more provision than the minimum'':
+some participants may be missing and the service is still deliverable.
+
+\paragraph{Redundancy queries.}
+Given $\Phi$, $\mathcal M$, a service index $s$, and a budget $k$, the
+\emph{redundancy query}
+\[
+  \textsf{Redundant}(\Phi, \mathcal M, s, k)
+\]
+asks whether \Cref{def:k-redundancy} holds. This is a semantic question of the
+same flavor as forceability: it quantifies over strategy profiles, but the
+quantifier alternation matches the intended reading ``the remaining coalition
+can cover for the failed participants''. In particular, deciding redundancy is
+no easier than deciding the corresponding coalition-forceability instances;
+over the IF-extended calculus this inherits the hardness results of
+\Cref{sec:k-complexity}.
+
+\paragraph{Remarks.}
+\begin{itemize}[nosep]
+  \item The definition is intentionally \emph{service-directed}: we do not
+    require the deviating participants themselves to succeed, only that the
+    designated service bit remains~1.
+  \item One can strengthen the notion by requiring the non-failing participants
+    to keep \emph{their own} objectives, not only the service's; this amounts to
+    replacing the single component $(\cdot)_s$ in
+    \Cref{def:k-redundancy} with a conjunction over a chosen survivor set.
+  \item Because the definition is phrased only in terms of strategy
+    quantification, it fits cleanly into the guarantee layer of
+    \Cref{sec:solutions} and does not require new object-language constructs.
+\end{itemize}

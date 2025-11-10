@@ -1,0 +1,71 @@
+\section{Proofs}
+\label[appendix]{app:proofs}
+
+\begin{proposition}[Canonical 2-player embedding]
+\label{prop:abs-unique}
+Fix $i \in \{0,1\}$. Assume a 2-player calculus with binders $P_0 x.\,$ and $P_1 x.\,$ and an adversarial projection operation
+\[
+  \AdvOp_j : \text{2-FOL} \to \FOL \qquad (j=0,1)
+\]
+such that
+\begin{align*}
+  \AdvOp_i(\langle \psi_0,\psi_1\rangle) &= \psi_i, &
+  \AdvOp_i(P_i x.\,\Phi) &= \exists x.\,\AdvOp_i(\Phi), &
+  \AdvOp_i(P_{1-i} x.\,\Phi) &= \forall x.\,\AdvOp_i(\Phi),
+\end{align*}
+and similarly for $j=1-i$ with the roles of $\exists$ and $\forall$ swapped.
+Then there is at most one operation
+\[
+  \AbsOp_i : \FOL \to \text{2-FOL}
+\]
+satisfying
+\begin{enumerate}
+  \item $\AdvOp_i \circ \AbsOp_i = \mathrm{id}_{\FOL}$,
+  \item $\AdvOp_{1-i} \circ \AbsOp_i = \neg(\,\cdot\,)$,
+  \item $\AbsOp_i$ is compositional over the FOL constructors (atoms, $\neg$, $\land$, $\lor$, $\exists$, $\forall$).
+\end{enumerate}
+Moreover, this unique operation is given inductively by
+\[
+  \AbsOp_i(\alpha) = \langle \alpha, \neg \alpha\rangle,\quad
+  \AbsOp_i(\neg \fo) = \langle \neg \AdvOp_i(\AbsOp_i(\fo)),\ \AdvOp_i(\AbsOp_i(\fo))\rangle,
+\]
+\[
+  \AbsOp_i(\fo \land \psi) = \AbsOp_i(\fo) \wedge \AbsOp_i(\psi),\quad
+  \AbsOp_i(\fo \lor \psi) = \AbsOp_i(\fo) \vee \AbsOp_i(\psi),
+\]
+\[
+  \AbsOp_i(\exists x.\fo) = P_i x.\,\AbsOp_i(\fo),\qquad
+  \AbsOp_i(\forall x.\fo) = P_{1-i} x.\,\AbsOp_i(\fo),
+\]
+where $\wedge,\vee$ on the right-hand side are the componentwise game-combinators
+compatible with adversarial projection.
+Up to the player-rotation that swaps $0$ and $1$, this embedding is canonical.
+\end{proposition}
+
+\begin{proof}[Proof sketch]
+Proceed by structural induction on the FOL formula $\fo$.
+
+For atoms $\alpha$: by (1) we must have $\AdvOp_i(\AbsOp_i(\alpha)) = \alpha$.
+By (2) we must also have $\AdvOp_{1-i}(\AbsOp_i(\alpha)) = \neg \alpha$.
+But adversarial projection on terminal pairs is just projection, so $\AbsOp_i(\alpha)$ must be
+$\langle \alpha, \neg \alpha\rangle$.
+
+For Boolean connectives: by (3) we must define
+$\AbsOp_i(\fo \circ \psi)$ from $\AbsOp_i(\fo)$ and $\AbsOp_i(\psi)$ using
+the same constructor $\circ$. Because adversarial projection commutes with these
+constructors (by definition of the calculus), (1) and (2) are preserved.
+
+For quantifiers: consider $\exists x.\fo$.
+By (1), $\AdvOp_i(\AbsOp_i(\exists x.\fo))$ must be $\exists x.\fo$.
+By the specification of $\AdvOp_i$ on binders, this is possible only if
+$\AbsOp_i(\exists x.\fo)$ is of the form $P_i x.\,\Phi$ with
+$\AdvOp_i(\Phi)=\fo$, hence $P_i x.\,\AbsOp_i(\fo)$.
+Similarly, for $\forall x.\fo$, condition (2) forces the other player’s binder:
+$\AdvOp_{1-i}(\AbsOp_i(\forall x.\fo)) = \neg \forall x.\fo
+= \exists x.\neg \fo$, and under the given adversarial projection convention this means
+$\AbsOp_i(\forall x.\fo)$ must be $P_{1-i} x.\,\AbsOp_i(\fo)$.
+
+Since each constructor is forced in this way, no alternative definition of
+$\AbsOp_i$ can satisfy (1)–(3). Finally, choosing $i=0$ or $i=1$ just swaps the
+two components, so the two embeddings are related by the role-rotation.
+\end{proof}

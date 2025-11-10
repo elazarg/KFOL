@@ -1,0 +1,88 @@
+\section{Related Work}
+\label{sec:related}
+
+\paragraph{Scope.}
+There exist broad surveys of logic-and-games that cover structural, epistemic, and dynamic perspectives on interaction, ranging from semantic games for classical logic to logics of powers, preferences, and play updates; see especially the entries \emph{Logic and Games}, \emph{Logics for Analyzing Games}, and \emph{Games, Full Abstraction and Full Completeness} in the \emph{Stanford Encyclopedia of Philosophy}~\cite{sep-logics-for-games,sep-logic-games,sep-games-abstraction}.
+To keep the comparison focused, we review here only those strands that (i) offer an explicit syntactic account of game structure, or (ii) are close to our first-order, role-indexed presentation.
+
+\subsection{Global Specifications of Interaction}
+A first cluster of formalisms describes \emph{the whole interaction} among several named participants.
+
+Multiparty session types (MPST) and choreographies specify a single global protocol over roles and obtain role-local views by projection; well-formedness ensures the locals compose~\cite{HondaYoshidaCarbone2008MPST}. The logical underpinning for this line of work is the \textbf{``Propositions-as-Sessions''} correspondence, which gives a rigorous mapping from linear logic to session-typed processes~\cite{wadler2012propositions,caires2010session}. This work, and its extension to \textbf{Dependent Session Types (DST)}, primarily focuses on using the logical foundation to guarantee protocol-level properties like \textbf{type preservation} and \textbf{global progress} (i.e., deadlock-freeness)~\cite{ToninhoCairesPfenningDependentSessionTypes}.
+
+The goal of these systems is typically not game-theoretic, but rather to ensure \textbf{protocol safety} or \textbf{relational verification}. For instance, recent work uses dependent session types to prove that a concurrent program (like a queue) correctly implements the semantics of its sequential model (e.g., proving it is FIFO, not LIFO)~\cite{fu2025dependentsessiontypesverified}. This entire line of work is overwhelmingly focused on \emph{binary} (two-party) sessions; indeed, recent work on dependent session types for verified programming explicitly lists integration with \emph{multi-party} session types as future work~\cite{fu2025dependentsessiontypesverified}.
+
+There is also work on enriching global types with logical/refinement conditions and carrying them through projection to verified endpoints~\cite{japaridze2024propositional,zhou2024refining}. Even in systems that \emph{are} multi-party, such as the ``Multiparty Dependent Session Types'' of Wu and Xi, the goal remains protocol safety, with the main soundness result being \textbf{deadlock-freeness}~\cite{bocchi2010theory,wu2018multiparty,vassor2024refinements}.
+% TODO: bocchi2010theory and vassor2024refinements are FAR more similar to this work than what's written here.
+
+Our calculus builds on a similar ''session-like'' global structure, but differs in two crucial respects: (i) our calculus is \textbf{natively K-player}, a direction explicitly noted as future work in the binary logical-foundations literature, and more importantly (ii) evaluation produces a per-role outcome tuple, on top of which we can define game-theoretic success (forceability, coalitions). In other words, we use a session-like global form as a \emph{game logic}, not only as a source of \emph{protocol-safety types}.
+
+Declarative game-description languages such as GDL~\cite{LoveHinrichsGenesereth2006GDL} and later systems like Ludii~\cite{PietteEtAl2021LudiiConcepts} also give global specifications, but they axiomatize transition, observation, and goal relations of a grounded game, whereas we define games \emph{compositionally} inside a first-order syntax.
+Unlike Castellan–Yoshida~\cite{CastellanYoshidaSessionGame}, who show that binary session protocols and game-semantic strategies can be given a common event-structure model for the (session) $\pi$-calculus, we work with a first-order, K-role, payoff-producing calculus and treat viewpoint/rotation as syntactic operators. Our system is not a model of the session $\pi$-calculus, but a specification language whose global shape is session-like.
+
+\subsection{Strategic and Coalition Logics}
+Modal and temporal logics for strategic ability---Parikh’s game logic~\cite{Parikh1985LogicOfGames}, Coalition Logic~\cite{pauly2002modal}, ATL~\cite{AlurHenzingerKupferman2002ATL}, Strategy Logic~\cite{ChatterjeeHenzingerPiterman2010SL}, and its imperfect-information extensions~\cite{BerthonEtAl2021SLii}---interpret formulas over concurrent game structures and reason about what agents or coalitions can enforce.
+These systems are natively multi-agent but remain modal and essentially Boolean: objectives are truth conditions, not structured outcomes, and the syntax does not expose the move/quantifier level that our calculus uses as its core.
+Classical game theory~\cite{VonNeumannMorgenstern1944,Nash1950,Shapley1953StochasticGames,Harsanyi1967PartI,Harsanyi1968PartII,Harsanyi1968PartIII} provides the semantic background for multi-player interaction, but not a first-order, operational specification language of the kind we develop.
+
+\subsection{Information-Sensitive First-Order Logics}
+Independence-Friendly Logic and its descendants~\cite{HintikkaSandu1989,Hintikka1996POMR,MannSanduSevenster2011IFL} expose informational independence directly in the syntax and give semantics via two-player imperfect-information games.
+This line is the closest antecedent for our treatment of information flow: it shows that first-order binding can be read as game moves with (in)dependence conditions.
+However, it is inherently two-player and polar (Verifier vs.\ Falsifier) and does not provide role rotation or multiway outcome vectors.
+Our system can be seen as taking that mechanism and lifting it to $K$ explicitly named roles.
+
+\subsection{Game Semantics and Compositional Interaction}
+Game-semantical and dialogical accounts of logic and computation model proofs or programs as two-player games and connectives as game combinators~\cite{Blass1992GameSemanticsLL,Girard1987LinearLogic,Lorenzen1960LogikUndAgon,van2003logic}, and are surveyed in~\cite{sep-games-abstraction}. This is distinct from the ''Propositions-as-Sessions'' (P-a-S) line of work, which uses linear logic as a \emph{type system} for \emph{protocols} (e.g., $\pi$-calculus processes) to ensure safety properties~\cite{wadler2012propositions,caires2010session}.
+We borrow the compositional stance from classical game semantics---formulas \emph{are} interaction structures---but we make it syntactic, multi-role, and tied to first-order binders, which standard game semantics does not.
+In other words, we internalize the game structure at the level of the object language, rather than only using games as semantic models for an independent language.
+
+This also distinguishes \KFOL\ from Japaridze's Computability Logic (CoL)~\cite{japaridze2024propositional}, a broad
+game-semantic framework where formulas represent computational problems
+(games) and validity means the existence of a machine (strategy) that
+always wins. CoL is a comprehensive logic of interactive computability,
+whereas \KFOL\ is a logic of multi-role strategic ability with explicit
+information constraints and distinct per-role objectives.
+
+\subsection{Quantitative and Multi-Outcome Extensions}
+Work on richer winning conditions and quantitative objectives in games and verification (e.g.\ parity and stochastic games~\cite{Jurdzinski2000SPM,ChatterjeeMajumdarJurdzinski2004NashStochastic}, multi-agent model checking~\cite{LomuscioRaimondi2006MCMAS}) shows how to move beyond purely Boolean outcomes, but typically stays modal and does not offer a first-order, role-indexed syntax with explicit symmetry.
+Our outcome tuples live at the object level of the calculus and are aligned with the roles of the global description.
+
+\subsection{Position of This Work}
+The calculus here can be read as:
+(i) a global, role-indexed, dependent type with per-player refinement in the spirit of MPST/choreographies~\cite{HondaYoshidaCarbone2008MPST} and of declarative game-description languages~\cite{LoveHinrichsGenesereth2006GDL,PietteEtAl2021LudiiConcepts}, but with a focus on game-theoretic payoffs rather than \emph{only} protocol safety or \emph{relational verification}~\cite{fu2025dependentsessiontypesverified};
+(ii) internal to first-order, information-sensitive syntax as in IF/Dependence~\cite{HintikkaSandu1989,MannSanduSevenster2011IFL}, and
+(iii) producing per-role outcomes and supporting explicit symmetry operations (adversarial projection to a viewpoint, rotation of roles, and an explicit embedding of classical FOL).
+These operations should be understood as making the embedding of classical FOL into the multi-role setting precise, not as a separate algebraic contribution.
+
+\subsection{Applications}
+The structures in \KFOL\ are general enough to model a wide range of 
+multi-agent scenarios.
+While detailed case studies are beyond the scope of 
+this paper, we briefly sketch several application domains:
+\begin{itemize}
+    \item \textbf{Blockchain Protocols:} \KFOL\ can serve as a core calculus 
+      for domain-specific languages targeting smart contracts.
+ IF-binders 
+      (\Cref{sec:extensions}) naturally encode commit-reveal schemes for 
+      on-chain games with hidden information.
+ This is a focus of a concurrent work.
+          
+    \item \textbf{Game-Theoretic Analysis:} The same compiler targets Gambit, 
+          translating specifications into extensive-form games for automated 
+          equilibrium analysis and strategy synthesis.
+ \item \textbf{Partially-Cooperative Specifications:} \KFOL\ can model 
+          software systems where multiple modules cooperatively satisfy a 
+          global invariant (shared objective) while also achieving their own 
+          local postconditions (individual objectives).
+ The forceability 
+          semantics lets developers implement modules defensively, accounting 
+          for incomplete or adversarial behavior by other components or test 
+          harnesses.
+ \item \textbf{Interactive Proof Systems:} The information hiding of 
+          $\setminus V$ binders directly models non-communication constraints 
+          in multi-prover interactive proofs ($\mathsf{MIP}$).
+ The distinction 
+          between visible and hidden moves corresponds to public 
+          ($\mathsf{AM}$) versus private ($\mathsf{IP}$) randomness in 
+          complexity-theoretic protocols. Secret-sharing might be incorporated via fractional permission.
+\end{itemize}

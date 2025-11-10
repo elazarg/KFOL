@@ -1,0 +1,281 @@
+\section{Strategies as Relations; Profiles and Composition as Joins}
+\label{sec:ra-view}
+
+This section recasts (deterministic, pure) strategies for a \KFOL\ prefix as
+\emph{functional relations} over the variables they are allowed to see.  The
+payoff is conceptual clarity and a compact algebra of composition: profiles
+are natural joins; hiding is projection; $\alpha$-renaming and player
+permutation are schema renamings; clocks and broadcasts are key-shaping
+patterns; IF-style independence is a key-exclusion constraint; and several
+solution concepts become anti-join/division queries.  We keep the mathematics
+lightweight but precise enough that a fully formal account is routine.
+
+We treat each binder as a \emph{typed column}, the visibility DAG as the
+\emph{set of key attributes} allowed to influence that column, a pure strategy
+as a \emph{deterministic fill-rule} (a function from key to value), and a
+strategy profile as the \emph{natural join} of those per-binder tables.  In
+short: \emph{shape first, behavior second}.  The game specification fixes the
+shape (columns, types, who can depend on whom); strategies populate it.
+
+Why is this worth doing?  Two reasons.  First, it gives an intuitive picture
+that matches how we already think about the prenex script: we fill the row
+from left to right, and each move can only look at certain earlier columns.
+Second, it buys an algebra of composition: sequencing is a join on an
+interface (optionally followed by projection), clocks and broadcasts are
+shorthand for key-shaping, independence is a key-exclusion constraint, and
+several semantic queries (feasibility, forceability, ``no profitable
+deviation'' in the $\{0,1\}$ case) become small relational patterns.
+
+\paragraph{What this \emph{is} and \emph{is not}.}
+It \emph{is} a faithful, lightweight reading of our deterministic, prenex
+fragment that can be made fully formal with routine RA machinery.  It is
+\emph{not} a new semantics for arbitrary utilities, stochastic choices, or
+concurrent branching---those require extra layers (aggregation, probability,
+or event-structure concurrency) that we intentionally avoid here.
+
+\paragraph{How to read the section.}
+If you only need the dictionary, use \Cref{fig:ra-cheatsheet} as a
+reference.  If you want to see why the dictionary is sound, skim the short
+lemmas that follow: they show that (i) joining total, functional strategy
+tables yields a single completed play, and (ii) the composition and
+independence patterns behave as advertised.
+
+\begin{figure}[t]
+  \centering
+  \small
+  \setlength{\tabcolsep}{6pt}
+  \renewcommand{\arraystretch}{1.2}
+  \begin{tabular}{p{0.44\linewidth} p{0.50\linewidth}}
+    \toprule
+    \textbf{Game-calculus notion} & \textbf{DB/RA reading (intuition)} \\
+    \midrule
+    Binder $P_i x_k$ with type $D_{x_k}$ & A \emph{typed column} $x_k{:}D_{x_k}$ in the eventual row \\
+    Syntactic (prenex) order & The order we fill columns left-to-right \\
+    Visibility edge $x_j\to x_k$ & $x_j$ is in the \emph{key} for $x_k$ (allowed dependency) \\
+    Slash / independence for $x_k$ & \emph{Key exclusion}: certain earlier columns are \emph{forbidden} from $x_k$'s key \\
+    Player $i$ controls $x_k$ & Ownership: who supplies the value for column $x_k$ given its key \\
+    Game specification (no strategies) & Schema + key policy: column types and allowed dependencies \\
+    Pure strategy for $x_k$ & Deterministic \emph{fill-rule} (graph of a function) from key$(x_k)$ to $x_k$ \\
+    Strategy profile & \emph{Natural join} of all per-binder strategy tables \\
+    Play (deterministic case) & The \emph{single completed row} produced by the join \\
+    Terminal objective for player $i$ & A Boolean predicate on the completed row (selection/filter) \\
+    Sequential composition $\Phi;\Psi$ & Join on an \emph{interface} of shared columns, then (optionally) project to hide internals \\
+    Clock (unit choke-point) & Add a dummy unit column at the boundary; require it in the next phase's keys \\
+    Broadcast & Put all prior columns into initial keys of the next phase (wide join) \\
+    $\alpha$-renaming / player permutation & Column rename / ownership relabel; schema isomorphism \\
+    Equivalence up to DAG isomorphism & Same dependency structure between columns (schema isomorphism) \\
+    Legal histories at $x_k$ & Reachable partial rows projected to key$(x_k)$ \\
+    Feasibility (well-posedness) & There exist per-column fill-rules total on legal histories \\
+    Forceability of player $i$ & Anti-join pattern: no opponent completion produces a row failing $i$'s predicate \\
+    Pure Nash (binary outcomes) & ``No $0\!\to\!1$ unilateral improvement'' expressed as self-join + anti-join \\
+    \bottomrule
+  \end{tabular}
+  \caption{\textbf{Relational cheat-sheet.} A compact correspondence between the
+  game calculus and a database/relational-algebra reading.  Use this as a
+  waypoint if you get lost in the details.}
+  \label{fig:ra-cheatsheet}
+\end{figure}
+
+\paragraph{Notation.}
+We write $D_x$ for the domain of variable $x$, $X\to Y$ for a (relational)
+functional dependency, and use standard RA operators: natural join ($\Join$),
+projection ($\pi$), selection ($\sigma$), renaming ($\rho$), and set
+difference ($\setminus$).  Schemas are sets of attributes named by variables.
+Fix a prenex prefix with binders $b_1,\dots,b_n$ producing variables
+$x_1,\dots,x_n$ and a visibility DAG $E\subseteq\{(j{\to}k)\mid j<k\}$.
+
+\begin{definition}[Keys, local strategy tables]
+For each position $k$ let the \emph{key} (visible history) be
+\[
+  K_k \;\coloneqq\; \{\,x_j \mid (j{\to}k)\in E\,\}\subseteq \{x_1,\dots,x_{k-1}\}.
+\]
+A \emph{local strategy table} for $x_k$ is a relation
+\[
+  S_k \;\subseteq\; \prod_{x\in K_k}\! D_x \;\times\; D_{x_k}
+  \qquad\text{with}\qquad K_k \to x_k.
+\]
+Intuitively, $S_k$ is the graph of a total function from visible histories to
+the move for $x_k$ (totality is stated below).
+\end{definition}
+
+\begin{definition}[Legal histories and totality]
+Let $H_1\coloneqq\{\bullet\}$ and, inductively for $k>1$,
+\[
+  H_k \;\coloneqq\; \pi_{K_k}\!\Big(\; \Join_{j<k} S_j \;\Big).
+\]
+We say $S_k$ is \emph{total on legal histories} if for every $h\in H_k$ there
+exists a unique $v\in D_{x_k}$ with $(h,v)\in S_k$.
+\end{definition}
+
+\begin{definition}[Strategy profile as join]
+Given local tables $S_1,\ldots,S_n$ (one per binder), the \emph{profile} is
+the natural join
+\[
+  S \;\coloneqq\; \Join_{k=1}^n S_k \;\subseteq\; \prod_{k=1}^n D_{x_k}.
+\]
+\end{definition}
+
+\begin{lemma}[Determinacy of play]\label{lem:determinacy}
+If each $S_k$ satisfies $K_k\to x_k$ and is total on its legal histories,
+then $S$ is a singleton relation over $\{x_1,\dots,x_n\}$.
+\end{lemma}
+
+\emph{Proof sketch.} Topologically sort $E$; functionality and totality
+determine a unique value for $x_k$ once the predecessors are fixed.  \qed
+
+\paragraph{Equivalence and normalization.}
+Equivalence up to (i) player permutation, (ii) $\alpha$-renaming, and (iii)
+visibility-DAG isomorphism coincides with schema isomorphism for the family
+$\{S_k\}$ (rename attributes; re-order does not matter).  Thus, adopting the
+relational representation turns “equality up to those symmetries” into
+literal equality up to renaming.
+
+
+\subsection{Composition as Join + Projection}\label{subsec:ra-composition}
+
+Let $\Phi$ end with variables $X^\Phi=\{x_1,\dots,x_m\}$ and $\Psi$ begin with
+$Y^\Psi=\{y_1,\dots\}$.  To \emph{sequentially compose} $\Phi;\Psi$ choose an
+\emph{interface} $I\subseteq X^\Phi$ and rename attributes in the first wave
+of $\Psi$ so that every initial key $K_{y_\ell}$ is a subset of $I$ and the
+domains match.  Then set
+\[
+  S^{\Phi;\Psi} \;\coloneqq\; \pi_{\text{externals}}\!\big( S^\Phi \Join_I S^\Psi \big),
+\]
+where $S^\Phi$ and $S^\Psi$ are the joins of their local tables, and
+$\text{externals}$ projects away hidden interface attributes if desired.
+
+Two useful patterns are immediate:
+
+\begin{itemize}
+\item \textbf{Clock (unit choke-point).} Introduce a fresh $t:\mathbf{1}$ as
+the last variable of $\Phi$ and include $t$ in every initial key of $\Psi$.
+Joining on $t$ enforces sequencing without adding information.
+\item \textbf{Broadcast.} Include \emph{all} of $X^\Phi$ in the initial keys
+of $\Psi$; the first wave of $\Psi$ can see all prior moves.  This is just a
+wide natural join.
+\end{itemize}
+
+\begin{proposition}[Soundness of sequential composition]
+With domain-consistent interfaces, $S^{\Phi;\Psi}$ coincides with the
+play-by-play semantics of first resolving $\Phi$ then $\Psi$ under the
+visibility wiring.  \qed
+\end{proposition}
+
+\subsection{Independence as Key Exclusion}\label{subsec:ra-independence}
+
+IF-style annotations are read as \emph{schema constraints}.
+
+\begin{definition}[Slash/visibility constraints]
+For a binder annotated $P_i x_k \setminus V$ (variable-level) or $P_i x_k / J$
+(role-level), enforce:
+\[
+  \forall x_j\in V \;\; (x_j \notin K_k)
+  \qquad\text{or}\qquad
+  \forall j\in J \;\; (\mathrm{pl}(x_j)\in J \Rightarrow x_j \notin K_k).
+\]
+Totality remains relative to $H_k=\pi_{K_k}(\Join_{j<k} S_j)$, i.e.\ to the
+\emph{reduced} keys.
+\end{definition}
+
+\begin{remark}[No-signalling-by-key]
+If a variable is slashed from $x_k$, it does not appear in $K_k$; hence
+$x_k$ cannot (directly) depend on it.  Allowing a slashed variable into
+$K_k$ admits signalling; forbidding it prevents such channels.  \qed
+\end{remark}
+
+\subsection{Objectives and RA Queries}\label{subsec:ra-queries}
+
+Let each player’s objective be a predicate
+$W_i \subseteq \prod_{k=1}^n D_{x_k}$ (evaluate the terminal tuple there).
+Given a profile $S$, player $i$ succeeds iff $\sigma_{W_i}(S)=S$.  Beyond
+single-profile checks, several semantic questions over \emph{sets of}
+strategies are naturally relational (assume finite domains for enumeration).
+
+\paragraph{Feasibility.}
+A game is feasible if there exists a family $\{S_k\}$ with each $S_k$ total on
+$H_k$.  Algorithmically: compute $H_k$ bottom-up and check emptiness of the
+anti-join $H_k \setminus \pi_{K_k}(S_k)$ for all $k$.
+
+\paragraph{Forceability (worst-case guarantee).}
+Let $\mathcal{P}_i$ be the relation enumerating admissible tables for player
+$i$ (correct schemas; total on legal histories) and $\mathcal{P}_{-i}$ the
+product for the others.  The set of forcing strategies for $i$ is
+\[
+  \mathcal{F}_i \;=\;
+  \mathcal{P}_i \;\setminus\;
+  \pi_{\text{id}(S_i)}
+  \bigl(
+    \sigma_{\neg W_i}( S_i \Join \mathcal{P}_{-i} )
+  \bigr),
+\]
+i.e.\ those $S_i$ for which there is no opponent completion producing a losing
+play.  This is an anti-join/selection pattern.
+
+\paragraph{Pure Nash in the $\{0,1\}$ case.}
+A profile $S$ (a singleton play under \Cref{lem:determinacy}) is
+Nash iff for each $i$ there is no alternative $S'_i$ such that
+$\sigma_{W_i}( S'_i \Join S_{-i})$ is nonempty while
+$\sigma_{W_i}( S_i \Join S_{-i})$ is empty.  Again, a self-join plus
+anti-join.
+
+\subsection{Small Running Example}\label{subsec:ra-example}
+
+Two binders: $x$ (player $A$) then $y$ (player $B$) with $K_y=\{x\}$.
+Let $D_x=D_y=\{0,1\}$.  Tables:
+\[
+  S_x(x) \text{ with }\emptyset\to x,
+  \qquad
+  S_y(x,y) \text{ with } x\to y.
+\]
+Profile $S=S_x\Join S_y \subseteq \{(x,y)\}$.  If
+$W_B=\{(x,y)\mid x=y\}$, then $B$’s success on the profile is the check
+$\sigma_{W_B}(S)=S$.  Sequentially compose with a $\Psi$ whose first move
+$z$ sees $y$: set $K_z=\{y\}$ and compute $S^{\Phi;\Psi} = \pi_{x,y,z}
+(S \Join S_z)$; hiding $y$ is $\pi_{x,z}$.
+
+\paragraph{Scope and complexity (brief).}
+When the visibility hypergraph is acyclic, worst-case optimal joins (e.g.\
+Yannakakis-style) evaluate profiles and composition in time linear in the
+input plus output size.  For cyclic schemas, joins can blow up in the worst
+case; feasibility/forceability remain \emph{queries} but inherit that cost.
+These are standard RA complexity boundaries; nothing exotic is required here.
+
+\medskip
+\noindent
+\emph{Summary.} Treating local strategies as functional relations keyed by the
+visibility DAG makes profiles a natural join, hiding a projection, wiring a
+renaming, sequencing a join on an interface, clocks/broadcasts key-shaping,
+and IF-style independence a key-exclusion constraint.  This alignment is
+faithful at the granularity of our deterministic, prenex fragment, and is
+fully formalizable with routine RA machinery.
+
+\paragraph{Generalising to mixed strategies.}
+All of the relational scaffolding survives if we replace per-binder functions by
+\emph{behavioural kernels}. Assuming perfect recall (each binder’s key contains
+everything the player could have observed so far), a mixed strategy for the
+binder producing $x_k$ is a conditional distribution
+\(p_k(x_k \mid K_k)\) with \(\sum_{v\in D_{x_k}} p_k(v\mid h)=1\) for every
+\emph{reachable} key $h\in H_k$. The profile then induces a distribution over
+complete plays that factorises along the visibility DAG:
+\[
+  \Pr(x_1,\dots,x_n) \;=\; \prod_{k=1}^n p_k\!\big(x_k \,\big|\, x_{K_k}\big).
+\]
+In database terms, keep the same schema and keys; attach a weight column to each
+local table, interpret \emph{join} as weight multiplication, \emph{selection} as
+zeroing weights, and \emph{projection}/hiding as marginalization (summing
+weights). Independence, clocks, broadcasts, and sequential composition remain
+purely structural—they only shape keys—so they carry over unchanged.
+
+\paragraph{Solution concepts with randomness.}
+Objectives lift from Boolean predicates on rows to expected values under
+\(\Pr\). Pure-strategy checks like “no $0\!\to\!1$ deviation” become expected
+payoff inequalities: for player $i$, a mixed profile is Nash iff for every
+(unilateral) behavioral deviation $\hat p_i$,
+\(\mathbb{E}_{p_i,p_{-i}}[u_i] \ge \mathbb{E}_{\hat p_i,p_{-i}}[u_i]\).
+Relationally, this is the same self-join over opponents’ kernels, but the
+decision is an aggregate comparison rather than an emptiness test. If shared
+private randomness is needed across a player’s binders, introduce a hidden seed
+variable sourced once and included in that player’s later keys (the same
+key-shaping trick as the clock/broadcast). Normalization constraints
+\(\sum_{v} p_k(v\mid h)=1\) are required only on \emph{legal} histories $h$,
+mirroring totality in the deterministic case.

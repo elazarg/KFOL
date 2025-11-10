@@ -1,0 +1,70 @@
+
+\section{Adversarial Test Components}
+\label{subsec:adversarial-tests}
+
+Tests in this setting are naturally \emph{adversarial}: they are players whose
+terminal formulas are written with the intention of catching bad behavior of
+other players. This is slightly at odds with everyday testing terminology: here
+a ``good'' test is one that is \emph{bad for} at least one incorrect
+implementation. Formally, if $\mathcal I$ is the set of implementations and
+$G \subseteq \mathcal I$ the intended ones, we call a test non-vacuous if it
+fails on some $I \in \mathcal I \setminus G$.
+
+\begin{definition}[Test suite]
+Let $\mathcal I$ be the set of implementations of a given interface, and let
+$G \subseteq \mathcal I$ be the intended ones. A \emph{test suite} is a function
+\[
+  T : \mathcal I \to \{\mathsf{pass}, \mathsf{fail}\}.
+\]
+It is
+\begin{itemize}
+  \item \emph{non-vacuous} if $\exists I \in \mathcal I \setminus G:\; T(I) =
+    \mathsf{fail}$;
+  \item \emph{satisfiable} if $\exists I \in G:\; T(I) = \mathsf{pass}$;
+  \item \emph{complete} if $\forall I \in \mathcal I:\; T(I) = \mathsf{pass}
+    \iff I \in G$.
+\end{itemize}
+\end{definition}
+
+As with solution concepts, this is a \emph{counterfactual} view: we talk about
+which incorrect implementations would be rejected, not about the single
+observed run.
+
+\paragraph{(1) Non-vacuous test.}
+$T$ is \emph{non-vacuous} if
+\[
+  \exists I \in \mathcal I \setminus G:\; T(I) = \mathsf{fail}.
+\]
+At least one incorrect implementation is actually detected.
+
+\paragraph{(2) Satisfiable test.}
+$T$ is \emph{satisfiable} if
+\[
+  \exists I \in G:\; T(I) = \mathsf{pass}.
+\]
+At least one correct implementation survives.
+
+\paragraph{(3) Complete test.}
+$T$ is \emph{complete} for $(\mathcal I,G)$ if
+\[
+  \forall I \in \mathcal I:\;
+  T(I) = \mathsf{pass} \iff I \in G.
+\]
+This is the ideal but rarely attainable situation.
+
+\paragraph{Connection to the game view.}
+Just as forceability and the dependence notions talk about \emph{counterfactual}
+strategy profiles (``if player $j$ had chosen a different strategy, player $i$'s
+outcome would have changed''), test components talk about \emph{counterfactual}
+implementations (``if we had run the misbehaving implementation, this test would
+have failed''). In both cases the logic does not execute these alternatives; it
+only provides the language to state that such counterfactual runs exist and are
+separated by the specification.
+
+Consequently, what we actually specify here is not ``a system that is already
+correct'', but rather
+\begin{quote}
+a system whose interaction structure contains meaningful, adversarial tests;
+and correctness itself is obtained only under the extra assumption that those
+tests do in fact succeed on the run.
+\end{quote}

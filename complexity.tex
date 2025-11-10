@@ -1,0 +1,171 @@
+
+\section{Complexity of Forceability}
+\label{sec:k-complexity}
+
+We analyze the complexity of the forceability problem:
+given a finite structure $\mathcal M$, a closed \KFOL\ formula $\Phi$,
+and a player $i$, decide if $F_i(\Phi,\mathcal M)$ is true.
+We assume $\mathcal M$ is fixed and the formula $\Phi$ is the input.
+
+\subsection{The Broadcast Core is PSPACE-complete}
+
+First, we observe that the core calculus (without $\setminus V$ binders)
+is PSPACE-complete, by a standard reduction from Quantified
+Boolean Formulas (QBF).
+
+\begin{proposition}[PSPACE-completeness of Core]
+\label[proposition]{prop:pspace-core}
+For fixed $K \ge 2$, the forceability problem $F_i$
+for the broadcast fragment (no $\setminus V$ binders)
+over finite structures is PSPACE-complete.
+\end{proposition}
+
+\begin{proof}[Proof sketch]
+Membership in PSPACE is by a standard alternating Turing machine.
+We can evaluate $F_i(\Phi, \mathcal{M})$ by a recursive algorithm
+that simulates the game.
+For a binder $P_i x.\,\Phi'$, it existentially guesses $a \in |\mathcal{M}|$
+and recurses. For $P_j x.\,\Phi'$ (where $j \ne i$), it
+universally checks all $a \in |\mathcal{M}|$ and recurses.
+Since the domain $|\mathcal{M}|$ is finite, this takes polynomial
+space in the depth of the formula.
+
+Hardness is by reduction from QBF. Let $\psi$ be a QBF
+\[
+  Q_1 x_1 \dots Q_n x_n.\; f(x_1, \dots, x_n)
+\]
+over Boolean variables. We build a $K=2$ formula $\Phi_\psi$
+over a structure $\mathcal{M}$ with domain $\{0, 1\}$.
+This is a \textbf{one-hot} (\textbf{zero-sum} or \textbf{conflicting}) game,
+as defined in \Cref{sec:outcome-classes}.
+\[
+\Phi_\psi :=
+  P_{q(1)} x_1.\;
+  P_{q(2)} x_2.\; \dots\;
+  P_{q(n)} x_n.\;
+  \langle f, \neg f \rangle
+\]
+where $q(j) = 0$ if $Q_j = \exists$ and $q(j) = 1$ if $Q_j = \forall$.
+(Assuming $K=2$; for $K>2$ we pad with $\top$).
+The QBF $\psi$ is true if and only if player $P_0$ can
+force their objective, i.e., $F_0(\Phi_\psi, \mathcal{M})$ holds.
+Since QBF is PSPACE-complete, so is our problem.
+\end{proof}
+
+\subsection{IF-style Independence is NEXPTIME-hard}
+
+When we add the IF-style binders, the complexity jumps.
+The problem is now at least as hard as Dependency QBF (DQBF),
+which is NEXPTIME-complete.
+
+\begin{proposition}[NEXPTIME-hardness with IF-binders]
+\label[proposition]{prop:nexptime-if}
+For fixed $K \ge 2$, the forceability problem $F_i$
+with $\setminus V$ binders is NEXPTIME-hard.
+\end{proposition}
+
+\begin{proof}[Proof sketch]
+We reduce from DQBF. A DQBF instance consists of a formula
+\[
+  \forall y_1 \dots \forall y_n \; \exists x_1 \dots \exists x_m.\; f(\vec{y}, \vec{x})
+\]
+and for each $x_j$, a dependency set $D_j \subseteq \{y_1, \dots, y_n\}$.
+The instance is true iff there exist Skolem functions $f_1, \dots, f_m$,
+where each $f_j$ \emph{only} depends on the variables in $D_j$,
+such that $\forall \vec{y}, f(\vec{y}, f_1(D_1), \dots, f_m(D_m))$ holds.
+
+We build a $K=2$ formula $\Phi$ over $\mathcal{M}=\{0,1\}$.
+Let $P_1$ be the $\forall$ player and $P_0$ be the $\exists$ player.
+For each $x_j$, define its ``hidden set'' $H_j$ as the
+variables $x_j$ is \emph{not} allowed to see:
+$H_j := \{y_1, \dots, y_n\} \setminus D_j$.
+
+The formula $\Phi$ is:
+\[
+\begin{aligned}
+\Phi :=
+  P_1 y_1.\; \dots\; P_1 y_n.\;
+  & P_0 x_1 \setminus H_1.\; \\
+  & P_0 x_2 \setminus H_2.\; \\
+  & \dots \\
+  & P_0 x_m \setminus H_m.\;
+  \langle f, \neg f \rangle
+\end{aligned}
+\]
+The DQBF instance is true if and only if $F_0(\Phi, \mathcal{M})$ holds.
+
+($\Rightarrow$) If DQBF is true, the Skolem functions $f_j$ exist.
+$P_0$'s strategy $\profile_0$ is defined as $\profile_0(P_0 x_j \setminus H_j, s) := f_j(s|_{D_j})$.
+This strategy is valid because it is independent of $H_j$.
+By construction, it forces $f$ to be true.
+
+($\Leftarrow$) If $F_0(\Phi, \mathcal{M})$ holds, then a valid strategy
+$\profile_0$ exists. The binder $P_0 x_j \setminus H_j$
+\emph{forces} $\profile_0$ to be independent of $H_j$.
+This means $\profile_0$'s choice for $x_j$ can only depend on
+variables \emph{not} in $H_j$, which is exactly $D_j$.
+This strategy $\profile_0$ \emph{is} the set of
+Skolem functions $f_j(D_j)$ that witnesses the DQBF.
+\end{proof}
+
+\subsection{Coalitional Forceability}
+
+Having $K > 2$ also introduces new, hard problems
+not present in 2-player logic. We can ask if a
+\emph{coalition} of players can all win together.
+
+\begin{definition}[Coalitional Forceability]
+Let $S \subseteq \{0,\ldots,K-1\}$ be a coalition.
+$S$ can jointly force its objectives if
+\[
+F_S(\Phi,\mathcal M)
+:= \exists \{\profile_i\}_{i \in S}\;
+   \forall \{\profile_j\}_{j \notin S}\;
+   \bigwedge_{i \in S} \bigl( \llbracket \Phi \rrbracket_{\mathcal M, \profile} \bigr)_i = 1.
+\]
+\end{definition}
+
+\begin{proposition}[PSPACE-hardness of Coalitional Forceability]
+\label[proposition]{prop:coalitional-pspace}
+For any fixed $K \ge 2$, the coalitional forceability problem
+$F_S$ is PSPACE-hard, even without $\setminus V$ binders.
+\end{proposition}
+
+\begin{proof}[Proof sketch]
+The reduction is again from QBF. Let $\psi$ be a QBF as in
+\Cref{prop:pspace-core}.
+Let $S = \{0\}$ be the coalition, and let the opposing
+coalition be $J = \{1, \dots, K-1\}$.
+We map $\exists$ quantifiers to $P_0$ (the coalition) and
+$\forall$ quantifiers to $P_1$ (one of the opponents).
+\[
+\Phi_\psi :=
+  P_{q(1)} x_1.\; \dots\; P_{q(n)} x_n.\;
+  \langle f, \top, \dots, \top \rangle
+\]
+where $q(j) = 0$ if $Q_j = \exists$ and $q(j) = 1$ if $Q_j = \forall$.
+The other players $P_2, \dots, P_{K-1}$ have no moves and
+automatically win (their objective is $\top$).
+The QBF $\psi$ is true $\iff \exists \profile_0 \forall \profile_1$
+(and $\forall \profile_2 \dots$) such that $(\llbracket \Phi \rrbracket)_0 = 1$.
+This is exactly $F_S(\Phi_\psi, \mathcal{M})$ for $S=\{0\}$.
+The hardness holds.
+\end{proof}
+
+\subsection{Discussion}
+
+These three statements together characterize the computational complexity
+of \KFOL:
+
+\begin{itemize}
+  \item The broadcast $K$-player fragment is PSPACE-complete
+        (\Cref{prop:pspace-core})
+  \item Adding IF-style independence increases hardness to at least NEXPTIME
+        (\Cref{prop:nexptime-if})
+  \item Coalitional forceability is PSPACE-hard even in the broadcast fragment
+        (\Cref{prop:coalitional-pspace})
+\end{itemize}
+
+These results establish that \KFOL\ forceability is a computationally rich
+problem that quantifies over strategies under role-indexed information
+constraints.

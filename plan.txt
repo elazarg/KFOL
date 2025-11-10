@@ -1,0 +1,120 @@
+Plan: Three-Level Factoring of K-FOL to Match MPST
+0. Motivation
+We want to justify the claim:
+
+“The ‘protocol half’ of K-FOL is the same thing, up to encoding, as MPST local projections; the ‘payoff half’ is the extra structure K-FOL adds on top.”
+To make that defensible, the objects compared on both sides must forget payoffs to the same degree.
+1. Start from the shape of a K-FOL formula
+A K-FOL formula is fundamentally of the form:
+
+[
+
+\Phi ;=; \underbrace{\text{Prefix}}{\text{linear, player-tagged, visibility-aware script}} ;+; \underbrace{\text{Terminal}}{\langle \fo_0,\dots,\fo_{K-1} \rangle}.
+
+]
+So: (Script, Goal-Tuple).
+2. Define three KFOL-side projections
+We introduce three levels, not two.
+
+(a) Pure script view
+[
+
+\Script_i(\Phi)
+
+]
+
+This is the purely structural, purely forgetful per-participant view:
+keep the linear order of moves,
+keep, for each move, who performs it,
+keep the visibility / slash information as it affects (i),
+drop the terminal entirely,
+drop even the fact that (i) had a goal.
+Result: “What does participant (i) do/see in this interaction?” — nothing about winning.
+This is the KFOL thing that is on the same level as MPST local projection.
+(b) Goal extraction
+[
+
+\Goal_i(\Phi) ;:=; \fo_i
+
+]
+
+This just picks the (i)-th component of the terminal K-tuple. No protocol structure, just “what would (i) like?”
+(c) Semantic refinement (the original one)
+[
+
+\AdvOp_i(\Phi) ;=; \Force\bigl(\Script_i(\Phi), \Goal_i(\Phi)\bigr)
+
+]
+
+i.e. “given this script (which constrains information) and this goal, can (i) force it against all other strategies?”
+This makes explicit what was previously bundled together.
+3. MPST side
+You already have
+
+[
+
+\mathcal T : \KFOL \to \text{GlobalMPST}
+
+]
+
+that erases goals and keeps the script.
+Then MPST gives you the usual local projection:
+
+[
+
+(\mathcal T(\Phi)) \upharpoonright_i
+
+]
+
+which is, again, just the script for participant (i).
+So on the MPST side we also have a “pure script for (i)”.
+4. The commuting square that actually works
+Now we can state the defensible square:
+[
+
+\begin{array}{ccc}
+
+\KFOL & \xrightarrow{;\mathcal T;} & \text{GlobalMPST} \
+
+\Big\downarrow{\Script_i} & & \Big\downarrow{(\cdot)\upharpoonright_i} \
+
+\text{Per-Player Script} & \xrightarrow{;\cong;} & \text{Local MPST for } i
+
+\end{array}
+
+]
+Left-down: forget everything but the script relevant to (i).
+Top-right-down: translate to MPST, then project locally.
+Bottom arrow: “these two are the same kind of object.”
+This works because both paths now forget the goal.
+5. Where the goal tuple lives
+Once the structural square is established, you say:
+
+“KFOL ≠ MPST, because KFOL also has (\Goal_i(\Phi)) for every (i).”
+“This extra K-tuple of goals is what lets us define (\AdvOp_i) / forceability, i.e. game-theoretic judgments on top of the same protocol skeleton.”
+So the contribution is positioned as:
+
+Protocol layer (validated by the commuting square with MPST).
+Payoff layer (new, KFOL-only).
+Game-semantic layer (forceability over 1+2).
+6. Coalitions / participant partitions (optional but consistent)
+If we need fewer participants than K, we first fix a surjection
+
+[
+
+\pi : {0,\dots,K-1} \twoheadrightarrow {A_1,\dots,A_m}
+
+]
+
+and apply your existing coalition projection on the KFOL side to get a formula with one goal per participant.
+Then we run the same square with (A_j) instead of (i). It’s the same pattern, just after grouping.
+7. How to present it in the paper
+You can literally write:
+
+“Every K-FOL specification splits into a protocol part and a payoff part.
+
+(i) The protocol part, when viewed from one participant, coincides with MPST local projection.
+
+(ii) The payoff part is retained only on the K-FOL side, enabling game-theoretic reasoning (forceability, coalitions).
+
+Therefore K-FOL extends, rather than replaces, the MPST style.”
