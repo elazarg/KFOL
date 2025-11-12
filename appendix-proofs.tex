@@ -69,3 +69,54 @@ Since each constructor is forced in this way, no alternative definition of
 $\AbsOp_i$ can satisfy (1)–(3). Finally, choosing $i=0$ or $i=1$ just swaps the
 two components, so the two embeddings are related by the role-rotation.
 \end{proof}
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[
+  node distance=9mm and 26mm,
+  cls/.style={draw, rounded corners, inner sep=2.2pt, align=center, font=\small, fill=white},
+  imply/.style={-Latex, very thick},
+  compat/.style={-Latex, dashed},
+  note/.style={font=\scriptsize, inner sep=1pt}
+]
+
+% ----- implication spine (left column) -----
+\node[cls] (PI) {Perfect\\Information};
+\node[cls, below=12mm of PI] (HO) {Hierarchical\\Observation\\\footnotesize(static/dynamic)};
+\node[cls, below=9mm of HO] (FF) {Fork-free\\\footnotesize(no info forks)};
+\node[cls, below=9mm of FF] (PM) {Public-mediated\\Signalling\\\footnotesize(noninterf.\ + declass.)};
+\node[cls, below=9mm of PM] (PR) {Perfect Recall\\\footnotesize(no forgetting)};
+
+\draw[imply] (PI) -- (HO);
+\draw[imply] (HO) -- (FF);
+\draw[imply] (FF) -- (PM);
+
+% ----- feeders hitting PM horizontally -----
+\node[cls, left=28mm of PM] (CS) {Common-signal\\Games};
+\node[cls, right=28mm of PM] (RSR) {Role-stratified\\Recall};
+
+\draw[imply] (CS) -- (PM);
+\draw[imply] (RSR) -- (PM);
+
+% ----- orthogonal knobs (right column, row-aligned) -----
+\node[cls, right=28mm of HO] (LY) {Layered / Phased\\Visibility};
+\node[cls, right=28mm of FF] (BDW) {Bounded Signalling\\Depth / Width};
+\node[cls, right=28mm of PM] (BTW) {Bounded Treewidth\\\footnotesize(undirected)};
+
+% dashed compat, straight and non-crossing
+\draw[compat] (LY.west) -- (HO.east);
+\draw[compat] (BDW.west) -- (FF.east);
+\draw[compat] (BTW.west) -- (PM.east);
+\draw[compat] (PR.east) -- ++(12mm,0); % light touch: PR is orthogonal baseline
+
+% ----- legend (tight) -----
+\node[note, below=10mm of PR] (legend) {%
+\begin{tikzpicture}[baseline=(L.base)]
+  \node (L) {};
+  \draw[imply] (0,0) -- +(8mm,0); \node[anchor=west] at (10mm,0) {implication};
+  \draw[compat] (0,-3.2mm) -- +(8mm,0); \node[anchor=west] at (10mm,-3.2mm) {compatible / orthogonal};
+\end{tikzpicture}};
+
+\end{tikzpicture}
+\caption{Information-structure relationships.}
+\end{figure}

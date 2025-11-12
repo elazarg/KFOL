@@ -1,0 +1,278 @@
+\section{Cryptographic Primitives: Capabilities, Axioms, and Relevance}
+\label{app:crypto}
+
+This appendix summarizes standard cryptographic primitives in a way that is
+useful for reasoning about information flow and coordination. For each
+primitive we list: (i) what it provides in standard terms; (ii) canonical
+security notions (assumptions/axioms); (iii) an intuitive/abstract reading; and
+(iv) potential relevance to \KFOL.
+
+\paragraph{Notation.}
+We write $i,j$ for principals/roles, $pk_i,sk_i$ for public/secret keys,
+$c$ for commitments/ciphertexts, and $\Pi$ for public assertions/certificates.
+
+\subsection{Commitment Schemes}
+\textbf{What it provides (standard).}
+Two-phase interface: $\mathsf{Com}(x;r)\to c$ (commit) and
+$\mathsf{Open}(c;x;r)$ (reveal). Pedersen, hash-based, etc.
+
+\textbf{Canonical security notions.}
+\emph{Hiding} (computationally, $c$ leaks no information about $x$).
+\emph{Binding} (no adversary can open $c$ to two distinct values).
+\emph{Correctness} (honest opens verify).
+
+\textbf{Intuitive / abstract meaning.}
+Separation of \emph{declaration} from \emph{definition}: “fixed now, opaque
+until chosen to reveal.” Lets you assert relations later (equality, membership)
+without retroactively changing the value.
+
+\textbf{Potential relevance to \KFOL.}
+Model “causal without value” dependencies; schedule \emph{when} a value becomes
+usable; link hidden choices across branches by later equalities.
+
+\subsection{Zero-Knowledge Proofs (Commit-and-Prove)}
+\textbf{What it provides (standard).}
+Prover convinces verifier that a statement $\phi(w;z)$ is true about a hidden
+witness $w$ (often committed) and public input $z$, revealing nothing beyond
+validity (Sigma protocols, SNARKs/STARKs).
+
+\textbf{Canonical security notions.}
+\emph{Soundness} (false statements are unprovable);
+\emph{Zero-Knowledge} (no leakage beyond truth);
+optionally \emph{(Knowledge-)soundness} (a valid proof implies existence of a
+witness, sometimes extractable in the ideal model).
+
+\textbf{Intuitive / abstract meaning.}
+“Declaration + properties”: you can publish any property of a hidden value
+without revealing the value itself; selectively disclose.
+
+\textbf{Potential relevance to \KFOL.}
+Express rich constraints on hidden choices (range, membership, equality, functional
+relationships) while preserving independence/visibility structure.
+
+\subsection{Digital Signatures}
+\textbf{What it provides (standard).}
+$\mathsf{Sign}_{sk_i}(m)\to\sigma$, $\mathsf{Verify}_{pk_i}(m,\sigma)\in\{\top,\bot\}$.
+
+\textbf{Canonical security notions.}
+\emph{EUF-CMA unforgeability}; \emph{transferable verifiability};
+(non-\emph{deniable}) \emph{non-repudiation}.
+
+\textbf{Intuitive / abstract meaning.}
+Attribution that survives transfer: anyone can check who endorsed what.
+
+\textbf{Potential relevance to \KFOL.}
+Attach statements to roles; make public assertions accountable; distinguish
+authorized from informal claims.
+
+\subsection{Public-Key Encryption (PKE)}
+\textbf{What it provides (standard).}
+$\mathsf{Enc}_{pk_j}(m)\to c$, $\mathsf{Dec}_{sk_j}(c)\to m$. Typically via KEM+AEAD.
+
+\textbf{Canonical security notions.}
+\emph{IND-CCA confidentiality} (best practice); authenticity only if combined with signatures.
+
+\textbf{Intuitive / abstract meaning.}
+\emph{Capability split}: public \emph{write} to $j$’s mailbox; private \emph{read}
+by $j$ only. Adds a private edge to $j$ without informing others.
+
+\textbf{Potential relevance to \KFOL.}
+Implements private visibility / IF-style independence; enables hidden coordination
+without disturbing public knowledge.
+
+\subsection{Symmetric Encryption (AEAD)}
+\textbf{What it provides (standard).}
+Authenticated encryption with associated data: $\mathsf{Enc}_k(m,ad)\to c$,
+$\mathsf{Dec}_k(c,ad)\to m/\bot$.
+
+\textbf{Canonical security notions.}
+\emph{IND-CPA/CCA confidentiality} and \emph{INT-CTXT integrity}; nonce-discipline assumptions.
+
+\textbf{Intuitive / abstract meaning.}
+A secure channel once a key exists; $ad$ binds context (session, role, epoch).
+
+\textbf{Potential relevance to \KFOL.}
+Implements reliable private subchannels after key agreement; preserves global
+structure while enabling local secrecy.
+
+\subsection{Hashes, Merkle Trees, and Vector Commitments}
+\textbf{What it provides (standard).}
+Binding, succinct handles for data; short membership/non-membership proofs.
+
+\textbf{Canonical security notions.}
+\emph{Collision resistance} (hashes); \emph{position-binding} and proof soundness (Merkle/VC).
+
+\textbf{Intuitive / abstract meaning.}
+Names for large structures; selective disclosure of parts.
+
+\textbf{Potential relevance to \KFOL.}
+Attach short certificates to public state; avoid flooding the public script when
+only a property matters.
+
+\subsection{Public Randomness: Beacons and VRFs}
+\textbf{What it provides (standard).}
+Common unpredictable randomness (\emph{beacon}); per-identity, privately sampled
+but publicly verifiable randomness (\emph{VRF}).
+
+\textbf{Canonical security notions.}
+\emph{Unpredictability}, \emph{uniqueness}, \emph{bias-resistance}.
+
+\textbf{Intuitive / abstract meaning.}
+Stochastic moves that are either common-knowledge (beacon) or privately verifiable (VRF).
+
+\textbf{Potential relevance to \KFOL.}
+Model probabilistic binders without introducing side information; coordinate
+random choices.
+
+\subsection{Secret Sharing and Threshold Cryptography}
+\textbf{What it provides (standard).}
+$t$-of-$n$ reconstruction for secrets (Shamir); threshold signatures/decryption.
+
+\textbf{Canonical security notions.}
+\emph{$t$-privacy} ($< t$ learn nothing), \emph{$t$-correctness} ($\ge t$ succeed);
+\emph{monotonicity}.
+
+\textbf{Intuitive / abstract meaning.}
+Fractional permissions / joint custody; coalitions gate learning or action.
+
+\textbf{Potential relevance to \KFOL.}
+Coalition-controlled reveals; “broadcaster/choke-point” nodes realized as threshold events.
+
+\subsection{Secure Multiparty Computation (MPC)}
+\textbf{What it provides (standard).}
+Compute $y=f(x_1,\dots,x_n)$ while keeping inputs private; reveal only agreed outputs.
+
+\textbf{Canonical security notions.}
+\emph{Correctness}, \emph{privacy} against coalitions up to a threshold; optionally
+\emph{robustness}/\emph{fairness}.
+
+\textbf{Intuitive / abstract meaning.}
+Compute on secrets; disclose only what the specification allows.
+
+\textbf{Potential relevance to \KFOL.}
+Publish complex functions of hidden choices without violating independence; keep value-visibility minimal.
+
+\subsection{Append-Only Ledgers / Bulletin Boards}
+\textbf{What it provides (standard).}
+Public, tamper-evident, globally ordered log of statements.
+
+\textbf{Canonical security notions.}
+\emph{Append-only}; \emph{consistency} (common prefix); liveness under network assumptions.
+
+\textbf{Intuitive / abstract meaning.}
+A shared timeline; prevents backdating and equivocation.
+
+\textbf{Potential relevance to \KFOL.}
+Implements a globally agreed causal order for public assertions; supports time-based reasoning.
+
+\subsection{Verifiable Delay Functions (VDFs)}
+\textbf{What it provides (standard).}
+Enforces a minimum delay $\Delta$ to learn $y=\mathsf{VDF}^\Delta(x)$ with a
+short, quickly verifiable proof.
+
+\textbf{Canonical security notions.}
+\emph{Sequentiality}, \emph{uniqueness}, \emph{fast verification}.
+
+\textbf{Intuitive / abstract meaning.}
+Time-locks: information becomes available only after $\Delta$.
+
+\textbf{Potential relevance to \KFOL.}
+Model latency constraints (“reveal only after time $t$”) without adding new players.
+
+\subsection{Anonymous Credentials; Ring and Group Signatures}
+\textbf{What it provides (standard).}
+Authorized statements with hidden author (ring); membership-certified anonymity with optional opening/revocation (group/credentials).
+
+\textbf{Canonical security notions.}
+\emph{Unforgeability}, \emph{anonymity}; (un)linkability depending on scheme; accountable opening for group sigs.
+
+\textbf{Intuitive / abstract meaning.}
+Authorization decoupled from identity; speak as a class without revealing who.
+
+\textbf{Potential relevance to \KFOL.}
+Model “someone with role-rights said this” without disturbing role anonymity.
+
+\subsection{Oblivious Transfer (OT), Mixnets, and ORAM}
+\textbf{What it provides (standard).}
+OT: receiver learns one of many items, sender learns not which.
+Mixnets: unlink sender/receiver; ORAM: hide access patterns to memory.
+
+\textbf{Canonical security notions.}
+Standard indistinguishability definitions against traffic/choice observers.
+
+\textbf{Intuitive / abstract meaning.}
+Hides meta-information (who talks to whom; which index was used).
+
+\textbf{Potential relevance to \KFOL.}
+If independence should hold even against traffic analysis, these support private edges without meta-leakage.
+
+\bigskip
+\noindent\textbf{Design takeaway.}
+For most information-flow arguments one can assume the following \emph{axioms}
+without committing to a concrete scheme:
+\begin{itemize}
+  \item \emph{Declaration vs.\ definition:} values can be fixed yet hidden until revealed (commitment).
+  \item \emph{Selective disclosure:} properties of hidden values can be asserted without revealing the values (zero-knowledge).
+  \item \emph{Capability split:} public write / private read channels exist (PKE); private authenticated channels exist given a key (AEAD).
+  \item \emph{Attribution:} transferable accountability for statements (signatures).
+  \item \emph{Coalition gates:} certain reveals/actions require threshold participation (secret sharing/threshold crypto).
+  \item \emph{Order/time:} public append-only order and enforceable delays can be assumed (ledger, VDF).
+\end{itemize}
+These are sufficient to justify common \KFOL\ constructions around visibility,
+independence, and coordination \emph{without} embedding cryptographic details in
+the language.
+
+\subsection{Payoff as Evidence of (In)Capability or Knowledge}
+\label{subsec:payoff-ignorance}
+
+A recurring theme across economics, learning theory, and cryptography is using
+\emph{payoffs} (or scores) as operational evidence about an agent’s information
+state or computational capability. The informal reading is: if an agent is
+\emph{rational} (utility-maximizing) and nevertheless fails to achieve a certain
+payoff threshold that would be attainable by someone with a specific piece of
+knowledge or computational ability, then the observed shortfall is evidence that
+the agent lacks that knowledge/ability. This idea appears under several names:
+
+\paragraph{Rational (Interactive) Proofs and Utility Gaps.}
+In \emph{rational proofs} (a.k.a.\ \emph{rational interactive proofs}), the
+verifier designs payments so that a prover maximizes expected payoff if and only
+if it supplies correct information (e.g., a correct computation). The key
+notion is a \emph{utility gap}: there exists $\delta>0$ such that any strategy
+producing the correct answer yields an expected payoff at least $\delta$ higher
+than any incorrect strategy. Persistently earning less than the optimal payoff
+is then formal evidence of \emph{incapability} (or irrationality). This is the
+closest formalization of ``payoff $\Rightarrow$ (lack of) capability.''
+
+\paragraph{Proper Scoring Rules and Peer Prediction.}
+With \emph{strictly proper scoring rules}, truthful reports of one’s belief
+uniquely maximize expected score. Systematically suboptimal scores thus serve as
+evidence that the reporter \emph{lacks} accurate information (or chose to
+misreport against interest). When ground truth is unavailable, \emph{peer
+prediction} and \emph{Bayesian Truth Serum} engineer payoffs so that honest,
+well-informed reports form (the unique) best response in equilibrium.
+
+\paragraph{Signaling and Separating Equilibria.}
+In \emph{costly signaling} (e.g., Spence), only high-ability or well-informed
+types find it profitable to take a particular action. Failure to take the costly
+signal is Bayesian evidence of \emph{not} being the high-ability/informed type,
+again reading payoff-differences as evidence about capability.
+
+\paragraph{Algorithmic Knowledge (Resource-Bounded Knowing).}
+\emph{Algorithmic knowledge} models explicit knowledge via a knowledge algorithm:
+an agent ``knows'' $\varphi$ precisely when its algorithm can derive $\varphi$
+within given resources. Coupled with payoff design (as above), inability to
+produce a derivation/witness that would strictly improve payoff is evidence of
+non-knowledge under the stipulated resource bound.
+
+\medskip
+\noindent
+\textbf{Remark on payoff granularity.}
+The literature typically relies on \emph{numeric} payoffs or scores to create a
+strict improvement margin (the utility gap $\delta$). In the current 
+$\{0,1\}$-valued setting, such margins collapse: ``profitable deviation'' reduces
+to turning a $0$ into a $1$, and you cannot use a \emph{larger} loss in one game
+to certify the ability to secure a \emph{smaller} but positive payoff elsewhere.
+If you later extend to graded payoffs, you can leverage cross-game arguments of
+the form: ``accepting a higher loss here credibly certifies an ability that
+secures a smaller gain there,'' which is the standard currency in scoring-rule
+and rational-proof analyses.

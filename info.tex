@@ -1,0 +1,60 @@
+
+\section{IF-style binders for roles}
+\label{subsec:if-binders}
+We refine the player binder to carry an \emph{independence set}, in the style of
+Independence-Friendly (IF) logic~\cite{HintikkaSandu1989}. The syntax becomes
+\[
+  \Phi \Coloneqq
+  \langle \fo_0,\dots,\fo_{K-1} \rangle
+  \;\mid\;
+  P_i x / J.\,\Phi
+\]
+where $i \in \{0,\dots,K-1\}$ is the role making the move, $x$ is the chosen
+object, and $J \subseteq \{0,\dots,K-1\}$ is a finite set of \emph{roles from
+which this choice must be independent}. Informally,
+\emph{``player $i$ chooses a value for $x$, and the future moves of all roles in
+$J$ must not be allowed to depend on this choice.''}
+
+\paragraph{Semantics.}
+The semantics of this binder is identical to $P_i x.\,\Phi$,
+but it adds a \emph{constraint on valid strategies}.
+A strategy profile $\profile$ is \emph{valid} for $\Phi$ if,
+for every binder $P_i x \setminus V.\,\Phi'$, the strategy
+function $\profile_i$ is independent of $V$.
+
+Formally, for any two assignments $s_1, s_2$ over the free
+variables of $P_i x \setminus V.\,\Phi'$,
+\[
+\bigl(\forall v \notin V,\ s_1(v) = s_2(v)\bigr)
+\implies
+\profile_i(P_i x \setminus V.\,\Phi', s_1) = \profile_i(P_i x \setminus V.\,\Phi', s_2).
+\]
+(Note: The implication states that if two assignments agree on all
+variables \emph{except} possibly for those in $V$, the strategy must
+produce the same choice. This formally captures independence from $V$.)
+
+The definitions of evaluation $\llbracket\cdot\rrbracket$ and forceability $F_i$
+(\Cref{def:k-semantics} and \Cref{def:k-force})
+are unchanged, but the quantification $\exists \profile_i$
+is now restricted to \emph{valid} strategies.
+
+\subsection{Syntax Sugar: Where-Clauses}
+\label{subsec:where}
+For convenience we allow binders to carry an explicit local condition, in the
+style of refined MPST. A binder
+\[
+  P_i x : \psi.\,\Phi
+\]
+is required to use only variables that were bound earlier in the prefix and are
+visible to player $i$ (i.e.\ not hidden from $i$ by a slash-set). Its meaning is
+defined by desugaring to the core calculus as follows:
+\begin{enumerate}[nosep]
+  \item $\psi$ is conjoined to player $i$'s terminal component, expressing that
+        $i$ is responsible for establishing it;
+  \item for every other player $j$, every subformula of $j$'s terminal component
+        that depends on $x$ is wrapped under $\psi \rightarrow (\cdot)$,
+        expressing that $j$ may rely on $i$ having established $\psi$.
+\end{enumerate}
+Intuitively, a where-clause records at the point of the move which property the
+owner promises to make true, and makes this promise available as an assumption
+to later players.

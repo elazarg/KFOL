@@ -1,0 +1,763 @@
+
+\section{Structural Operations: A General Framework}
+\label{sec:structural-framework}
+
+Before introducing specific binary operations like $\otimes$ and $\leaky$, 
+we develop a general theory of \emph{structural operations} on \KFOL\ formulas.
+The intuition is simple: a structural operation combines games by interleaving 
+their syntactic structure (the prefix) and composing their outcomes (the terminal), 
+but never reorders moves \emph{within} a single component game or inspects 
+semantic properties like forceability or equilibrium structure.
+
+\paragraph{Informal overview.}
+Think of each \KFOL\ formula as an abstract syntax tree: a sequence of 
+player-labeled binders followed by a terminal tuple. A \emph{structural combinator} 
+merges multiple such trees by:
+\begin{enumerate}[nosep]
+  \item \textbf{Shuffling prefixes}: interleaving the binders while preserving 
+    the relative order within each component,
+  \item \textbf{Managing information flow}: optionally adding IF-style 
+    independence constraints ($\setminus V$) to control visibility,
+  \item \textbf{Composing terminals}: building the outcome tuple from the 
+    component outcomes via Boolean operations.
+\end{enumerate}
+Crucially, these operations are \emph{syntactic} and \emph{local}: they operate 
+on the structure of formulas without examining game-theoretic properties or 
+restructuring individual components internally.
+
+\paragraph{Player renaming convention.}
+When combining formulas $\Phi^{(1)}, \ldots, \Phi^{(m)}$ over disjoint signatures, 
+we automatically rename players to fresh, disjoint blocks of indices. If 
+$\Phi^{(i)}$ is a $K_i$-FOL formula, its players are renumbered to 
+$\{\sum_{j<i} K_j, \ldots, \sum_{j \leq i} K_j - 1\}$, so the combined formula 
+is a $K'$-FOL formula where $K' = \sum_{i=1}^m K_i$. This ensures player 
+identities remain distinct; merging players across games is handled separately 
+via coalition projection (\Cref{def:coalitions}).
+
+\begin{definition}[Structural combinator]
+\label{def:structural-combinator}
+A \textbf{structural combinator} is an operator $C$ that takes $m \geq 2$ 
+formulas $\Phi^{(1)}, \ldots, \Phi^{(m)}$ over pairwise disjoint signatures 
+$\profile_1, \ldots, \profile_m$ and produces a formula 
+$\Psi$ over $\profile = \bigcup_{i=1}^m \profile_i$ satisfying the following conditions.
+
+After player renaming, write each component as
+\[
+\Phi^{(i)} \;=\; P_{k_1^{(i)}} x_1^{(i)}.\, \cdots\, P_{k_{n_i}^{(i)}} x_{n_i}^{(i)}.\,
+\langle \fo_0^{(i)}, \ldots, \fo_{K_i-1}^{(i)} \rangle.
+\]
+
+\smallskip
+\noindent\textbf{(SC1) Shuffle structure.}
+The output prefix is determined by a \emph{shuffle} 
+\[
+\profile: \{1, \ldots, N\} \to \bigcup_{i=1}^m \{i\} \times \{1, \ldots, n_i\},
+\]
+where $N = \sum_{i=1}^m n_i$, satisfying:
+\begin{itemize}[nosep]
+  \item $\profile$ is a bijection (every input binder appears exactly once),
+  \item For each game $i$, if $\profile(j) = (i, k)$ and $\profile(j') = (i, k')$ 
+    with $j < j'$, then $k < k'$ (order preservation within components).
+\end{itemize}
+The output is
+\[
+\Psi \;=\; P_{\ell_1} y_1 \setminus V_1.\, \cdots\, P_{\ell_N} y_N \setminus V_N.\,
+\langle \psi_0, \ldots, \psi_{K'-1} \rangle,
+\]
+where, if $\profile(j) = (i, k)$, then $y_j = x_k^{(i)}$, $\ell_j = k_k^{(i)}$, 
+and $V_j \subseteq \{y_1, \ldots, y_{j-1}\}$ (IF-constraints may reference only 
+earlier variables in the linear prefix).
+
+\smallskip
+\noindent\textbf{(SC2) Terminal compositionality.}
+For each output index $\ell \in \{0, \ldots, K'-1\}$ fix a Boolean formula
+\[
+B_\ell\bigl( \{ p^{(i)}_j \mid 1 \le i \le m,\ 0 \le j \le K_i - 1 \} \bigr)
+\]
+in propositional variables $p^{(i)}_j$ indexed by the components and their
+players. Given input formulas
+\[
+\Phi^{(i)} \;=\; P_{k_1^{(i)}} x_1^{(i)}.\, \cdots.\, P_{k_{n_i}^{(i)}} x_{n_i}^{(i)}.\,
+\langle \fo^{(i)}_0, \ldots, \fo^{(i)}_{K_i-1} \rangle
+\quad (1 \le i \le m),
+\]
+the output terminal is
+\[
+\langle \psi_0, \ldots, \psi_{K'-1} \rangle
+\quad\text{where}\quad
+\psi_\ell \;:=\; B_\ell\bigl( \{ \fo^{(i)}_j \}_{i,j} \bigr).
+\]
+We require \emph{block uniformity}: the Boolean formulas $(B_0, \ldots, B_{K'-1})$ 
+must treat the component games symmetrically. Permuting entire player blocks in 
+the output corresponds to permuting which component game's formulas appear in 
+the Boolean construction, ensuring no artificial preference for specific component positions.
+
+\smallskip
+\noindent\textbf{(SC3) Player preservation.}
+\begin{itemize}[nosep]
+  \item The output uses exactly the player indices $\{0, \ldots, K'-1\}$ from 
+    the renamed inputs (no new indices introduced),
+  \item Each binder position preserves its player index: if $\profile(j) = (i, k)$, 
+    then $\ell_j = k_k^{(i)}$ (no player duplication or fusion),
+  \item The output terminal has exactly $K'$ components (arity matches the player count).
+\end{itemize}
+\end{definition}
+
+\begin{remark}[Information flow vs.\ shuffle choice]
+Condition (SC1) separates two orthogonal design choices: the \emph{shuffle} 
+$\profile$ (which positions get which binders) and the \emph{IF-pattern} 
+$(V_1, \ldots, V_N)$ (which information is actually visible). 
+The same shuffle with different IF-patterns yields combinators with 
+identical syntactic structure but radically different information flow. 
+This distinction is central to the relationship between $\leaky$ and $\otimes$ 
+(see \S\ref{subsubsec:seq-vs-tensor}).
+\end{remark}
+
+\begin{remark}[Cross-game outcome dependencies]
+The Boolean formulas $B_\ell$ in (SC2) explicitly permit a player's objective 
+to depend on objectives from multiple input games. 
+For instance, when combining two 2-FOL formulas $\Phi$ and $\Psi$ with 
+terminals $\langle\fo_0, \fo_1\rangle$ and $\langle\psi_0, \psi_1\rangle$, 
+we can define 
+\[
+B_0 = p^{(1)}_0 \wedge p^{(2)}_1, \quad
+B_1 = p^{(1)}_1 \wedge p^{(2)}_0, \quad
+B_2 = \top, \quad
+B_3 = \top
+\]
+to obtain the output terminal
+$\langle \fo_0 \wedge \psi_1, \fo_1 \wedge \psi_0, \top, \top \rangle$. 
+This enables constructions like the cross-diagonal product $\circledast$ 
+and models scenarios where a physical player occupies different roles in 
+different subgames.
+\end{remark}
+
+\begin{lemma}[Normal form]
+\label{lem:combinator-normal-form}
+Every structural combinator is uniquely determined (up to $\alpha$-equivalence 
+of bound variables and up to block-preserving permutations of player indices) 
+by the triple $(\profile, (V_1, \ldots, V_N), (B_0, \ldots, B_{K'-1}))$ consisting of:
+\begin{enumerate}[nosep]
+  \item A bijective shuffle $\profile$ as in (SC1),
+  \item An IF-pattern $(V_1, \ldots, V_N)$ with $V_j \subseteq \{y_1, \ldots, y_{j-1}\}$,
+  \item A tuple of Boolean formulas $(B_0, \ldots, B_{K'-1})$ as in (SC2).
+\end{enumerate}
+Conversely, any such triple satisfying (SC1)–(SC3) defines a structural combinator.
+\end{lemma}
+
+This normal form shows that structural combinators have no hidden degrees of 
+freedom beyond the three explicit design choices.
+
+\begin{proposition}[Combinator closure]
+\label{prop:combinator-closure}
+The class of structural combinators is closed under composition: if $C_1$ and 
+$C_2$ are structural combinators, then 
+$C_1(\Phi, C_2(\Psi, \Theta))$ is equivalent to a single structural combinator 
+$C_3(\Phi, \Psi, \Theta)$ acting directly on the original components.
+\end{proposition}
+\begin{proof}[Proof sketch]
+Composing shuffles yields a shuffle (by transitivity of order preservation and 
+composition of bijections). Composing Boolean formulas on terminals yields a 
+Boolean function. The union of two prefix-respecting IF-patterns is 
+prefix-respecting: if $V_j$ references only earlier variables and $V'_k$ does 
+likewise in the nested structure, their combined pattern in the flattened prefix 
+references only earlier variables. Player preservation (SC3) is maintained 
+because composition does not introduce, duplicate, or merge player indices.
+\end{proof}
+
+\paragraph{Decomposability.}
+Sometimes we want to know whether the combined game still exposes each component
+verbatim. Call a structural combinator \emph{decomposable} if, for every input
+tuple $(\Phi^{(1)},\dots,\Phi^{(m)})$, each component $\Phi^{(i)}$ can be read
+back from the output by:
+(i) selecting exactly those binders whose source in the shuffle was component $i$,
+(ii) deleting from their IF-sets only variables coming from other components, and
+(iii) projecting the terminal to the entries corresponding to component $i$'s players.
+A sufficient and necessary condition for this simple reconstruction is:
+\emph{prefix transparency} (the IF-sets $V_j$ never reference variables from the 
+same component $i$ when $\profile(j) = (i,k)$) and \emph{terminal transparency} 
+(every input terminal formula $\fo^{(i)}_j$ appears verbatim among the output 
+terminals, i.e., $B_\ell = p^{(i)}_j$ for some $\ell$).
+The basic products ($\leaky$ and $\otimes$ in \Cref{ex:prototypical-combinators} below) 
+both satisfy these conditions.
+
+\paragraph{Structural morphisms (unary operations).}
+While structural combinators merge multiple games (arity $m \geq 2$), we also 
+consider \emph{structural morphisms} that transform a single game (arity $m=1$). 
+Some morphisms preserve the player set structure (like componentwise complement), 
+while others intentionally violate (SC3) by restructuring player identities through 
+fusion or relabeling. Examples include:
+\begin{itemize}[nosep]
+  \item The permutation action $\pi \cdot \Phi$ for $\pi \in S_K$ 
+    (\Cref{def:permute-k}), which relabels all binders and permutes the terminal 
+    (violates (SC3) by changing player indices),
+  \item Coalition projections $\CoalProjAnd{\pi}$ and $\CoalProjOr{\pi}$, which 
+    reduce a $K$-FOL formula to a 2-FOL formula by merging roles according to 
+    a surjection $\pi: \{0,\ldots,K-1\} \twoheadrightarrow \{A, B\}$ 
+    (violates (SC3) by fusing players),
+  \item The componentwise complement $\Comp{\Phi}$, which negates all terminal 
+    formulas while preserving the player set and prefix structure (preserves (SC3)).
+\end{itemize}
+We reserve the term \emph{combinator} for operators satisfying (SC3) and 
+\emph{morphism} for unary operators (some of which may violate (SC3)). 
+The full algebra of \KFOL\ is built by composing combinators and morphisms.
+
+\begin{example}[Prototypical combinators]
+\label[example]{ex:prototypical-combinators}
+Two fundamental structural combinators illustrate the extremes of information flow:
+\begin{enumerate}[nosep]
+  \item The \textbf{sequential (leaky)} product $\Phi \leaky \Psi$ uses a 
+    concatenation shuffle with empty IF-pattern ($V_j = \emptyset$ for all $j$), 
+    allowing $\Psi$-moves to observe all $\Phi$-moves.
+    
+  \item The \textbf{tensor (independent)} product $\Phi \otimes \Psi$ uses 
+    the same concatenation shuffle but adds IF-constraints to enforce strategic 
+    independence: $\Psi$-strategies must be independent of all $\Phi$-moves.
+\end{enumerate}
+Both use the same shuffle and concatenate terminals; only the IF-pattern differs. 
+Precise definitions and properties appear in \S\ref{subsubsec:seq-vs-tensor}.
+\end{example}
+
+\begin{example}[Non-decomposable: cross-diagonal product]
+\label[example]{ex:non-decomposable}
+The cross-diagonal construction $\Phi \circledast \Psi$, which we define later in \Cref{def:coalitions} via coalition projection,
+is \emph{not} decomposable because it violates terminal transparency.
+Its terminal
+\[
+\langle \fo_0 \wedge \psi_1, \fo_1 \wedge \psi_0 \rangle
+\]
+mixes objectives from both components: neither $\fo_0$ nor $\psi_1$ appears
+as a standalone output terminal. This mixing is intentional—$\circledast$ models
+scenarios like Battleship where each physical player occupies different roles in
+different subgames, and recovery of the original component games is neither
+possible nor desired.
+\end{example}
+
+\paragraph{What structural operations exclude.}
+To clarify the boundary of the class, structural operations do \emph{not}:
+\begin{itemize}[nosep]
+  \item Reorder moves within a component game (violates (SC1) order preservation),
+  \item Inspect game-theoretic properties like forceability or determinacy 
+    (violates syntactic locality),
+  \item Create outcomes that depend on meta-properties like ``number of quantifiers 
+    controlled by player~0'' (such dependencies cannot be expressed as Boolean 
+    functions of component terminals),
+  \item Duplicate a single player into multiple roles with independent strategies 
+    (violates (SC3) for combinators; some morphisms may do this).
+\end{itemize}
+These restrictions ensure that structural operations are \emph{predictable}: 
+understanding the combined game requires only understanding each component plus 
+the explicit combination rules given by $(\profile, (V_j), (B_0,\ldots,B_{K'-1}))$.
+
+\subsection{Derived operators}
+\label{sec:derived-ops}
+The core language stays prenex, single-terminal $K$-FOL. We keep it
+small and add useful operations \emph{externally}, by rewriting
+prefixes and terminals.
+
+\subsubsection{Clock and Megaphone Points}
+\label{subsubsec:clock-megaphone}
+
+We sometimes want to split a single linear interaction into two phases,
+so that all binders of the second phase are guaranteed to ``come after''
+the first phase in the visibility order. Since our syntax is purely
+prenex, we realize such phase boundaries as ordinary binders owned by a
+distinguished, purely structural player.
+
+\paragraph{Preliminaries.}
+Fix once and for all a ground sort $\mathsf{unit}$ with a single element
+$()$. Let $\mathsf{Clk}$ denote a fresh player index not occurring in the
+original game (i.e.\ if $\Phi$ uses players $\{0,\dots,K-1\}$, then
+$\mathsf{Clk} = K$). We assume that terminals never mention $\mathsf{Clk}$.
+
+For a formula $\Psi$ and a variable name $z$, write
+\[
+  \mathrm{vis\text{-}add}(\Psi,z)
+\]
+for the formula obtained from $\Psi$ by making $z$ \emph{visible} to
+every binder of $\Psi$, i.e.\ if a binder of $\Psi$ is written
+$P_i x \setminus V.\,\Psi'$, we rewrite it to
+$P_i x \setminus (V \setminus \{z\}).\,\mathrm{vis\text{-}add}(\Psi',z)$.
+Intuitively, no binder is allowed to hide from $z$.
+
+More generally, for a finite set $S$ of variables we define
+$\mathrm{vis\text{-}add}(\Psi,S)$ by removing $S$ from every slash-set.
+
+We write $\mathrm{vars}(\Phi)$ for the set of variables bound in $\Phi$.
+
+\paragraph{Clock point.}
+Given a $K$-player formula
+\[
+  \Phi \;=\; P_{i_1} x_1.\, \dots.\, P_{i_n} x_n.\, \langle \varphi_0,\dots,\varphi_{K-1} \rangle,
+\]
+its \emph{clocked} version is the $(K+1)$-player formula
+\[
+  \mathsf{Clk}(\Phi)
+  \;:=\;
+  P_{\mathsf{Clk}} c : \mathsf{unit}.\, \Phi
+\]
+where $c$ is fresh and $\mathsf{Clk}$ is the new structural player.
+Since the clock binder is last, it sees all variables bound in $\Phi$.
+
+\paragraph{Clock sequencing.}
+Given two formulas $\Phi$ and $\Psi$ over the same player set
+$\{0,\dots,K-1\}$, their \emph{clock-sequencing}
+\[
+  \Phi \triangleright \Psi
+\]
+is defined as
+\[
+  \Phi \triangleright \Psi
+  \;:=\;
+  P_{\mathsf{Clk}} c : \mathsf{unit}.\, \mathrm{vis\text{-}add}(\Psi, c)
+\]
+placed after $\Phi$, i.e.\ concretely
+\[
+  \Phi \triangleright \Psi
+  \;:=\;
+  \bigl(\Phi \cdot P_{\mathsf{Clk}} c : \mathsf{unit}.\, \mathrm{vis\text{-}add}(\Psi, c)\bigr),
+\]
+where “$\cdot$” denotes concatenation of the two prefixes.
+Intuitively, the clock is a value-less choke-point: it comes after
+$\Phi$, and we force all binders in $\Psi$ to be able to see it, so
+$\Psi$ is unambiguously in the “second phase.”
+
+\paragraph{Megaphone point.}
+Given a $K$-player formula
+\[
+  \Phi \;=\; P_{i_1} x_1.\,\dots.\,P_{i_n} x_n.\,\langle \varphi_0,\dots,\varphi_{K-1}\rangle,
+\]
+its \emph{megaphoned} version is the $(K{+}1)$-player formula
+\[
+  \mathsf{Meg}(\Phi)
+  \;:=\;
+  \Phi \cdot P_{\mathsf{Meg}}\,x_1.\;\dots.\;P_{\mathsf{Meg}}\,x_n.\;\langle \varphi_0,\dots,\varphi_{K-1}\rangle
+\]
+where $\mathsf{Meg}$ is a fresh role and each $u_{x_k}$ is fresh. Since the
+megaphone binders are placed \emph{after} $\Phi$, they see all $x_k$; we assume
+a fixed echo strategy $\sigma_{\mathsf{Meg}}(u_{x_k})=x_k$ (the role is
+non-strategic). This adds no new objectives, only copies of earlier values.
+
+\paragraph{Megaphone sequencing.}
+Given two formulas $\Phi$ and $\Psi$ over the same player set
+$\{0,\dots,K{-}1\}$, define their \emph{megaphone sequencing}, written
+\[
+  \Phi \;!\; \Psi,
+\]
+by inserting per-variable echoes of $\Phi$ at the cut and making $\Psi$ see
+them:
+\[
+  \Phi \;!\; \Psi
+  \;:=\;
+  \Phi \cdot
+    P_{\mathsf{Meg}}\,x_1.\;\dots.\;P_{\mathsf{Meg}}\,x_m.\Psi,
+\]
+where $\{x_1,\dots,x_m\}$ are the variables bound in the left part $\Phi$.
+Intuitively, the megaphone \emph{re-utters} $x$ and is made visible to all
+binders of $\Psi$, so later moves can condition on the previously hidden $x$'s.
+
+\paragraph{Informal view.}
+In the visibility graph, a clock introduces a single node that every
+later node must see, but that carries no data. A megaphone introduces a
+single node after which the visibility relation is reset to ``everybody
+sees everything so far.''
+
+\subsubsection{Sequencing vs.\ tensor products of disjoint games}
+\label{subsubsec:seq-vs-tensor}
+
+We now provide the complete formal definitions of the two prototypical 
+combinators introduced in \Cref{ex:prototypical-combinators}, 
+specialized to the case of disjoint arenas.
+
+In this subsection we fix the following setting.
+\begin{description}
+  \item[Disjoint arenas.] $\mathcal A_1$ and $\mathcal A_2$ share no relation
+  or function symbols. Terminals of the first component mention only variables
+  of the first component, and likewise for the second.
+  \item[Broadcast, left-to-right play.] The combined game is played in the
+  order induced by the written prefix. Every move sees all earlier moves.
+  \item[Pure strategies.] A strategy for player $i$ is a total function from
+  the visible history (subject to IF-constraints, when present) to a value.
+  \item[Symmetric-capable players.] Every player can realize any pure strategy
+  that is admissible under the visibility regime (no computational or oracle
+  asymmetries are modeled in the main results).
+\end{description}
+
+We introduce two external binary operators on $K$-FOL formulas over
+disjoint arenas: an \emph{asymmetric, leaky} one (a pipe) and a
+\emph{symmetric, independence-enforcing} one (a tensor).
+
+\medskip
+
+\paragraph{Sequencing (leaky) product.}
+Let $\Phi$ be a $K_1$-FOL formula over arena $\mathcal A_1$ and let $\Psi$
+be a $K_2$-FOL formula over arena $\mathcal A_2$, with $\mathcal A_1$ and
+$\mathcal A_2$ disjoint.
+Write
+\[
+\Phi \equiv P_{i_1} x_1.\dots P_{i_m} x_m.\,\langle \fo_0,\dots,\fo_{K_1-1}\rangle,
+\qquad
+\Psi \equiv P_{j_1} y_1.\dots P_{j_n} y_n.\,\langle \psi_0,\dots,\psi_{K_2-1}\rangle,
+\]
+after renaming the roles of $\Psi$ to
+$\{K_1,\dots,K_1{+}K_2{-}1\}$.
+We define the \emph{sequencing product}
+\[
+  \Phi \leaky \Psi
+\]
+to be the $(K_1{+}K_2)$-FOL formula
+\[
+P_{i_1} x_1.\dots P_{i_m} x_m.\;
+P_{j_1} y_1.\dots P_{j_n} y_n.\;
+\langle \fo_0,\dots,\fo_{K_1-1},\psi_0,\dots,\psi_{K_2-1}\rangle.
+\]
+That is, we just concatenate the prefixes and the terminal tuples.
+Because the prefix order is ``all $x$ first, then all $y$,'' every move in the
+$\Psi$-component can \emph{see} all $x$-values chosen in the $\Phi$-component.
+Information therefore flows one way, from $\Phi$ to $\Psi$, but not back.
+
+\paragraph{Tensor (independent) product.}
+To remove this one-sided leak we use the IF-style binder. Let
+\[
+X := \{x_1,\dots,x_m\}, \qquad Y := \{y_1,\dots,y_n\}.
+\]
+We define the \emph{tensor} of $\Phi$ and $\Psi$ by
+\[
+\Phi \otimes \Psi
+\;:=\;
+\bigl(P_{i_1} x_1 \setminus Y.\dots P_{i_m} x_m \setminus Y.\bigr)\;
+\bigl(P_{j_1} y_1 \setminus X.\dots P_{j_n} y_n \setminus X.\bigr)\;
+\langle \fo_0,\dots,\fo_{K_1-1},\psi_0,\dots,\psi_{K_2-1}\rangle.
+\]
+Here every $x$-move is explicitly independent of \emph{all} $Y$, and every
+$y$-move is explicitly independent of \emph{all} $X$. Valid strategies for
+$\Phi \otimes \Psi$ must therefore choose $x$'s without seeing any $y$'s and
+choose $y$'s without seeing any $x$'s. This is the genuinely non-signalling
+combination.
+
+\paragraph{Forceability invariance.}
+Forceability asks whether a winning strategy \emph{exists}, not whether
+it can be feasibly computed or executed. At this idealized level, the
+extra visibility in the leaky product does not change the answer.
+
+\begin{proposition}[forceability ignores information flow for disjoint games]
+\label{prop:tensor-leaky-forceability}
+Let $\mathcal A_1, \mathcal A_2$ be disjoint arenas. Then for every 
+structure $\mathcal M$, assignment $s$, and player $i$,
+\[
+F_i(\Phi \otimes \Psi, \mathcal M, s)
+\;=\;
+F_i(\Phi \leaky \Psi, \mathcal M, s).
+\]
+\end{proposition}
+\begin{proof}
+The two products have the same terminal
+$\langle \fo_0,\dots,\fo_{K_1-1},\psi_0,\dots,\psi_{K_2-1}\rangle$.
+By disjointness, each $\fo_k$ mentions only $X$ and each $\psi_\ell$
+mentions only $Y$.
+
+($\otimes \Rightarrow \leaky$): any strategy profile valid for the tensor is
+also a strategy profile for the leaky product, which only reveals \emph{more}
+history.
+
+($\leaky \Rightarrow \otimes$): fix $i$.
+By symmetry of the construction it suffices to treat
+$i \in \{K_1,\dots,K_1{+}K_2{-}1\}$ (the $\Psi$-side).
+Suppose $i$ has a pure winning strategy $\profile_i$ in $\Phi \leaky \Psi$.
+Since $i$'s objective $\psi_j$ depends only on $Y$, any dependence of
+$\profile_i$ on $X$-values is observationally irrelevant for winning.
+Define $\profile_i'$ by: for any history $h$ visible to player $i$ in 
+$\Phi \otimes \Psi$, pick some extension $h'$ in $\Phi \leaky \Psi$ with 
+the same $Y$-projection and set $\profile_i'(h) := \profile_i(h')$. Since 
+$\profile_i$ wins regardless of $X$, every such $\profile_i'$ witnesses
+forceability in the tensor game.
+\end{proof}
+
+\paragraph{Realizability (the operational view).}
+Proposition~\ref{prop:tensor-leaky-forceability} concerns the existence
+of winning strategies, not their feasibility. In real protocols, where
+players have bounded computation, limited randomness, or restricted
+oracle access, the two products separate: the leaky product allows
+observing another player's expensive computations, random samples, or
+privileged information, while the tensor forbids such observation.
+Forceability is insensitive to these resource constraints; realizability
+is not.
+
+\paragraph{Operational reading.}
+The tensor $\Phi \otimes \Psi$ is written as one prenex block, but the
+IF-constraints make the $X$-moves and the $Y$-moves \emph{strategically}
+independent. This supports two equivalent readings:
+\begin{enumerate}
+  \item \textbf{Static}: any linearization that respects the constraints
+  yields the same outcome.
+  \item \textbf{Nondeterministic/concurrent}: any enabled binder may move
+  next; because of independence the interleaving does not affect the terminal.
+\end{enumerate}
+Under this second reading, $\otimes$ behaves like a genuine ``parallel''
+combination, in contrast to the leaky pipe $\leaky$, which bakes the
+one-sided information flow into the prefix order.
+
+\begin{definition}[Coalition forming]
+\label[definition]{def:coalitions}
+Let $\Phi$ be a $K$-role game and let
+\[
+  \pi : \{0,\dots,K-1\} \twoheadrightarrow \{0,\dots,M-1\}
+\]
+be a surjection with $1 \le M < K$. For each $j$, the set
+$\pi^{-1}(j)$ is the $j$-th \emph{block} of original roles.
+
+We form coalitions along $\pi$ in two steps:
+
+\begin{enumerate}[nosep]
+  \item \textbf{Relabel binders.} In every subterm $P_i x.\,\Psi$ of $\Phi$,
+        replace $P_i$ by $P_{\pi(i)}$. After this step, each coalition $j$
+        acts as a single role that makes all moves of the roles in its block
+        $\pi^{-1}(j)$.
+
+  \item \textbf{Combine terminal goals per block.} If $\Phi$ ends in
+        $\langle \psi_0,\dots,\psi_{K-1}\rangle$, then for each block
+        $\pi^{-1}(j)$ pick a fixed Boolean way of combining the goals in that
+        block (for example: “all of them must hold’’ or “at least one must
+        hold’’) and replace the terminal by the $M$-tuple whose $j$-th
+        component is that combination of the goals of $\pi^{-1}(j)$.
+\end{enumerate}
+We write the resulting $M$-role game as $\CoalForm{\pi}{\mathsf{agg}}(\Phi)$.
+We require $M < K$ so this actually merges at least two roles; when $M=K$
+this construction reduces to a mere permutation.
+\end{definition}
+
+Two instances will be used throughout. For the 2-coalition case, let
+$\pi : \{0,\dots,K-1\} \twoheadrightarrow \{0,1\}$.
+Then
+\[
+  \CoalProjAnd{\pi}(\Phi) := \CoalForm{\pi}{\wedge}(\Phi),
+  \qquad
+  \CoalProjOr{\pi}(\Phi)  := \CoalForm{\pi}{\vee}(\Phi).
+\]
+\paragraph{Implication projection.}
+Once a $K$-role game has been formed into two coalitions via a map
+$\pi : \{0,\dots,K-1\} \twoheadrightarrow \{0,1\}$ (using, e.g.,
+$\CoalProjAnd{\pi}$ or $\CoalProjOr{\pi}$), the result is a 2-role game.
+On such 2-role games we can read a conditional relationship between the
+two coalition objectives.
+
+Define the \emph{implication projection}
+\[
+  \ImplyOp_{0 \to 1} : \TFOL \to \FOL
+\]
+by structural recursion:
+\[
+\begin{aligned}
+\ImplyProj{0 \to 1}{\langle \alpha,\beta\rangle}
+  &:= \alpha \to \beta,\\
+\ImplyProj{0 \to 1}{P_0 x.\,\Phi}
+  &:= \exists x.\,\ImplyProj{0 \to 1}{\Phi},\\
+\ImplyProj{0 \to 1}{P_1 x.\,\Phi}
+  &:= \forall x.\,\ImplyProj{0 \to 1}{\Phi}.
+\end{aligned}
+\]
+Thus coalition $0$'s moves are treated as existential choices and coalition
+$1$'s moves as universal challenges; at the terminal we test exactly
+``if $0$'s bundled objective holds, then so does $1$'s.''
+
+Combining coalition forming and implication projection, for any
+$K$-role game $\Phi$ and any surjection
+$\pi : \{0,\dots,K-1\} \twoheadrightarrow \{0,1\}$ we obtain an ordinary
+first-order formula
+\[
+  \ImplyProj{0 \to 1}{\CoalProjAnd{\pi}{\Phi}}
+  \qquad\text{or}\qquad
+  \ImplyProj{0 \to 1}{\CoalProjOr{\pi}{\Phi}},
+\]
+to be read as:
+\begin{quote}
+  under the interaction discipline of $\Phi$, whenever coalition $0$
+  achieves its (conjunctive / disjunctive) bundled objective, coalition $1$
+  also succeeds.
+\end{quote}
+This lets us reason about the original multi-party protocol in plain \FOL:
+first coalesce roles according to $\pi$, then project the resulting 2-role
+game to the implication shape.
+
+This is the 2-role analogue of the adversarial projection: we follow the
+same $\exists$/$\forall$ discipline, but test an implication at the end
+instead of a single coalition’s goal.
+
+\paragraph{Coalition-mediated multiplication (2-FOL).}
+When $\Phi^{(1)}$ and $\Phi^{(2)}$ are \emph{2-FOL} formulas, we can
+compose them without leaving 2-FOL by:
+\[
+\Phi^{(1)} \mathbin{\circledast} \Phi^{(2)}
+\;:=\;
+\CoalProjAnd{\pi_{\times}}\!\bigl(\,\Phi^{(1)} \otimes \Phi^{(2)}\,\bigr),
+\]
+where
+\[
+\pi_{\times}^{-1}(0) = \{ 0^{(1)}, 1^{(2)} \}, \quad
+\pi_{\times}^{-1}(1) = \{ 1^{(1)}, 0^{(2)} \}.
+\]
+We first form the 4-role product,
+then collapse the 4 roles to 2 physical players via the chosen
+coalition. Different coalition maps give different binary operations;
+we keep them \emph{external} so the core grammar stays minimal.
+
+\paragraph{Remark.}
+All five operators above preserve the game-theoretic reading but they
+do \emph{not} all preserve the arity $K$, so forcing them into the
+core grammar would complicate typing and substitution. Keeping them as
+derived/meta operators lets us talk about permutation, complement,
+tensor, and coalition-building uniformly.
+
+\paragraph{Diagonal multiplication (pointwise).}
+Take the \emph{diagonal} coalition
+\[
+\pi_{\parallel}^{-1}(A) = \{ P_0^{(1)}, P_0^{(2)} \},
+\qquad
+\pi_{\parallel}^{-1}(B) = \{ P_1^{(1)}, P_1^{(2)} \}.
+\]
+Then
+\[
+\CoalProjAnd{\pi_{\parallel}}(\Phi^{(1)} \otimes \Phi^{(2)})
+\quad\text{has terminal}\quad
+\langle \fo_0 \wedge \psi_0, \; \fo_1 \wedge \psi_1 \rangle,
+\]
+i.e. we just conjoin the ``same'' role in the two games. When the two arenas
+are literally the same, this recovers pointwise conjunction.
+
+\paragraph{Cross-diagonal multiplication.}
+Take instead the \emph{cross} coalition
+\[
+\pi_{\times}^{-1}(A) = \{ P_0^{(1)}, P_1^{(2)} \},
+\qquad
+\pi_{\times}^{-1}(B) = \{ P_1^{(1)}, P_0^{(2)} \}.
+\]
+Define
+\[
+\Phi^{(1)} \circledast \Phi^{(2)} \ :=\
+\CoalProjAnd{\pi_{\times}}{(\Phi^{(1)} \otimes \Phi^{(2)})}.
+\]
+Unfolding the terminal we get
+\[
+\Phi^{(1)} \circledast \Phi^{(2)}
+\quad\text{has terminal}\quad
+\langle \fo_0 \wedge \psi_1,\; \fo_1 \wedge \psi_0 \rangle,
+\]
+and the binders are relabeled according to $\pi_{\times}$, so the result is again
+a 2-FOL formula.
+
+\paragraph{Rotation compatibility.}
+The cross coalition is stable under swapping the two 2-FOL components, hence
+\[
+\Phi \circledast \Psi \;\equiv_\RotOp\; \Psi \circledast \Phi,
+\qquad
+\Rot{\Phi \circledast \Psi} \;=\; \Rot{\Phi} \circledast \Rot{\Psi}.
+\]
+
+\begin{example}[Battleship]
+Battleship is naturally the cross-diagonal product of two independent
+2-player games:
+\[
+\text{Alice attacks Bob} \quad\text{and}\quad \text{Bob attacks Alice}.
+\]
+Physical Alice must win in her \emph{attacker} role in the first game
+and in her \emph{defender} role in the second. This is exactly\footnote{The real game does not require consistency between the two Alice roles or the two Bob roles, so it is a 4-player game, where only the final winning condition (who wins first) connects the two groups of roles. The real game would also require more complex hide/reveal scheme to force the defending player to reveal the correct board.} the
+$\pi_{\times}$ aggregation:
+\[
+\text{Battleship} \;=\;
+(\text{Alice}\to\text{Bob}) \;\circledast\; (\text{Bob}\to\text{Alice}).
+\]
+\end{example}
+
+\subsection{Splicing (Overlap)}
+\label{subsec:splice}
+
+We add a combinator that glues a suffix of $\Phi$ to a prefix of $\Psi$ by
+identifying a boundary of moves and their visibility.
+
+\paragraph{Data.}
+Let $G_\Phi=(V_\Phi,E_\Phi)$ and $G_\Psi=(V_\Psi,E_\Psi)$ be the visibility DAGs
+(nodes labeled by $(\mathrm{name},\mathrm{player},\mathrm{dom})$).
+A \emph{splice instance} is a finite labeled DAG $I=(V_I,E_I)$ with injective
+label-preserving homomorphisms
+\[
+  \iota_L: I \hookrightarrow G_\Phi,
+  \qquad
+  \iota_R: I \hookrightarrow G_\Psi .
+\]
+
+\paragraph{Side conditions.}
+\begin{enumerate}[label=(S\arabic*),leftmargin=2.2em]
+\item \textbf{Type/role agreement:} for all $v\in V_I$,
+  $\mathrm{dom}_\Phi(\iota_L v)=\mathrm{dom}_\Psi(\iota_R v)$ and
+  $\mathrm{player}_\Phi(\iota_L v)=\mathrm{player}_\Psi(\iota_R v)$.
+\item \textbf{Boundary shape:}
+  \begin{itemize}
+  \item (\emph{Suffix in $\Phi$}) no edge enters $\iota_L(V_I)$ from
+        $V_\Phi\setminus \iota_L(V_I)$.
+  \item (\emph{Prefix in $\Psi$}) no edge leaves $\iota_R(V_I)$ to
+        $V_\Psi\setminus \iota_R(V_I)$.
+  \end{itemize}
+\item \textbf{Acyclic gluing:} identifying $\iota_L(v)\equiv\iota_R(v)$ for all
+  $v\in V_I$ and taking edges $E_\Phi\cup E_\Psi$ yields an acyclic transitive closure.
+\end{enumerate}
+
+\begin{definition}[Splice]
+\label{def:splice}
+Given $\Phi,\Psi$ and $(I,\iota_L,\iota_R)$ satisfying (S1–S3), define
+\[
+  \Phi \;\splice_{(\iota_L,\iota_R)}\; \Psi
+\]
+to be the game with visibility DAG
+\(
+  G \coloneqq G_\Phi \cup_{\iota_L\equiv\iota_R} G_\Psi
+\)
+(disjoint union modulo identification of the images of $I$), labels inherited
+from $\Phi$ and $\Psi$. Its prenex script is any topological linearization of
+$G$ that preserves the internal orders of $\Phi$ and $\Psi$ and places
+$V_\Phi\setminus \iota_L(V_I)$ before $V_\Psi\setminus \iota_R(V_I)$.
+Two such scripts are equivalent modulo player permutation, $\alpha$-renaming,
+and DAG isomorphism.
+\end{definition}
+
+\paragraph{Concrete prenex construction.}
+(Useful for inductions.) $\alpha$-rename so that the images of $I$ have identical
+names and other names are disjoint; list the binders of
+$\Phi\setminus \iota_L(V_I)$, then the identified boundary, then
+$\Psi\setminus \iota_R(V_I)$; visibility edges are the union after identification.
+(S2) prevents backward edges; (S3) ensures acyclicity.
+
+\paragraph{Special cases.}
+\begin{itemize}
+\item \textbf{Tensor} ($\otimes$): $I=\emptyset$ (disjoint union; no cross-visibility).
+\item \textbf{Clocked sequencing} ($\,;\,$): $I=\{t\}$ with $t$ a fresh unit-typed
+  choke point appended to $\Phi$ and required in the initial keys of $\Psi$.
+\item \textbf{Leaky/broadcast sequencing} ($\curlyvee$): $I$ is the maximal frontier
+  at the cut (all nodes of $\Phi$ seen by any initial node of $\Psi$).
+\end{itemize}
+
+\paragraph{Algebraic laws (up to the section’s equivalence).}
+Let $\rho$ be any player permutation or $\alpha$-renaming.
+\begin{align*}
+\text{(Naturality)}\;\;&
+\rho(\Phi) \splice_{(\rho\circ\iota_L,\rho\circ\iota_R)} \rho(\Psi)
+\;\equiv\; \rho\!\big(\Phi \splice_{(\iota_L,\iota_R)} \Psi\big).\\[2pt]
+\text{(Unit)}\;\;&
+\Phi \splice_{\emptyset} \mathbf{1} \;\equiv\; \Phi \;\equiv\; \mathbf{1} \splice_{\emptyset} \Phi.\\[2pt]
+\text{(Associativity)}\;\;&
+(\Phi \splice_{I_{12}} \Psi) \splice_{I_{23}} \Xi
+\;\equiv\;
+\Phi \splice_{I_{13}} (\Psi \splice_{I_{23}} \Xi)
+\quad\text{whenever the boundary embeddings agree on overlaps.}
+\end{align*}
+
+\paragraph{Space of binary operations.}
+Every coalition map
+\[
+\pi : \{ P_0^{(1)}, P_1^{(1)}, P_0^{(2)}, P_1^{(2)} \} \to \{A,B\}
+\]
+gives a different binary operator on 2-FOL by the schema
+\[
+(\Phi^{(1)},\Phi^{(2)}) \;\mapsto\; R_\pi^{\wedge}(\Phi^{(1)} \otimes \Phi^{(2)}).
+\]
+Diagonal and cross-diagonal are the two most symmetric cases; others mix the
+roles in less structured ways.
