@@ -13,28 +13,29 @@
 \newcommand{\ow}[1]{\mathbin{\star_{#1}}}
 \newcommand{\Sym}{\operatorname{Sym}}
 \newcommand{\FP}{\mathcal{FP}^{+}}
-\title{Owned Choice for Arbitrarily Many Roles:\\Ambiguity Actions and Equational Complexity}
+\title{The Idempotent Core of Owned Choice:\\Separation, Determinacy, and Ambiguity}
 \author{KFOL research working note}
-\date{28 October 2026}
+\date{29 October 2026}
 \begin{document}
 \maketitle
 \begin{abstract}
-The rational owned-choice algebra has an exponential carrier but optimal
-singleton-and-pair tests for its equations. We identify the ambiguity-action
-quotient of its unary term monoid for every number of roles. It is a
-quotient of an affine extension of the known factorpower of the symmetric
-group. Its canonical rows satisfy an exact perfect-matching criterion;
-recognition, synthesis, and composition are polynomial in the number of
-roles. The quotient has $34$ elements for three roles and $1979$ for four.
-The partial-permutation description is precisely the three-role case.
-Equational validity is coNP-complete already for each fixed number of
-roles at least three, even without role switches. The units of the full
-unary term monoid are exactly the role permutations for every number of
-roles. These statements characterize a quotient and a decision problem;
-the complete higher-role unary clone and a finite equational basis remain
-open. The Boolean embedding used for hardness is kernel-checked in Lean;
-the general matching and complexity theorems have written proofs and
-independent finite checks.
+For any number of roles at least three, every idempotent operation
+definable using owned choices, winner constants, and internal role
+switches is already definable by choices and variables alone. This
+intrinsic core has a syntactic recognition algorithm. Idempotency needs
+only $\lceil\log_2(K+1)\rceil$ fixed test values for $K\geq4$, optimally,
+with three needed at $K=3$. A common-leaf separation theorem identifies
+the deterministic atomic fragment at every arity with the known clone
+$S_2$: essentially unary or at most two-valued functions. Thus an
+idempotent term preserving unique outcomes on all atomic inputs must
+project one input there. For ambiguity we identify an affine factorpower
+quotient and classify the singleton fibers of two-permutation actions,
+where marginal row bounds fail. Relative reset unifies the constructions
+and gives a right-normal-band quotient on homogeneous observations. The
+common-leaf theorem, including internal switches, and the reset laws are
+kernel-checked in Lean. Other new structural theorems have written proofs
+and independent finite checks; the full clone and a finite equational
+basis remain open.
 \end{abstract}
 
 \section{A small algebra and its questions}
@@ -78,6 +79,232 @@ partial permutations. For more roles, a coordinate can depend on two or
 more input membership bits: $x\cup(1\ 2)(x)$ at $K=4$ is an elementary
 example. The right general object retains these disjunctive source sets,
 and also the constant coordinates.
+
+\section{Idempotency identifies an intrinsic core}\label{sec:core}
+
+A positive-arity term operation is \emph{idempotent} when
+$t(S,\ldots,S)=S$ for every nonempty $S$. This semantic condition
+identifies a smaller syntax. For a variable occurrence, compose all
+role permutations on its path from the root, in the order in which
+they act on its value.
+
+\begin{theorem}[Exact idempotent elimination]\label{thm:core}
+A term is idempotent if and only if it has no winner leaves and every
+variable occurrence has identity accumulated permutation. Consequently
+the idempotent part of the full term clone is exactly the clone generated
+by the $K$ binary owned choices, without constants or internal switches.
+Recognition and extraction of such a term take polynomial time in the
+explicit input description.
+\end{theorem}
+\begin{proof}
+On the all-ambiguous cell, track a constant set $C$ and the
+variable-occurrence permutations. If any winner leaf occurs, $C$ is
+nonempty: it starts nonempty at that leaf, is transported by switches,
+survives unions, and a collapse at an owned node replaces it by a
+nonempty owner singleton. A node with no constant contribution cannot
+collapse on this cell, since every live child is ambiguous. Thus a term
+containing a winner leaf has some fixed nonempty $C$ in every ambiguous
+diagonal output. But $\bigcap_{|S|\geq2}S=\varnothing$ for $K\geq3$,
+so the term cannot be idempotent.
+
+Without winner leaves, every intermediate value on this cell is
+ambiguous. Every choice is union. The diagonal value is therefore the
+union of $\pi S$ over all variable occurrences. Idempotency forces each
+$\pi S\subseteq S$. If $\pi(i)\ne i$, a pair containing $i$ and omitting
+$\pi(i)$ contradicts that inclusion. Every accumulated permutation is
+identity.
+
+Transport switches through choices using
+$\pi(u\star_r v)=\pi u\star_{\pi(r)}\pi v$ and compose them.
+All leaf permutations disappear. The remaining constant-free owned term
+is idempotent because its primitive choices are. A traversal accumulating
+permutations both checks the criterion and transports the owners,
+without expanding the tree.
+\end{proof}
+
+The no-switching calculus thus contains \emph{every} idempotent definable
+operation. Internal switching still enlarges the complete clone and
+changes its congruences, as the preceding notes show.
+
+\begin{corollary}[Semilattice trace]\label{cor:trace}
+On all-ambiguous inputs, every idempotent term is union over a fixed
+nonempty subset of its arguments. These restrictions form exactly the
+semilattice term clone, and restriction is a surjective clone
+homomorphism. There is no near-unanimity term of any finite arity, and
+no Mal'cev term. Every variable occurring in a core term is semantically
+essential, so every valid core identity has the same variables on both
+sides.
+\end{corollary}
+\begin{proof}
+In the constant-free core all intermediate ambiguous values are
+ambiguous; the result is union of the occurring variables. Distinct
+supports are separated by a pair and $I$. Composition unions supports,
+and every nonempty support is realized by derived union. A nonempty
+join cannot satisfy near-unanimity: put the larger of those two values
+at a selected argument and the smaller at all others. The Mal'cev
+identities would require support both in the first argument alone and
+in the third alone. Operations satisfying either collection of
+identities are already idempotent. The same two-value test detects the
+presence of each argument, proving essentiality and the regularity of
+every identity.
+\end{proof}
+
+\begin{corollary}[Intrinsic player views]\label{cor:views}
+Every idempotent operation in the full role-switching language acts
+compositionally on each of the $K+1$-state player views
+\[
+ q_k(S)=
+ \begin{cases}
+ P,&k\in S,\\
+ i,&S=\{i\},\ i\ne k,\\
+ N,&\text{otherwise}.
+ \end{cases}
+\]
+These give a subdirect representation by $K$ factors. The family is
+irredundant: none of its player views can be omitted.
+\end{corollary}
+\begin{proof}
+Each $q_k$ is a congruence quotient for every owned choice, proved in
+\texttt{Perspectives.lean}. Theorem~\ref{thm:core} extends this to all
+idempotent operations, even when their original definitions contain
+internal switches. All membership bits are recovered from the $P$
+states, so the family separates values. Each view is onto. Omitting
+$q_k$ identifies $I\setminus\{k\}$ and $I$, which every other player
+views as $P$.
+\end{proof}
+
+The decomposition that fails for unrestricted internal role switching
+therefore holds intrinsically for all idempotent definable operations.
+The representation is subdirect, not the full Cartesian product.
+
+\subsection{An optimal logarithmic test set}
+
+A fixed domain $D\subseteq\Pow(I)$ \emph{certifies idempotency} when,
+for terms of every arity, agreement $t(S,\ldots,S)=S$ for $S\in D$
+implies idempotency. This tests a specific diagonal law, rather than
+all term equations.
+
+\begin{theorem}[Exact ambiguous certificates]\label{thm:idem-domain}
+For a domain consisting of ambiguous values, certification holds exactly
+when
+\[
+ \bigcap D=\varnothing,\qquad
+ (\mathbf1_{i\in S})_{S\in D}\text{ are distinct for all }i\in I.
+\]
+The minimum size of a certifying domain, even allowing singleton test
+values, is three for $K=3$, and $\lceil\log_2(K+1)\rceil$ for $K\geq4$.
+Both minima are attained using ambiguous values alone.
+\end{theorem}
+\begin{proof}
+If $k\in\bigcap D$, the nonidentity term $x\cup\{k\}$ fixes every test.
+If two roles have the same incidence vector, their transposition fixes
+every test. These necessary conditions apply also to singleton tests.
+
+Conversely suppose every test is ambiguous and the two conditions hold.
+An agreeing term's constant contribution lies in $\bigcap D$, so is
+empty. Hence it has no winner leaves. Each occurrence permutation
+satisfies $\pi S\subseteq S$ on each test, and finiteness makes these
+equalities. A permutation fixing each test can only exchange roles with
+identical incidence vectors. It is identity. Apply Theorem~\ref{thm:core}.
+
+With $m$ tests the conditions require $K$ distinct binary words of
+length $m$, excluding the all-one word. Thus $K\leq2^m-1$. For $K\geq4$
+set $m=\lceil\log_2(K+1)\rceil$. Start the role signatures with the $m$
+distinct two-bit words supported on a cycle on $m$ bits. Each bit occurs
+twice, making every test ambiguous. Add distinct words other than the
+all-one word until there are $K$ signatures.
+
+For $K=3$, two tests satisfying the necessary conditions have signatures
+$00,01,10$, hence are two distinct singletons. A unary merger of the third
+role into a tested role fixes both but is not identity. Three pairs
+certify idempotency. Such mergers are constructed below.
+\end{proof}
+
+At $K=7$, three ambiguous diagonal tests suffice, compared with $28$
+values for testing every full-signature equation. The improvement is
+specific to idempotency.
+
+\section{Separation and deterministic atomic expressivity}\label{sec:sep}
+
+Fix input environments $v_a$ and pairwise disjoint target regions
+$W_a\subseteq I$. A source occurrence is a winner leaf, or a variable
+leaf together with its accumulated permutation.
+
+\begin{theorem}[One common source]\label{thm:source}
+If $t(v_a)\subseteq W_a$ for every $a$, one source occurrence of $t$
+already has its value inside $W_a$ in every environment simultaneously.
+If there are at least two target regions, it is a variable occurrence.
+\end{theorem}
+\begin{proof}
+At an owned node with owner $r$, at most one target contains $r$.
+In every other environment the output cannot collapse to $\{r\}$;
+it is union, so both children meet the target. In the possible
+exceptional environment, either both children meet the target or a
+child is the absorbing owner singleton and meets it. Choose that child:
+it works in all environments. Descend to a leaf. At a switch pull the
+targets back along the permutation, preserving disjointness. A winner
+leaf has the same nonempty value in all environments and cannot fit
+two disjoint targets.
+\end{proof}
+
+Distinct singleton outputs at any number of tests are thus jointly
+explained by one occurrence. It cannot change between tests.
+\texttt{Separation.lean} proves this for arbitrary index types and target
+predicates, with internal permutations explicit in the syntax.
+
+Call a term \emph{atom-preserving} if it returns a singleton on every
+singleton-input valuation. It induces a function $f:I^n\to I$.
+
+\begin{theorem}[Exact deterministic atomic clone]\label{thm:S2}
+At every positive arity, the functions induced by atom-preserving terms
+are exactly the essentially unary or at most two-valued functions.
+This is the known clone $S_2$.
+\end{theorem}
+\begin{proof}
+Let $\iota_3\subseteq I^3$ be the relation of triples with a repeated
+entry. Three input environments having this property in every
+coordinate cannot have three distinct singleton outputs:
+Theorem~\ref{thm:source} would give one permutation sending an input
+triple with repetition to three distinct roles. Every induced function
+therefore preserves $\iota_3$.
+
+Use the established presentation $\operatorname{Pol}(\iota_3)=S_2$,
+recorded by Szendrei\cite[Proposition~2.2]{Szendrei2012} in the
+S\l upecki--Burle classification. It applies for every finite $K\geq3$.
+This is a use of that classification, not a new classification of $S_2$.
+
+Conversely every unary map $h:I\to I$ has an atomic realization.
+The term $x\star_a(a\ b)(x)$ merges atomic $b$ into $a$, fixing the
+others. Merge each $h$-fiber into a representative, then permute the
+representatives to the prescribed images.
+
+For distinct output roles $a,b$, tests of input labels are unary maps
+into $\{a,b\}$. On these atomic values, $\star_a$ is Boolean OR and
+$\star_b$ Boolean AND, with truth $a$. Finite DNF of label tests
+realizes every $I^n\to\{a,b\}$. Constants cover the one-valued case.
+\end{proof}
+
+\begin{corollary}[Idempotent atomic determinacy]
+An idempotent, atom-preserving term projects one input on all atomic
+valuations. A genuinely multiargument rule using at least three output
+roles must return ambiguity somewhere on atomic inputs.
+\end{corollary}
+\begin{proof}
+Idempotency makes its atomic function surjective. As $K\geq3$,
+Theorem~\ref{thm:S2} makes it essentially unary, and the diagonal law
+makes that unary map identity.
+\end{proof}
+
+The exact number of induced $n$-ary atomic functions is
+\[
+ \binom K2(2^{K^n}-2)+K+
+ n\left(K^K-\binom K2(2^K-2)-K\right).
+\]
+The first part counts functions with at most two values. The remaining
+essentially unary functions have a unique essential argument.
+For $K=3,n=2$ the count is $1545$. This classifies deterministic atomic
+behavior, leaving mixed and ambiguous valuations available for richer
+operations.
 
 \section{The known relation monoid and its affine extension}
 
@@ -260,6 +487,194 @@ These are finite computations, with complete enumerations reproduced by
 full unary term monoid. Its singleton fibers for general $K$ are still
 unclassified.
 
+\section{Relative reset and exact two-permutation fibers}
+
+\subsection{A uniform reset operation}
+
+Given $A,B$, start with $A\cup B$ and, once for each owner $r$, replace
+the current value $U$ by $U\star_r B$. Write the resulting derived
+binary operation as $\Delta(A,B)$.
+
+\begin{lemma}[Relative reset]\label{lem:relative}
+\[
+ \Delta(A,B)=
+ \begin{cases}B,&|B|=1,\\A\cup B,&|B|\geq2.\end{cases}
+\]
+Its value is independent of the enumeration of owners. It is
+idempotent and equivariant.
+\end{lemma}
+\begin{proof}
+Every intermediate value contains $B$. If $B$ is ambiguous, both
+operands are ambiguous, and each step preserves $A\cup B$. If
+$B=\{r\}$, its own step forces that singleton; every later step leaves
+it fixed. Idempotency and equivariance follow from the displayed law.
+The atomic and ambiguous cases are proved in \texttt{Separation.lean}.
+\end{proof}
+
+This single construction replaces the earlier separate atomic reset
+devices. It also gives a precise, familiar observational quotient.
+For an idempotent atom-preserving term, record its support $J$ on
+ambiguous inputs and its projected argument $j$ on atomic inputs.
+The extracted core cannot depend on an absent argument, so $j\in J$.
+
+\begin{proposition}[Homogeneous observation quotient]\label{prop:pointed}
+These pairs are exactly $(J,j)$ with $\varnothing\ne J$ and $j\in J$.
+They compose by
+\[
+ (J,j)\bigl((L_i,\ell_i)_i\bigr)
+   =\left(\bigcup_{i\in J}L_i,\ell_j\right).
+\]
+They form the term clone of right normal bands. Relative reset maps to
+its binary multiplication.
+\end{proposition}
+\begin{proof}
+Atomic and all-ambiguous input regions are invariant under these
+operations, so their observations respect substitution. Every pair is
+realized by $\Delta(\bigcup_{i\in J}x_i,x_j)$, and distinct pairs are
+separated by atomic valuations or by a pair and $I$ on ambiguous inputs.
+The binary operation on pairs is $(J,j)(L,\ell)=(J\cup L,\ell)$:
+word terms remember their variable set and their last variable.
+Associativity, $xx=x$, and $xyz=yxz$ present exactly these word
+invariants, the standard right-normal-band
+calculus\cite[Section~8]{RomanowskaSmith1989}.
+\end{proof}
+
+This is a quotient of operations observed on two invariant regions,
+not a quotient identifying winner-set values. Mixed valuations retain
+more information. For distinct $a,b,c$,
+\[
+ \Delta(\Delta(\{c\},\{a\}),\{a,b\})=\{a,b\},\qquad
+ \Delta(\{c\},\Delta(\{a\},\{a,b\}))=\{a,b,c\}.
+\]
+Thus $\Delta$ is not associative in the full algebra. The right-normal-band
+presentation is complete for the stated observation quotient only.
+
+\subsection{Marginal atomic bounds do not suffice}
+
+For $K=4$ let $\sigma=(1\ 2\ 3\ 4)$ and fix the ambiguity action
+$F(S)=S\cup\sigma S$. Each atomic row must be a nonempty subset of
+$\{i,\sigma(i)\}$, with no mandatory singleton-source image. These
+obvious marginal bounds allow the atomic function
+\[
+ h(1)=1,\quad h(2)=2,\quad h(3)=3,\quad h(4)=1.
+\]
+Nevertheless no term has these rows and ambiguity action $F$.
+We prove a uniform classification explaining the obstruction.
+
+\begin{lemma}[Localization without constant coordinates]\label{lem:local}
+Suppose a unary term has ambiguity action $R[S]$, with no constant
+output coordinate. It contains no winner leaves. Push switches to its
+variable leaves.
+Every remaining leaf permutation lies in the perfect matchings of the
+canonical support graph.
+\end{lemma}
+\begin{proof}
+On ambiguous inputs a live term has constant-plus-permutation provenance.
+Any constant contribution would make an output coordinate constant,
+so it is empty. As in Theorem~\ref{thm:core}, any winner leaf would force
+a nonempty constant contribution, so there are none. Each leaf
+permutation contributes its graph to $R$. For nonconstant rows the
+canonical source sets are uniquely determined, so its graph lies in
+the allowed graph. Conversely every such permutation is a perfect
+matching and an allowed generator.
+\end{proof}
+
+For $R=\mathrm{id}\cup\sigma$ and $K\geq4$, every source row has size
+one or two, hence is nonconstant. Its perfect matchings independently
+choose identity or $\sigma$ on each nontrivial cycle: choosing a shifted
+edge forces the next shifted edge around that cycle.
+
+For a cycle $C$, describe an atomic row at $i\in C$ by
+$0$ for $\{i\}$, $1$ for $\{\sigma(i)\}$, and $?$ for their pair.
+A fixed point has just its one mandatory singleton.
+
+\begin{theorem}[Exact two-permutation fibers]\label{thm:cycles}
+Fix $K\geq4$ and the ambiguity action $S\mapsto S\cup\sigma S$.
+The choices on different cycles of $\sigma$ are independent.
+On a cycle of length $m$ the permitted atomic tables are exactly:
+\begin{itemize}
+\item for $m=1$, its fixed singleton;
+\item for $m=2$, every word in $\{0,1,?\}^2$;
+\item for $m\geq3$, every word in $\{0,?\}^m$ or $\{1,?\}^m$,
+and the $m$ words with $0$ at $r$, $1$ at $\sigma^{-1}(r)$,
+and $?$ elsewhere.
+\end{itemize}
+Consequently the fiber size is
+\[
+ \prod_{C\text{ a cycle of }\sigma}g(|C|),\qquad
+ g(1)=1,\quad g(2)=9,\quad g(m)=2^{m+1}+m-1\ (m\geq3).
+\]
+An arbitrary action $p[S]\cup q[S]$ is covered by normalizing the output
+with $p^{-1}$ and taking $\sigma=p^{-1}q$.
+\end{theorem}
+\begin{proof}
+For necessity, the atomic upper bound gives the displayed row options.
+Suppose a long cycle has row $0$ at $i$ and row $1$ at $j$. If
+$i\ne\sigma(j)$, these are distinct singleton winners. The common-source
+theorem requires one allowed leaf permutation producing both. But an
+allowed matching on this cycle is either identity everywhere or shifted
+everywhere. Neither does so. Thus $i=\sigma(j)$. If both kinds of
+singleton occur there can be only one of each, giving precisely the
+listed exceptional words. For a fixed point nonemptiness forces its
+singleton; for a two-cycle this argument imposes no further restriction.
+
+For synthesis on one cycle, start with the union of its two permutation
+generators, giving all $?$ rows. To force $0$ at selected positions,
+successively apply $U\mapsto U\star_i x$. This affects only the chosen
+row and retains earlier $0$ rows. To force $1$ instead, use
+$U\mapsto U\star_{\sigma(i)}\sigma(x)$. The exceptional word at $r$ is
+$x\star_r\sigma(x)$. These constructions also realize all nine words
+on a two-cycle.
+
+The allowed leaf permutations already form the Cartesian product of
+the two orientations on each cycle. All owned operations and union are
+idempotent. Closure of a Cartesian product under idempotent
+coordinatewise operations is the product of the local closures:
+realize one coordinate while holding the others fixed, then realize
+the next while holding the first fixed. Thus these local atomic tables
+can be realized independently, by a term $t$ whose ambiguity support
+lies in $\mathrm{id}\cup\sigma$.
+
+Finally apply $\Delta(E,t)$ where $E(x)=x\cup\sigma(x)$.
+On ambiguous inputs $t(S)\subseteq E(S)$ and $t(S)$ is ambiguous, so
+reset retains exactly $E(S)$. On an atomic input the prescribed row
+$t(\{i\})$ is either a singleton or the full allowed pair. In the first
+case reset selects it; in the second $E(\{i\})$ already equals it.
+This restores full ambiguity support without changing any atomic row.
+The two uniform-orientation families overlap once; the $m$ exceptional
+words are separate. This proves the count and independence.
+\end{proof}
+
+The example above violates this coherence condition at inputs $2$ and
+$4$. A four-cycle has $35$ permitted tables, not the $3^4=81$ allowed
+by its marginal bounds. Longer cycles give $68$ and $133$ at lengths
+five and six. If every atomic row is a singleton, a long cycle must
+choose one orientation everywhere; a two-cycle may also merge its two
+roles.
+
+\begin{corollary}[All four-role fibers without constant coordinates]
+At $K=4$, every ambiguity action without constant coordinates is a union
+of two permutations. There are $282$ such actions and exactly $6378$
+unary term functions above them.
+\end{corollary}
+\begin{proof}
+Every canonical row has at most two sources. A singleton row forces its
+matched source to occur nowhere else, since every edge extends to a
+matching. Remove such pairs. In the remaining support graph all output
+degrees are two, while every input degree is at least two: an input of
+degree one would force its output to have degree one. Counting edges
+makes all input degrees two as well. Components are even cycles, each
+the union of two matchings. Apply Theorem~\ref{thm:cycles}.
+
+For normalized cycle types $1^4,\,2\,1^2,\,2^2,\,3\,1,\,4$, the numbers
+of distinct support graphs are respectively $24,72,18,96,72$. These
+follow by choosing the first permutation and the cycle permutation, then
+dividing by the two orientation choices in each nontrivial component.
+They sum to $282$. The fiber sizes are respectively $1,9,81,18,35$,
+giving $6378$ in total. The enumeration in \texttt{check\_fibers.py}
+independently checks every four-role support.
+\end{proof}
+
 \section{Reversible contexts at every number of roles}
 
 \begin{lemma}
@@ -363,6 +778,18 @@ bound left open by pair testing.
 
 \section{Evidence, attribution, and the next mathematical gap}
 
+\texttt{Separation.lean} introduces syntax containing internal role
+permutations, records the accumulated permutation at each source, and
+proves the common-source theorem for arbitrary families of disjoint
+target predicates. Its atomic corollary supplies a common permuted
+variable for any injective family of singleton outputs. It also proves
+the atomic and ambiguous relative-reset laws. The idempotent elimination,
+optimal idempotency domains, semilattice trace, $S_2$ identification,
+right-normal-band quotient, and general fiber classification remain
+mathematical proofs. In particular the use of
+$\operatorname{Pol}(\iota_3)=S_2$ is an explicit application of an external
+theorem, not a fact currently imported into Lean.
+
 \texttt{BooleanCore.lean} proves the gate, the two Boolean operations,
 and the embedding of arbitrary monotone Boolean formula equations. It
 uses ordinary syntax from the preceding modules and proves both
@@ -383,22 +810,43 @@ the Boolean gates through $K=6$ and the dual-rail equivalence on all
 $4369$ CNFs with up to three clauses on two variables, including empty
 clauses. These support the written proofs, rather than replacing them.
 
-The factorpower, its edge-extension criterion, semidirect-product
-construction, matching algorithms, Boolean hardness reduction, and
-subset-poset automorphism argument are established mathematics reused
-explicitly. The candidate contribution is their exact relationship to
-rational owned choice: the optimal pair theorem from the preceding note,
-the affine ambiguity quotient with its threshold and canonical matching
-criterion, and their consequences for contexts and equational validity.
-Priority of this particular combination is not established by identifying
-the factorpower alone.
+\texttt{core.py} implements the exact idempotent criterion and extracts
+the equivalent constant-free owned term. \texttt{check\_core.py} compares
+this with full diagonal evaluation on $1200$ terms at $K=3,\ldots,6$,
+including transported and cancelling internal switches. It checks every
+ambiguous domain at $K=3,4$, every domain against all $751$ unary functions
+at $K=3$, and optimal constructions through $K=64$.
+
+\texttt{fibers.py} constructs actual terms for the two-permutation
+fibers and for all deterministic atomic operations in $S_2$.
+\texttt{check\_fibers.py} independently exhausts closure of allowed
+permutation leaves, compares it with the cycle formulas, and evaluates
+the synthesized terms on every winner set. Cases include every cycle
+type at $K=4$, cycles of lengths five and six, and two disjoint
+three-cycles. It checks every four-role support without constant
+coordinates. Separately it tests all $19683$ binary functions on three
+roles against preservation of $\iota_3$, obtaining precisely the $1545$
+functions in $S_2$, and synthesizes each one. These are independent
+finite checks at the specified sizes, not generic proof certificates.
+
+The factorpower, $S_2$ and its relation presentation, right normal bands,
+binary separating codes, semidirect products, matching algorithms,
+Boolean hardness reduction, and subset-poset automorphism argument are
+reused established mathematics. The candidate contribution lies in
+their exact relationship to rational owned choice, together with the
+common-source and idempotent-elimination theorems and the exact cycle
+fibers. Identifying the known objects does not establish priority for
+these connections.
 
 There is still no finite equational basis or proof calculus. The
 all-arity pair theorem controls input tests, but not which tables on
 those tests are realizable. The ambiguity quotient controls one part of
-unary composition, but forgets singleton rows. Two focused next questions
-are therefore the exact singleton fibers at general $K$, and a uniform
-presentation that derives the status split equationally. The residual
+unary composition. Its two-permutation fibers are now known, while
+general fibers with constant coordinates or larger source sets remain
+open. The intrinsic idempotent core gives a smaller target for a uniform
+presentation, with no constants or internal-switch constructors needed.
+The right-normal-band quotient presents only homogeneous observations;
+mixed inputs are an explicit remaining obstruction. The residual
 bound needed by the conditional Willard route in \texttt{symmetric.tex}
 also remains open. No dependent type-theoretic claim follows yet.
 
