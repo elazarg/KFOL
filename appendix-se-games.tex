@@ -1,0 +1,517 @@
+\section{A Game-Theoretic Framework for Modular Specifications}
+\label{sec:framework}
+
+\subsection*{A Spec-Agnostic Semantic Lens for Architectural Analysis}
+
+\paragraph{Abstract.}
+We present a semantic, specification-agnostic framework for analyzing modular software architectures through \emph{multi-player coordination games}.
+Component implementations act as strategies; the composed system induces demonic nondeterministic behaviors; and local specifications define binary obligation-satisfaction utilities.
+A chosen solution concept~$\mathsf{SC}$ selects architecturally relevant profiles.
+
+Architectural properties such as coupling, substitutability, minimality, and information hiding arise by comparing these $\mathsf{SC}$-selected profiles with globally desirable behaviors. As a motivating illustration rather than a general theorem (see \Cref{subsec:pne-caveat} below), some solution concepts---notably Pure Nash Equilibrium (PNE)---can select equilibrium profiles that are \textbf{undesired} stability traps: points where no component can locally repair its obligation even though the global system behavior is undesirable.
+
+The approach is semantic, lightweight, and applies to any specification formalism with a behavioral interpretation.
+
+\subsection{Motivation}
+
+In modular architectures, components interact through a shared semantic environment while each carries its own local obligations.
+Models such as game semantics, assume--guarantee/rely-guarantee
+reasoning~\cite{Jones1983RelyGuarantee,AbadiLamport1993ComposingSpecifications},
+interface theories~\cite{deAlfaroHenzinger2001InterfaceAutomata}, or
+contract-based design~\cite{Benveniste2018ContractsForSystemDesign} typically
+use \emph{two-player} perspectives (a component against its environment).
+Some approaches (MPST, certain assume-guarantee frameworks~\cite{ChiltonAssumeGuarantee}) extend to multi-role perspectives, but here we adopt an even more general view:
+
+\begin{quote}
+\emph{A tuple of specifications induces a multi-player game.
+Implementations act as strategies; the composed system induces behaviors; a solution concept selects key profiles for architectural analysis.}
+\end{quote}
+
+Crucially, the framework is \emph{agnostic} about what those profiles \emph{mean}: depending on the solution concept, they may represent desirable configurations or undesirable ones.
+
+\subsection{System Model}
+
+Let $C=\{c_0,\dots,c_{n-1}\}$ be the set of components.
+
+\paragraph{Specifications and Behaviors.}
+
+\begin{itemize}
+\item A behavior domain $\mathsf{Beh}$.
+\item For each component $c$:
+  \begin{itemize}
+  \item a specification space $\mathsf{Spec}_c$,
+  \item an implementation space $\Sigma_c$,
+  \item a semantics $\llbracket - \rrbracket_c : \mathsf{Spec}_c \to \mathcal P(\mathsf{Beh})$.
+  \end{itemize}
+\end{itemize}
+
+The satisfaction set may be empty.
+If $\llbracket S_c \rrbracket_c = \varnothing$, then component $c$ is permanently unsatisfiable: $u_c(\sigma)=0$ for all~$\sigma$.
+
+\paragraph{Demonic Composition Semantics.}
+
+A joint profile is $\sigma=(\sigma_c)_{c\in C}$.
+
+\[
+\mathsf{out} : \prod_{c\in C}\Sigma_c \to \mathcal P(\mathsf{Beh})
+\]
+
+$\mathsf{out}$ is \emph{demonic}: every behavior in $\mathsf{out}(\sigma)$ must satisfy obligations.
+Outputs are assumed non-empty.
+Utilities therefore depend on the \emph{entire} behavior set.
+
+This demonic reading is appropriate for safety-style reasoning (``every possible behavior must be safe'') and pessimistic architectural analysis. For models of intentional internal nondeterminism or optimization under uncertainty, one would instead use angelic or probabilistic readings; these can be accommodated by changing the definition of $u_c$ and the behavior model, but we do not pursue that here.
+
+\paragraph{Observation Granularity.}
+
+Each component observes via
+\[
+\pi_c : \mathsf{Beh} \to \mathsf{Obs}_c,
+\qquad
+\pi_c(B) = \{\pi_c(b) \mid b \in B\}.
+\]
+
+The projection $\pi_c$ may collapse behaviors; it defines the abstraction level and visible nondeterminism.
+
+\paragraph{Global Desirability.}
+
+A global correctness predicate:
+\[
+\mathsf{Valid} \subseteq \mathsf{Beh},
+\qquad
+\mathsf{ValidBeh} = \{\sigma \mid \mathsf{out}(\sigma) \subseteq \mathsf{Valid}\}.
+\]
+
+No relationship between $\mathsf{Valid}$ and local obligations is assumed.
+
+\subsection{The Induced Game}
+
+Given $S=(S_c)_{c\in C}$:
+
+\begin{itemize}
+\item players: components;
+\item strategies: implementations;
+\item outcomes: $\mathsf{out}(\sigma)$;
+\item utilities:
+\[
+u_c(\sigma)=
+\begin{cases}
+1 & \text{if }\mathsf{out}(\sigma)\subseteq\llbracket S_c\rrbracket_c\\
+0 & \text{otherwise.}
+\end{cases}
+\]
+\end{itemize}
+
+Utilities are binary, demonic, and obligation-based: any violating behavior forces utility~0, and satisfying behaviors are not ranked.
+
+\subsection{Solution Concepts}
+
+A solution concept gives a set
+\[
+\mathsf{SC}(S) \subseteq \prod_{c\in C} \Sigma_c
+\]
+of architecturally relevant profiles.
+
+Different solution concepts correspond to different architectural questions.
+Pure Nash Equilibrium (PNE) captures unilateral repairability;
+dominant strategies capture robustness to any environment behavior;
+max-min or worst-case concepts capture hardening against adversarial contexts;
+correlated or cooperative equilibria model designed coordination.
+In this paper we work explicitly with PNE as a running example, but the definitions are parametric in SC and can be instantiated with these standard notions.
+
+
+\paragraph{Pure Nash Equilibrium (PNE).}
+
+Let $(\sigma_{-c}, \sigma'_c)$ replace the $c$-component of $\sigma$.
+
+\[
+\sigma \in \mathsf{PNE}(S)
+\;\Longleftrightarrow\;
+\neg \exists c,\sigma'_c.\;
+u_c(\sigma_{-c},\sigma'_c) > u_c(\sigma).
+\]
+
+Because utilities are binary and demonic:
+\begin{itemize}
+\item only $0\to 1$ improvements matter;
+\item profiles where all utilities are $0$ may still be PNE;
+\item PNE can identify \emph{undesired stability traps}.
+\end{itemize}
+
+This undesirability is specific to PNE under binary demonic utilities; other solution concepts may select desirable configurations.
+
+\label{subsec:pne-caveat}
+\paragraph{Caveat.} The claim that PNE ``identifies'' undesired stability traps is an informal observation motivating the framework, illustrated by the all-zero-utility example above, not a general theorem: we have not characterized which specification tuples $S$ admit an all-desirable PNE, which admit only trap-like PNE, or how common each case is. Formalizing that characterization (e.g.\ as a condition on $\mathsf{Valid}$, $\mathsf{out}$, and the $u_c$) is left open; until it exists, this subsection should be read as a worked motivating example for the framework's vocabulary rather than as evidence that PNE analysis of module specifications reliably surfaces bad states.
+
+Before treating that characterization as a fresh open problem, it should be
+checked against rational verification's existing complexity theory (see the
+paragraph below), which already studies ``which games admit desirable
+equilibria'' in a closely related
+form~\cite{FismanKupfermanLustig2010RationalSynthesis,AbateEtAl2021RationalVerification};
+``self-contained'' is precisely the property that makes a question likely to
+already exist in a neighboring literature.
+
+\paragraph{Named intermediate solution concepts.}
+Forceability-style coupling (\Cref{prop:indep-is-sc-all} below) is sound and
+compositional but paranoid: it certifies safety by assuming every other
+component behaves adversarially, discarding any information about what the
+other components actually are or want. PNE is close to the opposite failure:
+it can fail to rule out profiles that are not even individually compliant.
+The formal-methods and multi-agent-systems literature has already engineered
+several points strictly between these extremes, each trading paranoia for
+compositionality in a controlled way:
+\begin{itemize}[nosep]
+  \item \textbf{Secure equilibria}~\cite{ChatterjeeHenzingerJurdzinski2006SecureEquilibria}
+  use lexicographic objectives (primarily achieve your own goal, secondarily
+  hurt the opponent) to obtain equilibria with a unique value, engineered
+  specifically to support compositional verification --- a targeted fix for
+  the stability-trap problem of \Cref{subsec:pne-caveat}.
+  \item \textbf{Assume-admissible synthesis}~\cite{BrenguierRaskinSankur2017AssumeAdmissible}
+  has each component assume the others play \emph{admissible} (non-dominated)
+  strategies, rather than assuming either full adversarial behavior or a
+  fixed-point equilibrium. This composes, unlike PNE, while being strictly
+  less paranoid than forceability's $\forall\sigma_{-D}$.
+  \item \textbf{Rational synthesis / rational
+  verification}~\cite{FismanKupfermanLustig2010RationalSynthesis,AbateEtAl2021RationalVerification}
+  certify a specification under the assumption that the environment plays
+  \emph{some} equilibrium of its own objectives, with a developed complexity
+  theory for when this is decidable.
+\end{itemize}
+Ordering these by how much they assume about the environment gives a monotone
+family, in the sense of SC Monotonicity below, sitting between
+$\mathsf{SC}_{\mathrm{All}}$ (\Cref{prop:indep-is-sc-all}: assumes nothing
+beyond raw compliance) and forceability (assumes the worst). Each of these is
+a solution concept in this appendix's sense and generates its own coupling,
+substitutability, and minimality notions by the schema above; we have not
+carried out that instantiation, nor checked which points of this spectrum
+survive \KFOL's symmetry-group action (\Cref{sec:symmetry}) or remain
+two-coalition facts under coalition merging
+(\Cref{subsec:coalitional-forceability}). Both are left open.
+
+\paragraph{SC Monotonicity.}
+
+If $\mathsf{SC}_1(S)\subseteq\mathsf{SC}_2(S)$, then
+\[
+\mathsf{SC}_2(S) \subseteq \mathsf{ValidBeh}
+\;\Rightarrow\;
+\mathsf{SC}_1(S) \subseteq \mathsf{ValidBeh}.
+\]
+
+No monotonicity holds for specification weakening or behavior refinement.
+
+\subsubsection{Implementation Independence}
+
+The coupling notions above are defined \emph{relative to a solution concept}:
+they only quantify over profiles in $\mathsf{SC}(S)$.
+Sometimes we want a stronger, \emph{solution-concept-independent} notion that
+says: once a set of components meets its local obligations, the system is
+globally well-behaved, regardless of which particular implementations were
+chosen.
+
+Let $D \subseteq C$ be a set of components.
+We say that the specification tuple $S$ is
+\emph{implementation independent on $D$} if any profile that satisfies
+the obligations of all components in $D$ is globally desirable:
+\[
+  \mathsf{Indep}_D(S)
+  \;\triangleq\;
+  \forall \sigma \in \textstyle\prod_{c\in C} \Sigma_c.\;
+    \biggl(
+      \bigwedge_{c\in D} u_c(\sigma) = 1
+    \biggr)
+    \;\Longrightarrow\;
+    \mathsf{out}(\sigma) \subseteq \mathsf{Valid}.
+\]
+
+Intuitively, $\mathsf{Indep}_D(S)$ states that implementations for the
+components in $D$ can be chosen \emph{independently}: any combination of
+implementations that meets their local specifications yields globally
+desirable behavior, irrespective of the particular choices made for the
+remaining components in $C \setminus D$ (provided they are included in
+$\sigma$ and participate in $\mathsf{out}$ as usual).
+
+\paragraph{Reading via assume-guarantee contracts.}
+This quantifier shape --- $\forall$ over $D$'s own compliant implementations,
+$\forall$ over the environment --- is exactly the satisfaction relation of
+assume-guarantee/rely-guarantee
+reasoning~\cite{Jones1983RelyGuarantee,AbadiLamport1993ComposingSpecifications},
+interface theories~\cite{deAlfaroHenzinger2001InterfaceAutomata}, and their
+modern synthesis in contract-based
+design~\cite{Benveniste2018ContractsForSystemDesign}: a component's contract
+is satisfied demonically on \emph{both} sides, not only the environment's.
+Forceability (the main text's \Cref{def:k-force}) is angelic on the player's
+own side ($\exists\profile_i$: some strategy works) and demonic on the
+environment's side ($\forall\profile_{-i}$); $\mathsf{Indep}_D$ is demonic on
+\emph{both} sides ($\forall\sigma_D$ compliant, $\forall\sigma_{-D}$), which
+is exactly what makes it a statement about the \emph{contract itself} rather
+than about the existence of a witness --- you should not need to find the
+clever compliant implementation, any of them must do. That body of theory
+already develops the composition operators (quotient/residuation), refinement
+orders, and compatibility conditions this appendix does not; what follows
+should be read as an instance of that theory inside this paper's vocabulary,
+not as new theory.
+
+Two special cases are worth highlighting:
+
+\begin{itemize}
+  \item \textbf{Pairwise independence.}
+  For two components $a,b \in C$, implementation independence on
+  $D = \{a,b\}$ says that whenever both $a$ and $b$ satisfy their local
+  obligations in some profile, the resulting global behavior is valid.
+  This matches the informal idea that the modules for $a$ and $b$ can be
+  implemented and combined without introducing architectural failures.
+
+  \item \textbf{Full independence.}
+  Implementation independence on $D = C$ says that as soon as
+  \emph{all} components satisfy their local specifications in a profile,
+  the system is globally desirable:
+  \[
+    \mathsf{Indep}_C(S)
+    \;\equiv\;
+    \forall \sigma.\;
+      \biggl(
+        \bigwedge_{c\in C} u_c(\sigma) = 1
+      \biggr)
+      \;\Longrightarrow\;
+      \mathsf{out}(\sigma) \subseteq \mathsf{Valid}.
+  \]
+  This is a very strong architectural property:
+  any locally compliant joint implementation is guaranteed to be globally
+  acceptable.
+\end{itemize}
+
+Unlike the $\mathsf{SC}$-relative coupling notion
+$\mathsf{SC}(S) \subseteq \mathsf{ValidBeh}$, implementation independence
+quantifies over \emph{all} profiles that satisfy the obligations of the
+chosen components $D$, regardless of whether they are selected by the
+solution concept.
+It therefore captures a stricter, solution-concept-agnostic form of
+``independent implementability''.
+
+\paragraph{A compatibility (nonemptiness) side condition.}
+As stated, $\mathsf{Indep}_D(S)$ is vacuously true whenever $D$'s
+locally-compliant profile set is empty --- i.e.\ whenever $D$'s own local
+specification is unsatisfiable in isolation. This is the same vacuity
+contract theory calls out under the name \emph{compatibility}. We do not
+build a nonemptiness requirement into the definition above, so that
+$\mathsf{Indep}_D(S)$ remains a pure implication matching the rest of this
+appendix's style; but any use of $\mathsf{Indep}_D(S)$ as evidence of
+\emph{safe} modularity, rather than merely \emph{vacuously consistent}
+modularity, should check nonemptiness of $D$'s compliance set separately.
+
+\begin{proposition}[Full independence is coupling at the compliance solution concept]
+\label{prop:indep-is-sc-all}
+Define $\mathsf{SC}_{\mathrm{All}}(S) := \{\sigma \in \prod_c \Sigma_c :
+\forall c\in C,\ u_c(\sigma)=1\}$, the degenerate solution concept that
+imposes no strategic or rationality assumption beyond raw local compliance.
+Then
+\[
+\mathsf{Indep}_C(S) \iff \mathsf{SC}_{\mathrm{All}}(S) \subseteq \mathsf{ValidBeh}.
+\]
+Moreover, if $\sigma$ is a profile in which every $c\in C$ plays a dominant
+strategy for its own local specification (i.e.\ $u_c(\sigma_{-c},\sigma_c)=1$
+for every $\sigma_{-c}$), then $\sigma\in\mathsf{SC}_{\mathrm{All}}(S)$; so
+the dominant-strategy solution concept is a \emph{subset} of
+$\mathsf{SC}_{\mathrm{All}}$, not in general equal to it (a dominant strategy
+is compliant in every environment, but a profile can be compliant in the one
+environment actually realized without any component's strategy being
+dominant). By SC Monotonicity, $\mathsf{Indep}_C(S)$ therefore implies loose
+coupling under the dominant-strategy solution concept, of which forceability
+is the binary-utility instance --- but the implication runs only in that
+direction.
+\end{proposition}
+\begin{proof}
+Immediate from unfolding both definitions: $\mathsf{Indep}_C(S)$ says
+$\forall\sigma.\ (\bigwedge_c u_c(\sigma)=1) \Rightarrow
+\mathsf{out}(\sigma)\subseteq\mathsf{Valid}$, which is literally
+$\mathsf{SC}_{\mathrm{All}}(S)\subseteq\mathsf{ValidBeh}$ once
+$\mathsf{SC}_{\mathrm{All}}(S)$ is unfolded. The dominant-strategy inclusion
+and the monotonicity consequence are as stated above.
+\end{proof}
+
+\begin{remark}[Why PNE escapes this hierarchy]
+$\mathsf{PNE}(S)$ is \emph{not} in general a subset of
+$\mathsf{SC}_{\mathrm{All}}(S)$: as already noted, an all-zero-utility profile
+can be a PNE. So \Cref{prop:indep-is-sc-all}'s monotonicity argument says
+nothing about PNE-coupling in either direction --- $\mathsf{Indep}_C(S)$ can
+hold while some PNE is still an undesired stability trap, because that PNE
+need not be locally compliant at all and so falls entirely outside what
+$\mathsf{Indep}_C$ constrains. This is the precise mechanism behind
+\Cref{subsec:pne-caveat}'s caveat, not merely an informal observation about
+it.
+\end{remark}
+
+\begin{remark}[A tempting but likely-flat $K$-ary candidate]
+Byzantine-style robustness --- ``valid under arbitrary deviation by any
+$\le f$ of the $K$ components'' --- is the notion in this framework that most
+looks like genuine $K$-ary content, since it quantifies over a whole family
+of coalitions rather than one fixed coalition. But it is exactly a finite
+conjunction of two-coalition facts, one forceability-style statement per
+coalition of size $\le f$, and the flattening result of
+\Cref{prop:coalition-merge-lossless} applies to each conjunct separately.
+This is the third time in this paper that a plausible-looking source of
+$K$-ary content collapses into a family of two-coalition facts, after the
+tensor/coalition-merging discussion of \Cref{subsec:open-games} and the
+IF-binder conjecture of \Cref{subsec:coalitional-forceability}. If this
+calculus has genuine $K\ge 3$ content anywhere, the pattern across all three
+attempts points the same way: it will come from information asymmetry
+between components, not from counting coalitions.
+\end{remark}
+
+\subsection{Architectural Notions}
+
+Architectural properties compare $\mathsf{SC}(S)$ with desirable profiles.
+
+\paragraph{Coupling.}
+
+A system is \emph{loosely coupled} under $\mathsf{SC}$ when
+\[
+\mathsf{SC}(S)\subseteq \mathsf{ValidBeh}.
+\]
+
+Otherwise some SC-profile is globally undesirable.
+If $\mathsf{SC}(S)=\varnothing$, the condition holds vacuously.
+
+\paragraph{Substitutability Relative to the Global Property.}
+
+Fix component $B$.
+For all environments $\sigma_{-B}$ and all $\sigma_B,\sigma'_B$ with
+$u_B(\sigma_{-B},\sigma_B)=u_B(\sigma_{-B},\sigma'_B)=1$:
+
+\[
+\mathsf{out}(\sigma_{-B},\sigma_B)\subseteq\mathsf{Valid}
+\;\Longleftrightarrow\;
+\mathsf{out}(\sigma_{-B},\sigma'_B)\subseteq\mathsf{Valid}.
+\]
+
+Quantification is over \emph{all} environments, not only $\mathsf{SC}$-reachable ones.
+This expresses $\mathsf{Valid}$-preserving substitutability, not refinement or observational equivalence.
+
+\paragraph{Minimality of Specifications.}
+
+Semantic weakening:
+\[
+S'_c \le S_c \Rightarrow 
+\llbracket S_c\rrbracket_c \subseteq \llbracket S'_c\rrbracket_c.
+\]
+
+$S_B$ is \emph{$\mathsf{SC}$-minimal} in context $S_A$ when:
+\begin{enumerate}
+\item $\mathsf{SC}(S)\neq\varnothing$ and $\mathsf{SC}(S)\subseteq\mathsf{ValidBeh}$;
+\item no strictly weaker $S'_B < S_B$ preserves \emph{all} desirable SC-stable profiles.
+\end{enumerate}
+
+\paragraph{Information Hiding (Stability-Oriented).}
+
+\[
+\sigma_{-c}=\sigma'_{-c}
+\ \land\
+\pi_c(\mathsf{out}(\sigma))=\pi_c(\mathsf{out}(\sigma'))
+\;\Rightarrow\;
+(\sigma\in\mathsf{SC}(S)\Rightarrow \sigma'\in\mathsf{SC}(S)).
+\]
+
+A strict extensional criterion:
+equality of projected behavior sets is required; adding new projected behaviors or splitting one into multiple distinguishable observations breaks hiding.
+This is stricter than trace- or simulation-based hiding unless accounted for in~$\pi_c$.
+\subsection{Adversarial Test Components}
+\label{subsec:adversarial-tests}
+
+In a modular setting, \emph{tests} are naturally modeled as \emph{adversarial}
+components: they are written with the explicit intention of catching bad
+behavior of other components. This is slightly at odds with everyday testing
+terminology: here a ``good'' test is one that is \emph{bad for} at least one
+incorrect implementation.
+
+Let $\mathcal I$ be the set of implementations of a given interface or
+component role, and let $\mathcal G \subseteq \mathcal I$ be the set of
+\emph{intended} implementations. For example, one may take $\mathcal G$ to be those
+implementations that both satisfy a local specification $S_c$ and lead to
+globally desirable behavior (with respect to $\mathsf{Valid}$) under some
+chosen class of environments.
+
+\begin{definition}[Test suite]
+Let $\mathcal I$ be the implementation space for a given interface, and let
+$\mathcal G \subseteq \mathcal I$ be the intended implementations. A
+\emph{test suite} is a function
+\[
+  T : \mathcal I \to \{\mathsf{pass}, \mathsf{fail}\}.
+\]
+It is
+\begin{itemize}
+  \item \emph{non-vacuous} if
+    $\exists I \in \mathcal I \setminus \mathcal G:\; T(I) = \mathsf{fail}$;
+  \item \emph{satisfiable} if
+    $\exists I \in \mathcal G:\; T(I) = \mathsf{pass}$;
+  \item \emph{complete} if
+    $\forall I \in \mathcal I:\; T(I) = \mathsf{pass}
+      \iff I \in \mathcal G$.
+\end{itemize}
+\end{definition}
+
+Thus:
+\begin{description}
+  \item[Non-vacuous] At least one incorrect implementation is actually
+    detected:
+    \[
+      \exists I \in \mathcal I \setminus \mathcal G:\; T(I) = \mathsf{fail}.
+    \]
+
+  \item[Satisfiable] At least one intended implementation survives:
+    \[
+      \exists I \in \mathcal G:\; T(I) = \mathsf{pass}.
+    \]
+
+  \item[Complete] The suite perfectly separates intended from unintended
+    implementations:
+    \[
+      \forall I \in \mathcal I:\;
+      T(I) = \mathsf{pass} \iff I \in \mathcal G.
+    \]
+\end{description}
+
+This is a \emph{counterfactual} view: a test suite classifies \emph{all}
+implementations in $\mathcal I$, including those never actually deployed or
+executed in any particular run. It asks which incorrect implementations
+\emph{would} be rejected, not only what happens on the single implementation
+actually in use.
+
+In an architectural setting, a \emph{test component} together with its
+surrounding harness induces such a test suite $T$ on $\mathcal I$: for each
+implementation $I$, $T(I)$ records whether the composed system, with that
+implementation plugged in, causes the test component to pass or fail.
+
+Consequently, what we specify here is not ``a system that is already correct''
+in isolation, but rather
+\begin{quote}
+a system whose interaction structure contains meaningful, adversarial tests
+that separate intended implementations $\mathcal G$ from unintended ones
+$\mathcal I \setminus \mathcal G$; correctness itself is then obtained only
+under the additional assumption that the tests do in fact succeed on the
+implementations actually deployed.
+\end{quote}
+
+\subsection{Why This Lens Is Useful}
+
+The framework separates:
+\begin{itemize}
+\item specification semantics,
+\item implementations,
+\item joint behavior,
+\item observation level,
+\item architectural stance (solution concept),
+\item global acceptability.
+\end{itemize}
+
+These parameters are orthogonal; small semantic changes can alter the architecture's stability landscape.
+This fragility reveals mismatches between obligations, composition semantics, and global aims.
+
+\subsection{Summary}
+
+A tuple of component specifications induces a multi-player
+game with binary demonic obligation semantics.
+A solution concept $\mathsf{SC}$ selects profiles of architectural interest.
+Comparing these with globally desirable behaviors yields precise notions of coupling, substitutability, specification minimality, and information hiding.
+
+Some solution concepts (notably PNE) reveal undesired stability traps, while others may select desirable or optimal configurations.
+The framework accommodates both without committing to a single interpretation.

@@ -10,7 +10,173 @@ core with IF-style binders, which raises the complexity of the
 forceability problem from PSPACE-complete to NEXPTIME-hard,
 and allows the logic to syntactically capture information constraints.
 
-Future work includes a deeper study of the K-player complement
-operator, developing a full proof theory, and combining this work with other axes such as probabilistic reasoning.
+We want to be explicit about the limits of what this paper shows. In
+particular, the complexity results should \emph{not} be read as evidence that
+$K>2$ roles carry strategic content beyond the two-player machinery the
+calculus is built from: as discussed in \Cref{sec:k-complexity}, the
+PSPACE-completeness of the broadcast core is uniform in $K$, coalitional
+forceability under broadcast visibility reduces to ordinary two-role
+forceability of a merged game (\Cref{prop:coalition-merge-lossless}), and even
+the NEXPTIME-hardness result is witnessed by a $K=2$ construction
+(\Cref{rem:nexptime-is-k2}). What we have established is that a specific
+$K$-role, prenex, first-order game syntax admits clean semantics, a retract
+onto classical \FOL at $K=2$, a nontrivial (if only partially understood)
+symmetry algebra, and MPST-style protocol readings, with the expected
+metatheory worked out. We have \emph{not} established that this syntax does
+anything a family of two-player games could not already do; that is the open
+question we consider most important, first below.
 
-An open question is whether \KFOL can serve as a full semantic model for a K-player fragment of linear logic. This would involve defining an 'abstraction' function from multi-party linear propositions back to \KFOL games and proving that the cut operation in the logic corresponds to game composition.
+\paragraph{Open questions.}
+\begin{itemize}
+  \item \textbf{Genuine $K\ge 3$ separation.} Is there a \KFOL\ phenomenon ---
+  in forceability, complexity, or elsewhere --- that is not reducible to a
+  family of two-player or two-coalition facts? \Cref{subsec:coalitional-forceability}
+  conjectures that coalitional forceability under IF-binders, where a
+  coalition's own members are mutually information-restricted \emph{and}
+  whose objectives are coupled across that restriction, is the place to look:
+  role-merging is provably lossless once visibility is broadcast
+  (\Cref{prop:coalition-merge-lossless}), a mere $\setminus V$-crossing within
+  a coalition is not by itself enough
+  (\Cref{prop:cross-diagonal-forceability}), and the existing NEXPTIME-hardness
+  construction does not touch this case (\Cref{rem:nexptime-is-k2}). No
+  separating construction is currently known; finding one --- or proving that
+  none exists, i.e.\ that \KFOL\ forceability always reduces to two-coalition
+  facts --- would be the paper's missing central theorem. This same fork has
+  now recurred three times under three different readings of the calculus ---
+  here, in the tensor/coalition-merging discussion of
+  \Cref{subsec:open-games}, and in the Byzantine-robustness remark of
+  \Cref{sec:framework} --- and collapsed to two-coalition facts in the
+  perfect-information case each time. That convergence is itself evidence
+  about where to look: every attempt so far suggests genuine $K\ge 3$ content,
+  if it exists in this calculus, comes from information asymmetry between
+  roles rather than from coalition counting. All of this is posed
+  information-theoretically; \Cref{subsec:computational-soundness-gap}
+  poses, but does not resolve, the same question once independence is only
+  assumed to hold computationally.
+
+  \item \textbf{A third complexity regime between the two known ones ---
+  and a more basic gap underneath it.} \Cref{rem:hierarchical-if} separates
+  three claims of different strength. The most basic is not about the
+  hierarchical restriction at all: \Cref{prop:nexptime-if} only proves
+  NEXPTIME-\emph{hardness} of the general IF fragment, with no matching
+  upper bound, so unrestricted \KFOL\ forceability is not currently known to
+  be decidable --- Peterson--Reif--Azhar's own finding that fully general
+  (non-hierarchical) multiplayer incomplete-information games can be
+  undecidable~\cite{PetersonReifAzhar2001LowerBounds,PetersonReifAzhar2002DecisionAlgorithms}
+  leaves this as a live possibility, not merely a formality. Restricting to
+  \emph{hierarchical} (pairwise-comparable) $\setminus V$ patterns is very
+  likely decidable by a routine Skolem-table argument (not a deep unknown);
+  what is genuinely open is whether its complexity matches their
+  $(d{+}1)$-fold-exponential bound exactly, with a matching lower bound
+  specific to \KFOL's own syntax. This is a well-posed, independently
+  interesting complexity question even
+  if the $K\ge 3$ separation conjecture above turns out to be false, and a
+  natural warm-up for it: it isolates nesting depth as a complexity
+  parameter distinct from $K$, and --- because
+  \Cref{prop:cross-diagonal-forceability} already shows comparability alone
+  does not break flattening --- confirms that a separating construction, if
+  one exists, must specifically use non-hierarchical independence, not
+  merely nontrivial independence.
+
+  \item \textbf{Relationship to ATL, Coalition Logic, and Strategy Logic ---
+  check this one first.} Individual forceability $F_i$ is semantically a
+  one-shot instance of ATL's $\langle\!\langle i \rangle\!\rangle$ modality
+  (\Cref{sec:related}). We have not worked out a translation in either
+  direction, nor compared complexity results on equal footing (formula
+  complexity here vs.\ combined complexity there). Unlike the other items in
+  this list, a bad answer here is not merely a missing result but a threat to
+  the rest of them: if forceability turns out to be a routine encoding of
+  $\langle\!\langle i \rangle\!\rangle$, several other open questions in this
+  list inherit that reduction for free (in either a good or a bad way,
+  depending on which direction it runs) and should be revisited in its light.
+  It is also comparatively cheap to check. This should be done before any
+  claim of novelty relative to that literature is treated as established
+  rather than plausible, and before investing in the harder items below.
+
+  \item \textbf{Team semantics / Dependence Logic.} The IF-binder extension
+  overlaps with Väänänen's dependence logic~\cite{Vaananen2007DependenceLogic},
+  the modern reformulation of the same two-player, imperfect-information
+  territory Hintikka--Sandu IF logic occupies. We conjectured team semantics
+  corresponds to the $K=2$ slice of \KFOL's information-sensitive fragment,
+  consistent with \Cref{rem:nexptime-is-k2}; on reflection a clean
+  biconditional is unlikely to be the right target, since IF logic and
+  dependence logic are already known to diverge at the open-formula level
+  (despite sentence-level equivalence) and team semantics itself has
+  lax/strict variants. The more realistic --- and still worthwhile --- shape
+  of this item is a \emph{taxonomy}: which variant corresponds to \KFOL's
+  $K=2$ IF-fragment under which translation, and exactly where the others
+  diverge from it. We have not attempted this in either form.
+
+  \item \textbf{A full proof theory --- scope this before attempting it.} We
+  have no sequent calculus, cut rule, or cut-elimination result for \KFOL;
+  \Cref{sec:ra-view}'s relational-algebra reading gives compositional
+  intuition (profiles as joins) but is not a substitute for one. This should
+  not be stated as flatly open, though: classical IF logic is provably
+  \emph{not} axiomatizable (validity is not recursively enumerable, via
+  Trakhtenbrot's theorem~\cite{Trakhtenbrot1950,sep-logic-if}), and our
+  IF-binder extension is close enough to IF logic
+  (\Cref{subsec:if-binders,sec:related}) that a complete proof calculus for
+  the \emph{full IF-extended} fragment may be impossible in principle, not
+  merely unbuilt. What remains open --- and what a proof theory should
+  actually be scoped to --- is the broadcast core (which retracts onto
+  classical \FOL at $K=2$ and inherits its axiomatizability) and whichever
+  restricted IF fragments (if any) stay decidable or recursively
+  axiomatizable; the conjecture that the full IF-extended fragment resists
+  complete axiomatization should itself be checked, not assumed, since we
+  have not verified \KFOL's IF-binders are expressive enough to actually
+  embed the constructions Trakhtenbrot's argument needs.
+
+  \item \textbf{\KFOL\ as a semantic model of a $K$-player fragment of linear
+  logic.} This would mean an abstraction from multi-party linear propositions
+  into \KFOL\ games such that cut corresponds to game composition. Carbone,
+  Montesi, Sch\"urmann, and Yoshida's coherence-proofs correspondence for
+  MPST~\cite{CarboneMontesiSchurmannYoshida2015Coherence} is the closest
+  existing result along these lines we are aware of, though it is fully
+  cooperative (coherence, not our adversarial forceability); an adversarial
+  analogue of coherence is, as far as we know, still to be worked out
+  (\Cref{sec:related}).
+
+  \item \textbf{Classifying the complement operator.}
+  \Cref{rem:no-classification} notes that our negative results about
+  $\CompOp$ (failure to preserve zero-sumness, failure of De Morgan duality)
+  are witnessed by single counterexamples, not a classification of when these
+  properties hold. Relatedly (\Cref{rem:outcome-geometry}): what group of
+  transformations of the $K$-player outcome space interpolates between the
+  one-hot (zero-sum) and diagonal (fully cooperative) extremes for $K>2$,
+  generalizing the $K=2$ rotation/complement symmetries of
+  \Cref{sec:symmetry}, and do its orbits correspond to meaningful degrees of
+  cooperativeness or coalition structure? A categorical axiomatization of what
+  the group action preserves (in the spirit of $*$-autonomous categories for
+  classical duality) would likely answer both questions at once. A more
+  speculative version of the same question, not derived here: the $S_K$
+  action also acts on coalition families
+  $\mathcal S\subseteq 2^{\{0,\dots,K-1\}}$
+  (\Cref{rem:coalition-operator-parameters}), and its orbits are a candidate
+  notion of ``type of power structure'' --- ``no singleton dominates'' is
+  $S_K$-invariant, ``role 0 is hegemon'' is not --- which would make
+  ``unbiased'' formal as $S_K$-equivariance of a coalition predicate. We have
+  not computed a single orbit or posed the corresponding representation
+  question (which $S_K$-invariant labelings of the coalition lattice are
+  realized by an actual \KFOL\ formula's forceability landscape); this is a
+  research direction, not a claim.
+
+  \item \textbf{Compositional game theory as candidate machinery.}
+  \Cref{subsec:open-games} surveys open games, lenses/optics, and
+  Escard\'o--Oliva selection functions as a possible source for both the
+  categorical axiomatization above and a precise version of the
+  coalitional-merging conjecture (do coalitions correspond to lenses, with
+  the over-/under-approximation gap identifying exactly where $K\ge3$ content
+  lives?). One specific obstacle: the standard open-games equilibrium functor
+  is Nash-style, which is the composability failure mode \KFOL's forceability
+  semantics was built to avoid, so this machinery cannot be adopted wholesale
+  without first substituting an adversarial/minimax selection notion ---
+  itself apparently unstudied in that literature. This is scoped as a side
+  investigation to try, not a claim about what it will find.
+
+  \item \textbf{Probabilistic and quantitative extensions.} Combining this
+  work with mixed strategies, graded payoffs, or probabilistic reasoning is
+  future work; \Cref{subsec:payoff-ignorance} notes specifically that the
+  $\{0,1\}$-valued setting collapses the utility-gap arguments used in
+  rational-proof and scoring-rule literature, which graded payoffs would
+  restore.
+\end{itemize}

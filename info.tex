@@ -2,18 +2,64 @@
 \section{IF-style binders for roles}
 \label{subsec:if-binders}
 We refine the player binder to carry an \emph{independence set}, in the style of
-Independence-Friendly (IF) logic~\cite{HintikkaSandu1989}. The syntax becomes
+Independence-Friendly (IF) logic~\cite{HintikkaSandu1989}. The primitive
+syntax is
 \[
   \Phi \Coloneqq
   \langle \fo_0,\dots,\fo_{K-1} \rangle
   \;\mid\;
-  P_i x / J.\,\Phi
+  P_i x \setminus V.\,\Phi
 \]
 where $i \in \{0,\dots,K-1\}$ is the role making the move, $x$ is the chosen
-object, and $J \subseteq \{0,\dots,K-1\}$ is a finite set of \emph{roles from
-which this choice must be independent}. Informally,
-\emph{``player $i$ chooses a value for $x$, and the future moves of all roles in
-$J$ must not be allowed to depend on this choice.''}
+object, and $V$ is a finite set of \emph{previously bound variables from
+which this choice must be independent}. Informally, \emph{``player $i$
+chooses a value for $x$, and $i$'s choice may not depend on the values
+already bound to the variables in $V$.''}
+
+\paragraph{Why variable-level, not role-level.}
+An earlier version of this section attached the independence set to
+\emph{roles} instead ($P_i x / J$, $J \subseteq \{0,\dots,K-1\}$: ``the
+future moves of roles in $J$ must not depend on this choice''), matching the
+natural reading of a broadcast being withheld from certain participants.
+That grammar is strictly less expressive than what the rest of the paper
+needs and, in places, already assumed: the DQBF-hardness reduction of
+\Cref{prop:nexptime-if} requires each existential binder $x_j$ --- all owned
+by the \emph{same} role --- to exclude an arbitrary, binder-specific subset
+$H_j$ of the previously bound universal variables. Role-level exclusion
+cannot express this once two binders share an owner, because the number of
+distinct exclusion sets available is bounded by the number of role subsets,
+independent of how many variables that role has bound; a $K=2$ construction
+has only two role-level exclusion sets available ($\emptyset$ or the other
+role) no matter how many existential variables $P_0$ binds. The tensor
+combinator $\otimes$ of \Cref{subsubsec:seq-vs-tensor} has the same
+requirement and already used variable-level exclusion sets without this
+section licensing it. We correct that mismatch here by making variable-level
+exclusion the primitive and deriving role-level exclusion from it.
+
+\paragraph{Role-level exclusion, as a derived notation.}
+For a formula $\Psi = P_{k_1}z_1\setminus V_1.\,\dots.\,P_{k_n}z_n\setminus
+V_n.\,\langle\vec\fo\rangle$, a variable $x$, and a set of roles $J$, define
+\[
+  \mathrm{hide}(\Psi,x,J) :=
+  P_{k_1}z_1\setminus V_1'.\,\dots.\,P_{k_n}z_n\setminus V_n'.\,\langle\vec\fo\rangle,
+  \qquad
+  V_\ell' := \begin{cases} V_\ell\cup\{x\} & k_\ell\in J\\ V_\ell & k_\ell\notin J.\end{cases}
+\]
+Then, for $J \subseteq \{0,\dots,K-1\}\setminus\{i\}$,
+\[
+  P_i x / J.\,\Phi \;:=\; P_i x\setminus\emptyset.\,\mathrm{hide}(\Phi,x,J)
+\]
+recovers the role-level reading exactly: $x$ is added to the slash-set of
+\emph{every} later binder owned by a role in $J$, so no future move of any
+role in $J$ can depend on $x$. (The same style of rewriting, run in the
+opposite direction --- removing a variable from later slash-sets rather than
+adding one --- is $\mathrm{vis\text{-}add}$ in
+\Cref{subsubsec:clock-megaphone}.) This is the notation used by the MPST
+translation of \Cref{sec:mpst-connection}, whose well-formedness condition
+($V\subseteq\mathcal P\setminus\{i\}$, i.e.\ every binder's exclusion set is
+already role-uniform) should be read as restricting that translation to
+formulas built from this derived form, not as a property of \KFOL\ formulas
+in general.
 
 \paragraph{Semantics.}
 The semantics of this binder is identical to $P_i x.\,\Phi$,
@@ -37,6 +83,28 @@ The definitions of evaluation $\llbracket\cdot\rrbracket$ and forceability $F_i$
 (\Cref{def:k-semantics} and \Cref{def:k-force})
 are unchanged, but the quantification $\exists \profile_i$
 is now restricted to \emph{valid} strategies.
+
+\paragraph{This is a syntactic, not a semantic, guarantee.}
+Validity constrains the \emph{strategy function's argument list}: $x$'s
+chosen value cannot be computed as a function of $V$. It does not follow
+that the \emph{outcome} --- whether $\phi_i$ ends up true --- is independent
+of $V$; $\phi_i$ can still relate $x$ and $V$ through the terminal formula
+itself, in exactly the way a classical IF-logic formula's truth conditions
+can involve two syntactically independent variables through a shared atomic
+subformula~\cite{sep-logic-if}. This is not a defect: it is what the
+\Cref{prop:nexptime-if} DQBF reduction exploits (the matrix $f$ entangles
+$x_j$ and the universal variables it cannot see), and it is the expected,
+IF-logic-standard reading. It does mean $\setminus V$ alone gives no
+epistemic guarantee that role $i$'s later behavior, or the outcome, is
+uncorrelated with $V$ in any stronger sense --- only that $i$'s choice
+function cannot name $V$ as an input. A genuinely stronger, more
+epistemic notion of independence, closer to a guarantee about what is
+knowable rather than only about a function's argument list, would need to be
+built from something like \Cref{subsec:prop-annot-binders}'s identifiability
+machinery ($\mathrm{Id}_u$), which tracks what is \emph{derivable} from
+public commitments rather than only what a binder is syntactically permitted
+to name. We have not built this stronger notion or compared its forceability
+theory to the one in this paper.
 
 \subsection{Syntax Sugar: Where-Clauses}
 \label{subsec:where}

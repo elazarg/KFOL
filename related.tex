@@ -17,24 +17,65 @@ There is also work on enriching global types with logical/refinement conditions 
 
 Our calculus builds on a similar ''session-like'' global structure, but differs in two crucial respects: (i) our calculus is \textbf{natively K-player}, a direction explicitly noted as future work in the binary logical-foundations literature, and more importantly (ii) evaluation produces a per-role outcome tuple, on top of which we can define game-theoretic success (forceability, coalitions). In other words, we use a session-like global form as a \emph{game logic}, not only as a source of \emph{protocol-safety types}.
 
+The logical account closest to what we would need to make this precise is the \textbf{coherence} reading of MPST: Carbone, Montesi, Sch\"urmann, and Yoshida show that multiparty global types correspond to proofs in a generalization of classical linear logic where binary duality is replaced by an $n$-ary \emph{coherence} condition~\cite{CarboneMontesiSchurmannYoshida2015Coherence}. That correspondence is fully cooperative: coherence certifies that $K$ local behaviors fit together into one consistent global protocol, with a single (implicit) notion of success. The open question in \Cref{sec:conclusion} — whether \KFOL\ admits an abstraction into a $K$-player fragment of linear logic where cut corresponds to game composition — is best understood as asking for an \emph{adversarial} analogue of coherence, where the $K$ local types carry separate, possibly conflicting objectives rather than a shared one. We have not attempted this; it is the most directly relevant piece of literature we are aware of for that open question, and we flag it as the place to start rather than as something we have shown a relationship to.
+
 Declarative game-description languages such as GDL~\cite{LoveHinrichsGenesereth2006GDL} and later systems like Ludii~\cite{PietteEtAl2021LudiiConcepts} also give global specifications, but they axiomatize transition, observation, and goal relations of a grounded game, whereas we define games \emph{compositionally} inside a first-order syntax.
-Unlike Castellan–Yoshida~\cite{CastellanYoshidaSessionGame}, who show that binary session protocols and game-semantic strategies can be given a common event-structure model for the (session) $\pi$-calculus, we work with a first-order, K-role, payoff-producing calculus and treat viewpoint/rotation as syntactic operators. Our system is not a model of the session $\pi$-calculus, but a specification language whose global shape is session-like.
+Unlike Castellan-Yoshida~\cite{CastellanYoshidaSessionGame}, who show that binary session protocols and game-semantic strategies can be given a common event-structure model for the (session) $\pi$-calculus, we work with a first-order, K-role, payoff-producing calculus and treat viewpoint/rotation as syntactic operators. Our system is not a model of the session $\pi$-calculus, but a specification language whose global shape is session-like.
+
+Koller and Milch's multi-agent influence diagrams (MAIDs) \cite{KOLLER2003181} provide a graphical representation of non-cooperative games that makes explicit the dependence structure between chance, decision, and utility variables. MAIDs have a well-defined game-theoretic semantics (via reduction to extensive or sequence form) and support a qualitative notion of strategic relevance, captured by the s-reachability criterion and summarized in a relevance graph whose strongly connected components can be solved sequentially to obtain a global Nash equilibrium. This work is directly related to our dependency layer, which likewise factors games into variable-level decisions with explicit visibility and payoff dependencies and uses graph structure (reachability and incomparability) to support modular solution. Conceptually, MAIDs provide an important precedent and baseline: our framework extends this style of representation with a logical surface language (KFOL), compositional operators, hyperproperty-level reasoning, and crypto-implementable information constraints, but the underlying idea that a compact dependency DAG can guide equilibrium computation is shared.
+
+A natural independent line of work is to use multi-agent influence diagrams \cite{KOLLER2003181} as semantic structures for Strategy Logic in the sense of Chatterjee et al., interpreting strategy quantification over MAID policies. This would combine MAIDs’ explicit causal and informational structure—together with their strategic-relevance graph and decomposition algorithms—with the expressive power of Strategy Logic for specifying equilibria, counterfactuals, and hyperproperties of strategy profiles. Existing work on causal games and MAIDs hints at this connection but does not yet develop a full SL semantics or verification theory over MAIDs.
 
 \subsection{Strategic and Coalition Logics}
 Modal and temporal logics for strategic ability---Parikh’s game logic~\cite{Parikh1985LogicOfGames}, Coalition Logic~\cite{pauly2002modal}, ATL~\cite{AlurHenzingerKupferman2002ATL}, Strategy Logic~\cite{ChatterjeeHenzingerPiterman2010SL}, and its imperfect-information extensions~\cite{BerthonEtAl2021SLii}---interpret formulas over concurrent game structures and reason about what agents or coalitions can enforce.
 These systems are natively multi-agent but remain modal and essentially Boolean: objectives are truth conditions, not structured outcomes, and the syntax does not expose the move/quantifier level that our calculus uses as its core.
 Classical game theory~\cite{VonNeumannMorgenstern1944,Nash1950,Shapley1953StochasticGames,Harsanyi1967PartI,Harsanyi1968PartII,Harsanyi1968PartIII} provides the semantic background for multi-player interaction, but not a first-order, operational specification language of the kind we develop.
 
+We should be precise about the strength of this distinction. Semantically, individual forceability $F_i$ (\Cref{def:k-force}) is exactly a one-shot instance of ATL's $\langle\!\langle i \rangle\!\rangle$ coalition modality: ``role $i$ has a strategy that guarantees the objective against every strategy of the rest.'' The syntactic difference we point to --- that a \KFOL\ prefix \emph{is} the arena, quantifier by quantifier, rather than a formula interpreted over an externally given concurrent game structure --- is real, but we have not turned it into a translation or a separation result in either direction. We also do not know the precise relationship between \KFOL's PSPACE-complete/NEXPTIME-hard forceability problem (\Cref{sec:k-complexity}) and the model-checking complexity of ATL/ATL*/Strategy Logic: these are stated over different complexity parameters (formula size against a fixed finite structure here, versus formula and explicit game graph together there), so the numbers are not directly comparable without doing the reduction. We leave working out this relationship, in either direction, as open.
+
 \subsection{Information-Sensitive First-Order Logics}
-Independence-Friendly Logic and its descendants~\cite{HintikkaSandu1989,Hintikka1996POMR,MannSanduSevenster2011IFL} expose informational independence directly in the syntax and give semantics via two-player imperfect-information games.
+Independence-Friendly Logic and its descendants~\cite{HintikkaSandu1989,Hintikka1996POMR,MannSanduSevenster2011IFL,sep-logic-if} expose informational independence directly in the syntax and give semantics via two-player imperfect-information games.
 This line is the closest antecedent for our treatment of information flow: it shows that first-order binding can be read as game moves with (in)dependence conditions.
 However, it is inherently two-player and polar (Verifier vs.\ Falsifier) and does not provide role rotation or multiway outcome vectors.
 Our system can be seen as taking that mechanism and lifting it to $K$ explicitly named roles.
+
+\paragraph{A complexity-measure caveat, parallel to the ATL one above.}
+Classical IF logic's headline complexity fact is Fagin's theorem: IF sentences
+are exactly as expressive as existential second-order logic, hence (over
+finite structures) capture NP~\cite{Fagin1974GeneralizedSpectra,sep-logic-if}.
+This is \emph{data/structure} complexity --- the sentence is fixed, the
+finite structure varies. \Cref{prop:nexptime-if}'s NEXPTIME-hardness is
+\emph{formula} complexity --- the structure is fixed (domain $\{0,1\}$), the
+formula varies, exactly as in the DQBF reduction it uses. These are different
+axes, and the paper should not be read as claiming IF logic is ``secretly
+NEXPTIME-hard'': the correct comparison is between \KFOL's formula complexity
+and DQBF's own formula complexity, which does match. We had already flagged
+this same fixed-vs-varying distinction as unresolved for the ATL comparison
+(\Cref{sec:related}); it applies here for the same reason and we did not
+originally state it for IF logic specifically.
+
+\paragraph{A negation parallel worth noting.} IF logic's own strong (dual,
+game-interpreted) negation $\sim$ and contradictory negation $\neg$
+provably do not coincide outside the FOL-equivalent (determined) fragment,
+and closure of IF logic under negation over finite models is equivalent to
+$\mathsf P = \mathsf{NP}$~\cite{sep-logic-if}. This is structurally the same
+shape of result as \Cref{rem:no-global-de-morgan-duality}: a natural
+role-swap/negation-like operator ($\sim$ there, $\CompOp$ here) that agrees
+with genuine logical negation only on a restricted fragment (determined
+sentences there, the zero-sum fragment here), and fails outside it. We do not
+know of a direct technical connection beyond this shared shape, but it is
+independent evidence that this kind of failure is a structural feature of
+information/role-sensitive logics generally, not an artifact of \KFOL's
+specific construction.
+
+The reformulation of IF logic as \emph{team semantics}, and its development into Dependence Logic~\cite{Vaananen2007DependenceLogic}, is the modern presentation of this same two-player, imperfect-information territory, and is arguably closer to our IF-binder extension (\Cref{subsec:if-binders}) than the original Hintikka--Sandu game semantics is. We have not worked out the precise relationship. A natural way to state our contribution once that work is done would be: team semantics is the $K=2$ slice of \KFOL's information-sensitive fragment, and the DQBF-hardness of \Cref{prop:nexptime-if} is already a $K=2$ result in this sense (see the remark following that proof); what a genuinely $K\ge 3$ extension of team semantics buys is a separate question we pose but do not answer.
 
 \subsection{Game Semantics and Compositional Interaction}
 Game-semantical and dialogical accounts of logic and computation model proofs or programs as two-player games and connectives as game combinators~\cite{Blass1992GameSemanticsLL,Girard1987LinearLogic,Lorenzen1960LogikUndAgon,van2003logic}, and are surveyed in~\cite{sep-games-abstraction}. This is distinct from the ''Propositions-as-Sessions'' (P-a-S) line of work, which uses linear logic as a \emph{type system} for \emph{protocols} (e.g., $\pi$-calculus processes) to ensure safety properties~\cite{wadler2012propositions,caires2010session}.
 We borrow the compositional stance from classical game semantics---formulas \emph{are} interaction structures---but we make it syntactic, multi-role, and tied to first-order binders, which standard game semantics does not.
 In other words, we internalize the game structure at the level of the object language, rather than only using games as semantic models for an independent language.
+
+The closest direct antecedent for a multi-player game-semantics program as such is Abramsky's proposal for a ``socially responsive'' logic with games among more than two players and an explicit conflict/cooperation structure~\cite{Abramsky2006SociallyResponsive}. That proposal is, to our knowledge, still largely a research program rather than a developed calculus, which is itself informative: the gap between ``games with $K>2$ players have an obvious informal reading'' and ``games with $K>2$ players have a calculus with the metatheory a 2-player game logic has'' is exactly where the difficulty lies, and it is the gap this paper is trying to close for one specific (prenex, first-order) shape of calculus. We do not claim a formal relationship to Abramsky's proposal; we flag it because a reader asking ``has this general idea been tried before'' should be pointed to it before anything else in this section.
 
 This also distinguishes \KFOL\ from Japaridze's Computability Logic (CoL)~\cite{japaridze2024propositional}, a broad
 game-semantic framework where formulas represent computational problems
@@ -43,9 +84,109 @@ always wins. CoL is a comprehensive logic of interactive computability,
 whereas \KFOL\ is a logic of multi-role strategic ability with explicit
 information constraints and distinct per-role objectives.
 
+\subsection{Compositional Game Theory, Optics, and Selection Functions}
+\label{subsec:open-games}
+
+A separate line of work gives games a categorical, fully compositional
+semantics: \emph{open games} are the morphisms of a symmetric monoidal
+category, composed sequentially and in parallel and drawn as string diagrams,
+with a distinguished equilibrium structure singling out optimal
+play~\cite{GhaniHedgesWinschelZahn2018CompositionalGameTheory,Hedges2016Thesis}.
+The wiring these diagrams describe is built from \emph{lenses}, a
+$\mathrm{get}/\mathrm{put}$ pair describing a lossless view of, and update to,
+a larger state~\cite{FosterEtAl2007Lenses}, generalized to the more permissive
+notion of \emph{optics}~\cite{Riley2018CategoriesOfOptics} to accommodate
+branching and stochastic structure~\cite{BoltHedgesZahn2023BayesianOpenGames}.
+
+This is close enough to \Cref{sec:structural-framework}'s structural-combinator
+algebra that it is worth flagging, though we have not done the work of
+relating them. Two places we suspect a connection, neither of which we have
+checked:
+\begin{enumerate}[nosep]
+  \item \textbf{The wiring layer.} Sequencing ($\leaky$), tensor ($\otimes$),
+  and splicing (\Cref{subsec:splice}) all describe how to interleave prefixes
+  and merge terminals under a visibility/information discipline --- exactly
+  the kind of compositional wiring lenses and optics are built to formalize.
+  If \KFOL's structural combinators are (a fragment of) open games in
+  different notation, that would hand \Cref{sec:structural-framework}'s
+  normal-form lemma (\Cref{lem:combinator-normal-form}) a categorical
+  semantics for free. We have not checked whether the correspondence holds,
+  or where it would break.
+  \item \textbf{The coalition-merging question, stated as a lens.}
+  \Cref{prop:coalition-merge-lossless} says exactly that role-merging under
+  broadcast visibility is a \emph{lawful} lens: the $\mathrm{get}$ reading a
+  coalition's per-member strategies off as one merged strategy, and the
+  $\mathrm{put}$ writing a merged strategy back out to the members, are
+  mutually inverse, so no information is invented or destroyed. The open
+  conjecture in \Cref{subsec:coalitional-forceability} (as sharpened by
+  \Cref{prop:cross-diagonal-forceability}: it needs coupled objectives, not
+  merely a $\setminus V$-crossing) then has a clean restatement: for some
+  IF-restricted, objective-coupled coalition, no lawful lens realizes the
+  merge, and the two naive candidates --- give the merged role the
+  \emph{union} of its members' visibility, or the \emph{intersection} ---
+  fail in different directions (one invents coordination the coalition did
+  not have, the other destroys coordination it did), with distributed
+  coalitional forceability sitting somewhere in between. We have not pinned
+  down which of the standard lens laws ($\mathrm{get}$-$\mathrm{put}$ vs.\
+  $\mathrm{put}$-$\mathrm{get}$) each candidate violates, or whether a
+  weaker, quantified notion (lawful only up to the gap) is the right model;
+  that formalization is what would turn the conjecture into a checkable
+  statement.
+  \item \textbf{Is forceability even (lax) monoidal?} Before either of the
+  above is attempted, the open-games framework would ask a more basic
+  question first: is the map from a formula to its forceability vector
+  compatible with $\otimes$ at all --- does $F(\Phi\otimes\Psi)$ decompose
+  into $F(\Phi)$ and $F(\Psi)$, or only receive a lossy map from them? Two
+  small results already in this paper bear on it: forceability is insensitive
+  to the extra visibility of the leakier sequencing product for disjoint
+  arenas (\Cref{prop:tensor-leaky-forceability}), and the cross-diagonal
+  product's forceability factors exactly into its two components' forceability
+  when their objectives are separable (\Cref{prop:cross-diagonal-forceability}).
+  Both are \emph{strict}, not merely lax, but both are also restricted to the
+  disjoint-arena, separable-objective combinators we define by hand. We have
+  not checked whether strictness survives for structural combinators with
+  coupled cross-component objectives (the terminal-combining Boolean function
+  $B_\ell$ of \Cref{def:structural-combinator}'s (SC2), which is explicitly
+  allowed to mix several components' formulas) --- which is exactly where we
+  would also expect the coalition-merging question above to bite, and for the
+  same underlying reason: information flow the syntax restricts, that a naive
+  value-level composition could only assume away or invent.
+\end{enumerate}
+
+There is a mismatch to flag before either of these is pursued. The standard
+open-games equilibrium structure selects \emph{best-response} play --- it is
+built to have the same Nash equilibria as the games it
+represents~\cite{GhaniHedgesWinschelZahn2018CompositionalGameTheory} --- which
+is exactly the solution concept \KFOL's forceability $F_i$ was built to avoid
+(\Cref{sec:k-core}). Grafting \KFOL's semantics onto the open-games
+categorical structure without addressing this would silently reintroduce the
+equilibrium-composability problem the rest of this paper works to sidestep.
+We looked for existing work generalizing the open-games equilibrium functor to
+a worst-case/adversarial (minimax-style) selection instead of a Nash one and
+did not find any; if none exists, that generalization would itself be new
+work, not a citation we are missing.
+
+A closer semantic match for $F_i$ specifically, and one that does not detour
+through Nash equilibria at all, is Escard\'o and Oliva's \emph{selection
+functions}~\cite{EscardoOliva2010SelectionFunctions}: a selection function
+picks a preferred input for a given continuation, existential and universal
+quantification are both instances of the pattern, and they compose (via a
+monad structure) into exactly the optimal-strategy, backward-induction
+semantics of alternating-turn sequential games. That alternation ---
+$\exists\profile_i\,\forall\profile_{-i}\dots$ --- is structurally what
+\Cref{def:k-force}'s forceability already is. We flag selection functions as
+the more promising candidate for a \emph{semantic} (rather than only
+structural/wiring) categorical account of forceability, and open
+games/optics as the more promising candidate for the \emph{compositional
+algebra} of \Cref{sec:structural-framework}; whether the two combine into one
+framework for \KFOL, or pull in different directions, is a question for a
+scoped investigation, not something this paragraph settles.
+
 \subsection{Quantitative and Multi-Outcome Extensions}
 Work on richer winning conditions and quantitative objectives in games and verification (e.g.\ parity and stochastic games~\cite{Jurdzinski2000SPM,ChatterjeeMajumdarJurdzinski2004NashStochastic}, multi-agent model checking~\cite{LomuscioRaimondi2006MCMAS}) shows how to move beyond purely Boolean outcomes, but typically stays modal and does not offer a first-order, role-indexed syntax with explicit symmetry.
 Our outcome tuples live at the object level of the calculus and are aligned with the roles of the global description.
+
+The terminal $K$-tuple $\langle \fo_0,\dots,\fo_{K-1}\rangle$ itself, in isolation, is not new: it is exactly the payoff structure of a \emph{Boolean game}~\cite{HarrensteinEtAl2001BooleanGames}, where each player controls some variables and has a propositional goal formula over the shared variable set. We should be explicit that this is where our terminal comes from and what we add on top of it: (i) the goals are first-order, not propositional, and range over a shared first-order structure rather than a shared set of Boolean variables; and (ii) the variables are not simply ``controlled'' by a player in the sense of an unordered assignment --- they are bound by an explicit, ordered, visibility-annotated quantifier prefix, so that who moves when and who sees what is part of the syntax rather than left implicit. Neither addition is deep on its own; the calculus's content, if any, is in fixing this specific combination and working out its metatheory (\Cref{sec:k-core,sec:symmetry,sec:k-complexity}), not in the terminal payoff shape.
 
 \subsection{Position of This Work}
 The calculus here can be read as:

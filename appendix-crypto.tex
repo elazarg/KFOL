@@ -222,6 +222,55 @@ These are sufficient to justify common \KFOL\ constructions around visibility,
 independence, and coordination \emph{without} embedding cryptographic details in
 the language.
 
+\subsection{A Soundness Obligation This Appendix Has Not Discharged}
+\label{subsec:computational-soundness-gap}
+
+The axioms above justify \KFOL's $\setminus V$ constructions as
+\emph{realizable}, but not as \emph{sound}: $\setminus V$-independence
+(\Cref{subsec:if-binders}) is an exact, unconditional claim about a strategy
+function's argument list, of exactly the same shape as the Dolev--Yao
+``perfect encryption'' idealization in symbolic protocol analysis --- this is
+an identification, not merely an analogy, since both say a value is
+\emph{totally} unavailable to an excluded party rather than merely hard to
+extract. Whether an idealized independence claim survives once the
+primitives above realize it computationally is exactly the question
+computational-soundness results (relating symbolic and computational models
+of cryptography) and universal composability (relating a real protocol to an
+ideal functionality up to indistinguishability by any efficient
+environment) exist to
+answer~\cite{AbadiRogaway2002Reconciling,Canetti2001UC}. We have not checked
+this for any \KFOL\ construction in this appendix.
+
+The direction such a check would go is not obvious, and depends on a
+definitional fork we have not resolved: does $\setminus V$ prohibit
+\emph{any} private communication among the excluded parties (a genuine
+isolation constraint, under which a coalition sharing secret correlated
+randomness --- the exact mechanism secure multiparty computation and
+correlated-equilibrium-without-a-mediator constructions
+provide~\cite{DodisHaleviRabin2000Cryptographic} --- is simply outside the
+model by fiat), or only communication an efficient \emph{outside observer}
+could detect (under which such a coalition might satisfy a relaxed,
+computational notion of independence while still correlating its choices
+with the excluded value, since the winning condition in
+\Cref{subsec:coalitional-forceability}-style constructions checks realized
+bits directly and is not itself a statistical test a coalition needs to
+fool). Under the first reading we see no obvious mechanism for computational
+assumptions to change the flattening/separation landscape of
+\Cref{sec:k-complexity} at all, since \Cref{prop:coalition-merge-lossless}'s
+argument is a pure relabeling that preserves efficiency automatically. Under
+the second, standard results give real reason for caution rather than
+optimism: Halpern, Pass, and Reichman show Nash equilibrium can fail to
+exist outright for resource-bounded
+players~\cite{HalpernPassReichman2015NonExistence}, and the closest existing
+treatment of bounded computation inside extensive-form
+games~\cite{HalpernPass2015AlgorithmicRationality,HalpernPassSeeman2016ComputationalEFG}
+--- surveyed together with the rest of this intersection
+in~\cite{Katz2008Bridging} --- is exactly the place to check whether
+forceability's maximin shape (rather than Nash's fixed-point shape) is
+resilient to that hazard before conjecturing anything about coalitions
+specifically. We pose the fork itself, not either resolution, as the open
+question.
+
 \subsection{Payoff as Evidence of (In)Capability or Knowledge}
 \label{subsec:payoff-ignorance}
 

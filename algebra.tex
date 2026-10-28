@@ -142,11 +142,23 @@ by the triple $(\profile, (V_1, \ldots, V_N), (B_0, \ldots, B_{K'-1}))$ consisti
   \item An IF-pattern $(V_1, \ldots, V_N)$ with $V_j \subseteq \{y_1, \ldots, y_{j-1}\}$,
   \item A tuple of Boolean formulas $(B_0, \ldots, B_{K'-1})$ as in (SC2).
 \end{enumerate}
-Conversely, any such triple satisfying (SC1)–(SC3) defines a structural combinator.
+Conversely, any such triple satisfying (SC1)-(SC3) defines a structural combinator.
 \end{lemma}
 
-This normal form shows that structural combinators have no hidden degrees of 
+This normal form shows that structural combinators have no hidden degrees of
 freedom beyond the three explicit design choices.
+
+\begin{remark}[A categorical semantics is plausible but unchecked]
+The three-part normal form above (shuffle, IF-pattern, terminal-combining
+Boolean functions) is exactly the kind of data a \emph{lens}- or
+\emph{optic}-based categorical semantics is built to organize, and the
+compositional-game-theory literature already builds a symmetric monoidal
+category of open games with sequential and parallel composition strikingly
+similar in shape to $\leaky$ and $\otimes$ below. We have not attempted this
+connection; see \Cref{subsec:open-games} for what we do and do not know about
+it, including a mismatch (Nash-style equilibrium selection vs.\ our
+forceability semantics) that would need to be resolved first.
+\end{remark}
 
 \begin{proposition}[Combinator closure]
 \label{prop:combinator-closure}
@@ -526,6 +538,21 @@ We require $M < K$ so this actually merges at least two roles; when $M=K$
 this construction reduces to a mere permutation.
 \end{definition}
 
+\begin{remark}[Merging is lossless only under broadcast]
+\label{rem:merge-lossless-forward}
+When $\Phi$ has no $\setminus V$ binders, relabeling a block of roles to a
+single role loses no information about who can see what, because every binder
+already sees all earlier moves regardless of which label is attached to it.
+This is exactly what makes coalitional forceability collapse to ordinary
+two-role forceability of $\CoalProjAnd{\pi}(\Phi)$
+(\Cref{prop:coalition-merge-lossless}): under broadcast visibility, a
+coalition is nothing more than a relabeled single role. The same relabeling
+stops being information-preserving once slash-sets can name specific roles,
+which is where we conjecture --- but do not prove --- that genuine
+$K\ge 3$ coalitional content appears
+(\Cref{subsec:coalitional-forceability}).
+\end{remark}
+
 Two instances will be used throughout. For the 2-coalition case, let
 $\pi : \{0,\dots,K-1\} \twoheadrightarrow \{0,1\}$.
 Then
@@ -668,6 +695,47 @@ $\pi_{\times}$ aggregation:
 \]
 \end{example}
 
+\begin{proposition}[Cross-diagonal forceability factors, for separable objectives]
+\label{prop:cross-diagonal-forceability}
+Let $\Phi^{(1)},\Phi^{(2)}$ be 2-FOL formulas over disjoint arenas. Then
+\[
+F_A(\Phi^{(1)} \circledast \Phi^{(2)}, \mathcal M)
+\iff
+F_0(\Phi^{(1)}, \mathcal M) \wedge F_1(\Phi^{(2)}, \mathcal M),
+\]
+and symmetrically for $F_B$ with the roles swapped.
+\end{proposition}
+\begin{proof}[Proof sketch]
+Role $A=\{0^{(1)},1^{(2)}\}$ has binders drawn from both components, and
+$\otimes$'s independence constraints mark every $0^{(1)}$-binder (in the
+$\Phi^{(1)}$-arena) independent of every $\Phi^{(2)}$-variable, and every
+$1^{(2)}$-binder independent of every $\Phi^{(1)}$-variable. So $A$'s own
+binders are mutually restricted --- a $\setminus V$-crossing \emph{within} the
+coalition, in the sense of the remark following
+\Cref{prop:coalition-merge-lossless} below. But by disjointness of arenas,
+$A$'s terminal component $\fo_0\wedge\psi_1$ splits into a part mentioning
+only $\Phi^{(1)}$-variables and a part mentioning only $\Phi^{(2)}$-variables,
+so neither half of $A$'s objective could have benefited from seeing across the
+restriction even if it were allowed to. A merged strategy for $A$ is therefore
+exactly the unconstrained pair of an optimal $\Phi^{(1)}$-role-$0$ strategy and
+an optimal $\Phi^{(2)}$-role-$1$ strategy, chosen independently, and $A$ wins
+iff both halves do.
+\end{proof}
+
+\begin{remark}[A syntactic crossing is not, by itself, a loss]
+\Cref{prop:cross-diagonal-forceability} shows a coalition can have a
+$\setminus V$-crossing among its own members and still merge losslessly, as
+long as the members' objectives do not \emph{couple} across the restriction:
+here $\fo_0$ and $\psi_1$ each depend on only one side, so withholding
+cross-visibility costs nothing. This sharpens (and corrects an overstatement
+in an earlier draft of) the discussion in \Cref{subsec:coalitional-forceability}:
+the syntactic pattern ``a binder of $i\in S$ excludes some $j\in S$'' is
+necessary-looking but not sufficient for genuine loss; what should matter is
+whether the excluded information would actually have helped satisfy the
+coalition's (possibly cross-component) joint objective. We do not have a
+general sufficient condition for when it does.
+\end{remark}
+
 \subsection{Splicing (Overlap)}
 \label{subsec:splice}
 
@@ -703,7 +771,7 @@ label-preserving homomorphisms
 
 \begin{definition}[Splice]
 \label{def:splice}
-Given $\Phi,\Psi$ and $(I,\iota_L,\iota_R)$ satisfying (S1–S3), define
+Given $\Phi,\Psi$ and $(I,\iota_L,\iota_R)$ satisfying (S1-S3), define
 \[
   \Phi \;\splice_{(\iota_L,\iota_R)}\; \Psi
 \]
@@ -761,3 +829,108 @@ gives a different binary operator on 2-FOL by the schema
 \]
 Diagonal and cross-diagonal are the two most symmetric cases; others mix the
 roles in less structured ways.
+
+\subsection{Player-Directed Choice}
+\label{sec:player-choice}
+
+In a game-theoretic setting, branching must be attributed to a specific agent.
+Rather than introducing a primitive branching node, we model \emph{player-directed choice} as an ordinary move in the prefix that selects between two linearized subgames.
+This keeps \KFOL\ in a prenex, sequence-of-moves form (in the spirit of QBF and related game logics), while still validating the usual strategic intuition of extensive-form branching.
+
+\paragraph{Definition.}
+Let $\Phi$ and $\Psi$ be games over the same set of roles $\{0,\dots,K-1\}$, with disjoint sets of bound variables and terminals
+\[
+  \Phi \;:\; \langle \varphi_0,\dots,\varphi_{K-1}\rangle
+  \qquad
+  \Psi \;:\; \langle \psi_0,\dots,\psi_{K-1}\rangle.
+\]
+Fix a role $i$ that chooses between them.
+Introduce a fresh boolean variable $c$ (not occurring in $\Phi$ or $\Psi$), and choose any well-typed prefix shuffle
+$\sigma$ that interleaves the binders of $\Phi$ and $\Psi$ while preserving the internal order and visibility constraints of each branch.
+We define the \emph{player-directed choice}
+\[
+  \Phi \oplus_i \Psi
+  \;\;:\;=\;\;
+  P_i c.\;(\Phi \mathbin{\sigma} \Psi)
+\]
+with terminal
+\[
+  \langle \chi_0,\dots,\chi_{K-1}\rangle
+  \qquad\text{where}\qquad
+  \chi_k   \;:=\; (c = 0 \wedge \varphi_k) \,\vee\, (c = 1 \wedge \psi_k).
+\]
+Here $P_i c$ is an unslashed binder: the choice $c$ is visible to all subsequent moves.
+The disjointness assumption ensures that the two linearized branches do not accidentally interfere via name clashes.
+
+\paragraph{Intuition: predicated execution.}
+Syntactically, \KFOL\ offers only a single linear history.
+The operator $\oplus_i$ encodes branching by \emph{predicated execution} on that history:
+\begin{itemize}
+  \item The full sequences of moves of both $\Phi$ and $\Psi$ appear in the prefix and are legally played.
+  \item The decision variable $c$ \emph{masks} the terminal: for a fixed profile, exactly one disjunct in $\chi_k$ is live.
+        If $c = 0$, the terminal simplifies to $\varphi_k$; if $c = 1$, to $\psi_k$.
+\end{itemize}
+Consequently, all moves in the unchosen branch become \emph{outcome-insensitive}: they may still be observed and responded to, but no player’s payoff can depend on them once $c$ is fixed.
+In game-theoretic jargon, they are at most \emph{cheap talk}: strategically inert messages that pass through the visibility DAG without changing utilities.
+This linearization preserves the static information structure while inducing the same strategic payoffs as a branching game tree where player $i$ selects between $\Phi$ and $\Psi$.
+
+\paragraph{Optimization: leaky vs independent choice.}
+The definition allows any admissible shuffle $\sigma$; different choices of $\sigma$ correspond to different visibility of irrelevant history and can significantly affect solver complexity.
+
+\begin{itemize}
+  \item \textbf{Leaky choice.}
+        Taking $\sigma$ to be simple sequencing (e.g.\ $\Phi \leaky \Psi$) yields a \emph{leaky} encoding:
+        moves in the second branch can observe the entire history of the first.
+        Strategically this is harmless---the extra information concerns outcome-insensitive cheap talk---but a generic extensive-form solver must represent strategies for the second branch as functions of this enlarged history, inflating the search space.
+
+  \item \textbf{Independent choice.}
+        Alternatively, we can use a tensor-style shuffle (e.g.\ $\Phi \otimes \Psi$) that \emph{hides} the internal variables of $\Phi$ from $\Psi$ and vice versa, while keeping $c$ globally visible.
+        We call this the \emph{independent choice} encoding.
+        It enforces syntactic independence between the branches: no move in $\Phi$ can be conditioned on internal moves of $\Psi$ and conversely.
+\end{itemize}
+
+For verification work we adopt the independent encoding as canonical.
+It yields a game that is strategically equivalent to the leaky version, but admits smaller and cleaner information sets: strategy functions need only range over histories that are relevant to the chosen branch.
+In practice, this recovers the tight strategy spaces one would obtain from a structural branching node.
+
+\paragraph{Algebraic properties.}
+The operator $\oplus_i$ interacts smoothly with the structural morphisms of the calculus.
+
+\begin{itemize}
+  \item \textbf{Rotation compatibility.}
+        Role rotation $\RotOp$ acts only on roles, not on variables.
+        Thus, for any rotation $\RotOp$ we have a strategic equivalence
+        \[
+          \Rot{\Phi \oplus_i \Psi}
+          \;\;\simeq\;\;
+          \Rot{\Phi} \oplus_{\RotOp(i)} \Rot{\Psi},
+        \]
+        where the decision variable $c$ and its visibility are preserved on both sides.
+
+  \item \textbf{Distributivity over sequencing.}
+        Let $\Xi$ be a continuation game whose moves occur strictly after those of $\Phi$ and $\Psi$, and assume that $c$ is visible to all roles that act in $\Xi$.
+        Then
+        \[
+          (\Phi \oplus_i \Psi) \leaky \Xi
+          \;\;\simeq\;\;
+          (\Phi \leaky \Xi) \oplus_i (\Psi \leaky \Xi)
+        \]
+        in the sense of \emph{strategic isomorphism}: there is a bijection between strategy profiles that preserves all players’ utilities.
+        On the left, a single strategy for $\Xi$ may depend on $c$ and hence implement branch-specific behavior.
+        On the right, we have a pair $(\sigma_{\Xi_L}, \sigma_{\Xi_R})$ of strategies, one for each copy of $\Xi$.
+        The correspondence is given by
+        \[
+          \sigma_\Xi \;\mapsto\; (\sigma_\Xi \!\restriction_{c=0},\, \sigma_\Xi \!\restriction_{c=1})
+          \qquad\text{and}\qquad
+          (\sigma_{\Xi_L},\sigma_{\Xi_R}) \;\mapsto\;
+          \bigl(\,c=0 \Rightarrow \sigma_{\Xi_L} \;\mid\; c=1 \Rightarrow \sigma_{\Xi_R}\,\bigr).
+        \]
+        This justifies factoring out common suffixes as a compression technique:
+        the left-hand encoding shares a single copy of $\Xi$ without changing the strategic content of the game.
+\end{itemize}
+
+\paragraph{Remark: hidden choice.}
+A natural variation is \emph{hidden choice}, written $P_i c / J$, where $J$ is a set of roles from whom the choice is syntactically hidden.
+For roles in $J$ to remain genuinely unaware of $c$, the two branches must be \emph{protocol-compatible}: along any history visible to these roles, the subsequent binders, sorts, and observable actions of $\Phi$ and $\Psi$ must be indistinguishable (typically, structurally identical up to renaming).
+Otherwise, the value of $c$ can be inferred from the visible shape of the remaining game.
+Hidden choice matters when analyzing games with asymmetric information and signaling.

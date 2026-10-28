@@ -55,6 +55,7 @@ unless excluded by explicit independence/visibility constraints.
 Fix a structure $\mathcal M$ for $\Sigma$ with domain $|\mathcal M|$.
 
 \begin{definition}[Pure strategies]
+\label[definition]{def:pure-strategy}
 For a formula $\Phi$ and a player $i$, a \emph{pure strategy} $\profile_i$ is a function that, for every subformula $\Psi$ of $\Phi$ of the form $\Psi = P_i x.\,\Phi'$ and every assignment $s$ over the free variables of $\Psi$, returns a value $a \in |\mathcal M|$:
 \[\profile_i(\Psi, s) \in |\mathcal M|\]
 This function represents player $i$'s choice for $x$ given the visible history (encoded in $s$) at the moment of the choice. A \emph{strategy profile} is a $K$-tuple $\profile=(\profile_0,\ldots,\profile_{K-1})$.
@@ -188,7 +189,7 @@ For a terminal $\langle \fo_0,\ldots,\fo_{K-1} \rangle$ we distinguish:
 \begin{itemize}
   \item \textbf{Zero-sum (one-hot).}
     $\sum_i \Iverson{\mathcal M,s \models \fo_i} = 1$ for all $\mathcal M,s$.
-    This covers the classical 2-player fragment via abstraction–projection
+    This covers the classical 2-player fragment via abstraction-projection
     (see \Cref{sec:k-to-2}).
 
   \item \textbf{Jointly realizable.}
@@ -255,10 +256,12 @@ If the outcome is \emph{cooperative}, then every player's adversarial projection
 \end{remark}
 
 \begin{remark}[No zero-sum preservation]
+\label{rem:no-zero-sum-preservation}
 Componentwise complement does not preserve zero-sum games for $K>2$; as a simple counterexample, take a game with the constant outcome $(true, false, false)$, complementing it you get $(false, true, true)$
 \end{remark}
 
 \begin{remark}[No global De Morgan duality]
+\label{rem:no-global-de-morgan-duality}
 The complement $\CompOp$ preserves player roles and only flips objectives, so under adversarial projection it yields
 \[
 \AdvProj{i}{\Comp{P_i x.\,\Phi}}
@@ -269,4 +272,43 @@ which is in general not equivalent to
 \neg \AdvProj{i}{P_i x.\,\Phi} \equiv \forall x.\,\neg \AdvProj{i}{\Phi}.
 \]
 Thus $\CompOp$ is a purely algebraic, player-symmetric symmetry and not a logical negation.
+\end{remark}
+
+\begin{remark}[Witnesses, not a classification]
+\label{rem:no-classification}
+\Cref{rem:no-zero-sum-preservation,rem:no-global-de-morgan-duality} each establish their negative claim
+by a single counterexample: they show $\CompOp$ can fail to preserve a given outcome class or duality,
+not for which outcome classes, if any, it always succeeds. We do not know a classification of the
+terminals (or outcome classes) for which componentwise complement acts as a logical negation under
+adversarial projection, nor for which it preserves zero-sumness. This is restated as an open question
+in \Cref{sec:conclusion}, alongside the closely related question of what group of transformations on
+$\{0,1\}^K$ generalizes rotation/complement for $K>2$ (\Cref{rem:outcome-geometry}).
+\end{remark}
+
+\begin{remark}[Outcome classes as regions of the payoff space]
+\label{rem:outcome-geometry}
+The outcome classes of \Cref{sec:outcome-classes} can be read geometrically by
+viewing a terminal's truth pattern, for fixed $\mathcal M,s$, as a vertex
+$v \in \{0,1\}^K$ of the Boolean hypercube (equivalently, an indicator vector
+in $\mathbb{R}^K$). Zero-sum (one-hot) terminals are exactly those confined to the
+$K$ standard basis vectors $e_0,\dots,e_{K-1}$, i.e.\ the $K$ mutually
+orthogonal ``pure conflict'' axes; the fully cooperative terminal
+$\langle \fo,\dots,\fo\rangle$ is confined to the diagonal
+$\{(0,\dots,0),(1,\dots,1)\}$, a single axis shared by all players. Under
+this reading, $\CompOp$ is the antipodal map $v \mapsto \mathbf 1 - v$ on the
+hypercube, which fixes the diagonal setwise (matching
+\Cref{rem:no-zero-sum-preservation}: it fixes the diagonal but does not fix
+the one-hot vertices for $K>2$), and for $K=2$ the rotation swapping
+players $0,1$ coincides with a $90^\circ$ rotation of the square
+$\{e_0,e_1\}$-plane. This suggests a general question, left open here: what
+is the natural group of transformations of $\{0,1\}^K$ (or its convex hull)
+interpolating between the one-hot and diagonal extremes, and what
+game-theoretic meaning --- partial coalitions, correlated objectives, degree
+of cooperativeness --- attaches to its orbits for $K>2$? A related, more
+quantitative decomposition already exists for utility-based games: every
+finite game decomposes uniquely into a \emph{potential} component (aligned
+incentives, akin to the cooperative diagonal) and a \emph{harmonic}
+component (zero-sum-like) via an orthogonal projection on the space of
+payoff functions~\cite{candogan2011flows}; relating that decomposition to
+the Boolean/outcome setting here is left for future work.
 \end{remark}

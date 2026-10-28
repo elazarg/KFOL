@@ -56,7 +56,10 @@ Since QBF is PSPACE-complete, so is our problem.
 
 When we add the IF-style binders, the complexity jumps.
 The problem is now at least as hard as Dependency QBF (DQBF),
-which is NEXPTIME-complete.
+which is NEXPTIME-complete. This construction needs variable-level
+independence (each existential binder excluding an arbitrary,
+binder-specific subset of prior variables); \Cref{subsec:if-binders} makes
+this the primitive form of $\setminus V$ for exactly this reason.
 
 \begin{proposition}[NEXPTIME-hardness with IF-binders]
 \label[proposition]{prop:nexptime-if}
@@ -108,11 +111,26 @@ This strategy $\profile_0$ \emph{is} the set of
 Skolem functions $f_j(D_j)$ that witnesses the DQBF.
 \end{proof}
 
-\subsection{Coalitional Forceability}
+\begin{remark}[This construction is a $K=2$, single-role phenomenon]
+\label{rem:nexptime-is-k2}
+The hardness in \Cref{prop:nexptime-if} already appears at $K=2$, and every
+$x_j$ on the existential side is bound by the \emph{same} role $P_0$: the
+independence driving the DQBF reduction is between binders owned by \emph{one}
+role ($P_0 x_j \setminus H_j$ for varying $j$), not between distinct roles or
+coalitions of roles. So this result shows that a single role can fail to act
+as one self-visible agent once its own moves are mutually restricted; it does
+not by itself show that $K \ge 3$ roles, or coalitions of roles, do anything a
+two-role game cannot already do. We return to this distinction below, where it
+turns out to matter for how to read the next subsection.
+\end{remark}
 
-Having $K > 2$ also introduces new, hard problems
-not present in 2-player logic. We can ask if a
-\emph{coalition} of players can all win together.
+\subsection{Coalitional Forceability}
+\label{subsec:coalitional-forceability}
+
+Having $K > 2$ roles raises a natural further question: can a
+\emph{coalition} of roles jointly force all of its members' objectives at
+once, using strategies that may depend on each other's earlier moves however
+the visibility structure allows?
 
 \begin{definition}[Coalitional Forceability]
 Let $S \subseteq \{0,\ldots,K-1\}$ be a coalition.
@@ -125,47 +143,279 @@ F_S(\Phi,\mathcal M)
 \]
 \end{definition}
 
-\begin{proposition}[PSPACE-hardness of Coalitional Forceability]
-\label[proposition]{prop:coalitional-pspace}
-For any fixed $K \ge 2$, the coalitional forceability problem
-$F_S$ is PSPACE-hard, even without $\setminus V$ binders.
-\end{proposition}
+\paragraph{Relation to effectivity functions and Quantified Coalition Logic.}
+The map $S \mapsto F_S(\Phi,\mathcal M)$ is an instance of an \emph{effectivity
+function}~\cite{MoulinPeleg1982EffectivityFunctions}: a specification of which
+outcomes each coalition can guarantee. Pauly's representation theorem shows
+Coalition Logic is the modal logic of \emph{playable} effectivity
+functions~\cite{pauly2002modal}, later corrected to \emph{truly} playable
+functions to handle infinite outcome spaces~\cite{GorankoJamrogaTurrini2013TrulyPlayable}.
+Closer still, quantifying over coalitions directly in the object language ---
+``some coalition satisfying property $P$ can force $\phi$'' --- is already
+Quantified Coalition Logic's central
+operator~\cite{AgotnesVanDerHoekWooldridge2008QCL}. We are not aware of a
+prior treatment of coalitional forceability specifically inside a
+first-order, player-labeled quantifier-prefix calculus like \KFOL's, but the
+coalition-quantification idea itself is not new, and any future extension of
+\KFOL\ with an object-language coalition-quantifying operator should be
+scoped against this literature rather than presented as novel on that count
+alone.
 
-\begin{proof}[Proof sketch]
-The reduction is again from QBF. Let $\psi$ be a QBF as in
-\Cref{prop:pspace-core}.
-Let $S = \{0\}$ be the coalition, and let the opposing
-coalition be $J = \{1, \dots, K-1\}$.
-We map $\exists$ quantifiers to $P_0$ (the coalition) and
-$\forall$ quantifiers to $P_1$ (one of the opponents).
+A previous version of this section claimed $F_S$ was a hard problem ``not
+present in 2-player logic,'' with a proof that in fact only ever instantiated
+$S=\{0\}$: a singleton coalition, i.e.\ exactly the individual-forceability
+problem of \Cref{prop:pspace-core} under a different name, padding every other
+role with a vacuous objective $\top$. That argument says nothing about
+coalitions with $|S|\ge 2$, the only case in which ``coalition'' means
+anything beyond ``individual.'' We withdraw it. Using the coalition-forming
+apparatus already defined in \Cref{def:coalitions}, the honest statement is
+close to the opposite of what was claimed:
+
+\begin{proposition}[Coalition merging is lossless under broadcast visibility]
+\label{prop:coalition-merge-lossless}
+Let $\Phi$ be a closed \KFOL\ formula with no $\setminus V$ binders (broadcast
+fragment), let $S \subseteq \{0,\dots,K-1\}$, and let $\pi$ be the surjection
+onto $\{0,1\}$ with $\pi^{-1}(0)=S$ and $\pi^{-1}(1) = \{0,\dots,K-1\}\setminus
+S$. Then
 \[
-\Phi_\psi :=
-  P_{q(1)} x_1.\; \dots\; P_{q(n)} x_n.\;
-  \langle f, \top, \dots, \top \rangle
+F_S(\Phi, \mathcal M) \iff F_0\bigl(\CoalProjAnd{\pi}(\Phi), \mathcal M\bigr).
 \]
-where $q(j) = 0$ if $Q_j = \exists$ and $q(j) = 1$ if $Q_j = \forall$.
-The other players $P_2, \dots, P_{K-1}$ have no moves and
-automatically win (their objective is $\top$).
-The QBF $\psi$ is true $\iff \exists \profile_0 \forall \profile_1$
-(and $\forall \profile_2 \dots$) such that $(\llbracket \Phi \rrbracket)_0 = 1$.
-This is exactly $F_S(\Phi_\psi, \mathcal{M})$ for $S=\{0\}$.
-The hardness holds.
+\end{proposition}
+\begin{proof}
+By \Cref{def:pure-strategy}, a strategy $\profile_i$ for role $i$ is already a
+single function ranging over \emph{every} binder owned by $i$, keyed by the
+history visible at that binder. Under broadcast visibility, relabeling a
+binder from $P_i$ to $P_{\pi(i)}$ (as $\CoalForm{\pi}{\wedge}$ does) changes
+neither the binder's position in the prefix nor the history visible at it: it
+only renames which strategy fills it. Hence a family $\{\profile_i\}_{i\in
+S}$ of per-role strategies and a single merged strategy for role $0$ in
+$\CoalProjAnd{\pi}(\Phi)$ are the same underlying data, viewed either split by
+original owner or joined into one function on the disjoint union of domains;
+likewise for $\{\profile_j\}_{j\notin S}$ against role $1$. The terminal of
+$\CoalProjAnd{\pi}(\Phi)$ has first component $\bigwedge_{i\in S}\fo_i$,
+matching the conjunction in $F_S$ exactly, and $F_0$ inspects only that
+component. The two sides therefore quantify over the same strategy spaces and
+test the same condition.
 \end{proof}
+
+\begin{corollary}[Complexity of coalitional forceability, broadcast fragment]
+\label{cor:coalitional-pspace}
+For any fixed $K \ge 2$ and any $S \subseteq \{0,\dots,K-1\}$, $F_S$ without
+$\setminus V$ binders is PSPACE-complete: both membership and hardness follow
+from \Cref{prop:pspace-core} applied to the two-role formula
+$\CoalProjAnd{\pi}(\Phi)$, via \Cref{prop:coalition-merge-lossless}. No new
+reduction is needed.
+\end{corollary}
+
+\begin{remark}[Where, if anywhere, coalitions have separate content]
+\Cref{prop:coalition-merge-lossless} is specific to the broadcast fragment,
+and the proof shows exactly why: merging relies on relabeling not changing any
+binder's visible history. This breaks as soon as $\setminus V$ binders are
+present, because a slash-set can name a \emph{specific} role (``independent
+of role $j$''), and after merging $S$ into one role that name either refers to
+a member of the merged role itself or vanishes along with the role it named.
+Concretely, if $\Phi$ has a binder $P_i x \setminus \{j\}.\,\Phi'$ with
+$i,j\in S$, $i \ne j$ --- role $i$'s move must not depend on role $j$'s
+earlier move, even though $i,j$ are coalition partners --- there is no
+faithful way to fold this into a single merged strategy for $S$: dropping the
+restriction overstates what the coalition can jointly achieve, and keeping it
+means the ``merged'' role is not really merged.
+
+This last claim needs a correction. Stated this bluntly it is too strong: a
+$\setminus V$-crossing within a coalition does not, by itself, force a loss.
+\Cref{prop:cross-diagonal-forceability} exhibits exactly this crossing pattern
+inside a coalition (the cross-diagonal product $\circledast$, e.g.\
+Battleship) and shows the merge is nonetheless lossless there, because the two
+members' objectives are separable --- neither could have used the withheld
+information anyway. What should matter is not the syntactic crossing but
+whether it \emph{couples} the coalition's objectives: whether some counterfactual
+strategy exploiting the withheld information would provably do better. We do
+not have a general criterion for when that is the case, so the conjecture
+below should be read as requiring coupled objectives, not merely a $\setminus
+V$-crossing.
+
+With that correction, this still suggests, but does not prove, where genuine
+$K\ge 3$ content in this calculus would have to live: coalitions whose own
+members are mutually information-restricted by IF-binders \emph{and} whose
+objectives are coupled across that restriction. \Cref{prop:nexptime-if}
+already shows that independence between binders owned by a \emph{single} role
+breaks naive analysis (\Cref{rem:nexptime-is-k2}), but, as noted there, that
+construction uses $K=2$ and one role's self-restriction, not restrictions
+between distinct roles of a coalition with coupled goals. We do not have a
+construction that separates coalitional forceability with IF-binders from its
+two-coalition projections for $K\ge 3$. We conjecture one exists, along the
+lines sketched above, and we pose it as the main open technical question
+raised by this section (see also \Cref{sec:conclusion}). This conjecture is
+stated information-theoretically throughout; whether it survives, strengthens,
+or collapses once independence is realized by (and relaxed to) computational
+cryptographic primitives rather than assumed exactly is a separate question we
+have not addressed, posed precisely in
+\Cref{subsec:computational-soundness-gap}.
+
+One prerequisite of this conjecture is now checked rather than assumed: the
+grammar must actually be able to express cross-role, per-binder information
+restriction of the kind a construction along these lines would need.
+\Cref{subsec:if-binders}'s correction to variable-level exclusion confirms it
+can --- a binder owned by one role of a coalition can exclude an arbitrary
+subset of prior variables, including ones bound by another role of the
+\emph{same} coalition, which is exactly the pattern
+\Cref{prop:cross-diagonal-forceability} shows is \emph{not} sufficient by
+itself (coupling is still required) but which role-level exclusion could not
+even have expressed. This does not make the conjecture true; it removes one
+way it could have been vacuous.
+\end{remark}
+
+\begin{remark}[What a general coalition-quantifying operator would need, if built]
+\label{rem:coalition-operator-parameters}
+Suppose \KFOL\ were extended with an object-language operator quantifying
+over coalitions, in the style of Quantified Coalition
+Logic~\cite{AgotnesVanDerHoekWooldridge2008QCL}. Such an operator would have
+(at least) four parameters: (i) a \emph{coalition family} $\mathcal S
+\subseteq 2^{\{0,\dots,K-1\}}$ to quantify over --- note that a monotone
+coalition family is itself a \emph{simple game} in Shapley's
+sense~\cite{Shapley1962CompoundSimpleGames}, so this parameter connects
+directly to voting-theoretic structure; (ii) a \emph{goal-aggregation} rule
+per coalition (conjunctive, as $\CoalProjAnd{}$ already does, disjunctive, or
+threshold); (iii) an \emph{environment attitude} --- demonic/forceability, or
+one of the admissible/rational/secure alternatives of
+\Cref{sec:framework}; and (iv) an \emph{information/merge policy} for how a
+coalition's own members are allowed to share visibility, i.e.\ which lens
+(\Cref{subsec:open-games}) realizes the merge. For fixed $K$, parameters (i)
+and (ii) alone add no expressive power beyond a finite Boolean combination of
+the $F_S$ primitives already in this section: an operator varying only those
+two is syntactic sugar. Parameters (iii) and (iv) are exactly the two axes
+this paper keeps finding to be load-bearing --- the solution-concept
+spectrum of \Cref{sec:framework} and the lens-realizability question of
+\Cref{subsec:open-games} --- so a general operator's real content, if it has
+any, is concentrated there. We have not built this operator; this remark
+records what its design space looks like so a future attempt is not mistaken
+for new content when only (i) and (ii) are varied.
+\end{remark}
+
+\begin{remark}[An informal illustration: balance of power]
+\label{rem:balance-of-power}
+Classical balance-of-power theory offers a natural-language test of the
+previous remark's distinction. Read \emph{statically} --- no coalition is
+currently strong enough to profitably dominate the rest --- balance of power
+is analyzed via the core or von Neumann--Morgenstern \emph{stable
+sets}~\cite{VonNeumannMorgenstern1944}, and in ``might makes right'' settings
+with no external enforcement the core is typically empty or degenerate,
+which is the formal echo of such systems being dynamically deterred rather
+than statically stable~\cite{Jordan2006PillageAndProperty}; the dedicated
+international-relations formalization is
+Niou--Ordeshook--Rose's~\cite{NiouOrdeshookRose1989BalanceOfPower}. Read this
+way, balance of power is a Boolean property of the coalition landscape ---
+$\forall S.\ \neg F_S(\text{hegemony})$ --- and by
+\Cref{rem:coalition-operator-parameters} it is sugar: parameters (i)--(ii)
+only, hence a two-coalition fact under this paper's flattening results. Read
+\emph{dynamically} instead --- stability sustained because an attempted
+power grab would trigger a \emph{responding} counter-coalition, the
+mechanism of alliance politics --- the relevant concepts are \emph{bargaining
+sets}~\cite{AumannMaschler1964BargainingSet} and \emph{farsighted
+stability}~\cite{Chwe1994FarsightedCoalitionalStability,RayVohra2015FarsightedStableSet},
+where the deterring response is chosen \emph{after}, and in reaction to,
+information about the deviation --- parameter (iv): who learns what, when,
+before reacting. We do not know whether the dynamic reading resists
+flattening in \KFOL's sense; we note only that the literature itself needed
+a strictly more complex concept to capture the same intuition once
+information timing entered the picture, which is suggestive rather than
+conclusive.
+\end{remark}
+
+\begin{remark}[A third complexity regime: hierarchical independence]
+\label{rem:hierarchical-if}
+The two complexity results so far are extremes: no $\setminus V$ restriction
+at all (\Cref{prop:pspace-core}, PSPACE-complete) and fully general,
+possibly-incomparable $\setminus V$ restriction (\Cref{prop:nexptime-if},
+NEXPTIME-hard via DQBF). Call a formula's $\setminus V$-annotations
+\emph{hierarchical} if, for every two binders, the sets of earlier binders
+each is permitted to see are $\subseteq$-comparable --- no two binders have
+genuinely incomparable views of the prior history, only nested ones. This is
+a purely syntactic, checkable condition, strictly weaker than ``no
+restriction'' and strictly stronger than ``arbitrary $\setminus V$.''
+
+Peterson and Reif's multiperson alternation
+model~\cite{PetersonReif1979MultiplePersonAlternation}, and its refinement to
+\emph{hierarchical} multiplayer games of incomplete information by Peterson,
+Reif, and
+Azhar~\cite{PetersonReifAzhar2001LowerBounds,PetersonReifAzhar2002DecisionAlgorithms},
+is the direct precedent for this restriction: in their model, players whose
+information forms a nested (clique) hierarchy of depth $d$ have a
+\emph{decidable} outcome problem with a $(d{+}1)$-fold-exponential time
+bound, strictly between the alternation-only case and the fully general
+case, which they show can be \emph{undecidable} --- the same wall
+distributed-synthesis hits for non-hierarchical
+architectures~\cite{PnueliRosner1990DistributedHard}.
+
+\emph{Three separable claims, of different strength.} We were imprecise
+about this in an earlier draft of this remark, so we spell it out.
+\begin{enumerate}[nosep]
+  \item \textbf{Is the general (non-hierarchical) IF fragment even
+  decidable?} \Cref{prop:nexptime-if} proves only a lower bound (hardness via
+  a reduction \emph{from} DQBF); it does not show \KFOL's $\setminus V$ is
+  \emph{no more} expressive than DQBF, only that it is at least as hard.
+  Because $\setminus V$ permits arbitrary interleaving and multiple rounds of
+  hiding, unlike DQBF's fixed one-block-each shape, it is a live possibility
+  --- not excluded by anything proved here --- that unrestricted \KFOL\
+  forceability is harder than NEXPTIME, or even undecidable, matching
+  Peterson--Reif--Azhar's own finding that the fully general (non-hierarchical)
+  case can be undecidable. This is currently an unaddressed gap in this
+  section, not merely an open conjecture, and it is more basic than either
+  item below.
+  \item \textbf{Is the hierarchical sub-fragment decidable at all?} Almost
+  certainly yes, and probably by a routine argument: guess a Skolem-function
+  table at each hierarchy tier and verify, the same proof shape that already
+  shows plain DQBF is decidable (NEXPTIME-complete, not merely
+  NEXPTIME-hard), applied tier-by-tier instead of in one block. We have not
+  written this out, but we do not consider it a deep unknown.
+  \item \textbf{Does the complexity match the Peterson--Reif--Azhar
+  $(d{+}1)$-fold-exponential bound exactly, with a matching lower bound
+  specific to \KFOL's syntax?} This is the genuinely open part: we have
+  attempted no reduction in either direction, their hardness constructions
+  are for their own abstract model and may or may not embed into \KFOL's
+  prenex, terminal-tuple syntax, and there is no reason the bound has to
+  transfer unchanged rather than shift with \KFOL-specific structure.
+\end{enumerate}
+
+This sharpens \Cref{subsec:coalitional-forceability}'s conjecture rather than
+answering it: hierarchical $\setminus V$ is, by construction, exactly the
+regime where visibility sets are pairwise comparable, and
+\Cref{prop:cross-diagonal-forceability} already shows that a merely
+\emph{comparable} crossing pattern is not enough to break the flattening
+argument on its own (coupling was also required there). If the $K\ge 3$
+separation conjecture is true, its witness must therefore use \emph{non}-hierarchical
+$\setminus V$-annotations; testing whether coupled objectives plus
+hierarchical (but nontrivial) independence already separates, before
+attempting the harder non-hierarchical construction, is a natural
+intermediate step we have not carried out.
+\end{remark}
 
 \subsection{Discussion}
 
-These three statements together characterize the computational complexity
-of \KFOL:
+Taken together, these results are more informative about \emph{where} $K$-role
+structure matters than a bare list of hardness results would suggest:
 
 \begin{itemize}
-  \item The broadcast $K$-player fragment is PSPACE-complete
-        (\Cref{prop:pspace-core})
+  \item The broadcast $K$-role fragment is PSPACE-complete, uniformly in $K$
+        (\Cref{prop:pspace-core}). This uniformity is itself a signal: if
+        $K>2$ roles carried strategic content beyond two-coalition
+        alternation, we would expect some dependence of the complexity on
+        $K$, and there is none.
+  \item Coalitional forceability adds nothing further in the broadcast
+        fragment: it reduces to ordinary two-role forceability of a merged
+        game (\Cref{prop:coalition-merge-lossless}), and is PSPACE-complete
+        for exactly that reason (\Cref{cor:coalitional-pspace}).
   \item Adding IF-style independence increases hardness to at least NEXPTIME
-        (\Cref{prop:nexptime-if})
-  \item Coalitional forceability is PSPACE-hard even in the broadcast fragment
-        (\Cref{prop:coalitional-pspace})
+        (\Cref{prop:nexptime-if}), but the construction we give for this is
+        itself a $K=2$, single-role phenomenon (\Cref{rem:nexptime-is-k2}).
 \end{itemize}
 
-These results establish that \KFOL\ forceability is a computationally rich
-problem that quantifies over strategies under role-indexed information
-constraints.
+So every hardness result in this section is, on inspection, a two-player or
+single-role phenomenon stated in $K$-role notation. We think this is worth
+saying plainly rather than leaving implicit: by themselves, these results show
+that \KFOL\ forceability is at least as expressive as, and no harder than, the
+two-player machinery it is built from --- they do not show that the $K$-role
+structure is doing separate strategic work. Whether there is a genuinely
+$K\ge 3$ phenomenon, in complexity or elsewhere in the calculus, is open; the
+IF-binder coalition question above (and \Cref{sec:conclusion}) is where we
+think it is most likely to be found.
