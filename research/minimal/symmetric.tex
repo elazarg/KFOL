@@ -1,0 +1,431 @@
+\documentclass[11pt]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools,microtype,booktabs}
+\usepackage[hidelinks]{hyperref}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newcommand{\Pow}{\mathcal P_+}
+\newcommand{\ow}[1]{\mathbin{\star_{#1}}}
+\newcommand{\A}{\mathbf A_I^{\mathrm{sym}}}
+\newcommand{\B}{\mathsf B}
+\title{Owned Choice with Role Switching:\\Pair Tests and a Partial-Permutation Normal Form}
+\author{KFOL research working note}
+\date{28 October 2026}
+\begin{document}
+\maketitle
+\begin{abstract}
+We retain internal role-switching in the intended signature of rational
+owned choice. For any number of roles, every failed term equation has a
+countervaluation assigning at most two possible winners to each variable.
+Every singleton and pair is necessary, so the unique minimum fixed input
+test domain has $K(K+1)/2$ values. For three roles, we classify all unary
+term operations: there are exactly $751$. On ambiguous inputs their
+top-preserving part acts by partial permutations, with unrestricted
+singleton rows subject to explicit bounds and mandatory images. The
+resulting $745$-element monoid maps onto the $34$-element symmetric inverse
+monoid. Unary synthesis in the no-switching reduct and the necessity
+direction of its test-domain theorem are now kernel-checked. The new
+role-switching results have mathematical proofs and independent finite
+cross-checks, not full Lean proofs yet.
+\end{abstract}
+
+\section{The intended signature}
+
+Fix a finite role set $I$, $|I|=K\geq3$. Values are nonempty subsets of
+$I$. They record possible winners over full pure subgame-perfect
+equilibrium profiles of finite public games with a unique winner at
+each leaf. A role values its own win at one and all other winners at
+zero. The operations are
+\[
+ S\ow r T=\begin{cases}\{r\},&S=\{r\}\text{ or }T=\{r\},\\
+ S\cup T,&\text{otherwise},\end{cases}
+ \qquad S\longmapsto\pi S\quad(\pi\in\operatorname{Sym}(I)),
+\]
+together with the winner constants $\{i\}$. Syntactically,
+\[
+ t ::= \langle i\rangle\mid x_j\mid t\oplus_r t\mid\pi(t).
+\]
+An internal role switch renames owners and winners throughout its
+component. Its valuation is $\pi(\mathsf{val}(t))$, with variables
+interpreted in the original environment. It is retained as part of the
+intended logic, as in the original proposal and the known owner-indexed
+precedents\cite{Abramsky2007,OldeLoohuisVenema2010}.
+
+The smaller signature without internal switches is a reduct used to
+analyze this algebra. Its $K+1$-state one-player quotients and $K+2$-input
+test domains do not apply unchanged here. With internal switches, every
+player's contextual possible-win observation distinguishes every value:
+if $S,T$ differ at $i$, a permutation taking $i$ to the observing role
+separates them. This privileges no observing role; each can perform the
+same transport.
+
+The earlier notes \texttt{report.tex} and \texttt{structure.tex} supply
+the full-strategy interpretation, unary synthesis in the reduct, and the
+congruence classifications. In particular, the full-signature
+congruences form the chain of ambiguity truncations
+$c_m(S)=S$ for $|S|\leq m$, and $c_m(S)=I$ otherwise. These are uniform
+matroid closures\cite{Oxley2011}. The full algebra is subdirectly
+irreducible. The reduct's product representation is a \emph{subdirect}
+product, generally not the whole Cartesian product.
+
+Ordinary union is definable using three distinct owners:
+\[
+ J(x,y)=(x\ow r y)\ow t(x\ow s y)=x\cup y.
+\]
+All nonempty constants are therefore ground definable. Throughout, terms
+use only the displayed constructors; unions and larger constants below
+are these derived terms.
+
+\section{Every equation has a singleton-or-pair countervaluation}
+
+Assign each input variable a status: a specified singleton or an
+unspecified ambiguous set. Fixing the statuses fixes every test for
+whether an intermediate result is a singleton. The remaining dependence
+has a restricted positive form.
+
+\begin{lemma}[Permutation provenance on a status cell]\label{lem:provenance}
+On every fixed status cell, a term denotes
+\begin{equation}\label{eq:provenance}
+ C\ \cup\ \bigcup_j\ \bigcup_{\pi\in P_j}\pi S_j,
+\end{equation}
+where $C\subseteq I$, only ambiguous input variables occur in the union,
+and every $P_j$ is a finite, possibly empty, set of permutations.
+\end{lemma}
+\begin{proof}
+A winner or singleton-status input contributes a constant. An ambiguous
+input contributes its identity permutation. A role switch transports
+$C$ and composes the permutations. A nonempty $P_j$ contributes an
+ambiguous set, so that expression cannot equal an owner singleton. Thus
+an owned choice collapses exactly when some child is a constant owner
+singleton on the cell. Otherwise union its constants and coefficients.
+This proves the representation by induction. It is not asserted to be
+canonical: distinct coefficients may have the same action on ambiguous
+inputs.
+\end{proof}
+
+\begin{theorem}[Pair countervaluations]\label{thm:pairs}
+If an equation between terms in this full signature fails, it fails at a
+valuation in which every variable has one or two possible winners.
+\end{theorem}
+\begin{proof}
+Take a failed valuation, fix its statuses, and choose a role $k$ present
+in the left output and absent from the right, interchanging sides if
+necessary. Apply Lemma~\ref{lem:provenance} to both terms.
+
+If $k$ lies in the left constant, it survives every valuation in the
+cell. Otherwise it has a witness $k=\pi(i)$ for one ambiguous input
+$S_j$, one coefficient permutation, and some $i\in S_j$. Replace that
+input by a pair contained in it and containing $i$. Replace every other
+ambiguous input by any pair contained in it. Leave singleton inputs
+fixed. The left witness remains. The right output can only shrink under
+these replacements, since every coefficient is a permutation image and
+the status cell is unchanged. It still excludes $k$.
+\end{proof}
+
+\begin{lemma}[Resetting atomic inputs]\label{lem:reset}
+If a unary term function $F$ is extensive, repeatedly replacing its
+current value by $F(x)\ow i x$, for each $i\in I$, gives a term
+$\operatorname{Reset}(F)$ which fixes all singletons and agrees with $F$
+on every ambiguous input.
+\end{lemma}
+\begin{proof}
+At input $\{i\}$, its own suppression returns $\{i\}$. A different
+owner preserves the current value because it contains $i$. On ambiguous
+input $S$, the current value contains $S$; neither operand is a
+singleton, and their union is still the current value. Extensivity is
+preserved at each step.
+\end{proof}
+
+\begin{theorem}[Unique minimum fixed test domain]\label{thm:optimal}
+A fixed input domain tests every term equation, at every arity, exactly
+when it includes every singleton and every two-element set. Consequently
+the unique minimum domain is
+\[
+ D_2=\{S\subseteq I:1\leq|S|\leq2\},\qquad |D_2|=K(K+1)/2.
+\]
+\end{theorem}
+\begin{proof}
+Sufficiency is Theorem~\ref{thm:pairs}. Each singleton is necessary
+already in the reduct: its unary synthesis gives a term differing from
+the constant $I$ only at that singleton. These separators are now
+kernel-checked in \texttt{Synthesis.lean}.
+
+For necessity of a particular pair $P$, choose $k\notin P$, put
+$C=I\setminus\{k\}$, and form the extensive term
+\[
+ F(x)=x\cup C\cup\bigcup_{i\in I\setminus(P\cup\{k\})}(i\ k)(x).
+\]
+Here $(i\ k)$ is a transposition. If $x\subseteq P$, then $F(x)=C$.
+Otherwise $x$ contains $k$, or contains an $i$ whose transposition
+supplies $k$, and $F(x)=I$. Thus, on ambiguous inputs, $F$ differs from
+$I$ only at $P$. By Lemma~\ref{lem:reset},
+$\operatorname{Reset}(F)$ and $\operatorname{Reset}(I)$ agree at every
+singleton and every ambiguous input other than $P$, and disagree at
+$P$. Every complete input domain must therefore contain $P$.
+\end{proof}
+
+All $K$ owners and role switches remain available in these tests.
+Intermediate outputs may contain any number of winners. The domain
+$D_2$ is not closed under the operations; it is an input test domain,
+not a replacement algebra. For four roles it has ten values, while the
+reduct admits six. The pair separator above explicitly refutes reusing
+that six-value test domain after adding internal role switches.
+
+The theorem supplies a decision procedure, uniform in $K$, for term
+equality: test $D_2^n$. It does not by itself supply a finite equational
+basis or a new proof calculus.
+
+\section{Three roles: the exact unary normal form}
+
+Now let $I=\{a,b,c\}$. A partial permutation $p$ is an injective partial
+map from $I$ to itself. Put
+\[
+ C_p=I\setminus\operatorname{ran}(p),\qquad
+ F_p(S)=C_p\cup p[S\cap\operatorname{dom}(p)].
+\]
+
+\begin{theorem}[All unary term operations]\label{thm:unary}
+Every unary term function is either a constant or has the following
+unique normal form:
+\begin{equation}\label{eq:unary}
+ f(S)=\begin{cases}D_i,&S=\{i\},\\F_p(S),&|S|\geq2,\end{cases}
+\end{equation}
+where $p$ is a partial permutation and the nonempty rows satisfy
+\[
+ \begin{array}{ll}
+ \{p(i)\}\subseteq D_i\subseteq C_p\cup\{p(i)\},
+       &i\in\operatorname{dom}(p),\\
+ \varnothing\ne D_i\subseteq C_p,
+       &i\notin\operatorname{dom}(p).
+ \end{array}
+\]
+Every such normal form is realized by a term. The only constant also
+in this family is the constant $I$.
+\end{theorem}
+
+We prove the upper bound, uniqueness, and synthesis separately. The
+finite enumeration below independently checks the classification, but
+does not replace these arguments.
+
+\subsection{Upper bound and mandatory images}
+
+A unary term is either constant or admits a live provenance
+$(C,P)$ with nonempty $P\subseteq\operatorname{Sym}(I)$ such that
+\[
+ f(S)=C\cup\bigcup_{\pi\in P}\pi S\quad(|S|\geq2),\qquad
+ f(\{i\})\subseteq C\cup\{\pi(i):\pi\in P\}.
+\]
+This follows by the same induction as Lemma~\ref{lem:provenance}, keeping
+globally constant children separate. A constant owner singleton absorbs
+globally; otherwise a live child remains live. In particular, a live
+function preserves $I$ and maps ambiguous inputs to ambiguous outputs.
+
+The induction also gives the following mandatory-image fact:
+\begin{equation}\label{eq:mandatory}
+ k\notin C\text{ and }\pi(i)=k\text{ for every }\pi\in P
+       \quad\Longrightarrow\quad k\in f(\{i\}).
+\end{equation}
+At an owned node, every live child satisfying this hypothesis contains
+$k$ at input $\{i\}$. If the owner differs from $k$, such a child cannot
+be its singleton; a constant child cannot be that owner singleton
+either, since the whole expression would have been globally constant.
+Thus the node preserves $k$. If the owner is $k$, membership of $k$ is
+disjunction and is preserved directly. Role switching transports this
+argument; the variable supplies its base case.
+
+For an output role $k$, let $A_k=\{\pi^{-1}(k):\pi\in P\}$. This set
+is nonempty. On ambiguous inputs, membership of $k$ is either constantly
+true, or the test $S\cap A_k\ne\varnothing$. With three roles, if
+$|A_k|\geq2$, that test is always true. Hence every nonconstant output
+coordinate is exactly one input membership bit, say $k\in f(S)$ iff
+$i\in S$. Record $p(i)=k$. The recorded sources are distinct, because
+every permutation in $P$ must send each such source to its recorded
+target. Thus $p$ is a partial permutation, and the other coordinates
+form $C_p$.
+
+The atomic upper bound above excludes each variable output coordinate
+from all rows except its source row. The mandatory-image
+fact~\eqref{eq:mandatory} includes it in that row. These are precisely
+the bounds in Theorem~\ref{thm:unary}. The partial permutation is
+uniquely determined by its action on the three pairs: a variable output
+coordinate is absent exactly on the pair omitting its source. Atomic
+rows are actual values, so they too are unique.
+
+\subsection{Synthesis of every normal form}
+
+Use the already established reduct construction
+\[
+ R(C,E)(S)=\begin{cases}\{i\}\cup E_i,&S=\{i\},\\
+ S\cup C,&|S|\geq2,\end{cases}\qquad E_i\subseteq C\setminus\{i\}.
+\]
+It uses only singleton constants and owned choice. Its generic syntactic
+synthesis is now proved in \texttt{Synthesis.lean}.
+
+\emph{Rank three.} The partial permutation is total, $C_p$ is empty,
+and every row is its prescribed singleton. Use that role permutation.
+
+\emph{Rank two.} Extend $p$ to a total permutation $\pi$. Its remaining
+output is the single element of $C_p$. Apply a reduct function $R(C_p,E)$
+after $\pi(x)$, choosing each row's optional extra winner as prescribed.
+The remaining input row is the singleton in $C_p$. This realizes all
+four row choices for each rank-two partial permutation.
+
+\emph{Rank one.} By permuting the input, normalize $p$ to $p(a)=a$ and
+$C_p=\{b,c\}$. First choose any desired nonempty rows $D_b,D_c$ within
+$\{b,c\}$ while fixing the row $a$. On inputs $b,c$, owned choices by
+$b,c$ are Boolean disjunction and conjunction, and the transposition
+$(b\ c)$ is Boolean negation. Relative constants are
+$x\ow b(b\ c)(x)$ and $x\ow c(b\ c)(x)$. Every expression so built
+still sends $\{a\}$ to $\{a\}$. Taking unions of two Boolean functions
+realizes any prescribed pair of nonempty rows $D_b,D_c$.
+
+Precompose this expression with $R(C_p,0)$, which fixes all atomic inputs
+and sends ambiguous inputs to $C_p$ or $I$. The Boolean expressions
+above fix both those sets, so the resulting ambiguous behavior is
+exactly $F_p$. Finally, to add any prescribed $Z\subseteq C_p$ to the
+$a$ row, postcompose with $R(Z,E)$ having $E_a=Z$ and the other rows
+empty. It preserves every nonempty subset of $C_p$, as well as $I$.
+Thus all four choices for the $a$ row and all nine choices for the other
+two rows are realized independently.
+
+\emph{Rank zero.} The ambiguous output is always $I$ and the three
+atomic rows may be any nonempty sets. The term
+\[
+ x\ow a(a\ b)(x)
+\]
+sends singleton $b$ to $a$ and fixes the other singleton roles. It
+preserves $I$. These elementary mergers, together with permutations,
+realize every map $h:I\to I$: merge each input into a chosen
+representative of its $h$-fiber, then permute the distinct representatives
+to their desired images. Representatives are never merged, so the
+construction has the asserted effect. Union at most three such maps
+to realize arbitrary nonempty atomic rows, and precompose with $R(I,0)$.
+All ambiguous inputs then become $I$, while atomic rows are unchanged.
+
+This proves synthesis. Larger ground constants give the constant
+functions. Any nonconstant live function takes $I$ to $I$, so the only
+constant overlap is $I$ itself.
+
+\begin{corollary}[Exact count]
+There are exactly $751$ unary term operations in the three-role full
+signature. Of these, $745$ preserve $I$.
+\end{corollary}
+\begin{proof}
+For rank $r$, the number of partial permutations is
+$\binom3r^2r!$. The number of row choices for each is:
+\[
+\begin{array}{c|rrrr}
+ r&0&1&2&3\\\hline
+ \text{partial permutations}&1&9&18&6\\
+ \text{row choices each}&343&36&4&1
+\end{array}
+\]
+Hence there are $343+324+72+6=745$ normal forms of
+type~\eqref{eq:unary}. Add the six constant functions other than $I$.
+\end{proof}
+
+\section{Context composition and the symmetric inverse monoid}
+
+The partial permutations of $I$, including the empty map, form the
+standard symmetric inverse monoid $\mathcal I_I$ under partial
+composition~\cite{East2006}. For three roles its size is
+$\sum_{r=0}^3\binom3r^2r!=34$.
+
+\begin{theorem}[An ambiguity-action quotient]\label{thm:monoid}
+The $745$ unary term operations preserving $I$ form a monoid under
+composition. Sending the normal form $(p,D)$ to $p$ is a surjective
+monoid homomorphism onto $\mathcal I_I$.
+\end{theorem}
+\begin{proof}
+Every ambiguous input has an ambiguous output, and direct calculation
+gives $F_p\circ F_q=F_{p\circ q}$. Indeed, an output coordinate either
+is fixed present, or follows a unique input coordinate through each of
+the two partial permutations. The atomic rows of a composite are
+\[
+ D^{f\circ g}_i=\begin{cases}
+ D^f_j,&D^g_i=\{j\},\\
+ F_{p_f}(D^g_i),&|D^g_i|\geq2.
+ \end{cases}
+\]
+These formulas give the exact composite. Every $p$ has an admissible row
+family and is realized by the synthesis, so the homomorphism is onto.
+\end{proof}
+
+\begin{corollary}[All reversible unary operations]
+The invertible unary term operations are exactly the six role
+permutations.
+\end{corollary}
+\begin{proof}
+An invertible function fixes $I$: every other possibility is a constant.
+Its partial-permutation image must be a unit, hence a total permutation.
+Rank three leaves no choice of atomic rows. Conversely every role
+permutation has its inverse as a term.
+\end{proof}
+
+Thus the familiar inverse monoid is a quotient governing ambiguity,
+not the whole algebra of unary contexts. Its fibers retain the permitted
+atomic rows. This is genuine context composition with internal
+role-switching; it does not use uniform-profile selection, whose lift
+failed to preserve substitution in the preceding note.
+
+\section{Mechanization and finite checks}
+
+\texttt{Synthesis.lean} now proves, generically for a finite list covering
+all roles and three distinct owners:
+\begin{itemize}
+\item generation of every nonempty constant from singleton leaves;
+\item synthesis of every reduct unary normal form;
+\item the singleton separators and ambiguous-winner adders;
+\item necessity of both conditions in the reduct's complete-test theorem;
+\item correspondence between term instantiation and full-strategy SPE
+winner sets, including realization of every nonempty winner set.
+\end{itemize}
+The proof imports only \texttt{Std} through the preceding modules, uses
+Lean 4.34.1, and has no admitted facts or added axioms. The general
+role-switching provenance theorem, sharp pair theorem, and
+three-role unary classification remain mathematical proofs in this note.
+
+\texttt{check\_symmetric.py} performs two independent constructions of
+the three-role unary functions. It exhausts closure under all owned
+operations and role permutations, and separately synthesizes actual
+syntax for every proposed normal form. The resulting sets of $751$
+functions agree exactly. It also checks all $34^2$ partial-permutation
+composition cases. Singleton and pair separators are checked at
+$K=3,4,5,6$, and the multivariable provenance representation is compared
+with full evaluations of binary and ternary examples. These finite
+checks support the written arguments; they are not generic Lean proofs.
+
+\section{The finite-basis route: valid hypothesis, unresolved bound}
+
+For each fixed $K$ the signature is finite. Every $\star_r$ is already
+a semilattice operation, so the generated variety is congruence
+meet-semidistributive. This follows directly from the semilattice
+witnesses preceding Willard's Theorem 2.1\cite{Willard2000}; it does not
+require introducing neutral union as a primitive.
+
+Willard's Theorem 4.3 consequently applies \emph{if} the generated
+variety has a finite residual bound. That means a uniform finite bound
+on all its subdirectly irreducible members, including those arising
+from subalgebras and homomorphic images of arbitrary powers. The
+congruence chain of the generating algebra itself does not give that
+bound. Neither its existence nor its failure is established here. The
+optional script \texttt{probe\_residual.py} certifies selected
+subdirectly irreducible quotients of a specified small subpower; such
+finite experiments do not establish a residual bound.
+
+This leaves two concrete research targets: determine the residual bound,
+or extend the term-function characterization to more variables and more
+roles. The three-role unary result is a complete classification in the
+original role-switching signature; the optimal pair theorem is uniform
+in $K$ and arity. Neither is yet a finite equational axiomatization.
+The standard ingredients---Boolean functions, partial permutations,
+semilattice witnesses, and uniform matroids---are reused directly.
+Priority of these particular owned-choice results remains unestablished.
+
+\bibliographystyle{plain}
+\bibliography{references}
+\end{document}

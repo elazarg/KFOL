@@ -31,7 +31,8 @@ ground constants. We classify all unary term functions and derive their
 exact number. The union construction also works with identical component
 strategies in its repeated copies, under ordinary unrestricted deviations.
 The game interpretation, union identity, occurrence obstruction, uniform-copy
-result, and upper half of the classification are kernel-checked in Lean.
+result, and both the upper bound and synthesis of the classification are
+kernel-checked in Lean.
 The remaining arguments are given explicitly below. This note records a
 candidate algebraic contribution; priority has not been established.
 \end{abstract}
@@ -186,7 +187,9 @@ $k$. No later step can remove it. The required result $\{j,r\}$ excludes
 $k$, a contradiction. Interchange the variables for the other bound.
 \end{proof}
 
-The path obstruction is \texttt{no\_single\_use\_union} in Lean. The
+The path obstruction is \texttt{no\_single\_use\_union} in Lean. Ground
+game realization is now \texttt{every\_winner\_set\_realized} in
+\texttt{Synthesis.lean}. The
 syntax-to-path correspondence is the direct decomposition of a term at
 its unique input occurrence, as used in the proof.
 
@@ -316,7 +319,9 @@ the current value, which contains that other role. On a multiwinner
 input $S$, both operands contain $S$, so the result remains $S\cup\{k\}$.
 The order of these suppressions is irrelevant. Join $x$ with all the
 $g_k(x)$ using $J$. This realizes precisely~\eqref{eq:normal}; for empty
-$C$, use $x$.
+$C$, use $x$. The complete construction is now the generic theorem
+\texttt{unary\_synthesis} in \texttt{Synthesis.lean}; its terms have only
+singleton leaves and owned choices.
 
 \emph{Uniqueness.} For any $k$, choose a two-element $S$ omitting $k$.
 Then $k\in C$ exactly when $k\in\mathsf{Reg}(C,E)(S)$, so $C$ is uniquely
@@ -476,14 +481,15 @@ Neutral union & Generic Lean proof\\
 Single-use obstruction & Generic Lean path theorem; syntax decomposition above\\
 Uniform copies & Generic Lean proof for each fixed pair of component SPE profiles\\
 Unary classification upper bound & Generic Lean proof\\
-Unary synthesis, uniqueness, count, composition & Mathematical arguments above; finite checks for $K=3,4$\\
+Unary synthesis & Generic Lean construction from singleton-leaf syntax\\
+Unary uniqueness, count, composition & Mathematical arguments above; finite checks for $K=3,4$\\
 Unique-winner observation collapse & Generic Lean proof\\
 Originality of the algebraic package & Open: targeted literature comparison, not a priority proof\\
 \bottomrule
 \end{tabular}
 \end{center}
 
-The Lean development imports only \texttt{Std} and uses installed Lean
+The Lean development imports only \texttt{Std} through its local modules and uses Lean
 4.34.1. It has no admitted lemmas or added axioms. Printed dependencies
 are Lean's standard classical foundations: propositional extensionality,
 classical choice, and quotient soundness. The Python script provides

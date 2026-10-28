@@ -22,8 +22,10 @@
 \begin{document}
 \maketitle
 \begin{abstract}
-The algebra of possible pure subgame-perfect winners has $2^K-1$ values
-for $K\geq3$ roles. We compute its exact contextual quotient for each
+The intended signature includes internal role-switching; this note first
+analyzes its reduct without that operation. The algebra of possible pure
+subgame-perfect winners has $2^K-1$ values for $K\geq3$ roles. We compute
+the reduct's exact contextual quotient for each
 player's possible-win observation: it has $K+1$ values. These quotients
 jointly give a faithful representation. They imply an all-arity test
 theorem: a fixed input domain determines every term function exactly when
@@ -35,6 +37,8 @@ minimum subdirect decomposition. Adding internal role permutations
 reduces the congruences to a chain of uniform-matroid truncations.
 The observational congruence and the
 general test-domain sufficiency theorem are kernel-checked in Lean.
+Unary synthesis and the test-domain necessity theorem are now also
+kernel-checked in \texttt{Synthesis.lean}.
 The remaining proofs and their finite checks are identified explicitly.
 \end{abstract}
 
@@ -83,7 +87,7 @@ term context has used the input. Put
 Here the polynomial may repeat the input arbitrarily and use all ground
 constants. This is the standard contextual, or Leibniz, congruence of the
 logical matrix whose designated values are the sets containing $k$
-\cite{Font1993}. Computing it is the specific problem.
+\cite{BlokPigozzi1989,Font1993}. Computing it is the specific problem.
 
 \begin{theorem}[Exact one-player quotient]\label{thm:view}
 For nonempty $S,T\subseteq I$,
@@ -220,9 +224,9 @@ At least one such input must be tested.
 \end{proof}
 
 The sufficiency statement is \texttt{complete\_test\_domain} in Lean.
-The lower bounds use the explicit unary synthesis proved mathematically
-in the earlier note; their generic term constructions are not yet in
-Lean.
+The necessity statement is now \texttt{test\_domain\_necessary} in
+\texttt{Synthesis.lean}, using explicit unary synthesis and term
+separators. The cardinality corollary below remains a written argument.
 
 \begin{corollary}[Sharp size]\label{cor:optimal}
 The minimum size of a complete fixed test domain is
@@ -286,7 +290,7 @@ outputs. The only redundant case is $C=I$, already canonicalized by
 discarding $J$. All status cells are inhabited for $K\geq3$.
 \end{proof}
 
-These rules give a sound and complete normalization calculus for term
+These rules give a sound and complete normalization decision procedure for term
 equality: compute both tables and compare them. They also explain how
 ambiguity survives. Once the singleton cases at a cell are fixed, the
 remaining computation is just union with a record of which input
@@ -439,8 +443,8 @@ of $T$ omitting $x$ exists because $m<K$. Thus the proper closed sets
 are exactly those of size at most $m$. The congruence classification
 gives precisely the displayed kernels. Their closures are nested, so
 their kernels form a chain. The cardinalities and the uniform-matroid
-identification follow from their fixed sets; compare
-\cite[Example 3.7]{Martin2015}.
+identification follow from their fixed sets; see the uniform matroids
+in Oxley\cite{Oxley2011}.
 \end{proof}
 
 \begin{corollary}[Symmetry makes the algebra irreducible]
@@ -541,7 +545,7 @@ of repetition without introducing beliefs or probabilities.
 Statement & Evidence\\\midrule
 Exact contextual relation and congruence & Generic Lean proof\\
 Arbitrary-arity test-domain sufficiency & Generic Lean proof\\
-Optimal domain characterization and size & Mathematical proof using earlier unary synthesis; exhaustive unary separation tests for $K=3,4$\\
+Optimal domain characterization and size & Generic Lean proofs of both conditions; cardinality argument on paper; finite separation checks\\
 Canonical status forms & Mathematical proof and finite binary/ternary cross-checks\\
 All congruences and SI quotient classification & Mathematical proof; atom-collapse lemma in Lean; finite congruence checks\\
 Minimum subdirect decomposition & Mathematical consequence of the classifications\\

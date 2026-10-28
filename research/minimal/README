@@ -5,11 +5,13 @@ enough structure to justify a small calculus before adding hidden choices,
 beliefs, control, or dependent types. This directory records an initial
 theorem package. Originality is not established.
 
-Start with structure.tex (build/minimal/structure.pdf after building) for
-the all-arity results: exact K+1-state contextual perspectives, optimal
-fixed input tests, canonical status forms, all congruences, and the
-effect of internal role switching. The first note, report.tex, supplies
-the SPE interpretation, union occurrence bound, and unary classification.
+The intended signature retains internal role-switching. Start with
+symmetric.tex (build/minimal/symmetric.pdf after building): optimal
+singleton/pair tests at every arity, the exact three-role unary
+classification (751 functions), and its symmetric-inverse-monoid quotient.
+structure.tex analyzes the no-switching reduct and the congruences of
+both signatures. report.tex supplies the SPE interpretation, union
+occurrence bound, and the reduct's unary classification.
 The adjacent proposal-realization-and-sharing.md supplies the roadmap;
 the union construction was already in that proposal.
 
@@ -18,10 +20,10 @@ From the repository root:
     make check-minimal
     make paper-minimal
 
-The first command runs both sets of Python experiments and kernel-checks
-Basic.lean and Perspectives.lean using Lean 4.34.1, pinned by this directory's
+The first command runs three Python experiments and kernel-checks
+Basic.lean, Perspectives.lean, and Synthesis.lean using Lean 4.34.1, pinned by this directory's
 lean-toolchain. Only Std is imported. Generated .olean files go to
-build/minimal/lean. The second command builds both notes.
+build/minimal/lean. The second command builds all three notes.
 
 Proof inventory:
 
@@ -57,9 +59,18 @@ Proof inventory:
         with the full winner set. This is the key extra constraint in the
         mathematical classification of every congruence.
 
-Unary synthesis, uniqueness, counting, and composition have mathematical
-proofs in report.tex and finite checks, but are not yet generic Lean
-theorems. check.py independently exhausts the K=3 unary algebra (131
+    ground_realization / unary_synthesis (Synthesis.lean)
+        Explicit terms realizing every nonempty constant and every reduct
+        unary normal form. Only singleton leaves and owned choices occur.
+    ambiguity_adder / singleton_separator / test_domain_necessary
+        Constructed witnesses prove necessity of both conditions in the
+        reduct's all-arity test-domain characterization.
+    winners_instantiate / every_winner_set_realized
+        Connect the synthesized terms to full-strategy SPE game semantics.
+
+Unary synthesis is now a generic Lean theorem. Uniqueness, counting, and
+composition have mathematical proofs in report.tex and finite checks.
+check.py independently exhausts the K=3 unary algebra (131
 functions), constructs all normal forms for K=3,4 (131 and 6575), and checks
 laws and uniform copies on finite models. Its fixed-profile SPE criterion
 is separately justified by spe_node_iff in Lean.
@@ -70,7 +81,8 @@ winners. It is neither forceability nor sequential equilibrium. Hidden
 choices may destroy pure-equilibrium existence, so the public recurrence
 must not be silently reused for them.
 
-The new optimal-domain lower bounds use the earlier unary synthesis.
+Both directions of the reduct's exact test-domain characterization are
+now proved in Lean, using explicit syntactic witnesses for necessity.
 Canonical status forms, the full congruence classification, the minimum
 subdirect decomposition, and the internal-permutation congruence chain
 have mathematical proofs in structure.tex, not complete Lean proofs yet.
@@ -81,9 +93,25 @@ independently enumerates all congruences at K=3; constructs and checks the
 626 classified congruences at K=4; and verifies the irreducible kernels
 and symmetric congruence chains at both sizes.
 
-Internal role permutations are a separate signature extension. They make
-one player's contextual quotient faithful to the entire winner set; the
-K+1-state and K+2-test statements use the signature without that extension.
+The full signature makes one player's contextual quotient faithful to
+the entire winner set; the K+1-state and K+2-test statements concern its
+no-switching reduct. For the full signature, the optimal domain contains
+every singleton and every pair. The full-signature provenance theorem,
+pair-test theorem, and three-role unary classification currently have
+mathematical proofs, not Lean proofs. check_symmetric.py independently
+exhausts the 751 unary functions and synthesizes every normal form by an
+actual term. It checks all 34^2 partial-permutation composition cases,
+the sharp input separators for K=3..6, and binary/ternary provenance tests.
+
+An optional finite-basis experiment is available as:
+
+    python3 research/minimal/probe_residual.py
+
+It samples and certifies subdirectly irreducible quotients of a specified
+79-element subalgebra of A_3^3. Its eight fixed trials find sizes 4 and 7.
+This proves no bound on the generated variety and is not part of the
+theorem checks. The verified Willard route still needs a residual bound.
+
 External relabeling is a symmetry throughout. Prior art includes standard
 Leibniz congruences, semilattice closure operators, and uniform matroids;
 the specific classifications need a priority investigation.
