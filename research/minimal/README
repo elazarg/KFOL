@@ -6,9 +6,16 @@ beliefs, control, or dependent types. This directory records an initial
 theorem package. Originality is not established.
 
 The intended signature retains internal role-switching. Start with
-symmetric.tex (build/minimal/symmetric.pdf after building): optimal
-singleton/pair tests at every arity, the exact three-role unary
-classification (751 functions), and its symmetric-inverse-monoid quotient.
+general.tex and symmetric.tex (PDFs in build/minimal after building).
+general.tex identifies the ambiguity-action quotient at every K using an
+affine extension of the known factorpower of the symmetric group. Its
+canonical rows have an exact perfect-matching criterion and polynomial
+recognition, synthesis, and composition. It also proves coNP-completeness
+of equation validity, even at fixed K=3 without switches, and identifies
+all unary units as role permutations at every K.
+symmetric.tex proves optimal singleton/pair tests at every arity and the
+exact three-role unary classification (751 functions). Its partial-
+permutation quotient is precisely the K=3 specialization of general.tex.
 structure.tex analyzes the no-switching reduct and the congruences of
 both signatures. report.tex supplies the SPE interpretation, union
 occurrence bound, and the reduct's unary classification.
@@ -20,10 +27,11 @@ From the repository root:
     make check-minimal
     make paper-minimal
 
-The first command runs three Python experiments and kernel-checks
-Basic.lean, Perspectives.lean, and Synthesis.lean using Lean 4.34.1, pinned by this directory's
+The first command runs four Python experiments and kernel-checks
+Basic.lean, Perspectives.lean, Synthesis.lean, and BooleanCore.lean using
+Lean 4.34.1, pinned by this directory's
 lean-toolchain. Only Std is imported. Generated .olean files go to
-build/minimal/lean. The second command builds all three notes.
+build/minimal/lean. The second command builds all four notes.
 
 Proof inventory:
 
@@ -68,6 +76,15 @@ Proof inventory:
     winners_instantiate / every_winner_set_realized
         Connect the synthesized terms to full-strategy SPE game semantics.
 
+    boolean_gate / boolean_or / boolean_and (BooleanCore.lean)
+        A definable gate onto {atom a, I} and the exact Boolean truth tables
+        of two distinct owners on that carrier.
+    Positive.compile_correct / Positive.equation_embedding
+        Ordinary owned-choice terms encode every monotone Boolean formula;
+        equation validity is preserved and reflected for all nonempty
+        winner-set valuations. The SAT reduction and complexity-class
+        claims are mathematical proofs in general.tex, not Lean statements.
+
 Unary synthesis is now a generic Lean theorem. Uniqueness, counting, and
 composition have mathematical proofs in report.tex and finite checks.
 check.py independently exhausts the K=3 unary algebra (131
@@ -102,6 +119,19 @@ mathematical proofs, not Lean proofs. check_symmetric.py independently
 exhausts the 751 unary functions and synthesizes every normal form by an
 actual term. It checks all 34^2 partial-permutation composition cases,
 the sharp input separators for K=3..6, and binary/ternary provenance tests.
+
+The general ambiguity monoid has written proofs in general.tex, not Lean
+proofs yet. ambiguity.py implements its canonical rows, forced-edge
+matching criterion, witness permutations, balanced term synthesis, and
+composition. check_general.py independently exhausts the factorpowers
+(49 and 7443 relations) and all admissible canonical rows (34 and 1979
+actions) at K=3,4, and compares their affine quotients exactly. It checks
+semantic uniqueness, every composition at K=3, 10000 compositions at K=4,
+and synthesized terms. It also checks Boolean gates at K=3..6 and the
+dual-rail SAT equivalence on 4369 small CNFs. These are complete checks
+only at their stated finite sizes. General-K singleton fibers of the
+unary monoid, a finite equational basis, and the residual bound remain
+open. The monoid quotient is not claimed to classify full unary terms.
 
 An optional finite-basis experiment is available as:
 

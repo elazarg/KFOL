@@ -17,13 +17,16 @@ check-minimal:
 	python3 research/minimal/check.py
 	python3 research/minimal/check_structure.py
 	python3 research/minimal/check_symmetric.py
+	python3 research/minimal/check_general.py
 	mkdir -p build/minimal/lean
 	cd research/minimal && lean -DwarningAsError=true -o ../../build/minimal/lean/Basic.olean Basic.lean
 	cd research/minimal && LEAN_PATH=../../build/minimal/lean lean -DwarningAsError=true -o ../../build/minimal/lean/Perspectives.olean Perspectives.lean
-	cd research/minimal && LEAN_PATH=../../build/minimal/lean lean -DwarningAsError=true Synthesis.lean
+	cd research/minimal && LEAN_PATH=../../build/minimal/lean lean -DwarningAsError=true -o ../../build/minimal/lean/Synthesis.olean Synthesis.lean
+	cd research/minimal && LEAN_PATH=../../build/minimal/lean lean -DwarningAsError=true BooleanCore.lean
 
 paper-minimal:
 	latexmk -pdf -interaction=nonstopmode -halt-on-error -outdir=build/minimal research/minimal/report.tex
 	latexmk -pdf -interaction=nonstopmode -halt-on-error -outdir=build/minimal research/minimal/structure.tex
 	latexmk -pdf -interaction=nonstopmode -halt-on-error -outdir=build/minimal research/minimal/symmetric.tex
+	latexmk -pdf -interaction=nonstopmode -halt-on-error -outdir=build/minimal research/minimal/general.tex
 

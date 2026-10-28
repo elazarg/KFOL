@@ -1,0 +1,407 @@
+\documentclass[11pt]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools,microtype,booktabs}
+\usepackage[hidelinks]{hyperref}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newcommand{\Pow}{\mathcal P_+}
+\newcommand{\ow}[1]{\mathbin{\star_{#1}}}
+\newcommand{\Sym}{\operatorname{Sym}}
+\newcommand{\FP}{\mathcal{FP}^{+}}
+\title{Owned Choice for Arbitrarily Many Roles:\\Ambiguity Actions and Equational Complexity}
+\author{KFOL research working note}
+\date{28 October 2026}
+\begin{document}
+\maketitle
+\begin{abstract}
+The rational owned-choice algebra has an exponential carrier but optimal
+singleton-and-pair tests for its equations. We identify the ambiguity-action
+quotient of its unary term monoid for every number of roles. It is a
+quotient of an affine extension of the known factorpower of the symmetric
+group. Its canonical rows satisfy an exact perfect-matching criterion;
+recognition, synthesis, and composition are polynomial in the number of
+roles. The quotient has $34$ elements for three roles and $1979$ for four.
+The partial-permutation description is precisely the three-role case.
+Equational validity is coNP-complete already for each fixed number of
+roles at least three, even without role switches. The units of the full
+unary term monoid are exactly the role permutations for every number of
+roles. These statements characterize a quotient and a decision problem;
+the complete higher-role unary clone and a finite equational basis remain
+open. The Boolean embedding used for hardness is kernel-checked in Lean;
+the general matching and complexity theorems have written proofs and
+independent finite checks.
+\end{abstract}
+
+\section{A small algebra and its questions}
+
+Fix a finite role set $I$ of size $K\geq3$. Its values are nonempty
+winner sets. In finite public games with one winner at each leaf, each
+role values its own win at one and every other outcome at zero. The
+possible winners over full pure subgame-perfect equilibria compose by
+\[
+ S\ow r T=\begin{cases}\{r\},&S=\{r\}\text{ or }T=\{r\},\\
+ S\cup T,&\text{otherwise}.\end{cases}
+\]
+The intended signature also has singleton constants and internal role
+switches $S\mapsto\pi S$ for every $\pi\in\Sym(I)$. These switches
+rename owners and winners inside a component. Terms have the grammar
+\[
+ t::=\langle i\rangle\mid x_j\mid t\oplus_r t\mid\pi(t).
+\]
+The full-strategy interpretation and exact equilibrium recurrence are
+proved in \texttt{Basic.lean}. Hidden choices and sequential equilibrium
+are outside this public fragment.
+
+Three distinct owners define neutral union:
+\[
+ J(x,y)=(x\ow r y)\ow t(x\ow s y)=x\cup y.
+\]
+Consequently every nonempty constant, including $I$, is ground definable.
+We use these derived operations freely. Repeated variable occurrences
+denote independently solved copies, as required by the term algebra.
+
+The preceding note \texttt{symmetric.tex} proves two uniform facts used
+here. On each fixed singleton-or-ambiguous status cell, every term is a
+constant union permutation images of its ambiguous inputs. Every failed
+equation therefore has a countervaluation in which each input has at
+most two winners. Every singleton and every pair is necessary in a fixed
+test domain. Those mathematical proofs, including the separating terms,
+are not yet complete Lean developments.
+
+The three-role unary classification in that note has a quotient by
+partial permutations. For more roles, a coordinate can depend on two or
+more input membership bits: $x\cup(1\ 2)(x)$ at $K=4$ is an elementary
+example. The right general object retains these disjunctive source sets,
+and also the constant coordinates.
+
+\section{The known relation monoid and its affine extension}
+
+Regard a relation $R\subseteq I\times I$ as sending source roles to
+output roles, and write $R[S]$ for its direct image. Let $\FP(\Sym(I))$
+be the monoid of nonempty unions of permutation graphs, with relational
+composition. This is the \emph{factorpower} of the natural symmetric-group
+action, introduced by Ganyushkin and Mazorchuk and surveyed by
+Mazorchuk\cite{GanyushkinMazorchuk1995,Mazorchuk2009}. In the usual
+definition, nonempty subsets $P,Q\subseteq\Sym(I)$ are identified when
+$\{\pi(i):\pi\in P\}=\{\pi(i):\pi\in Q\}$ for every $i$.
+Thus the relation monoid appearing here is exactly a known object.
+
+Form its affine extension
+\[
+ \mathcal E_I=\mathcal P(I)\rtimes\FP(\Sym(I)),\qquad
+ (C,R)(D,Q)=(C\cup R[D],R\circ Q).
+\]
+The action on $\mathcal P(I)$ is by direct image; it preserves empty set
+and unions, so this multiplication is associative. Its identity is
+$(\varnothing,\mathrm{id})$. The affine action is
+\begin{equation}\label{eq:affine}
+ F_{C,R}(S)=C\cup R[S].
+\end{equation}
+Every such map sends ambiguous sets to ambiguous sets because $R$
+contains a permutation. Restrict these maps to
+$\mathcal A_I=\{S\subseteq I:|S|\geq2\}$ and identify equal restrictions.
+Call the resulting transformation monoid $\mathcal Q_I$.
+
+\begin{theorem}[Exact ambiguity quotient]\label{thm:quotient}
+Let $\mathcal M_I$ be the monoid of unary term functions fixing $I$.
+Restriction to $\mathcal A_I$ is a surjective monoid homomorphism
+$\mathcal M_I\twoheadrightarrow\mathcal Q_I$.
+\end{theorem}
+\begin{proof}
+A unary term is either globally constant or has live provenance
+$C\cup\bigcup_{\pi\in P}\pi S$ on ambiguous inputs, with $P$ nonempty.
+Here is a simultaneous induction establishing that dichotomy. The
+variable is live and a winner is constant. Switching transports constants
+and permutations. At an owned node, a live child is always ambiguous on
+ambiguous inputs. Thus collapse there occurs exactly when a globally
+constant child is the owner singleton, making the whole node globally
+constant. Otherwise union the live provenances and the constant children.
+A node with only constant children is again globally constant.
+
+Every live expression fixes $I$. Hence a top-preserving unary term is
+live or is the constant $I$, and has a restriction of the displayed form.
+Conversely, for any $(C,R)$ choose a nonempty finite set of permutations
+whose union is $R$. The term joining their images of $x$ and the
+singleton constants in $C$ realizes \eqref{eq:affine} on all inputs and
+fixes $I$. Restriction respects composition since all these maps preserve
+$\mathcal A_I$.
+\end{proof}
+
+The constant part cannot be suppressed. For example,
+$S\mapsto S\cup\{a\}$ on ambiguous inputs cannot equal $R[S]$ for a
+union of permutations $R$. Every other output coordinate $b\ne a$ has
+the singleton source $b$. As shown below, that source is uniquely
+determined by the restricted action. Thus every constituent permutation
+must fix all $b\ne a$, hence also $a$. Their union is the identity and
+cannot make $a$ constantly present. The relevant object is an affine
+extension and a quotient of a known monoid, not just the factorpower.
+
+\section{Canonical rows, matching, and synthesis}
+
+For an output role $k$ let
+$R^{-1}(k)=\{i:(i,k)\in R\}$. Membership of $k$ in
+\eqref{eq:affine} is either constant or the predicate
+$S\cap R^{-1}(k)\ne\varnothing$. Every such source set is nonempty.
+On ambiguous inputs this predicate is constantly true exactly when its
+source set has size at least $K-1$.
+
+\begin{lemma}[Unique row representation]\label{lem:rows}
+Every action in $\mathcal Q_I$ has a unique row for each output role,
+of one of the following forms:
+\[
+ *\quad\text{(always present)},\qquad
+ A_k\subseteq I,\quad 1\leq|A_k|\leq K-2
+ \quad\text{(present iff }S\cap A_k\ne\varnothing\text{)}.
+\]
+\end{lemma}
+\begin{proof}
+The preceding threshold gives existence. A nonconstant row has a pair
+disjoint from its source set, distinguishing it from $*$. If two small
+source sets $A,B$ differ, choose $i\in A\setminus B$, swapping their
+names if necessary. Since $|B|\leq K-2$, choose a different
+$j\notin B$. The pair $\{i,j\}$ meets $A$ and misses $B$, distinguishing
+the rows.
+\end{proof}
+
+Not every syntactically possible collection of rows is realizable. Build
+a bipartite graph $H$ with source and output copies of $I$. A nonconstant
+output row $k$ allows exactly the edges from $A_k$; a constant row allows
+edges from every source. Edges into nonconstant rows are
+\emph{prescribed}; edges into constant rows are only allowed.
+
+\begin{theorem}[Matching criterion]\label{thm:matching}
+A collection of canonical rows belongs to $\mathcal Q_I$ exactly when
+every prescribed edge belongs to a perfect matching of $H$. If all rows
+are constant, it always belongs.
+\end{theorem}
+\begin{proof}
+For necessity, choose a representative $(C,R)$. A nonconstant row
+cannot belong to $C$, and its preimage under $R$ is exactly its canonical
+source set by Lemma~\ref{lem:rows}. Every prescribed edge lies in some
+permutation constituent of $R$. That permutation is a perfect matching
+of $H$.
+
+Conversely, choose a perfect matching for each prescribed edge. Their
+union $R$ is a union of permutations. At a nonconstant row its preimage
+is contained in the allowed source set and includes every prescribed
+source, so it is exactly $A_k$. Set $C$ equal to the set of constant
+output rows. Then $(C,R)$ realizes the given rows. If no edges are
+prescribed, take $R$ to be the identity and $C=I$.
+\end{proof}
+
+For comparison, the analogous criterion with \emph{all} relation edges
+prescribed is the standard factorpower realizability criterion
+(Mazorchuk\cite[Section~2.1]{Mazorchuk2009}). Here the constant rows leave
+their matching edges free, and the ambiguity threshold removes larger
+nonconstant source sets. An ordinary Hall existence test alone is
+insufficient. At $K=4$, rows
+\[
+ (\{1\},\{1,2\},*,*)
+\]
+allow a perfect matching, but the prescribed edge from source $1$ to
+output $2$ belongs to none: output $1$ already requires source $1$.
+The collection is therefore not realizable.
+
+\begin{corollary}[Polynomial recognition and synthesis]
+Given $K$ canonical rows, membership in $\mathcal Q_I$ is decidable in
+polynomial time. Every member has a realization by at most $K^2$
+permutation images, together with its constant roles, and by an ordinary
+term of size polynomial in $K$.
+\end{corollary}
+\begin{proof}
+For each of the at most $K(K-2)$ prescribed edges, force that edge and
+find a perfect matching in the remaining graph. Standard augmenting
+paths suffice. Use those witness permutations in the synthesis from
+Theorem~\ref{thm:quotient}. Join the pieces in a balanced tree. Expanding
+the fixed derived-union term duplicates each argument twice; balanced
+joining of $m$ pieces has size $O(m^2)$ rather than the exponential
+expansion of a skew join. Singleton constant pieces and explicit
+permutation descriptions have polynomial size too.
+\end{proof}
+
+\begin{theorem}[Canonical composition]\label{thm:composition}
+For outer rows $A$ and inner rows $B$, the composite row at $k$ is:
+\begin{enumerate}
+\item $*$ if $A_k=*$ or some $i\in A_k$ has $B_i=*$;
+\item otherwise $\bigcup_{i\in A_k}B_i$, changed to $*$ if that union
+has at least $K-1$ elements.
+\end{enumerate}
+This computes composition in time polynomial in $K$ on descriptions of
+$O(K^2)$ bits.
+\end{theorem}
+\begin{proof}
+Substitute the inner membership disjunctions into the outer membership
+disjunction. A constant true disjunct makes the result true; otherwise
+the sources union. Apply the ambiguity threshold. Closure follows also
+from the affine multiplication in $\mathcal E_I$.
+\end{proof}
+
+For three roles every nonconstant row is a singleton. The matching
+criterion says that their sources must be distinct. Thus these rows
+are exactly a partial bijection, with $*$ on the missing output roles,
+recovering the $34$-element symmetric inverse monoid. Four roles admit
+two-source rows, and the matching criterion is a genuine further
+constraint. Exhausting the criterion and, independently, all affine
+permutation-union representatives gives
+\[
+\begin{array}{c|rr}
+K&|\FP(\Sym(I))|&|\mathcal Q_I|\\\hline
+3&49&34\\
+4&7443&1979
+\end{array}
+\]
+These are finite computations, with complete enumerations reproduced by
+\texttt{check\_general.py}. They count the ambiguity quotient, not the
+full unary term monoid. Its singleton fibers for general $K$ are still
+unclassified.
+
+\section{Reversible contexts at every number of roles}
+
+\begin{lemma}
+Every term function is monotone for inclusion on nonempty winner sets.
+\end{lemma}
+\begin{proof}
+Constants, variables, and permutation images are monotone. Suppose
+$S\subseteq S'$ and $T\subseteq T'$, all nonempty. If an upper operand
+equals $\{r\}$, its corresponding lower operand is also $\{r\}$, and
+both owned outputs equal $\{r\}$. Otherwise the upper output is
+$S'\cup T'$. The lower output is either $S\cup T$, which is contained
+in it, or $\{r\}$ supplied by one lower operand, which is contained in
+the corresponding upper operand. Thus owned choice is monotone.
+\end{proof}
+
+\begin{theorem}[All unary units]
+For every $K\geq3$, the group of units of the full unary term monoid is
+exactly $\Sym(I)$.
+\end{theorem}
+\begin{proof}
+A unit and its term inverse are monotone, so they form an order
+automorphism of the poset $\Pow(I)$. Such an automorphism permutes its
+minimal elements, the singletons. Every set is determined by the
+singletons below it, so that permutation determines the whole map.
+Conversely every role permutation and its inverse are terms.
+\end{proof}
+
+This generalizes the three-role unit calculation without requiring a
+higher-role classification of singleton fibers. It is a direct use of
+the familiar order-automorphism argument for the Boolean subset poset.
+
+\section{Equational validity is coNP-complete}
+
+The decision problem takes two ordinary tree terms, with any number of
+variables, and asks whether they agree at every nonempty-set valuation.
+Fixing $K$ fixes the algebra and its signature. In the uniform version,
+role names have binary encodings and permutations are explicit lists of
+their images. A succinct encoding of terms by shared recursive
+descriptions is not assumed.
+
+\begin{theorem}[Equational complexity]\label{thm:complexity}
+For every fixed $K\geq3$, equational validity is coNP-complete, already
+in the signature without role switches. The uniform problem with $K$
+as part of the input is coNP-complete as well.
+\end{theorem}
+\begin{proof}
+For fixed $K$, a failed valuation is a polynomial certificate since the
+algebra is finite and term evaluation is linear up to fixed constants.
+For variable $K$, use the pair countervaluation theorem. A certificate
+lists at most two role labels per input variable. Evaluate terms using
+sparse sets: an owned node either collapses or unions its inputs, while
+a permutation preserves cardinality. Each intermediate set has size at
+most twice the number of variable leaves below it plus the number of
+winner leaves. This is polynomial in tree-term size, independently of
+the exponential size of the carrier and even when $K$ is binary encoded.
+Evaluation and comparison are therefore polynomial. Validity is in coNP.
+
+For hardness fix distinct roles $a,b$ and encode Boolean truth by
+$\mathbf1=\{a\}$ and falsehood by $\mathbf0=I$. The gate
+\[
+ q(x)=x\ow a I
+   =\begin{cases}\mathbf1,&x=\{a\},\\\mathbf0,&\text{otherwise}
+     \end{cases}
+\]
+is a surjection onto these two values. On them,
+\[
+ u\ow a v=u\lor v,\qquad u\ow b v=u\land v.
+\]
+The first owner accepts either true operand. For the second owner no
+operand is its singleton, so it takes union; union absorbs the false
+value $I$. Consequently any monotone Boolean formula equation can be
+translated, replacing every variable by $q(x)$, disjunction by $\star_a$,
+and conjunction by $\star_b$. It is valid in the owned-choice algebra
+exactly when the Boolean equation is valid. The term for $I$ has fixed
+size because $K$ is fixed. This is a polynomial translation using no
+role switches.
+
+The standard dual-rail reduction gives hardness directly. Given a CNF
+formula $\varphi(z_1,\ldots,z_n)$, replace positive occurrences
+of $z_i$ by $p_i$ and negative occurrences by $n_i$, producing a monotone
+formula $\Phi(p,n)$. Put
+\[
+ A=\left(\bigwedge_i(p_i\lor n_i)\right)\land\Phi(p,n),
+ \qquad B=\bigvee_i(p_i\land n_i).
+\]
+The equation $A\lor B=B$ fails exactly when $A=1$ and $B=0$.
+Those conditions choose exactly one rail for every variable and satisfy
+$\varphi$. Conversely any satisfying assignment provides such rails.
+Thus $\varphi$ is unsatisfiable exactly when the equation is valid.
+CNF unsatisfiability is coNP-complete by the standard SAT theorem
+\cite{Cook1971}. Formula sizes and their owned-choice translations are
+polynomial. Hardness at the fixed value $K=3$ also gives uniform hardness.
+\end{proof}
+
+The two-value encoding does not replace the winner-set algebra by a
+Boolean algebra. It is a selected-operation fragment with a definable
+gate. In particular it is not a subalgebra of the full signature with
+all named winner constants and all internal role permutations. The
+complexity method is standard; its consequence here closes the lower
+bound left open by pair testing.
+
+\section{Evidence, attribution, and the next mathematical gap}
+
+\texttt{BooleanCore.lean} proves the gate, the two Boolean operations,
+and the embedding of arbitrary monotone Boolean formula equations. It
+uses ordinary syntax from the preceding modules and proves both
+directions of validity preservation for all nonempty input valuations.
+The SAT reduction and complexity-class statements remain mathematical
+proofs above. Lean 4.34.1 checks the module with only \texttt{Std}; the
+axiom audit reports only \texttt{propext}, \texttt{Classical.choice}, and
+\texttt{Quot.sound}, with no admitted statements or new axioms.
+
+\texttt{ambiguity.py} implements the matching criterion, witness
+permutations, balanced syntax synthesis, and canonical composition.
+\texttt{check\_general.py} compares two independent complete
+enumerations at $K=3,4$: admissible canonical rows versus affine images
+of the factorpower, itself enumerated by union closure of all
+permutations. It checks semantic uniqueness, every composition at $K=3$,
+sampled compositions at $K=4$, and actual term synthesis. It also checks
+the Boolean gates through $K=6$ and the dual-rail equivalence on all
+$4369$ CNFs with up to three clauses on two variables, including empty
+clauses. These support the written proofs, rather than replacing them.
+
+The factorpower, its edge-extension criterion, semidirect-product
+construction, matching algorithms, Boolean hardness reduction, and
+subset-poset automorphism argument are established mathematics reused
+explicitly. The candidate contribution is their exact relationship to
+rational owned choice: the optimal pair theorem from the preceding note,
+the affine ambiguity quotient with its threshold and canonical matching
+criterion, and their consequences for contexts and equational validity.
+Priority of this particular combination is not established by identifying
+the factorpower alone.
+
+There is still no finite equational basis or proof calculus. The
+all-arity pair theorem controls input tests, but not which tables on
+those tests are realizable. The ambiguity quotient controls one part of
+unary composition, but forgets singleton rows. Two focused next questions
+are therefore the exact singleton fibers at general $K$, and a uniform
+presentation that derives the status split equationally. The residual
+bound needed by the conditional Willard route in \texttt{symmetric.tex}
+also remains open. No dependent type-theoretic claim follows yet.
+
+\bibliographystyle{plain}
+\bibliography{references}
+\end{document}
