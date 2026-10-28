@@ -6,7 +6,7 @@
 \usepackage{amsmath,amssymb,amsthm,mathtools}
 \usepackage{microtype}
 \usepackage{booktabs}
-\usepackage{hyperref}
+\usepackage[hidelinks]{hyperref}
 \newtheorem{theorem}{Theorem}[section]
 \newtheorem{proposition}[theorem]{Proposition}
 \newtheorem{corollary}[theorem]{Corollary}
@@ -198,9 +198,31 @@ exclusive branches.
 
 \section{Repeated descriptions with uniform component strategies}
 
-One may worry that~\eqref{eq:union} relies on giving the copies of a
-component different strategy tables. For this particular construction it
-does not.
+Repeated occurrences normally have separately chosen full strategy
+tables. Fixing one component SPE profile in every copy gives a different
+observation in general.
+
+\begin{proposition}[Uniform-profile observation]
+Let $f[x]$ be any unary owned-choice context and $G$ any closed component.
+The winners of ordinary SPE profiles that use one and the same full SPE
+profile of $G$ in every copy are exactly
+\[
+ U(f)(\B(G))=\bigcup_{g\in\B(G)}f(\{g\}).
+\]
+Thus uniform copies preserve the ordinary observation at $S$ precisely
+when $f(S)=\bigcup_{g\in S}f(\{g\})$.
+\end{proposition}
+\begin{proof}
+Fix the component profile. Replace every copy with the leaf bearing its
+winner. Local optimality inside the component is already supplied by
+that profile; local optimality at each outer node depends only on child
+winners. Induction over the context therefore preserves SPE and the
+selected winner. Take the union over component SPE profiles.
+\end{proof}
+
+This generalization was identified in the external review
+\path{notes/review-results-2026-10-28.md}. The next theorem is its
+specific positive case for neutral union, with a generic Lean proof.
 
 \begin{theorem}[Uniform copies suffice]\label{thm:uniform}
 Fix a full SPE profile $p$ of $G$ and a full SPE profile $q$ of $H$, with
@@ -232,6 +254,14 @@ result therefore survives this test of reuse without changing the
 equilibrium concept. It does not identify outer decisions with component
 decisions, bind a previously realized value, or introduce an information
 set spanning two histories. Those are separate interface experiments.
+
+The term $D$ below supplies a separating case: it fixes every singleton
+but adds winners on some ambiguous inputs, so $U(D)$ is the identity
+while $D$ is not. Uniform observation is also not preserved by arbitrary
+substitution of an expression for the input variable. The follow-up note
+\texttt{structure.tex} gives an explicit substitution counterexample and
+develops the multivariable algebra. The theorem above makes no general
+claim that repetition can be treated as shared selection.
 
 \section{All unary contexts}
 

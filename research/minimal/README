@@ -5,8 +5,11 @@ enough structure to justify a small calculus before adding hidden choices,
 beliefs, control, or dependent types. This directory records an initial
 theorem package. Originality is not established.
 
-Read report.tex (build/minimal/report.pdf after building) for statements,
-proofs, limits, and comparisons. The larger manuscript is unchanged.
+Start with structure.tex (build/minimal/structure.pdf after building) for
+the all-arity results: exact K+1-state contextual perspectives, optimal
+fixed input tests, canonical status forms, all congruences, and the
+effect of internal role switching. The first note, report.tex, supplies
+the SPE interpretation, union occurrence bound, and unary classification.
 The adjacent proposal-realization-and-sharing.md supplies the roadmap;
 the union construction was already in that proposal.
 
@@ -15,9 +18,10 @@ From the repository root:
     make check-minimal
     make paper-minimal
 
-The first command runs the Python experiments and kernel-checks Basic.lean
-using the version pinned by this directory's lean-toolchain. It imports
-only Std and pins Lean 4.34.1.
+The first command runs both sets of Python experiments and kernel-checks
+Basic.lean and Perspectives.lean using Lean 4.34.1, pinned by this directory's
+lean-toolchain. Only Std is imported. Generated .olean files go to
+build/minimal/lean. The second command builds both notes.
 
 Proof inventory:
 
@@ -41,6 +45,18 @@ Proof inventory:
         Unique-winner tests identify all ambiguous sets under every unary
         context, even contexts containing multiple input occurrences.
 
+    sameView_own / contextualAt_iff (Perspectives.lean)
+        A player's exact contextual quotient: membership of that player,
+        plus singleton tests for every other player. There are K+1 classes.
+    small_counterexample / complete_test_domain
+        At every arity, singletons plus ambiguous test sets omitting
+        each player suffice. For a fixed observed player one prescribed
+        pair is enough. The tests are input values, not a subalgebra.
+    atom_collapse_to_top
+        Identifying an atom with anything else forces its identification
+        with the full winner set. This is the key extra constraint in the
+        mathematical classification of every congruence.
+
 Unary synthesis, uniqueness, counting, and composition have mathematical
 proofs in report.tex and finite checks, but are not yet generic Lean
 theorems. check.py independently exhausts the K=3 unary algebra (131
@@ -53,3 +69,21 @@ or a required contraction rule. The observation is possible pure SPE
 winners. It is neither forceability nor sequential equilibrium. Hidden
 choices may destroy pure-equilibrium existence, so the public recurrence
 must not be silently reused for them.
+
+The new optimal-domain lower bounds use the earlier unary synthesis.
+Canonical status forms, the full congruence classification, the minimum
+subdirect decomposition, and the internal-permutation congruence chain
+have mathematical proofs in structure.tex, not complete Lean proofs yet.
+check_structure.py verifies quotient operations for K=3..6; compares both
+all-arity representations against full binary/ternary valuations; checks
+all atom-containing test domains at K=3,4 against unary separation;
+independently enumerates all congruences at K=3; constructs and checks the
+626 classified congruences at K=4; and verifies the irreducible kernels
+and symmetric congruence chains at both sizes.
+
+Internal role permutations are a separate signature extension. They make
+one player's contextual quotient faithful to the entire winner set; the
+K+1-state and K+2-test statements use the signature without that extension.
+External relabeling is a symmetry throughout. Prior art includes standard
+Leibniz congruences, semilattice closure operators, and uniform matroids;
+the specific classifications need a priority investigation.
