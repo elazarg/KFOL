@@ -1,0 +1,483 @@
+\documentclass[11pt]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{microtype}
+\usepackage{booktabs}
+\usepackage{hyperref}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newcommand{\at}[1]{\langle #1\rangle}
+\newcommand{\ch}[1]{\mathbin{\oplus_{#1}}}
+\newcommand{\ow}[1]{\mathbin{\star_{#1}}}
+\newcommand{\Pow}{\mathcal P_{+}}
+\newcommand{\B}{\mathsf B}
+\title{Small Owned Choice:\\Neutral Union, Occurrence Bounds, and Unary Contexts}
+\author{KFOL research working note}
+\date{28 October 2026}
+\begin{document}
+\maketitle
+\begin{abstract}
+Fix a finite set of roles. Consider finite public games with only
+role-owned binary choice and a unique winner at each leaf. Observe the
+possible winners of pure subgame-perfect equilibria. This observation has
+a small compositional algebra. Three distinct owners define ordinary set
+union, using two occurrences of each argument. We prove that every union
+term needs at least two occurrences of each argument, even with arbitrary
+ground constants. We classify all unary term functions and derive their
+exact number. The union construction also works with identical component
+strategies in its repeated copies, under ordinary unrestricted deviations.
+The game interpretation, union identity, occurrence obstruction, uniform-copy
+result, and upper half of the classification are kernel-checked in Lean.
+The remaining arguments are given explicitly below. This note records a
+candidate algebraic contribution; priority has not been established.
+\end{abstract}
+
+\section{Why start here?}
+
+The motivating question is whether equally primitive player-owned choices
+can support a useful calculus. A small answer should first explain what
+composition preserves, which equations it validates, and what an observer
+can distinguish. Dependent types, control, hidden information, and beliefs
+should enter when a specific theorem requires them.
+
+This note fixes one particularly small experiment:
+\[
+  G ::= \at i \mid x \mid G\ch r G, \qquad i,r\in I.
+\]
+The set $I$ has $K$ roles. A closed term is a finite, perfect-information
+tree: at a node owned by $r$, role $r$ chooses one child. Leaf $\at i$
+gives utility $1$ to $i$ and $0$ to every other role. Histories are public;
+there is no chance, recursion, hidden state, or sharing of decision nodes.
+Substituting a term at two occurrences produces two subtrees.
+
+The observation $\B(G)$ is the set of winners attained by full pure
+subgame-perfect equilibrium (SPE) profiles. It is a set of possible
+equilibrium outcomes, not a mixed strategy or an individual guarantee.
+This is a semantic choice to investigate, rather than a claim that rational
+equilibrium is the only reading of an unbiased choice quantifier.
+
+Owner-indexed game syntax is established background
+\cite{Abramsky2007,OldeLoohuisVenema2010}. Full contingent strategies and
+dependent game trees also have established type-theoretic treatments
+\cite{EscardoOliva2023}. We use these foundations directly. The proposed
+contribution lies in the algebra and context classification under the
+specified observation.
+
+\section{From full strategies to a finite algebra}
+
+A full profile gives an action at \emph{every} internal node, including
+nodes avoided by that profile. At a node it therefore consists of a root
+action and a full profile for each child. A unilateral deviation by $i$
+may replace all actions owned by $i$, in both child trees. It leaves every
+other player's actions fixed. A profile is Nash if no such deviation
+improves the deviator's utility. It is SPE if its restriction to every
+subtree is Nash.
+
+For a fixed profile, let $a,b$ be the winners prescribed in its two child
+subtrees. Assuming both child profiles are SPE, the parent profile is SPE
+exactly when it chooses $r$ whenever $a=r$ or $b=r$. Otherwise either
+child is optimal for $r$. This characterization follows from whole-player
+deviations: a deviation that wins in a child would already improve that
+child's profile. It is not an assumption that checking only a current
+action is generally sufficient in games of partial information.
+
+For nonempty subsets $S,T\subseteq I$, put
+\begin{equation}\label{eq:own}
+ S\ow r T =
+ \begin{cases}
+ \{r\},&S=\{r\}\text{ or }T=\{r\},\\
+ S\cup T,&\text{otherwise}.
+ \end{cases}
+\end{equation}
+
+\begin{theorem}[Exact public-tree interpretation]\label{thm:adequacy}
+Every closed tree has a full pure SPE profile, and
+\[
+ \B(\at i)=\{i\},\qquad
+ \B(G\ch r H)=\B(G)\ow r\B(H).
+\]
+Every element of the right-hand side has a full SPE witness on the left.
+\end{theorem}
+\begin{proof}
+Existence follows inductively by choosing an owner-winning child whenever
+one is available in the chosen child profiles. If one child has only
+$r$-winning SPE profiles, every parent SPE must win for $r$, and one
+exists. Otherwise each child has an SPE profile losing for $r$. For any
+SPE winner $i$ in the left child, combine its witness with a losing-for-$r$
+SPE in the right child and choose left. This is locally optimal, whether
+or not $i=r$. The symmetric construction covers the right child.
+Conversely, a parent SPE selects the winner of a child SPE. These facts
+give both inclusions in~\eqref{eq:own}.
+\end{proof}
+
+This is a backward-induction result for a restricted utility model. Its
+role here is to justify the finite algebra $\Pow(I)$, not to claim new
+game theory. \texttt{Basic.lean} defines full profiles, whole-player
+deviations, Nash equilibrium, and SPE separately, then proves the theorem
+as \texttt{winners\_node}.
+
+Each $\star_r$ is associative, commutative, and idempotent. For
+associativity, a three-input product is $\{r\}$ if any input is $\{r\}$,
+and is their union otherwise. Nonemptiness ensures that a union of inputs
+different from $\{r\}$ cannot become $\{r\}$. Role permutations transport
+these operations and the leaf constants.
+
+For two roles, the ground-generated carrier consists only of the two
+singletons and recovers Boolean conjunction/disjunction after choosing a
+role as truth. With three roles there is genuine ambiguity, such as
+$\{0,1\}$, and the next construction generates every nonempty subset.
+
+\section{Neutral union and its minimum occurrence cost}
+
+\begin{theorem}[Neutral union]\label{thm:union}
+For pairwise distinct $r,s,t$,
+\begin{equation}\label{eq:union}
+ J(x,y)=(x\ow r y)\ow t(x\ow s y)=x\cup y.
+\end{equation}
+Consequently, if $K\geq3$, every nonempty subset of $I$ is the
+denotation of a closed owned-choice tree.
+\end{theorem}
+\begin{proof}
+If neither inner operation collapses, both return $x\cup y$. If just one
+collapses, its owner singleton belongs to the other result, and the outer
+owner is different. If both collapse, the inputs must be the two distinct
+owner singletons; the outer operation returns their union. Folding $J$
+over the leaf singletons realizes every nonempty subset.
+\end{proof}
+
+The definition uses three owned-choice nodes and two occurrences of each
+input. Although it names three owners, its denotation is independent of
+the distinct triple chosen. It is an equality of equilibrium-winner
+observations, not an isomorphism of trees or strategy spaces.
+
+\begin{theorem}[Occurrence lower bound]\label{thm:lower}
+Suppose $K\geq3$. In the syntax of owned binary choices and arbitrary
+nonempty ground constants, any term that denotes $x\cup y$ for every
+$x,y\in\Pow(I)$ contains at least two occurrences of $x$ and at least two
+occurrences of $y$. Hence three binary nodes are optimal.
+\end{theorem}
+\begin{proof}
+Zero occurrences cannot express dependence on that input. Suppose $x$
+occurs once. Read the unique path from its occurrence to the root, using
+commutativity to put the current value first. It has the form
+\[
+ X\longmapsto X\ow{r_1}g_1(Y)
+   \longmapsto\cdots\longmapsto (\cdots)\ow{r_n}g_n(Y),
+\]
+where each $g_j(Y)$ is nonempty and independent of $X$. We allow arbitrary
+such functions, which only strengthens the obstruction.
+
+For fixed $Y$, if some $g_j(Y)=\{r_j\}$, that step erases all dependence
+on $X$, and later steps cannot recover it. For $Y=\{r\}$ this is
+incompatible with $X\cup\{r\}$, which varies with $X$. Therefore no such
+side value equals its owner singleton. Every step then preserves all
+members of its current input: if the input is the owner singleton it
+remains so, and otherwise the operation takes a union.
+
+If the path is empty, its value is $X$, not union. Otherwise let $r$ be
+its innermost owner and set $Y=\{r\}$. Its first side value differs from
+$\{r\}$ and is nonempty, so contains some $k\ne r$. Choose
+$j\notin\{r,k\}$. Starting with $X=\{j\}$, the first step introduces
+$k$. No later step can remove it. The required result $\{j,r\}$ excludes
+$k$, a contradiction. Interchange the variables for the other bound.
+\end{proof}
+
+The path obstruction is \texttt{no\_single\_use\_union} in Lean. The
+syntax-to-path correspondence is the direct decomposition of a term at
+its unique input occurrence, as used in the proof.
+
+The cost measured here is \emph{syntactic occurrence}. A play enters just
+one of the four component occurrences. The theorem establishes neither
+runtime duplication nor a need for a contraction rule in a particular
+linear type system: additive branching may use a context in both
+exclusive branches.
+
+\section{Repeated descriptions with uniform component strategies}
+
+One may worry that~\eqref{eq:union} relies on giving the copies of a
+component different strategy tables. For this particular construction it
+does not.
+
+\begin{theorem}[Uniform copies suffice]\label{thm:uniform}
+Fix a full SPE profile $p$ of $G$ and a full SPE profile $q$ of $H$, with
+winners $g,h$. In
+\[
+  (G\ch r H)\ch t(G\ch s H),
+\]
+use exactly $p$ in both copies of $G$ and exactly $q$ in both copies of
+$H$. As the three outer actions vary, the winners of ordinary SPE
+profiles are exactly $\{g,h\}$. Therefore the winners of ordinary SPE
+profiles satisfying this copy-equality condition are
+$\B(G)\cup\B(H)$.
+\end{theorem}
+\begin{proof}
+For any fixed three outer actions, local optimality at those nodes depends
+only on the child winners $g,h$. Local optimality inside a component is
+already supplied by $p,q$. Thus the expanded full profile is SPE exactly
+when the corresponding profile of
+$(\at g\ch r\at h)\ch t(\at g\ch s\at h)$ is SPE. By
+Theorems~\ref{thm:adequacy} and~\ref{thm:union}, its possible winners are
+$\{g,h\}$. Conversely, a uniform ordinary SPE restricts to SPE profiles
+in its component copies. Taking the union over $p,q$ proves the claim.
+\end{proof}
+
+This is \texttt{uniform\_copies\_winners} in Lean. Importantly, we
+\emph{select} profiles with equal component copies from the ordinary SPE
+profiles. We do not restrict deviations to preserve that equality. The
+result therefore survives this test of reuse without changing the
+equilibrium concept. It does not identify outer decisions with component
+decisions, bind a previously realized value, or introduce an information
+set spanning two histories. Those are separate interface experiments.
+
+\section{All unary contexts}
+
+Assume $K\geq3$. A unary term function uses one variable, any number of
+its occurrences, owned choices, and leaf constants. By
+Theorem~\ref{thm:union}, arbitrary nonempty ground constants are available.
+Write $\mathsf{Reg}(C,E)$ for the following function, with parameters
+\[
+ C\subseteq I,\qquad E_i\subseteq C\setminus\{i\}\quad(i\in I):
+\]
+\begin{equation}\label{eq:normal}
+ \mathsf{Reg}(C,E)(S)=
+ \begin{cases}
+ \{i\}\cup E_i,&S=\{i\},\\
+ S\cup C,&|S|\geq2.
+ \end{cases}
+\end{equation}
+
+\begin{theorem}[Unary normal forms]\label{thm:unary}
+The unary term functions are exactly the nonempty constant functions and
+the functions~\eqref{eq:normal}. The regular parameters $C,(E_i)$ are
+unique. The only overlap with the constant functions is the constant
+function $I$.
+\end{theorem}
+\begin{proof}
+\emph{Upper bound.} The variable is regular with $C=\varnothing$ and
+empty rows, and each constant is constant. Suppose two child functions
+are regular with extra sets $C,D$. On a multiwinner input $S$, each child
+contains $S$ and cannot equal an owner singleton. Their owned combination
+is their union, $S\cup C\cup D$. On singleton $\{i\}$, both contain $i$;
+their owned combination still contains $i$ and is contained in
+$\{i\}\cup C\cup D$. This is regular.
+
+If one child is constant $D$ and the other regular with extra set $C$,
+then $D=\{r\}$ makes the result constant. Otherwise the regular child's
+multiwinner values cannot collapse and the result is $S\cup C\cup D$.
+On an atomic input, the operation preserves $i$ and stays inside
+$\{i\}\cup C\cup D$. Two constants give a constant. This proves closure
+and the upper classification by induction. The Lean theorem
+\texttt{unary\_normal\_form\_upper} formalizes this argument, including
+extensivity of the regular functions.
+
+\emph{Synthesis.} For every $k\in C$, prescribe the allowed singleton
+input roles
+\[
+ A_k=\{i\ne k:k\in E_i\}.
+\]
+Start with $g_k(x)=J(x,\at k)$. For each $i\ne k$ outside $A_k$, replace
+$g_k(x)$ by $g_k(x)\ow i x$. At singleton input $i$, this suppresses the
+extra winner $k$ by returning $\{i\}$. At another singleton, it preserves
+the current value, which contains that other role. On a multiwinner
+input $S$, both operands contain $S$, so the result remains $S\cup\{k\}$.
+The order of these suppressions is irrelevant. Join $x$ with all the
+$g_k(x)$ using $J$. This realizes precisely~\eqref{eq:normal}; for empty
+$C$, use $x$.
+
+\emph{Uniqueness.} For any $k$, choose a two-element $S$ omitting $k$.
+Then $k\in C$ exactly when $k\in\mathsf{Reg}(C,E)(S)$, so $C$ is uniquely
+determined. Each $E_i$ is the singleton-input result minus $i$. A regular
+function is extensive. If it is constant, its value must contain every
+singleton and hence equal $I$. That constant is regular with $C=I$ and
+$E_i=I\setminus\{i\}$.
+\end{proof}
+
+\begin{corollary}[Exact count and a small test set]
+There are exactly
+\begin{equation}\label{eq:count}
+  (1+2^{K-1})^K+2^K-2
+\end{equation}
+unary term functions. Equality of two unary functions is determined by
+their values on singleton and two-element input sets.
+\end{corollary}
+\begin{proof}
+For fixed $C$ there are $2^{|C|(K-1)}$ row families. Summing over $C$
+gives $(1+2^{K-1})^K$. Add the $2^K-1$ constants and subtract the single
+overlap. Singleton/pair tests determine all regular parameters. They
+also distinguish constants: a constant agreeing with a regular function
+on every singleton must contain every role, hence be $I$; pair tests
+then force $C=I$ and all rows to be full.
+\end{proof}
+
+Thus there are $131$ unary functions for $K=3$, $6575$ for $K=4$, and
+$1419887$ for $K=5$. The first number is independently recovered by
+exhaustive algebraic closure in \texttt{check.py}. The script constructs
+every parameterized function by actual owned-choice operations for
+$K=3,4$ and checks separation by singleton/pair tests. It does not
+enumerate all terms for $K=4,5$; the general classification supplies the
+upper bound.
+
+The parameters are also closed under context composition. If the outer
+function has parameters $(C,E)$ and the inner $(D,F)$, their composite is
+regular with extra set $C\cup D$ and rows
+\[
+ H_i=\begin{cases}
+ E_i,&F_i=\varnothing,\\
+ (F_i\cup C)\setminus\{i\},&F_i\ne\varnothing.
+ \end{cases}
+\]
+If either function is constant, evaluate the appropriate constant case.
+Indeed, a multiwinner input stays multiwinner through both functions. At
+input $\{i\}$, the inner result is still a singleton exactly when
+$F_i=\varnothing$; otherwise the outer function adds $C$.
+This supplies an explicit finite monoid of unary contexts rather than a
+list of isolated identities.
+
+Atomic inputs alone do not determine a context. For $I=\{a,b,c\}$, the term
+\[
+ D(x)=x\ow c\bigl((x\ow a\{b\})\ow b\{a\}\bigr)
+\]
+fixes every singleton but sends each multiwinner set $S$ to
+$S\cup\{a,b\}$. It has only two occurrences of $x$. Thus a calculus that
+checks equations only on the winner constants misses real distinctions.
+
+\section{Which observations retain the information?}
+
+\begin{proposition}[Unique-winner tests collapse ambiguity]\label{prop:obs}
+Every unary context function is either constant or extensive. If its
+observation is only whether its result equals a designated singleton,
+all sets with at least two members are contextually indistinguishable.
+If membership of a designated winner is observable, distinct sets are
+already distinguished by the identity context.
+\end{proposition}
+\begin{proof}
+The first statement follows either directly by induction (a constant
+owner-singleton absorbs; otherwise a nonconstant child is preserved), or
+from Theorem~\ref{thm:unary}. A constant context has the same result on all
+inputs. An extensive context cannot turn a multiwinner input into a
+singleton. Membership tests distinguish sets at an element of their
+symmetric difference.
+\end{proof}
+
+The first two statements are proved generically in Lean as
+\texttt{unary\_constant\_or\_extensive} and
+\texttt{ambiguity\_unobservable\_by\_unique\_winner}; they do not depend
+on enumerating the finite carrier. This settles the observation issue in
+Target C of the realization-and-sharing proposal for the public unary
+fragment. It also identifies a specific way an apparently richer logic
+could accidentally lose its intended content.
+
+For comparison, let $q(S)=\{i:S=\{i\}\}$. For nonempty operands,
+\[
+ q(S\ow r T)_r=q(S)_r\lor q(T)_r,\qquad
+ q(S\ow r T)_i=q(S)_i\land q(T)_i\quad(i\ne r).
+\]
+These are precisely the coordinate operations in the guarantee algebra
+of Olde Loohuis and Venema, Definition 3.20
+\cite{OldeLoohuisVenema2010}, restricted to its empty and singleton
+values. Induction also shows $\B(G)=\{i\}$ exactly when $i$ can force a
+win in this finite unique-winner fragment. This comparison explains the
+collapse; it is not the chosen meaning of $\B$.
+
+The full algebra validates different equations. For example, with
+$r=0,s=1$, $A=\{0,1\}$, $B=\{1\}$, and $C=\{2\}$,
+\[
+ A\ow0(B\ow1 C)=\{0,1\},\qquad
+ (A\ow0 B)\ow1(A\ow0 C)=\{0,1,2\}.
+\]
+Thus the mutual distributivity axiom of their multiplayer algebras
+fails here, even though every $\star_r$ distributes over the neutral
+union operation. Reusing their complete equational calculus would
+therefore change the semantics.
+
+\section{The partial-information boundary and the next calculus}
+
+Full sequential equilibrium (SE) is not a small primitive for this
+experiment. It requires assessments containing strategies and beliefs,
+sequential rationality at information sets, and a consistency condition.
+The current results give no compression theorem for those data.
+
+There is also a precise reason not to extend the public recurrence by
+fiat. Suppose Alice chooses a bit and Bob guesses it, winning exactly
+when he guesses correctly. With public observation, every pure SPE
+winner is Bob. Hide the bit from Bob while keeping the same tree and
+terminal winners. At a matching pair Alice can switch her bit; at a
+mismatching pair Bob can switch his guess. Hence there is no pure Nash
+equilibrium. Bob's information set crosses both branches, so neither
+Bob node roots a proper continuation subgame. SPE supplies no additional
+restriction beyond Nash here. It is the refinement that becomes vacuous,
+not the definition of Nash equilibrium.
+
+The public winner-set observation therefore cannot support arbitrary
+hidden-information composition. Switching to SE changes the semantic
+problem; it does not repair the existing recurrence for free. This is a
+boundary example, not a general impossibility theorem for small calculi
+with hidden information.
+
+The next step should keep the public core and specify one shared binary
+decision as an interface. Ask which equations survive and which pair of
+components equal under $\B$ becomes distinguishable. The uniform-copy
+theorem supplies a positive case: reusing the same full component profile
+does not itself destroy neutral union. The hidden-bit example supplies a
+negative case. A useful extension must characterize the gap, with
+whole-player deviations preserved throughout.
+
+For a first typed calculus, the immediate requirement is a substitution
+theorem for a chosen interface class. Distinguishing a reusable
+description, a previously chosen value, and a shared policy entry should
+follow from that theorem. The occurrence bound alone does not determine
+structural typing rules. A dependent calculus and a treatment of SE remain
+possible later targets, rather than premises of the current algebra.
+
+\section{Evidence, attribution, and remaining work}
+
+\begin{center}
+\small
+\begin{tabular}{@{}p{0.46\linewidth}p{0.46\linewidth}@{}}
+\toprule
+Result & Present evidence\\
+\midrule
+Full-strategy SPE adequacy & Generic Lean proof, including whole-player deviations\\
+Neutral union & Generic Lean proof\\
+Single-use obstruction & Generic Lean path theorem; syntax decomposition above\\
+Uniform copies & Generic Lean proof for each fixed pair of component SPE profiles\\
+Unary classification upper bound & Generic Lean proof\\
+Unary synthesis, uniqueness, count, composition & Mathematical arguments above; finite checks for $K=3,4$\\
+Unique-winner observation collapse & Generic Lean proof\\
+Originality of the algebraic package & Open: targeted literature comparison, not a priority proof\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The Lean development imports only \texttt{Std} and uses installed Lean
+4.34.1. It has no admitted lemmas or added axioms. Printed dependencies
+are Lean's standard classical foundations: propositional extensionality,
+classical choice, and quotient soundness. The Python script provides
+finite cross-checks; it is not a replacement for the generic proofs.
+
+The closest comparisons separate syntax, guarantees, and rational
+strategies. Abramsky supplies owner-indexed game constructions;
+Olde Loohuis--Venema supplies a different, guarantee-based algebra;
+Escard\'o--Oliva supplies full optimal-strategy machinery.
+Bolt--Hedges--Zahn's obstruction concerns a specified product of
+nondeterministic selection functions\cite{BoltHedgesZahn2019}. This note
+uses neither that product nor a claim that arbitrary component winner
+sets compose under partial information.
+
+The union term was already present in
+\texttt{research/proposal-realization-and-sharing.md}; it is not a new
+discovery of this note. The results worth a priority investigation are
+its optimal syntactic occurrence bound, the uniform-copy preservation
+theorem, and the unary normal-form classification. Searches did not find
+these exact statements, but that does not establish novelty. A complete
+equational axiomatization and the first nontrivial shared-decision
+interface remain open. This is a concrete algebraic research core, not
+yet a complete new logic or a CIC-style type theory.
+
+\bibliographystyle{plain}
+\bibliography{references}
+\end{document}

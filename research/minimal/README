@@ -1,0 +1,55 @@
+Minimal owned-choice research, 28 October 2026
+
+The research question is whether the public finite pure fragment has
+enough structure to justify a small calculus before adding hidden choices,
+beliefs, control, or dependent types. This directory records an initial
+theorem package. Originality is not established.
+
+Read report.tex (build/minimal/report.pdf after building) for statements,
+proofs, limits, and comparisons. The larger manuscript is unchanged.
+The adjacent proposal-realization-and-sharing.md supplies the roadmap;
+the union construction was already in that proposal.
+
+From the repository root:
+
+    make check-minimal
+    make paper-minimal
+
+The first command runs the Python experiments and kernel-checks Basic.lean
+using the version pinned by this directory's lean-toolchain. It imports
+only Std and pins Lean 4.34.1.
+
+Proof inventory:
+
+    winners_node
+        Exact SPE-winner recurrence, from full profiles and unrestricted
+        whole-player deviations; SPE existence and local optimality.
+    three_owner_join / neutralTree_winners
+        Three distinct owners define neutral union.
+    no_single_use_union
+        Union cannot have just one occurrence of either input. The formal
+        statement allows arbitrary nonempty side functions along a path.
+        The syntax-to-path decomposition is explained in report.tex.
+    uniform_copies_winners
+        Fix any two component SPE profiles. Reusing identical full profiles
+        in the copies achieves exactly their two winners. Deviations remain
+        unrestricted; this is not an imperfect-information theorem.
+    unary_normal_form_upper
+        Every unary function is constant or has fixed extra winners on
+        multiwinner inputs, with bounded rows on singleton inputs.
+    ambiguity_unobservable_by_unique_winner
+        Unique-winner tests identify all ambiguous sets under every unary
+        context, even contexts containing multiple input occurrences.
+
+Unary synthesis, uniqueness, counting, and composition have mathematical
+proofs in report.tex and finite checks, but are not yet generic Lean
+theorems. check.py independently exhausts the K=3 unary algebra (131
+functions), constructs all normal forms for K=3,4 (131 and 6575), and checks
+laws and uniform copies on finite models. Its fixed-profile SPE criterion
+is separately justified by spe_node_iff in Lean.
+
+The occurrence bound counts syntactic occurrences, not runtime duplication
+or a required contraction rule. The observation is possible pure SPE
+winners. It is neither forceability nor sequential equilibrium. Hidden
+choices may destroy pure-equilibrium existence, so the public recurrence
+must not be silently reused for them.
