@@ -1,89 +1,62 @@
 \documentclass[11pt]{article}
-
-% ------------------------------------------------------------
-% Packages (layout, typography, references)
-% ------------------------------------------------------------
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
 \usepackage[a4paper,margin=1in]{geometry}
 \usepackage{microtype}
-\usepackage{amsmath,amssymb,amsthm,stmaryrd,mathtools}
-\usepackage{xspace}
-\usepackage{url}
+\usepackage{amsmath,amssymb,amsthm,mathtools,stmaryrd}
+\usepackage{booktabs,array,enumitem}
+\usepackage{aliascnt}
+\usepackage[numbers,sort&compress]{natbib}
+\usepackage{xurl}
 \usepackage{hyperref}
 \usepackage[capitalize,nameinlink]{cleveref}
-\usepackage{enumitem}
-\setlist{nosep,leftmargin=*,itemsep=1pt,topsep=3pt}
-\usepackage[small,compact]{titlesec}
-\titlespacing*{\section}{0pt}{*2}{*0.6}
-\titlespacing*{\subsection}{0pt}{*1.6}{*0.5}
-\usepackage[most]{tcolorbox}
-\usepackage{tikz-cd}
-\usetikzlibrary{arrows.meta,positioning,calc,fit}
-\let\CheckCommand\providecommand
-\usepackage{booktabs}
-
-% ------------------------------------------------------------
-% Environments and numbering
-% ------------------------------------------------------------
-\newtheorem{theorem}{Theorem}
-\newtheorem{lemma}[theorem]{Lemma}
-\newtheorem{proposition}[theorem]{Proposition}
-\newtheorem{corollary}[theorem]{Corollary}
+\hypersetup{colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue,
+  pdftitle={K-FOG: Role-Owned Choice and Dependent Interaction},
+  pdfauthor={Elazar Gershuni}}
+\setlist{itemsep=2pt,topsep=5pt,leftmargin=*}
+\newtheorem{theorem}{Theorem}[section]
+\newaliascnt{proposition}{theorem}
+\newtheorem{proposition}[proposition]{Proposition}
+\aliascntresetthe{proposition}
+\newaliascnt{lemma}{theorem}
+\newtheorem{lemma}[lemma]{Lemma}
+\aliascntresetthe{lemma}
+\newaliascnt{corollary}{theorem}
+\newtheorem{corollary}[corollary]{Corollary}
+\aliascntresetthe{corollary}
 \theoremstyle{definition}
-\newtheorem{definition}[theorem]{Definition}
-\newtheorem{example}[theorem]{Example}
+\newaliascnt{definition}{theorem}
+\newtheorem{definition}[definition]{Definition}
+\aliascntresetthe{definition}
+\newaliascnt{example}{theorem}
+\newtheorem{example}[example]{Example}
+\aliascntresetthe{example}
 \theoremstyle{remark}
-\newtheorem{remark}[theorem]{Remark}
-
-\numberwithin{equation}{section}
-\numberwithin{theorem}{section}
-
-
-% ------------------------------------------------------------
-% Running example box
-% ------------------------------------------------------------
-\newtcolorbox{runningexample}{colback=gray!4,colframe=gray!50,
-  title=Running example,boxrule=0.4pt}
-
+\newaliascnt{remark}{theorem}
+\newtheorem{remark}[remark]{Remark}
+\aliascntresetthe{remark}
 \input{macros}
 
-\title{K-FOG: A Symmetric Multi-Role Game Calculus}
-\author{Elazar Gershuni, Technion}
-\date{\today}
+\title{K-FOG: Role-Owned Choice and Dependent Interaction}
+\author{Elazar Gershuni\\Technion}
+\date{28 October 2026}
 
 \begin{document}
 \maketitle
-
 \input{abstract}
-
 \input{intro}
-
-\input{KFOL}
-\input{2FOL}
-\input{info}
-\input{algebra}
-\input{extensions}
-
-\input{ra}
-
-\input{solutions}
-\input{tests}
-
-\input{functional}
-
-\input{session}
-
-\input{complexity}
-
-\input{related}
-
+\input{core}
+\input{interaction}
+\input{composition}
+\input{disclosure}
+\input{interpretations}
+\input{rational}
+\input{foundations}
+\input{development}
 \input{conclusion}
-
-% ============================================================
 \appendix
-\input{appendix-proofs}
-\input{appendix-crypto}
-
-\bibliographystyle{abbrv}
-\bibliography{related}
-
+\input{appendix-core}
+\bibliographystyle{abbrvnat}
+\bibliography{references}
 \end{document}

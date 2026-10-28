@@ -1,0 +1,112 @@
+\section{Games and logical interpretations}
+\label{sec:interpretations}
+
+\subsection{Full policies and endpoint plans}
+\label{sec:policies}
+
+For a public script, a full pure policy for role $i$ supplies an action at
+every choice history owned by $i$, and a return value at each terminal
+history. Each history includes the public parameter values and all earlier
+choices, with their occurrence identities. The domains are well-typed
+histories, including histories made unreachable by that role's own earlier
+actions. A profile of such policies determines a history and a result record
+by ordinary left-to-right evaluation.
+
+This interpretation is set-theoretic. A general policy need not be definable
+by a term of $\D$. Denote by $\llbracket\Local{i}{G}\rrbracket$ the analogous
+set of dependent sums and functions in a set interpretation of the public
+data. This notation does not assert that every set-theoretic endpoint has a
+syntactic implementation.
+
+Given a policy $\sigma_i$ and a history $h$, form its reduced endpoint plan
+$\Plan_i(G,h,\sigma_i)$ recursively. At an owned choice, use the value
+prescribed by $\sigma_i$ and retain its continuation for that value. At a
+received choice, retain the function sending each possible value to its
+corresponding continuation plan. At a terminal, return the policy's value.
+
+\begin{theorem}[Execution adequacy for policy reduction]
+\label{thm:adequacy}
+For every full policy profile, set-theoretic execution of its reduced
+endpoint plans has exactly the trace and return record of ordinary policy
+evaluation.
+\end{theorem}
+\begin{proof}
+At a terminal both evaluations select the same returns. At an owned choice,
+the owner's reduced plan supplies the value prescribed by its policy at
+the current history. Every other reduced plan is a function of that same
+value, so all continuations are the reductions of the original policies at
+the extended history. Apply the induction hypothesis to the continuation.
+\end{proof}
+
+The theorem preserves complete execution. It neither requires a
+winning-strategy interpretation nor identifies policy tables with reduced
+plans. Extending the comparison to an equivalence of strategic models must
+state which unreachable histories are identified and how deviations and
+randomization are represented.
+
+\subsection{Objectives observe executions}
+
+An objective can be any specified predicate $W_i(e)$ on $e:\Exec(G)$; a utility
+can be a function $u_i(e)$ into an ordered payoff domain. An outcome tuple
+$\langle[W_i(e)]\rangle_i$ is therefore one readout of the complete execution.
+No exclusivity or agreement condition is imposed on the $W_i$.
+
+For example, after (1), Alice may want the selected entry to be true, Bob may
+want it to be false, and Carol may want the first position. These predicates
+can conflict while the interaction remains well formed and executable.
+Taking $R_i=\Unit$ does not certify any of them. Replacing $R_i$ by a
+particular evidence type makes that proof a requirement of endpoint $i$;
+it changes the interface explicitly.
+
+Nash equilibrium, joint realizability, and adversarial guarantees can be
+defined on the resulting policy game. Their quantification is additional
+analysis data. It does not replace the profile space or complete evaluation
+with a distinguished vector of winners.
+
+\subsection{Classical quantifiers as a two-role interpretation}
+
+The conventional evaluation game of first-order logic is recovered by fixing
+a viewpoint and complementary objectives. We state this standard
+specialization over finite nonempty structures, so it involves no choice of
+noncomputable strategies over infinite domains.
+
+Fix distinct roles $i,j$ and a prenex first-order sentence
+$Q_1x_1\cdots Q_nx_n.\theta$, with quantifier-free matrix $\theta$.
+Translate each existential binder to $\Q_i$, each universal binder to
+$\Q_j$, and let all terminal result types be $\Unit$. Give role $i$ objective
+$\theta$ and role $j$ objective $\neg\theta$. The positive objective belongs
+to the selected role $i$, whichever role name is chosen.
+
+\begin{proposition}[Classical evaluation-game correspondence]
+In a finite nonempty first-order structure, the sentence is true iff role
+$i$ has a policy that achieves $\theta$ against every policy of $j$.
+\end{proposition}
+\begin{proof}
+Induct on the quantifier prefix. At an existential binder, truth requires
+some value with a true continuation, and role $i$ can select that value.
+At a universal binder, every value must have a true continuation; role $i$
+can use the corresponding contingent continuation after observing $j$'s
+choice. Finite branching permits all these choices to be assembled into
+one policy. Conversely, a guaranteeing policy gives the existential witness
+at an owned binder and a guaranteeing continuation after every opposing
+choice. At the terminal the statement is satisfaction of $\theta$.
+\end{proof}
+
+This interpretation explains the existential/universal pair without assigning
+permanent logical polarities to the roles of the global language. In a
+general $K$-role interaction there is no distinguished opposing role.
+
+\begin{proposition}[Role permutation is not general Boolean complement]
+For $K>2$, no permutation of individual roles maps every one-hot outcome to
+its coordinatewise Boolean complement.
+\end{proposition}
+\begin{proof}
+A permutation preserves the number of nonzero coordinates. A one-hot vector
+has one, while its complement has $K-1$.
+\end{proof}
+
+At $K=2$ these counts coincide, and swapping the complementary evaluation-game
+roles has the familiar negation reading. For larger role sets, permutation
+remains a symmetry of interaction. Logical complement of an objective remains
+an operation in the objective language. The two operations have different
+types and different laws.

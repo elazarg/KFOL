@@ -1,63 +1,109 @@
 \section{Introduction}
 
-First-order logic (\FOL) admits a game-semantics reading: existential
-quantifiers are choices of a ``verifier,'' universal quantifiers are choices
-of a ``falsifier,'' and negation swaps the two roles. This is useful, but the
-two quantifiers encode only two adversarial roles and do not naturally
-extend to $K>2$ players with distinct objectives.
+Suppose Alice chooses a positive number $n$, Bob supplies a vector of length
+$n$, and Carol selects a valid position. Alice's choice changes the types of
+Bob's and Carol's choices. Each participant has a different interface to the
+same event. Alice supplies $n$; Bob and Carol receive it. At the next event,
+Bob becomes the supplier. No participant is permanently the verifier or
+the environment.
 
-We introduce \KFOL\ as a symmetric variation for $K$ players.
-Each choice is explicitly labeled by the player making it
-($P_0, \dots, P_{K-1}$), and the operators preserve this symmetry.
-A \KFOL\ formula denotes a finite perfect-information game:
-a prefix of player-labeled quantifiers $P_i x.\,\Phi$ indicates
-which player chooses each variable, and a terminal $K$-tuple of classical
-formulas $\langle \fo_0, \dots, \fo_{K-1} \rangle$
-determines the outcome $(v_0, \dots, v_{K-1})$, where $v_i = 1$
-means that player $i$ achieves its objective.
+A role-owned quantifier records this structure directly:
+\[
+ \Q_A(n:\Nat_{>0}).\
+ \Q_B(v:\mathsf{Vec}(\Bool,n)).\
+ \Q_C(j:\mathsf{Fin}(n)).\ G(n,v,j).
+ \tag{1}
+\]
+An owned choice has the local shape of a dependent sum: supply a witness
+and continue at its instance. A received choice has the shape of a
+dependent product: accept the witness and continue at that instance.
+Globally, there is one binder and one chosen value, shared by all the
+continuations.
 
-Classical truth reappears only in the $K=2$ specialization by choosing
-a viewpoint: \emph{adversarial projection} at player $i \in \{0,1\}$ asks
-``can player $i$ force $v_i = 1$?'', yielding an ordinary truth value.
-Conversely, ordinary \FOL\ quantifiers are recovered by
-\emph{abstraction}, which embeds a classical formula $\fo$ as the
-zero-sum game $\langle \fo, \neg \fo \rangle$.
-In this fragment, \emph{rotation} (swapping the two players) behaves as
-classical negation.
+Player-indexed choices have a well-developed semantic foundation.
+Abramsky gives choices, quantifiers, role permutations, and information
+constraints an intrinsic game interpretation \cite{Abramsky2007}.
+Multirole logic supplies role-indexed proof rules and multiparty cut
+\cite{XiWu2023}. Dependent session types make communicated values
+available in continuation types \cite{ToninhoCairesPfenning2011};
+Wu and Xi's multiparty system includes endpoint-specific quantification
+\cite{WuXi2018}. Toninho and Yoshida project value-dependent global types
+even to endpoints with partial views \cite{ToninhoYoshida2017}.
+We use these results as the foundation for explicit interfaces between
+binding, strategic behavior, and disclosure.
 
-A useful way to situate our work is against refined multiparty session types (R-MPST)~\cite{vassor2024refinements}. In that line of work, one first writes a single global interaction script that says who communicates when and what each participant is allowed to see, and then refines individual steps with logical conditions so that standard operational questions (e.g.\ ``are the runs of this protocol admissible?'') can be asked. We adopt exactly this protocol/logic separation, but we keep the protocol in a broadcast-style linear prefix with IF-style hiding and we fix ordinary first-order logic as the default goal language --- choices made so that the same object can also be read as a finite, visibility-constrained game. Because the terminal of a \KFOL{} formula is a $K$-tuple of per-role goals, we can, in addition to the usual trace-validity questions, pose explicitly counterfactual, solution-concept questions over the very same script: who can force under these visibility restrictions, which coalitions can succeed together, whether a given profile is Nash-style stable, and so on. Our MPST translation shows that the interaction part can still be projected to a familiar session-typed view, while the abstraction–refinement embedding shows that per-player logical questions are recoverable. Thus the difference is not in rejecting the R-MPST pattern, but in exploiting it for both trace-level verification and game-theoretic analysis under one global description.
+The first computational requirement is shared dependent substitution.
+When Alice supplies a number $a$, every endpoint advances to the
+continuation for that same $a$. The substitution changes types as well as
+programs. We isolate this familiar mechanism in a small public calculus
+over a pure dependent data language. Its elementary execution laws provide
+the background for two harder questions.
 
-The contributions of this paper are:
-\begin{itemize}
-  \item A symmetric $K$-player calculus (\KFOL) with outcomes given by
-        $K$ first-order goals evaluated to $\{0,1\}$ and a minimal prefix
-        (prenex-style) syntax.
-  \item A detailed algebraic analysis of the $K=2$ specialization,
-        including rotation and complement, and the \FOL\ retract via
-        abstraction–projection.
-  \item An extension with IF-style information-hiding binders
-        ($P_i x \setminus V.\,\Phi$) that make the visibility relation explicit.
-  \item A linear, non-branching translation from \KFOL\ prefixes to
-        MPST-style global protocols, including a visibility-restricting
-        variant that makes the $\setminus V$ constraints explicit.
-  \item A complexity analysis showing that the \KFOL\ core is
-        PSPACE-complete and the IF-extension is NEXPTIME-hard.
-\end{itemize}
+\paragraph{Which behaviors does an interaction retain?}
+A participant's full strategy specifies what to do after every history,
+including histories excluded by its own earlier decisions. An executable
+plan can omit those counterfactual continuations. That reduction preserves
+complete execution, but loses information needed for subgame perfection.
+Even Nash equilibrium cannot be determined from an actual execution alone:
+it compares the profile with unilateral deviations.
 
-This is a \emph{horizontal} paper: our aim is to fix the core $K$-player calculus and situate it among neighbouring formalisms (game-semantics for FOL, IF-style binders, MPST-style global protocols, and structural combinators). We leave deeper treatments of each formalism to subsequent work.
+The interaction object therefore contains a script, full strategy spaces,
+and evaluation. An objective is a predicate or utility on executions.
+A solution concept is a property of the strategies and their alternatives.
+The same interaction can be analyzed under different goals or rationality
+conditions without changing who owns its choices.
 
-The remainder of this paper is organized as follows.
-\Cref{sec:k-core} defines the syntax, game-theoretic semantics,
-and forceability relation for the \KFOL\ core.
-\Cref{sec:symmetry} defines the $S_K$ group action.
-\Cref{sec:functional} presents multiple computational readings (procedural, functional, 
-Gallina-style dependent types, and a minimal core calculus with parametric 
-success notions) and explains how \KFOL combines MPST-like protocols with 
-multi-headed game-theoretic outcomes.
-\Cref{sec:k-to-2} analyzes the $K=2$ specialization in detail.
-\Cref{sec:extensions} introduces the IF-style extension and the structural
-operators (including tensor-like compositions and coalition projections).
-\Cref{sec:mpst-connection} relates \KFOL\ prefixes to MPST-style global
-protocols and presents the two translation schemes.
-\Cref{sec:k-complexity} establishes the complexity bounds.
-\Cref{sec:related} discusses related work.
+For a concrete logical target, consider finite perfect-information games
+with one winner at each leaf. Evaluate a game by the set of winners obtained
+by full pure subgame-perfect profiles. Ordinary backward induction gives
+explicit role-indexed operations on these sets. At two roles, one-winner
+values recover Boolean truth. At three roles, indifference supports extra
+values and refutes distributivity. This yields an equational research
+problem that retains role-owned choice without defining its meaning by
+adversarial guarantees.
+
+\paragraph{When does a chosen value become usable?}
+In a sealed-bid interaction, Alice fixes a value before Bob acts and
+discloses it afterward. If Alice could choose at the later moment, her
+choice could depend on Bob's intervening action. Commitment must therefore
+preserve the earlier binding across a change of audience.
+
+Visibility is also a typing issue. Alice may privately construct
+$v:\mathsf{Vec}(\Bool,n)$ while $n$ is still hidden from Bob.
+Bob cannot use that declared type until its index is available or a
+specified package abstracts it. Publication should enlarge a local context
+without replacing $n$ by a new unrelated witness.
+
+We define a finite phase calculus for this purpose. Its local views are
+computed from audience annotations, not supplied independently.
+A two-execution theorem proves hiding for prefixes with no release of the
+protected cell or its dependencies. The dependency condition is essential:
+publishing a copy of a hidden payload can disclose it before its own
+opening command. The theorem makes that indirect channel explicit.
+
+\paragraph{What is established, and what remains a contribution question?}
+The broadcast projection, dependent path construction, and elementary
+execution metatheory are established constructions used as background.
+The phase calculus and finite rational algebra specify two concrete
+research targets: dependent connection preserving stable binding and
+observation permissions, and a proof theory for rational role-owned choice.
+The statements below establish their indicated finite laws and give
+counterexamples to stronger claims. Originality of this assembly, or of a
+new logic or type theory, has not been established.
+
+Definability in an existing dependent kernel explains an implementation
+route. It is neither a novelty claim nor a reason to dismiss all conservative
+calculi. A new proof calculus still needs its own judgments, identity,
+connectives, connection rules, and metatheory. We specify those obligations
+after presenting the semantic interfaces.
+
+\paragraph{Scope.}
+The public core has finite dependent scripts and complete connections.
+Its conversation composition publishes endpoint returns together, thereby
+adding a simultaneous decision stage when those returns admit choices.
+The disclosure language has a fixed public schedule and successful
+publication; its theorem does not cover arbitrary timing or failure
+channels. The rational algebra concerns perfect-information trees with
+unit terminal returns. These are different declared interfaces for the
+same research program, rather than interchangeable notions of composition
+or observation.

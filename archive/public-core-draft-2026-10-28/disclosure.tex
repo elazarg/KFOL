@@ -1,0 +1,200 @@
+\section{Fixing a value and disclosing it}
+\label{sec:disclosure}
+
+The public binder makes a choice available immediately. Commitment separates
+that event into a binding and a later change of audience. We give an explicit
+transition and observation semantics for this separation. Its semantic results
+do not assume a complete dependent typing calculus for private networks.
+
+\subsection{Bindings, audiences, and views}
+
+A typed binding carries a fresh identity $c$, an owner $r$, a data type $A$,
+and one stored value $a:A$. An audience $S_c\subseteq\Roles$ records who may
+directly read the value; $r\in S_c$. The identity and declared interface may
+be public without making its stored value public.
+
+For deterministic executions, the primitive successful transitions are
+\[
+ \Bind_r(c:A:=a;S):
+       (\rho,\Omega)\longmapsto
+       (\rho[c\mapsto(r,A,a,S)],\Omega\cup\{c\}),
+ \tag{20}
+\]
+\[
+ \Pub(c;T):
+       (\rho,\Omega)\longmapsto
+       (\rho[c.S:=T],\Omega\setminus\{c\}),
+ \quad c\in\Omega,\quad S_c\subseteq T.
+ \tag{21}
+\]
+Here $\Omega$ tracks unresolved bindings; the owner authorizes (21). The
+update in (21) changes the audience field alone. It reads the already stored
+value. A later staged-disclosure calculus could use separate capabilities for
+several audience expansions; (20)--(21) give a single-resolution interface.
+
+At each choice occurrence $m$, the specification declares an observation map
+$o_m:\Hist_m\to O_m$ from legal histories leading to that occurrence to the
+actor's view.
+The view includes the authorized cells and the actor's retained local
+observations and choices. A local policy is a function of this view. If the
+choice type is dependent, require a family $\bar A_m:O_m\to\U$ and use
+\[
+ A_m(h)=\bar A_m(o_m(h)),\qquad
+ f_m:\prod_{o:O_m}\bar A_m(o).
+ \tag{22}
+\]
+Thus the type of the demanded answer is itself meaningful from the information
+available at that choice.
+
+One simple discipline permits transmitted types to depend only on the current
+public context. Owner-local computations may additionally depend on the
+owner's private values. Transmitting a type that depends on an unavailable
+value requires a specified abstract package; it is not an implicit use of
+that private value in another participant's context.
+
+\begin{example}[A sealed pair of choices]
+The script
+\[
+ \Bind_A(c:A:=a;\{A\});\quad
+ \Bind_B(d:B:=b;\{B\});\quad
+ \Pub(c;\Roles);\quad\Pub(d;\Roles)
+ \tag{23}
+\]
+fixes both payloads before either is opened. Bob may observe that Alice's
+binding event occurred, but his binding policy has no direct input for $a$.
+Putting $\Pub(c;\Roles)$ before Bob's binding gives a different interface:
+Bob may then choose $b$ as a function of $a$. The distinction is one of
+available arguments, independent of the eventual objectives.
+\end{example}
+
+\begin{proposition}[Binding preservation]
+\label{prop:binding}
+In any execution of (20)--(21), a live binding's stored value and type remain
+unchanged until its resolution. Successful publication of $c$ exposes that
+stored value. Two successful openings of the same retained binding identity,
+in executions that preserve its original binding, expose equal values.
+\end{proposition}
+\begin{proof}
+The binding transition allocates a fresh identity, so it overwrites no existing
+payload. A publication changes only its audience and resolution status. Every
+other transition changes a different identity. Induction on the execution
+therefore preserves the stored type and value. Publication reads precisely
+that value. The equality statement follows by reading the same immutable
+binding in the two executions; it does not identify fresh bindings created
+under different identities.
+\end{proof}
+
+This is an ideal binding interface. A cryptographic implementation must realize
+its binding, disclosure, and observation requirements. The abstract transition
+rule is not a cryptographic construction.
+
+\subsection{Uniformity and substitution of views}
+
+Define $h\sim_m h'$ when $o_m(h)=o_m(h')$. Dependent values in the following
+equations are compared in the common fiber provided by (22).
+
+\begin{proposition}[Observation uniformity]
+\label{prop:uniformity}
+The decision $f_m(o_m(h))$ is equal at histories $h\sim_m h'$.
+\end{proposition}
+\begin{proof}
+Both decisions are evaluations of the same dependent function at the same
+observation, with the same answer type by (22).
+\end{proof}
+
+Uniformity refers to the complete declared view. A secret may influence a
+separately published message, which may then influence a receiver. Omitting
+the secret's name from a local context does not remove that indirect channel.
+
+\begin{definition}[Observation-respecting interface map]
+For histories $h$ of one component and a context map $u$ into another, require
+\[
+ o_i(h)=o_i(h')\quad\Longrightarrow\quad
+ o'_i(u(h))=o'_i(u(h'))
+ \tag{24}
+\]
+for every relevant role and occurrence. In a typed version, answer families
+are transported along the same map on observations.
+\end{definition}
+
+\begin{lemma}[Composition preserves uniformity]
+\label{lem:view-composition}
+Composing an observation-uniform policy with an interface map satisfying
+(24) gives an observation-uniform policy. Such interface maps are closed
+under composition and include identities.
+\end{lemma}
+\begin{proof}
+Histories with equal source observations have equal target observations by
+(24). The target policy returns equal decisions at those observations.
+For two interface maps, apply (24) first to the first map and then to the
+second. Identity maps preserve observation equality directly.
+\end{proof}
+
+This elementary law is a necessary semantic component of information-aware
+substitution. A syntactic dependent cut rule must ensure its hypotheses,
+including the transport of the answer types. A proof of the law does not by
+itself supply that rule.
+
+\subsection{Public outcomes and common knowledge}
+
+An ideal public observation is stronger than independent, possibly delayed
+delivery of several messages. We can state the required epistemic property
+directly, using the standard indistinguishability interpretation of knowledge
+\cite{HalpernMoses1990,BaltagMossSolecki1999}.
+
+Fix a set $W$ of possible histories at one public stage. Player $i$ cannot
+distinguish $h$ and $h'$ when $o_i(h)=o_i(h')$. A proposition is common
+knowledge among a group $S$ at $h$ when it holds at every history reachable
+from $h$ by a finite chain of these indistinguishability steps for players
+in $S$.
+
+\begin{theorem}[Public readout gives common knowledge]
+\label{thm:common-knowledge}
+Let $p:W\to P$ be a public readout. Suppose that for every $i\in S$,
+\[
+ o_i(h)=o_i(h')\quad\Longrightarrow\quad p(h)=p(h').
+ \tag{25}
+\]
+Then at every $h\in W$, the fact $p=p(h)$ is common knowledge among $S$.
+\end{theorem}
+\begin{proof}
+Each permitted indistinguishability step preserves $p$ by (25). Induction on
+the length of a chain preserves its initial value. Thus every reachable
+history satisfies $p=p(h)$, which is the definition of common knowledge.
+\end{proof}
+
+For successful publication in (21), include the binding identity and its
+opened value in the common public readout. The theorem then establishes
+common knowledge of that factual outcome. Its hypotheses describe the ideal
+public stage. A runtime where readers have different delayed snapshots must
+justify a different observation model or prove an appropriate refinement.
+
+\subsection{Failure, polarity, and the type of an opening}
+
+Resolution can fail or be withheld. With a coproduct available, a total
+interface should then return a result such as
+\[
+ \Unit\; +\;\sum_{a:A}\Opens(c,a).
+ \tag{26}
+\]
+The left injection reports failure. The right injection supplies a value and
+evidence $\Opens(c,a)$ that it is the payload of the successful opening of
+$c$. Only the successful branch binds $a:A$ for a dependent continuation.
+Resolving a pending
+obligation does not imply that it was resolved successfully. In particular,
+a continuation after a fallible publication cannot receive an unconditional
+public variable $a:A$.
+
+The source language of VegasCore provides an operational instance of this
+distinction: it stores immutable private commitments, publishes success or
+failure results, and tracks unresolved commitments in its syntax indices
+\cite{VegasCore2026}. The successful transition model above isolates the
+binding and audience laws; it does not include that implementation's retry,
+exit, or scheduling policies.
+
+At the endpoint level, publication has a producing side and receiving sides.
+This is the familiar connection between polarity and input/output in session
+typing \cite{Griffith2016}. At the global level, binding and publication are
+two phases, not an involutive pair of logical duals. Both may be initiated by
+the same owner. The useful structure is the combination of a role-owned
+choice, its endpoint directions, and an explicit change of audience.

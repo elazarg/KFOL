@@ -1,0 +1,594 @@
+\documentclass[11pt]{article}
+\usepackage[a4paper,margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools,stmaryrd}
+\usepackage{hyperref,booktabs,longtable,array}
+\hypersetup{colorlinks=true,urlcolor=blue,linkcolor=blue}
+\newtheorem{proposition}{Proposition}
+\newtheorem{definition}{Definition}
+\newtheorem{observation}{Observation}
+\newcommand{\Str}{\mathsf{Str}}
+\newcommand{\Play}{\mathsf{play}}
+\newcommand{\End}{\mathsf{End}}
+\newcommand{\Q}{\mathsf{Q}}
+\title{A role-symmetric logic and dependent calculus:\\research assessment of K-FOG}
+\author{Research notes for the KFOL workspace}
+\date{28 October 2026}
+\begin{document}
+\maketitle
+
+\noindent\textbf{Assessment.}
+The central object is mathematically viable, and there is a particularly direct
+precedent: Abramsky's $L_A$. The role-indexed quantifier idea, including independent
+per-agent valuations, should not be claimed as new. There are also existing
+multirole proof calculi and role-indexed dependent session quantifiers. These
+findings support the idea's coherence, while substantially changing its novelty
+position. I have not established that the desired full dependent proof calculus
+already exists, nor established a novel theorem for it.
+
+The object of interest here is intrinsically multi-role interaction, rather than
+a language organized around individual forceability. The latter is one optional
+observation of a game and is not used to define the proposed core. Several
+forceability claims are audited in the appendix because the manuscript makes them.
+The original manuscript has not been edited.
+
+\section{Which existing objects actually match?}
+
+\paragraph{The closest semantic match: Abramsky's $L_A$.}
+\href{https://www.cs.ox.ac.uk/people/samson.abramsky/admproc.pdf}{A Compositional Game
+Semantics for Multi-Agent Logics of Partial Information} (2007), especially
+Sections 2.4, 3.3--3.4, and 4.4--4.6, gives role-owned quantifiers, role
+permutations, strategy interaction, per-agent valuations, and partial information.
+It treats formulas as interaction structures. Its Section 6 leaves proof theory
+open; that is a statement about that paper, not a claim that the problem remains
+open today.
+
+For the manuscript's broadcast prenex fragment the comparison can be made exact,
+using its intended full-history strategies rather than the inconsistent
+free-variable wording in its strategy definition.
+Translate each $P_i x$ to a choice particle owned by $i$. Package the terminal
+$\langle\varphi_0,\ldots,\varphi_{K-1}\rangle$ as an interpreted terminal atom
+$a_{\vec\varphi}(\vec x)$ whose $i$-valuation is
+\[
+  v_i(a_{\vec\varphi},\mathcal M,s)
+  :=[\mathcal M,s\models\varphi_i].
+\]
+This is a definitional interpretation of a new terminal symbol, not a claim that
+every tuple is already an atom in the original first-order signature.
+It gives the candidate correspondence
+\[
+ v_i\bigl(\Play(T\Phi,T\sigma)\bigr)
+       = \llbracket\Phi\rrbracket_{\mathcal M,s,\sigma,i}.
+ \tag{1}
+\]
+For a fixed broadcast prefix, strategies in both presentations can be restricted
+to the same history-to-choice functions. An induction on the prefix then proves
+(1): the same owner selects the same value, and the terminal clause is true by
+definition. This is a correspondence of full evaluations, before choosing a
+success predicate. For arbitrary information annotations, one must additionally
+prove that the two presentations admit exactly the same observation-uniform
+strategies. The manuscript's inconsistent slash conventions cannot be translated
+as a single convention without repair.
+
+\paragraph{A close algebraic antecedent.}
+\href{https://pure.uva.nl/ws/files/1012623/156995_334017.pdf}{Olde Loohuis and Venema,
+Logics and Algebras for Multiple Players} (2010) uses player-owned connectives,
+role switches, and valuations declaring arbitrary subsets of players winners.
+It develops equational proof systems and representation results. Its chosen
+equivalence observes winning-strategy sets; retaining the complete interaction
+object requires a finer equivalence. This is a direct antecedent for the
+multi-outcome idea, even though it is not the desired dependent term calculus.
+
+\paragraph{A close proof-theoretic antecedent.}
+\href{https://arxiv.org/pdf/2309.01317}{Xi and Wu, Multirole Logic and Multiparty
+Channels}, with earlier work in
+\href{https://arxiv.org/abs/1703.06391}{2017} and
+\href{https://arxiv.org/abs/1611.08888}{2016}, develops role-indexed logical
+operations and multiparty cut elimination. Its first-order quantifiers are indexed
+by ultrafilters; on a finite role set these are principal. It includes classical,
+intuitionistic, and linear variants. This is evidence for a real proof theory of
+role-indexed logic, not merely a protocol analogy. It does not automatically
+validate the manuscript's unrestricted payoff tuples or proposed compositions.
+
+\paragraph{The dependent quantifier already has an implementation precedent.}
+\href{https://arxiv.org/pdf/1808.00077}{Wu and Xi, Multiparty Dependent Session
+Types} (2018), Figure 7 and Section 4, has
+$\mathsf{quan}(r,\lambda a:\sigma.\pi)$. Its interpretation varies by endpoint,
+with the designated role interpreted universally and the others existentially
+in that presentation. The polarity convention differs from an owner-as-witness
+presentation; the neutral role-indexed mechanism is already there. The calculus
+separates statics and dynamics, so this result alone is not an identification with
+a full CIC-style dependent calculus.
+
+\paragraph{Other comparisons a type-theory claim must survive.}
+There are existing game models of dependent type theory, including
+\href{https://arxiv.org/abs/1610.01669}{Yamada's work} and
+\href{https://doi.org/10.1016/j.ic.2018.02.015}{Abramsky--Jagadeesan--V\'ak\'ar}.
+Those results show that dependent game semantics itself is not new. They do not
+by themselves supply this particular multi-role object language.
+\href{https://arxiv.org/abs/2212.07735}{Escard\'o and Oliva} model dependent game
+trees and mechanize strategy constructions in Agda. Using dependent types to
+describe games is therefore also an existing direction.
+\href{https://arxiv.org/abs/1603.04641}{Open games} supply a compositional treatment
+of game-theoretic interaction and equilibria; a composition claim should compare
+the preserved behavior, not merely the use of sequential and parallel notation.
+
+For the dependent information discipline, compare
+\href{https://arxiv.org/abs/2201.11040}{A Dependent Dependency Calculus} and
+\href{https://arxiv.org/abs/2011.15021}{Multimodal Dependent Type Theory}. The former
+integrates dependency analysis into dependent typing; the latter gives a general
+framework for interacting modalities with consistency and canonicity results.
+Neither is automatically an identification with neutral multi-party choice.
+The current \href{https://github.com/kami-language/kami-theory}{Kami theory
+repository} explicitly describes a distributed language based on MTT with full
+dependent types, so a broad claim about being the first dependent multi-location
+calculus would be particularly unsafe.
+
+\section{The object to retain}
+
+A useful semantic object is
+\[
+ G=\bigl(\text{typed interaction structure},
+          (\Str_i(G))_{i<K},\Play_G,(B_i)_{i<K}\bigr).
+ \tag{2}
+\]
+Here $\Play_G$ resolves a profile of strategies into a complete history, and $B_i$
+is the $i$-th terminal meaning on that history. In the manuscript $B_i$ is
+Boolean-valued. For a dependent theory it can instead be a family of propositions
+or evidence types. General objectives remain general: no one-hot or common-goal
+condition is imposed on (2).
+
+No strategy is selected or declared successful in the definition of (2).
+One can subsequently ask about proofs, partial implementations, refinement,
+equilibria, or forceability. Keeping these separate prevents the latter from
+silently becoming the whole meaning of a formula.
+
+For a fixed prefix, number occurrences $m=1,\ldots,n$ and attach an owner $r_m$,
+an action type, and an observation map
+\[
+ o_m:H_m\longrightarrow O_m.
+\]
+For fixed nondependent action types $A_m$, pure strategies are exactly
+\[
+ \Str_i(G)=\prod_{m:r_m=i}(O_m\longrightarrow A_m).
+ \tag{3}
+\]
+This gives a precise meaning to a single strategy for a role: a family of local
+policies, one per occurrence. Additional coherence requirements must be stated
+as additional requirements; packaging the policies into one function does not
+create them.
+
+In a dependent version, start with action types that descend to observations:
+there is a family $\bar A_m:O_m\to\mathcal U$ and
+\[
+ A_m(h)=\bar A_m(o_m h),\qquad
+ f_m:\prod_{o:O_m}\bar A_m(o).
+ \tag{4}
+\]
+This avoids assigning a player a choice type that varies with an unavailable
+secret. A richer theory could allow abstract hidden witnesses, but would need
+explicit packaging or a modal discipline rather than an unstated coercion.
+
+When observations are sets of earlier columns $K_m$, perfect recall has a simple
+checkable sufficient condition: whenever $b<m$ have the same owner,
+\[
+ K_b\cup\{b\}\subseteq K_m.
+ \tag{5}
+\]
+The unrestricted occurrence-local calculus and the perfect-recall calculus are
+both legitimate objects. They are different objects. The manuscript currently
+uses properties of both without fixing which one is intended.
+
+\section{Three precise foundational facts}
+
+\begin{proposition}[Evaluation and change of schedule]
+For an acyclic finite dependency structure, total deterministic local policies
+of the form (3) determine a unique complete history. Changing to another
+topological order of the same dependency structure does not change that history.
+\end{proposition}
+\begin{proof}
+For any event, its predecessors determine its observation and hence its action.
+Induct over the dependency order. Each event receives the same inputs in every
+topological execution, so it produces the same value. This argument uses the same
+event identities, action types, and policies; merely rearranging a broadcast
+prefix without preserving observations does not meet the hypothesis.
+\end{proof}
+
+\begin{proposition}[Role equivariance]
+A permutation of roles transports (2), its strategies, and its complete
+evaluations equivariantly.
+\end{proposition}
+\begin{proof}
+Relabel owners, reorder the terminal family, and transport each occurrence's
+policy along the corresponding occurrence bijection. The values selected at
+corresponding events are equal by induction. Thus the resulting terminal vector
+is permuted. If policies take syntax as an argument, the transport must also
+rename that argument; reordering the profile coordinates alone is insufficient.
+\end{proof}
+
+\begin{proposition}[No single-role permutation is general duality]
+For $K>2$, no permutation of the $K$ individual roles implements Boolean
+complement on every one-hot terminal outcome.
+\end{proposition}
+\begin{proof}
+A permutation takes a one-hot vector to a one-hot vector. Its Boolean complement
+has $K-1$ nonzero coordinates. These cannot be equal when $K>2$.
+\end{proof}
+
+The last fact explains a structural distinction. For local producer/consumer
+behavior, if an endpoint owns a set $R$ of roles, the complementary behavior at
+every role-owned choice belongs to the complementary set $\bar R$. The complement
+of a singleton is not a singleton when $K>2$. Multiparty interaction therefore
+needs a coherent family of endpoints, often indexed by a partition of roles.
+This does \emph{not} justify defining logical negation by complementing role sets:
+the interaction laws, identity, and cut must still be checked. The multirole
+literature itself identifies failures of naive negation under multiparty cut.
+
+\section{A small dependent kernel worth making exact}
+
+Take a terminating dependent data calculus as a base. Initially all communicated
+data and their types are public. Use a neutral global constructor
+\[
+  \Q_r(x:A).G
+\]
+with the continuation $G$ allowed to depend on the chosen value. Role labels
+remain part of the object language. A local interpretation at role $i$ can be
+defined, using the owner-as-witness convention, by
+\[
+ L_i(\Q_r(x:A).G)=
+ \begin{cases}
+   \displaystyle\sum_{x:A} L_i(G),&i=r,\\[3pt]
+   \displaystyle\prod_{x:A} L_i(G),&i\ne r.
+ \end{cases}
+ \tag{6}
+\]
+This is a concrete constructive formulation of local witness production and
+local input consumption. It is not a claim of novelty: it is close to the
+dependent session quantifier mechanism already discussed. For ordinary behavior
+types set $L_i(\End)=\mathbf1$. For certified endpoint types, optionally use an
+evidence family $L_i(\End)=B_i$. The global object and its ordinary behaviors
+exist independently of whether any certified endpoints exist.
+
+For example, with inhabited $X$ and positive natural numbers $\mathbb N_{>0}$,
+\[
+ \Q_A(n:\mathbb N_{>0}).\;
+ \Q_B(v:\mathsf{Vec}(X,n)).\;
+ \Q_C(j:\mathsf{Fin}(n)).\;
+ \End(B_A(n,v,j),B_B(n,v,j),B_C(n,v,j))
+ \tag{7}
+\]
+contains an actual dependency of later choice types on earlier choices. At $A$
+the first constructor is a dependent pair; at $B$ and $C$ it is a dependent
+function. Subsequent constructors make different roles the producer. The tuple
+of terminal families is retained globally.
+
+The interaction reduction at the head choice is explicit:
+\[
+ \mathsf{run}\bigl(\langle a,t_r\rangle,
+                     (\lambda x.t_i)_{i\ne r}\bigr)
+ \longrightarrow
+ \mathsf{run}\bigl(t_r,(t_i[a/x])_{i\ne r}\bigr).
+ \tag{8}
+\]
+More generally apply arbitrary dependent-function terms to $a$; lambdas merely
+display the beta step. The chosen value is substituted in all continuation
+types as well as their terms.
+
+\begin{proposition}[Dependent interaction for a fixed finite telescope]
+Given local inhabitants of all the types (6), interaction produces one common
+history. If terminal types are $B_i$, it also produces an inhabitant of each
+$B_i$ at that same history. There is one head communication per global binder.
+\end{proposition}
+\begin{proof}
+At a head owned by $r$, eliminate the dependent pair at endpoint $r$, obtaining
+$a:A$ and its continuation. Apply every other endpoint's dependent function to
+$a$. The results have exactly the local types of the continuation with $a$
+substituted. Recurse on the shorter telescope. At $\End$ the endpoint terms
+already inhabit the terminal families. Termination of the communications follows
+from the decreasing telescope length; normalization of arbitrary data-level
+computations is a separate property of the base calculus.
+\end{proof}
+
+This is already stronger than a Gallina-looking let-chain as an account of
+typed computation. But it does not yet give implication between interacting
+objects, higher-order interaction, a proof theory for all of (2), or a new
+foundation for dependent mathematics. Those are separate claims.
+
+\section{What would be a substantial research contribution?}
+
+The most useful candidate is a \emph{dependent multiparty substitution/cut
+theorem for the full interaction object}. It would give typed open terms,
+interfaces, identity, application/composition, and a reduction semantics whose
+meaning preserves role ownership and dependency. It should retain arbitrary
+terminal families and the behavior of each role, rather than prove a theorem
+only about one Boolean projection.
+
+Here are concrete proof obligations, in an order that avoids claiming more than
+has been built:
+\begin{enumerate}
+\item \textbf{Correspondence to the existing semantic object.} Formalize (1),
+      including the admissible strategy families. This settles exactly which
+      part of the manuscript is an existing fragment and which is an extension.
+\item \textbf{An actual dependent term calculus.} Specify formation, introduction,
+      elimination, substitution, and judgmental equality for a small neutral
+      choice fragment. Prove (8) preserves typing and the appropriate observations.
+      Merely defining a datatype of games inside CIC does not establish a new
+      object type theory.
+\item \textbf{Identity and implication.} Define what a term using $G$ to implement
+      $H$ is, with its role-indexed interface. The manuscript's material implication
+      between terminal goals is not such a definition: it supplies no application
+      or substitution operation. State the required coherence at shared terminals
+      instead of importing an identity axiom for arbitrary goal tuples.
+\item \textbf{Composition of open terms.} Prove substitution is associative up to
+      the declared equality and gives identity laws. For an information-aware
+      extension, require an interface substitution to respect observation
+      equivalences. In elementary terms, if $h\sim_i h'$, then the substituted
+      input views available to $i$ must still agree. This condition composes and
+      preserves uniform local policies. Extending it to dependent types is a
+      substantive part of the design.
+\item \textbf{Computation and checking.} Prove normalization or an appropriate
+      weaker result for the chosen fragment, and establish decidable checking
+      under explicit assumptions on the base calculus. Cut elimination alone
+      does not imply confluence. Classical proof reduction has well-known
+      confluence difficulties; see
+      \href{https://drops.dagstuhl.de/entities/document/10.4230/LIPIcs.CSL.2012.320}{Hetzl
+      and Stra\ss burger}. Ownership may help orient interactions, but is not a
+      proof that every higher-order critical pair is joinable.
+\item \textbf{A precise conservativity claim.} Give a translation of an ordinary
+      dependent fragment and prove the claimed preservation and reflection.
+      Greater expressiveness about interaction does not automatically mean
+      greater proof-theoretic strength or a stronger consistency assumption.
+\end{enumerate}
+
+The first two items are reliable starting points and are not, on their own,
+compelling novelty claims. The remaining items are candidate research results.
+I have not proved them for a specified new calculus or established that no
+existing system proves an equivalent theorem. Comparison must be against the
+multirole systems, dependent session systems, and modal/dependency calculi above.
+
+One subtlety in the existing intuitionistic multirole presentation is that its
+intuitionistic judgment is parameterized by a fixed ultrafilter. Over finite
+roles that parameter selects a principal role. An equivariant family of such
+judgments is different from one fixed judgment with a privileged role. Whether
+the desired theory needs a single fully neutral judgment, or an explicitly
+role-indexed family of constructive judgments, is an exact design issue. Neither
+choice should be concealed by notation.
+
+I would initially keep universes predicative and interaction finite, with
+dependent data and a small genuine composition fragment. General recursion,
+impredicativity, full inductive families of interactive types, and arbitrary
+information disclosure can be separate extensions. A small proof of a meaningful
+cut theorem would settle more than a large collection of encodings or
+complexity reductions.
+
+\appendix
+\section{Manuscript audit}
+
+The following audit distinguishes false claims from repairable definitions and
+results that are essentially correct under explicit hypotheses. File locations
+refer to the unchanged manuscript in this workspace.
+
+\subsection{Claims that survive}
+
+\begin{itemize}
+\item Evaluation by recursion on a finite prefix is well-defined for total
+      strategies and nonempty action domains. If the domain is infinite, the
+      game is finite-horizon, not necessarily a finite game tree.
+\item Role equivariance is correct after transporting syntax-indexed strategies.
+\item The two-player, complementary-payoff prenex embedding has the expected
+      projection and role-swap laws in the broadcast fragment, after fixing the
+      seat-indexing error described below.
+\item The broadcast individual-projection decision problem is PSPACE-complete
+      already over a fixed Boolean structure. This is a model-checking result,
+      not a decidability claim about validity over all structures.
+\item Joining total functional strategy graphs on an acyclic dependency structure
+      computes the unique play. This retains counterfactual strategies only if
+      the full graphs are retained, not just their resulting row.
+\item The tensor/leaky product forceability equality for disjoint player blocks,
+      unchanged component objectives, total pure strategies, and broadcast
+      component games is repairable. To extract a strategy on the right, freeze
+      one whole left-hand history consistently. The proof's claim that arbitrary
+      history-by-history extensions can be chosen is too strong. Its first
+      direction also needs attention to the enlarged opponent strategy sets.
+\end{itemize}
+
+These are useful facts but do not make individual forceability the intended core.
+
+\subsection{The abstraction theorem is incorrectly indexed and overclaims uniqueness}
+
+In \texttt{2FOL.tex:29}, $\mathsf A_i(\theta)$ always has terminal
+$\langle\theta,\neg\theta\rangle$. For $i=1$ its $i$-projection is
+$\neg\theta$, contradicting the stated retract. Put $\theta$ in seat $i$ and
+$\neg\theta$ in the other seat.
+
+The broad uniqueness assertion in \texttt{appendix-proofs.tex} does not follow
+from projection laws. Semantically equivalent redundant structure can be
+inserted. Moreover, the appendix uses Boolean game constructors absent from the
+core grammar. Pointwise conjunction of complementary terminal pairs gives
+$\langle a\land b,\neg a\land\neg b\rangle$, whose second component is not
+$\neg(a\land b)$. The proof assumes the connective compatibility it needs to
+establish. A uniqueness statement restricted to a stipulated constructor-by-
+constructor translation is a different, much narrower statement.
+
+\subsection{Three incompatible information conventions}
+
+\texttt{info.tex} starts with roles hidden from a newly produced value, then
+defines independence from earlier variables at the current choice.
+\texttt{session.tex} uses the outgoing recipient convention;
+\texttt{complexity.tex} uses incoming variable independence. These are distinct
+annotations. Fix one observation-map semantics and translate any surface sugar
+into it explicitly.
+
+\texttt{KFOL.tex:57} describes strategies using assignments only to the free
+variables of the remaining formula. That can omit earlier observations which
+are unused by terminal predicates but usable as signals. Use complete histories
+and then project to the declared observations.
+
+\subsection{The DQBF reduction is false as written}
+
+The reduction in \texttt{complexity.tex:55} hides only the disallowed universal
+variables. Earlier existential choices remain visible and can carry forbidden
+information. Consider the false DQBF
+\[
+ \forall y;\quad x_1(y),\ x_2();\quad
+ (x_1=y)\land(x_2=y).
+\]
+The manuscript's encoding permits $x_1:=y$ followed by $x_2:=x_1$, so the encoded
+player wins. The intended $x_2$ must be constant and cannot always equal $y$.
+For occurrence-local information, repair the hidden set to
+\[
+ H_j=(\{y_1,\ldots,y_n\}\setminus D_j)
+            \cup\{x_1,\ldots,x_{j-1}\}.
+ \tag{9}
+\]
+This repair permits forgetting. It does not prove the theorem under strict
+single-player perfect recall.
+
+For the corrected Boolean finite-prefix calculus with arbitrary occurrence-local
+views, individual forceability is in NEXPTIME as well as hard for it: guess the
+exponential-size local truth tables and enumerate all opponent action sequences.
+A losing sequence is realizable by opponent policies constant at each occurrence,
+so universal opponent-strategy tables need not themselves be enumerated.
+This upper-bound argument assumes unrestricted nonempty Boolean moves and a
+polynomial-size Boolean terminal formula.
+
+With perfect recall for the one forcing role and fixed incoming observation
+masks, its observed opponent variables form nested sets. Earlier own choices
+can be inlined as functions of the remembered observations. Place each universal
+input immediately before the first forcing move that observes it, and place
+never-observed inputs at the end. This yields an ordinary QBF of polynomial size,
+giving a PSPACE bound for that restricted problem. This is compatible with the
+known collapse of perfect-recall IF truth conditions to first-order truth
+conditions; see the primary
+\href{https://api.pageplace.de/preview/DT0400.9781139065382_A23865990/preview-9781139065382_A23865990.pdf}{Mann--Sandu--Sevenster
+book preview}, discussion of Chapter 6. It does not equate full games, all
+players' perspectives, or distributed coalitions with a single scalar formula.
+
+\subsection{Nash and individual rationality}
+
+\texttt{solutions.tex:134} says IR-NE may fail to exist when pure Nash equilibria
+exist and every player can force a win. Under the given definitions:
+\[
+ \mathsf{NE}(\sigma)\quad\Longrightarrow\quad\mathsf{IR}(\sigma).
+\]
+If $i$ could force 1 but received 0, switching to that forcing strategy would
+be a profitable unilateral deviation. Hence IR-NE and NE are the same set here.
+Further, if every $i$ has a forcing strategy, choose one for each role. Their
+joint profile wins for everyone, because each guarantee applies against all
+others. That profile is automatically Nash for Boolean payoffs. This contradicts
+the accompanying discussion of independently forcing profiles.
+
+The definitions of pure NE and weak dominance themselves are standard and usable.
+For finite perfect-information games with nonempty finite action sets, pure
+subgame-perfect equilibria already exist by backward induction; hidden-information
+extensions can lack pure NE.
+
+\subsection{Equal objectives and negation}
+
+Identical terminal objectives do not turn individual adversarial quantification
+into collective existence. Over the Boolean domain,
+\[
+ P_0x.\langle x=0,x=0\rangle
+\]
+has individual forceability $(1,0)$ and is jointly realizable. Complementing both
+goals still gives individual forceability $(1,0)$, by choosing $x=1$.
+Thus the cooperative-negation remark in \texttt{KFOL.tex:253} is false.
+
+The general no-De-Morgan conclusion is correct, but its displayed recursive
+calculation incorrectly replaces the projection of a complemented arbitrary
+subgame by the negation of its projection. Keep the complemented subgame inside
+the projection, or restrict the example to a terminal.
+
+The claim of a unique nontrivial player-symmetric involution is valid if one
+requires the same unary Boolean map independently on every coordinate. It is
+false for general equivariant involutions: swapping only $0^K$ and $1^K$ while
+fixing all other vectors is another such involution for $K\ge2$.
+
+\subsection{Terminal syntax is not a safe semantic quotient}
+
+The cheap-talk quotient in \texttt{solutions.tex:220} need not preserve outcomes.
+Let $P_0c.P_1y.\langle y=0,\top\rangle$ and fix $1$'s policy $y:=c$. Changing only
+$c$ changes the outcome, although $c$ occurs in no terminal goal. A quotient
+needs an explicitly proven observational congruence.
+
+The slicing lemma in \texttt{solutions.tex:495} is false because it switches a
+whole role's strategy from the irrelevance of just one occurrence. Let
+$P_1v.P_1u.\langle v=0,\top\rangle$. The final $u$-occurrence is irrelevant, but
+replacing player 1's full strategy can change $v$. Repair the conclusion to a
+local-policy change, or require all of that role's occurrences to be irrelevant.
+
+The definition of game equivalence by visibility-DAG isomorphism must include
+the terminal interpretations and typed labels. Identical graphs with different
+terminal goals are not equivalent games. Likewise, consistency of every Boolean
+combination of terminal goals does not establish strategic noninterference.
+
+\subsection{Composition needs more than acyclic graph gluing}
+
+The splice in \texttt{algebra.tex:704} specifies an arena but no complete terminal
+composition. Two independently produced copies of a shared boundary value can
+also disagree: each component may determine a valid singleton play while their
+join is empty. A cut interface must identify which side produces each value and
+which side consumes it, or require a compatibility proof.
+
+The suffix/prefix edge conditions in that section are reversed relative to the
+earlier-to-later orientation. Several clock and megaphone definitions are also
+incomplete: the clock written before the game is described as after it; a new
+role lacks a terminal component; fixed echo behavior is an extra operational
+primitive rather than an ordinary unrestricted role choice. These constructions
+need definitions before their algebraic laws can be assessed.
+
+Role merging preserves decentralized strategies only when occurrence-level views
+remain unchanged. Recomputing a merged role's memory or pooling its observations
+can change the game. The phrase ``one coalition acts as a single role'' must say
+which operation is intended.
+
+\subsection{Relational representation and counterfactuals}
+
+Totality only on histories reached under a fixed complete profile, as in
+\texttt{ra.tex:101}, is sufficient to run that profile. It is insufficient for
+deviations. Strategies must be defined on every legal observation that can arise
+against alternative opponents, not just the equilibrium path.
+
+Excluding a hidden column from a local key prevents direct access; it does not
+prevent indirect signaling through a visible intermediary. The DQBF countermodel
+is also a counterexample to a general no-signaling conclusion from key exclusion.
+Retaining all local tables, including off-path rows, is essential for the
+game-theoretic reading of relational queries.
+
+\subsection{Public properties and session translations}
+
+Exact identifiability in \texttt{extensions.tex:43} misses partial information.
+Over four possible secret values, observing parity can inform a later choice
+without identifying the secret. Use observation partitions/maps rather than an
+all-or-nothing visibility edge. A claimed public property also needs evidence
+or an explicit trust/ideal-functionality assumption. An inconsistent public
+theory identifies everything. Unique existence alone does not introduce an
+$\iota$-term into the first-order signature. With all certificates trivial,
+the proposed private-value extension does not recover the broadcast base, so its
+stated conservativity claim is not established.
+
+The session translations are at most structural encodings without further
+conditions. Ground message sorts do not force repeated sends to carry the same
+value, atomic broadcast knowledge is not supplied by a sequence of ordinary
+sends, and a private choice can vanish from the target. Refinements checkable in
+the global context need not be checkable in the sender's local context. Demanding
+all players' goals as refinements also changes a multi-outcome game into a
+joint-admissibility problem. The conjecture at \texttt{session.tex:137} needs a
+specified equivalence and a corrected source language before it is a theorem
+candidate. It is not evidence for a Curry--Howard correspondence as written.
+
+\section{Finite checks and their limits}
+
+\texttt{research/finite\_audit.py} enumerates total Boolean policies, retaining
+off-path behavior and replacing all policies owned by a role during deviations.
+It confirms the DQBF, hidden-matching, cooperative-negation, cheap-talk, and
+slicing examples above. It also checks all 256 payoff tables for two Boolean
+moves in each of two observation regimes: 512 games and 3,072 profiles, with 512
+broadcast projection comparisons. All checks passed.
+
+These are finite experiments, not Lean/Rocq proofs. The manuscript's
+\texttt{interpreter.v} is pseudocode with an unfinished assignment definition and
+does not mechanize its theorems. A useful first formalization would implement
+the exact game object, role transport, and the finite dependent interaction
+theorem; the manuscript's full claim set should not be encoded as axioms.
+
+\end{document}
