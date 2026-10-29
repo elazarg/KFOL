@@ -6,7 +6,7 @@ from random import Random
 
 from reset import (Normal, Reset, admissible, antimatroids, compose, evaluate,
                    feasible, form_from_family, frontier, minimal, normal,
-                   product_families, realize, selected, selector_closure,
+                   order_trigger, product_families, realize, selected, selector_closure,
                    synthesize, witness)
 from structure import Var
 
@@ -65,6 +65,8 @@ def check_tables_five():
     accepted = []
     for rest in product(*choices):
         form = Normal(0, ((0,),) + rest)
+        greedy = all(order_trigger(form, a) is not None for family in form.guards for a in family)
+        assert admissible(form) == greedy
         if admissible(form):
             assert normal(synthesize(form), arity) == form
             accepted.append(form)

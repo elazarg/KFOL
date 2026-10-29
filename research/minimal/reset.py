@@ -99,7 +99,9 @@ def admissible(form):
         for trigger in family:
             if trigger < 0 or trigger > full or trigger & (1 << j):
                 return False
-            if order_trigger(form, trigger) is None:
+            # DSC completeness: each prerequisite itself enables its members.
+            if any(trigger & (1 << k) and not any(b & trigger == b for b in form.guards[k])
+                   for k in range(arity)):
                 return False
     return True
 

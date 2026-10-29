@@ -13,6 +13,16 @@ The reset calculus has only variables and one derived operation:
 
     A <| B = B if B is a singleton, otherwise A union B.
 
+It is the intrinsic binary core of the idempotent atom-preserving
+owned-choice clone: its binary operations are exactly x, y, x <| y,
+and y <| x. Every unary context with only one fixed winner is either
+that constant or inflationary, which gives the rigidity needed for the
+binary classification. OneConstant.lean proves this dichotomy and
+rigidity; the complete binary theorem also uses the earlier mathematical
+atomic-projection result (and idempotent elimination for the full signature).
+The ternary operation (y *_a z) <| x is atom-preserving and idempotent
+but not reset-definable. Thus the binary characterization is sharp.
+
 Its complete term functions, on mixed atomic and ambiguous inputs,
 correspond exactly to antimatroids with one feasible singleton on their
 actual variable support. Canonical minimal prerequisite antichains give:
@@ -39,6 +49,42 @@ self-status independence, three-element completeness, and compilation
 into owned-choice syntax. Antimatroid representation, minimal-antichain
 normalization, synthesis, and clone minimality currently have mathematical
 proofs and independent finite checks, not complete Lean proofs.
+
+The prerequisite tables, on actual support, are the established dependency
+structures with choice (DSCs) of Bazerman, Minichiello, and Puzio (2023).
+Their antimatroid correspondence is reused explicitly. Recognizing a
+table only needs a local completeness check: each prerequisite set enables
+all of its own members. This is equivalent to the former greedy test;
+greedy orders still construct the realizing syntax.
+
+Two conservative-model laws give a further exact description:
+
+    (x <| y) <| x = y <| x
+    x <| (y <| z) = y <| (x <| z)
+
+Among conservative algebras, these characterize the entire reset theory.
+The models are precisely partial orders whose upper cones are chains
+(finite rooted forests). Comparable inputs return the higher one and
+incomparable inputs return the right one. The order is reconstructed from
+the operation. There are (n+1)^(n-1) such algebras on n labeled elements.
+These are abstract models of the equations, rather than an assertion
+that concrete winner-set reset is conservative.
+
+Comb-shaped forests have a least nonidentity congruence identifying
+exactly two leaves. Every nontrivial congruence contains this pair.
+There are such models with 2n+1 elements for every n>=1, and at every
+infinite cardinality. The reset variety is therefore residually large.
+This rules out a finite residual-bound route for reset but does not
+decide finite axiomatizability, and does not automatically transfer to
+the larger owned-choice signature.
+
+ResetModels.lean proves the generic order reconstruction in both
+directions, the comb forest operation, the collapse endomorphism and
+the least-congruence result for arbitrary level chains with a least
+element. Membership of all forest models in the reset variety has a
+written proof using disjoint right-projection sums and adjoining
+absorbing roots; this closure proof is not yet mechanized. The full
+residual-largeness conclusion depends on that written argument.
 
 The primary new structural results in general.tex are:
 
@@ -88,11 +134,12 @@ From the repository root:
     make check-minimal
     make paper-minimal
 
-The first command runs seven Python experiments and kernel-checks
+The first command runs eight Python experiments and kernel-checks
 Basic.lean, Perspectives.lean, Synthesis.lean, and BooleanCore.lean using
 Lean 4.34.1, plus Separation.lean for internal switches and relative reset,
-and Reset.lean for the complete reset fragment. The
-version is pinned by this directory's
+Reset.lean for the complete reset fragment, and ResetModels.lean for
+conservative models and comb congruences. OneConstant.lean additionally
+checks the rigidity lemma. The version is pinned by this directory's
 lean-toolchain. Only Std is imported. Generated .olean files go to
 build/minimal/lean. The second command builds all five notes.
 
@@ -169,6 +216,22 @@ Proof inventory:
     ResetCalculus.Term.compile_correct
         Expansion into actual owned-choice syntax preserves reset semantics
         on nonempty valuations, linking it to the formal SPE interpretation.
+
+    Models.ConservativeLaws.below_trans / upper_chain (ResetModels.lean)
+        The two conservative equations reconstruct a forest partial order.
+    Models.ForestOrder.absorb / leftComm / recover
+        Forest operations satisfy the equations and recover the same order.
+    Models.combForest_op / collapse_hom
+        The concrete comb operation comes from a forest order, and collapsing
+        its two base leaves is an endomorphism.
+    Models.comb_common_pair / monolith_minimal
+        Every nonidentity congruence on a comb contains exactly the same
+        two-point congruence, over arbitrary level chains and cardinalities.
+
+    OneConstant.Term.dichotomy / rigidity (OneConstant.lean)
+        Every unary context with one fixed winner is constant at that
+        winner or contains its input; one other atomic test detects the
+        constant case. These support the written binary-fragment theorem.
 
 Unary synthesis is now a generic Lean theorem. Uniqueness, counting, and
 composition have mathematical proofs in report.tex and finite checks.
@@ -247,6 +310,18 @@ prescribed root: 596 are realizable, giving 2980 after varying the root.
 It constructs syntax for every accepted table. Direct mixed-input
 evaluation, all four-input function pairs, and 1000 sampled substitutions
 are also checked. These are finite checks of the written generic proofs.
+
+forest.py implements conservative models and a full free-algebra lifting
+check. check_forest.py independently enumerates every conservative table
+through four elements and compares the two equations with parent-map
+forests. All 125 four-element models satisfy every reset identity, checked
+by factoring evaluation through the entire free algebra F_4 (140 elements).
+The five-element comb is checked the same way against F_5 (2980 elements).
+Principal-congruence closure independently checks the exact common pair
+on combs through fifteen elements. These computations corroborate the
+generic mathematical membership proof and Lean congruence theorem.
+The same script exhausts the one-constant unary closure for K=3..6
+(6,10,18,34 functions) and checks the generic rigidity dichotomy.
 
 An optional finite-basis experiment is available as:
 
