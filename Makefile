@@ -20,16 +20,19 @@ check-minimal:
 	python3 research/minimal/check_general.py
 	python3 research/minimal/check_core.py
 	python3 research/minimal/check_fibers.py
+	python3 research/minimal/check_reset.py
 	mkdir -p build/minimal/lean
 	cd research/minimal && lean -DwarningAsError=true -o ../../build/minimal/lean/Basic.olean Basic.lean
 	cd research/minimal && LEAN_PATH=../../build/minimal/lean lean -DwarningAsError=true -o ../../build/minimal/lean/Perspectives.olean Perspectives.lean
 	cd research/minimal && LEAN_PATH=../../build/minimal/lean lean -DwarningAsError=true -o ../../build/minimal/lean/Synthesis.olean Synthesis.lean
 	cd research/minimal && LEAN_PATH=../../build/minimal/lean lean -DwarningAsError=true BooleanCore.lean
-	cd research/minimal && LEAN_PATH=../../build/minimal/lean lean -DwarningAsError=true Separation.lean
+	cd research/minimal && LEAN_PATH=../../build/minimal/lean lean -DwarningAsError=true -o ../../build/minimal/lean/Separation.olean Separation.lean
+	cd research/minimal && LEAN_PATH=../../build/minimal/lean lean -DwarningAsError=true Reset.lean
 
 paper-minimal:
 	latexmk -pdf -interaction=nonstopmode -halt-on-error -outdir=build/minimal research/minimal/report.tex
 	latexmk -pdf -interaction=nonstopmode -halt-on-error -outdir=build/minimal research/minimal/structure.tex
 	latexmk -pdf -interaction=nonstopmode -halt-on-error -outdir=build/minimal research/minimal/symmetric.tex
 	latexmk -pdf -interaction=nonstopmode -halt-on-error -outdir=build/minimal research/minimal/general.tex
+	latexmk -pdf -interaction=nonstopmode -halt-on-error -outdir=build/minimal research/minimal/reset.tex
 
