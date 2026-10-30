@@ -1,0 +1,131 @@
+\subsection{Public boundaries and sequential composition}
+\label{sec:composition}
+
+A complete conversation exports a typed record. That record can be the input
+to a later conversation. The boundary is explicit: the next endpoints may use
+the completed trace and returned values because the interface publishes them.
+Only information declared by the return interface crosses that boundary.
+
+\paragraph{The terminal information boundary.}
+Each role chooses its terminal return from the preceding trace before seeing
+the other roles' returns. Publishing their tuple therefore adds a simultaneous
+decision stage when the result types admit choices. It is an additional
+imperfect-information feature of the conversation language, even though the
+preceding choices were public. Serializing those returns as ordinary public
+choices would enlarge later roles' information. When all returns are unit,
+the stage carries no decision, as assumed in \cref{sec:rational}.
+Throughout this section the boundary has this
+explicit simultaneous interpretation; sequencing is composition in the
+conversation language, rather than a cut rule for scripts.
+
+A conversation is a finite script, a skip, or a boundary sequence of
+conversations. In this section $G$ and $H$ range over conversations. Extend
+$\Local{i}{-}$, $\Exec$, and $\Run$ from scripts by the following clauses.
+
+\begin{definition}[Boundary sequencing]
+If $G$ is a conversation in $\Gamma$ and
+$H$ is a conversation in $\Gamma,z:\Exec(G)$, write $G\mathbin{\triangleright_z}H$
+for their boundary sequence. A plan for role $i$ consists of
+\begin{equation}
+ \Local{i}{G\mathbin{\triangleright_z}H}
+   :=\Local{i}{G}\times\prod_{e:\Exec(G)}\Local{i}{H[e/z]}.
+ \label{dep:eq:17}
+\end{equation}
+Write its two components as $(p_i,q_i)$.
+Execute $G$ with $\vecp$, obtaining $e$, then execute $H[e/z]$ with
+$(q_i(e))_i$. Retain both execution records:
+\begin{equation}
+ \Exec(G\mathbin{\triangleright_z}H)
+       :=\sum_{e:\Exec(G)}\Exec(H[e/z]).
+ \label{dep:eq:18}
+\end{equation}
+\end{definition}
+
+For skip, set every local plan type and its execution type to $\Unit$, and
+return $\star$. A component supplies its next-stage plan as a function of the
+record that its interface will actually receive.
+
+\begin{proposition}[Sequential execution]
+\label{prop:sequence}
+The composite is well typed, and its execution satisfies
+\begin{equation}
+ \Run_{G\triangleright H}(\vecp,\vec q)
+   =\bigl(e,\Run_{H[e/z]}((q_i(e))_i)\bigr),
+ \qquad e=\Run_G(\vecp).
+ \label{dep:eq:19}
+\end{equation}
+\end{proposition}
+\begin{proof}
+Induct on conversation formation, using \cref{thm:interaction} for a script
+and unit introduction for skip. In the sequence case the first induction
+hypothesis gives $e:\Exec(G)$. Dependent application gives
+$q_i(e):\Local{i}{H[e/z]}$. The second induction hypothesis produces the
+second component of \eqref{dep:eq:18}. Equation \eqref{dep:eq:19} is the definition of the composite
+execution.
+\end{proof}
+
+For the next statement, compare interface functions pointwise and dependent
+pairs componentwise. This extensional interface equality is metatheoretic;
+it adds no conversion rule to $\D$. An internal proof that the maps below are
+inverse would require the corresponding dependent extensionality principles
+in the chosen data calculus.
+
+\begin{lemma}[Associativity of public boundary composition]
+\label{thm:associativity}
+For $G$, $H(e)$, and $J(e,f)$, the two bracketings of sequential composition
+have canonically isomorphic endpoint-plan and execution types at extensional
+interface equality. Under those isomorphisms their executions agree.
+\end{lemma}
+\begin{proof}
+For each role, the left-associated plan has components
+\[
+ \left(p_i,\ q_i:\prod_e\Local{i}{H(e)},\
+                  r_i:\prod_{(e,f)}\Local{i}{J(e,f)}\right).
+\]
+Reassociate it as
+$\bigl(p_i,\lambda e.(q_i(e),\lambda f.r_i(e,f))\bigr)$.
+The inverse extracts the two functions by projection and currying. The maps
+are pointwise inverse by the dependent pair and function laws. The execution types are
+related by
+\[
+ ((e,f),g)\longleftrightarrow(e,(f,g)).
+\]
+In either bracketing, \eqref{dep:eq:19} first computes $e$ from $\vecp$, then $f$ from
+$\vec q(e)$, then $g$ from $\vec r(e,f)$. The three computations and their
+dependent arguments are identical.
+\end{proof}
+
+A skip conversation is a unit for this composition. The left and
+right unit isomorphisms follow from $\Unit\times A\cong A$ and the
+corresponding dependent sum laws. Its right unit discards only the extra unit
+record, not the execution of the preceding conversation.
+
+\paragraph{What the boundary retains.}
+Equations \eqref{dep:eq:18}--\eqref{dep:eq:19} retain intermediate choices and results. Objectives may
+inspect the whole composite record. Quotienting the first stage to a Boolean
+success value would generally give the second stage a different interface.
+Similarly, removing the boundary and concatenating interactions is justified
+only by a further translation that preserves when the returned information
+becomes available. The public boundary is part of this composition operation.
+
+\begin{proposition}[Definability over the data calculus]
+\label{prop:definability}
+The endpoint interpretations, complete-execution types, and finite public
+execution and sequencing operations are definable in $\D$. Adding their
+interface annotations and defining equations is a conservative definitional
+extension for judgments in the original data language.
+\end{proposition}
+\begin{proof}
+Expand \eqref{dep:eq:4}, \eqref{dep:eq:9}--\eqref{dep:eq:13}, and \eqref{dep:eq:17}--\eqref{dep:eq:19} recursively on each finite script or
+conversation. The result uses only data types, dependent sums and products,
+pair elimination, and application in $\D$. Each endpoint constructor expands
+by \eqref{dep:eq:5}--\eqref{dep:eq:7}. The translation is the identity on the original data syntax and
+types, so a derivation of an original data judgment translates to a derivation
+in $\D$ of that same judgment.
+\end{proof}
+
+This definability gives the public core a direct implementation route through
+an existing dependent kernel. The global annotations expose the ownership and
+binding discipline, while the interpretation explains their computational
+content. Extending composition to arbitrary open channel interfaces requires
+additional syntax and proof rules, considered in \cref{sec:development}.

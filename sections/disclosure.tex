@@ -1,0 +1,332 @@
+\subsection{Stable binding and changing visibility}
+\label{sec:disclosure}
+
+A commitment fixes a value before its eventual recipients can read it.
+Publication changes access to that value. We give a finite phase calculus
+whose views are derived from its audience annotations, followed by a
+two-execution hiding theorem. This is an ideal service, using the
+fixed-payload/open pattern of Canetti and Fischlin's commitment functionality
+\cite{CanettiFischlin2001}. Cryptographic realization and adversarial
+scheduling require additional semantics.
+
+\subsubsection{Protocols, phases, and local contexts}
+
+A disclosure protocol has the grammar
+\[
+ P::=\mathsf{done}
+   \mid \Bind_r(c:A;S).P
+   \mid \Pub_r(c;T).P.
+\]
+The first constructor binds a fresh cell variable $c$ in the continuation.
+The second refers to an existing cell; it binds no new variable.
+The finite command order, cell names, owners, audience sets, and declaration
+syntax are fixed by the protocol. Data values do not control this schedule.
+For each bind, $r\in S\subseteq\Roles$; for each publication, only the
+recorded owner may authorize it.
+
+A phase context $\Xi$ is an ordered list of declarations
+$c:A@r,S_c$. Its underlying data context contains every declared cell.
+Let $\Gamma_0$ be an initial public context, held fixed throughout the
+comparison of executions. Define the local context $\Gamma_i(\Xi)$ by
+keeping $\Gamma_0$ and exactly the cells for which $i\in S_c$, in their
+original order. A phase is well formed when every such projected context
+is a well-formed context of $\D$. Thus a visible cell's type may depend
+only on earlier cells visible to that recipient.
+For a declared cell $c$, write $\Gamma_i^{<c}(\Xi)$ for the projection
+of the declarations strictly preceding $c$, together with $\Gamma_0$.
+This is a prefix of the recipient's current local context.
+
+At a bind occurrence $m$, an implementation supplies a pure data term
+$t_m:A$. More precisely, it supplies a dependency-closed subcontext
+$\Gamma_{E_m}$ of $\Gamma_r(\Xi)$ with
+$\Gamma_{E_m}\vdash t_m:A$ and $\Gamma_{E_m}\vdash A:\U$.
+Here $E_m$ is the set of cell names in that subcontext; public parameters
+remain in $\Gamma_0$. This support need not be minimal.
+It includes the dependencies needed to form $A$, together with those
+needed to type the term and its context declarations. For example,
+an answer of type $\mathsf{Vec}(\Bool,n)$ has $n$ in its support even
+when its computational behavior does not inspect the index. Tracking
+only variables read by the term body would not justify the typing judgment.
+Using all of $\Gamma_r(\Xi)$ always gives a support when the term is
+well typed. Abstracting $t_m$ over this context gives the actor's decision
+function on the corresponding local data. All private inputs used by a
+decision must be represented in its context.
+
+The phase rules are as follows.
+A bind extends $\Xi$ by $c:A@r,S$, provided $c$ is fresh, $r\in S$,
+the owner's implementation has the type just stated, and
+$\Gamma_i(\Xi)\vdash A:\U$ for every $i\in S$.
+A publication changes $S_c$ to $T$, provided $S_c\subseteq T$,
+$c$ is still pending, its recorded owner is the actor, and
+$\Gamma_i^{<c}(\Xi)\vdash A:\U$ for every newly added
+$i\in T\setminus S_c$.
+Thus the type is checked at the position where $c:A$ will be inserted,
+not against declarations introduced later.
+At $\mathsf{done}$ no cell may remain pending.
+These conditions give a formation judgment for a protocol by processing
+its commands from left to right.
+
+The publication rule matters for dependent types. Suppose Alice privately
+binds $n:\Nat_{>0}$ and then $v:\mathsf{Vec}(\Bool,n)$. She may publish $n$
+and then $v$ to Bob. Publishing $v$ first is rejected: its declared type is
+not yet meaningful in Bob's local context. An existential package could
+instead transmit the index with its vector, but that is an explicit change
+of interface. Toninho and Yoshida's projection construction addresses
+unknown dependencies by bundling them and using singleton types
+\cite{ToninhoYoshida2017}; the phase discipline here uses explicit staged
+visibility.
+
+\subsubsection{Histories and operational semantics}
+
+A store $\rho$ assigns each declared cell a closed data value, at the type
+obtained by substituting the earlier stored values in its declaration.
+Let $\Omega$ be the pending cells. A configuration consists of a residual
+protocol, its phase context, $\rho$, and $\Omega$.
+For a fixed implementation, the next bind evaluates $t_m\rho$ in $\D$
+to $a$, and makes the transition
+\begin{equation}
+ (\Xi,\rho,\Omega)
+ \xrightarrow{\Bind_r(c,a;S)}
+ (\Xi,c:A@r,S;\ \rho[c\mapsto a],\ \Omega\cup\{c\}).
+ \label{dep:eq:20}
+\end{equation}
+The semicolon in the target separates the extended context from its store.
+Publication makes the transition
+\begin{equation}
+ (\Xi,\rho,\Omega)
+ \xrightarrow{\Pub_r(c;T)}
+ (\Xi[c.S:=T],\rho,\Omega\setminus\{c\}).
+ \label{dep:eq:21}
+\end{equation}
+These transitions advance the residual protocol by one command. Their side
+conditions are the phase rules above. A history at phase $m$ is a legal
+sequence of the first $m$ transitions, including their intermediate stores.
+The only successful terminal history has residual $\mathsf{done}$ and
+$\Omega=\varnothing$.
+Strong normalization and canonical forms in $\D$ make the pure evaluation
+in \eqref{dep:eq:20} terminate. There is no other source of scheduling nondeterminism.
+
+The audience changes in \eqref{dep:eq:21} are monotone. Stored values remain present
+even after their pending obligations have been resolved. In particular,
+the cell name used as an index in a dependent type remains the same name
+across publication; \eqref{dep:eq:21} introduces no fresh witness.
+
+\begin{lemma}[Phase preservation]
+\label{lem:phase-preservation}
+A well-formed protocol implementation and a well-typed store advance to a
+well-formed phase and a well-typed store.
+\end{lemma}
+\begin{proof}
+At a bind, substitution types $t_m\rho$ at $A\rho$.
+For each recipient, $A$ is well formed in its previous local context, so
+context extension by $c:A$ is valid. Other local contexts are unchanged.
+At publication the data store does not change. For a new recipient write
+its old local context as $\Gamma_i^{<c}(\Xi),\Delta_i$.
+The publication premise types $A$ in that prefix. Structural context
+insertion in $\D$ therefore gives the well-formed context
+$\Gamma_i^{<c}(\Xi),c:A,\Delta_i$, preserving the judgments for the
+later declarations. This is exactly the new projected context, in the
+original declaration order. The underlying data context and store are
+unchanged; other recipients keep their contexts. No strengthening from
+the full current recipient context is required.
+\end{proof}
+
+\begin{lemma}[Binding across arbitrary continuations]
+\label{prop:binding}
+Fix a legal history ending with the binding of $c$ to $a$. Any two legal
+extensions of that history, even using different later implementations,
+publish $a$ whenever they successfully publish $c$.
+\end{lemma}
+\begin{proof}
+Every later bind allocates a fresh name. Every publication changes only
+audience metadata and pending status. Induction on each extension therefore
+gives $\rho(c)=a$ at every later phase. The value exposed by a successful
+publication is exactly this stored value. No preservation condition on the
+later implementations is assumed.
+\end{proof}
+
+\subsubsection{Views derived from audiences}
+
+At a fixed phase, define
+\begin{equation}
+ V_i^m(h)=\bigl(m,\ (\rho_h(c))_{c\in\Gamma_i(\Xi_m)\setminus\Gamma_0}\bigr).
+ \label{dep:eq:22}
+\end{equation}
+The fixed public context and declaration metadata are implicit in this
+tuple. Unavailable payloads and their instantiated private indices are
+absent. The tuple is ordered by the declarations in $\Xi_m$.
+Because cells are retained and audiences only expand, all previously
+received values and all previous owned choices remain in the view.
+This is perfect recall for this fixed-schedule language.
+
+Thus observations are determined by the protocol and its audiences.
+A decision term at phase $m$ can use only the corresponding projected
+context. Histories with equal views give equal arguments to the same
+implementation, hence convertible decisions in the common answer type.
+The answer type is meaningful locally by the phase rules.
+
+\begin{example}[A sealed pair]
+Use distinct role names $\mathsf{Alice},\mathsf{Bob}$ and public payload
+types $X,Y$. The protocol is
+\begin{equation}
+ \Bind_{\mathsf{Alice}}(c:X;\{\mathsf{Alice}\}).
+ \Bind_{\mathsf{Bob}}(d:Y;\{\mathsf{Bob}\}).
+ \Pub_{\mathsf{Alice}}(c;\Roles).
+ \Pub_{\mathsf{Bob}}(d;\Roles).
+ \mathsf{done}.
+ \label{dep:eq:23}
+\end{equation}
+At Bob's binding phase his projected context contains no $c$.
+For a fixed Bob implementation and fixed other inputs, changing Alice's
+chosen payload therefore cannot change Bob's choice.
+If Alice's publication is moved before Bob's bind, his context contains
+$c:X$ and a policy depending on that value becomes well typed.
+\end{example}
+
+\subsubsection{Hiding, including dependent intermediate data}
+\label{sec:hiding}
+
+It would be false to infer secrecy until $\Pub(c)$ merely from
+$i\notin S_c$. An authorized reader may bind a copy $d:=c$ and publish
+$d$ first. This is a different publication of information about $c$.
+The following dependency discipline states exactly which prefixes exclude
+such an indirect release.
+
+Fix an observer $i$ just after a private cell $c$ has been bound.
+Assume $i\notin S_c$, and initially mark $D=\{c\}$.
+Process a continuation prefix as follows:
+\begin{itemize}
+\item At a bind of $d$ with support $E_m$, mark $d$ precisely when
+      $E_m\cap D\ne\varnothing$, retaining all previous marks.
+      If $d$ is marked, require $i\notin S_d$.
+\item At a publication of $d$ to $T$, require $i\notin T$ whenever $d\in D$.
+\end{itemize}
+Call such a prefix \emph{sealed for $i$ from $c$}. These are decidable
+side conditions on the supplied supports and the fixed audience annotations.
+A derivation in a smaller support can certify a prefix that a coarser
+dependency analysis rejects. Types are included in the support judgment,
+so marking tracks dependencies of answer types as well as of term bodies.
+For a fixed protocol and supplied support derivations, sealing is checked
+statically by this finite scan; it requires no comparison of runtime
+payloads. Protocol formation itself permits a release to the observer,
+and does not require every prefix to be sealed. Sealing is a separate
+certificate relative to the chosen cell, observer, and prefix. We do not
+define a general information-flow type system or infer minimal supports.
+
+\begin{theorem}[Two-execution hiding for sealed prefixes]
+\label{thm:hiding}
+Start from the same history before the binding of $c$, and bind it to any
+two values $a,a':A$ with the same initial audience excluding $i$.
+Run the same well-typed continuation implementations along a prefix sealed
+for $i$ from $c$.
+At every phase of that prefix, all unmarked cells have convertible values
+in the same instantiated types, and the two $i$-views agree.
+Consequently every decision made by $i$ in the prefix is independent of
+whether $a$ or $a'$ was stored.
+\end{theorem}
+\begin{proof}
+Immediately after the two binds, all old cells agree, and the only marked
+cell is invisible to $i$. Maintain these two invariants by induction.
+
+For a bind with support disjoint from $D$, the two substitutions agree on
+its whole typing context. Congruence and substitution in $\D$ give the same
+answer type and convertible evaluations of $t_m$. Its newly stored value is
+therefore unmarked and equal in both runs. If the support meets $D$, mark
+the new cell. Its values and even its instantiated types may differ, but
+the sealing condition excludes it from $i$'s context. It cannot invalidate
+the equality claim for unmarked cells.
+
+A publication changes no value. If it exposes a cell to $i$, that cell is
+unmarked by the sealing condition and its values already agree. Otherwise
+it changes neither $i$'s data nor the equality invariant. All phase metadata
+are the same in the two runs, since the schedule and audience annotations
+do not depend on payloads. Equation \eqref{dep:eq:22} now gives equal views.
+The observer's next well-typed decision is an evaluation in that same
+visible context and so also agrees.
+\end{proof}
+
+This is a noninterference statement with an explicit release boundary.
+It proves hiding until the first release to $i$ of $c$ or any cell
+depending on it. Hiding until the particular command $\Pub(c)$ follows
+when no earlier dependent release occurs. The copy-and-publish example
+shows why that qualification is necessary. For \eqref{dep:eq:23}, Bob's bind has a
+support disjoint from $\{c\}$; the theorem supplies the sealed-pair claim
+from the audience rules.
+
+The result uses ordinary dependent substitution and dependency analysis.
+Its role in the proposed calculus is to specify an obligation for
+information-aware connection: a context must preserve the sealing judgment,
+rather than only the payload types.
+
+\subsubsection{Composition and common knowledge}
+
+For a map $u$ from one component's histories to another's, define
+observation-respecting connection by the condition
+\begin{equation}
+ V_i(h)=V_i(h')\ \Longrightarrow\
+ V'_i(u(h))=V'_i(u(h')).
+ \label{dep:eq:24}
+\end{equation}
+Here both view maps are computed from their protocols. A typed connection
+also transports the corresponding dependent answer families.
+
+\begin{lemma}[Composition of view-respecting maps]
+\label{lem:view-composition}
+Such maps include identities, are closed under composition, and preserve
+the uniformity of a policy pulled back along them.
+\end{lemma}
+\begin{proof}
+Apply \eqref{dep:eq:24} successively to the maps. An equal target view supplies the same
+arguments to a fixed target policy.
+\end{proof}
+
+At a fixed public stage let $W$ be the possible histories, with
+indistinguishability given by equality of $V_i$. Common knowledge among a
+group $S$ means truth at every history reachable by a finite chain of these
+relations. This is the standard partition characterization
+\cite{Aumann1976,HalpernMoses1990}.
+
+\begin{lemma}[Characterization of common readout knowledge]
+\label{thm:common-knowledge}
+For $p:W\to P$, the fact $p=p(h)$ is common knowledge among $S$ at every
+$h\in W$ if and only if
+\begin{equation}
+ \forall i\in S,\quad
+ V_i(h)=V_i(h')\ \Longrightarrow\ p(h)=p(h').
+ \label{dep:eq:25}
+\end{equation}
+\end{lemma}
+\begin{proof}
+For sufficiency, each indistinguishability edge preserves $p$, hence so
+does every finite chain. For necessity, any one such edge is a chain;
+common knowledge at its source gives the required equality at its target.
+\end{proof}
+
+After successful publication to $S$, the cell name and value form such a
+readout. The public-stage assumption includes common availability of the
+stage itself; independent delayed message delivery requires a different
+model of views \cite{HalpernMoses1990,BaltagMossSolecki1999}.
+
+\subsubsection{Failure and endpoint direction}
+
+With a coproduct, a fallible resolution can have interface
+\begin{equation}
+ \Unit+\sum_{a:A}\Opens(c,a).
+ \label{dep:eq:26}
+\end{equation}
+The right injection supplies the opened payload and evidence that it is the
+value fixed in $c$; the left reports failure. Only success adds the payload
+to the recipient's data context. The successful, fixed-schedule semantics
+above does not give a progress or hiding theorem for data-dependent failure,
+withholding, or timing. Those events can themselves disclose information and
+must appear in the views of an extended calculus.
+
+VegasCore stores immutable private commitments, exposes success or failure,
+and indexes programs by outstanding commitments
+\cite{VegasCore2026}. Its implementation motivates this distinction between
+successful disclosure and resolution of an obligation.
+
+Publication has a producing endpoint and receiving endpoints, giving the
+usual input/output polarity \cite{Griffith2016}. Binding and publication
+are temporal phases of the same stable cell. They need not exchange owners,
+and their composition is not an involution.

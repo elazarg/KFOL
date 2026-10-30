@@ -1,0 +1,108 @@
+\section{Introduction}
+
+Existential and universal quantification distinguish two opposed seats.
+A player-owned quantifier instead names who supplies the witness:
+$\Q_r(x:A).G(x)$. No player is permanently the verifier or the environment.
+The local interface is familiar: the owner supplies a value, the other
+participants receive it, and every continuation uses that same value.
+What remains to be chosen is how to observe the interaction.
+
+We study a finite rational-play observation. Each terminal has one
+winner; each player prefers its own win and is indifferent between all
+other winners. Full strategies specify actions at every history,
+including those excluded by the player's own earlier decisions.
+For a finite public game $G$, let $B(G)$ be the set of winners attained
+by its pure subgame-perfect equilibrium profiles. Backward induction gives
+\[
+ S\star_r T=\begin{cases}
+ \{r\},&S=\{r\}\text{ or }T=\{r\},\\
+ S\cup T,&\text{otherwise}.
+ \end{cases}
+\]
+A child in which every equilibrium wins for $r$ absorbs. A child merely
+admitting an $r$-win does not: a losing off-path equilibrium can support
+the owner's indifference at the parent.
+
+For two players, ground terms have only the singleton values and recover
+Boolean join and meet after selecting a viewpoint. With three players,
+every nonempty winner set is generated. Distributivity fails, yet the
+algebra has strong structural restrictions. We identify those restrictions
+and the small calculi they determine.
+
+\paragraph{Main results.}
+For each finite role set of size $K\geq3$, we establish the following.
+\begin{enumerate}
+\item \textbf{Sharp input tests.} Every failed full-signature equation has
+a singleton-or-pair countervaluation. Every singleton and pair is necessary,
+giving the unique minimum fixed test domain of size $K(K+1)/2$
+(\cref{sec:pair-tests}). Intermediate outputs still range over all values.
+\item \textbf{An intrinsic core.} A full term is idempotent exactly when
+it has no winner constants and every accumulated leaf permutation is
+identity. Its operation is then expressible by choices and variables
+alone (\cref{gen:thm:core}). Optimal diagonal tests have logarithmic size.
+A common-source theorem constrains simultaneous output requirements
+(\cref{gen:thm:source}).
+\item \textbf{Player perspectives.} Without internal switches, one player's
+possible-win observation has exactly $K+1$ contextual values. The $K$
+views give a faithful, irredundant subdirect representation
+(\cref{sec:perspectives,gen:cor:views}). We classify all congruences;
+internal switching reduces them to a chain of ambiguity thresholds
+(\cref{app:congruences}).
+\item \textbf{An exact binary fragment.} Binary idempotent atom-preserving
+operations are the projections and the two orientations of reset. Reset
+terms have canonical prerequisite tables and an exact antimatroid
+representation with polynomial equality, recognition, counterexamples,
+and synthesis (\cref{sec:reset}). Its generator is the established
+order algebra $O_{2+1}$, whose six-equation basis gives a complete calculus.
+\item \textbf{Complexity and composition.} Equation validity is
+coNP-complete already without constants or switches
+(\cref{sec:complexity}). We classify the $751$ three-role unary operations,
+the general ambiguity-action quotient and its two-permutation fibers,
+and the difference between independent copies, uniform equilibrium
+selection, and shared hidden decisions (\cref{app:contexts,app:ambiguity}).
+\end{enumerate}
+
+These are results about a specified algebraic semantics. They do not
+assert a dependent type theory or a cut theorem for hidden games.
+The dependent execution and disclosure results in \cref{app:dependent}
+make that boundary precise. Reducing full strategies to executable plans
+preserves execution but can lose subgame perfection. Publishing dependent
+data requires stable binding and a permitted local context. These
+interfaces are not identified by an unproved composition principle.
+
+\paragraph{Established ingredients.}
+Owned choices, player-indexed quantifiers, and role permutations occur in
+Abramsky's multi-agent game semantics \cite{Abramsky2007}. Olde Loohuis and
+Venema develop player-indexed logics and algebras using winning-strategy
+observations \cite{OldeLoohuisVenema2010}. Our observation is possible SPE
+winners with all ties retained; individual forcing does not define it.
+Full contingent strategies and dependent game trees have established
+treatments \cite{Rubinstein1991,EscardoOliva2023}. Finite backward induction
+supplies the starting algebra.
+
+We use the known $\operatorname{Pol}(\iota_3)=S_2$ classification for
+atomic expressivity \cite{Szendrei2012}, the factorpower of the symmetric
+group for ambiguity actions \cite{GanyushkinMazorchuk1995,Mazorchuk2009},
+and standard contextual congruences and closure operators
+\cite{BlokPigozzi1989,Font1993,Crapo1967}. For reset we use the order
+algebra, finite basis, related path normal forms, and residual-largeness
+result of Freese et al.\ \cite{FreeseEtAl2002}, and the known minimal clone
+\cite{Waldhauser2006}. Dependency structures with choice and their
+antimatroid correspondence are established in
+\cite{BazermanMinichielloPuzio2023}.
+
+The specific content is the exact behavior of these objects inside
+rational owned choice, including the sharp tests, intrinsic syntactic
+elimination, and fragment boundaries. Priority for those connections,
+and for the prerequisite presentation relative to the older path forms,
+has not been established. Established results are used directly in the
+proofs and are not counted as new classifications.
+
+\paragraph{Organization.}
+The main text develops the game algebra, player observations, pair tests,
+intrinsic core, complexity, and reset calculus. The appendices contain
+the complete unary, congruence, ambiguity-monoid, and forest-model
+arguments, followed by dependent execution and disclosure. The paper
+contains the mathematical statements and proofs; the accompanying Lean
+and Python sources supply the verification described in
+\cref{sec:verification}.

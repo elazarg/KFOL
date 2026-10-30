@@ -1,0 +1,222 @@
+\section{Canonical forms and all congruences}\label{app:congruences}
+\subsection{Canonical forms for several variables}
+
+The small quotients already give compositional function tables at all
+arities. There is a second, more syntactic normalization.
+
+Fix a status assignment
+$\sigma\in(I\cup\{*\})^n$, where status $i$ means the input is exactly
+$\{i\}$, and $*$ means it is ambiguous. On this status cell, represent an
+expression by $(C,J)$, denoting
+\[
+ C\ \cup\ \bigcup_{j\in J}S_j,
+ \qquad J\subseteq\{j:\sigma_j=*\}.
+\]
+For a constant use $(\{i\},\varnothing)$; for a singleton-status variable
+use that singleton; for an ambiguous variable use
+$(\varnothing,\{j\})$. An owned node collapses to
+$(\{r\},\varnothing)$ if either child has that form. Otherwise union the
+two $C$ fields and the two $J$ fields. Finally, when $C=I$, discard $J$.
+
+\begin{theorem}[Canonical status forms]\label{view:thm:normal}
+This normalization is sound on each status cell. Its final pair $(C,J)$
+is uniquely determined by the term function on that cell. Consequently
+the table of these pairs over all $(K+1)^n$ statuses is a canonical
+representation of any $n$-variable term function.
+\end{theorem}
+\begin{proof}
+If $J$ is nonempty, the value contains an ambiguous input, so cannot be
+an owner singleton. If $J$ is empty, the value is exactly $C$. The node
+rule therefore implements precisely the two cases of $\star_r$.
+
+For uniqueness, if two $C$ fields differ, choose $k$ in their symmetric
+difference and give every ambiguous variable a pair omitting $k$.
+Output membership of $k$ then detects the different fields. If $C$
+agrees and differs from $I$, but $J$ differs, choose $k\notin C$, give one
+variable in the symmetric difference a pair containing $k$, and give all
+other ambiguous variables pairs omitting $k$. This separates the
+outputs. The only redundant case is $C=I$, already canonicalized by
+discarding $J$. All status cells are inhabited for $K\geq3$.
+\end{proof}
+
+These rules give a sound and complete normalization decision procedure for term
+equality: compute both tables and compare them. They also explain how
+ambiguity survives. Once the singleton cases at a cell are fixed, the
+remaining computation is just union with a record of which input
+variables contribute. The table is not a characterization of which
+arbitrary tables are definable by terms, and hence does not yet classify
+the full clone. Nor is this a finite unconditional equational basis.
+
+\texttt{structure.py} implements both representations and a complete
+counterexample search over the optimal input domain. The status-form
+soundness and uniqueness arguments above are not yet mechanized.
+
+\subsection{All congruences and the small irreducible quotients}
+
+Union is term definable, so every algebra congruence is also a union
+congruence. The standard correspondence with closure operators is useful
+here; the class-maximum construction is classical, compare the lemma to
+Proposition 6 in Crapo\cite{Crapo1967}. We give the finite argument
+explicitly because the extra owner operations impose a strong condition.
+
+\begin{theorem}[Congruence classification]\label{view:thm:congruences}
+The congruences of $\A$ are exactly the kernels of closure operators
+$c:\Pow(I)\to\Pow(I)$ satisfying
+\begin{equation}\label{view:eq:atomclosure}
+ c(\{i\})\in\{\{i\},I\}\qquad(i\in I).
+\end{equation}
+Equivalently, they correspond to families $\mathcal F\subseteq\Pow(I)$
+such that $I\in\mathcal F$, $\mathcal F$ is closed under nonempty
+intersections when the result is nonempty, and
+\[
+ S\in\mathcal F,\ S\ne I,\ i\in S\quad\Longrightarrow\quad
+ \{i\}\in\mathcal F.
+\]
+The closure is the intersection of all members containing the input.
+\end{theorem}
+\begin{proof}
+For a congruence $\theta$, define
+$c(S)=\bigcup[S]_\theta$. Finiteness and union compatibility make this
+maximum a member of its class. Extensivity and idempotence follow.
+If $S\subseteq T$, union compatibility gives
+$T\mathrel\theta c(S)\cup T$, so $c(S)\subseteq c(T)$. Thus $c$ is a
+closure operator and $\theta=\ker c$.
+
+If $\{i\}$ is identified with any different value $S$, apply
+$x\mapsto x\ow i I$. It sends $\{i\}$ to $\{i\}$ and every other input
+to $I$. Hence $\{i\}\mathrel\theta I$ and $c(\{i\})=I$.
+This crucial step is \texttt{atom\_collapse\_to\_top} in Lean.
+
+Conversely, any closure operator has a union-compatible kernel, since
+$c(S\cup T)=c(c(S)\cup c(T))$. Assume~\eqref{view:eq:atomclosure}. Compare
+equivalent input pairs for $\star_i$. If neither side absorbs, their
+outputs are unions and have equal closures. If both absorb, both outputs
+are $\{i\}$. If just one absorbs, an input equivalent to $\{i\}$ differs
+from it. Their common closure cannot be $\{i\}$, since extensivity would
+make that nonempty input equal to $\{i\}$. Their closure is therefore
+$I$, and the nonabsorbing side's union also closes to $I$. This proves compatibility
+with every owned operation.
+
+The usual fixed-set description of closure operators gives the final
+formulation. A proper closed set containing $i$ rules out
+$c(\{i\})=I$ and therefore forces $\{i\}$ to be closed. Conversely, that
+condition makes every nonclosed singleton close to $I$.
+\end{proof}
+
+In particular, there are exactly $18$ congruences at $K=3$ and $626$ at
+$K=4$. The script independently enumerates all partitions at $K=3$.
+At $K=4$ it enumerates the classified closure families and checks every
+constructed kernel against every operation; completeness uses the proof
+above, rather than a partition search.
+
+\begin{theorem}[Subdirectly irreducible homomorphic images]\label{view:thm:si}
+Every nontrivial subdirectly irreducible homomorphic image of $\A$ is
+obtained from a nonempty proper set $S\subset I$ with closed family
+\[
+ \mathcal F_S=\{I,S\}\cup\{\{i\}:i\in S\}.
+\]
+For $|S|=1$ the quotient has two elements. For $|S|\geq2$ it has
+$|S|+2$ elements: one singleton state per $i\in S$, the state $S$, and
+the state $I$. In particular, every such image has at most $K+1$ elements.
+The case $S=I\setminus\{k\}$ is exactly $C_k$.
+\end{theorem}
+\begin{proof}
+The congruence/fixed-family correspondence reverses inclusion.
+Meet-irreducible congruences therefore correspond to join-irreducible
+admissible fixed families. Every admissible family is the join of the
+families $\mathcal F_S$ for its proper members $S$. Each
+$\mathcal F_S$ is join-irreducible: its member $S$ cannot be generated by
+intersections of its strictly smaller members, which are singletons.
+Thus these are exactly the meet-irreducible kernels and hence exactly the
+nontrivial subdirectly irreducible quotients.
+
+The displayed fixed sets are representatives of all quotient classes.
+For $|S|\geq2$, its least nontrivial congruence identifies the states $S$
+and $I$. To see minimality directly, collapsing an atom with $S$ forces
+it to collapse with $I$ by its owned operation. Collapsing an atom with
+$I$ then collapses $S$ with $I$ by combining it with a different atom
+under an owner outside $S$. Collapsing two atoms first collapses one
+with $I$ by its owned operation. Every nontrivial collapse therefore
+contains the stated pair.
+\end{proof}
+
+\begin{corollary}[Minimum subdirect decomposition]
+Every subdirect representation of $\A$ by nontrivial subdirectly
+irreducible factors must include, up to the quotient maps' kernel,
+each $C_k$. The $K$-factor decomposition of
+Corollary~\ref{view:cor:product} is consequently minimum and irredundant.
+\end{corollary}
+\begin{proof}
+The distinct values $I$ and $I\setminus\{k\}$ must be separated by some
+factor. Among the classified quotients, only
+$\mathcal F_{I\setminus\{k\}}$ separates them: every other proper
+fixed set fails to contain $I\setminus\{k\}$, so that value closes to
+$I$. Thus the corresponding factor $C_k$ is necessary for every $k$.
+\end{proof}
+
+These statements concern homomorphic images of $\A$ itself. They do not
+bound subdirectly irreducible members of the whole variety generated by
+$\A$, and do not establish finite basability.
+
+\subsection{What internal role switching changes}
+
+Now expand the signature by unary operations $S\mapsto\pi S$ for every
+role permutation $\pi$. Write $\A^{\mathrm{sym}}$ for this algebra. This
+is a separate extension: the preceding small test-domain and one-player
+quotient theorems used the original signature.
+
+\begin{theorem}[The symmetric congruence chain]\label{view:thm:sym}
+There are exactly $K$ congruences of $\A^{\mathrm{sym}}$. They are the
+kernels of
+\[
+ c_m(S)=\begin{cases}S,&|S|\leq m,\\I,&|S|>m,\end{cases}
+ \qquad m=0,1,\ldots,K-1.
+\]
+Here $m=0$ gives the universal relation and $m=K-1$ gives equality.
+For $1\leq m\leq K-1$, the quotient has
+$1+\sum_{j=1}^{m}\binom Kj$ values. These are the restrictions to
+nonempty sets of the uniform-matroid closures of rank $m+1$.
+\end{theorem}
+\begin{proof}
+A congruence of the expansion is exactly a congruence of $\A$ invariant
+under every permutation. Its class-maximum closure therefore commutes
+with permutations. If any singleton closes to $I$, symmetry makes every
+singleton close to $I$, and monotonicity makes every nonempty set close
+to $I$.
+
+Otherwise all singletons are closed. Let $m$ be the largest size of a
+proper closed set. Permutation invariance makes all $m$-element sets
+closed. Their nonempty intersections give every nonempty set of size at
+most $m$: for a smaller set $T$ and $x\notin T$, an $m$-element superset
+of $T$ omitting $x$ exists because $m<K$. Thus the proper closed sets
+are exactly those of size at most $m$. The congruence classification
+gives precisely the displayed kernels. Their closures are nested, so
+their kernels form a chain. The cardinalities and the uniform-matroid
+identification follow from their fixed sets; see the uniform matroids
+in Oxley\cite{Oxley2011}.
+\end{proof}
+
+\begin{corollary}[Symmetry makes the algebra irreducible]
+$\A^{\mathrm{sym}}$ is subdirectly irreducible. Its least nontrivial
+congruence identifies all sets of size at least $K-1$, leaving every
+smaller nonempty set fixed.
+\end{corollary}
+\begin{proof}
+In the chain above, $\ker c_{K-2}$ is the least congruence strictly above
+equality. It exists for $K\geq3$ and has the stated classes.
+\end{proof}
+
+The quotient with $m=1$ records every unique winner separately and merges
+all ambiguity. The intervening quotients retain increasingly large sets
+of alternative equilibrium winners. Thus internal role symmetry permits
+an exact hierarchy of ambiguity thresholds.
+
+The one-player contextual quotient also changes: it is now equality.
+If $S,T$ differ at role $i$, choose a permutation taking $i$ to $k$.
+The context $\pi(x)$ then distinguishes their possible-win observation
+for $k$. This does not invalidate the earlier product representation:
+the tuple of all $C_k$ still represents the underlying algebra, and
+permutations act by transporting \emph{between} its coordinates. They
+cannot be interpreted as separate unary operations inside each fixed
+factor. The distinction between external symmetry and internal role
+switching therefore has a measurable algebraic effect.

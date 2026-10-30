@@ -1,0 +1,617 @@
+\section{Unary operations with role switching}\label{app:ambiguity}
+Throughout this appendix, terms use the full signature
+$\mathbf A_I^{\rm sym}$.
+
+\subsection{Three roles: the exact unary normal form}
+
+Now let $I=\{a,b,c\}$. A partial permutation $p$ is an injective partial
+map from $I$ to itself. Put
+\[
+ C_p=I\setminus\operatorname{ran}(p),\qquad
+ F_p(S)=C_p\cup p[S\cap\operatorname{dom}(p)].
+\]
+
+\begin{theorem}[All unary term operations]\label{sym:thm:unary}
+Every unary term function is either a constant or has the following
+unique normal form:
+\begin{equation}\label{sym:eq:unary}
+ f(S)=\begin{cases}D_i,&S=\{i\},\\F_p(S),&|S|\geq2,\end{cases}
+\end{equation}
+where $p$ is a partial permutation and the nonempty rows satisfy
+\[
+ \begin{array}{ll}
+ \{p(i)\}\subseteq D_i\subseteq C_p\cup\{p(i)\},
+       &i\in\operatorname{dom}(p),\\
+ \varnothing\ne D_i\subseteq C_p,
+       &i\notin\operatorname{dom}(p).
+ \end{array}
+\]
+Every such normal form is realized by a term. The only constant also
+in this family is the constant $I$.
+\end{theorem}
+
+We prove the upper bound, uniqueness, and synthesis separately. The finite checks are described in \cref{sec:verification}.
+
+\subsubsection{Upper bound and mandatory images}
+
+A unary term is either constant or admits a live provenance
+$(C,P)$ with nonempty $P\subseteq\operatorname{Sym}(I)$ such that
+\[
+ f(S)=C\cup\bigcup_{\pi\in P}\pi S\quad(|S|\geq2),\qquad
+ f(\{i\})\subseteq C\cup\{\pi(i):\pi\in P\}.
+\]
+This follows by the same induction as Lemma~\ref{sym:lem:provenance}, keeping
+globally constant children separate. A constant owner singleton absorbs
+globally; otherwise a live child remains live. In particular, a live
+function preserves $I$ and maps ambiguous inputs to ambiguous outputs.
+
+The induction also gives the following mandatory-image fact:
+\begin{equation}\label{sym:eq:mandatory}
+ k\notin C\text{ and }\pi(i)=k\text{ for every }\pi\in P
+       \quad\Longrightarrow\quad k\in f(\{i\}).
+\end{equation}
+At an owned node, every live child satisfying this hypothesis contains
+$k$ at input $\{i\}$. If the owner differs from $k$, such a child cannot
+be its singleton; a constant child cannot be that owner singleton
+either, since the whole expression would have been globally constant.
+Thus the node preserves $k$. If the owner is $k$, membership of $k$ is
+disjunction and is preserved directly. Role switching transports this
+argument; the variable supplies its base case.
+
+For an output role $k$, let $A_k=\{\pi^{-1}(k):\pi\in P\}$. This set
+is nonempty. On ambiguous inputs, membership of $k$ is either constantly
+true, or the test $S\cap A_k\ne\varnothing$. With three roles, if
+$|A_k|\geq2$, that test is always true. Hence every nonconstant output
+coordinate is exactly one input membership bit, say $k\in f(S)$ iff
+$i\in S$. Record $p(i)=k$. The recorded sources are distinct, because
+every permutation in $P$ must send each such source to its recorded
+target. Thus $p$ is a partial permutation, and the other coordinates
+form $C_p$.
+
+The atomic upper bound above excludes each variable output coordinate
+from all rows except its source row. The mandatory-image
+fact~\eqref{sym:eq:mandatory} includes it in that row. These are precisely
+the bounds in Theorem~\ref{sym:thm:unary}. The partial permutation is
+uniquely determined by its action on the three pairs: a variable output
+coordinate is absent exactly on the pair omitting its source. Atomic
+rows are actual values, so they too are unique.
+
+\subsubsection{Synthesis of every normal form}
+
+Use the already established reduct construction
+\[
+ R(C,E)(S)=\begin{cases}\{i\}\cup E_i,&S=\{i\},\\
+ S\cup C,&|S|\geq2,\end{cases}\qquad E_i\subseteq C\setminus\{i\}.
+\]
+It uses only singleton constants and owned choice. Its generic syntactic
+synthesis is proved in \texttt{Synthesis.lean}.
+
+\emph{Rank three.} The partial permutation is total, $C_p$ is empty,
+and every row is its prescribed singleton. Use that role permutation.
+
+\emph{Rank two.} Extend $p$ to a total permutation $\pi$. Its remaining
+output is the single element of $C_p$. Apply a reduct function $R(C_p,E)$
+after $\pi(x)$, choosing each row's optional extra winner as prescribed.
+The remaining input row is the singleton in $C_p$. This realizes all
+four row choices for each rank-two partial permutation.
+
+\emph{Rank one.} By permuting the input, normalize $p$ to $p(a)=a$ and
+$C_p=\{b,c\}$. First choose any desired nonempty rows $D_b,D_c$ within
+$\{b,c\}$ while fixing the row $a$. On inputs $b,c$, owned choices by
+$b,c$ are Boolean disjunction and conjunction, and the transposition
+$(b\ c)$ is Boolean negation. Relative constants are
+$x\ow b(b\ c)(x)$ and $x\ow c(b\ c)(x)$. Every expression so built
+still sends $\{a\}$ to $\{a\}$. Taking unions of two Boolean functions
+realizes any prescribed pair of nonempty rows $D_b,D_c$.
+
+Precompose this expression with $R(C_p,0)$, which fixes all atomic inputs
+and sends ambiguous inputs to $C_p$ or $I$. The Boolean expressions
+above fix both those sets, so the resulting ambiguous behavior is
+exactly $F_p$. Finally, to add any prescribed $Z\subseteq C_p$ to the
+$a$ row, postcompose with $R(Z,E)$ having $E_a=Z$ and the other rows
+empty. It preserves every nonempty subset of $C_p$, as well as $I$.
+Thus all four choices for the $a$ row and all nine choices for the other
+two rows are realized independently.
+
+\emph{Rank zero.} The ambiguous output is always $I$ and the three
+atomic rows may be any nonempty sets. The term
+\[
+ x\ow a(a\ b)(x)
+\]
+sends singleton $b$ to $a$ and fixes the other singleton roles. It
+preserves $I$. These elementary mergers, together with permutations,
+realize every map $h:I\to I$: merge each input into a chosen
+representative of its $h$-fiber, then permute the distinct representatives
+to their desired images. Representatives are never merged, so the
+construction has the asserted effect. Union at most three such maps
+to realize arbitrary nonempty atomic rows, and precompose with $R(I,0)$.
+All ambiguous inputs then become $I$, while atomic rows are unchanged.
+
+This proves synthesis. Larger ground constants give the constant
+functions. Any nonconstant live function takes $I$ to $I$, so the only
+constant overlap is $I$ itself.
+
+\begin{corollary}[Exact count]
+There are exactly $751$ unary term operations in the three-role full
+signature. Of these, $745$ preserve $I$.
+\end{corollary}
+\begin{proof}
+For rank $r$, the number of partial permutations is
+$\binom3r^2r!$. The number of row choices for each is:
+\[
+\begin{array}{c|rrrr}
+ r&0&1&2&3\\\hline
+ \text{partial permutations}&1&9&18&6\\
+ \text{row choices each}&343&36&4&1
+\end{array}
+\]
+Hence there are $343+324+72+6=745$ normal forms of
+type~\eqref{sym:eq:unary}. Add the six constant functions other than $I$.
+\end{proof}
+
+\subsection{Context composition and the symmetric inverse monoid}
+
+The partial permutations of $I$, including the empty map, form the
+standard symmetric inverse monoid $\mathcal I_I$ under partial
+composition~\cite{East2006}. For three roles its size is
+$\sum_{r=0}^3\binom3r^2r!=34$.
+
+\begin{theorem}[An ambiguity-action quotient]\label{sym:thm:monoid}
+The $745$ unary term operations preserving $I$ form a monoid under
+composition. Sending the normal form $(p,D)$ to $p$ is a surjective
+monoid homomorphism onto $\mathcal I_I$.
+\end{theorem}
+\begin{proof}
+Every ambiguous input has an ambiguous output, and direct calculation
+gives $F_p\circ F_q=F_{p\circ q}$. Indeed, an output coordinate either
+is fixed present, or follows a unique input coordinate through each of
+the two partial permutations. The atomic rows of a composite are
+\[
+ D^{f\circ g}_i=\begin{cases}
+ D^f_j,&D^g_i=\{j\},\\
+ F_{p_f}(D^g_i),&|D^g_i|\geq2.
+ \end{cases}
+\]
+These formulas give the exact composite. Every $p$ has an admissible row
+family and is realized by the synthesis, so the homomorphism is onto.
+\end{proof}
+
+\begin{corollary}[All reversible unary operations]
+The invertible unary term operations are exactly the six role
+permutations.
+\end{corollary}
+\begin{proof}
+An invertible function fixes $I$: every other possibility is a constant.
+Its partial-permutation image must be a unit, hence a total permutation.
+Rank three leaves no choice of atomic rows. Conversely every role
+permutation has its inverse as a term.
+\end{proof}
+
+Thus the familiar inverse monoid is a quotient governing ambiguity,
+not the whole algebra of unary contexts. Its fibers retain the permitted
+atomic rows. This is genuine context composition with internal
+role-switching; it does not use uniform-profile selection, whose lift
+failed to preserve substitution in \cref{app:contexts}.
+
+\subsection{The known relation monoid and its affine extension}
+
+Regard a relation $R\subseteq I\times I$ as sending source roles to
+output roles, and write $R[S]$ for its direct image. Let $\FP(\Sym(I))$
+be the monoid of nonempty unions of permutation graphs, with relational
+composition. This is the \emph{factorpower} of the natural symmetric-group
+action, introduced by Ganyushkin and Mazorchuk and surveyed by
+Mazorchuk\cite{GanyushkinMazorchuk1995,Mazorchuk2009}. In the usual
+definition, nonempty subsets $P,Q\subseteq\Sym(I)$ are identified when
+$\{\pi(i):\pi\in P\}=\{\pi(i):\pi\in Q\}$ for every $i$.
+Thus the relation monoid appearing here is exactly a known object.
+
+Form its affine extension
+\[
+ \mathcal E_I=\mathcal P(I)\rtimes\FP(\Sym(I)),\qquad
+ (C,R)(D,Q)=(C\cup R[D],R\circ Q).
+\]
+The action on $\mathcal P(I)$ is by direct image; it preserves empty set
+and unions, so this multiplication is associative. Its identity is
+$(\varnothing,\mathrm{id})$. The affine action is
+\begin{equation}\label{gen:eq:affine}
+ F_{C,R}(S)=C\cup R[S].
+\end{equation}
+Every such map sends ambiguous sets to ambiguous sets because $R$
+contains a permutation. Restrict these maps to
+$\mathcal A_I=\{S\subseteq I:|S|\geq2\}$ and identify equal restrictions.
+Call the resulting transformation monoid $\mathcal Q_I$.
+
+\begin{theorem}[Exact ambiguity quotient]\label{gen:thm:quotient}
+Let $\mathcal M_I$ be the monoid of unary term functions fixing $I$.
+Restriction to $\mathcal A_I$ is a surjective monoid homomorphism
+$\mathcal M_I\twoheadrightarrow\mathcal Q_I$.
+\end{theorem}
+\begin{proof}
+A unary term is either globally constant or has live provenance
+$C\cup\bigcup_{\pi\in P}\pi S$ on ambiguous inputs, with $P$ nonempty.
+Here is a simultaneous induction establishing that dichotomy. The
+variable is live and a winner is constant. Switching transports constants
+and permutations. At an owned node, a live child is always ambiguous on
+ambiguous inputs. Thus collapse there occurs exactly when a globally
+constant child is the owner singleton, making the whole node globally
+constant. Otherwise union the live provenances and the constant children.
+A node with only constant children is again globally constant.
+
+Every live expression fixes $I$. Hence a top-preserving unary term is
+live or is the constant $I$, and has a restriction of the displayed form.
+Conversely, for any $(C,R)$ choose a nonempty finite set of permutations
+whose union is $R$. The term joining their images of $x$ and the
+singleton constants in $C$ realizes \eqref{gen:eq:affine} on all inputs and
+fixes $I$. Restriction respects composition since all these maps preserve
+$\mathcal A_I$.
+\end{proof}
+
+The constant part cannot be suppressed. For example,
+$S\mapsto S\cup\{a\}$ on ambiguous inputs cannot equal $R[S]$ for a
+union of permutations $R$. Every other output coordinate $b\ne a$ has
+the singleton source $b$. As shown below, that source is uniquely
+determined by the restricted action. Thus every constituent permutation
+must fix all $b\ne a$, hence also $a$. Their union is the identity and
+cannot make $a$ constantly present. The relevant object is an affine
+extension and a quotient of a known monoid, not just the factorpower.
+
+\subsection{Canonical rows, matching, and synthesis}
+
+For an output role $k$ let
+$R^{-1}(k)=\{i:(i,k)\in R\}$. Membership of $k$ in
+\eqref{gen:eq:affine} is either constant or the predicate
+$S\cap R^{-1}(k)\ne\varnothing$. Every such source set is nonempty.
+On ambiguous inputs this predicate is constantly true exactly when its
+source set has size at least $K-1$.
+
+\begin{lemma}[Unique row representation]\label{gen:lem:rows}
+Every action in $\mathcal Q_I$ has a unique row for each output role,
+of one of the following forms:
+\[
+ *\quad\text{(always present)},\qquad
+ A_k\subseteq I,\quad 1\leq|A_k|\leq K-2
+ \quad\text{(present iff }S\cap A_k\ne\varnothing\text{)}.
+\]
+\end{lemma}
+\begin{proof}
+The preceding threshold gives existence. A nonconstant row has a pair
+disjoint from its source set, distinguishing it from $*$. If two small
+source sets $A,B$ differ, choose $i\in A\setminus B$, swapping their
+names if necessary. Since $|B|\leq K-2$, choose a different
+$j\notin B$. The pair $\{i,j\}$ meets $A$ and misses $B$, distinguishing
+the rows.
+\end{proof}
+
+Not every syntactically possible collection of rows is realizable. Build
+a bipartite graph $H$ with source and output copies of $I$. A nonconstant
+output row $k$ allows exactly the edges from $A_k$; a constant row allows
+edges from every source. Edges into nonconstant rows are
+\emph{prescribed}; edges into constant rows are only allowed.
+
+\begin{theorem}[Matching criterion]\label{gen:thm:matching}
+A collection of canonical rows belongs to $\mathcal Q_I$ exactly when
+every prescribed edge belongs to a perfect matching of $H$. If all rows
+are constant, it always belongs.
+\end{theorem}
+\begin{proof}
+For necessity, choose a representative $(C,R)$. A nonconstant row
+cannot belong to $C$, and its preimage under $R$ is exactly its canonical
+source set by Lemma~\ref{gen:lem:rows}. Every prescribed edge lies in some
+permutation constituent of $R$. That permutation is a perfect matching
+of $H$.
+
+Conversely, choose a perfect matching for each prescribed edge. Their
+union $R$ is a union of permutations. At a nonconstant row its preimage
+is contained in the allowed source set and includes every prescribed
+source, so it is exactly $A_k$. Set $C$ equal to the set of constant
+output rows. Then $(C,R)$ realizes the given rows. If no edges are
+prescribed, take $R$ to be the identity and $C=I$.
+\end{proof}
+
+For comparison, the analogous criterion with \emph{all} relation edges
+prescribed is the standard factorpower realizability criterion
+(Mazorchuk\cite[Section~2.1]{Mazorchuk2009}). Here the constant rows leave
+their matching edges free, and the ambiguity threshold removes larger
+nonconstant source sets. An ordinary Hall existence test alone is
+insufficient. At $K=4$, rows
+\[
+ (\{1\},\{1,2\},*,*)
+\]
+allow a perfect matching, but the prescribed edge from source $1$ to
+output $2$ belongs to none: output $1$ already requires source $1$.
+The collection is therefore not realizable.
+
+\begin{corollary}[Polynomial recognition and synthesis]
+Given $K$ canonical rows, membership in $\mathcal Q_I$ is decidable in
+polynomial time. Every member has a realization by at most $K^2$
+permutation images, together with its constant roles, and by an ordinary
+term of size polynomial in $K$.
+\end{corollary}
+\begin{proof}
+For each of the at most $K(K-2)$ prescribed edges, force that edge and
+find a perfect matching in the remaining graph. Standard augmenting
+paths suffice. Use those witness permutations in the synthesis from
+Theorem~\ref{gen:thm:quotient}. Join the pieces in a balanced tree. Expanding
+the fixed derived-union term duplicates each argument twice; balanced
+joining of $m$ pieces has size $O(m^2)$ rather than the exponential
+expansion of a skew join. Singleton constant pieces and explicit
+permutation descriptions have polynomial size too.
+\end{proof}
+
+\begin{theorem}[Canonical composition]\label{gen:thm:composition}
+For outer rows $A$ and inner rows $B$, the composite row at $k$ is:
+\begin{enumerate}
+\item $*$ if $A_k=*$ or some $i\in A_k$ has $B_i=*$;
+\item otherwise $\bigcup_{i\in A_k}B_i$, changed to $*$ if that union
+has at least $K-1$ elements.
+\end{enumerate}
+This computes composition in time polynomial in $K$ on descriptions of
+$O(K^2)$ bits.
+\end{theorem}
+\begin{proof}
+Substitute the inner membership disjunctions into the outer membership
+disjunction. A constant true disjunct makes the result true; otherwise
+the sources union. Apply the ambiguity threshold. Closure follows also
+from the affine multiplication in $\mathcal E_I$.
+\end{proof}
+
+Together, \cref{gen:lem:rows,gen:thm:matching,gen:thm:composition} give
+an explicit model of the entire ambiguity-action monoid $\mathcal Q_I$:
+its elements are exactly the admissible canonical row tables, its
+identity has row $\{k\}$ at output $k$, and its multiplication is the
+displayed row substitution and threshold rule. This is a canonical
+representation with effective multiplication, not a presentation by
+abstract generators and defining relations. It classifies the whole
+ambiguity quotient for every $K$; what remains unclassified is the
+general singleton fiber above an action, and hence the full unary
+context monoid at larger $K$.
+
+For three roles every nonconstant row is a singleton. The matching
+criterion says that their sources must be distinct. Thus these rows
+are exactly a partial bijection, with $*$ on the missing output roles,
+recovering the $34$-element symmetric inverse monoid. Four roles admit
+two-source rows, and the matching criterion is a genuine further
+constraint. Exhausting the criterion and, independently, all affine
+permutation-union representatives gives
+\[
+\begin{array}{c|rr}
+K&|\FP(\Sym(I))|&|\mathcal Q_I|\\\hline
+3&49&34\\
+4&7443&1979
+\end{array}
+\]
+These are finite computations, with complete enumerations reproduced by
+\texttt{check\_general.py}. They count the ambiguity quotient, not the
+full unary term monoid. Its singleton fibers for general $K$ are still
+unclassified.
+
+\subsection{Relative reset and exact two-permutation fibers}
+
+\subsubsection{A uniform reset operation}
+
+Given $A,B$, start with $A\cup B$ and, once for each owner $r$, replace
+the current value $U$ by $U\star_r B$. Write the resulting derived
+binary operation as $\Delta(A,B)$.
+
+\begin{lemma}[Relative reset]\label{gen:lem:relative}
+\[
+ \Delta(A,B)=
+ \begin{cases}B,&|B|=1,\\A\cup B,&|B|\geq2.\end{cases}
+\]
+Its value is independent of the enumeration of owners. It is
+idempotent and equivariant.
+\end{lemma}
+\begin{proof}
+Every intermediate value contains $B$. If $B$ is ambiguous, both
+operands are ambiguous, and each step preserves $A\cup B$. If
+$B=\{r\}$, its own step forces that singleton; every later step leaves
+it fixed. Idempotency and equivariance follow from the displayed law.
+The atomic and ambiguous cases are proved in \texttt{Separation.lean}.
+\end{proof}
+
+This construction also gives a precise observational quotient.
+For an idempotent atom-preserving term, record its support $J$ on
+ambiguous inputs and its projected argument $j$ on atomic inputs.
+The extracted core cannot depend on an absent argument, so $j\in J$.
+
+\begin{proposition}[Homogeneous observation quotient]\label{gen:prop:pointed}
+These pairs are exactly $(J,j)$ with $\varnothing\ne J$ and $j\in J$.
+They compose by
+\[
+ (J,j)\bigl((L_i,\ell_i)_i\bigr)
+   =\left(\bigcup_{i\in J}L_i,\ell_j\right).
+\]
+They form the term clone of right normal bands. Relative reset maps to
+its binary multiplication.
+\end{proposition}
+\begin{proof}
+Atomic and all-ambiguous input regions are invariant under these
+operations, so their observations respect substitution. Every pair is
+realized by $\Delta(\bigcup_{i\in J}x_i,x_j)$, and distinct pairs are
+separated by atomic valuations or by a pair and $I$ on ambiguous inputs.
+The binary operation on pairs is $(J,j)(L,\ell)=(J\cup L,\ell)$:
+word terms remember their variable set and their last variable.
+Associativity, $xx=x$, and $xyz=yxz$ present exactly these word
+invariants, the standard right-normal-band
+calculus\cite[Section~8]{RomanowskaSmith1989}.
+\end{proof}
+
+This is a quotient of operations observed on two invariant regions,
+not a quotient identifying winner-set values. Mixed valuations retain
+more information. For distinct $a,b,c$,
+\[
+ \Delta(\Delta(\{c\},\{a\}),\{a,b\})=\{a,b\},\qquad
+ \Delta(\{c\},\Delta(\{a\},\{a,b\}))=\{a,b,c\}.
+\]
+Thus $\Delta$ is not associative in the full algebra. The right-normal-band
+presentation is complete for the stated observation quotient only.
+\Cref{sec:reset} gives the complete mixed-input
+semantics of the reset-only fragment: antimatroids with a unique initial
+element, polynomial prerequisite normal forms, and a three-element
+generator identified with Waldhauser's $G_3^{\rm op}$\cite{Waldhauser2006}.
+
+\subsubsection{Marginal atomic bounds do not suffice}
+
+For $K=4$ let $\sigma=(1\ 2\ 3\ 4)$ and fix the ambiguity action
+$F(S)=S\cup\sigma S$. Each atomic row must be a nonempty subset of
+$\{i,\sigma(i)\}$, with no mandatory singleton-source image. These
+obvious marginal bounds allow the atomic function
+\[
+ h(1)=1,\quad h(2)=2,\quad h(3)=3,\quad h(4)=1.
+\]
+Nevertheless no term has these rows and ambiguity action $F$.
+We prove a uniform classification explaining the obstruction.
+
+\begin{lemma}[Localization without constant coordinates]\label{gen:lem:local}
+Suppose a unary term has ambiguity action $R[S]$, with no constant
+output coordinate. It contains no winner leaves. Push switches to its
+variable leaves.
+Every remaining leaf permutation lies in the perfect matchings of the
+canonical support graph.
+\end{lemma}
+\begin{proof}
+On ambiguous inputs a live term has constant-plus-permutation provenance.
+Any constant contribution would make an output coordinate constant,
+so it is empty. As in Theorem~\ref{gen:thm:core}, any winner leaf would force
+a nonempty constant contribution, so there are none. Each leaf
+permutation contributes its graph to $R$. For nonconstant rows the
+canonical source sets are uniquely determined, so its graph lies in
+the allowed graph. Conversely every such permutation is a perfect
+matching and an allowed generator.
+\end{proof}
+
+For $R=\mathrm{id}\cup\sigma$ and $K\geq4$, every source row has size
+one or two, hence is nonconstant. Its perfect matchings independently
+choose identity or $\sigma$ on each nontrivial cycle: choosing a shifted
+edge forces the next shifted edge around that cycle.
+
+For a cycle $C$, describe an atomic row at $i\in C$ by
+$0$ for $\{i\}$, $1$ for $\{\sigma(i)\}$, and $?$ for their pair.
+A fixed point has just its one mandatory singleton.
+
+\begin{theorem}[Exact two-permutation fibers]\label{gen:thm:cycles}
+Fix $K\geq4$ and the ambiguity action $S\mapsto S\cup\sigma S$.
+The choices on different cycles of $\sigma$ are independent.
+On a cycle of length $m$ the permitted atomic tables are exactly:
+\begin{itemize}
+\item for $m=1$, its fixed singleton;
+\item for $m=2$, every word in $\{0,1,?\}^2$;
+\item for $m\geq3$, every word in $\{0,?\}^m$ or $\{1,?\}^m$,
+and the $m$ words with $0$ at $r$, $1$ at $\sigma^{-1}(r)$,
+and $?$ elsewhere.
+\end{itemize}
+Consequently the fiber size is
+\[
+ \prod_{C\text{ a cycle of }\sigma}g(|C|),\qquad
+ g(1)=1,\quad g(2)=9,\quad g(m)=2^{m+1}+m-1\ (m\geq3).
+\]
+An arbitrary action $p[S]\cup q[S]$ is covered by normalizing the output
+with $p^{-1}$ and taking $\sigma=p^{-1}q$.
+\end{theorem}
+\begin{proof}
+For necessity, the atomic upper bound gives the displayed row options.
+Suppose a long cycle has row $0$ at $i$ and row $1$ at $j$. If
+$i\ne\sigma(j)$, these are distinct singleton winners. The common-source
+theorem requires one allowed leaf permutation producing both. But an
+allowed matching on this cycle is either identity everywhere or shifted
+everywhere. Neither does so. Thus $i=\sigma(j)$. If both kinds of
+singleton occur there can be only one of each, giving precisely the
+listed exceptional words. For a fixed point nonemptiness forces its
+singleton; for a two-cycle this argument imposes no further restriction.
+
+For synthesis on one cycle, start with the union of its two permutation
+generators, giving all $?$ rows. To force $0$ at selected positions,
+successively apply $U\mapsto U\star_i x$. This affects only the chosen
+row and retains earlier $0$ rows. To force $1$ instead, use
+$U\mapsto U\star_{\sigma(i)}\sigma(x)$. The exceptional word at $r$ is
+$x\star_r\sigma(x)$. These constructions also realize all nine words
+on a two-cycle.
+
+The allowed leaf permutations already form the Cartesian product of
+the two orientations on each cycle. All owned operations and union are
+idempotent. Closure of a Cartesian product under idempotent
+coordinatewise operations is the product of the local closures.
+For two coordinates, suppose $t$ realizes $a$ from generators
+$a_1,\ldots,a_n$ and $u$ realizes $b$ from $b_1,\ldots,b_m$.
+Choose $z_{ij}=(a_i,b_j)$ from the full Cartesian product of generators.
+Then
+\[
+ t\bigl(u(z_{11},\ldots,z_{1m}),\ldots,
+         u(z_{n1},\ldots,z_{nm})\bigr)=(a,b):
+\]
+each inner application preserves $a_i$ by idempotency, and the outer
+application preserves $b$ by idempotency. Induct on the number of
+coordinates. Thus these local atomic tables
+can be realized independently, by a term $t$ whose ambiguity support
+lies in $\mathrm{id}\cup\sigma$.
+
+Finally apply $\Delta(E,t)$ where $E(x)=x\cup\sigma(x)$.
+On ambiguous inputs $t(S)\subseteq E(S)$ and $t(S)$ is ambiguous, so
+reset retains exactly $E(S)$. On an atomic input the prescribed row
+$t(\{i\})$ is either a singleton or the full allowed pair. In the first
+case reset selects it; in the second $E(\{i\})$ already equals it.
+This restores full ambiguity support without changing any atomic row.
+The two uniform-orientation families overlap once; the $m$ exceptional
+words are separate. This proves the count and independence.
+\end{proof}
+
+The example above violates this coherence condition at inputs $2$ and
+$4$. A four-cycle has $35$ permitted tables, not the $3^4=81$ allowed
+by its marginal bounds. Longer cycles give $68$ and $133$ at lengths
+five and six. If every atomic row is a singleton, a long cycle must
+choose one orientation everywhere; a two-cycle may also merge its two
+roles.
+
+\begin{corollary}[All four-role fibers without constant coordinates]
+At $K=4$, every ambiguity action without constant coordinates is a union
+of two permutations. There are $282$ such actions and exactly $6378$
+unary term functions above them.
+\end{corollary}
+\begin{proof}
+Every canonical row has at most two sources. A singleton row forces its
+matched source to occur nowhere else, since every edge extends to a
+matching. Remove such pairs. In the remaining support graph all output
+degrees are two, while every input degree is at least two: an input of
+degree one would force its output to have degree one. Counting edges
+makes all input degrees two as well. Components are even cycles, each
+the union of two matchings. Apply Theorem~\ref{gen:thm:cycles}.
+
+For normalized cycle types $1^4,\,2\,1^2,\,2^2,\,3\,1,\,4$, the numbers
+of distinct support graphs are respectively $24,72,18,96,72$. These
+follow by choosing the first permutation and the cycle permutation, then
+dividing by the two orientation choices in each nontrivial component.
+They sum to $282$. The fiber sizes are respectively $1,9,81,18,35$,
+giving $6378$ in total. The enumeration in \texttt{check\_fibers.py}
+independently checks every four-role support.
+\end{proof}
+
+\subsection{Reversible contexts at every number of roles}
+
+\begin{lemma}
+Every term function is monotone for inclusion on nonempty winner sets.
+\end{lemma}
+\begin{proof}
+Constants, variables, and permutation images are monotone. Suppose
+$S\subseteq S'$ and $T\subseteq T'$, all nonempty. If an upper operand
+equals $\{r\}$, its corresponding lower operand is also $\{r\}$, and
+both owned outputs equal $\{r\}$. Otherwise the upper output is
+$S'\cup T'$. The lower output is either $S\cup T$, which is contained
+in it, or $\{r\}$ supplied by one lower operand, which is contained in
+the corresponding upper operand. Thus owned choice is monotone.
+\end{proof}
+
+\begin{theorem}[All unary units]
+For every $K\geq3$, the group of units of the full unary term monoid is
+exactly $\Sym(I)$.
+\end{theorem}
+\begin{proof}
+A unit and its term inverse are monotone, so they form an order
+automorphism of the poset $\Pow(I)$. Such an automorphism permutes its
+minimal elements, the singletons. Every set is determined by the
+singletons below it, so that permutation determines the whole map.
+Conversely every role permutation and its inverse are terms.
+\end{proof}
+
+This generalizes the three-role unit calculation without requiring a
+higher-role classification of singleton fibers. It is a direct use of
+the familiar order-automorphism argument for the Boolean subset poset.

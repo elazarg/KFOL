@@ -1,0 +1,122 @@
+\section{Verification and the remaining boundaries}
+\label{sec:verification}\label{sec:development}
+
+\subsection{Proof status and reproducibility}
+
+The formal development in \texttt{lean/} uses Lean 4.34.1 with only \texttt{Std}. It has no
+admitted proofs or added axioms; audits report only \texttt{propext},
+\texttt{Classical.choice}, and \texttt{Quot.sound} where needed.
+\begin{center}\small
+\begin{tabular}{p{0.20\linewidth}p{0.71\linewidth}}
+\toprule
+Module & Kernel-checked results\\
+\midrule
+\texttt{Basic} & Full profiles, whole-player deviations, Nash and SPE;
+the winner recurrence, neutral union, path occurrence obstruction,
+uniform copies for union, and unary upper bound.\\[3pt]
+\texttt{Perspectives} & Contextual player quotient, preservation of views,
+complete-test sufficiency, and atom collapse to top.\\[3pt]
+\texttt{Synthesis} & Ground realization, all reduct unary normal forms,
+input separators, complete-test necessity, and SPE interpretation of
+substituted terms.\\[3pt]
+\texttt{BooleanCore} & Boolean formula embedding; constant-free monotone
+compilation and its predicate semantics; input-union bound and relative gate.\\[3pt]
+\texttt{Separation} & Common-source separation with explicit switches,
+and atomic and ambiguous relative-reset laws.\\[3pt]
+\texttt{Reset} & Mixed selector semantics, self-status independence,
+three-element completeness, compilation to owned choice, and soundness
+of the six published basis equations.\\[3pt]
+\texttt{ResetModels} & Forest reconstruction, comb operations, collapse
+endomorphism, and generic least-congruence proof.\\[3pt]
+\texttt{OneConstant} & Constant-or-inflationary dichotomy and one-test rigidity.\\
+\bottomrule
+\end{tabular}\end{center}
+
+The full pair theorem, idempotent elimination and optimal diagonal tests,
+complete congruence classifications, external $S_2$ step, unary fibers,
+antimatroid representation and synthesis, forest membership in the reset
+variety, and full complexity reduction have written proofs here. Finite
+checks do not make them generic Lean theorems. Reset basis completeness
+is imported mathematically from Freese et al., not as a Lean axiom.
+Dependent script metatheory and hiding also have written proofs.
+
+Run \texttt{make check paper}. Independent finite checks in \texttt{checks/}
+enumerate small full profiles and deviations, synthesize the $131$
+reduct and $751$ full three-role unary functions, and compare congruences,
+tests, matching criteria, and fibers with independent constructions.
+They check the Boolean reduction on $4369$ small CNFs and $28$ actual
+constant-free equation pairs on all $7^4$ mixed valuations. Reset checks
+compare antimatroid enumeration with term closure through arity four,
+all $140^2$ products, and $20^4$ candidate root-fixed five-input tables,
+and compare conservative models with forest enumeration. Separate
+models execute dependent phase and sealing rules. These computations
+check their finite implementations, not the conversion or normalization
+metatheory of the dependent data calculus.
+
+\subsection{Algebraic boundaries}
+
+Reset has a finite equational presentation. A finite basis for full
+owned choice or its intrinsic core is unresolved here. Pair tests
+control inputs, not all-arity realizability of tables on those inputs.
+The unary ambiguity quotient is exact, but does not determine arbitrary
+singleton fibers or mixed multi-input operations. The core's
+coNP-completeness prevents extending reset's polynomial equality
+algorithm to the whole core unless $\mathrm P=\mathrm{NP}$; it does not
+prevent a finite equational basis.
+
+Each owned choice is a semilattice operation. For fixed $K$, the
+full finite-signature variety is congruence meet-semidistributive.
+Willard's finite-basis theorem applies if it has a finite residual bound
+\cite{Willard2000}. Classifying quotients of the generator does not bound
+irreducibles throughout the variety. Reset's residual largeness does
+not transfer automatically to an expansion by other operations.
+
+There are two specific obstacles to a residual-bound argument. The pair
+test domain is not a subalgebra, and testing all identities on that
+domain does not bound the irreducible models of those identities.
+Likewise, the $K+1$-state player quotients describe the generator's
+reduct, not every subalgebra and quotient of arbitrary powers.
+In the opposite direction, the reset combs would prove residual
+largeness for full owned choice if each could be expanded to a member
+of the full generated variety with the prescribed reset term operation.
+Such an expansion would remain subdirectly irreducible: every
+nonidentity congruence of the expansion is a reset congruence and
+therefore contains the comb's nontrivial monolith. The missing step is
+constructing expansions satisfying all full-signature identities, not
+preserving irreducibility after an expansion has been obtained. We
+have neither those expansions nor a residual bound here.
+
+With role switching, one owned choice defines every other:
+\[
+ x\star_b y=\pi(\pi^{-1}x\star_a\pi^{-1}y),\qquad\pi(a)=b.
+\]
+A role-symmetric fragment containing unrestricted owned choice already
+contains the hard core. Polynomial-time equality would require weaker
+owner-sensitive operations or a restriction on admissible terms.
+
+\subsection{Dependent and hidden interaction}
+
+The dependent interface in \cref{app:dependent} retains shared witnesses,
+full alternatives, and audience-derived observations. A general
+connection rule must preserve dependent contexts and the sealing
+certificate, provide one supplier for each witness, and relate open
+components to full strategies as well as execution. Neither a public
+encoding nor a winner-set equation proves this for hidden composition.
+No such general cut theorem or stronger CIC-style theory is claimed.
+
+The stable-witness interface currently consists of the written judgments
+$\Gamma_{E_m}\vdash t_m:A$, $\Gamma_{E_m}\vdash A:\U$, and the
+recipient-prefix premise $\Gamma_i^{<c}(\Xi)\vdash A:\U$ for publication
+in \cref{sec:disclosure}. A Lean interface for staged visibility would
+need a formal data calculus, well-formed dependent context projections,
+and an insertion/substitution theorem before it could certify those
+judgments or their preservation. The existing Lean modules formalize
+the public game algebra; they do not yet provide this dependent interface.
+
+Antimatroid prerequisites record when an input contributes under
+ambiguity statuses. They are not automatically the information
+dependencies of commit--reveal. Connecting the structures requires
+specified judgments and a preservation theorem. Adding control also
+requires an account of stable dependent values and conversion; the
+known two-role degeneracy constraints already apply before adding
+players \cite{Herbelin2005,Miquey2017}.

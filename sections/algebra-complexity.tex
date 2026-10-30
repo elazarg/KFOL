@@ -1,0 +1,88 @@
+\section{Equational validity is coNP-complete}\label{sec:complexity}
+
+The decision problem takes two ordinary tree terms, with any number of
+variables, and asks whether they agree at every nonempty-set valuation.
+Fixing $K$ fixes the algebra and its signature. In the uniform version,
+role names have binary encodings and permutations are explicit lists of
+their images. A succinct encoding of terms by shared recursive
+descriptions is not assumed.
+
+\begin{theorem}[Equational complexity]\label{gen:thm:complexity}
+For every fixed $K\geq3$, equational validity is coNP-complete, already
+in the signature with only variables and owned choices, without winner
+constants or role switches. The uniform problem with $K$
+as part of the input is coNP-complete as well.
+\end{theorem}
+\begin{proof}
+For fixed $K$, a failed valuation is a polynomial certificate since the
+algebra is finite and term evaluation is linear up to fixed constants.
+For variable $K$, use the pair countervaluation theorem. A certificate
+lists at most two role labels per input variable. Evaluate terms using
+sparse sets: an owned node either collapses or unions its inputs, while
+a permutation preserves cardinality. Each intermediate set has size at
+most twice the number of variable leaves below it plus the number of
+winner leaves. This is polynomial in tree-term size, independently of
+the exponential size of the carrier and even when $K$ is binary encoded.
+Evaluation and comparison are therefore polynomial. Validity is in coNP.
+
+For hardness fix distinct roles $a,b$ and put $P(S)=[S=\{a\}]$.
+On arbitrary nonempty inputs,
+\[
+ P(S\ow a T)=P(S)\lor P(T),\qquad
+ P(S\ow b T)=P(S)\land P(T).
+\]
+The first equality is the absorbing-owner test. For the second, a
+collapse to $\{b\}$ cannot pass $P$; otherwise a union is $\{a\}$ exactly
+when both nonempty operands are $\{a\}$. Compile a constant-free monotone
+Boolean formula $F$ to $\widehat F$ by replacing disjunction and
+conjunction with these choices and leaving variables unchanged.
+Then $P(\widehat F(v))=F(P\circ v)$ for every valuation, by induction.
+
+The standard dual-rail reduction gives hardness directly. Given a CNF
+formula, handle an empty clause by the fixed valid equation $x=x$,
+and a CNF with no clauses by the fixed invalid equation $x=y$.
+For the remaining $\varphi(z_1,\ldots,z_n)$, replace positive occurrences
+of $z_i$ by $p_i$ and negative occurrences by $n_i$, producing a monotone
+formula $\Phi(p,n)$. Put
+\[
+ A=\left(\bigwedge_i(p_i\lor n_i)\right)\land\Phi(p,n),
+ \qquad B=\bigvee_i(p_i\land n_i).
+\]
+The equation $A\lor B=B$ fails exactly when $A=1$ and $B=0$.
+Those conditions choose exactly one rail for every variable and satisfy
+$\varphi$. Conversely any satisfying assignment provides such rails.
+To reflect this Boolean equation as equality of winner sets, let $W$
+be the union of all rail variables, expressed using a balanced fold of
+$J$. Every constant-free term $u$ over those variables satisfies
+$u(v)\subseteq W(v)$. Hence the constant-free gate
+\[
+ G_W(u)=u\ow a W
+ =\begin{cases}
+ \{a\},&u=\{a\}\text{ or }W=\{a\},\\
+ W,&\text{otherwise}
+ \end{cases}
+\]
+gives the identity
+\[
+ G_W(\widehat A\ow a\widehat B)=G_W(\widehat B).
+\]
+If $\varphi$ is unsatisfiable, the Boolean predicates agree on every
+valuation. When $W=\{a\}$ both sides are $\{a\}$; otherwise the gate
+maps equal predicates to the same winner set. If $\varphi$ is satisfiable,
+assign each true rail $\{a\}$ and each false rail $\{b\}$.
+Then $W=\{a,b\}$, $A=1$, and $B=0$, so the displayed identity fails.
+These formulas use no Boolean constants in $A,B$.
+
+Thus CNF unsatisfiability reduces to constant-free equation validity.
+It is coNP-complete by the standard SAT theorem \cite{Cook1971}.
+The balanced expansion of $W$ has $O(n^2)$ size: each $J$ uses its two
+arguments twice. Formula sizes and their owned-choice translations are
+polynomial, with no constants or switches. Hardness at $K=3$ also gives
+uniform hardness.
+\end{proof}
+
+The gate uses the common input union as its false value, so it does not
+require a named winner or $I$. The complexity method is standard. Unless $\mathrm P=\mathrm{NP}$,
+the entire idempotent core has no polynomial-time canonicalization with
+polynomial-time comparison. This does not preclude a finite equational
+basis or an effective proof calculus.

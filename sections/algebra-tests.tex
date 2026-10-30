@@ -1,0 +1,102 @@
+\section{Optimal pair tests with internal role switching}\label{sec:pair-tests}
+We now use the full signature $\mathbf A_I^{\rm sym}$, retaining both
+winner constants and internal role permutations.
+
+\subsection{Every equation has a singleton-or-pair countervaluation}
+
+Assign each input variable a status: a specified singleton or an
+unspecified ambiguous set. Fixing the statuses fixes every test for
+whether an intermediate result is a singleton. The remaining dependence
+has a restricted positive form.
+
+\begin{lemma}[Permutation provenance on a status cell]\label{sym:lem:provenance}
+On every fixed status cell, a term denotes
+\begin{equation}\label{sym:eq:provenance}
+ C\ \cup\ \bigcup_j\ \bigcup_{\pi\in P_j}\pi S_j,
+\end{equation}
+where $C\subseteq I$, only ambiguous input variables occur in the union,
+and every $P_j$ is a finite, possibly empty, set of permutations.
+\end{lemma}
+\begin{proof}
+A winner or singleton-status input contributes a constant. An ambiguous
+input contributes its identity permutation. A role switch transports
+$C$ and composes the permutations. A nonempty $P_j$ contributes an
+ambiguous set, so that expression cannot equal an owner singleton. Thus
+an owned choice collapses exactly when some child is a constant owner
+singleton on the cell. Otherwise union its constants and coefficients.
+This proves the representation by induction. It is not asserted to be
+canonical: distinct coefficients may have the same action on ambiguous
+inputs.
+\end{proof}
+
+\begin{theorem}[Pair countervaluations]\label{sym:thm:pairs}
+If an equation between terms in this full signature fails, it fails at a
+valuation in which every variable has one or two possible winners.
+\end{theorem}
+\begin{proof}
+Take a failed valuation, fix its statuses, and choose a role $k$ present
+in the left output and absent from the right, interchanging sides if
+necessary. Apply Lemma~\ref{sym:lem:provenance} to both terms.
+
+If $k$ lies in the left constant, it survives every valuation in the
+cell. Otherwise it has a witness $k=\pi(i)$ for one ambiguous input
+$S_j$, one coefficient permutation, and some $i\in S_j$. Replace that
+input by a pair contained in it and containing $i$. Replace every other
+ambiguous input by any pair contained in it. Leave singleton inputs
+fixed. The left witness remains. The right output can only shrink under
+these replacements, since every coefficient is a permutation image and
+the status cell is unchanged. It still excludes $k$.
+\end{proof}
+
+\begin{lemma}[Resetting atomic inputs]\label{sym:lem:reset}
+If a unary term function $F$ is extensive, repeatedly replacing its
+current value by $F(x)\ow i x$, for each $i\in I$, gives a term
+$\operatorname{Reset}(F)$ which fixes all singletons and agrees with $F$
+on every ambiguous input.
+\end{lemma}
+\begin{proof}
+At input $\{i\}$, its own suppression returns $\{i\}$. A different
+owner preserves the current value because it contains $i$. On ambiguous
+input $S$, the current value contains $S$; neither operand is a
+singleton, and their union is still the current value. Extensivity is
+preserved at each step.
+\end{proof}
+
+\begin{theorem}[Unique minimum fixed test domain]\label{sym:thm:optimal}
+A fixed input domain tests every term equation, at every arity, exactly
+when it includes every singleton and every two-element set. Consequently
+the unique minimum domain is
+\[
+ D_2=\{S\subseteq I:1\leq|S|\leq2\},\qquad |D_2|=K(K+1)/2.
+\]
+\end{theorem}
+\begin{proof}
+Sufficiency is Theorem~\ref{sym:thm:pairs}. Each singleton is necessary
+already in the reduct: its unary synthesis gives a term differing from
+the constant $I$ only at that singleton. These separators are now
+kernel-checked in \texttt{Synthesis.lean}.
+
+For necessity of a particular pair $P$, choose $k\notin P$, put
+$C=I\setminus\{k\}$, and form the extensive term
+\[
+ F(x)=x\cup C\cup\bigcup_{i\in I\setminus(P\cup\{k\})}(i\ k)(x).
+\]
+Here $(i\ k)$ is a transposition. If $x\subseteq P$, then $F(x)=C$.
+Otherwise $x$ contains $k$, or contains an $i$ whose transposition
+supplies $k$, and $F(x)=I$. Thus, on ambiguous inputs, $F$ differs from
+$I$ only at $P$. By Lemma~\ref{sym:lem:reset},
+$\operatorname{Reset}(F)$ and $\operatorname{Reset}(I)$ agree at every
+singleton and every ambiguous input other than $P$, and disagree at
+$P$. Every complete input domain must therefore contain $P$.
+\end{proof}
+
+All $K$ owners and role switches remain available in these tests.
+Intermediate outputs may contain any number of winners. The domain
+$D_2$ is not closed under the operations; it is an input test domain,
+not a replacement algebra. For four roles it has ten values, while the
+reduct admits six. The pair separator above explicitly refutes reusing
+that six-value test domain after adding internal role switches.
+
+The theorem supplies a decision procedure, uniform in $K$, for term
+equality: test $D_2^n$. It does not by itself supply a finite equational
+basis or a new proof calculus.

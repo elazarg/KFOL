@@ -1,0 +1,225 @@
+\section{Owned choice and rational outcomes}
+\label{sec:rational}
+
+Fix a finite set $I$ of $K\geq3$ roles. A role values its own win at one
+and every other outcome at zero. Values are nonempty winner sets
+$\Pow(I)$. A singleton is \emph{resolved}; a set with at least two members
+is \emph{ambiguous}. The full term language is
+\[
+ t ::= \at i\mid x_j\mid t\ch r t\mid\pi(t),
+ \qquad i,r\in I,\quad \pi\in\Sym(I).
+\]
+The constant $\at i$ denotes $\{i\}$. The constructor $\ch r$ is
+owned choice, and $\pi(t)$ internally permutes the component's roles.
+An input variable is evaluated in its original environment before that
+permutation is applied. Substitution at repeated occurrences creates
+independent component copies.
+Leaves carry only a winner label, with no strategic terminal returns.
+The dependent interface in \cref{app:dependent} also permits return
+records; a simultaneous decision at such a boundary is outside this
+perfect-information winner-set recurrence.
+
+We distinguish three signatures throughout:
+\[
+ \begin{array}{c|l}
+ \mathbf A_I & \star_r\ (r\in I),\ \{i\}\ (i\in I)\\
+ \mathbf A_I^{\rm sym} & \mathbf A_I\text{ and all internal role permutations}\\
+ \mathbf C_I & \star_r\ (r\in I)\text{ alone, with variables and no constants}.
+ \end{array}
+\]
+All have carrier $\Pow(I)$. External renaming of the roles is a symmetry
+in every case; an internal permutation is an extra term constructor only
+in the full signature. The core $\mathbf C_I$ will be characterized
+intrinsically by idempotency in \cref{sec:intrinsic}.
+
+\subsection{From full strategies to a finite algebra}
+
+A full profile gives an action at \emph{every} internal node, including
+nodes avoided by that profile. At a node it therefore consists of a root
+action and a full profile for each child. A unilateral deviation by $i$
+may replace all actions owned by $i$, in both child trees. It leaves every
+other player's actions fixed. A profile is Nash if no such deviation
+improves the deviator's utility. It is SPE if its restriction to every
+subtree is Nash.
+
+For a fixed profile, let $a,b$ be the winners prescribed in its two child
+subtrees. Assuming both child profiles are SPE, the parent profile is SPE
+exactly when it chooses $r$ whenever $a=r$ or $b=r$. Otherwise either
+child is optimal for $r$. This characterization follows from whole-player
+deviations: a deviation that wins in a child would already improve that
+child's profile. It is not an assumption that checking only a current
+action is generally sufficient in games of partial information.
+
+For nonempty subsets $S,T\subseteq I$, put
+\begin{equation}\label{game:eq:own}
+ S\ow r T =
+ \begin{cases}
+ \{r\},&S=\{r\}\text{ or }T=\{r\},\\
+ S\cup T,&\text{otherwise}.
+ \end{cases}
+\end{equation}
+
+\begin{theorem}[Exact public-tree interpretation]\label{game:thm:adequacy}
+Every closed tree has a full pure SPE profile, and
+\[
+ \B(\at i)=\{i\},\qquad
+ \B(G\ch r H)=\B(G)\ow r\B(H).
+\]
+Every element of the right-hand side has a full SPE witness on the left.
+\end{theorem}
+\begin{proof}
+Existence follows inductively by choosing an owner-winning child whenever
+one is available in the chosen child profiles. If one child has only
+$r$-winning SPE profiles, every parent SPE must win for $r$, and one
+exists. Otherwise each child has an SPE profile losing for $r$. For any
+SPE winner $i$ in the left child, combine its witness with a losing-for-$r$
+SPE in the right child and choose left. This is locally optimal, whether
+or not $i=r$. The symmetric construction covers the right child.
+Conversely, a parent SPE selects the winner of a child SPE. These facts
+give both inclusions in~\eqref{game:eq:own}.
+\end{proof}
+
+This is a backward-induction result for a restricted utility model. Its
+role here is to justify the finite algebra $\Pow(I)$, not to claim new
+game theory. \texttt{Basic.lean} defines full profiles, whole-player
+deviations, Nash equilibrium, and SPE separately, then proves the theorem
+as \texttt{winners\_node}.
+
+Each $\star_r$ is associative, commutative, and idempotent. For
+associativity, a three-input product is $\{r\}$ if any input is $\{r\}$,
+and is their union otherwise. Nonemptiness ensures that a union of inputs
+different from $\{r\}$ cannot become $\{r\}$. Role permutations transport
+these operations and the leaf constants.
+
+For two roles, the ground-generated carrier consists only of the two
+singletons and recovers Boolean conjunction/disjunction after choosing a
+role as truth. With three roles there is genuine ambiguity, such as
+$\{0,1\}$, and the next construction generates every nonempty subset.
+
+\subsection{Neutral union and its minimum occurrence cost}
+
+\begin{theorem}[Neutral union]\label{game:thm:union}
+For pairwise distinct $r,s,t$,
+\begin{equation}\label{game:eq:union}
+ J(x,y)=(x\ow r y)\ow t(x\ow s y)=x\cup y.
+\end{equation}
+Consequently, if $K\geq3$, every nonempty subset of $I$ is the
+denotation of a closed owned-choice tree.
+\end{theorem}
+\begin{proof}
+If neither inner operation collapses, both return $x\cup y$. If just one
+collapses, its owner singleton belongs to the other result, and the outer
+owner is different. If both collapse, the inputs must be the two distinct
+owner singletons; the outer operation returns their union. Folding $J$
+over the leaf singletons realizes every nonempty subset.
+\end{proof}
+
+The definition uses three owned-choice nodes and two occurrences of each
+input. Although it names three owners, its denotation is independent of
+the distinct triple chosen. It is an equality of equilibrium-winner
+observations, not an isomorphism of trees or strategy spaces.
+
+\begin{theorem}[Occurrence lower bound]\label{game:thm:lower}
+Suppose $K\geq3$. In the syntax of owned binary choices and arbitrary
+nonempty ground constants, any term that denotes $x\cup y$ for every
+$x,y\in\Pow(I)$ contains at least two occurrences of $x$ and at least two
+occurrences of $y$. Hence three binary nodes are optimal.
+\end{theorem}
+\begin{proof}
+Zero occurrences cannot express dependence on that input. Suppose $x$
+occurs once. Read the unique path from its occurrence to the root, using
+commutativity to put the current value first. It has the form
+\[
+ X\longmapsto X\ow{r_1}g_1(Y)
+   \longmapsto\cdots\longmapsto (\cdots)\ow{r_n}g_n(Y),
+\]
+where each $g_j(Y)$ is nonempty and independent of $X$. We allow arbitrary
+such functions, which only strengthens the obstruction.
+
+For fixed $Y$, if some $g_j(Y)=\{r_j\}$, that step erases all dependence
+on $X$, and later steps cannot recover it. For $Y=\{r\}$ this is
+incompatible with $X\cup\{r\}$, which varies with $X$. Therefore no such
+side value equals its owner singleton. Every step then preserves all
+members of its current input: if the input is the owner singleton it
+remains so, and otherwise the operation takes a union.
+
+If the path is empty, its value is $X$, not union. Otherwise let $r$ be
+its innermost owner and set $Y=\{r\}$. Its first side value differs from
+$\{r\}$ and is nonempty, so contains some $k\ne r$. Choose
+$j\notin\{r,k\}$. Starting with $X=\{j\}$, the first step introduces
+$k$. No later step can remove it. The required result $\{j,r\}$ excludes
+$k$, a contradiction. Interchange the variables for the other bound.
+\end{proof}
+
+The path obstruction is \texttt{no\_single\_use\_union} in Lean. Ground
+game realization is \texttt{every\_winner\_set\_realized} in
+\texttt{Synthesis.lean}. The
+syntax-to-path correspondence is the direct decomposition of a term at
+its unique input occurrence, as used in the proof.
+
+The cost measured here is \emph{syntactic occurrence}. A play enters just
+one of the four component occurrences. The theorem establishes neither
+runtime duplication nor a need for a contraction rule in a particular
+linear type system: additive branching may use a context in both
+exclusive branches.
+
+
+\subsection{A distributivity obstruction}
+For three roles, indifference gives additional values and invalidates
+classical distributivity. In particular,
+\[
+ B((\langle0\rangle\oplus_0\langle1\rangle)
+                  \oplus_1\langle2\rangle)=\{0,2\},
+\]
+whereas
+\[
+ B((\langle0\rangle\oplus_1\langle2\rangle)
+           \oplus_0(\langle1\rangle\oplus_1\langle2\rangle))
+       =\{0,1,2\}.
+\]
+In the first tree, role $0$ must choose winner $0$ in its subtree.
+The root owner $1$ then chooses between prescribed winners $0$ and $2$,
+and is indifferent between them. For the distributed tree, the right
+subtree's owner $1$ must choose winner $1$, while the left subtree's
+owner $1$ is indifferent between winners $0$ and $2$. Its full SPE
+profiles are therefore exactly the following three choices of child
+outcomes and root action:
+\begin{center}
+\begin{tabular}{cccc}
+\toprule
+Left child winner & Right child winner & Root action (owner $0$) & Winner\\
+\midrule
+$0$ & $1$ & left & $0$\\
+$2$ & $1$ & left & $2$\\
+$2$ & $1$ & right & $1$\\
+\bottomrule
+\end{tabular}
+\end{center}
+The last row prescribes winner $2$ in the unvisited left subtree.
+That continuation is an equilibrium because its owner $1$ loses either
+way; it makes root owner $0$ indifferent between its two losing choices.
+This is how the repeated branch enables the additional winner $1$.
+The calculation concerns full subgame-perfect profiles, including their
+unvisited continuations.
+
+\begin{corollary}[No Boolean meet/join product representation]
+\label{cor:no-boolean-product}
+For $K\ge3$, this generated algebra has no injective homomorphism into a
+product of Boolean algebras in which each owned operation acts in each
+coordinate as either meet or join.
+\end{corollary}
+\begin{proof}
+Any pair of such coordinate operations satisfies
+$(a\star_r b)\star_s c
+ =(a\star_s c)\star_r(b\star_s c)$, whether the coordinate operations
+coincide or differ. Products and subalgebras preserve this identity.
+The displayed three-role calculation refutes it in the generated algebra.
+An injective homomorphism would preserve and reflect the equality.
+\end{proof}
+
+For any number of roles, a quantifier over a finite nonempty action set
+is the fold of its owner's associative, commutative, idempotent operation.
+It adds no independent algebraic primitive. At $K=2$ the ground-generated
+carrier has only the two singletons, and the operations are Boolean
+join and meet after selecting a viewpoint. The theorems below concern
+$K\geq3$, where all nonempty subsets are generated.

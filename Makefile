@@ -1,41 +1,48 @@
-.PHONY: all paper check check-archive check-minimal paper-minimal
+PYTHON ?= python3
+LEAN ?= lean
+LATEXMK ?= latexmk
+ZIP ?= zip
+
+PAPER_SOURCES := main.tex references.bib $(wildcard sections/*.tex)
+PYTHON_CHECKS := $(sort $(wildcard checks/check_*.py))
+LEAN_MODULES := Basic Perspectives Synthesis BooleanCore Separation Reset ResetModels OneConstant
+LEAN_OBJECTS := $(addprefix build/lean/,$(addsuffix .olean,$(LEAN_MODULES)))
+
+.PHONY: all paper overleaf check check-python check-lean clean
 
 all: paper
 
-paper:
-	latexmk -pdf -interaction=nonstopmode -halt-on-error -outdir=build main.tex
+paper: build/main.pdf
 
-check-archive:
-	cd archive/manuscript-2026-10-28 && sha256sum --check --quiet MANIFEST.sha256
-	cd archive/public-core-draft-2026-10-28 && sha256sum --check --quiet MANIFEST.sha256
+build/main.pdf: $(PAPER_SOURCES) | build
+	$(LATEXMK) -pdf -interaction=nonstopmode -halt-on-error -outdir=build main.tex
 
-check: check-archive
-	python3 checks/finite_models.py
-	python3 checks/review_models.py
+overleaf: build/overleaf.zip
 
-check-minimal:
-	python3 research/minimal/check.py
-	python3 research/minimal/check_structure.py
-	python3 research/minimal/check_symmetric.py
-	python3 research/minimal/check_general.py
-	python3 research/minimal/check_core.py
-	python3 research/minimal/check_fibers.py
-	python3 research/minimal/check_reset.py
-	python3 research/minimal/check_forest.py
-	mkdir -p build/minimal/lean
-	cd research/minimal && lean -DwarningAsError=true -o ../../build/minimal/lean/Basic.olean Basic.lean
-	cd research/minimal && LEAN_PATH=../../build/minimal/lean lean -DwarningAsError=true -o ../../build/minimal/lean/Perspectives.olean Perspectives.lean
-	cd research/minimal && LEAN_PATH=../../build/minimal/lean lean -DwarningAsError=true -o ../../build/minimal/lean/Synthesis.olean Synthesis.lean
-	cd research/minimal && LEAN_PATH=../../build/minimal/lean lean -DwarningAsError=true BooleanCore.lean
-	cd research/minimal && LEAN_PATH=../../build/minimal/lean lean -DwarningAsError=true -o ../../build/minimal/lean/Separation.olean Separation.lean
-	cd research/minimal && LEAN_PATH=../../build/minimal/lean lean -DwarningAsError=true -o ../../build/minimal/lean/Reset.olean Reset.lean
-	cd research/minimal && LEAN_PATH=../../build/minimal/lean lean -DwarningAsError=true ResetModels.lean
-	cd research/minimal && LEAN_PATH=../../build/minimal/lean lean -DwarningAsError=true OneConstant.lean
+build/overleaf.zip: $(PAPER_SOURCES) | build
+	rm -f $@
+	$(ZIP) -q $@ $(PAPER_SOURCES)
 
-paper-minimal:
-	latexmk -pdf -interaction=nonstopmode -halt-on-error -outdir=build/minimal research/minimal/report.tex
-	latexmk -pdf -interaction=nonstopmode -halt-on-error -outdir=build/minimal research/minimal/structure.tex
-	latexmk -pdf -interaction=nonstopmode -halt-on-error -outdir=build/minimal research/minimal/symmetric.tex
-	latexmk -pdf -interaction=nonstopmode -halt-on-error -outdir=build/minimal research/minimal/general.tex
-	latexmk -pdf -interaction=nonstopmode -halt-on-error -outdir=build/minimal research/minimal/reset.tex
+check: check-python check-lean
 
+check-python:
+	@set -e; for script in $(PYTHON_CHECKS); do $(PYTHON) $$script; done
+
+check-lean: $(LEAN_OBJECTS)
+
+build/lean/%.olean: lean/%.lean lean-toolchain | build/lean
+	cd lean && LEAN_PATH=../build/lean $(LEAN) -DwarningAsError=true -o ../$@ $*.lean
+
+build/lean/Perspectives.olean: build/lean/Basic.olean
+build/lean/Synthesis.olean: build/lean/Perspectives.olean
+build/lean/BooleanCore.olean: build/lean/Synthesis.olean
+build/lean/Separation.olean: build/lean/Synthesis.olean
+build/lean/Reset.olean: build/lean/Separation.olean
+build/lean/ResetModels.olean: build/lean/Reset.olean
+build/lean/OneConstant.olean: build/lean/Separation.olean
+
+build build/lean:
+	mkdir -p $@
+
+clean:
+	rm -rf build

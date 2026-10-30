@@ -1,0 +1,188 @@
+\subsection{Interaction as dependent substitution}
+\label{sec:interaction}
+
+\subsubsection{Complete executions}
+
+Fix a closed script, or equivalently instantiate its public context. A profile
+is a tuple $\vecp=(p_i)_{i\in\Roles}$ with $p_i:G@i$.
+We first define the type of complete executions.
+
+\begin{definition}[Trace and return family]
+The trace type is
+\begin{equation}
+ \Trace(\End\langle R_i\rangle_i)=\Unit,
+ \qquad
+ \Trace(\Q_r(x:A).H)=\sum_{a:A}\Trace(H[a/x]).
+ \label{dep:eq:9}
+\end{equation}
+For $t:\Trace(G)$, define the terminal return family by
+\begin{equation}
+ \Ret_i^{\End\langle R_j\rangle_j}(\star)=R_i,
+ \qquad
+ \Ret_i^{\Q_r(x:A).H}(a,t)=\Ret_i^{H[a/x]}(t).
+ \label{dep:eq:10}
+\end{equation}
+The complete execution type is
+\begin{equation}
+ \Exec(G):=\sum_{t:\Trace(G)}\prod_{i\in\Roles}\Ret_i^G(t).
+ \label{dep:eq:11}
+\end{equation}
+\end{definition}
+
+The finite product in \eqref{dep:eq:11} is a record indexed by roles. All returned values
+refer to the same trace $t$. A separate trace for each endpoint would lose the
+agreement that communication is meant to establish.
+
+\begin{definition}[Execution]
+\label{def:execution}
+Define $\Run_G(\vecp):\Exec(G)$ recursively. At a terminal,
+\begin{equation}
+ \Run_{\End\langle R_i\rangle_i}(\vecp)
+       :=(\star,(p_i)_i).
+ \label{dep:eq:12}
+\end{equation}
+At $G=\Q_r(x:A).H$, destruct $p_r$ as $(a,u_r)$ and put
+\begin{equation}
+ q_i:=
+ \begin{cases}
+   u_r,&i=r,\\
+   p_i(a),&i\ne r.
+ \end{cases}
+ \label{dep:eq:13}
+\end{equation}
+If $\Run_{H[a/x]}(\vec q)=(t,\vec z)$, return
+$((a,t),\vec z)$.
+\end{definition}
+
+The construction uses dependent elimination of a pair at the owner's endpoint
+and dependent application at every other endpoint. It chooses no value on
+behalf of the participants.
+
+\begin{lemma}[Dependent interaction]
+\label{thm:interaction}
+For every well-typed profile $p_i:G@i$, execution is well typed at $\Exec(G)$.
+In particular, if $\Run_G(\vecp)=(t,\vec z)$, then
+$z_i:\Ret_i^G(t)$ for every $i$.
+\end{lemma}
+\begin{proof}
+At a terminal this is exactly the type of the result record. At a choice,
+dependent elimination of $p_r$ gives $a:A$ and $u_r:\Local{r}{H[a/x]}$.
+For $i\ne r$, application gives
+$p_i(a):\Local{i}{H}[a/x]$, which is definitionally
+$\Local{i}{H[a/x]}$ by \cref{lem:substitution}.
+The induction hypothesis therefore applies to the common continuation
+$H[a/x]$. Its result has the return types required by \eqref{dep:eq:10}, and pairing the
+trace with $a$ gives \eqref{dep:eq:11}.
+\end{proof}
+
+\subsubsection{The interaction reduction}
+
+A configuration consists of one residual script and a profile of its
+endpoints. With canonical head forms, its communication rule is
+\begin{equation}
+ \Cfg\bigl(\Q_r(x:A).H;
+       \Send_r(a,p_r),(\Recv_i(x.q_i))_{i\ne r}\bigr)
+ \longrightarrow
+ \Cfg\bigl(H[a/x];p_r,(q_i[a/x])_{i\ne r}\bigr).
+ \label{dep:eq:14}
+\end{equation}
+For the reduction semantics, first expand the endpoint macros into $\D$.
+Rule \eqref{dep:eq:14} then requires a pair at the owner's head and a lambda at each
+receiving head. Label this step by $(r,a)$. Include exactly the following
+additional rules: a pure $\D$-reduction of one endpoint term is an internal
+configuration step, and a configuration at $\End$ whose endpoint terms are
+in data normal form takes one terminal step returning their record.
+Terminal configurations have no successors. There are no other steps.
+The ordered choice labels reconstruct the trace in \eqref{dep:eq:9}. A complete execution
+is a maximal sequence of these steps; pure endpoint reductions may be
+interleaved with enabled communication.
+
+\begin{corollary}[Subject reduction for complete connections]
+\label{cor:preservation}
+A communication step \eqref{dep:eq:14} preserves the typing of all residual endpoints at
+one common residual script. Every recorded trace prefix is well typed.
+\end{corollary}
+\begin{proof}
+Invert \eqref{dep:eq:6} and \eqref{dep:eq:7}, and apply \cref{lem:substitution} to every receiver. The
+owner's continuation already has the substituted type. The trace clause is
+the dependent pair introduction in \eqref{dep:eq:9}.
+\end{proof}
+
+\begin{lemma}[Termination and unique execution]
+\label{thm:termination}
+Assume the normalization, confluence, and canonical-form properties of $\D$.
+Every closed well-typed complete connection terminates. It takes exactly
+$n(G)$ choice steps and one terminal return. Its complete result is unique up
+to data conversion. Interleaving pure endpoint reductions with enabled head
+communication does not change that result.
+\end{lemma}
+\begin{proof}
+At a choice, normalization gives the owner's canonical dependent pair. The
+receivers are applicable functions at $A$. Subject reduction supplies a
+well-typed continuation with one fewer script binder; data substitution leaves
+that constructor count unchanged. Induction on $n(G)$ gives termination and
+the step count. Each pure normalization phase terminates by the assumption on
+$\D$. There are finitely many communication steps, so an infinite execution
+cannot consist of either infinitely many communications or an infinite pure
+reduction between them.
+
+For uniqueness, pure confluence determines the owner's witness up to
+conversion. Substituting convertible witnesses gives convertible continuation
+types and terms. Apply the induction hypothesis to that continuation. At the
+terminal, normalize the result record. The equations defining $\Run$ respect
+pure conversion, so taking a pure reduction earlier or later gives the same
+complete result.
+\end{proof}
+
+The execution lemma concerns one finite scripted connection. It supplies neither
+termination of a recursive process calculus nor deadlock freedom for an
+arbitrarily wired network of channels.
+
+\subsubsection{Role symmetry}
+
+Let $\pi:\Roles\cong\Roles$ be a permutation. It acts by
+\begin{equation}
+ \pi\End\langle R_i\rangle_i
+   =\End\langle R_{\pi^{-1}(i)}\rangle_i,
+ \qquad
+ \pi(\Q_r(x:A).H)=\Q_{\pi(r)}(x:A).\pi H.
+ \label{dep:eq:15}
+\end{equation}
+Data types and chosen values are unchanged. The corresponding endpoint
+transport retains its data term and changes its role and global annotation.
+
+\begin{lemma}[Endpoint transport]
+\label{lem:role-transport}
+$\Local{\pi(i)}{\pi G}\equivdef\Local{i}{G}$.
+\end{lemma}
+\begin{proof}
+At a terminal, the inverse permutation in \eqref{dep:eq:15} selects $R_i$. At a choice,
+$\pi(i)=\pi(r)$ iff $i=r$, so the same sum or product is selected in \eqref{dep:eq:4}.
+Induct on the continuation.
+\end{proof}
+
+Define the transported profile by $(\pi\vecp)_j=p_{\pi^{-1}(j)}$, with its
+annotation transported by \cref{lem:role-transport}. On execution records,
+define $\pi_*(t,(z_i)_i)=(t,(z_{\pi^{-1}(j)})_j)$: trace values are retained
+and the terminal record is permuted in the same direction.
+
+\begin{lemma}[Equivariance]
+\label{thm:equivariance}
+For every well-typed profile,
+\begin{equation}
+ \Run_{\pi G}(\pi\vecp)=\pi_*\Run_G(\vecp).
+ \label{dep:eq:16}
+\end{equation}
+Role transport also takes each communication step to a communication step.
+\end{lemma}
+\begin{proof}
+The transported owner supplies the same pair and therefore the same witness.
+The transported receivers apply the same functions to that witness. Induct on
+the residual script. The terminal record is reordered exactly by $\pi_*$.
+The same argument applied to \eqref{dep:eq:14} proves the reduction statement.
+\end{proof}
+
+Symmetry is a property of the family of roles and endpoints. An individual
+endpoint judgment names the role it implements, just as an ordinary function
+judgment names its arguments. There is no permanently privileged role in
+\eqref{dep:eq:2}--\eqref{dep:eq:16}.

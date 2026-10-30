@@ -1,0 +1,41 @@
+\subsection{A worked dependent connection}
+\label{app:worked}
+
+Let the roles be $A,B,C$ and use the script in \eqref{dep:eq:1}, with
+\[
+ R_A(n,v,j)=\Bool,\qquad R_B(n,v,j)=\mathsf{Fin}(n),
+ \qquad R_C(n,v,j)=\mathsf{Vec}(\Bool,n).
+\]
+Its local types are
+\begin{align*}
+ \Local{A}{G}
+   &=\sum_{n:\Nat_{>0}}\prod_{v:\mathsf{Vec}(\Bool,n)}
+                    \prod_{j:\mathsf{Fin}(n)}\Bool,\\
+ \Local{B}{G}
+   &=\prod_{n:\Nat_{>0}}\sum_{v:\mathsf{Vec}(\Bool,n)}
+                    \prod_{j:\mathsf{Fin}(n)}\mathsf{Fin}(n),\\
+ \Local{C}{G}
+   &=\prod_{n:\Nat_{>0}}\prod_{v:\mathsf{Vec}(\Bool,n)}
+                    \sum_{j:\mathsf{Fin}(n)}\mathsf{Vec}(\Bool,n).
+\end{align*}
+Choose implementations
+\begin{align*}
+ p_A&=(2,\lambda v.\lambda j.\mathsf{index}(v,j)),\\
+ p_B&=\lambda n.(\mathsf{replicate}(n,\mathsf{true}),\lambda j.j),\\
+ p_C&=\lambda n.\lambda v.(0_n,v),
+\end{align*}
+where $0_n:\mathsf{Fin}(n)$ exists because $n$ is positive. The first
+interaction selects $2$ and instantiates both receivers at that number.
+The next selects Bob's vector $(\mathsf{true},\mathsf{true})$. The third
+selects Carol's $0_2$. The final return record is
+\[
+ \bigl(\mathsf{true},0_2,
+       (\mathsf{true},\mathsf{true})\bigr),
+\]
+indexed by the common trace
+$(2,(\mathsf{true},\mathsf{true}),0_2)$.
+
+Neither receiver was required to guess a dependent type from a value it had
+not received. The first substitution determines the vector and index types;
+the next two substitutions determine the return families. The example
+exercises three different owners and all the clauses of the interaction rule.
