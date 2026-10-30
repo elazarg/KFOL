@@ -117,13 +117,120 @@ only permutes the inequalities and probability coordinates.
 
 This is the standard backward continuation-payoff construction for games
 with observed past actions and simultaneous current moves, expressed as
-an algebra for an explicit disclosure boundary. Compositional mixed-game
-semantics also has established treatments in open games
-\cite{GhaniEtAl2018,GhaniEtAl2020}. We do not claim a new general
-sequential-equilibrium solution method. Full revelation is what makes
-the belief calculation above local. A retained private cell invalidates
-that cancellation argument unless its conditional law is included in
-the interface.
+an algebra for an explicit disclosure boundary. Deterministic open games
+provide a related compositional approach \cite{GhaniEtAl2018}.
+The proposed mixed extension \cite{GhaniEtAl2020} has finite counterexamples
+to its category laws \cite{GameTheoryOpenGameObstructions2026}, detailed
+below. It supplies no composition theorem used here. Full revelation
+makes the belief calculation local, while the continuation $p_a$ remains
+indexed by its public tuple until the stage incentives have been checked.
+A retained private cell requires its conditional law in the interface.
+
+\subsection{Finite obstructions to the proposed mixed open-game category}
+\label{se:sec:open-game-obstruction}
+
+Ghani, Kupke, Lambert, and Nordvall Forsberg's Definition~11
+\cite{GhaniEtAl2020} lifts a history-indexed set of finite strategy laws
+$R(x)$ to
+\begin{equation}\label{se:eq:relational-lift}
+ \mathsf L_R(\mu)=
+ \left\{\sum_x\mu(x)\nu_x:
+       \nu_x\in\operatorname{conv}_{\!f}R(x)
+       \text{ for }x\in\operatorname{supp}\mu\right\}.
+\end{equation}
+Here $\operatorname{conv}_{\!f}$ is finite convex closure. Their
+Definition~12 combines a source strategy law $\mu$ and a later strategy
+law $\nu$ by the independent product $\mu\otimes\nu$. The latter must
+belong to \eqref{se:eq:relational-lift}, applied to the source's
+intermediate-history law and the later equilibrium predicate.
+Our examples use identity coplay and a constant zero continuation, so
+the first component's payoff averaging imposes no additional condition.
+They are valid objects of the proposed open-game structure; their
+equilibrium predicates need not be presented as utility maximizers.
+
+\begin{proposition}[Failure of the proposed category laws]
+\label{se:prop:open-game-obstruction}
+For that raw composition, the left identity law and the canonical
+associativity law are false. The two bracketings can have incomparable
+equilibrium-law sets. Taking finite convex closure does not yield a
+composition congruence, and closing after every composition still does
+not restore associativity.
+\end{proposition}
+\begin{proof}
+For the left identity, let a component $K$ have a Boolean strategy,
+constant play, and selected laws exactly $\{\delta_0,\delta_1\}$.
+At a point history, \eqref{se:eq:relational-lift} gives the finite convex
+closure of this set. Consequently $\mathsf{Id};K$ admits the fair law
+$(\delta_0+\delta_1)/2$, while $K$ rejects it. This refutes the left-unit
+claim in Lemma~16 under the canonical strategy identification.
+
+For associativity put $B=\{0,1\}$. Let $F$ have strategy $s\in B$,
+input $\mathsf{Unit}$, output $s$, and every strategy law selected.
+Let $H$ have input $b\in B$, strategy $t\in B$, output $t$, and selected
+law exactly $\delta_b$. All backward types are $\mathbb R$, coplay
+forwards its argument, and selection ignores the continuation.
+For a Boolean law $\mu$, write
+$d_\mu=\sum_b\mu(b)\delta_{(b,b)}$.
+Directly from the two definitions, and identifying the strategy
+parentheses canonically, the selected triple laws are
+\begin{align*}
+ E_{(F;H);H}&=\{\mu\otimes\mu\otimes\mu:\mu\in\mathcal D B\},\\
+ E_{F;(H;H)}&=\{\mu\otimes d_\mu:\mu\in\mathcal D B\}.
+\end{align*}
+Indeed $F;H$ requires independent equal marginals; the second composition
+adds a third independent copy. In contrast, $H;H$ at a fixed input $b$
+selects only $\delta_{(b,b)}$. Lifting this selection along $\mu$ gives
+$d_\mu$, which is then made independent of the source strategy.
+
+Take $u=(\delta_0+\delta_1)/2$. The left bracketing admits the fully
+independent fair law $u^{\otimes3}$, assigning $1/8$ to each triple.
+The right bracketing rejects it because its last two coordinates agree
+almost surely. Conversely $u\otimes d_u$ is admitted on the right and
+rejected on the left: its three fair marginals force the sole possible
+left candidate $u^{\otimes3}$, which is a different law. This refutes
+Theorem~15 and proves incomparability, not merely unequal sets.
+
+Convex equivalence also fails to be a composition congruence. Replace
+$F$ by $F_0$, which selects only point laws. It is convex-equivalent
+to $F$, but the convex closure of $E_{F_0;H}$ is supported on equal
+coordinates, whereas $F;H$ admits $u\otimes u$. For the proposed
+repair that closes after every composition, all inputs $F,H$ already
+have convex equilibrium sets. The left-associated composite still admits
+$u^{\otimes3}$. On the right, $H;H$ at $b$ selects a singleton law;
+closing does not change it. Every resulting law, and every finite
+mixture of such laws, has its last coordinates equal. It therefore
+still excludes $u^{\otimes3}$.
+\end{proof}
+
+These are finite counterexamples to specified laws of the published
+lifting, not an impossibility theorem for probabilistic open games or
+for compositional mixed-game semantics generally. The obstruction is
+that a history-indexed choice of strategy laws is averaged into a
+marginal and then recombined independently; reassociation changes
+which correlations are retained. Restricting to convex equilibrium
+sets alone is not closed under the proposed tensor either: the fair
+mixture of the point-product laws at $(0,0)$ and $(1,1)$ is correlated.
+
+The pinned \texttt{GameTheory} \texttt{v1-final} artifact
+\cite{GameTheoryOpenGameObstructions2026} contains the Lean theorems
+\path{probabilistic_leftIdentity_requires_convexity},
+\path{probabilistic_seq_not_associative},
+\path{probabilistic_seq_bracketings_incomparable},
+\path{convexIso_not_left_seq_congruence}, and
+\path{saturated_seq_not_associative}. Its \path{Mixed.lean} implements
+Definitions~11--12 and records the scope. The independent exact-rational
+checker \path{checks/check_open_game_obstruction.py} reproduces the
+displayed witnesses. The historical Lean development is not rebuilt
+by this paper's \texttt{make check}.
+
+The round recursion in \cref{se:thm:round} uses a different interface:
+conditional continuations remain attached to every public action tuple,
+and independence is imposed on current simultaneous choices, not on
+realized actions across histories. Its SE proof is direct. It asserts
+neither a category of arbitrary open components nor the refuted
+independent-law composition rules. Its general assessment correspondence
+still has the written, rather than kernel-checked, status in
+\cref{sec:verification}.
 
 \subsection{Public choice and the limit of winner-set abstraction}
 
