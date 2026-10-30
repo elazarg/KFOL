@@ -1,0 +1,369 @@
+\section{Sequential equilibrium at complete-revelation boundaries}
+\label{sec:sealed-rounds}
+
+Commit--reveal permits an exact compositional semantics beyond public
+owned choice, provided the interface clears the private information.
+The values must then retain probabilities. We first give the interface
+and its sequential-equilibrium interpretation, then isolate a scalar
+fragment and prove that no finite exact winner-observation algebra can
+cover even Boolean sealed rounds.
+
+\subsection{A round with one public continuation for every action tuple}
+
+Fix the role set $I$. A round has a finite nonempty action set $A_i$
+for every role; inactive roles have a singleton action set. Its syntax is
+\[
+ \mathsf R_{(A_i)_{i\in I}}(a\mapsto G_a),
+ \qquad a\in A=\prod_{i\in I}A_i.
+\]
+Each role binds its action privately. No action or signal depending on
+it becomes available to another role before all actions are bound.
+Publication is automatic and reveals the entire tuple to every role.
+The game then enters the public continuation $G_a$. Every action tuple,
+including one with equilibrium probability zero, has its own continuation.
+Leaf games have one winner as before.
+
+There are no private input types, unrevealed cells crossing a round
+boundary, common private random seeds, abort choices, or strategic
+publication times. Current behavioral randomizations are independent
+across roles. The public history can determine the next finite menus
+and continuation syntax. Binding and release use the ideal service of
+\cref{sec:disclosure}; this is not a theorem about cryptographic or
+asynchronous implementation. One active role gives public owned choice.
+Two active roles with Boolean menus give a sealed two-bit round.
+
+For commitment and release orders $i_1,\ldots,i_K$ and
+$j_1,\ldots,j_K$, the individual round is the disclosure block
+\[
+ \begin{aligned}
+ &\Bind_{i_1}(c_{i_1}:A_{i_1};\{i_1\}).\ \cdots\
+       \Bind_{i_K}(c_{i_K}:A_{i_K};\{i_K\}).\\
+ &\Pub_{j_1}(c_{j_1};I).\ \cdots\ \Pub_{j_K}(c_{j_K};I).
+ \end{aligned}
+\]
+The selected continuation starts after this block. Audience-derived
+views identify exactly the histories with the same preceding public
+history at each commitment; no role has a current private input before
+its one commitment. Public observations during release are followed by
+no further choice until the whole tuple is available. Thus release
+order also has no strategic effect in this fragment.
+
+Write $\Delta_I$ for the simplex of winner distributions, and define
+\[
+ \mathcal E(G)=\{\text{winner distributions of behavioral sequential
+ equilibria of }G\}\subseteq\Delta_I.
+\]
+We use the assessment definition of sequential equilibrium: sequential
+rationality together with beliefs that are limits of Bayes beliefs of
+completely mixed profiles \cite{KrepsWilson1982}. The coordinates of a
+distribution are exactly the players' expected utilities. For a family
+of nonempty sets $P_a\subseteq\Delta_I$, define
+\begin{equation}\label{se:eq:round}
+ \mathcal N_A((P_a)_a)=
+ \left\{\sum_{a\in A}\left(\prod_i\sigma_i(a_i)\right)p_a:
+ \begin{array}{l}
+ p_a\in P_a\text{ for every }a,\\
+ \sigma\text{ is a mixed Nash equilibrium of the finite game}\\
+ \hfill u_i(a)=(p_a)_i
+ \end{array}\right\}.
+\end{equation}
+Selection of $p_a$ occurs for every tuple, before solving the stage game.
+It records the complete continuation strategy, including off-path play;
+it is not a choice made by a new strategic agent.
+
+\begin{theorem}[Exact round recursion]\label{se:thm:round}
+For the round language,
+\[
+ \mathcal E(\at i)=\{\delta_i\},\qquad
+ \mathcal E(\mathsf R_A(a\mapsto G_a))=
+        \mathcal N_A((\mathcal E(G_a))_a).
+\]
+Each value set is nonempty, compact, and semialgebraic over the rationals.
+The round operators are monotone in their continuation sets and commute
+with role renaming. Reordering the private commitments within a round
+preserves the value set.
+\end{theorem}
+\begin{proof}
+After full publication, each $G_a$ is a proper public subgame. Restricting
+an assessment to it gives a sequential equilibrium and a distribution
+$p_a$. Any pure change of the current action, followed by the prescribed
+continuation, is a legal deviation. The current independent action laws
+therefore form a Nash equilibrium for the displayed payoffs.
+
+Conversely choose one continuation equilibrium at every tuple and a
+stage Nash profile. Backward induction rules out deviations that also
+change later actions: each selected continuation is already optimal
+against its opponents, and a current action change cannot improve its
+expected continuation payoff. To verify consistency rather than just
+subgame optimality, perturb every action law toward its uniform law
+with one common positive parameter. At a public round history its reach
+factor cancels from Bayes' rule. At a player's commitment, the belief
+over preceding hidden commitments is the product of those roles'
+perturbed laws. Its limit is the product of the prescribed laws, also
+at off-path public histories. Revelation steps offer no choices. This
+constructs one consistent assessment for the whole finite game.
+The same argument works for every serial order of private commitments.
+
+Nonemptiness follows by choosing continuation distributions and applying
+finite mixed Nash existence \cite{Nash1951}. The variables $p_a$ and
+$\sigma_i$ range over compact sets. Nash optimality is a finite family
+of weak polynomial inequalities, so the feasible set is closed and
+its continuous image is compact. The simplex, these inequalities, and
+the output equation are rational polynomial conditions. Projection
+preserves semialgebraicity, giving the induction. Inclusion of
+continuation sets preserves every old feasible choice. Role renaming
+only permutes the inequalities and probability coordinates.
+\end{proof}
+
+This is the standard backward continuation-payoff construction for games
+with observed past actions and simultaneous current moves, expressed as
+an algebra for an explicit disclosure boundary. Compositional mixed-game
+semantics also has established treatments in open games
+\cite{GhaniEtAl2018,GhaniEtAl2020}. We do not claim a new general
+sequential-equilibrium solution method. Full revelation is what makes
+the belief calculation above local. A retained private cell invalidates
+that cancellation argument unless its conditional law is included in
+the interface.
+
+\subsection{Public choice and the limit of winner-set abstraction}
+
+For a distribution set $P$, put
+$\operatorname{Win}(P)=\{i:\exists p\in P,\ p_i>0\}$.
+The one-active-role instance of \eqref{se:eq:round} is
+\begin{equation}\label{se:eq:public}
+ P\mathbin{\widehat\star_r}Q=
+ \left\{\alpha p+(1-\alpha)q:
+ \begin{array}{l}
+ p\in P,\ q\in Q,\ 0\leq\alpha\leq1,\\
+ \alpha>0\Rightarrow p_r\geq q_r,\\
+ \alpha<1\Rightarrow q_r\geq p_r
+ \end{array}\right\}.
+\end{equation}
+For singleton inputs it selects the distribution with larger $r$
+coordinate, or the full segment between them on a tie.
+
+\begin{corollary}[Public mixed-support conservativity]\label{se:cor:public}
+On finite public owned-choice trees,
+$\operatorname{Win}(\mathcal E(G))=B(G)$. Allowing mixed sequential
+equilibria adds no possible winner to the pure SPE observation.
+\end{corollary}
+\begin{proof}
+Pure SPE profiles are sequential equilibria in this perfect-information
+language. For the other inclusion induct on trees. If a child has pure
+winner set $\{r\}$, its mixed continuation distributions are all
+$\delta_r$ by induction. The parent owner $r$ can secure utility one,
+so every parent equilibrium also has distribution $\delta_r$.
+Otherwise the pure recurrence already includes every possible child
+winner; mixing can introduce no others. Nonemptiness of each child's
+equilibrium set is used throughout.
+\end{proof}
+
+Distribution sets need not be convex, even in the public sublanguage.
+Let
+\[
+ T=(\at0\ch2\at1)\ch0\at2.
+\]
+The left child can give player $0$ any probability $x\in[0,1]$.
+When $x>0$, the root must choose left. When $x=0$, the root may mix.
+Consequently
+\begin{equation}\label{se:eq:nonconvex}
+ \mathcal E(T)=
+ [\delta_0,\delta_1]\ \cup\ [\delta_1,\delta_2].
+\end{equation}
+In particular $(\delta_0+\delta_2)/2$ is absent. It belongs to
+$\mathcal E(T\ch1 T)$: choose continuation equilibria $\delta_0$ and
+$\delta_2$ in the two independent copies, and let the indifferent
+root mix equally. Thus distribution-level public choice is not
+idempotent. Convexifying value sets would also change the semantics.
+The idempotency of the winner-set algebra is a property of its
+observation, not of these richer values.
+
+\subsection{A scalar fragment: parallel sum and role exchange}
+
+Fix two active roles $a,b$, with every leaf won by one of them.
+These games are constant-sum. In the round language, induction reduces
+every stage to a finite zero-sum matrix game. Its equilibrium value
+is unique, so write
+\[
+ \mathcal E(G)=\{v(G)\delta_a+(1-v(G))\delta_b\}.
+\]
+For public choices owned by $a$ and $b$, the scalar operations are
+$\max$ and $\min$. Exchanging the roles throughout a component gives
+$C(x)=1-x$.
+
+There is a useful Boolean sealed-round constructor $D(G,H)$:
+\begin{center}
+\begin{tabular}{c|cc}
+ & $b:0$ & $b:1$\\\hline
+$a:0$ & $G$ & $\at b$\\
+$a:1$ & $\at b$ & $H$
+\end{tabular}
+\end{center}
+The bits are committed privately and both published before entering
+the selected continuation. If $v(G)=x$ and $v(H)=y$, its stage payoff
+matrix for $a$ is $\left(\begin{smallmatrix}x&0\\0&y\end{smallmatrix}\right)$.
+
+\begin{proposition}[Parallel-sum interpretation]\label{se:prop:parallel}
+The constructor $D$ denotes
+\[
+ x\parallel y=
+ \begin{cases}xy/(x+y),&x+y>0,\\0,&x=y=0.\end{cases}
+\]
+It is associative, commutative, monotone, and zero-absorbing. On the
+unit interval it distributes over both $\min$ and $\max$.
+\end{proposition}
+\begin{proof}
+For $x+y>0$, both players assign probability $y/(x+y)$ to their
+action $0$. Against this law, either pure action of the opponent gives
+$xy/(x+y)$. These two security guarantees force that value in every
+Nash equilibrium. If one diagonal entry is zero the same value follows;
+if both are zero every strategy profile has value zero.
+For positive arguments, reciprocal values turn parallel sum into
+addition. This proves associativity and commutativity; the zero cases
+are immediate. Monotonicity follows from the displayed formula, and
+a monotone unary map on a chain preserves binary minima and maxima.
+\end{proof}
+
+Parallel sum is the established operation from network and matrix
+theory \cite{AndersonDuffin1969}. Its appearance here follows from a
+two-by-two zero-sum game. Its electrical interpretation and algebraic
+laws are not new. The constructor has two Boolean commitments and
+one occurrence of each continuation; it introduces neither chance nor
+numerical rewards at leaves.
+
+\begin{theorem}[Exact rational scalar fragment]\label{se:thm:rational}
+The scalar values generated by the winner leaves, role exchange, and
+$D$ are exactly $\mathbb Q\cap[0,1]$. In fact $C$ and
+$U(x)=x\parallel1=x/(1+x)$ suffice with the leaves.
+\end{theorem}
+\begin{proof}
+The operations preserve rationality. For the converse induct on the
+denominator of $p/q$, with $0\leq p\leq q$ and $q>0$. Endpoints are
+leaves. If $0<p<q$ and $2p\leq q$, write
+\[
+ p/q=U\bigl(p/(q-p)\bigr).
+\]
+Otherwise write
+\[
+ p/q=C\bigl(U((q-p)/p)\bigr).
+\]
+Each recursive denominator is smaller. Reduction of fractions is not
+needed. This gives an explicit synthesis procedure, without claiming
+polynomial size in the binary encoding of $p,q$.
+\end{proof}
+
+Rational values of finite rational zero-sum games are standard. The
+point here is the small constructor set realizing them with stable
+Boolean commitments and complete-revelation boundaries. It supplies
+a scalar calculus inside the role-symmetric round semantics, not a
+classification of general multiparty equilibrium distributions.
+
+\begin{corollary}[Decidable scalar equations]\label{se:cor:decidable}
+Equations in $0,1,C,\parallel,\min,\max$ hold on rational scalar
+values exactly when they hold on the real unit interval. Their validity
+is decidable by real quantifier elimination.
+\end{corollary}
+\begin{proof}
+All primitives are continuous. Parallel sum is continuous also at
+$(0,0)$ because $0\leq x\parallel y\leq\min(x,y)$.
+Rational valuations are dense. For the decision claim, the graph of
+parallel sum is given on the unit square by $z(x+y)=xy$, with $z=0$
+when $x+y=0$; the other graphs are polynomial or piecewise polynomial.
+Term evaluation and a failed equality are therefore expressible in the
+first-order theory of real closed fields. Its decision theorem applies.
+\end{proof}
+
+\subsection{Infinitely many contextual values with three roles}
+
+Put $L_0=\at0$ and $L_{n+1}=D(L_n,\at0)$, using active roles $0,1$.
+Then
+\[
+ v(L_n)=1/(n+1).
+\]
+Each step adds one round and only one occurrence of its predecessor,
+so explicit tree size is linear in $n$. For $n\geq0$ put $G_n=L_{n+1}$.
+Every $G_n$ has exactly the possible SE winners $\{0,1\}$ and unique
+distribution
+\[
+ p_n=\frac1{n+2}\delta_0+\frac{n+1}{n+2}\delta_1.
+\]
+Let $R_m$ be the same construction with roles $0,2$. Consider the
+public context $F_m[-]=[-]\ch0 R_m$.
+
+\begin{theorem}[No finite exact winner algebra for sealed rounds]
+\label{se:thm:infinite}
+For all $n,m\geq0$,
+\[
+ \operatorname{Win}(\mathcal E(F_m[G_n]))=
+ \begin{cases}
+ \{0,1\},&n<m,\\
+ \{0,1,2\},&n=m,\\
+ \{0,2\},&n>m.
+ \end{cases}
+\]
+Thus the possible-winner observation is not compositional on winner
+sets. Its contextual equivalence has infinite index, already with
+three roles, Boolean commitments, complete revelation after every
+round, and no internal role switches. No finite-valued compositional
+semantics can preserve even player $2$'s possible-win observation for
+this language.
+\end{theorem}
+\begin{proof}
+The root owner compares $1/(n+2)$ with $1/(m+2)$. It selects the
+larger value, or may select either continuation on equality. This
+gives the formula. All inputs $G_n$ have the same winner set, but the
+outputs vary, disproving composition on those sets. In particular
+player $2$ is a possible winner exactly when $m\leq n$. Distinct
+indices therefore have different responses to the contexts $F_m$.
+Any compositional semantics adequate for that observation must assign
+them distinct values, so its carrier is infinite. Extra inactive
+roles do not affect the construction.
+\end{proof}
+
+The first separator uses rates $1/2$ and $1/3$, against an outside
+component with probabilities $1/2$ for each of players $0,2$.
+The first input ties and permits player $1$ to win; the second loses
+the comparison and excludes player $1$. This obstruction does not
+depend on subtle off-path beliefs or retained private information.
+It already occurs in the fragment where those complications have
+been eliminated by full revelation.
+
+\begin{corollary}[Scalar full abstraction]\label{se:cor:scalar}
+For closed components in the rational scalar fragment with the same
+active pair, equality of scalar values is exactly contextual
+equivalence for possible SE winners in the three-role round language.
+It suffices to observe the third role's possible victory.
+\end{corollary}
+\begin{proof}
+Equal values give equal singleton distribution sets, which
+\eqref{se:eq:round} preserves in every context, including repeated
+independent occurrences. For values $v<w$, choose a rational
+$v<t<w$. Realize a component of value $t$ between player $a$ and the
+third player $c$, using \cref{se:thm:rational}. A public choice owned
+by $a$ selects this outside component against value $v$, permitting
+$c$ to win, and selects the input against $w$, excluding $c$.
+\end{proof}
+
+\subsection{What this interface does and does not compose}
+
+The round operator unifies public and sealed choices in one finite
+binder scheme. Full publication allows continuation equilibria to be
+selected independently at each public action tuple, and removes a
+separate belief parameter from the algebra. Before that boundary,
+the commitments cannot be treated as sequential public choices:
+revealing one matching-pennies bit before the other's commitment
+lets the later player dictate the outcome.
+
+The interface summarizes a closed continuation with the fixed
+winner utilities. Replacing a continuation by another with the same
+$\mathcal E$ is sound. Replacing the terminal rewards inside a
+previously summarized component requires a continuation-dependent
+response semantics; it is not supplied by its closed value set.
+Likewise a pending secret, private type, selective audience, or
+strategic release leaves an information state crossing the interface.
+Marginal winner probabilities then do not specify the needed joint
+conditional laws and consistent beliefs. A general cut theorem for
+that larger language remains open here. The positive recursion and
+the infinite-index obstruction identify an exact complete-revelation
+fragment, without assigning that fragment the scope of arbitrary
+commit--reveal interaction.
