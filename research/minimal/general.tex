@@ -33,9 +33,10 @@ quotient and classify the singleton fibers of two-permutation actions,
 where marginal row bounds fail. Relative reset unifies the constructions
 and gives a right-normal-band quotient on homogeneous observations. The
 common-leaf theorem, including internal switches, and the reset laws are
-kernel-checked in Lean. Other new structural theorems have written proofs
+kernel-checked in Lean. The remaining structural theorems have written proofs
 and independent finite checks; the full clone and a finite equational
-basis remain open.
+basis remain open. Equation validity is coNP-complete even in the
+intrinsic core, without constants or internal switches.
 \end{abstract}
 
 \section{A small algebra and its questions}
@@ -68,7 +69,8 @@ denote independently solved copies, as required by the term algebra.
 
 The preceding note \texttt{symmetric.tex} proves two uniform facts used
 here. On each fixed singleton-or-ambiguous status cell, every term is a
-constant union permutation images of its ambiguous inputs. Every failed
+union of a fixed constant set and permutation images of its ambiguous
+inputs. Every failed
 equation therefore has a countervaluation in which each input has at
 most two winners. Every singleton and every pair is necessary in a fixed
 test domain. Those mathematical proofs, including the separating terms,
@@ -145,8 +147,12 @@ at a selected argument and the smaller at all others. The Mal'cev
 identities would require support both in the first argument alone and
 in the third alone. Operations satisfying either collection of
 identities are already idempotent. The same two-value test detects the
-presence of each argument, proving essentiality and the regularity of
-every identity.
+presence of each argument, proving essentiality. Regularity of identities
+is the standard two-element semilattice observation: interpret every
+primitive choice as join on $\{P,I\}$, for a proper ambiguous pair $P$.
+An identity must then have the same variable support on both sides.
+This is the usual regular-identity setting of semilattice sums
+\cite{Plonka1967}.
 \end{proof}
 
 \begin{corollary}[Intrinsic player views]\label{cor:views}
@@ -215,9 +221,10 @@ twice, making every test ambiguous. Add distinct words other than the
 all-one word until there are $K$ signatures.
 
 For $K=3$, two tests satisfying the necessary conditions have signatures
-$00,01,10$, hence are two distinct singletons. A unary merger of the third
-role into a tested role fixes both but is not identity. Three pairs
-certify idempotency. Such mergers are constructed below.
+$00,01,10$, hence are two distinct singletons. The reduct's ambiguity
+adder from \texttt{report.tex} fixes every singleton but adds $c$ to
+ambiguous inputs, so those tests cannot certify idempotency.
+Three pairs certify it.
 \end{proof}
 
 At $K=7$, three ambiguous diagonal tests suffice, compared with $28$
@@ -238,9 +245,9 @@ If there are at least two target regions, it is a variable occurrence.
 \begin{proof}
 At an owned node with owner $r$, at most one target contains $r$.
 In every other environment the output cannot collapse to $\{r\}$;
-it is union, so both children meet the target. In the possible
-exceptional environment, either both children meet the target or a
-child is the absorbing owner singleton and meets it. Choose that child:
+it is union, so both children lie in the target. In the possible
+exceptional environment, either both children lie in the target or a
+child is the absorbing owner singleton and lies in it. Choose that child:
 it works in all environments. Descend to a leaf. At a switch pull the
 targets back along the permutation, preserving disjointness. A winner
 leaf has the same nonempty value in all environments and cannot fit
@@ -633,9 +640,18 @@ on a two-cycle.
 The allowed leaf permutations already form the Cartesian product of
 the two orientations on each cycle. All owned operations and union are
 idempotent. Closure of a Cartesian product under idempotent
-coordinatewise operations is the product of the local closures:
-realize one coordinate while holding the others fixed, then realize
-the next while holding the first fixed. Thus these local atomic tables
+coordinatewise operations is the product of the local closures.
+For two coordinates, suppose $t$ realizes $a$ from generators
+$a_1,\ldots,a_n$ and $u$ realizes $b$ from $b_1,\ldots,b_m$.
+Choose $z_{ij}=(a_i,b_j)$ from the full Cartesian product of generators.
+Then
+\[
+ t\bigl(u(z_{11},\ldots,z_{1m}),\ldots,
+         u(z_{n1},\ldots,z_{nm})\bigr)=(a,b):
+\]
+each inner application preserves $a_i$ by idempotency, and the outer
+application preserves $b$ by idempotency. Induct on the number of
+coordinates. Thus these local atomic tables
 can be realized independently, by a term $t$ whose ambiguity support
 lies in $\mathrm{id}\cup\sigma$.
 
@@ -721,7 +737,8 @@ descriptions is not assumed.
 
 \begin{theorem}[Equational complexity]\label{thm:complexity}
 For every fixed $K\geq3$, equational validity is coNP-complete, already
-in the signature without role switches. The uniform problem with $K$
+in the signature with only variables and owned choices, without winner
+constants or role switches. The uniform problem with $K$
 as part of the input is coNP-complete as well.
 \end{theorem}
 \begin{proof}
@@ -736,28 +753,23 @@ winner leaves. This is polynomial in tree-term size, independently of
 the exponential size of the carrier and even when $K$ is binary encoded.
 Evaluation and comparison are therefore polynomial. Validity is in coNP.
 
-For hardness fix distinct roles $a,b$ and encode Boolean truth by
-$\mathbf1=\{a\}$ and falsehood by $\mathbf0=I$. The gate
+For hardness fix distinct roles $a,b$ and put $P(S)=[S=\{a\}]$.
+On arbitrary nonempty inputs,
 \[
- q(x)=x\ow a I
-   =\begin{cases}\mathbf1,&x=\{a\},\\\mathbf0,&\text{otherwise}
-     \end{cases}
+ P(S\ow a T)=P(S)\lor P(T),\qquad
+ P(S\ow b T)=P(S)\land P(T).
 \]
-is a surjection onto these two values. On them,
-\[
- u\ow a v=u\lor v,\qquad u\ow b v=u\land v.
-\]
-The first owner accepts either true operand. For the second owner no
-operand is its singleton, so it takes union; union absorbs the false
-value $I$. Consequently any monotone Boolean formula equation can be
-translated, replacing every variable by $q(x)$, disjunction by $\star_a$,
-and conjunction by $\star_b$. It is valid in the owned-choice algebra
-exactly when the Boolean equation is valid. The term for $I$ has fixed
-size because $K$ is fixed. This is a polynomial translation using no
-role switches.
+The first equality is the absorbing-owner test. For the second, a
+collapse to $\{b\}$ cannot pass $P$; otherwise a union is $\{a\}$ exactly
+when both nonempty operands are $\{a\}$. Compile a constant-free monotone
+Boolean formula $F$ to $\widehat F$ by replacing disjunction and
+conjunction with these choices and leaving variables unchanged.
+Then $P(\widehat F(v))=F(P\circ v)$ for every valuation, by induction.
 
 The standard dual-rail reduction gives hardness directly. Given a CNF
-formula $\varphi(z_1,\ldots,z_n)$, replace positive occurrences
+formula, handle an empty clause by the fixed valid equation $x=x$,
+and a CNF with no clauses by the fixed invalid equation $x=y$.
+For the remaining $\varphi(z_1,\ldots,z_n)$, replace positive occurrences
 of $z_i$ by $p_i$ and negative occurrences by $n_i$, producing a monotone
 formula $\Phi(p,n)$. Put
 \[
@@ -767,18 +779,43 @@ formula $\Phi(p,n)$. Put
 The equation $A\lor B=B$ fails exactly when $A=1$ and $B=0$.
 Those conditions choose exactly one rail for every variable and satisfy
 $\varphi$. Conversely any satisfying assignment provides such rails.
-Thus $\varphi$ is unsatisfiable exactly when the equation is valid.
-CNF unsatisfiability is coNP-complete by the standard SAT theorem
-\cite{Cook1971}. Formula sizes and their owned-choice translations are
-polynomial. Hardness at the fixed value $K=3$ also gives uniform hardness.
+To reflect this Boolean equation as equality of winner sets, let $W$
+be the union of all rail variables, expressed using a balanced fold of
+$J$. Every constant-free term $u$ over those variables satisfies
+$u(v)\subseteq W(v)$. Hence the constant-free gate
+\[
+ G_W(u)=u\ow a W
+ =\begin{cases}
+ \{a\},&u=\{a\}\text{ or }W=\{a\},\\
+ W,&\text{otherwise}
+ \end{cases}
+\]
+gives the identity
+\[
+ G_W(\widehat A\ow a\widehat B)=G_W(\widehat B).
+\]
+If $\varphi$ is unsatisfiable, the Boolean predicates agree on every
+valuation. When $W=\{a\}$ both sides are $\{a\}$; otherwise the gate
+maps equal predicates to the same winner set. If $\varphi$ is satisfiable,
+assign each true rail $\{a\}$ and each false rail $\{b\}$.
+Then $W=\{a,b\}$, $A=1$, and $B=0$, so the displayed identity fails.
+These formulas use no Boolean constants in $A,B$.
+
+Thus CNF unsatisfiability reduces to constant-free equation validity.
+It is coNP-complete by the standard SAT theorem \cite{Cook1971}.
+The balanced expansion of $W$ has $O(n^2)$ size: each $J$ uses its two
+arguments twice. Formula sizes and their owned-choice translations are
+polynomial, with no constants or switches. Hardness at $K=3$ also gives
+uniform hardness.
 \end{proof}
 
-The two-value encoding does not replace the winner-set algebra by a
-Boolean algebra. It is a selected-operation fragment with a definable
-gate. In particular it is not a subalgebra of the full signature with
-all named winner constants and all internal role permutations. The
-complexity method is standard; its consequence here closes the lower
-bound left open by pair testing.
+The gate uses the common input union as its false value, so it does not
+require a named winner or $I$. The complexity method is standard; this
+constant-free form follows the argument in
+\texttt{notes/review-reset-2026-10-30.md}. Unless $\mathrm P=\mathrm{NP}$,
+the entire idempotent core has no polynomial-time canonicalization with
+polynomial-time comparison. This does not preclude a finite equational
+basis or an effective proof calculus.
 
 \section{Evidence, attribution, and the next mathematical gap}
 
@@ -798,7 +835,10 @@ theorem, not a fact currently imported into Lean.
 and the embedding of arbitrary monotone Boolean formula equations. It
 uses ordinary syntax from the preceding modules and proves both
 directions of validity preservation for all nonempty input valuations.
-The SAT reduction and complexity-class statements remain mathematical
+It also proves the singleton-predicate interpretation on arbitrary
+nonempty inputs, constant-free monotone compilation, and the relative
+gate using a containing input union. The SAT reduction and
+complexity-class statements remain mathematical
 proofs above. Lean 4.34.1 checks the module with only \texttt{Std}; the
 axiom audit reports only \texttt{propext}, \texttt{Classical.choice}, and
 \texttt{Quot.sound}, with no admitted statements or new axioms.
@@ -812,7 +852,9 @@ permutations. It checks semantic uniqueness, every composition at $K=3$,
 sampled compositions at $K=4$, and actual term synthesis. It also checks
 the Boolean gates through $K=6$ and the dual-rail equivalence on all
 $4369$ CNFs with up to three clauses on two variables, including empty
-clauses. These support the written proofs, rather than replacing them.
+clauses. It additionally compiles actual constant-free equation pairs for
+$28$ CNFs, including a contradiction, and tests each on all $7^4$ mixed
+valuations. These support the written proofs, rather than replacing them.
 
 \texttt{core.py} implements the exact idempotent criterion and extracts
 the equivalent constant-free owned term. \texttt{check\_core.py} compares
@@ -849,10 +891,24 @@ unary composition. Its two-permutation fibers are now known, while
 general fibers with constant coordinates or larger source sets remain
 open. The intrinsic idempotent core gives a smaller target for a uniform
 presentation, with no constants or internal-switch constructors needed.
+Its equation validity is already coNP-complete; reset's polynomial-time
+normalization cannot extend to the whole core unless $\mathrm P=\mathrm{NP}$.
 The right-normal-band quotient presents only homogeneous observations;
 mixed inputs are an explicit remaining obstruction. The residual
 bound needed by the conditional Willard route in \texttt{symmetric.tex}
-also remains open. No dependent type-theoretic claim follows yet.
+also remains open. Reset itself has a published finite basis, imported
+in \texttt{reset.tex} from Freese et al.\ \cite[Theorem~3.7]{FreeseEtAl2002};
+it is no longer a finite-basis research target.
+
+There is also a signature boundary for smaller fragments. Reset plus
+one fixed $\star_a$, without switches, is a separate complexity question.
+If all role permutations are available, it expresses every $\star_b$:
+choose $\pi(a)=b$ and use
+$\pi(\pi^{-1}x\star_a\pi^{-1}y)$. A family closed under all role
+renamings and containing one owned choice therefore contains the whole
+hard core. A tractable role-symmetric extension of reset must use weaker
+owner-sensitive operations or restrict admissible syntax. No dependent
+type-theoretic claim follows yet.
 
 \bibliographystyle{plain}
 \bibliography{references}

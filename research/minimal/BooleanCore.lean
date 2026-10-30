@@ -8,6 +8,8 @@ import Synthesis
 set_option autoImplicit false
 namespace MinimalChoice
 
+noncomputable local instance (p : Prop) : Decidable p := Classical.propDecidable p
+
 def topSet {α : Type} : S α := fun _ => True
 
 @[simp] theorem join_topSet {α : Type} (A : S α) : join A topSet = topSet := by
@@ -143,6 +145,75 @@ theorem Positive.equation_embedding {α β : Type} (h : Three α) (roles : List 
   · intro he v _
     rw [p.compile_correct h roles covers, q.compile_correct h roles covers, he]
 
+/-- The stronger reduction uses raw monotone formulas, with no constants
+and no variable gates. The predicate `S = atom a` supplies their semantics. -/
+inductive RawPositive (β : Type) where
+  | var : β → RawPositive β
+  | and : RawPositive β → RawPositive β → RawPositive β
+  | or : RawPositive β → RawPositive β → RawPositive β
+
+def RawPositive.eval {β : Type} (f : RawPositive β) (v : β → Prop) : Prop :=
+  match f with
+  | .var i => v i
+  | .and p q => p.eval v ∧ q.eval v
+  | .or p q => p.eval v ∨ q.eval v
+
+def RawPositive.compile {α β : Type} (a b : α) (f : RawPositive β) : Term α β :=
+  match f with
+  | .var i => .var i
+  | .and p q => .node b (p.compile a b) (q.compile a b)
+  | .or p q => .node a (p.compile a b) (q.compile a b)
+
+def winnerFree {α β : Type} : Term α β → Prop
+  | .win _ => False
+  | .var _ => True
+  | .node _ p q => winnerFree p ∧ winnerFree q
+
+theorem RawPositive.compile_winnerFree {α β : Type} (a b : α) (f : RawPositive β) :
+    winnerFree (f.compile a b) := by
+  induction f <;> simp_all [RawPositive.compile, winnerFree]
+
+theorem RawPositive.compile_predicate {α β : Type} (a b : α) (hab : a ≠ b)
+    (f : RawPositive β) (v : β → S α) (hv : ∀ i, NE (v i)) :
+    denote (f.compile a b) v = atom a ↔ f.eval (fun i => v i = atom a) := by
+  induction f with
+  | var i => rfl
+  | and p q hp hq =>
+    change own b (denote (p.compile a b) v) (denote (q.compile a b) v) = atom a ↔ _
+    rw [own_eq_other_iff b a hab.symm _ _ (denote_ne _ v hv) (denote_ne _ v hv)]
+    exact and_congr hp hq
+  | or p q hp hq =>
+    change own a (denote (p.compile a b) v) (denote (q.compile a b) v) = atom a ↔ _
+    rw [own_eq_owner_iff a _ _ (denote_ne _ v hv) (denote_ne _ v hv)]
+    exact or_congr hp hq
+
+theorem winnerFree_sub {α β : Type} (t : Term α β) (ht : winnerFree t)
+    (v : β → S α) (W : S α) (hv : ∀ i, Sub (v i) W) :
+    Sub (denote t v) W := by
+  induction t with
+  | win _ => exact False.elim ht
+  | var i => exact hv i
+  | node r p q hp hq =>
+    intro w hw
+    rcases own_sub_join r _ _ w hw with hw | hw
+    · exact hp ht.1 w hw
+    · exact hq ht.2 w hw
+
+theorem relative_boolean_gate {α : Type} (a : α) (A W : S α) (hAW : Sub A W) :
+    own a A W = (if A = atom a ∨ W = atom a then atom a else W) := by
+  classical
+  have hj : join A W = W := by
+    funext w
+    exact propext ⟨fun hw => hw.elim (hAW w) id, Or.inr⟩
+  simp only [own, hj]
+
+theorem relative_gate_equal {α : Type} (a : α) (A B W : S α)
+    (hAW : Sub A W) (hBW : Sub B W) (hp : A = atom a ↔ B = atom a) :
+    own a A W = own a B W := by
+  classical
+  rw [relative_boolean_gate a A W hAW, relative_boolean_gate a B W hBW]
+  simp only [hp]
+
 end MinimalChoice
 
 #print axioms MinimalChoice.boolean_gate
@@ -150,3 +221,8 @@ end MinimalChoice
 #print axioms MinimalChoice.boolean_and
 #print axioms MinimalChoice.Positive.compile_correct
 #print axioms MinimalChoice.Positive.equation_embedding
+#print axioms MinimalChoice.RawPositive.compile_winnerFree
+#print axioms MinimalChoice.RawPositive.compile_predicate
+#print axioms MinimalChoice.winnerFree_sub
+#print axioms MinimalChoice.relative_boolean_gate
+#print axioms MinimalChoice.relative_gate_equal

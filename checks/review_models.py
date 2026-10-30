@@ -162,8 +162,11 @@ def phase_run(commands, complete=False):
     cells, store, pending = {}, {}, set()
     states = []
 
-    def visible(role):
-        return {name for name, cell in cells.items() if role in cell.audience}
+    def visible(role, before=None):
+        names = list(cells)
+        if before is not None:
+            names = names[:names.index(before)]
+        return {name for name in names if role in cells[name].audience}
 
     def snapshot(stage):
         views = tuple(
@@ -195,7 +198,7 @@ def phase_run(commands, complete=False):
             cell = cells[command.name]
             require(command.owner == cell.owner and cell.audience <= command.audience)
             for role in command.audience - cell.audience:
-                require(set(cell.data_type.dependencies) <= visible(role))
+                require(set(cell.data_type.dependencies) <= visible(role, before=command.name))
             cells[command.name] = replace(cell, audience=command.audience)
             pending.remove(command.name)
         assert all(store[name] == value for name, value in previous.items())

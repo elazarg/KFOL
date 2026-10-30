@@ -27,6 +27,55 @@ theorem reset_multiple {α : Type} (A B : S α) :
       exact ⟨u, v, huv, Or.inr hu, Or.inr hv⟩
   · simp only [reset, ite_eq_right hb]
 
+theorem reset_membership {α : Type} (A B : S α) (w : α) :
+    reset A B w ↔ B w ∨ (Multiple B ∧ A w) := by
+  classical
+  by_cases hb : Multiple B <;> simp [reset, hb, join, or_comm]
+
+/-- Soundness of Freese et al. (2002), Theorem 3.7, in reset notation.
+Completeness uses their published theorem and `Term.three_chain_complete`;
+that equational-derivation argument is not formalized in this module. -/
+theorem basis_idem {α : Type} (A : S α) : reset A A = A := by
+  funext w
+  apply propext
+  simp only [reset_membership]
+  grind
+
+theorem basis_absorb {α : Type} (A B : S α) :
+    reset (reset A B) A = reset B A := by
+  funext w
+  apply propext
+  simp only [reset_membership]
+  grind
+
+theorem basis_repeat {α : Type} (A B : S α) :
+    reset (reset A B) B = reset A B := by
+  funext w
+  apply propext
+  simp only [reset_membership]
+  grind
+
+theorem basis_nested {α : Type} (A B C : S α) :
+    reset A (reset (reset A B) C) = reset A (reset B C) := by
+  funext w
+  apply propext
+  simp only [reset_membership, reset_multiple]
+  grind
+
+theorem basis_exchange {α : Type} (A B C : S α) :
+    reset (reset (reset A B) C) B = reset (reset A C) B := by
+  funext w
+  apply propext
+  simp only [reset_membership]
+  grind
+
+theorem basis_left_comm {α : Type} (A B C : S α) :
+    reset A (reset B C) = reset B (reset A C) := by
+  funext w
+  apply propext
+  simp only [reset_membership, reset_multiple]
+  grind
+
 theorem reset_ne {α : Type} (A B : S α) (hb : NE B) : NE (reset A B) := by
   classical
   by_cases hm : Multiple B
@@ -286,6 +335,12 @@ theorem Term.compile_correct {α β : Type} (h : Three α) (roles : List α)
 end MinimalChoice.ResetCalculus
 
 #print axioms MinimalChoice.ResetCalculus.reset_eq_owned
+#print axioms MinimalChoice.ResetCalculus.basis_idem
+#print axioms MinimalChoice.ResetCalculus.basis_absorb
+#print axioms MinimalChoice.ResetCalculus.basis_repeat
+#print axioms MinimalChoice.ResetCalculus.basis_nested
+#print axioms MinimalChoice.ResetCalculus.basis_exchange
+#print axioms MinimalChoice.ResetCalculus.basis_left_comm
 #print axioms MinimalChoice.ResetCalculus.Term.denote_membership
 #print axioms MinimalChoice.ResetCalculus.Term.selected_self_independent
 #print axioms MinimalChoice.ResetCalculus.Term.three_chain_complete

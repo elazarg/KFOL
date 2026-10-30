@@ -11,6 +11,32 @@ from reset import (Normal, Reset, admissible, antimatroids, compose, evaluate,
 from structure import Var
 
 
+def check_published_basis():
+    # An independent order-algebra table, not the prerequisite normalizer.
+    # Freese et al. (2002), O_(2+1): 0 < 1, and 2 isolated.
+    order_product = lambda x, y: x if x == y or (x, y) == (0, 1) else y
+    image = (2, 1, 0)  # Z -> c, U -> b, T -> a
+    chain = (1, 3, 7)
+    x, y, z = Var(0), Var(1), Var(2)
+    op = Reset
+    basis = (
+        (op(x, x), x),
+        (op(op(x, y), x), op(y, x)),
+        (op(op(x, y), y), op(x, y)),
+        (op(x, op(op(x, y), z)), op(x, op(y, z))),
+        (op(op(op(x, y), z), y), op(op(x, z), y)),
+        (op(x, op(y, z)), op(y, op(x, z))),
+    )
+    for i, j in product(range(3), repeat=2):
+        result = evaluate(op(x, y), (chain[i], chain[j]))
+        assert image[chain.index(result)] == order_product(image[i], image[j])
+    for left, right in basis:
+        for inputs in product(chain, repeat=3):
+            assert evaluate(left, inputs) == evaluate(right, inputs)
+    print("Published O_(2+1) isomorphism and six basis equations checked; "
+          "completeness uses Freese et al., Theorem 3.7", flush=True)
+
+
 def check_families():
     counts = [len(antimatroids(n)) for n in range(5)]
     assert counts == [1, 1, 3, 22, 485]
@@ -111,6 +137,7 @@ def check_semantics(forms_by_arity, large):
 
 
 if __name__ == "__main__":
+    check_published_basis()
     small = check_families()
     large = check_tables_five()
     check_semantics(small, large)

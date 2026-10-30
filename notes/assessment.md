@@ -1,6 +1,6 @@
 # K-player choice logic: assessment and claims
 
-Date: 2026-10-28. Scope: the manuscript in this repo (`main.tex` and its inputs), the prior literature, and new results.
+Date: 2026-10-28. Historical scope: the original manuscript, now in `archive/manuscript-2026-10-28`, the prior literature, and results considered at that date. References to manuscript files below concern that archive; this is not a review of the rewritten root manuscript or the later `research/minimal` development.
 Every computational claim below can be reproduced with the scripts in `notes/checks/` (run `python3 <script>` from that directory).
 
 Notation:

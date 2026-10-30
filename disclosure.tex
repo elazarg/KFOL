@@ -32,6 +32,9 @@ keeping $\Gamma_0$ and exactly the cells for which $i\in S_c$, in their
 original order. A phase is well formed when every such projected context
 is a well-formed context of $\D$. Thus a visible cell's type may depend
 only on earlier cells visible to that recipient.
+For a declared cell $c$, write $\Gamma_i^{<c}(\Xi)$ for the projection
+of the declarations strictly preceding $c$, together with $\Gamma_0$.
+This is a prefix of the recipient's current local context.
 
 At a bind occurrence $m$, an implementation supplies a pure data term
 $t_m:A$. More precisely, it supplies a dependency-closed subcontext
@@ -50,7 +53,10 @@ the owner's implementation has the type just stated, and
 $\Gamma_i(\Xi)\vdash A:\U$ for every $i\in S$.
 A publication changes $S_c$ to $T$, provided $S_c\subseteq T$,
 $c$ is still pending, its recorded owner is the actor, and
-$\Gamma_i(\Xi)\vdash A:\U$ for every newly added $i\in T\setminus S_c$.
+$\Gamma_i^{<c}(\Xi)\vdash A:\U$ for every newly added
+$i\in T\setminus S_c$.
+Thus the type is checked at the position where $c:A$ will be inserted,
+not against declarations introduced later.
 At $\mathsf{done}$ no cell may remain pending.
 These conditions give a formation judgment for a protocol by processing
 its commands from left to right.
@@ -109,10 +115,15 @@ well-formed phase and a well-typed store.
 At a bind, substitution types $t_m\rho$ at $A\rho$.
 For each recipient, $A$ is well formed in its previous local context, so
 context extension by $c:A$ is valid. Other local contexts are unchanged.
-At publication the data store does not change. Inserting $c:A$ into a new
-recipient's filtered context is valid by the publication premise; declarations
-already visible there were well formed without $c$ and remain so by
-weakening. Every other declaration keeps its type and value.
+At publication the data store does not change. For a new recipient write
+its old local context as $\Gamma_i^{<c}(\Xi),\Delta_i$.
+The publication premise types $A$ in that prefix. Structural context
+insertion in $\D$ therefore gives the well-formed context
+$\Gamma_i^{<c}(\Xi),c:A,\Delta_i$, preserving the judgments for the
+later declarations. This is exactly the new projected context, in the
+original declaration order. The underlying data context and store are
+unchanged; other recipients keep their contexts. No strengthening from
+the full current recipient context is required.
 \end{proof}
 
 \begin{lemma}[Binding across arbitrary continuations]
