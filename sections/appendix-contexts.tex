@@ -5,12 +5,12 @@ Assume $K\geq3$ and the reduct $\mathbf A_I$, without internal switches.
 A unary term function uses one variable, any number of
 its occurrences, owned choices, and leaf constants. By
 Theorem~\ref{game:thm:union}, arbitrary nonempty ground constants are available.
-Write $\mathsf{Reg}(C,E)$ for the following function, with parameters
+Write $\Reg(C,E)$ for the following function, with parameters
 \[
  C\subseteq I,\qquad E_i\subseteq C\setminus\{i\}\quad(i\in I):
 \]
 \begin{equation}\label{game:eq:normal}
- \mathsf{Reg}(C,E)(S)=
+ \Reg(C,E)(S)=
  \begin{cases}
  \{i\}\cup E_i,&S=\{i\},\\
  S\cup C,&|S|\geq2.
@@ -58,7 +58,7 @@ $C$, use $x$. The complete construction is the generic theorem
 singleton leaves and owned choices.
 
 \emph{Uniqueness.} For any $k$, choose a two-element $S$ omitting $k$.
-Then $k\in C$ exactly when $k\in\mathsf{Reg}(C,E)(S)$, so $C$ is uniquely
+Then $k\in C$ exactly when $k\in\Reg(C,E)(S)$, so $C$ is uniquely
 determined. Each $E_i$ is the singleton-input result minus $i$. A regular
 function is extensive. If it is constant, its value must contain every
 singleton and hence equal $I$. That constant is regular with $C=I$ and
@@ -84,7 +84,7 @@ then force $C=I$ and all rows to be full.
 
 Thus there are $131$ unary functions for $K=3$, $6575$ for $K=4$, and
 $1419887$ for $K=5$. The first number is independently recovered by
-exhaustive algebraic closure in \texttt{check.py}. The script constructs
+exhaustive algebraic closure in \texttt{check\_choice.py}. The script constructs
 every parameterized function by actual owned-choice operations for
 $K=3,4$ and checks separation by singleton/pair tests. It does not
 enumerate all terms for $K=4,5$; the general classification supplies the
@@ -107,9 +107,9 @@ This supplies an explicit finite monoid of unary contexts rather than a
 list of isolated identities.
 
 Atomic inputs alone do not determine a context. For $I=\{a,b,c\}$, the term
-\[
+\begin{equation}\label{game:eq:D}
  D(x)=x\ow c\bigl((x\ow a\{b\})\ow b\{a\}\bigr)
-\]
+\end{equation}
 fixes every singleton but sends each multiwinner set $S$ to
 $S\cup\{a,b\}$. It has only two occurrences of $x$. Thus a calculus that
 checks equations only on the winner constants misses real distinctions.
@@ -170,7 +170,7 @@ Repeated occurrences normally have separately chosen full strategy
 tables. Fixing one component SPE profile in every copy gives a different
 observation in general.
 
-\begin{proposition}[Uniform-profile observation]
+\begin{proposition}[Uniform-profile observation]\label{game:prop:uniform-observation}
 Let $f[x]$ be any unary owned-choice context and $G$ any closed component.
 The winners of ordinary SPE profiles that use one and the same full SPE
 profile of $G$ in every copy are exactly
@@ -191,7 +191,8 @@ selected winner. Take the union over component SPE profiles.
 The next theorem is the positive case for neutral union, with a generic Lean proof.
 
 \begin{theorem}[Uniform copies suffice]\label{game:thm:uniform}
-Fix a full SPE profile $p$ of $G$ and a full SPE profile $q$ of $H$, with
+Fix pairwise distinct $r,s,t$, a full SPE profile $p$ of $G$,
+and a full SPE profile $q$ of $H$, with
 winners $g,h$. In
 \[
   (G\ch r H)\ch t(G\ch s H),
@@ -229,18 +230,9 @@ claim that repetition can be treated as shared selection.
 
 \subsection{Repetition and substitution remain separate questions}
 
-For ordinary unary terms $f$, define uniform-profile observation by
-\[
- U(f)(S)=\bigcup_{i\in S}f(\{i\}).
-\]
-Fixing the same full component SPE profile in every occurrence gives
-exactly this function: the surrounding tree sees its winner as a leaf.
-The uniform-copy result for neutral union is a special positive case.
-
-The term
-$D(x)=x\ow c((x\ow a\{b\})\ow b\{a\})$ fixes all singleton inputs but
-adds $\{a,b\}$ to ambiguous inputs when $I=\{a,b,c\}$. Thus $U(D)$ is
-the identity. Nevertheless, for $H(x)=x\cup\{c\}$,
+For the observation $U$ of \cref{game:prop:uniform-observation}, the
+context $D$ in \eqref{game:eq:D} has $U(D)$ equal to the identity.
+Nevertheless, for $H(x)=x\cup\{c\}$,
 \[
  U(D\circ H)(\{a\})=I,\qquad
  (U(D)\circ U(H))(\{a\})=\{a,c\}.
@@ -254,7 +246,7 @@ ordinary SPE profiles selected for copy equality; they do not restrict
 deviations or define an imperfect-information equilibrium.
 
 \begin{proposition}[Exactly which unary contexts tolerate uniform selection]
-For $R(C,E)$ from the unary classification, $U(R)=R$ exactly when, for
+For $f=\Reg(C,E)$ from the unary classification, $U(f)=f$ exactly when, for
 every $k\in C$, at most one $i\ne k$ has $k\notin E_i$. There are exactly
 \[
  (K+1)^K+2^K-2

@@ -7,36 +7,36 @@ arities. There is a second, more syntactic normalization.
 Fix a status assignment
 $\sigma\in(I\cup\{*\})^n$, where status $i$ means the input is exactly
 $\{i\}$, and $*$ means it is ambiguous. On this status cell, represent an
-expression by $(C,J)$, denoting
+expression by $(C,\Lambda)$, denoting
 \[
- C\ \cup\ \bigcup_{j\in J}S_j,
- \qquad J\subseteq\{j:\sigma_j=*\}.
+ C\ \cup\ \bigcup_{j\in \Lambda}S_j,
+ \qquad \Lambda\subseteq\{j:\sigma_j=*\}.
 \]
 For a constant use $(\{i\},\varnothing)$; for a singleton-status variable
 use that singleton; for an ambiguous variable use
 $(\varnothing,\{j\})$. An owned node collapses to
 $(\{r\},\varnothing)$ if either child has that form. Otherwise union the
-two $C$ fields and the two $J$ fields. Finally, when $C=I$, discard $J$.
+two $C$ fields and the two $\Lambda$ fields. Finally, when $C=I$, discard $\Lambda$.
 
 \begin{theorem}[Canonical status forms]\label{view:thm:normal}
-This normalization is sound on each status cell. Its final pair $(C,J)$
+This normalization is sound on each status cell. Its final pair $(C,\Lambda)$
 is uniquely determined by the term function on that cell. Consequently
 the table of these pairs over all $(K+1)^n$ statuses is a canonical
 representation of any $n$-variable term function.
 \end{theorem}
 \begin{proof}
-If $J$ is nonempty, the value contains an ambiguous input, so cannot be
-an owner singleton. If $J$ is empty, the value is exactly $C$. The node
+If $\Lambda$ is nonempty, the value contains an ambiguous input, so cannot be
+an owner singleton. If $\Lambda$ is empty, the value is exactly $C$. The node
 rule therefore implements precisely the two cases of $\star_r$.
 
 For uniqueness, if two $C$ fields differ, choose $k$ in their symmetric
 difference and give every ambiguous variable a pair omitting $k$.
 Output membership of $k$ then detects the different fields. If $C$
-agrees and differs from $I$, but $J$ differs, choose $k\notin C$, give one
+agrees and differs from $I$, but $\Lambda$ differs, choose $k\notin C$, give one
 variable in the symmetric difference a pair containing $k$, and give all
 other ambiguous variables pairs omitting $k$. This separates the
 outputs. The only redundant case is $C=I$, already canonicalized by
-discarding $J$. All status cells are inhabited for $K\geq3$.
+discarding $\Lambda$. All status cells are inhabited for $K\geq3$.
 \end{proof}
 
 These rules give a sound and complete normalization decision procedure for term

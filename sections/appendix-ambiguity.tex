@@ -80,7 +80,7 @@ rows are actual values, so they too are unique.
 
 Use the already established reduct construction
 \[
- R(C,E)(S)=\begin{cases}\{i\}\cup E_i,&S=\{i\},\\
+ \Reg(C,E)(S)=\begin{cases}\{i\}\cup E_i,&S=\{i\},\\
  S\cup C,&|S|\geq2,\end{cases}\qquad E_i\subseteq C\setminus\{i\}.
 \]
 It uses only singleton constants and owned choice. Its generic syntactic
@@ -90,7 +90,7 @@ synthesis is proved in \texttt{Synthesis.lean}.
 and every row is its prescribed singleton. Use that role permutation.
 
 \emph{Rank two.} Extend $p$ to a total permutation $\pi$. Its remaining
-output is the single element of $C_p$. Apply a reduct function $R(C_p,E)$
+output is the single element of $C_p$. Apply a reduct function $\Reg(C_p,E)$
 after $\pi(x)$, choosing each row's optional extra winner as prescribed.
 The remaining input row is the singleton in $C_p$. This realizes all
 four row choices for each rank-two partial permutation.
@@ -104,11 +104,11 @@ $x\ow b(b\ c)(x)$ and $x\ow c(b\ c)(x)$. Every expression so built
 still sends $\{a\}$ to $\{a\}$. Taking unions of two Boolean functions
 realizes any prescribed pair of nonempty rows $D_b,D_c$.
 
-Precompose this expression with $R(C_p,0)$, which fixes all atomic inputs
+Precompose this expression with $\Reg(C_p,0)$, which fixes all atomic inputs
 and sends ambiguous inputs to $C_p$ or $I$. The Boolean expressions
 above fix both those sets, so the resulting ambiguous behavior is
 exactly $F_p$. Finally, to add any prescribed $Z\subseteq C_p$ to the
-$a$ row, postcompose with $R(Z,E)$ having $E_a=Z$ and the other rows
+$a$ row, postcompose with $\Reg(Z,E)$ having $E_a=Z$ and the other rows
 empty. It preserves every nonempty subset of $C_p$, as well as $I$.
 Thus all four choices for the $a$ row and all nine choices for the other
 two rows are realized independently.
@@ -124,7 +124,7 @@ realize every map $h:I\to I$: merge each input into a chosen
 representative of its $h$-fiber, then permute the distinct representatives
 to their desired images. Representatives are never merged, so the
 construction has the asserted effect. Union at most three such maps
-to realize arbitrary nonempty atomic rows, and precompose with $R(I,0)$.
+to realize arbitrary nonempty atomic rows, and precompose with $\Reg(I,0)$.
 All ambiguous inputs then become $I$, while atomic rows are unchanged.
 
 This proves synthesis. Larger ground constants give the constant
@@ -410,16 +410,16 @@ The atomic and ambiguous cases are proved in \texttt{Separation.lean}.
 \end{proof}
 
 This construction also gives a precise observational quotient.
-For an idempotent atom-preserving term, record its support $J$ on
+For an idempotent atom-preserving term, record its support $\Lambda$ on
 ambiguous inputs and its projected argument $j$ on atomic inputs.
-The extracted core cannot depend on an absent argument, so $j\in J$.
+The extracted core cannot depend on an absent argument, so $j\in \Lambda$.
 
 \begin{proposition}[Homogeneous observation quotient]\label{gen:prop:pointed}
-These pairs are exactly $(J,j)$ with $\varnothing\ne J$ and $j\in J$.
+These pairs are exactly $(\Lambda,j)$ with $\varnothing\ne \Lambda$ and $j\in \Lambda$.
 They compose by
 \[
- (J,j)\bigl((L_i,\ell_i)_i\bigr)
-   =\left(\bigcup_{i\in J}L_i,\ell_j\right).
+ (\Lambda,j)\bigl((L_i,\ell_i)_i\bigr)
+   =\left(\bigcup_{i\in \Lambda}L_i,\ell_j\right).
 \]
 They form the term clone of right normal bands. Relative reset maps to
 its binary multiplication.
@@ -427,14 +427,19 @@ its binary multiplication.
 \begin{proof}
 Atomic and all-ambiguous input regions are invariant under these
 operations, so their observations respect substitution. Every pair is
-realized by $\Delta(\bigcup_{i\in J}x_i,x_j)$, and distinct pairs are
+realized by $\Delta(\bigcup_{i\in \Lambda}x_i,x_j)$, and distinct pairs are
 separated by atomic valuations or by a pair and $I$ on ambiguous inputs.
-The binary operation on pairs is $(J,j)(L,\ell)=(J\cup L,\ell)$:
+The binary operation on pairs is $(\Lambda,j)(L,\ell)=(\Lambda\cup L,\ell)$:
 word terms remember their variable set and their last variable.
 Associativity, $xx=x$, and $xyz=yxz$ present exactly these word
 invariants, the standard right-normal-band
 calculus\cite[Section~8]{RomanowskaSmith1989}.
 \end{proof}
+
+In the notation of Freese et al., this is the term clone of
+$\mathcal P_{\vee}$, the unique largest proper subvariety of the
+reset variety $\mathcal P_{2+1}$
+\cite[Theorems~3.1, 3.7--3.8]{FreeseEtAl2002}.
 
 This is a quotient of operations observed on two invariant regions,
 not a quotient identifying winner-set values. Mixed valuations retain

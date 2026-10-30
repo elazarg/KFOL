@@ -2,7 +2,8 @@
 
 Rows are output coordinates. The full mask denotes constant presence;
 every other row is a nonempty source set of size at most K-2. The matching
-criterion checks realizability, not just well-formedness. See the intrinsic-core and complexity sections of the paper.
+criterion checks realizability, not just well-formedness. See the paper's
+appendix on unary operations with role switching.
 """
 
 from itertools import permutations, product

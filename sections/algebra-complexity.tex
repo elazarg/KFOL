@@ -86,3 +86,180 @@ require a named winner or $I$. The complexity method is standard. Unless $\mathr
 the entire idempotent core has no polynomial-time canonicalization with
 polynomial-time comparison. This does not preclude a finite equational
 basis or an effective proof calculus.
+
+\subsection{Hardness without owners}
+
+The preceding reduction uses owned choices. Hardness also appears in
+smaller signatures whose primitive operations are derived from them.
+Use $A\del B=B$ when $B$ is a singleton, and $A\cup B$ otherwise;
+its owned-choice definition and intrinsic characterization are given in
+\cref{sec:reset}.
+Here size is measured in the stated native signature; an expansion
+into owned-choice syntax need not preserve that size.
+
+Write $\operatorname{rc}(a_1,\ldots,a_n;b)$ for the right comb
+$a_1\del(a_2\del\cdots\del(a_n\del b))$, and
+$\operatorname{lc}(b;g_1,\ldots,g_m)$ for the left comb
+$(\cdots((b\del g_1)\del g_2)\cdots)\del g_m$.
+Both are $b$ when their lists are empty.
+
+\begin{theorem}[Owner-free hardness]\label{thm:owner-free-hardness}
+For every fixed $K\geq3$, equation validity for the signature
+$\{\del,\cup\}$ on $\Pow(I)$ is coNP-complete. It uses no constants,
+owner names, or internal role switches.
+\end{theorem}
+\begin{proof}
+Membership in coNP follows either from a full valuation at fixed $K$,
+or from the pair theorem and polynomial native evaluation. The pair
+witness exists because both operations are owned-choice definable;
+its existence does not require a small expansion of the input term.
+
+For hardness, take a CNF $\varphi$ on $n\geq1$ Boolean variables.
+Use literal variables $u_i,\bar u_i$ and three additional input variables
+$t,z,c$. Put
+\begin{align*}
+ W&=\operatorname{rc}(u_1,\bar u_1,\ldots,u_n,\bar u_n,t;z),\\
+ b_i&=(c\del(u_i\cup t))\del(\bar u_i\cup t),\\
+ R&=\operatorname{rc}(b_1,\ldots,b_n;W),\\
+ g_C&=t\cup\bigcup_{\ell\in C}\ell,\qquad
+ A=\operatorname{lc}(c;(g_C)_{C\in\varphi}).
+\end{align*}
+The equation is
+\begin{equation}\label{eq:union-reduction}
+ A\del R=R.
+\end{equation}
+All displayed symbols are input variables or the two native operations.
+The tree size is linear in the CNF description and $n$.
+
+If $z$ is resolved, $W$, $R$, and both sides of
+\eqref{eq:union-reduction} are $z$. Otherwise $W$ is the union of
+$z,t$, and all literals; $R$ is ambiguous and contains $W$.
+Every contribution other than $c$ is therefore already in $R$.
+Outside $W$, a marker from $c$ survives in $A$ exactly when every
+clause guard $g_C$ is ambiguous. It survives in $R$ exactly when
+some pair $u_i\cup t,\bar u_i\cup t$ is simultaneously ambiguous.
+
+Suppose the equation fails. Every clause guard is ambiguous, and no
+pair is simultaneously ambiguous. Since $n\geq1$, $t$ must be a
+singleton: an ambiguous $t$ would make every pair ambiguous.
+For nonempty $X$, $X\cup t$ is resolved exactly when $X=t$.
+Assign variable $i$ true iff $u_i\ne t$. If a positive literal differs
+from $t$, it is true under this assignment. If a negative literal
+$\bar u_i$ differs from $t$, consistency forces $u_i=t$, so that
+negative literal is true. Every ambiguous clause guard has such a
+literal, hence $\varphi$ is satisfied.
+
+Conversely choose three distinct roles $b,d,e$ and a satisfying
+assignment. Set $t=\{b\}$, each false literal to $\{b\}$, each true
+literal to $\{d\}$, $z=\{b,d\}$, and $c=\{e\}$.
+All clause guards are ambiguous, while every literal pair has a
+resolved guard. Thus $e$ survives on the left and is absent on the
+right. This proves the reduction. CNFs with no variables are decided
+trivially and mapped to a fixed valid or invalid equation.
+\end{proof}
+
+\subsection{Hardness inside the atom-preserving fragment}
+
+Put $H_s(x,y,z)=(y\star_s z)\del x$, the ternary witness used in
+\cref{reset:thm:binary}. Each $H_s$ is idempotent and atom-preserving,
+and reset is already definable by
+\[
+ x\del y=H_s(y,x,x).
+\]
+Thus the following result uses a signature of only two ternary operations.
+
+\begin{theorem}[Two atom-preserving operations suffice]\label{thm:H-hardness}
+For $K\geq3$ and distinct $a,b\in I$, equation validity for
+$\{H_a,H_b\}$ on $\Pow(I)$ is coNP-complete, without constants.
+\end{theorem}
+\begin{proof}
+The same finite-valuation argument gives membership in coNP.
+For a CNF $\varphi$, use one input $y_i$ per Boolean variable, together
+with $z,c$. Let $W=\operatorname{rc}(y_1,\ldots,y_n;z)$.
+For a clause $C=(\ell_1,\ldots,\ell_m)$ define
+\[
+ b_C=H_{s_1}(z,y_{i_1},H_{s_2}(z,y_{i_2},\ldots
+                  H_{s_m}(z,y_{i_m},c)\ldots)),
+\]
+where $s_j=a$ for a positive literal and $s_j=b$ for a negative one.
+An empty clause gives $b_C=c$. Put
+$R=\operatorname{rc}((b_C)_{C\in\varphi};W)$. The equation is
+\begin{equation}\label{eq:H-reduction}
+ c\del R=R.
+\end{equation}
+Expand each reset by $x\del y=H_a(y,x,x)$. In each right comb, the
+continuation $y$ occurs once and only the small left operand is
+repeated. The clause terms also use their continuation once. The
+expanded tree therefore has polynomial, in fact linear, size in
+$n$ and the total literal count.
+
+When $z$ is resolved, both sides are $z$. Otherwise $W$ and $R$ are
+ambiguous, and $W$ contains $z$ and every $y_i$. Outside $W$ the
+exact propagation law is
+\[
+ H_s(z,y,u)\text{ contains a marker from }u
+ \quad\Longleftrightarrow\quad
+ u\text{ contains it and }y\ne\{s\}.
+\]
+This also holds when the marker is $s$: then $y\ne\{s\}$ follows
+already from $y\subseteq W$. It follows by induction that a marker
+from $c$ survives through $b_C$ iff all its literal tests
+$y_{i_j}\ne\{s_j\}$ hold.
+
+If $\varphi$ is unsatisfiable, read variable $i$ as true iff
+$y_i=\{a\}$. Some clause is false. Its positive literals have
+$y_i\ne\{a\}$, and its negative literals have $y_i=\{a\}\ne\{b\}$.
+Consequently that branch retains every marker outside $W$ from $c$.
+Since $W\subseteq R$, this gives $c\subseteq R$ and proves
+\eqref{eq:H-reduction} on every valuation.
+
+For a satisfying assignment, set $y_i=\{a\}$ for true and
+$y_i=\{b\}$ for false, $z=\{a,b\}$, and $c=\{d\}$ for a third
+role $d$. Every clause has a literal with $y_i=\{s\}$, removing
+$d$ in its branch. Thus $d\notin R$, while $d\in c\del R$.
+\end{proof}
+
+These results do not exclude all tractable owner-sensitive fragments.
+They do exclude polynomial-time equality for reset with union and for
+the full idempotent atom-preserving clone unless $\mathrm P=\mathrm{NP}$.
+Reset with one fixed $H_a$ is a separate unresolved case.
+
+\subsection{The number of roles becomes observable again}
+
+Let $\mathcal B_K=(\Pow(\{1,\ldots,K\});\del,\cup)$.
+Unlike reset alone, these owner-free algebras have distinct equational
+theories at every $K\geq3$.
+
+\begin{theorem}[Strict dependence on the role count]\label{thm:colouring-theories}
+For every $K\geq3$,
+$\operatorname{Eq}(\mathcal B_{K+1})\subsetneq
+ \operatorname{Eq}(\mathcal B_K)$.
+\end{theorem}
+\begin{proof}
+For $n\geq3$ use variables $x_1,\ldots,x_n,z,c$. Define
+\begin{align*}
+ W_n&=\operatorname{rc}(x_1,\ldots,x_n;z),\\
+ R_n&=\operatorname{rc}(c\del x_1,\ldots,c\del x_n;W_n),\\
+ A_n&=\operatorname{lc}(c;(x_u\cup x_v)_{1\leq u<v\leq n}).
+\end{align*}
+Take the equation $A_n\del R_n=R_n$.
+If $z$ is resolved, it holds immediately. Otherwise $W_n$ is ambiguous
+and contains all the $x_i$. If any $x_i$ is ambiguous, $R_n$ also
+contains $c$, so the equation holds. If all $x_i$ are singletons and
+two agree, their edge guard is resolved and erases $c$ from $A_n$;
+every remaining contribution lies in $W_n\subseteq R_n$.
+The only remaining case has $n$ distinct singleton inputs. At $K=n$
+they exhaust the carrier's roles, so $W_n=I$ and the equation holds.
+
+At $K=n+1$ set $x_i=\{i\}$, $z=\{1,2\}$, and $c=\{n+1\}$.
+Every edge guard is ambiguous; $A_n$ retains the fresh winner $n+1$,
+while $R_n=W_n=\{1,\ldots,n\}$ omits it. The equation fails.
+Finally, the inclusion of role sets induces a subalgebra embedding
+$\mathcal B_K\hookrightarrow\mathcal B_{K+1}$: union and singleton
+status are preserved. Equations valid in the latter hold in the
+former, and the displayed equation makes this inclusion strict.
+\end{proof}
+
+The edge guards express proper colourings of a complete graph. A fresh
+marker requires an unused role, which is precisely what fails at $K=n$.
+Thus role dependence can return even when no operation names an owner.
