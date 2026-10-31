@@ -5,7 +5,7 @@ ZIP ?= zip
 
 PAPER_SOURCES := main.tex references.bib $(wildcard sections/*.tex)
 PYTHON_CHECKS := $(sort $(wildcard checks/check_*.py))
-LEAN_MODULES := Basic Perspectives Synthesis BooleanCore Separation Reset ResetModels OneConstant Fragments SealedRounds
+LEAN_MODULES := Basic Perspectives Synthesis BooleanCore Separation FullAlgebra Reset ResetModels OneConstant Fragments SealedRounds
 LEAN_OBJECTS := $(addprefix build/lean/,$(addsuffix .olean,$(LEAN_MODULES)))
 
 .PHONY: all paper overleaf check check-python check-lean clean
@@ -37,6 +37,7 @@ build/lean/Perspectives.olean: build/lean/Basic.olean
 build/lean/Synthesis.olean: build/lean/Perspectives.olean
 build/lean/BooleanCore.olean: build/lean/Synthesis.olean
 build/lean/Separation.olean: build/lean/Synthesis.olean
+build/lean/FullAlgebra.olean: build/lean/Separation.olean
 build/lean/Reset.olean: build/lean/Separation.olean
 build/lean/ResetModels.olean: build/lean/Reset.olean
 build/lean/OneConstant.olean: build/lean/Separation.olean

@@ -48,6 +48,15 @@ these replacements, since every coefficient is a permutation image and
 the status cell is unchanged. It still excludes $k$.
 \end{proof}
 
+\texttt{FullAlgebra.lean} proves the pair theorem directly in the full
+term syntax. Singleton-status equivalence is preserved by every
+constructor. On a fixed status cell, shrinking inputs shrinks the output,
+and one input membership suffices to preserve any selected output winner.
+The formal refinement preserves that membership while reducing every
+input to a singleton or pair. These are
+\path{FullTerm.status_mono}, \path{FullTerm.one_pin}, and
+\path{FullTerm.pair_countervaluation}.
+
 \begin{lemma}[Resetting atomic inputs]\label{sym:lem:reset}
 If a unary term function $F$ is extensive, start with $U(x)=F(x)$ and
 successively replace $U(x)$ by $U(x)\ow i x$, for each $i\in I$. This gives a term
@@ -89,6 +98,11 @@ $\operatorname{Reset}(F)$ and $\operatorname{Reset}(I)$ agree at every
 singleton and every ambiguous input other than $P$, and disagree at
 $P$. Every complete input domain must therefore contain $P$.
 \end{proof}
+
+The explicit pair separators and both directions of test-domain
+completeness are kernel-checked as
+\path{FullTerm.pair_separator} and \path{full_test_domain_iff}.
+The cardinality formula is the count of singletons and unordered pairs.
 
 All $K$ owners and role switches remain available in these tests.
 Intermediate outputs may contain any number of winners. The domain
