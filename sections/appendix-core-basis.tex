@@ -388,6 +388,207 @@ fragment or for the core. Nor is the union expansion term equivalent
 to the raw pair: $\{a,b\}$ is closed under both choices, but its
 join $a+b=n$ lies outside it, so union is not a raw two-choice term.
 
+\subsection{Quotients that require every owner}
+\label{app:core-quotients}
+
+The variety join in \cref{core:cor:fragment-reduction} requires
+homomorphic images. Products and subalgebras of the proper-owner
+subvarieties do not suffice, even for small irreducible models.
+
+\begin{theorem}[An irreducible model with every owner active]
+\label{core:thm:all-owner-quotient}
+For every $K\geq3$, there is a $(K+2)$-element subdirectly irreducible
+algebra $Q_K\in\operatorname V(\mathbf C_K)$ in which no owned choice
+equals derived union. It is a quotient of a $(K+5)$-element subalgebra
+of the product of two observer quotients. It cannot embed into any
+product of members of the proper-owner subvarieties $\mathcal W_R$.
+\end{theorem}
+\begin{proof}
+Number the owners $0,\ldots,K-1$. Use the carrier and join of
+$D_K$, but modify its owner-$0$ operation at the top element:
+\[
+ x\star_0^{Q}y=
+ \begin{cases}
+ p,&p\in\{x,y\},\\
+ x\star_0^{D}y,&\text{otherwise}.
+ \end{cases}
+\]
+All other choices keep their $D_K$ tables. Every owner differs from
+join, since $a_i\star_i^Q n=a_i$ whereas $a_i+n=n$.
+The algebra is nonconservative: $a_1\star_0^Q a_2=n$.
+
+Let $A=D_K\setminus\{a_1\}$ and $B=D_K\setminus\{a_0\}$,
+both core quotients from \cref{core:thm:basis-arity}. In $A\times B$
+take the following $K+5$ elements, with the displayed map $h$:
+\[
+\begin{array}{c|c}
+\text{source element}&h\\\hline
+(a_0,n)&a_0\\
+(p,a_1)&a_1\\
+(a_i,a_i)\quad(i\notin\{0,1\})&a_i\\
+(p,n),\ (n,n)&n\\
+(a_0,p),\ (p,p),\ (n,p)&p
+\end{array}
+\]
+This set is closed under coordinatewise join, and $h$ preserves join.
+For owner $0$, the three elements mapped to $p$ remain among those elements
+when combined with any source element, while $(a_0,n)$ absorbs every
+source element outside that fiber. All other products take join.
+For owner $1$, the element $(p,a_1)$ absorbs every source element;
+for each other owner $i$, the element $(a_i,a_i)$ does so.
+The remaining products again take join. These descriptions prove
+closure under every choice and show that $h$ is an onto homomorphism
+to $Q_K$. Thus $Q_K$ belongs to the core variety, and its displayed
+join agrees with the derived union term.
+
+The equivalence $\mu$ whose sole nonsingleton class is $\{a_0,n\}$
+is a congruence. Indeed, multiplying that pair by $a_i$ for $i\ne0$
+either returns $a_i$ on both sides or keeps the results within that
+class; multiplying it by $p$ gives $p$ on both sides, and the
+remaining products stay within the class. Join is also compatible.
+
+Every nonidentity congruence contains $\mu$. If an identified pair
+contains $a_i$ for $i\ne0$, with the other element different from
+$a_i$, applying $x\mapsto x\star_i^Q p$ gives $a_i\sim p$.
+Applying $x\mapsto x\star_0^Q a_0$ then gives $a_0\sim p$.
+Joining this pair with $n$ gives $n\sim p$, hence $a_0\sim n$.
+If the original pair lies in $\{a_0,n,p\}$, either it already is
+$a_0\sim n$, or the same last two operations give that relation.
+Thus $\mu$ is the monolith, proving subdirect irreducibility.
+
+Finally let $f:Q_K\to E$ be a homomorphism into any member of some
+proper-owner subvariety. An unused owner $j$ acts as union in $E$,
+so preservation of the choice and of derived union gives
+\[
+ f(a_j)=f(a_j\star_j^Q n)=f(a_j)+f(n)=f(a_j+n)=f(n).
+\]
+Its kernel is nonidentity and therefore identifies $a_0,n$.
+Every coordinate of any proposed product embedding identifies this
+same pair, which rules out the embedding.
+\end{proof}
+
+For $K=3$, \path{lean/CoreQuotients.lean} kernel-checks the
+eight-element subalgebra, its maps to the two observer factors, and
+the onto map to $Q_3$. It transfers every core identity to $Q_3$,
+for arbitrary terms and arities, and proves the monolith claim for
+every compatible equivalence. The arbitrary-$K$ argument is the
+written proof above; \path{checks/check_core_quotients.py} checks its
+tables, product maps, and principal congruences at $K=3,\ldots,8$.
+
+\subsection{Collapsing ambiguity gives a finitely based subvariety}
+\label{app:core-atomic}
+
+The quotient that keeps every owner singleton and identifies all
+ambiguous sets has a finite basis over arbitrary algebras. This
+separates the singleton behavior from the additional structure that
+retains ambiguity.
+
+Write $\mathbf A_K^{\rm at}$ for the algebra on
+$\{a_i:i\in I\}\cup\{n\}$ with incomparable atoms below $n$, in
+which each $\star_i$ absorbs $a_i$ and otherwise takes join.
+It is $D_K\setminus\{p\}$, already shown to be a core quotient.
+Let $q:\mathbf C_K\to\mathbf A_K^{\rm at}$ be its quotient map.
+
+\begin{theorem}[The atomic subvariety]\label{core:thm:atomic-basis}
+For every $K\geq3$,
+\[
+ \operatorname V(\mathbf A_K^{\rm at})
+ =\operatorname V(\mathbf C_K)\cap
+   \operatorname{Mod}\{x\del y=y\}.
+\]
+This variety has a finite equational basis over arbitrary algebras.
+An explicit sequential-veto term is near-unanimity of arity $K+1$,
+and no near-unanimity term has smaller arity. The arity assertion
+concerns near-unanimity terms, not the number of variables in a basis.
+\end{theorem}
+\begin{proof}
+For nonempty winner sets $S,T$, reset semantics gives
+\begin{equation}\label{core:eq:atomic-kernel}
+ q(S)=q(T)\quad\Longleftrightarrow\quad S\del T=T\del S.
+\end{equation}
+Indeed, two ambiguous arguments give union on both sides; equal
+atoms give that atom. Different atoms give the two different right
+arguments, and with exactly one ambiguous argument one result is
+ambiguous and the other atomic. Consequently, for any two core terms,
+\begin{equation}\label{core:eq:atomic-lift}
+ \mathbf A_K^{\rm at}\models s=t
+ \quad\Longleftrightarrow\quad
+ \mathbf C_K\models s\del t=t\del s.
+\end{equation}
+This follows by applying the onto homomorphism $q$ to valuations.
+Reset is right projection in $\mathbf A_K^{\rm at}$: a right atom
+absorbs during its owner's stage, and a right $n$ already absorbs
+in the initial union. Thus one inclusion in the displayed variety
+equality follows from quotient membership. For the reverse inclusion,
+any core model satisfying $x\del y=y$ turns every lifted identity
+on the right of \eqref{core:eq:atomic-lift} into $t=s$. It therefore
+satisfies every identity of $\mathbf A_K^{\rm at}$.
+
+To construct the near-unanimity term, start with $K+1$ input positions.
+Each owner, in a fixed order, removes one remaining position. After
+all $K$ stages, return the input at the one position left.
+At an owner-$i$ stage, combine the terms for all possible removals
+using $\star_i$. This is an ordinary finite core term: the multibranch
+choice is any binary fold, and all leaves are input variables.
+
+For each $i$, the map $b_i$ that sends $a_i$ to $1$ and all other
+values of $\mathbf A_K^{\rm at}$ to $0$ interprets $\star_i$ as
+disjunction and every other choice as conjunction. These maps jointly
+separate all values. If all but one input equal $a_i$, owner $i$ can
+remove the exceptional position at its stage, unless that position
+has already gone. At least two positions remain at that stage, so
+this ensures that the final input is $a_i$, whatever the other
+removals. Hence the term's $b_i$ value is $1$. For each other $b_j$
+there is at most one input equal to $1$; any owner other than $j$
+can remove that position, ensuring a $0$ result. The same argument
+for every $b_j$ handles a repeated input $n$. The resulting term $N$
+therefore satisfies all near-unanimity identities
+\[
+ N(y,x,\ldots,x)=N(x,y,x,\ldots,x)=\cdots
+   =N(x,\ldots,x,y)=x.
+\]
+
+For optimality, suppose an $m$-ary near-unanimity term existed with
+$3\leq m\leq K$. Choose distinct owners $i_1,\ldots,i_m$.
+In valuation $r$, give every variable the atom $a_{i_r}$ except
+variable $r$, which receives $a_{i_{r+1}}$, with indices cyclic.
+Near-unanimity forces the output $a_{i_r}$. On these atomic inputs,
+the same term in the original winner-set algebra must return
+$\{i_r\}$, since its quotient is an atom. The common-source theorem
+(\cref{gen:thm:source}) now requires one input occurrence to equal
+$\{i_r\}$ in every valuation $r$. No column does: column $r$
+fails in valuation $r$. This is a contradiction.
+
+A variety with a near-unanimity term is congruence distributive
+\cite{Mitschke1978}. Since $\mathbf A_K^{\rm at}$ is finite and
+has finite signature, Baker's theorem supplies a finite equational
+basis \cite{Baker1977}. This proves existence of a finite basis;
+we have not extracted an explicit list from that theorem.
+\end{proof}
+
+Equation~\eqref{core:eq:atomic-kernel} describes a congruence on the
+winner-set generator. Reset commutation need not be transitive on
+other core models. In $Q_K$ from \cref{core:thm:all-owner-quotient},
+\[
+ a_0\del p=p\del a_0=p,\qquad
+ p\del n=n\del p=p,
+ \qquad a_0\del n=n\ne a_0=n\del a_0.
+\]
+Thus the atomic quotient result does not give a congruence decomposition
+of every core model by this relation. Nor is the veto term
+near-unanimity in the original core: on ambiguous inputs it takes
+their union.
+
+\path{lean/CoreAtomic.lean} proves the generic reset comparison and
+checks the four-variable veto term, reset's right-projection law, and
+the singleton quotient kernel for three owners.
+The arbitrary-$K$ veto argument, optimality, and subvariety equality
+are written proofs. Congruence distributivity and finite basability
+use the cited external theorems.
+\path{checks/check_core_atomic.py} checks the quotient and reset
+comparison at $K=3,\ldots,6$ and every near-unanimity valuation at
+$K=3,\ldots,8$.
+
 \subsection{A complete presentation of conservative core models}
 \label{app:core-conservative}
 
@@ -549,6 +750,51 @@ of the twenty-element free binary core algebra gives a homomorphism
 at each pair in this carrier. This finite certificate is checked by
 \path{checks/check_core_mixed.py}; the binary classification then
 transfers every two-variable identity, independently of term size.
+\end{proof}
+
+\begin{proposition}[Sharp size of the candidate obstruction]
+\label{core:prop:candidate-small-models}
+Every three-owner algebra with at most five elements satisfying
+$\Sigma_{\rm cons}$, owner exhaustion, and
+\eqref{core:eq:birkhoff}--\eqref{core:eq:union-definition} belongs to
+$\operatorname V(\mathbf C_3)$. The six-element algebra in
+\cref{core:prop:mixed-absorption} is therefore a smallest countermodel
+to this candidate basis.
+\end{proposition}
+\begin{proof}[Finite certificate]
+This is an exhaustive finite verification, with membership established
+by explicit homomorphic images of subalgebras of products.
+The program \path{checks/check_core_small_models.py} enumerates join
+semilattices up to isomorphism, every semilattice table for each
+choice, and all combinations satisfying the stated equations.
+For a finite join order, some labeling is a linear extension;
+enumerating transitive relations compatible with that labeling and
+checking least upper bounds therefore omits no semilattice.
+Relabeling these tables supplies every choice operation on the fixed
+carrier. At carrier sizes $3,4,5$, respectively, this gives
+$26,194,1596$ candidate tables, of which $6,24,75$ are subdirectly
+irreducible. These counts may include isomorphic full algebras,
+since only the join reduct was normalized.
+
+Irreducibility is decided by intersecting the congruences generated
+by every unequal pair. Every nonidentity congruence contains one
+of these principal congruences, so this intersection is nonidentity
+exactly in the irreducible case. Every resulting irreducible table
+matches one of twenty supplied membership certificates after carrier
+and owner relabeling. Owner relabeling preserves the core variety by
+the corresponding permutation of winner sets.
+
+Each certificate lists a subalgebra of a product of observer quotients,
+with at most thirteen source elements, and an onto map to the target.
+The checker verifies closure and operation preservation on every pair;
+it also verifies that all target elements occur. The certificates are
+in \path{checks/data/core-small-models.json}; no search for terms or
+bound on term size enters their verification. Models with at most
+two elements are conservative and are covered by
+\cref{core:thm:conservative-basis}. Finite subdirect decomposition now
+covers every enumerated algebra: its irreducible quotients still
+satisfy the candidate equations and have at most five elements.
+The six-element failure proved above makes the bound sharp.
 \end{proof}
 
 The generic soundness proof of mixed absorption is also kernel-checked

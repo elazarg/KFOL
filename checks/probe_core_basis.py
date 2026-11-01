@@ -112,12 +112,12 @@ def mixed_absorption_holds(add, operations):
     return True
 
 
-def search(size):
+def candidate_models(size):
+    """All models of the original candidate, up to isomorphism of join."""
     tables = list(semilattices(size))
     relabellings = tuple(permutations(range(size)))
     elements = range(size)
     seen = set()
-    count = exhausted = mixed = 0
     for add in tables:
         if add in seen:
             continue
@@ -135,14 +135,20 @@ def search(size):
                        for a, b, c in permutations(range(3))
                        for x, y in product(elements, repeat=2)):
                 continue
-            count += 1
-            failure = binary_failure(add, ops)
-            if failure is not None:
-                raise AssertionError(('binary identity missing from candidate', add, ops, failure))
-            if exhaustion_holds(add, ops):
-                exhausted += 1
-                mixed += mixed_absorption_holds(add, ops)
-    print(f'size={size}: {len(tables)} labelled semilattices; {count} candidate '
+            yield add, ops
+
+
+def search(size):
+    count = exhausted = mixed = 0
+    for add, ops in candidate_models(size):
+        count += 1
+        failure = binary_failure(add, ops)
+        if failure is not None:
+            raise AssertionError(('binary identity missing from candidate', add, ops, failure))
+        if exhaustion_holds(add, ops):
+            exhausted += 1
+            mixed += mixed_absorption_holds(add, ops)
+    print(f'size={size}: {count} candidate '
           f'models pass every binary identity; {exhausted} also satisfy exhaustion; '
           f'{mixed} satisfy exhaustion and mixed absorption.',
           flush=True)

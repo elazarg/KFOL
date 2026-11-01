@@ -6,7 +6,7 @@ winner-set algebra, but it fails the owner-exhaustion identity.
 """
 
 from dataclasses import dataclass
-from functools import reduce
+from functools import lru_cache, reduce
 
 from fragments import owned, union, var
 
@@ -21,6 +21,48 @@ def marker_own(count, owner, left, right):
     if left == owner or right == owner:
         return owner
     return marker_join(count, left, right)
+
+
+def quotient_own(count, owner, left, right):
+    """Q_K: owner 0 stops absorbing at p; every other table is D_K's."""
+    if owner == 0 and count + 1 in (left, right):
+        return count + 1
+    return marker_own(count, owner, left, right)
+
+
+def quotient_source(count):
+    """A subalgebra of (D_K minus a_1) times (D_K minus a_0), and Q_K map."""
+    low, high = count, count + 1
+    return {(0, low): 0, (high, 1): 1,
+            **{(i, i): i for i in range(2, count)},
+            (high, low): low, (low, low): low,
+            (0, high): high, (high, high): high, (low, high): high}
+
+
+def atomic_image(count, value):
+    return value.bit_length() - 1 if value.bit_count() == 1 else count
+
+
+def atomic_own(count, owner, left, right):
+    if owner in (left, right):
+        return owner
+    return left if left == right else count
+
+
+def veto_value(count, inputs, operation):
+    """Evaluate the K+1-input veto term, with owners 0,...,K-1 in order."""
+    assert len(inputs) == count + 1
+
+    @lru_cache(None)
+    def evaluate(mask):
+        remaining = [j for j in range(count + 1) if mask & (1 << j)]
+        if len(remaining) == 1:
+            return inputs[remaining[0]]
+        owner = count + 1 - len(remaining)
+        branches = [evaluate(mask ^ (1 << j)) for j in remaining]
+        return reduce(lambda x, y: operation(owner, x, y), branches)
+
+    return evaluate((1 << (count + 1)) - 1)
 
 
 def deletion_quotient(count, omitted, value):

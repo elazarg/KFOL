@@ -38,7 +38,7 @@ Layout:
     references.bib    Bibliography
     sections/         Sections, appendices, macros, and label snapshots
     scripts/          Label export between the two documents
-    lean/             Twenty Lean proof modules, using only Std
+    lean/             Twenty-two Lean proof modules, using only Std
     checks/           Python models and independent finite checks
     notes/            Exploration not claimed in the paper
     lean-toolchain    Lean version (4.34.1)
@@ -150,6 +150,33 @@ absorption identity and checks a six-state countermodel to the candidate
 core laws even with owner exhaustion. checks/check_core_mixed.py checks
 these certificates, all proper-owner maps at K=3,4,5, and the conservative
 structural lemma on chains of sizes two through six.
+
+Homomorphic images are essential in that variety join. A K+2-state
+irreducible core model Q_K has every owner different from union, and cannot
+embed into any product of proper-owner models. It is an explicit quotient
+of a K+5-state subalgebra of two observer factors. lean/CoreQuotients.lean
+proves the K=3 certificate, transfer of all identities at every arity,
+and the monolith property. checks/check_core_quotients.py checks the generic
+construction at K=3..8; its arbitrary-K proof is in the technical report.
+
+The earlier six-state candidate countermodel is smallest possible.
+checks/check_core_small_models.py exhaustively verifies that every model
+of the candidate laws plus exhaustion on at most five elements is a core
+model. It uses twenty explicit HSP certificates, each with at most thirteen
+source elements, stored in checks/data/core-small-models.json. This finite
+result does not prove an unrestricted basis or completeness after adding
+mixed absorption.
+
+Identifying all ambiguous winner sets gives a finitely based quotient over
+arbitrary algebras. Its variety is exactly the core subvariety satisfying
+x reset y = y. A sequential-veto term is near-unanimity of arity K+1;
+the common-source theorem excludes smaller arities. Mitschke's and Baker's
+external theorems then give congruence distributivity and a finite basis.
+The proof establishes existence; it does not list that basis.
+lean/CoreAtomic.lean proves generic reset comparison and the three-owner
+veto certificate. checks/check_core_atomic.py checks the quotient at K=3..6
+and near-unanimity at K=3..8. The original core has no near-unanimity term,
+and its Q_K models show that reset commutation need not be transitive.
 
 sections/appendix-basis.tex gives a finite presentation of all conservative
 one-owner models: seventeen equations, reducible to thirteen in that class,

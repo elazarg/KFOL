@@ -6,7 +6,7 @@ LATEX = $(LATEXMK) -pdf -interaction=nonstopmode -halt-on-error -outdir=build
 
 PAPER_SOURCES := main.tex tr.tex references.bib $(wildcard sections/*.tex)
 PYTHON_CHECKS := $(sort $(wildcard checks/check_*.py))
-LEAN_MODULES := Basic Perspectives CoreModels CoreObstruction CoreMixed CoreConservative Synthesis BooleanCore Separation FullAlgebra Reset ResetModels OneConstant Fragments RawFragments OwnerFragments OwnerModels ChainGuards MixedPolicies SealedRounds
+LEAN_MODULES := Basic Perspectives CoreModels CoreObstruction CoreMixed CoreConservative CoreQuotients CoreAtomic Synthesis BooleanCore Separation FullAlgebra Reset ResetModels OneConstant Fragments RawFragments OwnerFragments OwnerModels ChainGuards MixedPolicies SealedRounds
 LEAN_OBJECTS := $(addprefix build/lean/,$(addsuffix .olean,$(LEAN_MODULES)))
 
 .PHONY: all paper overleaf check check-python check-lean clean
@@ -44,6 +44,8 @@ build/lean/CoreModels.olean: build/lean/Perspectives.olean
 build/lean/CoreObstruction.olean: build/lean/CoreModels.olean
 build/lean/CoreMixed.olean: build/lean/CoreModels.olean
 build/lean/CoreConservative.olean: build/lean/CoreModels.olean
+build/lean/CoreQuotients.olean: build/lean/CoreObstruction.olean
+build/lean/CoreAtomic.olean: build/lean/CoreObstruction.olean build/lean/Reset.olean
 build/lean/Synthesis.olean: build/lean/Perspectives.olean
 build/lean/BooleanCore.olean: build/lean/Synthesis.olean
 build/lean/Separation.olean: build/lean/Synthesis.olean
