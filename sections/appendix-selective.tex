@@ -1,10 +1,7 @@
 \section{Selective reset: a tractable family with several owners}
 \label{app:selective}
 
-The owner-count dichotomy of \cref{owner:cor:complexity} concerns the
-specific operations $H_r$. This boundary does not extend to all operations defined from reset and
-owned choices; reset itself is already a derived operation. For distinct
-$a,b$, consider the native ternary operation
+The owner-count dichotomy of \cref{owner:cor:complexity} concerns the operations $H_r$ only, and it does not extend to all operations defined from owned choices. For distinct $a,b$, consider the ternary operation
 \[
  G_{a,b}(X,Y,Z)=((Y\star_b Z)\star_a Y)\del X.
 \]
@@ -53,7 +50,7 @@ $R_D$ takes the root of its first argument. For an observer $k$ put
  N_k(Y)\ \Longleftrightarrow\
  Y\ne\{r\}\text{ for every }r\in D\setminus\{k\}.
 \]
-The exact membership recursion is
+Write $M_j$ for the ambiguity of input $j$, and $N_j$ for $N_k(x_j)$. The exact membership recursion is
 \[
  k\in R_D(x,y,z)\quad\Longleftrightarrow\quad
  k\in x\ \lor\
@@ -90,7 +87,7 @@ and only $j$ contains $k$. Thus a guard on the other side holds
 precisely when it covers the selected guard. This proves necessity.
 The guard lists and cover relation contain neither $D$ nor role names,
 so the equational theory is independent of both $D$ and $K$.
-The $O(n^4)$ list-based bound follows as in \cref{sec:one-owner}.
+The $O(n^4)$ list-based bound follows as in \cref{app:proofs-owner}.
 \end{proof}
 
 The two excluded policies have rooted operations definable by reset:
@@ -98,15 +95,32 @@ The two excluded policies have rooted operations definable by reset:
  R_\varnothing(X,Y,Z)=(Y\del X)\del(Z\del X),\qquad
  R_I(X,Y,Z)=(Z\del Y)\del X.
 \]
-Their equations need not be the common theory of the nontrivial policies.
+Their theories differ from the common one: $R_\varnothing$ is symmetric in $Y,Z$, and $R_I(X,Y,Z)=R_I(Y,Z,Z)\del X$, and neither identity holds for a nontrivial policy.
 They also have polynomial comparison in native tree size, without
 expanding those definitions: for the empty policy omit the $N$ tests;
 for the full policy replace them by ambiguity tests on the same input.
 For the latter, a nonambiguous input passing $N_k$ must be $\{k\}$,
 and its unguarded contribution already wins for $k$. The resulting
 positive ambiguity guards are compared by the reset selector argument,
-with one guard per native leaf. The theorem fixes \emph{one} policy in a signature. It does not classify
-languages containing several independently chosen policies.
+with one guard per native leaf. The theorem fixes \emph{one} policy in a signature, and it does not extend to all pairs of policies.
+
+\begin{proposition}[Two disjoint policies]\label{selective:prop:disjoint}
+For disjoint nonempty $D,D'\subseteq I$ and $K\geq3$, equation validity for
+$\{R_D,R_{D'}\}$ is coNP-complete, without constants.
+\end{proposition}
+\begin{proof}
+Fix $a\in D$ and $b\in D'$, and repeat the proof of \cref{thm:H-hardness} with
+$R_D$ for $H_a$, $R_{D'}$ for $H_b$, and $x\del y=R_D(y,x,x)$. For ambiguous $z$ and a marker
+outside $W$, the term $R_E(z,y,u)$ contains the marker from $u$ exactly when $u$ contains it and
+$y$ is not a blocking atom of $E$. If $\varphi$ is unsatisfiable, read variable $i$ as true iff
+$y_i$ is a blocking atom of $D$. In a false clause, the positive literals then pass their tests
+by definition, and the negative literals pass because $D$ and $D'$ are disjoint. The
+valuation for a satisfying assignment is unchanged.
+\end{proof}
+
+Disjointness is what this reduction uses. A shared blocking atom fails both tests, so the
+equation built from the unsatisfiable $x\land\lnot x$ is no longer valid. Whether nested or
+overlapping policies stay polynomial is open.
 
 \begin{corollary}[Two owners, polynomial equality]\label{selective:cor:G}
 For distinct $a,b$ and every $K\geq3$, the language $\{\del,G_{a,b}\}$
@@ -114,9 +128,12 @@ has polynomial equation validity. Either owner's possible-win observation,
 compared on all valuations, suffices for full equation equality.
 \end{corollary}
 \begin{proof}
-Use $D=\{a,b\}$ in the theorem. In its completeness proof, take
-$k=a$, $r=b$, and $c\notin\{a,b\}$, or interchange the owners.
+Use $D=\{a,b\}$ in the theorem. In its completeness proof, take $k=a$, $r=b$, and $c\notin\{a,b\}$, or interchange the owners.
 \end{proof}
+
+An outsider's observation does not suffice at $K=3$: the third role cannot separate
+$G_{a,b}(x,y,z)$ from $(z\del y)\del x$, which either owner can.
+
 
 The operation is not reset-definable. For three distinct roles, set
 $X=\{b,c\}$ and $Z=\{a\}$. Changing $Y$ from $\{b\}$ to $\{c\}$
