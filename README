@@ -164,8 +164,29 @@ checks/check_core_small_models.py exhaustively verifies that every model
 of the candidate laws plus exhaustion on at most five elements is a core
 model. It uses twenty explicit HSP certificates, each with at most thirteen
 source elements, stored in checks/data/core-small-models.json. This finite
-result does not prove an unrestricted basis or completeness after adding
-mixed absorption.
+result does not prove an unrestricted basis.
+
+After adding mixed absorption, the candidate is complete through six
+elements. The slower exhaustive verification is run separately:
+
+    python3 checks/probe_core_six_models.py
+
+Of 14303 six-element candidate tables, 204 are irreducible. Seventeen
+HSP certificates, with source sizes at most 24, cover 147; the others
+are conservative or extensions by a common absorbing element. The
+certificates in checks/data/core-six-models.json are checked by make check.
+The absorbing-extension argument uses the proved regularity of every
+core identity. No unrestricted completeness conclusion follows.
+
+For a separate family, membership is decided exactly by exhaustion:
+incomparable owner atoms below an arbitrary chain of markers, with each
+owner absorbing up to its own threshold. The technical report constructs
+an explicit quotient of a subalgebra of the atomic quotient times proper
+observer factors whenever the least threshold is zero, and proves the
+corresponding criterion for infinite chains. checks/check_core_thresholds.py
+verifies 441 instances of the construction and 295 exhaustion failures.
+This excludes the whole threshold family as a source of countermodels
+to the strengthened candidate; the full finite-basis question remains open.
 
 Identifying all ambiguous winner sets gives a finitely based quotient over
 arbitrary algebras. Its variety is exactly the core subvariety satisfying

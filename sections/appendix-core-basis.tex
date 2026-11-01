@@ -797,6 +797,58 @@ satisfy the candidate equations and have at most five elements.
 The six-element failure proved above makes the bound sharp.
 \end{proof}
 
+\begin{lemma}[Adjoining an absorbing element]
+\label{core:lem:absorbing-extension}
+Every core identity has the same variables on both sides. Consequently,
+adjoining a new element $\infty$ to any core model, with
+$x\star_i\infty=\infty\star_i x=\infty$ for every owner, gives another
+core model.
+\end{lemma}
+\begin{proof}
+Choose two ambiguous winner sets $N\subsetneq P$, possible since
+$K\geq3$. On ambiguous inputs every choice is union. If a variable
+occurs on just one side of an equation, assigning it $P$ and all other
+variables $N$ separates the two sides. Thus every valid identity is
+regular. In the extended algebra an evaluation either uses only old
+elements on both sides or has an occurrence of $\infty$ on both sides.
+In the latter case both terms evaluate to $\infty$.
+\end{proof}
+
+\begin{proposition}[The strengthened candidate through six elements]
+\label{core:prop:six-models}
+Every three-owner algebra with at most six elements satisfying the
+candidate in \cref{core:prop:candidate-small-models} and all ordered
+instances of mixed absorption~\eqref{core:eq:mixed-absorption} belongs
+to $\operatorname V(\mathbf C_3)$.
+\end{proposition}
+\begin{proof}[Finite certificate]
+Sizes at most five are covered by
+\cref{core:prop:candidate-small-models}. The exhaustive six-element
+enumeration uses the same semilattice enumeration, equation checks,
+and principal-congruence test. It is reproduced by
+\path{checks/probe_core_six_models.py}; the slower enumeration is
+separate from the default checks. Membership certificates are in
+\path{checks/data/core-six-models.json} and are independently verified
+by the default checks.
+
+There are $14429$ original candidate tables, $14309$ after exhaustion,
+and $14303$ after mixed absorption. Among the last tables $204$ are
+subdirectly irreducible. Each is either conservative, an extension by
+a common absorbing element of a closed five-element subalgebra, or
+matches one of seventeen HSP certificates after carrier and owner
+relabeling. The first case uses
+\cref{core:thm:conservative-basis}; the second uses the five-element
+result and \cref{core:lem:absorbing-extension}. Each HSP certificate
+has at most twenty-four source elements. Closure, surjectivity, and
+operation preservation are checked on every source pair.
+
+Finite subdirect decomposition completes the argument, since each
+irreducible quotient still satisfies all the candidate equations.
+No bound on term size is used. This establishes completeness only
+through six elements; it does not bound the size of an unrestricted
+countermodel.
+\end{proof}
+
 The generic soundness proof of mixed absorption is also kernel-checked
 in \path{lean/CoreMixed.lean}.
 \path{checks/check_core_mixed.py} independently checks the six-state
@@ -805,3 +857,121 @@ all proper-owner quotient maps at those values of $K$, and the
 conservative structural lemma for every conservative semilattice
 operation on chains of sizes two through six. The relative basis and
 the new mixed law do not provide a complete unrestricted core basis.
+
+\subsection{Atoms with an arbitrary chain of markers}
+\label{app:core-thresholds}
+
+The next family allows every owner to stop absorbing above its own
+threshold. It includes $D_K$ and $Q_K$ and chains of arbitrarily many
+markers. Owner exhaustion decides membership throughout this family.
+
+\begin{theorem}[Exact membership for threshold algebras]
+\label{core:thm:thresholds}
+Fix $K\geq3$, $\ell\geq0$, and integers
+$0\leq t_i\leq\ell$ for $i\in I$. Let $T_{\boldsymbol t}$ have
+incomparable atoms $a_i$ below the chain $n_0<\cdots<n_\ell$.
+Write $+$ for its join. Define $\star_i$ to absorb $a_i$ against
+every atom and against $n_h$ with $h\leq t_i$, and to equal join
+on every other pair. Then $+$ is the usual derived core union and
+\[
+ T_{\boldsymbol t}\in\operatorname V(\mathbf C_K)
+ \quad\Longleftrightarrow\quad
+ T_{\boldsymbol t}\models\eqref{core:eq:exhaustion}
+ \quad\Longleftrightarrow\quad
+ \min_{i\in I}t_i=0.
+\]
+When the minimum is zero, an explicit HSP representation uses the
+atomic quotient $\mathbf A_K^{\rm at}$ and $\ell$ copies of one proper-owner
+observer quotient.
+\end{theorem}
+\begin{proof}
+For distinct owners $a,b,c$, the term
+$(x\star_a y)\star_c(x\star_b y)$ is join. For an atom and a marker,
+at most one inner operation absorbs, and the outer owner differs
+from that absorbing owner. For two distinct atoms the only remaining
+case has the two inner owners absorb their respective atoms; the
+third owner returns $n_0$, their join. Equal inputs and pairs of
+markers are immediate.
+
+If every $t_i\geq1$, evaluate exhaustion at $c=n_1$ and $x_i=a_i$.
+Its right side is $n_0$ and its left side is $n_1$. It remains to
+prove membership when $t_j=0$ for some owner $j$.
+
+Let $A=\mathbf A_K^{\rm at}=\{a_i:i\in I\}\cup\{n\}$ and let
+$O_j=D_K\setminus\{a_j\}$, with markers $n,p$. Both belong to the
+core variety by \cref{core:thm:basis-arity}. For $b\in A$ and
+$H\subseteq\{1,\ldots,\ell\}$, impose the condition
+\[
+ b=a_i\quad\Longrightarrow\quad H\subseteq\{h:h>t_i\}.
+\]
+Represent $(b,H)$ as a vector in $A\times O_j^\ell$: its first
+coordinate is $b$, and its $h$th observer coordinate is
+\[
+ v_h(b,H)=
+ \begin{cases}
+ a_i,&b=a_i\text{ and }h\leq t_i,\\
+ p,&h\in H,\\
+ n,&\text{otherwise}.
+ \end{cases}
+\]
+No observer coordinate is $a_j$, since $t_j=0$. These vectors are
+distinct: the first coordinate determines $b$, and the positions
+of $p$ determine $H$.
+
+They form a subalgebra $S$. To see this, multiply $(b,H)$ and
+$(d,J)$ under owner $i$ and put $e=b\star_i^A d$. The resulting
+vector represents $(e,L)$, where
+\[
+ L=
+ \begin{cases}
+ (H\cup J)\setminus\{1,\ldots,t_i\},&e=a_i,\\
+ H\cup J,&e\ne a_i.
+ \end{cases}
+\]
+Indeed, $e=a_i$ precisely when one first coordinate is $a_i$.
+Its observer coordinates through $t_i$ absorb, and the others retain
+exactly the indicated positions of $p$. If $e=a_k$ with $k\ne i$,
+both first coordinates were $a_k$, so their prescribed $a_k$
+coordinates agree. If $e=n$, no atom survives in an observer
+coordinate. These cases also establish the required condition on $L$.
+
+Define an onto map $\pi:S\to T_{\boldsymbol t}$ by
+\[
+ \pi(b,H)=
+ \begin{cases}
+ n_{\max H},&H\ne\varnothing,\\
+ a_i,&H=\varnothing\text{ and }b=a_i,\\
+ n_0,&H=\varnothing\text{ and }b=n.
+ \end{cases}
+\]
+The representatives $(a_i,\varnothing)$, $(n,\varnothing)$,
+and $(n,\{h\})$ prove surjectivity. For operation preservation,
+first suppose one projected input is $a_i$. A marker $n_h$ in the
+other input is erased exactly when $h\leq t_i$; otherwise its
+maximum position survives. Atom inputs are absorbed as required.
+If neither projected input is $a_i$, the maximum position must
+survive: the only possible deletion occurs when a first coordinate
+is $a_i$, but that source then has a nonempty set of positions
+strictly above $t_i$. Its own maximum cannot be deleted. With no
+positions present, preservation reduces to the atomic table.
+Thus $\pi$ is a homomorphism, proving membership. Exhaustion follows
+from membership and its native validity.
+\end{proof}
+
+The same criterion holds for an infinite marker chain with least
+element $n_0$, allowing each owner an arbitrary initial segment
+$L_i$ containing $n_0$ in place of a finite threshold. Membership
+is equivalent to $\bigcap_i L_i=\{n_0\}$. An element of that
+intersection above $n_0$ violates exhaustion. Conversely, every
+finite set of markers, together with all atoms and $n_0$, is a
+finite subalgebra of the displayed form and satisfies the criterion.
+Every identity evaluation takes place in one of these subalgebras.
+
+The arbitrary-$K$ construction and the infinite-chain extension are
+written proofs. The independent check
+\path{checks/check_core_thresholds.py} verifies $441$ explicit HSP
+certificates and $295$ exhaustion failures for $K=3,\ldots,6$ and
+up to four marker steps. It checks all pairs in every source,
+using the existing observer tables. This rules out this whole family
+as a source of countermodels to a candidate containing exhaustion;
+it is not a representation theorem for arbitrary core candidates.

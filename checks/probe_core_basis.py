@@ -20,7 +20,7 @@ The search is outside make check and uses only the Python standard library.
 import argparse
 from itertools import combinations, permutations, product
 
-from core_basis import binary_product, binary_profiles, binary_term, mixed_absorption
+from core_basis import binary_product, binary_profiles, binary_term
 
 
 def relabel(table, permutation):
@@ -105,9 +105,10 @@ def exhaustion_holds(add, operations):
 def mixed_absorption_holds(add, operations):
     for a, b in combinations(range(len(operations)), 2):
         for first, second in ((a, b), (b, a)):
-            left, right = mixed_absorption(first, second)
-            for values in product(range(len(add)), repeat=3):
-                if evaluate(left, values, add, operations) != evaluate(right, values, add, operations):
+            m, p = operations[first], operations[second]
+            for x, y, z in product(range(len(add)), repeat=3):
+                yz = m[y][z]
+                if m[x][p[y][yz]] != m[x][p[y][m[x][yz]]]:
                     return False
     return True
 

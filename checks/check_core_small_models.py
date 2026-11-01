@@ -20,8 +20,8 @@ def key(add, ops):
     return tuple(map(tuple, add)), tuple(sorted(tuple(map(tuple, t)) for t in ops))
 
 
-def certify_members():
-    path = Path(__file__).with_name('data') / 'core-small-models.json'
+def certify_members(filename='core-small-models.json'):
+    path = Path(__file__).with_name('data') / filename
     certificates = json.loads(path.read_text())
     known = set()
     for certificate in certificates:
@@ -62,6 +62,7 @@ def is_subdirectly_irreducible(ops):
 
 def check():
     known, certificates, maximum = certify_members()
+    _, six_certificates, six_maximum = certify_members('core-six-models.json')
     counts = []
     for size in range(1, 6):
         candidates = irreducibles = 0
@@ -84,6 +85,10 @@ def check():
           f'each with at most {maximum} source elements. '
           'All smaller candidate models belong to the core variety; '
           'the six-state obstruction is smallest possible.')
+    print(f'Six-element strengthened candidate: {six_certificates} HSP certificates '
+          f'verified, with at most {six_maximum} source elements. '
+          'Exhaustive six-element coverage is checked separately by '
+          'probe_core_six_models.py.')
 
 
 if __name__ == '__main__':
