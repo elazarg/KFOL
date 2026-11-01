@@ -24,9 +24,10 @@ Fix $K$. For a signature chosen from $\{\star_r:r\in I\}\cup\{\cup,\del\}$, equa
 \end{theorem}
 
 \begin{idea}
-A single semilattice operation only sees variable supports, and reset is \cref{reset:thm:three}. For hardness, one device runs through the reductions; here it is for reset with union. Put a fresh winner in an input $c$. Since $c\del g$ keeps that winner exactly when $g$ is ambiguous, a chain of guards is a conjunction.
-A guard $t\cup\ell_1\cup\cdots\cup\ell_m$ is ambiguous exactly when some $\ell_i$ differs from an atom $t$, which is a disjunction. Reading a literal as false when it equals $t$, we obtain conjunctive normal form. On the other side of the equation, each Boolean variable has a branch keeping $c$ when both its literals differ from $t$, so a failing valuation must make one literal of each variable equal to $t$, and this is an assignment. For two
-owners, read $S$ as true when $S=\{a\}$: then $\star_a$ is OR and $\star_b$ is AND, on arbitrary inputs.
+A single semilattice operation only sees variable supports, and reset is \cref{reset:thm:three}. For hardness, one device runs through the reductions; here it is for reset with union. The equation is $A\del R=R$, where $R$ already contains every input but one, $c$, unless its root input is atomic, when both sides collapse to that atom. So the sides can differ only by a winner of $c$. Since $c\del g$ keeps that winner exactly when $g$ is ambiguous, a chain of guards in $A$ is a conjunction.
+A guard $t\cup\ell_1\cup\cdots\cup\ell_m$ with $t$ an atom is ambiguous exactly when some $\ell_i$ differs from $t$, which is a disjunction. Reading a literal as false when it equals $t$, we obtain conjunctive normal form. In $R$, each Boolean variable has a branch keeping $c$ when both its literals differ from $t$. An ambiguous $t$ makes these branches keep $c$, so a failing valuation has $t$ atomic and makes one literal of each variable equal to $t$, and this is an assignment.
+
+Two owners use the same shape, reading a literal as false when it equals $\{a\}$. The $\star_b$-fold of a clause equals $\{a\}$ exactly when the clause is false, and $\star_a$ keeps a marker exactly when no operand equals $\{a\}$. A literal equal to $\{b\}$ makes both sides $\{b\}$. This containment and absorption is what turns a Boolean reading into equality of winner sets, which the Boolean reading alone does not give: it satisfies distributivity, and owned choice does not.
 \end{idea}
 
 \begin{corollary}[Equational complexity]\label{gen:thm:complexity}
