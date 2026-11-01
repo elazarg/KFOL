@@ -334,7 +334,7 @@ theorem ambiguity_unobservable_by_unique_winner {α : Type}
     exact ⟨fun h => False.elim (hnA h), fun h => False.elim (hnB h)⟩
 
 /-- The upper half of the unary normal-form classification. The finite
-    parameter count and synthesis of every row are proved in the paper (main.tex). -/
+    parameter count and synthesis of every row are proved in the technical report (tr.tex). -/
 def Regular {α : Type} (f : S α → S α) : Prop :=
   ∃ C, Extensive f ∧
     (∀ A, Multiple A → f A = join A C) ∧

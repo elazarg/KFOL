@@ -2,8 +2,9 @@ PYTHON ?= python3
 LEAN ?= lean
 LATEXMK ?= latexmk
 ZIP ?= zip
+LATEX = $(LATEXMK) -pdf -interaction=nonstopmode -halt-on-error -outdir=build
 
-PAPER_SOURCES := main.tex references.bib $(wildcard sections/*.tex)
+PAPER_SOURCES := main.tex tr.tex references.bib $(wildcard sections/*.tex)
 PYTHON_CHECKS := $(sort $(wildcard checks/check_*.py))
 LEAN_MODULES := Basic Perspectives CoreModels Synthesis BooleanCore Separation FullAlgebra Reset ResetModels OneConstant Fragments RawFragments OwnerFragments OwnerModels ChainGuards MixedPolicies SealedRounds
 LEAN_OBJECTS := $(addprefix build/lean/,$(addsuffix .olean,$(LEAN_MODULES)))
@@ -12,14 +13,19 @@ LEAN_OBJECTS := $(addprefix build/lean/,$(addsuffix .olean,$(LEAN_MODULES)))
 
 all: paper
 
-paper: build/main.pdf
-
-build/main.pdf: $(PAPER_SOURCES) | build
-	$(LATEXMK) -pdf -interaction=nonstopmode -halt-on-error -outdir=build main.tex
+# main.tex and tr.tex read each other's numbering from committed snapshots,
+# sections/labels-main.tex and sections/labels-tr.tex, so either one builds alone.
+# Numbers in one document do not depend on the other, so one export settles both.
+paper: | build
+	$(LATEX) main.tex
+	$(LATEX) tr.tex
+	$(PYTHON) scripts/export_labels.py
+	$(LATEX) main.tex
+	$(LATEX) tr.tex
 
 overleaf: build/overleaf.zip
 
-build/overleaf.zip: $(PAPER_SOURCES) | build
+build/overleaf.zip: paper
 	rm -f $@
 	$(ZIP) -q $@ $(PAPER_SOURCES)
 

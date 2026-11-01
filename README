@@ -1,12 +1,16 @@
 Rational Owned Choice: Finite Algebras and Sealed Rounds
 
-The paper is main.tex. Select it as the main document in Overleaf and use
-pdfLaTeX, or build locally with TeX Live and latexmk:
+The paper is main.tex, and its appendices form a technical report, tr.tex.
+Below, "the paper" includes both. Select either one as the main document in
+Overleaf and use pdfLaTeX, or build both locally with TeX Live and latexmk:
 
     make paper
 
-The PDF is build/main.pdf. To create an upload containing only the paper
-sources and bibliography:
+The PDFs are build/main.pdf and build/tr.pdf. Each document reads the other's
+numbering from a committed snapshot, sections/labels-main.tex or
+sections/labels-tr.tex, so it builds alone. make paper refreshes these
+snapshots; commit them after a change that renumbers anything. To create an
+upload containing only the paper sources and bibliography:
 
     make overleaf
 
@@ -30,8 +34,10 @@ generally. The paper's closed-round SE recursion is proved separately.
 Layout:
 
     main.tex          Paper entry point
+    tr.tex            Technical report entry point, holding the appendices
     references.bib    Bibliography
-    sections/         Paper sections, appendices, and macros
+    sections/         Sections, appendices, macros, and label snapshots
+    scripts/          Label export between the two documents
     lean/             Sixteen Lean proof modules, using only Std
     checks/           Python models and independent finite checks
     notes/            Exploration not claimed in the paper

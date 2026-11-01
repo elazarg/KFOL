@@ -135,7 +135,7 @@ for a coalition structure given by a partition. Question: is h exact with more v
   distribution sets: `(δa+δc)/2` in E(T +_b T). **Hand.**
 - **Splice.** Gluing a shared move makes one decision serve several parents. That is the
   paper's uniform-copy observation (`game:prop:uniform-observation`), not independent
-  copies. It differs from the shared circuits in the uncommitted circuit appendix, which
+  copies. It differs from the shared circuits in the circuit appendix, which
   share syntax only and still denote independent copies. **Hand.**
 
 ## 5. Tried, and not useful for this
