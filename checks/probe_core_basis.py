@@ -7,7 +7,9 @@ each *_i over +, pairwise Birkhoff laws, pairwise union coverage, and the
 three-owner definition of +. All these laws use at most three variables,
 so the five-element extra-marker algebra must satisfy them. We separately
 test the four-variable owner-exhaustion law, which excludes that algebra.
-Completeness after adding exhaustion remains unproved.
+The candidate even with exhaustion is refuted by the six-state certificate
+in check_core_mixed.py. We also count models satisfying the missing mixed
+absorption law; completeness of this further extension remains unproved.
 
 Enumerates finite operation tables, up to isomorphism of their + reduct,
 and tests their ENTIRE two-variable core theory via its finite free table.
@@ -18,7 +20,7 @@ The search is outside make check and uses only the Python standard library.
 import argparse
 from itertools import combinations, permutations, product
 
-from core_basis import binary_product, binary_profiles, binary_term
+from core_basis import binary_product, binary_profiles, binary_term, mixed_absorption
 
 
 def relabel(table, permutation):
@@ -100,12 +102,22 @@ def exhaustion_holds(add, operations):
     return True
 
 
+def mixed_absorption_holds(add, operations):
+    for a, b in combinations(range(len(operations)), 2):
+        for first, second in ((a, b), (b, a)):
+            left, right = mixed_absorption(first, second)
+            for values in product(range(len(add)), repeat=3):
+                if evaluate(left, values, add, operations) != evaluate(right, values, add, operations):
+                    return False
+    return True
+
+
 def search(size):
     tables = list(semilattices(size))
     relabellings = tuple(permutations(range(size)))
     elements = range(size)
     seen = set()
-    count = exhausted = 0
+    count = exhausted = mixed = 0
     for add in tables:
         if add in seen:
             continue
@@ -127,9 +139,12 @@ def search(size):
             failure = binary_failure(add, ops)
             if failure is not None:
                 raise AssertionError(('binary identity missing from candidate', add, ops, failure))
-            exhausted += exhaustion_holds(add, ops)
+            if exhaustion_holds(add, ops):
+                exhausted += 1
+                mixed += mixed_absorption_holds(add, ops)
     print(f'size={size}: {len(tables)} labelled semilattices; {count} candidate '
-          f'models pass every binary identity; {exhausted} also satisfy exhaustion.',
+          f'models pass every binary identity; {exhausted} also satisfy exhaustion; '
+          f'{mixed} satisfy exhaustion and mixed absorption.',
           flush=True)
 
 

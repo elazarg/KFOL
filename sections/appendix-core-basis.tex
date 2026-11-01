@@ -279,3 +279,283 @@ of $D_K$ at $K=3,4,5,6$, including failure of
 every product on every winner-set valuation at $K=3,4,5$, giving
 free-algebra sizes $20,37,70$. These results leave unrestricted
 finite basability of the core open.
+
+\subsection{Generators for proper-owner fragments}
+\label{app:core-proper-fragments}
+
+The extra-marker construction has a different status when an owner is
+unavailable: it then generates exactly the corresponding fragment.
+Here union is an explicit operation; the conclusion also holds after
+forgetting it.
+
+\begin{proposition}[Proper-owner generator]\label{core:prop:proper-generator}
+Let $\varnothing\ne R\subsetneq I$, with $m=|R|$ and $K\geq3$.
+In the signature $\{+\}\cup\{\star_i:i\in R\}$, let $D_R$ have
+carrier $\{a_i:i\in R\}\cup\{n,p\}$ and the same tables as the
+extra-marker construction: the atoms lie below $n<p$, and $\star_i$
+absorbs $a_i$ and otherwise takes join. Then
+\[
+ D_R\in\operatorname H(\mathbf C_K|_R),\qquad
+ \mathbf C_K|_R\in\operatorname{SP}(D_R).
+\]
+Consequently this fragment's equational theory depends only on $m$,
+not on the number of available but unused roles.
+\end{proposition}
+\begin{proof}
+For each observer $k\in I$ define
+\[
+ q_k(S)=
+ \begin{cases}
+ p,&k\in S,\\
+ a_i,&S=\{i\},\ i\in R,\ k\notin S,\\
+ n,&\text{otherwise}.
+ \end{cases}
+\]
+Union is preserved: membership of $k$ takes precedence, and a union
+not containing $k$ is a selected singleton precisely when both
+inputs are that singleton. For $i\ne k$, the equality $q_k(S)=a_i$
+holds precisely when $S=\{i\}$. Thus an absorbing $\star_i$ branch
+is preserved; otherwise both the source and target take union.
+If $i=k$, the target image omits $a_i$, so its operation is join.
+An absorbing source branch maps to $p$, as does the target join
+because one input maps to $p$. The remaining cases again take union.
+Hence every $q_k$ is a homomorphism.
+
+If $k\notin R$, the map is onto: $\{i\}$ supplies each $a_i$,
+$\{k\}$ supplies $p$, and any two-element set avoiding $k$
+supplies $n$. Such a set exists because $K\geq3$.
+Finally $q_k(S)=p$ if and only if $k\in S$, so the family of all
+$q_k$ separates distinct winner sets. Their product is an embedding
+into $D_R^I$. These constructions also preserve the reduced
+signature without union.
+\end{proof}
+
+\begin{corollary}[Reduction to fragments with union]
+\label{core:cor:fragment-reduction}
+For $\varnothing\ne R\subsetneq I$, the subvariety
+\[
+ \mathcal W_R=\operatorname V(\mathbf C_K)\cap
+ \operatorname{Mod}\{x\star_j y=x+y:j\notin R\}
+\]
+is term equivalent to $\operatorname V(D_R)$ with union retained.
+If the core has a finite basis, so does this fragment, with no increase
+in the variable bound. Moreover
+\[
+ \operatorname V(\mathbf C_K)
+   =\bigvee_{j\in I}\mathcal W_{I\setminus\{j\}}.
+\]
+\end{corollary}
+\begin{proof}
+Expand $D_R$ by interpreting every unused choice as join. This
+expansion belongs to the core variety. When $|R|=1$ this is
+\cref{core:prop:dissemilattice-lift}. Otherwise choose $j\notin R$
+and restrict the winner-set algebra to nonempty subsets of
+$R\cup\{j\}$. The map $q_j$ above is an onto homomorphism to the
+expanded $D_R$: owner $j$ acts as join in the image, and every owner
+outside $R\cup\{j\}$ already acts as union in the source.
+Duplicating join commutes with homomorphic images, subalgebras, and
+products, so this expansion puts all of $\operatorname V(D_R)$ in
+$\mathcal W_R$. Conversely every member of $\mathcal W_R$, after
+forgetting the unused choices, satisfies all identities of $D_R$
+by \cref{core:prop:proper-generator}, and its forgotten operations
+are recovered as union. This proves the term equivalence.
+
+For the finite-basis assertion, take a core basis, replace each unused
+choice by $+$, and add the two-variable equation equating $+$ with
+the similarly translated derived union term. These equations define
+exactly the fragment just described. The core basis already needs at
+least $K+1$ variables by \cref{core:thm:basis-arity}, so the extra
+equation does not increase its variable bound.
+
+Finally, for each $j$ take $R=I\setminus\{j\}$. The full-signature
+quotients $q_j$ belong to $\mathcal W_R$ and jointly separate all
+winner sets by membership. Thus the core generator embeds into their
+product. The opposite variety inclusion follows from the definition
+of $\mathcal W_R$.
+\end{proof}
+
+For $m=1$ this is the generator $3_m$ used above. For $m=2$, write
+the atoms as $a,b$. The two choices are maximum in the linear orders
+\[
+ b<n<p<a,\qquad a<n<p<b,
+\]
+respectively. Viewing the first as meet gives meet order $a<p<n<b$;
+the other join order is $a<n<p<b$. Thus the raw two-choice reduct is
+the classical four-element bichain $B$
+\cite[Definition~5.4]{HardingRomanowska2017}.
+This identification does not establish a finite basis for that
+fragment or for the core. Nor is the union expansion term equivalent
+to the raw pair: $\{a,b\}$ is closed under both choices, but its
+join $a+b=n$ lies outside it, so union is not a raw two-choice term.
+
+\subsection{A complete presentation of conservative core models}
+\label{app:core-conservative}
+
+An algebra is \emph{conservative} if every basic operation returns
+one of its inputs. In this subsection $+$ again abbreviates a fixed
+derived union term using three distinct owners. It is conservative
+whenever the basic choices are conservative.
+
+Let $\Sigma_{\rm cons}$ consist of the three semilattice laws for
+$+$, the three semilattice laws for each $\star_i$, and
+\begin{align}
+ x\star_i(y+z)&=(x\star_i y)+(x\star_i z),
+       &&i\in I,\label{core:eq:cons-dist}\\
+ (x\star_i y)+(x\star_j y)&=x+y,
+       &&i\ne j.\label{core:eq:pair-cover}
+\end{align}
+Only one equation is needed per unordered pair in the second family.
+There are $3+4K+\binom K2$ equations, each using at most three
+variables after expanding $+$. All are sound in the core.
+For pair coverage, if neither choice absorbs, both return union;
+if just one absorbs, the other supplies union; and if both absorb,
+the two inputs must be the two different owner singletons.
+
+\begin{theorem}[Conservative core presentation]
+\label{core:thm:conservative-basis}
+For every $K\geq3$, a conservative algebra in the core signature
+belongs to $\operatorname V(\mathbf C_K)$ if and only if it satisfies
+$\Sigma_{\rm cons}$. In every such algebra, all but at most one
+owned choice equal derived union. The bound of three variables is
+optimal, even for an infinite relative equational presentation.
+\end{theorem}
+\begin{proof}
+Necessity follows from soundness. Conversely, let a conservative
+algebra satisfy $\Sigma_{\rm cons}$. Since $+$ is a conservative
+semilattice operation, the order $x\leq y\iff x+y=y$ is linear.
+Distribution makes each choice monotone in both arguments for this
+order.
+
+Suppose two choices $f,g$ both differ from $+$. By conservativity
+and commutativity there are $x<y$ and $u<v$ such that
+$f(x,y)=x$ and $g(u,v)=u$. Put
+$a=\min(x,u)$ and $b=\min(y,v)$. Then $a<b$.
+Monotonicity gives $f(a,y)\leq f(x,y)=x<y$, so conservativity
+forces $f(a,y)=a$. Since $a\leq b\leq y$, a second application
+gives $f(a,b)\leq a$ and hence $f(a,b)=a$. The same argument
+with $u,v$ gives $g(a,b)=a$. Pair coverage would now say
+$a=f(a,b)+g(a,b)=a+b=b$, a contradiction.
+
+Thus all choices except possibly one, say $\star_r$, equal $+$.
+If there is no exception, choose any $r$. The two operations
+$+,\star_r$ form a meet-distributive bisemilattice by their
+semilattice laws and \eqref{core:eq:cons-dist}. Its expansion is
+exactly the given algebra, so
+\cref{core:prop:dissemilattice-lift} puts it in the core variety.
+This argument applies to infinite conservative algebras as well.
+
+For optimality, duplicate at every owner the commutative idempotent
+operation on $\{0,1,2\}$ with
+$0*1=0$, $1*2=1$, and $2*0=2$. Every two-element subalgebra is a
+semilattice with all choices equal, hence belongs to the core
+variety by \cref{core:prop:dissemilattice-lift}. The algebra therefore
+satisfies every two-variable core identity, without a term-size
+bound. But $(0*1)*2=2$ whereas $0*(1*2)=0$, so it is not a core
+model. It is conservative, which proves the relative lower bound.
+\end{proof}
+
+\begin{corollary}[Small countermodels]\label{core:cor:small-countermodel}
+Let $K\geq3$ and $s\geq3$. Every algebra with at most $s+1$
+elements satisfying all $s$-variable identities of $\mathbf C_K$
+belongs to $\operatorname V(\mathbf C_K)$. In particular, the
+$(K+2)$-element algebra of \cref{core:thm:basis-arity} is a smallest
+countermodel to the entire $K$-variable theory.
+\end{corollary}
+\begin{proof}
+If the algebra is generated by at most $s$ elements, any evaluation
+of any identity can be expressed by terms in those generators.
+Substitution turns the identity into a valid identity with at most
+$s$ variables, which holds by assumption. Thus the algebra satisfies
+every core identity.
+
+Otherwise it has exactly $s+1$ elements and cannot have a binary
+product $f(x,y)=z\notin\{x,y\}$: deleting $z$ would leave at most
+$s$ generators, since $x,y$ recover $z$. All its basic operations
+are therefore conservative. It satisfies $\Sigma_{\rm cons}$ because
+$s\geq3$, so \cref{core:thm:conservative-basis} applies. The final
+claim follows by taking $s=K$ and using the exhibited countermodel.
+\end{proof}
+
+\path{lean/CoreConservative.lean} kernel-checks the generic structural
+lemma that two conservative, commutative operations distributing over
+a conservative join and satisfying pair coverage cannot both differ
+from join. The passage through dissemilattice generation, the optimal
+variable bound, and the small-countermodel corollary have the written
+proofs above. Conservativity is a hypothesis on the models, not an
+additional identity: this theorem is a relative presentation and does
+not settle unrestricted finite basability.
+
+\subsection{A missing mixed-owner identity}
+\label{app:core-mixed-law}
+
+Even adding owner exhaustion to the preceding equations and several
+natural mixed laws does not yield a complete basis. The following
+three-variable identity gives a concrete obstruction.
+
+\begin{proposition}[Mixed absorption]\label{core:prop:mixed-absorption}
+For all owners $a,b$, the core satisfies
+\begin{equation}\label{core:eq:mixed-absorption}
+ x\star_a\bigl(y\star_b(y\star_a z)\bigr)
+ =x\star_a\bigl(y\star_b(x\star_a(y\star_a z))\bigr).
+\end{equation}
+For three owners it does not follow from $\Sigma_{\rm cons}$,
+owner exhaustion, and all instances of
+\begin{align}
+ x\star_i(x\star_j y)&=x\star_j(x\star_i y),
+       \label{core:eq:birkhoff}\\
+ (x\star_i y)\star_k(x\star_j y)&=x+y
+       \qquad(i,j,k\text{ distinct}).\label{core:eq:union-definition}
+\end{align}
+These equations have a six-element countermodel that also satisfies
+every two-variable core identity.
+\end{proposition}
+\begin{proof}
+For soundness of \eqref{core:eq:mixed-absorption}, if $x=\{a\}$,
+the outer choice absorbs on both sides. If $y$ or $z$ equals
+$\{a\}$, then $y\star_a z=\{a\}$ and inserting $x\star_a$
+does not change this inner value. In the remaining cases put
+$u=y\cup z$ and $v=x\cup u$. Neither is $\{a\}$.
+If $y=\{b\}$, both $b$ choices return $y$. Otherwise neither
+$u$ nor $v$ is $\{b\}$, because each contains the nonempty set
+$y\ne\{b\}$. The two $b$ choices return $u$ and $v$, respectively,
+and the outer $a$ choices both return $v$.
+
+For nonderivability take carrier $\{0,1,2,3,4,5\}$, set
+$\star_1=+$, and use the following tables. Rows and columns are
+in increasing order.
+\[
+\begin{array}{c@{\qquad}c@{\qquad}c}
++ & \star_0 & \star_2\\[2pt]
+\begin{pmatrix}
+0&2&2&3&4&5\\2&1&2&4&4&5\\2&2&2&4&4&5\\
+3&4&4&3&4&5\\4&4&4&4&4&5\\5&5&5&5&5&5
+\end{pmatrix}&
+\begin{pmatrix}
+0&0&0&3&3&3\\0&1&2&3&4&5\\0&2&2&3&4&5\\
+3&3&3&3&3&3\\3&4&4&3&4&5\\3&5&5&3&5&5
+\end{pmatrix}&
+\begin{pmatrix}
+0&1&2&3&4&5\\1&1&1&1&1&5\\2&1&2&4&4&5\\
+3&1&4&3&4&5\\4&1&4&4&4&5\\5&5&5&5&5&5
+\end{pmatrix}
+\end{array}
+\]
+All the listed candidate equations hold in these tables; their finite
+verification is kernel-checked in \path{lean/CoreMixed.lean}.
+But at $a=0$, $b=2$, and $(x,y,z)=(0,1,5)$, the two sides of
+\eqref{core:eq:mixed-absorption} are $3$ and $0$, respectively.
+For the last assertion, evaluating every representative and product
+of the twenty-element free binary core algebra gives a homomorphism
+at each pair in this carrier. This finite certificate is checked by
+\path{checks/check_core_mixed.py}; the binary classification then
+transfers every two-variable identity, independently of term size.
+\end{proof}
+
+The generic soundness proof of mixed absorption is also kernel-checked
+in \path{lean/CoreMixed.lean}.
+\path{checks/check_core_mixed.py} independently checks the six-state
+certificate, the mixed law on every native valuation for $K=3,4,5$,
+all proper-owner quotient maps at those values of $K$, and the
+conservative structural lemma for every conservative semilattice
+operation on chains of sizes two through six. The relative basis and
+the new mixed law do not provide a complete unrestricted core basis.

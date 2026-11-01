@@ -38,7 +38,7 @@ Layout:
     references.bib    Bibliography
     sections/         Sections, appendices, macros, and label snapshots
     scripts/          Label export between the two documents
-    lean/             Eighteen Lean proof modules, using only Std
+    lean/             Twenty Lean proof modules, using only Std
     checks/           Python models and independent finite checks
     notes/            Exploration not claimed in the paper
     lean-toolchain    Lean version (4.34.1)
@@ -54,8 +54,10 @@ order, with generated files under build/lean. make clean removes build/.
 checks/probe_residual.py is an optional experiment, outside the checks;
 it establishes no residual bound for the whole variety.
 checks/probe_core_basis.py optionally enumerates small models of candidate
-core laws, checks their entire two-variable theory, and tests the additional
-owner-exhaustion equation. Passing this search is not a completeness proof.
+core laws, checks their entire two-variable theory, and tests owner
+exhaustion and mixed absorption. The candidate without mixed absorption
+has a six-state countermodel. Passing the extended search is not a
+completeness proof.
 
 checks/check_fragments.py independently evaluates the reset/union and
 two-owner H hardness reductions, including every mixed valuation in its
@@ -126,6 +128,28 @@ and, for three owners, the quotient maps, transfer of every three-variable
 identity, and the four-variable failure. checks/check_core_obstruction.py
 checks the quotients at K=3..6 and complete binary tables at K=3,4,5.
 Unrestricted finite basability of the core remains open.
+
+The same section gives a complete relative presentation for conservative
+core models: 3+4K+binom(K,2) identities, with an optimal bound of three
+variables. All but at most one owner operation equal derived union.
+lean/CoreConservative.lean proves this structural lemma for arbitrary
+carriers; completeness uses the cited dissemilattice generation theorem.
+A written corollary makes the K+2-state witness above smallest possible:
+for s >= 3, every algebra of size at most s+1 satisfying the entire
+s-variable core theory already belongs to the core variety.
+
+Every nonempty proper-owner fragment with m owners has an exact
+(m+2)-state generator, also when union is retained. The union expansion
+is term equivalent to the core subvariety in which unused owners equal
+union; any finite core basis would yield a finite basis for that fragment.
+The core variety is the join of these subvarieties with one unused owner.
+The raw two-owner
+reduct is the classical four-element bichain B; this observation does
+not give a finite basis. lean/CoreMixed.lean proves a generic mixed
+absorption identity and checks a six-state countermodel to the candidate
+core laws even with owner exhaustion. checks/check_core_mixed.py checks
+these certificates, all proper-owner maps at K=3,4,5, and the conservative
+structural lemma on chains of sizes two through six.
 
 sections/appendix-basis.tex gives a finite presentation of all conservative
 one-owner models: seventeen equations, reducible to thirteen in that class,

@@ -39,6 +39,41 @@ def exhaustion_identity(count):
     return union(marker, cover), cover
 
 
+def fragment_quotient(owners, observer, value):
+    """The player-observer map into the |owners|+2-state fragment generator."""
+    if value & (1 << observer):
+        return len(owners) + 1
+    if value.bit_count() == 1:
+        role = value.bit_length() - 1
+        if role in owners:
+            return owners.index(role)
+    return len(owners)
+
+
+def mixed_absorption(first, second):
+    """A valid three-variable law missing from the initial core candidate."""
+    x, y, z = map(var, range(3))
+    yz = owned(first, y, z)
+    return (owned(first, x, owned(second, y, yz)),
+            owned(first, x, owned(second, y, owned(first, x, yz))))
+
+
+# Fixed countermodel to the candidate including owner exhaustion.
+# The middle operation is join. This is a certificate, not search output
+# that must be regenerated in order to verify the obstruction.
+MIXED_JOIN = (
+    (0, 2, 2, 3, 4, 5), (2, 1, 2, 4, 4, 5), (2, 2, 2, 4, 4, 5),
+    (3, 4, 4, 3, 4, 5), (4, 4, 4, 4, 4, 5), (5, 5, 5, 5, 5, 5),
+)
+MIXED_OPERATIONS = (
+    ((0, 0, 0, 3, 3, 3), (0, 1, 2, 3, 4, 5), (0, 2, 2, 3, 4, 5),
+     (3, 3, 3, 3, 3, 3), (3, 4, 4, 3, 4, 5), (3, 5, 5, 3, 5, 5)),
+    MIXED_JOIN,
+    ((0, 1, 2, 3, 4, 5), (1, 1, 1, 1, 1, 5), (2, 1, 2, 4, 4, 5),
+     (3, 1, 4, 3, 4, 5), (4, 1, 4, 4, 4, 5), (5, 5, 5, 5, 5, 5)),
+)
+
+
 @dataclass(frozen=True)
 class BinaryProfile:
     """Variable support, and singleton-winning owners for each input.
