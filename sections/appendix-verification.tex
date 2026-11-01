@@ -2,12 +2,19 @@
 
 The formal development in \texttt{lean/} uses Lean 4.34.1 with only \texttt{Std}. It has no admitted proofs or added axioms; audits report only \texttt{propext}, \texttt{Classical.choice}, and \texttt{Quot.sound} where needed. \Cref{tab:status} records the evidence for each main result: ``Lean'' names kernel-checked theorems, ``written'' means a mathematical proof in this paper, and ``external'' means a theorem imported from the literature, which is not a Lean axiom. Finite checks test their implementations at stated sizes. Run \texttt{make check paper} to reproduce them.
 
-\begin{table}[ht]
-\centering\small
-\begin{tabular}{p{0.34\linewidth}p{0.60\linewidth}}
+{\small
+\begin{longtable}{p{0.34\linewidth}p{0.60\linewidth}}
+\caption{The evidence for the main results.}\label{tab:status}\\
 \toprule
 Result & Evidence\\
 \midrule
+\endfirsthead
+\toprule
+Result & Evidence\\
+\midrule
+\endhead
+\bottomrule
+\endlastfoot
 SPE recurrence, neutral union (\cref{game:thm:adequacy,game:thm:union})
  & Lean: \texttt{winners\_node}, \texttt{three\_owner\_join}, \texttt{every\_winner\_set\_realized}.\\
 Occurrence lower bound (\cref{game:thm:lower})
@@ -56,11 +63,7 @@ Congruences, unary classifications (\cref{app:contexts,app:congruences,app:ambig
  & Reduct synthesis in Lean (\texttt{unary\_synthesis}); remainder written; finite checks.\\
 Dependent layer (\cref{app:dependent})
  & Written; finite models of phase and sealing rules.\\
-\bottomrule
-\end{tabular}
-\caption{The evidence for the main results.}
-\label{tab:status}
-\end{table}
+\end{longtable}}
 
 \subsection{Lean modules}
 
@@ -153,7 +156,7 @@ constant-free equation pairs on all $7^4$ mixed valuations. Reset checks
 compare antimatroid enumeration with term closure through arity four,
 all $140^2$ products, and $20^4$ candidate root-fixed five-input tables,
 and compare conservative models with forest enumeration. Separate
-bit-parallel checks evaluate the new native fragment equations on every
+bit-parallel checks evaluate the native fragment equations on every
 winner-set valuation: $11$ one-variable and $604$ two-variable CNFs at
 $K=3$, with $823543$ valuations per two-variable reset/union equation
 and $2401$ per two-variable $H$ equation. These include empty clauses,

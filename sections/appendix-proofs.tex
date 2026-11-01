@@ -261,7 +261,7 @@ the unique minimum domain is
 \begin{proof}
 Sufficiency is \cref{sym:thm:pairs}. Each singleton is necessary
 already in the reduct: its unary synthesis gives a term differing from
-the constant $I$ only at that singleton. These separators are now
+the constant $I$ only at that singleton. These separators are
 kernel-checked in \texttt{Synthesis.lean}.
 
 For necessity of a particular pair $P$, choose $k\notin P$, put
@@ -773,8 +773,6 @@ Minimality is already known for $G_3$ and its dual in Waldhauser's work; the dir
 The decision problem takes two ordinary tree terms, with any number of variables, and asks whether they agree at every nonempty-set valuation. Fixing $K$ fixes the algebra and its signature. In the uniform version, role names have binary encodings and permutations are explicit lists of their images. Terms are not
 encoded by shared recursive descriptions.
 
-The proof below of \cref{gen:thm:complexity} is direct, and uses all three owners of $J$; \cref{thm:raw-pairs} gives a shorter reduction with two.
-
 \begin{proof}[Proof of \cref{gen:thm:complexity}]
 For fixed $K$, a failed valuation is a polynomial certificate since the
 algebra is finite and term evaluation is linear up to fixed constants.
@@ -787,13 +785,13 @@ winner leaves. This is polynomial in tree-term size, independently of
 the exponential size of the carrier and even when $K$ is binary encoded.
 Evaluation and comparison are therefore polynomial. Validity is in coNP.
 
-For hardness, \cref{thm:raw-pairs} below gives a linear reduction
+For hardness, \cref{thm:raw-pairs} gives a linear reduction
 using just two distinct owned operations. It uses neither constants,
 role switches, nor derived union. Fixed-$K$ hardness also supplies
 uniform hardness.
 \end{proof}
 
-The gate uses the common input union as its false value, so it requires no named winner and no $I$. For the remaining reductions, size is measured in the stated native signature; an expansion into owned-choice syntax may be larger. Write $\operatorname{rc}(a_1,\ldots,a_n;b)$ for the right comb
+For the remaining reductions, size is measured in the stated native signature; an expansion into owned-choice syntax may be larger. Write $\operatorname{rc}(a_1,\ldots,a_n;b)$ for the right comb
 $a_1\del(a_2\del\cdots\del(a_n\del b))$, and $\operatorname{lc}(b;g_1,\ldots,g_m)$ for the left comb $(\cdots((b\del g_1)\del g_2)\cdots)\del g_m$. Both are $b$ when their lists are empty.
 
 \begin{proposition}[Reset with union]\label{thm:owner-free-hardness}
@@ -901,6 +899,8 @@ $y_i=\{b\}$ for false, $z=\{a,b\}$, and $c=\{d\}$ for a third
 role $d$. Every clause has a literal with $y_i=\{s\}$, removing
 $d$ in its branch. Thus $d\notin R$, while $d\in c\del R$.
 \end{proof}
+
+Let $\mathcal B_K=(\Pow(\{1,\ldots,K\});\del,\cup)$.
 
 \begin{proposition}[Dependence on the number of roles]\label{thm:colouring-theories}
 For every $K\geq3$,
@@ -1348,7 +1348,7 @@ first-order theory of real closed fields. Its decision theorem applies.
 
 \paragraph{The infinite family.}
 In \cref{se:thm:infinite}, all inputs $G_n$ have the same winner set while the outputs vary, so the possible-winner observation is not compositional on winner sets, and its contextual equivalence has infinite index. This holds with complete revelation after every round and no internal role switches, and extra inactive roles do not affect the construction.
-Each step $L_{n+1}=D(L_n,\at0)$ adds one round and only one occurrence of its predecessor, so explicit tree size is linear in $n$. The games $G_n$ have the unique distribution
+Each step $L_{n+1}=D(L_n,\at a)$ adds one round and only one occurrence of its predecessor, so explicit tree size is linear in $n$. The games $G_n$ have the unique distribution
 \[
  p_n=\frac1{n+2}\delta_a+\frac{n+1}{n+2}\delta_b.
 \]
