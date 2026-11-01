@@ -128,13 +128,13 @@ def part_two_player_general_sum():
     dist = sum(owned(upper[0], x, owned(upper[1], y, z)) != owned(upper[1], owned(upper[0], x, y), owned(upper[0], x, z)) for x, y, z in triples)
     abs_fail = sum(owned(upper[0], x, owned(upper[1], x, y)) != x for x, y in itertools.product(seen, repeat=2))
     print(f"   distributivity fails on {dist} of {len(triples)} triples, absorption on {abs_fail}.")
-    # Which values have the same forcing vector?
-    def forcing(v):
+    # Who is certain to win? In this algebra that is not the same as who can force.
+    def certain(v):
         return (all(w & 1 for w in v), all(w & 2 for w in v))
     groups = {}
     for v in seen:
-        groups.setdefault(forcing(v), []).append(sorted(v))
-    print("   values per individual-forcing vector (of values, on outcome sets):", {k: len(g) for k, g in sorted(groups.items())})
+        groups.setdefault(certain(v), []).append(sorted(v))
+    print("   values by (a certain, b certain):", {k: len(g) for k, g in sorted(groups.items())})
 
 
 # ---- coalition quotients -------------------------------------------------------

@@ -38,8 +38,8 @@ it does not.
 
 - `<ab> +_a <none>` has value {ab}: b surely wins, yet b cannot force a win.
 - **Tested:** the leaves generate 12 of the 15 possible values. Distributivity fails
-  on 192 of 1728 triples and absorption on 60 of 144 pairs. Seven values share the
-  forcing vector (no, no).
+  on 192 of 1728 triples and absorption on 60 of 144 pairs. Seven of the values leave
+  neither player certain of winning.
 - K-FOG's cross-diagonal product (Battleship) reaches this algebra even from zero-sum
   games. **Tested:** `<0>` and `<0> +_0 <1>` both have value {0}, but crossing with `<0>`
   gives {neither} and {neither, B}. So Zermelo values are not a congruence for it.
@@ -129,10 +129,10 @@ for a coalition structure given by a partition. Question: is h exact with more v
   serial {a,b,c}. Whether the inclusion survives deeper rounds is open.
 - **Clock and megaphone.** A paper round is K-FOG's tensor followed by a megaphone. A
   secret retained across a boundary is a clock without the megaphone, the case for which
-  the paper has no composition theorem.
+  the paper has no composition theorem. **Hand.**
 - **Cheap talk.** K-FOG's outcome-insensitive binder is `G +_r G`. It is invisible to
   winner sets, by idempotence. It is exactly the paper's failure of idempotence on
-  distribution sets: `(δa+δc)/2` in E(T +_b T).
+  distribution sets: `(δa+δc)/2` in E(T +_b T). **Hand.**
 - **Splice.** Gluing a shared move makes one decision serve several parents. That is the
   paper's uniform-copy observation (`game:prop:uniform-observation`), not independent
   copies. It differs from the shared circuits in the uncommitted circuit appendix, which
