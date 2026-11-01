@@ -38,7 +38,7 @@ Layout:
     references.bib    Bibliography
     sections/         Sections, appendices, macros, and label snapshots
     scripts/          Label export between the two documents
-    lean/             Sixteen Lean proof modules, using only Std
+    lean/             Eighteen Lean proof modules, using only Std
     checks/           Python models and independent finite checks
     notes/            Exploration not claimed in the paper
     lean-toolchain    Lean version (4.34.1)
@@ -53,6 +53,9 @@ needs only the standard library. Lean imports are built in dependency
 order, with generated files under build/lean. make clean removes build/.
 checks/probe_residual.py is an optional experiment, outside the checks;
 it establishes no residual bound for the whole variety.
+checks/probe_core_basis.py optionally enumerates small models of candidate
+core laws, checks their entire two-variable theory, and tests the additional
+owner-exhaustion equation. Passing this search is not a completeness proof.
 
 checks/check_fragments.py independently evaluates the reset/union and
 two-owner H hardness reductions, including every mixed valuation in its
@@ -112,6 +115,17 @@ lean/OwnerModels.lean constructs a four-element countermodel, embeds every
 proper subalgebra in F squared, and proves that every three-variable
 identity transfers, with no term-size bound. A valid four-variable identity
 fails in that model. This lower bound applies to the unrestricted basis.
+
+For the K-owner core, every equational basis needs at least K+1 variables.
+sections/appendix-core-basis.tex constructs a (K+2)-element algebra that
+satisfies every K-variable identity but fails owner exhaustion. The same
+section classifies all binary core terms: the free two-generated algebra
+has 2^(K+1)+K+1 elements. The general proofs are written.
+lean/CoreObstruction.lean kernel-checks the owner-exhaustion membership law
+and, for three owners, the quotient maps, transfer of every three-variable
+identity, and the four-variable failure. checks/check_core_obstruction.py
+checks the quotients at K=3..6 and complete binary tables at K=3,4,5.
+Unrestricted finite basability of the core remains open.
 
 sections/appendix-basis.tex gives a finite presentation of all conservative
 one-owner models: seventeen equations, reducible to thirteen in that class,

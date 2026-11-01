@@ -95,3 +95,187 @@ The expansion and congruence arguments above are written proofs.
 \path{checks/check_core_basis.py} checks the seven sound identities,
 the concrete embeddings, and the failed reverse distributive law
 independently with winner sets.
+
+\subsection{A variable lower bound for the core}
+\label{app:core-arity}
+
+There is a second obstruction to a small basis, independent of the
+residual bound. It grows with the number of owners. Throughout this
+subsection $+$ is the derived union term, not an additional operation.
+
+\begin{theorem}[Core basis arity]\label{core:thm:basis-arity}
+For each $K\geq3$, the equational theory of the $K$-owner core is not
+axiomatizable by identities using at most $K$ variables, even by an
+infinite set of such identities. Every equational basis contains an
+identity with at least $K+1$ variables.
+
+An explicit $(K+2)$-element algebra satisfies every $K$-variable core
+identity but fails the valid $(K+1)$-variable identity
+\begin{equation}\label{core:eq:exhaustion}
+ c+\sum_{i\in I}(c\star_i x_i)
+   =\sum_{i\in I}(c\star_i x_i).
+\end{equation}
+\end{theorem}
+\begin{proof}
+Equation~\eqref{core:eq:exhaustion} is valid because an owner's choice
+never erases that owner's membership: if $i\in c$, then
+$i\in c\star_i x_i$. The sum therefore contains every member of $c$.
+It is a finite nonempty sum; replacing every $+$ by its core term
+introduces no further variables.
+
+Define $D_K$ on $\{a_i:i\in I\}\cup\{n,p\}$. Give it the join
+semilattice in which the $a_i$ are incomparable below $n<p$, and put
+\[
+ u\star_i v=
+ \begin{cases}
+ a_i,&u=a_i\text{ or }v=a_i,\\
+ u+v,&\text{otherwise}.
+ \end{cases}
+\]
+Here join is used to specify the tables, while the algebra's signature
+consists only of the $\star_i$. Its derived union is exactly this
+join. Indeed, in
+$(u\star_a v)\star_c(u\star_b v)$ for distinct $a,b,c$, if neither
+input is $a_a$ or $a_b$, both inner values are $u+v$; if just one
+inner operation absorbs, the other returns $u+v$; and if both absorb,
+the inputs are $a_a,a_b$ and both the outer value and $u+v$ are $n$.
+In the middle case the outer operation cannot absorb unless both
+inputs were $a_c$, which belongs to the first case.
+
+The following subalgebras of $D_K$ belong to
+$\operatorname V(\mathbf C)$:
+\begin{enumerate}
+\item $D_K\setminus\{p\}$ is the quotient of the winner-set algebra
+  that sends $\{i\}$ to $a_i$ and every ambiguous set to $n$.
+  Owned choice yields its owner singleton when either input is that
+  singleton; otherwise its output is a singleton precisely when
+  both inputs are that same singleton. Thus the map preserves every
+  operation. It is onto.
+\item For each $j\in I$, $D_K\setminus\{a_j\}$ is the quotient under
+  \[
+  q_j(S)=
+  \begin{cases}
+  p,&j\in S,\\
+  a_i,&S=\{i\},\ i\ne j,\\
+  n,&\text{otherwise}.
+  \end{cases}
+  \]
+  This is the player-$j$ quotient: the membership and singleton
+  recursions prove that $q_j$ preserves owned choice. For owner $j$
+  its target operation is join, since the target omits $a_j$.
+  Surjectivity uses $K\geq3$: a pair of roles different from $j$
+  supplies $n$, and $\{j\}$ supplies $p$.
+\end{enumerate}
+
+Any set of at most $K$ generators misses one of the $K+1$ elements
+$p,a_1,\ldots,a_K$. It therefore lies in one of these subalgebras,
+as does the subalgebra it generates. Every evaluation of a
+$K$-variable identity stays in such a subalgebra. Consequently
+$D_K$ satisfies every $K$-variable identity of $\mathbf C$,
+with no restriction on term size.
+
+Finally, take $c=p$ and $x_i=a_i$ in
+\eqref{core:eq:exhaustion}. Each summand is $a_i$, so the right
+side is $n$ and the left side is $p$. Thus $D_K$ is not a core
+model. Soundness of equational logic proves the claimed lower bound.
+\end{proof}
+
+For three owners this is a five-element countermodel to the entire
+three-variable theory. More generally, it excludes any proposed basis
+whose variable bound stays fixed as $K$ increases. It does not exclude
+a finite basis for any fixed $K$: the single exhaustion equation
+already detects this countermodel. Nor is it a lower bound for the
+signatures with winner constants or internal permutations, which are
+not interpreted on $D_K$ here.
+
+\subsection{The complete two-variable core theory}
+\label{app:core-binary}
+
+The binary term functions admit an exact classification, useful for
+testing proposed bases without imposing a term-size cutoff.
+
+\begin{proposition}[Binary core normal forms]\label{core:prop:binary}
+The free two-generated core algebra has
+\[
+ 2^{K+1}+K+1
+\]
+elements. Its distinct term functions are the two projections, union,
+the $K$ owned choices, and, for every nonempty $A\subseteq I$,
+\[
+ L_A(x,y)=
+ \begin{cases}
+ x,&x=\{i\}\text{ for some }i\in A,\\
+ x\cup y,&\text{otherwise},
+ \end{cases}
+ \qquad R_A(x,y)=L_A(y,x).
+\]
+\end{proposition}
+\begin{proof}
+A term using only one of its variables is that projection, by
+idempotence. Consider a term using both. For each role $i$, its
+singleton-output predicate is the lattice term obtained by replacing
+$\star_i$ by disjunction and every other choice by conjunction,
+on the predicates $x=\{i\}$ and $y=\{i\}$. A monotone idempotent
+Boolean function on two arguments is their conjunction, their
+disjunction, or one of the two projections. Write $A$ for the
+owners whose predicate holds at $(1,0)$ and $B$ for those whose
+predicate holds at $(0,1)$.
+
+If $i\in A$ and $j\in B$ with $i\ne j$, evaluating at
+$x=\{i\}$ and $y=\{j\}$ would make the output both singletons.
+Hence $A\times B$ lies in the diagonal. The possibilities are
+$A=B=\varnothing$, exactly one nonempty set, or
+$A=B=\{i\}$.
+
+These predicates determine the whole binary function. If both
+inputs are ambiguous, every operation is union. If one is a
+singleton and the other ambiguous, the three sets $x,y,x\cup y$
+are closed under all choices; a term using both inputs returns
+either the singleton or their union. This follows inductively:
+an operation can discard a contribution only by returning its
+owner singleton. If both inputs are distinct singletons, the
+same three-set closure holds, and its only nonsingleton is their
+union. Equal singleton inputs give their common value by idempotence.
+Thus the four possibilities for $(A,B)$ give exactly the listed
+functions.
+
+All of them are terms. Start from $x+y$ and, for each $i\in A$,
+replace the current term $t$ by $x\star_i t$. This realizes $L_A$;
+interchanging the variables realizes $R_A$.
+For distinct $A,A'$, choose $i$ in their symmetric difference,
+put $x=\{i\}$, and take $y=I\setminus\{i\}$, which is ambiguous.
+This distinguishes $L_A$ from $L_{A'}$, and also distinguishes
+every nonempty left form from union and from every right form.
+The symmetric valuations distinguish right forms. The same tests
+in both orientations distinguish each owned choice from all
+one-sided forms and the other owned choices. Finally, incomparable
+ambiguous inputs distinguish the projections from all terms using
+both inputs. Counting gives
+$2+1+K+2(2^K-1)=2^{K+1}+K+1$.
+\end{proof}
+
+There is also a short multiplication rule for these normal forms.
+Record a term by its variable support and its two owner sets $A,B$;
+the projections have records $(\{x\},I,\varnothing)$ and
+$(\{y\},\varnothing,I)$. A choice by owner $r$ takes the union
+of the supports and replaces the two left-owner sets $A,A'$ by
+\[
+ (A\cap A')\cup\bigl(\{r\}\cap(A\cup A')\bigr),
+\]
+and similarly for the right-owner sets. This follows from the
+singleton recursion. It gives the entire finite operation table,
+not just representatives found by a bounded search.
+
+The local-model argument for arbitrary $K$ and the binary classification
+above are written proofs. \path{lean/CoreObstruction.lean} kernel-checks
+the indexed membership proof of owner exhaustion, and, for $K=3$, the
+four quotient maps, transfer of every three-variable core identity,
+and the failed four-variable equation. It does not bound the size of
+the terms in the transfer theorem.
+\path{checks/check_core_obstruction.py} checks both
+families of quotient maps and every set of at most $K$ generators
+of $D_K$ at $K=3,4,5,6$, including failure of
+\eqref{core:eq:exhaustion}. It checks the binary normal forms and
+every product on every winner-set valuation at $K=3,4,5$, giving
+free-algebra sizes $20,37,70$. These results leave unrestricted
+finite basability of the core open.
