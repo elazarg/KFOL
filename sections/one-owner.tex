@@ -16,7 +16,7 @@ Say $h=(i,C,D)$ \emph{covers} $g=(j,A,B)$ when
 \begin{equation}\label{owner:eq:cover}
  i=j,\qquad C\subseteq A,\qquad D\subseteq A\cup B\cup\{j\}.
 \end{equation}
-Then $g$ implies $h$, and nothing more can be said. The tests see three levels of an input, $\{a\}$, then another atom, then ambiguity, and these form a chain. So a guard $g=(j,A,B)$ can be met as narrowly as possible: make the inputs in $A$ ambiguous, set the rest of $B$ to a fixed atom $\{b\}$ and all others to $\{a\}$, and let only $x_j$ contain $k$. A guard holds at this valuation exactly when it covers $g$, so a disjunction implied by $g$ has a disjunct implied by $g$.
+Then $g$ implies $h$, and nothing more can be said. The tests see three levels of an input, $\{a\}$, then another atom, then ambiguity, and these form a chain. So a guard $g=(j,A,B)$ can be met as narrowly as possible: make the inputs in $A$ ambiguous, set the rest of $B$ to a fixed atom $\{b\}$ and all others to $\{a\}$, and let only $x_j$ contain $k$. A guard holds at this valuation exactly when it covers $g$, so a disjunction implied by $g$ has a disjunct implied by $g$. This is what makes comparison polynomial: an implication between lists reduces to comparing guards pairwise.
 
 \begin{proposition}[Guard completeness]\label{owner:thm:guards}
 If all $H$ indices in $s,t$ belong to $\{k,a\}$, then $k\in s$ implies $k\in t$ on all valuations if and only if every guard of $\Gamma_k(s)$ is covered by a guard of $\Gamma_k(t)$. A failed comparison has an explicit countervaluation with at most two winners per input, using three roles.
@@ -44,5 +44,4 @@ A guard minimal under coverage does not require its own source to be ambiguous, 
 Fix $K$ and $R\subseteq I$. For reset with $H_r$, $r\in R$, equation validity is polynomial when $|R|\leq1$ and coNP-complete when $|R|\geq2$. For an observer $k$, the implication $k\in s\Rightarrow k\in t$ on all valuations, and the corresponding equivalence, are polynomial when $|R\setminus\{k\}|\leq1$ and coNP-complete when $|R\setminus\{k\}|\geq2$.
 \end{corollary}
 
-So with $H_a$ and $H_b$, each owner's observational equality is polynomial while a third player's is coNP-complete, and even agreement of both owners on every valuation does not settle an equation (\cref{app:proofs-owner}). Tractability comes from the preserved root and the single chain of tests. Union loses the root,
-and for an observer outside both owners, $H_a$ and $H_b$ test $y\ne\{a\}$ and $y\ne\{b\}$, which no single chain orders.
+So with $H_a$ and $H_b$, each owner's observational equality is polynomial while a third player's is coNP-complete, and even agreement of both owners on every valuation does not settle an equation (\cref{app:proofs-owner}). Tractability comes from the preserved root and the single chain of tests. Union loses the root. For an observer outside both owners, $H_a$ and $H_b$ test $y\ne\{a\}$ and $y\ne\{b\}$, and these break the chain: their disjunction always holds although neither test does.
