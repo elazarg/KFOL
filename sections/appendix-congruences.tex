@@ -21,12 +21,12 @@ $(\varnothing,\{j\})$. An owned node collapses to
 $(\{r\},\varnothing)$ if either child has that form. Otherwise union the
 two $C$ fields and the two $\Lambda$ fields. Finally, when $C=I$, discard $\Lambda$.
 
-\begin{theorem}[Canonical status forms]\label{view:thm:normal}
+\begin{proposition}[Canonical status forms]\label{view:thm:normal}
 This normalization is sound on each status cell. Its final pair $(C,\Lambda)$
 is uniquely determined by the term function on that cell. Consequently
 the table of these pairs over all $(K+1)^n$ statuses is a canonical
 representation of any $n$-variable term function.
-\end{theorem}
+\end{proposition}
 \begin{proof}
 If $\Lambda$ is nonempty, the value contains an ambiguous input, so cannot be
 an owner singleton. If $\Lambda$ is empty, the value is exactly $C$. The node
@@ -46,13 +46,10 @@ These rules give a sound and complete normalization decision procedure for term
 equality: compute both tables and compare them. They also explain how
 ambiguity survives. Once the singleton cases at a cell are fixed, the
 remaining computation is just union with a record of which input
-variables contribute. The table is not a characterization of which
-arbitrary tables are definable by terms, and hence does not yet classify
-the full clone. Nor is this a finite unconditional equational basis.
+variables contribute. Which tables are definable by terms remains open.
 
 \texttt{structure.py} implements both representations and a complete
-counterexample search over the optimal input domain. The status-form
-soundness and uniqueness arguments above are not yet mechanized.
+counterexample search over the optimal input domain.
 
 \subsection{All congruences and the small irreducible quotients}
 
@@ -64,11 +61,11 @@ explicitly because the extra owner operations impose a strong condition.
 
 \begin{theorem}[Congruence classification]\label{view:thm:congruences}
 The congruences of $\A$ are exactly the kernels of closure operators
-$c:\Pow(I)\to\Pow(I)$ satisfying
+$c:\Pow\to\Pow$ satisfying
 \begin{equation}\label{view:eq:atomclosure}
  c(\{i\})\in\{\{i\},I\}\qquad(i\in I).
 \end{equation}
-Equivalently, they correspond to families $\mathcal F\subseteq\Pow(I)$
+Equivalently, they correspond to families $\mathcal F\subseteq\Pow$
 such that $I\in\mathcal F$, $\mathcal F$ is closed under nonempty
 intersections when the result is nonempty, and
 \[
@@ -112,7 +109,7 @@ At $K=4$ it enumerates the classified closure families and checks every
 constructed kernel against every operation; completeness uses the proof
 above, rather than a partition search.
 
-\begin{theorem}[Subdirectly irreducible homomorphic images]\label{view:thm:si}
+\begin{proposition}[Subdirectly irreducible homomorphic images]\label{view:thm:si}
 Every nontrivial subdirectly irreducible homomorphic image of $\A$ is
 obtained from a nonempty proper set $S\subset I$ with closed family
 \[
@@ -122,7 +119,7 @@ For $|S|=1$ the quotient has two elements. For $|S|\geq2$ it has
 $|S|+2$ elements: one singleton state per $i\in S$, the state $S$, and
 the state $I$. In particular, every such image has at most $K+1$ elements.
 The case $S=I\setminus\{k\}$ is exactly $C_k$.
-\end{theorem}
+\end{proposition}
 \begin{proof}
 The congruence/fixed-family correspondence reverses inclusion.
 Meet-irreducible congruences therefore correspond to join-irreducible
@@ -147,7 +144,7 @@ contains the stated pair.
 Every subdirect representation of $\A$ by nontrivial subdirectly
 irreducible factors must include, up to the quotient maps' kernel,
 each $C_k$. The $K$-factor decomposition of
-Corollary~\ref{view:cor:product} is consequently minimum and irredundant.
+\cref{view:cor:product} is consequently minimum and irredundant.
 \end{corollary}
 \begin{proof}
 The distinct values $I$ and $I\setminus\{k\}$ must be separated by some
@@ -168,7 +165,7 @@ role permutation $\pi$. Write $\A^{\mathrm{sym}}$ for this algebra. This
 is a separate extension: the preceding small test-domain and one-player
 quotient theorems used the original signature.
 
-\begin{theorem}[The symmetric congruence chain]\label{view:thm:sym}
+\begin{proposition}[The symmetric congruence chain]\label{view:thm:sym}
 There are exactly $K$ congruences of $\A^{\mathrm{sym}}$. They are the
 kernels of
 \[
@@ -179,7 +176,7 @@ Here $m=0$ gives the universal relation and $m=K-1$ gives equality.
 For $1\leq m\leq K-1$, the quotient has
 $1+\sum_{j=1}^{m}\binom Kj$ values. These are the restrictions to
 nonempty sets of the uniform-matroid closures of rank $m+1$.
-\end{theorem}
+\end{proposition}
 \begin{proof}
 A congruence of the expansion is exactly a congruence of $\A$ invariant
 under every permutation. Its class-maximum closure therefore commutes

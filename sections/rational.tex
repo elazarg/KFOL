@@ -1,228 +1,45 @@
-\section{Owned choice and rational play}
-\label{sec:rational}
+\section{Owned choice}\label{sec:rational}
 
-\subsection{Games, strategies, and equilibria}
+Throughout, $I$ is a finite set of $K\geq3$ \emph{roles}, or players; $a,b,c$ are distinct roles, $r$ is a role acting as an owner, and $k$ is a role acting as an observer. A game is a finite binary tree: a leaf $\at i$ declares that $i$ wins, and a node $G\ch r H$ is
+a public choice by its \emph{owner} $r$. A role values its own win at one and every other outcome at zero, so a role that cannot win has no opinion about who does. Ties are therefore everywhere, and we keep all of them.
 
-Fix a finite set $I$ of $K\geq3$ \emph{roles}, which we also call players. A
-game is a finite binary tree. A leaf $\at i$ declares that $i$ wins, and a node
-$G\ch r H$ is a choice by its \emph{owner} $r$ between two continuations.
-Everything is public. Preferences are as simple as they can be: a role values
-its own win at one and every other outcome at zero, so a role that cannot win
-has no opinion about who does. This indifference is not a simplification to be
-removed later. It is the source of nearly everything in this paper: ties are
-everywhere, and we keep all of them.
+A \emph{full profile} prescribes an action at every node, including nodes it avoids. A deviation by $i$ may change all of $i$'s actions, and a \emph{subgame-perfect equilibrium} (SPE) is a profile that no deviation improves in any subtree. The value $\den G$ is
+the set of roles that win in some SPE of $G$.
 
-A \emph{full profile} prescribes an action at every internal node, including
-nodes that the profile itself avoids. At a node it therefore consists of a root
-action and a full profile for each child. A unilateral deviation by $i$ may
-replace all the actions owned by $i$, in both child trees, and leaves every
-other player's actions fixed. A profile is \emph{Nash} if no such deviation
-improves the deviator's utility, and a \emph{subgame-perfect equilibrium} (SPE)
-if its restriction to every subtree is Nash. We write $\B(G)$ for the set of
-roles that win in some SPE of $G$.
-
-Why insist on behavior at unreached nodes? Because that is what equilibria are
-made of. Take
+Behavior at unreached nodes is what equilibria are made of. In
 \[
- D=(\at0\ch1\at2)\ch0(\at1\ch1\at2).
+ D=(\at a\ch b\at c)\ch a(\at b\ch b\at c),
 \]
-In the right subtree, owner $1$ must choose itself. In the left subtree, owner
-$1$ loses either way and may choose either winner. The SPE profiles of $D$ are
-therefore exactly these:
-\begin{center}
-\begin{tabular}{cccc}
-\toprule
-Left child winner & Right child winner & Root action (owner $0$) & Winner\\
-\midrule
-$0$ & $1$ & left & $0$\\
-$2$ & $1$ & left & $2$\\
-$2$ & $1$ & right & $1$\\
-\bottomrule
-\end{tabular}
-\end{center}
-The last row is the interesting one. Winner $1$ is possible only because of what
-player $1$ is prepared to do in a subtree that is never entered: by prescribing
-winner $2$ there, it leaves the root owner indifferent between two losing
-choices. So $\B(D)=\{0,1,2\}$, and a semantics that recorded only behavior along
-the path of play could not explain it.
+player $b$ takes its own win on the right and is indifferent on the left. If it prescribes winner $c$ on the left, the root owner $a$ loses either way and may go right. So $b$ can win, thanks to what it would do in a subtree never entered, and $\den D=\{a,b,c\}$.
 
-Now fix a profile whose two child profiles are SPE, with child winners $x$ and
-$y$. The parent profile is SPE exactly when it chooses a branch won by $r$
-whenever $x=r$ or $y=r$; otherwise either branch is optimal for $r$. This
-follows from whole-player deviations, since a deviation that wins in a child
-would already improve that child's profile. It is not an assumption that
-checking the current action alone suffices, which in games of partial
-information would be false. Collecting the possibilities over all child
-equilibria suggests the operation on nonempty sets $S,T\subseteq I$ that governs
-the whole paper:
-\begin{equation}\label{game:eq:own}
- S\ow r T =
- \begin{cases}
- \{r\},&S=\{r\}\text{ or }T=\{r\},\\
- S\cup T,&\text{otherwise}.
- \end{cases}
-\end{equation}
+Values range over the set $\Pow$ of nonempty subsets of $I$, composed by the operation $\star_r$ of \eqref{game:eq:own}, and valuations assign values to variables. Call a singleton an \emph{atom} and a larger set \emph{ambiguous}.
 
-\begin{theorem}[Exact public-tree interpretation]\label{game:thm:adequacy}
-Every closed tree has a full pure SPE profile, and
-\[
- \B(\at i)=\{i\},\qquad
- \B(G\ch r H)=\B(G)\ow r\B(H).
-\]
-Every element of the right-hand side has a full SPE witness on the left.
-\end{theorem}
-\begin{proof}
-Existence follows inductively by choosing an owner-winning child whenever
-one is available in the chosen child profiles. If one child has only
-$r$-winning SPE profiles, every parent SPE must win for $r$, and one
-exists. Otherwise each child has an SPE profile losing for $r$. For any
-SPE winner $i$ in the left child, combine its witness with a losing-for-$r$
-SPE in the right child and choose left. This is locally optimal, whether
-or not $i=r$. The symmetric construction covers the right child.
-Conversely, a parent SPE selects the winner of a child SPE. These facts
-give both inclusions in~\eqref{game:eq:own}.
-\end{proof}
+\begin{proposition}[Backward induction]\label{game:thm:adequacy}
+Every game has a full pure SPE profile, and
+$\den{\at i}=\{i\}$, $\den{G\ch r H}=\den G\ow r\den H$.
+\end{proposition}
 
-This is backward induction for a very restricted utility model, and we do not
-offer it as new game theory. Its role is to justify the finite algebra
-$\Pow(I)$. \texttt{Basic.lean} defines full profiles, whole-player deviations,
-Nash equilibrium, and SPE separately, and then proves the theorem as
-\texttt{winners\_node}. Leaves carry only a winner label, with no strategic
-terminal returns. The dependent interface of \cref{app:dependent} also permits
-return records; a simultaneous decision at such a boundary lies outside this
-perfect-information recurrence.
+\begin{idea}
+A branch in which $r$ always wins must be taken. Otherwise each branch has an equilibrium in which $r$ loses; playing it in one branch makes $r$ indifferent, so every equilibrium winner of the other branch can be realized.
+\end{idea}
 
-\subsection{The algebra of winner sets}
-
-Call a singleton \emph{resolved} and a set with at least two members
-\emph{ambiguous}. The full term language is
+Terms are given by
 \[
  t ::= \at i\mid x_j\mid t\ch r t\mid\pi(t),
- \qquad i,r\in I,\quad \pi\in\Sym(I).
+ \qquad \pi\in\Sym(I),
 \]
-The constant $\at i$ denotes $\{i\}$, the constructor $\ch r$ denotes $\star_r$,
-and $\pi(t)$ internally permutes the roles of a component. An input variable is
-evaluated in its original environment before the permutation is applied.
-Substitution at repeated occurrences creates independent component copies; we
-return to this point below.
+where $\pi(t)$ renames the roles of a component. Repeated occurrences of a variable are independently solved copies. We write $\mathbf A^{\rm sym}$ for this full signature, $\mathbf A$ for its reduct without permutations, and $\mathbf C$ for owned choices alone.
 
-We distinguish three signatures, and a few derived operations recur often enough
-to name now.
-\begin{center}
-\begin{tabular}{lll}
-\toprule
-Name & Definition & Used for\\
-\midrule
-$\mathbf A_I$ & $\star_r$ $(r\in I)$ and constants $\{i\}$ $(i\in I)$
-  & the reduct; player views (\cref{sec:perspectives})\\
-$\mathbf A_I^{\rm sym}$ & $\mathbf A_I$ and all internal role permutations
-  & the full signature (\cref{sec:pair-tests})\\
-$\mathbf C_I$ & $\star_r$ $(r\in I)$ alone, with variables
-  & the intrinsic core (\cref{sec:intrinsic})\\
-\midrule
-$J(x,y)$ & $(x\ow r y)\ow t(x\ow s y)$, with $r,s,t$ distinct
-  & neutral union $x\cup y$\\
-$x\del y$ & $y$ if $y$ is a singleton, else $x\cup y$
-  & reset (\cref{sec:reset})\\
-$H_s(x,y,z)$ & $(y\star_s z)\del x$
-  & guarded choice (\cref{sec:complexity,sec:one-owner})\\
-\bottomrule
-\end{tabular}
-\end{center}
-All signatures have carrier $\Pow(I)$. External renaming of the roles is a
-symmetry in every case; an internal permutation is an extra term constructor
-only in the full signature.
+Each $\star_r$ is a semilattice operation, so a quantifier over a finite action set is a fold and binary choice suffices. With only two roles, ground terms would be Boolean: the two owned choices are join and meet once a role is chosen as truth. With three there is genuine ambiguity, and all of it is reachable.
 
-Each $\star_r$ is associative, commutative, and idempotent. For associativity, a
-three-input product is $\{r\}$ if any input is $\{r\}$, and is their union
-otherwise; nonemptiness ensures that a union of inputs different from $\{r\}$
-cannot become $\{r\}$. So a quantifier over a finite nonempty action set is simply
-the fold of its owner's operation, and it adds no independent algebraic primitive.
-Role permutations transport these operations and the leaf constants.
-
-For two roles the ground-generated carrier has only the two singletons, and
-$\star_1,\star_2$ are Boolean join and meet once a role is chosen as truth. This is
-classical logic. With three roles there is genuine ambiguity, such as $\{0,1\}$, and
-the following construction generates everything.
-
-\begin{theorem}[Neutral union]\label{game:thm:union}
+\begin{proposition}[Neutral union]\label{game:thm:union}
 For pairwise distinct $r,s,t$,
 \begin{equation}\label{game:eq:union}
  J(x,y)=(x\ow r y)\ow t(x\ow s y)=x\cup y.
 \end{equation}
-Consequently, if $K\geq3$, every nonempty subset of $I$ is the
-denotation of a closed owned-choice tree.
-\end{theorem}
-\begin{proof}
-If neither inner operation collapses, both return $x\cup y$. If just one
-collapses, its owner singleton belongs to the other result, and the outer
-owner is different. If both collapse, the inputs must be the two distinct
-owner singletons; the outer operation returns their union. Folding $J$
-over the leaf singletons realizes every nonempty subset.
-\end{proof}
+Consequently every member of $\Pow$ is the value of a game.
+\end{proposition}
 
-The definition uses three owned-choice nodes and two occurrences of each input.
-Although it names three owners, its denotation is independent of the distinct
-triple chosen. It is an equality of equilibrium-winner observations, not an
-isomorphism of trees or strategy spaces. Ground realization is
-\texttt{every\_winner\_set\_realized} in \texttt{Synthesis.lean}. The two occurrences cannot be avoided.
+If just one inner choice collapses, its owner's atom belongs to the other result, and the outer owner is different; if both collapse, the outer choice unites them. We simply write $\cup$ from now on.
 
-\begin{theorem}[Occurrence lower bound]\label{game:thm:lower}
-Suppose $K\geq3$. In the syntax of owned binary choices and arbitrary
-nonempty ground constants, any term that denotes $x\cup y$ for every
-$x,y\in\Pow(I)$ contains at least two occurrences of $x$ and at least two
-occurrences of $y$. Hence three binary nodes are optimal.
-\end{theorem}
-
-\begin{idea}
-With a single occurrence of $x$, the term reads as a path from that occurrence to
-the root. Union must vary with $x$ for every $y$, so no side value on the path can
-ever equal its owner's singleton, and hence each step only adds winners. But the
-innermost side value, at $y=\{r\}$, already contains some $k\ne r$, which cannot then
-be removed, and this contradicts the required output $\{j,r\}$ at $x=\{j\}$. The
-path obstruction is \texttt{no\_single\_use\_union} in Lean; the full argument is in
-\cref{app:proofs-rational}.
-\end{idea}
-
-The cost measured here is \emph{syntactic occurrence}. A play enters just one of the
-four component occurrences. The theorem establishes neither runtime duplication nor a
-need for a contraction rule in a linear type system: additive branching may use a
-context in both exclusive branches.
-
-\subsection{Not Boolean, in any coordinates}
-
-Indifference invalidates distributivity. For the game $D$ above we found three possible
-winners, whereas
-\[
- B((\at0\ch0\at1)\ch1\at2)=\{0,2\}.
-\]
-Role $0$ must choose winner $0$ in its subtree, and the root owner $1$ is then
-indifferent between prescribed winners $0$ and $2$. The two trees differ exactly by
-distributing $\ch1$ over $\ch0$. This is a real obstruction, and not an artifact of the
-presentation.
-
-\begin{corollary}[No Boolean meet/join product representation]
-\label{cor:no-boolean-product}
-For $K\ge3$, this generated algebra has no injective homomorphism into a
-product of Boolean algebras in which each owned operation acts in each
-coordinate as either meet or join.
-\end{corollary}
-\begin{proof}
-Any pair of such coordinate operations satisfies
-$(a\star_r b)\star_s c
- =(a\star_s c)\star_r(b\star_s c)$, whether the coordinate operations
-coincide or differ. Products and subalgebras preserve this identity.
-The displayed three-role calculation refutes it in the generated algebra.
-An injective homomorphism would preserve and reflect the equality.
-\end{proof}
-
-\subsection{What repetition means}
-
-A repeated variable stands for independently solved copies. That reading is forced by
-the term algebra, but it is worth seeing what it excludes. Fixing one and the same
-equilibrium in every copy of a component gives a different observation,
-$U(f)(S)=\bigcup_{g\in S}f(\{g\})$, which agrees with the ordinary one for union but not
-in general, and which is not preserved by substitution. A \emph{shared hidden} decision
-is a different matter again: if one player's bit is hidden from the player who must guess it,
-no pure equilibrium exists at all. These three readings of ``the same thing twice'' have
-genuinely different meanings, and \cref{app:contexts} separates them.
+The algebra is not Boolean in any coordinates. Indifference breaks distributivity: $\den{(\at a\ch a\at b)\ch b\at c}=\{a,c\}$, whereas distributing $\ch b$ over $\ch a$ gives $D$ (\cref{cor:no-boolean-product}).

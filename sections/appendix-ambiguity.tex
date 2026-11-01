@@ -3,7 +3,7 @@ This appendix describes how contexts with internal switching act on ambiguity: e
 extension of a known relation monoid at every number of roles.
 
 Throughout this appendix, terms use the full signature
-$\mathbf A_I^{\rm sym}$.
+$\mathbf A^{\rm sym}$.
 
 \subsection{Three roles: the exact unary normal form}
 
@@ -43,7 +43,7 @@ $(C,P)$ with nonempty $P\subseteq\operatorname{Sym}(I)$ such that
  f(S)=C\cup\bigcup_{\pi\in P}\pi S\quad(|S|\geq2),\qquad
  f(\{i\})\subseteq C\cup\{\pi(i):\pi\in P\}.
 \]
-This follows by the same induction as Lemma~\ref{sym:lem:provenance}, keeping
+This follows by the same induction as \cref{sym:lem:provenance}, keeping
 globally constant children separate. A constant owner singleton absorbs
 globally; otherwise a live child remains live. In particular, a live
 function preserves $I$ and maps ambiguous inputs to ambiguous outputs.
@@ -74,7 +74,7 @@ form $C_p$.
 The atomic upper bound above excludes each variable output coordinate
 from all rows except its source row. The mandatory-image
 fact~\eqref{sym:eq:mandatory} includes it in that row. These are precisely
-the bounds in Theorem~\ref{sym:thm:unary}. The partial permutation is
+the bounds in \cref{sym:thm:unary}. The partial permutation is
 uniquely determined by its action on the three pairs: a variable output
 coordinate is absent exactly on the pair omitting its source. Atomic
 rows are actual values, so they too are unique.
@@ -134,7 +134,7 @@ This proves synthesis. Larger ground constants give the constant
 functions. Any nonconstant live function takes $I$ to $I$, so the only
 constant overlap is $I$ itself.
 
-\begin{corollary}[Exact count]
+\begin{corollary}[Count]
 There are exactly $751$ unary term operations in the three-role full
 signature. Of these, $745$ preserve $I$.
 \end{corollary}
@@ -159,11 +159,11 @@ standard symmetric inverse monoid $\mathcal I_I$ under partial
 composition~\cite{East2006}. For three roles its size is
 $\sum_{r=0}^3\binom3r^2r!=34$.
 
-\begin{theorem}[An ambiguity-action quotient]\label{sym:thm:monoid}
+\begin{proposition}[An ambiguity-action quotient]\label{sym:thm:monoid}
 The $745$ unary term operations preserving $I$ form a monoid under
 composition. Sending the normal form $(p,D)$ to $p$ is a surjective
 monoid homomorphism onto $\mathcal I_I$.
-\end{theorem}
+\end{proposition}
 \begin{proof}
 Every ambiguous input has an ambiguous output, and direct calculation
 gives $F_p\circ F_q=F_{p\circ q}$. Indeed, an output coordinate either
@@ -190,11 +190,7 @@ Rank three leaves no choice of atomic rows. Conversely every role
 permutation has its inverse as a term.
 \end{proof}
 
-Thus the familiar inverse monoid is a quotient governing ambiguity,
-not the whole algebra of unary contexts. Its fibers retain the permitted
-atomic rows. This is genuine context composition with internal
-role-switching; it does not use uniform-profile selection, whose lift
-failed to preserve substitution in \cref{app:contexts}.
+Thus the inverse monoid is a quotient governing ambiguity, and its fibers retain the permitted atomic rows.
 
 \subsection{The known relation monoid and its affine extension}
 
@@ -224,11 +220,11 @@ contains a permutation. Restrict these maps to
 $\mathcal A_I=\{S\subseteq I:|S|\geq2\}$ and identify equal restrictions.
 Call the resulting transformation monoid $\mathcal Q_I$.
 
-\begin{theorem}[Exact ambiguity quotient]\label{gen:thm:quotient}
+\begin{proposition}[Ambiguity quotient]\label{gen:thm:quotient}
 Let $\mathcal M_I$ be the monoid of unary term functions fixing $I$.
 Restriction to $\mathcal A_I$ is a surjective monoid homomorphism
 $\mathcal M_I\twoheadrightarrow\mathcal Q_I$.
-\end{theorem}
+\end{proposition}
 \begin{proof}
 A unary term is either globally constant or has live provenance
 $C\cup\bigcup_{\pi\in P}\pi S$ on ambiguous inputs, with $P$ nonempty.
@@ -291,15 +287,15 @@ output row $k$ allows exactly the edges from $A_k$; a constant row allows
 edges from every source. Edges into nonconstant rows are
 \emph{prescribed}; edges into constant rows are only allowed.
 
-\begin{theorem}[Matching criterion]\label{gen:thm:matching}
+\begin{proposition}[Matching criterion]\label{gen:thm:matching}
 A collection of canonical rows belongs to $\mathcal Q_I$ exactly when
 every prescribed edge belongs to a perfect matching of $H$. If all rows
 are constant, it always belongs.
-\end{theorem}
+\end{proposition}
 \begin{proof}
 For necessity, choose a representative $(C,R)$. A nonconstant row
 cannot belong to $C$, and its preimage under $R$ is exactly its canonical
-source set by Lemma~\ref{gen:lem:rows}. Every prescribed edge lies in some
+source set by \cref{gen:lem:rows}. Every prescribed edge lies in some
 permutation constituent of $R$. That permutation is a perfect matching
 of $H$.
 
@@ -334,14 +330,14 @@ term of size polynomial in $K$.
 For each of the at most $K(K-2)$ prescribed edges, force that edge and
 find a perfect matching in the remaining graph. Standard augmenting
 paths suffice. Use those witness permutations in the synthesis from
-Theorem~\ref{gen:thm:quotient}. Join the pieces in a balanced tree. Expanding
+\cref{gen:thm:quotient}. Join the pieces in a balanced tree. Expanding
 the fixed derived-union term duplicates each argument twice; balanced
 joining of $m$ pieces has size $O(m^2)$ rather than the exponential
 expansion of a skew join. Singleton constant pieces and explicit
 permutation descriptions have polynomial size too.
 \end{proof}
 
-\begin{theorem}[Canonical composition]\label{gen:thm:composition}
+\begin{proposition}[Canonical composition]\label{gen:thm:composition}
 For outer rows $A$ and inner rows $B$, the composite row at $k$ is:
 \begin{enumerate}
 \item $*$ if $A_k=*$ or some $i\in A_k$ has $B_i=*$;
@@ -350,7 +346,7 @@ has at least $K-1$ elements.
 \end{enumerate}
 This computes composition in time polynomial in $K$ on descriptions of
 $O(K^2)$ bits.
-\end{theorem}
+\end{proposition}
 \begin{proof}
 Substitute the inner membership disjunctions into the outer membership
 disjunction. A constant true disjunct makes the result true; otherwise
@@ -480,7 +476,7 @@ canonical support graph.
 \begin{proof}
 On ambiguous inputs a live term has constant-plus-permutation provenance.
 Any constant contribution would make an output coordinate constant,
-so it is empty. As in Theorem~\ref{gen:thm:core}, any winner leaf would force
+so it is empty. As in \cref{gen:thm:core}, any winner leaf would force
 a nonempty constant contribution, so there are none. Each leaf
 permutation contributes its graph to $R$. For nonconstant rows the
 canonical source sets are uniquely determined, so its graph lies in
@@ -497,7 +493,7 @@ For a cycle $C$, describe an atomic row at $i\in C$ by
 $0$ for $\{i\}$, $1$ for $\{\sigma(i)\}$, and $?$ for their pair.
 A fixed point has just its one mandatory singleton.
 
-\begin{theorem}[Exact two-permutation fibers]\label{gen:thm:cycles}
+\begin{theorem}[Two-permutation fibers]\label{gen:thm:cycles}
 Fix $K\geq4$ and the ambiguity action $S\mapsto S\cup\sigma S$.
 The choices on different cycles of $\sigma$ are independent.
 On a cycle of length $m$ the permitted atomic tables are exactly:
@@ -582,7 +578,7 @@ matching. Remove such pairs. In the remaining support graph all output
 degrees are two, while every input degree is at least two: an input of
 degree one would force its output to have degree one. Counting edges
 makes all input degrees two as well. Components are even cycles, each
-the union of two matchings. Apply Theorem~\ref{gen:thm:cycles}.
+the union of two matchings. Apply \cref{gen:thm:cycles}.
 
 For normalized cycle types $1^4,\,2\,1^2,\,2^2,\,3\,1,\,4$, the numbers
 of distinct support graphs are respectively $24,72,18,96,72$. These
@@ -608,18 +604,16 @@ in it, or $\{r\}$ supplied by one lower operand, which is contained in
 the corresponding upper operand. Thus owned choice is monotone.
 \end{proof}
 
-\begin{theorem}[All unary units]
+\begin{proposition}[All unary units]
 For every $K\geq3$, the group of units of the full unary term monoid is
 exactly $\Sym(I)$.
-\end{theorem}
+\end{proposition}
 \begin{proof}
 A unit and its term inverse are monotone, so they form an order
-automorphism of the poset $\Pow(I)$. Such an automorphism permutes its
+automorphism of the poset $\Pow$. Such an automorphism permutes its
 minimal elements, the singletons. Every set is determined by the
 singletons below it, so that permutation determines the whole map.
 Conversely every role permutation and its inverse are terms.
 \end{proof}
 
-This generalizes the three-role unit calculation without requiring a
-higher-role classification of singleton fibers. It is a direct use of
-the familiar order-automorphism argument for the Boolean subset poset.
+This uses the familiar order-automorphism argument for the Boolean subset poset.

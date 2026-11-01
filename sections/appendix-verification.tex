@@ -1,6 +1,66 @@
 \section{Verification details}\label{app:verification}
 
-This appendix records the Lean modules and the finite checks behind \cref{tab:status}. Run \texttt{make check paper} to reproduce them.
+The formal development in \texttt{lean/} uses Lean 4.34.1 with only \texttt{Std}. It has no admitted proofs or added axioms; audits report only \texttt{propext}, \texttt{Classical.choice}, and \texttt{Quot.sound} where needed. \Cref{tab:status} records the evidence for each main result: ``Lean'' names kernel-checked theorems, ``written'' means a mathematical proof in this paper, and ``external'' means a theorem imported from the literature, which is not a Lean axiom. Finite checks test their implementations at stated sizes. Run \texttt{make check paper} to reproduce them.
+
+\begin{table}[ht]
+\centering\small
+\begin{tabular}{p{0.34\linewidth}p{0.60\linewidth}}
+\toprule
+Result & Evidence\\
+\midrule
+SPE recurrence, neutral union (\cref{game:thm:adequacy,game:thm:union})
+ & Lean: \texttt{winners\_node}, \texttt{three\_owner\_join}, \texttt{every\_winner\_set\_realized}.\\
+Occurrence lower bound (\cref{game:thm:lower})
+ & Lean for the path obstruction (\texttt{no\_single\_use\_union}); syntax-to-path step written.\\
+Player quotient (\cref{view:thm:view})
+ & Lean: \texttt{sameView\_own}, \texttt{contextualAt\_iff}.\\
+Reduct test domains (\cref{view:thm:tests})
+ & Lean: \texttt{complete\_test\_domain}, \texttt{test\_domain\_necessary}. Cardinality written.\\
+Pair theorem, optimal domain (\cref{sym:thm:pairs,sym:thm:optimal})
+ & Lean: \texttt{FullTerm.pair\_countervaluation}, \texttt{full\_test\_domain\_iff}.\\
+Idempotent elimination, intrinsic views (\cref{gen:thm:core,gen:cor:views})
+ & Lean: \texttt{FullTerm.idempotent\_iff\_clean}, \texttt{FullTerm.idempotent\_extraction}, \texttt{FullTerm.idempotent\_sameView}.\\
+Semilattice trace, diagonal tests (\cref{gen:cor:trace,gen:thm:idem-domain})
+ & Written; finite checks.\\
+Common source (\cref{gen:thm:source})
+ & Lean: \texttt{FullTerm.separation}.\\
+Atomic clone (\cref{gen:thm:S2})
+ & Written; external $\operatorname{Pol}(\iota_3)=S_2$ \cite{Szendrei2012}; finite checks.\\
+Binary fragment (\cref{reset:thm:binary})
+ & Rigidity in Lean (\texttt{OneConstant.Term.rigidity}); remainder written; external $S_2$ step.\\
+Reset semantics, chain (\cref{reset:lem:selection,reset:thm:three})
+ & Lean: \texttt{Term.denote\_membership}, \texttt{Term.three\_chain\_complete}, \texttt{Term.compile\_correct}.\\
+Reset basis (\cref{reset:thm:basis})
+ & Soundness in Lean (\texttt{basis\_*}); completeness external \cite{FreeseEtAl2002}.\\
+Antimatroids, realizability, minimality (\cref{reset:thm:anti,reset:thm:synthesis,reset:thm:minimal})
+ & Written; finite checks.\\
+Hardness reductions (\cref{gen:thm:complexity,thm:owner-free-hardness,thm:H-hardness,thm:raw-pairs})
+ & Semantic certificates in Lean (\texttt{BooleanCore}, \texttt{Fragments}, \texttt{RawFragments}); CNF assembly, sizes, and complexity written; finite checks.\\
+Dependence on $K$ (\cref{thm:colouring-theories})
+ & Lean: \texttt{colouring\_guard\_obstruction}; identity family and embeddings written; finite checks.\\
+One-owner calculus (\cref{owner:thm:guards,owner:thm:one-table,owner:thm:four})
+ & Lean: \texttt{Term.observation\_implication\_iff}, \texttt{Term.single\_table\_equation\_iff}, \texttt{Term.equationB\_correct}, \texttt{Term.four\_element\_complete}, \texttt{three\_state\_obstruction}. Minimality also uses external \cite[Theorem~3.2]{FreeseEtAl2002}.\\
+Owner-count dichotomy (\cref{owner:cor:complexity})
+ & Written deductions from the above.\\
+Round recursion (\cref{se:thm:round})
+ & Written; local stage checks only.\\
+Scalar fragment (\cref{se:prop:parallel,se:thm:rational})
+ & Stage and arithmetic in Lean (\texttt{diagonal\_nash\_value}, \texttt{every\_rational}); connection to game syntax written.\\
+Infinite index, full abstraction (\cref{se:thm:infinite,se:cor:scalar})
+ & Written; finite checks. Lean has only the arithmetic \texttt{no\_finite\_summary}, not connected to game syntax.\\
+Open-game obstruction (\cref{se:prop:open-game-obstruction})
+ & Written; pinned external Lean artifact \cite{GameTheoryOpenGameObstructions2026}, not rebuilt here; exact-rational checker.\\
+Forest models, combs (\cref{app:reset-models})
+ & Reconstruction and generic monolith in Lean (\texttt{ResetModels}); forest membership written.\\
+Congruences, unary classifications (\cref{app:contexts,app:congruences,app:ambiguity})
+ & Reduct synthesis in Lean (\texttt{unary\_synthesis}); remainder written; finite checks.\\
+Dependent layer (\cref{app:dependent})
+ & Written; finite models of phase and sealing rules.\\
+\bottomrule
+\end{tabular}
+\caption{The evidence for the main results.}
+\label{tab:status}
+\end{table}
 
 \subsection{Lean modules}
 

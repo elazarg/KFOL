@@ -1,11 +1,57 @@
-\section{Proofs for the main text}\label{app:proofs}
+\section{Proofs and further results}\label{app:proofs}
 
-This appendix contains the proofs omitted from the main text, in the order of the sections they belong to.
-Short arguments given in full in the main text are not repeated.
+This appendix follows the order of the main text. Arguments given in full there are not repeated. As in the main text, $K\geq3$ throughout. We say \emph{atomic} for inputs that are atoms.
 
-\subsection{Owned choice and rational play}\label{app:proofs-rational}
+\subsection{Owned choice}\label{app:proofs-rational}
 
-\begin{proof}[Proof of \cref{game:thm:lower}]
+Let a profile have two SPE child profiles with child winners $x$ and $y$. The parent profile is SPE exactly when it chooses a branch won by $r$ whenever $x=r$ or $y=r$; otherwise either branch is optimal for $r$. This follows from
+whole-player deviations, since a deviation that wins in a child would already improve that child's profile. The SPE profiles of the game $D$ of \cref{sec:rational} are exactly these:
+\begin{center}
+\begin{tabular}{cccc}
+\toprule
+Left child winner & Right child winner & Root action (owner $a$) & Winner\\
+\midrule
+$a$ & $b$ & left & $a$\\
+$c$ & $b$ & left & $c$\\
+$c$ & $b$ & right & $b$\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{proof}[Proof of \cref{game:thm:adequacy}]
+Existence follows inductively by choosing an owner-winning child whenever
+one is available in the chosen child profiles. If one child has only
+$r$-winning SPE profiles, every parent SPE must win for $r$, and one
+exists. Otherwise each child has an SPE profile losing for $r$. For any
+SPE winner $i$ in the left child, combine its witness with a losing-for-$r$
+SPE in the right child and choose left. This is locally optimal, whether
+or not $i=r$. The symmetric construction covers the right child.
+Conversely, a parent SPE selects the winner of a child SPE. These facts
+give both inclusions in~\eqref{game:eq:own}.
+\end{proof}
+
+\texttt{Basic.lean} proves this as \texttt{winners\_node}, from full profiles and whole-player deviations. Every element of $\den G\ow r\den H$ has a full SPE witness. Leaves carry only a winner label. The dependent interface of \cref{app:dependent} also permits return records, and a simultaneous decision at such a boundary lies outside this perfect-information recurrence.
+
+For associativity of $\star_r$, a three-input product is $\{r\}$ if any input is $\{r\}$, and is their union otherwise; nonemptiness ensures that a union of inputs different from $\{r\}$ cannot become $\{r\}$. Role permutations transport the
+operations and the leaf constants. External renaming of the roles is a symmetry of every signature. Each $\star_r$ is associative, commutative, and idempotent. 
+\begin{proof}[Proof of \cref{game:thm:union}]
+If neither inner operation collapses, both return $x\cup y$. If just one
+collapses, its owner singleton belongs to the other result, and the outer
+owner is different. If both collapse, the inputs must be the two distinct
+owner singletons; the outer operation returns their union. Folding $J$
+over the leaf singletons realizes every nonempty subset.
+\end{proof}
+
+Ground realization is \texttt{every\_winner\_set\_realized} in \texttt{Synthesis.lean}. The denotation of $J$ is independent of the distinct
+triple of owners chosen, and $J$ cannot use fewer occurrences.
+
+\begin{proposition}[Occurrence lower bound]\label{game:thm:lower}
+Suppose $K\geq3$. In the syntax of owned binary choices and arbitrary
+nonempty ground constants, any term that denotes $x\cup y$ for every
+$x,y\in\Pow$ contains at least two occurrences of $x$ and at least two
+occurrences of $y$. Hence three binary nodes are optimal.
+\end{proposition}
+\begin{proof}
 Zero occurrences cannot express dependence on that input. Suppose $x$
 occurs once. Read the unique path from its occurrence to the root, using
 commutativity to put the current value first. It has the form
@@ -31,10 +77,35 @@ $k$. No later step can remove it. The required result $\{j,r\}$ excludes
 $k$, a contradiction. Interchange the variables for the other bound.
 \end{proof}
 
-The syntax-to-path correspondence is the direct decomposition of a term at its unique input occurrence, as used in
-this proof.
+The syntax-to-path correspondence is the direct decomposition of a term at its unique input occurrence, and the path obstruction is \texttt{no\_single\_use\_union} in Lean. The cost measured is syntactic occurrence: a play enters just one of the four
+component occurrences, and additive branching may use a context in both exclusive branches.
+
+Role $a$ must choose winner $a$ in the subtree of $(\at a\ch a\at b)\ch b\at c$, and the root owner $b$ is then indifferent between prescribed winners $a$ and $c$. This calculation gives the following.
+
+\begin{proposition}[No Boolean representation]
+\label{cor:no-boolean-product}
+For $K\ge3$, this generated algebra has no injective homomorphism into a
+product of Boolean algebras in which each owned operation acts in each
+coordinate as either meet or join.
+\end{proposition}
+\begin{proof}
+Any pair of such coordinate operations satisfies
+$(a\star_r b)\star_s c
+ =(a\star_s c)\star_r(b\star_s c)$, whether the coordinate operations
+coincide or differ. Products and subalgebras preserve this identity.
+The displayed three-role calculation refutes it in the generated algebra.
+An injective homomorphism would preserve and reflect the equality.
+\end{proof}
 
 \subsection{Player views}\label{app:proofs-views}
+
+Explicitly, the view of \cref{view:thm:view} is
+\begin{equation}\label{view:eq:view}
+ S\equiv_k T\quad\Longleftrightarrow\quad
+ (k\in S\Longleftrightarrow k\in T)
+ \ \land\ \bigwedge_{i\ne k}(S=\{i\}\Longleftrightarrow T=\{i\}),
+\end{equation}
+and it is the coarsest congruence preserving the possible-win observation for $k$.
 
 \begin{proof}[Proof of \cref{view:thm:view}]
 For nonempty $S,T$, direct calculation gives
@@ -59,9 +130,43 @@ contexts distinguish all the listed cases. The class $\nv$ is inhabited
 because there are two distinct roles other than $k$.
 \end{proof}
 
-Ground constants suffice to represent arbitrary polynomial parameters because union realizes every nonempty subset.
+Ground constants suffice to represent arbitrary polynomial parameters, because union realizes every nonempty subset. \texttt{sameView\_own} and \texttt{contextualAt\_iff} prove the congruence and its contextual characterization in Lean.
 
-\begin{proof}[Proof of \cref{view:thm:tests}]
+The operations of $C_k$ have a short description. For an owner $r\ne k$, an input $a_r$ absorbs. Without that absorber, an input $\pv$ gives $\pv$, two equal atoms $a_i$ give $a_i$, and all other cases give $\nv$. For owner $k$, omit the absorbing case.
+
+\begin{corollary}[Faithful family of small perspectives]\label{view:cor:product}
+The canonical map
+\[
+ \A\longrightarrow\prod_{k\in I} C_k,\qquad
+ S\longmapsto([S]_{\equiv_k})_{k\in I}
+\]
+is an injective homomorphism and is onto each factor. Thus the
+$2^K-1$-valued algebra has a subdirect representation by $K$ factors,
+each of size $K+1$.
+\end{corollary}
+\begin{proof}
+Each coordinate is a quotient homomorphism. If two inputs differ, some
+$k$ belongs to exactly one of them, and their $k$ coordinates differ.
+\end{proof}
+
+The views also supply ordinary finite logical matrices: designate $\pv$ in $C_k$ and interpret consequence by preservation of that designation. Role renaming transports $C_k$ to $C_{\pi k}$.
+
+\paragraph{Test domains without switching.}
+Call $D\subseteq\Pow$ a \emph{complete input test domain} if, for every arity $n$ and every pair of terms $f,g$ of $\mathbf A$,
+\[
+ f=g\text{ on }\Pow^n\quad\Longleftrightarrow\quad f=g\text{ on }D^n.
+\]
+
+\begin{proposition}[Reduct test domains]\label{view:thm:tests}
+A domain $D$ is complete exactly when:
+\begin{enumerate}
+\item every singleton $\{i\}$ belongs to $D$;
+\item for every $k$, some ambiguous $F\in D$ omits $k$.
+\end{enumerate}
+The second condition says that the intersection of the ambiguous members
+of $D$ is empty, with the intersection of an empty family taken as $I$.
+\end{proposition}
+\begin{proof}
 \emph{Sufficiency.} Suppose $f,g$ differ at a valuation $v$, and choose
 $k$ belonging to exactly one output. Choose an ambiguous $F\in D$
 omitting $k$. Replace each input set $S$ as follows:
@@ -97,12 +202,24 @@ This differs from the identity exactly on ambiguous sets omitting $k$.
 At least one such input must be tested.
 \end{proof}
 
-\begin{proof}[Proof of \cref{view:cor:optimal}]
+The sufficiency and necessity statements are \path{complete_test_domain} and \path{test_domain_necessary} in Lean.
+
+\begin{corollary}[Sharp size]\label{view:cor:optimal}
+The minimum size of a complete fixed test domain is
+\[
+ \begin{cases}6,&K=3,\\K+2,&K\geq4.\end{cases}
+\]
+For three roles, take every singleton and every pair. For four or more,
+take every singleton and any two disjoint pairs.
+\end{corollary}
+\begin{proof}
 Every singleton is necessary. One ambiguous set has nonempty
 intersection with itself, so at least two are needed. Two disjoint pairs
 suffice for $K\geq4$. At $K=3$, every ambiguous set has size at least
 two, so any two intersect. All three pairs are necessary and sufficient.
 \end{proof}
+
+For a fixed observed player, an even smaller tailored domain consists of all $K$ singletons and one fixed pair omitting that player. The optimal alphabet is a set of inputs: intermediate outputs may be larger sets.
 
 \subsection{Pair tests}\label{app:proofs-tests}
 
@@ -113,13 +230,11 @@ $C$ and composes the permutations. A nonempty $P_j$ contributes an
 ambiguous set, so that expression cannot equal an owner singleton. Thus
 an owned choice collapses exactly when some child is a constant owner
 singleton on the cell. Otherwise union its constants and coefficients.
-This proves the representation by induction. It is not asserted to be
-canonical: distinct coefficients may have the same action on ambiguous
+This proves the representation by induction. This representation is not canonical: distinct coefficients may have the same action on ambiguous
 inputs.
 \end{proof}
 
-The representation in \cref{sym:lem:provenance} is not asserted to be canonical: distinct coefficients may have the same
-action on ambiguous inputs. The necessity of pairs uses the following gadget.
+The necessity of pairs uses the following gadget.
 
 \begin{lemma}[Resetting atomic inputs]\label{sym:lem:reset}
 If a unary term function $F$ is extensive, start with $U(x)=F(x)$ and
@@ -135,8 +250,16 @@ singleton, and their union is still the current value. Extensivity is
 preserved at each step.
 \end{proof}
 
-\begin{proof}[Proof of \cref{sym:thm:optimal}]
-Sufficiency is Theorem~\ref{sym:thm:pairs}. Each singleton is necessary
+\begin{proposition}[Minimum test domain]\label{sym:thm:optimal}
+A fixed input domain tests every term equation, at every arity, exactly
+when it includes every singleton and every two-element set. Consequently
+the unique minimum domain is
+\[
+ D_2=\{S\subseteq I:1\leq|S|\leq2\},\qquad |D_2|=K(K+1)/2.
+\]
+\end{proposition}
+\begin{proof}
+Sufficiency is \cref{sym:thm:pairs}. Each singleton is necessary
 already in the reduct: its unary synthesis gives a term differing from
 the constant $I$ only at that singleton. These separators are now
 kernel-checked in \texttt{Synthesis.lean}.
@@ -149,11 +272,15 @@ $C=I\setminus\{k\}$, and form the extensive term
 Here $(i\ k)$ is a transposition. If $x\subseteq P$, then $F(x)=C$.
 Otherwise $x$ contains $k$, or contains an $i$ whose transposition
 supplies $k$, and $F(x)=I$. Thus, on ambiguous inputs, $F$ differs from
-$I$ only at $P$. By Lemma~\ref{sym:lem:reset},
+$I$ only at $P$. By \cref{sym:lem:reset},
 $\operatorname{Reset}(F)$ and $\operatorname{Reset}(I)$ agree at every
 singleton and every ambiguous input other than $P$, and disagree at
 $P$. Every complete input domain must therefore contain $P$.
 \end{proof}
+
+\texttt{FullAlgebra.lean} proves these results in the full term syntax. Singleton-status equivalence is preserved by every constructor; on a fixed status cell, shrinking inputs shrinks the output; and one input membership suffices to preserve any selected output
+winner, which the formal refinement keeps while reducing every input to a singleton or pair (\path{FullTerm.status_mono}, \path{FullTerm.one_pin}). The explicit separators are \path{FullTerm.pair_separator}. For four roles $D_2$ has ten values, while the reduct admits six, and the
+pair separator shows why that domain cannot be reused after adding internal switches.
 
 \subsection{The intrinsic core}\label{app:proofs-core}
 
@@ -183,11 +310,19 @@ permutations both checks the criterion and transports the owners,
 without expanding the tree.
 \end{proof}
 
-The formal proof uses persistence of a constant contribution on each status cell and survival of every leaf contribution on
-the all-ambiguous cell. The extraction accumulates permutations while traversing the original term and transports owners at
-internal nodes.
+The formal proof uses persistence of a constant contribution on each status cell and survival of every leaf contribution on the all-ambiguous cell. The extraction accumulates permutations while traversing the original term and transports owners at internal nodes
+(\path{FullTerm.idempotent_extraction}). Internal switching still enlarges the complete clone and changes its congruences.
 
-\begin{proof}[Proof of \cref{gen:cor:trace}]
+\begin{corollary}[Semilattice trace]\label{gen:cor:trace}
+On all-ambiguous inputs, every idempotent term is union over a fixed
+nonempty subset of its arguments. These restrictions form exactly the
+semilattice term clone, and restriction is a surjective clone
+homomorphism. There is no near-unanimity term of any finite arity, and
+no Mal'cev term. Every variable occurring in a core term is semantically
+essential, so every valid core identity has the same variables on both
+sides.
+\end{corollary}
+\begin{proof}
 In the constant-free core all intermediate ambiguous values are
 ambiguous; the result is union of the occurring variables. Distinct
 supports are separated by a pair and $I$. Composition unions supports,
@@ -205,8 +340,22 @@ This is the usual regular-identity setting of semilattice sums
 \cite{Plonka1967}.
 \end{proof}
 
-\begin{proof}[Proof of \cref{gen:cor:views}]
-Each $q_k$ is a congruence quotient for every owned choice by \cref{view:thm:view}. Theorem~\ref{gen:thm:core} extends this to all
+\begin{corollary}[Intrinsic player views]\label{gen:cor:views}
+Every idempotent operation in the full role-switching language acts
+compositionally on each of the $K+1$-state player views
+\[
+ q_k(S)=
+ \begin{cases}
+ \pv,&k\in S,\\
+ a_i,&S=\{i\},\ i\ne k,\\
+ \nv,&\text{otherwise}.
+ \end{cases}
+\]
+These give a subdirect representation by $K$ factors. The family is
+irredundant: none of its player views can be omitted.
+\end{corollary}
+\begin{proof}
+Each $q_k$ is a congruence quotient for every owned choice by \cref{view:thm:view}. \cref{gen:thm:core} extends this to all
 idempotent operations, even when their original definitions contain
 internal switches. All membership bits are recovered from the $\pv$
 states, so the family separates values. Each view is onto. Omitting
@@ -214,7 +363,22 @@ $q_k$ identifies $I\setminus\{k\}$ and $I$, which every other player
 views as $\pv$.
 \end{proof}
 
-\begin{proof}[Proof of \cref{gen:thm:idem-domain}]
+Each $q_k$ is a quotient by \cref{view:thm:view}, and this is \path{FullTerm.idempotent_sameView} in Lean. The representation is subdirect, not the full Cartesian product.
+
+A fixed domain $D\subseteq\Pow$ \emph{certifies idempotency} when, for terms of every arity, agreement $t(S,\ldots,S)=S$ for $S\in D$ implies idempotency.
+
+\begin{proposition}[Idempotency certificates]\label{gen:thm:idem-domain}
+For a domain consisting of ambiguous values, certification holds exactly
+when
+\[
+ \bigcap D=\varnothing,\qquad
+ (\mathbf1_{i\in S})_{S\in D}\text{ are distinct for all }i\in I.
+\]
+The minimum size of a certifying domain, even allowing singleton test
+values, is three for $K=3$, and $\lceil\log_2(K+1)\rceil$ for $K\geq4$.
+Both minima are attained using ambiguous values alone.
+\end{proposition}
+\begin{proof}
 If $k\in\bigcap D$, the nonidentity term $x\cup\{k\}$ fixes every test.
 If two roles have the same incidence vector, their transposition fixes
 every test. These necessary conditions apply also to singleton tests.
@@ -224,7 +388,7 @@ An agreeing term's constant contribution lies in $\bigcap D$, so is
 empty. Hence it has no winner leaves. Each occurrence permutation
 satisfies $\pi S\subseteq S$ on each test, and finiteness makes these
 equalities. A permutation fixing each test can only exchange roles with
-identical incidence vectors. It is identity. Apply Theorem~\ref{gen:thm:core}.
+identical incidence vectors. It is identity. Apply \cref{gen:thm:core}.
 
 With $m$ tests the conditions require $K$ distinct binary words of
 length $m$, excluding the all-one word. Thus $K\leq2^m-1$. For $K\geq4$
@@ -240,18 +404,25 @@ ambiguous inputs, so those tests cannot certify idempotency.
 Three pairs certify it.
 \end{proof}
 
-\begin{proof}[Proof of \cref{gen:thm:S2}]
+At $K=7$, three ambiguous diagonal tests suffice, compared with $28$ values for testing every full-signature equation.
+
+\begin{proposition}[Atomic functions]\label{gen:thm:S2}
+At every positive arity, the functions induced by atom-preserving terms
+are exactly the essentially unary or at most two-valued functions.
+This is the known clone $S_2$.
+\end{proposition}
+\begin{proof}
 Let $\iota_3\subseteq I^3$ be the relation of triples with a repeated
 entry. Three input environments having this property in every
 coordinate cannot have three distinct singleton outputs:
-Theorem~\ref{gen:thm:source} would give one permutation sending an input
+\cref{gen:thm:source} would give one permutation sending an input
 triple with repetition to three distinct roles. Every induced function
 therefore preserves $\iota_3$.
 
 Use the established presentation $\operatorname{Pol}(\iota_3)=S_2$,
 recorded by Szendrei\cite[Proposition~2.2]{Szendrei2012} in the
 S\l upecki--Burle classification. It applies for every finite $K\geq3$.
-This is a use of that classification, not a new classification of $S_2$.
+
 
 Conversely every unary map $h:I\to I$ has an atomic realization.
 The term $x\star_a(a\ b)(x)$ merges atomic $b$ into $a$, fixing the
@@ -264,10 +435,18 @@ $\star_b$ Boolean AND, with truth $a$. Finite DNF of label tests
 realizes every $I^n\to\{a,b\}$. Constants cover the one-valued case.
 \end{proof}
 
+The exact number of induced $n$-ary atomic functions is
+\[
+ \binom K2(2^{K^n}-2)+K+
+ n\left(K^K-\binom K2(2^K-2)-K\right).
+\]
+The first part counts functions with at most two values, and the remaining essentially unary functions have a unique essential argument. For $K=3,n=2$ the count is $1545$. Mixed and ambiguous valuations remain available for richer operations.
+
 \subsection{Reset}\label{app:proofs-reset}
 
 \paragraph{The binary fragment.}
-Work first with constant-free, switch-free owned-choice terms, which are automatically idempotent.
+The full form of \cref{reset:thm:binary} adds that the reset clone is exactly the part generated by the binary operations of the idempotent, atom-preserving owned-choice clone. If $T=\{r\}$, the suppressions defining reset select it at owner $r$ and all later owners preserve it; if $T$ is ambiguous, every step preserves $S\cup T$. The order of the suppressions is immaterial. Reset commutes with every role permutation. It cannot express
+arbitrary owned choice or ordinary union, since it preserves singleton-valued inputs, whereas an owned choice between two other winners can return their pair. Work first with constant-free, switch-free owned-choice terms, which are automatically idempotent.
 
 \begin{lemma}[One-constant rigidity]\label{reset:lem:rigidity}
 A unary owned-choice expression whose only constant is $\{r\}$ is
@@ -298,7 +477,7 @@ Suppose the atomic restriction projects $x$. If $y$ does not occur,
 idempotency makes the whole term $x$. Otherwise both variables occur.
 Freeze $x=\{r\}$, leaving a unary expression in $y$ with only that
 constant. Its atomic outputs are $\{r\}$, so
-Lemma~\ref{reset:lem:rigidity} makes it constant on all $y$.
+\cref{reset:lem:rigidity} makes it constant on all $y$.
 
 Now let $x$ be ambiguous. If $y$ is ambiguous too, every node computes
 union, giving $x\cup y$. If $y=\{r\}$, specialize instead in $x$.
@@ -313,13 +492,27 @@ The opposite projection gives the other two operations, all of which
 are definable.
 \end{proof}
 
-The binary theorem uses the idempotent-elimination theorem and the external atomic-clone classification; its complete proof is
-not yet a Lean theorem.
+\Cref{gen:thm:core} extends this characterization to idempotent full-signature terms, including constants and internal switches in their original syntax. For $H_a$, the ambiguity statuses in the example of \cref{sec:reset} are unchanged and only $z$ supplies $c$, so
+the selector semantics below rules out a reset expression for $H_a$.
 
-\paragraph{Selection and the chain.}
+\paragraph{Selection.}
+Let $N$ be the finite set of input positions, including any declared unused positions. For a valuation $S=(S_j)_{j\in N}$ put $B=\{j:|S_j|\geq2\}$, a set of input positions. The root is
+$\rho(x_j)=j$, $\rho(s\del t)=\rho(t)$.
 
-\begin{proof}[Proof of \cref{reset:lem:selection}]
-If the right child is resolved, reset returns it. If it is ambiguous,
+\begin{lemma}[Resolution and selection]\label{reset:lem:selection}
+A reset term is ambiguous exactly when its root input is ambiguous.
+There is a selector $E_t:2^N\to2^N$ with
+\begin{align*}
+ E_{x_j}(B)&=\{j\},\\
+ E_{s\del t}(B)&=E_t(B)\cup
+ \begin{cases}E_s(B),&\rho(t)\in B,\\\varnothing,&\rho(t)\notin B,\end{cases}\\
+ t(S)&=\bigcup_{j\in E_t(B)}S_j.
+\end{align*}
+Every selector is monotone, always selects its root, and selecting
+position $j$ is independent of whether $j$ itself belongs to $B$.
+\end{lemma}
+\begin{proof}
+If the right child is atomic, reset returns it. If it is ambiguous,
 reset unions the children and remains ambiguous. This proves the first
 three statements by induction. Monotonicity follows from the positive
 recursion. For self-independence, at a node with root $j$ that input is
@@ -327,20 +520,47 @@ always selected. Otherwise its new guard concerns a different position,
 and both child selection predicates are independent of $j$ by induction.
 \end{proof}
 
+This exact mixed-input semantics is \path{ResetCalculus.Term.denote_membership} in Lean. For each position $j$, let $\mathcal G_j(t)$ be the antichain of inclusion-minimal sets $A\subseteq N$ such that $j\in E_t(A)$; an empty antichain means the position is unused. Then
+\begin{equation}\label{reset:eq:guards}
+ j\in E_t(B)\quad\Longleftrightarrow\quad
+       \exists A\in\mathcal G_j(t)\; A\subseteq B.
+\end{equation}
+For the root the antichain is $\{\varnothing\}$, and every other antichain omits $\varnothing$. No minimal prerequisite for $j$ contains $j$, by self-independence. A variable contributes its empty guard. At $s\del t$, retain the right table and add $\rho(t)$ to each left guard, then
+delete duplicates and every guard containing a smaller one for the same output. Before minimization there is at most one guard per variable occurrence, so a tree traversal collects and normalizes them in polynomial time.
+
 \begin{proof}[Proof of \cref{reset:thm:three}]
 Equal tables give equal selectors and therefore equal values.
 If two tables differ, some selector inclusion differs at $B,j$.
 Assign $T$ to position $j$, $U$ to the other positions in $B$, and $Z$
 elsewhere. Setting $j$ to ambiguous does not change whether $j$ is
-selected, by Lemma~\ref{reset:lem:selection}. The marker $c$ occurs in the
+selected, by \cref{reset:lem:selection}. The marker $c$ occurs in the
 result exactly when that position is selected. Thus the terms differ.
 Distinct minimal antichains give such $B,j$: take a minimal prerequisite
 on one side not containing a prerequisite from the other. All operations
 on finite guard tables are polynomial.
 \end{proof}
 
-\begin{proof}[Proof of \cref{reset:cor:generator}]
-Theorem~\ref{reset:thm:three} identifies their identities. The three-element
+A failed equality thus has a polynomially constructible countervaluation using only $Z,U,T$.
+
+This is \path{ResetCalculus.Term.three_chain_complete} in Lean. Numbering the chain $0<1<2$, its table is
+\begin{equation}\label{reset:eq:three-table}
+\begin{array}{c|ccc}
+\del&0&1&2\\\hline
+0&0&1&2\\
+1&0&1&2\\
+2&0&2&2
+\end{array}
+\end{equation}
+It is the dual of $G_3$ in Waldhauser's classification \cite[Theorem~3.4, table $G_3$]{Waldhauser2006}, under $0\mapsto b$, $1\mapsto a$, $2\mapsto c$. It is the order algebra $O_{2+1}$ of Freese et al.\ \cite[Section~3]{FreeseEtAl2002}, whose poset has $a<b$ and an isolated $c$, with
+$x\cdot y=x$ if $x\leq y$ and $y$ otherwise, under $0\mapsto c$, $1\mapsto b$, $2\mapsto a$. So the reset variety is the variety generated by this three-element algebra.
+
+\begin{corollary}[Minimum finite generator]\label{reset:cor:generator}
+The three-element algebra generates the common variety of all reset
+algebras on $\Pow$ for $|I|\geq3$, and no smaller algebra generates
+that variety.
+\end{corollary}
+\begin{proof}
+\cref{reset:thm:three} identifies their identities. The three-element
 algebra is nonassociative:
 $(2\del0)\del1=1$, while $2\del(0\del1)=2$.
 Every idempotent binary operation on two elements is one of the two
@@ -349,8 +569,21 @@ Any generator would have to satisfy the valid identity $x\del x=x$,
 so a smaller generator is impossible.
 \end{proof}
 
+Even a two-value input domain that is not closed under reset cannot test all identities: associativity holds whenever its three arguments use at most two distinct winner sets. A failure requires the middle argument to be atomic and the last ambiguous, with a contribution of the first
+lying outside their union, and two distinct input values cannot supply that contribution.
+
+\begin{proof}[Proof of \cref{reset:thm:basis}]
+Freese et al.\ \cite[Theorem~3.7]{FreeseEtAl2002} prove that their
+equations (E1)--(E5), together with left commutation, form a basis for
+$O_{2+1}$. These are exactly (R1)--(R6) under the isomorphism above.
+\cref{reset:thm:three} identifies the identities of that algebra with
+those of winner-set reset for every $K\geq3$.
+\end{proof}
+
+The inference rules are the ordinary rules of equational logic: reflexivity, symmetry, transitivity, substitution, and congruence under $\del$. Soundness of the six equations is kernel-checked in \texttt{Reset.lean}, and the completeness argument uses the external theorem.
+
 \paragraph{Path normal forms.}
-The same source already develops common-root path normal forms and a
+Freese et al.\ already develop common-root path normal forms and a
 suffix criterion for comparing them
 \cite[Lemmas~3.5--3.6]{FreeseEtAl2002}. The correspondence with guards
 is exact. For a left-associated path $p$ with pairwise distinct input
@@ -374,16 +607,35 @@ some suffix for $j$ in $w$ contained in $\sigma_p(j)$. This is the
 suffix-inclusion criterion of their Lemma~3.6, expressed through our
 monotone selection predicates. Their order inequality $w\leq p$ reads
 $w\del p=w$; for common-root terms this is exactly the displayed
-inclusion of selectors. Thus the guard tables retain the minimal
-suffixes needed for evaluation and comparison; they do not introduce
-an unrelated normalization theory. The main text gives the
-prerequisite/antimatroid presentation and its algorithms. Priority for
-those connections and algorithms remains unestablished.
+inclusion of selectors. Thus the guard tables retain the minimal suffixes needed for evaluation and comparison.
+
+\begin{remark}[Relationship with the older path normal form]
+\label{reset:rem:priority}
+For a constituent path $p$ using the whole support, the suffix criterion $E_p\subseteq E_t$ of Freese et al.\ says exactly that the reversal of $p$ is a basic word of $\mathcal F_t$. Taking every such absorbed constituent therefore gives precisely all the antimatroid's basic words: this is their
+Lemma~3.5 normal form taken maximally \cite{FreeseEtAl2002}. The distinctions studied here are the closure condition characterizing which constituent families occur, the compact polynomial guard tables and their algorithms, and the substitution formula.
+\end{remark}
 
 \paragraph{Antimatroids.}
-To verify the description of $e_{\mathcal F}(B)$ in the main text, take a feasible subset of $B\cup\{j\}$ containing $j$ and an
-accessible order of it. Its prefix before $j$ is feasible inside $B$; unioning with the basis makes $j$ an available extension. The
-converse is immediate.
+We use the standard finite feasible-set definition \cite[Section~7]{Czedli2014}: on its actual support $X$, an antimatroid is a union-closed family $\mathcal F\subseteq2^X$ containing $\varnothing$ and $X$, in which every nonempty feasible set can lose one element and remain feasible. We require exactly one feasible singleton $\{r\}$; accessibility then makes $r$ belong to every nonempty feasible set. Unused input positions lie outside the support $X$. Write
+\[
+ \bas_{\mathcal F}(B)=\bigcup\{A\in\mathcal F:A\subseteq B\},\qquad
+ e_{\mathcal F}(B)=\{j:j\in\bas_{\mathcal F}(B\cup\{j\})\}.
+\]
+The basis is the largest feasible subset of $B$, and $e_{\mathcal F}(B)$ consists of that basis together with its available one-element extensions. To verify this description, take a feasible subset of $B\cup\{j\}$ containing $j$ and an accessible order of it. Its prefix before $j$ is feasible inside $B$;
+unioning with the basis makes $j$ an available extension. The converse is immediate.
+
+Precisely, the correspondence of \cref{reset:thm:anti} is, on nonempty supports $X\subseteq N$,
+\[
+ E_t=e_{\mathcal F_t},\qquad
+ \mathcal F_t=\{A\subseteq X:A\subseteq E_t(A)\}.
+\]
+For reset itself the family operation is
+\begin{equation}\label{reset:eq:family-product}
+ \mathcal F\del\mathcal G=
+ \{\varnothing\}\cup
+ \{A\cup C:A\in\mathcal F,\ C\in\mathcal G\setminus\{\varnothing\}\},
+\end{equation}
+and the root of the product is the root of $\mathcal G$.
 
 \begin{proof}[Proof of \cref{reset:thm:anti}]
 The variable $x_j$ gives $\{\varnothing,\{j\}\}$.
@@ -403,7 +655,7 @@ If $r$ is the root of $\mathcal G$, its basis obeys
  \end{cases}
 \]
 Applying the definition of $e$ gives exactly the selector recursion
-in Lemma~\ref{reset:lem:selection}. Also
+in \cref{reset:lem:selection}. Also
 $A\subseteq e_{\mathcal F}(A)$ iff $A$ is feasible: membership of
 $j\in A$ in this readiness set means $j\in\bas_{\mathcal F}(A)$.
 This proves faithful representation for every term.
@@ -424,13 +676,26 @@ the prescribed antimatroid. This is an application of the standard
 basic-word representation, with reset supplying its composition.
 \end{proof}
 
-The parentheses in the path display are essential: for an order $r,a,b$, the term is $(x_b\del x_a)\del x_r$. It selects the initial
-segment through the first resolved input. Repeated labels in more general terms are handled by \eqref{reset:eq:family-product};
-replacing the occurrence tree by a graph on variable names can incorrectly combine paths from different occurrences.
+The parentheses in the path display are essential: for an order $r,a,b$, the term is $(x_b\del x_a)\del x_r$. It selects the initial segment through the first atomic input. Repeated labels in more general terms are handled by \eqref{reset:eq:family-product}; replacing the occurrence tree by a graph on
+variable names can incorrectly combine paths from different occurrences.
 
 \paragraph{Realizability.}
+The family representation can be exponentially large, but prerequisite antichains stay small. Given a candidate root $r$ and minimal antichains $\mathcal G_j$, call a set $A$ \emph{constructible} if its positions can be ordered $a_1,\ldots,a_m$ such that for every $\ell$ some member of $\mathcal G_{a_\ell}$ lies in
+$\{a_1,\ldots,a_{\ell-1}\}$. This is checked greedily: start empty and add any enabled member of $A$. Enabling is monotone, so a greedy choice cannot prevent success.
 
-\begin{proof}[Proof of \cref{reset:thm:synthesis}]
+\begin{proposition}[Realizability]\label{reset:thm:synthesis}
+A table is the canonical table of a reset term exactly when:
+\begin{enumerate}
+\item $\mathcal G_r=\{\varnothing\}$ and no other antichain contains
+$\varnothing$;
+\item every member of $\mathcal G_j$ omits $j$;
+\item every member of every antichain is constructible.
+\end{enumerate}
+Recognition is polynomial in the table description. A realizable
+table with $M$ prerequisites on $n$ input positions has a term
+realization of size $O(nM)$.
+\end{proposition}
+\begin{proof}
 For necessity, roots and self-independence give the first two
 conditions. A minimal prerequisite $A$ enabling $j$ is feasible in the
 represented antimatroid: readiness at $A$ has a feasible predecessor
@@ -450,17 +715,46 @@ contribution is introduced. There are $M$ paths of length at most
 $n+1$.
 \end{proof}
 
-To see the equivalence of constructibility with the local form \eqref{reset:eq:complete}, note first that constructibility implies
-completeness. Conversely, induct on the size of a prerequisite $A$. For each $k\in A$, choose $B\in\mathcal G_k$ inside $A$. Since
-$k\notin B$, it is smaller than $A$ and constructible by induction. Append $k$ to its construction. Unions of constructible sets are
-constructible: concatenate their orders, skipping repeated positions. Unioning these constructions reaches all of $A$. The implementation
-checks the local condition and uses greedy orders for synthesis. An exponential antimatroid is therefore not needed for either equality or
-synthesis.
+Constructibility has a simpler equivalent local form:
+\begin{equation}\label{reset:eq:complete}
+ A\in\mathcal G_j,\ k\in A
+ \quad\Longrightarrow\quad
+ \exists B\in\mathcal G_k\; B\subseteq A.
+\end{equation}
+Constructibility implies this completeness condition. Conversely, induct on the size of a prerequisite $A$. For each $k\in A$, choose $B\in\mathcal G_k$ inside $A$. Since $k\notin B$, it is smaller than $A$ and constructible by induction. Append $k$ to its construction. Unions of constructible sets are
+constructible: concatenate their orders, skipping repeated positions. Unioning these constructions reaches all of $A$.
 
-The substitution formula \eqref{reset:eq:substitution} follows by substituting the inner output unions into the outer output union, and
-substituting each inner root status into an outer guard.
+On actual support, the antichain, nonemptiness, self-exclusion, and completeness conditions are precisely the axioms for a \emph{dependency structure with choice} (DSC) in \cite[Definition~2.9]{BazermanMinichielloPuzio2023}, whose correspondence with antimatroids is established there
+\cite[Theorem~3.15]{BazermanMinichielloPuzio2023}. The implementation checks the local condition and uses greedy orders for synthesis. These are algorithms for formulas over the primitive reset operation; its expansion into owned choices may duplicate subterms.
 
-\begin{proof}[Proof of \cref{reset:thm:minimal}]
+\paragraph{Substitution, counting, and minimality.}
+Let an outer table have root $r$ and prerequisites $\mathcal G_i$, and substitute inner tables with roots $r_i$ and prerequisites $\mathcal H^i_j$. Inner ambiguity is determined exactly by the inner root, so
+\begin{equation}\label{reset:eq:substitution}
+ r_{\rm new}=r_r,\qquad
+ \mathcal G^{\rm new}_j=
+ \min\bigcup_i
+ \left\{\{r_k:k\in A\}\cup C:
+       A\in\mathcal G_i,\ C\in\mathcal H^i_j\right\},
+\end{equation}
+where $\min$ deletes nonminimal sets. The formula follows by substituting the inner output unions into the outer output union, and each inner root status into an outer guard. It is polynomial in the two explicit table descriptions, and it respects actual term substitution, including mixed inputs.
+
+Removing the unique initial element from every nonempty feasible set leaves an arbitrary antimatroid on the remaining support, and adjoining one initial element reverses this. If $a_m$ counts labeled antimatroids on a full $m$-element support, with $a_0=1$, the number of $n$-ary reset term functions is
+therefore
+\[
+ f_n=\sum_{m=1}^n\binom nm\,m\,a_{m-1}.
+\]
+Independent finite enumerations give
+\[
+ (a_0,\ldots,a_4)=(1,1,3,22,485),\qquad
+ (f_1,\ldots,f_5)=(1,4,18,140,2980).
+\]
+The antimatroid counts are counts of known combinatorial objects.
+
+\begin{proposition}[Minimal clone]\label{reset:thm:minimal}
+Every nonprojection reset term has a binary identification minor equal
+to reset. Hence its term clone is minimal.
+\end{proposition}
+\begin{proof}
 A term selects all its occurring variables when every input is
 ambiguous. Each of them is essential, as witnessed by assigning a proper
 ambiguous set to all inputs except one assigned a larger set.
@@ -472,7 +766,14 @@ use $y$. Thus it is $\{\{y\}\}$, while the $y$ prerequisite is empty.
 This is exactly $x\del y$. Minimality follows.
 \end{proof}
 
+Minimality is already known for $G_3$ and its dual in Waldhauser's work; the direct proof records the explicit recovery by input identification. So there are no intermediate nontrivial subclones of the reset clone.
+
 \subsection{Hardness}\label{app:proofs-hard}
+
+The decision problem takes two ordinary tree terms, with any number of variables, and asks whether they agree at every nonempty-set valuation. Fixing $K$ fixes the algebra and its signature. In the uniform version, role names have binary encodings and permutations are explicit lists of their images. Terms are not
+encoded by shared recursive descriptions.
+
+The proof below of \cref{gen:thm:complexity} is direct, and uses all three owners of $J$; \cref{thm:raw-pairs} gives a shorter reduction with two.
 
 \begin{proof}[Proof of \cref{gen:thm:complexity}]
 For fixed $K$, a failed valuation is a polynomial certificate since the
@@ -492,12 +793,15 @@ role switches, nor derived union. Fixed-$K$ hardness also supplies
 uniform hardness.
 \end{proof}
 
-For the remaining reductions, size is measured in the stated native signature; an expansion into owned-choice syntax need not preserve that
-size. Use $A\del B=B$ when $B$ is a singleton, and $A\cup B$ otherwise. Write $\operatorname{rc}(a_1,\ldots,a_n;b)$ for the right comb
-$a_1\del(a_2\del\cdots\del(a_n\del b))$, and $\operatorname{lc}(b;g_1,\ldots,g_m)$ for the left comb
-$(\cdots((b\del g_1)\del g_2)\cdots)\del g_m$. Both are $b$ when their lists are empty.
+The gate uses the common input union as its false value, so it requires no named winner and no $I$. For the remaining reductions, size is measured in the stated native signature; an expansion into owned-choice syntax may be larger. Write $\operatorname{rc}(a_1,\ldots,a_n;b)$ for the right comb
+$a_1\del(a_2\del\cdots\del(a_n\del b))$, and $\operatorname{lc}(b;g_1,\ldots,g_m)$ for the left comb $(\cdots((b\del g_1)\del g_2)\cdots)\del g_m$. Both are $b$ when their lists are empty.
 
-\begin{proof}[Proof of \cref{thm:owner-free-hardness}]
+\begin{proposition}[Reset with union]\label{thm:owner-free-hardness}
+For every fixed $K\geq3$, equation validity for the signature
+$\{\del,\cup\}$ on $\Pow$ is coNP-complete. It uses no constants,
+owner names, or internal role switches.
+\end{proposition}
+\begin{proof}
 Membership in coNP follows either from a full valuation at fixed $K$,
 or from the pair theorem and polynomial native evaluation. The pair
 witness exists because both operations are owned-choice definable;
@@ -520,7 +824,7 @@ The equation is
 All displayed symbols are input variables or the two native operations.
 The tree size is linear in the CNF description and $n$.
 
-If $z$ is resolved, $W$, $R$, and both sides of
+If $z$ is atomic, $W$, $R$, and both sides of
 \eqref{eq:union-reduction} are $z$. Otherwise $W$ is the union of
 $z,t$, and all literals; $R$ is ambiguous and contains $W$.
 Every contribution other than $c$ is therefore already in $R$.
@@ -531,7 +835,7 @@ some pair $u_i\cup t,\bar u_i\cup t$ is simultaneously ambiguous.
 Suppose the equation fails. Every clause guard is ambiguous, and no
 pair is simultaneously ambiguous. Since $n\geq1$, $t$ must be a
 singleton: an ambiguous $t$ would make every pair ambiguous.
-For nonempty $X$, $X\cup t$ is resolved exactly when $X=t$.
+For nonempty $X$, $X\cup t$ is atomic exactly when $X=t$.
 Assign variable $i$ true iff $u_i\ne t$. If a positive literal differs
 from $t$, it is true under this assignment. If a negative literal
 $\bar u_i$ differs from $t$, consistency forces $u_i=t$, so that
@@ -542,12 +846,16 @@ Conversely choose three distinct roles $b,d,e$ and a satisfying
 assignment. Set $t=\{b\}$, each false literal to $\{b\}$, each true
 literal to $\{d\}$, $z=\{b,d\}$, and $c=\{e\}$.
 All clause guards are ambiguous, while every literal pair has a
-resolved guard. Thus $e$ survives on the left and is absent on the
+atomic guard. Thus $e$ survives on the left and is absent on the
 right. This proves the reduction. CNFs with no variables are decided
 trivially and mapped to a fixed valid or invalid equation.
 \end{proof}
 
-\begin{proof}[Proof of \cref{thm:H-hardness}]
+\begin{proposition}[Two guarded owners]\label{thm:H-hardness}
+For $K\geq3$ and distinct $a,b\in I$, equation validity for
+$\{H_a,H_b\}$ on $\Pow$ is coNP-complete, without constants.
+\end{proposition}
+\begin{proof}
 The same finite-valuation argument gives membership in coNP.
 For a CNF $\varphi$, use one input $y_i$ per Boolean variable, together
 with $z,c$. Let $W=\operatorname{rc}(y_1,\ldots,y_n;z)$.
@@ -568,7 +876,7 @@ repeated. The clause terms also use their continuation once. The
 expanded tree therefore has polynomial, in fact linear, size in
 $n$ and the total literal count.
 
-When $z$ is resolved, both sides are $z$. Otherwise $W$ and $R$ are
+When $z$ is atomic, both sides are $z$. Otherwise $W$ and $R$ are
 ambiguous, and $W$ contains $z$ and every $y_i$. Outside $W$ the
 exact propagation law is
 \[
@@ -594,7 +902,12 @@ role $d$. Every clause has a literal with $y_i=\{s\}$, removing
 $d$ in its branch. Thus $d\notin R$, while $d\in c\del R$.
 \end{proof}
 
-\begin{proof}[Proof of \cref{thm:colouring-theories}]
+\begin{proposition}[Dependence on the number of roles]\label{thm:colouring-theories}
+For every $K\geq3$,
+$\operatorname{Eq}(\mathcal B_{K+1})\subsetneq
+ \operatorname{Eq}(\mathcal B_K)$.
+\end{proposition}
+\begin{proof}
 For $n\geq3$ use variables $x_1,\ldots,x_n,z,c$. Define
 \begin{align*}
  W_n&=\operatorname{rc}(x_1,\ldots,x_n;z),\\
@@ -602,10 +915,10 @@ For $n\geq3$ use variables $x_1,\ldots,x_n,z,c$. Define
  A_n&=\operatorname{lc}(c;(x_u\cup x_v)_{1\leq u<v\leq n}).
 \end{align*}
 Take the equation $A_n\del R_n=R_n$.
-If $z$ is resolved, it holds immediately. Otherwise $W_n$ is ambiguous
+If $z$ is atomic, it holds immediately. Otherwise $W_n$ is ambiguous
 and contains all the $x_i$. If any $x_i$ is ambiguous, $R_n$ also
 contains $c$, so the equation holds. If all $x_i$ are singletons and
-two agree, their edge guard is resolved and erases $c$ from $A_n$;
+two agree, their edge guard is atomic and erases $c$ from $A_n$;
 every remaining contribution lies in $W_n\subseteq R_n$.
 The only remaining case has $n$ distinct singleton inputs. At $K=n$
 they exhaust the carrier's roles, so $W_n=I$ and the equation holds.
@@ -618,6 +931,8 @@ $\mathcal B_K\hookrightarrow\mathcal B_{K+1}$: union and singleton
 status are preserved. Equations valid in the latter hold in the
 former, and the displayed equation makes this inclusion strict.
 \end{proof}
+
+The edge guards express proper colorings of a complete graph. A fresh marker requires an unused role, which is precisely what fails at $K=n$. \texttt{Fragments.lean} has the generic pigeonhole certificate.
 
 \begin{proof}[Proof of \cref{thm:raw-pairs}]
 A single owned operation and union are semilattices: equality is equality
@@ -692,14 +1007,48 @@ All constructions use each clause and rail only a bounded number of
 times. Hardness passes to every larger signature.
 \end{proof}
 
+Each minimal hard pair therefore has a linear-size reduction in its native tree syntax.
+
+\path{lean/RawFragments.lean} proves the fold tests, the absorption arguments, and the generic UNSAT transfer for the owned guards; the CNF syntax assembly, size bounds, and complexity conclusions are written proofs, and \path{checks/check_raw_pairs.py} evaluates the actual native reductions independently.
+
 \subsection{One owner}\label{app:proofs-owner}
 
+Restricting the $H$ indices does not restrict every node of an owned-choice expansion, since reset itself is a derived operation. Complexity is measured in the native tree syntax.
+
 \begin{proof}[Proof of \cref{owner:lem:root}]
-Reset returns its right operand when that operand is resolved, and
+Reset returns its right operand when that operand is atomic, and
 otherwise returns an ambiguous union containing it. Both status claims
 follow by induction, since the right operand in the definition of
 $H_r(X,Y,Z)$ is $X$.
 \end{proof}
+
+Fix an observer $k\ne a$, and allow $H_k$ and $H_a$. Write $M_j$ for ``$x_j$ is ambiguous'', and
+\[
+ N_j\ \Longleftrightarrow\ x_j\ne\{a\},\qquad
+ V_j\ \Longleftrightarrow\ k\in x_j.
+\]
+The implications $M_j\Rightarrow N_j$ and $V_j\Rightarrow N_j$ are the only restrictions needed below. If $t_k$ denotes membership of $k$ in the value of $t$, the exact recursive laws are
+\begin{align}
+ (s\del t)_k
+   &\longleftrightarrow t_k\lor(M_{\rho(t)}\land s_k),\label{owner:eq:reset}\\
+ H_k(x,y,z)_k
+   &\longleftrightarrow x_k\lor
+        (M_{\rho(x)}\land(y_k\lor z_k)),\label{owner:eq:self}\\
+ H_a(x,y,z)_k
+   &\longleftrightarrow x_k\lor
+        (M_{\rho(x)}\land N_{\rho(y)}\land N_{\rho(z)}
+                     \land(y_k\lor z_k)).\label{owner:eq:other}
+\end{align}
+For \eqref{owner:eq:self}, membership of the owner in an owned choice is disjunction. For \eqref{owner:eq:other}, an outsider survives that choice precisely when neither child is the absorbing atom $\{a\}$, and \cref{owner:lem:root} turns these child tests into input tests. The meaning of a guard $g=(j,A,B)$ is
+$[g]=V_j\land\bigwedge_{i\in A}M_i\land\bigwedge_{i\in B}N_i$.
+
+The list $\Gamma_k(t)$ is built from \eqref{owner:eq:reset}--\eqref{owner:eq:other}: an input contributes $(j,\varnothing,\varnothing)$; reset retains the right guards and adds $\rho(t)$ to the $M$ tests of the left guards; $H$ retains the root guards and adds the displayed tests to each guard of its other two arguments.
+Each variable occurrence contributes exactly one guard, so no distributive expansion duplicates anything. For example, the outsider guards of $H_a(x,y,z)$ are
+\[
+ (x,\varnothing,\varnothing),\qquad
+ (y,\{x\},\{y,z\}),\qquad (z,\{x\},\{y,z\}),
+\]
+where in the second guard the $N_y$ test is automatic from its source $V_y$, and similarly for $N_z$ in the third. In \eqref{owner:eq:cover}, the implication $[g]\Rightarrow[h]$ uses $V_j\Rightarrow N_j$ for the last extra index $j$.
 
 \begin{proof}[Proof of \cref{owner:thm:guards}]
 Sufficiency follows from \eqref{owner:eq:guards} and
@@ -720,14 +1069,47 @@ Thus $g$ holds, and a right guard holds exactly when it covers $g$.
 No right guard does. This is the required countervaluation.
 \end{proof}
 
-\paragraph{Canonical tables.}
-The criterion also gives canonical tables: for each source, remove its index and the $M$ indices from its $N$ tests, then retain only the
-minimal guards under \eqref{owner:eq:cover}. No minimal guard has its source in its $M$ tests. Indeed, a guard $(j,A,B)$ with $j\in A$ has a
-covering guard $(j,A',B')$ with $j\notin A'$, $A'\subseteq A$, and $B'\subseteq B$. Induct on the term: if its root is $j$, the root
-occurrence supplies $(j,\varnothing,\varnothing)$; otherwise apply the induction hypothesis to the contributing child and reattach the node's
-tests. Any newly attached $M$ test is the node's different root. Minimal antichains are unique because \cref{owner:thm:guards} characterizes
-implication exactly. Guard compilation and the three tests in \eqref{owner:eq:cover} check the short certificate of an affirmative comparison
-directly.
+The criterion is \path{Term.observation_implication_iff} in \texttt{OwnerFragments.lean}.
+
+\paragraph{Canonical tables and bounds.}
+The criterion also gives canonical tables: for each source, remove its index and the $M$ indices from its $N$ tests, then retain only the minimal guards under \eqref{owner:eq:cover}. No minimal guard has its source in its $M$ tests. Indeed, a guard $(j,A,B)$ with $j\in A$ has a covering guard $(j,A',B')$ with $j\notin A'$,
+$A'\subseteq A$, and $B'\subseteq B$. Induct on the term: if its root is $j$, the root occurrence supplies $(j,\varnothing,\varnothing)$; otherwise apply the induction hypothesis to the contributing child and reattach the node's tests. Any newly attached $M$ test is the node's different root. Minimal antichains are unique
+because \cref{owner:thm:guards} characterizes implication exactly.
+
+For trees of total size $n$ there are at most $n$ guards, each with $O(n)$ tests. Direct list-based compilation and all-pairs coverage give an $O(n^4)$ equality bound when input names have constant-time equality, and bit-set implementations improve the elementary subset checks. The algorithm never enumerates winner sets. An
+affirmative comparison has a short certificate: for each left guard, the index of a covering right guard, which guard compilation and the three tests in \eqref{owner:eq:cover} check directly.
+
+The owner's list is
+\begin{equation}\label{owner:eq:forget}
+ \Gamma_a(t)=\{(j,A,\varnothing):(j,A,B)\in\Gamma_k(t)\},
+ \qquad k\ne a.
+\end{equation}
+This identity is for unminimized lists. It follows directly from the recursion, since an owner's own $H$ adds no $N$ tests, and forgetting the $N$ tests preserves coverage.
+
+\begin{proof}[Proof of \cref{owner:thm:one-table}]
+Equality implies observational equality and hence mutual coverage by
+\cref{owner:thm:guards}. Conversely, all outsiders have the same lists,
+so mutual coverage gives equality of every outsider's membership.
+By \eqref{owner:eq:forget}, it also gives mutual coverage for the owner,
+hence equality of that membership. These memberships determine the set.
+\end{proof}
+
+One outsider suffices for identities, meaning equality of its observation on \emph{all valuations}; it does not determine the
+complete winner set of an individual execution. \path{Term.single_table_equation_iff} and \path{Term.equationB_correct} prove the criterion and the executable checker in Lean.
+
+\paragraph{The four-element algebra.}
+Name the elements of $\mathbf F$ by $A=\{a\}$, $B=\{b\}$, $N=\{a,b\}$, $P=\{a,b,k\}$. Both operations are conservative: each returns one of its arguments. Explicitly,
+\[
+ x\del y=y\quad\text{except }P\del N=P,
+\]
+\[
+ H_a(x,y,z)=\begin{cases}
+ P,&x=N,\ y\ne A,\ z\ne A,\ \text{and }(y=P\text{ or }z=P),\\
+ N,&x=N\text{ and the preceding condition fails},\\
+ x,&x\ne N.
+ \end{cases}
+\]
+Its reset reduct is the forest order with root $P$, child $N$, and leaves $A,B$.
 
 \begin{proof}[Proof of \cref{owner:thm:four}]
 First retain the five flags used to evaluate the recursion:
@@ -739,10 +1121,10 @@ algebra. Identify the two states with $p=1$: observed singletons and
 observed ambiguous sets. This is a congruence. In a root position both
 already give observed victory; in every other position the rules use
 only $e$ and $p$, which agree. The four resulting states have exactly
-the displayed operations on $\mathbf C$.
-An identity of $\mathbf C$ therefore preserves the outsider's $p$ flag
+the displayed operations on $\mathbf F$.
+An identity of $\mathbf F$ therefore preserves the outsider's $p$ flag
 on all winner-set valuations. By \cref{owner:thm:one-table} it is a full
-identity. Conversely, $\mathbf C$ is a subalgebra, so it satisfies every
+identity. Conversely, $\mathbf F$ is a subalgebra, so it satisfies every
 winner-set identity. This proves completeness and independence of $K$.
 
 For minimality, any smaller generator has a nonassociative reset reduct.
@@ -756,22 +1138,25 @@ algebra. Name its elements $Z,U,T$, with
 Write $h$ for the candidate ternary operation. With $s=h(x,y,c)$,
 the valid identities $s\del x=s=x\del s$ force
 $h(Z,y,c)=Z$, $h(T,y,c)=T$, and $h(U,y,c)\in\{U,T\}$.
-The following identities are also valid in $\mathbf C$:
+The following identities are also valid in $\mathbf F$:
 \[
  h(x,y,y)=y\del x,\qquad h(y,y,c)=c\del y,\qquad
  h(x,y,x)=y\del x.
 \]
 Put $t=(c\del y)\del x$. The equation $s\del t=t$ is false in
-$\mathbf C$, at $(x,y,c)=(N,B,P)$. On the three-element chain,
+$\mathbf F$, at $(x,y,c)=(N,B,P)$. On the three-element chain,
 the root bounds and these identities allow it to fail only when
 $h(U,Z,T)=T$.
-The equation $(c\del x)\del s=s$ is also false in $\mathbf C$, at
+The equation $(c\del x)\del s=s$ is also false in $\mathbf F$, at
 $(N,A,P)$. In a three-element candidate its failure requires
 $h(U,y,T)=U$ for some $y$. The binary-minor identities give value $T$
 when $y=U,T$, while the first required failure gives $T$ when $y=Z$.
 This is impossible. Smaller reducts are associative, so they cannot
 generate the theory either.
 \end{proof}
+
+The completeness theorem, conservative operations, required identities, and generic three-state obstruction are kernel-checked in \path{lean/OwnerModels.lean} (\path{Term.four_element_complete}, \path{three_state_obstruction}); the reduction of arbitrary smaller models to the three-element chain uses the published theorem. The four-state quotient
+is also the exact outsider contextual quotient when parameters are permitted. The observation distinguishes $P$ from the other states; the context $P\del x$ distinguishes $N$ from $A,B$; and $H_a(N,x,P)$ distinguishes $A$ from $B$.
 
 \begin{proof}[Proof of \cref{owner:cor:complexity}]
 \Cref{owner:thm:one-table,owner:thm:guards} give the algorithms; unused
@@ -787,14 +1172,45 @@ equivalence. Nonvalidity has a polynomial singleton-or-pair certificate,
 so both problems belong to coNP.
 \end{proof}
 
+\paragraph{Agreement of both owners.}
+Put
+\[
+ W=y_1\del(y_2\del z),\quad
+ T=H_a(z,y_1,c)\del(H_b(z,y_2,c)\del W).
+\]
+The terms $c\del T$ and $T$ have identical possible-$a$ and possible-$b$ observations on every valuation. Indeed, a potential new $a$ marker already in $W$ needs no argument, and one outside $W$ has $y_1\ne\{a\}$ and survives through $H_a(z,y_1,c)$; the same argument uses $y_2$ for $b$, and a atomic $z$ makes both terms equal to $z$. But
+with $y_1=\{a\}$, $y_2=\{b\}$, $z=\{a,b\}$, $c=\{k\}$, the values are $\{a,b,k\}$ and $\{a,b\}$ respectively.
+
 \subsection{Sealed rounds}\label{app:proofs-sealed}
 
-\begin{proof}[Proof of \cref{se:thm:round}]
+\paragraph{The interface.}
+Write $\Delta$ for the simplex of winner distributions. Inactive roles have a singleton action set. No action or signal depending on a commitment becomes available to another role before all actions are bound, and every action tuple, including one with equilibrium probability zero, has its own continuation. The language has no private input types, unrevealed cells crossing a round boundary, common
+private random seeds, abort choices, or strategic publication times. Current behavioral randomizations are independent across roles, and the public history can determine the next finite menus and continuation syntax.
+
+Binding and release follow the stable-binding and audience pattern of \cref{sec:disclosure}. For commitment and release orders $i_1,\ldots,i_K$ and $j_1,\ldots,j_K$, a round's deterministic command block is
+\[
+ \begin{aligned}
+ &\Bind_{i_1}(c_{i_1}:A_{i_1};\{i_1\}).\ \cdots\
+       \Bind_{i_K}(c_{i_K}:A_{i_K};\{i_K\}).\\
+ &\Pub_{j_1}(c_{j_1};I).\ \cdots\ \Pub_{j_K}(c_{j_K};I).
+ \end{aligned}
+\]
+The round language additionally allows randomized binding and tuple-dependent continuation selection, and we assume no translation from the deterministic calculus and no cryptographic or asynchronous realization. Audience-derived views identify exactly the histories with the same preceding public history at each commitment, and no role has a current
+private input before its one commitment. Public observations during release are followed by no further choice until the whole tuple is available, so release order has no strategic effect.
+
+As an observed-action multistage game, the language has the standard mixed subgame-perfect semantics \cite[Sections~3.2 and 4.2]{FudenbergTirole1991}. We also consider its serial commitment implementation and use the assessment definition of sequential equilibrium: sequential rationality together with beliefs that are limits of Bayes beliefs of
+completely mixed profiles \cite{KrepsWilson1982}.
+
+\begin{proposition}[Properties of round values]\label{se:prop:round-values}
+Each value set is nonempty, compact, and semialgebraic over the rationals. The round operators are monotone in their continuation sets and commute with role renaming. Reordering the private commitments within a round preserves the value set.
+\end{proposition}
+
+\begin{proof}[Proof of \cref{se:thm:round,se:prop:round-values}]
 The standard finite-horizon one-stage-deviation argument gives the
 mixed SPE recursion. We prove its equivalence with the serial SE model.
-After full publication, each $G_a$ is a proper public subgame. Restricting
+After full publication, each $G_\alpha$ is a proper public subgame. Restricting
 an assessment to it gives a sequential equilibrium and a distribution
-$p_a$. Any pure change of the current action, followed by the prescribed
+$p_\alpha$. Any pure change of the current action, followed by the prescribed
 continuation, is a legal deviation. The current independent action laws
 therefore form a Nash equilibrium for the displayed payoffs.
 
@@ -813,7 +1229,7 @@ constructs one consistent assessment for the whole finite game.
 The same argument works for every serial order of private commitments.
 
 Nonemptiness follows by choosing continuation distributions and applying
-finite mixed Nash existence \cite{Nash1951}. The variables $p_a$ and
+finite mixed Nash existence \cite{Nash1951}. The variables $p_\alpha$ and
 $\sigma_i$ range over compact sets. Nash optimality is a finite family
 of weak polynomial inequalities, so the feasible set is closed and
 its continuous image is compact. The simplex, these inequalities, and
@@ -823,7 +1239,27 @@ continuation sets preserves every old feasible choice. Role renaming
 only permutes the inequalities and probability coordinates.
 \end{proof}
 
-\begin{proof}[Proof of \cref{se:cor:public}]
+This is the standard backward continuation-payoff construction for games with observed past actions and simultaneous current moves, expressed as an algebra for an explicit disclosure boundary. The continuation $p_\alpha$ remains indexed by its public tuple until the stage incentives have been checked.
+
+\paragraph{Public choice.}
+For a distribution set $P$, put $\operatorname{Win}(P)=\{i:\exists p\in P,\ p_i>0\}$. The one-active-role instance of \eqref{se:eq:round} is
+\begin{equation}\label{se:eq:public}
+ P\mathbin{\widehat\star_r}Q=
+ \left\{\alpha p+(1-\alpha)q:
+ \begin{array}{l}
+ p\in P,\ q\in Q,\ 0\leq\alpha\leq1,\\
+ \alpha>0\Rightarrow p_r\geq q_r,\\
+ \alpha<1\Rightarrow q_r\geq p_r
+ \end{array}\right\}.
+\end{equation}
+For singleton inputs it selects the distribution with larger $r$ coordinate, or the full segment between them on a tie.
+
+\begin{corollary}[Public mixed-support conservativity]\label{se:cor:public}
+On finite public owned-choice trees,
+$\operatorname{Win}(\mathcal E(G))=\den G$. Allowing mixed sequential
+equilibria adds no possible winner to the pure SPE observation.
+\end{corollary}
+\begin{proof}
 Pure SPE profiles are sequential equilibria in this perfect-information
 language. For the other inclusion induct on trees. If a child has pure
 winner set $\{r\}$, its mixed continuation distributions are all
@@ -834,7 +1270,32 @@ winner; mixing can introduce no others. Nonemptiness of each child's
 equilibrium set is used throughout.
 \end{proof}
 
-\begin{proof}[Proof of \cref{se:prop:parallel}]
+Distribution sets need not be convex, even in the public sublanguage. Let
+\[
+ T=(\at a\ch c\at b)\ch a\at c.
+\]
+The left child can give player $a$ any probability $x\in[0,1]$. When $x>0$ the root must choose left, and when $x=0$ the root may mix. Consequently
+\begin{equation}\label{se:eq:nonconvex}
+ \mathcal E(T)=
+ [\delta_a,\delta_b]\ \cup\ [\delta_b,\delta_c].
+\end{equation}
+In particular $(\delta_a+\delta_c)/2$ is absent. It belongs to $\mathcal E(T\ch b T)$: choose continuation equilibria $\delta_a$ and $\delta_c$ in the two independent copies, and let the indifferent root mix equally. Thus distribution-level public choice is not idempotent, and convexifying value sets would change the semantics. The idempotency of the
+winner-set algebra is a property of its observation.
+
+\paragraph{The scalar fragment.}
+In the round language with two active roles, induction reduces every stage to a finite zero-sum matrix game, whose equilibrium value is unique, so $\mathcal E(G)=\{v(G)\delta_a+(1-v(G))\delta_b\}$. For public choices owned by $a$ and $b$, the scalar operations are $\max$ and $\min$, and exchanging the roles throughout a component gives $C(x)=1-x$. In
+$D(G,H)$ the bits are committed privately and both published before entering the selected continuation. If $v(G)=x$ and $v(H)=y$, the stage payoff matrix for $a$ is $\left(\begin{smallmatrix}x&0\\0&y\end{smallmatrix}\right)$.
+
+\begin{proposition}[Parallel sum]\label{se:prop:parallel}
+The constructor $D$ denotes
+\[
+ x\parallel y=
+ \begin{cases}xy/(x+y),&x+y>0,\\0,&x=y=0.\end{cases}
+\]
+It is associative, commutative, monotone, and zero-absorbing. On the
+unit interval it distributes over both $\min$ and $\max$.
+\end{proposition}
+\begin{proof}
 For $x+y>0$, both players assign probability $y/(x+y)$ to their
 action $0$. Against this law, either pure action of the opponent gives
 $xy/(x+y)$. These two security guarantees force that value in every
@@ -846,7 +1307,14 @@ are immediate. Monotonicity follows from the displayed formula, and
 a monotone unary map on a chain preserves binary minima and maxima.
 \end{proof}
 
-\begin{proof}[Proof of \cref{se:thm:rational}]
+The stage certificate is \texttt{diagonal\_nash\_value} in Lean. The reciprocal-sum value and reciprocal-proportional optimal strategies are the classical diagonal matrix-game formula \cite[Part~II, Section~3.3]{FergusonNotes}, and parallel sum is an established operation in network and matrix theory \cite{AndersonDuffin1969}. The constructor has two Boolean commitments and one occurrence of each continuation, and it introduces neither chance nor numerical rewards at leaves.
+
+\begin{proposition}[Rational values]\label{se:thm:rational}
+The scalar values generated by the winner leaves, role exchange, and
+$D$ are exactly $\mathbb Q\cap[0,1]$. In fact $C$ and
+$U(x)=x\parallel1=x/(1+x)$ suffice with the leaves.
+\end{proposition}
+\begin{proof}
 The operations preserve rationality. For the converse induct on the
 denominator of $p/q$, with $0\leq p\leq q$ and $q>0$. Endpoints are
 leaves. If $0<p<q$ and $2p\leq q$, write
@@ -858,11 +1326,17 @@ Otherwise write
  p/q=C\bigl(U((q-p)/p)\bigr).
 \]
 Each recursive denominator is smaller. Reduction of fractions is not
-needed. This gives an explicit synthesis procedure, without claiming
-polynomial size in the binary encoding of $p,q$.
+needed. This gives an explicit synthesis procedure.
 \end{proof}
 
-\begin{proof}[Proof of \cref{se:cor:decidable}]
+The arithmetic is \texttt{every\_rational} in Lean. Rational values of finite rational zero-sum games are standard; the point is the small constructor set realizing them with stable Boolean commitments and complete-revelation boundaries.
+
+\begin{corollary}[Decidable scalar equations]\label{se:cor:decidable}
+Equations in $0,1,C,\parallel,\min,\max$ hold on rational scalar
+values exactly when they hold on the real unit interval. Their validity
+is decidable by real quantifier elimination.
+\end{corollary}
+\begin{proof}
 All primitives are continuous. Parallel sum is continuous also at
 $(0,0)$ because $0\leq x\parallel y\leq\min(x,y)$.
 Rational valuations are dense. For the decision claim, the graph of
@@ -871,3 +1345,35 @@ when $x+y=0$; the other graphs are polynomial or piecewise polynomial.
 Term evaluation and a failed equality are therefore expressible in the
 first-order theory of real closed fields. Its decision theorem applies.
 \end{proof}
+
+\paragraph{The infinite family.}
+In \cref{se:thm:infinite}, all inputs $G_n$ have the same winner set while the outputs vary, so the possible-winner observation is not compositional on winner sets, and its contextual equivalence has infinite index. This holds with complete revelation after every round and no internal role switches, and extra inactive roles do not affect the construction.
+Each step $L_{n+1}=D(L_n,\at0)$ adds one round and only one occurrence of its predecessor, so explicit tree size is linear in $n$. The games $G_n$ have the unique distribution
+\[
+ p_n=\frac1{n+2}\delta_a+\frac{n+1}{n+2}\delta_b.
+\]
+The first separator uses rates $1/2$ and $1/3$, against an outside component with probabilities $1/2$ for each of players $a,c$. The first input ties and permits player $b$ to win; the second loses the comparison and excludes player $b$. The obstruction already occurs in the fragment where off-path beliefs and retained private information have been eliminated by
+full revelation.
+
+\begin{corollary}[Scalar full abstraction]\label{se:cor:scalar}
+For closed components in the rational scalar fragment with the same
+active pair, equality of scalar values is exactly contextual
+equivalence for possible SE winners in the three-role round language.
+It suffices to observe the third role's possible victory.
+\end{corollary}
+\begin{proof}
+Equal values give equal singleton distribution sets, which
+\eqref{se:eq:round} preserves in every context, including repeated
+independent occurrences. For values $v<w$, choose a rational
+$v<t<w$. Realize a component of value $t$ between player $a$ and the
+third player $c$, using \cref{se:thm:rational}. A public choice owned
+by $a$ selects this outside component against value $v$, permitting
+$c$ to win, and selects the input against $w$, excluding $c$.
+\end{proof}
+
+\paragraph{What the interface composes.}
+The round operator unifies public and sealed choices in one finite binder scheme. Full publication allows continuation equilibria to be selected independently at each public action tuple, and removes a separate belief parameter from the algebra. Before that boundary the commitments cannot be treated as sequential public choices: revealing one matching-pennies
+bit before the other's commitment lets the later player dictate the outcome.
+
+The interface summarizes a closed continuation with the fixed winner utilities. Replacing a continuation by another with the same $\mathcal E$ is sound. Replacing the terminal rewards inside a previously summarized component requires a continuation-dependent response semantics. A pending secret, private type, selective audience, or strategic release leaves an
+information state crossing the interface, and marginal winner probabilities then do not specify the needed joint conditional laws and consistent beliefs.

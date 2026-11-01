@@ -1,165 +1,39 @@
 \section{The intrinsic core}\label{sec:intrinsic}
-\subsection{Idempotency identifies a smaller syntax}\label{gen:sec:core}
 
-Which operations combine their inputs without adding anything of their own? A natural answer
-is the \emph{idempotent} ones: a positive-arity term operation is idempotent when
-$t(S,\ldots,S)=S$ for every nonempty $S$. This semantic condition turns out to determine the
-syntax. For a variable occurrence, compose all role permutations on its path from the root, in
-the order in which they act on its value.
+Which operations combine their inputs without adding anything of their own? Call a term operation \emph{idempotent} if $t(S,\ldots,S)=S$ for every $S$. This semantic condition determines the syntax. For a variable occurrence, compose the role permutations on its path from the root.
 
-\begin{theorem}[Exact idempotent elimination]\label{gen:thm:core}
-A term is idempotent if and only if it has no winner leaves and every
-variable occurrence has identity accumulated permutation. Consequently
-the idempotent part of the full term clone is exactly the clone generated
-by the $K$ binary owned choices, without constants or internal switches.
-Recognition and extraction of such a term take polynomial time in the
-explicit input description.
+\begin{theorem}[Idempotent elimination]\label{gen:thm:core}
+A term is idempotent if and only if it has no winner leaves and every variable occurrence has identity accumulated permutation. Consequently the idempotent term operations are exactly those of $\mathbf C$, and an equivalent term can be extracted in polynomial time.
 \end{theorem}
 
 \begin{idea}
-Work on the diagonal at ambiguous inputs. A winner leaf leaves a fixed nonempty constant in every
-output there: the constant is transported by switches, survives unions, and a collapse only
-replaces it by an owner singleton. But no role lies in all ambiguous sets. So an idempotent term
-has no winner leaves, and without them every node on this cell is a union. The diagonal value is
-then $\bigcup\pi S$ over all occurrences, and $\pi S\subseteq S$ for every pair forces $\pi$ to be
-the identity. Conversely, $\pi(u\star_r v)=\pi u\star_{\pi(r)}\pi v$ pushes all switches to the
-leaves, where they vanish. The full proof is in \cref{app:proofs-core}; the criterion and the
-extraction are \path{FullTerm.idempotent_iff_clean} and \path{FullTerm.idempotent_extraction}.
+Evaluate the diagonal on ambiguous inputs. A winner leaf leaves a fixed nonempty constant in every output, but no role lies in all ambiguous sets. Without winner leaves every node is a union, so the value is $\bigcup\pi S$, and $\pi S\subseteq S$ for every pair forces $\pi$ to be the identity.
+Conversely, $\pi(u\star_r v)=\pi u\star_{\pi(r)}\pi v$ pushes switches to the leaves, where they vanish.
 \end{idea}
 
-So the no-switching calculus contains \emph{every} idempotent definable operation. Internal
-switching still enlarges the complete clone and changes its congruences, but it adds nothing here.
-We did not choose this core for convenience; idempotency selects it. Two consequences follow.
+So idempotency singles out $\mathbf C$. On ambiguous inputs a core term is the union of its variables, which excludes near-unanimity and Mal'cev terms and makes every identity regular (\cref{gen:cor:trace}), and the player views apply to all idempotent operations, even those defined with internal
+switches (\cref{gen:cor:views}).
 
-\begin{corollary}[Semilattice trace]\label{gen:cor:trace}
-On all-ambiguous inputs, every idempotent term is union over a fixed
-nonempty subset of its arguments. These restrictions form exactly the
-semilattice term clone, and restriction is a surjective clone
-homomorphism. There is no near-unanimity term of any finite arity, and
-no Mal'cev term. Every variable occurring in a core term is semantically
-essential, so every valid core identity has the same variables on both
-sides.
-\end{corollary}
-
-\begin{idea}
-On ambiguous inputs a core term never collapses, so it is the union of its occurring variables.
-Near-unanimity and Mal'cev identities imply idempotency, so any such term would lie in the core; but
-a nonempty union cannot ignore one argument, as one sees by putting $I$ there and a pair elsewhere.
-Regularity is the standard observation for algebras containing a two-element semilattice
-\cite{Plonka1967}. See \cref{app:proofs-core}.
-\end{idea}
-
-\begin{corollary}[Intrinsic player views]\label{gen:cor:views}
-Every idempotent operation in the full role-switching language acts
-compositionally on each of the $K+1$-state player views
-\[
- q_k(S)=
- \begin{cases}
- \pv,&k\in S,\\
- a_i,&S=\{i\},\ i\ne k,\\
- \nv,&\text{otherwise}.
- \end{cases}
-\]
-These give a subdirect representation by $K$ factors. The family is
-irredundant: none of its player views can be omitted.
-\end{corollary}
-
-Each $q_k$ is a quotient for every owned choice by \cref{view:thm:view}, and \cref{gen:thm:core}
-extends this to all idempotent operations, even when their original definitions contain internal
-switches; this is \path{FullTerm.idempotent_sameView}. So the decomposition that fails for
-unrestricted role switching holds intrinsically for all idempotent definable operations. The
-representation is subdirect, not the full Cartesian product.
-
-\subsubsection{An optimal logarithmic test}
-
-How do we recognize idempotency semantically, without looking at the syntax? A fixed domain
-$D\subseteq\Pow(I)$ \emph{certifies idempotency} when, for terms of every arity, agreement
-$t(S,\ldots,S)=S$ for $S\in D$ implies idempotency. This tests a specific diagonal law, rather than
-all term equations, and it needs very few values.
-
-\begin{theorem}[Exact ambiguous certificates]\label{gen:thm:idem-domain}
-For a domain consisting of ambiguous values, certification holds exactly
-when
-\[
- \bigcap D=\varnothing,\qquad
- (\mathbf1_{i\in S})_{S\in D}\text{ are distinct for all }i\in I.
-\]
-The minimum size of a certifying domain, even allowing singleton test
-values, is three for $K=3$, and $\lceil\log_2(K+1)\rceil$ for $K\geq4$.
-Both minima are attained using ambiguous values alone.
-\end{theorem}
-
-\begin{idea}
-The two conditions rule out the only ways to fool the test: a constant present in every test, and a
-permutation exchanging two roles that no test tells apart. Conversely, these are the only obstacles,
-by \cref{gen:thm:core}. Assigning each role a binary word recording which tests contain it reduces
-the size question to counting words, with the all-one word excluded. See \cref{app:proofs-core}.
-\end{idea}
-
-At $K=7$, three ambiguous diagonal tests suffice, compared with $28$ values for testing every
-full-signature equation. The improvement is specific to idempotency.
-
-\subsection{One common source}\label{gen:sec:sep}
-
-Our next theorem is the simplest structural constraint we know on what terms can do. Fix input
-environments $v_a$ and pairwise disjoint target regions $W_a\subseteq I$. A \emph{source occurrence}
-is a winner leaf, or a variable leaf together with its accumulated permutation.
+The next theorem is the simplest constraint we know on what terms can do. A \emph{source occurrence} is a winner leaf, or a variable leaf together with its accumulated permutation.
 
 \begin{theorem}[One common source]\label{gen:thm:source}
-If $t(v_a)\subseteq W_a$ for every $a$, one source occurrence of $t$
-already has its value inside $W_a$ in every environment simultaneously.
-If there are at least two target regions, it is a variable occurrence.
+Fix environments $v_e$ and pairwise disjoint regions $W_e\subseteq I$. If $t(v_e)\subseteq W_e$ for every $e$, then one source occurrence of $t$ has its value inside $W_e$ in every environment simultaneously. With at least two regions, it is a variable occurrence.
 \end{theorem}
 \begin{proof}
 At an owned node with owner $r$, at most one target contains $r$.
 In every other environment the output cannot collapse to $\{r\}$;
 it is union, so both children lie in the target. In the possible
 exceptional environment, either both children lie in the target or a
-child is the absorbing owner singleton and lies in it. Choose that child:
+child is the absorbing owner atom and lies in it. Choose that child:
 it works in all environments. Descend to a leaf. At a switch pull the
 targets back along the permutation, preserving disjointness. A winner
 leaf has the same nonempty value in all environments and cannot fit
 two disjoint targets.
 \end{proof}
 
-Distinct singleton outputs at any number of tests are thus jointly explained by one occurrence, which
-cannot change between tests. \texttt{Separation.lean} proves this for arbitrary index types and target
-predicates, with internal permutations explicit in the syntax.
+This shows what determinism costs. Call a term \emph{atom-preserving} if it returns an atom on atomic inputs, so that it induces a function $f:I^n\to I$. Three environments with a repeated entry in every coordinate cannot produce three distinct outputs, since \cref{gen:thm:source} would give one
+permutation doing so. So $f$ preserves the relation of triples with a repeat, and by the known classification of that clone \cite{Szendrei2012}, $f$ is essentially unary or takes at most two values (\cref{gen:thm:S2}). An idempotent $f$ is surjective, and the diagonal law then gives the following.
 
-The theorem tells us what determinism costs. Call a term \emph{atom-preserving} if it returns a
-singleton on every singleton-input valuation. It induces a function $f:I^n\to I$.
-
-\begin{theorem}[Exact deterministic atomic clone]\label{gen:thm:S2}
-At every positive arity, the functions induced by atom-preserving terms
-are exactly the essentially unary or at most two-valued functions.
-This is the known clone $S_2$.
-\end{theorem}
-
-\begin{idea}
-Let $\iota_3$ be the relation of triples with a repeated entry. If three environments have this property
-in every coordinate and yet produced three distinct singleton outputs, \cref{gen:thm:source} would give
-one permutation sending a triple with a repeat to three distinct roles. So induced functions preserve
-$\iota_3$, and the established presentation $\operatorname{Pol}(\iota_3)=S_2$ \cite{Szendrei2012} gives
-the upper bound. Conversely, $x\star_a(a\ b)(x)$ merges atomic $b$ into $a$, which yields every unary map;
-and $\star_a,\star_b$ act as OR and AND on $\{a\},\{b\}$, which yields every two-valued function. See
-\cref{app:proofs-core}.
-\end{idea}
-
-\begin{corollary}[Idempotent atomic determinacy]\label{gen:cor:determinacy}
-An idempotent, atom-preserving term projects one input on all atomic
-valuations. A genuinely multiargument rule using at least three output
-roles must return ambiguity somewhere on atomic inputs.
+\begin{corollary}[Determinacy]\label{gen:cor:determinacy}
+An idempotent atom-preserving term projects one input on atomic valuations.
 \end{corollary}
-
-Indeed, idempotency makes the atomic function surjective, so as $K\geq3$ it must be essentially unary, and
-the diagonal law makes that unary map the identity. In other words, an idempotent rule built from rational play has no deterministic way of
-aggregating unique-winner inputs, beyond copying one of them.
-
-The exact number of induced $n$-ary atomic functions is
-\[
- \binom K2(2^{K^n}-2)+K+
- n\left(K^K-\binom K2(2^K-2)-K\right).
-\]
-The first part counts functions with at most two values, and the remaining essentially unary functions have
-a unique essential argument. For $K=3,n=2$ the count is $1545$. This classifies deterministic atomic behavior;
-mixed and ambiguous valuations remain available for richer operations.

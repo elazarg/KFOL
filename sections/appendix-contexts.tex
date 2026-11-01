@@ -4,10 +4,10 @@ separates three readings of a repeated component: independent copies, uniform eq
 
 \subsection{Unary contexts without internal switches}
 
-Assume $K\geq3$ and the reduct $\mathbf A_I$, without internal switches.
+Assume $K\geq3$ and the reduct $\mathbf A$, without internal switches.
 A unary term function uses one variable, any number of
 its occurrences, owned choices, and leaf constants. By
-Theorem~\ref{game:thm:union}, arbitrary nonempty ground constants are available.
+\cref{game:thm:union}, arbitrary nonempty ground constants are available.
 Write $\Reg(C,E)$ for the following function, with parameters
 \[
  C\subseteq I,\qquad E_i\subseteq C\setminus\{i\}\quad(i\in I):
@@ -20,12 +20,12 @@ Write $\Reg(C,E)$ for the following function, with parameters
  \end{cases}
 \end{equation}
 
-\begin{theorem}[Unary normal forms]\label{game:thm:unary}
+\begin{proposition}[Unary normal forms]\label{game:thm:unary}
 The unary term functions are exactly the nonempty constant functions and
 the functions~\eqref{game:eq:normal}. The regular parameters $C,(E_i)$ are
 unique. The only overlap with the constant functions is the constant
 function $I$.
-\end{theorem}
+\end{proposition}
 \begin{proof}
 \emph{Upper bound.} The variable is regular with $C=\varnothing$ and
 empty rows, and each constant is constant. Suppose two child functions
@@ -68,7 +68,7 @@ singleton and hence equal $I$. That constant is regular with $C=I$ and
 $E_i=I\setminus\{i\}$.
 \end{proof}
 
-\begin{corollary}[Exact count and a small test set]
+\begin{corollary}[Count and a small test set]
 There are exactly
 \begin{equation}\label{game:eq:count}
   (1+2^{K-1})^K+2^K-2
@@ -106,8 +106,7 @@ If either function is constant, evaluate the appropriate constant case.
 Indeed, a multiwinner input stays multiwinner through both functions. At
 input $\{i\}$, the inner result is still a singleton exactly when
 $F_i=\varnothing$; otherwise the outer function adds $C$.
-This supplies an explicit finite monoid of unary contexts rather than a
-list of isolated identities.
+This supplies an explicit finite monoid of unary contexts.
 
 Atomic inputs alone do not determine a context. For $I=\{a,b,c\}$, the term
 \begin{equation}\label{game:eq:D}
@@ -129,11 +128,11 @@ to vary, distinguishes distinct sets already through the identity context.
 \begin{proof}
 The first statement follows either directly by induction (a constant
 owner-singleton absorbs; otherwise a nonconstant child is preserved), or
-from Theorem~\ref{game:thm:unary}. A constant context has the same result on all
+from \cref{game:thm:unary}. A constant context has the same result on all
 inputs. An extensive context cannot turn a multiwinner input into a
 singleton. Membership tests distinguish sets at an element of their
-symmetric difference. This does not say that one fixed role distinguishes
-every pair of inputs: for example, $\{k\}$ and $\{k,j\}$ both contain $k$.
+symmetric difference. One fixed role need not distinguish a pair of inputs: for example, $\{k\}$
+and $\{k,j\}$ both contain $k$.
 The exact fixed-role contextual quotient is \cref{view:thm:view}.
 \end{proof}
 
@@ -152,7 +151,7 @@ For comparison, let $q(S)=\{i:S=\{i\}\}$. For nonempty operands,
 These are precisely the coordinate operations in the guarantee algebra
 of Olde Loohuis and Venema, Definition 3.20
 \cite{OldeLoohuisVenema2010}, restricted to its empty and singleton
-values. Induction also shows $\B(G)=\{i\}$ exactly when $i$ can force a
+values. Induction also shows $\den{G}=\{i\}$ exactly when $i$ can force a
 win in this finite unique-winner fragment. This comparison explains the
 collapse; it is not the chosen meaning of $\B$.
 
@@ -178,7 +177,7 @@ Let $f[x]$ be any unary owned-choice context and $G$ any closed component.
 The winners of ordinary SPE profiles that use one and the same full SPE
 profile of $G$ in every copy are exactly
 \[
- U(f)(\B(G))=\bigcup_{g\in\B(G)}f(\{g\}).
+ U(f)(\den{G})=\bigcup_{g\in\den{G}}f(\{g\}).
 \]
 Thus uniform copies preserve the ordinary observation at $S$ precisely
 when $f(S)=\bigcup_{g\in S}f(\{g\})$.
@@ -193,7 +192,7 @@ selected winner. Take the union over component SPE profiles.
 
 The next theorem is the positive case for neutral union, with a generic Lean proof.
 
-\begin{theorem}[Uniform copies suffice]\label{game:thm:uniform}
+\begin{proposition}[Uniform copies suffice]\label{game:thm:uniform}
 Fix pairwise distinct $r,s,t$, a full SPE profile $p$ of $G$,
 and a full SPE profile $q$ of $H$, with
 winners $g,h$. In
@@ -204,32 +203,27 @@ use exactly $p$ in both copies of $G$ and exactly $q$ in both copies of
 $H$. As the three outer actions vary, the winners of ordinary SPE
 profiles are exactly $\{g,h\}$. Therefore the winners of ordinary SPE
 profiles satisfying this copy-equality condition are
-$\B(G)\cup\B(H)$.
-\end{theorem}
+$\den{G}\cup\den{H}$.
+\end{proposition}
 \begin{proof}
 For any fixed three outer actions, local optimality at those nodes depends
 only on the child winners $g,h$. Local optimality inside a component is
 already supplied by $p,q$. Thus the expanded full profile is SPE exactly
 when the corresponding profile of
 $(\at g\ch r\at h)\ch t(\at g\ch s\at h)$ is SPE. By
-Theorems~\ref{game:thm:adequacy} and~\ref{game:thm:union}, its possible winners are
+\cref{game:thm:adequacy,game:thm:union}, its possible winners are
 $\{g,h\}$. Conversely, a uniform ordinary SPE restricts to SPE profiles
 in its component copies. Taking the union over $p,q$ proves the claim.
 \end{proof}
 
-This is \texttt{uniform\_copies\_winners} in Lean. Importantly, we
+This is \texttt{uniform\_copies\_winners} in Lean. We
 \emph{select} profiles with equal component copies from the ordinary SPE
-profiles. We do not restrict deviations to preserve that equality. The
-result therefore survives this test of reuse without changing the
-equilibrium concept. It does not identify outer decisions with component
-decisions, bind a previously realized value, or introduce an information
-set spanning two histories. Those are separate interface experiments.
+profiles, and deviations remain unrestricted.
 
 The term $D$ above supplies a separating case: it fixes every singleton
 but adds winners on some ambiguous inputs, so $U(D)$ is the identity
 while $D$ is not. Uniform observation is also not preserved by arbitrary
-substitution of an expression for the input variable. The next subsection gives an explicit substitution counterexample. The theorem above makes no general
-claim that repetition can be treated as shared selection.
+substitution of an expression for the input variable. The next subsection gives an explicit substitution counterexample.
 
 \subsection{Repetition and substitution remain separate questions}
 
@@ -244,11 +238,9 @@ The uniform-profile equivalence is not preserved by substituting an
 expression for its variable. Binding the entire component's selected
 behavior differs from sharing only the input behavior inside several
 separately solved surrounding contexts. A typed treatment of sharing
-must identify that boundary explicitly. These observations are about
-ordinary SPE profiles selected for copy equality; they do not restrict
-deviations or define an imperfect-information equilibrium.
+must identify that boundary explicitly.
 
-\begin{proposition}[Exactly which unary contexts tolerate uniform selection]
+\begin{proposition}[Unary contexts tolerating uniform selection]
 For $f=\Reg(C,E)$ from the unary classification, $U(f)=f$ exactly when, for
 every $k\in C$, at most one $i\ne k$ has $k\notin E_i$. There are exactly
 \[
@@ -303,8 +295,4 @@ has actually failed.
 Thus winner-set equivalence for public games does not justify arbitrary
 hidden composition. Sequential equilibrium introduces strategies,
 beliefs, sequential rationality, and consistency, and is a different
-semantic problem. This example is not a general impossibility theorem
-for small calculi with hidden information. It requires a shared-policy
-interface to state its observation and deviations explicitly. Selecting
-ordinary profiles with equal component copies, as above, does not
-impose that hidden interface on their deviations.
+semantic problem. 

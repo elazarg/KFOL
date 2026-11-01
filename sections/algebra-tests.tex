@@ -1,14 +1,7 @@
-\section{Testing equations: singletons and pairs}\label{sec:pair-tests}
+\section{Testing equations on small inputs}\label{sec:pair-tests}
 
-An equation quantifies over $2^K-1$ values per variable. We now show that, in the full
-signature $\mathbf A_I^{\rm sym}$, very few of them matter. The idea is that everything
-$\star_r$ does beyond union lies in one test: is an operand exactly $\{r\}$? Once these tests are
-decided, a term is a plain union of permuted inputs and constants, and such an expression can be
-shrunk.
-
-Accordingly, assign each input variable a \emph{status}: a specified singleton, or an unspecified
-ambiguous set. Fixing the statuses fixes every test for whether an intermediate result is a
-singleton.
+An equation quantifies over $2^K-1$ values per variable. Without internal switching, the views show that $K+2$ fixed values suffice for $K\geq4$ (\cref{view:cor:optimal}). The full signature needs more, though still few. Everything $\star_r$ does beyond union lies in one test: is an operand
+exactly $\{r\}$? So assign each input variable a \emph{status}, either a specified atom or an unspecified ambiguous set. This fixes every such test, and what remains is a union.
 
 \begin{lemma}[Permutation provenance on a status cell]\label{sym:lem:provenance}
 On every fixed status cell, a term denotes
@@ -19,70 +12,22 @@ where $C\subseteq I$, only ambiguous input variables occur in the union,
 and every $P_j$ is a finite, possibly empty, set of permutations.
 \end{lemma}
 
-\begin{idea}
-Induct on the term. A winner or singleton-status input is a constant, an ambiguous input
-contributes its identity permutation, and a role switch transports both. A nonempty $P_j$
-contributes an ambiguous set, which cannot equal an owner singleton. So an owned choice collapses
-on the cell exactly when some child is a constant owner singleton, and otherwise it unions
-constants and coefficients. See \cref{app:proofs-tests}.
-\end{idea}
-
-The main theorem now has a short proof.
-
 \begin{theorem}[Pair countervaluations]\label{sym:thm:pairs}
-If an equation between terms in this full signature fails, it fails at a
-valuation in which every variable has one or two possible winners.
+If an equation between terms of $\mathbf A^{\rm sym}$ fails, it fails at a valuation in which every variable has one or two possible winners.
 \end{theorem}
 \begin{proof}
 Take a failed valuation, fix its statuses, and choose a role $k$ present
 in the left output and absent from the right, interchanging sides if
-necessary. Apply Lemma~\ref{sym:lem:provenance} to both terms.
+necessary. Apply \cref{sym:lem:provenance} to both terms.
 
 If $k$ lies in the left constant, it survives every valuation in the
 cell. Otherwise it has a witness $k=\pi(i)$ for one ambiguous input
 $S_j$, one coefficient permutation, and some $i\in S_j$. Replace that
 input by a pair contained in it and containing $i$. Replace every other
-ambiguous input by any pair contained in it. Leave singleton inputs
-fixed. The left witness remains. The right output can only shrink under
+ambiguous input by any pair contained in it. Leave atomic inputs fixed. The left witness remains. The right output can only shrink under
 these replacements, since every coefficient is a permutation image and
 the status cell is unchanged. It still excludes $k$.
 \end{proof}
 
-Every input is needed. Singletons are already necessary in the reduct, and the point of the next
-theorem is that role switching makes every pair necessary too.
-
-\begin{theorem}[Unique minimum fixed test domain]\label{sym:thm:optimal}
-A fixed input domain tests every term equation, at every arity, exactly
-when it includes every singleton and every two-element set. Consequently
-the unique minimum domain is
-\[
- D_2=\{S\subseteq I:1\leq|S|\leq2\},\qquad |D_2|=K(K+1)/2.
-\]
-\end{theorem}
-
-\begin{idea}
-For a pair $P$, choose $k\notin P$ and let
-\[
- F(x)=x\cup(I\setminus\{k\})\cup\bigcup_{i\in I\setminus(P\cup\{k\})}(i\ k)(x).
-\]
-If $x\subseteq P$ then $F(x)=I\setminus\{k\}$; any other $x$ contains $k$, or an $i$ whose
-transposition supplies $k$, so $F(x)=I$. Thus on ambiguous inputs $F$ differs from the constant
-$I$ only at $P$. A small gadget (\cref{sym:lem:reset}) then repairs singleton inputs without
-touching ambiguous ones, which isolates $P$. Details are in \cref{app:proofs-tests}.
-\end{idea}
-
-These proofs are mechanized in the existing full term syntax. \texttt{FullAlgebra.lean} shows that
-singleton-status equivalence is preserved by every constructor, that on a fixed status cell
-shrinking inputs shrinks the output, and that one input membership suffices to preserve any
-selected output winner, which the formal refinement keeps while reducing every input to a singleton or pair
-(\path{FullTerm.status_mono}, \path{FullTerm.one_pin},
-\path{FullTerm.pair_countervaluation}). The explicit separators and both directions of completeness
-are \path{FullTerm.pair_separator} and \path{full_test_domain_iff}. The cardinality formula is the
-count of singletons and unordered pairs.
-
-We should be clear about what has and has not been achieved. All $K$ owners and role switches remain
-available in these tests, and intermediate outputs may contain any number of winners: $D_2$ is an
-input test domain, not a replacement algebra. For four roles it has ten values, while the reduct
-admits six, and the pair separator explicitly refutes reusing that six-value domain after adding
-internal switches. The theorem supplies a decision procedure, uniform in $K$, for term equality: test
-$D_2^n$. It does not by itself supply a finite equational basis or a proof calculus.
+These inputs are all needed: a fixed set of inputs tests every equation, at every arity, exactly when it contains every atom and every two-element set (\cref{sym:thm:optimal}). So the unique minimum domain has $K(K+1)/2$ values. It is a set of inputs only, since intermediate results still range
+over all of $\Pow$.
