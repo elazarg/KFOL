@@ -1,0 +1,145 @@
+\subsection{Connection through a private store}
+\label{sec:private-connection}
+
+The public boundary of \cref{sec:composition} is useful when the next
+component should see the whole execution. A different interface retains
+the store and its audiences, including private cells. It gives a
+connection rule for the fixed-schedule disclosure language without
+requiring publication at the boundary.
+
+\paragraph{Open fragments.}
+Replace $\mathsf{done}$ by a hole in a finite disclosure protocol.
+A fragment judgment
+\[
+ P:(\Xi,\Omega)\longrightarrow(\Xi',\Omega')
+\]
+processes its commands using exactly the phase rules of
+\cref{sec:disclosure}, but permits pending cells at both ends. The
+output context retains all input declarations in their original order,
+with the same types and owners; only audiences can grow. New binds
+have fresh names. The hole makes no choice and publishes no record.
+The connection rule is
+\[
+ \frac{P:(\Xi,\Omega)\longrightarrow(\Xi',\Omega')\qquad
+       Q:(\Xi',\Omega')\longrightarrow(\Xi'',\Omega'')}
+      {P;Q:(\Xi,\Omega)\longrightarrow(\Xi'',\Omega'')},
+\]
+where $P;Q$ fills the hole of $P$ with $Q$, after fresh bound names
+have been chosen. Interfaces match as ordered dependent contexts,
+up to consistent renaming and data conversion. No value is copied to
+a new witness at this boundary. A complete protocol additionally has
+empty final pending set.
+
+\paragraph{All possible boundary stores.}
+Fix a set-theoretic model of the data calculus and a family $W$ of
+well-typed input stores for $\Xi$. Let $W_m(P;W)$ be the stores
+reachable after $m$ commands when every bind may choose any value of
+its instantiated type. This definition is independent of a chosen
+profile. Write $W_P$ for the final family. Publications change only
+the phase metadata. Immutable cells and the fixed schedule mean that
+a store at phase $m$, together with that schedule, determines its
+entire preceding history from the input interface: earlier stores
+are restrictions and earlier audiences are known. Each local view
+likewise determines all the role's preceding local views.
+
+At a bind occurrence $m$ owned by $i$, put
+\[
+ \mathcal V_m=\{V_i^m(\rho):\rho\in W_m(P;W)\}.
+\]
+Here $m$ counts commands preceding the bind. Its answer type is a
+family $A_m(v)$ on $\mathcal V_m$, since its dependencies are in
+the actor's local context. Define the full strategy space
+\begin{equation}\label{dep:eq:fragment-strategies}
+ \mathsf S_i(P;W)=
+ \prod_{\substack{m\text{ a bind in }P\\\text{owned by }i}}
+       \prod_{v\in\mathcal V_m} A_m(v).
+\end{equation}
+Every legal view receives a decision, including views inconsistent with
+the player's own earlier decisions. An empty product is a singleton;
+no inhabitance claim is made if a required answer type is empty.
+A data implementation induces such a strategy by evaluation, whereas
+the set-theoretic space also admits nondefinable functions, as in
+\cref{sec:policies}. Smaller implementation supports certify dependency
+claims; they do not silently restrict the full space of deviations in
+\eqref{dep:eq:fragment-strategies}.
+
+\begin{theorem}[Private-store connection]\label{dep:thm:connection}
+For well-formed fragments $P,Q$ with matching boundary and input family
+$W$, connection has the following properties.
+\begin{enumerate}
+\item Every execution preserves dependent typing and each stored witness.
+Its boundary store belongs to $W_P$, and
+\[
+ \mathsf{Run}_{P;Q}(\sigma,\tau;\rho)
+ =\mathsf{Run}_Q(\tau;\mathsf{Run}_P(\sigma;\rho)).
+\]
+The stores retain all intermediate bound values.
+\item There is a canonical bijection
+\[
+ \mathsf S_i(P;Q;W)\cong
+ \mathsf S_i(P;W)\times\mathsf S_i(Q;W_P).
+\]
+It preserves every decision at every legal view, and carries whole-player
+unilateral deviations to pairs of component deviations.
+\item Connection is associative, with the empty fragment as unit,
+up to consistent bound-name renaming and the displayed strategy
+bijections. Rebracketing preserves histories, dependent answer families,
+observation partitions, and execution.
+\item Sealing certificates compose when the marked dependency set at
+the end of the first fragment is passed unchanged to the second.
+The two-execution hiding theorem therefore holds across this private
+boundary for implementations satisfying those certificates.
+\end{enumerate}
+\end{theorem}
+\begin{proof}
+The second fragment starts with exactly the context, pending set, and
+store produced by the first. Phase preservation applies at every
+command. Fresh binding and immutable storage preserve all old values;
+publication resolves the same named witness. This proves the first
+claim and the execution equation by induction on $P$.
+
+All stores in $W_P$ are endpoints of legal $P$ histories. Appending any
+legal $Q$ history to one of those histories gives a legal composite
+history; conversely every composite history splits there. Therefore
+the stores at each $Q$ phase are exactly those obtained by starting
+$Q$ from $W_P$. The boundary has no extra observation event. Its
+local context already contains every value that the role previously
+saw, so the suffix's view agrees with the composite view, with only
+the fixed phase offset changed. The factors of
+\eqref{dep:eq:fragment-strategies} consequently split into the binds
+in $P$ and the binds in $Q$. Splitting and concatenating these decision
+families are inverse. This also proves the claim about deviations;
+the suffix is indexed by all legal boundary stores, not merely the
+one reached by the chosen prefix strategy.
+
+For three fragments, both bracketings are the same command list and
+have the same families of reachable stores at each phase. In
+particular $(W_P)_Q=W_{P;Q}$. The strategy identifications are just
+reassociation of three products. The empty list has identity execution
+and singleton strategy spaces. Because audiences and answer families
+at every phase are unchanged, the history and observation claims
+follow as well.
+
+Finally, the sealing scan is a deterministic update on the marked
+set. Running it over $P;Q$ is running it first over $P$ and then
+over $Q$ with the resulting marks. At the boundary the two runs
+agree on all unmarked cells, and all marked cells remain invisible
+to the observer. These are exactly the induction invariants of
+\cref{thm:hiding}; no reset of the marked set or of the store occurs.
+Its proof therefore continues through the boundary.
+\end{proof}
+
+For example, a first fragment may privately bind $n:\Nat_{>0}$ and
+$v:\mathsf{Vec}(\Bool,n)$, and a second may let Bob bind an independent
+Boolean before Alice publishes $n$ and then $v$. Both pending cells
+cross the boundary. Bob's strategy before publication has no argument
+for either value; after publication the vector still has the original
+index. Publishing $v$ first remains ill typed. The interface retains
+both the dependent witness and the information restriction.
+
+This settles connection for the paper's finite, fixed-schedule phase
+language. It does not give a cut rule for asynchronous channels or
+data-dependent control. It composes full games and implementations;
+no equilibrium set is selected at an intermediate boundary. Thus it
+supplies no marginal-equilibrium composition law of the refuted kind
+in \cref{se:sec:open-game-obstruction}.

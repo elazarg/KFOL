@@ -63,6 +63,14 @@ noncomputable def leftResets {α : Type} : List (S α) → S α → S α
   | [], base => base
   | A :: rest, base => leftResets rest (reset base A)
 
+/-- A clause gate shares its input marker among its literal gates. -/
+noncomputable def circuitClause {α : Type} (gs : List (S α)) (C Z : S α) : S α :=
+  rightResets (gs.map (reset C)) Z
+
+noncomputable def circuitCNF {α : Type} : List (List (S α)) → S α → S α → S α
+  | [], C, _ => C
+  | gs :: rest, C, Z => circuitCNF rest (circuitClause gs C Z) Z
+
 theorem rightResets_multiple {α : Type} (xs : List (S α)) (base : S α) :
     Multiple (rightResets xs base) ↔ Multiple base := by
   induction xs <;> simp_all [rightResets, reset_multiple]
@@ -75,6 +83,33 @@ theorem rightResets_mem {α : Type} (xs : List (S α)) (base : S α)
   | cons A xs ih =>
     simp only [rightResets, reset_membership, rightResets_multiple, hm, true_and, ih,
       List.mem_cons]
+    grind
+
+theorem circuitClause_marker {α : Type} (gs : List (S α)) (C Z W : S α) (w : α)
+    (hz : Multiple Z) (hzw : Sub Z W) (hw : ¬ W w)
+    (hg : ∀ g ∈ gs, Sub g W) :
+    circuitClause gs C Z w ↔ C w ∧ ∃ g ∈ gs, Multiple g := by
+  have hzn : ¬ Z w := fun h => hw (hzw w h)
+  simp only [circuitClause, rightResets_mem _ _ hz, hzn, false_or, List.mem_map]
+  constructor
+  · rintro ⟨A, ⟨g, hgm, rfl⟩, ha⟩
+    have hgn : ¬ g w := fun h => hw (hg g hgm w h)
+    rw [reset_membership] at ha
+    exact ⟨(ha.resolve_left hgn).2, g, hgm, (ha.resolve_left hgn).1⟩
+  · rintro ⟨hc, g, hgm, hm⟩
+    exact ⟨reset C g, ⟨g, hgm, rfl⟩, reset_membership C g w |>.mpr (Or.inr ⟨hm, hc⟩)⟩
+
+theorem circuitCNF_marker {α : Type} (F : List (List (S α))) (C Z W : S α) (w : α)
+    (hz : Multiple Z) (hzw : Sub Z W) (hw : ¬ W w)
+    (hg : ∀ gs ∈ F, ∀ g ∈ gs, Sub g W) :
+    circuitCNF F C Z w ↔ C w ∧ ∀ gs ∈ F, ∃ g ∈ gs, Multiple g := by
+  induction F generalizing C with
+  | nil => simp [circuitCNF]
+  | cons gs rest ih =>
+    have hhead : ∀ g ∈ gs, Sub g W := hg gs (by simp)
+    have htail : ∀ qs ∈ rest, ∀ g ∈ qs, Sub g W := fun qs hqs => hg qs (by simp [hqs])
+    rw [circuitCNF, ih _ htail, circuitClause_marker gs C Z W w hz hzw hw hhead]
+    simp only [List.mem_cons]
     grind
 
 /-- Outside the common baseline, a left comb retains its marker exactly
@@ -412,4 +447,6 @@ theorem colouring_guard_obstruction {k : Nat} (X : Fin k → S (Fin k))
 #print axioms leftResets_marker
 #print axioms H_marker
 #print axioms unsat_rails
+#print axioms circuitClause_marker
+#print axioms circuitCNF_marker
 end MinimalChoice.SmallFragments

@@ -1,0 +1,78 @@
+\subsection{Sharing changes the complexity}
+\label{app:proofs-circuits}
+
+A circuit is a finite acyclic graph of operation gates and input
+variables, with a designated output; a gate's value may be used more
+than once. Its size counts gates and edges. Unfolding it gives a tree
+term with the same value, but that tree need not have polynomial size.
+
+\begin{theorem}[Reset circuit equality]\label{reset:thm:circuits}
+For every fixed $K\geq3$, equality of reset circuits is coNP-complete,
+without constants. It is already coNP-complete on the three-element
+generator $Z\subset U\subset T$. The same conclusion holds for
+circuits over $\{\del,H_a\}$, over $H_a$ alone, or over any nonempty
+family of rooted blocking-policy operations.
+\end{theorem}
+\begin{proof}
+A failed valuation is a polynomial certificate. For reset alone,
+\cref{reset:thm:three} applies to the unfolded terms, so inputs from
+$\{Z,U,T\}$ suffice; evaluate the original circuit without unfolding.
+
+For hardness take a CNF $\varphi$ with rails $p_i,n_i$, a root $z$,
+and a marker $c$. Write $\operatorname{rc}$ for the right reset comb
+of \cref{app:proofs-hard}. Put
+\[
+ W=\operatorname{rc}(p_1,n_1,\ldots,p_n,n_n;z),\qquad
+ R=\operatorname{rc}(((c\del p_i)\del n_i)_{i=1}^n;W).
+\]
+Enumerate the clauses as $C_1,\ldots,C_q$, reading a literal as its
+rail. Set $A_0=c$ and, for $1\leq j\leq q$, define the circuit gate
+\[
+ A_j=\operatorname{rc}((A_{j-1}\del\ell)_{\ell\in C_j};z).
+\]
+All occurrences of $A_{j-1}$ refer to the same earlier circuit output.
+The equation is $A_q\del R=R$. The construction has
+$5n+2\sum_j|C_j|+1$ reset gates, including the final comparison's
+left output, and $O(n+\sum_j|C_j|+q)$ description size.
+An empty clause gives $A_j=z$.
+
+If $z$ is atomic, $R=z$ and the equation holds. Otherwise $R$ is
+ambiguous and contains $W$. For a marker $w\notin W$, the clause
+recursion gives
+\[
+ w\in A_j\quad\Longleftrightarrow\quad
+ w\in A_{j-1}\ \land\
+ \exists\ell\in C_j:\operatorname{Amb}(\ell).
+\]
+Indeed each literal rail omits $w$, and its reset gate retains $w$
+exactly when that rail is ambiguous; the right comb takes their union
+with $z$. Meanwhile $w\in R$ exactly when $w\in c$ and some pair
+$p_i,n_i$ is simultaneously ambiguous. Every output contribution
+outside $W$ comes from $c$. A failed equation therefore gives an
+ambiguous literal in every clause and never two ambiguous opposite
+rails. Assign variable $i$ true iff $p_i$ is ambiguous; this satisfies
+the CNF.
+
+Conversely, use the fixed chain of \cref{reset:thm:three}. Given a
+satisfying assignment, set true rails to $U$, false rails to $Z$,
+$z=U$, and $c=T$. Then $W=R=U$, while every clause preserves the
+extra winner of $T$, so $A_q=T$ and the equation fails. Empty
+conjunctions and empty clauses are included in the construction.
+
+Finally $x\del y=H_a(y,x,x)=R_D(y,x,x)$ for every policy $D$.
+Replacing a reset gate by either of these gates uses repeated edges,
+not repeated copies of its input circuit, and has constant cost.
+This transfers hardness. Direct evaluation over the fixed finite
+carrier gives the coNP upper bounds for all the listed signatures.
+\end{proof}
+
+Thus the guard algorithms are polynomial in tree size and cannot in
+general be made polynomial in circuit size unless $\mathrm P=\mathrm{NP}$.
+This is compatible with a finite equational basis: reset itself has
+one. Sharing changes succinctness, not the valid identities.
+\path{lean/Fragments.lean} checks the generic clause and CNF marker
+recurrences as \path{circuitClause_marker} and \path{circuitCNF_marker};
+syntax assembly and the complexity argument above are written proofs.
+\path{checks/check_reset_circuits.py} evaluates the actual acyclic
+circuits on all winner-set valuations in its finite cases and checks
+the fixed-chain reduction separately.

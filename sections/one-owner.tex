@@ -40,10 +40,42 @@ So this theory does not depend on $K$.
 A guard minimal under coverage does not require its own source to be ambiguous, so its source can take the value $\{a,b,k\}$, and the valuation above then uses only these four values. For minimality, Freese et al.'s Theorem~3.2 forces a three-element candidate to have reset reduct $O_{2+1}$, and every such candidate satisfying the identities of $\mathbf F$ satisfies one of two further equations, both of which $\mathbf F$ refutes.
 \end{idea}
 
+The tables also characterize which functions are expressible.
+\Cref{owner:thm:synthesis} gives polynomial recognition of abstract
+one-owner tables and constructs a realizing term of size $O(nM)$ for
+$n$ inputs and $M$ guards. The construction follows one occurrence at
+a time, replacing other branches by their roots, and grows the tests
+that such a path can safely impose. Together with the table substitution
+formula, this determines the one-owner clone. Its first free-algebra
+sizes are $1,4,27,804$.
+
+\begin{theorem}[Finite equational basis]\label{owner:thm:basis-main}
+The one-owner theory has a basis of forty identities using at most
+six variables, complete over arbitrary algebras. Every basis needs
+an identity with at least four variables.
+\end{theorem}
+
+\begin{idea}
+Project terms to their common root and distribute them into words of
+unary actions on a join semilattice. The finite action laws remove
+repeated tests. A covering guard then supplies either a single source
+or the whole guarded pair, which turns guard coverage into an
+equational derivation. \Cref{app:owner-finite-basis} gives the explicit
+basis and completeness proof. Conservativity is not assumed.
+\end{idea}
+
 \begin{corollary}[Owner-count dichotomy]\label{owner:cor:complexity}
 Fix $K$ and $R\subseteq I$. For reset with $H_r$, $r\in R$, equation validity is polynomial when $|R|\leq1$ and coNP-complete when $|R|\geq2$. For an observer $k$, the implication $k\in s\Rightarrow k\in t$ on all valuations, and the corresponding equivalence, are polynomial when $|R\setminus\{k\}|\leq1$ and coNP-complete when $|R\setminus\{k\}|\geq2$.
 \end{corollary}
 
 So with $H_a$ and $H_b$, each owner's observational equality is polynomial while a third player's is coNP-complete, and even agreement of both owners on every valuation does not settle an equation (\cref{app:proofs-owner}). Tractability comes from the preserved root and the single chain of tests. Union loses the root. For an observer outside both owners, $H_a$ and $H_b$ test $y\ne\{a\}$ and $y\ne\{b\}$, and these break the chain: their disjunction always holds although neither test does.
 
-This dichotomy is specific to the $H$ family. The operation $G_{a,b}(x,y,z)=((y\star_b z)\star_a y)\del x$ names two owners, yet it is a strict tractable extension of reset: its inner expression is $y$ when $y$ is $\{a\}$ or $\{b\}$ and $y\cup z$ otherwise. \Cref{app:selective} treats such sets of blocking atoms, and classifies signatures with one or two of them.
+This dichotomy is specific to the $H$ family. The operation $G_{a,b}(x,y,z)=((y\star_b z)\star_a y)\del x$ names two owners, yet it is a strict tractable extension of reset: its inner expression is $y$ when $y$ is $\{a\}$ or $\{b\}$ and $y\cup z$ otherwise. \Cref{app:selective} treats such sets of blocking atoms and classifies every fixed finite family of them.
+
+The criterion uses each role's \emph{passing pattern}: the set of
+policies that its atom passes. Equality is polynomial if these patterns
+form a chain, or if they are closed under intersection and some pattern
+has two representatives; every other case is coNP-complete
+(\cref{selective:thm:families}). A repeated pattern supplies an observer
+whose removal leaves every atomic pattern available. Intersection
+closure supplies the least valuations needed for guard comparison.

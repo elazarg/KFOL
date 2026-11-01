@@ -84,6 +84,51 @@ and the three-state obstruction used in the minimum-generator proof;
 the order-algebra reduction uses a published theorem. checks/check_one_owner.py compares these tables with
 the existing winner-set evaluator and constructs three-role separators.
 
+sections/appendix-owner-synthesis.tex characterizes the realizable
+one-owner guard tables and constructs native terms of size O(nM).
+checks/check_owner_synthesis.py compares the algorithm with independent
+four-state term closure through arity three and all 8000 root-fixed
+four-input candidate tables. The synthesis theorem and clone substitution
+formula have written proofs; they do not establish a finite identity basis.
+
+sections/appendix-owner-basis.tex separately proves finite basability over
+arbitrary algebras for the one-owner signature {reset, H_a}. Its explicit
+forty-equation basis uses at most six variables. Common-root word
+normalization and two-source absorption give a written completeness proof.
+lean/OwnerModels.lean checks soundness of all forty equations; it does not
+formalize the generic completeness proof. checks/check_owner_finite_basis.py
+independently checks native soundness, every product of the free
+three-generated algebra, and larger sampled normalization and absorption
+certificates. The minimum variable bound is between four and six.
+
+Any one-owner equational basis needs at least four variables.
+lean/OwnerModels.lean constructs a four-element countermodel, embeds every
+proper subalgebra in F squared, and proves that every three-variable
+identity transfers, with no term-size bound. A valid four-variable identity
+fails in that model. This lower bound applies to the unrestricted basis.
+
+sections/appendix-basis.tex gives a finite presentation of all conservative
+one-owner models: seventeen equations, reducible to thirteen in that class,
+with an optimal bound of four variables. Every algebra with at most five
+elements satisfying the entire four-variable theory is in the intended
+variety; a countermodel to that theory must have at least six elements.
+Its completeness proof uses forest thresholds and guard coverage, and is
+written rather than formalized. lean/OwnerModels.lean checks the equations
+and a nonconservative four-element countermodel showing that the seventeen
+equations are not a full basis. It also checks a six-element subalgebra of
+F squared mapping onto a nonconservative irreducible four-element model,
+with collapse and pair-separation certificates for its monolith.
+checks/check_owner_presentation.py independently checks the finite witnesses,
+all 569 forest-based four-element candidates, and sampled guard thresholds.
+Finite basability of the core and full owned-choice signatures remains open.
+
+sections/connections.tex gives private-store connection for fixed-schedule
+disclosure fragments. It retains dependent witnesses, pending obligations,
+audience views, full off-path strategies, and sealing certificates.
+checks/check_connections.py enumerates finite profiles and fragment cuts.
+The generic connection theorem has a written proof, not a Lean formalization
+or a marginal-equilibrium composition claim.
+
 Earlier drafts and tracked reviews are available in Git history through
 69f763a. Uncommitted reviews are retained locally in .git/local-notes/.
 
@@ -108,3 +153,16 @@ and the observer-relative hardness certificates. Polynomiality for chains
 and the complete two-policy complexity classification have written proofs;
 checks/check_mixed_policies.py compares their guard algorithms with exact
 winner-set tables and checks native hardness reductions.
+
+The arbitrary-family classification is in
+sections/appendix-policy-families.tex. Passing patterns give a complete
+polynomial/coNP-complete dichotomy for every fixed finite policy family.
+checks/check_policy_families.py tests the guard algorithm and expanded
+native reductions; the generic classification has a written proof.
+
+Shared reset circuits have coNP-complete equality even on the three-element
+generator (sections/appendix-circuits.tex). lean/Fragments.lean proves
+the clause and CNF marker recurrences. checks/check_reset_circuits.py
+checks the actual DAG reduction, all mixed valuations in its finite cases,
+the fixed-chain witnesses, and the linear gate count. Circuit syntax
+assembly and the complexity theorem have written proofs.

@@ -47,6 +47,9 @@ Dependence on $K$ (\cref{thm:colouring-theories})
  & Lean: \texttt{colouring\_guard\_obstruction}; identity family and embeddings written; finite checks.\\
 One-owner calculus (\cref{owner:thm:guards,owner:thm:one-table,owner:thm:four})
  & Lean: \texttt{Term.observation\_implication\_iff}, \texttt{Term.single\_table\_equation\_iff}, \texttt{Term.equationB\_correct}, \texttt{Term.four\_element\_complete}, \texttt{three\_state\_obstruction}. Minimality also uses external \cite[Theorem~3.2]{FreeseEtAl2002}.\\
+One-owner table realizability and clone (\cref{owner:thm:synthesis})
+ & Written safe-path and saturation proofs; independent four-state closure
+ and exhaustive candidate-table checks.\\
 Selective reset (\cref{selective:thm:guards,selective:cor:G,selective:prop:disjoint})
  & Lean: \texttt{ChainGuards.Term.policy\_equation\_iff},
  \texttt{ChainGuards.Term.policy\_checker\_correct},
@@ -60,6 +63,37 @@ Two players (\cref{app:two-players})
  & Written; finite checks. Not in Lean.\\
 Owner-count dichotomy (\cref{owner:cor:complexity})
  & Written deductions from the above.\\
+Arbitrary policy families (\cref{selective:thm:families})
+ & Written pattern criterion, guard completeness, and native 3-CNF reductions;
+ exact finite checks in \texttt{check\_policy\_families.py}.\\
+Reset circuits (\cref{reset:thm:circuits})
+ & Lean clause and CNF marker laws (\texttt{circuitClause\_marker},
+ \texttt{circuitCNF\_marker}); circuit assembly and coNP-completeness written;
+ exact native DAG checks.\\
+One-owner residual largeness (\cref{owner:prop:residual})
+ & Lean three-state closure and term-definition certificates
+ (\texttt{Four.owner\_free\_closed}, \texttt{Four.owner\_free\_h});
+ lifting all reset models and preservation of congruences written.\\
+One-owner basis arity (\cref{owner:prop:four-variables})
+ & Lean: \texttt{Four.root\_expansion},
+ \texttt{BasisObstruction.three\_variable\_transfer}, and
+ \texttt{BasisObstruction.root\_expansion\_failure}.
+ The equational nonderivability conclusion and minimum witness size
+ are written consequences.\\
+Unrestricted one-owner finite basis (\cref{owner:thm:finite-basis})
+ & Lean soundness of all forty equations (\texttt{FiniteBasis});
+ common-root normalization, action-word identities, two-source absorption,
+ and equational completeness written. Finite checks of normalization
+ and the absorption certificates.\\
+Conservative one-owner presentation (\cref{owner:thm:conservative-basis,owner:cor:small-four-variable,owner:prop:relative-not-full})
+ & Written forest-threshold and guard-coverage proof; Lean soundness of
+ the equations and a countermodel to their completeness over arbitrary
+ algebras (\texttt{PresentationObstruction}); the six-element lower bound
+ for countermodels to all four-variable identities is written.\\
+Nonconservative irreducible (\cref{owner:prop:nonconservative-si})
+ & Lean product and quotient maps, collapse homomorphism, and
+ \texttt{NonconservativeWitness.pair\_forces}; variety membership and
+ the monolith conclusion are written consequences.\\
 Round recursion (\cref{se:thm:round})
  & Written; local stage checks only.\\
 Scalar fragment (\cref{se:prop:parallel,se:thm:rational})
@@ -72,8 +106,9 @@ Forest models, combs (\cref{app:reset-models})
  & Reconstruction and generic monolith in Lean (\texttt{ResetModels}); forest membership written.\\
 Congruences, unary classifications (\cref{app:contexts,app:congruences,app:ambiguity})
  & Reduct synthesis in Lean (\texttt{unary\_synthesis}); remainder written; finite checks.\\
-Dependent layer (\cref{app:dependent})
- & Written; finite models of phase and sealing rules.\\
+Dependent layer and private connection (\cref{app:dependent,dep:thm:connection})
+ & Written; finite models of phase and sealing rules, full strategy
+ factorization, and dependent-store connection.\\
 \end{longtable}}
 
 \subsection{Lean modules}
@@ -115,7 +150,11 @@ completeness and compilation to full owned choice.\\
 second-owner absorption, and generic UNSAT transfer for owned guards.\\
 \texttt{OwnerModels} & Four-element completeness, conservative operations,
 generator identities and nonidentities, root absorption bounds, and
-the generic three-state obstruction.\\
+the generic three-state obstruction; a four-element model satisfying
+every three-variable identity but failing root expansion; soundness and
+finite obstructions for the conservative presentation, and a
+nonconservative irreducible quotient of a subalgebra of $\mathbf F^2$;
+soundness of all forty equations of the unrestricted basis.\\
 \texttt{ChainGuards} & Two-owner membership and guard laws, selective
 reset identity, role symmetry, policy-independent completeness and
 executable checker, and endpoint reset identities.\\
@@ -188,9 +227,32 @@ valuation at $K=3$, and sample $K=4,5$, with explicit singleton-or-pair
 separators. Two-owner checks compare both owners' guard semantics for
 $303$ terms on every $7^3$ valuation and test $4000$ separators,
 including an equation on which only the outsider disagrees. The
+one-owner synthesis check compares every canonical candidate with full
+four-state term closure through arity three ($1,4,27$ functions), and
+all $8000$ root-fixed four-input tables with independent exhaustive
+path search ($201$ accepted). It also synthesizes $750$ sampled terms
+at arities $5,6,8$, checks their canonical tables and linear size bound,
+and compares native winner-set evaluations. Another $250$ checks
+compare the clone formula with native term substitution. The
 four-state projection is also checked on all $33509$ triples of values
 at $K=3,4,5$, together with the conservative concrete model and all
-$512$ smaller candidate expansions. The pair-dichotomy checks cover all
+$512$ smaller candidate expansions. The basis-obstruction check verifies
+all four proper-subalgebra embeddings with the native winner-set evaluator,
+the separating valuation, and root expansion on every four-input
+valuation at $K=3,4$. The conservative-presentation check evaluates all
+seventeen equations on $\mathbf F$, compares them with passing-relation
+coherence on all $569$ forest-based four-element candidates ($281$ pass),
+and samples the guard-threshold assertions. It also checks the
+nonconservative countermodel and the irreducible quotient using native
+winner-set operations. The generic relative completeness theorem remains
+a written proof. The unrestricted-basis check evaluates all forty
+equations on $10420$ native valuations of $\mathbf F$. It checks
+the two-source certificates in both directions for all $20412$ reset
+and $H_a$ products of the free three-generated algebra, and checks
+normalization and certificates for $240$ sampled identities at
+arities $4,6,8$. The arbitrary-algebra completeness proof is written;
+these finite tests do not replace its word induction.
+The pair-dichotomy checks cover all
 $604$ two-variable CNFs at $K=3$: $16807$ valuations per equation
 for two owned choices and $823543$ for reset with owned choice.
 At $K=4$ all $11$ one-variable CNFs are checked on $3375$ and
@@ -198,6 +260,12 @@ $759375$ valuations respectively. Separate
 models execute dependent phase and sealing rules. These computations
 check their finite implementations, not the conversion or normalization
 metatheory of the dependent data calculus.
+Private-connection checks enumerate all $32$ full profiles of a finite
+dependent-vector protocol, all seven cuts and $28$ three-fragment splits.
+They check the complete decision domains and unilateral deviations,
+stable indices and pending cells, hidden views, and composition of the
+sealing scan. Restricting a suffix to the actual prefix store is tested
+as a rejected loss of off-path strategy data.
 Sealed-round checks compare complete rational Nash support rectangles
 with direct unilateral deviations on a grid for $256$ two-by-two
 continuation tables. They check $2209$ diagonal games, rational synthesis
@@ -249,3 +317,27 @@ They compare the normal-form criterion with the three-element order on
 $40000$ random pairs, and the sealed-round class with the two serializations on
 all $21243$ class matrices up to $3\times3$ and with exact values on $120099$
 games with two rows.
+
+The arbitrary-family checks consider every subfamily of the six
+nonempty proper policies on three roles, forty sampled four-role
+families, a four-role family requiring three minimal passing patterns
+in its hardness construction, and four larger examples. In the tested cases with an
+intersection-closed pattern family and a repeated pattern, they compare
+the guard algorithm with complete three-input winner-set tables and
+check explicit separators. In the hard configurations they evaluate
+the reductions expanded into the original policy signature. All eleven
+one-variable CNFs are checked exhaustively for the three-role cases;
+four-role cases check an empty conjunction, an empty clause, and a
+contradiction exhaustively; the selected four-role family checks all
+eleven one-variable CNFs. The five-role example with every pair easy
+and the triple hard checks all eleven one-variable CNFs on all $29791$
+valuations. The five-role case with all patterns distinct uses scalar
+samples and explicit SAT witnesses. General union-of-tests normalization is also
+checked against native evaluation, including hard families.
+The reset-circuit checks evaluate all eleven one-variable and all
+$604$ two-variable CNFs on every three-role valuation, respectively
+$2401$ and $117649$ per circuit equation, and the one-variable cases
+on all $50625$ four-role valuations. They independently check every
+valuation on the fixed three-element reset chain and the exact linear
+gate count. These are finite checks of the constructions, not generic
+formalizations of the complexity theorems.

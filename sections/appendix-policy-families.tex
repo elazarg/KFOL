@@ -1,0 +1,190 @@
+\subsection{The classification for arbitrary finite families}
+\label{selective:sec:families}
+
+Fix a finite indexed family $\mathcal D=(D_1,\ldots,D_m)$ of policies.
+The \emph{passing pattern} of a role is
+\[
+ p(r)=\{j\in\{1,\ldots,m\}:r\notin D_j\},\qquad
+ \mathcal P=\{p(r):r\in I\}.
+\]
+Patterns in $\mathcal P$ are distinct sets; their multiplicities are
+the numbers of roles realizing them. Intersection closure below means
+closure under binary intersection, not that the full set of indices
+must occur.
+
+\begin{theorem}[Finite-family dichotomy]\label{selective:thm:families}
+For fixed $K\geq3$ and $\mathcal D$, equation validity for native tree
+terms in $\{\del\}\cup\{R_D:D\in\mathcal D\}$ is polynomial exactly
+in the following cases, with coNP-completeness in all other cases:
+\begin{enumerate}
+\item $\mathcal P$ is a chain under inclusion; or
+\item $\mathcal P$ is intersection-closed and some pattern has
+      multiplicity at least two.
+\end{enumerate}
+In the second case, any observer with a repeated pattern is
+equation-complete, and a failed comparison has a singleton-or-pair
+countervaluation. The classification criterion itself is polynomial
+in an explicitly listed family and role set.
+\end{theorem}
+
+As usual, ``exactly'' separates the polynomial cases from the
+coNP-complete cases without asserting $\mathrm P\ne\mathrm{NP}$.
+The theorem includes the empty family, endpoint policies, and repeated
+policy symbols. It recovers \cref{selective:cor:two-policies}.
+
+\begin{proof}
+\emph{The polynomial cases.}
+If the role patterns form a chain, the policies form a chain too.
+Indeed, incomparable $D_i,D_j$ would supply roles in each difference,
+whose patterns are incomparable. Apply \cref{selective:thm:nested}.
+
+Now suppose $\mathcal P$ is intersection-closed and choose $k$ with a
+second representative of $p(k)$. Compile the common positive guard
+lists, using $N_D^k$, as before. On each input combine all passing
+requirements into their union $U$ of blocking sets:
+$\bigwedge_D N_D^k=N_U^k$. Remove passing requirements at a guard's
+source and at inputs already required ambiguous. Replace a remaining
+requirement with $U=I$ by ambiguity. This last replacement is exact
+for the whole list. At an $R_D(x,y,z)$ node the only new union of
+tests is at $i=\rho(y)$. If that union becomes $I$, its passing test
+means ambiguity or membership of $k$ in $x_i$. The latter case is
+already supplied by the unguarded root source of $y$, under the same
+ambiguity requirement on $\rho(x)$. This is the absorption argument
+of \eqref{selective:eq:joint}, now for any number of labels. No new
+guards are introduced.
+
+A normalized guard has a source $j$, ambiguity set $A$, and one
+proper blocking set $U_i$ at each remaining tested input. Coverage
+requires the same source, inclusion of ambiguity requirements, and
+$U_i^{\rm weak}\subseteq U_i^{\rm strong}$ whenever the stronger
+guard does not already require ambiguity there. Missing requirements
+are represented by $U_i=\varnothing$. These implications are sound
+at every observer.
+
+For completeness give only the source a value containing $k$, choosing
+its atom or a pair according to its ambiguity requirement. At a
+nonsource required ambiguous use a pair omitting $k$. For any other
+input with requirement $U\ne I$, consider the roles outside $U$.
+Their patterns have an intersection $p_*$ in $\mathcal P$, and a role
+realizing $p_*$ is itself outside $U$: it passes every policy whose
+union is $U$. Choose such a role different from $k$, which is possible
+because $p(k)$ has another representative. Its atom realizes the
+least passing vector allowed by the requirement. In particular, it
+passes a union $V$ of policy sets exactly when $V\subseteq U$.
+To check this last assertion, passing every policy in $V$ is forced
+precisely when every role outside $U$ lies outside $V$.
+Thus a guard holds at this valuation exactly when it covers the
+selected guard. Pairwise coverage is complete at $k$ and sound for
+all roles, proving full equality and the claimed separator.
+There is at most one guard per native leaf; unions, subset tests,
+and guard minimization are polynomial.
+
+\emph{Preparing the hard cases.}
+If $\mathcal P$ is not intersection-closed, choose $p,q\in\mathcal P$
+with $s=p\cap q\notin\mathcal P$, and put $J=I$.
+Otherwise the remaining case has distinct patterns for every role
+and two incomparable patterns $p,q$. Their intersection is the
+pattern of a unique role $k$; put $s=p(k)$ and $J=I\setminus\{k\}$.
+In both cases the family
+\[
+ \mathcal Q=\{p(r):r\in J,\ s\subseteq p(r)\}
+\]
+has at least two minimal members. For if it had a unique minimum,
+that minimum would lie between $s$ and $p\cap q=s$, although $s$
+does not occur in $\mathcal Q$.
+Partition the minimal members into two nonempty groups
+$\mathcal M_0,\mathcal M_1$, and define
+\[
+ U=\bigcup_{j\in s}D_j,\qquad
+ B_e=\bigcap_{v\in\mathcal M_e}\ \bigcup_{j\in v\setminus s}D_j
+ \quad(e=0,1).
+\]
+Every inner union is nonempty as an indexed union, since $v\ne s$.
+An atom outside $U$ passes $B_e$ exactly when its pattern contains
+one of the minimal members in $\mathcal M_e$.
+Consequently
+\[
+ (B_0\cap B_1)\setminus U\subseteq I\setminus J,
+\]
+and there are roles
+$a\in(B_0\setminus B_1)\setminus U$ and
+$b\in(B_1\setminus B_0)\setminus U$.
+The operations $R_{B_e}$ are definable from the given family by
+\eqref{selective:eq:policy-union} and
+\eqref{selective:eq:policy-inter}.
+
+\emph{The reduction.}
+Reduce 3-CNF unsatisfiability. Use input variables $y_i$ for Boolean
+variables, a root $z$, and a marker $c$. For each clause $C$, form
+$b_C$ by nesting $R_{B_0}(z,y_i,-)$ for positive literals and
+$R_{B_1}(z,y_i,-)$ for negative literals, starting at $c$.
+An empty clause gives $b_C=c$. Initially let $W$ be the right reset
+comb of all $y_i$, with base $z$, and let $R$ be the right reset
+comb of the clause branches, with base $W$.
+Starting from $c$, form $P$ by applying the gates
+$R_{D_j}(z,y_i,-)$ for every $i$ and $j\in s$.
+The proposed equation is
+\[
+ P\del R=R.
+\]
+
+In the case $J\ne I$, add a calibration input $u_r$ for every
+$r\ne k$, include these inputs in $W$, and make the following
+additions. For each $j\in p(r)$ add the gate
+$R_{D_j}(z,u_r,-)$ to $P$. Add $c\del u_r$ to the branches of $R$,
+and add $R_{D_j}(z,u_r,c)$ for each $j\notin p(r)$.
+No calibration is needed when $J=I$.
+
+If $z$ is atomic, both sides are $z$. Otherwise $R$ is ambiguous
+and contains $W$. Every contribution outside $W$ comes from $c$.
+A separating marker $w\notin W$ must survive every gate of $P$
+and no branch of $R$. Thus each $y_i$ is ambiguous or an atom
+outside $U$. When calibration is present, $c\del u_r$ forces
+$u_r$ to be atomic; its positive and negative tests force its
+pattern to be exactly $p(r)$. Since all patterns are distinct,
+$u_r=\{r\}$, and the marker must be $w=k$.
+
+There is now no input $y_i$ blocking both $B_0$ and $B_1$.
+For $J=I$ their intersection outside $U$ is empty. In the calibrated
+case its only possible role is the marker $k$, which cannot occur
+in $W$. Read variable $i$ as true exactly when $y_i$ blocks $B_0$.
+If the CNF is unsatisfiable, some clause is false; every gate in its
+branch passes the marker, contradicting its absence from $R$.
+This proves validity on all winner-set valuations for UNSAT.
+
+For SAT set $y_i=\{a\}$ for true and $\{b\}$ for false,
+$z=\{a,b\}$, and $c=\{w\}$, using $w=k$ when calibrated and
+any third role otherwise. Set each calibration input to its named
+atom. Every gate in $P$ passes $w$, whereas every clause branch
+blocks it at a satisfied literal and every calibration branch
+omits it. Thus the equation fails.
+
+Finally this is a polynomial reduction in the original native tree
+signature. The family is fixed. Derived $B_e$ gates occur only in
+clause branches of depth at most three, so their expansions have
+bounded size. The arbitrarily long chain defining $P$ uses only
+original policy gates, each with its continuation once. The reset
+combs also use each branch once. A finite valuation certificate
+gives the coNP upper bound. Intersection closure, comparability,
+and multiplicities of the $K$ listed patterns are polynomial to check.
+\end{proof}
+
+\begin{example}[Every pair is easy, the family is hard]
+On $I=\{0,1,2,3,4\}$ take
+\[
+ D_1=\{0,1\},\qquad D_2=\{0,1,3,4\},\qquad D_3=\{0,1,2\}.
+\]
+Each pair of policies has polynomial equality: $D_1$ is contained in
+both others, and $D_2,D_3$ overlap with a repeated common pattern.
+All three have common intersection $\{0,1\}$, so the empty-intersection
+obstruction does not apply. Their passing patterns are
+$\varnothing,\{1,2\},\{1,3\}$, with multiplicities $2,1,2$.
+The intersection $\{1\}$ is missing. Thus the three-policy signature
+is coNP-complete by \cref{selective:thm:families}.
+\end{example}
+
+\path{checks/check_policy_families.py} compares the common guard
+algorithm with exact winner-set tables, constructs least-guard
+separators, and evaluates the expanded native hardness reductions.
+The classification and reduction-size arguments are written proofs;
+they are not additional kernel-checked Lean theorems.

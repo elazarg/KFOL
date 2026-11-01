@@ -1,7 +1,395 @@
-\section{Toward a finite basis}\label{app:basis}
+\section{Finite bases and residual bounds}\label{app:basis}
 
-A finite basis for full owned choice or its intrinsic core is open. The polynomial guard algorithm of \cref{sec:one-owner} does not supply one for the four-element expansion, whose abstract guard tables also lack a realizability criterion analogous to reset's: canonical comparison of tables extracted from terms does not characterize which tables can occur. Since
-that generator is conservative, it may yield to the methods that classify the conservative models of reset. The polynomial bounds of \cref{sec:one-owner} concern trees, and shared subexpressions require a separate size analysis.
+The one-owner expansion has a finite equational basis over arbitrary
+algebras: \cref{owner:thm:finite-basis} gives forty identities with
+at most six variables. At least four variables are necessary.
+Within conservative algebras, thirteen equations suffice, with an
+optimal four-variable bound (\cref{owner:thm:conservative-basis}).
+A finite basis for full owned choice or its intrinsic core remains open.
+The polynomial bounds of
+\cref{sec:one-owner} concern trees; shared circuits already have
+coNP-complete equality for reset alone (\cref{reset:thm:circuits}).
+The unrestricted basis is proved by word normalization and two-source
+absorption, separately from table synthesis and complexity.
+
+\subsection{At least four variables are necessary}
+
+There is a concrete obstruction to extending reset's three-variable
+basis within the same variable bound.
+
+\begin{proposition}[No three-variable basis]\label{owner:prop:four-variables}
+The equational theory of $\{\del,H_a\}$ is not axiomatizable by
+identities using at most three variables, even by an infinite set of
+such identities. A four-element algebra satisfies all its
+three-variable identities but fails the valid identity
+\begin{equation}\label{owner:eq:root-expansion}
+ H_a(u\del r,y,z)
+   =(u\del r)\del H_a(r,y,z).
+\end{equation}
+Consequently every equational basis contains an identity with at
+least four variables.
+\end{proposition}
+\begin{proof}
+First, \eqref{owner:eq:root-expansion} is valid. If $r$ is atomic,
+both sides return $r$. If $r$ is ambiguous, both sides are
+$u\cup r\cup(y\star_a z)$.
+
+Define an algebra $\mathbf W$ on $\{0,1,2,e\}$. On the chain
+$0<1<2$, reset is maximum; if either argument is $e$, reset returns
+its right argument. The ternary operation $h$ is maximum when all
+three arguments lie in the chain, and
+\[
+ h(e,y,z)=e,\qquad
+ h(x,y,e)=h(x,e,y)=
+ \begin{cases}2,&x=0\text{ and }y=2,\\x,&\text{otherwise},\end{cases}
+ \quad(x\ne e).
+\]
+These clauses also specify $h(x,e,e)=x$. Both operations are
+conservative, so every subset is a subalgebra.
+
+Every three-element subalgebra belongs to $\operatorname V(\mathbf F)$.
+Using the four-state names $A,B,N,P$ from \cref{sec:one-owner}, the
+embeddings are
+\[
+\begin{array}{c|c|c}
+\text{subalgebra}&\text{images in its listed order}&\text{target}\\\hline
+\{0,1,2\}&(N,N),\ (P,N),\ (P,P)&\mathbf F^2\\
+\{0,1,e\}&N,\ P,\ A&\mathbf F\\
+\{1,2,e\}&N,\ P,\ A&\mathbf F\\
+\{0,2,e\}&N,\ P,\ B&\mathbf F
+\end{array}
+\]
+The first is a three-element chain on which both operations are
+join. In the next two rows the owner atom blocks the extra winner;
+in the last row the other atom permits it. Directly checking the
+operations verifies all four embeddings.
+
+An evaluation of a three-variable identity in $\mathbf W$ stays in
+the subalgebra on its at most three input values. That subalgebra
+satisfies every identity of $\mathbf F$, so $\mathbf W$ satisfies
+all three-variable identities of $\mathbf F$. Nevertheless, at
+$(u,r,y,z)=(1,0,2,e)$ the left side of
+\eqref{owner:eq:root-expansion} is $h(1,2,e)=1$, while the right
+side is $1\del h(0,2,e)=1\del2=2$. Soundness of equational logic
+therefore excludes any basis confined to three variables.
+\end{proof}
+
+The sound identity, the four embeddings into $\mathbf F^2$, and
+transfer of \emph{every} three-variable identity, with no term-size
+bound, are kernel-checked in \path{lean/OwnerModels.lean}. The witness
+is smallest possible: an algebra with at most three elements satisfying
+all three-variable identities satisfies every identity, by identifying
+variables that take the same value in a proposed countervaluation.
+This is an arity lower bound, not a proof of nonfinite basability.
+
+\input{sections/appendix-owner-basis}
+
+\subsection{A finite presentation within conservative algebras}
+
+Write $h$ for $H_a$. Let $\Sigma$ consist of reset's six equations
+(R1)--(R6), together with the following eleven equations:
+\begin{align}
+ h(x,y,z)&=h(x,z,y),\tag{H1}\label{owner:eq:H1}\\
+ h(x,y,y)&=y\del x,\tag{H2}\label{owner:eq:H2}\\
+ h(x,x,y)&=y\del x,\tag{H3}\label{owner:eq:H3}\\
+ h(x,y,z)\del x&=h(x,y,z),\tag{H4}\label{owner:eq:H4}\\
+ x\del h(x,y,z)&=h(x,y,z),\tag{H5}\label{owner:eq:H5}\\
+ h(x,y\del x,z\del x)&=(y\del x)\del(z\del x),\tag{H6}\label{owner:eq:H6}\\
+ h(x,(z\del y)\del x,y)&=(z\del y)\del x,\tag{H7}\label{owner:eq:H7}\\
+ h(u\del r,y,z)&=(u\del r)\del h(r,y,z),\tag{H8}\label{owner:eq:H8}\\
+ h(r,u\del r,y\del z)&=h(r,u\del r,z)\del((y\del z)\del r),\tag{H9}\label{owner:eq:H9}\\
+ h(r,(u\del r)\del(y\del r),z)
+   &=h(r,u\del r,z)\del h(r,y\del r,z),\tag{H10}\label{owner:eq:H10}\\
+ h(y,u,z)\del r&=(h(r,u,z)\del y)\del r.\tag{H11}\label{owner:eq:H11}
+\end{align}
+All are identities of $\mathbf F$. Their soundness follows by checking
+its four states; the $h$ equations are kernel-checked in
+\path{lean/OwnerModels.lean}. Equation (H8) is
+\eqref{owner:eq:root-expansion}.
+
+\begin{theorem}[Conservative presentation]\label{owner:thm:conservative-basis}
+For an algebra $(C,\del,h)$ in which both operations are conservative,
+the following are equivalent:
+\begin{enumerate}
+\item it satisfies every identity of $\mathbf F$;
+\item it satisfies $\Sigma$.
+\end{enumerate}
+This holds for finite and infinite carriers. Omitting (R1), (R3),
+(R4), and (R5) leaves thirteen equations with the same relative
+completeness. Each uses at most four variables, and this variable
+bound is optimal within the conservative class.
+\end{theorem}
+
+The proof first determines the freedom in $h$, then interprets guards
+at a threshold in the forest order. Conservativity is a hypothesis,
+not an equation added to $\Sigma$.
+
+\begin{lemma}[Passing relation]\label{owner:lem:passing}
+Let $(C,\del,h)$ be conservative and satisfy $\Sigma$. Its reset
+reduct is the forest order of \cref{reset:thm:forest}. Write
+$v\parallel w$ for incomparability. Except on triples
+\[
+ x<b,\qquad z\parallel b,\qquad z\parallel x,
+\]
+with root $x$ and side arguments $b,z$ in either order, $h$ equals
+$h_0(x,y,z)=(y\del x)\del(z\del x)$.
+On an exceptional triple it returns either $x$ or $b$.
+
+For nonminimal $b$ and $z\parallel b$, define $E(b,z)$ by
+$h(x,b,z)=b$ for some $x<b$. Then ``some'' can be replaced by
+``every'', and
+\begin{align}
+ b\leq c,\ z\parallel c,\ E(b,z)&\ \Longrightarrow\ E(c,z),
+       \label{owner:eq:passing-up}\\
+ z\leq z',\ z,z'\parallel b&\ \Longrightarrow\
+       \bigl(E(b,z)\Longleftrightarrow E(b,z')\bigr).
+       \label{owner:eq:passing-constant}
+\end{align}
+\end{lemma}
+\begin{proof}
+Reset has the stated form by \cref{reset:thm:forest}. Equations
+(H4)--(H5) imply $x\leq h(x,y,z)$. Together with conservativity,
+this determines $h$ when neither side argument is strictly above $x$.
+Repeated arguments are covered by (H1)--(H3). On a three-element
+chain, (H6) handles the least root, the bound handles the greatest,
+and (H8) handles the middle: for $y<x<z$,
+\[
+ h(x,y,z)=h(x\del y,y,z)
+          =(x\del y)\del h(y,y,z)=z.
+\]
+If $x,y$ are incomparable below $p$, (H7) gives $h(x,p,y)=p$.
+These exhaust the three-element forests except for one comparable
+pair and an isolated element. In that case the only undetermined
+value is $h(x,b,z)\in\{x,b\}$ for $x<b$ and isolated $z$.
+If $z\parallel b$ and $x<b$, the forest property already forces
+$z\parallel x$.
+
+For $x<u<b$, (H8) gives
+$h(u,b,z)=u\del h(x,b,z)$, so the two choices pass together.
+For incomparable $x,u<b$, (H11) gives
+\[
+ h(u,b,z)\del x=(h(x,b,z)\del u)\del x.
+\]
+The left side is $b$ or $x$ according as the choice at $u$ passes
+or fails; the right side makes the same test at $x$. Thus $E$ is
+independent of the chosen lower element.
+
+For \eqref{owner:eq:passing-up}, choose $x<b\leq c$ and apply
+(H10) with root $x$ and side sources $b,c$:
+\[
+ h(x,c,z)=h(x,b,z)\del h(x,c,z).
+\]
+If $E(b,z)$ holds and $E(c,z)$ fails, this reads $x=b$.
+For \eqref{owner:eq:passing-constant}, choose $x<b$ and apply (H9):
+\[
+ h(x,b,z')=h(x,b\del x,z'\del z)
+          =h(x,b,z)\del(z'\del x)=h(x,b,z).
+\]
+Here $z'\parallel x$, so $z'\del x=x$.
+\end{proof}
+
+\begin{proof}[Proof of \cref{owner:thm:conservative-basis}]
+Necessity follows from soundness of $\Sigma$. For sufficiency, fix a
+valuation $v$ in a conservative $\Sigma$-model. Every term evaluates
+above the value of its root, by the forest operation and (H4)--(H5).
+For a nonminimal element $b$, interpret the two guard tests by
+\[
+ M_b(q)\ \Longleftrightarrow\ q\leq b,
+ \qquad
+ N_b(q)\ \Longleftrightarrow\
+ q\text{ is comparable with }b\ \text{or}\ E(b,q).
+\]
+The $E$ alternative is used only when $q\parallel b$.
+We have $M_b(q)\Rightarrow N_b(q)$ and $N_b(b)$.
+Call a guard $(j,A,B)$ \emph{fitting at $b$} if $v_j=b$,
+every $v_i$ for $i\in A$ satisfies $M_b$, and every $v_i$ for
+$i\in B$ satisfies $N_b$. We claim:
+\begin{enumerate}
+\item if a term evaluates to $b$, one of its guards fits at $b$;
+\item if one of its guards fits at $b$, the term evaluates to an
+element at least $b$.
+\end{enumerate}
+Use the unminimized occurrence guards of
+\eqref{owner:eq:guards}; deleting covered guards preserves both claims.
+
+For the first claim, trace a selected occurrence of the value $b$
+through the conservative operations. At a reset node returning its
+left value $b$ instead of a different right value $d$, necessarily
+$d<b$, so the right root passes $M_b$. Following the right child
+adds no test. At an $h$ node, following the first child adds no test.
+Otherwise its first value is $d<b$, and a side child supplies $b$.
+That child's root and the first child's root are at most $b$.
+If the other side value $c$ is comparable with $b$, it must be at
+most $b$: a value $c>b$ would be selected on the chain $d<b<c$.
+Its root therefore passes $N_b$. If $c\parallel b$, selecting $b$
+means $E(b,c)$. The other side's root $q\leq c$ is also incomparable
+with $b$, and \eqref{owner:eq:passing-constant} gives $E(b,q)$.
+Thus every newly imposed guard test passes.
+
+For the second claim, follow the guarded occurrence upwards, starting
+at its value $b$. Suppose its current value is $q\geq b$.
+At a reset node entered from the right, the output is at least $q$.
+Entered from the left, the right root is at most $b$; its value $d$
+is therefore comparable with $b$, by the forest property. If $d\geq b$
+the output is already at least $b$; otherwise $d<b\leq q$ and reset
+returns $q$.
+
+At an $h$ node entered through its first child, the root bound suffices.
+Entered through a side child, the first root is at most $b$, so its
+value $d$ is comparable with $b$. Again $d\geq b$ suffices. Otherwise
+$d<b\leq q$. If the other side value $c$ is comparable with $q$,
+the determined chain or fork case returns an element at least $q$.
+If $c\parallel q$, then $c\parallel b$: a common lower element of
+$c,q$ would force comparability. Its root $z\leq c$ is likewise
+incomparable with $b$. The fitting guard gives $E(b,z)$; first
+\eqref{owner:eq:passing-constant} and then
+\eqref{owner:eq:passing-up} give $E(b,c)$ and $E(q,c)$.
+Thus $h(d,q,c)=q$. This proves both claims by induction along
+the occurrence path.
+
+Now let $s=t$ be an identity of $\mathbf F$. The two terms have
+the same root, as is seen on the projection subalgebra $\{A,B\}$.
+Their values under $v$ are therefore comparable. If they differ,
+write the larger one as $b$; it is nonminimal. The first claim gives
+a fitting guard on that side. Guard completeness gives a covering
+guard on the other side. It still fits: its ambiguity tests are a
+subset of the old ones, and its additional passing tests are implied
+by old tests or by the source value $b$. The second claim then says
+the other value is at least $b$, a contradiction. This proves every
+identity, without a cardinality restriction on $C$.
+Only (R2) and (R6) were used to reconstruct the forest order; the
+remaining four reset equations may therefore be omitted. Finally,
+the countermodel of \cref{owner:prop:four-variables} is conservative,
+so no presentation confined to three-variable identities can work
+even within this class.
+\end{proof}
+
+\begin{corollary}[Small models of the four-variable theory]
+\label{owner:cor:small-four-variable}
+Every algebra with at most five elements satisfying all four-variable
+identities of $\mathbf F$ belongs to $\operatorname V(\mathbf F)$.
+Thus any countermodel to the sufficiency of the entire four-variable
+theory has at least six elements.
+\end{corollary}
+\begin{proof}
+A conservative model satisfies $\Sigma$ and hence the theorem.
+If a model $C$ is not conservative, some basic operation produces a
+value $d$ different from each of its arguments. The set
+$C\setminus\{d\}$ therefore generates $C$ and has at most four
+elements. Any algebra generated by at most four elements and satisfying
+all four-variable identities of $\mathbf F$ satisfies every identity:
+express the values in a proposed countervaluation as terms in those
+generators, then substitute these terms into the identity. This would
+give a failing identity on at most four variables, a contradiction.
+\end{proof}
+
+The finite relative presentation should be distinguished from that
+entire four-variable theory. Over arbitrary algebras, even all
+seventeen equations of $\Sigma$ are insufficient.
+
+\begin{proposition}[The relative presentation is not a full basis]
+\label{owner:prop:relative-not-full}
+There is a four-element algebra satisfying $\Sigma$ that fails the
+valid three-variable identity
+\begin{equation}\label{owner:eq:insert-root}
+ h(x,y,z)=h(x,x\del y,z).
+\end{equation}
+\end{proposition}
+\begin{proof}
+Take the join semilattice on three incomparable elements $p,q,r$
+below a greatest element $\top$, and let reset be join. Define
+$h(x,y,z)=x\vee y\vee z$ except that
+$h(r,p,q)=h(r,q,p)=r$. Direct substitution verifies all seventeen
+equations of $\Sigma$; these finite universal checks are
+kernel-checked in the namespace \texttt{PresentationObstruction} of
+\path{lean/OwnerModels.lean}. Identity \eqref{owner:eq:insert-root}
+is valid on $\mathbf F$, also kernel-checked there. In the displayed
+model its two sides at $(x,y,z)=(r,p,q)$ are $r$ and $\top$.
+\end{proof}
+
+There is also an obstruction to obtaining a full basis by asserting
+that all subdirectly irreducible models are conservative.
+
+\begin{proposition}[A nonconservative irreducible model]
+\label{owner:prop:nonconservative-si}
+The variety generated by $\mathbf F$ has a four-element subdirectly
+irreducible member whose reset operation is not conservative.
+\end{proposition}
+\begin{proof}
+Use the carrier $\{0,p,q,1\}$. Set $x\del y=y$ except that
+$x\del0=1$ whenever $x\ne0$. Set $h(x,y,z)=x$ for $x\ne0$,
+and set
+\[
+ h(0,y,z)=
+ \begin{cases}
+ 0,&(y,z)\in\{(0,0),(p,q),(q,p)\},\\
+ 1,&\text{otherwise}.
+ \end{cases}
+\]
+In $\mathbf F^2$, the six elements
+\[
+ (N,N),\ (P,A),\ (A,P),\ (P,N),\ (N,P),\ (P,P)
+\]
+form a subalgebra. Map the first three to $0,p,q$, respectively,
+and the last three to $1$. This map preserves both operations and is
+surjective, placing the displayed algebra in
+$\operatorname V(\mathbf F)$. Its reset is not conservative, since
+$p\del0=1$.
+
+The partition with sole nonsingleton block $\{0,1\}$ is a congruence:
+on its three classes reset is right projection and $h$ is first
+projection. Every nonidentity congruence contains this pair. A pair
+involving $0$ is sent to $0,1$ by $x\mapsto x\del0$.
+The pair $p,q$ is sent to $1,0$ by $x\mapsto h(0,x,p)$.
+The pairs $p,1$ and $q,1$ are sent to $0,1$ by
+$x\mapsto h(0,x,q)$ and $x\mapsto h(0,x,p)$, respectively.
+Thus the displayed congruence is the monolith.
+\end{proof}
+
+The relative completeness proof is a written argument. The finite
+soundness, countermodel, and quotient certificates are checked separately.
+The unrestricted basis was proved by a different method above. In particular,
+the proposition prevents a reduction to conservative subdirect factors
+even for all models of the intended theory, before considering any
+possibly larger class defined by $\Sigma$.
+
+\subsection{Residual bounds and possible positive routes}
+
+One possible approach to the four-element expansion can be ruled out:
+its generated variety has no finite residual bound.
+
+\begin{proposition}[Reset models lift to the one-owner variety]
+\label{owner:prop:residual}
+Every algebra $(B,\del)$ in the reset variety has an expansion in the
+variety generated by $\mathbf F$, by defining
+\[
+ h_0(x,y,z)=(y\del x)\del(z\del x).
+\]
+This expansion has exactly the congruences of its reset reduct.
+Consequently the one-owner variety is residually large.
+\end{proposition}
+\begin{proof}
+In $\mathbf F$ the three values $B,N,P$ form a subalgebra. Their
+reset reduct is the three-element generator, and on them
+$H_a=h_0$: if the root is $B$ or $P$, both sides return the root;
+at $N$, both return $P$ exactly when one of the other arguments is
+$P$. These finite identities and closure are checked in
+\path{lean/OwnerModels.lean}.
+
+Take any identity of $\mathbf F$ and replace every $H_a$ by the
+displayed reset term. The resulting reset identity holds on that
+three-element subalgebra and hence in every reset model, by
+\cref{reset:thm:three}. Thus the proposed expansion satisfies every
+identity of $\mathbf F$, proving membership in its generated variety.
+Adding a term operation changes no congruences. The combs of
+\cref{reset:thm:comb,reset:cor:residual} therefore retain their
+monoliths after expansion and give subdirectly irreducible models of
+arbitrarily large cardinality.
+\end{proof}
+
+Residual largeness does not imply the absence of a finite basis;
+reset itself has both properties. The proposition concerns the
+one-owner expansion, not an expansion by all owned choices.
 
 There is a conditional route to a finite basis. Each owned choice is a semilattice operation, and for fixed $K$ the full finite-signature variety is congruence meet-semidistributive. Concretely, the semilattice witness terms displayed just before Willard's Theorem~2.1 satisfy his condition $C_2(T)$ when their product is interpreted as any fixed $\star_r$
 \cite{Willard2000}; the characterization then supplies meet-semidistributivity, and the expansion by other operations preserves those term identities. Willard's finite-basis theorem applies if the variety has a finite residual bound \cite{Willard2000}. Classifying quotients of the generator does not bound irreducibles throughout the variety, and reset's residual

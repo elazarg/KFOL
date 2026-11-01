@@ -1,0 +1,141 @@
+\subsubsection{Recognition and synthesis of one-owner tables}
+\label{app:owner-synthesis}
+
+Guard comparison decides equality of given terms. We now characterize
+which abstract tables are terms. Fix input positions $N$, $|N|=n$, and
+a candidate root $r$. A canonical candidate $\mathcal T$ has
+$\mathcal T_r=\{(\varnothing,\varnothing)\}$. For $j\ne r$ its
+family $\mathcal T_j$ is an antichain of pairs $(A,B)$ under coverage,
+with
+\[
+ r\in A,\qquad j\notin A,\qquad B\cap(A\cup\{j\})=\varnothing.
+\]
+Empty families are allowed. These conditions are necessary by root
+status and the canonical-table argument above. Write
+\[
+ \mathsf{ok}(j;C,D)\quad\Longleftrightarrow\quad
+ \exists(A,B)\in\mathcal T_j:\quad
+ A\subseteq C,\quad B\subseteq C\cup D\cup\{j\}.
+\]
+Thus the contribution with source $j$ and tests $(C,D)$ is already
+permitted by the candidate. This predicate is monotone as tests grow,
+where an ambiguity test implies a nonowner test.
+
+For each nonroot guard $(j,A,B)$ run the following finite saturation.
+Set $U=A\cup B\cup\{j\}$ and initialize $C=\{r\}$, $D=\varnothing$.
+Repeatedly choose $w\in A$ and $z\in U$ for which, putting
+$E=D\cup\{w,z\}$,
+\begin{equation}\label{owner:eq:saturation}
+ \mathsf{ok}(w;C,E)\quad\text{and}\quad
+ \mathsf{ok}(z;C,E),
+\end{equation}
+and replace
+\[
+ (C,D)\longmapsto
+ \bigl(C\cup\{w\},\ E\setminus(C\cup\{w\})\bigr)
+\]
+whenever this changes the state. At a fixed point accept the guard if
+\begin{equation}\label{owner:eq:finish}
+ \mathsf{ok}(j;C,D),\quad\text{or}\quad
+ \exists z\in U:\ 
+ \mathsf{ok}(j;C,D\cup\{j,z\})\ \land\
+ \mathsf{ok}(z;C,D\cup\{j,z\}).
+\end{equation}
+The root guard is accepted without a test. Reject a noncanonical input
+or any table with a rejected guard.
+
+\begin{theorem}[One-owner table synthesis]\label{owner:thm:synthesis}
+A canonical table is realized by a term in $\{\del,H_a\}$ if and only
+if every guard passes this saturation test. Recognition is polynomial
+in the table description, and an accepted table with $M$ guards has
+a realizing native tree of size $O(nM)$, constructible in polynomial
+time. The outcome does not depend on the order of enabled updates.
+\end{theorem}
+\begin{proof}
+Throughout saturation, $C\subseteq A$ and $C\cup D\subseteq U$.
+The rank $2|C|+|D|$ strictly increases at a changing update and is at
+most $2n$. An update never removes a test: replacing $N_w$ by $M_w$
+strengthens it. Enabled updates remain enabled under strengthening.
+Consequently exhaustive application terminates at the least fixed point
+above the initial state, independently of order.
+
+We first construct a term for an accepted guard. A one-hole path starts
+with $[-]\del x_r$, so the tests above the hole are
+$(\{r\},\varnothing)$ and its required root is $r$.
+An update using $w,z$ replaces the hole by
+\[
+ H_a(x_r,\ [-]\del x_w,\ x_z).
+\]
+The new hole again has root $r$. The two new contributions with sources
+$w,z$ have tests $(C,D\cup\{w,z\})$; they are permitted precisely
+by \eqref{owner:eq:saturation}. The contribution of $x_r$ is always
+permitted. The tests above the new hole are exactly the updated state:
+the $H_a$ frame adds $M_r,N_w,N_z$, and the reset frame adds $M_w$.
+Here $r\in C$ already.
+
+For the first alternative of \eqref{owner:eq:finish}, fill the hole with
+$x_j\del x_r$. For the second, fill it with $H_a(x_r,x_j,x_z)$.
+Every contribution is permitted by $\mathcal T$, and the displayed
+occurrence of $j$ has tests implied by $(A,B)$: only tests in $A$ and
+$U$ were introduced, and $N_j$ follows from the source itself.
+Thus this path is contained in the candidate and covers the requested
+guard. It has root $r$ and $O(n)$ nodes. Join these paths by reset.
+Same-root reset is their union, including when the common root is
+atomic, so the resulting term has exactly the candidate table.
+There are $M$ paths, giving size $O(nM)$.
+
+For necessity, take a term with table $\mathcal T$ and an occurrence
+supplying a minimal nonroot guard $(j,A,B)$. Follow its route from the
+root. At a reset, descending into its right child adds no tests and
+retains the root; discard the left child. Descending into the left child
+retains a frame $[-]\del x_v$, where $v$ is the right child's root.
+At $H_a$, descending into its first child adds no tests and retains the
+root; discard the other children. Descending into either other child
+retains a frame $H_a(x_v,[-],x_z)$, using symmetry of the last two
+arguments. Replace each off-path child by its root variable.
+This pruning preserves the chosen occurrence's tests and only removes
+other contributions, since each child's root contribution was already
+present. The resulting path is therefore contained in $\mathcal T$.
+
+Each nonterminal root $v$ of this path belongs to $A$, since leaving
+it adds $M_v$. Every companion $z$ belongs to $U$, since it adds $N_z$.
+Compare the path from outside to inside with a saturated state $(C,D)$.
+Inductively its accumulated tests are implied by $(C,D)$, and its
+current nonterminal root lies in $C$. This holds initially for $r$.
+If a reset frame leads to another nonterminal root $w$, the path's
+contribution of $w$ is permitted. Thus
+$\mathsf{ok}(w;C,D\cup\{w\})$ holds. The saturation rule with
+$w=z$ forces $w\in C$, and the induction continues. If an $H_a$
+frame leads to a nonterminal root $w$ with companion $z$, both of
+their contributions are permitted under $D\cup\{w,z\}$.
+At a fixed point the rule forces $w\in C$ and $z\in C\cup D$,
+again giving the induction. The last frame leads to the source $j$.
+A reset gives the first alternative of \eqref{owner:eq:finish}, and
+an $H_a$ frame gives its second alternative. The guard is accepted.
+
+Finally, each guard needs at most $2n$ changing updates. A full scan
+tests at most $n^2$ pairs using coverage against the supplied table.
+Both recognition and recording the constructing frames are polynomial.
+\end{proof}
+
+This also describes the one-owner term clone, including substitution.
+If inner tables have roots $r_i$, substitute them into an outer table
+by replacing each outer guard $(i,A,B)$ and inner guard $(j,C,D)$ of
+the $i$th table by
+\[
+ \left(j,\ C\cup\{r_\ell:\ell\in A\},\
+             D\cup\{r_\ell:\ell\in B\}\right),
+\]
+then normalize. The composite root is $r_{r}$, where $r$ is the outer
+root. Root status and the membership recurrence prove this formula
+directly. The synthesis theorem identifies exactly the tables on which
+these operations act; it is stronger than enumerating closure under
+the original operations.
+
+The implementation is in \path{checks/one_owner.py}.
+\path{checks/check_owner_synthesis.py} compares recognition with complete
+four-state term-function closure through arity three, giving free-algebra
+sizes $1,4,27$. At arity four it checks all $8000$ canonical candidates
+with a fixed root against independent exhaustive path search: $201$
+are realizable, hence there are $804$ four-ary term functions. These
+are finite checks of the written theorem, not a kernel formalization.
