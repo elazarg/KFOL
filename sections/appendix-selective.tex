@@ -1,4 +1,4 @@
-\section{Selective reset: a tractable family with several owners}
+\section{Selective reset with several blocking policies}
 \label{app:selective}
 
 The owner-count dichotomy of \cref{owner:cor:complexity} concerns the operations $H_r$ only, and it does not extend to all operations defined from owned choices. For distinct $a,b$, consider the ternary operation
@@ -118,9 +118,9 @@ by definition, and the negative literals pass because $D$ and $D'$ are disjoint.
 valuation for a satisfying assignment is unchanged.
 \end{proof}
 
-Disjointness is what this reduction uses. A shared blocking atom fails both tests, so the
-equation built from the unsatisfiable $x\land\lnot x$ is no longer valid. Whether nested or
-overlapping policies stay polynomial is open.
+Disjointness is what this full-equation reduction uses. A shared blocking atom fails both tests, so the
+equation built from the unsatisfiable $x\land\lnot x$ is no longer valid.
+Overlapping policies require a separate argument, developed below.
 
 \begin{corollary}[Two owners, polynomial equality]\label{selective:cor:G}
 For distinct $a,b$ and every $K\geq3$, the language $\{\del,G_{a,b}\}$
@@ -142,11 +142,356 @@ and possible-$a$ memberships stay fixed. Reset's selector semantics
 cannot distinguish these valuations. Thus this is a strict tractable
 extension of reset, even though two owners occur in its definition.
 
+\subsection{Least valuations for guards}
+
+With several policies, write $N_D^k(Y)$ for the passing test of policy
+$D$ at observer $k$. The root and membership recursions above still
+apply, with the policy named at each node. A guard consists of one
+source membership $k\in x_j$, ambiguity requirements, and passing
+requirements $N_D^k(x_i)$. There is at most one guard per native leaf.
+All tests are positive. A guard covers another when every requirement
+of the former follows from requirements of the latter, using
+ambiguity, source membership, and the inclusions between blocking sets.
+
+The useful sufficient condition is a least feasible vector of test
+values for each guard, with only its source containing $k$.
+If a disjunction of guards holds at this vector, one of its guards
+holds there and hence at every valuation satisfying the selected
+guard. Conversely, an uncovered guard gives a countervaluation at
+its least vector. Thus comparison reduces to pairwise guard coverage,
+rather than enumeration of valuations. The next results construct
+such vectors in different ways.
+
+\begin{theorem}[Nested policies]\label{selective:thm:nested}
+Let $K\geq3$ and let $\mathcal D$ be a finite family totally ordered by
+inclusion. Equation validity for
+$\{\del\}\cup\{R_D:D\in\mathcal D\}$ is polynomial in native term size.
+For fixed $K$ and $\mathcal D$, the list-based bound is $O(n^4)$.
+A failed equation has a singleton-or-pair countervaluation.
+\end{theorem}
+\begin{proof}
+Fix an observer $k$ and replace every test's blocking set by
+$E=D\setminus\{k\}$. A test with $E=\varnothing$ is true.
+If $E=I\setminus\{k\}$, replace its gate at an $R_D$ node by the
+ambiguity test on the second argument's root. This replacement is exact:
+the only nonambiguous passing value is $\{k\}$, whose unguarded
+second-argument contribution already contains $k$.
+
+The remaining distinct sets form a chain
+$\varnothing\ne E_1\subsetneq\cdots\subsetneq E_t
+\subsetneq I\setminus\{k\}$.
+Within a guard, ambiguity implies every passing test, as does source
+membership. Elsewhere retain only the largest required $E_s$ on each
+input. A weaker guard covers a stronger one exactly when they have the
+same source, its ambiguity requirements are included in the stronger
+ones, and each of its passing requirements follows from a stronger
+passing requirement or ambiguity. In particular,
+$N_{E_s}^k$ implies $N_{E_r}^k$ precisely when $E_r\subseteq E_s$.
+These implications prove soundness.
+
+For necessity choose the source as $\{k\}$, or a pair containing $k$
+if ambiguity is required. A nonsource required ambiguous is a pair
+omitting $k$, available because $K\geq3$. For a nonsource whose
+strongest requirement is $N_{E_s}^k$, choose an atom in
+$E_{s+1}\setminus E_s$ if $s<t$, and outside $E_t\cup\{k\}$ if
+$s=t$. It passes exactly $E_1,\ldots,E_s$. A nonsource with no
+passing requirement is an atom in $E_1$. If the chain is empty,
+choose any atom other than $k$. This realizes exactly the forced
+tests, and only the source contains $k$. Consequently an uncovered
+guard separates the two observations.
+
+Compare all $K$ observations. Each has at most $n$ guards of length
+$O(n)$; the same list comparison as in \cref{app:proofs-owner} gives
+$O(n^4)$ for fixed parameters. Removing endpoints and duplicate sets
+is polynomial preprocessing. The proof also gives a bound polynomial
+in $K$, the explicitly listed family, and $n$ when these vary.
+\end{proof}
+
+\subsection{Overlapping policies with spare representatives}
+
+For two policies, an atom different from $k$ has one of four passing
+patterns: neither test, only $N_D^k$, only $N_E^k$, or both. The
+corresponding regions are
+\[
+ A=D\cap E,\qquad B=D\setminus E,\qquad
+ C=E\setminus D,\qquad T=I\setminus(D\cup E).
+\]
+
+\begin{theorem}[Four represented patterns]\label{selective:thm:patterns}
+Suppose some $k$ has a representative other than itself in each of
+$A,B,C,T$. Equation validity for $\{\del,R_D,R_E\}$ is polynomial.
+The $k$ observation alone is equation-complete, and the same common
+guard comparison works for every configuration satisfying the premise.
+In particular, this holds when all four regions are nonempty and
+$K\geq5$.
+\end{theorem}
+\begin{proof}
+Compile the guards with two test labels, without observer-specific
+endpoint replacements. Coverage requires the same source, inclusion
+of ambiguity requirements, and inclusion of each label's requirements,
+allowing ambiguity or source membership to discharge either label.
+These implications are sound at every observer.
+
+Choose representatives $a\in A$, $b\in B$, $c\in C$, $t\in T$,
+all different from $k$. For an uncovered guard use $\{k\}$ or
+$\{k,a\}$ at its source according to its ambiguity requirement.
+At a nonsource required ambiguous use $\{a,t\}$. Elsewhere use the
+atoms $a,c,b,t$ for, respectively, no passing requirement, only $D$,
+only $E$, or both. These realize exactly the forced tests and only the
+source contains $k$. Any uncovered guard therefore separates the
+$k$ observations. Complete coverage implies equality at every observer,
+so this observation is equation-complete. Guard sizes give the same
+polynomial bound as above. If $K\geq5$, one of the four nonempty
+regions contains at least two roles; take $k$ in that region.
+\end{proof}
+
+\begin{theorem}[Covering, overlapping policies]\label{selective:thm:covering}
+Suppose $D,E$ are incomparable, overlap, and satisfy $D\cup E=I$.
+If $K\geq4$, equation validity for $\{\del,R_D,R_E\}$ is polynomial.
+One observer whose atomic pattern has a second representative is
+equation-complete.
+\end{theorem}
+\begin{proof}
+The three regions $A,B,C$ are nonempty. As $K\geq4$, choose $k$
+in a region containing at least two roles, and representatives
+$a\in A$, $b\in B$, $c\in C$, all different from $k$.
+There is no resolved nonobserver atom passing both tests. Instead,
+for every nonempty $Y$,
+\begin{equation}\label{selective:eq:joint}
+ N_D^k(Y)\land N_E^k(Y)\quad\Longleftrightarrow\quad
+ \operatorname{Amb}(Y)\lor k\in Y.
+\end{equation}
+
+Compile the common guard lists with the following additional rule:
+when both labels occur on the same input, replace them by ambiguity
+on that input. This is a rule for the whole list, rather than an
+equivalence of individual guards. To prove it exact, maintain the
+invariant that every compiled term has its root membership as an
+unguarded source. Reset preserves this invariant and creates no
+test collision. At an $R_D(x,y,z)$ node, a new collision can only be
+at $i=\rho(y)$, when adding $N_D^k(x_i)$ to a third-argument guard
+already requiring $N_E^k(x_i)$. By \eqref{selective:eq:joint}, the
+ambiguity replacement loses only the case $k\in x_i$. But $y$ has
+unguarded root source $i$, so the second-argument list already
+contains $\operatorname{Amb}(x_{\rho(x)})\land k\in x_i$.
+It covers every lost case. The same argument applies with $D,E$
+interchanged. This proves exactness inductively, without adding guards.
+
+The resulting guards require at most one label per nonsource,
+nonambiguous input. A least valuation uses atoms $a,c,b$ for no
+label, only $D$, or only $E$, respectively; use $\{a,b\}$ for
+nonsource ambiguity and $\{k\}$ or $\{k,a\}$ at the source.
+Exactly the forced tests hold. Coverage as in
+\cref{selective:thm:patterns} is therefore complete at $k$ and
+sound at every observer. The list-size bound is unchanged.
+\end{proof}
+
+When all four regions are nonempty, at $K=4$ each must be a singleton.
+Whichever observer is chosen then removes one of the required atomic patterns.
+\Cref{selective:thm:calibration} below shows that this absence changes
+the complexity: full equation validity is coNP-complete.
+
+\begin{proposition}[A hard observation of an easy algebra]
+\label{selective:prop:hard-view}
+If $D\cap E=\{k\}$ and both $D\setminus E$ and $E\setminus D$
+are nonempty, deciding equality of the $k$ observations on all
+valuations is coNP-complete. This can hold when full equation validity
+is polynomial.
+\end{proposition}
+\begin{proof}
+Use the two-policy clause reduction of
+\cref{selective:prop:disjoint}, now testing only membership of $k$.
+If the common baseline $W$ contains $k$, both sides contain it.
+Otherwise no input can be the atom $\{k\}$, so no input is a blocking
+atom for both policies. The UNSAT argument therefore applies to this
+observation: assign true exactly to blocking atoms of $D$; every false
+clause passes all its tests. For SAT choose
+$a\in D\setminus E$, $b\in E\setminus D$, use their atoms for the
+Boolean values, $z=\{a,b\}$, and the marker $c=\{k\}$. Every
+satisfied clause blocks the marker. Countervaluations have polynomial
+size, giving the matching coNP upper bound.
+
+For coexistence take $I=\{0,1,2,3,4\}$,
+$D=\{0,1,2\}$, and $E=\{0,3\}$. The $0$ observation is hard by
+this proposition; the $1$ observation is equation-complete by
+\cref{selective:thm:patterns}, so full equality is polynomial.
+\end{proof}
+
+There is no conflict between the two complexity statements. Full
+equality implies observational equality, but an observationally valid
+equation may fail fully. In the five-role example, the reduction of
+$x\land\lnot x$ is valid at observer $0$. At inputs
+$y=\{0\}$, $z=\{1,3\}$, and $c=\{4\}$, its full sides are
+$\{0,1,3,4\}$ and $\{0,1,3\}$.
+
+This also gives a finite-algebra example: the $31$-element algebra in
+the proposition has polynomial equation validity, whereas its
+$6$-element player-$0$ quotient has coNP-complete equation validity.
+The quotient exists by \cref{gen:cor:views}. Both sides of every
+reduction equation have root $z$, so they already agree on all
+nonobserver singleton statuses. Equality in this quotient therefore
+coincides, on the reduction, with equality of the $0$ observations.
+Every quotient valuation lifts to a winner-set valuation, giving
+hardness; the finite carrier gives the coNP upper bound. Hard
+homomorphic images of tractable finite algebras are known even for
+semigroups \cite{Seif2005}; here the quotient is an intrinsic player view.
+
+\subsection{The missing-pattern boundary}
+
+\begin{theorem}[Calibrating the observer]\label{selective:thm:calibration}
+On three roles, equation validity for two incomparable blocking
+policies is coNP-complete. On four roles it is coNP-complete when
+all four regions $A,B,C,T$ are nonempty.
+Consequently, for crossing policies with proper union, full equation
+validity is coNP-complete at $K=4$ and polynomial at every $K\geq5$.
+\end{theorem}
+\begin{proof}
+Disjoint policies are covered by \cref{selective:prop:disjoint}.
+The remaining three-role case is, up to renaming,
+$D=\{a,b\}$ and $E=\{a,c\}$. In the four-role case use the same
+sets and the fourth role $d$ outside both. We modify the clause
+reduction to ensure that any separating marker must be $a$.
+
+Write $L_F(v,U)=R_F(z,v,U)$. Use Boolean inputs $y_i$, a root input
+$z$, a marker input $q$, and calibration inputs $u_b,u_c$; add $u_d$
+in the four-role case. Let $W$ be the right reset comb of all the
+$y_i$ and calibration inputs, with base $z$. For each clause form
+$C_\gamma(q)$ by nesting $L_D(y_i,-)$ for positive literals and
+$L_E(y_i,-)$ for negative literals, as in the disjoint-policy reduction.
+Set
+\[
+ P=L_E(u_b,L_D(u_c,q)),
+\]
+inserting the additional gates $L_D(u_d,-)$ and $L_E(u_d,-)$ before
+$q$ in the four-role case. Let $R$ be the right reset comb over $W$
+whose added branches are all $C_\gamma(q)$, the two branches
+$L_D(u_b,q)$ and $L_E(u_c,q)$, and $q\del u$ for every calibration
+input $u$. Use the equation
+\begin{equation}\label{selective:eq:calibration}
+ P\del R=R.
+\end{equation}
+Its native tree size is linear in the CNF length.
+
+If $z$ is a singleton, both sides of the equation are that singleton.
+Otherwise $R$ is ambiguous and contains $W$. Any failure supplies a
+marker $k\notin W$ present in $P$ and absent from $R$. The calibration
+branches $q\del u$ force each $u$ to be nonambiguous. Nonemptiness
+and $k\notin W$ make each $u$ an atom different from $k$.
+The gates in $P$ require $u_b$ to pass $E$ and $u_c$ to pass $D$,
+whereas the two added $L$ branches force them to fail $D$ and $E$
+respectively. Hence $u_b=\{b\}$ and $u_c=\{c\}$. On four roles,
+the two additional gates in $P$ force $u_d=\{d\}$. Since all these
+inputs lie in $W$, the marker must be $k=a$.
+
+If the CNF is unsatisfiable, the observer-relative argument in
+\cref{selective:prop:hard-view} now applies: some false clause passes
+every test and puts the marker in $R$, a contradiction. If it is
+satisfiable, set true inputs to $\{b\}$, false inputs to $\{c\}$,
+$z=\{b,c\}$, $q=\{a\}$, and each calibration input to its named
+atom. Every clause blocks $a$, as do the added branches; all gates
+in $P$ pass it. This falsifies \eqref{selective:eq:calibration}.
+Thus the equation is valid exactly for UNSAT. The finite-carrier
+upper bound gives coNP-completeness. At three roles every incomparable
+pair is disjoint or has the overlapping form treated here; at four
+roles four nonempty regions are necessarily singletons. Combine with
+\cref{selective:thm:patterns} for the final assertion.
+\end{proof}
+
+In particular, duplicating any one of the four atomic patterns changes
+the four-role problem from coNP-complete to polynomial, while keeping
+the same native operations. The calibrated equation for
+$x\land\lnot x$ also separates the equational theories. For
+$D=\{0,1\}$, $E=\{0,2\}$ it is valid on four roles. On five roles,
+take $y=\{0\}$, $z=\{1,2\}$, $q=\{4\}$, and
+$(u_b,u_c,u_d)=(\{1\},\{2\},\{3\})$; its sides are $I$ and
+$\{0,1,2,3\}$. The extra role supplies a marker while all four
+atomic patterns remain represented by other roles.
+
+\begin{corollary}[Two-policy classification]\label{selective:cor:two-policies}
+Fix $K\geq3$ and two policies $D,E$. Equation validity for
+$\{\del,R_D,R_E\}$ has the following complexity:
+\begin{center}\small
+\begin{tabular}{ll}
+\toprule
+Policies & Complexity\\
+\midrule
+Comparable by inclusion & Polynomial\\
+Incomparable and disjoint & coNP-complete\\
+Incomparable and overlapping, every atomic pattern unique & coNP-complete\\
+Incomparable and overlapping, some atomic pattern repeated & Polynomial\\
+\bottomrule
+\end{tabular}
+\end{center}
+In the last two rows a pattern is one of the nonempty regions
+$D\cap E$, $D\setminus E$, $E\setminus D$, and
+$I\setminus(D\cup E)$; it is unique when that region is a singleton.
+\end{corollary}
+\begin{proof}
+Use \cref{selective:thm:nested,selective:prop:disjoint} for the first
+two rows. In the overlapping incomparable case there are three
+nonempty regions when $D\cup E=I$, and four otherwise. All are
+singletons exactly at $K=3$ or $K=4$, respectively, so use
+\cref{selective:thm:calibration}. If one is repeated, use
+\cref{selective:thm:covering,selective:thm:patterns}.
+\end{proof}
+
+\subsection{Families of overlapping policies can be hard}
+
+The policy parameter respects union and intersection through the
+following identities, for nonempty inputs:
+\begin{align}
+ R_{D\cup E}(X,Y,Z)&=R_D(X,Y,R_E(X,Y,Z)),
+ \label{selective:eq:policy-union}\\
+ R_{D\cap E}(X,Y,Z)&=R_D(X,Y,Z)\del R_E(X,Y,Z).
+ \label{selective:eq:policy-inter}
+\end{align}
+Indeed, passing the union test means passing both tests, and passing
+the intersection test means passing at least one. The rooted outputs
+have the same ambiguity status, so reset on the right of
+\eqref{selective:eq:policy-inter} takes their union exactly when
+needed.
+
+\begin{proposition}[Empty common intersection]\label{selective:prop:empty-inter}
+Fix a finite family of nonempty policies with empty total intersection.
+Equation validity for its rooted operations is coNP-complete at each
+fixed $K\geq3$. Three pairwise-overlapping policies already suffice.
+\end{proposition}
+\begin{proof}
+Choose a minimal subfamily with empty intersection. The intersection
+$D$ of all but its last member is nonempty and disjoint from that
+last nonempty member $E$. Identity
+\eqref{selective:eq:policy-inter} defines $R_D$, so apply the
+two-disjoint-policy reduction from 3-CNF UNSAT. Each clause nests at
+most three policy operations; expanding the fixed definition of $R_D$
+therefore costs a constant factor per clause. Reset can be expressed
+as $x\del y=R_E(y,x,x)$: in the combining right comb this duplicates
+only the bounded-size left clause, preserving a polynomial tree-size
+bound. This bounded-depth argument is needed because arbitrary nested
+expansion of \eqref{selective:eq:policy-inter} can duplicate a
+continuation exponentially. The coNP upper bound follows by direct
+evaluation of a countervaluation. For the last assertion take
+$\{a,b\},\{b,c\},\{a,c\}$ on three distinct roles.
+\end{proof}
+
+Thus chains are tractable, pairwise overlap alone does not suffice for
+families, and some crossing pairs with spare representatives are
+tractable even though one of their observations is hard. A complete
+classification for three or more policies remains open. The
+two-policy classification is complete.
+
 \path{lean/ChainGuards.lean} proves \eqref{selective:eq:inner}, the
 membership recursions, generic coverage completeness, the executable
 checker, policy independence, and the endpoint reset identities.
-The polynomial bound is the written guard-size argument.
+\path{lean/MixedPolicies.lean} proves the policy lattice identities,
+the abstract least-point coverage principle, joint-test absorption,
+and the marker, UNSAT,
+and SAT certificates for the two-policy reduction, including the
+observer-relative shared-blocker condition. The nested and four-pattern
+classifications, covering-policy normalization, calibration reduction,
+CNF assembly, and complexity bounds have written proofs
+above; the mixed-policy checkers are not yet formalized in Lean.
 \path{checks/check_chain_guards.py} independently evaluates the original
 two-owned-choice expression and all nontrivial blocking policies at
-$K=3,4,5$. The issue is the arrangement of tests and the preserved root,
-not merely how many owners occur.
+$K=3,4,5$. \path{checks/check_mixed_policies.py} compares mixed-policy
+guard tests and least-guard separators with exact winner-set truth
+tables, and independently checks the small hardness reductions.

@@ -67,6 +67,20 @@ class Valuations:
             a, b = (self.evaluate(t, cache) for t in term.args)
             ambiguous = self.multiple(b)
             result = tuple(y | (ambiguous & x) for x, y in zip(a, b))
+        elif term.op == 'policy':
+            blockers, root, left, right = term.args
+            root, left, right = (self.evaluate(t, cache) for t in (root, left, right))
+            blocked = 0
+            for r in range(self.roles):
+                if blockers & (1 << r):
+                    others = 0
+                    for s, row in enumerate(left):
+                        if s != r:
+                            others |= row
+                    blocked |= left[r] & ~others
+            ambiguous = self.multiple(root)
+            result = tuple(x | (ambiguous & (y | (z & ~blocked)))
+                           for x, y, z in zip(root, left, right))
         elif term.op == 'owned':
             owner, a, b = term.args
             a, b = self.evaluate(a, cache), self.evaluate(b, cache)
