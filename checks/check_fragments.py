@@ -67,6 +67,18 @@ class Valuations:
             a, b = (self.evaluate(t, cache) for t in term.args)
             ambiguous = self.multiple(b)
             result = tuple(y | (ambiguous & x) for x, y in zip(a, b))
+        elif term.op == 'owned':
+            owner, a, b = term.args
+            a, b = self.evaluate(a, cache), self.evaluate(b, cache)
+            def singleton(rows):
+                others = 0
+                for i, row in enumerate(rows):
+                    if i != owner:
+                        others |= row
+                return rows[owner] & ~others
+            collapse = singleton(a) | singleton(b)
+            result = tuple((collapse if i == owner else 0) | ((x | y) & ~collapse)
+                           for i, (x, y) in enumerate(zip(a, b)))
         else:
             owner, root, left, right = term.args
             root, left, right = (self.evaluate(t, cache) for t in (root, left, right))

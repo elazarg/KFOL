@@ -1,4 +1,4 @@
-Rational Owned Choice: Player Views, Sharp Tests, and Intrinsic Fragments
+Rational Owned Choice: Finite Algebras and Sealed Rounds
 
 The paper is main.tex. Select it as the main document in Overleaf and use
 pdfLaTeX, or build locally with TeX Live and latexmk:
@@ -15,14 +15,15 @@ proofs, attribution, and proof-status inventory are all in the paper.
 
 Known source refutation: Ghani--Kupke--Lambert--Nordvall Forsberg's
 "Compositional Game Theory with Mixed Strategies" (arXiv:2009.06831v1)
-has finite counterexamples to the left identity in Lemma 16 and the
-associativity in Theorem 15. Convex closing does not repair associativity.
-The paper gives a self-contained proof in sections/sealed-rounds.tex,
+has finite counterexamples to the unit law Id;K = K in Lemma 16
+(a right unit in the source's circle notation) and associativity in
+Theorem 15. Convex closing does not repair associativity.
+The paper gives a self-contained proof in sections/appendix-open-games.tex,
 "Finite obstructions to the proposed mixed open-game category". The
 Lean proofs are pinned to GameTheory v1-final, revision
-9a97eb703249436707e1fffcc4efd5ead30d6754, under
+02898a2d8b918f9b106a683420ca78c99867560e, under
 GameTheory/Languages/OpenGame/{Mixed,Examples}.lean:
-https://github.com/elazarg/GameTheory/tree/9a97eb703249436707e1fffcc4efd5ead30d6754/GameTheory/Languages/OpenGame
+https://github.com/elazarg/GameTheory/tree/02898a2d8b918f9b106a683420ca78c99867560e/GameTheory/Languages/OpenGame
 This refutes the specified composition, not probabilistic open games
 generally. The paper's closed-round SE recursion is proved separately.
 
@@ -31,7 +32,7 @@ Layout:
     main.tex          Paper entry point
     references.bib    Bibliography
     sections/         Paper sections, appendices, and macros
-    lean/             Twelve Lean proof modules, using only Std
+    lean/             Fourteen Lean proof modules, using only Std
     checks/           Python models and independent finite checks
     lean-toolchain    Lean version (4.34.1)
     build/            Generated PDF, upload ZIP, and compiled proofs
@@ -75,10 +76,16 @@ including internal role permutations, with no added axioms.
 
 lean/OwnerFragments.lean proves exact guard comparison and executable
 checker correctness for reset with one H owner, including single-outsider
-completeness and a common five-element generator for every K >= 3. It
+completeness for every K >= 3. It
 also checks observational comparison with the observer's own H and one
-other owner's H. checks/check_one_owner.py compares these tables with
+other owner's H. lean/OwnerModels.lean proves four-element completeness
+and the three-state obstruction used in the minimum-generator proof;
+the order-algebra reduction uses a published theorem. checks/check_one_owner.py compares these tables with
 the existing winner-set evaluator and constructs three-role separators.
 
 Earlier drafts and tracked reviews are available in Git history through
 69f763a. Uncommitted reviews are retained locally in .git/local-notes/.
+
+lean/RawFragments.lean checks semantic certificates for all raw-pair
+hardness reductions; checks/check_raw_pairs.py evaluates the actual native
+reductions. Syntax assembly and complexity bounds have written proofs.

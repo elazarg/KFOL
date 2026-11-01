@@ -1,4 +1,4 @@
-\section{One owner, one table, five states}
+\section{One owner, one table, four states}
 \label{sec:one-owner}
 
 The two-$H$ hardness theorem has an exact lower boundary. One $H_a$
@@ -123,7 +123,14 @@ No right guard does. This is the required countervaluation.
 
 This also gives canonical tables: for each source, remove its index and
 the $M$ indices from its $N$ tests, then retain only the minimal guards
-under \eqref{owner:eq:cover}. Minimal antichains are unique because
+under \eqref{owner:eq:cover}. No minimal guard has its source in its $M$ tests. Indeed, a guard
+$(j,A,B)$ with $j\in A$ has a covering guard $(j,A',B')$ with
+$j\notin A'$, $A'\subseteq A$, and $B'\subseteq B$.
+Induct on the term: if its root is $j$, the root occurrence supplies
+$(j,\varnothing,\varnothing)$; otherwise apply the induction hypothesis
+to the contributing child and reattach the node's tests. Any newly
+attached $M$ test is the node's different root.
+Minimal antichains are unique because
 \cref{owner:thm:guards} characterizes implication exactly.
 For trees of total size $n$, there are at most $n$ guards, each with
 $O(n)$ tests. Direct list-based compilation and all-pairs coverage give
@@ -161,54 +168,90 @@ By \eqref{owner:eq:forget}, it also gives mutual coverage for the owner,
 hence equality of that membership. These memberships determine the set.
 \end{proof}
 
-There is a small algebra behind this result. For a fixed outsider $k$,
-retain the three flags
+There is a smaller concrete algebra behind this result. Choose
+$b\notin\{a,k\}$ and put
 \[
- q(S)=(m,e,p)=
-   (|S|>1,\ S=\{a\},\ k\in S).
+ A=\{a\},\quad B=\{b\},\quad N=\{a,b\},\quad P=\{a,b,k\}.
 \]
-There are exactly five possible states:
-\begin{center}
-\begin{tabular}{lccc l}
-\toprule
-State & $m$ & $e$ & $p$ & Three-role representative\\
-\midrule
-Owner singleton & 0&1&0&$\{a\}$\\
-Observed singleton & 0&0&1&$\{k\}$\\
-Other singleton & 0&0&0&$\{b\}$\\
-Observed ambiguity & 1&0&1&$\{k,a\}$\\
-Other ambiguity & 1&0&0&$\{a,b\}$\\
-\bottomrule
-\end{tabular}
-\end{center}
-Write $d(p)=(1,0,p)$. On these five states define
-\begin{align*}
- u\del v&=\begin{cases}v,&\neg m_v,\\
-                         d(p_u\lor p_v),&m_v,\end{cases}\\
- h(u,v,w)&=\begin{cases}u,&\neg m_u,\\
- d(p_u\lor(\neg e_v\land\neg e_w\land(p_v\lor p_w))),&m_u.
+The set $\mathbf C=\{A,B,N,P\}$ is closed under reset and $H_a$.
+Both operations are conservative: each returns one of its arguments.
+Their complete description is particularly short:
+\[
+ x\del y=y\quad\text{except }P\del N=P,
+\]
+\[
+ H_a(x,y,z)=\begin{cases}
+ P,&x=N,\ y\ne A,\ z\ne A,\ \text{and }(y=P\text{ or }z=P),\\
+ N,&x=N\text{ and the preceding condition fails},\\
+ x,&x\ne N.
  \end{cases}
-\end{align*}
-Call this algebra $\mathbf F$.
+\]
+Its reset reduct is the forest order with root $P$, child $N$, and
+leaves $A,B$. Thus one owner adds one resolved atom to the three-state
+reset chain.
 
-\begin{theorem}[A common five-element generator]\label{owner:thm:five}
-For every $K\geq3$ and role $a$, the algebra
-$(\Pow(I);\del,H_a)$ has exactly the identities of $\mathbf F$.
-In particular its equational theory is independent of $K$.
+\begin{theorem}[A minimum four-element generator]\label{owner:thm:four}
+For every $K\geq3$ and role $a$, $(\Pow(I);\del,H_a)$ has exactly the
+identities of $\mathbf C$. No algebra with fewer than four elements
+generates this equational theory.
 \end{theorem}
 \begin{proof}
-The displayed recursion makes $q$ a surjective homomorphism; the five
-representatives prove surjectivity. Thus every identity of the winner-set
-algebra holds in $\mathbf F$. Conversely, an identity holding in
-$\mathbf F$ gives equality of the outsider flag $p$ on every valuation.
-By \cref{owner:thm:guards}, this implies mutual guard coverage, and
-\cref{owner:thm:one-table} supplies equality of the complete winner sets.
+First retain the five flags used to evaluate the recursion:
+\[
+ (m,e,p)=(|S|>1,\ S=\{a\},\ k\in S).
+\]
+The five possible flag states form a homomorphic image of the winner-set
+algebra. Identify the two states with $p=1$: observed singletons and
+observed ambiguous sets. This is a congruence. In a root position both
+already give observed victory; in every other position the rules use
+only $e$ and $p$, which agree. The four resulting states have exactly
+the displayed operations on $\mathbf C$.
+An identity of $\mathbf C$ therefore preserves the outsider's $p$ flag
+on all winner-set valuations. By \cref{owner:thm:one-table} it is a full
+identity. Conversely, $\mathbf C$ is a subalgebra, so it satisfies every
+winner-set identity. This proves completeness and independence of $K$.
+
+For minimality, any smaller generator has a nonassociative reset reduct.
+By Freese et al.'s Theorem~3.2 \cite{FreeseEtAl2002}, such a reduct
+contains $O_{2+1}$; hence a three-element candidate is precisely that
+algebra. Name its elements $Z,U,T$, with
+\[
+ u\del Z=Z,\quad u\del T=T,\quad
+ Z\del U=U\del U=U,\quad T\del U=T.
+\]
+Write $h$ for the candidate ternary operation. With $s=h(x,y,c)$,
+the valid identities $s\del x=s=x\del s$ force
+$h(Z,y,c)=Z$, $h(T,y,c)=T$, and $h(U,y,c)\in\{U,T\}$.
+The following identities are also valid in $\mathbf C$:
+\[
+ h(x,y,y)=y\del x,\qquad h(y,y,c)=c\del y,\qquad
+ h(x,y,x)=y\del x.
+\]
+Put $t=(c\del y)\del x$. The equation $s\del t=t$ is false in
+$\mathbf C$, at $(x,y,c)=(N,B,P)$. On the three-element chain,
+the root bounds and these identities allow it to fail only when
+$h(U,Z,T)=T$.
+The equation $(c\del x)\del s=s$ is also false in $\mathbf C$, at
+$(N,A,P)$. In a three-element candidate its failure requires
+$h(U,y,T)=U$ for some $y$. The binary-minor identities give value $T$
+when $y=U,T$, while the first required failure gives $T$ when $y=Z$.
+This is impossible. Smaller reducts are associative, so they cannot
+generate the theory either.
 \end{proof}
 
-The outsider suffices here at the level of identities: two terms with
-the same outsider observation \emph{on all valuations} are equal.
-This does not say that the five-state map is injective on winner sets,
-or that one observer determines the value of an individual execution.
+The four-state quotient is also the exact outsider contextual quotient
+when parameters are permitted. The observation distinguishes $P$ from
+the other states; the context $P\del x$ distinguishes $N$ from $A,B$;
+and $H_a(N,x,P)$ distinguishes $A$ from $B$.
+One outsider suffices for identities, meaning equality of its observation
+on \emph{all valuations}; it does not determine the complete winner set
+of an individual execution.
+
+The completeness theorem, conservative operations, required identities,
+and generic three-state obstruction are kernel-checked in
+\path{lean/OwnerModels.lean}. The reduction of arbitrary smaller
+models to the three-element chain uses the published theorem, not a
+formalized universal-algebra library.
 
 \subsection{The exact owner boundary}
 
@@ -254,7 +297,8 @@ chain of outsider tests, not atom preservation by itself. Union loses
 that root law and already gives owner-free hardness. A second other
 owner supplies incompatible singleton tests and recovers Boolean
 constraints. The guard criterion, executable comparison, one-table
-completeness, five-element theorem, and compilation to the existing
+completeness, four-element completeness theorem, and compilation to the existing
 owned-choice semantics are kernel-checked in
-\path{lean/OwnerFragments.lean}. The polynomial size bounds and the
+\path{lean/OwnerFragments.lean} and \path{lean/OwnerModels.lean}.
+The polynomial size bounds and the
 complexity deductions are written arguments.

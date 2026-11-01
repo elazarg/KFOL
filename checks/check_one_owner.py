@@ -112,6 +112,15 @@ def check_five_states():
                  (not left[1] and not right[1] and (left[2] or right[2])))
                 if root[0] else root)
 
+    def four(v):
+        return 'P' if v[2] else 'A' if v[1] else 'N' if v[0] else 'B'
+
+    def reset_four(x, y):
+        return 'P' if x == 'P' and y == 'N' else y
+
+    def h_four(x, y, z):
+        return ('P' if y != 'A' and z != 'A' and 'P' in (y, z) else 'N') if x == 'N' else x
+
     states = set()
     comparisons = 0
     x, y, z = map(var, range(3))
@@ -128,9 +137,32 @@ def check_five_states():
             av, bv, cv = (view(value, owner, observer) for value in inputs)
             assert view(denote(reset(x, y), inputs), owner, observer) == reset_view(av, bv)
             assert view(denote(h(owner, x, y, z), inputs), owner, observer) == h_view(av, bv, cv)
+            assert four(reset_view(av, bv)) == reset_four(four(av), four(bv))
+            assert four(h_view(av, bv, cv)) == h_four(four(av), four(bv), four(cv))
             comparisons += 1
-    print(f"Five-state generator: surjectivity at K=3,4,5 and {comparisons} "
-          "native-operation homomorphism comparisons passed.")
+    concrete = (1, 2, 3, 7)
+    for values in product(concrete, repeat=3):
+        assert denote(reset(x, y), values) in values
+        assert denote(h(0, x, y, z), values) in values
+    # All three-element candidates satisfying the root absorption bounds.
+    def r(x, y):
+        return (2 if x == 2 else 1) if y == 1 else y
+    surviving = 0
+    for row in product((1, 2), repeat=9):
+        def hh(x, y, z):
+            return row[3*y + z] if x == 1 else x
+        if not all(hh(a, b, b) == r(b, a) and hh(b, b, c) == r(c, b)
+                   and hh(a, b, a) == r(b, a) for a, b, c in product(range(3), repeat=3)):
+            continue
+        surviving += 1
+        first = all(r(hh(a, b, c), r(r(c, b), a)) == r(r(c, b), a)
+                    for a, b, c in product(range(3), repeat=3))
+        second = all(r(r(c, a), hh(a, b, c)) == hh(a, b, c)
+                     for a, b, c in product(range(3), repeat=3))
+        assert first or second
+    assert surviving == 4
+    print(f"Four-state generator: {comparisons} homomorphism comparisons at K=3,4,5; "
+          "conservative concrete subalgebra and all 512 smaller candidates passed.")
 
 
 if __name__ == '__main__':

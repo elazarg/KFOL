@@ -31,6 +31,10 @@ def h(owner, root, left, right):
     return Term('h', (owner, root, left, right))
 
 
+def owned(owner, left, right):
+    return Term('owned', (owner, left, right))
+
+
 def denote(term, values):
     if term.op == 'var':
         return values[term.args[0]]
@@ -40,6 +44,10 @@ def denote(term, values):
         left, right = term.args
         value = denote(right, values)
         return value if value.bit_count() == 1 else denote(left, values) | value
+    if term.op == 'owned':
+        owner, left, right = term.args
+        left, right = denote(left, values), denote(right, values)
+        return 1 << owner if left == 1 << owner or right == 1 << owner else left | right
     owner, root, left, right = term.args
     root = denote(root, values)
     if root.bit_count() == 1:
@@ -55,19 +63,38 @@ def right_comb(pieces, base, operation=reset):
     return base
 
 
-def union_reduction(cnf, variables):
+def union_reduction(cnf, variables, operation=union):
     assert variables >= 1
     t, z, c = (var(i) for i in range(2 * variables, 2 * variables + 3))
     rails = [var(i) for i in range(2 * variables)]
     base = right_comb(rails + [t], z)
-    bad = [reset(reset(c, union(rails[2*i], t)), union(rails[2*i+1], t))
+    bad = [reset(reset(c, operation(rails[2*i], t)), operation(rails[2*i+1], t))
            for i in range(variables)]
     rhs = right_comb(bad, base)
     lhs = c
     for clause in cnf:
-        guard = reduce(union, (rails[2*i + int(not sign)] for i, sign in clause), t)
+        guard = reduce(operation, (rails[2*i + int(not sign)] for i, sign in clause), t)
         lhs = reset(lhs, guard)
     return reset(lhs, rhs), rhs
+
+
+def raw_reduction(cnf, variables, second_owner=1):
+    """Two raw choices; second_owner=None gives raw choice plus union."""
+    rails = [var(i) for i in range(2 * variables)]
+    if any(not clause for clause in cnf):
+        return rails[0], rails[0]
+    if not cnf:
+        return rails[0], rails[1]
+    first = lambda x, y: owned(0, x, y)
+    second = union if second_owner is None else lambda x, y: owned(second_owner, x, y)
+    marker = var(2 * variables)
+    base = reduce(second, rails)
+    bad = [first(first(marker, rails[2*i]), rails[2*i+1]) for i in range(variables)]
+    right = reduce(second, bad, base)
+    guards = [reduce(second, (rails[2*i + int(not sign)] for i, sign in clause))
+              for clause in cnf]
+    left = reduce(first, guards, marker)
+    return second(left, right), right
 
 
 def h_reduction(cnf, variables, a=0, b=1):

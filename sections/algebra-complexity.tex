@@ -25,59 +25,9 @@ winner leaves. This is polynomial in tree-term size, independently of
 the exponential size of the carrier and even when $K$ is binary encoded.
 Evaluation and comparison are therefore polynomial. Validity is in coNP.
 
-For hardness fix distinct roles $a,b$ and put $P(S)=[S=\{a\}]$.
-On arbitrary nonempty inputs,
-\[
- P(S\ow a T)=P(S)\lor P(T),\qquad
- P(S\ow b T)=P(S)\land P(T).
-\]
-The first equality is the absorbing-owner test. For the second, a
-collapse to $\{b\}$ cannot pass $P$; otherwise a union is $\{a\}$ exactly
-when both nonempty operands are $\{a\}$. Compile a constant-free monotone
-Boolean formula $F$ to $\widehat F$ by replacing disjunction and
-conjunction with these choices and leaving variables unchanged.
-Then $P(\widehat F(v))=F(P\circ v)$ for every valuation, by induction.
-
-The standard dual-rail reduction gives hardness directly. Given a CNF
-formula, handle an empty clause by the fixed valid equation $x=x$,
-and a CNF with no clauses by the fixed invalid equation $x=y$.
-For the remaining $\varphi(z_1,\ldots,z_n)$, replace positive occurrences
-of $z_i$ by $p_i$ and negative occurrences by $n_i$, producing a monotone
-formula $\Phi(p,n)$. Put
-\[
- A=\left(\bigwedge_i(p_i\lor n_i)\right)\land\Phi(p,n),
- \qquad B=\bigvee_i(p_i\land n_i).
-\]
-The equation $A\lor B=B$ fails exactly when $A=1$ and $B=0$.
-Those conditions choose exactly one rail for every variable and satisfy
-$\varphi$. Conversely any satisfying assignment provides such rails.
-To reflect this Boolean equation as equality of winner sets, let $W$
-be the union of all rail variables, expressed using a balanced fold of
-$J$. Every constant-free term $u$ over those variables satisfies
-$u(v)\subseteq W(v)$. Hence the constant-free gate
-\[
- G_W(u)=u\ow a W
- =\begin{cases}
- \{a\},&u=\{a\}\text{ or }W=\{a\},\\
- W,&\text{otherwise}
- \end{cases}
-\]
-gives the identity
-\[
- G_W(\widehat A\ow a\widehat B)=G_W(\widehat B).
-\]
-If $\varphi$ is unsatisfiable, the Boolean predicates agree on every
-valuation. When $W=\{a\}$ both sides are $\{a\}$; otherwise the gate
-maps equal predicates to the same winner set. If $\varphi$ is satisfiable,
-assign each true rail $\{a\}$ and each false rail $\{b\}$.
-Then $W=\{a,b\}$, $A=1$, and $B=0$, so the displayed identity fails.
-These formulas use no Boolean constants in $A,B$.
-
-Thus CNF unsatisfiability reduces to constant-free equation validity.
-It is coNP-complete by the standard SAT theorem \cite{Cook1971}.
-The balanced expansion of $W$ has $O(n^2)$ size: each $J$ uses its two
-arguments twice. Formula sizes and their owned-choice translations are
-polynomial, with no constants or switches. Hardness at $K=3$ also gives
+For hardness, \cref{thm:raw-pairs} below gives a linear reduction
+using just two distinct owned operations. It uses neither constants,
+role switches, nor derived union. Fixed-$K$ hardness also supplies
 uniform hardness.
 \end{proof}
 
@@ -265,3 +215,94 @@ former, and the displayed equation makes this inclusion strict.
 The edge guards express proper colourings of a complete graph. A fresh
 marker requires an unused role, which is precisely what fails at $K=n$.
 Thus role dependence can return even when no operation names an owner.
+
+\subsection{Every pair of basic operations is hard}
+
+\begin{theorem}[Raw-signature dichotomy]\label{thm:raw-pairs}
+Fix $K\geq3$. For a signature chosen from
+$\{\star_r:r\in I\}\cup\{\cup,\del\}$, equation validity is
+polynomial-time decidable if the signature has at most one operation,
+and coNP-complete otherwise. Each minimal hard pair has a linear-size
+reduction in its native tree syntax.
+\end{theorem}
+\begin{proof}
+A single owned operation and union are semilattices: equality is equality
+of variable supports. Reset has the polynomial algorithm of
+\cref{reset:thm:three}. The empty signature permits only variables.
+Nonvalidity has a polynomial valuation certificate at fixed $K$.
+For hardness we reduce CNF unsatisfiability, using the standard
+SAT completeness theorem \cite{Cook1971}.
+It remains to cover four types of distinct pairs. Reset with union is
+\cref{thm:owner-free-hardness}.
+
+For two owners $a\ne b$, write $\odot=\star_b$. Given a CNF with at
+least one clause, all clauses nonempty, and $n\geq1$, use rails
+$p_i,n_i$ and marker variable $m$. Put
+\begin{align*}
+ W&=p_1\odot n_1\odot\cdots\odot p_n\odot n_n,\\
+ b_i&=m\star_a p_i\star_a n_i,\qquad
+ R=b_1\odot\cdots\odot b_n\odot W,\\
+ u_C&=\mathop{\bigodot}_{\ell\in C}\ell,\qquad
+ A=m\star_a u_{C_1}\star_a\cdots\star_a u_{C_q}.
+\end{align*}
+The equation is $A\odot R=R$. Associativity makes the displayed folds
+unambiguous. Empty clauses and empty conjunctions are handled by fixed
+valid and invalid equations respectively.
+
+For a satisfying Boolean assignment, choose $c\notin\{a,b\}$, assign
+true rails $\{c\}$, false rails $\{a\}$, and $m=\{b\}$.
+Every $b_i$ is $\{a\}$ and $R=\{a,c\}$, whereas each clause value
+contains $c$ and $A$ contains $b$. The equation fails.
+
+Conversely suppose the CNF is unsatisfiable. If a rail is $\{b\}$,
+$W=R=\{b\}$ and absorption proves the equation. Otherwise every
+clause fold is a union and differs from $\{b\}$. Each $b_i$ also
+differs from $\{b\}$: an $a$-fold equals that different singleton only
+when all its inputs do. Thus $R$ is a union containing $W$, and
+$A\ne\{b\}$. It suffices to prove $A\subseteq R$.
+If $A=\{a\}$, either $m=\{a\}$, making every $b_i=\{a\}$, or
+some $u_C=\{a\}$, already contained in $W$. Otherwise $m$ and all
+$u_C$ differ from $\{a\}$ and $A=m\cup\bigcup_C u_C$.
+If a pair of rails both differs from $\{a\}$, its $b_i$ retains $m$.
+If no such pair exists, assign each variable so that its false literal
+has rail $\{a\}$. Unsatisfiability supplies an all-false clause,
+whose fold is $\{a\}$, a contradiction. Hence $m\subseteq R$,
+and the equation holds.
+
+For $\{\star_a,\cup\}$ use exactly the same construction with
+$\odot=\cup$. The $\{b\}$ cases are unnecessary; the containment
+argument and the same three-role countervaluation apply.
+
+For $\{\del,\star_a\}$ use \cref{thm:owner-free-hardness}'s construction,
+replacing every explicit union by $\star_a$. The reset comb $W$ still
+contains all rails and $t$ whenever $z$ is ambiguous. Every new guard
+is contained in that baseline. An outside marker fails the equation
+only if all clause guards are ambiguous while no rail pair has both
+its guards ambiguous. For any nonempty clause,
+\[
+ \left|t\star_a\mathop{\star_a}_{\ell\in C}\ell\right|>1
+ \quad\Longrightarrow\quad
+ \exists\ell\in C:\ |\ell\star_a t|>1.
+\]
+To verify this implication, an ambiguous fold has no input equal to
+$\{a\}$. If $t$ is ambiguous, any clause literal gives the witness.
+If $t=\{r\}\ne\{a\}$, the fold is a union and some literal differs
+from $\{r\}$, giving the witness. The unsatisfiable-rails argument now
+forces a conflicting pair, contrary to failure.
+For a satisfying assignment choose distinct $a,b,d$ and set
+$t=\{b\}$, false rails $\{b\}$, true rails $\{d\}$,
+$z=\{b,d\}$, and $c=\{a\}$. No guard operand is $\{a\}$,
+so every replaced union agrees with its old value and the marker
+separates the equation as before. This proves the final pair case.
+All constructions use each clause and rail only a bounded number of
+times. Hardness passes to every larger signature.
+\end{proof}
+
+The contrast with \cref{sec:one-owner} is exact: raw choice next to reset
+is hard even with one owner, whereas putting that choice under a
+preserved root in $H_a$ gives polynomial equality.
+\path{lean/RawFragments.lean} proves the fold tests, common absorption
+argument, second-owner absorption, and generic UNSAT transfer for the
+owned guards. The CNF syntax assembly, size bounds, and complexity
+conclusions are written proofs; \path{checks/check_raw_pairs.py}
+evaluates the actual native reductions independently.

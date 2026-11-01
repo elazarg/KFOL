@@ -38,8 +38,12 @@ and the generic finite-colouring obstruction.\\
 \texttt{OwnerFragments} & Native root status and guard semantics,
 complete coverage criterion and explicit three-role separators,
 executable observational and full-equation checkers, one-outsider-table
-completeness, a common five-element generator, and compilation to
-full owned choice.\\
+completeness and compilation to full owned choice.\\
+\texttt{RawFragments} & Owned-fold tests, raw-pair absorption,
+second-owner absorption, and generic UNSAT transfer for owned guards.\\
+\texttt{OwnerModels} & Four-element completeness, conservative operations,
+generator identities and nonidentities, root absorption bounds, and
+the generic three-state obstruction.\\
 \texttt{SealedRounds} & Diagonal-stage security and unique Nash payoff
 over an ordered field, rational-generation arithmetic, reciprocal
 terms, and the impossibility of a finite summary for all threshold probes.\\
@@ -64,10 +68,16 @@ semantic certificates under the stated baseline-containment hypotheses,
 including both absorption and fresh-marker separation. Assembly of
 the syntactic reductions, their polynomial tree sizes, and the final
 complexity statements are written proofs in \cref{sec:complexity}.
+\texttt{RawFragments.lean} additionally checks the semantic fold,
+absorption, and guard-transfer certificates for the raw-pair reductions;
+it does not formalize the CNF syntax assembly or polynomial reductions.
 For the tractable fragment, \texttt{OwnerFragments.lean} proves the
 generic guard criterion and executable checker correctness, including
 \path{Term.single_table_equation_iff}, \path{Term.equationB_correct},
-and \path{Term.five_element_complete}. Polynomial size bounds and the
+and, in \texttt{OwnerModels.lean}, \path{Term.four_element_complete}.
+The minimum-generator proof uses Freese et al.'s three-element
+subalgebra theorem externally; its remaining ternary obstruction is
+kernel-checked as \path{three_state_obstruction}. Polynomial size bounds and the
 observer-relative complexity dichotomy are written deductions in
 \cref{sec:one-owner}.
 The colouring proof has a generic Lean pigeonhole/guard certificate;
@@ -98,8 +108,13 @@ valuation at $K=3$, and sample $K=4,5$, with explicit singleton-or-pair
 separators. Two-owner checks compare both owners' guard semantics for
 $303$ terms on every $7^3$ valuation and test $4000$ separators,
 including an equation on which only the outsider disagrees. The
-five-state projection is also checked on all $33509$ triples of values
-at $K=3,4,5$. Separate
+four-state projection is also checked on all $33509$ triples of values
+at $K=3,4,5$, together with the conservative concrete model and all
+$512$ smaller candidate expansions. The raw-pair checks cover all
+$604$ two-variable CNFs at $K=3$: $16807$ valuations per equation
+for the raw-choice pairs and $823543$ for reset with owned choice.
+At $K=4$ all $11$ one-variable CNFs are checked on $3375$ and
+$759375$ valuations respectively. Separate
 models execute dependent phase and sealing rules. These computations
 check their finite implementations, not the conversion or normalization
 metatheory of the dependent data calculus.
@@ -164,12 +179,20 @@ contains the hard core. The lower boundary is sharper:
 for reset with union, which has no owners, and for two owners'
 idempotent atom-preserving $H$ operations. Neither removing owners nor
 requiring atom preservation alone ensures tractability.
+\Cref{thm:raw-pairs} strengthens the raw boundary to every distinct
+pair of basic operations. In particular reset plus raw $\star_a$ is
+hard, whereas reset plus guarded $H_a$ is tractable.
 \Cref{owner:cor:complexity} closes the lower boundary: reset plus one
 fixed $H_a$ has polynomial equality, while adding a second distinct
-$H$ makes it coNP-complete. Its common five-element generator also
+$H$ makes it coNP-complete. Its common four-element generator also
 shows that this tractable theory is independent of $K\geq3$.
-A finite basis for this five-element expansion is not supplied by the
-polynomial guard algorithm; that is a separate presentation question.
+A finite basis for this minimum four-element expansion is not supplied
+by the polynomial guard algorithm. This is a smaller presentation target
+than the full core. Its abstract guard tables also lack a realizability
+criterion analogous to reset's: canonical comparison of tables extracted
+from terms does not characterize which tables can occur. The present
+polynomial bounds concern trees; shared subexpressions require a separate
+size analysis.
 
 \subsection{Dependent and hidden interaction}
 

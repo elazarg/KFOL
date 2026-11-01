@@ -91,6 +91,15 @@ def check():
     assert marginal(fair_diagonal, (0,)) == marginal(fair_diagonal, (1,)) == fair
     assert fair_diagonal != independent(fair, fair)
 
+    # Honest indifferent argmax decisions admit all action laws. Their
+    # composite admits products, but prefixing the composite by Id takes
+    # convex closure, admitting this correlated mixture of point products.
+    def is_product(law):
+        return law == independent(marginal(law, (0,)), marginal(law, (1,)))
+    assert is_product(pair0) and is_product(pair1)
+    assert not is_product(fair_diagonal)
+    assert mixture(F(1, 2), pair0, pair1) == fair_diagonal
+
     # Convex-equivalent sources F0 and F cease to be equivalent after ;H:
     # conv(E(F0;H)) has equal coordinates; E(F;H) admits independent fair bits.
     assert all(x == y for x, y in fair_diagonal)
