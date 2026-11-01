@@ -1,145 +1,153 @@
 \section{Introduction}
 
-Existential and universal quantification distinguish two opposed seats.
-A player-owned quantifier instead names who supplies the witness:
-$\Q_r(x:A).G(x)$. No player is permanently the verifier or the environment.
-The local interface is familiar: the owner supplies a value, the other
-participants receive it, and every continuation uses that same value.
-What remains to be chosen is how to observe the interaction.
+A quantifier can be read as a move. In the evaluation game of first-order
+logic \cite{Hintikka1973}, one player supplies witnesses for $\exists$,
+another supplies them for $\forall$, and a sentence is true just when the
+first player has a winning strategy. On this reading $\exists$ and $\forall$
+are not really two binders. They are one binder with two possible owners.
+It is then natural to ask what happens when there are more than two players.
 
-We study a finite rational-play observation. Each terminal has one
-winner; each player prefers its own win and is indifferent between all
-other winners. Full strategies specify actions at every history,
-including those excluded by the player's own earlier decisions.
-For a finite public game $G$, let $B(G)$ be the set of winners attained
-by its pure subgame-perfect equilibrium profiles. Backward induction gives
+Write $\Q_r(x:A).G$ for the game in which player $r$ chooses a value $x$ of
+type $A$, in full view of everyone, after which play continues as $G$. No
+player is permanently the verifier, and none is permanently the environment.
+This syntax is not new: player-indexed connectives and quantifiers, together
+with role permutations, appear in Abramsky's game semantics for multi-agent
+logics \cite{Abramsky2007}, in the logics and algebras of Olde Loohuis and
+Venema \cite{OldeLoohuisVenema2010}, and in the multirole logic of Xi and Wu
+\cite{XiWu2023}. The question we take up is semantic. What does such a game
+\emph{mean}, and when should two of them count as the same?
+
+With two players and opposed objectives the answer is classical: ask who has
+a winning strategy. With three players that answer says very little.
+Consider the game in which player $c$ chooses whether $a$ or $b$ wins:
+\[
+ \at a\ch c\at b.
+\]
+Nobody can force a win here, and a semantics of guarantees sees nothing in
+it. Yet something is plainly going on. Player $c$ loses either way, so
+nothing in $c$'s interests settles the matter, and either of the others may
+end up winning. Placed inside a larger game, that possibility matters.
+
+We therefore observe rational play rather than guarantees. For a finite
+public game $G$, let $B(G)$ be the set of players who win in some pure
+subgame-perfect equilibrium of $G$, so that $B(\at a\ch c\at b)=\{a,b\}$.
+Backward induction then gives a very simple rule. At a node owned by $r$,
+with branches of values $S$ and $T$,
 \[
  S\star_r T=\begin{cases}
  \{r\},&S=\{r\}\text{ or }T=\{r\},\\
  S\cup T,&\text{otherwise}.
  \end{cases}
 \]
-A child in which every equilibrium wins for $r$ absorbs. A child merely
-admitting an $r$-win does not: a losing off-path equilibrium can support
-the owner's indifference at the parent.
+If a branch guarantees $r$'s win, $r$ takes it and nothing else survives.
+Otherwise every possibility is retained. The one point that deserves a
+moment's thought is that a branch in which $r$ merely \emph{might} win does
+not absorb. ``Might'' refers to which equilibrium is played inside that
+branch, and against an equilibrium in which $r$ loses there, $r$ is
+indifferent and may go either way.
 
-For two players, ground terms have only the singleton values and recover
-Boolean join and meet after selecting a viewpoint. With three players,
-every nonempty winner set is generated. Distributivity fails, yet the
-algebra has strong structural restrictions. We identify those restrictions
-and the small calculi they determine.
+Every finite public game thus has a value among the nonempty subsets of the
+players, and these values compose. This paper is a study of the resulting
+algebra. It has $2^K-1$ elements and is defined in one line. For two players its
+ground terms are Boolean logic in disguise. From three players on it is something else:
+distributivity fails, and no representation by Boolean meets and joins
+exists. Yet the algebra is far from shapeless, and its structure can be
+determined rather exactly.
 
-\paragraph{Main results.}
-For each finite role set of size $K\geq3$, we establish the following.
-\begin{enumerate}
-\item \textbf{Sharp input tests.} Every failed full-signature equation has
-a singleton-or-pair countervaluation. Every singleton and pair is necessary,
-giving the unique minimum fixed test domain of size $K(K+1)/2$
-(\cref{sec:pair-tests}). Intermediate outputs still range over all values.
-\item \textbf{An intrinsic core.} A full term is idempotent exactly when
-it has no winner constants and every accumulated leaf permutation is
-identity. Its operation is then expressible by choices and variables
-alone (\cref{gen:thm:core}). Optimal diagonal tests have logarithmic size.
-A common-source theorem constrains simultaneous output requirements
-(\cref{gen:thm:source}).
-\item \textbf{Player perspectives.} Without internal switches, one player's
-possible-win observation has exactly $K+1$ contextual values. The $K$
-views give a faithful, irredundant subdirect representation
-(\cref{sec:perspectives,gen:cor:views}). We classify all congruences;
-internal switching reduces them to a chain of ambiguity thresholds
-(\cref{app:congruences}).
-\item \textbf{An exact binary fragment.} Binary idempotent atom-preserving
-operations are the projections and the two orientations of reset. Reset
-terms have canonical prerequisite tables and an exact antimatroid
-representation with polynomial equality, recognition, counterexamples,
-and synthesis (\cref{sec:reset}). Its generator is the established
-order algebra $O_{2+1}$, whose six-equation basis gives a complete calculus.
-\item \textbf{Complexity and composition.} Equation validity is
-coNP-complete already without constants or switches
-(\cref{sec:complexity}). Hardness already holds for owner-free reset
-with union and for two atom-preserving ternary $H$ operations.
-Every pair of raw operations from owned choice, union, and reset is hard,
-while every single operation is tractable; reset with union also has strictly different theories as $K$ increases.
-We classify the $751$ three-role unary operations,
-the general ambiguity-action quotient and its two-permutation fibers,
-and the difference between independent copies, uniform equilibrium
-selection, and shared hidden decisions (\cref{app:contexts,app:ambiguity}).
-\item \textbf{An exact tractable owner boundary.} Reset plus one $H_a$
-has polynomial equality and the same theory for every $K\geq3$.
-One outsider's guard table suffices for all equations; a common
-four-element algebra generates the identities, and four is minimum. For an observer $k$,
-polynomial equality extends to $H_k$ and one other owner's $H$;
-two other owners give coNP-completeness (\cref{sec:one-owner}).
-\item \textbf{A complete-revelation interface.} Finite commit--reveal
-rounds compose on sets of mixed SPE winner distributions, equal to SE
-values of the serial implementation
-(\cref{sec:sealed-rounds}). A scalar fragment implements parallel sum
-and generates every rational win probability. Three roles and Boolean
-commitments already give infinitely many contextual possible-win
-values, ruling out a finite exact extension of the winner-set algebra.
-\end{enumerate}
+\paragraph{What we find.}
+Our results fall into five groups.
 
-These are results about a specified algebraic semantics. They do not
-assert a dependent type theory or a cut theorem for arbitrary hidden games.
-The round recursion requires full public disclosure at its boundaries.
-The dependent execution and disclosure results in \cref{app:dependent}
-make that boundary precise. Reducing full strategies to executable plans
-preserves execution but can lose subgame perfection. Publishing dependent
-data requires stable binding and a permitted local context. These
-interfaces are not identified by an unproved composition principle.
+\emph{Equations have small counterexamples.} Intermediate results of a term
+may range over all winner sets, but its inputs need not. Every failed
+equation already fails when each variable has one or two possible winners,
+and every such input is needed. The resulting test domain, of size
+$K(K+1)/2$, is optimal uniformly in the number of players and variables
+(\cref{sec:pair-tests}).
 
-\paragraph{Established ingredients.}
-Owned choices, player-indexed quantifiers, and role permutations occur in
-Abramsky's multi-agent game semantics \cite{Abramsky2007}. Olde Loohuis and
-Venema develop player-indexed logics and algebras using winning-strategy
-observations \cite{OldeLoohuisVenema2010}. Our observation is possible SPE
-winners with all ties retained; individual forcing does not define it.
-Full contingent strategies and dependent game trees have established
-treatments \cite{Rubinstein1991,EscardoOliva2023}. Finite backward induction
-supplies the starting algebra.
+\emph{Idempotency picks out a core.} A term of the full language, with winner
+constants and internal role permutations, is idempotent exactly when it can
+be written with owned choices and variables alone (\cref{sec:intrinsic}).
+On this core each player's view has only $K+1$ states
+(\cref{sec:perspectives}). A common-source theorem shows what determinism
+costs: an idempotent rule that always returns a unique winner on unique-winner
+inputs can do nothing there except project one of them.
 
-Xi and Wu's multirole logic supplies role-indexed connectives and
-quantifiers with multiparty cut elimination \cite{XiWu2023}. This is
-the closest proof-theoretic precursor to the binder motivating our
-semantics. Multiparty coherence \cite{CarboneEtAl2016} and dependent
-command/response interaction \cite{HancockSetzer2000} are further
-foundations for the dependent interface in \cref{app:dependent}.
+\emph{One small fragment is completely understood.} The binary operations of
+that kind are the projections and \emph{reset}: keep a resolved right operand,
+otherwise take union (\cref{sec:reset}). Reset has polynomial equality and a
+representation by antimatroids. Its three-element generator turns out to be a
+known order algebra, whose published finite basis gives a complete calculus.
 
-The proposed probabilistic open-game category \cite{GhaniEtAl2020}
-has finite formal counterexamples to its unit and associativity laws
-\cite{GameTheoryOpenGameObstructions2026}. We reproduce the obstruction
-in \cref{se:sec:open-game-obstruction}. The complete-revelation recursion
-uses a direct SE argument and does not invoke that composition theorem.
+\emph{Tractability ends abruptly, and at an exact place.} Equality is
+coNP-complete. Owned choice, union, and reset are each easy alone, and every
+pair of them is hard (\cref{sec:complexity}). Yet reset with one owner's
+guarded choice stays polynomial and has a minimum generator of four elements.
+For an individual observer, hardness begins exactly when two \emph{other}
+owners are present (\cref{sec:one-owner}).
 
-We use the known $\operatorname{Pol}(\iota_3)=S_2$ classification for
-atomic expressivity \cite{Szendrei2012}, the factorpower of the symmetric
-group for ambiguity actions \cite{GanyushkinMazorchuk1995,Mazorchuk2009},
-and standard contextual congruences and closure operators
-\cite{BlokPigozzi1989,Font1993,Crapo1967}. For reset we use the order
-algebra, finite basis, related path normal forms, and residual-largeness
-result of Freese et al.\ \cite{FreeseEtAl2002}, and the known minimal clone
-\cite{Waldhauser2006}. Dependency structures with choice and their
-antimatroid correspondence are established in
-\cite{BazermanMinichielloPuzio2023}.
+\emph{Beyond public choice, probabilities cannot be avoided.} Commit--reveal
+rounds with complete disclosure compose exactly, but on sets of winner
+distributions rather than winner sets. With three players, no finite
+winner-set algebra can reach them (\cref{sec:sealed-rounds}).
 
-The contribution is the structure of possible-SPE-winner semantics:
-sharp tests, intrinsic syntactic elimination, exact tractable and hard
-fragment boundaries, and the finite-to-infinite transition at sealed
-rounds. The prerequisite tables specialize the older path forms to
-mixed winner-set valuations and give explicit algorithms and
-substitution; \cref{reset:rem:priority} details that relationship.
-Established results are used directly in the proofs and are not counted
-as new classifications. The comparisons identify the results supplied
-by the cited sources; priority for the remaining guard and forest
-connections is not established by those comparisons.
+The appendices also contain classifications that the main text only touches on: all
+congruences, which internal switching reduces to a chain of ambiguity thresholds; the $751$
+three-role unary operations; and the general ambiguity-action quotient with its two-permutation
+fibers.
 
-\paragraph{Organization.}
-The main text develops the game algebra, player observations, pair tests,
-intrinsic core, complexity, reset calculus, one-owner fragment, and
-fully revealed sealed rounds. The appendices contain
-the complete unary, congruence, ambiguity-monoid, and forest-model
-arguments, the mixed open-game obstruction, and dependent execution
-and disclosure. The paper
-contains the mathematical statements and proofs; the accompanying Lean
-and Python sources supply the verification described in
-\cref{sec:verification}.
+\paragraph{What we do not claim.}
+These are results about one specified semantics. Apart from the calculus for
+reset, which is imported, we give no proof system, and a finite equational
+basis for the full algebra or its core remains open. Nor do we give a
+dependent type theory, or a cut theorem for hidden games. The round recursion
+requires full public disclosure at its boundaries.
+\Cref{app:dependent} sets out interfaces that such a theory would have to
+respect: reducing full strategies to executable plans preserves execution
+but can lose subgame perfection, and publishing dependent data requires
+stable binding and a permitted local context.
+
+\paragraph{Relation to existing work.}
+Olde Loohuis and Venema's algebras observe winning strategies; our observation
+is possible SPE winners with all ties retained, and individual forcing does
+not define it. Xi and Wu's multirole logic has multiparty cut elimination and
+is the closest proof-theoretic precursor to our binder. Full contingent
+strategies and dependent game trees have established treatments
+\cite{Rubinstein1991,EscardoOliva2023}, and finite backward induction supplies
+the starting algebra. Multiparty coherence \cite{CarboneEtAl2016} and dependent
+command/response interaction \cite{HancockSetzer2000} are further foundations
+for the dependent interface.
+
+We rely on established mathematics throughout, and we use it directly: the
+classification $\operatorname{Pol}(\iota_3)=S_2$ for atomic expressivity
+\cite{Szendrei2012}; the factorpower of the symmetric group for ambiguity
+actions \cite{GanyushkinMazorchuk1995,Mazorchuk2009}; standard contextual
+congruences and closure operators \cite{BlokPigozzi1989,Font1993,Crapo1967};
+the order algebra, finite basis, related path normal forms, and
+residual-largeness result of Freese et al.\ \cite{FreeseEtAl2002}; the known
+minimal clone of Waldhauser \cite{Waldhauser2006}; and the dependency
+structures with choice of Bazerman et al.\ \cite{BazermanMinichielloPuzio2023}.
+None of these is counted here as a new classification.
+
+The contribution is the structure of possible-SPE-winner semantics: sharp
+tests, intrinsic syntactic elimination, exact tractable and hard fragment
+boundaries, and the transition from finite to infinite at sealed rounds. The
+prerequisite tables specialize the older path forms to mixed winner-set
+valuations, with explicit algorithms and substitution
+(\cref{reset:rem:priority}). The comparisons above identify what the cited
+sources supply. Priority for the remaining guard and forest connections is not
+established by those comparisons.
+
+Finally, the probabilistic open-game category proposed by Ghani et al.\
+\cite{GhaniEtAl2020} has finite counterexamples to its unit and associativity
+laws \cite{GameTheoryOpenGameObstructions2026}, which we reproduce in
+\cref{se:sec:open-game-obstruction}. Our round recursion is proved directly and
+does not use that composition.
+
+\paragraph{How to read this paper.}
+The main text states the results and explains why they hold, giving complete
+arguments where these are short. Longer proofs are collected in
+\cref{app:proofs}. The remaining appendices contain the full unary, congruence,
+ambiguity-monoid, and forest-model developments, the open-game obstruction, the
+dependent interface, and the details of our finite checks. \Cref{tab:status}
+records, for each main result, whether it is kernel-checked in Lean, proved on
+paper, or imported from the literature.

@@ -1,22 +1,23 @@
-\section{Player observations and small test domains}\label{sec:perspectives}
-This section uses $\mathbf A_I$, with winner constants and owned choices
-but no internal role switches. The full-signature comparison is
-\cref{view:thm:sym}; \cref{gen:cor:views} shows why these perspectives
-also apply intrinsically to all idempotent definable operations.
+\section{What one player can see}\label{sec:perspectives}
 
-\subsection{Exactly what one player can observe}
+A winner set records a good deal: there are $2^K-1$ of them. Suppose we care about a
+single player $k$, and ask only whether $k$ can win. How much of the set then matters?
+The right way to pose the question is contextually, since a value may affect $k$'s
+prospects only after passing through a surrounding game. In this section we work in
+$\mathbf A_I$, with winner constants and owned choices but no internal role switches;
+\cref{gen:cor:views} will show why the answer also applies intrinsically to every
+idempotent definable operation.
 
-Fix $k\in I$. An observer asks whether $k$ is a possible winner after a
-term context has used the input. Put
+Put
 \[
  S\equiv_k T\quad\Longleftrightarrow\quad
  \forall f\in\operatorname{Pol}_1(\A),\quad
        k\in f(S)\ \Longleftrightarrow\ k\in f(T).
 \]
-Here the polynomial may repeat the input arbitrarily and use all ground
-constants. This is the standard contextual, or Leibniz, congruence of the
-logical matrix whose designated values are the sets containing $k$
-\cite{BlokPigozzi1989,Font1993}. Computing it is the specific problem.
+Here the polynomial may repeat its input arbitrarily and use all ground constants. This
+is the standard contextual, or Leibniz, congruence of the logical matrix whose designated
+values are the sets containing $k$ \cite{BlokPigozzi1989,Font1993}. What is specific to our
+setting is the answer.
 
 \begin{theorem}[Exact one-player quotient]\label{view:thm:view}
 For nonempty $S,T\subseteq I$,
@@ -34,41 +35,25 @@ There are exactly $K+1$ classes:
 This is the coarsest congruence preserving the possible-win observation
 for $k$.
 \end{theorem}
-\begin{proof}
-For nonempty $S,T$, direct calculation gives
-\[
- S\ow r T=\{i\}\ \Longleftrightarrow\
- \begin{cases}
- S=\{i\}\text{ or }T=\{i\},&r=i,\\
- S=T=\{i\},&r\ne i.
- \end{cases}
-\]
-Also, membership of the owner $r$ is simply the disjunction of its
-membership in the two inputs. For $k\ne r$, membership of $k$ is
-\[
- (k\in S\text{ or }k\in T)\ \land\ S\ne\{r\}\ \land\ T\ne\{r\}.
-\]
-These equations show that the right-hand side of~\eqref{view:eq:view} is a
-congruence, hence is preserved by every context.
 
-Conversely, the identity context tests membership of $k$. For $i\ne k$,
-the context $x\ow i\{k\}$ excludes $k$ exactly when $x=\{i\}$. These
-contexts distinguish all the listed cases. The class $\nv$ is inhabited
-because there are two distinct roles other than $k$.
-\end{proof}
+\begin{idea}
+Two calculations do the work. For $k\ne r$, the role $k$ belongs to $S\ow r T$ exactly when
+it belongs to $S$ or $T$ and neither input is $\{r\}$; and the result equals a singleton
+$\{i\}$ only under tests of the same kind. So membership of $k$, together with the tests
+``$S=\{i\}$'', is closed under every operation: this information is a congruence.
+Conversely none of it can be dropped. The identity context tests $k$, and the context
+$x\ow i\{k\}$ excludes $k$ exactly when $x=\{i\}$. Each other player's singleton is a
+trap, which $k$ must be able to recognize. The class $\nv$ is inhabited because there are
+two roles other than $k$. Details are in \cref{app:proofs-views};
+\texttt{sameView\_own} and \texttt{contextualAt\_iff} prove the congruence and its
+contextual characterization in Lean.
+\end{idea}
 
-\texttt{sameView\_own} and \texttt{contextualAt\_iff} prove the
-congruence and its contextual characterization generically in Lean.
-Ground constants suffice to represent arbitrary polynomial parameters
-because union realizes every nonempty subset.
-
-Write $C_k=\A/{\equiv_k}$. Its operations have a short explicit form.
-For owner $r\ne k$, an input $a_r$ absorbs. Without that absorber, an
-input $\pv$ gives $\pv$; two equal atoms $a_i$ give $a_i$; all other
-cases give $\nv$. For owner $k$, omit the absorbing-$a_r$ case.
-Equivalently, each operation is the join of a simple order: distinct
-non-owner atoms join to $\nv$, then comes $\pv$, and an owner atom
-$a_r$, when present, sits above everything.
+Write $C_k=\A/{\equiv_k}$. Its operations have a short description. For an owner $r\ne k$, an
+input $a_r$ absorbs. Without that absorber, an input $\pv$ gives $\pv$, two equal atoms $a_i$
+give $a_i$, and all other cases give $\nv$. For owner $k$, omit the absorbing case. Thus each
+operation is the join of a simple order: distinct non-owner atoms join to $\nv$, then comes
+$\pv$, and an owner atom $a_r$, when present, sits above everything.
 
 \begin{corollary}[Faithful family of small perspectives]\label{view:cor:product}
 The canonical map
@@ -85,22 +70,23 @@ Each coordinate is a quotient homomorphism. If two inputs differ, some
 $k$ belongs to exactly one of them, and their $k$ coordinates differ.
 \end{proof}
 
-This retains possible SPE winners. It is not the Boolean guarantee
-representation: $\{k\}$ and every ambiguous set containing $k$ are
-\emph{identified} in $C_k$, whereas individual forceability distinguishes
-them. The family of all perspectives jointly recovers every membership
-bit. Role renaming transports $C_k$ to $C_{\pi k}$ without privileging
-one observer.
+This is not the Boolean guarantee representation. The sets $\{k\}$ and every ambiguous set
+containing $k$ are \emph{identified} in $C_k$, whereas individual forceability distinguishes
+them. The difference is one of observation. If we observe only whether a result equals a
+designated singleton, every ambiguous set becomes contextually indistinguishable
+(\cref{game:prop:obs}), and what remains is the coordinatewise structure of Olde Loohuis and
+Venema's guarantee algebra \cite[Definition~3.20]{OldeLoohuisVenema2010}, restricted to its
+empty and singleton values. Possible winners retain what guarantees discard. Role renaming
+transports $C_k$ to $C_{\pi k}$, so no observer is privileged.
 
-It also supplies ordinary finite logical matrices: designate $\pv$ in
-$C_k$ and interpret consequence by preservation of that designation.
-Generating a truth-table proof system for a finite matrix is standard;
-the content here is the explicit smallest contextual matrix.
+The views also supply ordinary finite logical matrices: designate $\pv$ in $C_k$ and interpret
+consequence by preservation of that designation. Generating a truth-table proof system for a
+finite matrix is standard; the content here is the explicit smallest contextual matrix.
 
 \subsection{Optimal fixed input tests, at every arity}
 
-Call $D\subseteq\Pow(I)$ a complete input test domain if, for every arity
-$n$ and every pair of terms $f,g$,
+The views have an immediate practical consequence. Call $D\subseteq\Pow(I)$ a \emph{complete
+input test domain} if, for every arity $n$ and every pair of terms $f,g$,
 \[
  f=g\text{ on }\Pow(I)^n\quad\Longleftrightarrow\quad f=g\text{ on }D^n.
 \]
@@ -115,46 +101,16 @@ A domain $D$ is complete exactly when:
 The second condition says that the intersection of the ambiguous members
 of $D$ is empty, with the intersection of an empty family taken as $I$.
 \end{theorem}
-\begin{proof}
-\emph{Sufficiency.} Suppose $f,g$ differ at a valuation $v$, and choose
-$k$ belonging to exactly one output. Choose an ambiguous $F\in D$
-omitting $k$. Replace each input set $S$ as follows:
-\[
- S\longmapsto
- \begin{cases}
- \{k\},&k\in S,\\
- \{i\},&S=\{i\},\ i\ne k,\\
- F,&\text{otherwise}.
- \end{cases}
-\]
-The replacement belongs to $D$ and has the same $k$-view. All operations
-preserve that view, so the outputs still differ at $k$. The replacement
-may use the \emph{same} $F$ for every variable. This proof works at any
-arity, not just for unary functions.
 
-\emph{Necessity of singleton tests.} The unary classification in \cref{game:thm:unary} realizes all functions
-\[
- \Reg(C,E)(S)=\begin{cases}\{i\}\cup E_i,&S=\{i\},\\
- S\cup C,&|S|\geq2,\end{cases}
- \quad E_i\subseteq C\setminus\{i\}.
-\]
-Fix $i$ and $k\ne i$. Take $C=I$, all rows full except
-$E_i=I\setminus\{i,k\}$. This function differs from the constant $I$
-only at $\{i\}$. Hence that singleton must be tested.
-
-\emph{Necessity of ambiguity coverage.} For each $k$, the same
-classification realizes
-\[
- F_k(S)=\begin{cases}S,&|S|=1,\\S\cup\{k\},&|S|\geq2.\end{cases}
-\]
-This differs from the identity exactly on ambiguous sets omitting $k$.
-At least one such input must be tested.
-\end{proof}
-
-The sufficiency statement is \texttt{complete\_test\_domain} in Lean.
-The necessity statement is \texttt{test\_domain\_necessary} in
-\texttt{Synthesis.lean}, using explicit unary synthesis and term
-separators. The cardinality corollary below remains a written argument.
+\begin{idea}
+If $f,g$ differ, some $k$ belongs to exactly one output. Replace every input by a
+representative in $D$ with the same $k$-view: $\{k\}$ if the input contains $k$, its own
+singleton if it is another singleton, and a fixed ambiguous $F$ omitting $k$ otherwise. Views
+are preserved by all operations, so the outputs still differ at $k$. Necessity uses explicit
+separating terms from the unary classification of \cref{game:thm:unary}. Both directions are
+in Lean, as \texttt{complete\_test\_domain} and \texttt{test\_domain\_necessary}; see also
+\cref{app:proofs-views}.
+\end{idea}
 
 \begin{corollary}[Sharp size]\label{view:cor:optimal}
 The minimum size of a complete fixed test domain is
@@ -164,16 +120,18 @@ The minimum size of a complete fixed test domain is
 For three roles, take every singleton and every pair. For four or more,
 take every singleton and any two disjoint pairs.
 \end{corollary}
-\begin{proof}
-Every singleton is necessary. One ambiguous set has nonempty
-intersection with itself, so at least two are needed. Two disjoint pairs
-suffice for $K\geq4$. At $K=3$, every ambiguous set has size at least
-two, so any two intersect. All three pairs are necessary and sufficient.
-\end{proof}
 
-For a fixed observed player, an even smaller tailored domain consists of
-all $K$ singletons and one fixed pair omitting that player. Thus an
-equation can be checked in $K$ quotient algebras on $K+1$ states, or on a
-single fixed input alphabet of the optimal size above. The latter input
-alphabet is not a subalgebra: intermediate outputs may be larger sets.
-No claim is made that it is a smaller carrier with the same operations.
+For a fixed observed player, an even smaller tailored domain consists of all $K$ singletons and
+one fixed pair omitting that player. So an equation can be checked in $K$ quotient algebras on
+$K+1$ states, or on a single input alphabet of the optimal size above. That alphabet is not a
+subalgebra, since intermediate outputs may be larger sets, and no claim is made that it is a
+smaller carrier with the same operations.
+
+\subsection{What internal switching changes}
+
+All of this depends on keeping roles external. Add internal permutations, and a congruence must
+be invariant under them. The rich lattice of congruences of $\A$ (\cref{view:thm:congruences})
+then collapses to a chain of $K$ ambiguity thresholds (\cref{view:thm:sym}), which retain sets
+up to some size and merge the rest. The algebra becomes subdirectly irreducible, and the
+one-player contextual quotient becomes equality: if $S,T$ differ at $i$, a permutation carrying
+$i$ to $k$ lets player $k$ see the difference. The small test domain fails too, as we now show.

@@ -1,11 +1,33 @@
-\section{Equational validity is coNP-complete}\label{sec:complexity}
+\section{Where tractability ends}\label{sec:complexity}
 
-The decision problem takes two ordinary tree terms, with any number of
-variables, and asks whether they agree at every nonempty-set valuation.
-Fixing $K$ fixes the algebra and its signature. In the uniform version,
-role names have binary encodings and permutations are explicit lists of
-their images. A succinct encoding of terms by shared recursive
-descriptions is not assumed.
+Pair tests give a decision procedure for equations, but an exponential one: $|D_2|^n$ valuations for
+$n$ variables. Reset, on the other hand, has polynomial equality. How much of owned choice can we add
+to reset and stay polynomial? Very little, as it turns out, and the boundary can be drawn exactly.
+\Cref{tab:complexity} summarizes the picture for fixed $K\geq3$.
+
+\begin{table}[ht]
+\centering
+\begin{tabular}{lll}
+\toprule
+Signature & Equation validity & Reference\\
+\midrule
+any one of $\star_r$, $\cup$, $\del$ & polynomial & \cref{thm:raw-pairs}\\
+any two of them, including $\star_a,\star_b$ with $a\ne b$ & coNP-complete & \cref{thm:raw-pairs}\\
+$\del$ and one $H_a$ & polynomial & \cref{owner:thm:one-table}\\
+$H_a$ and $H_b$ with $a\ne b$ & coNP-complete & \cref{thm:H-hardness}\\
+the core $\mathbf C_I$, or the full signature & coNP-complete & \cref{gen:thm:complexity}\\
+\bottomrule
+\end{tabular}
+\caption{The complexity of equations, for tree terms at fixed $K\geq3$.}
+\label{tab:complexity}
+\end{table}
+
+The decision problem takes two ordinary tree terms, with any number of variables, and asks whether they
+agree at every nonempty-set valuation. Fixing $K$ fixes the algebra and its signature. In the uniform
+version, role names have binary encodings and permutations are explicit lists of their images. A succinct
+encoding of terms by shared recursive descriptions is not assumed.
+
+\subsection{The core is hard}
 
 \begin{theorem}[Equational complexity]\label{gen:thm:complexity}
 For every fixed $K\geq3$, equational validity is coNP-complete, already
@@ -13,210 +35,49 @@ in the signature with only variables and owned choices, without winner
 constants or role switches. The uniform problem with $K$
 as part of the input is coNP-complete as well.
 \end{theorem}
-\begin{proof}
-For fixed $K$, a failed valuation is a polynomial certificate since the
-algebra is finite and term evaluation is linear up to fixed constants.
-For variable $K$, use the pair countervaluation theorem. A certificate
-lists at most two role labels per input variable. Evaluate terms using
-sparse sets: an owned node either collapses or unions its inputs, while
-a permutation preserves cardinality. Each intermediate set has size at
-most twice the number of variable leaves below it plus the number of
-winner leaves. This is polynomial in tree-term size, independently of
-the exponential size of the carrier and even when $K$ is binary encoded.
-Evaluation and comparison are therefore polynomial. Validity is in coNP.
 
-For hardness, \cref{thm:raw-pairs} below gives a linear reduction
-using just two distinct owned operations. It uses neither constants,
-role switches, nor derived union. Fixed-$K$ hardness also supplies
-uniform hardness.
-\end{proof}
+\begin{idea}
+Membership needs only a short certificate: a failed valuation at fixed $K$, or, uniformly in $K$, a
+singleton-or-pair valuation from \cref{sym:thm:pairs}, evaluated on sparse sets. For hardness, fix roles
+$a\ne b$ and read a set $S$ as true when $S=\{a\}$. On arbitrary nonempty inputs,
+\[
+ P(S\ow a T)=P(S)\lor P(T),\qquad
+ P(S\ow b T)=P(S)\land P(T),
+\]
+so any monotone Boolean formula compiles directly into owned choices. To turn agreement of truth values
+into equality of sets, take $W$ to be the union of all inputs: every constant-free term $u$ lies inside
+$W$, so $u\ow a W$ is $\{a\}$ if $u$ is true and $W$ otherwise (the two cases agree when $W=\{a\}$). The
+standard dual-rail encoding of CNF unsatisfiability then finishes the reduction. See
+\cref{app:proofs-hard}.
+\end{idea}
 
-The gate uses the common input union as its false value, so it does not
-require a named winner or $I$. The complexity method is standard. Unless $\mathrm P=\mathrm{NP}$,
-the entire idempotent core has no polynomial-time canonicalization with
-polynomial-time comparison. This does not preclude a finite equational
-basis or an effective proof calculus.
+The gate uses the common input union as its false value, so it requires no named winner and no $I$. The
+method is standard. Unless $\mathrm P=\mathrm{NP}$, the entire idempotent core has no polynomial-time
+canonicalization with polynomial-time comparison. This does not preclude a finite equational basis or an
+effective proof calculus.
 
-\subsection{Hardness without owners}
+\subsection{Hardness without owners, and the raw dichotomy}
 
-The preceding reduction uses owned choices. Hardness also appears in
-smaller signatures whose primitive operations are derived from them.
-Use $A\del B=B$ when $B$ is a singleton, and $A\cup B$ otherwise;
-its owned-choice definition and intrinsic characterization are given in
-\cref{sec:reset}.
-Here size is measured in the stated native signature; an expansion
-into owned-choice syntax need not preserve that size.
-
-Write $\operatorname{rc}(a_1,\ldots,a_n;b)$ for the right comb
-$a_1\del(a_2\del\cdots\del(a_n\del b))$, and
-$\operatorname{lc}(b;g_1,\ldots,g_m)$ for the left comb
-$(\cdots((b\del g_1)\del g_2)\cdots)\del g_m$.
-Both are $b$ when their lists are empty.
+One might suspect that hardness comes from owners, since their absorbing singletons are what distinguish
+the algebra from a semilattice. It does not. All the reductions below use one device. Put a fresh winner in
+an input $c$, and build a term in which $c$ survives only if a chain of guards are all ambiguous: this is
+what reset does, since $c\del g$ keeps $c$ exactly when $g$ is ambiguous. A chain of guards is thus a
+conjunction. And a guard such as
+\[
+ t\cup\ell_1\cup\cdots\cup\ell_m
+\]
+is ambiguous exactly when some $\ell_i$ differs from a resolved $t$, which is a disjunction. So conjunctive
+normal form appears using nothing but reset and union: read a literal as false when it equals $t$.
 
 \begin{theorem}[Owner-free hardness]\label{thm:owner-free-hardness}
 For every fixed $K\geq3$, equation validity for the signature
 $\{\del,\cup\}$ on $\Pow(I)$ is coNP-complete. It uses no constants,
 owner names, or internal role switches.
 \end{theorem}
-\begin{proof}
-Membership in coNP follows either from a full valuation at fixed $K$,
-or from the pair theorem and polynomial native evaluation. The pair
-witness exists because both operations are owned-choice definable;
-its existence does not require a small expansion of the input term.
 
-For hardness, take a CNF $\varphi$ on $n\geq1$ Boolean variables.
-Use literal variables $u_i,\bar u_i$ and three additional input variables
-$t,z,c$. Put
-\begin{align*}
- W&=\operatorname{rc}(u_1,\bar u_1,\ldots,u_n,\bar u_n,t;z),\\
- b_i&=(c\del(u_i\cup t))\del(\bar u_i\cup t),\\
- R&=\operatorname{rc}(b_1,\ldots,b_n;W),\\
- g_C&=t\cup\bigcup_{\ell\in C}\ell,\qquad
- A=\operatorname{lc}(c;(g_C)_{C\in\varphi}).
-\end{align*}
-The equation is
-\begin{equation}\label{eq:union-reduction}
- A\del R=R.
-\end{equation}
-All displayed symbols are input variables or the two native operations.
-The tree size is linear in the CNF description and $n$.
-
-If $z$ is resolved, $W$, $R$, and both sides of
-\eqref{eq:union-reduction} are $z$. Otherwise $W$ is the union of
-$z,t$, and all literals; $R$ is ambiguous and contains $W$.
-Every contribution other than $c$ is therefore already in $R$.
-Outside $W$, a marker from $c$ survives in $A$ exactly when every
-clause guard $g_C$ is ambiguous. It survives in $R$ exactly when
-some pair $u_i\cup t,\bar u_i\cup t$ is simultaneously ambiguous.
-
-Suppose the equation fails. Every clause guard is ambiguous, and no
-pair is simultaneously ambiguous. Since $n\geq1$, $t$ must be a
-singleton: an ambiguous $t$ would make every pair ambiguous.
-For nonempty $X$, $X\cup t$ is resolved exactly when $X=t$.
-Assign variable $i$ true iff $u_i\ne t$. If a positive literal differs
-from $t$, it is true under this assignment. If a negative literal
-$\bar u_i$ differs from $t$, consistency forces $u_i=t$, so that
-negative literal is true. Every ambiguous clause guard has such a
-literal, hence $\varphi$ is satisfied.
-
-Conversely choose three distinct roles $b,d,e$ and a satisfying
-assignment. Set $t=\{b\}$, each false literal to $\{b\}$, each true
-literal to $\{d\}$, $z=\{b,d\}$, and $c=\{e\}$.
-All clause guards are ambiguous, while every literal pair has a
-resolved guard. Thus $e$ survives on the left and is absent on the
-right. This proves the reduction. CNFs with no variables are decided
-trivially and mapped to a fixed valid or invalid equation.
-\end{proof}
-
-\subsection{Hardness inside the atom-preserving fragment}
-
-Put $H_s(x,y,z)=(y\star_s z)\del x$, the ternary witness used in
-\cref{reset:thm:binary}. Each $H_s$ is idempotent and atom-preserving,
-and reset is already definable by
-\[
- x\del y=H_s(y,x,x).
-\]
-Thus the following result uses a signature of only two ternary operations.
-
-\begin{theorem}[Two atom-preserving operations suffice]\label{thm:H-hardness}
-For $K\geq3$ and distinct $a,b\in I$, equation validity for
-$\{H_a,H_b\}$ on $\Pow(I)$ is coNP-complete, without constants.
-\end{theorem}
-\begin{proof}
-The same finite-valuation argument gives membership in coNP.
-For a CNF $\varphi$, use one input $y_i$ per Boolean variable, together
-with $z,c$. Let $W=\operatorname{rc}(y_1,\ldots,y_n;z)$.
-For a clause $C=(\ell_1,\ldots,\ell_m)$ define
-\[
- b_C=H_{s_1}(z,y_{i_1},H_{s_2}(z,y_{i_2},\ldots
-                  H_{s_m}(z,y_{i_m},c)\ldots)),
-\]
-where $s_j=a$ for a positive literal and $s_j=b$ for a negative one.
-An empty clause gives $b_C=c$. Put
-$R=\operatorname{rc}((b_C)_{C\in\varphi};W)$. The equation is
-\begin{equation}\label{eq:H-reduction}
- c\del R=R.
-\end{equation}
-Expand each reset by $x\del y=H_a(y,x,x)$. In each right comb, the
-continuation $y$ occurs once and only the small left operand is
-repeated. The clause terms also use their continuation once. The
-expanded tree therefore has polynomial, in fact linear, size in
-$n$ and the total literal count.
-
-When $z$ is resolved, both sides are $z$. Otherwise $W$ and $R$ are
-ambiguous, and $W$ contains $z$ and every $y_i$. Outside $W$ the
-exact propagation law is
-\[
- H_s(z,y,u)\text{ contains a marker from }u
- \quad\Longleftrightarrow\quad
- u\text{ contains it and }y\ne\{s\}.
-\]
-This also holds when the marker is $s$: then $y\ne\{s\}$ follows
-already from $y\subseteq W$. It follows by induction that a marker
-from $c$ survives through $b_C$ iff all its literal tests
-$y_{i_j}\ne\{s_j\}$ hold.
-
-If $\varphi$ is unsatisfiable, read variable $i$ as true iff
-$y_i=\{a\}$. Some clause is false. Its positive literals have
-$y_i\ne\{a\}$, and its negative literals have $y_i=\{a\}\ne\{b\}$.
-Consequently that branch retains every marker outside $W$ from $c$.
-Since $W\subseteq R$, this gives $c\subseteq R$ and proves
-\eqref{eq:H-reduction} on every valuation.
-
-For a satisfying assignment, set $y_i=\{a\}$ for true and
-$y_i=\{b\}$ for false, $z=\{a,b\}$, and $c=\{d\}$ for a third
-role $d$. Every clause has a literal with $y_i=\{s\}$, removing
-$d$ in its branch. Thus $d\notin R$, while $d\in c\del R$.
-\end{proof}
-
-These results do not exclude all tractable owner-sensitive fragments.
-They do exclude polynomial-time equality for reset with union and for
-the full idempotent atom-preserving clone unless $\mathrm P=\mathrm{NP}$.
-Reset with one fixed $H_a$ is polynomial-time decidable; the exact
-boundary and its five-element semantics are proved in
-\cref{sec:one-owner}.
-
-\subsection{The number of roles becomes observable again}
-
-Let $\mathcal B_K=(\Pow(\{1,\ldots,K\});\del,\cup)$.
-Unlike reset alone, these owner-free algebras have distinct equational
-theories at every $K\geq3$.
-
-\begin{theorem}[Strict dependence on the role count]\label{thm:colouring-theories}
-For every $K\geq3$,
-$\operatorname{Eq}(\mathcal B_{K+1})\subsetneq
- \operatorname{Eq}(\mathcal B_K)$.
-\end{theorem}
-\begin{proof}
-For $n\geq3$ use variables $x_1,\ldots,x_n,z,c$. Define
-\begin{align*}
- W_n&=\operatorname{rc}(x_1,\ldots,x_n;z),\\
- R_n&=\operatorname{rc}(c\del x_1,\ldots,c\del x_n;W_n),\\
- A_n&=\operatorname{lc}(c;(x_u\cup x_v)_{1\leq u<v\leq n}).
-\end{align*}
-Take the equation $A_n\del R_n=R_n$.
-If $z$ is resolved, it holds immediately. Otherwise $W_n$ is ambiguous
-and contains all the $x_i$. If any $x_i$ is ambiguous, $R_n$ also
-contains $c$, so the equation holds. If all $x_i$ are singletons and
-two agree, their edge guard is resolved and erases $c$ from $A_n$;
-every remaining contribution lies in $W_n\subseteq R_n$.
-The only remaining case has $n$ distinct singleton inputs. At $K=n$
-they exhaust the carrier's roles, so $W_n=I$ and the equation holds.
-
-At $K=n+1$ set $x_i=\{i\}$, $z=\{1,2\}$, and $c=\{n+1\}$.
-Every edge guard is ambiguous; $A_n$ retains the fresh winner $n+1$,
-while $R_n=W_n=\{1,\ldots,n\}$ omits it. The equation fails.
-Finally, the inclusion of role sets induces a subalgebra embedding
-$\mathcal B_K\hookrightarrow\mathcal B_{K+1}$: union and singleton
-status are preserved. Equations valid in the latter hold in the
-former, and the displayed equation makes this inclusion strict.
-\end{proof}
-
-The edge guards express proper colourings of a complete graph. A fresh
-marker requires an unused role, which is precisely what fails at $K=n$.
-Thus role dependence can return even when no operation names an owner.
-
-\subsection{Every pair of basic operations is hard}
+The other side of the equation catches any inconsistent assignment, in the manner of dual-rail encoding
+(\cref{app:proofs-hard}; \texttt{Fragments.lean} checks the semantic certificates). The same pattern, with folds in place
+of unions, handles every other pair of basic operations.
 
 \begin{theorem}[Raw-signature dichotomy]\label{thm:raw-pairs}
 Fix $K\geq3$. For a signature chosen from
@@ -225,84 +86,58 @@ polynomial-time decidable if the signature has at most one operation,
 and coNP-complete otherwise. Each minimal hard pair has a linear-size
 reduction in its native tree syntax.
 \end{theorem}
-\begin{proof}
-A single owned operation and union are semilattices: equality is equality
-of variable supports. Reset has the polynomial algorithm of
-\cref{reset:thm:three}. The empty signature permits only variables.
-Nonvalidity has a polynomial valuation certificate at fixed $K$.
-For hardness we reduce CNF unsatisfiability, using the standard
-SAT completeness theorem \cite{Cook1971}.
-It remains to cover four types of distinct pairs. Reset with union is
-\cref{thm:owner-free-hardness}.
 
-For two owners $a\ne b$, write $\odot=\star_b$. Given a CNF with at
-least one clause, all clauses nonempty, and $n\geq1$, use rails
-$p_i,n_i$ and marker variable $m$. Put
-\begin{align*}
- W&=p_1\odot n_1\odot\cdots\odot p_n\odot n_n,\\
- b_i&=m\star_a p_i\star_a n_i,\qquad
- R=b_1\odot\cdots\odot b_n\odot W,\\
- u_C&=\mathop{\bigodot}_{\ell\in C}\ell,\qquad
- A=m\star_a u_{C_1}\star_a\cdots\star_a u_{C_q}.
-\end{align*}
-The equation is $A\odot R=R$. Associativity makes the displayed folds
-unambiguous. Empty clauses and empty conjunctions are handled by fixed
-valid and invalid equations respectively.
-
-For a satisfying Boolean assignment, choose $c\notin\{a,b\}$, assign
-true rails $\{c\}$, false rails $\{a\}$, and $m=\{b\}$.
-Every $b_i$ is $\{a\}$ and $R=\{a,c\}$, whereas each clause value
-contains $c$ and $A$ contains $b$. The equation fails.
-
-Conversely suppose the CNF is unsatisfiable. If a rail is $\{b\}$,
-$W=R=\{b\}$ and absorption proves the equation. Otherwise every
-clause fold is a union and differs from $\{b\}$. Each $b_i$ also
-differs from $\{b\}$: an $a$-fold equals that different singleton only
-when all its inputs do. Thus $R$ is a union containing $W$, and
-$A\ne\{b\}$. It suffices to prove $A\subseteq R$.
-If $A=\{a\}$, either $m=\{a\}$, making every $b_i=\{a\}$, or
-some $u_C=\{a\}$, already contained in $W$. Otherwise $m$ and all
-$u_C$ differ from $\{a\}$ and $A=m\cup\bigcup_C u_C$.
-If a pair of rails both differs from $\{a\}$, its $b_i$ retains $m$.
-If no such pair exists, assign each variable so that its false literal
-has rail $\{a\}$. Unsatisfiability supplies an all-false clause,
-whose fold is $\{a\}$, a contradiction. Hence $m\subseteq R$,
-and the equation holds.
-
-For $\{\star_a,\cup\}$ use exactly the same construction with
-$\odot=\cup$. The $\{b\}$ cases are unnecessary; the containment
-argument and the same three-role countervaluation apply.
-
-For $\{\del,\star_a\}$ use \cref{thm:owner-free-hardness}'s construction,
-replacing every explicit union by $\star_a$. The reset comb $W$ still
-contains all rails and $t$ whenever $z$ is ambiguous. Every new guard
-is contained in that baseline. An outside marker fails the equation
-only if all clause guards are ambiguous while no rail pair has both
-its guards ambiguous. For any nonempty clause,
+\begin{idea}
+For owners $a\ne b$, a $\star_b$-fold of literals equals $\{a\}$ only when all of them do, and a $\star_a$-fold
+retains a marker only when none of its inputs is $\{a\}$. So
 \[
- \left|t\star_a\mathop{\star_a}_{\ell\in C}\ell\right|>1
- \quad\Longrightarrow\quad
- \exists\ell\in C:\ |\ell\star_a t|>1.
+ (m\star_a u_{C_1}\star_a\cdots\star_a u_{C_q})\ow b R= R,
 \]
-To verify this implication, an ambiguous fold has no input equal to
-$\{a\}$. If $t$ is ambiguous, any clause literal gives the witness.
-If $t=\{r\}\ne\{a\}$, the fold is a union and some literal differs
-from $\{r\}$, giving the witness. The unsatisfiable-rails argument now
-forces a conflicting pair, contrary to failure.
-For a satisfying assignment choose distinct $a,b,d$ and set
-$t=\{b\}$, false rails $\{b\}$, true rails $\{d\}$,
-$z=\{b,d\}$, and $c=\{a\}$. No guard operand is $\{a\}$,
-so every replaced union agrees with its old value and the marker
-separates the equation as before. This proves the final pair case.
-All constructions use each clause and rail only a bounded number of
-times. Hardness passes to every larger signature.
-\end{proof}
+for clause folds $u_C$ and a suitable right-hand side $R$, encodes unsatisfiability with no use of $J$ and in
+linear size. The pair $\{\star_a,\cup\}$ uses the same construction, and $\{\del,\star_a\}$ is the owner-free
+reduction with $\star_a$ in place of union. Full proofs are in \cref{app:proofs-hard}.
+\path{lean/RawFragments.lean} proves the fold tests, the absorption arguments, and the generic UNSAT transfer for the
+owned guards; the CNF syntax assembly, size bounds, and complexity conclusions are written proofs, and
+\path{checks/check_raw_pairs.py} evaluates the actual native reductions independently.
+\end{idea}
 
-The contrast with \cref{sec:one-owner} is exact: raw choice next to reset
-is hard even with one owner, whereas putting that choice under a
-preserved root in $H_a$ gives polynomial equality.
-\path{lean/RawFragments.lean} proves the fold tests, common absorption
-argument, second-owner absorption, and generic UNSAT transfer for the
-owned guards. The CNF syntax assembly, size bounds, and complexity
-conclusions are written proofs; \path{checks/check_raw_pairs.py}
-evaluates the actual native reductions independently.
+\subsection{Hardness among atom-preserving operations}
+
+Perhaps determinism helps? Recall the ternary witness $H_s(x,y,z)=(y\star_s z)\del x$ of \cref{sec:reset}. Each
+$H_s$ is idempotent and atom-preserving, and reset is already definable by
+\[
+ x\del y=H_s(y,x,x).
+\]
+
+\begin{theorem}[Two atom-preserving operations suffice]\label{thm:H-hardness}
+For $K\geq3$ and distinct $a,b\in I$, equation validity for
+$\{H_a,H_b\}$ on $\Pow(I)$ is coNP-complete, without constants.
+\end{theorem}
+
+\begin{idea}
+When $z$ is ambiguous, $H_s(z,y,u)$ retains a marker from $u$ exactly when $y\ne\{s\}$. Nest these along a
+clause, with $s=a$ for positive literals and $s=b$ for negative ones, and read variable $i$ as true when
+$y_i=\{a\}$. A falsified clause keeps the marker; and when every $y_i$ is $\{a\}$ or $\{b\}$, only a falsified
+clause does. The two singletons are mutually exclusive values of $y_i$, and that is all a Boolean variable needs. See \cref{app:proofs-hard}.
+\end{idea}
+
+So these results exclude polynomial-time equality for reset with union and for the full idempotent atom-preserving clone,
+unless $\mathrm P=\mathrm{NP}$. They do not exclude all tractable owner-sensitive fragments, as the next section shows.
+
+\subsection{The number of roles becomes observable again}
+
+Reset has the same theory for every $K\geq3$. Adding union changes that, even though neither operation names an owner. Let
+$\mathcal B_K=(\Pow(\{1,\ldots,K\});\del,\cup)$.
+
+\begin{theorem}[Strict dependence on the role count]\label{thm:colouring-theories}
+For every $K\geq3$,
+$\operatorname{Eq}(\mathcal B_{K+1})\subsetneq
+ \operatorname{Eq}(\mathcal B_K)$.
+\end{theorem}
+
+\begin{idea}
+The guards $x_u\cup x_v$ express proper colorings of a complete graph: a marker survives only if the $x_i$ are pairwise
+distinct singletons, or else some input is ambiguous, in which case the other side has it too. On $n$ distinct singletons a
+further fresh marker needs an unused role, and that is precisely what fails at $K=n$ but succeeds at $K=n+1$. See
+\cref{app:proofs-hard}; \texttt{Fragments.lean} has the generic pigeonhole certificate.
+\end{idea}

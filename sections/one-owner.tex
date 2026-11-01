@@ -1,52 +1,43 @@
 \section{One owner, one table, four states}
 \label{sec:one-owner}
 
-The two-$H$ hardness theorem has an exact lower boundary. One $H_a$
-already expresses reset, and it retains a genuine owner test. Nevertheless,
-its equations have a polynomial decision procedure, uniform in the number
-of roles. More generally, the complexity of an individual player's
-observation depends on how many \emph{other} owners occur.
+Two copies of $H$ are hard. What about one? A single $H_a$ already expresses reset, and it retains a genuine owner test.
+Nevertheless its equations have a polynomial decision procedure, uniform in the number of roles. More generally, the complexity
+of an individual player's observation depends on how many \emph{other} owners occur.
 
 Throughout this section the native syntax is
 \[
  t::=x_j\mid t\del t\mid H_r(t,t,t),\qquad
  H_r(X,Y,Z)=(Y\star_r Z)\del X.
 \]
-There are no constants, unions, or internal role switches. Restricting the
-$H$ indices does not restrict every node of an owned-choice expansion:
-reset itself is a derived operation. Complexity is measured in this native
-tree syntax.
+There are no constants, unions, or internal role switches. Restricting the $H$ indices does not restrict every node of an
+owned-choice expansion, since reset itself is a derived operation. Complexity is measured in this native tree syntax.
 
 \subsection{A root whose status never changes}
 
-Define the root variable by
+What keeps this fragment tame is that a choice is always guarded by a root. Define the root variable by
 \[
  \rho(x_j)=j,\qquad \rho(s\del t)=\rho(t),\qquad
- \rho(H_r(x,y,z))=\rho(x).
+ \rho(H_r(x,y,z))=\rho(x),
 \]
-Write $M_j$ for the assertion that the value of $x_j$ is ambiguous.
+and write $M_j$ for the assertion that the value of $x_j$ is ambiguous.
 
 \begin{lemma}[Root status]\label{owner:lem:root}
 A term is ambiguous exactly when its root variable is ambiguous. For
 every role $r$, its value is $\{r\}$ exactly when its root variable is
 $\{r\}$.
 \end{lemma}
-\begin{proof}
-Reset returns its right operand when that operand is resolved, and
-otherwise returns an ambiguous union containing it. Both status claims
-follow by induction, since the right operand in the definition of
-$H_r(X,Y,Z)$ is $X$.
-\end{proof}
 
-Fix an observer $k$ and one different role $a$. Allow $H_k$ and $H_a$,
-in addition to reset. Put
+Reset returns a resolved right operand and otherwise returns an ambiguous union containing it, so this is an easy induction.
+It is exactly what union and raw choice lack: here, tests on subterms reduce to tests on input variables.
+
+Fix an observer $k$ and one different role $a$. Allow $H_k$ and $H_a$, in addition to reset. Put
 \[
  N_j\ \Longleftrightarrow\ x_j\ne\{a\},\qquad
  V_j\ \Longleftrightarrow\ k\in x_j.
 \]
-The implications $M_j\Rightarrow N_j$ and $V_j\Rightarrow N_j$ are
-the only restrictions needed below. If $t_k$ denotes possible membership
-of $k$ in the value of $t$, the exact recursive laws are
+The implications $M_j\Rightarrow N_j$ and $V_j\Rightarrow N_j$ are the only restrictions needed below. If $t_k$ denotes possible
+membership of $k$ in the value of $t$, the exact recursive laws are
 \begin{align}
  (s\del t)_k
    &\longleftrightarrow t_k\lor(M_{\rho(t)}\land s_k),\label{owner:eq:reset}\\
@@ -58,42 +49,39 @@ of $k$ in the value of $t$, the exact recursive laws are
         (M_{\rho(x)}\land N_{\rho(y)}\land N_{\rho(z)}
                      \land(y_k\lor z_k)).\label{owner:eq:other}
 \end{align}
-For \eqref{owner:eq:self}, membership of the owner in an owned choice
-is disjunction. For \eqref{owner:eq:other}, an outsider survives that
-choice precisely when neither child is the absorbing singleton $\{a\}$.
-\Cref{owner:lem:root} turns these child tests into input tests.
+For \eqref{owner:eq:self}, membership of the owner in an owned choice is disjunction. For \eqref{owner:eq:other}, an outsider survives
+that choice precisely when neither child is the absorbing singleton $\{a\}$, and \cref{owner:lem:root} turns these child tests into input
+tests.
 
 \subsection{Exact guard comparison}
 
-A guard is a triple $g=(j,A,B)$, with source variable $j$ and finite sets
-of input indices $A,B$. Its meaning is
+Unfolding these laws says that $k$ can win exactly when one of finitely many conjunctions holds, each attached to a variable occurrence
+that might supply $k$. A \emph{guard} is a triple $g=(j,A,B)$, with source variable $j$ and finite sets of input indices $A,B$. Its meaning
+is
 \[
  [g]=V_j\land\bigwedge_{i\in A}M_i\land\bigwedge_{i\in B}N_i.
 \]
-The list $\Gamma_k(t)$ is built from \eqref{owner:eq:reset}--\eqref{owner:eq:other}:
-an input contributes $(j,\varnothing,\varnothing)$; reset retains the
-right guards and adds $\rho(t)$ to the $M$ tests of the left guards;
-$H$ retains the root guards and adds the displayed tests to each guard
-of its other two arguments. Consequently
+The list $\Gamma_k(t)$ is built from \eqref{owner:eq:reset}--\eqref{owner:eq:other}: an input contributes $(j,\varnothing,\varnothing)$; reset
+retains the right guards and adds $\rho(t)$ to the $M$ tests of the left guards; $H$ retains the root guards and adds the displayed tests to each
+guard of its other two arguments. Consequently
 \begin{equation}\label{owner:eq:guards}
  t_k\longleftrightarrow\bigvee_{g\in\Gamma_k(t)}[g].
 \end{equation}
-Each variable occurrence contributes exactly one guard. No distributive
-expansion duplicates a guard.
-For example, the outsider guards of $H_a(x,y,z)$ are
+Each variable occurrence contributes exactly one guard, so no distributive expansion duplicates anything. For example, the outsider guards of
+$H_a(x,y,z)$ are
 \[
  (x,\varnothing,\varnothing),\qquad
- (y,\{x\},\{y,z\}),\qquad (z,\{x\},\{y,z\}).
+ (y,\{x\},\{y,z\}),\qquad (z,\{x\},\{y,z\}),
 \]
-In the second guard the $N_y$ test is automatic from its source $V_y$;
-similarly $N_z$ is automatic in the third.
+where in the second guard the $N_y$ test is automatic from its source $V_y$, and similarly for $N_z$ in the third.
 
 Say $h=(i,C,D)$ \emph{covers} $g=(j,A,B)$ when
 \begin{equation}\label{owner:eq:cover}
  i=j,\qquad C\subseteq A,\qquad D\subseteq A\cup B\cup\{j\}.
 \end{equation}
-These conditions imply $[g]\Rightarrow[h]$; the last extra index $j$
-uses $V_j\Rightarrow N_j$.
+These conditions imply $[g]\Rightarrow[h]$; the last extra index $j$ uses $V_j\Rightarrow N_j$. The surprising point is that nothing more can be said.
+For a monotone DNF over Boolean variables, one conjunct implies a disjunction only if it implies one disjunct. Here the status of an input has three
+relevant levels, $\{a\}$, then another singleton, then ambiguity, and these form a \emph{chain}. So the same argument applies.
 
 \begin{theorem}[Guard completeness]\label{owner:thm:guards}
 Suppose $|I|\geq3$, $k\ne a$, and all $H$ indices in $s,t$ belong to
@@ -102,58 +90,28 @@ and only if every guard of $\Gamma_k(s)$ is covered by a guard of
 $\Gamma_k(t)$. A failed comparison has an explicitly constructible
 singleton-or-pair countervaluation using just three roles.
 \end{theorem}
-\begin{proof}
-Sufficiency follows from \eqref{owner:eq:guards} and
-\eqref{owner:eq:cover}. For necessity, choose $b\notin\{k,a\}$ and
-an uncovered guard $g=(j,A,B)$. Assign
-\[
- x_i=\begin{cases}
- \{k,a\},&i=j\text{ and }i\in A,\\
- \{k\},&i=j\text{ and }i\notin A,\\
- \{a,b\},&i\ne j\text{ and }i\in A,\\
- \{b\},&i\ne j,\ i\notin A,\ i\in B,\\
- \{a\},&\text{otherwise}.
- \end{cases}
-\]
-Exactly the indices in $A$ are ambiguous; exactly those in
-$A\cup B\cup\{j\}$ satisfy $N$; only input $j$ contains $k$.
-Thus $g$ holds, and a right guard holds exactly when it covers $g$.
-No right guard does. This is the required countervaluation.
-\end{proof}
 
-This also gives canonical tables: for each source, remove its index and
-the $M$ indices from its $N$ tests, then retain only the minimal guards
-under \eqref{owner:eq:cover}. No minimal guard has its source in its $M$ tests. Indeed, a guard
-$(j,A,B)$ with $j\in A$ has a covering guard $(j,A',B')$ with
-$j\notin A'$, $A'\subseteq A$, and $B'\subseteq B$.
-Induct on the term: if its root is $j$, the root occurrence supplies
-$(j,\varnothing,\varnothing)$; otherwise apply the induction hypothesis
-to the contributing child and reattach the node's tests. Any newly
-attached $M$ test is the node's different root.
-Minimal antichains are unique because
-\cref{owner:thm:guards} characterizes implication exactly.
-For trees of total size $n$, there are at most $n$ guards, each with
-$O(n)$ tests. Direct list-based compilation and all-pairs coverage give
-an $O(n^4)$ equality bound when input names have constant-time equality;
-bit-set implementations improve the elementary subset checks. The
-algorithm is uniform in $K$ and never enumerates winner sets.
-An affirmative comparison has a short certificate: provide, for each
-left guard, the index of a covering right guard. Guard compilation and
-the three tests in \eqref{owner:eq:cover} check the certificate directly.
-This is a complete comparison calculus uniform in $K$; it does not
-assert a finite equational basis for the native $H$ signature.
+\begin{idea}
+Sufficiency is \eqref{owner:eq:cover}. For necessity, take an uncovered guard $g=(j,A,B)$ and set each input to the least status satisfying $g$: ambiguous
+on $A$, a neutral singleton $\{b\}$ on the rest of $B$, and $\{a\}$ elsewhere, with only $x_j$ containing $k$. Then $g$ holds, and a right guard holds exactly
+when it covers $g$. The criterion is \path{Term.observation_implication_iff} in \texttt{OwnerFragments.lean}; see \cref{app:proofs-owner}.
+\end{idea}
+
+For trees of total size $n$ there are at most $n$ guards, each with $O(n)$ tests. Direct list-based compilation and all-pairs coverage give an $O(n^4)$ equality
+bound when input names have constant-time equality, and bit-set implementations improve the elementary subset checks. The algorithm is uniform in $K$ and never
+enumerates winner sets. An affirmative comparison has a short certificate: for each left guard, the index of a covering right guard. Minimal guards also give
+canonical tables (\cref{app:proofs-owner}). This is a complete comparison calculus uniform in $K$; it does not assert a finite equational basis for the native
+$H$ signature.
 
 \subsection{A single outsider sees every equation}
 
-Now allow just one $H$ index $a$. All outsider tables have the same
-syntax. The owner's table is simpler still:
+Now allow just one $H$ index $a$. All outsider tables have the same syntax, and the owner's table is simpler still:
 \begin{equation}\label{owner:eq:forget}
  \Gamma_a(t)=\{(j,A,\varnothing):(j,A,B)\in\Gamma_k(t)\},
  \qquad k\ne a.
 \end{equation}
-This identity is for the unminimized guard lists. It follows directly
-from the recursion: an owner's own $H$ adds no $N$ tests. Forgetting
-the $N$ tests preserves coverage.
+This identity is for the unminimized guard lists. It follows directly from the recursion, since an owner's own $H$ adds no $N$ tests, and forgetting the $N$ tests
+preserves coverage.
 
 \begin{theorem}[One-table completeness]\label{owner:thm:one-table}
 For $K\geq3$, terms in $\{\del,H_a\}$ are equal on every nonempty
@@ -168,14 +126,16 @@ By \eqref{owner:eq:forget}, it also gives mutual coverage for the owner,
 hence equality of that membership. These memberships determine the set.
 \end{proof}
 
-There is a smaller concrete algebra behind this result. Choose
-$b\notin\{a,k\}$ and put
+So one player, watching from outside, can settle every equation. This is a statement about identities: two terms with the same outsider observation \emph{on all
+valuations} are equal, but one observer does not determine the complete winner set of an individual execution. \path{Term.single_table_equation_iff} and
+\path{Term.equationB_correct} prove the criterion and the executable checker in Lean.
+
+There is a small concrete algebra behind this result. Choose $b\notin\{a,k\}$ and put
 \[
  A=\{a\},\quad B=\{b\},\quad N=\{a,b\},\quad P=\{a,b,k\}.
 \]
-The set $\mathbf C=\{A,B,N,P\}$ is closed under reset and $H_a$.
-Both operations are conservative: each returns one of its arguments.
-Their complete description is particularly short:
+The set $\mathbf C=\{A,B,N,P\}$ is closed under reset and $H_a$, and both operations are conservative: each returns one of its arguments. Their complete description is
+short:
 \[
  x\del y=y\quad\text{except }P\del N=P,
 \]
@@ -186,72 +146,26 @@ Their complete description is particularly short:
  x,&x\ne N.
  \end{cases}
 \]
-Its reset reduct is the forest order with root $P$, child $N$, and
-leaves $A,B$. Thus one owner adds one resolved atom to the three-state
-reset chain.
+Its reset reduct is the forest order with root $P$, child $N$, and leaves $A,B$. Compare the reset chain $\{a\}\subset\{a,b\}\subset\{a,b,k\}$ of \cref{reset:thm:three}:
+what one owner adds to reset is exactly one more resolved atom, the singleton that can pass the owner's test without being ambiguous.
 
 \begin{theorem}[A minimum four-element generator]\label{owner:thm:four}
 For every $K\geq3$ and role $a$, $(\Pow(I);\del,H_a)$ has exactly the
 identities of $\mathbf C$. No algebra with fewer than four elements
 generates this equational theory.
 \end{theorem}
-\begin{proof}
-First retain the five flags used to evaluate the recursion:
-\[
- (m,e,p)=(|S|>1,\ S=\{a\},\ k\in S).
-\]
-The five possible flag states form a homomorphic image of the winner-set
-algebra. Identify the two states with $p=1$: observed singletons and
-observed ambiguous sets. This is a congruence. In a root position both
-already give observed victory; in every other position the rules use
-only $e$ and $p$, which agree. The four resulting states have exactly
-the displayed operations on $\mathbf C$.
-An identity of $\mathbf C$ therefore preserves the outsider's $p$ flag
-on all winner-set valuations. By \cref{owner:thm:one-table} it is a full
-identity. Conversely, $\mathbf C$ is a subalgebra, so it satisfies every
-winner-set identity. This proves completeness and independence of $K$.
 
-For minimality, any smaller generator has a nonassociative reset reduct.
-By Freese et al.'s Theorem~3.2 \cite{FreeseEtAl2002}, such a reduct
-contains $O_{2+1}$; hence a three-element candidate is precisely that
-algebra. Name its elements $Z,U,T$, with
-\[
- u\del Z=Z,\quad u\del T=T,\quad
- Z\del U=U\del U=U,\quad T\del U=T.
-\]
-Write $h$ for the candidate ternary operation. With $s=h(x,y,c)$,
-the valid identities $s\del x=s=x\del s$ force
-$h(Z,y,c)=Z$, $h(T,y,c)=T$, and $h(U,y,c)\in\{U,T\}$.
-The following identities are also valid in $\mathbf C$:
-\[
- h(x,y,y)=y\del x,\qquad h(y,y,c)=c\del y,\qquad
- h(x,y,x)=y\del x.
-\]
-Put $t=(c\del y)\del x$. The equation $s\del t=t$ is false in
-$\mathbf C$, at $(x,y,c)=(N,B,P)$. On the three-element chain,
-the root bounds and these identities allow it to fail only when
-$h(U,Z,T)=T$.
-The equation $(c\del x)\del s=s$ is also false in $\mathbf C$, at
-$(N,A,P)$. In a three-element candidate its failure requires
-$h(U,y,T)=U$ for some $y$. The binary-minor identities give value $T$
-when $y=U,T$, while the first required failure gives $T$ when $y=Z$.
-This is impossible. Smaller reducts are associative, so they cannot
-generate the theory either.
-\end{proof}
+\begin{idea}
+Keeping the flags $(|S|>1,\ S=\{a\},\ k\in S)$ gives a five-state homomorphic image of the winner-set algebra, and identifying its two observed states is a congruence,
+whose quotient is $\mathbf C$. So identities of $\mathbf C$ preserve the outsider's observation, and \cref{owner:thm:one-table} makes them full identities; conversely
+$\mathbf C$ is a subalgebra. For minimality, Freese et al.'s Theorem~3.2 forces a three-element candidate to have reset reduct $O_{2+1}$, and a short computation with identities
+then refutes it. Intuitively, a chain has no state that passes the owner's test without being ambiguous. The completeness theorem, conservative operations, required identities, and generic
+three-state obstruction are kernel-checked in \path{lean/OwnerModels.lean} (\path{Term.four_element_complete}, \path{three_state_obstruction}); the reduction of arbitrary smaller
+models to the three-element chain uses the published theorem. See \cref{app:proofs-owner}.
+\end{idea}
 
-The four-state quotient is also the exact outsider contextual quotient
-when parameters are permitted. The observation distinguishes $P$ from
-the other states; the context $P\del x$ distinguishes $N$ from $A,B$;
-and $H_a(N,x,P)$ distinguishes $A$ from $B$.
-One outsider suffices for identities, meaning equality of its observation
-on \emph{all valuations}; it does not determine the complete winner set
-of an individual execution.
-
-The completeness theorem, conservative operations, required identities,
-and generic three-state obstruction are kernel-checked in
-\path{lean/OwnerModels.lean}. The reduction of arbitrary smaller
-models to the three-element chain uses the published theorem, not a
-formalized universal-algebra library.
+The four-state quotient is also the exact outsider contextual quotient when parameters are permitted. The observation distinguishes $P$ from the other states; the context $P\del x$
+distinguishes $N$ from $A,B$; and $H_a(N,x,P)$ distinguishes $A$ from $B$.
 
 \subsection{The exact owner boundary}
 
@@ -263,42 +177,20 @@ For a fixed observer $k$, observational implication and equivalence are
 polynomial-time decidable when $|R\setminus\{k\}|\leq1$, and
 coNP-complete when $|R\setminus\{k\}|\geq2$.
 \end{corollary}
-\begin{proof}
-\Cref{owner:thm:one-table,owner:thm:guards} give the algorithms; unused
-owner indices may be added to apply them. Two distinct $H$ operations
-give the full-equation lower bound by \cref{thm:H-hardness}.
-For the observational lower bound choose two owners $a,b\ne k$ in that
-same reduction and use $c=\{k\}$ as its fresh-marker witness. In an
-unsatisfiable instance the equation is valid for all roles; in a
-satisfiable instance this valuation separates membership of $k$.
-The reduction is to the implication $c\del R\subseteq_k R$, where
-$\subseteq_k$ means implication of $k$ membership, as well as to its
-equivalence. Nonvalidity has a polynomial singleton-or-pair certificate,
-so both problems belong to coNP.
-\end{proof}
 
-Thus with $H_a,H_b$, both participating owners have polynomial
-observational equality, while a third player's observation is already
-coNP-complete. Even agreement of both owners is insufficient. Put
+The algorithms come from \cref{owner:thm:one-table,owner:thm:guards}, and the lower bounds from the reduction of \cref{thm:H-hardness}, using a marker $c=\{k\}$ for the observational
+case (\cref{app:proofs-owner}). The polynomial size bounds and the complexity deductions are written arguments.
+
+Thus with $H_a,H_b$, both participating owners have polynomial observational equality, while a third player's observation is already coNP-complete. Even agreement of both owners is
+insufficient. Put
 \[
  W=y_1\del(y_2\del z),\quad
  T=H_a(z,y_1,c)\del(H_b(z,y_2,c)\del W).
 \]
-The terms $c\del T$ and $T$ have identical possible-$a$ and possible-$b$
-observations on every valuation. Indeed, a potential new $a$ marker
-already in $W$ needs no argument; one outside $W$ has $y_1\ne\{a\}$,
-and survives through $H_a(z,y_1,c)$. The same argument uses $y_2$ for
-$b$. A resolved $z$ makes both terms equal to $z$.
-But with $y_1=\{a\}$, $y_2=\{b\}$, $z=\{a,b\}$, $c=\{k\}$,
-the values are $\{a,b,k\}$ and $\{a,b\}$ respectively.
+The terms $c\del T$ and $T$ have identical possible-$a$ and possible-$b$ observations on every valuation. Indeed, a potential new $a$ marker already in $W$ needs no argument, and one outside
+$W$ has $y_1\ne\{a\}$ and survives through $H_a(z,y_1,c)$; the same argument uses $y_2$ for $b$, and a resolved $z$ makes both terms equal to $z$. But with $y_1=\{a\}$, $y_2=\{b\}$,
+$z=\{a,b\}$, $c=\{k\}$, the values are $\{a,b,k\}$ and $\{a,b\}$ respectively. An outsider can know something that neither owner's view reveals.
 
-The source of tractability is the preserved root status and the single
-chain of outsider tests, not atom preservation by itself. Union loses
-that root law and already gives owner-free hardness. A second other
-owner supplies incompatible singleton tests and recovers Boolean
-constraints. The guard criterion, executable comparison, one-table
-completeness, four-element completeness theorem, and compilation to the existing
-owned-choice semantics are kernel-checked in
-\path{lean/OwnerFragments.lean} and \path{lean/OwnerModels.lean}.
-The polynomial size bounds and the
-complexity deductions are written arguments.
+The moral is that tractability comes from the preserved root status and the single chain of outsider tests, not from atom preservation by itself. Union loses that root law and gives owner-free
+hardness. A second other owner supplies incompatible singleton tests and recovers Boolean constraints. And raw $\star_a$ next to reset is hard (\cref{thm:raw-pairs}), whereas putting that same choice
+under a preserved root, in $H_a$, gives polynomial equality.

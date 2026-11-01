@@ -1,226 +1,121 @@
-\section{Verification and the remaining boundaries}
+\section{Status of the results, and what remains}
 \label{sec:verification}\label{sec:development}
 
-\subsection{Proof status and reproducibility}
+\subsection{What has been checked, and how}
 
-The formal development in \texttt{lean/} uses Lean 4.34.1 with only \texttt{Std}. It has no
-admitted proofs or added axioms; audits report only \texttt{propext},
-\texttt{Classical.choice}, and \texttt{Quot.sound} where needed.
-\begin{center}\small
-\begin{tabular}{p{0.20\linewidth}p{0.71\linewidth}}
+The formal development in \texttt{lean/} uses Lean 4.34.1 with only \texttt{Std}. It has no admitted proofs or added axioms; audits report only
+\texttt{propext}, \texttt{Classical.choice}, and \texttt{Quot.sound} where needed. \Cref{tab:status} records the evidence for each main result. ``Lean'' names
+kernel-checked theorems, ``written'' means a mathematical proof in this paper, and ``external'' means a theorem imported from the literature, which is not a Lean axiom.
+The module inventory and the finite checks in \texttt{checks/} are described in \cref{app:verification}; finite checks test their implementations at stated sizes and do
+not make any result a generic Lean theorem.
+
+\begin{table}[ht]
+\centering\small
+\begin{tabular}{p{0.34\linewidth}p{0.60\linewidth}}
 \toprule
-Module & Kernel-checked results\\
+Result & Evidence\\
 \midrule
-\texttt{Basic} & Full profiles, whole-player deviations, Nash and SPE;
-the winner recurrence, neutral union, path occurrence obstruction,
-uniform copies for union, and unary upper bound.\\[3pt]
-\texttt{Perspectives} & Contextual player quotient, preservation of views,
-complete-test sufficiency, and atom collapse to top.\\[3pt]
-\texttt{Synthesis} & Ground realization, all reduct unary normal forms,
-input separators, complete-test necessity, and SPE interpretation of
-substituted terms.\\[3pt]
-\texttt{BooleanCore} & Boolean formula embedding; constant-free monotone
-compilation and its predicate semantics; input-union bound and relative gate.\\[3pt]
-\texttt{Separation} & Common-source separation with explicit switches,
-and atomic and ambiguous relative-reset laws.\\[3pt]
-\texttt{FullAlgebra} & Full-signature singleton/pair countervaluations,
-sharp fixed test domains, exact idempotent elimination, equivalent core
-extraction, and intrinsic player-view preservation.\\[3pt]
-\texttt{Reset} & Mixed selector semantics, self-status independence,
-three-element completeness, compilation to owned choice, and soundness
-of the six published basis equations.\\[3pt]
-\texttt{ResetModels} & Forest reconstruction, comb operations, collapse
-endomorphism, and generic least-congruence proof.\\[3pt]
-\texttt{OneConstant} & Constant-or-inflationary dichotomy and one-test rigidity.\\
-\texttt{Fragments} & Guard and marker propagation, Boolean UNSAT transfer,
-absorption/separation certificates for reset/union and two-owner $H$,
-and the generic finite-colouring obstruction.\\
-\texttt{OwnerFragments} & Native root status and guard semantics,
-complete coverage criterion and explicit three-role separators,
-executable observational and full-equation checkers, one-outsider-table
-completeness and compilation to full owned choice.\\
-\texttt{RawFragments} & Owned-fold tests, raw-pair absorption,
-second-owner absorption, and generic UNSAT transfer for owned guards.\\
-\texttt{OwnerModels} & Four-element completeness, conservative operations,
-generator identities and nonidentities, root absorption bounds, and
-the generic three-state obstruction.\\
-\texttt{SealedRounds} & Diagonal-stage security and unique Nash payoff
-over an ordered field, rational-generation arithmetic, reciprocal
-terms, and the impossibility of a finite summary for all threshold probes.\\
+SPE recurrence, neutral union (\cref{game:thm:adequacy,game:thm:union})
+ & Lean: \texttt{winners\_node}, \texttt{three\_owner\_join}, \texttt{every\_winner\_set\_realized}.\\
+Occurrence lower bound (\cref{game:thm:lower})
+ & Lean for the path obstruction (\texttt{no\_single\_use\_union}); syntax-to-path step written.\\
+Player quotient (\cref{view:thm:view})
+ & Lean: \texttt{sameView\_own}, \texttt{contextualAt\_iff}.\\
+Reduct test domains (\cref{view:thm:tests})
+ & Lean: \texttt{complete\_test\_domain}, \texttt{test\_domain\_necessary}. Cardinality written.\\
+Pair theorem, optimal domain (\cref{sym:thm:pairs,sym:thm:optimal})
+ & Lean: \texttt{FullTerm.pair\_countervaluation}, \texttt{full\_test\_domain\_iff}.\\
+Idempotent elimination, intrinsic views (\cref{gen:thm:core,gen:cor:views})
+ & Lean: \texttt{FullTerm.idempotent\_iff\_clean}, \texttt{FullTerm.idempotent\_extraction}, \texttt{FullTerm.idempotent\_sameView}.\\
+Semilattice trace, diagonal tests (\cref{gen:cor:trace,gen:thm:idem-domain})
+ & Written; finite checks.\\
+Common source (\cref{gen:thm:source})
+ & Lean: \texttt{FullTerm.separation}.\\
+Atomic clone (\cref{gen:thm:S2})
+ & Written; external $\operatorname{Pol}(\iota_3)=S_2$ \cite{Szendrei2012}; finite checks.\\
+Binary fragment (\cref{reset:thm:binary})
+ & Rigidity in Lean (\texttt{OneConstant.Term.rigidity}); remainder written; external $S_2$ step.\\
+Reset semantics, chain (\cref{reset:lem:selection,reset:thm:three})
+ & Lean: \texttt{Term.denote\_membership}, \texttt{Term.three\_chain\_complete}, \texttt{Term.compile\_correct}.\\
+Reset basis (\cref{reset:thm:basis})
+ & Soundness in Lean (\texttt{basis\_*}); completeness external \cite{FreeseEtAl2002}.\\
+Antimatroids, realizability, minimality (\cref{reset:thm:anti,reset:thm:synthesis,reset:thm:minimal})
+ & Written; finite checks.\\
+Hardness reductions (\cref{gen:thm:complexity,thm:owner-free-hardness,thm:H-hardness,thm:raw-pairs})
+ & Semantic certificates in Lean (\texttt{BooleanCore}, \texttt{Fragments}, \texttt{RawFragments}); CNF assembly, sizes, and complexity written; finite checks.\\
+Dependence on $K$ (\cref{thm:colouring-theories})
+ & Lean: \texttt{colouring\_guard\_obstruction}; identity family and embeddings written; finite checks.\\
+One-owner calculus (\cref{owner:thm:guards,owner:thm:one-table,owner:thm:four})
+ & Lean: \texttt{Term.observation\_implication\_iff}, \texttt{Term.single\_table\_equation\_iff}, \texttt{Term.equationB\_correct}, \texttt{Term.four\_element\_complete}, \texttt{three\_state\_obstruction}. Minimality also uses external \cite[Theorem~3.2]{FreeseEtAl2002}.\\
+Owner-count dichotomy (\cref{owner:cor:complexity})
+ & Written deductions from the above.\\
+Round recursion (\cref{se:thm:round})
+ & Written; local stage checks only.\\
+Scalar fragment (\cref{se:prop:parallel,se:thm:rational})
+ & Stage and arithmetic in Lean (\texttt{diagonal\_nash\_value}, \texttt{every\_rational}); connection to game syntax written.\\
+Infinite index, full abstraction (\cref{se:thm:infinite,se:cor:scalar})
+ & Written; finite checks. Lean has only the arithmetic \texttt{no\_finite\_summary}, not connected to game syntax.\\
+Open-game obstruction (\cref{se:prop:open-game-obstruction})
+ & Written; pinned external Lean artifact \cite{GameTheoryOpenGameObstructions2026}, not rebuilt here; exact-rational checker.\\
+Forest models, combs (\cref{app:reset-models})
+ & Reconstruction and generic monolith in Lean (\texttt{ResetModels}); forest membership written.\\
+Congruences, unary classifications (\cref{app:contexts,app:congruences,app:ambiguity})
+ & Reduct synthesis in Lean (\texttt{unary\_synthesis}); remainder written; finite checks.\\
+Dependent layer (\cref{app:dependent})
+ & Written; finite models of phase and sealing rules.\\
 \bottomrule
-\end{tabular}\end{center}
+\end{tabular}
+\caption{The evidence for the main results.}
+\label{tab:status}
+\end{table}
 
-Optimal diagonal tests, complete congruence classifications,
-the external $S_2$ step, unary fibers,
-antimatroid representation and synthesis, forest membership in the reset
-variety, and full complexity reduction have written proofs here. Finite
-checks do not make them generic Lean theorems. Reset basis completeness
-is imported mathematically from Freese et al., not as a Lean axiom.
-Dependent script metatheory and hiding also have written proofs.
-For sealed rounds, the SE correspondence, consistency and public-boundary
-pasting, semialgebraic closure, scalar game realization and contextual
-full abstraction have written proofs in \cref{sec:sealed-rounds}.
-\texttt{SealedRounds.lean} proves the stage and arithmetic certificates;
-it does not define a general SE assessment or connect the full round
-syntax to the threshold probes internally.
-For the smaller hard fragments, \texttt{Fragments.lean} checks the
-semantic certificates under the stated baseline-containment hypotheses,
-including both absorption and fresh-marker separation. Assembly of
-the syntactic reductions, their polynomial tree sizes, and the final
-complexity statements are written proofs in \cref{sec:complexity}.
-\texttt{RawFragments.lean} additionally checks the semantic fold,
-absorption, and guard-transfer certificates for the raw-pair reductions;
-it does not formalize the CNF syntax assembly or polynomial reductions.
-For the tractable fragment, \texttt{OwnerFragments.lean} proves the
-generic guard criterion and executable checker correctness, including
-\path{Term.single_table_equation_iff}, \path{Term.equationB_correct},
-and, in \texttt{OwnerModels.lean}, \path{Term.four_element_complete}.
-The minimum-generator proof uses Freese et al.'s three-element
-subalgebra theorem externally; its remaining ternary obstruction is
-kernel-checked as \path{three_state_obstruction}. Polynomial size bounds and the
-observer-relative complexity dichotomy are written deductions in
-\cref{sec:one-owner}.
-The colouring proof has a generic Lean pigeonhole/guard certificate;
-the complete identity family and its role-set embeddings are proved
-mathematically there.
+\subsection{Open problems in the algebra}
 
-Run \texttt{make check paper}. Independent finite checks in \texttt{checks/}
-enumerate small full profiles and deviations, synthesize the $131$
-reduct and $751$ full three-role unary functions, and compare congruences,
-tests, matching criteria, and fibers with independent constructions.
-They check the Boolean reduction on $4369$ small CNFs and $28$ actual
-constant-free equation pairs on all $7^4$ mixed valuations. Reset checks
-compare antimatroid enumeration with term closure through arity four,
-all $140^2$ products, and $20^4$ candidate root-fixed five-input tables,
-and compare conservative models with forest enumeration. Separate
-bit-parallel checks evaluate the new native fragment equations on every
-winner-set valuation: $11$ one-variable and $604$ two-variable CNFs at
-$K=3$, with $823543$ valuations per two-variable reset/union equation
-and $2401$ per two-variable $H$ equation. These include empty clauses,
-contradictions, and tautological clauses. At $K=4$ the one-variable
-reset/union equations are checked on all $759375$ valuations. The
-complete-graph identities are checked on all $16807$ valuations at
-$K=3$ and $11390625$ at $K=4$, with explicit next-role counterexamples.
-Scalar evaluation independently checks witnesses and samples from the
-bit-parallel tables. Separate
-one-owner checks compare $403$ three-input terms on every $7^3$
-valuation at $K=3$, and sample $K=4,5$, with explicit singleton-or-pair
-separators. Two-owner checks compare both owners' guard semantics for
-$303$ terms on every $7^3$ valuation and test $4000$ separators,
-including an equation on which only the outsider disagrees. The
-four-state projection is also checked on all $33509$ triples of values
-at $K=3,4,5$, together with the conservative concrete model and all
-$512$ smaller candidate expansions. The raw-pair checks cover all
-$604$ two-variable CNFs at $K=3$: $16807$ valuations per equation
-for the raw-choice pairs and $823543$ for reset with owned choice.
-At $K=4$ all $11$ one-variable CNFs are checked on $3375$ and
-$759375$ valuations respectively. Separate
-models execute dependent phase and sealing rules. These computations
-check their finite implementations, not the conversion or normalization
-metatheory of the dependent data calculus.
-Sealed-round checks compare complete rational Nash support rectangles
-with direct unilateral deviations on a grid for $256$ two-by-two
-continuation tables. They check $2209$ diagonal games, rational synthesis
-through denominator $100$, $24$ reciprocal games and $576$ threshold
-contexts, as well as role transport, commitment exchange, and the
-nonconvex distribution-set witness. These are local stage and arithmetic
-checks, not a solver for beliefs in general imperfect-information games.
-The raw mixed open-game refutation in
-\cref{se:sec:open-game-obstruction} has a self-contained finite proof and
-pinned historical Lean sources. A separate exact-rational checker
-reproduces its unit, incomparable-bracketing, and convex-repair witnesses.
-Those historical sources are not rebuilt by the current check target.
+The most pressing question is a presentation. Reset has a finite equational basis. A finite basis for full owned choice or its intrinsic core is unresolved here, and the
+core's coNP-completeness rules out extending reset's polynomial equality algorithm to the whole core unless $\mathrm P=\mathrm{NP}$. It does not prevent a finite equational basis.
 
-\subsection{Algebraic boundaries}
+A smaller target is the one-owner fragment. A finite basis for the minimum four-element expansion is not supplied by the polynomial guard algorithm, and its abstract guard tables lack a
+realizability criterion analogous to reset's: canonical comparison of tables extracted from terms does not characterize which tables can occur. Since the generator is conservative, it may
+yield to the methods that classify the conservative models of reset. Our polynomial bounds also concern trees, and shared subexpressions require a separate size analysis.
 
-Reset has a finite equational presentation. A finite basis for full
-owned choice or its intrinsic core is unresolved here. Pair tests
-control inputs, not all-arity realizability of tables on those inputs.
-The unary ambiguity quotient is exact, but does not determine arbitrary
-singleton fibers or mixed multi-input operations. The core's
-coNP-completeness prevents extending reset's polynomial equality
-algorithm to the whole core unless $\mathrm P=\mathrm{NP}$; it does not
-prevent a finite equational basis.
+The full clone remains undetermined. Pair tests control inputs, not all-arity realizability of tables on those inputs. The unary ambiguity quotient is exact, but does not determine arbitrary
+singleton fibers or mixed multi-input operations.
 
-Each owned choice is a semilattice operation. For fixed $K$, the
-full finite-signature variety is congruence meet-semidistributive.
-Concretely, the semilattice witness terms displayed just before
-Willard's Theorem~2.1 satisfy his condition $C_2(T)$ when their product
-is interpreted as any fixed $\star_r$ \cite{Willard2000}. The
-characterization then supplies meet-semidistributivity; the expansion
-by other operations preserves those term identities.
-Willard's finite-basis theorem applies if it has a finite residual bound
-\cite{Willard2000}. Classifying quotients of the generator does not bound
-irreducibles throughout the variety. Reset's residual largeness does
-not transfer automatically to an expansion by other operations.
+There is a conditional route to a finite basis. Each owned choice is a semilattice operation, and for fixed $K$ the full finite-signature variety is congruence meet-semidistributive. Concretely,
+the semilattice witness terms displayed just before Willard's Theorem~2.1 satisfy his condition $C_2(T)$ when their product is interpreted as any fixed $\star_r$ \cite{Willard2000}; the
+characterization then supplies meet-semidistributivity, and the expansion by other operations preserves those term identities. Willard's finite-basis theorem applies if the variety has a finite
+residual bound \cite{Willard2000}. But classifying quotients of the generator does not bound irreducibles throughout the variety, and reset's residual largeness does not transfer automatically to
+an expansion by other operations.
 
-There are two specific obstacles to a residual-bound argument. The pair
-test domain is not a subalgebra, and testing all identities on that
-domain does not bound the irreducible models of those identities.
-Likewise, the $K+1$-state player quotients describe the generator's
-reduct, not every subalgebra and quotient of arbitrary powers.
-In the opposite direction, the reset combs would prove residual
-largeness for full owned choice if each could be expanded to a member
-of the full generated variety with the prescribed reset term operation.
-Such an expansion would remain subdirectly irreducible: every
-nonidentity congruence of the expansion is a reset congruence and
-therefore contains the comb's nontrivial monolith. The missing step is
-constructing expansions satisfying all full-signature identities, not
-preserving irreducibility after an expansion has been obtained. We
-have neither those expansions nor a residual bound here.
+Two specific obstacles stand in the way of a residual bound. The pair test domain is not a subalgebra, and testing all identities on that domain does not bound the irreducible models of those identities.
+Likewise, the $K+1$-state player quotients describe the generator's reduct, not every subalgebra and quotient of arbitrary powers. In the opposite direction, the reset combs would prove residual largeness
+for full owned choice if each could be expanded to a member of the full generated variety with the prescribed reset term operation. Such an expansion would remain subdirectly irreducible: every nonidentity
+congruence of the expansion is a reset congruence and therefore contains the comb's nontrivial monolith. The missing step is constructing expansions satisfying all full-signature identities. We have neither
+those expansions nor a residual bound here.
 
-With role switching, one owned choice defines every other:
+The tractable fragments are also constrained by symmetry. With role switching, one owned choice defines every other:
 \[
  x\star_b y=\pi(\pi^{-1}x\star_a\pi^{-1}y),\qquad\pi(a)=b.
 \]
-A role-symmetric fragment containing unrestricted owned choice already
-contains the hard core. The lower boundary is sharper:
-\cref{thm:owner-free-hardness,thm:H-hardness} show coNP-completeness
-for reset with union, which has no owners, and for two owners'
-idempotent atom-preserving $H$ operations. Neither removing owners nor
-requiring atom preservation alone ensures tractability.
-\Cref{thm:raw-pairs} strengthens the raw boundary to every distinct
-pair of basic operations. In particular reset plus raw $\star_a$ is
-hard, whereas reset plus guarded $H_a$ is tractable.
-\Cref{owner:cor:complexity} closes the lower boundary: reset plus one
-fixed $H_a$ has polynomial equality, while adding a second distinct
-$H$ makes it coNP-complete. Its common four-element generator also
-shows that this tractable theory is independent of $K\geq3$.
-A finite basis for this minimum four-element expansion is not supplied
-by the polynomial guard algorithm. This is a smaller presentation target
-than the full core. Its abstract guard tables also lack a realizability
-criterion analogous to reset's: canonical comparison of tables extracted
-from terms does not characterize which tables can occur. The present
-polynomial bounds concern trees; shared subexpressions require a separate
-size analysis.
+So a role-symmetric fragment containing unrestricted owned choice already contains the hard core, and a tractable role-symmetric fragment needs something weaker.
 
-\subsection{Dependent and hidden interaction}
+\subsection{From winners to dependent interaction}
 
-The dependent interface in \cref{app:dependent} retains shared witnesses,
-full alternatives, and audience-derived observations. A general
-connection rule must preserve dependent contexts and the sealing
-certificate, provide one supplier for each witness, and relate open
-components to full strategies as well as execution. The complete-revelation
-fragment in \cref{sec:sealed-rounds} supplies an exact SE recursion at
-public boundaries, and proves that its qualitative contextual quotient
-is already infinite. It does not permit hidden cells to cross those
-boundaries. Neither that recursion nor a winner-set equation proves
-general hidden composition. No such general cut theorem or stronger
-CIC-style theory is claimed.
+We began with a binder $\Q_r(x:A).G$ in which later types may depend on earlier choices, and we have so far studied only who wins. \Cref{app:dependent} develops the interface that the winner algebra
+abstracts away, and it is worth saying what this interface is.
 
-The stable-witness interface currently consists of the written judgments
-$\Gamma_{E_m}\vdash t_m:A$, $\Gamma_{E_m}\vdash A:\U$, and the
-recipient-prefix premise $\Gamma_i^{<c}(\Xi)\vdash A:\U$ for publication
-in \cref{sec:disclosure}. A Lean interface for staged visibility would
-need a formal data calculus, well-formed dependent context projections,
-and an insertion/substitution theorem before it could certify those
-judgments or their preservation. The existing Lean modules formalize
-the public game algebra; they do not yet provide this dependent interface.
+A script gives each endpoint a dependent type: the owner of a binder sees a $\sum$, every other player sees a $\prod$. Execution is dependent substitution, and all endpoints continue with the same value. This
+is an instance of dependent multiparty session typing \cite{ToninhoYoshida2017,WuXi2018,ToninhoCairesPfenning2011}, and the operations are definable in an existing dependent calculus. Two points deserve emphasis.
+Full strategies and executable plans differ: reducing a full strategy to a plan preserves execution but can lose subgame perfection, so equilibria do not factor through execution. And hidden values need stable
+binding: a committed cell keeps its name and value across publication, a dependent cell can be published only after its index is visible, and a value remains hidden until the first release of it \emph{or of
+anything depending on it}, a qualification that the copy-and-publish example shows to be necessary.
 
-Antimatroid prerequisites record when an input contributes under
-ambiguity statuses. They are not automatically the information
-dependencies of commit--reveal. Connecting the structures requires
-specified judgments and a preservation theorem. Adding control also
-requires an account of stable dependent values and conversion; the
-known two-role degeneracy constraints already apply before adding
-players \cite{Herbelin2005,Miquey2017}.
+A general connection rule would have to preserve dependent contexts and the sealing certificate, provide one supplier for each witness, and relate open components to full strategies as well as execution. The
+complete-revelation recursion of \cref{sec:sealed-rounds} gives an exact recursion at public boundaries, and proves that its qualitative contextual quotient is already infinite, but it does not permit hidden cells
+to cross those boundaries. Neither that recursion nor a winner-set equation proves general hidden composition, and no such cut theorem or stronger CIC-style theory is claimed. The stable-witness interface currently
+consists of the written judgments $\Gamma_{E_m}\vdash t_m:A$, $\Gamma_{E_m}\vdash A:\U$, and the recipient-prefix premise $\Gamma_i^{<c}(\Xi)\vdash A:\U$ of \cref{sec:disclosure}. A Lean interface for staged visibility
+would need a formal data calculus, well-formed dependent context projections, and an insertion/substitution theorem; the existing Lean modules formalize the public game algebra only.
+
+Finally, a warning against a tempting identification. Antimatroid prerequisites record when an input contributes under ambiguity statuses. They are not automatically the information dependencies of commit--reveal, and
+connecting the two would require specified judgments and a preservation theorem. Adding control also requires an account of stable dependent values and conversion; the known two-role degeneracy constraints already apply
+before adding players \cite{Herbelin2005,Miquey2017}.
