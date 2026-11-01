@@ -1,0 +1,98 @@
+\section{Two players}\label{app:two-players}
+
+The body of the paper assumes $K\geq3$. Here we drop that assumption and take $I=\{a,b\}$. Write $\top=\{a\}$, $\bot=\{b\}$, and $m=\{a,b\}$ for the three values, and $\lnot$ for the role switch.
+
+\subsection{The public algebra}
+
+\begin{proposition}[Strong Kleene logic]\label{two:prop:kleene}
+On the chain $\bot<m<\top$, the operations $\star_a$ and $\star_b$ are maximum and minimum, and the role switch is the order-reversing involution fixing $m$.
+\end{proposition}
+
+This is immediate from \eqref{game:eq:own}. So $\mathbf A^{\rm sym}$ is Kleene's strong three-valued logic \cite{Kleene1952}, and we write $\lor$ for $\star_a$ and $\land$ for $\star_b$. The atoms are closed under every operation, so each public game has an atomic value, which is Zermelo's theorem. On atoms this is classical logic, and in public games $m$ occurs only as an input.
+
+A value here says no more than who can force a win. Put $q(S)=(S=\top,\ S=\bot)$. Then $q$ is injective, and
+\[
+ q(S\star_a T)=(q_1(S)\lor q_1(T),\ q_2(S)\land q_2(T)),\qquad
+ q(S\star_b T)=(q_1(S)\land q_1(T),\ q_2(S)\lor q_2(T)).
+\]
+These are the coordinate operations of Olde Loohuis and Venema's algebra for two players \cite[Definition~3.20]{OldeLoohuisVenema2010}, and the image of $q$ is closed under their operations. Thus $S=\{i\}$ says that $i$ can force a win, reading an input as won by $i$ exactly when it equals $\{i\}$, and $i\in S$ says that the other player cannot. Olde Loohuis and Venema remark that their two-player setting, in which an input may have both players or neither as winners, is closer to multivalued logic than to classical logic. Under $q$, our $m$ is their element in which neither player wins.
+
+This fails from three players on. In the games $D$ and $(\at a\ch a\at b)\ch b\at c$ of \cref{sec:rational}, no player can force a win, yet the values are $\{a,b,c\}$ and $\{a,c\}$.
+
+Order the values by information, with $m\sqsubset\top$ and $m\sqsubset\bot$. A function on values is \emph{monotone} if it preserves this order coordinatewise, and \emph{normal} if it sends tuples of atoms to atoms.
+
+\begin{proposition}[Term functions]\label{two:prop:terms}
+The term functions of $\mathbf A^{\rm sym}$ are exactly the normal monotone functions. With a constant $m$ added, they are exactly the monotone functions.
+\end{proposition}
+\begin{proof}
+The operations are normal and monotone, and the constant $m$ is monotone. Conversely, let $f$ be monotone, with $P=f^{-1}(\top)$ and $Q=f^{-1}(\bot)$. Call two tuples \emph{compatible} if they have a common upper bound. Then $P$ and $Q$ are up-sets, and no tuple of $P$ is compatible with a tuple of $Q$. For a tuple $p$, let $c_p$ be the meet of $x_i$ over $p_i=\top$ and of $\lnot x_i$ over $p_i=\bot$. Then $c_p(v)=\top$ exactly when $p\sqsubseteq v$, and $c_p(v)=\bot$ exactly when $p$ and $v$ are incompatible. Put
+\[
+ t_1=\bigvee_{p\in P}c_p,\qquad t_2=\bigwedge_{q\in Q}\lnot c_q,
+\]
+with an empty join $\bot$ and an empty meet $\top$. If $v\in P$ then $t_1(v)=t_2(v)=\top$. If $v\in Q$ then $t_1(v)=t_2(v)=\bot$. Otherwise $t_1(v)\leq m\leq t_2(v)$. So $f=(t_1\lor m)\land t_2$. If $f$ is normal, replace $m$ by $\bigvee_i(x_i\land\lnot x_i)$, which is $\bot$ on tuples of atoms and $m$ on all others.
+\end{proof}
+
+In particular $x\cup y$ is monotone but not normal, so union is not a term, and \cref{game:thm:union} has no analogue here.
+
+\begin{proposition}[Presentation]\label{two:prop:basis}
+The identities of $\mathbf C$ are those of distributive lattices, and those of $\mathbf A$ are those of bounded distributive lattices; in both cases the two atoms decide them. The identities of $\mathbf A^{\rm sym}$ follow in equational logic from the bounded distributive lattice laws, $\lnot\lnot x=x$, $\lnot(x\land y)=\lnot x\lor\lnot y$, $\lnot\bot=\top$, and
+\begin{equation}\label{two:eq:kleene}
+ x\land\lnot x\leq y\lor\lnot y,
+\end{equation}
+and all three values are needed to test them.
+\end{proposition}
+\begin{proof}
+The chain is a bounded sublattice of the square of its sublattice $\{\bot,\top\}$, and that two-element lattice generates the distributive lattices, with or without bounds. This gives the first claim.
+
+For $\mathbf A^{\rm sym}$ the laws hold by inspection. They reduce a term to a join of meets of literals $x,\lnot x$, and also to a meet of joins of literals, where an empty meet is $\top$ and an empty join is $\bot$. So $s\leq t$ follows as soon as $c\leq d$ follows for each meet $c$ of $s$ and each join $d$ of $t$. This holds if $c$ and $d$ share a literal, or, by \eqref{two:eq:kleene}, if $c$ contains a pair $x,\lnot x$ and $d$ contains a pair $y,\lnot y$. Otherwise a valuation refutes $c\leq d$. If $c$ has no pair, make its literals $\top$, and give any other variable the value making its literal in $d$ equal to $\bot$, or $m$ if $d$ has both of its literals. Then $c$ is $\top$ and $d\leq m$. If $c$ has a pair and $d$ has none, make the literals of $d$ equal to $\bot$, and treat the other variables dually. Then $d$ is $\bot$ and $c\geq m$.
+
+Finally, $x=x\land\lnot x$ fails only at $\top$, $x=x\lor\lnot x$ fails only at $\bot$, and $x\land\lnot x=\bot$ fails only at $m$.
+\end{proof}
+
+These laws are those of Kalman's Kleene lattices \cite{Kalman1958}, with bounds. So the presentation that remains open for $K\geq3$ has a classical answer here. Each player's view has just two classes, since no ambiguous set omits a player: $\{\top,m\}$ and $\{\bot\}$ for $a$, and dually for $b$. Thus $\mathbf A$ is a subdirect product of two Boolean lattices, which \cref{cor:no-boolean-product} excludes for $K\geq3$, and up to complement this representation is $q$.
+
+\begin{proposition}[Complexity]\label{two:prop:complexity}
+For a signature chosen from $\{\star_a,\star_b,\cup,\del\}$, equation validity is coNP-complete if the signature contains two of $\star_a,\star_b,\cup$, and polynomial otherwise. Validity in $\mathbf C$, $\mathbf A$, and $\mathbf A^{\rm sym}$ is coNP-complete.
+\end{proposition}
+\begin{proof}
+A countervaluation gives membership in coNP. Since $S\del T=T$, reset can be erased from a term, and one semilattice operation sees only the variables of a term. For hardness of $\{\star_a,\star_b\}$, a CNF $\varphi$ over literal variables $x_i,\bar x_i$ is unsatisfiable exactly when
+\[
+ \varphi\land\bigwedge_i(x_i\lor\bar x_i)\leq\bigvee_i(x_i\land\bar x_i)
+\]
+holds on the two atoms, and by \cref{two:prop:basis} that is equation validity. This is the word problem for distributive lattices \cite{BloniarzHuntRosenkrantz1984}, which Olde Loohuis and Venema use in the same way \cite[Theorem~5.50]{OldeLoohuisVenema2010}.
+
+For $\{\star_a,\cup\}$, a term equals $\bot$ exactly when all its variables do, and equals $\top$ exactly when the monotone formula reading $\star_a$ as OR and $\cup$ as AND holds of the predicates $x=\top$. So two terms are equal exactly when they have the same variables and these formulas are equivalent. Replacing a term $s$ by $s\star_a(s\cup(x_1\star_a\cdots\star_a x_n))$ adds the variables $x_i$ and keeps its formula, so monotone formula equivalence reduces to this problem. The role switch carries the result to $\{\star_b,\cup\}$.
+\end{proof}
+
+\paragraph{What fails.}
+Backward induction and \cref{gen:thm:source} use no third role and still hold, and the pair theorem is trivial, since no value has more than two winners. The following fail or become empty.
+\begin{itemize}
+\item \Cref{game:thm:union}: union is not a term, and $m$ is not the value of a public game.
+\item \Cref{view:thm:view}: there are two classes rather than $K+1$, as above.
+\item \Cref{gen:thm:core}: $x\star_a\at b=x$ has a winner leaf, and $x\lor(y\land\lnot y)$ is idempotent but is not a term of $\mathbf C$, since it is not increasing in $y$ along the chain. The proof needs two ambiguous sets, and here there is only $m$.
+\item \Cref{gen:cor:determinacy,reset:thm:binary}: the binary terms of $\mathbf C$ are $x$, $y$, $x\lor y$, and $x\land y$, and all of them preserve atoms.
+\item \Cref{sec:reset,sec:one-owner,app:selective}: here $S\del T=T$, $H_a(x,y,z)=x$, and $R_D(x,y,z)=x$.
+\item \Cref{thm:raw-pairs}: reset together with one other operation is polynomial.
+\end{itemize}
+
+\subsection{Sealed rounds}
+
+Rounds make sense for two players. Every game is then constant-sum, so $\mathcal E(G)$ is the single distribution with $a$'s winning probability $v(G)$ (\cref{app:proofs-sealed}), and $\operatorname{Win}(\mathcal E(G))$ is $\top$, $\bot$, or $m$ according as $v(G)$ is $1$, $0$, or neither. Take a round $\mathsf R$ in which $a$ chooses $\alpha$ and $b$ chooses $\beta$, with continuations $G_{\alpha\beta}$, and let $g_{\alpha\beta}=\operatorname{Win}(\mathcal E(G_{\alpha\beta}))$. Its two public serializations, in which $a$ or $b$ respectively commits first in the open, have values
+\[
+ S_a=\bigvee_\alpha\bigwedge_\beta g_{\alpha\beta},\qquad
+ S_b=\bigwedge_\beta\bigvee_\alpha g_{\alpha\beta}.
+\]
+
+\begin{proposition}[Rounds]\label{two:prop:rounds}
+$\operatorname{Win}(\mathcal E(\mathsf R))=S_a\cup S_b=(S_a\lor m)\land S_b$.
+\end{proposition}
+\begin{proof}
+By \cref{se:thm:round}, $v(\mathsf R)$ is the value of the matrix game with entries $v(G_{\alpha\beta})\in[0,1]$. This value is $1$ exactly when some row is all $1$, since every row in the support of a strategy securing $1$ has this form. Dually, it is $0$ exactly when some column is all $0$. These two conditions say that $S_a=\top$ and $S_b=\bot$. Since $S_a\leq S_b$, the first forces $S_b=\top$ and the second forces $S_a=\bot$. So the class is the common atom when $S_a=S_b$ is an atom, and $m$ otherwise, which is the union. The second formula follows by cases.
+\end{proof}
+
+So possible winners compose on three values, for all rounds, and games of the same class agree on possible winners in every context. For $K\geq3$ this fails (\cref{se:thm:infinite,se:cor:scalar}), because a third player supplies a test. Hiding adds exactly the constant $m$. The game $D(\at a,\at a)$ of \cref{sec:sealed-rounds} is matching pennies: it has $S_a=\bot$ and $S_b=\top$, and so realizes $m$ from a closed game, with value $1/2$. Conversely, once $m$ is available every round is a term. By \cref{two:prop:terms}, the contexts built from public choice, role switches, and rounds denote exactly the monotone functions on the three values. For example, the round with matrix $\left(\begin{smallmatrix}x&y\\y&x\end{smallmatrix}\right)$ has $S_a=x\land y$ and $S_b=x\lor y$, so it realizes $x\cup y$, and its scalar value is $(x+y)/2$.
+
+\paragraph{Beyond forcing.}
+The three classes still record forcing: a class is an atom exactly when that player has a pure strategy winning against every play of the other, and $m$ says that nobody has one. What forcing cannot see is the scalar value. The games $L_n$ of \cref{sec:sealed-rounds}, for $n\geq1$, all have class $m$, with values $1/(n+1)$, and the values range over all rationals in the unit interval (\cref{se:thm:rational}). On $[0,1]$, the operations $\max$, $\min$, and $1-x$ satisfy the laws of \cref{two:prop:basis}, and the map to classes is a homomorphism. The round operators, such as parallel sum, are what lie beyond these laws.
+
+This is the territory of independence-friendly logic. A sealed round is an independent pair of quantifiers, as in $(\forall x)(\exists y/\forall x)$, followed by a continuation that may depend on both choices, and matching pennies is the standard undetermined sentence there. The equilibrium semantics of Sevenster and Sandu assigns a sentence the minimax value of its game, corresponding to our $v$ \cite{SevensterSandu2010,MannSanduSevenster2011,Sevenster2014}. As first defined it is not compositional, and Galliani and Mann give a compositional semantics with the same values, using probability distributions over assignments \cite{GallianiMann2013}. Disclosure at the end of each round is what lets our recursion use values alone. We have not compared the two languages formally.
