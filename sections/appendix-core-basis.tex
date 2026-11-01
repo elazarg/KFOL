@@ -1,0 +1,97 @@
+\subsection{Owned choice, dissemilattices, and the core}
+\label{app:core-basis}
+
+The core contains a classical variety that gives a finite basis for
+another fragment and excludes a finite residual bound for the core itself.
+Write $+$ for union and $xy$ for $x\star_a y$ in this subsection.
+A \emph{meet-distributive bisemilattice}, also called a
+\emph{dissemilattice}, satisfies the three semilattice laws for each
+operation and the one distributive law
+\begin{equation}\label{core:eq:dissemilattice}
+ x(y+z)=xy+xz.
+\end{equation}
+This is a basis of seven identities for that class.
+
+\begin{proposition}[A seven-equation basis]\label{core:prop:choice-union-basis}
+For every $K\geq3$ and owner $a$, the winner-set algebra in the
+signature $\{\star_a,\cup\}$ generates exactly the variety of
+meet-distributive bisemilattices. Its identities are therefore
+axiomatized by the seven equations just described.
+\end{proposition}
+\begin{proof}
+Both operations are semilattices. For
+\eqref{core:eq:dissemilattice}, if $x=\{a\}$, both sides are
+$\{a\}$. Otherwise, if both $y,z$ equal $\{a\}$, both sides
+again equal $\{a\}$. If neither equals $\{a\}$, both sides are
+$x\cup y\cup z$. If exactly one equals $\{a\}$, the same union
+is obtained: the absorbed branch on the right contributes the
+owner singleton and the other branch contributes $x$.
+
+Choose distinct $a,b,c$ and take the three-element subalgebra
+\[
+ B=\{a\},\qquad N=\{a,b\},\qquad P=\{a,b,c\}.
+\]
+Union is maximum in $B<N<P$; owned choice is maximum in
+$N<P<B$. This is the classical generator $3_m$ of the
+meet-distributive bisemilattices
+\cite[Section~3.3, Theorem~3.9 and the following paragraph]{HardingRomanowska2017}.
+In particular it fails the other distributive law:
+\[
+ N+(BP)=N,\qquad (N+B)(N+P)=P.
+\]
+The winner-set algebra belongs to that variety and contains its
+generator, so it generates precisely that variety.
+\end{proof}
+
+This is the raw owned-choice fragment, distinct from the guarded
+one-owner theory of \cref{owner:thm:finite-basis}. Its equation
+problem is coNP-complete by \cref{thm:raw-pairs}. A finite basis
+does not impose a polynomial bound on equational derivations.
+
+\begin{proposition}[Dissemilattices inside the core]
+\label{core:prop:dissemilattice-lift}
+Fix an owner $a$. Every meet-distributive bisemilattice $(D,+,\cdot)$
+expands to a member of $\operatorname V(\mathbf C)$ by setting
+\[
+ x\star_a y=x\cdot y,\qquad
+ x\star_r y=x+y\quad(r\ne a).
+\]
+This expansion preserves the congruence lattice. The variety
+$\operatorname V(\mathbf C)$ has no finite residual bound.
+\end{proposition}
+\begin{proof}
+The same three winner sets $B,N,P$ form a subalgebra for every
+owned choice. For $r\ne a$ none is the singleton $\{r\}$, so
+$\star_r$ is union on them. Thus this subalgebra is exactly the
+displayed expansion of $3_m$.
+
+Duplicating operation symbols commutes with products, subalgebras,
+and homomorphic images. Since $3_m$ generates all meet-distributive
+bisemilattices, their displayed expansions belong to
+$\operatorname V(\mathbf C)$. Both original operations occur in
+the expansion, and every added operation repeats one of them,
+so its congruences are unchanged.
+
+There are infinitely many nonisomorphic subdirectly irreducible
+meet-distributive bisemilattices
+\cite[Section~3.3, following Theorem~3.9]{HardingRomanowska2017}.
+Their expansions remain subdirectly irreducible and pairwise
+nonisomorphic. A finite signature has only finitely many algebras
+of any bounded finite cardinality, up to isomorphism. Consequently
+no finite cardinal bounds the subdirectly irreducible core models.
+\end{proof}
+
+This excludes the finite-residual-bound hypothesis of Willard's
+theorem for the core. It does not prove nonfinite basability: the
+embedded dissemilattice variety itself has the seven-equation basis.
+Nor does it settle the residual bound after adding winner constants
+or internal role switching; the displayed expansions supply neither.
+
+The generic associativity and distributivity calculations, and the
+three-state embedding for three roles, are kernel-checked in
+\path{lean/CoreModels.lean}. The dissemilattice generation and
+irreducible-family results are imported from the cited literature.
+The expansion and congruence arguments above are written proofs.
+\path{checks/check_core_basis.py} checks the seven sound identities,
+the concrete embeddings, and the failed reverse distributive law
+independently with winner sets.
