@@ -1,0 +1,135 @@
+\section{Selective reset: a tractable family with several owners}
+\label{app:selective}
+
+The owner-count dichotomy of \cref{owner:cor:complexity} concerns the
+specific operations $H_r$. This boundary does not extend to all operations defined from reset and
+owned choices; reset itself is already a derived operation. For distinct
+$a,b$, consider the native ternary operation
+\[
+ G_{a,b}(X,Y,Z)=((Y\star_b Z)\star_a Y)\del X.
+\]
+Its inner expression has a simpler description:
+\begin{equation}\label{selective:eq:inner}
+ (Y\star_b Z)\star_a Y=
+ \begin{cases}
+ Y,&Y=\{a\}\text{ or }Y=\{b\},\\
+ Y\cup Z,&\text{otherwise}.
+ \end{cases}
+\end{equation}
+If $Y$ is either owner's atom, that atom absorbs. Otherwise the inner
+choice either returns $\{b\}$, which the outer union joins back to $Y$,
+or returns $Y\cup Z$. The outer choice cannot absorb to $\{a\}$:
+for nonempty operands this would require $Y=\{a\}$.
+In particular, $G_{a,b}=G_{b,a}$, despite the ordered syntax of its
+definition. Its actual parameter is a set of blocking atoms.
+
+For $D\subseteq I$ define selective reset and its rooted form by
+\begin{align*}
+ Z\mathbin{\triangleleft_D}Y
+   &=\begin{cases}Y,&Y=\{r\}\text{ for some }r\in D,\\
+                   Y\cup Z,&\text{otherwise},\end{cases}\\
+ R_D(X,Y,Z)&=(Z\mathbin{\triangleleft_D}Y)\del X.
+\end{align*}
+These operations are owned-choice definable: start with $Y\cup Z$ and
+apply $U\mapsto U\star_r Y$ for $r\in D$. If $Y$ is a blocking atom,
+its suppression succeeds and later steps preserve it. Otherwise every
+step preserves the initial union. Thus
+$G_{a,b}=R_{\{a,b\}}$. Every $R_D$ is idempotent and atom-preserving,
+and $R_D(Y,X,X)=X\del Y$, so reset is already definable from it.
+
+\begin{theorem}[Policy-independent guard calculus]\label{selective:thm:guards}
+Fix one $D\subseteq I$ throughout the native signature
+$\{\del,R_D\}$, with variables and no constants or internal switches.
+If $\varnothing\ne D\ne I$, equation validity is
+decided by the same polynomial guard comparison for every such $D$
+and every $K\geq3$. In particular, all these algebras have the same
+equational theory. A failed equation has an explicit countervaluation
+using three roles and at most two winners per input.
+\end{theorem}
+\begin{proof}
+The root status laws are unchanged: reset takes the right root and
+$R_D$ takes the root of its first argument. For an observer $k$ put
+\[
+ N_k(Y)\ \Longleftrightarrow\
+ Y\ne\{r\}\text{ for every }r\in D\setminus\{k\}.
+\]
+The exact membership recursion is
+\[
+ k\in R_D(x,y,z)\quad\Longleftrightarrow\quad
+ k\in x\ \lor\
+ \bigl(M_{\rho(x)}\land
+       (k\in y\ \lor\ (N_k(y)\land k\in z))\bigr).
+\]
+If $y$ is a blocking atom different from $k$, the $z$ contribution is
+blocked. If it is $\{k\}$, the unguarded $y$ contribution already wins
+for $k$. Otherwise the inner operation takes union. Root status makes
+$N_k(y)$ a test on the root input of $y$.
+
+Use the guards of \cref{sec:one-owner}, now with the same list for
+\emph{every} observer. For an $R_D$ node retain the first argument's
+guards, add $M_{\rho(x)}$ to the second argument's guards, and add both
+$M_{\rho(x)}$ and $N_{\rho(y)}$ to the third argument's guards.
+Each native variable occurrence contributes exactly one guard.
+The cover relation remains \eqref{owner:eq:cover}: ambiguity implies
+$N_k$, and containing $k$ also implies $N_k$. Consequently coverage
+is sound for every observer, regardless of the size of $D$.
+
+For completeness choose $r\in D$, $c\notin D$, and a third role
+$k\notin\{r,c\}$. For an uncovered guard $(j,A,B)$ assign
+\[
+ x_i=\begin{cases}
+ \{k,r\},&i=j,\ i\in A,\\
+ \{k\},&i=j,\ i\notin A,\\
+ \{r,c\},&i\ne j,\ i\in A,\\
+ \{c\},&i\ne j,\ i\notin A,\ i\in B,\\
+ \{r\},&\text{otherwise}.
+ \end{cases}
+ \]
+Exactly $A$ is ambiguous, exactly $A\cup B\cup\{j\}$ passes $N_k$,
+and only $j$ contains $k$. Thus a guard on the other side holds
+precisely when it covers the selected guard. This proves necessity.
+The guard lists and cover relation contain neither $D$ nor role names,
+so the equational theory is independent of both $D$ and $K$.
+The $O(n^4)$ list-based bound follows as in \cref{sec:one-owner}.
+\end{proof}
+
+The two excluded policies have rooted operations definable by reset:
+\[
+ R_\varnothing(X,Y,Z)=(Y\del X)\del(Z\del X),\qquad
+ R_I(X,Y,Z)=(Z\del Y)\del X.
+\]
+Their equations need not be the common theory of the nontrivial policies.
+They also have polynomial comparison in native tree size, without
+expanding those definitions: for the empty policy omit the $N$ tests;
+for the full policy replace them by ambiguity tests on the same input.
+For the latter, a nonambiguous input passing $N_k$ must be $\{k\}$,
+and its unguarded contribution already wins for $k$. The resulting
+positive ambiguity guards are compared by the reset selector argument,
+with one guard per native leaf. The theorem fixes \emph{one} policy in a signature. It does not classify
+languages containing several independently chosen policies.
+
+\begin{corollary}[Two owners, polynomial equality]\label{selective:cor:G}
+For distinct $a,b$ and every $K\geq3$, the language $\{\del,G_{a,b}\}$
+has polynomial equation validity. Either owner's possible-win observation,
+compared on all valuations, suffices for full equation equality.
+\end{corollary}
+\begin{proof}
+Use $D=\{a,b\}$ in the theorem. In its completeness proof, take
+$k=a$, $r=b$, and $c\notin\{a,b\}$, or interchange the owners.
+\end{proof}
+
+The operation is not reset-definable. For three distinct roles, set
+$X=\{b,c\}$ and $Z=\{a\}$. Changing $Y$ from $\{b\}$ to $\{c\}$
+changes whether $a$ is present, although all input ambiguity statuses
+and possible-$a$ memberships stay fixed. Reset's selector semantics
+cannot distinguish these valuations. Thus this is a strict tractable
+extension of reset, even though two owners occur in its definition.
+
+\path{lean/ChainGuards.lean} proves \eqref{selective:eq:inner}, the
+membership recursions, generic coverage completeness, the executable
+checker, policy independence, and the endpoint reset identities.
+The polynomial bound is the written guard-size argument.
+\path{checks/check_chain_guards.py} independently evaluates the original
+two-owned-choice expression and all nontrivial blocking policies at
+$K=3,4,5$. The issue is the arrangement of tests and the preserved root,
+not merely how many owners occur.

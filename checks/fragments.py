@@ -35,6 +35,14 @@ def owned(owner, left, right):
     return Term('owned', (owner, left, right))
 
 
+def g(a, b, root, left, right):
+    return Term('g', (a, b, root, left, right))
+
+
+def policy(blockers, root, left, right):
+    return Term('policy', (blockers, root, left, right))
+
+
 def denote(term, values):
     if term.op == 'var':
         return values[term.args[0]]
@@ -48,6 +56,17 @@ def denote(term, values):
         owner, left, right = term.args
         left, right = denote(left, values), denote(right, values)
         return 1 << owner if left == 1 << owner or right == 1 << owner else left | right
+    if term.op == 'g':
+        a, b, root, left, right = term.args
+        root, left, right = (denote(t, values) for t in (root, left, right))
+        inner = 1 << b if left == 1 << b or right == 1 << b else left | right
+        inner = 1 << a if inner == 1 << a or left == 1 << a else inner | left
+        return root if root.bit_count() == 1 else root | inner
+    if term.op == 'policy':
+        blockers, root, left, right = term.args
+        root, left, right = (denote(t, values) for t in (root, left, right))
+        inner = left if left.bit_count() == 1 and left & blockers else left | right
+        return root if root.bit_count() == 1 else root | inner
     owner, root, left, right = term.args
     root = denote(root, values)
     if root.bit_count() == 1:
