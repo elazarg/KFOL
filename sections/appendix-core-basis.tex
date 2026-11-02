@@ -3,8 +3,10 @@
 Whether the core $\mathbf C_K$ has a finite basis for fixed $K$ is open, and
 nothing here settles it. This appendix collects what is known, in four groups.
 \begin{itemize}
-\item \emph{Obstructions.} The core variety has no finite residual bound, since it
-  contains every dissemilattice (\cref{app:core-dissemilattice}), and any basis
+\item \emph{Obstructions.} The core contains every dissemilattice
+  (\cref{app:core-dissemilattice}). An explicit family of irreducible
+  ladders rules out both a finite residual bound and bounded critical depth
+  (\cref{app:core-ladders}), and any basis
   needs an identity with at least $K+1$ variables, owner exhaustion being the
   witness (\cref{app:core-arity}).
 \item \emph{Settled cases.} Binary terms and unary polynomial functions are
@@ -31,11 +33,11 @@ route through Willard's theorem remains. \Cref{tab:status} records the evidence
 for each result. Throughout, $+$ is the derived union term, which on winner
 sets is union.
 
-\subsection{Dissemilattices and the residual bound}
+\subsection{Dissemilattices inside the core}
 \label{app:core-dissemilattice}
 
 The core contains a classical variety that gives a finite basis for
-another fragment and excludes a finite residual bound for the core itself.
+another fragment.
 Write $xy$ for $x\star_a y$ in this subsection.
 A \emph{meet-distributive bisemilattice}, also called a
 \emph{dissemilattice}, satisfies the three semilattice laws for each
@@ -89,8 +91,7 @@ expands to a member of $\operatorname V(\mathbf C)$ by setting
  x\star_a y=x\cdot y,\qquad
  x\star_r y=x+y\quad(r\ne a).
 \]
-This expansion preserves the congruence lattice. The variety
-$\operatorname V(\mathbf C)$ has no finite residual bound.
+This expansion preserves the congruence lattice.
 \end{proposition}
 \begin{proof}
 The same three winner sets $B,N,P$ form a subalgebra for every
@@ -105,20 +106,118 @@ $\operatorname V(\mathbf C)$. Both original operations occur in
 the expansion, and every added operation repeats one of them,
 so its congruences are unchanged.
 
-There are infinitely many nonisomorphic subdirectly irreducible
-meet-distributive bisemilattices
-\cite[Section~3.3, following Theorem~3.9]{HardingRomanowska2017}.
-Their expansions remain subdirectly irreducible and pairwise
-nonisomorphic. A finite signature has only finitely many algebras
-of any bounded finite cardinality, up to isomorphism. Consequently
-no finite cardinal bounds the subdirectly irreducible core models.
 \end{proof}
 
-So Willard's theorem cannot supply a basis for the core. Residual
-largeness is no evidence against one: the embedded dissemilattice variety
-is itself finitely based. The bound after adding winner constants or
-internal role switching is untouched, since the displayed expansions supply
-neither; \cref{app:full-signature} returns to it.
+\subsection{Alternating ladders and congruence depth}
+\label{app:core-ladders}
+
+The following explicit models rule out a finite residual bound. They also
+rule out a weaker hypothesis used in an extension of Willard's theorem.
+A \emph{basic translation} fixes all but one input of a basic operation;
+here it has the form $x\mapsto x\star_i d$. A translation of depth at most
+$h$ is a composition of at most $h$ basic translations, including the
+identity at depth zero. A variety has \emph{bounded critical depth} if some
+$h$ works as follows: in every subdirectly irreducible member, every
+unequal pair $u,v$ generates each pair in the monolith by a chain of
+translated pairs $\{p(u),p(v)\}$ with translations of depth at most $h$.
+This is the notion of \cite{BakerMcNultyWang2005}.
+
+For $r\geq1$, define $L_r$ on
+\[
+ \{a_0,\ldots,a_{r-1}\}\cup\{c_0,\ldots,c_r\}.
+\]
+Give $a_j$ and $c_j$ level $j$, denoted by $\ell$, and put
+\[
+ x+y=\begin{cases}x,&x=y,\\c_{\max(\ell(x),\ell(y))},&x\ne y.\end{cases}
+\]
+The element $a_j$ has owner $j\bmod2$. Under its owner's choice it absorbs
+any input of level at most $j+1$; otherwise a choice takes join. If both
+inputs qualify as absorbers, take the one with larger index. Owners other
+than $0,1$ act as join.
+
+\begin{theorem}[Irreducible ladders]\label{core:thm:ladders}
+For every $K\geq3$ and $r\geq1$, the algebra $L_r$ belongs to
+$\operatorname V(\mathbf C_K)$ and is subdirectly irreducible. Its monolith
+has the single nonsingleton class $\{c_0,c_1\}$. For $r\geq2$, generating
+this pair from $c_{r-1},c_r$ requires translations of depth at least $r-1$,
+even when arbitrarily long chains of translated pairs are allowed.
+Consequently the core variety has neither a finite residual bound nor
+bounded critical depth. The depth conclusion also holds with union added
+as a basic operation.
+\end{theorem}
+\begin{proof}
+For coordinate $j<r$, let $B_j=\{b_j,n,p\}$ have join order $b_j<n<p$.
+Owner $j\bmod2$ absorbs $b_j$ and otherwise takes join, while every other
+owner takes join. This is the three-element core subalgebra with winner
+sets $\{j\bmod2\}$, $\{0,1\}$, and $\{0,1,2\}$.
+In $\prod_{j<r}B_j$ take
+\[
+ S_r=\{v:v_j=b_j\Longrightarrow v_{j-1}=p\text{ for }1\leq j<r\}.
+\]
+This is a subalgebra. If a coordinate-$j$ output is $b_j$ under its
+owner's choice, one input has that coordinate $b_j$, hence its preceding
+coordinate is $p$. The adjacent owners differ, so the preceding operation
+is join and returns $p$. Under any other owner's choice both coordinate-$j$
+inputs must be $b_j$, so both preceding coordinates are $p$.
+
+Map the all-$n$ tuple to $c_0$. For any other $v\in S_r$, let $j$ be its
+last coordinate not equal to $n$ and set
+\[
+ h(v)=\begin{cases}a_j,&v_j=b_j,\\c_{j+1},&v_j=p.\end{cases}
+\]
+This map is onto: use a prefix of $p$ coordinates followed by $n$'s to
+obtain each marker, and put $b_j$ after a prefix of $j$ copies of $p$ to
+obtain $a_j$.
+
+To check operation preservation, examine the highest coordinate where
+either input differs from $n$. If both do, their values there are $p,p$,
+$b_j,b_j$, or $b_j,p$. Their product gives exactly the prescribed choice
+on $c_{j+1}$ and $a_j$. If only one does and its value is $p$, the product
+there remains $p$, agreeing with the marker's join with any lower image.
+If that value is $b_j$, its owner preserves it, agreeing with absorption
+by $a_j$. Any other owner changes that coordinate to $n$. For $j>0$, the
+preceding coordinate of that input is $p$, so the product there remains
+$p$ unless the other input has $b_{j-1}$ and its owner is acting. These
+give respectively $c_j$ and $a_{j-1}$, exactly as the ladder tables
+require. For $j=0$ the result is the all-$n$ tuple. This proves that $h$
+is a homomorphism and proves membership. It also identifies the displayed
+join with the core's derived union: in the source both are coordinatewise
+union, and the last-coordinate rule preserves join.
+
+The equivalence $\mu$ with sole nonsingleton class $\{c_0,c_1\}$ is a
+congruence. A basic translation either preserves that pair or identifies
+its endpoints. To prove minimality, take any distinct pair identified by
+a congruence. Two different markers already give an unequal marker pair.
+For two atoms $a_i,a_j$ with $i<j$, joining with $c_i$ gives $c_i,c_j$.
+For $a_i,c_h$ with $i\ne h$, joining with $c_{\min(i,h)}$ gives $c_i,c_h$.
+For $a_i,c_i$, first choose against $c_{i+1}$ under owner $i\bmod2$,
+then join with $c_i$, to obtain $c_i,c_{i+1}$.
+
+Thus some $c_s,c_t$ with $s<t$ are identified. Joining with $c_{t-1}$
+gives $c_{t-1},c_t$. If $t\geq2$, translate successively by
+$a_{t-2},a_{t-3},\ldots,a_0$, each under its owner. The lower endpoint
+descends to $a_0$, while $c_t$ stays fixed. Joining with $c_0$ now gives
+$c_0\sim c_t$. Joining this pair with $c_1$, and using transitivity,
+gives $c_0\sim c_1$. This also holds immediately when $t=1$, proving
+that $\mu$ is the monolith.
+
+Finally every basic translation lowers level by at most one. Join never
+lowers it; absorption by a coefficient $a_j$ requires an input of level
+at most $j+1$. Hence every image of either $c_{r-1}$ or $c_r$ under a
+translation of depth less than $r-1$ has level at least one. None of
+these translated pairs touches $c_0$. No chain of them can therefore
+connect $c_0$ to $c_1$, although that pair belongs to the principal
+congruence generated by $c_{r-1},c_r$. This proves the depth lower bound.
+The sizes $2r+1$ prove the residual assertion.
+\end{proof}
+
+Thus neither Willard's finite-residual-bound theorem nor the
+bounded-critical-depth extension of Baker, McNulty, and Wang supplies a
+basis for the core. These are obstructions to those sufficient criteria,
+not a proof of nonfinite basability; the embedded dissemilattice variety
+itself has a finite basis. The signatures with winner constants or
+internal role switching require a separate analysis, since the ladders
+supply neither; \cref{app:full-signature} returns to them.
 
 \subsection{A variable lower bound}
 \label{app:core-arity}
