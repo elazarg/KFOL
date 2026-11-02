@@ -166,17 +166,27 @@ model. It uses twenty explicit HSP certificates, each with at most thirteen
 source elements, stored in checks/data/core-small-models.json. This finite
 result does not prove an unrestricted basis.
 
-After adding mixed absorption, the candidate is complete through six
-elements. The slower exhaustive verification is run separately:
+After adding mixed absorption, the candidate is complete through eight
+elements. The exhaustive verifications are run separately:
 
     python3 checks/probe_core_six_models.py
+    python3 checks/probe_core_seven_models.py --size 8 --audit-six
 
-Of 14303 six-element candidate tables, 204 are irreducible. Seventeen
-HSP certificates, with source sizes at most 24, cover 147; the others
-are conservative or extensions by a common absorbing element. The
-certificates in checks/data/core-six-models.json are checked by make check.
-The absorbing-extension argument uses the proved regularity of every
-core identity. No unrestricted completeness conclusion follows.
+The second command requires a C++17 compiler and uses a second semilattice
+enumeration, audited against the original Python enumeration at size six.
+Sizes six, seven, eight use 17, 46, 163 HSP certificates, with source sizes
+at most 24, 47, 117. All certificates in checks/data/core-{six,seven,eight}-models.json
+are checked by make check without a compiler. The remaining irreducibles
+are conservative, one-owner dissemilattice expansions, or extensions by a
+common absorbing element. Any countermodel to the strengthened candidate
+has at least nine elements; unrestricted completeness remains unproved.
+
+Observer tests can be reduced at every arity d: atom-only assignments and
+assignments with exactly one upper marker suffice. Across all K observers
+this uses K(K-1)^d + d K^d tests and embeds the free d-generated core algebra.
+The proof is an induction on atomic flags and marker provenance.
+checks/check_core_sparse_tests.py independently reconstructs complete
+sampled term tables from these sparse values.
 
 For a separate family, membership is decided exactly by exhaustion:
 incomparable owner atoms below an arbitrary chain of markers, with each

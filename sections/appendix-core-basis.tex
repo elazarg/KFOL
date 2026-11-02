@@ -9,10 +9,12 @@ nothing here settles it. This appendix collects what is known, in four groups.
   witness (\cref{app:core-arity}).
 \item \emph{Settled cases.} The binary terms are classified
   (\cref{app:core-binary}), and conservative models have a presentation by
-  three-variable equations (\cref{app:core-conservative}).
+  three-variable equations (\cref{app:core-conservative}). Term equality
+  admits a smaller exact test domain at every arity
+  (\cref{core:prop:sparse-tests}).
 \item \emph{A candidate basis.} For three owners, those equations, owner exhaustion,
   and two mixed families are incomplete, with a smallest countermodel of six
-  elements. One more identity removes every countermodel through six elements
+  elements. One more identity removes every countermodel through eight elements
   (\cref{app:core-candidate}).
 \item \emph{Families of models.} The core variety is the join of the subvarieties
   with an unused owner, but only through homomorphic images
@@ -381,7 +383,7 @@ These are all valid in the core. For three owners they are not complete: they
 miss the three-variable identity \eqref{core:eq:mixed-absorption} below, on a
 six-element model, and no smaller model shows this. Let the \emph{strengthened
 candidate} add all ordered instances of that identity. For three owners it has
-no countermodel through six elements. Whether it is a basis is open.
+no countermodel through eight elements. Whether it is a basis is open.
 
 \begin{proposition}[Mixed absorption]\label{core:prop:mixed-absorption}
 For all owners $a,b$, the core satisfies
@@ -495,35 +497,60 @@ elements on both sides or has an occurrence of $\infty$ on both sides.
 In the latter case both terms evaluate to $\infty$.
 \end{proof}
 
-\begin{proposition}[The strengthened candidate through six elements]
-\label{core:prop:six-models}
-Every three-owner model of the strengthened candidate with at most six
+\begin{proposition}[The strengthened candidate through eight elements]
+\label{core:prop:bounded-models}
+Every three-owner model of the strengthened candidate with at most eight
 elements belongs to $\operatorname V(\mathbf C_3)$.
 \end{proposition}
 \begin{proof}[Finite certificate]
 Sizes at most five are covered by
-\cref{core:prop:candidate-small-models}. The exhaustive six-element
-enumeration uses the same semilattice enumeration, equation checks,
-and principal-congruence test. It is reproduced by
-\path{checks/probe_core_six_models.py}; the slower enumeration is
-separate from the default checks. Membership certificates are in
-\path{checks/data/core-six-models.json} and are independently verified
-by the default checks.
+\cref{core:prop:candidate-small-models}. At size six the earlier
+enumeration gives $14303$ strengthened candidate tables, of which
+$204$ are irreducible. Six are conservative, $51$ are absorbing
+extensions of closed five-element subalgebras, and $147$ match
+seventeen HSP certificates, each with at most twenty-four source
+elements. The first two cases use
+\cref{core:thm:conservative-basis,core:lem:absorbing-extension}.
 
-There are $14429$ original candidate tables, $14309$ after exhaustion,
-and $14303$ after mixed absorption. Among the last tables $204$ are
-subdirectly irreducible. Each is either conservative, an extension by
-a common absorbing element of a closed five-element subalgebra, or
-matches one of seventeen HSP certificates after carrier and owner
-relabeling. The first case uses
-\cref{core:thm:conservative-basis}; the second uses the five-element
-result and \cref{core:lem:absorbing-extension}. Each HSP certificate
-has at most twenty-four source elements. Closure, surjectivity, and
-operation preservation are checked on every source pair.
+For sizes seven and eight, a second enumeration adjoins minimal
+elements to smaller join semilattices. Removing a minimal element
+leaves a join subalgebra. Its strict upper set $U$ is a nonempty
+upset, and its join with an old element $x$ must be the least
+element of $U\cap\mathord\uparrow x$. Enumerating all such upsets,
+then canonicalizing and relabeling the resulting tables, therefore
+supplies every semilattice. For each join shape, every compatible
+choice triple is tested against all the candidate equations.
+Suppressing owner order gives the following counts; full algebras
+may still be isomorphic.
+\[
+\begin{array}{c|r|r|r|r|r}
+\text{size}&\text{models}&\text{irreducibles}&
+ \text{one owner}&\text{absorbing extension}&\text{HSP}\\\hline
+7&29439&102&8&24&70\\
+8&299013&315&10&70&235
+\end{array}
+\]
+The one-owner cases use \cref{core:prop:dissemilattice-lift}.
+Absorbing extensions have a closed subalgebra of size one less, so
+induction applies. The remaining tables match $46$ certificates at
+size seven and $163$ at size eight, with source sizes at most $47$
+and $117$, respectively. Each certificate is a homomorphic image of
+a subalgebra of a product of observer quotients. Closure,
+surjectivity, and operation preservation are checked on every
+source pair.
+
+The verification is reproduced by
+\path{checks/probe_core_six_models.py} and
+\path{checks/probe_core_seven_models.py --size 8 --audit-six}.
+The latter also compares the new enumeration with the independent
+older enumeration at size six: the full labeled semilattice set,
+candidate and irreducible counts, and irreducible coverage agree.
+The supplied certificates are independently checked by the default
+checks; their discovery need not be repeated.
 
 Finite subdirect decomposition completes the argument, since each
 irreducible quotient still satisfies all the candidate equations.
-No bound on term size is used. A larger countermodel is not excluded.
+No bound on term size is used.
 \end{proof}
 
 \subsection{Fragments with an unused owner}
@@ -632,6 +659,53 @@ The identification gives no basis for this fragment by itself, and the
 union expansion is not term equivalent to the raw pair: $\{a,b\}$ is
 closed under both choices, but its
 join $a+b=n$ lies outside it, so union is not a raw two-choice term.
+
+The observer factors also reduce the test domain for arbitrary core
+terms. Only one input needs to carry their upper marker.
+
+\begin{proposition}[One marked input suffices]
+\label{core:prop:sparse-tests}
+Let $d\geq1$. In each observer factor
+$O_j=D_K\setminus\{a_j\}$, it suffices to test identities on
+assignments to $d$ variables that are either atom-only, or have
+exactly one input equal to $p$ and every other input an atom or $n$.
+Across the $K$ observers this gives exactly
+\[
+ K(K-1)^d+dK^d
+\]
+tests. Evaluation on these tests embeds the free $d$-generated core
+algebra into the corresponding product of observer factors.
+\end{proposition}
+\begin{proof}
+The observer factors together have exactly the core identities by
+\cref{core:cor:fragment-reduction}. Fix one factor and fix which
+variables are atoms, including their values. Each remaining variable
+can be either $n$ or $p$.
+
+For any term, its atom flags are independent of these remaining
+choices. Under owner $i$, the $a_i$ flag is the disjunction of the
+two input flags, and every other atom flag is their conjunction;
+the omitted atom flag is always false. Write $A_i(s)$ for the
+$a_i$ flag of a subterm $s$, and $P_s$ for its $p$ flag. Then
+\[
+ P_{s\star_i t}
+  =(P_s\lor P_t)\land\neg A_i(s)\land\neg A_i(t).
+\]
+The atom flags are fixed. Induction therefore shows that $P_s$ is
+a disjunction of a subset of the input $p$ flags, with no constant
+true contribution.
+
+Suppose two terms differ at an arbitrary assignment. If their atom
+flags differ, either the assignment is already atom-only, or
+replacing one nonatom input by $p$ and all the other nonatom inputs
+by $n$ preserves that difference. If both outputs are nonatoms,
+one is $p$ and the other $n$. A source flag contributing to the
+first disjunction and not the second witnesses the same difference
+when it is the only input set to $p$. Thus the stated tests
+separate all unequal term functions. There are $(K-1)^d$ atom-only
+tests and $dK^{d-1}$ one-marker tests per observer. Evaluation is
+a homomorphism, so joint separation gives the embedding.
+\end{proof}
 
 \subsection{Quotients that require every owner}
 \label{app:core-quotients}

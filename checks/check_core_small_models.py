@@ -13,6 +13,7 @@ from pathlib import Path
 from core_basis import marker_own
 from probe_core_basis import candidate_models, exhaustion_holds, relabel
 from probe_residual import merge_congruence, root
+from semilattice_shapes import automorphisms
 
 
 def key(add, ops):
@@ -20,7 +21,7 @@ def key(add, ops):
     return tuple(map(tuple, add)), tuple(sorted(tuple(map(tuple, t)) for t in ops))
 
 
-def certify_members(filename='core-small-models.json'):
+def certify_members(filename='core-small-models.json', *, include_relabelings=True, fix_join=False):
     path = Path(__file__).with_name('data') / filename
     certificates = json.loads(path.read_text())
     known = set()
@@ -42,8 +43,11 @@ def certify_members(filename='core-small-models.json'):
             assert mapping[z] == ops[r][mapping[x]][mapping[y]]
         for x, y in product(range(len(add)), repeat=2):
             assert ops[2][ops[0][x][y]][ops[1][x][y]] == add[x][y]
-        for p in permutations(range(len(add))):
-            known.add(key(relabel(add, p), [relabel(t, p) for t in ops]))
+        if include_relabelings:
+            renamings = automorphisms(add) if fix_join else permutations(range(len(add)))
+            for p in renamings:
+                renamed = relabel(add, p)
+                known.add(key(renamed, [relabel(t, p) for t in ops]))
     return known, len(certificates), max(len(c['source']) for c in certificates)
 
 
@@ -63,6 +67,10 @@ def is_subdirectly_irreducible(ops):
 def check():
     known, certificates, maximum = certify_members()
     _, six_certificates, six_maximum = certify_members('core-six-models.json')
+    _, seven_certificates, seven_maximum = certify_members(
+        'core-seven-models.json', include_relabelings=False)
+    _, eight_certificates, eight_maximum = certify_members(
+        'core-eight-models.json', include_relabelings=False)
     counts = []
     for size in range(1, 6):
         candidates = irreducibles = 0
@@ -89,6 +97,12 @@ def check():
           f'verified, with at most {six_maximum} source elements. '
           'Exhaustive six-element coverage is checked separately by '
           'probe_core_six_models.py.')
+    print(f'Seven-element strengthened candidate: {seven_certificates} HSP certificates '
+          f'verified, with at most {seven_maximum} source elements. '
+          'Exhaustive coverage is checked separately by probe_core_seven_models.py.')
+    print(f'Eight-element strengthened candidate: {eight_certificates} HSP certificates '
+          f'verified, with at most {eight_maximum} source elements. '
+          'Exhaustive coverage is checked by probe_core_seven_models.py --size 8.')
 
 
 if __name__ == '__main__':
