@@ -27,8 +27,8 @@ nothing here settles it. This appendix collects what is known, in four groups.
   quotient below each bound and lifts the entire atomic equational theory
   (\cref{app:core-atomic}). A separate quotient construction reduces finite
   basability exactly to a variety with a named left reset unit, generated
-  by $K^2$ pointed algebras of size $K+1$
-  (\cref{app:core-units}). Owner exhaustion decides membership in a family
+  by $K^2$ pointed algebras of size $K+1$. Even a neutral reset unit
+  leaves unbounded observation depth (\cref{app:core-units}). Owner exhaustion decides membership in a family
   with arbitrarily long chains of ambiguous values
   (\cref{app:core-thresholds}).
 \end{itemize}
@@ -1355,44 +1355,138 @@ whole finite-basis question, whereas
 \cref{core:prop:atomic-uniform-lift} transfers only identities of the
 atomic quotient.
 
-The named unit does not reduce arbitrary contexts to single choices.
-For a fixed $r$, put $\rho_r(x)=x\del r$, and define an equivalence by
+The named unit does not bound the number of observations needed to
+control arbitrary contexts. For a fixed $r$, put $\rho_r(x)=x\del r$.
+Let $\equiv_r^h$ identify $x,y$ exactly when
 \[
- x\equiv_r^1 y\quad\Longleftrightarrow\quad
- \rho_r(x)=\rho_r(y)\quad\text{and}\quad
- \rho_r(x\star_i a)=\rho_r(y\star_i a)
- \text{ for every }i,a.
+ \rho_r(p(x))=\rho_r(p(y))
 \]
-If this relation were a congruence, these one-step observations would
-determine the result after every further context. Even a stronger unit
-condition does not guarantee that.
+for every translation $p$ of depth at most $h$. Equivalently,
+$\equiv_r^0=\ker\rho_r$, and each successive relation refines the
+preceding one by every basic translation. The stable relation is the
+largest congruence contained in $\ker\rho_r$.
 
-\begin{proposition}[One-step observations do not suffice]
+\begin{theorem}[Unbounded reset-observation depth]
 \label{core:prop:observation-obstruction}
-There is a nine-element subdirectly irreducible algebra in
-$\mathcal V_3$ with a left reset unit $r$ such that
-$x\leq r\star_i x$ for every $i,x$, but $\equiv_r^1$ is not a congruence.
-Only two owners differ from join.
-\end{proposition}
-\begin{proof}[Finite certificate]
-Use the algebra on $\{0,\ldots,8\}$ in
-\path{checks/data/core-observation-countermodel.json}.
-The certificate presents it as an onto image of a subalgebra of
-$O_2\times O_2\times O_0\times O_1$, so it belongs to $\mathcal V_3$.
-The checker verifies the homomorphism, the stated unit conditions at
-$r=2$, and the monolith with sole nonsingleton class $\{2,3\}$.
-Its reset observation is
+For every $K\geq3$ and $d\geq1$, there is a $(4d+1)$-element
+subdirectly irreducible algebra $A_d\in\mathcal V_K$ with a left reset
+unit $r$ satisfying $x\leq r\star_i x$ for every $i,x$, such that
 \[
- (\rho_2(0),\ldots,\rho_2(8))=(2,3,2,3,3,3,3,8,8).
+ \equiv_r^{d-1}\ne 0,\qquad \equiv_r^d=0.
 \]
-The sole nonsingleton class of $\equiv_2^1$ is $\{7,8\}$, but
+Only owners $0,1$ can differ from join. Thus no fixed observation depth
+suffices, even with this stronger unit condition and only two active
+owners. The conclusion also holds when union is a basic operation.
+\end{theorem}
+\begin{proof}
+Use the ladder $L_d$ of \cref{core:thm:ladders}. Write $x^e$ for
+$(x,e)$ and take
 \[
- (7\star_1 4,\,8\star_1 4)=(4,5),\qquad
- (4\star_0 1,\,5\star_0 1)=(0,1).
+ A_d=\{x^e:x\in L_d,\ e\in\{0,1\}\}\setminus\{c_0^0\}.
 \]
-The final reset observations are $2$ and $3$. Thus a two-step context
-distinguishes a pair on which all one-step observations agree.
+Start with the coordinatewise operations of $L_d$ and the two-element
+core subalgebra on which $\star_0$ is minimum and every other choice
+and join are maximum. Change just one unordered pair: under join and
+every $\star_i$ with $i\ne0$, set
+\begin{equation}\label{core:eq:doubled-exception}
+ a_0^1+c_0^1=a_0^1\star_i c_0^1=c_1^1
+ \qquad(i\ne0).
+\end{equation}
+All other products retain their coordinatewise values. These tables
+never return the omitted $c_0^0$. Every operation still combines the
+superscripts by minimum for owner $0$ and maximum otherwise.
+
+We first prove membership by induction, so no preservation of core
+identities by this table modification is assumed. For $d=1$, owners
+other than $0$ are join, and the five-element tables satisfy the seven
+dissemilattice equations. Thus $A_1\in\mathcal V_K$ by
+\cref{core:prop:dissemilattice-lift}.
+
+For the induction step put $i=d\bmod2$, and let $B_i=\{b,n,p\}$ be
+the three-element core algebra with join order $b<n<p$, in which owner
+$i$ absorbs $b$ and all other choices are join. In $A_d\times B_i$ take
+\[
+ S_d=(A_d\times\{n,p\})\cup\{(c_d^0,b),(c_d^1,b)\}.
+\]
+This is a subalgebra. The only issue is an output with second
+coordinate $b$. Under owner $i$, choosing against $c_d^e$ keeps first
+coordinate $c_d$: the last old atom has the other owner, and every
+older atom of owner $i$ stops absorbing below level $d$. Under another
+owner both second coordinates must already be $b$, so both first
+coordinates are copies of $c_d$.
+
+The following map is onto $A_{d+1}$:
+\begin{equation}\label{core:eq:doubled-step}
+ h(x^e,n)=x^e,\qquad
+ h(x^e,p)=c_{d+1}^e,\qquad
+ h(c_d^e,b)=a_d^e.
+\end{equation}
+It preserves every choice and join. For two $n$ coordinates, use the
+unchanged old tables. A $p$ combined with $n$ or $p$ maps to the new
+upper marker; no old atom absorbs that marker. For $b$ against $n$,
+owner $i$ returns the new atom, while under another owner the new
+atom has precisely the same interaction with old elements as $c_d$.
+For $b$ against $p$, owner $i$ returns the new atom and every other
+owner the new upper marker. Two $b$ coordinates return the new atom.
+In every case the superscripts combine by the same minimum or maximum.
+This proves the homomorphism claim, including the exceptional old pair
+\eqref{core:eq:doubled-exception}. It proves membership for every $d$
+and also identifies the displayed join with derived core union.
+
+Put $r=c_0^1$ and $m_j=c_j^1$ for $j\geq1$, with $m_0=r$.
+Directly from the tables, $r\del x=x$, $x\leq r\star_i x$, and
+$\rho_r(x)=r+x$. More explicitly,
+\[
+ \rho_r(a_0^0)=\rho_r(r)=m_0,\qquad
+ \rho_r(a_0^1)=m_1,\qquad
+ \rho_r(a_j^e)=\rho_r(c_j^e)=m_j\quad(j\geq1),
+\]
+where atoms are included only when $j<d$.
+
+Consider the pair $c_d^0,c_d^1$. As long as its common first coordinate
+has positive level, a basic translation either identifies its endpoints
+or leaves two superscripts on the same first coordinate. Each translation
+lowers that level by at most one, as in $L_d$; the exceptional pair
+\eqref{core:eq:doubled-exception} involves only level zero inputs.
+Thus every translation of depth less than $d$ gives equal reset
+observations. The same holds with join allowed, since join never lowers
+level. In contrast, for
+\[
+ w_j=a_j^{\,1-(j\bmod2)},
+\]
+choosing successively against $w_{d-1},w_{d-2},\ldots,w_0$, each under
+its owner, sends the pair to $a_0^0,a_0^1$. The superscript is preserved
+at each step. Their observations are $m_0,m_1$, proving the lower bound
+and an explicit depth-$d$ distinction.
+
+For the upper bound, any two distinct elements with equal observation
+are separated within $d$ steps. A pair $a_j^0,a_j^1$ or $c_j^0,c_j^1$
+at positive level $j$ is separated by the same descending word of
+length $j$. An atom and a marker at level $j\geq1$ are separated in
+one step by choosing against $c_{j+1}^0$ under owner $j\bmod2$.
+The extra element $a_0^1$ in the fiber of $m_1$ is separated from its
+other elements by choosing against $c_1^0$ under owner $0$.
+Finally, $a_0^0,r$ are separated by choosing against $a_0^1$ under
+owner $0$. These exhaust the displayed observation fibers, proving
+$\equiv_r^d=0$.
+
+For completeness, the equivalence with sole nonsingleton class
+$\{m_0,m_1\}$ is a congruence: each basic translation preserves this
+pair or identifies its endpoints. Every nonzero congruence contains
+it. Indeed, the preceding separation sends some identified unequal pair
+to distinct markers $m_s,m_t$, $s<t$. Joining with $m_{t-1}$ gives
+$m_{t-1}\sim m_t$. If $t\geq2$, successively choose against
+$a_{t-2}^1,\ldots,a_0^1$, under their owners. The lower endpoint becomes
+$a_0^1$, while $m_t$ stays fixed. Choosing against $a_0^0$ under owner
+$0$ and then applying $\rho_r$ gives $m_0\sim m_t$. Join with $m_1$
+and use transitivity to obtain $m_0\sim m_1$. The case $t=1$ is
+immediate. This proves subdirect irreducibility.
 \end{proof}
+
+The nine-element obstruction is $A_2$. The inductive construction shows
+why increasing a fixed context bound cannot repair that normalization
+strategy. It does not rule out an equational basis that controls contexts
+by induction.
 
 \subsection{Atoms with an arbitrary chain of markers}
 \label{app:core-thresholds}

@@ -8,8 +8,9 @@ precursor; it can also search for examples requiring greater depth.
 
 The default run covers the stored HSP-certified models and the ladders.
 Optional deterministic samples also check subalgebras of observer products
-and their homomorphic images. Passing these tests does not prove the
-any uniform depth bound, or completeness of any proposed basis.
+and their homomorphic images. Passing these tests does not prove a
+uniform depth bound, or completeness of any proposed basis. The doubled
+ladders in core_observation.py now refute every uniform depth bound.
 """
 
 import argparse
