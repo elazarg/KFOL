@@ -1,6 +1,6 @@
 /- The singleton/ambiguity quotient: reset comparison and a four-variable
 near-unanimity term for three owners. The arbitrary-K veto construction,
-subvariety identification, and use of Baker's theorem are written proofs. -/
+explicit atomic basis, and canonical ideal quotients are written proofs. -/
 import CoreObstruction
 import Reset
 

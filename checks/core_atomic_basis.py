@@ -29,22 +29,8 @@ def semilattice_laws(operation, name):
 
 def atomic_basis(owners):
     assert owners >= 3
-    x, y, z = map(var, range(3))
-    operations = [union] + [lambda x, y, i=i: owned(i, x, y)
-                            for i in range(owners)]
-    result = []
-    for i, operation in enumerate(operations):
-        result += semilattice_laws(operation, f'semilattice_{i}')
-    for i, outer in enumerate(operations):
-        for j, inner in enumerate(operations):
-            if i != j:
-                result.append((f'distributive_{i}_{j}', outer(x, inner(y, z)),
-                               inner(outer(x, y), outer(x, z))))
-    for i, j in combinations(range(owners), 2):
-        result.append((f'coverage_{i}_{j}',
-                       union(owned(i, x, y), owned(j, x, y)), union(x, y)))
-    result.append(('reset_projection', reset(x, y), y))
-    return result
+    x, y = map(var, range(2))
+    return lifting_basis(owners) + [('reset_projection', reset(x, y), y)]
 
 
 def bounded_lift(left, right):
@@ -54,6 +40,25 @@ def bounded_lift(left, right):
 
 
 def lifting_basis(owners):
+    """The three-variable core laws already give the atomic normalization."""
+    x, y, z = map(var, range(3))
+    result = semilattice_laws(union, 'join')
+    for i in range(owners):
+        operation = lambda x, y, i=i: owned(i, x, y)
+        result += semilattice_laws(operation, f'choice_{i}')
+        result.append((f'distributes_over_join_{i}', owned(i, x, union(y, z)),
+                       union(owned(i, x, y), owned(i, x, z))))
+    for i, j in combinations(range(owners), 2):
+        result += [
+            (f'coverage_{i}_{j}', union(owned(i, x, y), owned(j, x, y)), union(x, y)),
+            (f'birkhoff_{i}_{j}', owned(i, x, owned(j, x, y)),
+             owned(j, x, owned(i, x, y))),
+        ]
+    return result
+
+
+def normalization_consequences(owners):
+    """Previously separate axioms, now consequences of lifting_basis."""
     x, y, z = map(var, range(3))
     result = semilattice_laws(union, 'join')
     for i in range(owners):

@@ -23,8 +23,9 @@ nothing here settles it. This appendix collects what is known, in four groups.
   with an unused owner, but only through homomorphic images
   (\cref{app:core-proper-fragments,app:core-quotients}). Identifying all
   ambiguous winner sets gives an explicitly based subvariety. A finite
-  set of core identities lifts its entire equational theory under a common
-  upper bound (\cref{app:core-atomic}). Owner exhaustion decides membership in a family
+  set of three-variable core identities constructs the largest atomic
+  quotient below each bound and lifts the entire atomic equational theory
+  (\cref{app:core-atomic}). Owner exhaustion decides membership in a family
   with arbitrarily long chains of ambiguous values
   (\cref{app:core-thresholds}).
 \end{itemize}
@@ -991,8 +992,9 @@ same pair, which rules out the embedding.
 
 The quotient that keeps every owner singleton and identifies all
 ambiguous sets has an explicit finite basis over arbitrary algebras.
-Normalizing below a common upper bound then lifts every consequence of
-this basis to a core identity, using a fixed finite set of core laws.
+Below a common upper bound, the basic three-variable core laws already
+construct the largest atomic quotient. This lifts every consequence of
+the atomic basis to a core identity.
 
 Write $\mathbf A_K^{\rm at}$ for the algebra on
 $\{a_i:i\in I\}\cup\{n\}$ with incomparable atoms below $n$, in
@@ -1007,16 +1009,10 @@ For every $K\geq3$,
  =\operatorname V(\mathbf C_K)\cap
    \operatorname{Mod}\{x\del y=y\}.
 \]
-An explicit basis $\mathcal B_K$ consists of the semilattice laws for
-all operations in $\mathcal O=\{+,\star_i:i\in I\}$, all ordered
-mutual distributive laws
-\begin{equation}\label{core:eq:atomic-distributivity}
- x\mathbin\circ(y\mathbin\bullet z)
- =(x\mathbin\circ y)\mathbin\bullet(x\mathbin\circ z)
- \qquad(\circ,\bullet\in\mathcal O,\ \circ\ne\bullet),
-\end{equation}
-pair coverage \eqref{core:eq:pair-cover}, and $x\del y=y$.
-It has $(3K^2+7K+8)/2$ equations, each using at most three variables.
+An explicit basis $\mathcal B_K$ consists of $\Sigma_{\rm cons}$,
+the pairwise Birkhoff laws
+$x\star_i(x\star_j y)=x\star_j(x\star_i y)$, and $x\del y=y$.
+It has $K^2+3K+4$ equations, each using at most three variables.
 Here $+$ and $\del$ are their fixed core term definitions.
 An explicit sequential-veto term is near-unanimity of arity $K+1$,
 and no near-unanimity term has smaller arity.
@@ -1044,33 +1040,24 @@ any core model satisfying $x\del y=y$ turns every lifted identity
 on the right of \eqref{core:eq:atomic-lift} into $t=s$. It therefore
 satisfies every identity of $\mathbf A_K^{\rm at}$.
 
-For the explicit basis, first treat $+$ as a separate operation and
-expand $\del$ as the successive choices $y\star_i(-)$, starting
-from $x+y$. The maps $b_i$ sending $a_i$ to $1$ and all other
+The maps $b_i$ sending $a_i$ to $1$ and all other
 values to $0$ jointly separate the atomic algebra. They interpret
 $\star_i$ as disjunction and every other operation, including $+$,
-as conjunction. Hence all operations are mutually distributive;
-pair coverage and right-projection reset also hold.
+as conjunction. Thus the atomic algebra and these $K$ two-element
+images generate the same variety. All the stated basis equations
+hold in each image. In particular, all operations are mutually
+distributive, although those additional laws are not needed in the basis.
 
-Conversely, the semilattice and distributive laws define the variety
-of distributive $(K+1)$-semilattices. Its nontrivial subdirectly
-irreducible algebras have two or three elements
-\cite[Corollary~3.8]{KnoebelRomanowska1991}. On two elements, normalize
-$+$ to maximum; each choice is minimum or maximum. Pair coverage
-allows at most one minimum, while right-projection reset rules out
-all choices being maximum. The surviving $K$ algebras are precisely
-the images of the $b_i$, with the two values relabeled. Each
-three-element algebra in the classification extends one of the
-two-element structures by a common absorbing element $\infty$.
-Its subalgebra $\{0,\infty\}$ has all operations equal and fails
-$x\del y=y$. No such algebra survives. Subdirect representation
-therefore places every model of $\mathcal B_K$ in
-$\operatorname V(\mathbf A_K^{\rm at})$, without a cardinality bound.
-On all surviving two-element algebras, the fixed three-owner union
-term equals $+$, so this argument also applies with $+$ treated as
-an abbreviation in the core signature. Counting the semilattice,
-distributive, coverage, and reset equations gives
-$3(K+1)+K(K+1)+\binom K2+1$.
+For completeness, \cref{core:prop:atomic-uniform-lift} below proves
+directly from $\Gamma_K=\mathcal B_K\setminus\{x\del y=y\}$ that
+the map $x\mapsto u\del x$ makes every principal ideal an atomic
+quotient. In a model of $\mathcal B_K$ this map is the identity,
+so every principal ideal already belongs to
+$\operatorname V(\mathbf A_K^{\rm at})$. Any finite tuple lies
+below its join. Thus every atomic identity holds in the whole model,
+proving completeness. The quotient proof uses the two-element
+generation just established, independently of this completeness claim.
+Counting the equations gives $3+3K+K+2\binom K2+1$.
 
 To construct the near-unanimity term, start with $K+1$ input positions.
 Each owner, in a fixed order, removes one remaining position. After
@@ -1122,18 +1109,28 @@ of every core model by this relation. Nor is the veto term
 near-unanimity in the original core: on ambiguous inputs it takes
 their union.
 
-A common upper bound avoids the failed transitivity when transporting
-atomic proofs. Put $q_u(x)=u\del x$. On the ideal below an ambiguous
-winner set $u$, this fixes atoms and sends every ambiguous value to
-$u$. With normalized operations, its image is a subalgebra of
-$\mathbf A_K^{\rm at}$.
+A common upper bound avoids the failed transitivity. Put
+$q_u(x)=u\del x$ and $e_i^u(x)=x\star_i u$. On the ideal below an
+ambiguous winner set $u$, the first map fixes atoms and sends ambiguous
+values to $u$. Its quotient interpretation follows already from the
+semilattice, distribution, coverage, and pairwise Birkhoff laws.
 
-\begin{proposition}[Finite uniform lifting of the atomic theory]
+\begin{proposition}[Canonical atomic quotients and uniform lifting]
 \label{core:prop:atomic-uniform-lift}
-There is an explicit set $\Gamma_K$ of $(3K^2+11K+20)/2$ valid core
-identities, each using at most four variables, with the following
-property. If $\mathbf A_K^{\rm at}\models s=t$, let $X$ be the union
-of the variables of $s,t$ and let $z\notin X$. Then
+Let $\Gamma_K$ consist of $\Sigma_{\rm cons}$ and the pairwise Birkhoff
+laws $x\star_i(x\star_j y)=x\star_j(x\star_i y)$.
+These are $K^2+3K+3$ valid core identities, each using at most three
+variables. In any model $A$ of these laws and for each $u\in A$,
+$q_u$ maps the ideal $A_{\leq u}$ onto its largest quotient in
+$\operatorname V(\mathbf A_K^{\rm at})$, with normalized operations
+$a\mathbin{\widehat\star_i}b=q_u(a\star_i b)$. Moreover
+\begin{equation}\label{core:eq:atomic-closure-meet}
+ q_u(x)=\bigwedge_{i\in I}e_i^u(x)\qquad(x\leq u),
+\end{equation}
+where the greatest lower bound exists even if other meets do not.
+
+Consequently, if $\mathbf A_K^{\rm at}\models s=t$, let $X$ be the
+union of the variables of $s,t$ and let $z\notin X$. Then
 \begin{equation}\label{core:eq:atomic-bounded-lift}
  \Gamma_K\vdash U\del s=U\del t,
  \qquad U=z+\sum_{x\in X}x.
@@ -1142,63 +1139,102 @@ In particular, substitution and replacement in core contexts are allowed,
 with all resulting variables included in the common bound.
 \end{proposition}
 \begin{proof}
-Take the three semilattice laws for $+$, the $K$ upper-bound laws
-\begin{equation}\label{core:eq:choice-upper-bound}
- (x\star_i y)+(x+y)=x+y,
-\end{equation}
-and the following bounded normalization laws:
-\begin{gather}
- x+q_u(x)=q_u(x),\quad u+q_u(x)=u,\quad
- q_u(q_u(x))=q_u(x)\qquad(u=x+z),
- \label{core:eq:bounded-retraction}\\
- q_u(x\star_i y)=q_u(q_u(x)\star_i q_u(y))
- \qquad(u=x+y+z).\label{core:eq:bounded-compatibility}
-\end{gather}
-Finally, for each equation $v=w$ of $\mathcal B_K$, include
-\begin{equation}\label{core:eq:bounded-generators}
- q_u(v)=q_u(w),\qquad
- u=z+\sum_{x\in\operatorname{Var}(v)\cup\operatorname{Var}(w)}x,
-\end{equation}
-with $z$ fresh. All occurrences of $u,q_u,+,\del$ abbreviate core
-terms, so these are unconditional identities. There are
-$3+K+3+K+|\mathcal B_K|$ equations, with at most four variables.
+The laws are among those already verified for the core. Their number is
+$3+3K+K+2\binom K2$. Work in an arbitrary model $A$. Distribution
+makes every choice monotone for the join order, and pair coverage gives
+$x\star_i y\leq x+y$, so each principal ideal is a subalgebra.
 
-For soundness, in $\mathbf C_K$ each choice stays below the union
-of its arguments. If $u$ is an atom, its nonempty ideal is trivial.
-Otherwise $q_u$ fixes each atom below $u$ and replaces every ambiguous
-value by $u$. It is an idempotent map into the same ideal. The
-normalized operations $a\mathbin{\widehat\star_i}b=q_u(a\star_i b)$
-on its image have the atomic table restricted to the atoms contained
-in $u$. This proves compatibility and all the lifted basis equations.
+First, each $e_i=e_i^u$ is a closure operator on $A_{\leq u}$ and
+preserves join. It preserves its own choice by associativity. For
+$i\ne j$, put $f=\star_i$, $g=\star_j$, and $v=x+y\leq u$.
+Distribution and the Birkhoff law give
+\[
+ f(g(x,y),v)=g(f(x,y),v).
+\]
+The common value is at least both $g(x,y)$ and $f(x,y)$, hence at
+least $v$ by coverage; it is also at most $v$. Thus it equals $v$.
+Now $w=f(g(x,y),u)$ is fixed by $e_i$ and satisfies
+$v\leq w\leq e_i(v)$. Applying $e_i$ to the first inequality gives
+$e_i(v)\leq w$, so
+\begin{equation}\label{core:eq:atomic-closure-hom}
+ e_i(x\star_j y)=e_i(x)+e_i(y)\qquad(i\ne j).
+\end{equation}
 
-Now let $A\models\Gamma_K$, with no finiteness assumption. The
-semilattice $+$ orders $A$. For any $u\in A$, its ideal
-$A_{\leq u}$ is closed under every choice by
-\eqref{core:eq:choice-upper-bound}. Substituting $z=u$ in the
-normalization laws shows that $q_u$ is an idempotent map from this
-ideal into itself. Equip its image $B_u$ with the operations
-$\widehat\star_i$ just defined. Equation~\eqref{core:eq:bounded-compatibility}
-makes $q_u:A_{\leq u}\to B_u$ an onto homomorphism. In particular,
-for every core term $v$ and tuple $\vec a$ in the ideal,
+On $e_i[A_{\leq u}]$, the operation $\star_i$ is meet: for fixed
+points $a,b$ it lies below $a\star_i u=a$ and $b\star_i u=b$,
+and monotonicity proves the greatest-lower-bound property. Together
+with join it is therefore a distributive lattice. Every other choice
+is join on this image. To see this, put $v=a+b$. The elements $a,b$
+are also fixed by $e_i^v$, and
+\eqref{core:eq:atomic-closure-hom} gives
+$e_j^v(a)=e_j^v(b)=v$ for $j\ne i$. If $w=a\star_j b$, distribution
+and associativity give $w\star_j(a+b)=w$. Applying the homomorphism
+$e_j^v$ to $w$ therefore gives $w=v\star_j v=v$.
+Thus $e_i$ is a retraction onto an actual subalgebra, belonging to the variety
+generated by the two-element image of $b_i$, hence to
+$\operatorname V(\mathbf A_K^{\rm at})$. Equation~\eqref{core:eq:atomic-closure-hom}
+makes $e_i$ a homomorphism to this expansion. Hence
+\[
+ \alpha_u=\bigcap_{i\in I}\ker e_i
+\]
+is a congruence with atomic quotient.
+
+It remains to identify a representative of each class. Fix $x\leq u$
+and consider the interval $[x,u]$. The maps
+$F_i(v)=x\star_i v$ on this interval preserve join, are idempotent,
+commute pairwise, and satisfy
+\[
+ F_i(v)\leq v,\qquad F_i(v)+F_j(v)=v\quad(i\ne j).
+\]
+For $S\subseteq I$, let $P_S$ be the composition of its $F_i$'s,
+with $P_\varnothing$ the identity. If $j\notin S$, then
+\begin{equation}\label{core:eq:atomic-complementary-maps}
+ P_S(v)+F_j(v)=v.
+\end{equation}
+For induction, apply $F_i$ to this equality for $S\setminus\{i\}$.
+Because $F_iF_j(v)\leq F_j(v)$, the result implies
+$F_i(v)\leq P_S(v)+F_j(v)$; adding $F_j(v)$ proves the claim.
+The empty case is immediate.
+
+Inductively, $P_S(u)$ is the greatest lower bound in $[x,u]$ of the
+$F_i(u)$ for $i\in S$. To add $j\notin S$, any common lower bound $v\in[x,u]$
+satisfies
+\[
+ P_S(v)\leq P_SF_j(u),\qquad
+ F_j(v)\leq F_jP_S(u)=P_SF_j(u).
+\]
+Equation~\eqref{core:eq:atomic-complementary-maps} then bounds $v$
+by $P_{S\cup\{j\}}(u)$. Any lower bound outside $[x,u]$ can first
+be joined with $x$. Since reset's definition gives
+$q_u(x)=P_I(u)$, this proves \eqref{core:eq:atomic-closure-meet}.
+
+In particular $x\leq q_u(x)\leq e_i(x)$, so applying the closure
+operator $e_i$ gives $e_i(q_u(x))=e_i(x)$. The meet formula shows
+that equal closure profiles give equal normalizations. Therefore
+$\ker q_u=\alpha_u$, and $q_u(x)$ is the greatest member of its
+class: any other member is below each $e_i(x)$ and hence below their
+meet. This also proves idempotence of $q_u$. Its image $B_u$ with the
+normalized operations is thus an atomic quotient.
+It is the largest one: in any atomic algebra, right-projection reset
+makes $q_u$ the identity, so the meet formula makes the $e_i$ jointly
+injective. Any homomorphism from the ideal to an atomic algebra must
+therefore identify all pairs in $\alpha_u$.
+Finally, for every core term $v$ and tuple $\vec a$ in the ideal,
 \begin{equation}\label{core:eq:bounded-term-evaluation}
  v^{B_u}(q_u(\vec a))=q_u(v^A(\vec a)).
 \end{equation}
-Substitute $z=u$ in \eqref{core:eq:bounded-generators}, and use this
-term-evaluation formula. It follows that $B_u\models\mathcal B_K$.
-By the explicit atomic basis, every atomic identity holds in $B_u$.
 Given any assignment for $s,t,z$, take $u$ to be the value of $U$;
 all the assigned variables lie below $u$. Applying
 \eqref{core:eq:bounded-term-evaluation} proves
 \eqref{core:eq:atomic-bounded-lift} in $A$. Equational completeness
-gives the claimed derivability. The homomorphism formula is also the
-reason that replacement in contexts is valid throughout the lift.
+gives derivability, including substitution and replacement in contexts.
 \end{proof}
 
 These equations control the atomic information uniformly, but they
 do not suffice for the core: $D_K$ also satisfies $\Gamma_K$.
-Indeed, below a marker $u$, its $q_u$ fixes atoms and sends every
-marker to $u$, giving the same normalized atomic table. Yet $D_K$
-fails owner exhaustion. Even adjoining exhaustion is insufficient:
+It satisfies every three-variable core identity by
+\cref{core:thm:basis-arity}, but fails owner exhaustion.
+Even adjoining exhaustion is insufficient:
 the six-element countermodel of \cref{core:prop:mixed-absorption}
 satisfies $\Gamma_3$ and exhaustion but fails mixed absorption.
 Thus the atomic lifting leaves a separate problem of controlling

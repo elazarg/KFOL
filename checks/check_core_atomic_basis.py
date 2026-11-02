@@ -1,14 +1,16 @@
 """Native soundness and boundary checks for the atomic basis and its lifts.
 
-The SI classification used for completeness is external (Knoebel--Romanowska,
-Corollary 3.8). Here we check its two/three-element templates independently,
+Completeness follows from the written closure and meet arguments. Here we
+check two-element lattice expansions and their common-absorber extensions,
 all displayed equations, the core abbreviations, and the D_K obstruction.
 """
 
+import json
 from itertools import product
+from pathlib import Path
 
 from core_atomic_basis import (atomic_basis, expand_core, lifting_basis,
-                               variables)
+                               normalization_consequences, variables)
 from core_basis import (MIXED_JOIN, MIXED_OPERATIONS, marker_join,
                         marker_own, mixed_absorption)
 from probe_core_basis import exhaustion_holds
@@ -80,7 +82,7 @@ def check_templates():
 
             for size in (2, 3):
                 if size == 3 and not any(pattern):
-                    continue  # Not a three-element SI template.
+                    continue  # Repeats the all-join semilattice case.
                 carrier = tuple(range(size))
                 tables = operation_tables(carrier, max, choice, owners)
                 holds = all(left == right for _, left, right in
@@ -94,14 +96,52 @@ def check_templates():
     return templates, survivors
 
 
+def check_reflection(add, operations):
+    """Check every principal ideal, not only the ideal at the top."""
+    count = 0
+    for u in range(len(add)):
+        ideal = [x for x in range(len(add)) if add[x][u] == u]
+        profiles = {x: tuple(table[x][u] for table in operations) for x in ideal}
+        normal = {}
+        for x in ideal:
+            value = u
+            for table in operations:
+                value = table[x][value]
+            normal[x] = value
+            # The proposed normal form is the greatest lower bound of its
+            # closure profile, even if the ideal has no other meets.
+            assert value in ideal and add[x][value] == value
+            for bound in profiles[x]:
+                assert add[value][bound] == bound
+            for lower in ideal:
+                if all(add[lower][bound] == bound for bound in profiles[x]):
+                    assert add[lower][value] == value
+        for x, y in product(ideal, repeat=2):
+            assert (normal[x] == normal[y]) == (profiles[x] == profiles[y])
+            for i, table in enumerate(operations):
+                value = table[x][y]
+                assert value in ideal
+                assert normal[value] == normal[table[normal[x]][normal[y]]]
+                for j, target in enumerate(operations):
+                    expected = (target[profiles[x][j]][profiles[y][j]] if i == j
+                                else add[profiles[x][j]][profiles[y][j]])
+                    assert profiles[value][j] == expected
+                    # Each closure image is an actual subalgebra: other
+                    # owners act there as the original join.
+                    if i != j:
+                        assert table[profiles[x][j]][profiles[y][j]] == expected
+            count += 1
+    return count
+
+
 def check():
     comparisons = 0
     for owners in range(3, 7):
         basis, lifts = atomic_basis(owners), lifting_basis(owners)
-        assert len(basis) == (3 * owners**2 + 7 * owners + 8) // 2
-        assert len(lifts) == (3 * owners**2 + 11 * owners + 20) // 2
+        assert len(basis) == owners**2 + 3 * owners + 4
+        assert len(lifts) == owners**2 + 3 * owners + 3
         assert max(len(variables(s) | variables(t)) for _, s, t in basis) == 3
-        assert max(len(variables(s) | variables(t)) for _, s, t in lifts) == 4
+        assert max(len(variables(s) | variables(t)) for _, s, t in lifts) == 3
         join = lambda x, y: marker_join(owners, x, y)
         choice = lambda i, x, y: marker_own(owners, i, x, y)
         atomic = tuple(range(owners + 1))
@@ -113,6 +153,7 @@ def check():
             observer = tuple(x for x in range(owners + 2) if x != omitted)
             tables = operation_tables(observer, join, choice, owners)
             comparisons += assert_laws(lifts, observer, tables)
+            comparisons += assert_laws(normalization_consequences(owners), observer, tables)
             for x, y in product(observer, repeat=2):
                 assert choice(2, choice(0, x, y), choice(1, x, y)) == join(x, y)
 
@@ -120,6 +161,7 @@ def check():
         marker = tuple(range(owners + 2))
         tables = operation_tables(marker, join, choice, owners)
         comparisons += assert_laws(lifts, marker, tables)
+        comparisons += assert_laws(normalization_consequences(owners), marker, tables)
         witness = tuple(range(owners)) + (owners + 1,)
         cover = owners
         for i in range(owners):
@@ -138,7 +180,7 @@ def check():
     comparisons += assert_laws(expanded, carrier, tables)
 
     # Exhaustion does not complete the lifting theory: the earlier mixed
-    # countermodel also satisfies all forty lifts and still fails absorption.
+    # countermodel also satisfies the lifting basis and still fails absorption.
     carrier = tuple(range(6))
     tables = operation_tables(carrier, lambda x, y: MIXED_JOIN[x][y],
                               lambda i, x, y: MIXED_OPERATIONS[i][x][y], 3)
@@ -147,12 +189,24 @@ def check():
     mixed = [('mixed_absorption', *mixed_absorption(0, 2))]
     assert any(left != right for _, left, right in truth_tables(mixed, carrier, tables))
 
+    reflection_pairs = check_reflection(MIXED_JOIN, MIXED_OPERATIONS)
+    models = 1
+    for name in ('core-small-models', 'core-six-models', 'core-seven-models',
+                 'core-eight-models'):
+        certificates = json.loads((Path(__file__).with_name('data') / (name + '.json')).read_text())
+        for model in certificates:
+            reflection_pairs += check_reflection(model['join'], model['operations'])
+            models += 1
+
     templates, survivors = check_templates()
     print(f'Atomic basis and uniform lifts: {comparisons} equation evaluations; '
-          f'{templates} SI templates leave exactly {survivors} owner quotients '
+          f'{templates} lattice/absorber templates leave exactly {survivors} owner quotients '
           'at K=3..6. K=3 core expansions sound; D_K satisfies the lifts '
           'but fails exhaustion; the six-state mixed countermodel passes '
           'lifts and exhaustion. Arbitrary-algebra completeness written.')
+    print(f'Canonical atomic quotients: every principal ideal of {models} models; '
+          f'{reflection_pairs} input pairs, all closure homomorphisms, greatest '
+          'lower bounds, kernel equality, and normalized operations checked.')
 
 
 if __name__ == '__main__':
