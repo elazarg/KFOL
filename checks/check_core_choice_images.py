@@ -4,15 +4,18 @@ The certificate was found by Prover9 and expanded by prooftrans. This
 checker does not invoke either program: it independently checks each
 substitution and replacement. The assumptions are the two-owner part of
 Gamma plus mixed absorption, the two bound equations already derived
-from Gamma in the paper, and f(c,a)=a, f(c,b)=b. The conclusion is
-f(c,g(a,b))=g(a,b), over arbitrary algebras, not just finite tables.
+from Gamma in the paper, and f(c,a)=a, f(c,b)=b. The conclusions are
+choice-image closure and j(c,g(a,b))=g(b,j(a,c)), over arbitrary
+algebras, not just finite tables.
 """
 
 import json
 import re
 from collections import Counter
-from itertools import product
+from itertools import combinations, product
 from pathlib import Path
+
+from core_basis import marker_join, marker_own
 
 
 VARIABLE = re.compile(r'[u-z][A-Za-z0-9_]*\Z')
@@ -173,7 +176,27 @@ def verify(certificate):
             match(output[1], right, instance)
         proved[identifier] = left, right
     assert proved[certificate['goal']] == equation('f(c,g(a,b))=g(a,b)')
+    assert proved[802] == equation('j(c,g(a,b))=g(b,j(a,c))')
     return Counter(rule[0] for _, _, rule in steps)
+
+
+def check_local_laws(image, c, i, owners, add, choice):
+    """Join shift and two-owner exhaustion in a choice image."""
+    other = [j for j in range(owners) if j != i]
+    shifts = exhaustions = 0
+    for x, y in product(image, repeat=2):
+        for j in other:
+            value = add(c, choice(j, x, y))
+            assert value == choice(j, add(c, x), y)
+            assert value == choice(j, x, add(c, y))
+            assert value == choice(j, add(c, x), add(c, y))
+            shifts += 1
+    for j, k in combinations(other, 2):
+        for u, v, w in product(image, repeat=3):
+            bound = add(choice(j, u, v), choice(k, u, w))
+            assert add(u, bound) == bound
+            exhaustions += 1
+    return shifts, exhaustions
 
 
 def check():
@@ -182,7 +205,8 @@ def check():
     counts = verify(certificate)
     # Negative controls: accepting a different hypothesis or an unsupported
     # final equation would invalidate this as an equational certificate.
-    for index in (0, len(certificate['steps']) - 1):
+    auxiliary = next(i for i, step in enumerate(certificate['steps']) if step[0] == 802)
+    for index in (0, auxiliary, len(certificate['steps']) - 1):
         altered = json.loads(path.read_text())
         altered['steps'][index][1] = 'f(c,g(a,b))=a'
         try:
@@ -192,7 +216,7 @@ def check():
         else:
             raise AssertionError('accepted an altered certificate')
 
-    images = quotients = 0
+    images = quotients = shifts = exhaustions = 0
     for owners in range(3, 6):
         carrier = range(1, 1 << owners)
 
@@ -217,6 +241,10 @@ def check():
                     value = choice(j, x, value)
                 assert value == x
             images += 1
+            local_shifts, local_exhaustions = check_local_laws(
+                image, c, i, owners, int.__or__, choice)
+            shifts += local_shifts
+            exhaustions += local_exhaustions
         for i, j, k in product(range(owners), repeat=3):
             if len({i, j, k}) != 3:
                 continue
@@ -233,10 +261,39 @@ def check():
                               else 1 if owner == j and 1 in (a, b) else join)
                     assert mapping[choice(owner, x, y)] == target
             quotients += 1
+    stored_images = 0
+    for name in ('small', 'six', 'seven', 'eight'):
+        path = Path(__file__).with_name('data') / f'core-{name}-models.json'
+        for model in json.loads(path.read_text()):
+            add, operations = model['join'], model['operations']
+            owners = len(operations)
+            for c, i in product(range(len(add)), range(owners)):
+                image = set(operations[i][c])
+                local_shifts, local_exhaustions = check_local_laws(
+                    image, c, i, owners, lambda x, y: add[x][y],
+                    lambda j, x, y: operations[j][x][y])
+                shifts += local_shifts
+                exhaustions += local_exhaustions
+                stored_images += 1
+    # D_K fails global exhaustion but satisfies the hypotheses and these
+    # local laws: the new deduction does not assume global exhaustion.
+    marker_images = 0
+    for owners in range(3, 7):
+        for c, i in product(range(owners + 2), range(owners)):
+            image = {marker_own(owners, i, c, x) for x in range(owners + 2)}
+            local_shifts, local_exhaustions = check_local_laws(
+                image, c, i, owners, lambda x, y: marker_join(owners, x, y),
+                lambda j, x, y: marker_own(owners, j, x, y))
+            shifts += local_shifts
+            exhaustions += local_exhaustions
+            marker_images += 1
     print(f'Choice-image closure: {sum(counts.values())} universal equational '
           f'proof steps ({dict(counts)}); altered certificates rejected. '
           f'{images} native images have a reset unit and at most two active owners; '
           f'{quotients} maps onto two-owner generators checked.')
+    print(f'Choice-image local laws: {images + stored_images + marker_images} images, '
+          f'{shifts} join-shift and {exhaustions} two-owner exhaustion instances; '
+          'the universal certificate also proves the join-shift equation.')
 
 
 if __name__ == '__main__':
