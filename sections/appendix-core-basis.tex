@@ -20,8 +20,9 @@ nothing here settles it. This appendix collects what is known, in four groups.
 \item \emph{Families of models.} The core variety is the join of the subvarieties
   with an unused owner, but only through homomorphic images
   (\cref{app:core-proper-fragments,app:core-quotients}). Identifying all
-  ambiguous winner sets gives a finitely based subvariety
-  (\cref{app:core-atomic}). Owner exhaustion decides membership in a family
+  ambiguous winner sets gives an explicitly based subvariety. A finite
+  set of core identities lifts its entire equational theory under a common
+  upper bound (\cref{app:core-atomic}). Owner exhaustion decides membership in a family
   with arbitrarily long chains of ambiguous values
   (\cref{app:core-thresholds}).
 \end{itemize}
@@ -890,9 +891,9 @@ same pair, which rules out the embedding.
 \label{app:core-atomic}
 
 The quotient that keeps every owner singleton and identifies all
-ambiguous sets has a finite basis over arbitrary algebras. This
-separates the singleton behavior from the additional structure that
-retains ambiguity.
+ambiguous sets has an explicit finite basis over arbitrary algebras.
+Normalizing below a common upper bound then lifts every consequence of
+this basis to a core identity, using a fixed finite set of core laws.
 
 Write $\mathbf A_K^{\rm at}$ for the algebra on
 $\{a_i:i\in I\}\cup\{n\}$ with incomparable atoms below $n$, in
@@ -907,7 +908,17 @@ For every $K\geq3$,
  =\operatorname V(\mathbf C_K)\cap
    \operatorname{Mod}\{x\del y=y\}.
 \]
-This variety has a finite equational basis over arbitrary algebras.
+An explicit basis $\mathcal B_K$ consists of the semilattice laws for
+all operations in $\mathcal O=\{+,\star_i:i\in I\}$, all ordered
+mutual distributive laws
+\begin{equation}\label{core:eq:atomic-distributivity}
+ x\mathbin\circ(y\mathbin\bullet z)
+ =(x\mathbin\circ y)\mathbin\bullet(x\mathbin\circ z)
+ \qquad(\circ,\bullet\in\mathcal O,\ \circ\ne\bullet),
+\end{equation}
+pair coverage \eqref{core:eq:pair-cover}, and $x\del y=y$.
+It has $(3K^2+7K+8)/2$ equations, each using at most three variables.
+Here $+$ and $\del$ are their fixed core term definitions.
 An explicit sequential-veto term is near-unanimity of arity $K+1$,
 and no near-unanimity term has smaller arity.
 \end{theorem}
@@ -934,6 +945,34 @@ any core model satisfying $x\del y=y$ turns every lifted identity
 on the right of \eqref{core:eq:atomic-lift} into $t=s$. It therefore
 satisfies every identity of $\mathbf A_K^{\rm at}$.
 
+For the explicit basis, first treat $+$ as a separate operation and
+expand $\del$ as the successive choices $y\star_i(-)$, starting
+from $x+y$. The maps $b_i$ sending $a_i$ to $1$ and all other
+values to $0$ jointly separate the atomic algebra. They interpret
+$\star_i$ as disjunction and every other operation, including $+$,
+as conjunction. Hence all operations are mutually distributive;
+pair coverage and right-projection reset also hold.
+
+Conversely, the semilattice and distributive laws define the variety
+of distributive $(K+1)$-semilattices. Its nontrivial subdirectly
+irreducible algebras have two or three elements
+\cite[Corollary~3.8]{KnoebelRomanowska1991}. On two elements, normalize
+$+$ to maximum; each choice is minimum or maximum. Pair coverage
+allows at most one minimum, while right-projection reset rules out
+all choices being maximum. The surviving $K$ algebras are precisely
+the images of the $b_i$, with the two values relabeled. Each
+three-element algebra in the classification extends one of the
+two-element structures by a common absorbing element $\infty$.
+Its subalgebra $\{0,\infty\}$ has all operations equal and fails
+$x\del y=y$. No such algebra survives. Subdirect representation
+therefore places every model of $\mathcal B_K$ in
+$\operatorname V(\mathbf A_K^{\rm at})$, without a cardinality bound.
+On all surviving two-element algebras, the fixed three-owner union
+term equals $+$, so this argument also applies with $+$ treated as
+an abbreviation in the core signature. Counting the semilattice,
+distributive, coverage, and reset equations gives
+$3(K+1)+K(K+1)+\binom K2+1$.
+
 To construct the near-unanimity term, start with $K+1$ input positions.
 Each owner, in a fixed order, removes one remaining position. After
 all $K$ stages, return the input at the one position left.
@@ -941,10 +980,8 @@ At an owner-$i$ stage, combine the terms for all possible removals
 using $\star_i$. This is an ordinary finite core term: the multibranch
 choice is any binary fold, and all leaves are input variables.
 
-For each $i$, the map $b_i$ that sends $a_i$ to $1$ and all other
-values of $\mathbf A_K^{\rm at}$ to $0$ interprets $\star_i$ as
-disjunction and every other choice as conjunction. These maps jointly
-separate all values. If all but one input equal $a_i$, owner $i$ can
+Use the same separating maps $b_i$ as above. If all but one input
+equal $a_i$, owner $i$ can
 remove the exceptional position at its stage, unless that position
 has already gone. At least two positions remain at that stage, so
 this ensures that the final input is $a_i$, whatever the other
@@ -969,10 +1006,8 @@ $\{i_r\}$, since its quotient is an atom. The common-source theorem
 $\{i_r\}$ in every valuation $r$. No column does: column $r$
 fails in valuation $r$. This is a contradiction.
 
-A variety with a near-unanimity term is congruence distributive
-\cite{Mitschke1978}. Since $\mathbf A_K^{\rm at}$ is finite and
-has finite signature, Baker's theorem supplies a finite equational
-basis \cite{Baker1977}. We have not extracted an explicit basis.
+The near-unanimity term also gives congruence distributivity
+\cite{Mitschke1978}.
 \end{proof}
 
 Equation~\eqref{core:eq:atomic-kernel} describes a congruence on the
@@ -987,6 +1022,88 @@ Thus the atomic quotient result does not give a congruence decomposition
 of every core model by this relation. Nor is the veto term
 near-unanimity in the original core: on ambiguous inputs it takes
 their union.
+
+A common upper bound avoids the failed transitivity when transporting
+atomic proofs. Put $q_u(x)=u\del x$. On the ideal below an ambiguous
+winner set $u$, this fixes atoms and sends every ambiguous value to
+$u$. With normalized operations, its image is a subalgebra of
+$\mathbf A_K^{\rm at}$.
+
+\begin{proposition}[Finite uniform lifting of the atomic theory]
+\label{core:prop:atomic-uniform-lift}
+There is an explicit set $\Gamma_K$ of $(3K^2+11K+20)/2$ valid core
+identities, each using at most four variables, with the following
+property. If $\mathbf A_K^{\rm at}\models s=t$, let $X$ be the union
+of the variables of $s,t$ and let $z\notin X$. Then
+\begin{equation}\label{core:eq:atomic-bounded-lift}
+ \Gamma_K\vdash U\del s=U\del t,
+ \qquad U=z+\sum_{x\in X}x.
+\end{equation}
+In particular, substitution and replacement in core contexts are allowed,
+with all resulting variables included in the common bound.
+\end{proposition}
+\begin{proof}
+Take the three semilattice laws for $+$, the $K$ upper-bound laws
+\begin{equation}\label{core:eq:choice-upper-bound}
+ (x\star_i y)+(x+y)=x+y,
+\end{equation}
+and the following bounded normalization laws:
+\begin{gather}
+ x+q_u(x)=q_u(x),\quad u+q_u(x)=u,\quad
+ q_u(q_u(x))=q_u(x)\qquad(u=x+z),
+ \label{core:eq:bounded-retraction}\\
+ q_u(x\star_i y)=q_u(q_u(x)\star_i q_u(y))
+ \qquad(u=x+y+z).\label{core:eq:bounded-compatibility}
+\end{gather}
+Finally, for each equation $v=w$ of $\mathcal B_K$, include
+\begin{equation}\label{core:eq:bounded-generators}
+ q_u(v)=q_u(w),\qquad
+ u=z+\sum_{x\in\operatorname{Var}(v)\cup\operatorname{Var}(w)}x,
+\end{equation}
+with $z$ fresh. All occurrences of $u,q_u,+,\del$ abbreviate core
+terms, so these are unconditional identities. There are
+$3+K+3+K+|\mathcal B_K|$ equations, with at most four variables.
+
+For soundness, in $\mathbf C_K$ each choice stays below the union
+of its arguments. If $u$ is an atom, its nonempty ideal is trivial.
+Otherwise $q_u$ fixes each atom below $u$ and replaces every ambiguous
+value by $u$. It is an idempotent map into the same ideal. The
+normalized operations $a\mathbin{\widehat\star_i}b=q_u(a\star_i b)$
+on its image have the atomic table restricted to the atoms contained
+in $u$. This proves compatibility and all the lifted basis equations.
+
+Now let $A\models\Gamma_K$, with no finiteness assumption. The
+semilattice $+$ orders $A$. For any $u\in A$, its ideal
+$A_{\leq u}$ is closed under every choice by
+\eqref{core:eq:choice-upper-bound}. Substituting $z=u$ in the
+normalization laws shows that $q_u$ is an idempotent map from this
+ideal into itself. Equip its image $B_u$ with the operations
+$\widehat\star_i$ just defined. Equation~\eqref{core:eq:bounded-compatibility}
+makes $q_u:A_{\leq u}\to B_u$ an onto homomorphism. In particular,
+for every core term $v$ and tuple $\vec a$ in the ideal,
+\begin{equation}\label{core:eq:bounded-term-evaluation}
+ v^{B_u}(q_u(\vec a))=q_u(v^A(\vec a)).
+\end{equation}
+Substitute $z=u$ in \eqref{core:eq:bounded-generators}, and use this
+term-evaluation formula. It follows that $B_u\models\mathcal B_K$.
+By the explicit atomic basis, every atomic identity holds in $B_u$.
+Given any assignment for $s,t,z$, take $u$ to be the value of $U$;
+all the assigned variables lie below $u$. Applying
+\eqref{core:eq:bounded-term-evaluation} proves
+\eqref{core:eq:atomic-bounded-lift} in $A$. Equational completeness
+gives the claimed derivability. The homomorphism formula is also the
+reason that replacement in contexts is valid throughout the lift.
+\end{proof}
+
+These equations control the atomic information uniformly, but they
+do not suffice for the core: $D_K$ also satisfies $\Gamma_K$.
+Indeed, below a marker $u$, its $q_u$ fixes atoms and sends every
+marker to $u$, giving the same normalized atomic table. Yet $D_K$
+fails owner exhaustion. Even adjoining exhaustion is insufficient:
+the six-element countermodel of \cref{core:prop:mixed-absorption}
+satisfies $\Gamma_3$ and exhaustion but fails mixed absorption.
+Thus the atomic lifting leaves a separate problem of controlling
+information retained between ambiguous values.
 
 \subsection{Atoms with an arbitrary chain of markers}
 \label{app:core-thresholds}

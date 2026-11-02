@@ -1,8 +1,8 @@
 """Singleton-collapse quotient and the explicit veto near-unanimity term.
 
 The generic subvariety and optimal-arity arguments are written proofs.
-Congruence distributivity and finite basability use Mitschke and Baker;
-these computations are not a replacement for those external theorems.
+The explicit finite basis and uniform bounded lifts are checked separately
+in check_core_atomic_basis.py; their completeness proofs are written.
 """
 
 from itertools import product
