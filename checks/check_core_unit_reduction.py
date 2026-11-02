@@ -14,6 +14,45 @@ from core_basis import marker_join, marker_own
 from core_unit_reduction import unit_reduction_laws
 
 
+def check_unit_profiles(carrier, tables):
+    """Order recovery from local atomic closures at every left reset unit."""
+    add, operations, resets = tables
+    checked = 0
+    for c in carrier:
+        if not all(resets[c, x] == x for x in carrier):
+            continue
+        beta = {x: add[c, x] for x in carrier}
+        closures = [{x: add[x, operation[c, x]] for x in carrier}
+                    for operation in operations]
+        for x in carrier:
+            assert resets[beta[x], x] == x
+            for closure in closures:
+                assert add[x, closure[x]] == closure[x]
+                assert closure[closure[x]] == closure[x]
+            for i, first in enumerate(closures):
+                for j, second in enumerate(closures):
+                    if i != j:
+                        assert first[second[x]] == beta[x]
+        for x, y in product(carrier, repeat=2):
+            # This checks the greatest-lower-bound property, not just that
+            # the displayed element is one lower bound of its profile.
+            assert (add[y, x] == x) == all(add[y, closure[x]] == closure[x]
+                                          for closure in closures)
+            for i, closure in enumerate(closures):
+                assert closure[add[x, y]] == add[closure[x], closure[y]]
+                operation = operations[i]
+                assert closure[operation[x, y]] == operation[closure[x], closure[y]]
+            if beta[x] == beta[y]:
+                assert resets[x, y] == y and resets[y, x] == x
+            for z in carrier:
+                target = add[x, y]
+                assert (add[z, target] == target) == all(
+                    add[z, add[y, closure[x]]] == add[y, closure[x]]
+                    for closure in closures)
+            checked += 1
+    return checked
+
+
 def check_quotients(carrier, tables):
     add, operations, resets = tables
     profiles = {x: tuple(resets[c, x] for c in carrier) for x in carrier}
@@ -38,6 +77,7 @@ def check_quotients(carrier, tables):
 
 def check():
     equations = quotient_pairs = pointed_generators = quotient_maps = 0
+    profile_pairs = 0
     for owners in range(3, 7):
         laws = unit_reduction_laws(owners)
         assert len(laws) == owners + 6
@@ -63,6 +103,7 @@ def check():
             add, operations, resets = observer_tables
             equations += assert_laws(laws, observer, observer_tables)
             quotient_pairs += check_quotients(observer, observer_tables)
+            profile_pairs += check_unit_profiles(observer, observer_tables)
             units = {c for c in observer
                      if all(resets[c, x] == x for x in observer)}
             assert units == set(observer) - {high}
@@ -96,6 +137,7 @@ def check():
             tables = operation_tables(carrier, lambda x, y: add[x][y],
                                       lambda i, x, y: ops[i][x][y], len(ops))
             quotient_pairs += check_quotients(carrier, tables)
+            profile_pairs += check_unit_profiles(carrier, tables)
             assert any(all(tables[2][c, x] == x for x in carrier)
                        for c in carrier)
             for c in carrier:
@@ -109,6 +151,9 @@ def check():
           f'{quotient_pairs} root/input-pair checks; '
           f'{pointed_generators} pointed generators and {quotient_maps} '
           f'atomic quotient maps; {models} stored core models.')
+    print(f'Local atomic recovery: {profile_pairs} unit/input-pair checks, '
+          'including order reflection, preservation of join and the matching '
+          'choice, joins of profile meets, and right-projection reset in each fiber.')
 
 
 if __name__ == '__main__':

@@ -97,6 +97,7 @@ def check_family():
     assert operations[1] == operations[2] == add
 
     source_checks = principal_checks = unit_checks = 0
+    extension_principal_checks = 0
     for length in range(1, 13):
         mapping = step_certificate(length)
         assert len(mapping) == 8 * length + 4
@@ -148,9 +149,44 @@ def check_family():
             congruence = merge_congruence(list(range(size)), x, y, translations)
             assert root(congruence, r) == root(congruence, t)
             principal_checks += 1
+
+        # Adjoining a common absorbing top preserves the core identities.
+        # It erases the largest atomic quotient, while preserving the
+        # monolith, neutral reset unit, and exact observation depth.
+        infinity = size
+        extended_add = [row + [infinity] for row in add] + [[infinity] * (size + 1)]
+        extended_ops = [[row + [infinity] for row in operation]
+                        + [[infinity] * (size + 1)] for operation in operations]
+        for x in range(size + 1):
+            value = extended_add[r][x]
+            atomic = extended_add[infinity][x]
+            for operation in extended_ops:
+                value = operation[x][value]
+                atomic = operation[x][atomic]
+                assert extended_add[x][operation[r][x]] == operation[r][x]
+            assert value == x and atomic == infinity
+        extended_observation = reset_observation(extended_add, extended_ops, r)
+        assert extended_observation == observation + [infinity]
+        partition = canonical(extended_observation)
+        for depth in range(length):
+            assert partition[pair[0]] == partition[pair[1]]
+            partition = refine(partition, extended_ops)
+        assert partition == list(range(size + 1))
+        extended_monolith = monolith + [infinity]
+        translations = [operation[x] for operation in extended_ops
+                        for x in range(size + 1)]
+        for translation in translations:
+            assert root(extended_monolith, translation[r]) == root(
+                extended_monolith, translation[t])
+        for x, y in combinations(range(size + 1), 2):
+            congruence = merge_congruence(list(range(size + 1)), x, y, translations)
+            assert root(congruence, r) == root(congruence, t)
+            extension_principal_checks += 1
     print(f'Doubled ladders: lengths 1..12; {source_checks} inductive HSP '
           f'pair/owner checks; {principal_checks} principal congruences; '
           f'{unit_checks} neutral-unit checks; exact observation depth equals length.')
+    print(f'Absorbing-top doubled ladders: {extension_principal_checks} principal '
+          'congruences; trivial largest atomic quotient and unchanged exact depth.')
 
 
 if __name__ == '__main__':

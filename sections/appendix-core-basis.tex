@@ -28,7 +28,9 @@ nothing here settles it. This appendix collects what is known, in four groups.
   (\cref{app:core-atomic}). A separate quotient construction reduces finite
   basability exactly to a variety with a named left reset unit, generated
   by $K^2$ pointed algebras of size $K+1$. Even a neutral reset unit
-  leaves unbounded observation depth (\cref{app:core-units}). Owner exhaustion decides membership in a family
+  leaves unbounded observation depth, including when the largest atomic
+  quotient is trivial. Local atomic quotients instead recover each element
+  at its own bound (\cref{app:core-units}). Owner exhaustion decides membership in a family
   with arbitrarily long chains of ambiguous values
   (\cref{app:core-thresholds}).
 \end{itemize}
@@ -1355,6 +1357,94 @@ whole finite-basis question, whereas
 \cref{core:prop:atomic-uniform-lift} transfers only identities of the
 atomic quotient.
 
+A named unit gives a local recovery statement that does not require
+neutrality. The bound must depend on the element being recovered.
+
+\begin{proposition}[Local atomic recovery at a reset unit]
+\label{core:prop:unit-profiles}
+Let $A\models\Gamma_K$ and suppose $c\del x=x$ for every $x\in A$.
+Put
+\[
+ \beta(x)=c+x,\qquad E_i(x)=x+(c\star_i x).
+\]
+Each $E_i$ is a join-preserving closure operator and preserves $\star_i$.
+Its image, in the signature $\{+,\star_i\}$, is a dissemilattice retract.
+For distinct owners $i,j$,
+\begin{equation}\label{core:eq:unit-profile-composition}
+ E_iE_j(x)=\beta(x).
+\end{equation}
+Moreover,
+\begin{equation}\label{core:eq:unit-profile-recovery}
+ q_{\beta(x)}(x)=x,\qquad
+ x=\bigwedge_{i\in I}E_i(x),\qquad
+ z+x=\bigwedge_{i\in I}\bigl(z+E_i(x)\bigr).
+\end{equation}
+The displayed greatest lower bounds exist in the join order, without
+assuming any other meets. Thus $x\mapsto(E_i(x))_{i\in I}$ is an
+order embedding preserving join, and its $i$th coordinate preserves
+owner $i$'s choice.
+
+Each fiber of $\beta$ has right-projection reset:
+\begin{equation}\label{core:eq:unit-fiber-reset}
+ c+x=c+y\quad\Longrightarrow\quad x\del y=y,\quad y\del x=x.
+\end{equation}
+In particular, within such a fiber the local atomic quotient separates
+all elements. If $c$ is also neutral, meaning $x\leq c\star_i x$ for
+all $i,x$, then $E_i(x)=c\star_i x$.
+\end{proposition}
+\begin{proof}
+Write $F_i(x)=c\star_i x$. Associativity and distribution give
+$F_i^2=F_i$ and show that $F_i$ preserves join. Consequently
+$E_i=\mathrm{id}+F_i$ is extensive, idempotent, and join preserving.
+Expanding $(x+F_i(x))\star_i(y+F_i(y))$, all three terms involving
+an $F_i$ equal $F_i(x\star_i y)$ by associativity and idempotence.
+The remaining term is $x\star_i y$, proving preservation of $\star_i$.
+Its image is consequently a subalgebra for these two operations, with
+$E_i$ as retraction, and inherits their dissemilattice laws.
+
+For $i\ne j$, distribution gives
+\[
+ E_iE_j(x)=x+F_i(x)+F_j(x)+F_iF_j(x).
+\]
+Pair coverage says $F_i(x)+F_j(x)=c+x$, and the choice upper bound
+puts $F_iF_j(x)\leq c+x$. This proves
+\eqref{core:eq:unit-profile-composition}.
+
+Reset preserves join in its left argument: it is a composition of
+join-preserving basic translations after the initial join with its
+right argument. Therefore, using the unit and idempotence,
+\[
+ (c+x)\del x=(c\del x)+(x\del x)=x.
+\]
+At $u=c+x$, the bounded closure of
+\cref{core:prop:atomic-uniform-lift} is
+\[
+ e_i^u(x)=x\star_i(c+x)=x+(c\star_i x)=E_i(x).
+\]
+Its meet formula proves the first two assertions in
+\eqref{core:eq:unit-profile-recovery}. For the last, $z+x$ is a lower
+bound of every $z+E_i(x)$. Any common lower bound $v$ satisfies
+\[
+ v\leq z+E_i(x)\leq E_i(z)+E_i(x)=E_i(z+x)
+\]
+for every $i$. Applying the meet formula to $z+x$ gives $v\leq z+x$.
+Order reflection and injectivity follow from that same formula.
+
+Finally suppose $c+x=c+y=u$. Since $y\leq u$, monotonicity of reset
+in its left argument and its extensive right argument give
+\[
+ x\leq y\del x\leq u\del x=x.
+\]
+Interchanging $x,y$ proves \eqref{core:eq:unit-fiber-reset}.
+The local atomic quotient $q_u$ fixes every element of this fiber by
+\eqref{core:eq:unit-profile-recovery}. The neutral case follows from
+the definition of $E_i$.
+\end{proof}
+
+This recovers elements from local atomic information. The coordinate
+maps preserve their corresponding choices; no preservation of the other
+owners' choices is asserted.
+
 The named unit does not bound the number of observations needed to
 control arbitrary contexts. For a fixed $r$, put $\rho_r(x)=x\del r$.
 Let $\equiv_r^h$ identify $x,y$ exactly when
@@ -1376,7 +1466,9 @@ unit $r$ satisfying $x\leq r\star_i x$ for every $i,x$, such that
 \]
 Only owners $0,1$ can differ from join. Thus no fixed observation depth
 suffices, even with this stronger unit condition and only two active
-owners. The conclusion also holds when union is a basic operation.
+owners. The conclusion also holds when union is a basic operation. Adjoining
+one absorbing element gives a $(4d+2)$-element family with the same
+properties and a trivial largest atomic quotient.
 \end{theorem}
 \begin{proof}
 Use the ladder $L_d$ of \cref{core:thm:ladders}. Write $x^e$ for
@@ -1481,6 +1573,24 @@ $a_0^1$, while $m_t$ stays fixed. Choosing against $a_0^0$ under owner
 $0$ and then applying $\rho_r$ gives $m_0\sim m_t$. Join with $m_1$
 and use transitivity to obtain $m_0\sim m_1$. The case $t=1$ is
 immediate. This proves subdirect irreducibility.
+
+Now adjoin a common absorbing element $\infty$. Membership follows
+from \cref{core:lem:absorbing-extension}. The unit and neutrality
+conditions persist, and $\rho_r(\infty)=\infty$ makes its observation
+class a singleton from depth zero. Every old context and distinction
+persists; a translation with coefficient $\infty$ is constant. Thus the
+exact observation depth is unchanged.
+
+The old monolith remains a congruence. A nonzero congruence identifying
+two old elements contains it. If instead $\infty\sim x$ for an old
+$x$, there is a basic translation $p$ with $p(x)\ne x$, giving an
+unequal old pair $x\sim p(x)$. Such a translation exists because $A_d$
+has no common absorbing element: its join top is $c_d^1$, which
+$a_{d-1}^1$ absorbs under owner $(d-1)\bmod2$. Hence the extension is
+also subdirectly irreducible. Finally,
+$\infty\del x=\infty$ for every $x$, so
+\cref{core:prop:atomic-uniform-lift} identifies its largest atomic
+quotient as the one-element algebra.
 \end{proof}
 
 The nine-element obstruction is $A_2$. The inductive construction shows
