@@ -15,8 +15,14 @@ from core_unit_reduction import unit_reduction_laws
 
 
 def check_unit_profiles(carrier, tables):
-    """Order recovery from local atomic closures at every left reset unit."""
+    """Element, partial-profile, and binary recovery at every reset unit."""
     add, operations, resets = tables
+    lower = {x: frozenset(y for y in carrier if add[y, x] == x)
+             for x in carrier}
+
+    def assert_meet(value, bounds):
+        assert lower[value] == frozenset.intersection(*(lower[b] for b in bounds))
+
     checked = 0
     for c in carrier:
         if not all(resets[c, x] == x for x in carrier):
@@ -24,8 +30,20 @@ def check_unit_profiles(carrier, tables):
         beta = {x: add[c, x] for x in carrier}
         closures = [{x: add[x, operation[c, x]] for x in carrier}
                     for operation in operations]
+        masks = range(1 << len(operations))
+        partial = []
+        for mask in masks:
+            projection = {}
+            for x in carrier:
+                value = beta[x]
+                for i, operation in enumerate(operations):
+                    if mask & (1 << i):
+                        value = operation[x, value]
+                projection[x] = value
+            partial.append(projection)
         for x in carrier:
             assert resets[beta[x], x] == x
+            assert partial[0][x] == beta[x] and partial[-1][x] == x
             for closure in closures:
                 assert add[x, closure[x]] == closure[x]
                 assert closure[closure[x]] == closure[x]
@@ -33,6 +51,23 @@ def check_unit_profiles(carrier, tables):
                 for j, second in enumerate(closures):
                     if i != j:
                         assert first[second[x]] == beta[x]
+            for mask, projection in enumerate(partial):
+                assert add[x, projection[x]] == projection[x]
+                assert projection[projection[x]] == projection[x]
+                assert beta[projection[x]] == beta[x]
+                for i, closure in enumerate(closures):
+                    assert closure[projection[x]] == (
+                        closure[x] if mask & (1 << i) else beta[x])
+                if mask:
+                    assert_meet(projection[x], [closure[x]
+                                for i, closure in enumerate(closures)
+                                if mask & (1 << i)])
+                for other, second in enumerate(partial):
+                    intersection = partial[mask & other][x]
+                    assert projection[second[x]] == intersection
+                    assert add[projection[x], second[x]] == intersection
+                    assert_meet(partial[mask | other][x],
+                                [projection[x], second[x]])
         for x, y in product(carrier, repeat=2):
             # This checks the greatest-lower-bound property, not just that
             # the displayed element is one lower bound of its profile.
@@ -42,6 +77,14 @@ def check_unit_profiles(carrier, tables):
                 assert closure[add[x, y]] == add[closure[x], closure[y]]
                 operation = operations[i]
                 assert closure[operation[x, y]] == operation[closure[x], closure[y]]
+                bounds = [operation[profile[x], profile[y]] if j == i
+                          else add[profile[x], profile[y]]
+                          for j, profile in enumerate(closures)]
+                assert_meet(operation[x, y], bounds)
+                assert_meet(operation[x, y],
+                            [operation[y, profile[x]] for profile in closures])
+            for projection in partial:
+                assert projection[add[x, y]] == add[projection[x], projection[y]]
             if beta[x] == beta[y]:
                 assert resets[x, y] == y and resets[y, x] == x
             for z in carrier:
@@ -152,8 +195,9 @@ def check():
           f'{pointed_generators} pointed generators and {quotient_maps} '
           f'atomic quotient maps; {models} stored core models.')
     print(f'Local atomic recovery: {profile_pairs} unit/input-pair checks, '
-          'including order reflection, preservation of join and the matching '
-          'choice, joins of profile meets, and right-projection reset in each fiber.')
+          'including partial closures and their Boolean subset laws, '
+          'binary reconstruction, preservation of profile meets by basic '
+          'translations, and right-projection reset in each fiber.')
 
 
 if __name__ == '__main__':

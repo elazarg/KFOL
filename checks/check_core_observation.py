@@ -189,6 +189,31 @@ def check_family():
           'congruences; trivial largest atomic quotient and unchanged exact depth.')
 
 
+def check_profile_context():
+    """Basic preservation of profile meets fails under a depth-three context."""
+    values, indices, add, operations = tables(2)
+    r, x = indices[2, 1], indices[1, 0]
+    profile = [add[x][operation[r][x]] for operation in operations]
+    assert profile == [indices[3, 0], indices[1, 1], indices[3, 1]]
+
+    def context(v):
+        v = operations[1][indices[4, 0]][v]
+        v = operations[0][indices[0, 1]][v]
+        return operations[1][r][v]
+
+    images = list(map(context, profile))
+    assert images == [indices[4, 1], indices[3, 1], indices[4, 1]]
+    assert context(x) == r
+    meet = indices[3, 1]
+    assert meet != r and add[r][meet] == meet
+    # Check every possible lower bound, as well as the explicit output table.
+    for v in range(len(values)):
+        assert (add[v][meet] == meet) == all(add[v][z] == z for z in images)
+    print('Profile meets: the certified nine-element doubled ladder has a '
+          'depth-three context that fails to preserve the meet.')
+
+
 if __name__ == '__main__':
     check_original()
     check_family()
+    check_profile_context()

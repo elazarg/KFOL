@@ -29,8 +29,10 @@ nothing here settles it. This appendix collects what is known, in four groups.
   basability exactly to a variety with a named left reset unit, generated
   by $K^2$ pointed algebras of size $K+1$. Even a neutral reset unit
   leaves unbounded observation depth, including when the largest atomic
-  quotient is trivial. Local atomic quotients instead recover each element
-  at its own bound (\cref{app:core-units}). Owner exhaustion decides membership in a family
+  quotient is trivial. Local atomic quotients recover elements and binary
+  choices as explicit meets; basic translations preserve the element
+  profiles, but their compositions need not (\cref{app:core-units}).
+  Owner exhaustion decides membership in a family
   with arbitrarily long chains of ambiguous values
   (\cref{app:core-thresholds}).
 \end{itemize}
@@ -1384,6 +1386,22 @@ assuming any other meets. Thus $x\mapsto(E_i(x))_{i\in I}$ is an
 order embedding preserving join, and its $i$th coordinate preserves
 owner $i$'s choice.
 
+There is also a closure for each subset $R\subseteq I$. Define $P_R(x)$
+by starting at $\beta(x)$ and applying $v\mapsto x\star_i v$ once
+for each $i\in R$, in any order. Then $P_\varnothing=\beta$,
+$P_I=\mathrm{id}$, and each $P_R$ preserves join. Its profile is
+\begin{equation}\label{core:eq:partial-profile}
+ E_jP_R(x)=
+ \begin{cases}E_j(x)&j\in R,\\ \beta(x)&j\notin R.\end{cases}
+\end{equation}
+For nonempty $R$, $P_R(x)=\bigwedge_{i\in R}E_i(x)$, and for all
+$R,S\subseteq I$,
+\begin{equation}\label{core:eq:partial-profile-composition}
+ P_RP_S(x)=P_R(x)+P_S(x)=P_{R\cap S}(x),\qquad
+ P_R(x)\wedge P_S(x)=P_{R\cup S}(x).
+\end{equation}
+In particular, the $P_R$ are commuting closure operators.
+
 Each fiber of $\beta$ has right-projection reset:
 \begin{equation}\label{core:eq:unit-fiber-reset}
  c+x=c+y\quad\Longrightarrow\quad x\del y=y,\quad y\del x=x.
@@ -1430,6 +1448,23 @@ bound of every $z+E_i(x)$. Any common lower bound $v$ satisfies
 for every $i$. Applying the meet formula to $z+x$ gives $v\leq z+x$.
 Order reflection and injectivity follow from that same formula.
 
+For the subset maps, the interval argument in
+\cref{core:prop:atomic-uniform-lift}, at $u=\beta(x)$, proves order
+independence and the partial-meet formula. It also gives
+$x\leq P_R(x)\leq\beta(x)$, hence $\beta P_R(x)=\beta(x)$.
+Apply $e_j^u$ to the defining composition. The initial value is $u$.
+Each stage with owner different from $j$ takes join with $E_j(x)$
+by \eqref{core:eq:atomic-closure-hom}. If a stage with owner $j$
+occurs, it takes meet with $E_j(x)$ in the image lattice and changes
+the value from $u$ to $E_j(x)$; later stages leave it there.
+Since $e_j^u(P_R(x))=E_j(P_R(x))$, this proves
+\eqref{core:eq:partial-profile}. Comparing profiles now proves
+join preservation, the composition formula, and the join formula in
+\eqref{core:eq:partial-profile-composition}. The meet formula follows
+by combining the two families of lower-bound conditions; if one subset
+is empty, its value is $\beta(x)$, above every partial meet. Extensivity
+and idempotence give the closure assertion.
+
 Finally suppose $c+x=c+y=u$. Since $y\leq u$, monotonicity of reset
 in its left argument and its extensive right argument give
 \[
@@ -1441,9 +1476,55 @@ The local atomic quotient $q_u$ fixes every element of this fiber by
 the definition of $E_i$.
 \end{proof}
 
-This recovers elements from local atomic information. The coordinate
-maps preserve their corresponding choices; no preservation of the other
-owners' choices is asserted.
+The same closures reconstruct a choice from the profiles of its inputs.
+
+\begin{proposition}[Binary reconstruction]\label{core:prop:binary-reconstruction}
+Under the hypotheses of \cref{core:prop:unit-profiles}, put
+\[
+ G_j^i(x,y)=
+ \begin{cases}
+ E_i(x)\star_i E_i(y)&j=i,\\
+ E_j(x)+E_j(y)&j\ne i.
+ \end{cases}
+\]
+Then the following greatest lower bounds exist:
+\begin{equation}\label{core:eq:binary-profile-recovery}
+ x\star_i y=\bigwedge_{j\in I}G_j^i(x,y),\qquad
+ a\star_i x=\bigwedge_{j\in I}\bigl(a\star_i E_j(x)\bigr).
+\end{equation}
+Thus every basic translation, including join, preserves the profile
+meet of an element. This assertion does not extend to arbitrary
+compositions of translations.
+\end{proposition}
+\begin{proof}
+Put $z=x\star_i y$, $v=x+y$, and $u=c+v$. Associativity and distribution
+give $e_i^v(z)=z\star_i(x+y)=z$. Since
+$z\leq q_v(z)\leq e_i^v(z)$, we have $q_v(z)=z$. Join preservation
+of reset in its left argument and the unit law now give
+\[
+ q_u(z)=(c\del z)+(v\del z)=z.
+\]
+The bounded closure for owner $i$ is
+$e_i^u(z)=z+(c\star_i z)=E_i(z)=E_i(x)\star_i E_i(y)$.
+For $j\ne i$, \eqref{core:eq:atomic-closure-hom} and distribution give
+\[
+ e_j^u(z)=e_j^u(x)+e_j^u(y)
+ =x+y+(c\star_j x)+(c\star_j y)=E_j(x)+E_j(y).
+\]
+Here the extra summand $x\star_j y$ is absorbed by $x+y$.
+The meet formula for $q_u(z)$ proves the first identity in
+\eqref{core:eq:binary-profile-recovery}.
+
+For the second, monotonicity makes $a\star_i x$ a lower bound.
+Let $w$ be any common lower bound of the displayed terms. Since
+$a\star_i E_j(x)\leq a+E_j(x)$, the translated-meet formula in
+\eqref{core:eq:unit-profile-recovery} gives $w\leq a+x$.
+For $j=i$, distribution gives
+$a\star_i E_i(x)=E_i(a\star_i x)=G_i^i(a,x)$.
+For $j\ne i$ we have $w\leq a+x\leq E_j(a)+E_j(x)=G_j^i(a,x)$.
+Apply the first identity to conclude $w\leq a\star_i x$.
+The failure for compositions is exhibited in $A_2$ below.
+\end{proof}
 
 The named unit does not bound the number of observations needed to
 control arbitrary contexts. For a fixed $r$, put $\rho_r(x)=x\del r$.
@@ -1593,10 +1674,23 @@ $\infty\del x=\infty$ for every $x$, so
 quotient as the one-element algebra.
 \end{proof}
 
-The nine-element obstruction is $A_2$. The inductive construction shows
-why increasing a fixed context bound cannot repair that normalization
-strategy. It does not rule out an equational basis that controls contexts
-by induction.
+The nine-element algebra $A_2$ also witnesses the last assertion of
+\cref{core:prop:binary-reconstruction}. With $r=c_0^1$, take $x=a_1^0$
+and the depth-three context
+\[
+ p(v)=r\star_1\bigl(a_0^1\star_0(c_2^0\star_1 v)\bigr).
+\]
+Its profile and the corresponding outputs are
+\[
+ (E_0(x),E_1(x),E_j(x))=(c_1^0,a_1^1,c_1^1),\qquad
+ (p(E_0(x)),p(E_1(x)),p(E_j(x)))=(c_2^1,c_1^1,c_2^1)
+ \quad(j\geq2).
+\]
+Their meet is $c_1^1$, whereas $p(x)=r<c_1^1$. Thus preservation of
+the profile meets by each basic translation cannot be iterated directly.
+The arbitrary-length construction separately rules out repairing the
+reset-observation strategy by increasing a fixed context bound. Neither
+obstruction rules out a basis that controls contexts by other equations.
 
 \subsection{Atoms with an arbitrary chain of markers}
 \label{app:core-thresholds}
