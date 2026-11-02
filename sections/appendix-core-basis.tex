@@ -7,9 +7,10 @@ nothing here settles it. This appendix collects what is known, in four groups.
   contains every dissemilattice (\cref{app:core-dissemilattice}), and any basis
   needs an identity with at least $K+1$ variables, owner exhaustion being the
   witness (\cref{app:core-arity}).
-\item \emph{Settled cases.} The binary terms are classified
-  (\cref{app:core-binary}), and conservative models have a presentation by
-  three-variable equations (\cref{app:core-conservative}). Term equality
+\item \emph{Settled cases.} Binary terms and unary polynomial functions are
+  classified (\cref{app:core-binary,core:prop:unary-polynomials}), and
+  conservative models have a presentation by three-variable equations
+  (\cref{app:core-conservative}). Term equality
   admits a smaller exact test domain at every arity
   (\cref{core:prop:sparse-tests}).
 \item \emph{A candidate basis.} For three owners, those equations, owner exhaustion,
@@ -281,6 +282,91 @@ of the supports and replaces the two left-owner sets $A,A'$ by
 \]
 and similarly for the right-owner sets. This follows from the
 singleton recursion, and it gives the entire finite operation table.
+
+\subsection{Unary polynomials}
+
+Allowing fixed parameters gives a different, still finite, collection of
+unary functions. Here a \emph{unary polynomial} is a core term with all
+but one variable assigned fixed winner sets; the remaining variable may
+occur repeatedly. The parameters are used to describe these functions,
+not added as constants to the core signature.
+
+\begin{proposition}[Unary polynomial normal forms]
+\label{core:prop:unary-polynomials}
+For $K\geq3$, the unary polynomial functions of $\mathbf C_K$ are
+the constant functions and precisely the functions
+\begin{equation}\label{core:eq:unary-profile}
+ f_{U,B}(S)=
+ \begin{cases}
+  \{i\}\cup B_i,&S=\{i\},\\
+  S\cup U,&|S|\geq2,
+ \end{cases}
+ \qquad
+ U\subseteq I,\quad B_i\subseteq U\setminus\{i\}.
+\end{equation}
+There are exactly
+\[
+ (1+2^{K-1})^K+2^K-2
+\]
+such polynomial functions. Every unary polynomial $p$ satisfies
+$p^3=p^2$, and this identity schema holds throughout
+$\operatorname V(\mathbf C_K)$. The exponent two is sharp.
+\end{proposition}
+\begin{proof}
+First show that the displayed class is closed under pointwise owned
+choice. Two constant functions give a constant. For two profiles with
+data $(U,B)$ and $(V,C)$, a choice by owner $r$ has ambiguous-input
+increment $U\cup V$. At singleton $\{i\}$ its increment is
+$B_i\cup C_i$, except that it is empty when $i=r$ and either
+$B_i$ or $C_i$ is empty. These are again admissible profile data.
+
+For a constant $T$ and a profile $(U,B)$, owner $r$ gives the constant
+function $\{r\}$ if $T=\{r\}$. Otherwise the new ambiguous-input
+increment is $U\cup T$. Its singleton increment is
+$(B_i\cup T)\setminus\{i\}$, except that it is empty when $i=r$
+and $B_i$ is empty. This too is a profile. The identity function
+has $U=\varnothing$, so induction on terms puts every unary
+polynomial in the stated class.
+
+Conversely extend the notation of \cref{core:prop:binary} by
+$L_\varnothing(x,y)=x+y$. For each $j\in U$ put
+\[
+ A_j=\{i\in I\setminus\{j\}:j\notin B_i\}.
+\]
+The polynomial
+\[
+ x+\sum_{j\in U} L_{A_j}(x,\{j\})
+\]
+realizes \eqref{core:eq:unary-profile}; when $U$ is empty it is
+just $x$. On an ambiguous input every summand adds its singleton
+parameter. On input $\{i\}$ it adds $j\ne i$ precisely when
+$j\in B_i$. This proves realizability.
+
+The data are unique. Intersecting $f_{U,B}(S)$ over all ambiguous
+$S$ recovers $U$, since their intersection is empty for $K\geq3$;
+the singleton outputs recover each $B_i$. For fixed $U$ there are
+$2^{(K-1)|U|}$ profiles, whose sum over $U\subseteq I$ is
+$(1+2^{K-1})^K$. Every profile contains its input, so the only
+constant profile is the constant $I$. Adding the other $2^K-2$
+constant functions gives the count.
+
+A profile is idempotent on ambiguous inputs. A singleton is either
+fixed or sent to an ambiguous set, which reaches a fixed point on
+the next application. Constants are idempotent, so $p^3=p^2$.
+For each term $t(x,\vec y)$ this asserts an ordinary core identity
+\[
+ t(t(t(x,\vec y),\vec y),\vec y)
+   =t(t(x,\vec y),\vec y),
+\]
+which therefore holds throughout the generated variety. For
+sharpness choose distinct $a,b,c$, set $A=\{a,b\}$ and
+$P=\{a,b,c\}$, and take
+$p(x)=A\star_a(P\star_b x)$. Then $p(\{b\})=A$ and
+$p^2(\{b\})=P$.
+\end{proof}
+
+Turning this classification into a basis would require uniform equational
+derivations with the parameters left as variables.
 
 \subsection{Conservative models}
 \label{app:core-conservative}
@@ -661,20 +747,22 @@ closed under both choices, but its
 join $a+b=n$ lies outside it, so union is not a raw two-choice term.
 
 The observer factors also reduce the test domain for arbitrary core
-terms. Only one input needs to carry their upper marker.
+terms. Only one input needs to carry their upper marker, and only
+the presence of that marker in the output needs to be recorded.
 
 \begin{proposition}[One marked input suffices]
 \label{core:prop:sparse-tests}
 Let $d\geq1$. In each observer factor
-$O_j=D_K\setminus\{a_j\}$, it suffices to test identities on
-assignments to $d$ variables that are either atom-only, or have
-exactly one input equal to $p$ and every other input an atom or $n$.
-Across the $K$ observers this gives exactly
+$O_j=D_K\setminus\{a_j\}$, retain only assignments with exactly
+one input equal to $p$ and every other input an atom or $n$.
+Record one bit per assignment: whether the output is $p$.
+These bits determine the entire term function. Across the $K$
+observers this gives exactly
 \[
- K(K-1)^d+dK^d
+ dK^d
 \]
-tests. Evaluation on these tests embeds the free $d$-generated core
-algebra into the corresponding product of observer factors.
+tests. Full-valued evaluation on these tests embeds the free
+$d$-generated core algebra into the product of observer factors.
 \end{proposition}
 \begin{proof}
 The observer factors together have exactly the core identities by
@@ -695,16 +783,28 @@ The atom flags are fixed. Induction therefore shows that $P_s$ is
 a disjunction of a subset of the input $p$ flags, with no constant
 true contribution.
 
-Suppose two terms differ at an arbitrary assignment. If their atom
-flags differ, either the assignment is already atom-only, or
-replacing one nonatom input by $p$ and all the other nonatom inputs
-by $n$ preserves that difference. If both outputs are nonatoms,
-one is $p$ and the other $n$. A source flag contributing to the
-first disjunction and not the second witnesses the same difference
-when it is the only input set to $p$. Thus the stated tests
-separate all unequal term functions. There are $(K-1)^d$ atom-only
-tests and $dK^{d-1}$ one-marker tests per observer. Evaluation is
-a homomorphism, so joint separation gives the embedding.
+This recovers the $p$ flag at any assignment: take the disjunction
+of the recorded bits obtained by keeping each of its $p$ inputs
+in turn and replacing the others by $n$. With no $p$ input the
+flag is false.
+
+To recover an atom flag $A_i$, let $S$ be the set of input positions
+equal to $a_i$. This flag depends only on $S$. For each $k\notin S$,
+test the assignment with $a_i$ in $S$, $p$ at $k$, and $n$ elsewhere.
+Then $A_i$ is true exactly when every such recorded bit is zero.
+Indeed, if $A_i$ is true, all these outputs are $a_i$. Conversely,
+set every position outside $S$ to $p$. Inputs and outputs now lie
+in the subalgebra $\{a_i,p\}$, so a false $A_i$ forces output $p$.
+Marker linearity makes at least one of the one-marker tests return
+$p$. If $S$ contains every position, the condition is vacuous and
+idempotence gives output $a_i$.
+
+These reconstructions determine every output: it is the atom whose
+flag is true, otherwise $p$ if its flag is true, and $n$ otherwise.
+There are $dK^{d-1}$ tests per observer. Full-valued evaluation is a
+homomorphism, so joint separation gives the embedding. The one-bit
+recording itself is used for reconstruction, not asserted to be a
+homomorphism.
 \end{proof}
 
 \subsection{Quotients that require every owner}

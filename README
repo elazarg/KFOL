@@ -129,6 +129,16 @@ identity, and the four-variable failure. checks/check_core_obstruction.py
 checks the quotients at K=3..6 and complete binary tables at K=3,4,5.
 Whether the core has a finite basis remains open.
 
+Unary polynomial functions, with arbitrary fixed parameters, also have an
+exact normal form. Apart from constants, they preserve their input, add a
+fixed set U on ambiguous inputs, and add an arbitrary subset of U minus i
+at each singleton i. Every such profile is realizable. The exact count is
+(1+2^(K-1))^K + 2^K - 2. Consequently every unary polynomial satisfies
+p^3=p^2 throughout the core variety, and the exponent two is sharp.
+checks/check_core_unary_polynomials.py verifies the entire 131-function
+closure at K=3 and all 6575 synthesized functions at K=4. The normal form
+classifies functions on the generator, not derivations from the candidate.
+
 The same section gives a complete relative presentation for conservative
 core models: 3+4K+binom(K,2) identities, with an optimal bound of three
 variables. All but at most one owner operation equal derived union.
@@ -181,12 +191,12 @@ are conservative, one-owner dissemilattice expansions, or extensions by a
 common absorbing element. Any countermodel to the strengthened candidate
 has at least nine elements; unrestricted completeness remains unproved.
 
-Observer tests can be reduced at every arity d: atom-only assignments and
-assignments with exactly one upper marker suffice. Across all K observers
-this uses K(K-1)^d + d K^d tests and embeds the free d-generated core algebra.
-The proof is an induction on atomic flags and marker provenance.
+Observer tests can be reduced at every arity d to assignments with exactly
+one upper marker. Recording only whether the output is that marker recovers
+all outputs, including atoms. Across all K observers this uses d K^d bits;
+full-valued evaluation on the same tests embeds the free d-generated core.
 checks/check_core_sparse_tests.py independently reconstructs complete
-sampled term tables from these sparse values.
+sampled term tables from these bits.
 
 For a separate family, membership is decided exactly by exhaustion:
 incomparable owner atoms below an arbitrary chain of markers, with each
