@@ -199,6 +199,36 @@ def check_local_laws(image, c, i, owners, add, choice):
     return shifts, exhaustions
 
 
+def check_retraction(carrier, c, i, owners, add, choice):
+    fixed = lambda x: choice(i, c, x)
+    closure = lambda x: add(x, fixed(x))
+    source = {closure(x) for x in carrier}
+    target = {fixed(x) for x in carrier}
+    assert target <= source
+    assert {fixed(x) for x in source} == target
+    for x in carrier:
+        assert closure(closure(x)) == closure(x)
+        assert fixed(closure(x)) == fixed(x)
+    for a in target:
+        assert fixed(a) == a
+    fiber_pairs = 0
+    for x, y in product(source, repeat=2):
+        a, b = fixed(x), fixed(y)
+        assert add(x, y) in source
+        assert fixed(add(x, y)) == add(a, b)
+        for j in range(owners):
+            value = choice(j, x, y)
+            assert value in source
+            assert fixed(value) == choice(j, a, b)
+            if a == b and j != i:
+                assert value == add(x, y)
+        if a == b:
+            assert add(a, x) == x
+            assert choice(i, a, x) == a
+            fiber_pairs += 1
+    return len(source)**2, fiber_pairs
+
+
 def check():
     path = Path(__file__).with_name('data') / 'core-choice-image-proof.json'
     certificate = json.loads(path.read_text())
@@ -217,6 +247,7 @@ def check():
             raise AssertionError('accepted an altered certificate')
 
     images = quotients = shifts = exhaustions = 0
+    retraction_pairs = fiber_pairs = 0
     for owners in range(3, 6):
         carrier = range(1, 1 << owners)
 
@@ -245,6 +276,9 @@ def check():
                 image, c, i, owners, int.__or__, choice)
             shifts += local_shifts
             exhaustions += local_exhaustions
+            pairs, fibers = check_retraction(carrier, c, i, owners, int.__or__, choice)
+            retraction_pairs += pairs
+            fiber_pairs += fibers
         for i, j, k in product(range(owners), repeat=3):
             if len({i, j, k}) != 3:
                 continue
@@ -275,6 +309,11 @@ def check():
                 shifts += local_shifts
                 exhaustions += local_exhaustions
                 stored_images += 1
+                pairs, fibers = check_retraction(
+                    range(len(add)), c, i, owners, lambda x, y: add[x][y],
+                    lambda j, x, y: operations[j][x][y])
+                retraction_pairs += pairs
+                fiber_pairs += fibers
     # D_K fails global exhaustion but satisfies the hypotheses and these
     # local laws: the new deduction does not assume global exhaustion.
     marker_images = 0
@@ -287,6 +326,12 @@ def check():
             shifts += local_shifts
             exhaustions += local_exhaustions
             marker_images += 1
+            pairs, fibers = check_retraction(
+                range(owners + 2), c, i, owners,
+                lambda x, y: marker_join(owners, x, y),
+                lambda j, x, y: marker_own(owners, j, x, y))
+            retraction_pairs += pairs
+            fiber_pairs += fibers
     print(f'Choice-image closure: {sum(counts.values())} universal equational '
           f'proof steps ({dict(counts)}); altered certificates rejected. '
           f'{images} native images have a reset unit and at most two active owners; '
@@ -294,6 +339,9 @@ def check():
     print(f'Choice-image local laws: {images + stored_images + marker_images} images, '
           f'{shifts} join-shift and {exhaustions} two-owner exhaustion instances; '
           'the universal certificate also proves the join-shift equation.')
+    print(f'Choice-image retractions: {retraction_pairs} source pairs and '
+          f'{fiber_pairs} same-fiber pairs; full homomorphisms, closure, '
+          'one active owner per fiber, and the fiber bottom/absorber checked.')
 
 
 if __name__ == '__main__':

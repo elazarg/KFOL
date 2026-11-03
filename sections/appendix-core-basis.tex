@@ -27,6 +27,9 @@ nothing here settles it. This appendix collects what is known, in four groups.
   follows from the strengthened candidate and controls arbitrary terms
   whose inputs have all been translated. Within each image, that candidate
   also implies two-owner exhaustion away from the translating owner.
+  Inflating the translation by join gives a larger subalgebra on which
+  the original translation is a homomorphic retraction; its fibers are
+  one-owner dissemilattices.
   Every principal join filter is a subdirect product of one-owner
   dissemilattices, already under the basic three-variable laws; adjoining
   a named join bottom therefore gives a finitely based class
@@ -41,6 +44,8 @@ nothing here settles it. This appendix collects what is known, in four groups.
   quotient is trivial. Local atomic quotients recover elements and binary
   choices as explicit meets. The profile closures have subalgebra images,
   whose other-owner choices are determined by the filter above the unit.
+  At a neutral unit these images are one-owner unital dissemilattices,
+  with an eight-equation presentation.
   Basic translations preserve the element profiles, but their compositions
   need not (\cref{app:core-units}).
   Owner exhaustion decides membership in a family
@@ -982,8 +987,50 @@ For example, take $c=\{0,1\}$ and $\lambda=\lambda_{c,0}$. Then
  \lambda(\{1\}\star_1\{2\})=\{0,1\},\qquad
  \lambda(\{1\})\star_1\lambda(\{2\})=\{0,1,2\}.
 \]
-Thus image closure alone does not supply a homomorphic-image decomposition.
 
+The translation does become a homomorphism after restricting its domain
+to the fixed points of its inflationary closure.
+
+\begin{proposition}[Retraction onto a choice image]
+\label{core:prop:choice-image-retraction}
+Let $A\in\mathcal V_K$, fix $c\in A$ and an owner $i$, and put
+$F(x)=c\star_i x$ and $E(x)=x+F(x)$. Then $E[A]$ is a subalgebra,
+and $F:E[A]\to F[A]$ is a retraction of algebras. In particular,
+the following three-variable core identity holds for every $j\ne i$:
+\begin{equation}\label{core:eq:profile-retraction}
+ c\star_i\bigl((x+(c\star_i x))\star_j(y+(c\star_i y))\bigr)
+   =(c\star_i x)\star_j(c\star_i y).
+\end{equation}
+Each fiber of this retraction is a subalgebra on which every choice
+except $\star_i$ is join. If the fiber is over $a\in F[A]$, then
+$a$ is its join bottom and absorbs $\star_i$.
+\end{proposition}
+\begin{proof}
+First work in $\mathbf C_K$. If $c=\{i\}$, then $F$ is constant
+and $E(x)=\{i\}\cup x$. Its image is a principal join filter, so is
+a subalgebra, and the constant map $F$ preserves every operation.
+Otherwise $F(x)$ contains $x$ for every winner set $x$, so $E=F$.
+Choice-image closure makes this a subalgebra, and $F$ is the identity
+on it. This proves \eqref{core:eq:profile-retraction} and the closure
+identities $E(E(x)\star_j E(y))=E(x)\star_j E(y)$ in the generator,
+and hence in $A$. Closure under join follows from join preservation.
+The semilattice and distribution laws give $F(E(x))=F(x)$ and
+$E(E(x))=E(x)$, so the displayed identity says
+exactly that $F$ preserves each other choice on $E[A]$. It preserves
+join and $\star_i$ by distribution and associativity. Finally
+$E(F(x))=F(x)=F(F(x))$, proving the retraction assertion.
+
+For a fiber over $a$, idempotence of all basic operations makes it a
+subalgebra. If $x$ lies in it, then $E(x)=x$ and $F(x)=a$, so
+$a\leq x$ and $a\star_i x=(c\star_i x)\star_i x=a$.
+For $j\ne i$, coverage gives
+$a+(a\star_j x)=x$. Monotonicity gives $a\leq a\star_j x$,
+so $a\star_j x=x$. Thus $a$ is a join bottom and an identity for
+$\star_j$ on the fiber. For two fiber elements $x,y$, monotonicity
+now gives $x,y\leq x\star_j y\leq x+y$, proving
+$x\star_j y=x+y$. The remaining choice and join inherit the
+dissemilattice laws.
+\end{proof}
 The observer factors also reduce the test domain for arbitrary core
 terms. Only one input needs to carry their upper marker, and only
 the presence of that marker in the output needs to be recorded.
@@ -1771,6 +1818,12 @@ preserves join and every $\star_j$ with $j\ne i$. Moreover $B_i$
 satisfies \eqref{core:eq:choice-image-exhaustion} for all distinct
 $j,k\ne i$. If $A\in\mathcal V_K$, then
 $B_i\in\mathcal W_i^{(2)}$.
+
+If $c$ is neutral, every $\star_j$ with $j\ne i$ equals join on
+$B_i$, and $c$ is an identity for $\star_i$ there. The possible
+profiles in the signature $\{+,\star_i,c\}$ are exactly the unital
+dissemilattices: the six semilattice laws, the distributive law
+\eqref{core:eq:dissemilattice}, and $c\star_i x=x$ form a basis.
 \end{corollary}
 \begin{proof}
 If $E_i(x)=x$, the composition formula gives $E_l(x)=c+x$ for
@@ -1815,7 +1868,24 @@ to $\mathcal W_i^{(2)}$. For any identity of that variety, replacing
 each variable $x$ by $E_i(x)$ gives a core identity, with $c$ fresh.
 It holds in $A$, and its restriction to the fixed points gives the
 original identity in $B_i$.
+
+Finally suppose $c$ is neutral. For $v\geq c$,
+$v\leq c\star_j v\leq c+v=v$, so $c$ is an identity for every
+choice on $A_{\geq c}$. Since $c$ is its join bottom, every choice
+on that filter is join. Equation~\eqref{core:eq:profile-filter-choice}
+therefore reduces to $x\star_j y=x+y$ on $B_i$ when $j\ne i$.
+Also $E_i(x)=c\star_i x$, so $c$ is the remaining choice's identity.
+Conversely, any unital dissemilattice expands to a core algebra by
+making all other choices join. Its multiplicative identity is a neutral
+reset unit, and its selected profile map is the identity. This proves
+the exact description and its eight-equation basis.
 \end{proof}
+
+Compatibility between the profiles is still needed. The six-element
+algebra of \cref{core:prop:mixed-absorption} has neutral reset unit
+$c=2$ and hence these one-owner profiles, but fails mixed absorption.
+For example, its map $E_0$ does not preserve $\star_2$:
+$E_0(1\star_2 3)=2$, whereas $E_0(1)\star_2 E_0(3)=4$.
 
 The named unit does not bound the number of observations needed to
 control arbitrary contexts. For a fixed $r$, put $\rho_r(x)=x\del r$.

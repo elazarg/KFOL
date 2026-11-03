@@ -30,6 +30,8 @@ def check_unit_profiles(carrier, tables):
         beta = {x: add[c, x] for x in carrier}
         closures = [{x: add[x, operation[c, x]] for x in carrier}
                     for operation in operations]
+        neutral = all(add[x, operation[c, x]] == operation[c, x]
+                      for operation in operations for x in carrier)
         masks = range(1 << len(operations))
         partial = []
         for mask in masks:
@@ -92,6 +94,10 @@ def check_unit_profiles(carrier, tables):
                     if j != i:
                         assert_meet(value, [add[a, b], other[beta[a], beta[b]]])
                         assert beta[value] == other[beta[a], beta[b]]
+                        if neutral:
+                            assert value == add[a, b]
+                if neutral:
+                    assert operation[c, a] == a
             for projection in partial:
                 assert projection[add[x, y]] == add[projection[x], projection[y]]
             if beta[x] == beta[y]:
@@ -208,9 +214,17 @@ def check():
     # The profile and filter proofs require Gamma and a reset unit, not
     # membership in the core. Check both established countermodel families.
     carrier = tuple(range(len(MIXED_JOIN)))
-    countermodel_pairs = check_unit_profiles(carrier, operation_tables(
+    countermodel_tables = operation_tables(
         carrier, lambda x, y: MIXED_JOIN[x][y],
-        lambda i, x, y: MIXED_OPERATIONS[i][x][y], 3))
+        lambda i, x, y: MIXED_OPERATIONS[i][x][y], 3)
+    add, operations, resets = countermodel_tables
+    assert all(resets[2, x] == x for x in carrier)
+    assert all(add[x, operation[2, x]] == operation[2, x]
+               for operation in operations for x in carrier)
+    profile = {x: add[x, operations[0][2, x]] for x in carrier}
+    assert profile[operations[2][1, 3]] == 2
+    assert operations[2][profile[1], profile[3]] == 4
+    countermodel_pairs = check_unit_profiles(carrier, countermodel_tables)
     for owners in range(3, 7):
         carrier = tuple(range(owners + 2))
         countermodel_pairs += check_unit_profiles(carrier, operation_tables(
