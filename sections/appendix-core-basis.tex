@@ -28,8 +28,9 @@ nothing here settles it. This appendix collects what is known, in four groups.
   whose inputs have all been translated. Within each image, that candidate
   also implies two-owner exhaustion away from the translating owner.
   Inflating the translation by join gives a larger subalgebra on which
-  the original translation is a homomorphic retraction; its fibers are
-  one-owner dissemilattices. Translations by base elements preserve the
+  the original translation is a homomorphic retraction, already under
+  the strengthened candidate; its fibers are one-owner dissemilattices.
+  Translations by base elements preserve the
   operations within each fiber, and terms omitting the selected choice
   split as joins of evaluations with only one input outside the base.
   In fact the larger algebra is a subdirect product of the choice image
@@ -1002,7 +1003,8 @@ to the fixed points of its inflationary closure.
 
 \begin{proposition}[Retraction onto a choice image]
 \label{core:prop:choice-image-retraction}
-Let $A\in\mathcal V_K$, fix $c\in A$ and an owner $i$, and put
+Let $A$ satisfy $\Gamma_K$ and all ordered mixed-absorption laws,
+fix $c\in A$ and an owner $i$, and put
 $F(x)=c\star_i x$ and $E(x)=x+F(x)$. Then $E[A]$ is a subalgebra,
 and $F:E[A]\to F[A]$ is a retraction of algebras. In particular,
 the following three-variable core identity holds for every $j\ne i$:
@@ -1013,21 +1015,67 @@ the following three-variable core identity holds for every $j\ne i$:
 Each fiber of this retraction is a subalgebra on which every choice
 except $\star_i$ is join. If the fiber is over $a\in F[A]$, then
 $a$ is its join bottom and absorbs $\star_i$.
+For every term $t$, also allowing the named parameter $c$,
+\[
+ F\bigl(t(E(x_1),\ldots,E(x_n))\bigr)
+   =t(F(x_1),\ldots,F(x_n)).
+\]
 \end{proposition}
 \begin{proof}
-First work in $\mathbf C_K$. If $c=\{i\}$, then $F$ is constant
-and $E(x)=\{i\}\cup x$. Its image is a principal join filter, so is
-a subalgebra, and the constant map $F$ preserves every operation.
-Otherwise $F(x)$ contains $x$ for every winner set $x$, so $E=F$.
-Choice-image closure makes this a subalgebra, and $F$ is the identity
-on it. This proves \eqref{core:eq:profile-retraction} and the closure
-identities $E(E(x)\star_j E(y))=E(x)\star_j E(y)$ in the generator,
-and hence in $A$. Closure under join follows from join preservation.
-The semilattice and distribution laws give $F(E(x))=F(x)$ and
-$E(E(x))=E(x)$, so the displayed identity says
-exactly that $F$ preserves each other choice on $E[A]$. It preserves
-join and $\star_i$ by distribution and associativity. Finally
-$E(F(x))=F(x)=F(F(x))$, proving the retraction assertion.
+The semilattice and distribution laws give
+$E^2=E$, $FE=F$, and $EF=F$, and both maps preserve join and
+$\star_i$. For closure under a distinct choice, write $f=\star_i$
+and $g=\star_j$. The equational certificate
+\path{checks/data/core-profile-closure-proof.json} derives
+\[
+ a+f(c,a)=a,\quad b+f(c,b)=b
+ \quad\Longrightarrow\quad
+ g(a,b)+f(c,g(a,b))=g(a,b).
+\]
+Its assumptions are the two-owner basic and mixed-absorption laws,
+the bounded-choice equations, and the choice-image closure and shift
+equations established in \cref{core:prop:choice-images}.
+Substituting $a=E(x)$ and $b=E(y)$ proves that $B=E[A]$ is a
+subalgebra. On $B$, $F\leq\mathrm{id}$, and the bounded reset formula
+gives
+\[
+ x\leq c\del x\leq x\star_i(c+x)=x+F(x)=x.
+\]
+Thus $c$ is a left reset unit on $B$.
+
+We prove preservation of $g$ using only $\Gamma_K$, this preunit
+condition, and closure of $F[B]$ under $g$. Put $\beta(x)=c+x$.
+Since $B$ is its own selected profile image,
+\cref{core:cor:profile-subalgebras} says that $\beta$ preserves $g$,
+and that $g(u,v)=u+v$ whenever $\beta u=\beta v$.
+On the filter above $c$, $G(w)=f(c,w)$ preserves $g$ by
+\cref{core:thm:join-filters}. Also $\beta F=G\beta$.
+For $x,y\in B$, set
+\[
+ z=g(x,y),\quad a=F(z),\quad b=g(F(x),F(y)),\quad
+ p=f(F(x),F(y)).
+\]
+The fixed points of the interior operator $F$ form its image.
+Closure makes $b$ fixed, and monotonicity gives $b\leq z$;
+hence $b\leq F(z)=a$. The homomorphisms just identified give
+\[
+ \beta a=G\beta g(x,y)
+ =g(G\beta x,G\beta y)=\beta b.
+\]
+It follows that $g(a,b)=a+b=a$.
+Applying $F$ to coverage for $x,y$, and comparing with coverage for
+$F(x),F(y)$, gives $p+a=F(x)+F(y)=p+b$.
+The Birkhoff law also gives $g(b,p)=b$: for arbitrary $u,v$, writing
+$p=f(u,v)$ and $b=g(u,v)$,
+\[
+ g(b,p)=g(b,g(u,p))=g(b,f(u,b))=f(b,g(b,u))=b.
+\]
+Apply $g(b,-)$ to $p+a=p+b$ and distribute over join.
+The two sides reduce to $a$ and $b$, respectively. Thus $a=b$,
+proving that $F$ preserves $g$ on $B$. Together with $FE=F$ this
+is \eqref{core:eq:profile-retraction}. Finally $EF=F=F^2$ makes
+$F:B\to F[A]$ a retraction. Induction on $t$, using $F(c)=c$,
+proves the displayed identity for arbitrary terms.
 
 For a fiber over $a$, idempotence of all basic operations makes it a
 subalgebra. If $x$ lies in it, then $E(x)=x$ and $F(x)=a$, so
@@ -1045,7 +1093,8 @@ the \emph{base} means its image $F[A]$, viewed as a subalgebra of $E[A]$.
 
 \begin{proposition}[Operations between retraction fibers]
 \label{core:prop:fiber-translations}
-Use the notation of \cref{core:prop:choice-image-retraction} and put
+Let $A\in\mathcal V_K$, use the notation of
+\cref{core:prop:choice-image-retraction}, and put
 $B=E[A]$. For $x,y\in B$ and $j\ne i$,
 \begin{equation}\label{core:eq:fiber-linearization}
  x\star_j y
@@ -1136,7 +1185,8 @@ quotient separates everything lost by the retraction.
 
 \begin{theorem}[Subdirect decomposition of a profile algebra]
 \label{core:thm:profile-subdirect}
-Let $B=E[A]$ and $F(x)=c\star_i x$ as above. Define the join-preserving
+Let $A\in\mathcal V_K$, and let $B=E[A]$ and
+$F(x)=c\star_i x$ as above. Define the join-preserving
 observer
 \[
  H(x)=\left(\prod_{j\ne i}\lambda_{c,j}\right)(c+x),
@@ -1163,22 +1213,30 @@ For every term $t$, including terms with the named parameter $c$,
 where $t^{(i)}$ replaces every nonselected choice in $t$ by join.
 \end{theorem}
 \begin{proof}
-We first prove two finite families of identities on $B$:
+We first prove the following identities on $B$:
 \begin{align}
  c+x&=H(x)+c+F(x),\label{core:eq:profile-observer-cover}\\
  H\bigl(a\star_i(x\star_j y)\bigr)
    &=H\bigl(a\star_i(x+y)\bigr)\qquad(j\ne i).
    \label{core:eq:profile-observer-erasure}
 \end{align}
-In the winner-set generator, if $c=\{i\}$, then $B$ is the filter
+The cover equation follows already from $\Gamma_K$, for arbitrary
+$c,x$. On the filter above $c$, let $G_j(v)=c\star_j v$ and put
+$v=c+x$. The complementary-map calculation in
+\cref{core:thm:join-filters} gives
+\[
+ v=G_i(v)+\Bigl(\prod_{j\ne i}G_j\Bigr)(v)
+   =c+F(x)+H(x).
+\]
+For erasure, work in the winner-set generator. If $c=\{i\}$, then $B$ is the filter
 above $c$, $F$ is constant, and $H$ is the identity on $B$. If
 $c=\{k\}$ with $k\ne i$, then $F$ is the identity on $B$ and $H$
 is constant with value $c$: its $k$-translation absorbs, and all
 remaining translations fix $c$. If $c$ is ambiguous, then $F$ is
 again the identity on $B$, $H(x)=c+x$, and all nonselected choices
 on $B$ are join. In the first case those choices are join as well.
-These cases prove both equations. Substituting $E$-images for
-$a,x,y$ makes them ordinary core identities, so they hold in $B$
+These cases prove erasure. Substituting $E$-images for
+$a,x,y$ makes it an ordinary core identity, so it holds in $B$
 for every $A\in\mathcal V_K$. The observer $H$ preserves join
 because each of its constituent translations does.
 
@@ -1229,15 +1287,16 @@ is finitely based if and only if its subvariety
 \]
 is finitely based. A finite basis $\mathcal E$ for $\mathcal L_i$
 gives a basis for $\mathcal P_i$ consisting of the semilattice,
-distribution, coverage and Birkhoff laws, the $2K$ equations
+distribution, coverage and Birkhoff laws, the $2K-1$ equations
 \begin{gather*}
  x+F(x)=x,\qquad
  F(x\star_j y)=F(x)\star_j F(y)\quad(j\ne i),\\
- \eqref{core:eq:profile-observer-cover},\qquad
  \eqref{core:eq:profile-observer-erasure}\quad(j\ne i),
 \end{gather*}
 and the equations of $\mathcal E$ with every variable $x$ replaced
-by $F(x)$, leaving the named $c$ fixed.
+by $F(x)$, leaving the named $c$ fixed. Alternatively, the $K-1$
+homomorphism equations for $F$ can be replaced by all ordered
+mixed-absorption laws.
 \end{corollary}
 \begin{proof}
 Necessity follows by adjoining $c\star_i x=x$ to a basis for
@@ -1245,7 +1304,9 @@ $\mathcal P_i$. For sufficiency, all displayed equations hold in
 $\mathcal P_i$: its preunit condition says $E[A]=A$, so
 \cref{core:prop:choice-image-retraction,core:thm:profile-subdirect}
 apply. The image $F[A]$ belongs to $\mathcal L_i$, validating the
-substituted equations as well.
+substituted equations as well. In the alternative presentation,
+\cref{core:prop:choice-image-retraction} derives the homomorphism
+equations because $E[A]=A$.
 
 Conversely, suppose a pointed algebra satisfies the proposed finite
 list. The equations make $F$ an idempotent endomorphism: preservation
@@ -1255,8 +1316,9 @@ is a pointed subalgebra. The substituted basis puts it in
 $\mathcal L_i$.
 
 The congruence and separation argument in
-\cref{core:thm:profile-subdirect} uses only the basic semilattice and
-distribution laws, $x+F(x)=x$, and the displayed observer equations.
+\cref{core:thm:profile-subdirect} uses only the basic laws,
+$x+F(x)=x$, and the observer equations; the cover equation follows
+from $\Gamma_K$ as shown there.
 It therefore applies to this algebra, without assuming core membership.
 Its quotient by $\rho$ satisfies the seven dissemilattice laws and
 has every nonselected choice equal to join. It belongs to

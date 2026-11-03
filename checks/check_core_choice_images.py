@@ -1,4 +1,4 @@
-"""Verify a universal equational derivation of choice-image closure.
+"""Verify universal equational derivations of choice and profile closure.
 
 The certificate was found by Prover9 and expanded by prooftrans. This
 checker does not invoke either program: it independently checks each
@@ -6,7 +6,9 @@ substitution and replacement. The assumptions are the two-owner part of
 Gamma plus mixed absorption, the two bound equations already derived
 from Gamma in the paper, and f(c,a)=a, f(c,b)=b. The conclusions are
 choice-image closure and j(c,g(a,b))=g(b,j(a,c)), over arbitrary
-algebras, not just finite tables.
+algebras, not just finite tables. A second certificate uses the first
+certificate's closure and shift consequences to derive closure of the
+inflationary image x + (c *_i x).
 """
 
 import json
@@ -32,6 +34,16 @@ ASSUMPTIONS = (
     'f(g(x,y),j(x,y))=j(x,y)',
     'g(f(x,y),j(x,y))=j(x,y)',
     'f(c,a)=a', 'f(c,b)=b',
+)
+
+# The four additional universal laws are substitution instances of the
+# first certificate's two conclusions, with both orders of the owners.
+PROFILE_ASSUMPTIONS = ASSUMPTIONS[:-2] + (
+    'f(x,g(f(x,y),f(x,z)))=g(f(x,y),f(x,z))',
+    'g(x,f(g(x,y),g(x,z)))=f(g(x,y),g(x,z))',
+    'j(x,g(f(x,y),f(x,z)))=g(f(x,z),j(f(x,y),x))',
+    'j(x,f(g(x,y),g(x,z)))=f(g(x,z),j(g(x,y),x))',
+    'j(a,f(c,a))=a', 'j(b,f(c,b))=b',
 )
 
 
@@ -140,10 +152,10 @@ def replace(term, path, replacement):
     return tuple(result)
 
 
-def verify(certificate):
+def verify_derivation(certificate, assumptions):
     steps = certificate['steps']
     actual = Counter(equation(eq) for _, eq, rule in steps if rule == ['axiom'])
-    assert actual == Counter(map(equation, ASSUMPTIONS))
+    assert actual == Counter(map(equation, assumptions))
     proved = {}
     for identifier, text, rule in steps:
         assert isinstance(identifier, int) and identifier > 0 and identifier not in proved
@@ -175,9 +187,20 @@ def verify(certificate):
             match(output[0], left, instance)
             match(output[1], right, instance)
         proved[identifier] = left, right
+    return proved, Counter(rule[0] for _, _, rule in steps)
+
+
+def verify(certificate):
+    proved, counts = verify_derivation(certificate, ASSUMPTIONS)
     assert proved[certificate['goal']] == equation('f(c,g(a,b))=g(a,b)')
     assert proved[802] == equation('j(c,g(a,b))=g(b,j(a,c))')
-    return Counter(rule[0] for _, _, rule in steps)
+    return counts
+
+
+def verify_profile(certificate):
+    proved, counts = verify_derivation(certificate, PROFILE_ASSUMPTIONS)
+    assert proved[certificate['goal']] == equation('j(g(a,b),f(c,g(a,b)))=g(a,b)')
+    return counts
 
 
 def check_local_laws(image, c, i, owners, add, choice):
@@ -295,6 +318,21 @@ def check():
             pass
         else:
             raise AssertionError('accepted an altered certificate')
+
+    profile_path = path.with_name('core-profile-closure-proof.json')
+    profile_certificate = json.loads(profile_path.read_text())
+    profile_counts = verify_profile(profile_certificate)
+    for index in (0, len(profile_certificate['steps']) - 1):
+        altered = json.loads(profile_path.read_text())
+        altered['steps'][index][1] = 'f(c,g(a,b))=a'
+        try:
+            verify_profile(altered)
+        except AssertionError:
+            pass
+        else:
+            raise AssertionError('accepted an altered profile certificate')
+    print(f'Universal profile-closure certificate: {sum(profile_counts.values())} '
+          f'steps, {dict(profile_counts)}.')
 
     images = quotients = shifts = exhaustions = 0
     retraction_pairs = fiber_pairs = transports = 0
