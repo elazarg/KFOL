@@ -39,8 +39,10 @@ nothing here settles it. This appendix collects what is known, in four groups.
   by $K^2$ pointed algebras of size $K+1$. Even a neutral reset unit
   leaves unbounded observation depth, including when the largest atomic
   quotient is trivial. Local atomic quotients recover elements and binary
-  choices as explicit meets; basic translations preserve the element
-  profiles, but their compositions need not (\cref{app:core-units}).
+  choices as explicit meets. The profile closures have subalgebra images,
+  whose other-owner choices are determined by the filter above the unit.
+  Basic translations preserve the element profiles, but their compositions
+  need not (\cref{app:core-units}).
   Owner exhaustion decides membership in a family
   with arbitrarily long chains of ambiguous values
   (\cref{app:core-thresholds}).
@@ -946,24 +948,11 @@ two equalities of \eqref{core:eq:choice-image-shift}; applying it twice
 gives the last. Hence $\beta$ preserves every choice except possibly
 $\star_i$.
 
-For \eqref{core:eq:choice-image-exhaustion}, work within the image and
-put $a=u\star_j v$, $b=u\star_k w$, and $s=a+b$.
-By \cref{core:thm:join-filters}, its filter above $c$ is a subdirect
-product of one-owner dissemilattices. In each factor at least one of
-$\star_j,\star_k$ is join, so that filter satisfies the displayed
-exhaustion equation. Applying it to $\beta u,\beta v,\beta w$ and
-using \eqref{core:eq:choice-image-shift} gives
-\[
- \beta u\leq\beta a+\beta b=c+s=:U.
-\]
-Thus $u,a,b,s\leq U$. Also
-$e_i^U(s)=s\star_i(c+s)=s$, so the canonical atomic quotient
-$q_U$ fixes $s$. Every atomic algebra satisfies two-owner exhaustion:
-in each separating two-element factor at least one of
-$\star_j,\star_k$ equals $+$, which suffices for the equation.
-Since $u\star_j a=a$ and $u\star_k b=b$, this equation in the
-atomic quotient gives $q_U(u+s)=q_U(s)=s$. Extensivity of $q_U$
-now gives $u+s\leq s$, proving the claim.
+For \eqref{core:eq:choice-image-exhaustion}, apply the reset-unit
+profile argument of \cref{core:cor:profile-subalgebras} below within
+this image. There $E_i(x)=x+(c\star_i x)=x$, so its selected profile
+image is the whole algebra. That argument uses only $\Gamma_K$ and
+the reset unit, independently of the present variety-membership assertion.
 
 It remains to prove membership in $\mathcal W_i^{(2)}$. First work in
 the winner-set generator and fix $c=S$. If $S=\{i\}$, the image is
@@ -1766,6 +1755,66 @@ $a\star_i E_i(x)=E_i(a\star_i x)=G_i^i(a,x)$.
 For $j\ne i$ we have $w\leq a+x\leq E_j(a)+E_j(x)=G_j^i(a,x)$.
 Apply the first identity to conclude $w\leq a\star_i x$.
 The failure for compositions is exhibited in $A_2$ below.
+\end{proof}
+
+\begin{corollary}[Subalgebra profiles at a reset unit]
+\label{core:cor:profile-subalgebras}
+Under the hypotheses of \cref{core:prop:unit-profiles}, each
+$B_i=E_i[A]$ is a subalgebra for the full core signature.
+For $x,y\in B_i$ and $j\ne i$,
+\begin{equation}\label{core:eq:profile-filter-choice}
+ x\star_j y=(x+y)\wedge\bigl((c+x)\star_j(c+y)\bigr).
+\end{equation}
+Thus the join order and the restriction of $\star_j$ to $A_{\geq c}$
+determine $\star_j$ on $B_i$. On $B_i$, the map $\beta(x)=c+x$
+preserves join and every $\star_j$ with $j\ne i$. Moreover $B_i$
+satisfies \eqref{core:eq:choice-image-exhaustion} for all distinct
+$j,k\ne i$. If $A\in\mathcal V_K$, then
+$B_i\in\mathcal W_i^{(2)}$.
+\end{corollary}
+\begin{proof}
+If $E_i(x)=x$, the composition formula gives $E_l(x)=c+x$ for
+every $l\ne i$. Apply binary reconstruction to $x,y\in B_i$ and
+owner $j\ne i$. Its $i$th bound is $x+y$, its $j$th bound is
+$(c+x)\star_j(c+y)$, and all remaining bounds equal $c+x+y$.
+The latter bounds are redundant, proving
+\eqref{core:eq:profile-filter-choice}.
+
+The first of its two bounds is fixed by $E_i$ because $E_i$ preserves
+join. The second lies above $c$ by monotonicity and is therefore also
+fixed: for every $v\geq c$,
+$E_i(v)=v+(c\star_i v)=v$. A closure operator fixes every existing
+meet of its fixed points. Thus $x\star_j y$ is fixed by $E_i$.
+Closure under join and $\star_i$ was already proved, so $B_i$ is a
+subalgebra.
+
+On $B_i$ the map $\beta$ equals $E_j$ for each $j\ne i$, and
+$E_j$ preserves its own choice. This proves the homomorphism assertions.
+For local exhaustion put $a=u\star_j v$, $b=u\star_k w$, and
+$s=a+b$, with $u,v,w\in B_i$ and distinct $j,k\ne i$.
+By \cref{core:thm:join-filters}, the filter above $c$ is a subdirect
+product of one-owner dissemilattices. In each factor at least one of
+$\star_j,\star_k$ is join, so the filter satisfies two-owner exhaustion.
+Apply this to $\beta u,\beta v,\beta w$ to obtain
+\[
+ \beta u\leq\beta a+\beta b=c+s=:U.
+\]
+Thus $u,a,b,s\leq U$, and local atomic recovery gives $q_U(s)=s$.
+Every atomic algebra also satisfies two-owner exhaustion: in each of
+its separating two-element factors at least one of
+$\star_j,\star_k$ equals $+$. Since $u\star_j a=a$ and
+$u\star_k b=b$, exhaustion in the atomic quotient below $U$ gives
+$q_U(u+s)=q_U(s)=s$. Extensivity of $q_U$ yields $u+s\leq s$.
+
+For the variety assertion, first evaluate $E_i$ in $\mathbf C_K$,
+with any parameter $c=S$. If $S=\{i\}$ then $E_i(T)=\{i\}\cup T$,
+so every choice except $\star_i$ is union on the image. Otherwise
+$E_i(T)=S\star_i T$, the choice image from
+\cref{core:prop:choice-images}. Hence every such native image belongs
+to $\mathcal W_i^{(2)}$. For any identity of that variety, replacing
+each variable $x$ by $E_i(x)$ gives a core identity, with $c$ fresh.
+It holds in $A$, and its restriction to the fixed points gives the
+original identity in $B_i$.
 \end{proof}
 
 The named unit does not bound the number of observations needed to

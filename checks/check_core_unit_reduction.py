@@ -5,12 +5,12 @@ the proof. They do not establish finite basability of the pointed variety.
 """
 
 import json
-from itertools import product
+from itertools import combinations, product
 from pathlib import Path
 
 from check_core_atomic_basis import assert_laws, operation_tables
 from core_atomic_basis import expand_core
-from core_basis import marker_join, marker_own
+from core_basis import MIXED_JOIN, MIXED_OPERATIONS, marker_join, marker_own
 from core_unit_reduction import unit_reduction_laws
 
 
@@ -83,6 +83,15 @@ def check_unit_profiles(carrier, tables):
                 assert_meet(operation[x, y], bounds)
                 assert_meet(operation[x, y],
                             [operation[y, profile[x]] for profile in closures])
+                # Every closure image is a full subalgebra, although the
+                # closure need only preserve join and its own choice.
+                a, b = closure[x], closure[y]
+                for j, other in enumerate(operations):
+                    value = other[a, b]
+                    assert closure[value] == value
+                    if j != i:
+                        assert_meet(value, [add[a, b], other[beta[a], beta[b]]])
+                        assert beta[value] == other[beta[a], beta[b]]
             for projection in partial:
                 assert projection[add[x, y]] == add[projection[x], projection[y]]
             if beta[x] == beta[y]:
@@ -93,6 +102,12 @@ def check_unit_profiles(carrier, tables):
                     add[z, add[y, closure[x]]] == add[y, closure[x]]
                     for closure in closures)
             checked += 1
+        for i, closure in enumerate(closures):
+            image = set(closure.values())
+            for j, k in combinations([j for j in range(len(operations)) if j != i], 2):
+                for u, v, w in product(image, repeat=3):
+                    bound = add[operations[j][u, v], operations[k][u, w]]
+                    assert add[u, bound] == bound
     return checked
 
 
@@ -190,14 +205,28 @@ def check():
                     nonclosed_image = True
             models += 1
     assert nonclosed_image  # Normalized operations cannot simply be omitted.
+    # The profile and filter proofs require Gamma and a reset unit, not
+    # membership in the core. Check both established countermodel families.
+    carrier = tuple(range(len(MIXED_JOIN)))
+    countermodel_pairs = check_unit_profiles(carrier, operation_tables(
+        carrier, lambda x, y: MIXED_JOIN[x][y],
+        lambda i, x, y: MIXED_OPERATIONS[i][x][y], 3))
+    for owners in range(3, 7):
+        carrier = tuple(range(owners + 2))
+        countermodel_pairs += check_unit_profiles(carrier, operation_tables(
+            carrier, lambda x, y: marker_join(owners, x, y),
+            lambda i, x, y: marker_own(owners, i, x, y), owners))
     print(f'Core unit reduction: {equations} equation evaluations; '
           f'{quotient_pairs} root/input-pair checks; '
           f'{pointed_generators} pointed generators and {quotient_maps} '
           f'atomic quotient maps; {models} stored core models.')
     print(f'Local atomic recovery: {profile_pairs} unit/input-pair checks, '
           'including partial closures and their Boolean subset laws, '
+          'full subalgebra images, filter reconstruction and local exhaustion, '
           'binary reconstruction, preservation of profile meets by basic '
           'translations, and right-projection reset in each fiber.')
+    print(f'The same profile checks pass on {countermodel_pairs} unit/input pairs '
+          'in the mixed countermodel and D_K for K=3..6.')
 
 
 if __name__ == '__main__':
