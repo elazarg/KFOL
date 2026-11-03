@@ -32,6 +32,10 @@ nothing here settles it. This appendix collects what is known, in four groups.
   one-owner dissemilattices. Translations by base elements preserve the
   operations within each fiber, and terms omitting the selected choice
   split as joins of evaluations with only one input outside the base.
+  In fact the larger algebra is a subdirect product of the choice image
+  and a one-owner dissemilattice. A finite observer calculus proves this
+  decomposition and reduces finite basability with a named $c$ satisfying
+  $c\star_i x\leq x$ exactly to the case $c\star_i x=x$.
   Every principal join filter is a subdirect product of one-owner
   dissemilattices, already under the basic three-variable laws; adjoining
   a named join bottom therefore gives a finitely based class
@@ -1122,6 +1126,140 @@ gives precisely that group, together with the all-base evaluation.
 The latter is below every retained-leaf evaluation by monotonicity,
 so it changes no join. This proves the formula, including repeated
 or unused variables.
+\end{proof}
+
+The fibers do not introduce another irreducible case: a one-owner
+quotient separates everything lost by the retraction.
+
+\begin{theorem}[Subdirect decomposition of a profile algebra]
+\label{core:thm:profile-subdirect}
+Let $B=E[A]$ and $F(x)=c\star_i x$ as above. Define the join-preserving
+observer
+\[
+ H(x)=\left(\prod_{j\ne i}\lambda_{c,j}\right)(c+x),
+ \qquad \lambda_{c,j}(x)=c\star_j x,
+\]
+where the product denotes composition in any fixed order. On $B$ put
+\begin{equation}\label{core:eq:profile-observer-congruence}
+ x\mathrel{\rho}y
+ \quad\Longleftrightarrow\quad
+ H(a\star_i x)=H(a\star_i y)\quad\text{for every }a\in B.
+\end{equation}
+Then $\rho$ is a congruence, every choice except $\star_i$ is join on
+$B/\rho$, and
+\[
+ x\longmapsto(F(x),[x]_\rho)
+\]
+embeds $B$ subdirectly into $F[A]\times B/\rho$. In particular, if $B$
+is subdirectly irreducible, then either $c$ is an identity for $\star_i$
+on $B$, or every other choice is join on $B$.
+For every term $t$, including terms with the named parameter $c$,
+\[
+ H(t(\vec x))=H(t^{(i)}(\vec x)),
+\]
+where $t^{(i)}$ replaces every nonselected choice in $t$ by join.
+\end{theorem}
+\begin{proof}
+We first prove two finite families of identities on $B$:
+\begin{align}
+ c+x&=H(x)+c+F(x),\label{core:eq:profile-observer-cover}\\
+ H\bigl(a\star_i(x\star_j y)\bigr)
+   &=H\bigl(a\star_i(x+y)\bigr)\qquad(j\ne i).
+   \label{core:eq:profile-observer-erasure}
+\end{align}
+In the winner-set generator, if $c=\{i\}$, then $B$ is the filter
+above $c$, $F$ is constant, and $H$ is the identity on $B$. If
+$c=\{k\}$ with $k\ne i$, then $F$ is the identity on $B$ and $H$
+is constant with value $c$: its $k$-translation absorbs, and all
+remaining translations fix $c$. If $c$ is ambiguous, then $F$ is
+again the identity on $B$, $H(x)=c+x$, and all nonselected choices
+on $B$ are join. In the first case those choices are join as well.
+These cases prove both equations. Substituting $E$-images for
+$a,x,y$ makes them ordinary core identities, so they hold in $B$
+for every $A\in\mathcal V_K$. The observer $H$ preserves join
+because each of its constituent translations does.
+
+The relation $\rho$ is an equivalence. Distribution and join
+preservation show that $x\mathrel\rho y$ implies
+$x+z\mathrel\rho y+z$. Associativity shows
+$x\star_i z\mathrel\rho y\star_i z$, since an observation with
+parameter $a$ becomes one with parameter $a\star_i z$.
+For $j\ne i$, erasure gives
+\[
+ H\bigl(a\star_i(x\star_j z)\bigr)
+   =H(a\star_i x)+H(a\star_i z),
+\]
+so it also proves $x\star_j z\mathrel\rho y\star_j z$.
+Thus $\rho$ is a congruence. The same erasure equation gives
+$x\star_j y\mathrel\rho x+y$ for every nonselected choice.
+Consequently $B/\rho$ is a one-owner dissemilattice expansion.
+
+If $x\mathrel\rho y$, the observations with $a=x$ and $a=y$ give
+$H(x)=H(x\star_i y)=H(y)$. Since the quotient replaces every
+nonselected choice by join, $t(\vec x)\mathrel\rho t^{(i)}(\vec x)$;
+this proves the erasure assertion for arbitrary terms.
+If also $F(x)=F(y)=b$, the cover
+equation gives $c+x=c+y$. Since $E$ is the identity on $B$,
+distribution now gives
+\[
+ x=x\star_i(c+x)=x\star_i(c+y)=b+(x\star_i y)=y.
+\]
+Hence $\ker F\cap\rho$ is the identity relation. Both factor maps
+are onto, proving the subdirect representation. In a subdirectly
+irreducible algebra two nonidentity congruences cannot have identity
+intersection. Thus either $\ker F$ or $\rho$ is the identity;
+idempotence of $F$ gives the stated alternatives.
+\end{proof}
+
+The observer equations also give a finite-basis transfer. Call $c$ a
+\emph{preunit for owner $i$} if $c\star_i x\leq x$ for every $x$.
+
+\begin{corollary}[Preunits reduce to owned units]
+\label{core:cor:preunit-basis}
+Fix $K\geq3$ and $i$. In the signature with a named $c$, the variety
+\[
+ \mathcal P_i=\{(A,c):A\in\mathcal V_K,\ x+(c\star_i x)=x\}
+\]
+is finitely based if and only if its subvariety
+\[
+ \mathcal L_i=\{(A,c):A\in\mathcal V_K,\ c\star_i x=x\}
+\]
+is finitely based. A finite basis $\mathcal E$ for $\mathcal L_i$
+gives a basis for $\mathcal P_i$ consisting of the semilattice,
+distribution, coverage and Birkhoff laws, the $2K$ equations
+\begin{gather*}
+ x+F(x)=x,\qquad
+ F(x\star_j y)=F(x)\star_j F(y)\quad(j\ne i),\\
+ \eqref{core:eq:profile-observer-cover},\qquad
+ \eqref{core:eq:profile-observer-erasure}\quad(j\ne i),
+\end{gather*}
+and the equations of $\mathcal E$ with every variable $x$ replaced
+by $F(x)$, leaving the named $c$ fixed.
+\end{corollary}
+\begin{proof}
+Necessity follows by adjoining $c\star_i x=x$ to a basis for
+$\mathcal P_i$. For sufficiency, all displayed equations hold in
+$\mathcal P_i$: its preunit condition says $E[A]=A$, so
+\cref{core:prop:choice-image-retraction,core:thm:profile-subdirect}
+apply. The image $F[A]$ belongs to $\mathcal L_i$, validating the
+substituted equations as well.
+
+Conversely, suppose a pointed algebra satisfies the proposed finite
+list. The equations make $F$ an idempotent endomorphism: preservation
+of join and $\star_i$ follows from distribution and associativity,
+and the remaining cases are explicit. Since $F(c)=c$, the image
+is a pointed subalgebra. The substituted basis puts it in
+$\mathcal L_i$.
+
+The congruence and separation argument in
+\cref{core:thm:profile-subdirect} uses only the basic semilattice and
+distribution laws, $x+F(x)=x$, and the displayed observer equations.
+It therefore applies to this algebra, without assuming core membership.
+Its quotient by $\rho$ satisfies the seven dissemilattice laws and
+has every nonselected choice equal to join. It belongs to
+$\mathcal V_K$ by \cref{core:prop:dissemilattice-lift}, as does
+$F[A]$. Their subdirect product belongs to $\mathcal V_K$, and the
+preunit equation puts it in $\mathcal P_i$.
 \end{proof}
 
 The observer factors also reduce the test domain for arbitrary core

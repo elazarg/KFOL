@@ -239,6 +239,46 @@ def check_retraction(carrier, c, i, owners, add, choice):
     return len(source)**2, fiber_pairs, transports
 
 
+def check_profile_split(carrier, c, i, owners, add, choice):
+    """Check the observer congruence, its quotient, and joint separation."""
+    fixed = lambda x: choice(i, c, x)
+    source = sorted({add(x, fixed(x)) for x in carrier})
+
+    def observe(x):
+        value = add(c, x)
+        for j in range(owners):
+            if j != i:
+                value = choice(j, c, value)
+        return value
+
+    observed = {x: observe(x) for x in source}
+    signatures = {x: tuple(observed[choice(i, a, x)] for a in source)
+                  for x in source}
+    names = {signature: n for n, signature
+             in enumerate(sorted(set(signatures.values())))}
+    quotient = {x: names[signatures[x]] for x in source}
+    assert len({(fixed(x), quotient[x]) for x in source}) == len(source)
+    for x in source:
+        assert add(c, x) == add(observed[x], add(c, fixed(x)))
+    operations = [add] + [lambda x, y, j=j: choice(j, x, y)
+                          for j in range(owners)]
+    tables = [{} for _ in operations]
+    for x, y in product(source, repeat=2):
+        joined = add(x, y)
+        assert observed[joined] == add(observed[x], observed[y])
+        key = quotient[x], quotient[y]
+        for table, operation in zip(tables, operations):
+            value = quotient[operation(x, y)]
+            assert table.setdefault(key, value) == value
+        for j in range(owners):
+            if j != i:
+                # Every coordinate is the four-variable erasure identity
+                # for a different selected-choice translation parameter.
+                assert signatures[choice(j, x, y)] == signatures[joined]
+                assert tables[j + 1][key] == tables[0][key]
+    return len(source)**3 * (owners - 1), len(names)
+
+
 def check():
     path = Path(__file__).with_name('data') / 'core-choice-image-proof.json'
     certificate = json.loads(path.read_text())
@@ -258,6 +298,7 @@ def check():
 
     images = quotients = shifts = exhaustions = 0
     retraction_pairs = fiber_pairs = transports = 0
+    erasures = quotient_elements = 0
     for owners in range(3, 6):
         carrier = range(1, 1 << owners)
 
@@ -291,6 +332,10 @@ def check():
             retraction_pairs += pairs
             fiber_pairs += fibers
             transports += moves
+            erased, size = check_profile_split(
+                carrier, c, i, owners, int.__or__, choice)
+            erasures += erased
+            quotient_elements += size
         for i, j, k in product(range(owners), repeat=3):
             if len({i, j, k}) != 3:
                 continue
@@ -327,6 +372,11 @@ def check():
                 retraction_pairs += pairs
                 fiber_pairs += fibers
                 transports += moves
+                erased, size = check_profile_split(
+                    range(len(add)), c, i, owners, lambda x, y: add[x][y],
+                    lambda j, x, y: operations[j][x][y])
+                erasures += erased
+                quotient_elements += size
     # D_K fails global exhaustion but satisfies the hypotheses and these
     # local laws: the new deduction does not assume global exhaustion.
     marker_images = 0
@@ -346,6 +396,12 @@ def check():
             retraction_pairs += pairs
             fiber_pairs += fibers
             transports += moves
+            erased, size = check_profile_split(
+                range(owners + 2), c, i, owners,
+                lambda x, y: marker_join(owners, x, y),
+                lambda j, x, y: marker_own(owners, j, x, y))
+            erasures += erased
+            quotient_elements += size
     print(f'Choice-image closure: {sum(counts.values())} universal equational '
           f'proof steps ({dict(counts)}); altered certificates rejected. '
           f'{images} native images have a reset unit and at most two active owners; '
@@ -358,6 +414,11 @@ def check():
           'one active owner per fiber, the fiber bottom/absorber, and '
           'cross-fiber splitting checked. '
           f'{transports} base-translation/fiber-pair cases preserve all operations.')
+    print(f'Profile subdirect decomposition: {erasures} observer-erasure '
+          f'instances, {quotient_elements} quotient elements in '
+          f'{images + stored_images + marker_images} quotients; congruence '
+          'compatibility, one-owner quotient operations, and joint separation '
+          'with the choice retraction checked.')
 
 
 if __name__ == '__main__':
