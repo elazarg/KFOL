@@ -29,7 +29,9 @@ nothing here settles it. This appendix collects what is known, in four groups.
   also implies two-owner exhaustion away from the translating owner.
   Inflating the translation by join gives a larger subalgebra on which
   the original translation is a homomorphic retraction; its fibers are
-  one-owner dissemilattices.
+  one-owner dissemilattices. Translations by base elements preserve the
+  operations within each fiber, and terms omitting the selected choice
+  split as joins of evaluations with only one input outside the base.
   Every principal join filter is a subdirect product of one-owner
   dissemilattices, already under the basic three-variable laws; adjoining
   a named join bottom therefore gives a finitely based class
@@ -1031,6 +1033,97 @@ now gives $x,y\leq x\star_j y\leq x+y$, proving
 $x\star_j y=x+y$. The remaining choice and join inherit the
 dissemilattice laws.
 \end{proof}
+The retraction also controls operations between different fibers. Here
+the \emph{base} means its image $F[A]$, viewed as a subalgebra of $E[A]$.
+
+\begin{proposition}[Operations between retraction fibers]
+\label{core:prop:fiber-translations}
+Use the notation of \cref{core:prop:choice-image-retraction} and put
+$B=E[A]$. For $x,y\in B$ and $j\ne i$,
+\begin{equation}\label{core:eq:fiber-linearization}
+ x\star_j y
+   =(x\star_j F(y))+(F(x)\star_j y).
+\end{equation}
+For each $a\in F[A]$ and each basic operation $h$ of $B$, the map
+$x\mapsto h(a,x)$ is a homomorphism from the fiber over $b$ to the
+fiber over $h(a,b)$. This includes translation under join. For a nonselected choice, the
+assertion follows from the following four-variable core identity, in
+which $F$ and $E$ use the parameter $c$ as above:
+\begin{equation}\label{core:eq:fiber-transport}
+ \begin{gathered}
+ a=F(z),\qquad u=E(x)+F(y),\qquad v=F(x)+E(y),\\
+ a\star_j(u\star_i v)
+    =(a\star_j u)\star_i(a\star_j v)\qquad(j\ne i).
+ \end{gathered}
+\end{equation}
+Consequently, if $t(x_1,\ldots,x_n)$ uses only join and choices other
+than $\star_i$, then for $x_1,\ldots,x_n\in B$, with $b_r=F(x_r)$,
+\begin{equation}\label{core:eq:fiber-term-linearization}
+ t(x_1,\ldots,x_n)
+   =\sum_{r=1}^n t(b_1,\ldots,b_{r-1},x_r,b_{r+1},\ldots,b_n).
+\end{equation}
+\end{proposition}
+\begin{proof}
+For \eqref{core:eq:fiber-linearization}, write $f=\star_i$ and
+$g=\star_j$, and set
+\[
+ a=F(x),\quad b=F(y),\quad p=f(a,b),\quad q=g(a,b),\quad
+ z=g(x,y),\quad r=g(x,b)+g(a,y).
+\]
+Associativity of $f$ and $F(a)=a$, $F(b)=b$ give
+$f(x,b)=p=f(a,y)$. Coverage applied to $(x,b)$ and $(a,y)$
+therefore gives $p+r=x+y$. Since $F\leq\mathrm{id}$ on $B$,
+monotonicity gives $r\leq z\leq x+y$, hence $p+z=p+r$.
+The homomorphism $F$ sends both $r$ and $z$ to $q$, so they lie
+in the same fiber and $g(q,r)=r$, $g(q,z)=z$.
+The Birkhoff identity also gives $g(q,p)=q$: indeed,
+\[
+ g(q,p)=g(q,g(a,p))=g(q,f(a,q))=f(q,g(q,a))=q.
+\]
+Applying $g(q,-)$ to $p+r=p+z$ and distributing over join now
+gives $r=z$.
+
+To prove \eqref{core:eq:fiber-transport}, work first in $\mathbf C_K$.
+If $c=\{i\}$, then $a=\{i\}$ and $u,v$ contain $\{i\}$.
+On that filter every $\star_j$ with $j\ne i$ is union, and
+translation by $a$ is the identity, so the equation holds.
+Otherwise $E=F$, whence $u=v=F(x)+F(y)$, and idempotence proves
+the equation. It is an identity in the four variables $c,z,x,y$,
+so it holds in every core algebra. Given any $x,y\in B$ with
+$F(x)=F(y)$, the facts $E(x)=x$, $E(y)=y$, and $F(x)\leq x,y$
+make the displayed $u,v$ equal to $x,y$. Every base element is
+$F(z)$, so the identity proves preservation of $\star_i$ by the
+indicated translation on each fiber. Distribution gives preservation
+of join. Since $F$ is a homomorphism, both translated elements lie
+in one fiber; all other choices are join on the source and target
+fibers, proving full operation preservation.
+
+For translation by a base element $a$ under $\star_i$, associativity
+gives $a\star_i x=a\star_i F(x)$, so the map is constant on each
+fiber. For join translation, let $F(x)=F(y)=b$ and put
+$w=x\star_i y$. Distribution gives
+\[
+ (a+x)\star_i(a+y)=a+(a\star_i b)+w=a+w.
+\]
+Here $a\star_i b\leq a+b$ and $b\leq w$, since $w$ is in the
+fiber over $b$. Thus join translation preserves $\star_i$ as well
+as join, and the same fiber argument proves preservation of every
+other choice.
+
+Finally, apply \eqref{core:eq:fiber-linearization} recursively to a
+term $t$, using distribution over join. First regard its leaf occurrences
+as distinct inputs. The resulting expression is the join, over all
+leaves, of the evaluation retaining that leaf and replacing every other
+leaf by its $F$-value. The join operation itself satisfies the same
+splitting formula because $F\leq\mathrm{id}$. Group leaves bearing
+the same variable: applying the same expansion to the corresponding
+summand on the right of \eqref{core:eq:fiber-term-linearization}
+gives precisely that group, together with the all-base evaluation.
+The latter is below every retained-leaf evaluation by monotonicity,
+so it changes no join. This proves the formula, including repeated
+or unused variables.
+\end{proof}
+
 The observer factors also reduce the test domain for arbitrary core
 terms. Only one input needs to carry their upper marker, and only
 the presence of that marker in the output needs to be recorded.
