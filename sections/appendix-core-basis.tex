@@ -33,10 +33,12 @@ nothing here settles it. This appendix collects what is known, in four groups.
   Translations by base elements preserve the
   operations within each fiber, and terms omitting the selected choice
   split as joins of evaluations with only one input outside the base.
-  In fact the larger algebra is a subdirect product of the choice image
-  and a one-owner dissemilattice. A finite observer calculus proves this
-  decomposition and reduces finite basability with a named $c$ satisfying
-  $c\star_i x\leq x$ exactly to the case $c\star_i x=x$.
+  In fact the strengthened candidate makes the larger algebra a subdirect
+  product of the choice image and a one-owner dissemilattice. Mixed
+  absorption implies the required observer erasure, including arbitrary
+  term contexts. This reduces finite basability with a named $c$
+  satisfying $c\star_i x\leq x$ exactly to the case $c\star_i x=x$,
+  without additional observer or retraction axioms.
   Every principal join filter is a subdirect product of one-owner
   dissemilattices, already under the basic three-variable laws; adjoining
   a named join bottom therefore gives a finitely based class
@@ -1088,104 +1090,77 @@ now gives $x,y\leq x\star_j y\leq x+y$, proving
 $x\star_j y=x+y$. The remaining choice and join inherit the
 dissemilattice laws.
 \end{proof}
-The retraction also controls operations between different fibers. Here
-the \emph{base} means its image $F[A]$, viewed as a subalgebra of $E[A]$.
+The remaining observer equation also follows from mixed absorption.
+Call $c$ a \emph{preunit for owner $i$} if $c\star_i x\leq x$ for
+every $x$. The following calculation requires only this inequality
+and the specified finite laws.
 
-\begin{proposition}[Operations between retraction fibers]
-\label{core:prop:fiber-translations}
-Let $A\in\mathcal V_K$, use the notation of
-\cref{core:prop:choice-image-retraction}, and put
-$B=E[A]$. For $x,y\in B$ and $j\ne i$,
-\begin{equation}\label{core:eq:fiber-linearization}
- x\star_j y
-   =(x\star_j F(y))+(F(x)\star_j y).
+\begin{lemma}[Observed erasure]\label{core:lem:observed-erasure}
+Let $A\models\Gamma_K$, fix distinct $i,j$, and suppose
+$c\star_i x\leq x$ for every $x$. If mixed absorption holds for the
+ordered pair $(j,i)$, then
+\begin{equation}\label{core:eq:pair-observer-erasure}
+ c\star_j\bigl(a\star_i(x\star_j y)\bigr)
+   =c\star_j\bigl(a\star_i(x+y)\bigr).
 \end{equation}
-For each $a\in F[A]$ and each basic operation $h$ of $B$, the map
-$x\mapsto h(a,x)$ is a homomorphism from the fiber over $b$ to the
-fiber over $h(a,b)$. This includes translation under join. For a nonselected choice, the
-assertion follows from the following four-variable core identity, in
-which $F$ and $E$ use the parameter $c$ as above:
-\begin{equation}\label{core:eq:fiber-transport}
- \begin{gathered}
- a=F(z),\qquad u=E(x)+F(y),\qquad v=F(x)+E(y),\\
- a\star_j(u\star_i v)
-    =(a\star_j u)\star_i(a\star_j v)\qquad(j\ne i).
- \end{gathered}
-\end{equation}
-Consequently, if $t(x_1,\ldots,x_n)$ uses only join and choices other
-than $\star_i$, then for $x_1,\ldots,x_n\in B$, with $b_r=F(x_r)$,
-\begin{equation}\label{core:eq:fiber-term-linearization}
- t(x_1,\ldots,x_n)
-   =\sum_{r=1}^n t(b_1,\ldots,b_{r-1},x_r,b_{r+1},\ldots,b_n).
-\end{equation}
-\end{proposition}
+\end{lemma}
 \begin{proof}
-For \eqref{core:eq:fiber-linearization}, write $f=\star_i$ and
-$g=\star_j$, and set
+Write $f=\star_i$, $g=\star_j$, $F(x)=f(c,x)$, $G(x)=g(c,x)$,
+and $R(a,x)=G(f(a,x))$. These maps preserve join in each free
+argument. The Birkhoff law gives $FG=GF$, so coverage and
+$F\leq\mathrm{id}$ give
 \[
- a=F(x),\quad b=F(y),\quad p=f(a,b),\quad q=g(a,b),\quad
- z=g(x,y),\quad r=g(x,b)+g(a,y).
+ c+Gx=F(Gx)+Gx=G(Fx)+Gx=Gx.
 \]
-Associativity of $f$ and $F(a)=a$, $F(b)=b$ give
-$f(x,b)=p=f(a,y)$. Coverage applied to $(x,b)$ and $(a,y)$
-therefore gives $p+r=x+y$. Since $F\leq\mathrm{id}$ on $B$,
-monotonicity gives $r\leq z\leq x+y$, hence $p+z=p+r$.
-The homomorphism $F$ sends both $r$ and $z$ to $q$, so they lie
-in the same fiber and $g(q,r)=r$, $g(q,z)=z$.
-The Birkhoff identity also gives $g(q,p)=q$: indeed,
+Thus $Gx\geq c$. Its image is fixed by $G$, and $g$ is join on
+these fixed points above $c$. Associativity therefore gives
+$G(g(x,y))=Gx+Gy$. Also
 \[
- g(q,p)=g(q,g(a,p))=g(q,f(a,q))=f(q,g(q,a))=q.
+ R(a,Ga)=G(g(a,Fa))=Ga+G(Fa)=Ga.
 \]
-Applying $g(q,-)$ to $p+r=p+z$ and distributing over join now
-gives $r=z$.
-
-To prove \eqref{core:eq:fiber-transport}, work first in $\mathbf C_K$.
-If $c=\{i\}$, then $a=\{i\}$ and $u,v$ contain $\{i\}$.
-On that filter every $\star_j$ with $j\ne i$ is union, and
-translation by $a$ is the identity, so the equation holds.
-Otherwise $E=F$, whence $u=v=F(x)+F(y)$, and idempotence proves
-the equation. It is an identity in the four variables $c,z,x,y$,
-so it holds in every core algebra. Given any $x,y\in B$ with
-$F(x)=F(y)$, the facts $E(x)=x$, $E(y)=y$, and $F(x)\leq x,y$
-make the displayed $u,v$ equal to $x,y$. Every base element is
-$F(z)$, so the identity proves preservation of $\star_i$ by the
-indicated translation on each fiber. Distribution gives preservation
-of join. Since $F$ is a homomorphism, both translated elements lie
-in one fiber; all other choices are join on the source and target
-fibers, proving full operation preservation.
-
-For translation by a base element $a$ under $\star_i$, associativity
-gives $a\star_i x=a\star_i F(x)$, so the map is constant on each
-fiber. For join translation, let $F(x)=F(y)=b$ and put
-$w=x\star_i y$. Distribution gives
+Apply mixed absorption with outer owner $j$ and inputs $c,a,z$.
+Using the Birkhoff law on its left and distributing on its right
+reduces it to
 \[
- (a+x)\star_i(a+y)=a+(a\star_i b)+w=a+w.
+ Ga+R(a,z)=Ga+R(a,Gz).
 \]
-Here $a\star_i b\leq a+b$ and $b\leq w$, since $w$ is in the
-fiber over $b$. Thus join translation preserves $\star_i$ as well
-as join, and the same fiber argument proves preservation of every
-other choice.
+Consequently
+\begin{align*}
+ Ga+R(a,g(x,y))
+ &=Ga+R(a,G(g(x,y)))\\
+ &=Ga+R(a,Gx)+R(a,Gy)\\
+ &=Ga+R(a,x)+R(a,y).
+\end{align*}
+To remove the common summand, first note that the basic laws imply
+$x\leq f(x,g(x,y))$: apply
+$f(x,-)$ to the coverage equation
+\[
+ f(x,g(x,y))+g(x,y)=x+g(x,y).
+\]
+Idempotence and associativity reduce the result to
+$f(x,g(x,y))=x+f(x,g(x,y))$.
 
-Finally, apply \eqref{core:eq:fiber-linearization} recursively to a
-term $t$, using distribution over join. First regard its leaf occurrences
-as distinct inputs. The resulting expression is the join, over all
-leaves, of the evaluation retaining that leaf and replacing every other
-leaf by its $F$-value. The join operation itself satisfies the same
-splitting formula because $F\leq\mathrm{id}$. Group leaves bearing
-the same variable: applying the same expansion to the corresponding
-summand on the right of \eqref{core:eq:fiber-term-linearization}
-gives precisely that group, together with the all-base evaluation.
-The latter is below every retained-leaf evaluation by monotonicity,
-so it changes no join. This proves the formula, including repeated
-or unused variables.
+Now put $q=g(x,y)$ and $s=f(a,q)$. Since $f(s,q)=s$, the
+preceding three-line equality with parameter $s$ gives
+\[
+ Gs=Gs+R(s,x)+R(s,y).
+\]
+By the absorption inequality just proved and monotonicity,
+\[
+ R(a,x)\leq G(f(a,f(x,q)))=R(s,x)\leq Gs=R(a,q),
+\]
+and the same holds with $y$ in place of $x$. Conversely $q\leq x+y$
+gives $R(a,q)\leq R(a,x)+R(a,y)$.
+Thus $R(a,q)=R(a,x)+R(a,y)=R(a,x+y)$, as required.
 \end{proof}
 
-The fibers do not introduce another irreducible case: a one-owner
+The fibers therefore introduce no further irreducible case: a one-owner
 quotient separates everything lost by the retraction.
 
 \begin{theorem}[Subdirect decomposition of a profile algebra]
 \label{core:thm:profile-subdirect}
-Let $A\in\mathcal V_K$, and let $B=E[A]$ and
+Let $A$ satisfy $\Gamma_K$ and all ordered mixed-absorption laws,
+and let $B=E[A]$ and
 $F(x)=c\star_i x$ as above. Define the join-preserving
 observer
 \[
@@ -1228,17 +1203,15 @@ $v=c+x$. The complementary-map calculation in
  v=G_i(v)+\Bigl(\prod_{j\ne i}G_j\Bigr)(v)
    =c+F(x)+H(x).
 \]
-For erasure, work in the winner-set generator. If $c=\{i\}$, then $B$ is the filter
-above $c$, $F$ is constant, and $H$ is the identity on $B$. If
-$c=\{k\}$ with $k\ne i$, then $F$ is the identity on $B$ and $H$
-is constant with value $c$: its $k$-translation absorbs, and all
-remaining translations fix $c$. If $c$ is ambiguous, then $F$ is
-again the identity on $B$, $H(x)=c+x$, and all nonselected choices
-on $B$ are join. In the first case those choices are join as well.
-These cases prove erasure. Substituting $E$-images for
-$a,x,y$ makes it an ordinary core identity, so it holds in $B$
-for every $A\in\mathcal V_K$. The observer $H$ preserves join
-because each of its constituent translations does.
+For erasure, $F\leq\mathrm{id}$ on $B$, so
+\cref{core:lem:observed-erasure} applies. Its proof gives
+$G_j(x)\geq c$ for $j\ne i$, and distribution then gives
+$G_j(c+x)=c+G_j(x)=G_j(x)$.
+The maps $G_j$ commute on the filter above $c$.
+Thus $H$ is $G_j$ followed by the remaining filter maps.
+Apply those maps to \eqref{core:eq:pair-observer-erasure} to obtain
+\eqref{core:eq:profile-observer-erasure}.
+The observer $H$ preserves join because each constituent translation does.
 
 The relation $\rho$ is an equivalence. Distribution and join
 preservation show that $x\mathrel\rho y$ implies
@@ -1272,8 +1245,97 @@ intersection. Thus either $\ker F$ or $\rho$ is the identity;
 idempotence of $F$ gives the stated alternatives.
 \end{proof}
 
-The observer equations also give a finite-basis transfer. Call $c$ a
-\emph{preunit for owner $i$} if $c\star_i x\leq x$ for every $x$.
+The retraction also controls operations between different fibers. Here
+the \emph{base} means its image $F[A]$, viewed as a subalgebra of $E[A]$.
+
+\begin{proposition}[Operations between retraction fibers]
+\label{core:prop:fiber-translations}
+Use the notation and hypotheses of
+\cref{core:prop:choice-image-retraction}, and put
+$B=E[A]$. For $x,y\in B$ and $j\ne i$,
+\begin{equation}\label{core:eq:fiber-linearization}
+ x\star_j y
+   =(x\star_j F(y))+(F(x)\star_j y).
+\end{equation}
+For each $a\in F[A]$ and each basic operation $h$ of $B$, the map
+$x\mapsto h(a,x)$ is a homomorphism from the fiber over $b$ to the
+fiber over $h(a,b)$. This includes translation under join. For a nonselected choice,
+it yields the following four-variable identity, in
+which $F$ and $E$ use the parameter $c$ as above:
+\begin{equation}\label{core:eq:fiber-transport}
+ \begin{gathered}
+ a=F(z),\qquad u=E(x)+F(y),\qquad v=F(x)+E(y),\\
+ a\star_j(u\star_i v)
+    =(a\star_j u)\star_i(a\star_j v)\qquad(j\ne i).
+ \end{gathered}
+\end{equation}
+Consequently, if $t(x_1,\ldots,x_n)$ uses only join and choices other
+than $\star_i$, then for $x_1,\ldots,x_n\in B$, with $b_r=F(x_r)$,
+\begin{equation}\label{core:eq:fiber-term-linearization}
+ t(x_1,\ldots,x_n)
+   =\sum_{r=1}^n t(b_1,\ldots,b_{r-1},x_r,b_{r+1},\ldots,b_n).
+\end{equation}
+\end{proposition}
+\begin{proof}
+For \eqref{core:eq:fiber-linearization}, write $f=\star_i$ and
+$g=\star_j$, and set
+\[
+ a=F(x),\quad b=F(y),\quad p=f(a,b),\quad q=g(a,b),\quad
+ z=g(x,y),\quad r=g(x,b)+g(a,y).
+\]
+Associativity of $f$ and $F(a)=a$, $F(b)=b$ give
+$f(x,b)=p=f(a,y)$. Coverage applied to $(x,b)$ and $(a,y)$
+therefore gives $p+r=x+y$. Since $F\leq\mathrm{id}$ on $B$,
+monotonicity gives $r\leq z\leq x+y$, hence $p+z=p+r$.
+The homomorphism $F$ sends both $r$ and $z$ to $q$, so they lie
+in the same fiber and $g(q,r)=r$, $g(q,z)=z$.
+The Birkhoff identity also gives $g(q,p)=q$: indeed,
+\[
+ g(q,p)=g(q,g(a,p))=g(q,f(a,q))=f(q,g(q,a))=q.
+\]
+Applying $g(q,-)$ to $p+r=p+z$ and distributing over join now
+gives $r=z$.
+
+For translation by a base element $a$ under $\star_i$, associativity
+gives $a\star_i x=a\star_i F(x)$, so the map is constant on each
+fiber. For join translation, let $F(x)=F(y)=b$ and put
+$w=x\star_i y$. Distribution gives
+\[
+ (a+x)\star_i(a+y)=a+(a\star_i b)+w=a+w.
+\]
+Here $a\star_i b\leq a+b$ and $b\leq w$, since $w$ is in the
+fiber over $b$. Thus join translation preserves $\star_i$ as well
+as join, and the same fiber argument proves preservation of every
+other choice.
+
+For a nonselected translation $h(a,-)$, use the decomposition of
+\cref{core:thm:profile-subdirect}. On a fiber of $F$, the first
+factor sends the entire translated fiber to the single element
+$h(a,b)$, so it preserves every operation there. In the quotient
+by $\rho$, the translation is join with $[a]_\rho$.
+The induced map $F$ still fixes $[a]_\rho$ and takes $[x]_\rho$
+and $[y]_\rho$ to the same value. The preceding join-translation
+calculation therefore proves operation preservation in that factor
+too. Joint injectivity gives preservation in $B$.
+For the displayed $u,v$ in \eqref{core:eq:fiber-transport},
+$F(u)=F(v)=F(x)+F(y)$ and $a=F(z)$ is a base element.
+Thus the fiber assertion gives that identity.
+
+Finally, apply \eqref{core:eq:fiber-linearization} recursively to a
+term $t$, using distribution over join. First regard its leaf occurrences
+as distinct inputs. The resulting expression is the join, over all
+leaves, of the evaluation retaining that leaf and replacing every other
+leaf by its $F$-value. The join operation itself satisfies the same
+splitting formula because $F\leq\mathrm{id}$. Group leaves bearing
+the same variable: applying the same expansion to the corresponding
+summand on the right of \eqref{core:eq:fiber-term-linearization}
+gives precisely that group, together with the all-base evaluation.
+The latter is below every retained-leaf evaluation by monotonicity,
+so it changes no join. This proves the formula, including repeated
+or unused variables.
+\end{proof}
+
+These consequences of the finite laws give a finite-basis transfer.
 
 \begin{corollary}[Preunits reduce to owned units]
 \label{core:cor:preunit-basis}
@@ -1286,17 +1348,14 @@ is finitely based if and only if its subvariety
  \mathcal L_i=\{(A,c):A\in\mathcal V_K,\ c\star_i x=x\}
 \]
 is finitely based. A finite basis $\mathcal E$ for $\mathcal L_i$
-gives a basis for $\mathcal P_i$ consisting of the semilattice,
-distribution, coverage and Birkhoff laws, the $2K-1$ equations
-\begin{gather*}
- x+F(x)=x,\qquad
- F(x\star_j y)=F(x)\star_j F(y)\quad(j\ne i),\\
- \eqref{core:eq:profile-observer-erasure}\quad(j\ne i),
-\end{gather*}
-and the equations of $\mathcal E$ with every variable $x$ replaced
-by $F(x)$, leaving the named $c$ fixed. Alternatively, the $K-1$
-homomorphism equations for $F$ can be replaced by all ordered
-mixed-absorption laws.
+gives the following basis for $\mathcal P_i$: $\Gamma_K$, all ordered
+mixed-absorption laws, the preunit equation $x+F(x)=x$, and the
+equations of $\mathcal E$ with every variable $x$ replaced by $F(x)$,
+leaving the named $c$ fixed. No additional retraction or observer
+equations are required.
+Moreover, $\Gamma_K$ and mixed absorption, with the respective
+preunit or owned-unit equation, axiomatize $\mathcal P_i$ if and
+only if they axiomatize $\mathcal L_i$.
 \end{corollary}
 \begin{proof}
 Necessity follows by adjoining $c\star_i x=x$ to a basis for
@@ -1304,27 +1363,20 @@ $\mathcal P_i$. For sufficiency, all displayed equations hold in
 $\mathcal P_i$: its preunit condition says $E[A]=A$, so
 \cref{core:prop:choice-image-retraction,core:thm:profile-subdirect}
 apply. The image $F[A]$ belongs to $\mathcal L_i$, validating the
-substituted equations as well. In the alternative presentation,
-\cref{core:prop:choice-image-retraction} derives the homomorphism
-equations because $E[A]=A$.
+substituted equations as well.
 
 Conversely, suppose a pointed algebra satisfies the proposed finite
-list. The equations make $F$ an idempotent endomorphism: preservation
-of join and $\star_i$ follows from distribution and associativity,
-and the remaining cases are explicit. Since $F(c)=c$, the image
-is a pointed subalgebra. The substituted basis puts it in
-$\mathcal L_i$.
-
-The congruence and separation argument in
-\cref{core:thm:profile-subdirect} uses only the basic laws,
-$x+F(x)=x$, and the observer equations; the cover equation follows
-from $\Gamma_K$ as shown there.
-It therefore applies to this algebra, without assuming core membership.
-Its quotient by $\rho$ satisfies the seven dissemilattice laws and
-has every nonselected choice equal to join. It belongs to
-$\mathcal V_K$ by \cref{core:prop:dissemilattice-lift}, as does
-$F[A]$. Their subdirect product belongs to $\mathcal V_K$, and the
-preunit equation puts it in $\mathcal P_i$.
+list. Its preunit equation gives $E[A]=A$, so
+\cref{core:prop:choice-image-retraction,core:thm:profile-subdirect}
+give an idempotent endomorphism $F$ and a subdirect decomposition
+into $F[A]$ and a one-owner dissemilattice. Since $F(c)=c$, the image
+is a pointed subalgebra, and the substituted basis puts it in
+$\mathcal L_i$. Both factors therefore belong to $\mathcal V_K$;
+so does $A$. The preunit equation puts it in $\mathcal P_i$.
+For the final assertion, if the owned-unit candidate is complete,
+the image $F[A]$ already satisfies that candidate; no lifted
+equations need be added. The converse follows by imposing the
+owned-unit equation on the preunit class.
 \end{proof}
 
 The observer factors also reduce the test domain for arbitrary core

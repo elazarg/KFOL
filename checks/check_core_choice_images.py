@@ -17,7 +17,7 @@ from collections import Counter
 from itertools import combinations, product
 from pathlib import Path
 
-from core_basis import marker_join, marker_own
+from core_basis import MIXED_JOIN, MIXED_OPERATIONS, marker_join, marker_own
 
 
 VARIABLE = re.compile(r'[u-z][A-Za-z0-9_]*\Z')
@@ -263,7 +263,7 @@ def check_retraction(carrier, c, i, owners, add, choice):
 
 
 def check_profile_split(carrier, c, i, owners, add, choice):
-    """Check the observer congruence, its quotient, and joint separation."""
+    """Check pair erasure, the observer quotient, and joint separation."""
     fixed = lambda x: choice(i, c, x)
     source = sorted({add(x, fixed(x)) for x in carrier})
 
@@ -277,6 +277,10 @@ def check_profile_split(carrier, c, i, owners, add, choice):
     observed = {x: observe(x) for x in source}
     signatures = {x: tuple(observed[choice(i, a, x)] for a in source)
                   for x in source}
+    pair_signatures = {
+        j: {x: tuple(choice(j, c, choice(i, a, x)) for a in source)
+            for x in source} for j in range(owners) if j != i
+    }
     names = {signature: n for n, signature
              in enumerate(sorted(set(signatures.values())))}
     quotient = {x: names[signatures[x]] for x in source}
@@ -297,6 +301,7 @@ def check_profile_split(carrier, c, i, owners, add, choice):
             if j != i:
                 # Every coordinate is the four-variable erasure identity
                 # for a different selected-choice translation parameter.
+                assert pair_signatures[j][choice(j, x, y)] == pair_signatures[j][joined]
                 assert signatures[choice(j, x, y)] == signatures[joined]
                 assert tables[j + 1][key] == tables[0][key]
     return len(source)**3 * (owners - 1), len(names)
@@ -333,6 +338,14 @@ def check():
             raise AssertionError('accepted an altered profile certificate')
     print(f'Universal profile-closure certificate: {sum(profile_counts.values())} '
           f'steps, {dict(profile_counts)}.')
+
+    # Gamma alone does not imply observed erasure, even at an owned unit.
+    # The mixed countermodel has c=0 as owner 2's identity; at (a,x,y)
+    # = (1,0,5), observation by owner 0 distinguishes choice from join.
+    f, g = MIXED_OPERATIONS[2], MIXED_OPERATIONS[0]
+    assert all(f[0][x] == x for x in range(6))
+    assert g[0][f[1][g[0][5]]] == 0
+    assert g[0][f[1][MIXED_JOIN[0][5]]] == 3
 
     images = quotients = shifts = exhaustions = 0
     retraction_pairs = fiber_pairs = transports = 0
@@ -452,8 +465,8 @@ def check():
           'one active owner per fiber, the fiber bottom/absorber, and '
           'cross-fiber splitting checked. '
           f'{transports} base-translation/fiber-pair cases preserve all operations.')
-    print(f'Profile subdirect decomposition: {erasures} observer-erasure '
-          f'instances, {quotient_elements} quotient elements in '
+    print(f'Profile subdirect decomposition: {erasures} instances each of pair and full observer erasure, '
+          f'{quotient_elements} quotient elements in '
           f'{images + stored_images + marker_images} quotients; congruence '
           'compatibility, one-owner quotient operations, and joint separation '
           'with the choice retraction checked.')
