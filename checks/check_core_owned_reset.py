@@ -78,7 +78,8 @@ def check_model(join, operations):
     return counts
 
 
-def check():
+def test_models():
+    """Native and certified models shared by the owned-unit proof audits."""
     models = []
     for owners in range(3, 6):
         native = tuple(range(1, 1 << owners))
@@ -101,6 +102,11 @@ def check():
         ops = [[[marker_own(owners, i, x, y) for y in carrier] for x in carrier]
                for i in range(owners)]
         models.append((join, ops))
+    return models
+
+
+def check():
+    models = test_models()
     totals = [0] * 5
     for join, ops in models:
         totals = [a + b for a, b in zip(totals, check_model(join, ops))]

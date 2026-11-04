@@ -59,7 +59,11 @@ nothing here settles it. This appendix collects what is known, in four groups.
   owners, mixed absorption makes these normalizers preserve the active
   choices themselves. At an owned unit, a linear-context expansion of
   reset proves preservation of the selected choice for any number of
-  owners, already under the strengthened candidate. Even a neutral reset unit
+  owners and determines reset on finite joins from its values on pairs.
+  Parameters fixed by the other unit maps give endomorphisms whose
+  kernels are explicit principal congruences
+  (\cref{core:prop:owned-fixed-parameters}). These results hold already
+  under the strengthened candidate. Even a neutral reset unit
   leaves unbounded observation depth, including when the largest atomic
   quotient is trivial. Local atomic quotients recover elements and binary
   choices as explicit meets. The profile closures have subalgebra images,
@@ -2321,7 +2325,12 @@ Each $\pi_c$ preserves the selected choice:
 \begin{equation}\label{core:eq:owned-unit-normalizer-hom}
  c\del(x\star_i y)=(c\del x)\star_i(c\del y).
 \end{equation}
-Consequently both identities hold inside every choice image of a model
+It is determined on finite joins by its values on pairs: for $m\geq1$,
+\begin{equation}\label{core:eq:owned-reset-pairs}
+ \pi_c\left(\sum_{r=1}^m x_r\right)
+ =\sum_{1\leq r\leq s\leq m}\pi_c(x_r+x_s).
+\end{equation}
+These identities hold inside every choice image of a model
 of the strengthened candidate, with all their arguments in that image.
 \end{proposition}
 \begin{proof}
@@ -2386,8 +2395,109 @@ $r_j(x)=f(x,P_j(x))$. Distribution gives
 \]
 The reverse inequality follows from the nucleus identity and
 extensivity, as in \cref{core:cor:two-owner-normalizers}.
+For the finite-join formula, distribute each summand of
+\eqref{core:eq:owned-unit-reset-expansion}. Since $P_j$ preserves join,
+its expansion consists of terms $f(x_r,P_j(x_s))$. Each occurs in
+$\pi_c(x_r+x_s)$, proving one inequality; monotonicity proves the other.
 Finally each choice image is a subalgebra with an owned unit by
 \cref{core:prop:choice-images}, so the result applies there.
+\end{proof}
+
+The same unit gives endomorphisms and explicit principal congruences
+when the translating parameter is fixed by the other unit maps.
+
+\begin{proposition}[Fixed parameters at an owned unit]
+\label{core:prop:owned-fixed-parameters}
+Under the hypotheses of \cref{core:prop:owned-unit-reset-expansion},
+write $G_j(x)=u\star_j x$ for $j\ne i$. If $h\geq u$ and
+$G_j(h)=h$, then the translation $r_h(x)=h\star_i x$ preserves
+$\star_j$. In particular, put
+\[
+ H=\prod_{j\ne i}G_j,\qquad C=H[A].
+\]
+Then $H(x)=x\del u$, and $C$ is the common fixed-point set of the
+$G_j$. Every operation on $C$ is join, with bottom $u$.
+For every $h\in C$, the map $r_h$ is an extensive idempotent
+endomorphism of $A$, and
+\begin{equation}\label{core:eq:owned-fixed-congruence}
+ r_h(x)=h\del x,\qquad
+ \ker r_h=\operatorname{Cg}_A(u,h),\qquad
+ r_hr_k=r_{h+k}\quad(h,k\in C).
+\end{equation}
+The least congruence forcing $x\del u=u$ is the directed union
+\[
+ \bigcup_{h\in C}\ker r_h.
+\]
+If $C$ has a greatest element $h$, this quotient is represented by
+the subalgebra $r_h[A]$, with named unit $h$.
+
+More locally, for any $h\in C$, the join ideal
+$I_h=\{x:H(x)\leq h\}$ is a subalgebra. The pointed algebra
+$(r_h[I_h],h)$ satisfies $y\del h=h$, and $r_h$ fixes every
+$x$ with $H(x)=h$.
+\end{proposition}
+\begin{proof}
+Write $f=\star_i$ and $g=\star_j$, and first assume only
+$h\geq u$ and $G_j(h)=h$. As in the proof of
+\cref{core:lem:observed-erasure}, the image of $G_j$ lies above $u$
+and $g$ is join on that image. Associativity therefore gives
+\[
+ g(h,x)=g(h,G_j(x))=h+G_j(x),\qquad
+ G_j(g(x,y))=G_j(x)+G_j(y).
+\]
+Set $v=f(h,g(x,y))$ and $w=g(f(h,x),f(h,y))$.
+The cross-choice inequality gives $v\leq w$. The choice bound gives
+$w\leq f(h,x)+f(h,y)$, and distribution gives
+\begin{align*}
+ w&\leq g(h+x,h+y)\\
+  &=h+G_j(x)+G_j(y)+g(x,y)\\
+  &=h+g(x,y)\leq h+v.
+\end{align*}
+Here $G_j(g(x,y))\leq u+g(x,y)$, and $g(x,y)\leq v$ follows
+from $h\geq u$ and $f(u,z)=z$.
+The mixed-meet formula \eqref{core:eq:mixed-meet} now gives $w\leq v$.
+Thus $r_h$ preserves $g$; it always preserves join and $f$.
+
+The maps $G_j$ commute, are idempotent, and satisfy
+$G_j(u+x)=G_j(x)$. Their product is therefore the reset fold
+$x\del u$, with image their common fixed-point set. All these fixed
+points lie above $u$. Each choice has identity $u$ on $C$, so
+monotonicity and the choice bound make it join there.
+If $h\in C$, the first part proves that $r_h$ preserves every
+operation. It is extensive because $h\geq u$, and is idempotent by
+associativity of $f$.
+For every $j\ne i$,
+\[
+ x\star_j(h+x)=h+G_j(x)+x=h+x.
+\]
+In the reset fold for $h\del x$, apply these commuting translations
+before the $i$-translation. The result is
+$f(x,h+x)=f(h,x)$, proving the first equality in
+\eqref{core:eq:owned-fixed-congruence}.
+
+The endomorphism $r_h$ identifies $u,h$. Conversely, any congruence
+identifying them identifies $x=f(u,x)$ with $r_h(x)=f(h,x)$ for
+every $x$, so it contains $\ker r_h$.
+Since $f(h,k)=h+k$ on $C$, associativity gives the composition formula.
+The kernels consequently form a directed family, and their union is
+the least congruence identifying $u$ with every $H(x)=x\del u$.
+If $h$ is greatest in $C$, this union is $\ker r_h$; evaluation
+through the endomorphism gives
+\[
+ r_h(x)\del h=r_h(x\del u)=r_h(H(x))=h+H(x)=h.
+\]
+
+For the local assertion, $H$ preserves join and, by
+\cref{core:cor:cross-choice-bound},
+$H(x\star_j y)\leq H(x)\star_j H(y)=H(x)+H(y)$ for every owner.
+Thus $I_h$ is a subalgebra and a join ideal. The choice bound gives
+$H(r_h(x))\leq H(h+x)=h+H(x)$, so $r_h$ maps $I_h$ into itself.
+The preceding evaluation proves $y\del h=h$ on its image.
+Finally, if $H(x)=h$, then $u\leq h\leq u+x$, whence
+\[
+ x=f(u,x)\leq f(h,x)\leq f(u+x,x)=x.
+\]
+This proves the fixed-point assertion.
 \end{proof}
 
 A named unit gives a local recovery statement that does not require
