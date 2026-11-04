@@ -5,7 +5,7 @@ the proof. They do not establish finite basability of the pointed variety.
 """
 
 import json
-from itertools import combinations, product
+from itertools import combinations, permutations, product
 from pathlib import Path
 
 from check_core_atomic_basis import assert_laws, operation_tables
@@ -152,6 +152,80 @@ def check_quotients(carrier, tables):
     return pairs
 
 
+def check_two_owner_normalizers(carrier, tables):
+    """Audit the two active choices and both sides of the proof sandwich."""
+    add, operations, resets = tables
+    active = [i for i, operation in enumerate(operations) if operation != add]
+    if len(active) > 2:
+        return 0
+    selected = (active + [i for i in range(len(operations)) if i not in active])[:2]
+    f, g = [operations[i] for i in selected]
+    checked = 0
+    for c, x, y in product(carrier, repeat=3):
+        assert resets[c, x] == f[x, g[x, c]] == g[x, f[x, c]]
+        for outer, inner in ((f, g), (g, f)):
+            v = outer[x, y]
+            w = outer[resets[c, x], resets[c, y]]
+            # Cross-choice inequality, then the reverse normalization bound.
+            left = inner[c, v]
+            right = outer[inner[c, x], inner[c, y]]
+            assert add[left, right] == right
+            assert outer[v, left] == resets[c, v]
+            assert outer[v, right] == w
+            assert add[w, resets[c, v]] == resets[c, v]
+            assert resets[c, v] == w
+        checked += 1
+    return checked
+
+
+def check_owned_generators():
+    """Embed each pointed observer image in one of the K small generators."""
+    generators = images = triples = 0
+    for owners in range(3, 7):
+        for i in range(owners):
+            templates = []
+            for active, unit in [((i,), owners)] + [((i, j), j)
+                                for j in range(owners) if j != i]:
+                carrier = tuple(active) + (owners, owners + 1)
+                tables = operation_tables(
+                    carrier, lambda x, y: marker_join(owners, x, y),
+                    lambda k, x, y: marker_own(owners, k, x, y), owners)
+                assert all(tables[1][i][unit, x] == x for x in carrier)
+                for c, x, y in product(carrier, repeat=3):
+                    f, r = tables[1][i], tables[2]
+                    assert r[c, f[x, y]] == f[r[c, x], r[c, y]]
+                    triples += 1
+                templates.append((carrier, unit, [tables[0]] + tables[1]))
+                generators += 1
+            for omitted in range(owners):
+                observer = tuple(x for x in range(owners + 2) if x != omitted)
+                add, operations, _ = operation_tables(
+                    observer, lambda x, y: marker_join(owners, x, y),
+                    lambda k, x, y: marker_own(owners, k, x, y), owners)
+                for c in observer:
+                    image = sorted({operations[i][c, x] for x in observer})
+                    assert c in image
+                    source = [add] + operations
+                    assert all(h[x, y] in image for h in source
+                               for x, y in product(image, repeat=2))
+                    found = False
+                    for carrier, unit, target in templates:
+                        for values in permutations(carrier, len(image)):
+                            mapping = dict(zip(image, values))
+                            if mapping[c] != unit:
+                                continue
+                            if all(mapping[h[x, y]] == k[mapping[x], mapping[y]]
+                                   for h, k in zip(source, target)
+                                   for x, y in product(image, repeat=2)):
+                                found = True
+                                break
+                        if found:
+                            break
+                    assert found, (owners, i, omitted, c, image)
+                    images += 1
+    return generators, images, triples
+
+
 def check():
     equations = quotient_pairs = pointed_generators = quotient_maps = 0
     profile_pairs = 0
@@ -204,6 +278,7 @@ def check():
     # checks. Verify the global normalization on every element, including
     # roots that are not left reset units.
     models = 0
+    two_owner_models = two_owner_triples = 0
     nonclosed_image = False
     for name in ('core-small-models', 'core-six-models',
                  'core-seven-models', 'core-eight-models'):
@@ -215,6 +290,9 @@ def check():
                                       lambda i, x, y: ops[i][x][y], len(ops))
             quotient_pairs += check_quotients(carrier, tables)
             profile_pairs += check_unit_profiles(carrier, tables)
+            count = check_two_owner_normalizers(carrier, tables)
+            two_owner_models += bool(count)
+            two_owner_triples += count
             assert any(all(tables[2][c, x] == x for x in carrier)
                        for c in carrier)
             for c in carrier:
@@ -224,6 +302,26 @@ def check():
                     nonclosed_image = True
             models += 1
     assert nonclosed_image  # Normalized operations cannot simply be omitted.
+    for name in ('core-owned-unit-observer-countermodel',
+                 'core-owned-unit-depth-countermodel'):
+        model = json.loads((Path(__file__).with_name('data') / (name + '.json')).read_text())
+        add, ops = model['join'], model['operations']
+        carrier = tuple(range(len(add)))
+        tables = operation_tables(carrier, lambda x, y: add[x][y],
+                                  lambda i, x, y: ops[i][x][y], len(ops))
+        count = check_two_owner_normalizers(carrier, tables)
+        assert count
+        two_owner_models += 1
+        two_owner_triples += count
+
+    # Join still requires normalization in the two-owner generator.
+    carrier = tuple(range(4))
+    tables = operation_tables(carrier, lambda x, y: marker_join(2, x, y),
+                              lambda i, x, y: (marker_own(2, i, x, y) if i < 2
+                                              else marker_join(2, x, y)), 3)
+    add, _, resets = tables
+    assert add[resets[3, 0], resets[3, 1]] == 2
+    assert resets[3, add[0, 1]] == 3
     # The global normalization proof requires only Gamma. Check its
     # premises and each proof step also outside the core variety.
     carrier = tuple(range(len(MIXED_JOIN)))
@@ -250,6 +348,7 @@ def check():
         equations += assert_laws(unit_reduction_laws(owners), carrier, tables)
         boundary_pairs += check_quotients(carrier, tables)
         countermodel_pairs += check_unit_profiles(carrier, tables)
+    owned_generators, owned_images, owned_triples = check_owned_generators()
     print(f'Core unit reduction: {equations} equation evaluations; '
           f'{quotient_pairs} root/input-pair checks; '
           f'{pointed_generators} pointed generators and {quotient_maps} '
@@ -259,6 +358,14 @@ def check():
           'outside the core, including operand absorption, local closure '
           'compatibility, the order sandwich, and normalizer composition. '
           'The proof steps also pass on every core root/input pair above.')
+    print(f'Two-owner reset homomorphisms: {two_owner_models} core models, '
+          f'{two_owner_triples} root/input triples; the reduced reset term, '
+          'cross-choice inequality, both normalization bounds, and both '
+          'homomorphism identities passed. Join preservation fails in D_2.')
+    print(f'Owned-unit generators: {owned_images} pointed observer images '
+          f'embed in pointed subalgebras of the {owned_generators} listed '
+          f'generators at K=3..6; {owned_triples} further triples verify '
+          'preservation of the selected choice by every reset normalizer.')
     print(f'Local atomic recovery: {profile_pairs} unit/input-pair checks, '
           'including partial closures and their Boolean subset laws, '
           'full subalgebra images, filter reconstruction and local exhaustion, '
