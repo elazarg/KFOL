@@ -18,7 +18,9 @@ nothing here settles it. This appendix collects what is known, in four groups.
 \item \emph{A candidate basis.} For three owners, those equations, owner exhaustion,
   and two mixed families are incomplete, with a smallest countermodel of six
   elements. One more identity removes every countermodel through eight elements
-  (\cref{app:core-candidate}).
+  (\cref{app:core-candidate}). That mixed-absorption identity also gives
+  an unrestricted meet formula for a choice applied to a different choice
+  (\cref{core:prop:mixed-meet}).
 \item \emph{Families of models.} The core variety is the join of the subvarieties
   with an unused owner, but only through homomorphic images
   (\cref{app:core-proper-fragments,app:core-quotients}). Each basic
@@ -773,6 +775,70 @@ checks; their discovery need not be repeated.
 Finite subdirect decomposition completes the argument, since each
 irreducible quotient still satisfies all the candidate equations.
 No bound on term size is used.
+\end{proof}
+
+Mixed absorption has an order consequence beyond these finite checks.
+The meet below exists in the join order; no lattice structure or named
+unit is assumed.
+
+\begin{proposition}[A meet for mixed choices]\label{core:prop:mixed-meet}
+Let $A$ satisfy $\Gamma_K$, write $f=\star_i$ and $g=\star_j$ for
+distinct owners, and assume mixed absorption for the ordered pair $(i,j)$.
+If
+\[
+ q\leq r,\qquad f(q,r)=r,\qquad g(q,r)=q,
+\]
+then, for every $a\in A$,
+\begin{equation}\label{core:eq:mixed-interval-meet}
+ f(a,q)=f(a,r)\wedge\bigl(a+f(a,q)\bigr).
+\end{equation}
+In particular,
+\begin{equation}\label{core:eq:mixed-meet}
+ a\star_i(x\star_j y)
+ =\bigl((a\star_i x)+(a\star_i y)\bigr)
+    \wedge\bigl(a+(a\star_i(x\star_j y))\bigr).
+\end{equation}
+Every translation under $\star_i$, and hence every composition of
+such translations, preserves the displayed meet.
+\end{proposition}
+\begin{proof}
+Put $v=f(a,q)$ and $p=f(a,r)$. Mixed absorption with inputs $a,q,r$
+and the two assumed operation values gives
+\[
+ v=f(a,g(q,r))=f(a,g(q,f(a,r)))=f(a,g(q,p)).
+\]
+Monotonicity gives $v\leq p$, so $v$ is a lower bound of
+$p$ and $a+v$. Let $z$ be any common lower bound.
+Since $f(a,v)=v$, distribution and $z\leq a+v$ give
+\[
+ f(z,v)\leq f(a+v,v)=v.
+\]
+The inequality $z\leq p$ and the preceding mixed-absorption
+calculation likewise give
+\[
+ f(a,g(z,q))\leq f(a,g(p,q))=v.
+\]
+Apply $f(a,-)$ to coverage at $(z,q)$:
+\[
+ f(a,z)+v=f(a,f(z,q))+f(a,g(z,q))
+         =f(z,v)+f(a,g(z,q))\leq v.
+\]
+Thus $f(a,z)\leq v$. Finally,
+\[
+ z=f(z,z)\leq f(z,a+v)=f(z,a)+f(z,v)\leq v,
+\]
+proving the greatest-lower-bound assertion.
+
+Take $q=g(x,y)$ and $r=x+y$. Every choice is bounded by join,
+so $q\leq r$. Distribution and associativity give $g(q,r)=q$,
+and the bound identity $f(g(x,y),x+y)=x+y$ from
+\cref{core:prop:atomic-uniform-lift} gives $f(q,r)=r$.
+Equation~\eqref{core:eq:mixed-interval-meet} now gives
+\eqref{core:eq:mixed-meet}.
+For translation by $b$ under $f$, replace $a$ by $f(b,a)$ in
+\eqref{core:eq:mixed-interval-meet}. Associativity and distribution
+identify the resulting value and its two bounds with the images of
+the original three terms. Iteration proves the composition assertion.
 \end{proof}
 
 \subsection{Fragments with an unused owner}
