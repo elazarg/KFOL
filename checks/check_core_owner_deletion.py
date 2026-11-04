@@ -24,6 +24,16 @@ def inspect(carrier, owners, add, choice, *, exhaustion=True):
             value = choice(j, c, x)
             assert add(x, value) == value
             counts['neutrality'] += 1
+        for j in remaining:
+            if any(choice(j, c, x) != x for x in carrier):
+                continue
+            for k in remaining:
+                if k == j:
+                    continue
+                assert all(choice(k, c, x) == add(c, x) for x in carrier)
+                for x, y in product(carrier, repeat=2):
+                    assert choice(k, x, y) == add(x, y)
+                    counts['unit_absorber_inactive_pairs'] += 1
 
         def reset(x, indices):
             value = add(c, x)
