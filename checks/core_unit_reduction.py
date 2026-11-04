@@ -1,7 +1,8 @@
 """Finite equations for the reduction to a named left reset unit.
 
-These equations are sound but are not asserted to be a basis for the core.
-The basis-transfer theorem is proved in appendix-core-basis.tex.
+These equations follow from the three-variable laws Gamma_K, but are not
+asserted to be a basis for the core. The derivation and basis-transfer
+theorem are proved in appendix-core-basis.tex.
 """
 
 from core_atomic_basis import semilattice_laws

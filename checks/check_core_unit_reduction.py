@@ -9,7 +9,7 @@ from itertools import combinations, product
 from pathlib import Path
 
 from check_core_atomic_basis import assert_laws, operation_tables
-from core_atomic_basis import expand_core
+from core_atomic_basis import expand_core, lifting_basis
 from core_basis import MIXED_JOIN, MIXED_OPERATIONS, marker_join, marker_own
 from core_unit_reduction import unit_reduction_laws
 
@@ -132,8 +132,21 @@ def check_quotients(carrier, tables):
         # evaluation followed by q; in particular the named c is a unit.
         assert all(q[resets[c, x]] == x for x in image)
         for x, y in product(carrier, repeat=2):
+            # Normalizers commute, compose by join of their parameters,
+            # and preserve join in the parameter. Check all three forms.
+            assert resets[c, resets[x, y]] == resets[add[c, x], y]
+            assert resets[add[c, x], y] == add[resets[c, y], resets[x, y]]
             assert q[add[x, y]] == q[add[q[x], q[y]]]
             for table in operations:
+                # Audit the local-to-global proof: operand absorption,
+                # equal local closures, then the order sandwich.
+                u = add[c, add[x, y]]
+                v, w = table[x, y], table[q[x], q[y]]
+                assert resets[x, v] == v == resets[y, v]
+                assert resets[u, q[x]] == resets[u, x]
+                assert resets[u, q[y]] == resets[u, y]
+                assert resets[u, w] == resets[u, v] == q[v]
+                assert add[v, w] == w and add[w, q[v]] == q[v]
                 assert q[table[x, y]] == q[table[q[x], q[y]]]
             pairs += 1
     return pairs
@@ -211,12 +224,15 @@ def check():
                     nonclosed_image = True
             models += 1
     assert nonclosed_image  # Normalized operations cannot simply be omitted.
-    # The profile and filter proofs require Gamma and a reset unit, not
-    # membership in the core. Check both established countermodel families.
+    # The global normalization proof requires only Gamma. Check its
+    # premises and each proof step also outside the core variety.
     carrier = tuple(range(len(MIXED_JOIN)))
     countermodel_tables = operation_tables(
         carrier, lambda x, y: MIXED_JOIN[x][y],
         lambda i, x, y: MIXED_OPERATIONS[i][x][y], 3)
+    gamma_evaluations = assert_laws(lifting_basis(3), carrier, countermodel_tables)
+    equations += assert_laws(unit_reduction_laws(3), carrier, countermodel_tables)
+    boundary_pairs = check_quotients(carrier, countermodel_tables)
     add, operations, resets = countermodel_tables
     assert all(resets[2, x] == x for x in carrier)
     assert all(add[x, operation[2, x]] == operation[2, x]
@@ -227,13 +243,22 @@ def check():
     countermodel_pairs = check_unit_profiles(carrier, countermodel_tables)
     for owners in range(3, 7):
         carrier = tuple(range(owners + 2))
-        countermodel_pairs += check_unit_profiles(carrier, operation_tables(
+        tables = operation_tables(
             carrier, lambda x, y: marker_join(owners, x, y),
-            lambda i, x, y: marker_own(owners, i, x, y), owners))
+            lambda i, x, y: marker_own(owners, i, x, y), owners)
+        gamma_evaluations += assert_laws(lifting_basis(owners), carrier, tables)
+        equations += assert_laws(unit_reduction_laws(owners), carrier, tables)
+        boundary_pairs += check_quotients(carrier, tables)
+        countermodel_pairs += check_unit_profiles(carrier, tables)
     print(f'Core unit reduction: {equations} equation evaluations; '
           f'{quotient_pairs} root/input-pair checks; '
           f'{pointed_generators} pointed generators and {quotient_maps} '
           f'atomic quotient maps; {models} stored core models.')
+    print(f'Gamma normalization derivation: {gamma_evaluations} premise '
+          f'evaluations and {boundary_pairs} further root/input-pair checks '
+          'outside the core, including operand absorption, local closure '
+          'compatibility, the order sandwich, and normalizer composition. '
+          'The proof steps also pass on every core root/input pair above.')
     print(f'Local atomic recovery: {profile_pairs} unit/input-pair checks, '
           'including partial closures and their Boolean subset laws, '
           'full subalgebra images, filter reconstruction and local exhaustion, '
