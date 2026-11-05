@@ -1,4 +1,4 @@
-"""Reduce two-choice translation words by first-occurrence phases.
+"""Reduce core translation words by first-occurrence phases.
 
 Tokens identify fixed translations. Each phase starts when a previously
 unseen token occurs. Within a phase retain only its first occurrences.

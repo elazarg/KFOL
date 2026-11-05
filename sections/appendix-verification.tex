@@ -382,13 +382,13 @@ Reset homomorphisms
  \texttt{check\_core\_owned\_fixed.py} verifies $1576590$ instances
  of the three-input finite-join formula.\\
 Distribution by reset (\cref{core:prop:reset-distribution})
- & Written derivation from the bounded atomic quotient and pair reset
- homomorphisms. Choice-image closure and Birkhoff fix the distributed
+ & Written derivation from the bounded atomic quotient. Choice-image
+ closure and Birkhoff fix the distributed
  expression under all three operand resets; composition removes the
  redundant parameters. \texttt{check\_core\_reset\_distribution.py}
  audits these steps on $1382314$ ordered-choice triples in $255$
- models, including distribution in the normalized image and both
- equalities in the doubled distributive law.\\
+ models, including distribution in the normalized image, the global
+ and pair reset formulas, and absorption by every choice.\\
 Reset-unit absorption and sandwich reset
 (\cref{core:lem:reset-unit-absorption,core:prop:sandwich-reset})
  & The certificate \path{checks/data/core-reset-unit-absorption-proof.json}
@@ -411,12 +411,28 @@ Word reduction after reset (\cref{core:cor:reset-words})
  It verifies $88756$ intertwining equations, then all $526848$ products
  of the $63084$ resulting reset maps, including their identity and
  both band laws. The largest coefficient monoid has $84$ elements.\\
-Unrestricted two-choice words
-(\cref{core:thm:two-choice-words,core:cor:two-choice-join-words})
- & Written derivation of deletion within first-occurrence phases,
- the quadratic length bound, and $P^3=P^2$ from input erasure and the
- reset band. \texttt{core\_two\_choice\_words.py} implements the
- reduction. Its audit \texttt{check\_core\_two\_choice\_words.py}
+Global sandwich reset (\cref{core:lem:global-sandwich})
+ & Written derivation from the pair sandwich, coverage, pair input
+ erasure, and the cross-choice inequality. The latter bounds the
+ extra summand by each third choice applied to the two sandwich values.
+ \texttt{check\_core\_context\_words.py} verifies all $2676846$
+ third-choice calculations in $255$ models, and $3122839$ global
+ sandwich equations, including join translations and equal choices.\\
+Unrestricted translation words (\cref{core:thm:translation-words})
+ & Written derivation of the reset band in the normalized quotient,
+ then deletion within first-occurrence phases, the quadratic length
+ bound, and $P^3=P^2$ using input erasure.
+ \texttt{core\_context\_words.py} implements the reduction.
+ \texttt{check\_core\_context\_words.py} closes the full transformation
+ monoid in each of $255$ models, with $14223$ elements and $778414$
+ transitions; every transition checks the reduced word's value, length,
+ and idempotent normalization. Every element passes stabilization,
+ all $13968$ nonempty representatives pass input erasure, and $38946$
+ upper-bound checks verify reduction and idempotence after global reset.
+ The largest monoid has $1932$ elements.\\
+Two-choice word audit
+(\cref{core:thm:translation-words,core:eq:linear-join-translation})
+ & The focused audit \texttt{check\_core\_two\_choice\_words.py}
  closes $1594$ full transformation monoids in $255$ models, with
  $57608$ element instances. Retaining each word's coefficient join
  gives $89608$ states and $1955172$ transitions; every transition
@@ -428,8 +444,7 @@ Unrestricted two-choice words
  gives $58412$ elements in $1594$ monoids, all satisfying stabilization;
  the largest has $437$ elements. The script also checks both linear
  factorizations of join on $2106202$ pairs in the double unitizations.
- The written unitization argument transfers finiteness and stabilization
- to words containing join translations.\\
+ The endpoint laws and distribution give these factorizations directly.\\
 Fixed parameters at an owned unit
 (\cref{core:prop:owned-fixed-parameters})
  & Written derivation from the mixed-meet formula and cross-choice

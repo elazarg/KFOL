@@ -11,7 +11,7 @@ from itertools import permutations
 
 from check_core_alternating_translations import compose
 from check_core_owned_reset import test_models
-from core_two_choice_words import normalize
+from core_context_words import normalize
 from core_two_owner_unitization import unitize
 
 

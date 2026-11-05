@@ -53,19 +53,17 @@ nothing here settles it. This appendix collects what is known, in four groups.
   term contexts. The same laws reduce alternating words in two fixed
   choice translations to length at most three
   (\cref{core:prop:alternating-translations}). With arbitrary parameters
-  for both choices, words in $m$ fixed translations reduce to length
+  for all choices and join, words in $m$ fixed translations reduce to length
   at most $m(m+1)/2$, and every word satisfies $P^3=P^2$
-  (\cref{core:thm:two-choice-words}). Finiteness and stabilization also
-  hold when join translations are included
-  (\cref{core:cor:two-choice-join-words}). The proof uses input reset
+  (\cref{core:thm:translation-words}). The proof uses input reset
   erasure, which holds for arbitrary core contexts and any number of
   owners (\cref{core:lem:input-reset-erasure}). For arbitrary
   owners and parameters, joining with a common upper bound of the
   parameters makes translations commute and removes repetitions
-  (\cref{core:lem:bounded-translations}). For two choices, applying
+  (\cref{core:lem:bounded-translations}). Applying global
   reset at that bound also removes repetitions from arbitrary words,
   while retaining their first-occurrence order; the resulting maps
-  form a left regular band (\cref{core:cor:reset-words}). The profile decomposition
+  form a left regular band. The profile decomposition
   reduces finite basability with a named $c$
   satisfying $c\star_i x\leq x$ exactly to the case $c\star_i x=x$,
   without additional observer or retraction axioms. The latter pointed
@@ -83,11 +81,12 @@ nothing here settles it. This appendix collects what is known, in four groups.
   Completeness of the strengthened candidate reduces to that pointed
   class without additional normalization axioms. With at most two active
   owners, mixed absorption makes these normalizers preserve the active
-  choices themselves. Such a reset gives the exact difference between
-  a mixed choice and its distributed expression
-  (\cref{core:prop:reset-distribution}). A pair reset also absorbs a repeated outer
-  translation by increasing its parameter
-  (\cref{core:prop:sandwich-reset}). At an owned unit, a linear-context expansion of
+  choices themselves. Global reset gives the exact difference between
+  a mixed choice and its distributed expression, and every choice absorbs
+  that difference
+  (\cref{core:prop:reset-distribution}). Global reset also absorbs a repeated outer
+  translation; for two choices this can be expressed by increasing its parameter
+  (\cref{core:prop:sandwich-reset,core:lem:global-sandwich}). At an owned unit, a linear-context expansion of
   reset proves preservation of the selected choice for any number of
   owners and determines reset on finite joins from its values on pairs.
   Parameters fixed by the other unit maps give endomorphisms whose
@@ -1255,6 +1254,10 @@ The mutual definitions are
 \end{equation}
 Consequently this three-constant raw variety is another equivalent
 finite-basis problem, with the same variable bound.
+Join translations also have a linear factorization:
+\begin{equation}\label{core:eq:linear-join-translation}
+ a+z=f(e+a,g(d+a,z))=g(d+a,f(e+a,z)).
+\end{equation}
 \end{corollary}
 \begin{proof}
 Write $U_f$ for the preceding construction and $U_g$ for the same
@@ -1334,6 +1337,12 @@ Conversely, defining $+$ by the right side of
 the four endpoint laws. The definitions are therefore inverse on
 the two generated varieties, proving the term equivalence and its
 finite-basis transfer.
+For the first linear factorization, distribution and the endpoint laws give
+\[
+ f(e+a,g(d+a,z))
+ =z+g(a,z)+f(a,z)+f(a,g(a,z))=a+z,
+\]
+using coverage and the choice upper bound. The other factorization is its dual.
 \end{proof}
 
 \begin{proposition}[Unitization preserves the candidate]
@@ -3002,27 +3011,32 @@ Join need not be preserved. In the two-owner generator $D_{\{i,j\}}$,
 take $c=p$ and its distinct atoms $a_i,a_j$. Then
 $\pi_p(a_i)+\pi_p(a_j)=n$, whereas $\pi_p(a_i+a_j)=p$.
 
-The homomorphism property nevertheless makes the failure of cross
-distribution an explicit reset.
+The atomic quotient also makes the failure of cross distribution an
+explicit global reset, without restricting the active owners.
 
 \begin{proposition}[Distribution by reset]
 \label{core:prop:reset-distribution}
 Let $A$ satisfy $\Gamma_K$ and all ordered mixed-absorption laws.
 For distinct choices $f,g$, put $R_c(z)=f(z,g(z,c))$. Then
 \begin{equation}\label{core:eq:reset-distribution}
- g(f(x,y),f(x,z))=R_{f(y,z)}\bigl(f(x,g(y,z))\bigr).
+ g(f(x,y),f(x,z))
+ =f(y,z)\del f(x,g(y,z))
+ =R_{f(y,z)}\bigl(f(x,g(y,z))\bigr).
 \end{equation}
 In particular, writing $p=f(x,g(y,z))$ and
-$q=g(f(x,y),f(x,z))$, the doubled distributive law holds in the
-stronger form
+$q=g(f(x,y),f(x,z))$, every choice $h$ satisfies the strengthened
+doubled distributive law
 \[
- f(p,q)=g(p,q)=q.
+ h(p,q)=q.
 \]
 \end{proposition}
 \begin{proof}
-Interpret the remaining choices as join. This preserves the hypotheses
-and identifies $R_c$ with the global reset, so
-\cref{core:cor:two-owner-normalizers} applies.
+Write $\pi_c(v)=c\del v$. In the interval $[v,c+v]$, the maps
+$w\mapsto v\star_i w$ commute and are contractive. Keeping only the
+$f,g$ stages in the reset fold gives
+\[
+ v\leq\pi_c(v)\leq R_c(v).
+\]
 Put $u=f(x,y)$, $v=f(x,z)$, and $T=x+y+z$.
 Choice-image closure gives $f(x,q)=q$. Since $g(q,u)=q$,
 associativity and Birkhoff give
@@ -3030,25 +3044,27 @@ associativity and Birkhoff give
  R_y(q)=g(q,f(q,y))=g(q,f(q,u))=f(q,g(q,u))=q.
 \]
 Similarly $R_z(q)=q$, and $R_x(q)=q$ because $q=f(x,q)$.
-Reset composition therefore gives $R_T(q)=q$.
+The displayed bounds give $\pi_x(q)=\pi_y(q)=\pi_z(q)=q$.
+Reset composition therefore gives $\pi_T(q)=q$.
 
-On the ideal below $T$, the image of $R_T$ is the atomic quotient
+On the ideal below $T$, the image of $\pi_T$ is the atomic quotient
 of \cref{core:prop:atomic-uniform-lift}. Its choices are mutually
-distributive by \cref{core:thm:atomic-basis}. Moreover its normalized
-$f,g$ are the original operations, since $R_T$ preserves them.
-All three inputs lie below $T$, so distribution in this quotient gives
+distributive by \cref{core:thm:atomic-basis}. All three inputs lie
+below $T$, and $\pi_T$ is a homomorphism to the normalized operations.
+Distribution in this quotient therefore gives
 \[
- R_T(p)=R_T(q)=q.
+ \pi_T(p)=\pi_T(q)=q.
 \]
 The operands $x$ and $g(y,z)$ both reset $p$ to itself. Using
 $f(y,z)+g(y,z)=y+z$ and reset composition, we obtain
 \[
- R_T(p)=R_{y+z}(p)=R_{f(y,z)}(p),
+ \pi_T(p)=\pi_{y+z}(p)=\pi_{f(y,z)}(p).
 \]
-which proves \eqref{core:eq:reset-distribution}.
-Finally $q=R_{f(y,z)}(p)$ is both an $f$-image and a $g$-image
-of $p$, by Birkhoff. Associativity and idempotence give
-$f(p,q)=g(p,q)=q$.
+This proves the global reset formula. Applying it to the same two-choice
+reduct with the other choices interpreted as join gives the pair reset
+formula as well. Finally the commuting idempotent stages of the global
+reset fold make its output $q$ fixed by every map $w\mapsto h(p,w)$.
+Hence $h(p,q)=q$ for every choice $h$.
 \end{proof}
 
 The reset homomorphism also strengthens the word reductions above. The
@@ -3187,35 +3203,98 @@ identity, but the translations $f(a_i,-)$ and $g(a_j,-)$ are
 distinct constant maps. Their two composition orders therefore give
 different values.
 
-Input reset erasure now removes the outer reset from a bounded word
-argument. Both choices may have arbitrarily many parameters.
+The pair reset in the sandwich identity can be replaced by the global
+reset, even when other owners are active.
 
-\begin{theorem}[Unrestricted two-choice translation words]
-\label{core:thm:two-choice-words}
+\begin{lemma}[Global sandwich reset]\label{core:lem:global-sandwich}
 Let $A$ satisfy $\Gamma_K$ and all ordered mixed-absorption laws,
-and fix a family of $m$ translations under two choices $f,g$.
+and put $\pi_b(z)=b\del z$. For any two basic translations
+$X(z)=h(a,z)$ and $Y(z)=k(b,z)$, where $h,k$ are choices or join,
+\begin{equation}\label{core:eq:global-sandwich}
+ XYX=\pi_bXY.
+\end{equation}
+\end{lemma}
+\begin{proof}
+First let $h=f$ and $k=g$ be distinct choices. Write $L=XY$,
+$v=L(z)$ and $w=LX(z)$. The pair sandwich identity gives
+$v\leq w=R_b(v)$, so $f(v,w)=g(v,w)=w$.
+For a third choice $h$, put
+\[
+ u=f(z,g(z,a)),\qquad r=f(z,h(z,a)).
+\]
+Coverage and distribution give $u+r=z+X(z)$. Input reset erasure
+in the two-choice reduct gives $L(u)=L(z)=v$. Since $L$ preserves
+join and $v\leq w$, it follows that
+\[
+ w=v+L(r).
+\]
+By Birkhoff, $r=h(z,X(z))$. The cross-choice inequality for
+compositions of translations therefore gives
+\[
+ L(r)\leq h(L(z),LX(z))=h(v,w).
+\]
+Monotonicity gives $v\leq h(v,w)\leq w$. Hence the preceding join
+formula forces $h(v,w)=w$. Every choice translation by $v$ thus
+fixes $w$. In the global reset fold for $\pi_b(v)$, perform the
+$f,g$ stages first; they give $R_b(v)=w$, and the other stages
+fix it. This proves \eqref{core:eq:global-sandwich} for distinct choices.
+
+If the choices coincide, associativity gives $XYX=XY$, whose output
+is fixed by $\pi_b$ because it lies in the image of translation by $b$.
+To include join, expand by one additional choice interpreted as join.
+The basic and mixed-absorption laws remain valid, and the additional
+stage does not change global reset. The result for choice translations
+in this expansion covers all cases involving join.
+\end{proof}
+
+Input erasure and global sandwich reset now control arbitrary words in
+the full signature.
+
+\begin{theorem}[Unrestricted translation words]
+\label{core:thm:translation-words}
+Let $A$ satisfy $\Gamma_K$ and all ordered mixed-absorption laws,
+and fix a family of $m$ basic translations under any choices or join.
 Every word in these translations equals a word of length at most
 $m(m+1)/2$. Thus they generate a finite transformation monoid,
 even if $A$ is infinite. Every element $P$ of this monoid satisfies
-\begin{equation}\label{core:eq:two-choice-word-powers}
+\begin{equation}\label{core:eq:translation-word-powers}
  P^3=P^2.
 \end{equation}
 
 A reduction is obtained by dividing a word into phases, each starting
 with the first occurrence of a previously unseen letter, and retaining
 only the first occurrence of each letter within each phase.
+
+If all coefficients lie below $t$, put $R=\pi_t$. For $W^\circ$
+obtained by retaining only the first occurrence of each letter in $W$,
+\begin{equation}\label{core:eq:global-reset-word-reduction}
+ RW=RW^\circ=RWR.
+\end{equation}
+The maps $RW$, including the empty word, form a left regular band with
+identity $R$.
 \end{theorem}
 \begin{proof}
-As in \cref{core:prop:sandwich-reset}, use the two-choice reduct with
-all remaining choices interpreted as join. Its reset is
-$R_t(z)=f(z,g(z,t))$. Input reset erasure says $WR_t=W$ when
-$t$ is the join of the coefficients occurring in a nonempty word $W$.
+First prove the assertion after reset. In the quotient by $\ker\pi_t$,
+realized on the normalized image, $t$ is a left reset unit. Every
+normalized coefficient $\pi_t(a)\leq t$ is also a left reset unit,
+by extensivity and monotonicity in reset's first argument. Thus
+\cref{core:lem:global-sandwich} gives $XYX=XY$ for every two
+induced translations. As in the proof of \cref{core:cor:reset-words},
+these pairwise equations erase all repeated letters in a word and give
+the left regular band laws. Congruence compatibility gives
+$RL=\widehat L R$ for each original translation and its induced
+translation on the quotient. Transferring the word reductions back
+gives \eqref{core:eq:global-reset-word-reduction}, and
+$(RU)(RV)=RUV$ transfers the band laws as well.
+
+Input reset erasure says $W\pi_t=W$ when $t$ is the join of the
+coefficients occurring in a nonempty word $W$.
 
 Suppose a prefix $U$ ends with a letter $X$, and every letter of a
 following word $V$ has already occurred in $U$. Let $t$ be the join
-of the coefficients in $U$, and put $R=R_t$. Then $UR=U$ and
+of the coefficients in $U$, and put $R=\pi_t$. Then $UR=U$ and
 $UX=U$. All coefficients in $XVX$ lie below $t$, so
-\cref{core:cor:reset-words} gives $RXVX=RXV$. Consequently
+\eqref{core:eq:global-reset-word-reduction} gives $RXVX=RXV$. Consequently
 \begin{equation}\label{core:eq:seen-letter-erasure}
  UVX=URXVX=URXV=UV.
 \end{equation}
@@ -3229,45 +3308,13 @@ The $i$th phase has at most $i$ letters after reduction. Summing gives
 the stated bound, and hence finiteness of the generated monoid.
 
 For stabilization, take a nonempty word $P$ and let $t$ be the join
-of its coefficients. Put $R=R_t$ and $E=RP$. The input erasure
-gives $PR=P$, and \cref{core:cor:reset-words} gives $E^2=E$.
+of its coefficients. Put $R=\pi_t$ and $E=RP$. Input erasure
+gives $PR=P$, and the reset band gives $E^2=E$.
 Therefore
 \[
  P^3=PRPRP=PE^2=PE=P^2.
 \]
 The identity transformation also satisfies this equation.
-\end{proof}
-
-\begin{corollary}[Allowing join translations]
-\label{core:cor:two-choice-join-words}
-Under the hypotheses of \cref{core:thm:two-choice-words}, any finite
-family of translations under $+,f,g$ generates a finite transformation
-monoid, and every element of this monoid satisfies $P^3=P^2$.
-\end{corollary}
-\begin{proof}
-Apply the candidate-preserving opposite unitizations of
-\cref{core:prop:candidate-unitization} to the two-choice reduct.
-The original algebra embeds in the resulting algebra, which has an
-$f$-unit and $g$-absorber $e$, and a $g$-unit and $f$-absorber $d$.
-Every join translation factors as two choice translations:
-\begin{equation}\label{core:eq:linear-join-translation}
- a+z=f(e+a,g(d+a,z))=g(d+a,f(e+a,z)).
-\end{equation}
-For the first factorization, distribution and the endpoint laws give
-\begin{align*}
- f(e+a,g(d+a,z))
- &=f(e+a,z+g(a,z))\\
- &=z+g(a,z)+f(a,z)+f(a,g(a,z))\\
- &=a+z.
-\end{align*}
-The last step uses coverage and the choice upper bound. The other
-factorization is its dual.
-Replace each join translation in the finite family by these two fixed
-choice translations. The preceding theorem gives a finite monoid in
-the extension, all of whose elements satisfy $P^3=P^2$.
-The submonoid corresponding to words in the original generators
-preserves the original algebra. Restriction is an onto monoid
-homomorphism to its translation monoid, proving both assertions.
 \end{proof}
 
 Reset also preserves an owned choice without limiting the number of
