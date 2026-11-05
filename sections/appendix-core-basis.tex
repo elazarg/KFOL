@@ -58,7 +58,10 @@ nothing here settles it. This appendix collects what is known, in four groups.
   $P^3=P^2$ (\cref{core:cor:one-fixed-translation}). For arbitrary
   owners and parameters, joining with a common upper bound of the
   parameters makes translations commute and removes repetitions
-  (\cref{core:lem:bounded-translations}). The profile decomposition
+  (\cref{core:lem:bounded-translations}). For two choices, applying
+  reset at that bound also removes repetitions from arbitrary words,
+  while retaining their first-occurrence order; the resulting maps
+  form a left regular band (\cref{core:cor:reset-words}). The profile decomposition
   reduces finite basability with a named $c$
   satisfying $c\star_i x\leq x$ exactly to the case $c\star_i x=x$,
   without additional observer or retraction axioms. The latter pointed
@@ -3028,8 +3031,73 @@ $R_y(x)=x$, the formula gives $FGF=FG$; combining it with
 $FGFG=FGF$ proves idempotence of $FG$.
 \end{proof}
 
-The selected-choice conclusion also follows from the finite laws at an
-owned unit, without limiting the number of active owners.
+The same identity controls words with arbitrarily many parameters for
+both choices after one common reset.
+
+\begin{corollary}[Word reduction after reset]
+\label{core:cor:reset-words}
+Under the hypotheses of \cref{core:prop:sandwich-reset}, fix a finite
+family of translations $L=h(a,-)$, where $h\in\{f,g\}$ and every
+coefficient $a$ lies below $t$. Put $R=R_t$. For a word $W$ in this
+family, let $W^\circ$ retain only the first occurrence of each letter,
+reading the composition from left to right. Then
+\begin{equation}\label{core:eq:reset-word-reduction}
+ RW=RW^\circ=RWR.
+\end{equation}
+The maps $RW$, including the empty word, form a finite left regular
+band with identity $R$: for any words $U,V$,
+\[
+ (RW)^2=RW,\qquad
+ (RU)(RV)(RU)=(RU)(RV).
+\]
+Every map has a representative of length at most the number of letters
+in the chosen family. If every coefficient is already fixed by $R$,
+the original word maps themselves form a left regular band and
+$W=W^\circ$ without an outer reset.
+\end{corollary}
+\begin{proof}
+First assume all coefficients are fixed by $R_t$. For any two of them,
+$a,b\leq t$, extensivity and monotonicity of reset give
+\[
+ a\leq R_b(a)\leq R_t(a)=a.
+\]
+The sandwich identity therefore says $XYX=XY$ for letters of
+different choices. Associativity and idempotence give the same law
+for letters of the same choice.
+
+These pairwise equations remove any later occurrence of a letter.
+Indeed $XQX=XQ$ follows by induction on the length of $Q$.
+The empty case is idempotence; writing $Q=VY$, the induction step is
+\[
+ XVYX=XVXYX=XVXY=XVY.
+\]
+Delete repeated letters successively to obtain $W=W^\circ$.
+Applying this deletion to $WW$ and $UVU$ proves the two band laws.
+There are finitely many words without repeated letters, proving the
+length and finiteness assertions.
+
+For arbitrary coefficients below $t$, replace each $a$ by $R(a)$
+and denote the resulting letter by $L'$ and word by $W'$.
+The new coefficients are fixed by $R$ and lie below $R(t)=t$.
+Since $R$ preserves both choices,
+\[
+ RL=L'R,\qquad RW=W'R.
+\]
+The first part applies to the primed letters. It gives
+$W'=(W^\circ)'$, hence $RW=RW^\circ$; idempotence of $R$ gives
+$RWR=RW$. In particular,
+$(RU)(RV)=RUV$. The band laws for the primed words now give
+those for the maps $RW$, whose identity is $R$.
+\end{proof}
+
+Order can still matter. In $D_{\{i,j\}}$, reset at $n$ is the
+identity, but the translations $f(a_i,-)$ and $g(a_j,-)$ are
+distinct constant maps. Their two composition orders therefore give
+different values.
+
+Reset also preserves an owned choice without limiting the number of
+active owners. The next expansion derives this from the finite laws at
+the unit.
 
 \begin{proposition}[Reset expansion at an owned unit]
 \label{core:prop:owned-unit-reset-expansion}
