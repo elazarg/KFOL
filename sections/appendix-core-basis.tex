@@ -104,6 +104,13 @@ nothing here settles it. This appendix collects what is known, in four groups.
   jointly separate the universal absorber extension; this also proves
   two-owner membership for those extensions
   (\cref{core:thm:one-owner-absorber-extension,core:prop:filter-absorber-comparison}).
+  For retractions whose values commonly support their fibers, identities
+  reduce to evaluations with one input outside the coefficient algebra.
+  All such extensions over the native two-owner algebra belong to its
+  variety, by exact finite presentations. The universal supported
+  extension nevertheless need not preserve embeddings of coefficient
+  algebras, even for a three-element native subpower
+  (\cref{core:lem:supported-extension-reduction,core:prop:native-supported-extensions,core:prop:supported-embedding-obstruction}).
   Adjoining a fixed point of
   one atomic profile gives, with two active owners, a quotient of size
   at most twice the square of the coefficient algebra's size; its
@@ -5203,6 +5210,148 @@ the kind just proved, so all identities of the two-owner variety hold.
 For coefficient algebras without a join bottom, the corresponding
 comparison remains an additional step toward pointed two-variable
 completeness.
+
+Another controlled extension starts with a retraction whose values
+commonly support their fibers. Here one additional input suffices to
+detect any failed identity, but extending the coefficient algebra need
+not preserve distinctions.
+
+\begin{lemma}[Reduction to one supported input]
+\label{core:lem:supported-extension-reduction}
+Let $A$ satisfy $\Gamma_K$ and all ordered mixed-absorption laws,
+and let $r:A\to C\leq A$ be a retraction such that, for every $x\in A$,
+\[
+ r(x)\leq x,\qquad h(r(x),x)=x
+ \quad\text{for every choice }h.
+\]
+Then all operations agree with join within each fiber, and every term
+$t$ in $m\geq1$ variables satisfies
+\[
+ t(x_1,\ldots,x_m)=
+ \sum_{i=1}^m t(r(x_1),\ldots,r(x_{i-1}),x_i,r(x_{i+1}),\ldots,r(x_m)).
+\]
+In particular, $A$ belongs to a variety $\mathcal V$ if every
+$\langle C,x\rangle$ belongs to $\mathcal V$.
+
+For $c\in C$, let $F_C(c)$ be the candidate algebra presented by
+the full operation tables of $C$ and one additional generator $u$,
+with $c+u=h(c,u)=u$ for every choice $h$. Sending $u$ to $c$
+defines a retraction of the stated kind. If $C$ is finite, then
+$F_C(c)$ is finite.
+\end{lemma}
+\begin{proof}
+For every choice $h$, common support gives the exact linearization
+\begin{equation}\label{core:eq:common-support-linearization}
+ h(x,y)=h(r(x),y)+h(r(y),x).
+\end{equation}
+Both summands lie below the left side. Their $h$-product is
+$h(h(r(x),x),h(r(y),y))=h(x,y)$, which is at most their join.
+For join the formula follows directly from $r\leq\mathrm{id}$.
+If $r(x)=r(y)$, the two summands are $y,x$, proving the fiber assertion.
+
+Induct on $t$. The variable case uses $r(x_i)\leq x_i$.
+At a binary node, first apply
+\eqref{core:eq:common-support-linearization}, distribute over the
+inductive sums, and then apply the same linearization in reverse to
+each retained-input pair. Its two supports are the corresponding
+subterms evaluated entirely in $C$, because $r$ is a homomorphism.
+This proves the displayed identity, including repeated occurrences
+of a variable. An identity valid in every $\langle C,x_i\rangle$
+therefore holds on each summand and hence on their join.
+
+In the presentation of $F_C(c)$, common support holds at every
+coefficient and at $u$. Its compatibility with all operations,
+proved in \cref{core:thm:upper-bound-extension}, propagates it to
+every term. The coefficient algebra embeds since evaluation $u\mapsto c$
+retracts onto it. Repeated linearization now writes every element as
+a nonempty join of coefficients and values of $C$-coefficient words
+at $u$. There are finitely many such word transformations when $C$
+is finite, by \cref{core:thm:translation-words}; their finite join
+closure proves the last assertion.
+\end{proof}
+
+\begin{proposition}[Supported extensions of the native two-owner algebra]
+\label{core:prop:native-supported-extensions}
+Let $D=D_{\{i,j\}}=\{\alpha,\beta,n,p\}$ with active choices
+$f,g$, and form $F_D(c)$ in $\operatorname{Mod}(\Sigma_2)$.
+The exact presentation sizes and separating native powers are
+\[
+\begin{array}{c|rrrr}
+ c&\alpha&\beta&n&p\\\hline
+ |F_D(c)|&11&11&18&17\\
+ F_D(c)\hookrightarrow D^{\,s},\quad s=&5&5&7&7
+\end{array}
+\]
+Consequently every $\Sigma_2$ algebra with a retraction onto $D$
+satisfying the common-support conditions of
+\cref{core:lem:supported-extension-reduction} belongs to
+$\operatorname V(D)$, without a cardinality restriction on its fibers.
+\end{proposition}
+\begin{proof}
+This is a finite presentation computation with independent proof replay.
+For each of $c=\alpha,n,p$, the certificate records ground terms,
+successive equality derivations, a closed operation table, and native
+homomorphisms. Equalities use the defining coefficient and support
+equations, instances of $\Sigma_2$, congruence, and the common-support
+and linearization consequences proved in
+\cref{core:lem:supported-extension-reduction}.
+
+The verifier \texttt{check\_core\_supported\_extensions.py} checks each
+equality against the congruence generated by the preceding events.
+Every operation-table entry is then checked against its ground-term
+representative. Thus every term in the presentation is derivably equal
+to its table representative. Separately, the table satisfies all of
+$\Sigma_2$, the defining presentation, and generatedness by $D,u$.
+The evaluation map from the presented algebra and the representative
+map back are therefore inverse; the tables are the actual universal
+presentations. Native evaluation is used only afterward: the listed
+maps preserve every operation and jointly separate each table.
+Exchanging $f,g$ and $\alpha,\beta$ gives the fourth case.
+
+For any common-support retraction onto $D$, the algebra
+$\langle D,x\rangle$ is an evaluation quotient of $F_D(r(x))$,
+so belongs to $\operatorname V(D)$. Apply
+\cref{core:lem:supported-extension-reduction} to obtain the conclusion.
+\end{proof}
+
+These native cases do not transfer through arbitrary coefficient
+embeddings. The obstruction already occurs over a three-element base.
+
+\begin{proposition}[Supported extensions need not preserve embeddings]
+\label{core:prop:supported-embedding-obstruction}
+In $D^2$ put
+\[
+ a=(\alpha,n),\qquad b=(n,\beta),\qquad c=(n,n),\qquad C=\{a,b,c\}.
+\]
+Then $C\leq D^2$, but the induced homomorphism
+$F_C(c)\to F_{D^2}(c)$ is not injective. Neither is the comparison
+$F_C(c)\to F_D(n)\times F_D(n)$ induced by the two coordinates.
+\end{proposition}
+\begin{proof}
+The map $a\mapsto\alpha$, $b\mapsto\beta$, $c\mapsto n$
+identifies $C$ with the atomic three-element subalgebra of $D$.
+It extends to a model of the presentation of $F_C(c)$ by $u\mapsto p$.
+Thus
+\[
+ u\ne v:=f(u,a)+g(u,b)\quad\text{in }F_C(c),
+\]
+since their images are $p$ and $n$.
+
+In $D^2$ there is the additional coefficient $d=(\alpha,\beta)$,
+with $d\leq c$, $f(d,c)=a$, and $g(d,c)=b$.
+The support equations and associativity give, in $F_{D^2}(c)$,
+\[
+ v=f(d,u)+g(d,u)=d+u=u.
+\]
+The comparison into the two coordinate extensions factors through
+this noninjective map and identifies the same pair. Equivalently,
+in the first coordinate $b=c=n$, so $g(u,b)=u$ and
+$f(u,a)\leq f(u,c)=u$; the second coordinate is symmetric.
+\end{proof}
+
+The additional map $C\to D$ used to distinguish $u,v$ is not one of
+the chosen coordinate projections. The obstruction therefore leaves
+open comparisons using all coefficient homomorphisms into $D$.
 
 Fixed points of one atomic profile provide another controlled part of
 such an extension. The preservation law below holds for every number
