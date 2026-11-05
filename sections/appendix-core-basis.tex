@@ -20,7 +20,10 @@ nothing here settles it. This appendix collects what is known, in four groups.
 \item \emph{Settled cases.} Binary terms and unary polynomial functions are
   classified (\cref{app:core-binary,core:prop:unary-polynomials}), and
   conservative models have a presentation by three-variable equations
-  (\cref{app:core-conservative}). Term equality
+  (\cref{app:core-conservative}). With a free join reduct, the basic
+  semilattice, distribution and coverage laws give an embedding into
+  a power of $D_K$; exhaustion makes the factors proper core observers
+  (\cref{core:thm:free-join-models}). Term equality
   admits a smaller exact test domain at every arity
   (\cref{core:prop:sparse-tests}).
 \item \emph{A candidate basis.} For three owners, those equations, owner exhaustion,
@@ -689,6 +692,108 @@ are therefore conservative. It satisfies $\Sigma_{\rm cons}$ because
 $s\geq3$, so \cref{core:thm:conservative-basis} applies. The final
 claim follows by taking $s=K$ and using the exhibited countermodel.
 \end{proof}
+
+\subsection{Free join reducts}
+\label{app:core-free-join}
+
+An independent class is determined by its join reduct. Here the
+choices need not be conservative on arbitrary elements.
+
+\begin{theorem}[Models with a free join reduct]
+\label{core:thm:free-join-models}
+Let $K\geq3$, and let the join reduct of $A$ be the nonempty finite
+subsets of a nonempty set $X$, with union. Suppose each $\star_i$
+is a semilattice operation distributing over union, and distinct
+choices satisfy pair coverage. Then $A$ embeds into $D_K^X$.
+
+Each choice is determined by a total preorder on $X$: on two
+singleton inputs it returns the preferred singleton, or both if
+they are tied. Moreover, the following conditions are equivalent:
+\begin{enumerate}
+\item $A$ satisfies owner exhaustion;
+\item every $x\in X$ is maximal in at least one owner's preorder;
+\item $A$ belongs to $\operatorname V(\mathbf C_K)$.
+\end{enumerate}
+When these conditions hold, the embedding can use only the proper
+core observers $D_K\setminus\{a_i\}$ as factors.
+\end{theorem}
+\begin{proof}
+Identify $x\in X$ with its singleton. Distribution determines
+every product from singleton products. Idempotence on $\{x,y\}$
+forces $x\star_i y\subseteq\{x,y\}$, so it is $x$, $y$, or
+$\{x,y\}$. For distinct $x,y$, write $x>_i y$ when it is $x$,
+and $x\sim_i y$ when both occur; also put $x\sim_i x$.
+Associativity makes strict preference transitive:
+if $xy=x$ and $yz=y$ for this choice, then
+$xz=(xy)z=x(yz)=x$.
+Ties are transitive as well. If $x\sim_i y\sim_i z$ but
+$x>_i z$, then $(xy)z=\{x,y,z\}$ while $x(yz)=\{x,y\}$;
+the opposite strict comparison fails symmetrically. Trichotomy
+and these two transitivity properties make comparisons constant
+on tie classes, which are linearly ordered. This proves the
+total-preorder description.
+
+Pair coverage says that at most one owner strictly prefers $x$
+to $y$, and at most one strictly prefers $y$ to $x$.
+For each $x\in X$, define labels on the singleton generators by
+\[
+ h_x(x)=p,\qquad
+ h_x(y)=
+ \begin{cases}
+ a_i,&y>_i x,\\
+ n,&\text{no owner strictly prefers }y\text{ to }x,
+ \end{cases}\quad(y\ne x).
+\]
+The owner in the first case is unique. Extend $h_x$ by join to
+all nonempty finite subsets. It preserves each choice; by
+distribution it suffices to check singleton inputs.
+
+Equal labels give that same label. For labels $a_i,a_j$ with
+$i\ne j$, owner $i$ prefers the first singleton and owner $j$
+the second: the first beats $x$ under $i$, whereas the second
+does not. Every other owner ties them, since a strict preference
+would duplicate one of those directions. These are precisely
+the products of $a_i,a_j$ in $D_K$.
+For labels $a_i,n$, owner $i$ prefers the first singleton; every
+other owner ties or prefers the second, again by coverage.
+Their images are therefore $a_i$ under choice $i$ and $n$
+under every other choice. Finally, for labels $p,a_i$, owner
+$i$ prefers the $a_i$ singleton to $x$, and every other owner
+ties or prefers $x$. For labels $p,n$, every owner ties or
+prefers $x$. These also give exactly the native products.
+
+Thus each $h_x$ is a homomorphism to $D_K$.
+Only the singleton $x$ is labeled $p$, and joins of non-$p$
+labels remain below $p$, so
+\[
+ h_x(U)=p\quad\Longleftrightarrow\quad x\in U.
+\]
+The family $(h_x)_{x\in X}$ separates subsets, proving the embedding.
+
+If $x$ is not maximal for any owner, choose $y_i>_i x$ for
+each $i$. Exhaustion fails at $c=\{x\}$ and $x_i=\{y_i\}$,
+since none of its covering summands contains $x$.
+Conversely, suppose every $x$ is maximal for some owner.
+For each $x\in c$, choose such an owner $i$. Its singleton
+product with every member of the nonempty parameter $x_i$
+contains $x$, so $c\star_i x_i$ contains $x$.
+All of $c$ is therefore covered, proving exhaustion.
+
+If $x$ is maximal for owner $i$, the map $h_x$ never returns
+$a_i$. Its image lies in the proper core observer omitting that
+atom. Under exhaustion the same separating family thus embeds
+$A$ into a product of core algebras. The reverse implication
+follows from validity of exhaustion in the core.
+\end{proof}
+
+Homomorphic images of this class do not exhaust the core variety.
+For example, take the four-element distributive lattice, with
+one choice equal to meet and every other choice equal to join.
+It is a product of two two-element core subalgebras.
+If it were a quotient of a model in the theorem, each of its
+two join-irreducible atoms $a,b$ would have a singleton preimage.
+Their selected product could then map only to $a$, $b$, or
+$a+b=1$, contradicting $a\star_i b=0$.
 
 \subsection{A candidate basis}
 \label{app:core-candidate}
