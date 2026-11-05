@@ -231,6 +231,20 @@ def main():
     native_join = [[x if x == y else max(2, x, y) for y in range(4)] for x in range(4)]
     native_f = [[0 if 0 in (x, y) else native_join[x][y] for y in range(4)] for x in range(4)]
     native_g = [[1 if 1 in (x, y) else native_join[x][y] for y in range(4)] for x in range(4)]
+    ordered_subalgebras = ordered_entries = 0
+    for mask in range(1, 16):
+        subset = [x for x in range(4) if mask >> x & 1]
+        if any(op[x][y] not in subset for op in (native_join, native_f, native_g)
+               for x, y in product(subset, repeat=2)):
+            continue
+        absorbers = [a for a in subset if all(native_f[a][x] == a for x in subset)]
+        assert len(absorbers) == 1
+        a = absorbers[0]
+        ordered_subalgebras += 1
+        for x, y in product(subset, repeat=2):
+            xy = native_join[x][y]
+            assert native_f[x][native_g[a][xy]] == native_g[a][native_f[x][xy]]
+            ordered_entries += 1
     obs1, obs2 = [1, 1, 0, 2], [0, 1, 1, 1]
     four_entries = hom(active_four, [native_join, native_f, native_g], obs1)
     four_entries += hom(active_four, [j2, j2, j2], obs2)
@@ -364,6 +378,8 @@ def main():
     print(json.dumps({'finite_expanded_generators': [3, 3, 2],
                       'six_state_embedding_entries': six_entries,
                       'four_state_embedding_entries': four_entries,
+                      'ordered_absorber_pointed_subalgebras': ordered_subalgebras,
+                      'ordered_absorber_identity_entries': ordered_entries,
                       'unitization_sizes': unit_sizes,
                       'unitization_isomorphism_entries': unit_entries,
                       'one_owner_binary_coefficients': 6,

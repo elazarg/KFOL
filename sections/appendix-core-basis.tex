@@ -24,8 +24,12 @@ nothing here settles it. This appendix collects what is known, in four groups.
   ambient varieties. In that signature the basic laws prove the
   ambient one-variable theory, and adding exhaustion gives the core
   one-variable theory, with exact free-algebra sizes
-  (\cref{core:thm:absorber-unary,core:cor:native-absorber-generator}). Moreover,
-  conservative models have a presentation by three-variable equations
+  (\cref{core:thm:absorber-unary,core:cor:native-absorber-generator}).
+  With two active choices the strengthened candidate proves the entire
+  two-variable theory with both global absorbers named; its free
+  pointed binary algebra has $221$ elements
+  (\cref{core:thm:two-owner-pointed-binary}).
+  Conservative models have a presentation by three-variable equations
   (\cref{app:core-conservative}). With a free join reduct, the basic
   semilattice, distribution and coverage laws give an embedding into
   a power of $D_K$; exhaustion makes the factors proper core observers
@@ -98,6 +102,10 @@ nothing here settles it. This appendix collects what is known, in four groups.
   make every such extension a member of $\operatorname V(D_K)$, with
   a linear size bound for finite coefficients. Exhaustion then gives
   core membership (\cref{core:prop:semilattice-absorber-extension}).
+  For one-owner coefficients and arbitrarily many ambient owners,
+  extensive unary basis values still span the extension under joins,
+  giving a polynomial bound in the coefficient size
+  (\cref{core:thm:one-owner-unary-span}).
   With two active choices, one-owner coefficients admit an exact
   universal extension by both absorbers, with a sharp quadratic size
   bound. For coefficients with a join bottom, the filter retractions
@@ -3554,6 +3562,9 @@ the second summand. The first summand is therefore redundant.
 For $K\geq3$, $\Gamma_K$ proves every two-variable core identity.
 Its free two-generated algebra is the free binary core algebra
 of \cref{core:prop:binary}, of size $2^{K+1}+K+1$.
+In the signature $(+,f,g)$, the analogous basic laws have an
+eleven-element free binary algebra, with the same binary identities
+as $D_{\{i,j\}}$.
 \end{theorem}
 \begin{proof}
 Write $f_i=\star_i$. Fix $x,y$, put $U=x+y$ and $c_i=f_i(x,y)$,
@@ -3638,6 +3649,10 @@ Hence the displayed forms span the free binary $\Gamma_K$-algebra.
 Their native functions are exactly the distinct forms of
 \cref{core:prop:binary}. The canonical map to the free binary core
 algebra is therefore an isomorphism, proving completeness.
+The closure argument also applies with just two choices: its last
+third-owner case is absent, and all preceding calculations still hold.
+Direct evaluation on $D_{\{i,j\}}$ distinguishes the resulting eleven
+forms, proving the final assertion.
 \end{proof}
 
 \subsection{Naming all owner absorbers}
@@ -4895,9 +4910,117 @@ Finally, \cref{core:thm:relative-exhaustion-complete} gives the
 core conclusion under exhaustion.
 \end{proof}
 
-With two active choices, the coefficients may also retain one arbitrary
-dissemilattice operation. The universal extension then has a quadratic
-bound. We first describe the unary operators that its coefficients acquire.
+For one-owner coefficients, the extensive unary basis still spans the
+extension for every number of owners, although its indices no longer
+merge into a single semilattice coefficient.
+
+\begin{theorem}[Unary join span over one-owner coefficients]
+\label{core:thm:one-owner-unary-span}
+Let $A$ satisfy $\Gamma_K$ and all ordered mixed-absorption laws,
+with global owner absorbers $a_i$. Let $C\leq A$ be nonempty, with
+every choice except possibly $f=\star_r$ equal to join on $C$.
+For the extensive unary basis put
+\[
+ e_{ji}(x)=\Bigl(\prod_{h\ne j}\star_h(x,-)\Bigr)(x+a_i),
+ \qquad r_i(x)=e_{ii}(x).
+\]
+Then $\langle C,\{a_i:i\in I\}\rangle$ is exactly the nonempty
+join closure of the coefficients, absorber constants, and $e_{ji}(c)$
+for $c\in C$. Every $e_{ji}$ preserves join on $C$.
+Consequently, for finite $|C|=m$,
+\[
+ |\langle C,\{a_i:i\in I\}\rangle|
+ \leq 2^K(m+1)^{K^2+1}-1.
+\]
+\end{theorem}
+\begin{proof}
+For $c,d\in C$, $s=c+d$, the shift $z\mapsto z+s$ between
+the filters above $c$ and $s$ preserves every inactive choice
+$h\ne r$. The proof in \cref{core:prop:semilattice-absorber-extension}
+for that operation uses only $h(c,d)=c+d$.
+Thus, for any set $L$ of inactive owners, the extensive map
+\[
+ E(x)=\Bigl(\prod_{h\in L}\star_h(x,-)\Bigr)(x+a_i)
+\]
+satisfies $E(c)+d=E(c+d)=c+E(d)$, and preserves join on $C$.
+In particular, every active-row map $e_{ri}$ is such a join multiplier.
+
+For any extensive join multiplier $E:C\to A$, define $H(x)=f(x,E(x))$.
+It is extensive, preserves join on $C$, and is an $f$-multiplier:
+\begin{equation}\label{core:eq:unary-coefficient-multiplier}
+ f(c,H(d))=H(f(c,d)).
+\end{equation}
+Indeed, putting $z=f(c,d)$ and applying $f(z,-)$ to
+$E(d)+z=E(z)+d$ gives
+$f(z,E(d))+z=f(z,E(z))+z$. Both $f$-terms dominate $z$, so they
+are equal, proving \eqref{core:eq:unary-coefficient-multiplier}.
+For join preservation, expand $f(c+d,E(c)+E(d))$.
+Its cross terms are bounded by $H(c)+H(d)$, since
+\[
+ f(c,E(d))+c=H(c)+f(c,d),\qquad f(c,d)\leq c+d\leq H(c)+H(d).
+\]
+For $j\ne r$, the basis map $e_{ji}$ is $f(x,E(x))$ with
+$L=I\setminus\{r,j\}$, so this proves both its multiplier law
+and join preservation. The diagonal $e_{rr}=r_r$ is also an
+$f$-multiplier: apply the same argument to $E=e_{rr}$, using
+$f(x,e_{rr}(x))=e_{rr}(x)$.
+
+Every $e_{ji}(d)$ lies above $d$ and is supported by $d$ for
+each owner other than $j$. The diagonal $r_i(d)$ is supported for
+every owner. For $j\ne i$, the value $e_{ji}(d)$ is globally
+extensive for owner $j$: the initial $d+a_i$ is extensive by
+absorber neutrality, and each subsequent translation uses an owner
+other than $j$. The mixed-meet argument in
+\cref{core:thm:upper-bound-extension} preserves this extensivity;
+here it applies on the whole algebra because the initial absorber
+is global.
+
+We next close coefficient translations of basis values. If $h$ is
+inactive and $v\geq d$, then
+\begin{equation}\label{core:eq:inactive-coefficient-shift}
+ h(c,v)=c+h(d,v).
+\end{equation}
+To see this, put $w=h(c,v)\geq c+d$ and use $H=h(d,-)$ on
+the filter above $d$. Both $c+d$ and $H(v)$ are $H$-fixed, so
+\[
+ H(w)=h(c+d,v)=h(c+d,H(v))=c+H(v).
+\]
+As $H$ contracts the filter, $H(w)\leq w$; distribution also gives
+$H(w)=w+H(v)\geq w$. This proves the formula. Hence
+\[
+ h(c,e_{ji}(d))=
+ \begin{cases}c+e_{ji}(d),&j\ne h,\\c+r_i(d),&j=h.
+ \end{cases}
+\]
+For the active choice, \eqref{core:eq:unary-coefficient-multiplier}
+handles every nonactive row and the active diagonal.
+For $E=e_{ri}$ with $i\ne r$, its join-multiplier law gives
+\[
+ f(c,E(d))+c=r_i(c)+f(c,d).
+\]
+Global $f$-extensivity of $E(d)$ removes the extra $c$ on the left.
+Thus all coefficient translations are joins of coefficients and basis
+values, with every index still in $C$.
+
+For any selected choice, each basis value is either globally extensive
+or has its coefficient as support. The three branch linearizations
+of \cref{core:thm:upper-bound-extension} therefore reduce a product
+of two basis values to coefficient translations and joins of basis
+values. Products with constants are unary polynomials at the same
+coefficient and reduce by \cref{core:thm:absorber-unary}.
+The constant table handles two constants, and distribution handles
+joins. Hence the asserted span is a subalgebra and is the desired
+generated extension. Finally, join preservation collects all entries
+with the same label into one coefficient slot. There are $K^2$ basis
+slots, one ordinary coefficient slot, and one optional constant
+subset; excluding the all-empty expression gives the bound.
+\end{proof}
+
+This is a normal form, without a representation assertion for its
+universal quotient. With two active choices, the universal extension
+over one-owner coefficients can be represented explicitly and has a
+sharp quadratic bound. We first describe the unary operators that its
+coefficients acquire.
 
 \begin{lemma}[Expanded one-owner coefficients]
 \label{core:lem:one-owner-multipliers}
@@ -5207,9 +5330,111 @@ tuple in the absorber extension therefore lies in an extension of
 the kind just proved, so all identities of the two-owner variety hold.
 \end{proof}
 
-For coefficient algebras without a join bottom, the corresponding
-comparison remains an additional step toward pointed two-variable
-completeness.
+These comparisons do not cover arbitrary coefficient algebras.
+For two active choices, the free binary coefficient algebra can instead
+be handled by a finite presentation, after the following consequence.
+
+\begin{corollary}[Ordered absorber translations]
+\label{core:cor:ordered-absorber-translation}
+If $A\models\Sigma_2$ and $a$ is a global $f$-absorber, then
+\[
+ f(x,g(a,x+y))=g(a,f(x,x+y)).
+\]
+Equivalently, $x\leq y$ implies $f(x,g(a,y))=g(a,f(x,y))$.
+\end{corollary}
+\begin{proof}
+First the displayed unconditional identity holds in every two-owner
+core algebra with an arbitrary named global $f$-absorber. To check this
+for a finitely generated such algebra, take a native-subpower cover
+generated by lifts of its generators, including the named absorber.
+Their $f$-fold is a global absorber of the cover by
+\cref{core:lem:absorber-fibers}, and maps to the named absorber by
+uniqueness. Each coordinate image is a subalgebra of $D_{\{i,j\}}$.
+If it contains $\alpha$, its $f$-absorber is $\alpha$ and
+$g(\alpha,-)$ is the identity. Otherwise $f$ is join there;
+extensivity of $g(a,-)$ makes both displayed sides $g(a,x+y)$.
+The identity therefore holds in the pointed cover and its quotient.
+Finitely generated subalgebras containing $a$ give the general case.
+
+Now, in the candidate, $C=\langle x,x+y\rangle$ has join bottom $x$.
+The algebra $B=\langle C,a\rangle$ is finitely generated and has a
+canonical global $g$-absorber $b$ by the fold lemma. Thus
+$B=\langle C,a,b\rangle$ belongs to the two-owner variety by
+\cref{core:prop:filter-absorber-comparison}. Apply the pointed identity
+just proved inside $B$.
+\end{proof}
+
+\begin{theorem}[Complete pointed binary theory for two active choices]
+\label{core:thm:two-owner-pointed-binary}
+In the signature $(+,f,g,a,b)$, let $\mathcal Q$ be defined by
+$\Sigma_2$ and the global absorber laws $f(a,x)=a$, $g(b,x)=b$.
+Let $\mathcal W^{\mathrm{abs}}$ consist of the similarly pointed
+algebras in $\operatorname V(D_{\{i,j\}})$.
+Then $\mathcal Q$ and $\mathcal W^{\mathrm{abs}}$ have the same
+identities in at most two ordinary variables. Their free pointed
+binary algebra has $221$ elements and its reduct embeds into
+$D_{\{i,j\}}^{14}$.
+\end{theorem}
+\begin{proof}
+Let $C_{11}$ be the free binary coefficient algebra of
+\cref{core:thm:binary-candidate}. Its eleven elements, with $U=x+y$,
+may be written as
+\[
+ x,y,U,f(x,y),g(x,y),f(y,U),g(y,U),g(y,f(x,y)),
+ f(x,U),g(x,U),g(x,f(x,y)).
+\]
+The free algebra in question is its universal $\Sigma_2$ extension
+by global absorbers $a,b$.
+
+The finite computation is checked by
+\texttt{check\_core\_two\_owner\_pointed\_binary.py}.
+First, ground equation replay proves that $56$ coefficient-word terms
+starting at the absorbers are closed under every coefficient choice
+translation. Together with the eleven coefficients they form a basis
+of $67$ terms. Each term has the absorber, support, or extensivity
+type established in \cref{core:thm:absorber-extension}. The branch
+linearizations from that theorem consequently express a choice
+product of two basis terms as a join of basis terms. Distribution
+then reduces every term to such a join.
+
+For nonempty sets $S$ of basis indices, write $[S]$ for their join.
+The second part of the certificate records implications $S\to T$
+meaning $[T]\leq[S]$. Every implication is checked as a direction
+of a replayed equation, a choice bound, an associativity instance,
+or a translated consequence of previous implications. Its closure
+operator $\kappa$ therefore satisfies $[\kappa(S)]=[S]$.
+The certificate supplies $221$ closed sets and checks every operation
+entry by taking the derived bilinear product of the basis terms and
+applying $\kappa$. This derives all multiplication equations for
+the displayed representatives in the original presentation.
+
+Independently, the resulting table satisfies every $\Sigma_2$ law,
+the coefficient table, and the two global absorber laws, and is
+generated by $x,y,a,b$. Evaluation maps the universal presentation
+onto it; the join representatives give a homomorphism back by the
+derived multiplication equations. Both composites fix the four
+generators, so the two maps are inverse. This proves exactness
+without assuming completeness of the implication-search procedure.
+Finally, fourteen listed homomorphisms to $D_{\{i,j\}}$ are checked
+on every operation entry and jointly separate the table, proving
+membership and the stated embedding.
+
+Besides the defining laws, ground replay uses the support and
+extensivity consequences already cited, the coefficient sandwich
+\eqref{core:eq:sandwich-reset}, and
+\cref{core:cor:ordered-absorber-translation}.
+Its unary reductions are pinned independently by
+\cref{core:thm:one-owner-absorber-extension} at a singleton coefficient
+algebra, whose universal extension has $12$ elements. The twelve
+listed unary forms are distinct on a seven-element candidate model
+with its two global absorbers named, and their complete operation
+table is checked there. No binary native-function equality is used
+as a presentation equation.
+
+Since the free binary candidate algebra itself belongs to
+$\mathcal W^{\mathrm{abs}}$, the canonical map to its free binary
+algebra is an isomorphism. This proves the identity assertion.
+\end{proof}
 
 Another controlled extension starts with a retraction whose values
 commonly support their fibers. Here one additional input suffices to
