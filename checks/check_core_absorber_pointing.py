@@ -2,7 +2,8 @@
 
 Quotient maps are checked at K=3,4,5. At K=3,4 all column forms are
 evaluated and separated; an independent full closure is computed at K=3.
-The six-state model that fails mixed absorption is separately checked as
+The enlarged native core is also checked as the ambient pointed generator;
+its unary counts are one larger. The six-state model that fails mixed absorption is separately checked as
 a homomorphic image of the native unary algebra, so the audit does not
 silently assume the strengthened candidate.
 """
@@ -34,6 +35,49 @@ def generator(k):
 
 def apply(table, a, b):
     return tuple(table[x][y] for x, y in zip(a, b))
+
+
+def ambient_audit(k):
+    """The native core plus one new ambiguous top, with singleton constants."""
+    top = (1 << k) - 1
+    states = range(top + 1)
+    atoms = [(1 << i) - 1 for i in range(k)]
+    add = [[top if top in (x, y) else ((x + 1) | (y + 1)) - 1
+            for y in states] for x in states]
+    ops = [[[a if a in (x, y) else add[x][y] for y in states]
+            for x in states] for a in atoms]
+    maps, entries = [], 0
+    for support in range(1 << k):
+        def q(x):
+            if x == top:
+                return k + 1
+            mask = x + 1
+            if mask.bit_count() == 1:
+                i = mask.bit_length() - 1
+                return i if support >> i & 1 else k + 1
+            return k if mask & ~support == 0 else k + 1
+
+        mapping = [q(x) for x in states]
+        maps.append(mapping)
+        for x, y in product(states, repeat=2):
+            a, b = mapping[x], mapping[y]
+            joined = a if a == b else k + 1 if k + 1 in (a, b) else k
+            assert mapping[add[x][y]] == joined
+            entries += 1
+            for i, table in enumerate(ops):
+                expected = i if support >> i & 1 and i in (a, b) else joined
+                assert mapping[table[x][y]] == expected
+                entries += 1
+    assert len(set(zip(*maps))) == len(states)
+    row = {'K': k, 'size': len(states), 'observer_operation_entries': entries}
+    if k <= 4:
+        forms = list(normal_forms(add, ops, atoms))
+        assert len(set(forms)) == len(forms) == (1 + 2 ** (k - 1)) ** k + 2 ** k - 1
+        row['unary_functions'] = len(forms)
+        if k == 3:
+            seed = [tuple(states)] + [(a,) * len(states) for a in atoms]
+            assert closure(seed, [add] + ops) == set(forms)
+    return row
 
 
 def normal_forms(add, ops, constants):
@@ -111,6 +155,7 @@ def quotient_audit(k, add, ops):
 
 def check():
     report = []
+    ambient = []
     for k in (3, 4, 5):
         add, ops = generator(k)
         row = {'K': k, 'size': len(add),
@@ -135,6 +180,7 @@ def check():
                 assert closure(seed, [add] + ops) == normal
                 native_forms, native_tables = forms, [add] + ops
         report.append(row)
+        ambient.append(ambient_audit(k))
 
     check_mixed_countermodel()
     add, ops = MIXED_JOIN, MIXED_OPERATIONS
@@ -155,6 +201,7 @@ def check():
         [tuple(range(len(add)))] + [(a,) * len(add) for a in absorbers],
         [add] + list(ops))
     print(json.dumps({'status': 'all assertions passed', 'generators': report,
+                      'ambient_generators': ambient,
                       'six_state_unary_homomorphism_entries': entries,
                       'six_state_unary_functions': len(set(images.values()))}, indent=2))
 
