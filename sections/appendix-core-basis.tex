@@ -11,11 +11,12 @@ nothing here settles it. This appendix collects what is known, in four groups.
   witness (\cref{app:core-arity}). Under the basic candidate laws, every
   failure of exhaustion contains a subalgebra mapping onto that same
   obstruction. Its sharp size bound is $2^K$, even when the ambient
-  algebra is infinite (\cref{core:thm:exhaustion-divisor}). Within
-  $\operatorname V(D_K)$, exhaustion also makes adjoining an upper
-  bound preserve core membership; equality with the core variety
-  reduces to separation in free algebras by explicit upper-bound
-  substitutions (\cref{core:prop:relative-upper-extension,core:prop:relative-upper-separation}).
+  algebra is infinite (\cref{core:thm:exhaustion-divisor}). Owner
+  exhaustion is also a complete relative basis inside
+  $\operatorname V(D_K)$: a finite induction over syntax-tree
+  frontiers derives every core identity. Thus the core variety is
+  its unique largest proper subvariety
+  (\cref{core:thm:relative-exhaustion-complete}).
 \item \emph{Settled cases.} Binary terms and unary polynomial functions are
   classified (\cref{app:core-binary,core:prop:unary-polynomials}), and
   conservative models have a presentation by three-variable equations
@@ -1155,118 +1156,171 @@ be contradicted if $A$ satisfied it. The theorem applies again.
 \end{proof}
 
 The observer quotients of \cref{core:thm:basis-arity} embed
-$\mathbf C_K$ into a product of proper subalgebras of $D_K$:
-their $p$ outputs record membership of each owner in the winner set.
+$\mathbf C_K$ into a product of proper subalgebras of $D_K$.
 Thus $\operatorname V(\mathbf C_K)\subseteq\mathcal W_E$.
-Whether equality holds is the remaining relative question; the
-splitting statement alone supplies no such equality.
+In fact exhaustion is a complete relative basis. The proof combines
+fixed term contexts over all cuts of a syntax tree.
 
-There is nevertheless an exact membership result for upper-bound
-extensions inside this relative class.
-
-\begin{proposition}[Relative upper-bound extensions]
-\label{core:prop:relative-upper-extension}
-Let $A\in\mathcal W_E$, let $C\leq A$ belong to
-$\operatorname V(\mathbf C_K)$, and let $u\in A$ be a join upper
-bound of $C$. Then $\langle C\cup\{u\}\rangle$ belongs to
-$\operatorname V(\mathbf C_K)$, with no finiteness assumption.
-\end{proposition}
+\begin{lemma}[Postorder retraction in the marker algebra]
+\label{core:lem:postorder-retraction}
+Let $H$ be a term in join and the choices. At each internal node $v$
+of its syntax tree, write $H_v$ for the subterm rooted there and
+$o_v$ for its operation. Let $h_H(z)$ apply the translations
+$z\mapsto o_v(H_v,z)$ in postorder, with children preceding parents.
+The coefficients $H_v$ retain their original variables.
+If $L$ is the join of the leaves, then $D_K$ satisfies
+\[
+ h_H(H)=H=h_H(L).
+\]
+Thus $h_H$ sends the whole interval $[H,L]$ to $H$.
+At a native valuation with $H=n$, call a node \emph{active} if
+its operation is $\star_i$ and its value is $a_i$. Then
+\[
+ h_H(p)=
+ \begin{cases}
+ n,&\text{some internal node is active},\\
+ p,&\text{no internal node is active}.
+ \end{cases}
+\]
+\end{lemma}
 \begin{proof}
-We first give an explicit lifting identity. Let
-$s(x,\vec y)=t(x,\vec y)$ be any core identity, where
-$\vec y=(y_1,\ldots,y_m)$ is nonempty, allowing dummy variables.
-Put $d=\sum_jy_j$ and $b=s(d,\vec y)+t(d,\vec y)$.
-For each owner $i$, let $c_i=y_1\star_i\cdots\star_i y_m$, and set
-\[
- Z(x,\vec y)=d+\sum_{i\in I}(x\star_i c_i).
-\]
-The choice bound gives $c_i\leq d$ and $Z\leq x+d$, while
-exhaustion gives $x+d\leq Z$. Hence
-\begin{equation}\label{core:eq:upper-deflation-exhaustion}
- \mathcal W_E\models Z(x,\vec y)=x+d.
-\end{equation}
+For each owner $i$, the test for output $a_i$ is a Boolean formula:
+$\star_i$ takes disjunction of the input tests, and every other
+operation takes conjunction. A node translation on these tests is
+either the identity or a constant map. If a constant map occurs,
+the last such map has the root's value. Otherwise an ancestor
+changing its value would be a later constant map. If no constant
+map occurs, every leaf has the root's value: conjunction with node
+value $1$ forces both child values to be $1$, while disjunction
+with node value $0$ forces both to be $0$; a change of gate type
+would supply a constant map. Hence the postorder word returns the
+root test whenever the initial bit lies between the conjunction
+and disjunction of the leaf tests. This applies to both $H$ and $L$.
 
-In $D_K$, the fold $c_i$ is $a_i$ when that atom occurs among the
-coefficients, and is $d$ otherwise. If any $y_j=p$, then $d=p$
-and $Z=d$. If every atom occurs but $p$ does not, then $d=n$ and
-every summand $x\star_i c_i$ is $a_i$, so again $Z=d$.
-Otherwise some atom $a_i$ is absent. Since $Z\geq d$, it cannot
-equal that absent atom: this would force every coefficient to
-equal $a_i$. Thus $(Z,\vec y)$ lies in the proper core subalgebra
-$D_K\setminus\{a_i\}$.
+The two outputs therefore have the same atom tests as $H$.
+If $H$ is an atom, this determines them. If $H=p$ and the tree
+has an internal node, its last translation has coefficient $p$;
+its output is $p$ unless it is an atom, already excluded. A
+single-leaf tree is immediate.
 
-In the first two cases the terms $b+s(Z,\vec y)$ and
-$b+t(Z,\vec y)$ both equal $b$. In the last case they agree
-because $s=t$ holds in that proper subalgebra. Consequently
-\[
- D_K\models b+s(Z,\vec y)=b+t(Z,\vec y).
-\]
-Use this identity in $A\in\operatorname V(D_K)$, then apply
-\eqref{core:eq:upper-deflation-exhaustion}, to obtain
-\begin{equation}\label{core:eq:relative-upper-lift}
- \mathcal W_E\models
- b+s(x+d,\vec y)=b+t(x+d,\vec y).
-\end{equation}
+Suppose $H=n$. Every $p$-valued node or leaf has an active ancestor:
+at the first point where $p$ disappears on its path to the root,
+an owned atom must absorb it. That ancestor occurs later in
+postorder. If $L=n$, no coefficient or initial value is $p$.
+If $L=p$, there is an active node; after the last active node
+no coefficient can be $p$, since such a coefficient would have a
+later active ancestor. The last active translation erases $p$,
+and subsequent translations cannot restore it. The atom tests
+exclude every atom, leaving $n$ in both cases.
 
-Now evaluate any core identity on elements of
-$\langle C\cup\{u\}\rangle$. Express those elements by terms
-in $u$ and finitely many coefficients $\vec c$ from $C$, adding
-a dummy coefficient if necessary. Substituting these terms gives
-another core identity $s(x,\vec y)=t(x,\vec y)$ of the preceding
-form. With $d=\sum_jc_j$, core membership of $C$ gives
-$s(d,\vec c)=t(d,\vec c)=b$. Since $d\leq u$, monotonicity
-makes $b$ lie below both $s(u,\vec c)$ and $t(u,\vec c)$.
-Equation~\eqref{core:eq:relative-upper-lift}, with $x=u$, therefore
-reduces to $s(u,\vec c)=t(u,\vec c)$. This proves every core
-identity on the extension.
+For the final assertion, the same last-active argument excludes
+output $p$ when an active node occurs. The atom-test argument
+still applies to initial input $p$: since $H=n$, the leaves cannot
+all be the same atom, so their conjunction is $0$ for every owner.
+Thus the output is $n$. With no active node every translation
+preserves $p$, proving the other case. Monotonicity gives the
+interval assertion.
 \end{proof}
 
-\begin{proposition}[A free separation criterion for the relative question]
-\label{core:prop:relative-upper-separation}
-For $n\geq2$, let $F_n$ be the free $\mathcal W_E$-algebra on
-$x_1,\ldots,x_n$, put $U=\sum_jx_j$, and let $\sigma_i$ be the
-endomorphism replacing $x_i$ by $U$ and fixing every other generator.
-Then
+\begin{theorem}[Exhaustion is a complete relative basis]
+\label{core:thm:relative-exhaustion-complete}
+For every $K\geq3$,
 \[
- \mathcal W_E=\operatorname V(\mathbf C_K)
- \quad\Longleftrightarrow\quad
- \bigcap_{i=1}^n\ker\sigma_i=0\quad\text{for every }n\geq2.
+ \operatorname V(\mathbf C_K)
+ =\operatorname V(D_K)\cap
+   \operatorname{Mod}\bigl(\eqref{core:eq:exhaustion}\bigr).
 \]
-\end{proposition}
+Consequently the core variety is the unique largest proper
+subvariety of $\operatorname V(D_K)$. A finite basis for
+$\operatorname V(D_K)$, if available, becomes a core basis by
+adjoining owner exhaustion.
+\end{theorem}
 \begin{proof}
-First prove joint separation for free core algebras. Any unequal
-terms have an unequal evaluation in an observer
-$D_K\setminus\{a_j\}$. If an input is $p$, it equals the join
-of all inputs; the same is true of an input $n$ when $p$ is absent.
-Replacing that input by the join changes neither evaluation.
-It remains to consider an assignment consisting entirely of atoms.
-If all inputs are equal, idempotence prevents a failure. Otherwise
-their join is $n$, and the unequal outputs include some atom $a_h$.
-Choose an input different from $a_h$ and replace it by $n$.
-Whether any term evaluates to $a_h$ depends only on which inputs
-equal $a_h$: the owner-$h$ choice takes the disjunction of those
-tests and every other operation takes their conjunction. Thus one
-term still returns $a_h$ and the other still does not. This proves
-joint separation and hence the forward implication.
+Write $f_i=\star_i$. Let $s=t_0$ be any core identity and put
+$t=s+t_0$. We prove $t\leq s$ in $\mathcal W_E$; applying the
+same argument with $s,t_0$ interchanged then proves their equality.
 
-Conversely, assume the displayed kernel intersections are trivial.
-Induct on $n$ to show $F_n$ is a core algebra. The one-generated
-free algebra is a singleton by idempotence. The subalgebra generated
-by all generators except $x_i$ is a homomorphic image of $F_{n-1}$,
-so is core by induction. The image $\sigma_i[F_n]$ is obtained by
-adjoining its upper bound $U$, and is core by
-\cref{core:prop:relative-upper-extension}. Joint injectivity embeds
-$F_n$ in the product of these core images. Thus all finitely
-generated free $\mathcal W_E$-algebras satisfy every core identity,
-which proves equality of the varieties.
+The quotient of $D_K$ identifying $n,p$ is a core algebra.
+Thus at each native valuation $s,t_0$ either return the same atom
+or both return markers.
+Since $s\leq t$, a valuation either has $s=t$ or is a
+\emph{defect}, with $s=n$ and $t=p$.
+At a defect, replace every input $a_i$ by $n$, for a fixed owner
+$i$, and denote the resulting valuation by $v^{-i}$.
+Monotonicity gives $t(v^{-i})=p$. This valuation lies in the
+proper core subalgebra $D_K\setminus\{a_i\}$, so
+\begin{equation}\label{core:eq:frontier-erasure}
+ s(v^{-i})=p\qquad\text{for every }i.
+\end{equation}
+
+A \emph{frontier} $F$ is an antichain of syntax-tree nodes of $s$
+meeting every root-to-leaf path once. Write $A_1,\ldots,A_m$ for
+their subterms and $H_F$ for the upper skeleton, so
+$s=H_F(A_1,\ldots,A_m)$. Let $h_F$ be the postorder word of
+this skeleton, and form the fixed terms
+\[
+ b_i^F=f_i(A_1,\ldots,A_m),\qquad
+ N_F=\sum_i f_i(t,b_i^F),\qquad
+ L_F=h_F(N_F),\qquad U_F=h_F(t+N_F).
+\]
+The fold defining $b_i^F$ is nonempty. Exhaustion, followed by
+the fixed context $h_F$, gives
+\begin{equation}\label{core:eq:frontier-exhaustion}
+ \mathcal W_E\models L_F=U_F.
+\end{equation}
+
+Let $\operatorname{Ref}(F)$ contain all immediate refinements,
+obtained by replacing one internal frontier node by its children.
+We claim the following inequality is valid in $D_K$:
+\begin{equation}\label{core:eq:frontier-refinement}
+ L_F\leq s+\sum_{G\in\operatorname{Ref}(F)}U_G.
+\end{equation}
+When there are no refinements, the right side means just $s$.
+At a valuation with $s=t$, let $L$ be the join of the frontier
+values. The choice bound gives $s,N_F\leq L$, hence
+$s\leq t+N_F\leq L$. The retraction lemma gives $U_F=s$,
+and therefore $L_F\leq s$.
+
+At a defect, $U_F=h_F(p)\in\{n,p\}$ and $L_F\leq U_F$,
+so the only case requiring proof is $L_F=p$.
+Then $U_F=p$, and the lemma says that the upper skeleton has
+no active node. No frontier value can be $p$, since it would
+need an active ancestor before the root could have value $n$.
+The join of the frontier values is therefore $n$.
+Here $b_i^F=a_i$ exactly when that atom occurs among the frontier
+values, and otherwise $b_i^F=n$.
+If every owner occurred, then $N_F=n=s$, giving $L_F=s$,
+a contradiction. Choose an absent owner $j$.
+
+Some internal frontier node must be inactive. Otherwise each
+internal frontier node would be active for an owner $k\ne j$,
+and its value $a_k$ would persist under $v^{-j}$: the $a_k$
+output test depends only on which inputs equal $a_k$.
+Every frontier leaf would also retain its value, since none is
+$a_j$. The entire frontier would therefore be unchanged, giving
+$s(v^{-j})=n$, contrary to \eqref{core:eq:frontier-erasure}.
+Refine an inactive internal frontier node to obtain $G$.
+This inserts its own translation into $h_F$ in postorder.
+Each old translation preserves $p$, and the inserted translation
+does too because its node is inactive. Hence $U_G=h_G(p)=p$,
+which supplies a summand proving \eqref{core:eq:frontier-refinement}.
+The argument also covers a frontier with no internal nodes:
+in that case the required inactive node is impossible, so $L_F\leq s$.
+
+There are finitely many frontiers. Induct from finer to coarser ones.
+If $U_G\leq s$ for every immediate refinement, the $D_K$-valid
+inequality \eqref{core:eq:frontier-refinement} gives $L_F\leq s$
+in $\mathcal W_E$, and \eqref{core:eq:frontier-exhaustion} gives
+$U_F\leq s$. Its empty-refinement case starts the induction.
+At the coarsest frontier, consisting only of the root, $h_F$ is
+the identity and every $b_i^F=s$. Coverage gives
+$N_F=\sum_i f_i(t,s)=t+s=t$, so $U_F=t$.
+This proves the desired inequality and hence every core identity
+in $\mathcal W_E$. The splitting corollary identifies the largest
+proper subvariety; the basis assertion follows from the equality
+just proved.
 \end{proof}
 
-The criterion concerns free algebras. Its pointwise meet analogue
-fails even in the ten-element core algebra of
-\cref{core:prop:owned-unit-observer-obstruction}: at
-$(x,y,z)=(1,6,8)$, the term $(x\star_0 y)+z$ has value $9$,
-whereas replacing any one input by their join $7$ gives $7$.
-Thus that stronger reconstruction cannot justify the free separation.
 
 \subsection{Fragments with an unused owner}
 \label{app:core-proper-fragments}
