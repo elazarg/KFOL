@@ -11,7 +11,11 @@ nothing here settles it. This appendix collects what is known, in four groups.
   witness (\cref{app:core-arity}). Under the basic candidate laws, every
   failure of exhaustion contains a subalgebra mapping onto that same
   obstruction. Its sharp size bound is $2^K$, even when the ambient
-  algebra is infinite (\cref{core:thm:exhaustion-divisor}).
+  algebra is infinite (\cref{core:thm:exhaustion-divisor}). Within
+  $\operatorname V(D_K)$, exhaustion also makes adjoining an upper
+  bound preserve core membership; equality with the core variety
+  reduces to separation in free algebras by explicit upper-bound
+  substitutions (\cref{core:prop:relative-upper-extension,core:prop:relative-upper-separation}).
 \item \emph{Settled cases.} Binary terms and unary polynomial functions are
   classified (\cref{app:core-binary,core:prop:unary-polynomials}), and
   conservative models have a presentation by three-variable equations
@@ -1152,6 +1156,113 @@ their $p$ outputs record membership of each owner in the winner set.
 Thus $\operatorname V(\mathbf C_K)\subseteq\mathcal W_E$.
 Whether equality holds is the remaining relative question; the
 splitting statement alone supplies no such equality.
+
+There is nevertheless an exact membership result for upper-bound
+extensions inside this relative class.
+
+\begin{proposition}[Relative upper-bound extensions]
+\label{core:prop:relative-upper-extension}
+Let $A\in\mathcal W_E$, let $C\leq A$ belong to
+$\operatorname V(\mathbf C_K)$, and let $u\in A$ be a join upper
+bound of $C$. Then $\langle C\cup\{u\}\rangle$ belongs to
+$\operatorname V(\mathbf C_K)$, with no finiteness assumption.
+\end{proposition}
+\begin{proof}
+We first give an explicit lifting identity. Let
+$s(x,\vec y)=t(x,\vec y)$ be any core identity, where
+$\vec y=(y_1,\ldots,y_m)$ is nonempty, allowing dummy variables.
+Put $d=\sum_jy_j$ and $b=s(d,\vec y)+t(d,\vec y)$.
+For each owner $i$, let $c_i=y_1\star_i\cdots\star_i y_m$, and set
+\[
+ Z(x,\vec y)=d+\sum_{i\in I}(x\star_i c_i).
+\]
+The choice bound gives $c_i\leq d$ and $Z\leq x+d$, while
+exhaustion gives $x+d\leq Z$. Hence
+\begin{equation}\label{core:eq:upper-deflation-exhaustion}
+ \mathcal W_E\models Z(x,\vec y)=x+d.
+\end{equation}
+
+In $D_K$, the fold $c_i$ is $a_i$ when that atom occurs among the
+coefficients, and is $d$ otherwise. If any $y_j=p$, then $d=p$
+and $Z=d$. If every atom occurs but $p$ does not, then $d=n$ and
+every summand $x\star_i c_i$ is $a_i$, so again $Z=d$.
+Otherwise some atom $a_i$ is absent. Since $Z\geq d$, it cannot
+equal that absent atom: this would force every coefficient to
+equal $a_i$. Thus $(Z,\vec y)$ lies in the proper core subalgebra
+$D_K\setminus\{a_i\}$.
+
+In the first two cases the terms $b+s(Z,\vec y)$ and
+$b+t(Z,\vec y)$ both equal $b$. In the last case they agree
+because $s=t$ holds in that proper subalgebra. Consequently
+\[
+ D_K\models b+s(Z,\vec y)=b+t(Z,\vec y).
+\]
+Use this identity in $A\in\operatorname V(D_K)$, then apply
+\eqref{core:eq:upper-deflation-exhaustion}, to obtain
+\begin{equation}\label{core:eq:relative-upper-lift}
+ \mathcal W_E\models
+ b+s(x+d,\vec y)=b+t(x+d,\vec y).
+\end{equation}
+
+Now evaluate any core identity on elements of
+$\langle C\cup\{u\}\rangle$. Express those elements by terms
+in $u$ and finitely many coefficients $\vec c$ from $C$, adding
+a dummy coefficient if necessary. Substituting these terms gives
+another core identity $s(x,\vec y)=t(x,\vec y)$ of the preceding
+form. With $d=\sum_jc_j$, core membership of $C$ gives
+$s(d,\vec c)=t(d,\vec c)=b$. Since $d\leq u$, monotonicity
+makes $b$ lie below both $s(u,\vec c)$ and $t(u,\vec c)$.
+Equation~\eqref{core:eq:relative-upper-lift}, with $x=u$, therefore
+reduces to $s(u,\vec c)=t(u,\vec c)$. This proves every core
+identity on the extension.
+\end{proof}
+
+\begin{proposition}[A free separation criterion for the relative question]
+\label{core:prop:relative-upper-separation}
+For $n\geq2$, let $F_n$ be the free $\mathcal W_E$-algebra on
+$x_1,\ldots,x_n$, put $U=\sum_jx_j$, and let $\sigma_i$ be the
+endomorphism replacing $x_i$ by $U$ and fixing every other generator.
+Then
+\[
+ \mathcal W_E=\operatorname V(\mathbf C_K)
+ \quad\Longleftrightarrow\quad
+ \bigcap_{i=1}^n\ker\sigma_i=0\quad\text{for every }n\geq2.
+\]
+\end{proposition}
+\begin{proof}
+First prove joint separation for free core algebras. Any unequal
+terms have an unequal evaluation in an observer
+$D_K\setminus\{a_j\}$. If an input is $p$, it equals the join
+of all inputs; the same is true of an input $n$ when $p$ is absent.
+Replacing that input by the join changes neither evaluation.
+It remains to consider an assignment consisting entirely of atoms.
+If all inputs are equal, idempotence prevents a failure. Otherwise
+their join is $n$, and the unequal outputs include some atom $a_h$.
+Choose an input different from $a_h$ and replace it by $n$.
+Whether any term evaluates to $a_h$ depends only on which inputs
+equal $a_h$: the owner-$h$ choice takes the disjunction of those
+tests and every other operation takes their conjunction. Thus one
+term still returns $a_h$ and the other still does not. This proves
+joint separation and hence the forward implication.
+
+Conversely, assume the displayed kernel intersections are trivial.
+Induct on $n$ to show $F_n$ is a core algebra. The one-generated
+free algebra is a singleton by idempotence. The subalgebra generated
+by all generators except $x_i$ is a homomorphic image of $F_{n-1}$,
+so is core by induction. The image $\sigma_i[F_n]$ is obtained by
+adjoining its upper bound $U$, and is core by
+\cref{core:prop:relative-upper-extension}. Joint injectivity embeds
+$F_n$ in the product of these core images. Thus all finitely
+generated free $\mathcal W_E$-algebras satisfy every core identity,
+which proves equality of the varieties.
+\end{proof}
+
+The criterion concerns free algebras. Its pointwise meet analogue
+fails even in the ten-element core algebra of
+\cref{core:prop:owned-unit-observer-obstruction}: at
+$(x,y,z)=(1,6,8)$, the term $(x\star_0 y)+z$ has value $9$,
+whereas replacing any one input by their join $7$ gives $7$.
+Thus that stronger reconstruction cannot justify the free separation.
 
 \subsection{Fragments with an unused owner}
 \label{app:core-proper-fragments}
