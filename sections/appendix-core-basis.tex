@@ -58,7 +58,10 @@ nothing here settles it. This appendix collects what is known, in four groups.
   (\cref{core:thm:translation-words}). Branching unary polynomials
   need more: translations over their coefficient subalgebra, joins,
   and even arbitrary inserted extensive maps can fail to generate them
-  (\cref{core:prop:branching-obstruction}). For every number of owners,
+  (\cref{core:prop:branching-obstruction}). Nor does any fixed number of
+  nested word constructions suffice: balanced alternating terms have
+  unbounded minimum branching rank, even on the native core
+  (\cref{core:thm:branching-rank}). For every number of owners,
   however, every term function is a pointwise meet of joins of variables
   and single choices between variables. The semilattice and distribution
   laws alone prove all the upper inequalities in this construction
@@ -3523,6 +3526,135 @@ whereas $P(x)=q$ lies in $J$. Induction on a proposed expression
 therefore rules out every expression of the stated form.
 \end{proof}
 
+The obstruction to words persists when coefficients may themselves be
+joins of words, and through every fixed number of repetitions of that
+construction. Define the \emph{branching rank} of a term by
+\[
+ b(x)=0,\qquad b(s+t)=\max\{b(s),b(t)\},\qquad
+ b(s\star_i t)=
+ \begin{cases}
+ b(s)+1,&b(s)=b(t),\\
+ \max\{b(s),b(t)\},&b(s)\ne b(t).
+ \end{cases}
+\]
+Join is allowed explicitly here. Rank at most one includes all joins of
+variable-coefficient words, irrespective of their lengths. Iterating
+translations whose coefficients have rank at most $r-1$, and taking joins,
+gives exactly the terms of rank at most $r$, up to distribution over join.
+
+\begin{theorem}[Unbounded branching rank]
+\label{core:thm:branching-rank}
+Fix $K\geq3$ and two distinct owners. Let $T_h$ be a complete binary
+tree of height $h$, with a different variable at each of its $2^h$
+leaves and with the two owners alternating between levels. Every core
+term equal to $T_h$ has branching rank at least $h$.
+Consequently no fixed number of nested word constructions, even with
+arbitrary joins and word lengths, gives normal forms for all core terms.
+\end{theorem}
+\begin{proof}
+Use the four-element algebra $D=\{0,1,n,p\}$ with join order
+$0,1<n<p$. Let $f$ absorb $1$ and $g$ absorb $0$; otherwise both
+take join. The remaining owners act as join. This is the expansion of
+$D_{\{i,j\}}$ belonging to the core variety by
+\cref{core:cor:fragment-reduction}. On $\{0,1\}$, $f$ is Boolean
+disjunction and $g$ is conjunction. Call a term using only $f,g$
+a \emph{raw term}.
+
+We first record two facts about markers. Collapsing $n,p$ to a single
+unknown value turns every raw term into its usual three-valued monotone
+Boolean evaluation. For a partial Boolean assignment, its value is
+constant precisely when all Boolean completions agree. If a marked
+variable, assigned $p$, is essential in the restricted Boolean function,
+then the raw term has value $p$. Indeed, fix the other unknown variables
+at Boolean values witnessing that essentiality. The remaining unary term,
+using $0,1$ as constants, simplifies to the variable by the unit and
+absorber laws. It therefore has value $p$. Restoring the other unknown
+values can only increase the result in the join order.
+
+For a raw term $T$ in which every variable occurs once, the converse
+holds whenever its value is unknown: a value $p$ supplies a marked
+variable essential in the restricted Boolean function. Induct on the
+tree. At an $f$ node with unknown output, neither child is $1$; a
+marked variable essential in one child remains essential after choosing
+a completion making the other child $0$. The child supports are disjoint,
+so these choices are compatible. At a $g$ node choose the other child
+to be $1$. It follows that if a raw term $s$ has the same Boolean
+function as $T$, then
+\begin{equation}\label{core:eq:read-once-minimum}
+ T\leq s\qquad\text{pointwise on }D.
+\end{equation}
+Stable outputs agree; at an unknown output $n$ the inequality is
+automatic, and at $p$ the essential marked variable forces equality.
+
+Next take $T=f(A,B)$, where $A,B$ have disjoint supports, each variable
+occurs once, and each child is either a variable or has root $g$.
+Suppose a raw term $s$ satisfies
+\begin{equation}\label{core:eq:branching-compatible}
+ T(e)=n\quad\Longrightarrow\quad s(e)\ne p.
+\end{equation}
+Its Boolean function depends only on the two Boolean values of $A,B$.
+To see this, consider a Boolean cube edge changing a variable $x$ of
+$A$ without changing the value of $A$. If both endpoint values of $A$
+are $0$, mark $x$ by $p$, keep the other variables of $A$ fixed, and
+assign $n$ to every variable of $B$. Then $A=0$, $B=n$, and $T=n$.
+If both endpoint values of $A$ are $1$, write $A=g(A_1,A_2)$ with
+$x$ in $A_1$. Both endpoint values of $A_1$ are $1$. Mark $x$, keep
+its other variables fixed, and assign $n$ to all variables of $A_2$
+and $B$. Now $A_1=1$, $A_2=B=n$, so again $T=n$.
+If $A$ is a variable, there are no such edges.
+
+In either case the partial assignment contains the original edge among
+its Boolean completions. If the Boolean function of $s$ changed along
+that edge, $x$ would be essential there, forcing $s=p$ and contradicting
+\eqref{core:eq:branching-compatible}. Thus $s$ is constant along every
+edge within either Boolean fiber of $A$, with the variables of $B$
+arbitrarily fixed. Each fiber is connected: the zero fiber is a downset
+containing the all-zero input, and the one fiber is an upset containing
+the all-one input. The same argument applies to $B$. Therefore the
+Boolean function of $s$ is $H(A,B)$. Since raw terms preserve the
+all-zero and all-one inputs and are monotone, the possibilities are
+exactly
+\begin{equation}\label{core:eq:branching-four-factors}
+ A,\quad B,\quad A\land B,\quad A\lor B.
+\end{equation}
+Exchanging $0,1$ and $f,g$ proves the dual assertion for a root $g$.
+
+We prove the rank bound for raw terms by induction on $h$; height zero
+is immediate. By symmetry suppose $T_h=f(A,B)$. Among raw
+representatives of $T_h$ of minimum branching rank, choose one $s$ of
+minimum size. It is not a variable. If $u,v$ are its immediate
+subterms, both satisfy \eqref{core:eq:branching-compatible}: neither
+$f$ nor $g$ can return $n$ when one input is $p$. Their Boolean
+functions therefore belong to \eqref{core:eq:branching-four-factors}.
+If either has Boolean function $A\lor B$, then that subterm equals
+$T_h$ on $D$. Indeed \eqref{core:eq:read-once-minimum} gives the
+lower inequality, compatibility gives equality where $T_h=n$, and
+the remaining outputs already agree. This contradicts the choice of
+$s$, since a subterm has no greater branching rank.
+
+If the root of $s$ were $g$, both Boolean functions would have to be
+$A\lor B$, which has just been excluded. Hence its root is $f$, and
+the only remaining pair whose disjunction is $A\lor B$ consists of
+$A$ and $B$. Say $u$ has Boolean function $A$ and $v$ has Boolean
+function $B$. Set all variables of $B$ to $0$. The resulting $v$ is
+identically $0$: simplifying constants by the unit and absorber laws
+leaves either a constant or a raw term, and a nonconstant raw term
+cannot have constant Boolean function $0$. The equality
+$f(u,v)=T_h$ therefore reduces to $u=A$. Removing constants does not
+increase rank. By induction $b(u)\geq h-1$; setting the variables
+of $A$ to $0$ similarly gives $b(v)\geq h-1$. Thus $b(s)\geq h$.
+
+Finally, take an arbitrary core representative. On $D$, replace all
+other owners by join and distribute joins outwards. This gives a
+nonempty join of raw terms, each of branching rank no greater than
+the original term. Each summand lies below $T_h$, hence has its
+Boolean function, since $0,1$ are minimal in the join order.
+Equation~\eqref{core:eq:read-once-minimum} makes each summand equal
+to $T_h$. The raw rank bound applies to every summand.
+\end{proof}
+
+This rules out a uniform bound on branching rank, not a finite basis:
+a finite set of identities may preserve arbitrarily large minimum ranks.
 There is nevertheless a pointwise upper normal form, for every number
 of owners. Its upper bounds use only joins of variables and single
 choices between variables. Their derivation needs no mixed absorption.
