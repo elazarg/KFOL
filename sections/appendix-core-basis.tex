@@ -55,7 +55,10 @@ nothing here settles it. This appendix collects what is known, in four groups.
   (\cref{core:prop:alternating-translations}). With arbitrary parameters
   for all choices and join, words in $m$ fixed translations reduce to length
   at most $m(m+1)/2$, and every word satisfies $P^3=P^2$
-  (\cref{core:thm:translation-words}). The proof uses input reset
+  (\cref{core:thm:translation-words}). Branching unary polynomials
+  need more: translations over their coefficient subalgebra, joins,
+  and even arbitrary inserted extensive maps can fail to generate them
+  (\cref{core:prop:branching-obstruction}). The word proof uses input reset
   erasure, which holds for arbitrary core contexts and any number of
   owners (\cref{core:lem:input-reset-erasure}). For arbitrary
   owners and parameters, joining with a common upper bound of the
@@ -3315,6 +3318,76 @@ Therefore
  P^3=PRPRP=PE^2=PE=P^2.
 \]
 The identity transformation also satisfies this equation.
+\end{proof}
+
+The word theorem does not extend by taking joins of words or inserting
+resets. The obstruction already occurs with two active owners and three
+parameters, even when every term in those parameters is available as a
+coefficient.
+
+\begin{proposition}[A branching obstruction]
+\label{core:prop:branching-obstruction}
+There are a finite core algebra $A$, a coefficient subalgebra
+$C=\langle a,b,c\rangle\leq A$, and a unary polynomial
+\[
+ P(z)=f\bigl(g(a,z),g(b,f(c,z))\bigr)
+\]
+that cannot be built from $z$ and constants in $C$ by join, basic
+translations with coefficients in $C$, and arbitrary extensive unary
+maps on $A$. In particular, allowing global or pair resets anywhere in
+such an expression does not suffice.
+\end{proposition}
+\begin{proof}
+Let $D=D_{\{i,j\}}=\{\alpha,\beta,n,p\}$, with $f=\star_i$
+absorbing $\alpha$ and $g=\star_j$ absorbing $\beta$. Its join
+order has incomparable $\alpha,\beta$ below $n<p$; apart from their
+absorbers, both choices take join. In $D^5$ put
+\[
+\begin{aligned}
+ a&=(\alpha,p,p,p,\beta),&
+ b&=(p,\alpha,\beta,p,n),\\
+ c&=(p,p,p,\beta,\alpha),&
+ x&=(\alpha,\alpha,\beta,\beta,p).
+\end{aligned}
+\]
+Take $C=\langle a,b,c\rangle$ and $A=\langle a,b,c,x\rangle$.
+Direct evaluation gives
+\[
+ q=P(x)=(\alpha,\alpha,\beta,\beta,n).
+\]
+
+Every $d\in C$ avoids the following four pairs of coordinate values:
+\begin{equation}\label{core:eq:branching-coefficient-guards}
+ (d_1,d_3)\ne(\alpha,\beta),\quad
+ (d_2,d_4)\ne(\alpha,\beta),\quad
+ (d_3,d_5)\ne(\beta,\alpha),\quad
+ (d_2,d_5)\ne(\alpha,\beta).
+\end{equation}
+Indeed $D^2\setminus\{(\alpha,\beta)\}$ and its converse are
+subalgebras: if a basic operation produces the excluded pair, one of
+its inputs is already that pair. Each of $a,b,c$ satisfies the four
+conditions, so they hold throughout $C$.
+
+Let $J=A_{\leq q}$. For every $d\in C$, every basic translation
+$L$ with coefficient $d$ satisfies
+\[
+ L(u)\in J\quad\Longrightarrow\quad u\in J.
+\]
+For join, the premise is impossible: $d+u\leq q$ would force
+$d_1=\alpha$ and $d_3=\beta$. If $f(d,u)\leq q$, coordinates
+$3,4$ force $d_3=d_4=u_3=u_4=\beta$.
+The guards then give $d_1,d_2,d_5\ne\alpha$. Coordinates $1,2$
+therefore force $u_1=u_2=\alpha$, and the last coordinate rules out
+$u_5=p$. Thus $u\leq q$. Dually, $g(d,u)\leq q$ forces
+$d_1=d_2=u_1=u_2=\alpha$; the guards give
+$d_3,d_4,d_5\ne\beta$, forcing $u_3=u_4=\beta$ and $u_5\ne p$.
+This again gives $u\leq q$. All unused choices equal join.
+
+Consequently $A\setminus J$ is closed under these translations.
+It is upward closed, so it is also closed under join and every
+extensive unary map. It contains $x$ and all of $C$, by the guards,
+whereas $P(x)=q$ lies in $J$. Induction on a proposed expression
+therefore rules out every expression of the stated form.
 \end{proof}
 
 Reset also preserves an owned choice without limiting the number of
