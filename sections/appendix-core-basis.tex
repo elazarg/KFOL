@@ -8,7 +8,10 @@ nothing here settles it. This appendix collects what is known, in four groups.
   ladders rules out both a finite residual bound and bounded critical depth
   (\cref{app:core-ladders}), and any basis
   needs an identity with at least $K+1$ variables, owner exhaustion being the
-  witness (\cref{app:core-arity}).
+  witness (\cref{app:core-arity}). Under the basic candidate laws, every
+  failure of exhaustion contains a subalgebra mapping onto that same
+  obstruction. Its sharp size bound is $2^K$, even when the ambient
+  algebra is infinite (\cref{core:thm:exhaustion-divisor}).
 \item \emph{Settled cases.} Binary terms and unary polynomial functions are
   classified (\cref{app:core-binary,core:prop:unary-polynomials}), and
   conservative models have a presentation by three-variable equations
@@ -1009,6 +1012,143 @@ $(13,16)$, verifying subdirect irreducibility here as well.
 Both finite certificates and their independent checks are recorded in
 \cref{app:verification}.
 \end{proof}
+
+\subsection{Exhaustion as a finite obstruction}
+\label{app:core-exhaustion-divisor}
+
+The algebra $D_K$ witnesses more than the variable lower bound.
+Let $\mathcal G_K$ consist of $\Gamma_K$ together with the
+distinct-three-owner union definitions
+\eqref{core:eq:union-definition}; thus these are exactly the candidate
+laws with owner exhaustion omitted. No mixed-absorption law is needed
+in this subsection.
+
+\begin{theorem}[Sharp finite witnesses to exhaustion]
+\label{core:thm:exhaustion-divisor}
+For every $K\geq3$ and every $A\models\mathcal G_K$,
+\[
+ A\not\models\eqref{core:eq:exhaustion}
+ \quad\Longleftrightarrow\quad
+ D_K\in\operatorname{HS}(A).
+\]
+Every failure yields a subalgebra of $A$ with at most $2^K$ elements
+and an onto homomorphism from it to $D_K$. The bound is sharp,
+already for algebras in $\operatorname V(D_K)$.
+\end{theorem}
+\begin{proof}
+Write $f_i(x,y)=x\star_i y$. Distribution makes each $f_i$ monotone
+for the join order, and coverage gives $f_i(x,y)\leq x+y$.
+We first record the consequence
+\begin{equation}\label{core:eq:exhaustion-cross-bound}
+ f_i(f_j(x,y),x+y)=x+y\qquad(i\ne j).
+\end{equation}
+Distribution and the Birkhoff law identify its left side with
+$f_j(f_i(x,y),x+y)$. By monotonicity the common value is at least
+both $f_i(x,y)$ and $f_j(x,y)$, whose join is $x+y$ by coverage.
+The upper bound gives equality.
+
+Choose a failure of exhaustion at $c,x_1,\ldots,x_K$, and put
+\[
+ b_i=f_i(c,x_i),\qquad v=\sum_i b_i,\qquad w=c+v.
+\]
+Then $v<w$. Set $a_i=f_i(b_i,w)$. Since $f_i(b_i,c)=b_i$,
+distribution and $b_i\leq v$ give
+\[
+ a_i=b_i+f_i(b_i,v)=f_i(b_i,v),\qquad
+ b_i\leq a_i\leq v.
+\]
+Consequently $\sum_i a_i=v$ and $f_i(a_i,w)=a_i$.
+For $i\ne j$, \eqref{core:eq:exhaustion-cross-bound} at $(a_j,w)$
+gives $f_i(a_j,w)=w$. Associativity then gives
+\[
+ f_i(a_i,a_j)=f_i(f_i(a_i,w),a_j)
+ =f_i(a_i,f_i(w,a_j))=a_i.
+\]
+The $a_i$ are pairwise incomparable: if $a_j\leq a_i$ for $j\ne i$,
+then $w=f_i(a_j,w)\leq f_i(a_i,w)=a_i\leq v<w$.
+For $h$ distinct from $i,j$, the union definition now gives
+\[
+ f_h(a_i,a_j)=f_h(f_i(a_i,a_j),f_j(a_i,a_j))=a_i+a_j.
+\]
+
+For nonempty $T\subseteq I$, write $q_T=\sum_{i\in T}a_i$.
+Distribution proves that
+\[
+ S=\{w\}\cup\{q_T:\varnothing\ne T\subseteq I\}
+\]
+is a subalgebra, with join given by union of indices and with
+\[
+ f_i(q_T,q_U)=
+ \begin{cases}
+ a_i,&T=\{i\}\text{ or }U=\{i\},\\
+ q_{T\cup U},&\text{otherwise},
+ \end{cases}
+ \qquad
+ f_i(w,q_T)=
+ \begin{cases}
+ a_i,&T=\{i\},\\
+ w,&\text{otherwise}.
+ \end{cases}
+\]
+No nonsingleton join $q_T$ can equal an $a_i$, by incomparability,
+and all $q_T$ lie below $v<w$. Thus the map sending $a_i$ to the
+corresponding atom of $D_K$, every nonsingleton $q_T$ to $n$, and
+$w$ to $p$ is well defined and onto. The displayed tables show it
+is a homomorphism, and $|S|\leq2^K$. Conversely, exhaustion is
+preserved by subalgebras and quotients and fails in $D_K$.
+
+For sharpness, let $U_K$ have all nonempty subsets of $I$ and one
+new greatest element $\omega$. Extend union by this greatest element;
+as usual, $f_i$ absorbs $\{i\}$ and otherwise takes join. The maps
+$q_j$ from \cref{core:thm:basis-arity}, extended by
+$q_j(\omega)=p$, are homomorphisms into $D_K$. So is the map $r$
+sending singletons to their atoms, nonsingleton subsets to $n$, and
+$\omega$ to $p$. The $q_j$ distinguish all subsets, and $r$
+distinguishes $\omega$ from every subset. Hence
+$U_K\in\operatorname{SP}(D_K)$, and $r$ is onto.
+
+Suppose $h:B\to D_K$ is onto for a subalgebra $B\leq U_K$.
+Choose $s_i,t\in B$ with $h(s_i)=a_i$ and $h(t)=p$.
+Since $h(f_i(s_i,t))=a_i$ but $h(s_i+t)=p$, the choice must
+absorb: one input is $\{i\}$. It cannot be $t$, since then the
+choice would have image $p$. Thus $s_i=\{i\}$ for every $i$.
+Closure under join puts every nonempty subset in $B$, with $h(I)=n$.
+The element $t$ cannot be a subset, since then $t\leq I$ would
+imply $p\leq n$. Therefore $t=\omega$ and $B=U_K$, which has
+exactly $2^K$ elements.
+\end{proof}
+
+\begin{corollary}[The splitting determined by exhaustion]
+\label{core:cor:exhaustion-splitting}
+Every subvariety of $\operatorname{Mod}(\mathcal G_K)$ either contains
+$\operatorname V(D_K)$ or satisfies owner exhaustion, exclusively.
+Consequently
+\[
+ \mathcal W_E=\operatorname V(D_K)\cap
+       \operatorname{Mod}\bigl(\eqref{core:eq:exhaustion}\bigr)
+\]
+is the unique largest proper subvariety of $\operatorname V(D_K)$.
+For any $A\models\mathcal G_K$, one also has
+$D_K\in\operatorname{HSP}(A)$ if and only if
+$D_K\in\operatorname{HS}(A)$.
+\end{corollary}
+\begin{proof}
+$D_K$ satisfies $\mathcal G_K$ by \cref{core:thm:basis-arity},
+since all its laws use at most three variables.
+A subvariety failing exhaustion has a member with a $D_K$ divisor
+by the theorem, and therefore contains $\operatorname V(D_K)$.
+The alternatives are exclusive because $D_K$ fails exhaustion.
+This also proves the largest-proper-subvariety assertion. Finally,
+if $D_K\in\operatorname{HSP}(A)$, preservation of exhaustion would
+be contradicted if $A$ satisfied it. The theorem applies again.
+\end{proof}
+
+The observer quotients of \cref{core:thm:basis-arity} embed
+$\mathbf C_K$ into a product of proper subalgebras of $D_K$:
+their $p$ outputs record membership of each owner in the winner set.
+Thus $\operatorname V(\mathbf C_K)\subseteq\mathcal W_E$.
+Whether equality holds is the remaining relative question; the
+splitting statement alone supplies no such equality.
 
 \subsection{Fragments with an unused owner}
 \label{app:core-proper-fragments}
