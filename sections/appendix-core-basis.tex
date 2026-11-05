@@ -70,7 +70,11 @@ nothing here settles it. This appendix collects what is known, in four groups.
   (\cref{core:thm:translation-words}). Adjoining a join upper bound
   to a finite subalgebra still gives a finite algebra: every generated
   element is a join of coefficients and words applied to that bound
-  (\cref{core:thm:upper-bound-extension}). Branching unary polynomials
+  (\cref{core:thm:upper-bound-extension}). Adjoining a fixed point of
+  one atomic profile gives, with two active owners, a quotient of size
+  at most twice the square of the coefficient algebra's size; its
+  fibers need not be singletons (\cref{core:prop:profile-extension-images}).
+  Branching unary polynomials
   need more: translations over their coefficient subalgebra, joins,
   and even arbitrary inserted extensive maps can fail to generate them
   (\cref{core:prop:branching-obstruction}). Nor does any fixed number of
@@ -3954,6 +3958,89 @@ For an arbitrary new element $x$, this theorem makes
 $\langle C\cup\{x+\sum C\}\rangle$ finite when $C$ is finite.
 It does not put $x$ in that subalgebra, so finiteness of arbitrary
 one-generator extensions still requires another argument.
+
+Fixed points of one atomic profile provide another controlled part of
+such an extension. The preservation law below holds for every number
+of owners; the finite quotient uses two active choices.
+
+\begin{proposition}[Images of a profile extension]
+\label{core:prop:profile-extension-images}
+Assume $\Gamma_K$ and all ordered mixed-absorption laws. Fix
+$f=\star_i$, a bound $T$, and $y\leq T$ with $f(y,T)=y$.
+For every other choice $g$ and all $a,b\leq T$,
+\begin{equation}\label{core:eq:profile-selected-preservation}
+ g(y,f(a,b))=f(g(y,a),g(y,b)).
+\end{equation}
+
+Suppose there are just two active choices $f,g$, with every other
+choice equal to join. Let $C\leq A_{\leq T}$ contain $T$ and put
+$B=\langle C\cup\{y\}\rangle$. The maps
+$F=f(y,-)$ and $G=g(y,-)$ are homomorphisms on $A_{\leq T}$.
+Writing $D=G[C]$, their images on $B$ are exactly
+\[
+ F[B]=F[C],\qquad G[B]=D\cup\{y\}\cup\{y+d:d\in D\}.
+\]
+If $|C|=m<\infty$, then
+\[
+ |B/(\ker F\cap\ker G)|\leq 2m^2.
+\]
+The common kernel can be nontrivial, even when $y\notin C$ and
+$B$ belongs to the core variety.
+\end{proposition}
+\begin{proof}
+Put $p=g(y,f(a,b))$ and $q=f(g(y,a),g(y,b))$.
+The cross-choice inequality gives $p\leq q$, and the choice bound
+gives $q\leq g(y,a)+g(y,b)$. The mixed-meet formula therefore gives
+\[
+ p=q\wedge(y+p).
+\]
+Since $f(y,a),f(y,b)\leq f(y,T)=y$, distribution gives
+\[
+ q\leq f(y+a,y+b)=y+f(a,b).
+\]
+Coverage at $y,f(a,b)$ gives
+$y+f(a,b)=f(y,f(a,b))+p\leq y+p$.
+Thus $q\leq y+p$, proving $p=q$.
+
+The atomic profile $e=f(T,-)$ is a homomorphism onto its
+distributive lattice image by \cref{core:prop:atomic-uniform-lift}.
+Since $e(y)=y$ and $F=Fe$, the map $F$ is the composite of $e$
+with lattice meet by $y$. It is therefore a homomorphism for all
+choices and join. In the two-owner case, the displayed preservation
+law makes $G$ a homomorphism as well; its own choice and join are
+preserved by associativity and distribution.
+
+On the lattice image of $e$, the choice $g$ is join. Hence
+$F(G(a))=g(y,F(a))=y$, since $F(a)\leq y$, and also
+$G(F(a))=y$. Thus $y$ is a $g$ identity and an $f$ absorber
+on $G[B]$. The set $F[C]$ is a subalgebra containing
+$F(y)=y=F(T)$, which proves $F[B]=F[C]$.
+Likewise $G[B]=\langle D\cup\{y\}\rangle$.
+The endpoint laws and distribution close
+$D\cup\{y\}\cup(y+D)$ under all operations. For example,
+for $d,e\in D$,
+\[
+\begin{aligned}
+ f(y+d,e)&=y+f(d,e),&
+ g(y+d,e)&=e+g(d,e),\\
+ f(y+d,y+e)&=y+f(d,e),&
+ g(y+d,y+e)&=y+d+e.
+\end{aligned}
+\]
+This proves the claimed second image.
+Monotonicity gives $y\leq g(y,T)$, so coverage and $f(y,T)=y$
+give $G(T)=T$. Thus $T\in D\cap(y+D)$, and the second image
+has at most $2|D|$ elements. The homomorphism $(F,G)$ proves
+the quotient bound.
+
+For the last assertion, use the ten-element core algebra in
+\cref{core:prop:owned-unit-observer-obstruction}, with its displayed
+labeling. Take $f=\star_1$, $g=\star_0$,
+$T=5$, $C=\{0,3,5,8,9\}$, and $y=4$.
+Its tables give a closed $C$, $y\leq T$, and $f(y,T)=y$.
+The elements $9\in C$ and $7=y+0$ are distinct elements of $B$,
+but both have $(F,G)$ image $(4,7)$.
+\end{proof}
 
 At arbitrary inputs the word theorem does not extend by taking joins
 of words or inserting resets. The obstruction already occurs with two
