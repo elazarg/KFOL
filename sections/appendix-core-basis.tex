@@ -66,7 +66,11 @@ nothing here settles it. This appendix collects what is known, in four groups.
   a meet representation throughout the core variety: a $(2h+2)$-element
   ladder algebra defeats every valid upper bound made from words of
   depth at most $h$
-  (\cref{core:prop:quadratic-quotient-obstruction}). The word proof uses input reset
+  (\cref{core:prop:quadratic-quotient-obstruction}). Even at unrestricted
+  depth, such an upper bound need not lie below a specified
+  meet-irreducible bound on the target, although the full family of
+  upper bounds can still have the target as its meet
+  (\cref{core:prop:upper-threshold-obstruction}). The word proof uses input reset
   erasure, which holds for arbitrary core contexts and any number of
   owners (\cref{core:lem:input-reset-erasure}). For arbitrary
   owners and parameters, joining with a common upper bound of the
@@ -3708,6 +3712,77 @@ family, proving \eqref{core:eq:bounded-upper-obstruction}.
 
 A finite equational basis could still prove identities involving words
 of unbounded depth.
+
+Allowing unrestricted depth leaves a separate obstacle to a proof by
+meet-irreducible thresholds. Upper bounds can recover a target without
+interpolating below each meet-irreducible element above it.
+
+\begin{proposition}[Failure of threshold interpolation]
+\label{core:prop:upper-threshold-obstruction}
+For every $K\geq3$, there are a seventeen-element core algebra $A$,
+a valuation $\vec v$ of $a,b,c,d,z$, and a meet-irreducible element
+$m$ such that, for $f=\star_0$, $g=\star_1$, and
+\[
+ t=f(g(a,b),g(c,d)),
+\]
+we have $t(\vec v)<m$, but no universally valid upper bound of $t$
+that is a finite join of variable-coefficient translation words
+has value at most $m$. The words may have arbitrary length and use
+any choice, join, and all five variables, including $z$ with value $m$.
+Nevertheless, the meet of all these upper bounds at $\vec v$ is
+$t(\vec v)$; two bounds of depth two already suffice.
+\end{proposition}
+\begin{proof}[Finite certificate and invariant]
+Let $B$ be the twenty-four-element core algebra in
+\cref{core:prop:owned-unit-observer-obstruction}, with its existing
+element labels. The subset $B\setminus\{0,5,12\}$ is a subalgebra.
+On it, the equivalence whose nonsingleton classes are
+\[
+ \{3,10\},\quad\{4,11\},\quad\{14,23\},\quad\{18,22\}
+\]
+is a congruence. Let $A$ be the quotient, labeling each class by
+its least element. Its carrier is
+\[
+ \{1,2,3,4,6,7,8,9,13,14,15,16,17,18,19,20,21\}.
+\]
+Every choice other than $f,g$ is join. The finite operation checks
+give
+\[
+ \mathord\downarrow13=\{1,13\},\qquad
+ 16\text{ is the unique cover of }13,\qquad
+ f(g(3,6),g(2,20))=1.
+\]
+Thus take $\vec v=(3,6,2,20,13)$, $m=13$, and $q=t(\vec v)=1$.
+
+Write $\alpha,\beta,n,p$ for the two atoms and markers of
+$D_{\{0,1\}}$, and evaluate the same variables there as
+$\vec e=(\beta,\alpha,\beta,\alpha,\alpha)$. In
+$D_{\{0,1\}}\times A$, consider the relation
+\[
+ R=(\{\alpha\}\times A)
+   \;\cup\;
+   (\{\beta,n\}\times(A\setminus\{1,13\})).
+\]
+It contains all five variable pairs. It is closed under join and
+under translation by each variable pair for every basic operation.
+These assertions, and the subquotient and order assertions above,
+are finite table checks, certified in \cref{app:verification}.
+Induction on word length, followed by closure under joins, therefore
+gives $(u(\vec e),u(\vec v))\in R$ for every proposed upper term $u$.
+If $u(\vec v)\leq13$, the definition of $R$ forces
+$u(\vec e)=\alpha$. But $t(\vec e)=\beta\nleq\alpha$, so $t\leq u$
+cannot be a core identity.
+
+For the final assertion, the choice bound and distribution give
+the universally valid depth-two upper terms
+\[
+ u=f(a,g(c,d))+f(b,g(c,d)),\qquad
+ v=f(c,g(a,b))+f(d,g(a,b)).
+\]
+Their values at $\vec v$ are $3$ and $2$, respectively, whose only
+common lower bound in $A$ is $1$. Since every valid upper bound
+is above $t(\vec v)=1$, the full family also has meet $1$.
+\end{proof}
 
 Reset also preserves an owned choice without limiting the number of
 active owners. The next expansion derives this from the finite laws at
