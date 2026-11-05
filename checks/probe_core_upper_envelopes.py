@@ -1,6 +1,8 @@
 """Test unrestricted word-upper meets at fixed valuations, for ALL term sizes.
 
-This probes an open conjecture, not finite basability. It uses the three
+This tests a property that fails in general; the five-variable obstruction
+is certified by check_core_upper_meet_obstruction.py. It does not decide
+finite basability. It uses the three
 four-element observers of the native three-owner core as reference algebras,
 and certified core models as targets. By default it checks every
 four-variable valuation, up to variable permutation, in the stored models.

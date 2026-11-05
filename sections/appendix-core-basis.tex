@@ -69,14 +69,16 @@ nothing here settles it. This appendix collects what is known, in four groups.
   a meet representation throughout the core variety: a $(2h+2)$-element
   ladder algebra defeats every valid upper bound made from words of
   depth at most $h$
-  (\cref{core:prop:quadratic-quotient-obstruction}). Even at unrestricted
-  depth, such an upper bound need not lie below a specified
-  meet-irreducible bound on the target, although the full family of
-  upper bounds can still have the target as its meet
-  (\cref{core:prop:upper-threshold-obstruction}). Unrestricted word-upper
-  meets do hold, at all arities, in every three-owner model of the
+  (\cref{core:prop:quadratic-quotient-obstruction}). Unrestricted word-upper
+  meets hold, at all arities, in every three-owner model of the
   strengthened candidate with at most eight elements
-  (\cref{core:prop:small-upper-meets}). The word proof uses input reset
+  (\cref{core:prop:small-upper-meets}), but fail for a five-variable term
+  in a twenty-four-element core algebra. This failure persists after
+  adding arbitrarily many parameter variables at arbitrary values
+  (\cref{core:prop:unrestricted-upper-obstruction}). A seventeen-element
+  example separates the meet property from the stronger requirement of
+  interpolation below each meet-irreducible upper threshold
+  (\cref{core:prop:upper-threshold-obstruction}). The word proof uses input reset
   erasure, which holds for arbitrary core contexts and any number of
   owners (\cref{core:lem:input-reset-erasure}). For arbitrary
   owners and parameters, joining with a common upper bound of the
@@ -3848,7 +3850,7 @@ family, proving \eqref{core:eq:bounded-upper-obstruction}.
 A finite equational basis could still prove identities involving words
 of unbounded depth.
 
-The unrestricted-word question admits an exact finite test for each
+The unrestricted-word meet property admits an exact finite test for each
 fixed finite core algebra. This removes both arity and term-size cutoffs
 from the small-model calculation.
 
@@ -3948,9 +3950,89 @@ Finite subdirect decomposition proves the assertion for all models
 in the statement.
 \end{proof}
 
-Allowing unrestricted depth leaves a separate obstacle to a proof by
-meet-irreducible thresholds. Upper bounds can recover a target without
-interpolating below each meet-irreducible element above it.
+The small-model result does not extend to all core algebras. In the next
+example, the target itself is meet-irreducible, and every valid word-join
+upper bound lies above its unique cover.
+
+\begin{proposition}[Failure of unrestricted upper meets]
+\label{core:prop:unrestricted-upper-obstruction}
+For every $K\geq3$, let $f=\star_0$, $g=\star_1$, and put
+\[
+ t=d+f\bigl(g(a,c),g(e,f(a,b))\bigr).
+\]
+There are a twenty-four-element core algebra $A$ and a valuation
+$\vec v$ of these five variables such that the greatest lower bound
+of all universally valid word-join upper bounds of $t$ is strictly
+greater than $t(\vec v)$. The words may have arbitrary length and use
+every choice and join. The same failure holds after extending $\vec v$
+to any finite collection of additional parameter variables, at any
+values in $A$.
+\end{proposition}
+\begin{proof}[Finite certificate and invariant]
+Use the twenty-four-element algebra from
+\cref{core:prop:owned-unit-observer-obstruction}, with its existing
+labels, and interpret every choice other than $f,g$ as join. Its
+certificate is a quotient of a subalgebra of $D_{\{0,1\}}^6$, so
+this expansion belongs to the core variety for every $K\geq3$.
+Take
+\[
+ (a,b,c,d,e)=(3,5,6,12,20).
+\]
+The operation tables give
+\[
+ t(\vec v)=13,\qquad
+ \mathord\downarrow13=\{1,12,13\},\qquad
+ \{x:13<x\}=\{9,11,14,16\},
+\]
+with $16$ below every strict upper bound of $13$.
+
+In $D_{\{0,1\}}=\{\alpha,\beta,n,p\}$, let $f$ absorb
+$\alpha$, let $g$ absorb $\beta$, and evaluate the variables as
+\[
+ \vec e=(\beta,p,\alpha,\beta,\alpha).
+\]
+Then $t(\vec e)=p$. Consider the relation
+\[
+ R=(D_{\{0,1\}}\times A)\setminus
+ \{(\alpha,12),(n,12),(p,1),(p,12),(p,13)\}.
+\]
+It contains the five variable pairs, is closed under join, and is
+invariant under every basic translation by those pairs. Moreover, put
+\[
+ \sigma(x)=\begin{cases}\beta,&x=12,\\\alpha,&x\ne12.\end{cases}
+\]
+Each $(\sigma(x),x)$ belongs to $R$ and preserves $R$ by every basic
+translation. These assertions and the order facts above are finite
+table checks; the independent certificate is in \cref{app:verification}.
+
+For any additional parameter variable with actual value $x$, choose
+native value $\sigma(x)$. Induction on word length and then on joins
+gives
+\[
+ (u(\vec e),u(\vec v))\in R
+ \qquad(u\in\mathcal Q_X)
+\]
+for the extended valuations. If $t\leq u$ is a core identity, then
+$t(\vec e)=p$ forces $u(\vec e)=p$. Since $(p,13)\notin R$,
+the actual value of $u$ is not $13$. Validity also puts that value
+above $t(\vec v)=13$, so it is at least $16$.
+
+For the exact greatest lower bound, set $V=g(e,f(a,b))$ and
+$W=g(a,c)$. The choice bound, distribution, and associativity give
+the universal upper terms
+\[
+ u=d+f(a,V)+f(c,V),\qquad
+ v=d+f(e,W)+f(b,f(a,W)).
+\]
+After expanding $V,W$, each is a join of words of depth at most three.
+Their actual values are $14$ and $9$, whose greatest lower bound is
+$16$. Hence the entire family has greatest lower bound $16>13$,
+including after every stated parameter extension.
+\end{proof}
+
+The meet property and interpolation at prescribed thresholds are
+distinct: a smaller example recovers the target as a meet while failing
+interpolation below a meet-irreducible element strictly above it.
 
 \begin{proposition}[Failure of threshold interpolation]
 \label{core:prop:upper-threshold-obstruction}
