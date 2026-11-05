@@ -62,9 +62,10 @@ nothing here settles it. This appendix collects what is known, in four groups.
   however, every term function is a pointwise meet of joins of variables
   and single choices between variables. The semilattice and distribution
   laws alone prove all the upper inequalities in this construction
-  (\cref{core:prop:upper-interpolation}). Even the full family of such
-  quadratic upper bounds can have a strictly larger meet in a core
-  quotient, already for a word of length two
+  (\cref{core:prop:upper-interpolation}). No fixed word depth gives such
+  a meet representation throughout the core variety: a $(2h+2)$-element
+  ladder algebra defeats every valid upper bound made from words of
+  depth at most $h$
   (\cref{core:prop:quadratic-quotient-obstruction}). The word proof uses input reset
   erasure, which holds for arbitrary core contexts and any number of
   owners (\cref{core:lem:input-reset-erasure}). For arbitrary
@@ -3637,66 +3638,76 @@ choice products. Lifting those generators to variables gives the
 claimed interpolating term.
 \end{proof}
 
-The quadratic meet representation cannot be transferred to the whole
-core variety. The obstruction already occurs for a composition of two
-translations, and applies to every choice of quadratic upper bounds.
+The meet representation cannot be transferred to the whole core
+variety, even by allowing any fixed depth of translation words in its
+upper bounds. The ladder family gives a uniform obstruction.
 
-\begin{proposition}[Quadratic upper bounds do not survive quotients]
+\begin{proposition}[Unbounded depth of upper bounds in quotients]
 \label{core:prop:quadratic-quotient-obstruction}
-For every $K\geq3$, put $f=\star_0$, $g=\star_1$, and
-$t(x,a,b)=f(a,g(x,b))$. There is a valuation in the four-element core
-algebra $B=L_2\setminus\{c_0\}$ at which
-\[
- t(\vec v)<\bigwedge\{u(\vec v):
-     \mathbf C_K\models t\leq u,\quad
-     u\text{ is a join of variables and single choices}
-     \text{ in }x,a,b\}.
-\]
-In particular, no quadratic upper normal form for this term gives a
-meet representation throughout $\mathcal V_K$.
+For every $K\geq3$ and $h\geq1$, there are a word term $t_h$ of
+length $h+1$ and a valuation $\vec v$ in the $(2h+2)$-element core
+algebra $B_h=L_{h+1}\setminus\{c_0\}$ such that
+\begin{equation}\label{core:eq:bounded-upper-obstruction}
+ t_h(\vec v)=a_0<c_1
+   =\bigwedge\{u(\vec v):\mathbf C_K\models t_h\leq u,
+                              \quad u\in\mathcal Q_h\}.
+\end{equation}
+Here $\mathcal Q_h$ consists of finite nonempty joins of words in basic
+choice or join translations, of length at most $h$, applied to variables,
+with every translation coefficient also a variable of $t_h$. The empty word is allowed. Thus no fixed word
+depth suffices for such upper meet representations throughout
+$\mathcal V_K$. For $h=1$, the obstruction has four elements and the
+upper terms are exactly the quadratic joins of
+\cref{core:prop:upper-interpolation}.
 \end{proposition}
 \begin{proof}
-The four elements $a_0,a_1,c_1,c_2$ form a subalgebra of the ladder
-$L_2\in\mathcal V_K$ from \cref{core:thm:ladders}.
-Their join order is $a_0,a_1<c_1<c_2$. Take
+The elements $a_0,\ldots,a_h,c_1,\ldots,c_{h+1}$ form a subalgebra of
+$L_{h+1}\in\mathcal V_K$ from \cref{core:thm:ladders}.
+Use variables $y_0,\ldots,y_{h-1},b,x$, and define terms recursively by
 \[
- x=a_1,\qquad a=a_0,\qquad b=c_2.
+ s_h=b\star_{h\bmod2}x,\qquad
+ s_j=y_j\star_{j\bmod2}s_{j+1}\quad(0\leq j<h),\qquad t_h=s_0.
 \]
-The tables give $t(\vec v)=a_0<c_1$.
-All owners other than $0,1$ act as join, both in $B$ and in the
-core algebra $D_{\{0,1\}}$. A proposed upper term can therefore be
-expanded, in these two algebras, as a join of a nonempty selection from
+At the valuation
 \[
- x,\ a,\ b,\ f(x,a),\ f(x,b),\ f(a,b),\
- g(x,a),\ g(x,b),\ g(a,b).
+ y_j=a_j,\qquad b=c_{h+1},\qquad x=a_h,
 \]
-We show that every universally valid upper bound in this list of joins
-has value at least $c_1$ at the chosen valuation.
+we have $s_j(\vec v)=a_j$ for every $0\leq j\leq h$.
+In particular $t_h(\vec v)=a_0$.
 
-First evaluate in $D_{\{0,1\}}$ at $x=a=n$, $b=p$.
-The target has value $p$. To reach $p$, the join must contain at least
-one of
-\[
- b,\ f(x,b),\ f(a,b),\ g(x,b),\ g(a,b).
-\]
-In $B$, all these summands except $g(x,b)=a_1$ have value $c_2$.
-Thus it remains to consider a join containing $g(x,b)$ and none of
-the other four listed summands.
-Evaluate next at $x=a_1$, $a=p$, $b=n$ in $D_{\{0,1\}}$.
-Again $t=p$. Among the remaining possible summands, only $a$ and
-$f(x,a)$ have value $p$. The join must contain one of them.
-Back in $B$, each has value $a_0$, so either joins with
-$g(x,b)=a_1$ to give $c_1$. This proves the required lower bound.
+Let $u\in\mathcal Q_h$ be a valid upper bound. Evaluate first in the
+core algebra $D_{\{0,1\}}$ with $b=p$ and every other variable equal
+to $n$. All choices act as join on $\{n,p\}$, and $t_h=p$.
+Consequently some word summand $W$ of $u$ must contain $b$, either
+as its initial variable or as a translation coefficient.
 
-Finally, two valid upper terms are
+Evaluate this word in $B_h$. Each basic translation lowers ladder
+level by at most one. If $b$ is its initial variable, the initial
+level is $h+1$, so at most $h$ translations leave a level of at least
+one. If $b$ occurs as a coefficient, the corresponding translation
+has output level at least $h$: the only atom capable of absorbing
+$c_{h+1}$ is $a_h$, and every other output is $c_{h+1}$.
+At most $h-1$ translations remain, again leaving level at least one.
+Thus $\ell(W(\vec v))\geq1$.
+
+Validity of $t_h\leq u$ and $B_h\in\mathcal V_K$ give
+$a_0\leq u(\vec v)$; also $W(\vec v)\leq u(\vec v)$.
+Since the join of $a_0$ with any element of positive level is a marker
+$c_j$ with $j\geq1$, it follows that $c_1\leq u(\vec v)$.
+This applies to every valid upper term in $\mathcal Q_h$.
+
+Conversely, the choice bound gives the valid inequality
 \[
- U=f(a,x)+f(a,b),\qquad V=a+g(x,b).
+ t_h=y_0\star_0 s_1\leq y_0+s_1.
 \]
-Their inequalities follow from monotonicity, distribution, and the
-choice bound. Their values in $B$ are $c_2$ and $c_1$.
-Hence the meet of the entire family is exactly $c_1$, strictly above
-$t(\vec v)=a_0$.
+The term $s_1$ has length $h$, so this upper bound belongs to
+$\mathcal Q_h$. At the chosen valuation it has value
+$a_0+a_1=c_1$. Hence $c_1$ is the greatest lower bound of the entire
+family, proving \eqref{core:eq:bounded-upper-obstruction}.
 \end{proof}
+
+A finite equational basis could still prove identities involving words
+of unbounded depth.
 
 Reset also preserves an owned choice without limiting the number of
 active owners. The next expansion derives this from the finite laws at

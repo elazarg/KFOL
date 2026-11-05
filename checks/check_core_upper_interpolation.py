@@ -79,7 +79,7 @@ def audit(first_omitted, second_omitted):
 
 
 def check_quotient_obstruction():
-    """Audit the written two-evaluation obstruction for all quadratic joins."""
+    """Audit the h=1 case of the unbounded-depth obstruction."""
     from core_ladders import ladder_join, ladder_own
 
     values = (0, 1, 3, 4)  # a_0, a_1, c_1, c_2 in L_2
@@ -103,10 +103,9 @@ def check_quotient_obstruction():
     q = choices[0][actual[1]][choices[1][actual[0]][actual[2]]]
     w = indices[3]
     assert values[q] == 0 and q != w and add[q][w] == w
-    witnesses = [rows.index(row) for row in ((2, 2, 3), (1, 3, 2))]
-    assert all(target[row] == 3 for row in witnesses)
+    witness = rows.index((2, 2, 3))
+    assert target[witness] == 3
     valid = 0
-    witness_compatible = 0
     upper_values = set()
     for mask in range(1, 1 << len(profiles)):
         summands = tuple(elements(mask))
@@ -116,11 +115,9 @@ def check_quotient_obstruction():
             profile = [native[0][a][b]
                        for a, b in zip(profile, profiles[i])]
             value = add[value][outputs[i]]
-        if all(profile[row] == 3 for row in witnesses):
-            witness_compatible += 1
-            assert add[w][value] == value
         if all(native[0][a][b] == b for a, b in zip(target, profile)):
             valid += 1
+            assert profile[witness] == 3
             upper_values.add(value)
             assert add[w][value] == value
     assert valid == 312
@@ -128,9 +125,8 @@ def check_quotient_obstruction():
     assert all(add[z][w] == w for z in range(len(values))
                if all(add[z][u] == u for u in upper_values))
     print(f'Quadratic quotient obstruction: 511 nonempty joins audited; '
-          f'{valid} valid upper bounds on all 64 native assignments; '
-          f'the two written assignments alone force {witness_compatible} '
-          'joins above c_1 in the four-element subalgebra of L_2, whereas '
+          f'{valid} valid upper bounds on all 64 native assignments. '
+          'All are above c_1 in the four-element subalgebra of L_2, whereas '
           'the target is a_0. The full family of valid quadratic upper '
           'bounds has meet c_1.')
 
