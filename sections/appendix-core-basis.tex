@@ -70,7 +70,10 @@ nothing here settles it. This appendix collects what is known, in four groups.
   depth, such an upper bound need not lie below a specified
   meet-irreducible bound on the target, although the full family of
   upper bounds can still have the target as its meet
-  (\cref{core:prop:upper-threshold-obstruction}). The word proof uses input reset
+  (\cref{core:prop:upper-threshold-obstruction}). Unrestricted word-upper
+  meets do hold, at all arities, in every three-owner model of the
+  strengthened candidate with at most eight elements
+  (\cref{core:prop:small-upper-meets}). The word proof uses input reset
   erasure, which holds for arbitrary core contexts and any number of
   owners (\cref{core:lem:input-reset-erasure}). For arbitrary
   owners and parameters, joining with a common upper bound of the
@@ -3712,6 +3715,106 @@ family, proving \eqref{core:eq:bounded-upper-obstruction}.
 
 A finite equational basis could still prove identities involving words
 of unbounded depth.
+
+The unrestricted-word question admits an exact finite test for each
+fixed finite core algebra. This removes both arity and term-size cutoffs
+from the small-model calculation.
+
+\begin{proposition}[Unrestricted upper meets in small models]
+\label{core:prop:small-upper-meets}
+Let $A$ be a three-owner model of the strengthened candidate with at
+most eight elements. For every finite nonempty variable set $X$, every
+term $t$ over $X$, and every valuation $\vec a$ in $A$,
+\begin{equation}\label{core:eq:unrestricted-upper-meet}
+ t(\vec a)=\bigwedge\{u(\vec a):\mathbf C_3\models t\leq u,
+                                      \quad u\in\mathcal Q_X\},
+\end{equation}
+where $\mathcal Q_X$ consists of nonempty joins of words in basic
+choice or join translations, with initial variables and all coefficients
+in $X$, and no bound on word length.
+More generally, there is a finite algorithm deciding whether a given
+finite three-owner core algebra satisfies this assertion at all arities.
+\end{proposition}
+\begin{proof}[Finite reduction and certificate]
+First fix a finite core algebra $A$, $X$, and $\vec a$. Work with native
+term functions on the finite generator $\mathbf C_3$, or equivalently
+on its three four-element observers. For every reachable $b\in A$,
+let $P_b$ be the pointwise join of the functions of all terms having
+value $b$ at $\vec a$. This join is finite because there are only
+finitely many native functions on $X$. It is attained by a term with
+value $b$, since joining terms with that value still gives $b$.
+
+These maxima can be computed without enumerating terms. Start with
+the variable functions, grouped by their actual values. Whenever
+profiles at $b,c$ are available, apply a basic operation to their
+functions and insert the result at the actual state $h(b,c)$, joining
+it with any previous profile there. Every profile remains attained.
+At the fixed point, monotonicity and induction on terms show that
+the profile at $b$ majorizes every term with actual value $b$.
+It is therefore exactly $P_b$.
+
+Compute $L_b$ in the same way, but permit only translations by
+original variables and joins of profiles at the same actual state.
+Distribution expands every intermediate profile into a join of words,
+each with actual value $b$; induction on word length shows that $L_b$
+is the join of all such word functions. Omit undefined profiles.
+For each $m\in A$, put
+\[
+ E_m=\sum_{b\leq m}L_b
+\]
+when at least one summand exists. This is exactly the largest native
+function attained by a word-join term with actual value at most $m$.
+Consequently $P_b\leq E_m$ holds exactly when some universally valid
+word-join upper bound of $P_b$ has value at most $m$. The upper
+thresholds $\{m:P_b\leq E_m\}$ and the actual values of these upper
+terms have the same common lower bounds. Comparing that set with
+$\mathord\downarrow b$ decides \eqref{core:eq:unrestricted-upper-meet}
+for $P_b$.
+
+It also decides the assertion for every term with actual value $b$.
+Indeed, every upper bound of $P_b$ is an upper bound of such a term.
+Conversely, every native-valid upper bound of the term remains above
+$b$ because $A$ is already a core algebra. Thus passing for $P_b$
+implies passing for every term in its fiber; a failure for $P_b$
+is itself a term witness. The known core membership is essential in
+this step.
+
+To remove the arity bound, group variables having the same actual
+value. Replace each group by a new variable $y_b$, and write $t'$ for
+the resulting term. If $s_b$ is the join of the original variables in
+that group, monotonicity gives the universal inequality
+\[
+ t\leq t'(s_b:b\in G),
+\]
+with the same actual value, where $G$ is the set of input values.
+Any word-join upper bound of $t'$ expands after this substitution
+into a word-join upper bound of $t$, preserving its actual value.
+Hence it suffices to test the distinct-value valuation for each
+nonempty subset $G\subseteq A$. This proves the finite algorithm.
+
+The exact calculation in \texttt{probe\_core\_upper\_envelopes.py}
+passes every nonempty subset of each stored core model of size at
+most eight. To extend from these representatives to the entire
+class in the statement, use the coverage in
+\cref{core:prop:candidate-small-models,core:prop:bounded-models}.
+The asserted meet property is preserved by subalgebras and products:
+the family of universally valid upper terms is the same in every
+factor, so any common lower bound lies below the target in every
+coordinate. It is also invariant under carrier and owner relabeling.
+In a one-owner dissemilattice every term is itself a join of words,
+by distribution and associativity.
+
+Finally, adjoining an absorbing element preserves the property.
+Every valid inequality $t\leq u$ requires every variable of $t$ to
+occur in $u$, as assigning a larger ambiguous marker to a missing
+variable shows. If an input occurring in $t$ is the new absorber,
+every valid upper term therefore has that value. Otherwise the
+upper terms over the old inputs suffice, by the property in the old
+algebra. The one-owner, absorbing-extension, and certified cases
+thus cover every irreducible in the small-model enumeration.
+Finite subdirect decomposition proves the assertion for all models
+in the statement.
+\end{proof}
 
 Allowing unrestricted depth leaves a separate obstacle to a proof by
 meet-irreducible thresholds. Upper bounds can recover a target without
