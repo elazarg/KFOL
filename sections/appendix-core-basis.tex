@@ -63,7 +63,10 @@ nothing here settles it. This appendix collects what is known, in four groups.
   (\cref{core:prop:alternating-translations}). With arbitrary parameters
   for all choices and join, words in $m$ fixed translations reduce to length
   at most $m(m+1)/2$, and every word satisfies $P^3=P^2$
-  (\cref{core:thm:translation-words}). Branching unary polynomials
+  (\cref{core:thm:translation-words}). Adjoining a join upper bound
+  to a finite subalgebra still gives a finite algebra: every generated
+  element is a join of coefficients and words applied to that bound
+  (\cref{core:thm:upper-bound-extension}). Branching unary polynomials
   need more: translations over their coefficient subalgebra, joins,
   and even arbitrary inserted extensive maps can fail to generate them
   (\cref{core:prop:branching-obstruction}). Nor does any fixed number of
@@ -3741,8 +3744,109 @@ Therefore
 The identity transformation also satisfies this equation.
 \end{proof}
 
-The word theorem does not extend by taking joins of words or inserting
-resets. The obstruction already occurs with two active owners and three
+At an input above all coefficients, joins of words do suffice to
+generate the whole extension.
+
+\begin{theorem}[Adjoining an upper bound]
+\label{core:thm:upper-bound-extension}
+Let $A$ satisfy $\Gamma_K$ and all ordered mixed-absorption laws,
+let $C\leq A$ be nonempty, and let $t$ be a join upper bound of $C$.
+Then $\langle C\cup\{t\}\rangle$ consists exactly of the nonempty
+finite joins of elements of $C$ and values $W(t)$, where $W$ is a
+word in the translations $z\mapsto c\star_i z$ with $c\in C$.
+The empty word is allowed; $t$ need not be a coefficient.
+
+In particular, if $|C|=m<\infty$, put
+\[
+ q=Km,\qquad L=q(q+1)/2,\qquad N_q=\sum_{\ell=0}^{L}q^\ell.
+\]
+Then
+\[
+ |\langle C\cup\{t\}\rangle|\leq(m+1)2^{N_q}-1.
+\]
+\end{theorem}
+\begin{proof}
+All generated elements lie below $t$. Fix a choice $h$.
+Call $u$ \emph{extensive for $h$} when $z\leq h(u,z)$ for every
+$z\leq t$, and say that $c$ \emph{supports $u$ for $h$} when
+$c\leq u$ and $h(c,u)=u$.
+
+The support relation is transitive and is preserved by every basic
+translation $P$. Indeed, monotonicity, the cross-choice inequality
+of \cref{core:cor:cross-choice-bound}, and the choice bound give
+\[
+ P(u)=P(h(c,u))\leq h(P(c),P(u))
+ \leq P(c)+P(u)=P(u).
+\]
+Applying this in both arguments proves preservation by every basic
+binary operation $k$. In particular, supports $c,d\in C$ for $u,v$
+give a support $k(c,d)\in C$ for $k(u,v)$.
+
+If $u$ is extensive for $h$ and $k\ne h$ is another choice, then
+$k(u,v)$ is extensive for $h$. For each $z\leq t$, the mixed-meet
+formula of \cref{core:prop:mixed-meet} gives
+\[
+ h(z,k(u,v))=
+ \bigl(h(z,u)+h(z,v)\bigr)\wedge
+ \bigl(z+h(z,k(u,v))\bigr).
+\]
+The element $z$ lies below both factors, hence below the left side.
+Joining with $v$ also preserves extensivity, by monotonicity.
+If both $u,v$ are extensive for $h$, then so is $h(u,v)$, since
+\[
+ h(h(u,v),z)=h(u,h(v,z))\geq h(v,z)\geq z.
+\]
+If instead $d$ supports $v$ and $u$ is extensive, then $d$ supports
+$h(u,v)$: one has $d\leq v\leq h(u,v)$ and
+$h(d,h(u,v))=h(u,h(d,v))=h(u,v)$.
+
+It follows by induction on terms that every generated element is,
+for each choice $h$, either extensive for $h$ or supported for $h$
+by some $c\in C$. Each $c\in C$ supports itself, and $t$ is
+extensive because $z=h(z,z)\leq h(t,z)$ for $z\leq t$.
+The preceding calculations handle all induction steps.
+
+This invariant linearizes a choice between generated elements:
+\[
+ h(u,v)=
+ \begin{cases}
+ h(c,v)+h(d,u),&c,d\in C\text{ support }u,v,\\
+ v+h(d,u),&u\text{ is extensive and }d\in C\text{ supports }v,\\
+ u+v,&u,v\text{ are extensive}.
+ \end{cases}
+\]
+The symmetric mixed case is understood. In the first case each
+summand lies below $h(u,v)$, and their $h$-product is
+\[
+ h(h(c,v),h(d,u))=h(h(c,u),h(d,v))=h(u,v),
+\]
+which is at most their join. The second case follows in the same
+way from $h(h(d,u),v)=h(u,v)$ and $v\leq h(u,v)$.
+In the last case $h(u,v)$ lies above both inputs and below their join.
+
+Let $B$ be the claimed join closure. Distribution makes it closed
+under every choice translation with coefficient in $C$, since such
+a translation sends each coefficient back into $C$ and extends each
+word by one letter. The displayed formulas therefore make $B$
+closed under all choices. It contains $C,t$, and the reverse
+inclusion is immediate, proving the normal form.
+
+For finite $C$, there are $q$ letters. By
+\cref{core:thm:translation-words}, at most $N_q$ word values are
+needed. A join of coefficient summands reduces to either no such
+summand or one element of $C$, giving at most $m+1$ possibilities;
+the word summands give a subset of the $N_q$ values. Removing the
+completely empty expression proves the bound.
+\end{proof}
+
+For an arbitrary new element $x$, this theorem makes
+$\langle C\cup\{x+\sum C\}\rangle$ finite when $C$ is finite.
+It does not put $x$ in that subalgebra, so finiteness of arbitrary
+one-generator extensions still requires another argument.
+
+At arbitrary inputs the word theorem does not extend by taking joins
+of words or inserting resets. The obstruction already occurs with two
+active owners and three
 parameters, even when every term in those parameters is available as a
 coefficient.
 
