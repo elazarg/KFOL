@@ -116,6 +116,9 @@ nothing here settles it. This appendix collects what is known, in four groups.
   to joint separation in every free pointed algebra by absorber
   substitutions and common-lower-bound substitutions
   (\cref{core:prop:profile-amalgam,core:prop:free-retraction-criterion}).
+  Lattice interpolation already puts the common absorber-substitution
+  kernel inside the atomic reflection kernel, using only the basic
+  laws (\cref{core:cor:atomic-cofactor-interpolation}).
   For retractions whose values commonly support their fibers, identities
   reduce to evaluations with one input outside the coefficient algebra.
   All such extensions over the native two-owner algebra belong to its
@@ -123,6 +126,11 @@ nothing here settles it. This appendix collects what is known, in four groups.
   extension nevertheless need not preserve embeddings of coefficient
   algebras, even for a three-element native subpower
   (\cref{core:lem:supported-extension-reduction,core:prop:native-supported-extensions,core:prop:supported-embedding-obstruction}).
+  More generally, an extension with a separating ordered coordinate
+  that never decreases under any basic operation preserves every
+  regular identity of its base. Such extensions of core algebras
+  are therefore core already under the basic laws
+  (\cref{core:prop:non-erasing-coordinate}).
   Adjoining a fixed point of
   one atomic profile gives, with two active owners, a quotient of size
   at most twice the square of the coefficient algebra's size; its
@@ -5583,6 +5591,43 @@ Equation~\eqref{core:eq:free-retraction-separation} is established
 here for two active choices and $n\leq2$, by the pointed
 completeness results. Its unrestricted candidate case remains to be proved.
 
+The absorber maps already detect every atomic distinction. Their
+remaining common kernel is therefore confined to the atomic fibers.
+
+\begin{corollary}[Atomic interpolation from absorber cofactors]
+\label{core:cor:atomic-cofactor-interpolation}
+In the free absorber-pointed $\Gamma_K$ algebra on $x_1,\ldots,x_n$,
+put $T=\sum_lx_l+\sum_h a_h$ and $G_h(z)=T\star_h z$.
+For any term $t$, ordinary variable $x_i$, and owners $h\ne j$,
+\begin{equation}\label{core:eq:atomic-cofactor-interpolation}
+ G_h(t)=G_h(t[x_i:=a_h])
+       +\bigl(G_h(x_i)\star_h G_h(t[x_i:=a_j])\bigr).
+\end{equation}
+Every outside $G_h$ uses the same original $T$, including the
+unsubstituted $x_i$. Consequently, for each fixed $i$,
+\[
+ \bigcap_j\ker\varepsilon_{ij}\ \subseteq\ \ker\pi_T.
+\]
+These conclusions require no mixed-absorption axiom.
+\end{corollary}
+\begin{proof}
+By \cref{core:prop:atomic-uniform-lift}, $G_h$ is a homomorphism
+onto a distributive lattice with selected meet $\star_h$, join $+$,
+and top $T$. Its bottom is $a_h$, while $G_h(a_j)=T$ for $j\ne h$.
+For every bounded distributive-lattice polynomial $P$, distribution
+gives
+\[
+ P(z)=P(0)\vee\bigl(z\wedge P(1)\bigr).
+\]
+This follows by induction on $P$, including repeated occurrences of
+$z$. Apply it to the lattice polynomial obtained by applying $G_h$
+to $t$, with $z=G_h(x_i)$. Its endpoints are exactly the two
+cofactors in \eqref{core:eq:atomic-cofactor-interpolation}.
+Equality of all absorber cofactors therefore gives equality under
+every $G_h$. The atomic meet representation
+\eqref{core:eq:atomic-closure-meet} gives equality under $\pi_T$.
+\end{proof}
+
 Another controlled extension starts with a retraction whose values
 commonly support their fibers. Here one additional input suffices to
 detect any failed identity, but extending the coefficient algebra need
@@ -5724,6 +5769,55 @@ $f(u,a)\leq f(u,c)=u$; the second coordinate is symmetric.
 The additional map $C\to D$ used to distinguish $u,v$ is not one of
 the chosen coordinate projections. The obstruction therefore leaves
 open comparisons using all coefficient homomorphisms into $D$.
+
+An extension can also be controlled without a section when an
+additional separating coordinate is nondecreasing under every operation.
+
+\begin{proposition}[Regular identities with a non-erasing coordinate]
+\label{core:prop:non-erasing-coordinate}
+Let $A\models\Gamma_K$, let $p:A\to B$ be a homomorphism, and let
+$\lambda:A\to S$ take values in a partially ordered set. Suppose
+$(p,\lambda)$ is injective and, for every basic operation $h$, including
+join,
+\[
+ \lambda(x),\lambda(y)\leq\lambda(h(x,y)).
+\]
+Then every identity of $B$ having the same variables on both sides
+holds in $A$. In particular, if $B$ belongs to $\operatorname V(D_K)$,
+so does $A$; for $K\geq3$ the same holds for the core variety.
+There is no finiteness assumption.
+\end{proposition}
+\begin{proof}
+The join hypothesis makes $\lambda$ order-preserving: if $x\leq y$,
+then $\lambda(x)\leq\lambda(x+y)=\lambda(y)$.
+For a term $t$ at any valuation, let $L$ be the join of its leaf
+values. The first part of the proof of
+\cref{core:lem:postorder-retraction} uses only the basic laws and
+constructs a word $W$ of basic translations with $W(L)\leq t\leq L$.
+Every translation increases $\lambda$, so
+\[
+ \lambda(L)\leq\lambda(W(L))\leq\lambda(t)\leq\lambda(L).
+\]
+Thus $\lambda(t)=\lambda(L)$. Two sides of an identity with the
+same variables have the same leaf join, including when variables
+repeat. Their $p$-values agree by the identity in $B$, and their
+$\lambda$-values agree by this calculation; injectivity proves
+equality in $A$. Both named varieties contain a two-element algebra
+in which every operation is join, so all their identities have the
+same variables on both sides. This gives the membership conclusions.
+\end{proof}
+
+For example, on $B\times S$, where $S$ is a join semilattice, consider
+operations
+\[
+ h((a,u),(b,v))=
+   \bigl(h_B(a,b),u\vee v\vee\kappa_h(a,b)\bigr).
+\]
+Whenever these operations satisfy $\Gamma_K$, the proposition
+transfers core or ambient membership from $B$. The second coordinate
+may acquire new values during evaluation, but this cannot change a
+regular identity. Constructions permitting that coordinate to decrease
+fall outside the hypothesis.
 
 Fixed points of one atomic profile provide another controlled part of
 such an extension. The preservation law below holds for every number
