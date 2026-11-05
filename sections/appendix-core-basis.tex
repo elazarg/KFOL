@@ -125,6 +125,17 @@ nothing here settles it. This appendix collects what is known, in four groups.
   (\cref{core:prop:no-least-atomic-fiber}).
   For retractions whose values commonly support their fibers, identities
   reduce to evaluations with one input outside the coefficient algebra.
+  Every such extension over an atomic coefficient algebra has an ambient
+  representation, with no bound on the base or its fibers. Each
+  one-input extension embeds into a native power. For a topped base,
+  its top fiber is a distributive lattice of commuting contractions;
+  all atomic coefficient observers jointly separate the universal
+  supported extension
+  (\cref{core:thm:atomic-supported-extensions,core:cor:atomic-supported-observers}).
+  A six-element core algebra nevertheless requires both a subalgebra
+  and a quotient when represented through this class, even though it
+  has a neutral reset unit
+  (\cref{core:prop:atomic-support-cover-obstruction}).
   All such extensions over the native two-owner algebra belong to its
   variety, by exact finite presentations. The universal supported
   extension nevertheless need not preserve embeddings of coefficient
@@ -5699,9 +5710,10 @@ algebras as well as to the two-choice case.
 \end{proof}
 
 Another controlled extension starts with a retraction whose values
-commonly support their fibers. Here one additional input suffices to
-detect any failed identity, but extending the coefficient algebra need
-not preserve distinctions.
+commonly support their fibers. One additional input suffices to detect
+any failed identity. Atomic coefficient algebras admit a uniform
+representation of these extensions, although extending the coefficient
+algebra need not preserve distinctions.
 
 \begin{lemma}[Reduction to one supported input]
 \label{core:lem:supported-extension-reduction}
@@ -5756,6 +5768,319 @@ at $u$. There are finitely many such word transformations when $C$
 is finite, by \cref{core:thm:translation-words}; their finite join
 closure proves the last assertion.
 \end{proof}
+
+\begin{lemma}[Units in a supported extension]
+\label{core:lem:supported-units}
+Suppose $A\models\Gamma_K$ and $r:A\to C\leq A$ is a retraction
+with $r(x)\leq x$ and $h(r(x),x)=x$ for every choice $h$.
+The global left reset units of $A$ are exactly those of $C$.
+In particular, if $C$ is atomic, every coefficient $c\in C$
+is a global left reset unit of $A$.
+\end{lemma}
+\begin{proof}
+Write $\pi_b(x)=b\del x$. If $d$ commonly supports $x$, the reset
+fold gives $\pi_x(d)=x$: its initial join is $x+d=x$, and every
+subsequent choice translation by $d$ fixes $x$.
+If also $\pi_b(d)=d$, commuting resets give
+\[
+ \pi_b(x)=\pi_b\pi_x(d)=\pi_x\pi_b(d)=x.
+\]
+Apply this with $d=r(x)$ to extend every reset unit of $C$ to $A$.
+Conversely, if $x$ is a reset unit of $A$, then
+$x=\pi_x(r(x))=r(x)$, so $x\in C$ and is a reset unit there.
+\end{proof}
+
+\begin{theorem}[Supported extensions over atomic coefficients]
+\label{core:thm:atomic-supported-extensions}
+Let $K\geq2$, let $A$ satisfy $\Gamma_K$ and all ordered
+mixed-absorption laws, and let $r:A\to C\leq A$ be a retraction
+satisfying the common-support conditions of
+\cref{core:lem:supported-extension-reduction}. If $C$ is atomic,
+then $A\in\operatorname V(D_K)$, without any finiteness assumption.
+For $K\geq3$, owner exhaustion implies core membership.
+
+If $A=\langle C,u\rangle$ for one element $u$, then $A$ embeds into
+a power of $D_K$. In particular, every universal $F_C(c)$ over an
+atomic base has such an embedding. For $K=2$, join is retained in
+the signature.
+\end{theorem}
+\begin{proof}
+First suppose $C$ has join top $T$. Put $P_c=r^{-1}(c)$ and $L=P_T$.
+Each fiber is a common join semilattice with bottom its section value.
+Define
+\[
+ H_c(z)=z\del c,\qquad j_c(x)=T+x\quad(x\in P_c),
+ \qquad E_c=J_T H_c\big|_L,\qquad J_T(z)=T+z.
+\]
+The reset fold makes $H_c$ a join-preserving word of translations
+with coefficient $c$, including its initial join. It takes values in
+$P_c$, fixes that fiber, and for $x\in P_c$ satisfies
+\[
+ H_c(T+x)=T\del c+x\del c=c+x=x.
+\]
+Thus $j_c$ embeds $P_c$ into $L$ with inverse $H_c$ on its image.
+For $z\in L$, the choice bound gives $H_c(z)\leq z+c=z$.
+Consequently $E_c$ is a contractive idempotent join endomorphism of
+$L$, with image $j_c(P_c)$ and bottom $T$; also $E_T=\mathrm{id}$.
+
+By \cref{core:lem:supported-units}, all coefficients in $C$ are
+global reset units. The global sandwich law therefore gives
+$XYX=XY$ for every two coefficient translations, including join.
+As in \cref{core:thm:translation-words}, their words form a left
+regular band and erase every later occurrence of a letter.
+Any two such words $U,V$ which map $L$ contractively into itself
+commute there: $UV=UVU\leq VU$, and symmetrically $VU\leq UV$.
+In particular, the $E_c$ commute.
+
+For a choice $h$, let $e=h(c,d)$ and consider on $L$
+\[
+ Q=J_T h(d,H_c(-)).
+\]
+This is another contractive coefficient word. It satisfies
+$Q E_c=Q=E_e Q$, since $H_c j_c=\mathrm{id}_{P_c}$ and its
+output belongs to $j_e(P_e)$. Thus $Q\leq E_eE_c$.
+In the word $E_eE_c$, expand the $h(e,-)$ letter of $H_e$ as
+$h(c,-)h(d,-)$. The expanded word contains every letter of $Q$.
+Erasing repeated letters gives $(E_eE_c)Q=E_eE_c$; contractivity
+of $E_eE_c$ now gives the reverse inequality. Hence
+\begin{equation}\label{core:eq:atomic-supported-transport}
+ J_T h(d,H_c(-))=E_{h(c,d)}E_c.
+\end{equation}
+For join, $J_TJ_dH_c=E_c$ because $d\leq T$. Its values also
+belong to $j_{c+d}(P_{c+d})$, so $E_c\leq E_{c+d}$.
+
+Using \eqref{core:eq:common-support-linearization}, identify $A$
+with the tagged carrier
+\[
+ \coprod_{c\in C}\{c\}\times E_c(L).
+\]
+For any basic operation $h$, including join, its table is
+\begin{equation}\label{core:eq:atomic-supported-table}
+ h((c,p),(d,q))=
+ \bigl(h(c,d),E_{h(c,d)}(p+q)\bigr).
+\end{equation}
+For join the index is simply $p+q$. The coefficient section is
+$c\mapsto(c,0)$, where $0=T$ in $L$.
+
+Now assume $A=\langle C,u\rangle$, and put $v=T+u\in L$.
+Let $D$ be the bounded lattice of actual endomorphisms of $L$
+generated by the $E_c$, the zero map, and the identity, using
+composition and pointwise join. Commuting contractive idempotents
+are closed under these operations; composition is their meet and
+distributes over join. Thus $D$ is a bounded distributive lattice.
+The tag table shows inductively that every index is $P(v)$ for
+some $P\in D$. Conversely, the reflected resets $E_c$ and joins
+realize all these values in the top fiber. Hence
+\[
+ L=\{P(v):P\in D\}.
+\]
+Evaluation at $v$ is injective: if $P(v)=Q(v)$, then for every $R\in D$,
+\[
+ P(R(v))=R(P(v))=R(Q(v))=Q(R(v)),
+\]
+so the actual maps $P,Q$ agree on all of $L$. Evaluation is therefore
+a join isomorphism $D\cong L$. It makes $L$ a bounded distributive
+lattice with top $v$, and $E_c$ acts as meet with $E_c(v)$.
+
+If $L$ is a singleton, $A=C$. Otherwise its bounded lattice
+homomorphisms $\chi:L\to\{0,1\}$ jointly separate $L$.
+Retaining the base tag gives onto homomorphisms from $A$ to
+two-state tag algebras: tag $c$ has indices $\{0,1\}$ when
+$\chi(E_c(v))=1$, and only $0$ otherwise. Surjectivity at a doubled
+tag follows by using $E_c(v)$. Their product is injective.
+
+It remains to represent each such tag algebra. Let
+$S=\{c:\chi(E_c(v))=1\}$, so $T\in S$ and $S$ is upward closed.
+The choice $h$ has output bit
+$[h(c,d)\in S](p\vee q)$. Put
+$\lambda_h(c)=[h(c,T)\in S]$.
+Distribution at $(c,0),(d,1),(T,0)$ gives
+\begin{equation}\label{core:eq:atomic-supported-bit}
+ [h(c,d)\in S]=\lambda_h(c)\qquad(d\in S).
+\end{equation}
+Pair coverage at $(T,1),(c,0)$ gives
+$\lambda_h(c)\vee\lambda_k(c)=1$ for distinct owners.
+The reset fold $H_c(T,1)$ has final bit $[c\in S]$.
+At each stage with bit $1$, \eqref{core:eq:atomic-supported-bit}
+applies; a zero bit cannot revive. Therefore
+\[
+ [c\in S]=\bigwedge_h\lambda_h(c).
+\]
+Distribution and associativity with $(T,1)$, respectively, give
+\[
+ \lambda_h(c+d)=\lambda_h(c)\vee\lambda_h(d),\qquad
+ \lambda_h(h(c,d))=\lambda_h(c)\wedge\lambda_h(d).
+\]
+For $k\ne h$, the atomic profile identity
+\eqref{core:eq:atomic-closure-hom} gives
+$h(k(c,d),T)=h(c+d,T)$, and hence
+$\lambda_h(k(c,d))=\lambda_h(c)\vee\lambda_h(d)$.
+There is at most one vanishing $\lambda_h(c)$. Send $c$ to $a_h$
+when this one vanishes, and to $n$ when all are $1$. The displayed
+rules define a homomorphism
+$\phi:C\to\mathbf A_K^{\rm at}$, with $S=\phi^{-1}(n)$.
+
+The map sending $(c,0)$ to $\phi(c)$ and every available $(c,1)$
+to $p$ is a homomorphism into $D_K$. Indeed, with an upper input,
+\eqref{core:eq:atomic-supported-bit} says that its bit survives
+exactly when the other coefficient does not map to the selected
+owner's atom. All other entries follow from $\phi$ and the join
+table. Together with the projection to $C$, this map separates
+the tag algebra, embedding it into $C\times D_K$.
+Finally, $C$ itself embeds into a power of $D_K$: its atomic
+profiles $h(T,-)$ jointly separate by
+\cref{core:prop:atomic-uniform-lift}, and each profile is a
+distributive lattice whose two-element observers embed in $D_K$.
+This proves the asserted native embedding of $\langle C,u\rangle$.
+
+For arbitrary $A$ over this topped $C$, apply
+\cref{core:lem:supported-extension-reduction} to its one-input
+subalgebras. If $C$ has no top, a finite identity valuation uses
+only finitely many section values. They generate a finite atomic
+subalgebra $C_0$, since the atomic variety is generated by a finite
+algebra. The algebra generated by $C_0$ and the valuation retains
+the support retraction, and $C_0$ has a join top. Thus every ambient
+identity holds on the valuation.
+For the stronger one-input assertion without a top, every finite
+subset of $\langle C,u\rangle$ lies in some
+$\langle C_0,u\rangle$ of this kind, with $r(u)\in C_0$.
+Fix distinct $x,y$. Every finite set of constraints for a homomorphism
+to $D_K$ separating $x,y$ is realized on one such subalgebra.
+Compactness of the finite discrete target supplies a global
+separating homomorphism. The core conclusion follows from
+\cref{core:thm:relative-exhaustion-complete}.
+\end{proof}
+
+\begin{corollary}[All atomic coefficient observers suffice]
+\label{core:cor:atomic-supported-observers}
+For atomic $C$ and $c\in C$, the canonical maps
+\[
+ F_C(c)\longrightarrow F_{\mathbf A_K^{\rm at}}(h(c)),
+ \qquad h\in\operatorname{Hom}(C,\mathbf A_K^{\rm at}),
+\]
+jointly separate $F_C(c)$.
+\end{corollary}
+\begin{proof}
+Native homomorphisms $g:F_C(c)\to D_K$ jointly separate by the
+theorem. The atomic image $g(C)$ cannot contain both $n,p$.
+If it omits $p$, its inclusion factors through
+$\mathbf A_K^{\rm at}$. If it contains $p$, it has at most one
+owner atom, since two distinct atoms join to $n$. Relabel $p$ as
+$n$ to obtain $h:C\to\mathbf A_K^{\rm at}$. The reverse relabeling
+on the image extends to a homomorphism
+$j:\mathbf A_K^{\rm at}\to D_K$: preserve the one owner atom,
+if present, and send all other elements to $p$.
+Thus in every case $g|_C=jh$. The supported value $g(u)$ then
+defines, by the presentation, a homomorphism
+$F_{\mathbf A_K^{\rm at}}(h(c))\to D_K$ factoring $g$.
+Consequently the canonical comparisons jointly separate.
+\end{proof}
+
+The section hypothesis cannot be removed by embedding an arbitrary
+core algebra into a supported extension, or by taking a quotient of
+a whole supported extension. Both failures already occur together
+in a small proper-owner algebra.
+
+\begin{proposition}[Both a subalgebra and a quotient can be necessary]
+\label{core:prop:atomic-support-cover-obstruction}
+For every $K\geq3$, there is a six-element core algebra $Q$ with a neutral reset unit
+which neither embeds into, nor is an onto homomorphic image of, any
+atomic-base common-support extension satisfying $\Gamma_K$ and the
+ordered mixed-absorption laws. Nevertheless, $Q$ is a quotient of a
+seven-element subalgebra of an eight-element such extension.
+\end{proposition}
+\begin{proof}
+Use two choices $f,g$, with every other choice interpreted as join.
+Let $Q=\{u,v,w,a,A,b\}$. On $\{u,v,w,a,A\}$, the join order is
+\[
+ a<u<v<w,\qquad a<A<w,
+\]
+where $A$ is incomparable with $u,v$. Define the remaining joins by
+\[
+ b+a=b+u=b+v=v,\qquad b+A=b+w=w.
+\]
+The choice $g$ absorbs $b$ and otherwise is join. The choice $f$
+absorbs $A$ and otherwise is join except for the symmetric entries
+\[
+ f(a,u)=f(a,v)=f(a,b)=a,\qquad f(a,w)=A.
+\]
+
+For an explicit native cover, write
+$D_{\{0,1\}}=\{\alpha,\beta,n,p\}$, and take
+\[
+ B=\bigl(\{\alpha,n,p\}\times\{\beta,n,p\}\bigr)
+       \setminus\{(\alpha,\beta)\},\qquad
+ S=B\setminus\{(n,\beta)\}.
+\]
+Both sets are subalgebras. To obtain $(\alpha,\beta)$ under $f$
+would require an input with first coordinate $\alpha$ while both
+second coordinates are $\beta$; the case of $g$ is symmetric.
+Join cannot create this point either. In $S$, an input with second
+coordinate $\beta$ has first coordinate $p$, so no operation creates
+$(n,\beta)$. The following table defines an onto homomorphism:
+\[
+\begin{array}{c|ccccccc}
+ s&(\alpha,n)&(\alpha,p)&(n,n)&(n,p)&(p,\beta)&(p,n)&(p,p)\\\hline
+ s\mapsto Q&a&A&u&w&b&v&w
+\end{array}
+\]
+Its only identified pair is $(n,p),(p,p)$. Multiplication by an
+element with first coordinate $\alpha$ makes the $f$-outputs equal;
+with second coordinate $\beta$, the $g$-outputs are equal. Every
+other operation preserves this pair or makes its outputs equal.
+It is therefore a congruence, and its quotient has the displayed
+table of $Q$. This also proves core membership.
+Replacing every $p$ coordinate of $B$ by $n$ is a common-support
+retraction onto
+$\{(\alpha,n),(n,\beta),(n,n)\}$, an atomic subalgebra.
+
+For the failure of an embedding, reset at $w$ in $Q$ maps
+$u,v,w$ to $w$, maps $a,A$ to $A$, and fixes $b$.
+Every homomorphism into an atomic algebra must therefore collapse
+these three blocks. In an embedding into a supported extension,
+compose with its atomic retraction. No two blocks can then merge:
+the unequal pairs
+\[
+ f(a,u)\ne a+u,\qquad g(b,u)\ne b+u,\qquad f(a,b)\ne a+b
+\]
+would contradict the common join operation within a fiber.
+The image of this composite is consequently the flat atomic
+three-element base. Restrict the extension to the preimage of that
+base and apply \eqref{core:eq:atomic-supported-table}.
+
+Write $\bar x$ for the index of $x\in Q$, and let $E_0,E_1$
+be the commuting contractive operators of its two atom tags.
+The tag table and the displayed operations give
+\[
+ E_0(\bar a)=\bar a,\quad E_0(\bar A)=\bar A,\quad
+ E_1(\bar b)=\bar b,\quad
+ E_0(\bar u),E_0(\bar b)\leq\bar a,\quad
+ E_1(\bar A)\leq\bar b.
+\]
+Since $\bar w=\bar A+\bar u=\bar A+\bar b$, these imply
+$E_0(\bar w)=\bar A$ and $E_1(\bar w)=\bar b$.
+Commutation and contractivity now give
+\[
+ E_1(\bar A)=E_0(\bar b)\leq\bar a\leq\bar u,
+ \qquad
+ \bar b=E_1(\bar A+\bar u)\leq\bar u.
+\]
+Thus $\bar v=\bar b+\bar u=\bar u$, contradicting injectivity
+on the ordinary fiber.
+
+Finally the reset units of $Q$ are exactly $u,a$, with $u$ neutral.
+Their common-support sets are respectively $\{u,v,w\}$ and
+$\{a,A\}$; in particular $b$ has no reset-unit common support.
+In any atomic supported extension each element has such a support,
+by \cref{core:lem:supported-units}. Both the support equations and
+the reset-unit law descend under an onto homomorphism. Hence $Q$
+cannot be an onto image of a whole extension of this kind.
+\end{proof}
+
+This obstruction concerns arbitrary algebras. It does not decide
+whether adjoining atomic supports conservatively to free generators
+is possible. The next native cases allow a coefficient base which
+is not atomic.
 
 \begin{proposition}[Supported extensions of the native two-owner algebra]
 \label{core:prop:native-supported-extensions}
@@ -5837,8 +6162,9 @@ $f(u,a)\leq f(u,c)=u$; the second coordinate is symmetric.
 \end{proof}
 
 The additional map $C\to D$ used to distinguish $u,v$ is not one of
-the chosen coordinate projections. The obstruction therefore leaves
-open comparisons using all coefficient homomorphisms into $D$.
+the chosen coordinate projections. For atomic coefficient algebras,
+\cref{core:cor:atomic-supported-observers} proves separation when
+all coefficient homomorphisms into the atomic native base are used.
 
 An extension can also be controlled without a section when an
 additional separating coordinate is nondecreasing under every operation.
