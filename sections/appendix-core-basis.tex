@@ -76,7 +76,9 @@ nothing here settles it. This appendix collects what is known, in four groups.
   Completeness of the strengthened candidate reduces to that pointed
   class without additional normalization axioms. With at most two active
   owners, mixed absorption makes these normalizers preserve the active
-  choices themselves. At an owned unit, a linear-context expansion of
+  choices themselves. A pair reset also absorbs a repeated outer
+  translation by increasing its parameter
+  (\cref{core:prop:sandwich-reset}). At an owned unit, a linear-context expansion of
   reset proves preservation of the selected choice for any number of
   owners and determines reset on finite joins from its values on pairs.
   Parameters fixed by the other unit maps give endomorphisms whose
@@ -2953,6 +2955,78 @@ Idempotence of $\pi_c$ makes its image closed under both operations.
 Join need not be preserved. In the two-owner generator $D_{\{i,j\}}$,
 take $c=p$ and its distinct atoms $a_i,a_j$. Then
 $\pi_p(a_i)+\pi_p(a_j)=n$, whereas $\pi_p(a_i+a_j)=p$.
+
+The reset homomorphism also strengthens the word reductions above. The
+equational step needed in its image uses no join operation.
+
+\begin{lemma}[Absorption at a pair reset unit]
+\label{core:lem:reset-unit-absorption}
+Let $f,g$ satisfy their semilattice and Birkhoff laws, both ordered
+mixed-absorption laws, the choice-image closure identities of
+\cref{core:prop:choice-images}, and the four-letter identities of
+\cref{core:prop:alternating-translations}. If
+$f(x,g(x,c))=x$ for every $x$, then
+\begin{equation}\label{core:eq:reset-unit-absorption}
+ f(x,g(c,f(x,z)))=f(x,g(c,z)).
+\end{equation}
+\end{lemma}
+\begin{proof}
+The universal equational derivation in
+\path{checks/data/core-reset-unit-absorption-proof.json} starts with
+exactly the stated laws and ends with
+$f(x,g(c,f(x,y)))=f(x,g(c,y))$.
+Every step is an assumption, reversal, or substitution with replacement
+of a subterm. The independent verifier described in
+\cref{app:verification} checks these inference rules directly.
+Thus the derivation applies to arbitrary algebras with these two
+operations and the named $c$.
+\end{proof}
+
+\begin{proposition}[Absorbing a sandwich by resetting its parameter]
+\label{core:prop:sandwich-reset}
+Let $A$ satisfy $\Gamma_K$ and all ordered mixed-absorption laws.
+For distinct choices $f,g$, put
+\[
+ F_x(z)=f(x,z),\qquad G_y(z)=g(y,z),\qquad
+ R_y(z)=f(z,g(z,y)).
+\]
+Then
+\begin{equation}\label{core:eq:sandwich-reset}
+ F_xG_yF_x=R_yF_xG_y=F_{R_y(x)}G_y.
+\end{equation}
+In particular, $R_y(x)\geq x$ and $F_xG_y\leq F_xG_yF_x$
+pointwise. If $R_y(x)=x$, the composite $F_xG_y$ is idempotent.
+\end{proposition}
+\begin{proof}
+Work with the two-choice reduct, interpreting all remaining choices as
+join. This preserves the hypotheses, so
+\cref{core:cor:two-owner-normalizers} makes $R_y$ an extensive
+idempotent endomorphism for $f,g$. Its image is a subalgebra with
+pair reset unit $y$: idempotence says
+$f(u,g(u,y))=u$ for $u\in R_y[A]$. The preceding lemma therefore
+applies in this image.
+
+Write $F=F_x$, $G=G_y$, $v=FG(z)$ and $w=FGF(z)$.
+The four-letter reductions give $FG(w)=w$, hence
+\[
+ R_y(w)=f(w,G(w))=f(f(x,G(w)),G(w))=w.
+\]
+Set $r=R_y(x)$ and $s=R_y(z)$. Since $R_y(y)=y$, its homomorphism
+property and \eqref{core:eq:reset-unit-absorption} in its image give
+\[
+ R_y(w)=f(r,g(y,f(r,s)))=f(r,g(y,s))=R_y(v).
+\]
+Consequently $w=R_y(v)$. Also $R_yG=G$, since
+\[
+ R_y(G(z))=f(G(z),G(z))=G(z).
+\]
+The homomorphism property now gives
+$R_y(v)=f(R_y(x),G(z))$, proving
+\eqref{core:eq:sandwich-reset}.
+Extensivity of $R_y$ proves both inequalities. Finally, if
+$R_y(x)=x$, the formula gives $FGF=FG$; combining it with
+$FGFG=FGF$ proves idempotence of $FG$.
+\end{proof}
 
 The selected-choice conclusion also follows from the finite laws at an
 owned unit, without limiting the number of active owners.
