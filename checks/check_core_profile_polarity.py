@@ -8,14 +8,18 @@ x=0/other variables=1.  All carrier elements are available as separate
 parameter variables.  Thus finite closure covers all arities and depths
 in each selected algebra, rather than a bounded list of terms.
 
+The monomial test additionally permits every h-unit of a fixed coefficient
+as a qualifying variable.  Their h-fold is that coefficient, since the
+coefficient itself is included.  This covers arbitrary conjunctions of
+variables in the upper-profile test.
+
 The written proof uses choice-image closure to obtain
     t_h <= x  ==> h(x,t)=t,
 and the mixed-meet formula to obtain
     t_h >= x  ==> x <= h(x,t).
 In particular, an atomic identity P=x makes every h(x,P)=P; pair coverage
-then gives x+P=P.  The computation below is a finite audit of these
-conclusions, not a proof of free atomic generator irreducibility or an
-unrestricted finite basis.
+then gives x+P=P.  The computation audits these finite models; the
+technical report proves the statements for arbitrary candidate algebras.
 
 Only the Python standard library and checked-in model tables are used.
 """
@@ -203,12 +207,16 @@ def audit_closure(tables, selected, distinguished):
 
 def check():
     totals = dict(models=0, law_instances=0, closures=0, witness_states=0,
-                  closure_entries=0, polarity_entries=0)
+                  closure_entries=0, polarity_entries=0,
+                  monomial_states=0, monomial_closure_entries=0,
+                  monomial_conclusions=0)
     for name, tables in models():
         totals["models"] += 1
         totals["law_instances"] += audit_laws(tables)
         row = dict(model=name, size=len(tables[0]), closures=0,
-                   witness_states=0, closure_entries=0, polarity_entries=0)
+                   witness_states=0, closure_entries=0, polarity_entries=0,
+                   monomial_states=0, monomial_closure_entries=0,
+                   monomial_conclusions=0)
         for selected in range(1, len(tables)):
             for distinguished in range(len(tables[0])):
                 states, closure, polarity = audit_closure(
@@ -218,12 +226,80 @@ def check():
                 row["witness_states"] += states
                 row["closure_entries"] += closure
                 row["polarity_entries"] += polarity
+                states, closure, conclusions = audit_monomial_profile(
+                    tables, selected, distinguished
+                )
+                row["monomial_states"] += states
+                row["monomial_closure_entries"] += closure
+                row["monomial_conclusions"] += conclusions
         for key in ("closures", "witness_states", "closure_entries",
-                    "polarity_entries"):
+                    "polarity_entries", "monomial_states",
+                    "monomial_closure_entries", "monomial_conclusions"):
             totals[key] += row[key]
         print(json.dumps(row, sort_keys=True))
     print("PASS", json.dumps(totals, sort_keys=True))
     return totals
+
+
+def audit_monomial_profile(tables, selected, coefficient):
+    """Close value/profile pairs for every variable absorbed by coefficient."""
+    add, choice = tables[0], tables[selected]
+    size = len(add)
+    states, nodes, positions = [], [], {}
+
+    def insert(state, node):
+        if state not in positions:
+            positions[state] = len(states)
+            states.append(state)
+            nodes.append(node)
+
+    for value in range(size):
+        insert((value, 0), ("parameter", value))
+        if choice[coefficient][value] == coefficient:
+            insert((value, 1), ("qualifying", value))
+    cursor = 0
+    while cursor < len(states):
+        a, bit_a = states[cursor]
+        for other in range(cursor + 1):
+            b, bit_b = states[other]
+            for operation, table in enumerate(tables):
+                insert((table[a][b], profile_product(
+                    selected, operation, bit_a, bit_b)),
+                    (operation, cursor, other))
+        cursor += 1
+    assert len(states) <= 2 * size
+
+    replayed = []
+    for index, node in enumerate(nodes):
+        if node[0] in ("parameter", "qualifying"):
+            state = (node[1], int(node[0] == "qualifying"))
+            if state[1]:
+                assert choice[coefficient][state[0]] == coefficient
+        else:
+            operation, left, right = node
+            assert left < index and right < index
+            a, bit_a = replayed[left]
+            b, bit_b = replayed[right]
+            bit = (int(bool(bit_a) and bool(bit_b))
+                   if operation == selected else
+                   int(bool(bit_a) or bool(bit_b)))
+            state = (tables[operation][a][b], bit)
+        assert state == states[index]
+        replayed.append(state)
+
+    closure_entries = conclusions = 0
+    for operation, table in enumerate(tables):
+        for a, bit_a in states:
+            for b, bit_b in states:
+                assert (table[a][b], profile_product(
+                    selected, operation, bit_a, bit_b)) in positions
+                closure_entries += 1
+    for value, bit in states:
+        if bit:
+            result = choice[coefficient][value]
+            assert add[coefficient][result] == result
+            conclusions += 1
+    return len(states), closure_entries, conclusions
 
 
 if __name__ == "__main__":

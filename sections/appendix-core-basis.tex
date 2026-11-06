@@ -59,6 +59,9 @@ nothing here settles it. This appendix collects what is known, in four groups.
   covers together contain every vertex. This includes simultaneous
   fans and all bipartite row/column patterns
   (\cref{core:prop:overlap-coverage,core:thm:all-arity-overlap,core:thm:hypergraph-factoring}).
+  It also proves that a different choice acts as join on any two
+  terms using one fixed choice and join, provided they contain the
+  same variables (\cref{core:cor:one-choice-content}).
   A seven-variable star family also compares the row and column
   factorizations of every path or cycle with private edge residuals,
   irrespective of its length. More generally, a fixed star family
@@ -137,8 +140,11 @@ nothing here settles it. This appendix collects what is known, in four groups.
   Lattice interpolation already puts the common absorber-substitution
   kernel inside the atomic reflection kernel, using only the basic
   laws (\cref{core:cor:atomic-cofactor-interpolation}).
-  Every atomic identity with a variable on one side lifts to common
-  support under the strengthened candidate. Each free generator is
+  The strengthened candidate lifts a comparison of Boolean owner
+  profiles whenever a conjunction of variables lies between them
+  (\cref{core:cor:profile-interpolation}). In particular, every atomic
+  identity with a variable on one side lifts to common support. Each
+  free generator is
   therefore the least element of its atomic fiber, where all choices
   equal join (\cref{core:cor:atomic-projection-support}). Other fibers
   need not have least representatives even in a true free core algebra:
@@ -192,6 +198,11 @@ nothing here settles it. This appendix collects what is known, in four groups.
   those paths gives a uniform finite bound on finitely generated
   models of the entire schema, with computable finite free presentations
   (\cref{core:thm:atomic-fiber-local-finiteness,core:cor:atomic-fiber-free-presentation}).
+  For a fixed finite atomic quotient, the derivative orbit of one cut
+  also gives a bound on the size of separating homomorphic images,
+  independent of the fibers. Hence failures over that quotient are
+  witnessed with a bounded number of variables
+  (\cref{core:thm:fixed-atomic-residual-bound}).
   At a minimal separating cut,
   the zero ideal carries a canonical atomic owner map which descends
   to its image in the quotient
@@ -3378,24 +3389,28 @@ Boolean interpretation in which $\star_i$ is meet and every other
 basic operation, including join, is join. These are the complementary
 conventions to the separating maps $b_i$ used above.
 
-\begin{proposition}[Boolean profile tests for a variable translation]
+\begin{proposition}[Boolean profile tests for a conjunction translation]
 \label{core:prop:profile-polarity}
-Fix a variable $x$ and a term $t$, with arbitrary repetitions and
-additional variables. Under $\Gamma_K$ and all ordered mixed absorption,
+Fix a nonempty finite set $X$ of variables and put
+$c=\mathop{\star_i}_{x\in X}x$, with Boolean profile
+$m_X=\bigwedge_{x\in X}x$. For any term $t$, with arbitrary
+repetitions and additional variables, $\Gamma_K$ and all ordered
+mixed absorption give
 \begin{align}
- t^{[i]}\leq x
+ t^{[i]}\leq m_X
  &\quad\Longleftrightarrow\quad
-   x\star_i t=t\text{ is derivable},
+   c\star_i t=t\text{ is derivable},
    \label{core:eq:profile-fixedness}\\
- x\leq t^{[i]}
+ m_X\leq t^{[i]}
  &\quad\Longleftrightarrow\quad
-   x\leq x\star_i t\text{ is derivable}.
+   c\leq c\star_i t\text{ is derivable}.
    \label{core:eq:profile-extensivity}
 \end{align}
 The conditions on the left are inequalities of Boolean functions.
 \end{proposition}
 \begin{proof}
-Write $h=\star_i$. By monotonicity, $t^{[i]}\leq x$ is equivalent
+Write $h=\star_i$. First let $X=\{x\}$.
+By monotonicity, $t^{[i]}\leq x$ is equivalent
 to value $0$ when $x=0$ and every other variable is $1$.
 Induct on the syntax tree at this Boolean valuation.
 The only qualifying variable leaf is $x$.
@@ -3404,30 +3419,50 @@ the result fixed by $h(x,-)$. At a different-choice node both children
 qualify; the image of $h(x,-)$ is a subalgebra by
 \cref{core:prop:choice-images}, so the result is fixed as well.
 At a join node both children qualify, and distribution suffices.
-This proves the forward implication in
-\eqref{core:eq:profile-fixedness}.
+For general $X$, the hypothesis $t^{[i]}\leq m_X$ gives
+$t^{[i]}\leq x$ for every $x\in X$. Thus each $h(x,t)=t$,
+and associativity gives $h(c,t)=t$, proving
+\eqref{core:eq:profile-fixedness} in the forward direction.
 
-Dually, $x\leq t^{[i]}$ is equivalent to value $1$ when $x=1$
-and all other variables are $0$. At an $h$-node both children $u,v$
+Dually, $m_X\leq t^{[i]}$ is equivalent to value $1$ when the
+variables in $X$ are $1$ and all other variables are $0$.
+At a qualifying variable leaf $x\in X$, one has $h(c,x)=c$.
+At an $h$-node both children $u,v$
 qualify. Associativity, idempotence, and monotonicity give
 \[
- h(x,h(u,v))=h(h(x,u),h(x,v))\geq h(x,x)=x.
+ h(c,h(u,v))=h(h(c,u),h(c,v))\geq h(c,c)=c.
 \]
 At a join node one qualifying child suffices by distribution.
 At a distinct-choice node $t=g(u,v)$, one child qualifies, so
-$h(x,u)+h(x,v)\geq x$. The other bound in the mixed-meet formula
+$h(c,u)+h(c,v)\geq c$. The other bound in the mixed-meet formula
 \eqref{core:eq:mixed-meet}
 \[
- h(x,g(u,v))
- =\bigl(h(x,u)+h(x,v)\bigr)\wedge
-    \bigl(x+h(x,g(u,v))\bigr)
+ h(c,g(u,v))
+ =\bigl(h(c,u)+h(c,v)\bigr)\wedge
+    \bigl(c+h(c,g(u,v))\bigr)
 \]
-is also above $x$. Their greatest lower bound is therefore above $x$.
+is also above $c$. Their greatest lower bound is therefore above $c$.
 This proves the forward implication in
 \eqref{core:eq:profile-extensivity}.
 For both converses, evaluate the proposed identity in the two-element
 atomic image with $h$ as meet. It gives exactly the Boolean inequality
 on the left.
+\end{proof}
+
+\begin{corollary}[Conjunctive profile interpolation]
+\label{core:cor:profile-interpolation}
+If $s^{[i]}\leq m_X\leq t^{[i]}$ for a nonempty finite set of
+variables $X$, then $\Gamma_K$ and all ordered mixed absorption derive
+$s\leq s\star_i t$. In particular,
+$s^{[i]}=t^{[i]}=m_X$ implies $s\star_i t=s+t$.
+\end{corollary}
+\begin{proof}
+With $h=\star_i$ and $c=\mathop{\star_i}_{x\in X}x$, the proposition gives
+$h(c,s)=s$ and $c\leq h(c,t)$. Applying $h(s,-)$ to the latter yields
+\[
+ s=h(s,c)\leq h(s,h(c,t))=h(h(s,c),t)=h(s,t).
+\]
+For equal profiles, interchange $s,t$ and use the choice bound.
 \end{proof}
 
 \begin{corollary}[Atomic projection identities lift to common support]
@@ -3445,7 +3480,7 @@ on that fiber equals join.
 \end{corollary}
 \begin{proof}
 If $P=x$ is atomic-valid, every Boolean profile of $P$ equals $x$.
-Equation~\eqref{core:eq:profile-fixedness} therefore gives
+Equation~\eqref{core:eq:profile-fixedness}, with $X=\{x\}$, gives
 $h(x,P)=P$ for every choice. Pair coverage gives $x+P=P$.
 Conversely, the displayed support identities imply $P=x$ in every
 atomic two-element image, hence in the atomic generator.
@@ -3458,9 +3493,10 @@ monotonicity gives $h(u,v)\geq h(x,v)=v$ and similarly
 $h(u,v)\geq u$. The choice bound then gives $h(u,v)=u+v$.
 \end{proof}
 
-This does not replace the variable $x$ by an arbitrary term in the
-Boolean hypotheses. The general atomic-fiber schema concerns two
-arbitrary terms and is treated in
+Conjunctions in these tests are formed from variables; they cannot
+be replaced by arbitrary terms while keeping only the Boolean
+hypotheses. The general atomic-fiber schema concerns two arbitrary
+terms and is treated in
 \cref{core:prop:relative-atomic-fiber-schema}.
 
 For arbitrary atomic identities, a common upper bound gives a uniform lift. Put
@@ -4576,7 +4612,42 @@ summand dominates $x_i$; if $g$ is join, each summand dominates $E$.
 These observations prove the final assertion.
 \end{proof}
 
-The same coverage laws control simultaneous factorizations along
+\begin{corollary}[Comparison by a choice omitted from the terms]
+\label{core:cor:one-choice-content}
+Let $f,g$ be distinct choices. Assume $\Gamma_K$, all ordered mixed
+absorption, and overlap coverage for the ordered pair $(g,f)$.
+If terms $s,t$ use only $g$ and join, and every variable of $s$
+occurs in $t$, then $s\leq f(s,t)$ is derivable. If they contain
+the same variables, then $f(s,t)=s+t$ is derivable.
+\end{corollary}
+\begin{proof}
+First put $A=g(x_1,\ldots,x_n)$ and suppose that witnesses
+$b_i\leq t$ satisfy $g(x_i,b_i)=b_i$. For $n=1$,
+\cref{core:lem:absorber-fibers} gives $x_1\leq f(x_1,b_1)$.
+For $n\geq2$, overlap coverage at arity $n$, with outer choice
+$g$, inner choice $f$, and padding $b_i$, gives
+\[
+ A\leq\sum_i g(x_i,f(g(x_j:j\ne i),b_i)).
+\]
+The cross-choice inequality bounds the $i$th summand by
+\[
+ f(g(x_i,g(x_j:j\ne i)),g(x_i,b_i))
+ =f(A,b_i)\leq f(A,t).
+\]
+Thus $A\leq f(A,t)$ in both cases.
+
+Distribution writes $s,t$ exactly as finite nonempty joins of
+$g$-folds of nonempty sets of variables. Fix one such fold $A$ of
+$s$. For each variable $x$ in $A$, choose a fold $B_x$ of $t$
+containing $x$. Then $B_x\leq t$ and $g(x,B_x)=B_x$, so the
+preceding argument gives $A\leq f(A,t)\leq f(s,t)$. Joining over
+the folds of $s$ proves the first claim. For equal variable sets,
+interchange $s,t$ and apply the choice bound.
+\end{proof}
+
+This proves the $f$-comparison without requiring the two terms to
+have equal profiles for other owners. The same coverage laws also
+control simultaneous factorizations along
 arbitrary finite incidence patterns. A vertex cover here means a set
 meeting every edge; different covers may overlap.
 
@@ -7449,7 +7520,14 @@ quotient with common-semilattice congruence classes. Then
 Every atomic quotient with common-semilattice classes is the canonical
 atomic reflection of its domain. The schema has the same consequences
 if restricted to regular atomic identities, whose two sides contain
-the same variables. In particular, the entire schema is
+the same variables. It is also equivalent, relative to $\Sigma$, to
+all inequalities
+\begin{equation}\label{core:eq:profile-order-schema}
+ s\leq s\star_i t
+ \qquad\text{whenever }s^{[i]}\leq t^{[i]}
+ \text{ as Boolean functions}.
+\end{equation}
+In particular, the entire schema is
 complete for $\mathcal V$ relative to $\Sigma$ if and only if every
 $\Sigma$-algebra with such an atomic quotient belongs to
 $\mathcal V$.
@@ -7483,6 +7561,18 @@ atomic-valid and regular, so its restricted schema includes
 $h(U,V)=U+V$. Associativity and distribution give $h(U,V)=U$,
 whereas the choice bound gives $U+V=V$. Thus $U=V$, which is the
 required unrestricted instance.
+
+For the profile-order formulation, put $u=s\star_i t$ and $v=s+u$.
+If $s^{[i]}\leq t^{[i]}$, then $u^{[i]}=v^{[i]}=s^{[i]}$.
+For every $j\ne i$, both profiles are
+$s^{[j]}\vee t^{[j]}$. Thus $u=v$ is atomic-valid, and its schema
+instance gives $u\star_i v=u+v=v$. But associativity and
+distribution give $u\star_i(s+u)=u$, proving $u=v$ and
+\eqref{core:eq:profile-order-schema}.
+Conversely, if $s=t$ is atomic-valid, every pair of profiles is
+equal. Applying \eqref{core:eq:profile-order-schema} in both
+directions puts $s,t$ below $s\star_i t$; the choice bound gives
+the required equality with $s+t$.
 Finally, $D_K$, and each proper native observer in the core case, has
 the requisite atomic quotient. These generators prove the final criterion.
 \end{proof}
@@ -7648,8 +7738,72 @@ both sides of that equation are $1$. The path formula follows by
 term induction; the leaf's own derivative does not change its value.
 \end{proof}
 
-The path calculation gives a finiteness bound without a supported
-section or a representation by native observers.
+Closing one cut under derivatives first gives a finite separating
+quotient whenever the atomic base is finite.
+
+\begin{theorem}[Residual bound over a finite atomic quotient]
+\label{core:thm:fixed-atomic-residual-bound}
+Let $A$ satisfy $\Gamma_K$ and all ordered mixed absorption, and
+admit an onto atomic quotient $r:A\to C$ with common-semilattice
+fibers. If $|C|=m<\infty$, put $B(m)=m\,2^{2^m}$.
+Then $A$ is a subdirect product of homomorphic images of size at most
+$B(m)$, each still mapping onto $C$ with common-semilattice fibers.
+No finiteness of $A$ or its fibers is assumed.
+
+Every identity failing in $A$ has a variable-identification instance
+that fails in $A$ and uses at most $B(m)$ variables. In particular,
+if $A$ satisfies every core identity in at most $B(m)$ variables,
+then $A$ belongs to the core variety.
+\end{theorem}
+\begin{proof}
+Fix a nonconstant join cut $\chi$. Let $\mathcal D_\chi$ consist
+of the distinct cuts other than constant one reachable from $\chi$
+by derivative words, including the empty word. By
+\cref{core:lem:atomic-cut-derivatives}, legal words with the same
+tag set give the same cut, and every illegal word gives constant one.
+Consequently
+\[
+ |\mathcal D_\chi|\leq 2^m,\qquad
+ E_c\psi\in\mathcal D_\chi\cup\{1\}
+ \quad(c\in C,\ \psi\in\mathcal D_\chi).
+\]
+Define $a\equiv_\chi b$ when $r(a)=r(b)$ and
+$\psi(a)=\psi(b)$ for every $\psi\in\mathcal D_\chi$.
+There are at most $m\,2^{|\mathcal D_\chi|}\leq B(m)$ classes.
+This equivalence is a congruence: for a basic operation $h$ and
+output tag $c=h_C(r(a),r(b))$, the cut-operation formula gives
+\[
+ \psi(h(a,b))=(E_c\psi)(a)\vee(E_c\psi)(b).
+\]
+The derivative on the right is recorded or constant one, so all
+output bits and the output tag depend only on the input classes.
+
+The quotient $A/{\equiv_\chi}$ still maps onto $C$, since
+$\equiv_\chi\subseteq\ker r$. Its fibers are common semilattices,
+as their representatives lie in single fibers of $r$.
+It separates every pair separated by $\chi$, which is itself
+recorded. Join cuts separate distinct elements: if $a\not\leq b$,
+the cut with zero ideal $\mathord\downarrow b$ separates them.
+Taking all these quotient maps proves the subdirect representation.
+
+If a valuation separates the sides of an identity, one of these
+finite quotients still separates them. Identify variables assigned
+the same quotient value, choosing one original variable in each
+class. Evaluation at the chosen representatives preserves the two
+quotient values, so the resulting identity still fails in $A$ and
+uses at most $B(m)$ variables. Identifying variables in a core
+identity preserves its validity in the core, proving the last claim.
+\end{proof}
+
+Suppose a family's $n$th member lies outside the core but satisfies
+all core identities in at most $n$ variables. If its members have
+common-semilattice fibers over finite atomic quotients, those
+quotient sizes must be unbounded. Growing only the fibers over a
+fixed finite base cannot suffice. Arbitrary homomorphic images need
+not retain the common atomic fibers required here.
+
+For finitely generated $A$, its atomic quotient is automatically
+finite. Tracking whole term paths gives a size bound for $A$ itself.
 
 \begin{theorem}[Local finiteness of the atomic-fiber schema]
 \label{core:thm:atomic-fiber-local-finiteness}

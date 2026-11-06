@@ -67,6 +67,97 @@ def audit_minimal_cuts(join, choices, rho):
             "atomic_owner_map_entries": entries}
 
 
+def audit_residual_profiles(join, choices, rho, quotient, cuts,
+                            derivative, enabled, reduced_words):
+    """Exact cut-orbit congruences, retaining the prescribed atomic base.
+
+    Orders of tags can matter globally.  For one fixed initial cut, however,
+    every legal ordering of the same set has one endpoint; every illegal
+    word ends at constant one.  Only the nonconstant-one endpoints need
+    profile coordinates.
+    """
+    n = len(join)
+    m = max(rho) + 1
+    tables = choices + [join]
+    one = cuts.index((1,) * n)
+    records = []
+    all_class_maps = []
+    transition_checks = congruence_checks = common_fiber_checks = 0
+    separation_checks = 0
+    for initial, chi in enumerate(cuts):
+        orbit = {initial}
+        todo = [initial]
+        for current in todo:
+            for tag in range(m):
+                target = derivative[current][tag]
+                if target not in orbit:
+                    orbit.add(target)
+                    todo.append(target)
+                transition_checks += 1
+
+        # Independently obtain the same orbit using legal squarefree words.
+        legal_sets = {}
+        for word in reduced_words:
+            current = initial
+            legal = True
+            for tag in word:
+                legal = legal and enabled[current][tag]
+                current = derivative[current][tag]
+            if legal:
+                key = frozenset(word)
+                assert key not in legal_sets or legal_sets[key] == current
+                legal_sets[key] = current
+            else:
+                assert current == one
+        kept = sorted(orbit - {one})
+        assert set(kept) == set(legal_sets.values()) - {one}
+        assert len(kept) <= len(legal_sets) <= (1 << m)
+        assert all(derivative[current][tag] in orbit
+                   for current in orbit for tag in range(m))
+
+        signatures = [(rho[a], tuple(cuts[q][a] for q in kept))
+                      for a in range(n)]
+        ids = {signature: i for i, signature in enumerate(dict.fromkeys(signatures))}
+        class_map = [ids[signature] for signature in signatures]
+        representatives = [class_map.index(i) for i in range(len(ids))]
+        class_tags = [rho[a] for a in representatives]
+        class_tables = [
+            [[class_map[h[a][b]] for b in representatives] for a in representatives]
+            for h in tables
+        ]
+        assert set(class_tags) == set(range(m))
+        assert all(class_tags[class_map[a]] == rho[a] for a in range(n))
+        assert len(ids) <= m * (1 << len(kept)) <= m * (1 << (1 << m))
+
+        for h, class_h in zip(tables, class_tables):
+            for a, b in product(range(n), repeat=2):
+                assert class_map[h[a][b]] == class_h[class_map[a]][class_map[b]]
+                congruence_checks += 1
+        for operation, class_h in enumerate(class_tables):
+            for a, b in product(range(len(ids)), repeat=2):
+                assert (class_tags[class_h[a][b]]
+                        == quotient[operation][class_tags[a]][class_tags[b]])
+                if class_tags[a] == class_tags[b]:
+                    assert class_h[a][b] == class_tables[-1][a][b]
+                    common_fiber_checks += 1
+        for a, b in product(range(n), repeat=2):
+            if chi[a] != chi[b]:
+                assert class_map[a] != class_map[b]
+                separation_checks += 1
+        all_class_maps.append(class_map)
+        records.append({"initial_cut": initial,
+                        "nonconstant_one_derivatives": len(kept),
+                        "legal_tag_sets": len(legal_sets),
+                        "quotient_size": len(ids)})
+    assert len({tuple(q[a] for q in all_class_maps) for a in range(n)}) == n
+    return {"profile_quotients": len(records),
+            "derivative_transition_checks": transition_checks,
+            "quotient_homomorphism_entries": congruence_checks,
+            "common_atomic_fiber_entries": common_fiber_checks,
+            "original_cut_separations": separation_checks,
+            "profiles": records}
+
+
 @lru_cache(None)
 def shapes(internal):
     if internal == 0:
@@ -245,13 +336,16 @@ def audit_model(name, join, choices, rho):
             "distinct_derivative_word_actions": len(derivative_actions),
             "order_sensitive_tag_pairs": order_matters,
             "path_checks": path_checks, "path_scopes": scopes,
+            "residual_profiles": audit_residual_profiles(
+                join, choices, rho, quotient, cuts, derivative, enabled,
+                reduced_words),
             "minimal_cuts": audit_minimal_cuts(join, choices, rho)}
 
 
 def main():
     records = [audit_model(*model) for model in [native(2), native(3), nonflat()]]
     print(json.dumps({"status": "PASS", "models": records,
-                      "scope": "All join cuts; all operation/anchor tuples; all reduced-word transitions; every binary tree with at most3 internal nodes and all assignments."}, indent=2))
+                      "scope": "All join cuts and their exact derivative-profile quotients; all operation/anchor tuples; all reduced-word transitions; every binary tree with at most3 internal nodes and all assignments."}, indent=2))
 
 
 if __name__ == "__main__":
