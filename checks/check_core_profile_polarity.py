@@ -210,7 +210,8 @@ def check():
                   closure_entries=0, polarity_entries=0,
                   monomial_states=0, monomial_closure_entries=0,
                   monomial_conclusions=0, contraction_instances=0,
-                  contraction_applications=0)
+                  contraction_applications=0, path_domains=0,
+                  path_initializations=0, path_transitions=0)
     for name, tables in models():
         totals["models"] += 1
         totals["law_instances"] += audit_laws(tables)
@@ -221,6 +222,8 @@ def check():
         row["contraction_instances"], row["contraction_applications"] = (
             audit_projected_contraction(tables)
         )
+        (row["path_domains"], row["path_initializations"],
+         row["path_transitions"]) = audit_path_domains(tables)
         for selected in range(1, len(tables)):
             for distinguished in range(len(tables[0])):
                 states, closure, polarity = audit_closure(
@@ -239,7 +242,8 @@ def check():
         for key in ("closures", "witness_states", "closure_entries",
                     "polarity_entries", "monomial_states",
                     "monomial_closure_entries", "monomial_conclusions",
-                    "contraction_instances", "contraction_applications"):
+                    "contraction_instances", "contraction_applications",
+                    "path_domains", "path_initializations", "path_transitions"):
             totals[key] += row[key]
         print(json.dumps(row, sort_keys=True))
     print("PASS", json.dumps(totals, sort_keys=True))
@@ -331,6 +335,28 @@ def audit_projected_contraction(tables):
                             assert add[a][after] == after
                             applications += 1
     return instances, applications
+
+
+def audit_path_domains(tables):
+    """Verify the invariant for every length of a bounded-coefficient path."""
+    add = tables[0]
+    values = range(len(add))
+    domains = initializations = transitions = 0
+    for selected, choice in enumerate(tables[1:], start=1):
+        for bound in values:
+            domain = {v for v in values if add[v][choice[bound][v]]
+                      == choice[bound][v]}
+            bounded = {c for c in values if add[c][bound] == bound}
+            domains += 1
+            for coefficient, value in itertools.product(bounded, values):
+                assert choice[coefficient][value] in domain
+                initializations += 1
+            for operation, table in enumerate(tables):
+                coefficients = values if operation == selected else bounded
+                for coefficient, value in itertools.product(coefficients, domain):
+                    assert table[coefficient][value] in domain
+                    transitions += 1
+    return domains, initializations, transitions
 
 
 if __name__ == "__main__":

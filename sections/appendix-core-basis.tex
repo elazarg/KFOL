@@ -66,8 +66,10 @@ nothing here settles it. This appendix collects what is known, in four groups.
   (\cref{core:prop:star-identities,core:thm:bounded-degree-factoring}).
   Mixed absorption alone makes an omitted choice act as join on
   any two terms containing the same variables, with arbitrary
-  mixtures of the other choices
-  (\cref{core:cor:omitted-choice-content}). It also resolves a nested factoring overlap
+  mixtures of the other choices. It also lifts comparisons with
+  terms built from the siblings along a selected path in the source
+  (\cref{core:cor:omitted-choice-content,core:cor:path-comparison}).
+  It resolves a nested factoring overlap
   involving two choices, through an explicit common support
   (\cref{core:prop:nested-two-choice-factoring}).
 \item \emph{Families of models.} The core variety is the join of the subvarieties
@@ -218,9 +220,11 @@ nothing here settles it. This appendix collects what is known, in four groups.
   every flat atomic quotient, with arbitrary fibers and no support
   section: a subalgebra of a supported extension maps onto the given
   algebra. Flat quotients need not jointly separate a general atomic
-  extension, even a five-element core algebra. Without a section,
+  extension, even a five-element core algebra. Matching generation
+  over a free atomic base still need not give separation by native
+  homomorphisms. Without a section,
   retained-input linearization itself has an additional baseline term
-  (\cref{core:prop:relative-atomic-fiber-schema,core:thm:flat-atomic-fibers,core:prop:flat-fiber-separation-obstruction,core:lem:fiberwise-join-baseline}).
+  (\cref{core:prop:relative-atomic-fiber-schema,core:thm:flat-atomic-fibers,core:prop:flat-fiber-separation-obstruction,core:prop:matching-native-separation,core:lem:fiberwise-join-baseline}).
   A six-element core algebra nevertheless requires both a subalgebra
   and a quotient when represented through this class, even though it
   has a neutral reset unit
@@ -5018,8 +5022,40 @@ stage does not change global reset. The result for choice translations
 in this expansion covers all cases involving join.
 \end{proof}
 
-The sandwich identity gives a contraction that retains a join
-residual in the selected choice image.
+Two translation arguments give comparisons with terms omitting a
+selected choice. The first controls a path through the source;
+the second contracts a frontier of the target.
+
+\begin{lemma}[Translations with bounded coefficients]
+\label{core:lem:anchored-domain}
+Assume $\Gamma_K$ and all ordered mixed absorption. Fix a choice
+$f$ and an element $T$, and put $D_T=\{v:v\leq f(T,v)\}$.
+Every $f$-translation preserves $D_T$. Every join or other-choice
+translation with coefficient at most $T$ also preserves $D_T$.
+Moreover, $f(c,z)\in D_T$ whenever $c\leq T$, with no restriction
+on $z$.
+\end{lemma}
+\begin{proof}
+For a different choice $g$, let $x\leq T$, $v\in D_T$, and
+$w=g(x,v)$. The mixed-meet formula gives
+\[
+ f(T,w)=\bigl(f(T,x)+f(T,v)\bigr)\wedge\bigl(T+f(T,w)\bigr).
+\]
+The first bound dominates $x+v$, hence $w$.
+For the second, $w\leq g(x,f(T,v))$, and bounded commutation
+\eqref{core:eq:bounded-commutation} gives
+\[
+ T+g(x,f(T,v))=T+f(T,g(x,v))=T+f(T,w).
+\]
+Thus $w$ lies below both meet bounds, proving $w\in D_T$.
+For join, use $x\leq f(T,x)$ and join preservation of $f(T,-)$.
+Associativity and monotonicity give preservation by every
+$f$-translation, without a coefficient bound. Finally,
+$f(T,f(c,z))=f(f(T,c),z)\geq f(c,z)$ when $c\leq T$.
+\end{proof}
+
+The sandwich identity supplies the target contraction while retaining
+a join residual in the selected choice image.
 
 \begin{lemma}[Contraction under a projected threshold]
 \label{core:lem:projected-threshold-contraction}
@@ -5079,6 +5115,37 @@ by interchanging $s,t$ and using the choice bound.
 The source term may use the selected choice. The restriction is on
 the target's syntax; a target containing that choice can have the
 same Boolean profile without admitting these contractions.
+
+\begin{corollary}[Comparison along a source path]
+\label{core:cor:path-comparison}
+Assume $\Gamma_K$ and all ordered mixed absorption. In a term $s$,
+choose a subterm occurrence whose path to the root contains a node
+with selected choice $f$. Let $c_1,\ldots,c_m$ be the sibling
+subterms along this path. For every term $u(y_1,\ldots,y_m)$
+omitting $f$ and containing every $y_j$, the inequality
+\[
+ s\leq f\bigl(s,u(c_1,\ldots,c_m)\bigr)
+\]
+is derivable.
+\end{corollary}
+\begin{proof}
+At a valuation, put $T=c_1+\cdots+c_m$ and read the path from
+the selected occurrence outward as a word of translations.
+The first $f$-translation has coefficient at most $T$, so it
+enters $D_T$ of \cref{core:lem:anchored-domain}. Every subsequent
+translation also has coefficient at most $T$ and preserves $D_T$.
+Consequently
+\[
+ s\leq f(T,s)=\sum_{j=1}^m f(s,c_j).
+\]
+Apply the frontier contraction argument of
+\cref{core:cor:omitted-choice-content} to $u$, with threshold $s$.
+Its initial frontier has exactly this join of projections, and its
+final projection is $f(s,u(c_1,\ldots,c_m))$.
+The selected node ensures $m\geq1$. Repeated variables and
+occurrences cause no change; the sibling subterms are substitution
+blocks and may themselves contain $f$.
+\end{proof}
 
 The sandwich identity also resolves a nested factoring overlap.
 
@@ -8365,6 +8432,79 @@ Joining with $v(1)$ now gives $v(1)=v(4)$, since
 $0+1=1$ and $b+1=4$. This holds for every such homomorphism,
 including targets of arbitrary cardinality, and proves the assertion.
 \end{proof}
+
+Even a free atomic base and generators paired with its free generators
+do not guarantee separation by native homomorphisms.
+
+\begin{proposition}[A free atomic base does not give native separation]
+\label{core:prop:matching-native-separation}
+For every $K\geq3$, there is a three-generated core algebra $M$
+mapping onto the free atomic algebra on three generators, with
+common-semilattice fibers and the three generators mapping to
+the corresponding free generators, such that every homomorphism
+$M\to D_K$ identifies the same two distinct elements in one fiber.
+In particular, $M\notin\operatorname{SP}(D_K)$.
+\end{proposition}
+\begin{proof}
+Fix distinct choices $f,g$, owning $\alpha,\beta$. In every native
+algebra the following implication holds, where
+$U=f(s,x)+g(s,y,x)$ and $V=f(s,x)+g(s,y)$:
+\begin{equation}\label{core:eq:singleton-deletion-guard}
+ s\leq U\quad\Longrightarrow\quad s\leq V.
+\end{equation}
+Indeed, a failed conclusion forces $s=p$, $x=\alpha$, and
+$y=\beta$. For an owned or neutral value of $s$, either an arm
+dominates $s$ or the two owned outputs join to $n\geq s$.
+In the failed case $U=V=n$, so the premise fails too.
+The same argument shows that $s\leq U$ and $s\leq V$ both hold
+in the atomic generator, which has no upper marker $p$.
+
+Take the following native subalgebra and quotient:
+\[
+\begin{array}{c|ccccccccc}
+ z&(\alpha,\alpha)&(\alpha,p)&(\beta,n)&(\beta,p)&(n,n)&(n,p)&(p,\alpha)&(p,n)&(p,p)\\\hline
+ z\mapsto Q&0&1&2&3&4&5&6&7&5.
+\end{array}
+\]
+The source is closed under join and both choices. The only
+identified pair is $(n,p),(p,p)$. Every translation preserves
+that pair or makes its outputs equal: for $f$, an input with second
+coordinate $\alpha$ has first coordinate $\alpha$ or $p$; for $g$,
+no input has second coordinate $\beta$. Hence this is a congruence,
+and its eight-element quotient $Q$ is core, with all other choices
+interpreted as join. The source is generated by
+$s=(p,\alpha)$, $x=(\alpha,p)$, and $y=(\beta,n)$.
+At their quotient values,
+\[
+ s=6,\quad U=5=s+U,\quad V=4,\quad s+V=7\ne4.
+\]
+Thus \eqref{core:eq:singleton-deletion-guard} fails in $Q$.
+Reset at its join top gives the atomic retraction
+\[
+ \rho=(0,1,3,3,5,5,6,5).
+\]
+Its nonsingleton fibers are $\{2,3\}$ and $\{4,5,7\}$;
+every choice on each is join.
+
+Let $C$ be the free atomic algebra on $c_s,c_x,c_y$, and put
+\[
+ M=\langle(6,c_s),(1,c_x),(2,c_y)\rangle\leq Q\times C.
+\]
+Both projections are onto, and $M$ is core. Equality of free tags
+implies equality after the atomic evaluation into $\rho(Q)$, so
+the projection $M\to C$ has common-semilattice fibers.
+The premise $s\leq U$ holds in both coordinates. The elements
+$P=s+V$ and $V$ have the same free atomic tag but distinct
+$Q$-coordinates $7,4$. Every homomorphism $M\to D_K$ preserves
+the premise and therefore identifies them by
+\eqref{core:eq:singleton-deletion-guard}.
+\end{proof}
+
+A native valuation separating two terms need not descend to a
+homomorphism from $M$. Here $s\mapsto p$, $x\mapsto\alpha$,
+$y\mapsto\beta$ separates $s+V$ from $V$, while failing to preserve
+the positive equality $s+U=U$. Thus requiring a homomorphism
+would exclude this valid separation.
 
 The section hypothesis cannot be removed by embedding an arbitrary
 core algebra into a supported extension, or by taking a quotient of
