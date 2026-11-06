@@ -54,9 +54,11 @@ nothing here settles it. This appendix collects what is known, in four groups.
   not define a congruence (\cref{core:prop:owned-unit-observer-obstruction}).
   A finite family of four-variable overlap-coverage identities is also
   valid. Together with mixed absorption it implies overlap coverage
-  at every arity and resolves the corresponding collection of
-  simultaneous factoring alternatives for every choice
-  (\cref{core:prop:overlap-coverage,core:thm:all-arity-overlap}).
+  at every arity. More generally, it resolves factoring alternatives
+  indexed by vertex covers of any finite hypergraph, provided the
+  covers together contain every vertex. This includes simultaneous
+  fans and all bipartite row/column patterns
+  (\cref{core:prop:overlap-coverage,core:thm:all-arity-overlap,core:thm:hypergraph-factoring}).
 \item \emph{Families of models.} The core variety is the join of the subvarieties
   with an unused owner, but only through homomorphic images
   (\cref{app:core-proper-fragments,app:core-quotients}). The two-owner
@@ -175,7 +177,11 @@ nothing here settles it. This appendix collects what is known, in four groups.
   The entire atomic-fiber schema is equivalent to a representation
   problem for algebras with common-semilattice atomic fibers.
   Right-reset derivatives of global join cuts give an exact term-path
-  calculation over every atomic quotient. At a minimal separating cut,
+  calculation over every atomic quotient. Deleting repeated tags from
+  those paths gives a uniform finite bound on finitely generated
+  models of the entire schema, with computable finite free presentations
+  (\cref{core:thm:atomic-fiber-local-finiteness,core:cor:atomic-fiber-free-presentation}).
+  At a minimal separating cut,
   the zero ideal carries a canonical atomic owner map which descends
   to its image in the quotient
   (\cref{core:lem:atomic-cut-derivatives,core:lem:minimal-cut-owner-types}).
@@ -4427,19 +4433,6 @@ $I\subseteq[n]$, write $E_I=f(x_i:i\in I)$. Then
 \begin{equation}\label{core:eq:all-arity-overlap}
  E_{[n]}\leq\sum_{i=1}^n f(x_i,g(E_{[n]\setminus\{i\}},z_i)).
 \end{equation}
-For the simultaneous factoring alternatives, put
-\[
- \begin{aligned}
- E&=E_{[n]},& D_i&=f(x_i,z_i),&
- A_i&=f(x_i,g(E_{[n]\setminus\{i\}},z_i)),\\
- q&=g(E,D_1,\ldots,D_n),&&
- S_i&=g(A_i,D_j:j\ne i).
- \end{aligned}
-\]
-Then every choice $h$ satisfies
-\begin{equation}\label{core:eq:covered-distribution-peak}
- q=\sum_{i=1}^n S_i=h(S_1,\ldots,S_n).
-\end{equation}
 If either $f$ or $g$ is join, \eqref{core:eq:all-arity-overlap}
 already follows from $\Gamma_K$.
 \end{theorem}
@@ -4478,35 +4471,106 @@ This is \eqref{core:eq:all-arity-overlap}. Every fold used above is
 nonempty; for $n=2$ no merging is needed. If $f$ is join, the $i$th
 summand dominates $x_i$; if $g$ is join, each summand dominates $E$.
 These observations prove the final assertion.
-
-For the factoring identity, the strengthened doubled law gives
-$h(A_i,g(E,D_i))=g(E,D_i)$ for every choice $h$.
-Apply the $g$-translation with all $D_j$, $j\ne i$, and use the
-cross-choice bound. Since $S_i\leq q$, this gives
-\[
- q\leq h(S_i,q)\leq S_i+q=q,
- \qquad\text{hence }h(S_i,q)=q.
-\]
-In particular, with $W=g(A_1,\ldots,A_n)$, associativity gives
-$g(q,W)=q$. Coverage gives $E\leq\sum_i A_i$, and distribution
-gives $g(W,\sum_i A_i)=W$. Therefore
-\[
- q=g(q,W)=g(g(E,W),D_1,\ldots,D_n)
- \leq g(W,D_1,\ldots,D_n)
- =g(S_1,\ldots,S_n)\leq\sum_i S_i\leq q.
-\]
-The equality of the two $g$-folds uses $n\geq2$, so every $D_j$
-occurs in at least one $S_i$.
-For any choice $h$, put $v=h(S_1,\ldots,S_n)$. The equalities
-$h(S_i,q)=q$ imply $h(v,q)=q$. On the other hand, $q=\sum_iS_i$
-and distribution give $h(v,q)=\sum_i h(v,S_i)=v$. Thus $v=q$.
 \end{proof}
 
-The whole collection of alternatives is needed in
-\eqref{core:eq:covered-distribution-peak}. For example, in the native
-two-owner algebra take $n=3$, $(x_1,x_2,x_3)=(n,n,p)$, and
-$(z_1,z_2,z_3)=(a_j,a_j,a_i)$. Then $q=S_3=p$ but $S_1=S_2=n$,
-so deleting the third alternative destroys the join cover.
+The same coverage laws control simultaneous factorizations along
+arbitrary finite incidence patterns. A vertex cover here means a set
+meeting every edge; different covers may overlap.
+
+\begin{theorem}[Factoring along hypergraph covers]
+\label{core:thm:hypergraph-factoring}
+Assume the hypotheses of \cref{core:thm:all-arity-overlap}.
+Let $\mathcal H$ be a finite nonempty hypergraph on its incident vertex
+set $V$, with every edge containing at least two vertices. Put
+\[
+ \begin{aligned}
+ E_e&=f(x_v:v\in e),& Q&=g(E_e:e\in\mathcal H),\\
+ Y_v&=g(f(x_u:u\in e\setminus\{v\}):e\in\mathcal H,\ v\in e),&
+ A_v&=f(x_v,Y_v).
+ \end{aligned}
+\]
+For a vertex cover $C$, define $S_C=g(A_v:v\in C)$.
+If $C_1,\ldots,C_r$, $r\geq1$, are vertex covers with
+$\bigcup_{\ell=1}^r C_\ell=V$, then every choice $h$ satisfies
+\begin{equation}\label{core:eq:hypergraph-factoring}
+ Q=\sum_{\ell=1}^r S_{C_\ell}
+  =g(S_{C_1},\ldots,S_{C_r})
+  =h(S_{C_1},\ldots,S_{C_r}).
+\end{equation}
+All folds are nonempty, with singleton folds equal to their entry.
+\end{theorem}
+\begin{proof}
+Write $a\preccurlyeq_s b$ when $a\leq b$ and every choice on
+$a,b$ equals $b$. Associativity makes this relation transitive;
+monotonicity, the cross-choice bound, and the choice bound show that
+each basic operation preserves it. The strengthened doubled-distribution law
+of \cref{core:prop:reset-distribution}, together with compatibility
+and transitivity of common support, extends to nonempty folds and gives
+\[
+ A_v\preccurlyeq_s Q_v:=g(E_e:e\in\mathcal H,\ v\in e).
+\]
+For one incident edge this is equality. Since $Q$ contains the
+$g$-fold $Q_v$, associativity implies $g(Q,A_v)=Q$.
+For each cover $C$, compatibility gives
+\[
+ S_C\preccurlyeq_s g(Q_v:v\in C)=Q:
+\]
+every edge occurs in this fold at least once, and idempotence removes
+its repetitions.
+
+For $v\in e$, the residual fold $f(x_u:u\in e\setminus\{v\})$
+is an entry of $Y_v$, so its $g$-product with $Y_v$ equals $Y_v$.
+Apply \eqref{core:eq:all-arity-overlap} to the edge $e$, with padding
+parameter $Y_v$ at each vertex. It gives
+$E_e\leq\sum_{v\in e}A_v$.
+Put $W=g(S_{C_1},\ldots,S_{C_r})$. The union condition makes
+$W=g(A_v:v\in V)$, whence
+$g(Q,W)=Q$ and $g(W,A_v)=W$ for every $v$.
+Distribution therefore gives
+\[
+ g(W,E_e)\leq g\left(W,\sum_{v\in e}A_v\right)=W.
+\]
+Taking the nonempty $g$-fold over the edges yields
+$Q=g(W,Q)\leq W$. The choice bound and $S_{C_\ell}\leq Q$
+give $W\leq\sum_\ell S_{C_\ell}\leq Q$, proving equality.
+Finally put $u=h(S_{C_1},\ldots,S_{C_r})$.
+Common support gives $h(u,Q)=Q$, whereas distribution at
+$Q=\sum_\ell S_{C_\ell}$ gives $h(u,Q)=u$. Thus $u=Q$.
+\end{proof}
+
+For the simultaneous factoring fan, take vertices $x_i,z_i$,
+one edge containing all $x_i$, and the edges $\{x_i,z_i\}$,
+where $n\geq2$. Its covers
+$C_i=\{x_i\}\cup\{z_j:j\ne i\}$ jointly contain every vertex.
+Writing
+\[
+ \begin{aligned}
+ E&=f(x_1,\ldots,x_n),& D_i&=f(x_i,z_i),\\
+ A_i&=f(x_i,g(f(x_j:j\ne i),z_i)),&
+ S_i&=g(A_i,D_j:j\ne i),
+ \end{aligned}
+\]
+the theorem gives
+\begin{equation}\label{core:eq:covered-distribution-peak}
+ g(E,D_1,\ldots,D_n)=\sum_{i=1}^n S_i=h(S_1,\ldots,S_n).
+\end{equation}
+For a nonempty bipartite graph with edge set $B\subseteq I\times J$
+and incident vertex sets $I,J$, the two color classes are covers
+whose union is the full vertex set.
+Its row and column alternatives are
+\[
+ S=g\bigl(f(x_i,g(y_j:(i,j)\in B)):i\in I\bigr),\qquad
+ T=g\bigl(f(y_j,g(x_i:(i,j)\in B)):j\in J\bigr).
+\]
+Thus $g(f(x_i,y_j):(i,j)\in B)=S+T=h(S,T)$, including cycles of
+every finite length.
+
+The full-union condition cannot be omitted. For edges
+$\{x,y,z\}$, $\{x,u\}$, $\{y,v\}$, the sets
+$C=\{x,v\}$ and $D=\{y,u\}$ are covers but omit $z$.
+In the native two-owner algebra, with $f$ owning $a_i$ and $g$
+owning $a_j$, take $x=y=n$, $z=p$, and $u=v=a_j$.
+Then $Q=p$ while $S_C=S_D=n$.
 
 The reset homomorphism also strengthens the word reductions above. The
 equational step needed in its image uses no join operation.
@@ -7324,6 +7388,124 @@ in $P_e$ and apply $\chi$ to the claim. Join preservation of $R_a$
 gives \eqref{core:eq:atomic-cut-operation}. If $e$ is disabled,
 both sides of that equation are $1$. The path formula follows by
 term induction; the leaf's own derivative does not change its value.
+\end{proof}
+
+The path calculation gives a finiteness bound without a supported
+section or a representation by native observers.
+
+\begin{theorem}[Local finiteness of the atomic-fiber schema]
+\label{core:thm:atomic-fiber-local-finiteness}
+Suppose that $A$ satisfies $\Gamma_K$ and all ordered mixed absorption,
+is generated by $n\geq1$ elements, and admits an atomic quotient
+$r:A\to C$ with common-semilattice fibers. Then $C$ is finite and,
+writing $m=|C|$ and
+\[
+ N_m=\sum_{\ell=1}^m\frac{m!}{(m-\ell)!},
+\]
+one has $|A|\leq 2^{nN_m}-1$.
+In particular, every variety
+$\operatorname{Mod}(\Sigma\cup\mathcal R_{\mathcal A})$ in
+\cref{core:prop:relative-atomic-fiber-schema} is locally finite.
+Its $n$-generated algebras have size at most
+$2^{nN_{b_K(n)}}-1$, where
+$b_K(n)=|F_{\mathcal A}(n)|\leq(K+1)^{(K+1)^n}$.
+\end{theorem}
+\begin{proof}
+For a word $w$ of tags, let $\operatorname{fo}(w)$ retain each tag's
+first occurrence, in order. As transformations of all join cuts,
+\begin{equation}\label{core:eq:cut-first-occurrence}
+ E_w=E_{\operatorname{fo}(w)},
+\end{equation}
+where derivatives are applied in the displayed word order.
+Indeed, for a legal word, the commutation and idempotence argument in
+\cref{core:lem:atomic-cut-derivatives} deletes repeated tags.
+Otherwise write $vc$ for its prefix ending at the first illegal step.
+The prefix $v$ is legal, and $c$ has not occurred in $v$: after a legal
+occurrence its enablement would persist along the decreasing cuts.
+Deleting repetitions in $v$ leaves its cut unchanged, so the same
+step $c$ is illegal in $\operatorname{fo}(w)$. Both words then give
+constant one. Thus the reduction is independent of the initial cut.
+The order of distinct tags is retained; their derivatives need not
+commute when a tag is initially disabled.
+
+Let $a_1,\ldots,a_n$ generate $A$. Their images generate $C$, so
+$C$ is an image of the finite algebra $F_{\mathcal A}(n)$.
+For a term $P$, label its nodes by their values in $C$ and form
+$L(P)$, the set of pairs $(i,\operatorname{fo}(w))$ obtained from
+all occurrences of $a_i$, with $w$ the root-to-leaf tag word.
+It is a nonempty subset of the $nN_m$ possible pairs. The cut-path
+formula and \eqref{core:eq:cut-first-occurrence} give, for every cut,
+\[
+ \chi(P(\vec a))
+ =\bigvee_{(i,w)\in L(P)}(E_w\chi)(a_i).
+\]
+Consequently equal sets $L(P)=L(Q)$ force equal values under every
+join cut. Such cuts separate elements: if $x\not\leq y$, the cut
+whose zero ideal is $\mathord\downarrow y$ separates $x$ from $y$.
+Every realized set $L(P)$ therefore determines a unique element,
+proving the bound.
+
+Put $\mathcal W=\operatorname{Mod}(\Sigma\cup\mathcal R_{\mathcal A})$.
+As in \cref{core:prop:relative-atomic-fiber-schema}, the free algebra
+$F_{\mathcal W}(n)$ maps onto $F_{\mathcal A}(n)$ with
+common-semilattice fibers. The preceding bound applies directly to
+this free algebra, and hence to each of its homomorphic images.
+Finally, atomic term functions on $n$ variables are functions from
+$(\mathbf A_K^{\rm at})^n$ to $\mathbf A_K^{\rm at}$, giving the
+stated elementary bound on $b_K(n)$.
+\end{proof}
+
+The same summaries give finite presentations of these free algebras,
+with no presumed completeness of the finite candidate.
+
+\begin{corollary}[Computing the free schema algebras]
+\label{core:cor:atomic-fiber-free-presentation}
+If $\Sigma$ in \cref{core:prop:relative-atomic-fiber-schema} is finite,
+the free algebra on any fixed finite set of generators for
+$\operatorname{Mod}(\Sigma\cup\mathcal R_{\mathcal A})$ has an
+effectively computable finite presentation. The variety's equational
+theory is decidable.
+\end{corollary}
+\begin{proof}
+Compute $C=F_{\mathcal A}(n)$ as the algebra of term functions on
+$\mathbf A_K^{\rm at}$, with generators $c_1,\ldots,c_n$.
+Let $\mathcal L(C)$ be the finite set of nonempty words over $C$
+without repeated tags. On pairs $(c,L)$, where
+$\varnothing\ne L\subseteq[n]\times\mathcal L(C)$, define
+\[
+ h((c,L),(d,M))
+ =\left(e,\{(i,\operatorname{fo}(ew)):(i,w)\in L\cup M\}\right),
+ \qquad e=h_C(c,d).
+\]
+Let $S$ be the finite subalgebra generated by
+$s_i=(c_i,\{(i,(c_i))\})$. Its projection $t:S\to C$ is onto.
+No candidate laws are assumed of $S$. Induction, using
+$\operatorname{fo}(e\operatorname{fo}(w))=\operatorname{fo}(ew)$,
+identifies a term's second component with its path summary.
+
+Form the congruence $\theta$ generated by all ground instances in
+$S$ of $\Sigma$, together with
+\[
+ \bigl(h(s,u),s+u\bigr)
+ \quad\text{for }t(s)=t(u)\text{ and every choice }h.
+\]
+These are finitely many pairs, all in $\ker t$. Consequently
+$S/\theta$ maps onto $C$, satisfies $\Sigma$, and has
+common-semilattice fibers. It therefore belongs to
+$\mathcal W=\operatorname{Mod}(\Sigma\cup\mathcal R_{\mathcal A})$.
+
+In the other direction, the free algebra $F_{\mathcal W}(n)$ has
+common-semilattice fibers over $C$. Equal summaries in $S$ force
+equal values in this free algebra by the preceding theorem's cut
+argument. Thus generator evaluation defines an onto homomorphism
+$S\to F_{\mathcal W}(n)$, which identifies the generating pairs
+of $\theta$. The resulting map $S/\theta\to F_{\mathcal W}(n)$
+and the map in the opposite direction supplied by freeness both
+fix the generators, so they are inverse. Computing the finite
+tables and this congruence therefore computes the free algebra.
+Evaluating an identity in the free algebra on its variables decides
+its validity. The presentations depend on $n$; they do not supply
+a uniform finite subset of the identity schema.
 \end{proof}
 
 The zero set of a minimal separating cut has additional atomic structure.

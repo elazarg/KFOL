@@ -187,6 +187,27 @@ def audit_model(name, join, choices, rho):
             ans.append(q)
         return tuple(ans)
 
+    def first_occurrences(path):
+        return tuple(dict.fromkeys(path))
+
+    # Every reduced word and every one-letter extension are checked as
+    # transformations of ALL cuts. Induction then checks arbitrary word
+    # lengths in these finite models, including words with an illegal step.
+    reduced_words = [word for length in range(len(tags) + 1)
+                     for word in permutations(tags, length)]
+    word_transitions = 0
+    derivative_actions = set()
+    for word in reduced_words:
+        derivative_actions.add(path_action(word))
+        for c in tags:
+            extended = word + (c,)
+            assert path_action(extended) == path_action(first_occurrences(extended))
+            word_transitions += len(cuts)
+    order_matters = sum(path_action((c, d)) != path_action((d, c))
+                        for c, d in permutations(tags, 2))
+    if name == "D2":
+        assert order_matters  # Replacing ordered words by sets is invalid.
+
     def evaluate(term, values):
         if isinstance(term, int):
             value = values[term]
@@ -207,7 +228,8 @@ def audit_model(name, join, choices, rho):
                 term = decorate(shape, labels)
                 for values in product(carrier, repeat=internal + 1):
                     actual, paths = evaluate(term, values)
-                    endpoints = [(path_action(path), values[leaf]) for path, leaf in paths]
+                    endpoints = [(path_action(first_occurrences(path)), values[leaf])
+                                 for path, leaf in paths]
                     for q, chi in enumerate(cuts):
                         predicted = int(any(cuts[action[q]][value] for action, value in endpoints))
                         assert chi[actual] == predicted
@@ -219,6 +241,9 @@ def audit_model(name, join, choices, rho):
             "factorization_checks": factorization, "enabled_commutations": commuting,
             "right_reset_operation_checks": operation_rule,
             "cut_operation_checks": cut_operation_rule,
+            "first_occurrence_transition_checks": word_transitions,
+            "distinct_derivative_word_actions": len(derivative_actions),
+            "order_sensitive_tag_pairs": order_matters,
             "path_checks": path_checks, "path_scopes": scopes,
             "minimal_cuts": audit_minimal_cuts(join, choices, rho)}
 
@@ -226,7 +251,7 @@ def audit_model(name, join, choices, rho):
 def main():
     records = [audit_model(*model) for model in [native(2), native(3), nonflat()]]
     print(json.dumps({"status": "PASS", "models": records,
-                      "scope": "All join cuts; all operation/anchor tuples; every binary tree with at most3 internal nodes and all assignments."}, indent=2))
+                      "scope": "All join cuts; all operation/anchor tuples; all reduced-word transitions; every binary tree with at most3 internal nodes and all assignments."}, indent=2))
 
 
 if __name__ == "__main__":
