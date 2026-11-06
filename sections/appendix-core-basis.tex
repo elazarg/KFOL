@@ -135,11 +135,26 @@ nothing here settles it. This appendix collects what is known, in four groups.
   all atomic coefficient observers jointly separate the universal
   supported extension
   (\cref{core:thm:atomic-supported-extensions,core:cor:atomic-supported-observers}).
+  A chosen retraction is unnecessary for membership: the elements
+  having common support in an atomic subalgebra form an ambient
+  subalgebra. This also characterizes the homomorphic images of
+  whole atomic supported extensions
+  (\cref{core:cor:atomic-supported-region}).
   Naming this support retraction gives an explicit finite basis in
   the expanded signature, and universal supported presentations have
   exact normal forms as vectors of upsets of finite coefficient
   observer posets
   (\cref{core:thm:atomic-projection-basis,core:thm:atomic-supported-normal-forms}).
+  In the universal absorber extension of a finite atomic coefficient
+  algebra, the entire coefficient-supported region is one of these
+  exact presentations; for $K\geq3$ that region is already core
+  before exhaustion is imposed
+  (\cref{core:thm:atomic-absorber-supported-region}).
+  For any finite valid strengthening of the candidate, completeness
+  is equivalent to a precise intersection of congruences in a free
+  supported-pair retract. The coefficient-atomicization congruence
+  splits exactly into its one-input kernels
+  (\cref{core:prop:supported-conservativity-criterion}).
   A six-element core algebra nevertheless requires both a subalgebra
   and a quotient when represented through this class, even though it
   has a neutral reset unit
@@ -6014,6 +6029,54 @@ separating homomorphism. The core conclusion follows from
 \cref{core:thm:relative-exhaustion-complete}.
 \end{proof}
 
+\begin{corollary}[Atomic supported regions and their covers]
+\label{core:cor:atomic-supported-region}
+Let $A$ satisfy $\Gamma_K$ and all ordered mixed absorption, and
+let $C\leq A$ be atomic and nonempty. Write $c\preccurlyeq_s u$
+for common support, and put
+\[
+ D=\{u\in A:\text{some }c\in C\text{ satisfies }c\preccurlyeq_s u\}.
+\]
+Then $D$ is a subalgebra in $\operatorname V(D_K)$, and its full
+set of global left reset units is exactly $C$. For $K\geq3$,
+exhaustion makes $D$ a core algebra.
+
+More intrinsically, $A$ is an onto homomorphic image of a whole
+atomic common-support extension if and only if every element of
+$A$ has common support by a global left reset unit of $A$.
+\end{corollary}
+\begin{proof}
+Compatibility of support makes $D$ a subalgebra containing $C$,
+and makes
+\[
+ S=\{(u,c)\in D\times C:c\preccurlyeq_s u\}
+\]
+a subalgebra of $D\times C$. The map $(u,c)\mapsto(c,c)$ is a
+homomorphic retraction onto the atomic diagonal copy of $C$,
+whose value commonly supports $(u,c)$. The preceding theorem
+puts $S$ in the ambient variety, and first projection maps it onto
+$D$. Exhaustion is inherited from $A$ by both factors and their
+subalgebra, proving the core clause.
+
+For $c,d\in C$ and $d\preccurlyeq_s u$, atomicity and commuting
+resets give
+\[
+ \pi_c(u)=\pi_c\pi_u(d)=\pi_u\pi_c(d)=\pi_u(d)=u.
+\]
+Thus every $c\in C$ is a reset unit of $D$. Conversely, if $u$ is
+such a unit and $d\preccurlyeq_s u$ with $d\in C$, then
+$d=\pi_u(d)=u$, so $u\in C$.
+
+The support equations and the reset-unit law descend under onto
+homomorphisms, proving necessity in the final assertion. For
+sufficiency, take $C$ to be the reset-unit set of $A$. It is a
+join ideal, since $\pi_{c+d}=\pi_c\pi_d$ and resets are
+extensive and monotone in their parameters. The choice bound
+therefore makes it a subalgebra, and the reset-unit law makes it
+atomic. The hypothesis gives $D=A$, and the displayed relation
+provides the required whole-extension cover.
+\end{proof}
+
 \begin{corollary}[All atomic coefficient observers suffice]
 \label{core:cor:atomic-supported-observers}
 For atomic $C$ and $c\in C$, the canonical maps
@@ -6245,8 +6308,219 @@ Consequently $m$ inputs supported by $n$ give exactly
 elements. With exhaustion, for $K\geq3$, the size is
 $(M_K-1)^m+K M_{K-1}^m$: only the identity coefficient observer
 is removed. These presentations make the finite target of atomic
-support adjunction explicit; they do not prove that adjunction
-preserves all distinctions between terms in the original signature.
+support adjunction explicit. They also describe a whole region of an
+absorber extension whose other elements need not have atomic support.
+
+\begin{theorem}[The supported region of an atomic absorber extension]
+\label{core:thm:atomic-absorber-supported-region}
+Let $C$ be a finite atomic coefficient algebra with join top $T$,
+and let $c_i$ be its global owner-$i$ absorber. Fix a nonempty
+$J\subseteq I$, and let $B$ be the universal extension of $C$ by
+new global absorbers $a_i$, $i\in J$, over $\Gamma_K$ and all
+ordered mixed absorption. The subalgebra of elements having common
+support in $C$ is exactly a copy of
+\[
+ F_C(c_i:i\in J).
+\]
+It contains every word of choice translations with coefficients in
+$C$, evaluated at $a_i$, in which each owner other than $i$ occurs.
+For $K\geq3$ this supported region is core,
+even without exhaustion on $B$. Adding exhaustion to the universal
+presentation leaves its supported region isomorphic to the same
+$F_C(c_i:i\in J)$.
+\end{theorem}
+\begin{proof}
+The assignment $a_i\mapsto c_i$ defines a retraction $r:B\to C$.
+If $d\in C$ commonly supports $u$, applying $r$ shows that $d$
+commonly supports $r(u)$ inside the atomic algebra $C$, so $d=r(u)$.
+
+First consider a word at $a_i$. Initial owner-$i$ letters leave
+$a_i$ unchanged. Its first other-owner letter $h(c,a_i)$ has
+$c$ as support for both $h$ and owner $i$, by absorber neutrality,
+idempotence, and Birkhoff. For every other owner it remains globally
+extensive. Each later first occurrence of an owner supplies its
+coefficient as support for that owner, and the support/extensivity
+rules of \cref{core:thm:absorber-extension} preserve all previously
+acquired supports. If every other owner occurs, the final value
+$w$ has coefficients $d_h\leq w$ with $h(d_h,w)=w$ for every $h$.
+Their join $d$ commonly supports $w$: distribution gives
+$h(d,w)=\sum_k h(d_k,w)=w$, since all summands are below $w$
+and the $h$-summand equals $w$.
+
+For the exact region, work on the join filter above $T$. Put
+\[
+ P_h=h(T,-),\qquad P=\prod_h P_h,\qquad
+ b_i=P(T+a_i),\qquad D_0=\langle C,b_i:i\in J\rangle.
+\]
+These $P_h$ commute and are idempotent. Each $b_i$ has common
+support $T$, so $D_0$ lies in the supported region.
+For a coefficient letter $L=h(c,-)$, put $E_L(v)=T+h(c,v)$.
+By \cref{core:lem:bounded-translations}, the $E_L$ commute with
+one another and with $P$. Distribution gives
+$J_TLJ_T=J_TL$, where $J_T(v)=T+v$. Thus every coefficient word
+$W$ satisfies
+\[
+ T+W(a_i)=E_W(T+a_i).
+\]
+Suppose $u$ has common support $d=r(u)$. Then $T+u$ has common
+support $T$ and is fixed by $P$. Apply $P$ to the absorber-word
+join normal form of $u$: the displayed formula and commutation
+express $T+u$ as a join of $T$ and values $E_W(b_i)$, all in $D_0$.
+Right reset recovers $u$, because reset preserves joins in its left
+argument and
+\[
+ (T+u)\del d=(T\del d)+(u\del d)=d+u=u.
+\]
+Hence $D_0$ is the entire supported region.
+
+Set $Q_i=E_{c_i\star_i(-)}$. Global absorption gives
+$Q_i(T+a_i)=T+a_i$, so commutation gives $Q_i(b_i)=b_i$.
+Put $u_i=b_i\del c_i$, which has common support $c_i$.
+We claim $T+u_i=b_i$. For a choice $h\ne\star_i$,
+absorber neutrality inside $C$ gives $h(c_i,T)=T$. More generally,
+if $c\leq T\leq v$ and $h(c,T)=T$, then
+\[
+ h(c,v)=h(T,v):
+\]
+writing $z=h(c,v)$ gives $T\leq z\leq h(T,v)$ and
+$h(T,z)=h(T,v)\leq z$ by associativity and the choice bound.
+Consequently the normalized stages in the right reset at $c_i$
+are $Q_i$ and the $P_h$ for $h\ne\star_i$. Each fixes $b_i$,
+proving the claim. Thus $D_0=\langle C,u_i:i\in J\rangle$,
+and there is a canonical onto map
+\[
+ F_C(c_i:i\in J)\longrightarrow D_0.
+\]
+
+Use the separating native observers from
+\cref{core:thm:atomic-supported-normal-forms}. Their coefficient
+maps $\phi:C\to\mathbf A_K^{\rm at}$ may all be chosen with
+$\phi(T)=n$: the atomic profile lattices and their top-preserving
+two-element maps already separate $C$.
+For a coefficient observer, assign each new $a_j$ its native
+owner atom. Then every $b_j$ maps to $n$, extending that observer.
+An observer reading one input index has at most one generator
+shadow $b_i$ equal to $p$; this requires $\phi(c_i)=n$.
+Since $c_i$ absorbs owner $i$ on $C$, its coefficient image omits
+the native owner-$i$ atom. Assign $a_i$ to $p$ and every other
+new absorber to its owner atom. The generated image still omits
+owner $i$, so its $i$th choice is join and $p$ is its global
+$i$-absorber. This extends the prescribed observer, with $b_i=p$
+and every other $b_j=n$.
+All separating maps therefore factor through the canonical onto
+map, proving injectivity. Their images are atomic or omit an owner,
+so for $K\geq3$ they are core. They also remain valid observers
+of the presentation with exhaustion, proving its asserted exact region.
+\end{proof}
+
+For $C=\mathbf A_3^{\rm at}$ with all three new absorbers,
+the supported region therefore has
+$6^3+3(6\cdot3\cdot3)=378$ elements. This describes the supported
+region only; words still missing an owner and their interactions
+with it are not covered by the theorem.
+
+The conservativity question for arbitrary free inputs can likewise
+be formulated inside an explicit retract of an ordinary free algebra.
+
+\begin{proposition}[The free supported-kernel criterion]
+\label{core:prop:supported-conservativity-criterion}
+Let $\mathcal V$ be $\operatorname V(D_K)$, or the core variety
+when $K\geq3$. Let $\Sigma$ be any finite set of original-signature
+identities valid in $\mathcal V$ which contains $\Gamma_K$, all ordered mixed
+absorption, and, in the core case, owner exhaustion.
+In the free $\Sigma$-algebra on $x_1,\ldots,x_m,y_1,\ldots,y_m$,
+where $m\geq1$, put
+\[
+ u_i=\pi_{y_i}(x_i),\qquad
+ C=\langle x_1,\ldots,x_m\rangle,\qquad
+ S=\langle C,u_1,\ldots,u_m\rangle,\qquad
+ U=\langle u_1,\ldots,u_m\rangle.
+\]
+Then $S$ is a retract of that free algebra, and $U$ is free for
+$\Sigma$ on the displayed $u_i$.
+Let $\theta$ be the congruence of $S$ generated by the coefficient
+pairs $P(\vec x),Q(\vec x)$ for all atomic-valid identities $P=Q$.
+For $S_i=\langle C,u_i\rangle$, let $\rho_i:S\to S_i$ retain
+$C,u_i$ and send every other $u_j$ to $x_j$, and let $\theta_i$
+be generated in $S_i$ by the same coefficient pairs. Then
+\begin{equation}\label{core:eq:supported-kernel-intersection}
+ \theta=\bigcap_{i=1}^m\rho_i^{-1}(\theta_i).
+\end{equation}
+Moreover,
+\begin{equation}\label{core:eq:supported-conservativity}
+ \operatorname{Mod}(\Sigma)=\mathcal V
+ \quad\Longleftrightarrow\quad
+ \theta\cap U^2=\Delta_U\quad\text{for every }m\geq1.
+\end{equation}
+Here $\Delta_U$ is equality on $U$.
+\end{proposition}
+\begin{proof}
+Write $c\preccurlyeq_s v$ when $c+v=h(c,v)=v$ for every choice
+$h$. The reset laws give $x_i\preccurlyeq_s u_i$, and this support
+condition implies $\pi_v(c)=v$. Consequently the endomorphism
+fixing the $x_i$ and sending $y_i$ to $u_i$ fixes each $u_i$;
+its image is $S$ and it is idempotent. More generally, evaluation
+at any supported pairs $(c_i,v_i)$ sends $x_i$ to $c_i$ and
+$y_i$ to $v_i$, hence $u_i$ to $v_i$. Thus $S$ has precisely the
+free supported-pair presentation. Sending both $x_i,y_i$ to a
+fresh free generator $z_i$ sends $u_i$ to $z_i$, proving freeness
+of $U$. Sending all $u_i$ to $x_i$ gives a common-support retraction
+onto $C$, by compatibility of support with the operations.
+
+The supported-pair presentation defines $\rho_i$, split by the
+inclusion $S_i\hookrightarrow S$. Each $\rho_i$ sends a generator
+of $\theta$ to one of $\theta_i$, proving one inclusion in
+\eqref{core:eq:supported-kernel-intersection}. Conversely,
+the inclusion sends $\theta_i$ into $\theta$. If all retained
+pairs $\rho_i(s),\rho_i(t)$ belong to $\theta_i$, they therefore
+belong to $\theta$ in $S$. By the retained-input identity of
+\cref{core:lem:supported-extension-reduction},
+\[
+ s=\sum_i\rho_i(s),\qquad t=\sum_i\rho_i(t).
+\]
+Joining the component congruences proves $s\mathrel\theta t$.
+
+The quotient $S/\theta$ is the universal supported presentation
+over the free atomic algebra on the coefficient generators.
+Its coefficient section embeds by the evaluation $u_i\mapsto x_i$
+in that atomic algebra. It belongs to $\mathcal V$ by
+\cref{core:thm:atomic-supported-extensions}, including exhaustion
+in the core case. Additional identities in $\Sigma$ cause no
+change to the target: the corresponding presentation over the
+basic candidate, including exhaustion in the core case, already
+belongs to $\mathcal V$ and satisfies them.
+If $\theta\cap U^2=\Delta_U$, every finitely generated free
+$\Sigma$-algebra therefore embeds into a member of $\mathcal V$.
+This proves the completeness implication in
+\eqref{core:eq:supported-conservativity}.
+
+Conversely, suppose $\operatorname{Mod}(\Sigma)=\mathcal V$.
+Two distinct elements of $U$ have a separating native evaluation,
+using proper observers in the core case. Each native input $v_i$
+has atomic common support $q(v_i)$, where $q$ fixes atoms and $n$
+and sends $p$ to $n$. Assign $x_i\mapsto q(v_i)$ and
+$u_i\mapsto v_i$. This gives a homomorphism from $S$ which
+identifies every generating coefficient pair of $\theta$, but
+still separates the two elements of $U$. Their pair is therefore
+outside $\theta$, proving the converse.
+\end{proof}
+
+In particular, the original finite-basis question asks whether some
+finite valid strengthening $\Sigma$ satisfies
+\eqref{core:eq:supported-conservativity}; it does not require
+completeness of the present candidate. Formula
+\eqref{core:eq:supported-kernel-intersection} handles arbitrary
+coefficient congruence derivations, but leaves their simultaneous
+elimination on $U$ unproved. For example, any atomic-valid $P=Q$
+identifies the supports of $P(\vec u)$ and $Q(\vec u)$ in the
+quotient. Common-support linearization there gives
+\[
+ h(P(\vec u),Q(\vec u))=P(\vec u)+Q(\vec u)
+ \qquad(h\text{ any choice}).
+\]
+A complete strengthening must derive this entire schema in the
+original language, in addition to controlling the cyclic transport
+equalities in \eqref{core:eq:supported-kernel-intersection}.
 
 The section hypothesis cannot be removed by embedding an arbitrary
 core algebra into a supported extension, or by taking a quotient of
@@ -6343,10 +6617,8 @@ on the ordinary fiber.
 Finally the reset units of $Q$ are exactly $u,a$, with $u$ neutral.
 Their common-support sets are respectively $\{u,v,w\}$ and
 $\{a,A\}$; in particular $b$ has no reset-unit common support.
-In any atomic supported extension each element has such a support,
-by \cref{core:lem:supported-units}. Both the support equations and
-the reset-unit law descend under an onto homomorphism. Hence $Q$
-cannot be an onto image of a whole extension of this kind.
+By \cref{core:cor:atomic-supported-region}, $Q$ therefore cannot
+be an onto image of a whole atomic supported extension.
 \end{proof}
 
 This obstruction concerns arbitrary algebras. It does not decide
