@@ -59,15 +59,15 @@ nothing here settles it. This appendix collects what is known, in four groups.
   covers together contain every vertex. This includes simultaneous
   fans and all bipartite row/column patterns
   (\cref{core:prop:overlap-coverage,core:thm:all-arity-overlap,core:thm:hypergraph-factoring}).
-  It also proves that a different choice acts as join on any two
-  terms using one fixed choice and join, provided they contain the
-  same variables (\cref{core:cor:one-choice-content}).
   A seven-variable star family also compares the row and column
   factorizations of every path or cycle with private edge residuals,
   irrespective of its length. More generally, a fixed star family
   suffices at every fixed degree bound
   (\cref{core:prop:star-identities,core:thm:bounded-degree-factoring}).
-  Mixed absorption alone also resolves a nested factoring overlap
+  Mixed absorption alone makes an omitted choice act as join on
+  any two terms containing the same variables, with arbitrary
+  mixtures of the other choices
+  (\cref{core:cor:omitted-choice-content}). It also resolves a nested factoring overlap
   involving two choices, through an explicit common support
   (\cref{core:prop:nested-two-choice-factoring}).
 \item \emph{Families of models.} The core variety is the join of the subvarieties
@@ -4612,42 +4612,7 @@ summand dominates $x_i$; if $g$ is join, each summand dominates $E$.
 These observations prove the final assertion.
 \end{proof}
 
-\begin{corollary}[Comparison by a choice omitted from the terms]
-\label{core:cor:one-choice-content}
-Let $f,g$ be distinct choices. Assume $\Gamma_K$, all ordered mixed
-absorption, and overlap coverage for the ordered pair $(g,f)$.
-If terms $s,t$ use only $g$ and join, and every variable of $s$
-occurs in $t$, then $s\leq f(s,t)$ is derivable. If they contain
-the same variables, then $f(s,t)=s+t$ is derivable.
-\end{corollary}
-\begin{proof}
-First put $A=g(x_1,\ldots,x_n)$ and suppose that witnesses
-$b_i\leq t$ satisfy $g(x_i,b_i)=b_i$. For $n=1$,
-\cref{core:lem:absorber-fibers} gives $x_1\leq f(x_1,b_1)$.
-For $n\geq2$, overlap coverage at arity $n$, with outer choice
-$g$, inner choice $f$, and padding $b_i$, gives
-\[
- A\leq\sum_i g(x_i,f(g(x_j:j\ne i),b_i)).
-\]
-The cross-choice inequality bounds the $i$th summand by
-\[
- f(g(x_i,g(x_j:j\ne i)),g(x_i,b_i))
- =f(A,b_i)\leq f(A,t).
-\]
-Thus $A\leq f(A,t)$ in both cases.
-
-Distribution writes $s,t$ exactly as finite nonempty joins of
-$g$-folds of nonempty sets of variables. Fix one such fold $A$ of
-$s$. For each variable $x$ in $A$, choose a fold $B_x$ of $t$
-containing $x$. Then $B_x\leq t$ and $g(x,B_x)=B_x$, so the
-preceding argument gives $A\leq f(A,t)\leq f(s,t)$. Joining over
-the folds of $s$ proves the first claim. For equal variable sets,
-interchange $s,t$ and apply the choice bound.
-\end{proof}
-
-This proves the $f$-comparison without requiring the two terms to
-have equal profiles for other owners. The same coverage laws also
-control simultaneous factorizations along
+The same coverage laws control simultaneous factorizations along
 arbitrary finite incidence patterns. A vertex cover here means a set
 meeting every edge; different covers may overlap.
 
@@ -5049,7 +5014,69 @@ stage does not change global reset. The result for choice translations
 in this expansion covers all cases involving join.
 \end{proof}
 
-The same sandwich identity resolves a nested factoring overlap.
+The sandwich identity gives a contraction that retains a join
+residual in the selected choice image.
+
+\begin{lemma}[Contraction under a projected threshold]
+\label{core:lem:projected-threshold-contraction}
+Assume $\Gamma_K$ and all ordered mixed absorption. For distinct
+choices $f,g$, let $a\leq B$ and put $r=f(a,z)$. Then
+\begin{equation}\label{core:eq:projected-threshold-contraction}
+ a\leq f(B,u)+f(B,v)+r
+ \quad\Longrightarrow\quad
+ a\leq f(B,g(u,v))+r.
+\end{equation}
+\end{lemma}
+\begin{proof}
+Put $F=f(a,-)$, $q=g(u,v)$, $d=f(B,q)$, and
+$H=F\circ g(q,-)$. Birkhoff gives $H(a)=g(a,F(q))\geq a$,
+where the inequality follows from $f(F(q),a)=F(q)$ and
+\cref{core:lem:absorber-fibers}. Since $a\leq B$, monotonicity
+and the global sandwich identity give
+\[
+ H(f(B,u))\leq f(B,g(q,f(B,u)))
+ =\pi_q f(B,g(q,u))=d.
+\]
+Here $g(q,u)=q$, and the operand reset $\pi_q$ fixes $f(B,q)$.
+The same calculation bounds $H(f(B,v))$ by $d$.
+The cross-choice inequality, $F(r)=r$, and $F(q)\leq d$ give
+\[
+ H(r)\leq g(F(q),F(r))\leq g(d,r)\leq d+r.
+\]
+Since $H$ preserves join, applying it to the premise yields
+$a\leq H(a)\leq H(f(B,u))+H(f(B,v))+H(r)\leq d+r$.
+\end{proof}
+
+\begin{corollary}[Comparison with a term omitting the selected choice]
+\label{core:cor:omitted-choice-content}
+Under $\Gamma_K$ and all ordered mixed absorption, let $s$ be any
+term and let $t$ omit a selected choice $f$. If every variable of
+$s$ occurs in $t$, then $s\leq f(s,t)$ is derivable. Consequently,
+if both terms omit $f$ and contain the same variables, then
+$f(s,t)=s+t$ is derivable.
+\end{corollary}
+\begin{proof}
+Fix a valuation and put $a=s$ and $F=f(a,-)$. Start with the
+frontier of leaf occurrences in $t$. Its join $U$ bounds $s$,
+so $a=f(a,a)\leq F(U)$, the join of its frontier projections.
+Process the internal nodes of $t$ in postorder. At a join node,
+$F(u)+F(v)=F(u+v)$. At a choice node $g\ne f$, use
+\eqref{core:eq:projected-threshold-contraction} with $B=a$ to replace the two
+child projections by $F(g(u,v))$. The other frontier projections,
+if present, sum to $F(z)$ for their nonempty join $z$.
+If none remain, add $r=F(g(u,v))$ to the premise; the conclusion
+then reduces to $a\leq F(g(u,v))$.
+The bound therefore survives every contraction, ending at
+$a\leq F(t)$. A one-leaf target needs no contractions, and leaf
+occurrences retain repeated variables. The last assertion follows
+by interchanging $s,t$ and using the choice bound.
+\end{proof}
+
+The source term may use the selected choice. The restriction is on
+the target's syntax; a target containing that choice can have the
+same Boolean profile without admitting these contractions.
+
+The sandwich identity also resolves a nested factoring overlap.
 
 \begin{proposition}[Nested factoring with two choices]
 \label{core:prop:nested-two-choice-factoring}

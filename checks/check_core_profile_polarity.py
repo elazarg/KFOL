@@ -209,7 +209,8 @@ def check():
     totals = dict(models=0, law_instances=0, closures=0, witness_states=0,
                   closure_entries=0, polarity_entries=0,
                   monomial_states=0, monomial_closure_entries=0,
-                  monomial_conclusions=0)
+                  monomial_conclusions=0, contraction_instances=0,
+                  contraction_applications=0)
     for name, tables in models():
         totals["models"] += 1
         totals["law_instances"] += audit_laws(tables)
@@ -217,6 +218,9 @@ def check():
                    witness_states=0, closure_entries=0, polarity_entries=0,
                    monomial_states=0, monomial_closure_entries=0,
                    monomial_conclusions=0)
+        row["contraction_instances"], row["contraction_applications"] = (
+            audit_projected_contraction(tables)
+        )
         for selected in range(1, len(tables)):
             for distinguished in range(len(tables[0])):
                 states, closure, polarity = audit_closure(
@@ -234,7 +238,8 @@ def check():
                 row["monomial_conclusions"] += conclusions
         for key in ("closures", "witness_states", "closure_entries",
                     "polarity_entries", "monomial_states",
-                    "monomial_closure_entries", "monomial_conclusions"):
+                    "monomial_closure_entries", "monomial_conclusions",
+                    "contraction_instances", "contraction_applications"):
             totals[key] += row[key]
         print(json.dumps(row, sort_keys=True))
     print("PASS", json.dumps(totals, sort_keys=True))
@@ -300,6 +305,32 @@ def audit_monomial_profile(tables, selected, coefficient):
             assert add[coefficient][result] == result
             conclusions += 1
     return len(states), closure_entries, conclusions
+
+
+def audit_projected_contraction(tables):
+    """Check every upper coefficient and residual in the threshold image."""
+    add, *choices = tables
+    values = range(len(add))
+    instances = applications = 0
+    for i, first in enumerate(choices):
+        for j, second in enumerate(choices):
+            if i == j:
+                continue
+            for a in values:
+                image_values = set(first[a])
+                for upper in values:
+                    if add[a][upper] != upper:
+                        continue
+                    for u, v, residual in itertools.product(
+                            values, values, image_values):
+                        assert first[a][residual] == residual
+                        before = add[add[first[upper][u]][first[upper][v]]][residual]
+                        after = add[first[upper][second[u][v]]][residual]
+                        instances += 1
+                        if add[a][before] == before:
+                            assert add[a][after] == after
+                            applications += 1
+    return instances, applications
 
 
 if __name__ == "__main__":
