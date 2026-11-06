@@ -173,8 +173,11 @@ nothing here settles it. This appendix collects what is known, in four groups.
   splits exactly into its one-input kernels
   (\cref{core:prop:supported-conservativity-criterion}).
   The entire atomic-fiber schema is equivalent to a representation
-  problem for algebras with common-semilattice atomic fibers. The
-  strengthened candidate settles this representation problem for
+  problem for algebras with common-semilattice atomic fibers.
+  Right-reset derivatives of global join cuts give an exact term-path
+  calculation over every atomic quotient
+  (\cref{core:lem:atomic-cut-derivatives}). The strengthened candidate
+  settles this representation problem for
   every flat atomic quotient, with arbitrary fibers and no support
   section: a subalgebra of a supported extension maps onto the given
   algebra. Flat quotients need not jointly separate a general atomic
@@ -7117,7 +7120,9 @@ quotient with common-semilattice congruence classes. Then
                          \cap\operatorname{Mod}(\Sigma)\bigr).
 \end{equation}
 Every atomic quotient with common-semilattice classes is the canonical
-atomic reflection of its domain. In particular, the entire schema is
+atomic reflection of its domain. The schema has the same consequences
+if restricted to regular atomic identities, whose two sides contain
+the same variables. In particular, the entire schema is
 complete for $\mathcal V$ relative to $\Sigma$ if and only if every
 $\Sigma$-algebra with such an atomic quotient belongs to
 $\mathcal V$.
@@ -7145,6 +7150,12 @@ $a,b$ equals $a+b$. Their images in any atomic quotient therefore
 have the same property. The reset fold at either endpoint then gives
 both $a+b=a$ and $a+b=b$ in that quotient, so the two images agree.
 Thus $\theta\subseteq\kappa$.
+For the regular restriction, suppose $\mathcal A\models P=Q$ and
+fix a choice $h$. Put $U=h(P,Q)$ and $V=P+Q$. Then $U=V$ is
+atomic-valid and regular, so its restricted schema includes
+$h(U,V)=U+V$. Associativity and distribution give $h(U,V)=U$,
+whereas the choice bound gives $U+V=V$. Thus $U=V$, which is the
+required unrestricted instance.
 Finally, $D_K$, and each proper native observer in the core case, has
 the requisite atomic quotient. These generators prove the final criterion.
 \end{proof}
@@ -7199,9 +7210,123 @@ a finite basis through this route, one must establish the indicated
 representation and derive the entire schema from finitely many valid
 identities.
 
-For a flat atomic quotient the representation does follow from the
-strengthened candidate. Boolean cuts of the global join order suffice;
-they need not extend coherently from individual fibers.
+Boolean cuts of the global join order admit an exact path calculation
+over every atomic quotient with common-semilattice fibers. They need
+not extend coherently from individual fibers.
+
+\begin{lemma}[Cut derivatives over atomic quotients]
+\label{core:lem:atomic-cut-derivatives}
+Let $A$ satisfy $\Gamma_K$ and all ordered mixed-absorption laws,
+and let $r:A\to C$ be onto an atomic algebra with common-semilattice
+fibers $P_c=r^{-1}(c)$. Write $R_a(x)=x\del a$.
+A \emph{cut} is a join homomorphism $\chi:A\to\{0,1\}$, including
+the constants. For $c\in C$ define
+\[
+ (E_c\chi)(x)=\bigwedge_{a\in P_c}\chi(R_a(x)),
+\]
+and call $c$ \emph{enabled at $\chi$} if $\chi$ has a zero in $P_c$.
+Every derivative is a cut, is monotone in $\chi$, and agrees with
+$\chi$ on $P_c$. If $c$ is enabled and $\chi(a)=0$ for $a\in P_c$,
+then $E_c\chi=\chi\circ R_a\leq\chi$. If $c$ is disabled,
+$E_c\chi=1$.
+Each $E_c$ is idempotent, and derivatives at simultaneously enabled
+tags commute.
+
+A derivative word is \emph{legal} if each tag is enabled immediately
+before its step. Legal words with the same set $S$ of tags give the
+same cut $\chi_S$, and, whenever both sets admit legal words,
+\begin{equation}\label{core:eq:atomic-legal-cut-order}
+ S\subseteq T\quad\Longrightarrow\quad\chi_T\leq\chi_S.
+\end{equation}
+Every illegal word gives the constant-one cut. The enabled tags form
+a possibly empty subset closed under all basic operations of $C$.
+
+For every basic operation $h$, with $e=h(r(x),r(y))$, one has
+\begin{equation}\label{core:eq:atomic-cut-operation}
+ \chi(h(x,y))=(E_e\chi)(x)\vee(E_e\chi)(y).
+\end{equation}
+Consequently, label every node of a term by its $C$-value on the input
+tags. Its cut value is the join, over leaf occurrences, of the value
+of that leaf under the derivatives read from root to leaf, including
+both endpoints of the path.
+\end{lemma}
+\begin{proof}
+Write $\pi_x(z)=x\del z$. The reset fold expresses $R_a$ as a
+join-preserving word of basic translations with coefficient $a$,
+including its initial join. Atomicity gives $R_a(A)\subseteq P_{r(a)}$,
+and always $a\leq R_a(x)\leq a+x$. On $P_{r(a)}$ it equals $a+x$.
+For $a,b\in P_c$, commuting left resets give
+\begin{equation}\label{core:eq:atomic-right-reset-fiber}
+ R_{a+b}(x)=\pi_x\pi_b(a)=\pi_b\pi_x(a)
+ =b+R_a(x)=a+R_b(x).
+\end{equation}
+It follows also that $R_aR_b=R_{a+b}$ when $a,b$ share a fiber,
+so every $R_a$ is idempotent.
+
+Applying a cut to \eqref{core:eq:atomic-right-reset-fiber} gives
+\begin{equation}\label{core:eq:atomic-cut-factorization}
+ \chi(R_a(x))=\chi(a)\vee(E_c\chi)(x)\qquad(a\in P_c).
+\end{equation}
+For $\chi(a)=1$ use $R_a(x)\geq a$. For $\chi(a)=0$, the
+fiber identity gives
+$\chi(R_b(x))=\chi(b)\vee\chi(R_a(x))$ for every $b\in P_c$,
+with $b=a$ attaining the infimum. This proves the enabled formula
+and contractivity. In the disabled case every $R_a(x)$ has cut
+value $1$. Agreement on $P_c$, monotonicity, and idempotence follow
+from the same formulas.
+
+Suppose $c,d$ are enabled, and choose zeros $a\in P_c$, $b\in P_d$.
+They remain zeros after the other's derivative since
+$R_a(b),R_b(a)\leq a+b$. Let $W_a$ be the word containing all
+choice translations $\star_i(a,-)$ in the reset fold. Distribution
+gives $R_a(z)=a+W_a(z)$. For $T=a+b$ the choice bound and
+\cref{core:lem:bounded-translations} therefore give
+\[
+ T+R_aR_b(z)=T+W_aW_b(z)
+ =T+W_bW_a(z)=T+R_bR_a(z).
+\]
+All letters have coefficients below $T$. Applying $\chi$, with
+$\chi(T)=0$, proves enabled commutation.
+
+Enablement persists as cuts decrease. Thus a legal word remains legal
+at a smaller cut, with smaller result. A repeated tag can be commuted
+back to its first occurrence and removed by idempotence. For two legal
+words with the same tag set, the first tag of one is enabled initially
+and can be commuted to the front of the other; induction identifies
+their results. To prove \eqref{core:eq:atomic-legal-cut-order},
+perform a word for $S$ and then one for $T$, which remains legal at
+the smaller cut. Deleting repetitions leaves tag set $T$.
+An illegal step produces constant one and every later derivative
+preserves it. Finally, zero representatives $a,b$ of enabled tags
+have $\chi(h(a,b))=0$ because $h(a,b)\leq a+b$, proving closure
+of the enabled set.
+
+For the operation rule, put $u=h(x,y)$ and choose any $a\in P_{r(u)}$.
+We claim
+\begin{equation}\label{core:eq:atomic-right-reset-operation}
+ R_a(x+y)=a+u.
+\end{equation}
+The operand-reset laws give $\pi_{x+y}(u)=u$. Since $a,u$ share a
+common-semilattice fiber, reset at $a+u$ identifies them. For
+$V=a+x+y\geq a+u$, reset composition gives
+$\pi_V\pi_{a+u}=\pi_V$, so $\pi_V(a)=\pi_V(u)$. But
+\[
+ \pi_V(a)=\pi_{x+y}(a)=R_a(x+y),\qquad
+ \pi_V(u)=\pi_a\pi_{x+y}(u)=a+u,
+\]
+proving the claim. If $e=r(u)$ is enabled, choose $\chi(a)=0$
+in $P_e$ and apply $\chi$ to the claim. Join preservation of $R_a$
+gives \eqref{core:eq:atomic-cut-operation}. If $e$ is disabled,
+both sides of that equation are $1$. The path formula follows by
+term induction; the leaf's own derivative does not change its value.
+\end{proof}
+
+For finite $C$, each leaf path in the supported presentation contributes
+the intersection of the neutral predicates $Z_c$ of its tags. Over a
+general atomic base, inclusions between unions of these intersections
+need not give inclusions between the tag sets themselves. For a flat
+atomic quotient the path comparison has a simpler form, and the cut
+calculation proves representation.
 
 \begin{theorem}[Arbitrary fibers over a flat atomic quotient]
 \label{core:thm:flat-atomic-fibers}
@@ -7243,61 +7368,9 @@ Every operation whose output tag is $n$ is literal join. An operation
 other than $f_i$ with output tag $a_i$ also is join, and both its
 input tags must be $a_i$.
 
-Call a join homomorphism $\chi:A\to\{0,1\}$ a \emph{cut}, allowing
-the constant cuts. Define
-\[
- (D_i\chi)(x)=\bigwedge_{a\in A_i}\chi(f_i(a,x)),
-\]
-and call $i$ \emph{enabled at $\chi$} if $\chi(a)=0$ for some
-$a\in A_i$. For $a,b\in A_i$, associativity and the common-fiber
-join give
-\[
- a+f_i(b,x)=f_i(a+b,x)=b+f_i(a,x).
-\]
-Applying $\chi$ proves the factorization
-\begin{equation}\label{core:eq:flat-cut-factorization}
- \chi(f_i(a,x))=\chi(a)\vee(D_i\chi)(x).
-\end{equation}
-If $\chi(a)=1$, both sides are $1$ by extensivity at $a$.
-If $\chi(a)=0$, the preceding equality gives
-$\chi(f_i(b,x))=\chi(b)\vee\chi(f_i(a,x))$ for every $b$,
-and $b=a$ attains the infimum.
-
-If $i$ is enabled, any zero $a\in A_i$ consequently gives
-$D_i\chi=\chi\circ f_i(a,-)\leq\chi$, a join cut. If $i$ is
-disabled, $D_i\chi$ is the constant-one cut. In either case
-$D_i\chi$ agrees with $\chi$ on $A_i$, and $D_i$ is idempotent.
-The definition makes $D_i$ monotone in $\chi$. Enablement persists
-when the cut decreases, so each enabled step preserves every
-already enabled owner.
-
-When $i,j$ are both enabled at $\chi$, choose zeros $a\in A_i$
-and $b\in A_j$. Both remain zeros after the other's derivative,
-by the choice bound. Bounded commutation at $a+b$ gives
-\[
- a+b+f_i(a,f_j(b,x))=a+b+f_j(b,f_i(a,x)).
-\]
-Since $\chi(a+b)=0$, applying $\chi$ proves
-$D_jD_i\chi=D_iD_j\chi$.
-
-Call a derivative word \emph{legal} from $\chi$ if each owner is
-enabled just before its step. Its steps are contractive. Starting
-at a smaller cut preserves legality and decreases its result.
-Repeated owners can be deleted: after an owner's first occurrence
-it stays enabled, so a later occurrence can be commuted left until
-the two meet, then removed by idempotence. Two legal words with the
-same owner set give the same cut. To see this, the first letter of
-one is enabled initially and can be commuted to the front of the
-other; induction handles their remaining letters.
-For a set $S$ admitting a legal word, denote the result by $\chi_S$.
-If $S\subseteq T$ and both admit legal words, then
-\begin{equation}\label{core:eq:flat-legal-cut-order}
- \chi_T\leq\chi_S.
-\end{equation}
-Indeed, perform the word for $S$ and then the word for $T$; the
-second stays legal at the smaller cut, and deleting repetitions
-leaves owner set $T$. An illegal step instead produces constant
-one, which every later derivative preserves.
+Use the derivatives of \cref{core:lem:atomic-cut-derivatives}, writing
+$D_i=E_{a_i}$. For a cut $\chi$, legal words and the cuts $\chi_S$
+therefore satisfy \eqref{core:eq:atomic-legal-cut-order}.
 
 For a term $P$, decorate every node, including its leaves, by its
 $B$-value on the tuple $(c_l)$. For a leaf occurrence $o$, let $w_o$
@@ -7308,7 +7381,7 @@ and let $l(o)$ be its variable index. Then
 \end{equation}
 where derivatives are applied in path order. This follows by term
 induction. A node tagged $n$ is join. At a node tagged $a_i$,
-\eqref{core:eq:flat-cut-factorization} and the agreement of $D_i\chi$
+\eqref{core:eq:atomic-cut-operation} and the agreement of $D_i\chi$
 with $\chi$ on $A_i$ give the two child evaluations at $D_i\chi$.
 The same agreement permits the final leaf label.
 
@@ -7342,7 +7415,7 @@ has $\chi(P(\vec x))=1$ and $\chi(Q(\vec x))=0$.
 Choose a detected path of $P$ in \eqref{core:eq:flat-cut-paths}.
 If its word is legal, with owner set $S$, the corresponding $Q$-path
 has set $T\subseteq S$. If that word is illegal its contribution
-is $1$; if legal, \eqref{core:eq:flat-legal-cut-order} gives
+is $1$; if legal, \eqref{core:eq:atomic-legal-cut-order} gives
 $\chi_T\geq\chi_S$, so its contribution is again $1$.
 Both contradict $\chi(Q(\vec x))=0$.
 
@@ -7357,7 +7430,7 @@ By \eqref{core:eq:flat-envelope-path-order} there is a $Q$-path to
 the same variable with owner set contained in $S\cup\{j\}$.
 Its leaf label ensures that $j$ occurs. If this path were legal,
 let $R\subseteq S$ be the set preceding its first $j$. Then $R$
-is legal, and \eqref{core:eq:flat-legal-cut-order} gives
+is legal, and \eqref{core:eq:atomic-legal-cut-order} gives
 $\chi_S\leq\chi_R$. Enablement of $j$ at $\chi_R$ would imply
 enablement at $\chi_S$, contrary to its choice. Thus the $Q$-path
 is illegal and contributes $1$, the same contradiction.
