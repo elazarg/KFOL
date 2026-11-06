@@ -137,10 +137,13 @@ nothing here settles it. This appendix collects what is known, in four groups.
   Lattice interpolation already puts the common absorber-substitution
   kernel inside the atomic reflection kernel, using only the basic
   laws (\cref{core:cor:atomic-cofactor-interpolation}).
-  These fibers need not have least representatives even in a true
-  free core algebra: an explicit four-variable fiber has two elements
-  with no common lower bound in that fiber
-  (\cref{core:prop:no-least-atomic-fiber}).
+  Every atomic identity with a variable on one side lifts to common
+  support under the strengthened candidate. Each free generator is
+  therefore the least element of its atomic fiber, where all choices
+  equal join (\cref{core:cor:atomic-projection-support}). Other fibers
+  need not have least representatives even in a true free core algebra:
+  an explicit four-variable fiber has two elements with no common
+  lower bound in that fiber (\cref{core:prop:no-least-atomic-fiber}).
   For retractions whose values commonly support their fibers, identities
   reduce to evaluations with one input outside the coefficient algebra.
   Every such extension over an atomic coefficient algebra has an ambient
@@ -3368,7 +3371,99 @@ of every core model by this relation. Nor is the veto term
 near-unanimity in the original core: on ambiguous inputs it takes
 their union.
 
-A common upper bound avoids the failed transitivity. Put
+Boolean profiles also identify an infinite family of consequences
+that lift directly from the atomic theory, without a common upper
+bound. For a term $t$ and owner $i$, let $t^{[i]}$ be its monotone
+Boolean interpretation in which $\star_i$ is meet and every other
+basic operation, including join, is join. These are the complementary
+conventions to the separating maps $b_i$ used above.
+
+\begin{proposition}[Boolean profile tests for a variable translation]
+\label{core:prop:profile-polarity}
+Fix a variable $x$ and a term $t$, with arbitrary repetitions and
+additional variables. Under $\Gamma_K$ and all ordered mixed absorption,
+\begin{align}
+ t^{[i]}\leq x
+ &\quad\Longleftrightarrow\quad
+   x\star_i t=t\text{ is derivable},
+   \label{core:eq:profile-fixedness}\\
+ x\leq t^{[i]}
+ &\quad\Longleftrightarrow\quad
+   x\leq x\star_i t\text{ is derivable}.
+   \label{core:eq:profile-extensivity}
+\end{align}
+The conditions on the left are inequalities of Boolean functions.
+\end{proposition}
+\begin{proof}
+Write $h=\star_i$. By monotonicity, $t^{[i]}\leq x$ is equivalent
+to value $0$ when $x=0$ and every other variable is $1$.
+Induct on the syntax tree at this Boolean valuation.
+The only qualifying variable leaf is $x$.
+At an $h$-node at least one child qualifies, and associativity makes
+the result fixed by $h(x,-)$. At a different-choice node both children
+qualify; the image of $h(x,-)$ is a subalgebra by
+\cref{core:prop:choice-images}, so the result is fixed as well.
+At a join node both children qualify, and distribution suffices.
+This proves the forward implication in
+\eqref{core:eq:profile-fixedness}.
+
+Dually, $x\leq t^{[i]}$ is equivalent to value $1$ when $x=1$
+and all other variables are $0$. At an $h$-node both children $u,v$
+qualify. Associativity, idempotence, and monotonicity give
+\[
+ h(x,h(u,v))=h(h(x,u),h(x,v))\geq h(x,x)=x.
+\]
+At a join node one qualifying child suffices by distribution.
+At a distinct-choice node $t=g(u,v)$, one child qualifies, so
+$h(x,u)+h(x,v)\geq x$. The other bound in the mixed-meet formula
+\eqref{core:eq:mixed-meet}
+\[
+ h(x,g(u,v))
+ =\bigl(h(x,u)+h(x,v)\bigr)\wedge
+    \bigl(x+h(x,g(u,v))\bigr)
+\]
+is also above $x$. Their greatest lower bound is therefore above $x$.
+This proves the forward implication in
+\eqref{core:eq:profile-extensivity}.
+For both converses, evaluate the proposed identity in the two-element
+atomic image with $h$ as meet. It gives exactly the Boolean inequality
+on the left.
+\end{proof}
+
+\begin{corollary}[Atomic projection identities lift to common support]
+\label{core:cor:atomic-projection-support}
+For any term $P$ and variable $x$, the identity
+$\mathbf A_K^{\rm at}\models P=x$ holds if and only if
+$\Gamma_K$ and ordered mixed absorption derive
+\[
+ x+P=P,\qquad h(x,P)=P\quad\text{for every choice }h.
+\]
+Consequently, in any free algebra for an equational strengthening of
+these laws whose identities hold in the atomic variety, each generator is the least element of
+its fiber over the corresponding free atomic generator. Every choice
+on that fiber equals join.
+\end{corollary}
+\begin{proof}
+If $P=x$ is atomic-valid, every Boolean profile of $P$ equals $x$.
+Equation~\eqref{core:eq:profile-fixedness} therefore gives
+$h(x,P)=P$ for every choice. Pair coverage gives $x+P=P$.
+Conversely, the displayed support identities imply $P=x$ in every
+atomic two-element image, hence in the atomic generator.
+
+The free algebra maps naturally onto the free atomic algebra, and
+membership of $P$ in the generator's fiber means precisely that
+$P=x$ is atomic-valid. The first assertion therefore gives its
+least element and common support. If $u,v$ lie in this fiber,
+monotonicity gives $h(u,v)\geq h(x,v)=v$ and similarly
+$h(u,v)\geq u$. The choice bound then gives $h(u,v)=u+v$.
+\end{proof}
+
+This does not replace the variable $x$ by an arbitrary term in the
+Boolean hypotheses. The general atomic-fiber schema concerns two
+arbitrary terms and is treated in
+\cref{core:prop:relative-atomic-fiber-schema}.
+
+For arbitrary atomic identities, a common upper bound gives a uniform lift. Put
 $q_u(x)=u\del x$ and $e_i^u(x)=x\star_i u$. On the ideal below an
 ambiguous winner set $u$, the first map fixes atoms and sends ambiguous
 values to $u$. Its quotient interpretation follows already from the
