@@ -67,8 +67,10 @@ nothing here settles it. This appendix collects what is known, in four groups.
   Mixed absorption alone makes an omitted choice act as join on
   any two terms containing the same variables, with arbitrary
   mixtures of the other choices. It also lifts comparisons with
-  terms built from the siblings along a selected path in the source
-  (\cref{core:cor:omitted-choice-content,core:cor:path-comparison}).
+  terms built from the siblings along a selected path in the source,
+  and combines arbitrarily many independently anchored branches under
+  one other choice
+  (\cref{core:cor:omitted-choice-content,core:cor:path-comparison,core:prop:anchor-merging}).
   It resolves a nested factoring overlap
   involving two choices, through an explicit common support
   (\cref{core:prop:nested-two-choice-factoring}).
@@ -5146,6 +5148,88 @@ The selected node ensures $m\geq1$. Repeated variables and
 occurrences cause no change; the sibling subterms are substitution
 blocks and may themselves contain $f$.
 \end{proof}
+
+Choice images also permit independent anchors to merge under a common
+foreign choice. The key step takes place at an owned unit.
+
+\begin{lemma}[Merging anchors at an owned unit]
+\label{core:lem:unit-anchor-merging}
+Assume $\Gamma_K$ and all ordered mixed absorption, and fix distinct
+choices $f,g$. Let $a$ be a global $f$-unit. For $n\geq1$, suppose
+\[
+ g(P_1,\ldots,P_n)=a,\qquad f(c_i,P_i)=P_i\quad(1\leq i\leq n).
+\]
+Then $a\leq g(c_1,\ldots,c_n)$.
+\end{lemma}
+\begin{proof}
+First, $f(c,P)=P$ implies the erasure
+\begin{equation}\label{core:eq:anchor-erasure}
+ g(z,f(P,g(z,c)))=g(z,P).
+\end{equation}
+Indeed, put $F=f(P,-)$ and $G=g(z,-)$. The four-letter identity
+$GFGF=GFG$ from \cref{core:prop:alternating-translations}, evaluated
+at $c$, gives $GFG(c)=GFG(P)$. Birkhoff and pair absorption give
+\[
+ GFG(P)=g(z,g(P,f(P,z)))=g(z,P).
+\]
+
+Put $M=g(c_1,\ldots,c_n)$ and $r_i=g(M,P_i)$.
+Since $g(M,c_i)=M$, erasure and Birkhoff give
+\[
+ r_i=g(M,f(P_i,M))=f(M,g(M,P_i))=f(M,r_i).
+\]
+The image of $f(M,-)$ is closed under $g$, so
+$r=g(r_1,\ldots,r_n)=g(M,a)$ is also fixed by $f(M,-)$.
+The global unit and Birkhoff give
+\[
+ f(M,r)=f(M,g(M,a))=g(M,f(M,a))=g(M,M)=M.
+\]
+Thus $r=M$. Coverage now yields
+$a+M=f(a,M)+g(a,M)=M$, proving the assertion.
+\end{proof}
+
+\begin{proposition}[Merging independently anchored branches]
+\label{core:prop:anchor-merging}
+Assume $\Gamma_K$ and all ordered mixed absorption. Fix distinct
+choices $f,g$, and for $n\geq1$ put
+\[
+ U_i=f(c_i,u_i),\qquad A=g(U_1,\ldots,U_n).
+\]
+Then
+\begin{equation}\label{core:eq:anchor-merging}
+ A\leq g\bigl(f(A,c_1),\ldots,f(A,c_n)\bigr)
+   \leq f(A,c_1+\cdots+c_n).
+\end{equation}
+Consequently, for every term $t(y_1,\ldots,y_n)$ omitting $f$
+and containing every $y_i$, one has
+$A\leq f(A,t(c_1,\ldots,c_n))$.
+\end{proposition}
+\begin{proof}
+Work in the subalgebra $f(A,\mathcal B)$ of the ambient algebra
+$\mathcal B$, where $A$ is a global $f$-unit. Put
+$P_i=f(A,U_i)$ and $q=g(P_1,\ldots,P_n)$. Birkhoff gives
+\[
+ g(A,P_i)=f(A,g(A,U_i))=A,\qquad
+ g(U_i,P_i)=f(U_i,g(U_i,A))=P_i.
+\]
+The first identities imply $g(A,q)=A$. The second identities,
+together with the occurrence of $P_i$ in $q$, imply
+$g(q,U_i)=q$ for every $i$, hence $g(q,A)=q$. Thus $q=A$.
+Also $f(f(A,c_i),P_i)=P_i$ by associativity and idempotence.
+Apply \cref{core:lem:unit-anchor-merging} inside the image to obtain
+the first inequality in \eqref{core:eq:anchor-merging}. The choice
+bound and distribution give the second. The final assertion follows
+by the frontier contraction argument of
+\cref{core:cor:omitted-choice-content}, starting with the join
+$\sum_i f(A,c_i)$ and threshold $A$.
+\end{proof}
+
+The single foreign choice in the source fold supplies the exact
+normalization $g(f(A,U_i):i)=A$. This normalization does not extend
+to arbitrary mixed-choice terms: in $D_2$, with $f$ owning $\alpha$
+and $g$ owning $\beta$, the term $g(x,y)+z$ has value $n$ at
+$(p,\beta,\alpha)$, but value $p$ after applying $f(n,-)$ to all
+three inputs.
 
 The sandwich identity also resolves a nested factoring overlap.
 
