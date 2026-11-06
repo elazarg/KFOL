@@ -22,6 +22,51 @@ def nonflat():
     return "nonflat_M3_core", join, [join, join, f], [0,3,1,2,3]
 
 
+def audit_minimal_cuts(join, choices, rho):
+    """Check the proved partial owner map; no extension claim is tested here."""
+    n, k = len(join), len(choices)
+    cuts = [tuple(int(join[x][b] != b) for x in range(n)) for b in range(n)]
+    cuts.append((1,) * n)
+    cases = entries = dichotomies = 0
+    for p in range(n):
+        for psi in cuts:
+            if not psi[p] or any(
+                    q != psi and q[p] and all(x <= y for x, y in zip(q, psi))
+                    for q in cuts):
+                continue
+            zeros = [a for a in range(n) if not psi[a]]
+            if not zeros:
+                continue
+            cases += 1
+            types = {}
+            for a in zeros:
+                owners = []
+                for i, h in enumerate(choices):
+                    if psi[h[a][p]]:
+                        assert all(psi[h[a][x]] == psi[x] for x in range(n))
+                    else:
+                        owners.append(i)
+                    dichotomies += 1
+                assert len(owners) <= 1
+                types[a] = owners[0] if owners else k
+            for a, b in product(zeros, repeat=2):
+                native_join = types[a] if types[a] == types[b] else k
+                assert types[join[a][b]] == native_join
+                entries += 1
+                for i, h in enumerate(choices):
+                    value = i if i in (types[a], types[b]) else native_join
+                    assert types[h[a][b]] == value
+                    entries += 1
+                if rho[a] == rho[b]:
+                    assert types[a] == types[b]
+            for a in range(n):
+                if psi[a]:
+                    assert any(join[p][join[a][z]] == join[a][z] for z in zeros)
+    return {"minimal_cut_target_pairs": cases,
+            "translation_dichotomies": dichotomies,
+            "atomic_owner_map_entries": entries}
+
+
 @lru_cache(None)
 def shapes(internal):
     if internal == 0:
@@ -174,7 +219,8 @@ def audit_model(name, join, choices, rho):
             "factorization_checks": factorization, "enabled_commutations": commuting,
             "right_reset_operation_checks": operation_rule,
             "cut_operation_checks": cut_operation_rule,
-            "path_checks": path_checks, "path_scopes": scopes}
+            "path_checks": path_checks, "path_scopes": scopes,
+            "minimal_cuts": audit_minimal_cuts(join, choices, rho)}
 
 
 def main():
