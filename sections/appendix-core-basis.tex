@@ -52,6 +52,10 @@ nothing here settles it. This appendix collects what is known, in four groups.
   (\cref{core:lem:postorder-retraction}). Joining with an owned unit can destroy
   this meet, and observations with one selected-choice translation need
   not define a congruence (\cref{core:prop:owned-unit-observer-obstruction}).
+  A finite family of four-variable overlap-coverage identities is also
+  valid. Together with mixed absorption it resolves a branching
+  distribution overlap for every choice
+  (\cref{core:prop:overlap-coverage}).
 \item \emph{Families of models.} The core variety is the join of the subvarieties
   with an unused owner, but only through homomorphic images
   (\cref{app:core-proper-fragments,app:core-quotients}). The two-owner
@@ -167,6 +171,11 @@ nothing here settles it. This appendix collects what is known, in four groups.
   supported-pair retract. The coefficient-atomicization congruence
   splits exactly into its one-input kernels
   (\cref{core:prop:supported-conservativity-criterion}).
+  The entire atomic-fiber schema is equivalent to a representation
+  problem for algebras with common-semilattice atomic fibers. Without
+  a support section, retained-input linearization has an additional
+  baseline term
+  (\cref{core:prop:relative-atomic-fiber-schema,core:lem:fiberwise-join-baseline}).
   A six-element core algebra nevertheless requires both a subalgebra
   and a quotient when represented through this class, even though it
   has a neutral reset unit
@@ -4321,6 +4330,71 @@ reset fold make its output $q$ fixed by every map $w\mapsto h(p,w)$.
 Hence $h(p,q)=q$ for every choice $h$.
 \end{proof}
 
+A finite family of additional valid identities resolves a branching
+overlap between two distributed expressions.
+
+\begin{proposition}[Overlap coverage]
+\label{core:prop:overlap-coverage}
+For distinct basic operations $f,g$, possibly including join, the
+following four-variable identity is valid in $D_K$:
+\begin{equation}\label{core:eq:overlap-coverage}
+ f(x,y)\leq f(x,g(y,z))+f(y,g(x,w)).
+\end{equation}
+The instances involving join follow from $\Gamma_K$, so only the
+$K(K-1)$ ordered pairs of distinct choices supply additional axioms.
+For distinct choices, assume $\Gamma_K$, all ordered mixed absorption,
+and \eqref{core:eq:overlap-coverage}. Put
+\[
+ \begin{aligned}
+ q&=g(f(x,y),f(x,z),f(y,w)),\\
+ s&=g(f(x,g(y,z)),f(y,w)),\\
+ t&=g(f(y,g(x,w)),f(x,z)),
+ \end{aligned}
+\]
+where a three-input choice denotes its associative fold. Then
+\begin{equation}\label{core:eq:covered-distribution-peak}
+ h(s,t)=q=s+t\qquad(h\text{ any choice}).
+\end{equation}
+\end{proposition}
+\begin{proof}
+Write $E=f(x,y)$, $A=f(x,g(y,z))$, and $B=f(y,g(x,w))$.
+If $f$ is join, then $A\geq x$ and $B\geq y$.
+Otherwise let $a_i$ be its native owned atom. If $x=a_i$ or
+$y=a_i$, the corresponding $A$ or $B$ equals $a_i=E$.
+If neither input is $a_i$, the distinct operation $g$ cannot
+produce $a_i$ from either $(y,z)$ or $(x,w)$: a different owner's
+choice, or join, produces that atom only from two copies of it.
+Thus $A\geq x$, $B\geq y$, and $E=x+y$, proving the native
+inequality. When $g$ is join, ordinary distribution already gives
+$A\geq E$; this also proves the asserted equational join cases.
+
+For the consequence, put $C=f(y,w)$, $D=f(x,z)$, and $W=g(A,B)$.
+The strengthened doubled laws of \cref{core:prop:reset-distribution}
+give
+\[
+ g(A,g(E,D))=g(E,D),\qquad g(B,g(E,C))=g(E,C).
+\]
+Hence associativity gives $g(q,A)=q=g(q,B)$ and $g(q,W)=q$.
+By \cref{core:cor:cross-choice-bound}, $s,t\leq q$, so
+$g(s,t)\leq q$. On the other hand, overlap coverage gives
+$E\leq A+B$, while distribution and associativity give
+$g(W,A+B)=W$. Therefore
+\[
+ q=g(q,W)=g(g(E,W),C,D)
+ \leq g(W,C,D)=g(s,t).
+\]
+This proves $g(s,t)=q$. The choice bound gives $q\leq s+t$,
+and $s,t\leq q$ gives the reverse inequality.
+For any choice $h$, put $H=g(E,D)$. The doubled law gives
+$h(A,H)=H$, and the cross-choice bound gives
+\[
+ q=g(C,h(A,H))\leq h(g(C,A),g(C,H))=h(s,q)\leq s+q=q.
+\]
+Thus $h(s,q)=q$, and dually $h(t,q)=q$. Put $v=h(s,t)$.
+Then associativity gives $h(v,q)=h(s,h(t,q))=q$, whereas
+$q=s+t$ and distribution give $h(v,q)=v+v=v$. Hence $v=q$.
+\end{proof}
+
 The reset homomorphism also strengthens the word reductions above. The
 equational step needed in its image uses no join operation.
 
@@ -6508,7 +6582,11 @@ $v=g(Fx,Fy)$. Coverage gives $b+Fx=b+x$, and distribution gives
 \[
  b+v=g(b+Fx,b+Fy)=g(b+x,b+y)=b+g(x,y)=b+w.
 \]
-The mixed-meet formula gives $w=v\wedge(b+w)$, hence $w=v$.
+The cross-choice bound of \cref{core:cor:cross-choice-bound} gives
+$w\leq v$. Conversely, the mixed-meet formula gives
+$w=(Fx+Fy)\wedge(b+w)$. The choice bound gives $v\leq Fx+Fy$,
+and the displayed equality gives $v\leq b+w$, so $v\leq w$.
+Thus $w=v$.
 Preservation of $f$ and join follows from associativity and distribution;
 the argument for $G$ is dual. Finally $G(b)=b$ gives $GF=FG$.
 
@@ -6906,6 +6984,115 @@ quotient. Common-support linearization there gives
 A complete strengthening must derive this entire schema in the
 original language, in addition to controlling the cyclic transport
 equalities in \eqref{core:eq:supported-kernel-intersection}.
+
+The entire atomic-fiber schema has a separate representation target.
+The following relative formulation uses the free-algebra argument for
+Mal'tsev products~\cite[Theorem~2.10]{PenzaRomanowska2021}.
+
+\begin{proposition}[The relative atomic-fiber schema]
+\label{core:prop:relative-atomic-fiber-schema}
+Let $\mathcal A=\operatorname V(\mathbf A_K^{\rm at})$, and let
+$\mathcal S$ be the variety in which every basic operation is the
+same join semilattice operation. Let $\Sigma$ be any set of identities
+valid in $\mathcal V$, where $\mathcal V$ is $\operatorname V(D_K)$
+or the core variety for $K\geq3$. Assume that $\Sigma$ contains
+$\Gamma_K$, all ordered mixed absorption, and, in the core case,
+owner exhaustion.
+Define
+\[
+ \mathcal R_{\mathcal A}
+ =\{\,h(P,Q)=P+Q:
+       \mathcal A\models P=Q,\ h\text{ any choice}\,\}.
+\]
+Write $\mathcal S\circ\mathcal A$ for the algebras admitting an atomic
+quotient with common-semilattice congruence classes. Then
+\begin{equation}\label{core:eq:relative-atomic-fiber-schema}
+ \operatorname{Mod}(\Sigma\cup\mathcal R_{\mathcal A})
+ =\operatorname H\bigl((\mathcal S\circ\mathcal A)
+                         \cap\operatorname{Mod}(\Sigma)\bigr).
+\end{equation}
+Every atomic quotient with common-semilattice classes is the canonical
+atomic reflection of its domain. In particular, the entire schema is
+complete for $\mathcal V$ relative to $\Sigma$ if and only if every
+$\Sigma$-algebra with such an atomic quotient belongs to
+$\mathcal V$.
+\end{proposition}
+\begin{proof}
+An algebra with the stated quotient satisfies the schema: atomic-valid
+$P,Q$ have equal quotient values, and their values consequently lie in
+one common-semilattice class. Homomorphic images preserve the resulting
+identities, proving one inclusion.
+
+Conversely, put $\mathcal W=\operatorname{Mod}
+(\Sigma\cup\mathcal R_{\mathcal A})$. Since $\mathcal A\subseteq\mathcal W$,
+every free $\mathcal W$-algebra maps canonically onto the corresponding
+free atomic algebra. Two terms have the same image exactly when their
+identity is atomic-valid; the schema makes every choice on their values
+equal to join. Thus all kernel classes are common semilattices, and
+this free algebra belongs to the class on the right before applying
+$\operatorname H$. Every member of $\mathcal W$ is a homomorphic image
+of such a free algebra, proving equality.
+
+For canonicity, let $\theta$ be the given quotient kernel and $\kappa$
+the atomic reflection kernel. Since the quotient is atomic,
+$\kappa\subseteq\theta$. If $a\mathrel\theta b$, every choice on
+$a,b$ equals $a+b$. Their images in any atomic quotient therefore
+have the same property. The reset fold at either endpoint then gives
+both $a+b=a$ and $a+b=b$ in that quotient, so the two images agree.
+Thus $\theta\subseteq\kappa$.
+Finally, $D_K$, and each proper native observer in the core case, has
+the requisite atomic quotient. These generators prove the final criterion.
+\end{proof}
+
+\begin{lemma}[Fiberwise join and retained inputs]
+\label{core:lem:fiberwise-join-baseline}
+Let $r:A\to C$ be a homomorphism of algebras whose basic operations
+are associative, commutative, and idempotent, including a designated
+join. Its classes are common join semilattices if and only if the
+fiberwise join
+\[
+ \mu:A\times_C A\longrightarrow A,\qquad \mu(x,y)=x+y,
+\]
+is a homomorphism. Under these equivalent conditions, for any term
+$P$ in $m\geq1$ variables and tuples with $r(x_i)=r(y_i)$,
+\begin{equation}\label{core:eq:retained-input-baseline}
+ P(\vec x)+P(\vec y)
+ =P(\vec y)+\sum_{i=1}^m
+    P(y_1,\ldots,y_{i-1},x_i,y_{i+1},\ldots,y_m).
+\end{equation}
+For $m\geq2$ the separate $P(\vec y)$ on the right may be omitted.
+No section or least element of a fiber is assumed.
+\end{lemma}
+\begin{proof}
+For $r(x)=r(x')$ and $r(y)=r(y')$, and any basic $h$, the
+common-fiber operations and associativity give
+\[
+ \begin{aligned}
+ h(x+x',y+y')
+ &=h(h(x,x'),h(y,y'))\\
+ &=h(h(x,y),h(x',y'))
+  =h(x,y)+h(x',y').
+ \end{aligned}
+\]
+This proves that $\mu$ preserves $h$. Conversely, its homomorphism
+law applied to $(x,y),(y,x)$ in one fiber gives
+$h(x+y,y+x)=h(x,y)+h(y,x)$, hence $x+y=h(x,y)$.
+
+It follows by term induction that $P$ preserves coordinatewise join
+on a product of fixed fibers. The join of $\vec y$ and all tuples
+obtained by replacing its $i$th coordinate by $x_i$ is
+$\vec x+\vec y$. Applying $P$ gives
+\eqref{core:eq:retained-input-baseline}. For $m\geq2$ those replacement
+tuples alone already have the same join.
+\end{proof}
+
+With a common-support section the baseline can be removed, giving
+\cref{core:lem:supported-extension-reduction}.
+For arbitrary atomic fibers it cannot simply be discarded. The
+representation criterion above concerns the entire schema. To obtain
+a finite basis through this route, one must establish the indicated
+representation and derive the entire schema from finitely many valid
+identities.
 
 The section hypothesis cannot be removed by embedding an arbitrary
 core algebra into a supported extension, or by taking a quotient of
