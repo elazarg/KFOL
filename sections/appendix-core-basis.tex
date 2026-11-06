@@ -53,9 +53,10 @@ nothing here settles it. This appendix collects what is known, in four groups.
   this meet, and observations with one selected-choice translation need
   not define a congruence (\cref{core:prop:owned-unit-observer-obstruction}).
   A finite family of four-variable overlap-coverage identities is also
-  valid. Together with mixed absorption it resolves a branching
-  distribution overlap for every choice
-  (\cref{core:prop:overlap-coverage}).
+  valid. Together with mixed absorption it implies overlap coverage
+  at every arity and resolves the corresponding collection of
+  simultaneous factoring alternatives for every choice
+  (\cref{core:prop:overlap-coverage,core:thm:all-arity-overlap}).
 \item \emph{Families of models.} The core variety is the join of the subvarieties
   with an unused owner, but only through homomorphic images
   (\cref{app:core-proper-fragments,app:core-quotients}). The two-owner
@@ -172,10 +173,14 @@ nothing here settles it. This appendix collects what is known, in four groups.
   splits exactly into its one-input kernels
   (\cref{core:prop:supported-conservativity-criterion}).
   The entire atomic-fiber schema is equivalent to a representation
-  problem for algebras with common-semilattice atomic fibers. Without
-  a support section, retained-input linearization has an additional
-  baseline term
-  (\cref{core:prop:relative-atomic-fiber-schema,core:lem:fiberwise-join-baseline}).
+  problem for algebras with common-semilattice atomic fibers. The
+  strengthened candidate settles this representation problem for
+  every flat atomic quotient, with arbitrary fibers and no support
+  section: a subalgebra of a supported extension maps onto the given
+  algebra. Flat quotients need not jointly separate a general atomic
+  extension, even a five-element core algebra. Without a section,
+  retained-input linearization itself has an additional baseline term
+  (\cref{core:prop:relative-atomic-fiber-schema,core:thm:flat-atomic-fibers,core:prop:flat-fiber-separation-obstruction,core:lem:fiberwise-join-baseline}).
   A six-element core algebra nevertheless requires both a subalgebra
   and a quotient when represented through this class, even though it
   has a neutral reset unit
@@ -4330,8 +4335,9 @@ reset fold make its output $q$ fixed by every map $w\mapsto h(p,w)$.
 Hence $h(p,q)=q$ for every choice $h$.
 \end{proof}
 
-A finite family of additional valid identities resolves a branching
-overlap between two distributed expressions.
+A finite family of additional valid identities controls overlaps of
+arbitrary arity. The key reduction combines two guarded branches using
+only mixed absorption.
 
 \begin{proposition}[Overlap coverage]
 \label{core:prop:overlap-coverage}
@@ -4342,19 +4348,6 @@ following four-variable identity is valid in $D_K$:
 \end{equation}
 The instances involving join follow from $\Gamma_K$, so only the
 $K(K-1)$ ordered pairs of distinct choices supply additional axioms.
-For distinct choices, assume $\Gamma_K$, all ordered mixed absorption,
-and \eqref{core:eq:overlap-coverage}. Put
-\[
- \begin{aligned}
- q&=g(f(x,y),f(x,z),f(y,w)),\\
- s&=g(f(x,g(y,z)),f(y,w)),\\
- t&=g(f(y,g(x,w)),f(x,z)),
- \end{aligned}
-\]
-where a three-input choice denotes its associative fold. Then
-\begin{equation}\label{core:eq:covered-distribution-peak}
- h(s,t)=q=s+t\qquad(h\text{ any choice}).
-\end{equation}
 \end{proposition}
 \begin{proof}
 Write $E=f(x,y)$, $A=f(x,g(y,z))$, and $B=f(y,g(x,w))$.
@@ -4367,33 +4360,145 @@ choice, or join, produces that atom only from two copies of it.
 Thus $A\geq x$, $B\geq y$, and $E=x+y$, proving the native
 inequality. When $g$ is join, ordinary distribution already gives
 $A\geq E$; this also proves the asserted equational join cases.
-
-For the consequence, put $C=f(y,w)$, $D=f(x,z)$, and $W=g(A,B)$.
-The strengthened doubled laws of \cref{core:prop:reset-distribution}
-give
-\[
- g(A,g(E,D))=g(E,D),\qquad g(B,g(E,C))=g(E,C).
-\]
-Hence associativity gives $g(q,A)=q=g(q,B)$ and $g(q,W)=q$.
-By \cref{core:cor:cross-choice-bound}, $s,t\leq q$, so
-$g(s,t)\leq q$. On the other hand, overlap coverage gives
-$E\leq A+B$, while distribution and associativity give
-$g(W,A+B)=W$. Therefore
-\[
- q=g(q,W)=g(g(E,W),C,D)
- \leq g(W,C,D)=g(s,t).
-\]
-This proves $g(s,t)=q$. The choice bound gives $q\leq s+t$,
-and $s,t\leq q$ gives the reverse inequality.
-For any choice $h$, put $H=g(E,D)$. The doubled law gives
-$h(A,H)=H$, and the cross-choice bound gives
-\[
- q=g(C,h(A,H))\leq h(g(C,A),g(C,H))=h(s,q)\leq s+q=q.
-\]
-Thus $h(s,q)=q$, and dually $h(t,q)=q$. Put $v=h(s,t)$.
-Then associativity gives $h(v,q)=h(s,h(t,q))=q$, whereas
-$q=s+t$ and distribution give $h(v,q)=v+v=v$. Hence $v=q$.
 \end{proof}
+
+\begin{lemma}[Guarded contraction and merging]
+\label{core:lem:guarded-overlap-contraction}
+Let $A$ satisfy $\Gamma_K$ and all ordered mixed-absorption laws,
+and let $f,g$ be distinct choices. Then
+\begin{equation}\label{core:eq:guarded-overlap-contraction}
+ g(f(x,y),u)=u
+ \quad\Longrightarrow\quad
+ f(x,g(y,u))\leq f(x,u).
+\end{equation}
+Consequently, if $g(f(y,z),u)=u$ and $g(f(x,z),v)=v$, then
+\begin{equation}\label{core:eq:guarded-overlap-merge}
+ f(f(x,y),g(z,f(u,v)))\leq f(x,u)+f(y,v).
+\end{equation}
+\end{lemma}
+\begin{proof}
+Put $q=f(x,y)$, $p=f(x,g(y,u))$, $r=f(x,u)$, and $T=x+u$.
+The bounded commutation identity \eqref{core:eq:bounded-commutation},
+whose two coefficients $x,u$ lie below $T$, gives
+\[
+ T+p=T+g(u,f(x,y))=T.
+\]
+Thus $p\leq x+u$. Apply $f(x,-)$, using $f(x,p)=p$, to obtain
+$p\leq x+r$. The choice bound and distribution also give
+$p\leq q+r$. The guard makes $r=f(x,g(q,u))$, so the mixed-meet
+formula of \cref{core:prop:mixed-meet} gives
+\[
+ r=(f(x,q)+f(x,u))\wedge(x+r)=(q+r)\wedge(x+r).
+\]
+Hence $p\leq r$, proving \eqref{core:eq:guarded-overlap-contraction}.
+
+For the second assertion, the cross-choice bound gives
+\[
+ f(f(x,y),g(z,f(u,v)))
+ \leq f(x,y,g(z,u),g(z,v)).
+\]
+Here and below repeated inputs to a choice denote its associative
+fold. Apply the first assertion at $(y,z,u)$ and $(x,z,v)$.
+Monotonicity and associativity then bound the right side by
+\[
+ f(f(y,u),f(x,v))=f(f(x,u),f(y,v))\leq f(x,u)+f(y,v).
+\]
+\end{proof}
+
+The first guard can be eliminated by replacing $u$ with
+$g(f(x,y),z)$, giving an ordinary three-variable identity.
+The conclusion is an inequality: already in $D_{\{i,j\}}$, taking
+$(x,y,u)=(n,a_j,p)$ gives $n$ on the left and $p$ on the right.
+
+\begin{theorem}[Overlap coverage at every arity]
+\label{core:thm:all-arity-overlap}
+Assume $\Gamma_K$, all ordered mixed absorption, and
+\eqref{core:eq:overlap-coverage} for a fixed pair of distinct choices
+$f,g$. For $n\geq2$ and each nonempty set of positions
+$I\subseteq[n]$, write $E_I=f(x_i:i\in I)$. Then
+\begin{equation}\label{core:eq:all-arity-overlap}
+ E_{[n]}\leq\sum_{i=1}^n f(x_i,g(E_{[n]\setminus\{i\}},z_i)).
+\end{equation}
+For the simultaneous factoring alternatives, put
+\[
+ \begin{aligned}
+ E&=E_{[n]},& D_i&=f(x_i,z_i),&
+ A_i&=f(x_i,g(E_{[n]\setminus\{i\}},z_i)),\\
+ q&=g(E,D_1,\ldots,D_n),&&
+ S_i&=g(A_i,D_j:j\ne i).
+ \end{aligned}
+\]
+Then every choice $h$ satisfies
+\begin{equation}\label{core:eq:covered-distribution-peak}
+ q=\sum_{i=1}^n S_i=h(S_1,\ldots,S_n).
+\end{equation}
+If either $f$ or $g$ is join, \eqref{core:eq:all-arity-overlap}
+already follows from $\Gamma_K$.
+\end{theorem}
+\begin{proof}
+Set $u_{\{i\}}=g(E_{[n]\setminus\{i\}},z_i)$.
+For each nonempty proper subset $I\subset[n]$, construct $u_I$
+such that
+\[
+ g(E_{[n]\setminus I},u_I)=u_I,
+ \qquad
+ f(E_I,u_I)\leq\sum_{i\in I} f(x_i,u_{\{i\}}).
+\]
+These properties hold for singletons. For disjoint nonempty $I,J$
+with proper union, put $R=[n]\setminus(I\cup J)$ and define
+\[
+ u_{I\cup J}=g(E_R,f(u_I,u_J)).
+\]
+The guard follows from idempotence and associativity of $g$.
+Since $E_{[n]\setminus I}=f(E_J,E_R)$ and
+$E_{[n]\setminus J}=f(E_I,E_R)$, the old guards are exactly the
+hypotheses of \eqref{core:eq:guarded-overlap-merge} at
+$(x,y,z,u,v)=(E_I,E_J,E_R,u_I,u_J)$. That inequality proves the
+required bound for the union.
+
+Construct $u_I$ for $I=\{1,\ldots,n-1\}$. Binary overlap coverage
+at $(E_I,x_n)$, with padding parameters $u_I,u_{\{n\}}$, now gives
+\[
+ \begin{aligned}
+ E_{[n]}
+ &\leq f(E_I,g(x_n,u_I))+f(x_n,g(E_I,u_{\{n\}}))\\
+ &=f(E_I,u_I)+f(x_n,u_{\{n\}})
+ \leq\sum_{i=1}^n f(x_i,u_{\{i\}}).
+ \end{aligned}
+\]
+This is \eqref{core:eq:all-arity-overlap}. Every fold used above is
+nonempty; for $n=2$ no merging is needed. If $f$ is join, the $i$th
+summand dominates $x_i$; if $g$ is join, each summand dominates $E$.
+These observations prove the final assertion.
+
+For the factoring identity, the strengthened doubled law gives
+$h(A_i,g(E,D_i))=g(E,D_i)$ for every choice $h$.
+Apply the $g$-translation with all $D_j$, $j\ne i$, and use the
+cross-choice bound. Since $S_i\leq q$, this gives
+\[
+ q\leq h(S_i,q)\leq S_i+q=q,
+ \qquad\text{hence }h(S_i,q)=q.
+\]
+In particular, with $W=g(A_1,\ldots,A_n)$, associativity gives
+$g(q,W)=q$. Coverage gives $E\leq\sum_i A_i$, and distribution
+gives $g(W,\sum_i A_i)=W$. Therefore
+\[
+ q=g(q,W)=g(g(E,W),D_1,\ldots,D_n)
+ \leq g(W,D_1,\ldots,D_n)
+ =g(S_1,\ldots,S_n)\leq\sum_i S_i\leq q.
+\]
+The equality of the two $g$-folds uses $n\geq2$, so every $D_j$
+occurs in at least one $S_i$.
+For any choice $h$, put $v=h(S_1,\ldots,S_n)$. The equalities
+$h(S_i,q)=q$ imply $h(v,q)=q$. On the other hand, $q=\sum_iS_i$
+and distribution give $h(v,q)=\sum_i h(v,S_i)=v$. Thus $v=q$.
+\end{proof}
+
+The whole collection of alternatives is needed in
+\eqref{core:eq:covered-distribution-peak}. For example, in the native
+two-owner algebra take $n=3$, $(x_1,x_2,x_3)=(n,n,p)$, and
+$(z_1,z_2,z_3)=(a_j,a_j,a_i)$. Then $q=S_3=p$ but $S_1=S_2=n$,
+so deleting the third alternative destroys the join cover.
 
 The reset homomorphism also strengthens the word reductions above. The
 equational step needed in its image uses no join operation.
@@ -7093,6 +7198,236 @@ representation criterion above concerns the entire schema. To obtain
 a finite basis through this route, one must establish the indicated
 representation and derive the entire schema from finitely many valid
 identities.
+
+For a flat atomic quotient the representation does follow from the
+strengthened candidate. Boolean cuts of the global join order suffice;
+they need not extend coherently from individual fibers.
+
+\begin{theorem}[Arbitrary fibers over a flat atomic quotient]
+\label{core:thm:flat-atomic-fibers}
+Let $A$ satisfy $\Gamma_K$ and all ordered mixed-absorption laws.
+Suppose $r:A\to B$ is onto, its fibers are common join semilattices,
+and $B$ is a singleton or the flat native atomic algebra
+\[
+ B=\{n\}\cup\{a_i:i\in J\},\qquad \varnothing\ne J\subseteq I.
+\]
+Then $A$ is a homomorphic image of a subalgebra of an atomic supported
+extension over $B$. In particular $A\in\operatorname V(D_K)$.
+More precisely, for a finite generating tuple $x_1,\ldots,x_m$,
+put $c_l=r(x_l)$. In $F_B(c_1,\ldots,c_m)$, the assignment
+$u_l\mapsto x_l$ defines an onto homomorphism from the subalgebra
+generated by the upper inputs alone.
+
+For $K\geq3$, exhaustion gives core membership. If $J\ne I$,
+every omitted owner's operation already equals join in $A$, so
+core membership holds without assuming exhaustion.
+\end{theorem}
+\begin{proof}
+If $B$ is a singleton, all operations of $A$ equal join and the
+assertions follow by adjoining a new common bottom when necessary.
+Assume henceforth that $B$ has the displayed form.
+
+First observe that if $h(r(x),r(y))=r(x)+r(y)$, then
+$h(x,y)=x+y$. Indeed, $p=h(x,y)\leq q=x+y$ have the same tag,
+so the common-fiber hypothesis gives $h(p,q)=q$. Associativity
+and distribution instead give
+$h(p,q)=h(p,x)+h(p,y)=p$.
+Also, if $h(r(x),r(y))=r(x)$, then $x\leq h(x,y)$: the two
+elements share a fiber and $h(x,h(x,y))=h(x,y)$.
+In particular, for $A_i=r^{-1}(a_i)$ and $f_i=\star_i$,
+\[
+ f_i(a,x)\in A_i,\qquad a\leq f_i(a,x)
+ \quad(a\in A_i,\ x\in A).
+\]
+Every operation whose output tag is $n$ is literal join. An operation
+other than $f_i$ with output tag $a_i$ also is join, and both its
+input tags must be $a_i$.
+
+Call a join homomorphism $\chi:A\to\{0,1\}$ a \emph{cut}, allowing
+the constant cuts. Define
+\[
+ (D_i\chi)(x)=\bigwedge_{a\in A_i}\chi(f_i(a,x)),
+\]
+and call $i$ \emph{enabled at $\chi$} if $\chi(a)=0$ for some
+$a\in A_i$. For $a,b\in A_i$, associativity and the common-fiber
+join give
+\[
+ a+f_i(b,x)=f_i(a+b,x)=b+f_i(a,x).
+\]
+Applying $\chi$ proves the factorization
+\begin{equation}\label{core:eq:flat-cut-factorization}
+ \chi(f_i(a,x))=\chi(a)\vee(D_i\chi)(x).
+\end{equation}
+If $\chi(a)=1$, both sides are $1$ by extensivity at $a$.
+If $\chi(a)=0$, the preceding equality gives
+$\chi(f_i(b,x))=\chi(b)\vee\chi(f_i(a,x))$ for every $b$,
+and $b=a$ attains the infimum.
+
+If $i$ is enabled, any zero $a\in A_i$ consequently gives
+$D_i\chi=\chi\circ f_i(a,-)\leq\chi$, a join cut. If $i$ is
+disabled, $D_i\chi$ is the constant-one cut. In either case
+$D_i\chi$ agrees with $\chi$ on $A_i$, and $D_i$ is idempotent.
+The definition makes $D_i$ monotone in $\chi$. Enablement persists
+when the cut decreases, so each enabled step preserves every
+already enabled owner.
+
+When $i,j$ are both enabled at $\chi$, choose zeros $a\in A_i$
+and $b\in A_j$. Both remain zeros after the other's derivative,
+by the choice bound. Bounded commutation at $a+b$ gives
+\[
+ a+b+f_i(a,f_j(b,x))=a+b+f_j(b,f_i(a,x)).
+\]
+Since $\chi(a+b)=0$, applying $\chi$ proves
+$D_jD_i\chi=D_iD_j\chi$.
+
+Call a derivative word \emph{legal} from $\chi$ if each owner is
+enabled just before its step. Its steps are contractive. Starting
+at a smaller cut preserves legality and decreases its result.
+Repeated owners can be deleted: after an owner's first occurrence
+it stays enabled, so a later occurrence can be commuted left until
+the two meet, then removed by idempotence. Two legal words with the
+same owner set give the same cut. To see this, the first letter of
+one is enabled initially and can be commuted to the front of the
+other; induction handles their remaining letters.
+For a set $S$ admitting a legal word, denote the result by $\chi_S$.
+If $S\subseteq T$ and both admit legal words, then
+\begin{equation}\label{core:eq:flat-legal-cut-order}
+ \chi_T\leq\chi_S.
+\end{equation}
+Indeed, perform the word for $S$ and then the word for $T$; the
+second stays legal at the smaller cut, and deleting repetitions
+leaves owner set $T$. An illegal step instead produces constant
+one, which every later derivative preserves.
+
+For a term $P$, decorate every node, including its leaves, by its
+$B$-value on the tuple $(c_l)$. For a leaf occurrence $o$, let $w_o$
+record the owned-atom labels on its root-to-leaf path, omitting $n$,
+and let $l(o)$ be its variable index. Then
+\begin{equation}\label{core:eq:flat-cut-paths}
+ \chi(P(\vec x))=\bigvee_o(D_{w_o}\chi)(x_{l(o)}),
+\end{equation}
+where derivatives are applied in path order. This follows by term
+induction. A node tagged $n$ is join. At a node tagged $a_i$,
+\eqref{core:eq:flat-cut-factorization} and the agreement of $D_i\chi$
+with $\chi$ on $A_i$ give the two child evaluations at $D_i\chi$.
+The same agreement permits the final leaf label.
+
+Now suppose the generating tuple is finite. The coefficient observers
+$\phi:B\to\mathbf A_K^{\rm at}$ fixing $n$ independently send each
+$a_i$ either to itself or to $n$. No other atom is possible, since
+$f_i(a_i,n)=a_i$ must be preserved. Thus their poset is the Boolean
+lattice of deleted-owner sets. In the exact presentation of
+\cref{core:thm:atomic-supported-normal-forms}, the coordinate $l$
+of $P(\vec u)$ is the union, over its occurrences of $u_l$, of the
+principal upsets generated by their path owner sets. This follows
+from \eqref{core:eq:atomic-supported-upset-table}: each operation
+intersects the union of its input indices with the neutral predicate
+of its output tag, and the initial input has predicate $Z_{c_l}$.
+Consequently, for terms $P,Q$ with equal output tag,
+\begin{equation}\label{core:eq:flat-envelope-path-order}
+ P(\vec u)\leq Q(\vec u)
+ \quad\Longleftrightarrow\quad
+ \begin{gathered}
+ \text{each leaf path of $P$ has a path of $Q$ to the same variable}\\
+ \text{whose owner set is a subset of its own.}
+ \end{gathered}
+\end{equation}
+For the nontrivial implication, test the upset inclusion at the
+owner set generating a path of $P$.
+
+We show that every same-tag inequality in
+\eqref{core:eq:flat-envelope-path-order} holds at $\vec x$ in $A$.
+Otherwise the global cut $\chi(z)=0$ exactly when $z\leq Q(\vec x)$
+has $\chi(P(\vec x))=1$ and $\chi(Q(\vec x))=0$.
+Choose a detected path of $P$ in \eqref{core:eq:flat-cut-paths}.
+If its word is legal, with owner set $S$, the corresponding $Q$-path
+has set $T\subseteq S$. If that word is illegal its contribution
+is $1$; if legal, \eqref{core:eq:flat-legal-cut-order} gives
+$\chi_T\geq\chi_S$, so its contribution is again $1$.
+Both contradict $\chi(Q(\vec x))=0$.
+
+Otherwise let $j$ be the first disabled owner on the detected path,
+and let $S$ be the owner set of its legal prefix. At that node the
+subterm has tag $a_j$. Every operation producing $a_j$ has an input
+tagged $a_j$, so repeatedly choosing such a child gives a path to
+a leaf entirely tagged $a_j$. Replace the original suffix by this
+path. The resulting actual occurrence of a variable $x_l$ has
+$c_l=a_j$ and path owner set $S\cup\{j\}$.
+By \eqref{core:eq:flat-envelope-path-order} there is a $Q$-path to
+the same variable with owner set contained in $S\cup\{j\}$.
+Its leaf label ensures that $j$ occurs. If this path were legal,
+let $R\subseteq S$ be the set preceding its first $j$. Then $R$
+is legal, and \eqref{core:eq:flat-legal-cut-order} gives
+$\chi_S\leq\chi_R$. Enablement of $j$ at $\chi_R$ would imply
+enablement at $\chi_S$, contrary to its choice. Thus the $Q$-path
+is illegal and contributes $1$, the same contradiction.
+
+Every upper-input equality therefore remains true after
+$u_l\mapsto x_l$. This defines the asserted onto homomorphism.
+For an arbitrary generating family, take the directed union of the
+finite-input supported presentations over $B$. Their canonical
+coordinate inclusions are injective by the exact presentation, and
+every equality involves finitely many inputs. The same argument
+gives the required homomorphism from the upper-generated subalgebra
+of that union. The union is an atomic supported extension, so
+\cref{core:thm:atomic-supported-extensions} proves ambient membership.
+
+Finally, exhaustion gives core membership by
+\cref{core:thm:relative-exhaustion-complete}. If an owner is absent
+from $B$, its operation agrees with join at every quotient pair,
+and hence also in $A$ by the first observation. Such an algebra
+already satisfies exhaustion.
+\end{proof}
+
+The flat case cannot be extended merely by taking a subdirect product
+of algebras with flat atomic quotients.
+
+\begin{proposition}[Flat atomic fibers need not separate]
+\label{core:prop:flat-fiber-separation-obstruction}
+For every $K\geq3$, there is a five-element core algebra $A$ with
+common-semilattice fibers over a four-element atomic quotient such
+that every homomorphism from $A$ into any algebra with common-semilattice
+fibers over a flat atomic quotient identifies the same two distinct
+elements. In particular $A$ does not belong to the $\operatorname{SP}$
+closure of that class.
+\end{proposition}
+\begin{proof}
+Take the join diamond on $\{0,1,2,3,4\}$ with bottom $0$, atoms
+$1,2,3$, and top $4$. Choose one owner $i$. Its choice $f$ is
+Boolean meet on $\{0,2,3,4\}$, with $1$ adjoined as an $f$-unit;
+every other choice is join. A native cover is the following subalgebra
+of $\{a_i,n,p\}^2$, with the indicated onto homomorphism:
+\[
+ \begin{array}{c|ccccccc}
+ s&(a_i,a_i)&(a_i,p)&(n,n)&(n,p)&(p,a_i)&(p,n)&(p,p)\\\hline
+ s\mapsto A&0&3&1&4&2&4&4.
+ \end{array}
+\]
+This proves core membership. The quotient identifying $1,4$ is the
+Boolean four-element lattice, with $f$ as meet and every other
+operation as join; its fibers are common semilattices.
+Reset at $4$ identifies $1,4$ and fixes the other elements, so every
+map to an atomic algebra factors through this quotient.
+
+Let $v:A\to X$ be a homomorphism and $r:X\to B$ a flat atomic
+quotient with common-semilattice fibers. The image of $rv$ is either
+a singleton or $\{a_i,n\}$. Indeed, a nonconstant image containing
+a different owner atom is impossible: that owner's source operation
+is join, whereas its operation in $B$ absorbs the atom.
+In the nonconstant case the induced map from the Boolean quotient
+to $\{a_i,n\}$ preserves meet and join. It therefore sends $0$
+and exactly one of the Boolean atoms $2,3$ to $a_i$.
+In the constant case $0$ and $2$ also have the same image.
+Choose $b\in\{2,3\}$ with $rv(0)=rv(b)$.
+The common-fiber operations give
+\[
+ v(0)=v(f(0,b))=f(v(0),v(b))
+ =v(0)+v(b)=v(0+b)=v(b).
+\]
+Joining with $v(1)$ now gives $v(1)=v(4)$, since
+$0+1=1$ and $b+1=4$. This holds for every such homomorphism,
+including targets of arbitrary cardinality, and proves the assertion.
+\end{proof}
 
 The section hypothesis cannot be removed by embedding an arbitrary
 core algebra into a supported extension, or by taking a quotient of
