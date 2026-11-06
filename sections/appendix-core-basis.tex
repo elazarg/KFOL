@@ -59,6 +59,14 @@ nothing here settles it. This appendix collects what is known, in four groups.
   covers together contain every vertex. This includes simultaneous
   fans and all bipartite row/column patterns
   (\cref{core:prop:overlap-coverage,core:thm:all-arity-overlap,core:thm:hypergraph-factoring}).
+  A seven-variable star family also compares the row and column
+  factorizations of every path or cycle with private edge residuals,
+  irrespective of its length. More generally, a fixed star family
+  suffices at every fixed degree bound
+  (\cref{core:prop:star-identities,core:thm:bounded-degree-factoring}).
+  Mixed absorption alone also resolves a nested factoring overlap
+  involving two choices, through an explicit common support
+  (\cref{core:prop:nested-two-choice-factoring}).
 \item \emph{Families of models.} The core variety is the join of the subvarieties
   with an unused owner, but only through homomorphic images
   (\cref{app:core-proper-fragments,app:core-quotients}). The two-owner
@@ -4572,6 +4580,129 @@ In the native two-owner algebra, with $f$ owning $a_i$ and $g$
 owning $a_j$, take $x=y=n$, $z=p$, and $u=v=a_j$.
 Then $Q=p$ while $S_C=S_D=n$.
 
+These alternatives can still agree after applying a choice to both,
+even when their join does not recover the source. The following
+finite families give such comparisons for graphs of bounded degree.
+
+\begin{proposition}[Star support identities]
+\label{core:prop:star-identities}
+Fix distinct choices $f,g$ and $n\geq1$, and put
+\[
+ \begin{aligned}
+ U_i&=f(x_i,z_i),& P_i&=f(y,z_i),&
+ A_i&=f(x_i,g(P_i,r_i)),\\
+ A&=g(A_1,\ldots,A_n),& B&=f(y,g(U_1,\ldots,U_n)),& D&=g(A,B).
+ \end{aligned}
+\]
+Let $\mathsf{Star}_n(f,g)$ be the $3n+1$-variable identity family
+\begin{equation}\label{core:eq:star-support}
+ A+D=D,\qquad h(A,D)=D\quad\text{for every choice }h.
+\end{equation}
+Every member is valid in $D_K$. The case $n=1$ follows from
+$\Gamma_K$ and ordered mixed absorption. For $d\geq n$, the family
+$\mathsf{Star}_d(f,g)$ implies $\mathsf{Star}_n(f,g)$.
+\end{proposition}
+\begin{proof}
+For one row write $P=f(y,z)$. The strengthened doubled law applied to
+\[
+ f(x,g(P,g(P,r)))=f(x,g(P,r))
+\]
+gives $A_1\preccurlyeq_s g(A_1,f(y,U_1))$.
+
+To prove native validity at arbitrary arity, write $\beta$ for
+$g$'s owned atom and use this one-row support relation.
+If $A=\beta$, then $D=\beta$. If $A$ is a different atom $a_j$,
+every $A_i=a_j$, and the native support relation forces
+$f(y,U_i)=a_j$. If $a_j$ is owned by $f$, either $y=a_j$ or every
+$U_i=a_j$; otherwise $y=U_i=a_j$ for every $i$. In either case
+$B=a_j$, so $D=A$.
+Finally suppose $A$ is $n$ or $p$. If $B=\beta$, then
+$y=g(U_1,\ldots,U_n)=\beta$, since $f$ cannot create $\beta$
+from distinct inputs. Some $U_i=\beta$, and its support relation
+forces $A_i=\beta$, contradicting the value of $A$.
+Thus $B\ne\beta$ and $D=A+B$ is again a marker, above $A$.
+Every choice on these markers is join, proving
+\eqref{core:eq:star-support}. This proves unconditional identities
+in the generator, so they hold throughout its variety.
+For the final assertion, repeat rows until there are $d$ of them;
+idempotence leaves $A$ and $B$ unchanged.
+\end{proof}
+
+\begin{theorem}[Factoring with private residuals at bounded degree]
+\label{core:thm:bounded-degree-factoring}
+Assume $\Gamma_K$, ordered mixed absorption, and
+$\mathsf{Star}_d(f,g)$ for fixed distinct choices $f,g$.
+Let $B\subseteq I\times J$ be a finite nonempty simple bipartite
+graph with incident vertex sets $I,J$ and maximum degree at most $d$.
+Its edge terms may have private residuals $f(x_i,y_j,z_{ij})$.
+Define the row and column factorizations
+\[
+ \begin{aligned}
+ S&=g\bigl(f(x_i,g(f(y_j,z_{ij}):(i,j)\in B)):i\in I\bigr),\\
+ T&=g\bigl(f(y_j,g(f(x_i,z_{ij}):(i,j)\in B)):j\in J\bigr).
+ \end{aligned}
+\]
+Then $h(S,T)=S+T$ for every choice $h$.
+In particular the seven-variable family $\mathsf{Star}_2(f,g)$
+handles every private-residual path and cycle, of arbitrary length.
+\end{theorem}
+\begin{proof}
+Fix a column $j$. For each adjacent row $i$, let $r_i$ be the
+$g$-fold of its other residual terms $f(y_k,z_{ik})$.
+If there are none, use $r_i=f(y_j,z_{ij})$.
+The row term is then exactly $A_i$ in
+\eqref{core:eq:star-support}, with $y=y_j$ and $z_i=z_{ij}$.
+There are at most $d$ neighbors, so that identity says their
+$g$-fold commonly supports its $g$-product with the column term
+$B_j=f(y_j,g(f(x_i,z_{ij}):(i,j)\in B))$.
+Apply the common $g$-context containing the unrelated row terms,
+or the identity context if there are none. This gives
+$S\preccurlyeq_s g(S,B_j)$.
+Compatibility applied to the nonempty fold over all columns yields
+$S\preccurlyeq_s W:=g(S,T)$. The symmetric argument uses the row
+degree bound to give $T\preccurlyeq_s W$.
+Since $W\leq S+T$, these two ordinary bounds give $W=S+T$.
+For any choice $h$, support and associativity give
+$h(h(S,T),W)=W$; distribution at $W=S+T$ gives the same value
+as $h(S,T)$. Thus $h(S,T)=S+T$.
+\end{proof}
+
+For example, take the three-edge path with row vertices $x,v$ and
+column vertices $y,u$. Assign residual $z$ to its central edge,
+$u$ to the edge $\{x,u\}$, and $v$ to the edge $\{v,y\}$.
+Idempotence leaves the latter edge terms as $f(x,u)$ and $f(y,v)$.
+Thus $\mathsf{Star}_2(f,g)$ implies $h(S,T)=S+T$ for the
+five-variable alternatives
+\[
+ S=g(f(x,g(f(y,z),u)),f(y,v)),\qquad
+ T=g(f(y,g(f(x,z),v)),f(x,u)).
+\]
+
+An induction on star size cannot retain only the one-row support
+conclusions. In fact the conditional rule
+\[
+ \begin{gathered}
+ a\preccurlyeq_s g(a,f(y,u)),\quad
+ b\preccurlyeq_s g(b,f(y,v))\\
+ \Longrightarrow\quad
+ g(a,b)\leq g(g(a,b),f(y,g(u,v)))
+ \end{gathered}
+\]
+fails in a six-element one-owner core algebra. Its join order has
+chains $0<u<t$, $0<v<t$, and $0<y<a<t$, with no other comparisons.
+Let $g$ be meet in the order $0<u,v<t<y<a$, with $u,v$ incomparable,
+and let every other choice, including $f$, be join.
+The six $g$-translations preserve join: $g(0,-)$ is constant,
+$g(a,-)$ is the identity, $g(y,-)$ only lowers $a$ to $y$,
+$g(t,-)$ raises $y,a$ to $t$, and $g(u,-),g(v,-)$ are the
+two-valued maps with zero ideals $\{0,v\}$ and $\{0,u\}$,
+respectively. Hence this is a dissemilattice and
+belongs to the core by \cref{core:prop:dissemilattice-lift}.
+Taking $b=a$ makes both guarded values $t$, commonly supported
+by $a$, while the conclusion would assert $a\leq y$.
+Thus the row presentation, beyond its support conclusion, is
+essential to any uniform merging argument.
+
 The reset homomorphism also strengthens the word reductions above. The
 equational step needed in its image uses no join operation.
 
@@ -4750,6 +4881,38 @@ To include join, expand by one additional choice interpreted as join.
 The basic and mixed-absorption laws remain valid, and the additional
 stage does not change global reset. The result for choice translations
 in this expansion covers all cases involving join.
+\end{proof}
+
+The same sandwich identity resolves a nested factoring overlap.
+
+\begin{proposition}[Nested factoring with two choices]
+\label{core:prop:nested-two-choice-factoring}
+Assume $\Gamma_K$ and all ordered mixed absorption, and fix distinct
+choices $f,g$. Put
+\[
+ S=f(g(a,b),g(a,c,d)),\qquad
+ T=g(a,f(b,c),f(g(a,b),d)).
+\]
+Then $h(S,T)=S+T$ for every choice $h$.
+\end{proposition}
+\begin{proof}
+Put
+\[
+ L=g(a,f(b,g(c,d))),\qquad M=g(a,f(b,c),f(b,d)).
+\]
+The strengthened doubled-distribution law first gives
+$L\preccurlyeq_s S$, and then, by applying it to the inner
+$f$-term and retaining the $g(a,-)$ context, gives
+$L\preccurlyeq_s M$.
+By \cref{core:lem:global-sandwich},
+\[
+ g(a,f(b,d))\preccurlyeq_s g(a,f(g(a,b),d)).
+\]
+Applying the common context $g(f(b,c),-)$ gives
+$M\preccurlyeq_s T$. Hence $L$ commonly supports both $S,T$.
+For any choice $h$, monotonicity now gives
+$h(S,T)\geq h(L,T)=T$ and $h(S,T)\geq h(S,L)=S$.
+The choice bound gives the reverse inequality, proving the result.
 \end{proof}
 
 The sandwich identity also controls the partial reset meets of
@@ -7461,7 +7624,7 @@ with no presumed completeness of the finite candidate.
 \begin{corollary}[Computing the free schema algebras]
 \label{core:cor:atomic-fiber-free-presentation}
 If $\Sigma$ in \cref{core:prop:relative-atomic-fiber-schema} is finite,
-the free algebra on any fixed finite set of generators for
+the free algebra on any fixed nonempty finite set of generators for
 $\operatorname{Mod}(\Sigma\cup\mathcal R_{\mathcal A})$ has an
 effectively computable finite presentation. The variety's equational
 theory is decidable.
