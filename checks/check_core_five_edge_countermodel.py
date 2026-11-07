@@ -77,6 +77,28 @@ def upper_clone(base):
     return result
 
 
+def check_upper_clone_criterion(base):
+    """Old-table R/P/C, independent of the new-point law audit below."""
+    e, join = 0, base[-1]
+    ideal = [x for x in range(len(join)) if join[e][x] == e]
+    assert len(ideal) == 10
+    counts = dict(reflection=0, primeness=0, coverage=0)
+    for f in base:
+        for x in range(len(join)):
+            assert join[e][f[e][x]] != e or x in ideal
+            counts['reflection'] += 1
+        for x, y in product(ideal, repeat=2):
+            assert join[f[e][x]][f[e][y]] != e or e in (f[e][x], f[e][y])
+            counts['primeness'] += 1
+    for i in range(len(base)):
+        for j in range(i):
+            for x in ideal:
+                assert e in (base[i][e][x], base[j][e][x])
+                counts['coverage'] += 1
+    assert all(join[e][x] == e for x in ideal)
+    return counts
+
+
 def check_retraction_and_generation(tables, base):
     n, e = len(base[0]), 0
     q = list(range(n)) + [e]
@@ -272,6 +294,7 @@ def separating_quotient(tables):
 def main():
     start = time.monotonic()
     states, base = coefficient_algebra()
+    criterion = check_upper_clone_criterion(base)
     tables = upper_clone(base)
     retraction = check_retraction_and_generation(tables, base)
     laws = check_new_laws(tables)
@@ -288,6 +311,7 @@ def main():
     print(json.dumps({'status':'PASS', 'seconds':time.monotonic()-start,
         'coefficient_size':len(states), 'clone_size':len(tables[0]),
         'source_product_entries':4*len(states)**2,
+        'upper_clone_criterion_entries':criterion,
         'retraction_entries':retraction, 'new_Gamma_M_entries':laws,
         'OC2_critical_entries':uniform, 'mixed_HOC2_critical_entries':heterogeneous,
         'native_coverage_entries':native, 'coverage_arms':arms,
