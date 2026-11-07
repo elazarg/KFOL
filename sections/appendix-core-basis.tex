@@ -212,6 +212,10 @@ nothing here settles it. This appendix collects what is known, in four groups.
   satisfies all two-owner sourced coverage identities; this coverage
   obstruction therefore needs three active owners
   (\cref{core:prop:rigid-upper-clone,core:thm:upper-clone-two-owner-coverage}).
+  Even all binary-clause coverage identities are insufficient: a
+  $236$-element clone satisfies them and the entire atomic-fiber schema,
+  but fails a coverage identity with ternary clauses
+  (\cref{core:thm:binary-coverage-boundary}).
   Small generated pieces of a native-subpower clone have isomorphic
   coordinate projections with an exponential bound in their number
   of generators
@@ -8265,7 +8269,116 @@ native valuation lies in a proper native observer and refutes core
 validity. The remaining families therefore satisfy the theorem.
 \end{proof}
 
-The local membership problem for these clones admits an exact product
+Restricting clause size gives a different boundary. Binary clauses cannot
+detect every three-owner coverage obstruction, even with arbitrary numbers
+of variables and clauses.
+
+\begin{theorem}[Binary coverage is insufficient]
+\label{core:thm:binary-coverage-boundary}
+For every $K\geq4$, there is a $236$-element algebra satisfying
+$\Gamma_K$, all ordered mixed absorption, owner exhaustion, and the
+entire atomic-fiber schema, which satisfies every core-valid sourced
+coverage identity whose clauses have at most two vertices. It fails a
+native-valid sourced coverage identity on sixteen variables whose
+clauses have at most three vertices.
+\end{theorem}
+\begin{proof}
+Use the three active owners $0,1,2$ and six coordinates indexed by
+their permutations $\sigma$. Every unused choice is join. Write $n,p$
+for the native markers and put $e=n^6$. A mixed tuple of class $r$
+and missing owner $k$ has value $\sigma(r)$ when $\sigma(r)\ne k$,
+and otherwise has value $n$ or $p$. Its two latter coordinates
+are its possible marker positions. For $r=0,1$ and each $k$, take
+both tuples with exactly one $p$; denote them by $v_{r,k}^{\sigma}$,
+where $\sigma(r)=k$ specifies that position. For $r=2$ and each $k$,
+take the tuple with $p$ in both positions, denoted $w_{2,k}$.
+These are fifteen tuples.
+
+Let $C$ be the subalgebra they generate together with $e$ in the
+native sixth power. Closing these explicit tuples gives $235$ elements.
+Every element of $C$ below $e$, other than $e$ itself, has just one
+occurring owner $i$, and takes that atom at both coordinates with
+$\sigma(0)=i$. The deterministic closure and this assertion are
+verified in \cref{app:verification}.
+Reflection \textup{(R)} of \cref{core:prop:rigid-upper-clone} holds
+coordinatewise: an upper marker in $c$ persists in $f_i(e,c)$.
+The common class-$0$ positions give \textup{(P)}, and the single
+occurring owner gives \textup{(C)}. Consequently $A=A_e(C)$ satisfies
+$\Gamma_K$ and all ordered mixed absorption. An unused join owner
+gives exhaustion. Coordinatewise atomic collapse, with
+$\varepsilon\mapsto n^6$, has common-semilattice fibers: within each
+fixed atomic shadow every choice is coordinatewise join, and the new
+point lies in the all-neutral fiber. Thus $A$ also satisfies the
+atomic-fiber schema.
+
+We first prove the binary assertion. For any $a\in C$, let $P(a)$
+be its upper-marker positions and $O_i(a)$ its owner-$i$ positions.
+Each $O_i(a)$ is a union of the two-coordinate classes
+\[
+ O_i(r)=\{\sigma:\sigma(r)=i\},\qquad r=0,1,2.
+\]
+This holds for the generators and is preserved by every operation:
+the selected owner's profile takes unions and the other profiles
+take intersections. If two owners occur, compatibility of their
+profiles forces both to occur on one common class $r$. Three
+occurring owners would give a mixed atomic tuple, which the
+description of $C_{\leq e}$ excludes. Hence every mixed tuple has
+two owners and one or two upper-marker positions.
+
+Color a tuple with just one occurring owner by that owner, and leave
+marker-only tuples uncolored. For a mixed tuple of class $r$ with
+one upper-marker position $\sigma$, use color $\sigma(r+1)$,
+with classes read modulo three. With two upper-marker positions,
+choose either occurring owner. We claim this one coloring hits
+every strict binary arm. Its exact condition is
+\[
+ f_i(e,f_i(a,b))<e
+ \quad\Longleftrightarrow\quad
+ P(a)\subseteq O_i(b),\quad P(b)\subseteq O_i(a),\quad
+ O_i(a)\cup O_i(b)\ne\varnothing.
+\]
+If one endpoint has at most one occurring owner, either it is
+colored $i$, or the other endpoint must be atomic pure owner $i$.
+For two mixed endpoints, $i$ must occur in both. Their classes
+$r,s$ are distinct, and the two inclusions force unique marker
+positions $\sigma,\tau$, with $\sigma(s)=\tau(r)=i$.
+Either $s=r+1$ or $r=s+1$ modulo three, so one endpoint is colored
+$i$ as required. Repeated endpoints include singleton clauses.
+
+As in \cref{core:thm:upper-clone-two-owner-coverage}, any failed
+sourced coverage law in $A$ reduces to source $\varepsilon$, old
+vertex values, and strict old arms below $e$. A law using an unused
+owner is automatic, since its join arm bounds the source. Otherwise
+core validity requires an uncolorable family on the three active
+owners. The displayed coloring excludes every binary-clause failure.
+
+For the failed law, use one vertex variable for each of the fifteen
+tuples. For each owner $i$, include every ternary clause choosing one
+$i$-containing tuple from each class. There are four choices in each
+of classes $0,1$ and two in class $2$. Every such fold is the constant
+$i$-tuple. Also include, for each permutation $(i,j,k)$, the binary
+$i$-clause
+\[
+ \{v_{0,k}^{(k,i,j)},\ v_{1,j}^{(i,j,k)}\}.
+\]
+The two marker positions erase each other in this fold, leaving a
+strict pure-$i$ tuple below $e$.
+
+This clause family is uncolorable. For each owner $i$, its ternary
+clauses force some class $r_i$ whose every $i$-containing vertex
+is colored $i$: otherwise one vertex not colored $i$ from each
+class gives a missed clause. These three classes must be distinct,
+since every class has a vertex containing any prescribed pair of
+owners. Let $i,j,k$ be assigned classes $2,0,1$, respectively.
+The displayed binary $i$-clause then has its endpoints forced to
+colors $j,k$, a contradiction.
+Thus the sourced coverage identity for these clauses is native-valid.
+At source $\varepsilon$ in $A$, all its arms remain old and strictly
+below $e$. Their join is $e$, since the ternary arms include all
+three constant owner tuples. The identity therefore fails.
+\end{proof}
+
+The local membership problem for upper clones also admits an exact product
 reduction. It bounds the number of coordinates to retain, even when
 individual coefficients depend on arbitrarily many original generators.
 
