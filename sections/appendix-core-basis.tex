@@ -215,7 +215,12 @@ nothing here settles it. This appendix collects what is known, in four groups.
   Even all binary-clause coverage identities are insufficient: a
   $236$-element clone satisfies them and the entire atomic-fiber schema,
   but fails a coverage identity with ternary clauses
-  (\cref{core:thm:binary-coverage-boundary}).
+  (\cref{core:thm:binary-coverage-boundary}). Adding every sourced
+  coverage identity to the candidate and atomic-fiber schema gives
+  an intermediate variety with no bounded-variable identity basis.
+  Finite graph-cover clones fail its global coverage laws while all
+  sufficiently small generated subalgebras satisfy the entire
+  strengthening (\cref{core:thm:coverage-strengthening-nfb}).
   Small generated pieces of a native-subpower clone have isomorphic
   coordinate projections with an exponential bound in their number
   of generators
@@ -8385,6 +8390,206 @@ At source $\varepsilon$ in $A$, all its arms remain old and strictly
 below $e$. Their join is $e$, since the ternary arms include all
 three constant owner tuples. The identity therefore fails.
 \end{proof}
+
+Adding every sourced coverage identity gives an intermediate variety
+with no identity basis using a bounded number of variables. Finite covers
+of the five-edge obstruction retain its global failure while their small
+generated subalgebras satisfy the entire coverage strengthening.
+
+\begin{theorem}[Nonfinite basability of the coverage strengthening]
+\label{core:thm:coverage-strengthening-nfb}
+Fix $K\geq4$.  Let $\mathcal W_K$ be the variety defined by
+$\Gamma_K$, all ordered mixed absorption, owner exhaustion, the entire
+atomic-fiber schema $\mathcal R_{\mathcal A}$ of
+\cref{core:prop:relative-atomic-fiber-schema}, and every native-valid
+sourced coverage identity
+\[
+ p\leq\sum_{(i,X)\in\mathcal H}f_i\bigl(p,f_i(x:x\in X)\bigr),
+\]
+where $\mathcal H$ is a finite nonempty family of owner-labelled,
+nonempty finite sets of variables other than $p$.
+Then $\mathcal W_K$ has no identity basis using a bounded number of
+variables, and in particular no finite identity basis. For every
+$n\geq1$ there is a finite algebra outside $\mathcal W_K$ whose
+every $n$-generated subalgebra belongs to $\mathcal W_K$.
+The same variety results if native-valid coverage is replaced by
+core-valid coverage.
+\end{theorem}
+\begin{proof}
+Let $G_0$ be the graph on $a,b,c,d$ with edges
+\[
+ 0:ab,\qquad 1:ac,bd,\qquad 2:ad,bc.
+\]
+Take a finite graph cover $G\to G_0$, preserving these colors, and
+write $V_a,V_b,V_c,V_d$ for its vertex fibers.  Each color is a
+matching; colors $1,2$ are perfect matchings.  For each vertex $v$
+include a native coordinate with $x_v=p$, its color-$i$ neighbor
+assigned $a_i$, and all other $x_w=n$.  Add the two atomic coordinates
+pulled back from the following assignments to the four vertex types:
+\[
+ (a_0,a_2,a_1,a_1),\qquad(a_0,a_1,a_2,a_2).
+\]
+Put $e=n$ at every coordinate and let
+\[
+ C_G=\langle e,x_v:v\in V(G)\rangle
+       \leq D_{\{0,1,2\}}^{\,|V(G)|+2}.
+\]
+Every unused choice is join, so $C_G$ is core.  We first show that
+its rigid upper clone $A_G=A_e(C_G)$ satisfies the candidate and
+atomic-fiber schema.
+
+For a coefficient term $t$, let $M_i(t)$ contain the vertices $v$
+incident with a color-$i$ edge for which the owned-atom Boolean
+profile of $t$ is true on the singleton $\{x_v\}$.  These bits are
+read directly at the neighboring native coordinate, and hence depend
+only on the value of $t$.  They take unions under $f_i$ and
+intersections under every other operation.  Unprobed singleton bits
+are not used.  Two nonempty families belonging to different owners
+must both be the singleton $\{v\}$, by the common-source property.
+All other nonempty families then have the same form.  Call this a
+\emph{mixed link profile}, with anchor $v$.
+Equation~\eqref{core:eq:profile-fixedness} gives
+$f_i(x_v,t)=t$ for each of its owners, so pair coverage gives
+$x_v\leq t$.  Such a value has $p$ at the $v$-coordinate.
+
+If $t$ is $p$-free and $M_i(t)\ne\varnothing$, the same fixedness
+at $v\in M_i(t)$ forces $t=a_i$ at the $v$-coordinate.  Its unique
+$i$-input is the color-$i$ neighbor of $v$.  Thus $M_i(t)$ is a
+union of complete color-$i$ matching edges.  A foreign owner at an
+atomic coordinate would, by common-source, put all of $M_i(t)$
+inside that coordinate's foreign-owner input set.  Neither displayed
+atomic assignment colors both endpoints of an $i$-edge by the same
+foreign owner.  This is impossible.
+There is also no $p$-free value with different owners occurring only
+at the atomic coordinates.  In a shortest term for such a value,
+the root's selected owner is absent from all link coordinates, so
+both children lack that atom there.  The root acts as join on those
+coordinates, making both children $p$-free.  One child retains two
+different atomic-owner requirements: the selected requirement chooses
+a child and foreign requirements hold in both.  This contradicts
+minimality or the preceding case.  Join roots are handled in the
+same way.  Therefore every element below $e$ has at most one owner,
+proving condition \textup{(C)} of
+\cref{core:prop:rigid-upper-clone}.
+
+For \textup{(P)}, use the first atomic coordinate as pivot for
+owners $0,1$ and the second for owner $2$.  Their owner input sets
+are respectively $V_a,V_c\cup V_d,V_c\cup V_d$; each meets every
+edge of its designated matching.  Thus every proper atomic
+$i$-value with a nonempty $M_i$ has atom $a_i$ at its pivot.
+An anchor-only owner-$0$ value has the same profile on both atomic
+coordinates.  For owners $1,2$, the remaining contrary possibility
+has profile true on $V_b$ and false on $V_c\cup V_d$.
+Follow a syntax path retaining these two conditions.  At an
+$i$-node choose a positive child; both children retain the negative
+condition.  At any other node choose a negative child; both children
+retain the positive condition.  The leaf is $x_v$ for $v\in V_b$.
+At its $v$-coordinate the $i$-neighbor lies in $V_c\cup V_d$, so
+an $i$-sibling cannot absorb its $p$.  A foreign sibling retains the
+positive $i$-requirement on $V_b$, whereas its actual foreign-owner
+input lies outside $V_b$; common-source excludes that absorbing
+atom as well.  Thus $p$ reaches the root, a contradiction.
+Every proper atomic $i$-value therefore contains its fixed pivot,
+so two such values cannot join to $e$.
+
+Condition \textup{(R)} is immediate from $f_i(n,p)=p$.
+The clone criterion now gives $\Gamma_K$ and every ordered mixed
+absorption law.  An unused join owner gives exhaustion.
+Coordinatewise $p\mapsto n$, extended by $\varepsilon\mapsto n^{|V(G)|+2}$,
+is an atomic quotient with common-semilattice fibers.  Indeed old
+fibers are coordinatewise join, and the new point lies in the
+all-neutral fiber, above $e$ and below its other old elements.
+Hence $A_G$ satisfies $\mathcal R_{\mathcal A}$.
+
+The graph's own coverage law fails in $A_G$.  A degree-$d$ cover has
+$4d$ vertices and $5d$ edges.  A vertex assigned one owner can hit
+at most one edge, since each color is a matching.  Thus its
+owner-labelled edge family is uncolorable, and
+\[
+ p\leq\sum_{uv\text{ a color-}i\text{ edge}}f_i(p,x_u,x_v)
+\]
+is native-valid.  Every old arm $f_i(e,x_u,x_v)$ is strictly below
+$e$: the other endpoint erases the only possible $p$ at each of
+the two endpoint coordinates, and an $i$-atom remains there.
+Their join is $e$ by native validity.  At source $\varepsilon$
+all arms remain old, so the identity fails.
+
+Now choose $m$ arbitrary old values $X\subseteq C_G$ and put
+$C_X=\langle e,X\rangle$.  Every mixed link profile generated in
+$C_X$ has an anchor among the at most $m$ anchors of the initially
+mixed values.  This follows directly from union/intersection of
+the $M_i$: two pure profiles cannot create a mixed one; one mixed
+input retains its anchor; two different mixed anchors have empty
+foreign intersections.  Write $Z$ for this fixed set of anchors.
+If the girth of $G$ exceeds $m$, then $G[Z]$ is a forest.  Root its
+components and color each nonroot vertex by the color of its parent
+edge.  This hits every edge of $G[Z]$.
+
+Color every coefficient with exactly one nonempty link-owner family
+by that owner, and every $p$-free anchor-only pure-owner coefficient
+by its owner.  A mixed coefficient anchored at $v$ receives the
+forest color of $v$ when it contains that owner; otherwise leave it
+uncolored.  We claim that this one coloring hits every strict arm
+\[
+ f_i(e,f_i(y:y\in Y))<e,\qquad
+ \varnothing\ne Y\subseteq C_X\text{ finite}.
+\]
+Its upper-marker support is the union of the input upper-marker
+supports minus the union of their $i$-atom supports.  If the arm has
+no link $i$-atom, none of those markers can be erased, so every
+input is $p$-free.  Condition \textup{(C)} makes them globally pure;
+a nonneutral $i$-anchor then comes from an anchor-only pure-$i$
+input, already colored $i$.
+Otherwise delete the inputs with empty $M_i$. This preserves the
+link $i$-atom support and only decreases the marker support.  The
+remaining fold is still $p$-free and $i$-positive; condition
+\textup{(C)} excludes any newly exposed foreign owner.  If the
+original clause is unhit, every retained input is mixed.  Its
+anchor coordinate contains $p$, so erasing that marker requires
+another retained input anchored at its color-$i$ neighbor.
+Consequently their nonempty anchor set is a union of complete
+color-$i$ edges of $G[Z]$.  The forest coloring hits one of these
+edges, and hence the original clause, a contradiction.
+
+A partial hitting coloring extends arbitrarily to a total one.
+As in \cref{core:thm:upper-clone-two-owner-coverage}, it proves all
+native-valid sourced coverage in $A_e(C_X)$.  An old source follows
+by monotonicity from its old valuation.  For source $\varepsilon$,
+new vertex inputs may be replaced by $e$ using associativity and
+$f_i(\varepsilon,e)=\varepsilon$.  A failure would have old arm
+sum exactly $e$ and every arm strictly below $e$, yielding a
+hitting coloring of an uncolorable family.
+Thus every $n$-generated subalgebra of $A_G$ belongs to
+$\mathcal W_K$ when the girth exceeds $n$: a piece containing
+$\varepsilon$ and at most $n-1$ old generators embeds in
+$A_e(C_X)$, while a piece containing only old generators is core.
+
+Such finite covers exist with arbitrarily large girth.  For a
+self-contained construction, the two non-tree edges of $G_0$
+freely generate its fundamental group.  On the finite ball of
+reduced words of length at most $g$, extend each partial
+right-generator action to a permutation.  Every nonempty reduced
+word of length at most $g$ moves the empty word along its retained
+prefix path, so is nonidentity in the finite permutation group
+generated by these actions.  The regular voltage cover associated
+with this finite group has no nonempty reduced closed walk of
+length at most $g$.
+Any identity basis of $\mathcal W_K$ with variable bound $n$ would
+hold in the preceding finite algebra: each identity holds
+in every $n$-generated subalgebra, hence globally. The algebra nevertheless
+fails a defining coverage identity, a contradiction.
+
+Finally, a colorable coverage family using a proper owner subset
+fails already in a proper native observer.  A family using all
+owners follows from exhaustion by choosing one arm per owner.
+Thus adjoining exhaustion makes native-valid and core-valid
+sourced coverage equivalent.
+\end{proof}
+
+The core is contained in $\mathcal W_K$. To transfer this nonfinite-basis
+argument to the core, the small generated pieces would need core
+representations; their coverage colorings establish membership only in
+$\mathcal W_K$.
 
 The local membership problem for upper clones also admits an exact product
 reduction. It bounds the number of coordinates to retain, even when
