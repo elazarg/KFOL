@@ -243,7 +243,12 @@ nothing here settles it. This appendix collects what is known, in four groups.
   of owner distributive lattices, with arbitrary fibers and no support
   section: a subalgebra of the supported extension over that same base
   maps onto the given algebra. This includes every flat atomic
-  quotient. Flat quotients need not jointly separate a general atomic
+  quotient. Removing a least quotient fiber preserves membership
+  whenever its complement is a subalgebra; a Rees quotient and
+  principal join filters give the separating factors. This settles
+  arbitrary common-semilattice fibers over the mixed two-owner atomic
+  square as well (\cref{core:prop:removable-atomic-bottom,core:cor:atomic-square-fibers}).
+  Flat quotients need not jointly separate a general atomic
   extension, even a five-element core algebra. Matching generation
   over a free atomic base still need not give separation by native
   homomorphisms. Without a section,
@@ -9194,8 +9199,87 @@ join on every base pair, and hence on every actual pair; exhaustion
 then follows without an additional assumption.
 \end{proof}
 
-This cover cannot in general be replaced by a subdirect product of
-algebras with flat atomic quotients, even within a single owner branch.
+The representation also extends to the first mixed atomic base. The
+following reduction removes an entire least fiber by separating a
+Rees quotient from principal join filters; it does not require the
+supported cover to retain the original atomic quotient.
+
+\begin{proposition}[Removing a least quotient fiber]
+\label{core:prop:removable-atomic-bottom}
+Let $K\geq2$, let $A\models\Gamma_K$, and let $\rho:A\twoheadrightarrow C$ have
+common-semilattice fibers. Suppose $C$ has a least join element $c_0$
+and $C^-=C\setminus\{c_0\}$ is a nonempty subalgebra. Put
+$D=\rho^{-1}(c_0)$, $B=\rho^{-1}(C^-)$, and $I=\mathord\uparrow D$.
+Then $h(I,A)\subseteq I$ for every basic operation $h$. The Rees
+quotient $A/I$, obtained by identifying all of $I$ and no other points,
+is a homomorphic image of $B$, and
+\[
+ A\lhook\joinrel\longrightarrow
+ (A/I)\times\prod_{d\in D}A_{\geq d},\qquad
+ x\longmapsto\bigl([x]_I,(d+x)_{d\in D}\bigr)
+\]
+is a subdirect embedding. Consequently $A$ belongs to a variety
+containing all one-owner dissemilattices if and only if $B$ does.
+\end{proposition}
+\begin{proof}
+Fix $d\in D$ and put $y=h(d,x)$ for a basic operation $h$.
+Associativity gives $h(y,d)=y$. Since $c_0$ is least, $y$ and $d+y$
+have the same tag, so distribution and the common-fiber law give
+\[
+ y=h(y,d)+h(y,y)=h(y,d+y)=d+y.
+\]
+Thus $d\leq h(d,x)$. Monotonicity makes every $A_{\geq d}$ an
+absorbing ideal, hence so is their union $I$.
+
+The reset $\pi_d(x)$ equals $d+x$: its initial value has the tag of
+$x$, and every reset factor fixes it by the common-fiber law.
+The nucleus identity \eqref{core:eq:unit-nucleus}, followed by closure
+of the filter, therefore makes $J_d(x)=d+x$ an actual endomorphism
+onto $A_{\geq d}$. If two points have the same displayed coordinates,
+the Rees coordinate either identifies them already or puts both in
+$I$. In the latter case choose $d,e\in D$ with $d\leq x$ and
+$e\leq y$. Then $x=d+x=d+y\geq y$ and
+$y=e+y=e+x\geq x$, proving injectivity.
+
+Every noncollapsed Rees class has its representative in $B$. The
+collapsed class also meets $B$, since $d+b\in I\cap B$ for any
+$d\in D$, $b\in B$. Thus $B\twoheadrightarrow A/I$.
+Now apply \cref{core:thm:join-filters} to the remaining factors;
+the converse is closure under subalgebras.
+\end{proof}
+
+\begin{corollary}[The two-owner atomic square]
+\label{core:cor:atomic-square-fibers}
+Let $K\geq2$ and $i\ne j$. Every algebra satisfying $\Gamma_K$
+and all ordered mixed absorption, with common-semilattice fibers over
+the atomic square
+\[
+ C=\{a_i,n\}\times\{a_j,n\},
+\]
+belongs to $\operatorname V(D_{\{i,j\}})$. For $K\geq3$ it is a
+core algebra without a separate exhaustion assumption.
+\end{corollary}
+\begin{proof}
+Removing the least point of the square leaves the flat atomic base
+with owners $i,j$. Every other choice is join on the base and hence
+on the original algebra. Indeed, if $h_C$ is join, then $h(x,y)$
+and $x+y$ have the same tag, while associativity and distribution give
+$h(h(x,y),x+y)=h(x,y)$. The common-fiber law makes the left side
+$x+y$, proving $h(x,y)=x+y$. In the
+two-owner reduct, apply \cref{core:thm:horizontal-atomic-fibers}
+and \cref{core:prop:removable-atomic-bottom}; then restore the
+choices interpreted as join.
+\end{proof}
+
+The reduction can be repeated whenever deleting the current least
+quotient point leaves a subalgebra. In particular, the square result
+includes the eight-element obstruction in
+\cref{core:prop:fixed-base-cover-obstruction}: membership holds even
+though a supported cover over that same square is impossible.
+
+The horizontal cover cannot in general be replaced by a subdirect
+product of algebras with flat atomic quotients, even within a single
+owner branch.
 
 \begin{proposition}[Flat atomic fibers need not separate]
 \label{core:prop:flat-fiber-separation-obstruction}
