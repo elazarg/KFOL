@@ -266,12 +266,13 @@ results in four groups.
   principal join filters give the separating factors. This settles
   arbitrary common-semilattice fibers over the mixed two-owner atomic
   square as well (\cref{core:prop:removable-atomic-bottom,core:cor:atomic-square-fibers}).
-  Over a finite distributive lattice with two active choices, a
-  region-doubling construction also has a native representation.
-  Reflection at the neutral region and pair coverage reduce all its
-  doubled fibers to one dense, codense lattice point; a connected
-  graph of native coordinates represents that remaining factor
-  (\cref{core:thm:atomic-region-doubling}).
+  For region doublings over any atomic base, the basic laws
+  give a core representation whenever at most two owner types occur.
+  Removing omitted choices reduces the base to a distributive lattice;
+  all doubled fibers then reduce to one dense, codense point, represented
+  by a connected graph of native coordinates. For $K=3$, exhaustion
+  is therefore a complete relative test in this family
+  (\cref{core:thm:atomic-region-doubling,core:cor:atomic-doubling-omitted-types}).
   Flat quotients need not jointly separate a general atomic
   extension, even a five-element core algebra. Matching generation
   over a free atomic base still need not give separation by native
@@ -9775,7 +9776,8 @@ though a supported cover over that same square is impossible.
 A different reduction handles a prescribed doubling over larger
 two-owner atomic lattices. It allows several neutral fibers to be
 doubled simultaneously, without requiring a subalgebra of old
-representatives over the entire quotient.
+representatives over the entire quotient. We first treat the lattice
+case, then remove omitted types over an arbitrary atomic base.
 
 \begin{theorem}[Doubling neutral regions of an atomic lattice]
 \label{core:thm:atomic-region-doubling}
@@ -9811,6 +9813,8 @@ Then the algebra
 \]
 for every basic operation $h$ belongs to
 $\operatorname V(D_{\{i,j\}})$. In particular it is core for $K\geq3$.
+The ideal, filter, reflection and pair assumptions are automatic
+whenever this displayed algebra $A$ satisfies $\Gamma_K$.
 \end{theorem}
 \begin{proof}
 The displayed carrier is closed: two bit-$0$ inputs have bases in the
@@ -9925,6 +9929,127 @@ is a homomorphism: both factors preserve the base operations, and
 the exact endpoint preimages preserve bit erasure. It is injective
 because it retains both $x$ and $t$. Both factors belong to
 $\operatorname V(D_{\{i,j\}})$, proving the claim.
+
+It remains to show that $\Gamma_K$ forces the regional assumptions.
+Write $x_s=(x,s)$ for any allowed representative. If $b\in F$ and
+$x\geq b$ in the lattice, then $x\in I$ is impossible by monotonicity
+of $\tau$ on $U$. If $x\notin O$, choose $n_0\in N$ and put
+$w=n_0\wedge b\in N$. Since $w\leq b\leq x$, associativity gives
+the contradiction
+\[
+ f((n_0)_0,f(b_0,x_1))=w_0
+ \quad\ne\quad
+ f(f((n_0)_0,b_0),x_1)=w_1.
+\]
+Thus $F$ is upward closed; its meet closure follows from $\tau$.
+The dual $g$-associativity argument makes $I$ a lattice ideal.
+As before, this puts $r$ in $N$.
+
+Suppose $c\wedge x\in I$ but $x\notin I$. The homomorphism
+$\tau$ excludes $x\in U$, so $x_1$ is available.
+If $c\vee x\notin F$, this join cannot belong to $I$ either,
+since $I$ is an ideal and $c\notin I$. Birkhoff then fails:
+\[
+ f(c_0,g(c_0,x_1))=c_1
+ \quad\ne\quad
+ g(c_0,f(c_0,x_1))=c_0.
+\]
+Hence $c\vee x\in F$. But the meet and join arms are now both
+owned, with bit $0$. Their median lies in $N$, since
+\[
+ \operatorname{med}(c,x,r)
+   =\operatorname{med}(c\wedge x,c\vee x,r),
+\]
+so pair coverage equates its lower copy with the upper copy produced
+by $c_0+x_1$, another contradiction. This proves reflection at $c$;
+the argument at $d$ is dual. The reverse implications follow from
+the ideal and filter properties. Finally, if $x\wedge y\in I$ and
+$x\vee y\in F$, their median with $r$ is again neutral.
+Any nonowned input has an upper representative, and pair coverage
+would again equate the two copies of that median. Thus $x,y\in O$.
+\end{proof}
+
+\begin{corollary}[Removing omitted types from an atomic doubling]
+\label{core:cor:atomic-doubling-omitted-types}
+Let $K\geq3$, let $Q$ be an atomic algebra, and let
+$\tau:U\to\mathbf A_K^{\rm at}$ be a homomorphism on a subalgebra
+$U\leq Q$. Put $O_i=\tau^{-1}(a_i)$, $O=\bigcup_iO_i$ and
+$N=\tau^{-1}(n)$. Define the carrier and bit operations of $A$
+as in \cref{core:thm:atomic-region-doubling}, and suppose
+$A\models\Gamma_K$.
+If at most two owner types occur in $\tau(U)$, then $A$ is core.
+For $K=3$, without a restriction on the occurring types, $A$ is core
+if and only if it satisfies exhaustion.
+\end{corollary}
+\begin{proof}
+It suffices to treat finite $Q$. For any finite tuple in $A$, generate
+a subalgebra $Q_0\leq Q$ from its bases together with one representative
+of every type in $\tau(U)$. The atomic variety is locally finite, so
+$Q_0$ is finite. Its full preimage in $A$ is a subalgebra of the same
+form, using $U\cap Q_0$ and the same occurring types. Every identity
+evaluation is contained in such a subalgebra.
+
+If $N$ is empty, projection onto $Q$ is an isomorphism. Assume
+$u\in N$. For every operation $h$ other than $\star_i$,
+including join, we claim
+\begin{equation}\label{core:eq:atomic-doubling-foreign-region}
+ h(x,y)\in O_i\quad\Longleftrightarrow\quad x,y\in O_i.
+\end{equation}
+For the forward direction put $z=h(x,y)\in O_i$ and
+$w=h(u,z)\in N$. If $x\notin O$, its upper representative exists.
+Commutative associativity would give
+\[
+ h(u_0,h(x_1,y_t))=w_0
+ \quad\ne\quad h(x_1,h(u_0,y_t))=w_1,
+\]
+for any allowed $y_t$. Thus both inputs belong to $O$, and
+applying $\tau$ forces both into $O_i$. The reverse direction
+follows from closure of $U$ and the homomorphism $\tau$.
+
+Let $R$ be the set of occurring owners and let $\theta$ be the
+congruence on $Q$ generated by
+\[
+ \star_k(x,y)\mathrel\theta x+y
+ \qquad(k\notin R,\ x,y\in Q).
+\]
+Every $O_i$ is a union of $\theta$-classes. Indeed, all operations
+in an atomic algebra are mutually distributive
+(\cref{core:thm:atomic-basis}), so every elementary translation,
+and hence every word of translations, preserves every operation.
+A translated generating pair is therefore still of the form
+$\star_k(v,w),v+w$. Its two entries have identical membership in
+each $O_i$ by \eqref{core:eq:atomic-doubling-foreign-region}.
+The symmetric and transitive closure of these translated pairs
+generates $\theta$, proving the assertion.
+
+Put $Q'=Q/\theta$ and $U'=q(U)$. Exact owned preimages make
+$\tau$ descend to $U'$ and give an onto bit-preserving homomorphism
+$A\twoheadrightarrow A'$ to the corresponding doubling over $Q'$.
+Points outside $U$ may enter its neutral image; their upper copies
+are allowed there. In particular $A'\models\Gamma_K$, and
+\[
+ A\lhook\joinrel\longrightarrow Q\times A',\qquad
+ (x,t)\longmapsto\bigl(x,(q(x),t)\bigr).
+\]
+
+If $|R|=2$, the two surviving atomic profiles at the join top
+embed $Q'$ into the product of their distributive lattice images,
+with the second lattice order reversed
+(\cref{core:prop:atomic-uniform-lift}). All omitted profiles are
+constant. Thus the two active choices are lattice meet and join,
+and $+$ is their median at the join top, equivalently at $0+1$
+in the lattice order. \Cref{core:thm:atomic-region-doubling}
+puts $A'$ in the proper two-owner variety. If $|R|\leq1$, $A'$
+is a one-owner dissemilattice expansion, hence core by
+\cref{core:prop:dissemilattice-lift}. Since $Q$ is atomic and
+therefore core, the embedding proves the first assertion.
+
+Finally, if all three types occur when $K=3$, choose
+$v_i\in O_i$. Exhaustion at the upper source $u_1$ and the lower
+parameters $(v_i)_0$ fails: each arm has an owned base and bit $0$,
+so their sum is a lower neutral point; joining it with $u_1$
+gives an upper neutral point. Exhaustion therefore leaves at most
+two types. The converse is its validity in the core.
 \end{proof}
 
 The horizontal cover cannot in general be replaced by a subdirect

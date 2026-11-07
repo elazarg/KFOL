@@ -140,5 +140,62 @@ results.append(check("nine_state", (0, 0, 1, 3), 3, {0: 0, 3: 2, 15: 1}))
 results.append(check("nine_state_times_chain2", (0, 0, 1, 3, 0), 3,
                      {x | bit: t for x, t in {0: 0, 3: 2, 15: 1}.items()
                       for bit in (0, 16)}))
+
+
+def check_full_signature(dimension):
+    """All three atomic choices active; only the first two types occur."""
+    # Atomic B3 has owners0,1,2 and neutral3. The last native factor uses
+    # D01's different encoding: owners0,1, neutral2 and marker3.
+    def atomic(h, x, y):
+        if h and h - 1 in (x, y):
+            return h - 1
+        return x if x == y else 3
+
+    def op(h, x, y):
+        return tuple(atomic(h, a, b) for a, b in zip(x, y))
+
+    base = list(product(range(4), repeat=dimension))
+    states = [(x, t) for x in base
+              for t in ((0,) if x[0] < 2 else (1,) if x[0] == 2 else (0, 1))]
+    q = {x: tuple(3 if v == 2 else v for v in x) for x in base}
+
+    def doubled(h, a, b):
+        x, s = a
+        y, t = b
+        z = op(h, x, y)
+        return z, (s | t) * int(z[0] >= 2)
+
+    def marker(a):
+        x, t = a
+        return x[0] if x[0] < 2 else 3 if t else 2
+
+    # Each atomic profile takes values in the proper one-owner generator.
+    def profiles(x):
+        return tuple(v if v == owner else 3 for v in x for owner in range(3))
+
+    assert len({(profiles(x), marker((x, t))) for x, t in states}) == len(states)
+    quotient_states = {(q[x], t) for x, t in states}
+    assert len({(x, (q[x], t)) for x, t in states}) == len(states)
+    entries = 0
+    for h, a, b in product(range(4), states, states):
+        z, t = doubled(h, a, b)
+        assert (z, t) in states
+        target_operation = (NATIVE[0], NATIVE[1], NATIVE[2], NATIVE[0])[h]
+        assert marker((z, t)) == target_operation(marker(a), marker(b))
+        assert profiles(z) == tuple(atomic(h, v, w)
+                                    for v, w in zip(profiles(a[0]), profiles(b[0])))
+        # In the quotient the omitted third choice is join.
+        reduced_h = 0 if h == 3 else h
+        assert q[z] == op(reduced_h, q[a[0]], q[b[0]])
+        assert (z[0] < 2) == (q[z][0] < 2)
+        assert (q[z], t) in quotient_states
+        entries += 1
+    return dict(atomic_base=len(base), doubled=len(states),
+                reduced_doubling=len(quotient_states),
+                proper_native_factors=3 * dimension + 1,
+                embedding_products=entries)
+
+
+full_signature = [check_full_signature(d) for d in (1, 2)]
 print(json.dumps(dict(status="PASS", relation_products=relation_entries,
-                      fixtures=results), indent=2))
+                      fixtures=results, full_signature=full_signature), indent=2))
