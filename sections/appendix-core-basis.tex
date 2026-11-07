@@ -218,6 +218,11 @@ results in four groups.
   With at most one owner type there the clone is itself core, including
   when products return there from outside
   (\cref{core:prop:upper-clone-unit-normalization,core:cor:one-type-upper-clone}).
+  For every proper set of occurring types, core membership is equivalent
+  to the existence of an exact atomic typing relation. On a finite
+  coefficient algebra this is a finite Boolean constraint problem;
+  failure supplies a native-valid identity violated by the clone
+  (\cref{core:thm:exact-typed-clone}).
   Over any coefficient algebra in $\operatorname V(D_K)$, every legal such clone
   satisfies all two-owner sourced coverage identities; this coverage
   obstruction therefore needs three active owners
@@ -8304,6 +8309,57 @@ native valuation lies in a proper native observer and refutes core
 validity. The remaining families therefore satisfy the theorem.
 \end{proof}
 
+Arbitrary terms in the arms admit an exact atomic test when the source
+is reset by a specified neutral term. This turns a typing obstruction
+into an unconditional identity.
+
+\begin{lemma}[Compiling a neutral typing constraint]
+\label{core:lem:neutral-constraint-identity}
+Let $K\geq3$, let $\varnothing\ne R\subsetneq I$ be a proper set of owners, and let
+$q(\bar x),t_1(\bar x),\ldots,t_m(\bar x)$ be core terms.
+Assign labels $i_j\in R$ with every member of $R$ occurring, and take
+a fresh variable $p$. Put $L=p\del q(\bar x)$.
+The following are equivalent:
+\begin{enumerate}
+\item The constraints
+  $q(\bar x)=n$, $t_j(\bar x)=a_{i_j}$ have no solution in
+  $\mathbf A_R^{\rm at}=\{n\}\cup\{a_i:i\in R\}$,
+  with omitted choices interpreted as join.
+\item The full native algebra $D_K$ satisfies
+  \begin{equation}\label{core:eq:neutral-constraint-identity}
+    L\leq q(\bar x)+\sum_{j=1}^m f_{i_j}(L,t_j(\bar x)).
+  \end{equation}
+\item \eqref{core:eq:neutral-constraint-identity} is core-valid.
+\end{enumerate}
+If $|R|\geq2$, the same equivalence holds with the summand $q(\bar x)$
+omitted from the right side. Both inequalities abbreviate identities
+in the original signature, using the derived join and reset terms.
+\end{lemma}
+\begin{proof}
+Write $P$ for the native upper marker. A failure of
+\eqref{core:eq:neutral-constraint-identity} has exactly the form
+\[
+ q=n,\qquad p=P,\qquad t_j=a_{i_j}\quad(1\leq j\leq m).
+\]
+Indeed, if $q$ is an atom then $L=q$, already in the right side;
+if $q=P$, that summand again covers $L$. For $q=n$, the reset is
+$n$ unless $p=P$. In the latter case an arm is below $P$ exactly
+when its second input is the designated atom.
+Atomic collapse, followed by sending every atom outside $R$ to $n$,
+therefore turns any native failure into a solution of the constraints.
+Conversely a solution in $\mathbf A_R^{\rm at}$, with $p=P$, fails
+the identity in the proper observer $D_R$ and in $D_K$.
+Validity passes to their generated varieties, proving the equivalence.
+
+With at least two labels, the unguarded arm sum already dominates
+every nonmarker source. A source with an occurring owner has an arm
+of its own label; for a neutral or foreign-atom source, either an
+arm dominates it or the two designated atoms join to $n$.
+Thus an unguarded failure is exactly $L=P$ with all $t_j=a_{i_j}$.
+The reset condition forces the atomic shadow of $q$ to be $n$,
+and the same collapse and lifting argument applies.
+\end{proof}
+
 Restricting clause size gives a different boundary. Binary clauses cannot
 detect every three-owner coverage obstruction, even with arbitrary numbers
 of variables and clauses.
@@ -8531,6 +8587,97 @@ right projection. If all $f_i(e,c)=e$, then $e\del c=e$;
 unitness gives $c=e$. The atomic profile representation below $e$
 and condition \textup{(C)} now give exactly the stated owner lattices
 and their cross-branch products.
+\end{proof}
+
+For a proper occurring owner set, a relation over the coefficient
+algebra supplies such a cover exactly when the clone is core.
+The converse follows by compiling failed typing constraints.
+
+\begin{theorem}[An exact typing criterion for upper clones]
+\label{core:thm:exact-typed-clone}
+Let $C$ be core and suppose $A=A_e(C)\models\Gamma_K$.
+Put $I_e=C_{\leq e}$, let $R$ be its occurring owner types, and
+write $\eta:I_e\to\mathbf A_R^{\rm at}$ for its type homomorphism.
+Suppose $R$ is proper. Then the following are equivalent:
+\begin{enumerate}
+\item $A$ is core.
+\item $A\in\operatorname V(D_K)$.
+\item There is a subalgebra $T\leq C\times\mathbf A_R^{\rm at}$
+  projecting onto $C$, with
+  $T\cap(\{c\}\times\mathbf A_R^{\rm at})=\{(c,\eta(c))\}$
+  for every $c\in I_e$.
+\end{enumerate}
+For finite $C$, condition~3 has a Boolean encoding with
+$|C|(|R|+1)$ variables and
+$O(K|C|^2(|R|+1)^2)$ clauses. If it fails, a finite family of
+atomic constraints yields an explicit native-valid identity failed
+by the clone.
+\end{theorem}
+\begin{proof}
+Condition~3 implies condition~1 by
+\cref{core:lem:typed-upper-clone-cover}, using the two projections
+of $T$; condition~1 implies condition~2. If $R$ is empty, the
+constant-neutral relation gives condition~3 directly.
+
+Normalize at $e$ by \cref{core:prop:upper-clone-unit-normalization}.
+For the quotient $v:C\to C_e$, we have
+$v^{-1}((C_e)_{\leq e})=I_e$, and ideal types are preserved.
+Taking the image or inverse image under $v\times\mathrm{id}$
+therefore transfers typed relations in both directions. The same
+proposition preserves clone membership. We may assume that $e$
+is a reset unit and $\eta^{-1}(n)=\{e\}$.
+
+First let $C$ be finite, and name each old element by a variable
+$x_c$. Consider all assignments to these variables in
+$\mathbf A_R^{\rm at}$ subject to
+\[
+ x_e=n,\qquad
+ t=a_i\ \text{whenever }t((c)_{c\in C})\in\eta^{-1}(a_i).
+\]
+Although the term family is infinite, the assignment set is finite.
+An assignment satisfying these constraints generates a typed relation
+in $C\times\mathbf A_R^{\rm at}$. Owned returns have the correct
+type by construction. For a neutral return $h(s,t)=e$, both old
+child values lie in $I_e$: associativity gives
+$h(e,s)=h(e,t)=e$, and clone reflection applies; join is immediate.
+A neutral child is itself $e$, so induction on the term, starting
+with $x_e=n$, types every neutral return correctly. Conversely,
+choosing one label above each point of a typed relation gives an
+assignment satisfying all the constraints.
+
+If there is no typed relation, select one violated owned constraint
+for every assignment with $x_e=n$. This gives a finite unsatisfiable
+system; include a named owned element of each type to make $R$
+its exact label set. Apply \cref{core:lem:neutral-constraint-identity}
+with $q=x_e$. In the clone assign $x_c=c$ and $p=\varepsilon$.
+Then $L=\varepsilon\del e=\varepsilon$. Each arm is an old point
+$f_i(e,t_j)<e$, while the guard is old $e$. The right side is
+therefore $e$, so the native-valid identity fails. This contradicts
+condition~2 and proves necessity for finite $C$.
+
+For arbitrary $C$, core local finiteness makes every subalgebra
+generated by $e$, finitely many coefficients, and one representative
+of each occurring type finite. Its clone is a subalgebra of $A$.
+Under condition~2 the finite result supplies a typed relation there.
+Every finite part of the global relation constraints is thus
+satisfiable, and propositional compactness gives condition~3.
+
+Explicitly, use membership bits $Y_{c,a}$ for $c\in C$ and
+$a\in\mathbf A_R^{\rm at}$. Require a nonempty fiber at each $c$,
+fix every ideal fiber to its prescribed singleton, and impose
+\[
+ \neg Y_{c,a}\ \vee\ \neg Y_{d,b}\ \vee\
+ Y_{h_C(c,d),h_{\rm at}(a,b)}
+\]
+for every basic operation and every pair of labeled inputs.
+These are exactly the subalgebra conditions, with the stated size.
+After normalization, the identity for a finite failed instance can be extracted without
+trusting a solver: enumerate atomic assignments with $x_e=n$ and
+close their generating pairs, retaining a term for each pair.
+At most $|C|(|R|+1)$ pairs arise. A wrongly typed neutral term
+has a wrongly typed child; descending reaches an owned violation,
+since the neutral variable $x_e$ is fixed. One such witness per
+assignment gives the finite constraint system used above.
 \end{proof}
 
 The required typing can always be supplied when the ideal has at most
