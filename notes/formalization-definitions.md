@@ -173,3 +173,43 @@ trace claims hold for arbitrary role types with three distinct roles; there
 is no new global finiteness requirement. A regression case verifies that equal
 supports can still give different results on atomic inputs, so the restriction
 to ambiguous inputs is material.
+
+`KFOL.Paper.common_source` now states all of `gen:thm:source`. Its only additional
+project-defined notion is `Term.sourceOccurrences`, in `Definitions/Core.lean`:
+a traversal list of pairs `(leaf, p)`, where `leaf : Role ⊕ Var` retains the
+original winner or input label and `p` is its accumulated permutation. Internal
+switches multiply on the left, choices concatenate their children's lists,
+and repeated equal entries remain repeated. List membership therefore witnesses
+an actual source occurrence. The theorem's existential quantifiers precede the
+universal valuation index: the same occurrence and permutation meet every
+constraint simultaneously, rather than a separately selected source per case.
+
+The source value is written directly in `Paper.lean` as
+`WinnerSet.rename p (leaf.elim WinnerSet.singleton (valuation i))`. No new
+source evaluator or semantic predicate conceals its meaning. Regions are
+ordinary mathlib sets, with `Pairwise (fun i j => Disjoint (regions i) (regions j))`.
+The index, variable and role types may be infinite or empty where the terms
+and valuations exist. There is no finiteness or three-role hypothesis.
+
+With two distinct indices, that same source must be an input. Its membership
+in the existing `inputOccurrences` list is also part of the conclusion;
+`mem_inputOccurrences_iff` connects the two enumerations. At a winner source,
+its fixed value `p r` would lie in two disjoint regions. The proof of existence
+first chooses one child satisfying all constraints at a choice node and pulls
+regions back through switches. It depends only on the shared core definitions
+and elementary algebra, without depending on idempotent elimination.
+
+`KFOL.Paper.atomic_repeated_triples` gives the immediate repeat-relation
+consequence: if every input column repeats among three atomic valuations, and
+the three outputs are atomic, those outputs repeat too. Atomicity is local to
+those evaluations. `KFOL.Paper.no_atomic_if_then_else` rules out a selector
+between any two distinct control labels, using three available roles. Both
+statements spell out their atomic inputs and outputs directly; they do not
+assume the external S2 classification, which remains a separate obligation.
+
+The common-source regressions exercise necessary disjointness, the two-region
+hypothesis for variable sources, permuted inputs and the empty-index case.
+`checks/check_common_source.py` independently enumerates actual leaf paths and
+applies their switches from the leaf outward, comparing with the existing
+winner-set evaluator over 210 finite term cases. It is a finite cross-check;
+the generic index- and role-polymorphic result is proved in Lean.

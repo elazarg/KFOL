@@ -302,11 +302,31 @@ views, subdirect representations need not fill the product, and equal supports
 determine operations only on ambiguous inputs. Two-role and nullary cases are
 also checked. GameTheory remains absent from this dependency closure.
 
-The next algebra work is the common-source theorem, including its variable
-occurrence clause, followed by the reduct test-domain count and diagonal
-idempotency certificates. The separate complexity milestone still owes the
-polynomial-time clause of idempotent extraction. Strategic integration remains
-a separate gate after the dependency update.
+### Common sources and atomic consequences completed
+
+`KFOL.Paper.common_source` now covers all of `gen:thm:source`. It selects one
+actual leaf and accumulated permutation satisfying the entire disjoint family
+of constraints. With two distinct indices that same witness is an input, and
+its membership in the existing input-occurrence list is included. The new
+`sourceOccurrences` enumeration retains the original labels, traversal order
+and duplicate leaves. A proved bridge connects it to `inputOccurrences`.
+The proof needs neither finite types nor three roles and handles empty or
+infinite index families. It depends on elementary algebra and the shared syntax,
+not on idempotent elimination.
+
+The immediate prose claims are also complete:
+`KFOL.Paper.atomic_repeated_triples` proves preservation of the repeat-triple
+relation whenever the relevant outputs are atomic, and
+`KFOL.Paper.no_atomic_if_then_else` excludes a selector for any two distinct
+control labels. They use common-source separation directly; the external S2
+classification remains a separate required input. Boundary tests cover overlap,
+permuted source values, the single-region winner case and an empty index type.
+An independent check enumerates actual leaf paths in 210 finite term cases.
+
+Next complete the reduct test-domain count and diagonal idempotency certificates.
+The separate complexity milestone still owes the polynomial-time clause of
+idempotent extraction. Strategic integration remains a separate gate after the
+dependency update.
 
 | Milestone | Prerequisites | Concrete completion gate |
 | --- | --- | --- |

@@ -14,13 +14,15 @@ This slice covers `sym:thm:pairs`, `sym:thm:optimal` and the algebraic clauses
 of `gen:thm:core`; its machine running-time clause remains outstanding.
 Player views and their subdirect representations, and the full semilattice
 trace, are also included. View definitions are in `Definitions/Views.lean`.
+Common sources and their atomic consequences use the occurrence enumeration
+in `Definitions/Core.lean`.
 -/
 
 @[expose] public section
 
 namespace KFOL.Paper
 
-universe u v
+universe u v w
 
 /-- `sym:thm:pairs` (pair countervaluations). If an equation in the full public
 signature, including winner constants and internal role permutations, fails,
@@ -244,5 +246,59 @@ theorem semilattice_trace {Role : Type u} (three : Fin 3 ↪ Role) :
 [propext, Classical.choice, Quot.sound] -/
 #guard_msgs (whitespace := lax) in
 #print axioms KFOL.Paper.semilattice_trace
+
+/-- `gen:thm:source`. Disjoint output requirements are witnessed simultaneously
+by one actual leaf and its accumulated permutation. If the family has two
+distinct indices, that same leaf is a variable occurrence. No finiteness or
+three-role assumption is needed. -/
+theorem common_source {Role : Type u} {Var : Type v} {Index : Type w}
+    (t : Term Role Var) (valuation : Index → Var → WinnerSet Role)
+    (regions : Index → Set Role)
+    (hdisjoint : Pairwise fun i j => Disjoint (regions i) (regions j))
+    (hfits : ∀ i, (t.eval (valuation i)).val ⊆ regions i) :
+    ∃ (leaf : Role ⊕ Var) (p : Equiv.Perm Role), (leaf, p) ∈ t.sourceOccurrences ∧
+      (∀ i, (WinnerSet.rename p (leaf.elim WinnerSet.singleton (valuation i))).val ⊆ regions i) ∧
+      ((∃ i j : Index, i ≠ j) →
+        ∃ x : Var, leaf = .inr x ∧ (x, p) ∈ t.inputOccurrences) :=
+  t.exists_common_source_with_input_clause valuation regions hdisjoint hfits
+
+/-- info: 'KFOL.Paper.common_source' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Paper.common_source
+
+/-- Main prose following `gen:thm:source`: repeated entries in every input
+triple force a repeated atomic output. Atomicity is assumed only for the three
+evaluations in question, not globally for the term. -/
+theorem atomic_repeated_triples {Role : Type u} {Var : Type v} (t : Term Role Var)
+    (valuation : Fin 3 → Var → Role)
+    (hrepeat : ∀ x, valuation 0 x = valuation 1 x ∨ valuation 0 x = valuation 2 x ∨
+      valuation 1 x = valuation 2 x)
+    (out : Fin 3 → Role)
+    (houtputs : ∀ i, t.eval (fun x => WinnerSet.singleton (valuation i x)) =
+      WinnerSet.singleton (out i)) :
+    out 0 = out 1 ∨ out 0 = out 2 ∨ out 1 = out 2 :=
+  t.atomic_preserves_repeat_triple valuation hrepeat out houtputs
+
+/-- info: 'KFOL.Paper.atomic_repeated_triples' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Paper.atomic_repeated_triples
+
+/-- Main prose following `gen:thm:source`: no full-language term returns the
+second argument for control atom a and the third for control atom b, for all
+atomic arguments, when a and b are distinct. -/
+theorem no_atomic_if_then_else {Role : Type u} (three : Fin 3 ↪ Role)
+    (a b : Role) (hab : a ≠ b) (t : Term Role (Fin 3)) :
+    ¬((∀ y z : Role, t.eval (fun i => WinnerSet.singleton
+        (if i = 0 then a else if i = 1 then y else z)) = WinnerSet.singleton y) ∧
+      (∀ y z : Role, t.eval (fun i => WinnerSet.singleton
+        (if i = 0 then b else if i = 1 then y else z)) = WinnerSet.singleton z)) :=
+  t.not_atom_ifThenElse three a b hab
+
+/-- info: 'KFOL.Paper.no_atomic_if_then_else' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Paper.no_atomic_if_then_else
 
 end KFOL.Paper

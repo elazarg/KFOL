@@ -9,6 +9,7 @@ import all KFOL.Algebra.PairTests
 import all KFOL.Algebra.Idempotent
 import all KFOL.Algebra.Views
 import all KFOL.Algebra.SemilatticeTrace
+import all KFOL.Algebra.CommonSource
 import all KFOL.Algebra.TestDomains
 import all KFOL.Algebra.TestDomainCard
 import all KFOL.Algebra

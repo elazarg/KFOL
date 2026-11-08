@@ -36,6 +36,15 @@ def inputOccurrences : Term Role Var → List (Var × Equiv.Perm Role)
   | .choice _ s t => s.inputOccurrences ++ t.inputOccurrences
   | .rename p t => t.inputOccurrences.map (fun (x, q) => (x, p * q))
 
+/-- Every winner or variable leaf, paired with its accumulated permutation.
+The original leaf label is retained even for winner leaves. Traversal order
+and duplicate entries are preserved; membership witnesses an actual leaf. -/
+def sourceOccurrences : Term Role Var → List ((Role ⊕ Var) × Equiv.Perm Role)
+  | .winner r => [(.inl r, 1)]
+  | .var x => [(.inr x, 1)]
+  | .choice _ s t => s.sourceOccurrences ++ t.sourceOccurrences
+  | .rename p t => t.sourceOccurrences.map (fun (leaf, q) => (leaf, p * q))
+
 /-- The public reduct allows winner leaves but no internal role switches. -/
 def IsPublic : Term Role Var → Prop
   | .winner _ => True

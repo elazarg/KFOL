@@ -15,32 +15,6 @@ namespace WinnerSet
 
 variable {Role : Type u}
 
-@[simp] theorem rename_one (A : WinnerSet Role) : rename 1 A = A := by
-  apply Subtype.ext
-  exact Set.image_id _
-
-@[simp] theorem rename_mul (p q : Equiv.Perm Role) (A : WinnerSet Role) :
-    rename (p * q) A = rename p (rename q A) := by
-  apply Subtype.ext
-  exact (Set.image_image p q A.val).symm
-
-@[simp] theorem rename_union (p : Equiv.Perm Role) (A B : WinnerSet Role) :
-    rename p (union A B) = union (rename p A) (rename p B) := by
-  apply Subtype.ext
-  exact Set.image_union _ _ _
-
-/-- Owned choice is equivariant when the owner is transported as well. -/
-theorem rename_choice (p : Equiv.Perm Role) (r : Role) (A B : WinnerSet Role) :
-    rename p (choice r A B) = choice (p r) (rename p A) (rename p B) := by
-  classical
-  have hA := rename_eq_singleton_iff A r p
-  have hB := rename_eq_singleton_iff B r p
-  by_cases h : A = singleton r ∨ B = singleton r
-  · simp [choice, h, (or_congr hA hB).mpr h]
-  · have hn : ¬(rename p A = singleton (p r) ∨ rename p B = singleton (p r)) :=
-      fun hh => h ((or_congr hA hB).mp hh)
-    simp [choice, h, hn]
-
 theorem ambiguous_of_two_mem (A : WinnerSet Role) (a b : Role) (hab : a ≠ b)
     (ha : a ∈ A.val) (hb : b ∈ A.val) : Ambiguous A := by
   intro r he
