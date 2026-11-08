@@ -1,40 +1,43 @@
 # Term representation decision
 
-Use the native four-constructor `KFOL.Term` for this slice. It follows the
-paper's full signature directly, permits role and variable types in separate
-universes, and retains the existing status/pin proof's structural induction.
-Winner sets use mathlib sets and permutations; native syntax is not a second
-implementation of those general mathematical objects.
+Use native four-constructor `KFOL.Term` for the public-language traversals and
+existing algebra proofs, and mathlib's relation-free `FirstOrder.Language.Term`
+for generic equational proofs. Their production boundary is an exact codec,
+with no independently implemented generic syntax or substitution engine.
 
-The comparison in `tests/SyntaxComparison.lean` was checked on Lean/mathlib
-v4.35.0. It defines the same signature as a relation-free mathlib language:
-one nullary winner symbol per role, one binary choice symbol per owner, and one
-unary rename symbol per permutation. It checks:
+Native syntax follows the paper's full signature directly, allows role and
+variable types in separate universes, and gives the status, pin and extraction
+inductions their children directly. Winner sets, sets and permutations remain
+mathlib objects. The initial comparison on Lean/mathlib v4.35.0 transported the
+entire pair-countervaluation theorem and checked substitution and congruence
+on both interfaces. It supported keeping these native traversals.
 
-- An encoding to mathlib terms and a decoding back, with `decode_encode`.
-- Agreement of native evaluation and mathlib realization for every mathlib term.
-- Transport of the complete pair-countervaluation theorem for arbitrary
-  mathlib terms, including all three kinds of function symbol.
-- Mathlib's substitution/realization theorem and operation-congruence examples
-  on both interfaces. Native evaluation/substitution is proved in the library.
+The shared equational milestone promotes the codec from the comparison test
+to the production library. `Definitions/Equational.lean` supplies the full
+signature (nullary winner, binary owned choice, unary permutation) and its
+core reduct (only binary owned choice). `Equational/Native.lean` proves:
 
-Both interfaces work. Mathlib supplies substitution generically; the native
-proof is a four-case structural induction. Mathlib represents arguments by
-`Fin n → Term`, which requires selecting positions when inspecting a choice or
-rename. The native constructors give the status and pin inductions their
-children directly, and suit the later tree/guard traversals. For this small
-fixed signature, that favors retaining native syntax rather than requiring a
-language structure and tuple indexing throughout the algebra proofs.
+- Both round trips, for every generic term and every corresponding native term.
+- Agreement of native evaluation and mathlib realization.
+- Exact preservation of variable support.
+- Substitution compatibility: full encoding and core decoding.
 
-This does not block using mathlib's general algebra/model-theory machinery
-later: the checked codec and semantic compatibility show how to cross that
-boundary. The test retains only an isolated adapter to mathlib's existing
-syntax/realization, and is not a second production evaluator or a dependency of
-the paper. A general equational logic or HSP development has not been built as
-part of this decision.
+A native core term carries its independent `IsCore` proof at encoding; decoding
+any core-signature term produces that proof. There is no ambient full signature
+in a generic core identity, and the core signature has no ground terms.
+`tests/SyntaxComparison.lean` now uses the production codec to transport the
+pair theorem for arbitrary mathlib terms. It contains no duplicate codec.
 
-The initial successful comparison check took 1.42 seconds and about 1.1 GB peak
-RSS on this workspace, including loading imported objects. That is a record of
-the experiment, not a performance comparison between the two representations;
-the decision rests on proof and traversal structure. Reproduce the check with
+Generic soundness, completeness, HSP preservation and generated-subalgebra
+locality use mathlib terms directly. Completeness uses mathlib's term-algebra
+quotient operations and an independently defined derivation relation. This
+reuses the library's homomorphism, substructure and quotient APIs without
+requiring the existing algorithmic proofs to inspect `Fin n` argument tuples.
+Interpretations are explicit structure values used locally; different
+operations on one carrier do not install competing global instances.
+
+The source of meaning stays the shared winner-set operations. The codec's
+semantic bridge connects the two representations for every term; generic
+validity and derivation remain separate definitions. No general reverse HSP
+representation theorem is claimed. Reproduce all boundary checks with
 `make check-algebra`.

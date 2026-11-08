@@ -3,6 +3,13 @@ module
 import all KFOL.Definitions.Public
 import all KFOL.Definitions.Core
 import all KFOL.Definitions.Views
+import all KFOL.Definitions.Equational
+import all KFOL.Equational.Logic
+import all KFOL.Equational.Native
+import all KFOL.Equational.Preservation
+import all KFOL.Equational.Completeness
+import all KFOL.Equational.Locality
+import all KFOL.Equational
 import all KFOL.Definitions.TestDomains
 import all KFOL.Algebra.Basic
 import all KFOL.Algebra.PairTests

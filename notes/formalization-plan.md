@@ -36,8 +36,8 @@ The current target includes full machine-level complexity theorems and the full 
 
 1. Use a Lake package, namespace `KFOL`, and the user's pinned GameTheory library with its matching mathlib version. The inspected GameTheory revision `c6650cd861d4a05a64adb2e4fd99a4feafa231b0` uses Lean/mathlib 4.35.0; KFOL now uses Lean/mathlib 4.35.0 for the completed first algebra slice, while the original baseline used Lean 4.34.1. Reuse its canonical PMFs, strategic definitions, Nash/minimax and SE foundations. The user intends GameTheory to update to the newer ComplexityLib; select that updated compatible dependency set at the strategic/complexity integration gate instead of fixing the previously inspected legacy ComplexityLib pin as the implementation target. Start the independent mathlib-only algebra slice meanwhile. Validate the selected imports in an isolated downstream workspace and retain the current build during migration.
 2. Put every main-paper claim in root `Paper.lean`, including prose claims whose formal statements must be supplied from the report. Required report support lemmas normally remain in their natural library modules; export them in `Paper.lean` only when they express a main-paper assertion. Each theorem repeats its complete proposition, with its hypotheses and quantifiers. Its proof may invoke an implementation theorem. Neither `export`, an inferred theorem type, nor `theorem result : NamedClaim` is an acceptable public statement.
-3. Concentrate the intended meaning in five `KFOL/Definitions/*.lean` modules, reusing imported semantic definitions through a small documented interface. Separate the algebraic public syntax from its strategic interpretation so algebra imports no GameTheory modules. Proof modules may introduce constructions and helper definitions, but every project-defined constant in a public theorem's type must be documented in the definition index, including transitive dependencies. Five files are an organizational target, not a reason to hide a large definition behind a short abbreviation.
-4. Reuse mathlib's sets, permutations, algebraic languages, homomorphisms, substructures and quotients where they fit. Prototype native versus mathlib terms on pair-test transport and substitution/equational derivation before choosing the syntax. Both guard algorithms and generic algebraic proofs matter. Keep one semantic API after this gate. Generalize the small Equational Theories Project completeness proof where useful, with attribution; it currently treats one binary operation.
+3. Concentrate the intended meaning in a small collection of `KFOL/Definitions/*.lean` modules, reusing imported semantic definitions through a small documented interface. Separate the algebraic public syntax from its strategic interpretation so algebra imports no GameTheory modules. Proof modules may introduce constructions and helper definitions, but every project-defined constant in a public theorem's type must be documented in the definition index, including transitive dependencies. Five algebraic definition files currently suffice; later strategic and round definitions must stay in their own modules.
+4. Reuse mathlib's sets, permutations, algebraic languages, homomorphisms, substructures and quotients where they fit. The prototype selected native public traversals. The completed shared equational layer uses mathlib terms with exact production full/core codecs, including evaluation, support and substitution compatibility. It proves generic completeness using mathlib quotient operations; the Equational Theories Project is a proof reference, not an imported dependency. The shared winner-set operations remain the semantic API.
 5. Keep the public-game algebra and closed-round equilibrium semantics separate, joined by explicit correspondence theorems. None is defined by the conclusion it is meant to certify.
 6. Use category theory only in a named, separate portion that specifies objects, morphisms, equality, and laws. Ordinary homomorphisms and dependent equivalences suffice for the algebraic and execution proofs. The refuted mixed-open-game composition is an operation under study, never a `Category` instance.
 
@@ -101,13 +101,28 @@ For each required inventory row, implementation review records the public declar
 
 | Module | Definitions that a reader must audit |
 | --- | --- |
-| `Definitions/Public.lean` | Nonempty winner sets, singleton and ambiguity, owned choice, reset and guarded/policy operations; signatures, public trees and terms, algebraic evaluation; occurrences, contexts, substitution and observations. Mathlib only |
-| `Definitions/Equational.lean` | Finite-variable identities, satisfaction, theories, equational derivation, basis and variable bound; congruences and quotient interface; generated subalgebras; term operations and clones; native observer/atomic carriers; equational variety membership |
-| `Definitions/Algorithms.lean` | KFOL encodings, tree/DAG representations and input length; specifications of guards, policy patterns and antimatroids. Mathlib only; the small audited `Complexity/Language.lean` facade adds the imported complexity classes and machine specifications separately |
-| `Definitions/Strategic.lean` | Compilation of shared public syntax to GameTheory; canonical profile, execution, whole-player deviation, payoff and SPE specializations. The algebraic definitions never import this file |
-| `Definitions/Rounds.lean` | Finite round syntax and FOSG/EFG compilation; winner payoff and imported Nash/SE specializations; equilibrium outcome sets, round operator and contextual observation/compositional semantics. Imported definitions and their transitive meaning are indexed explicitly |
+| `Definitions/Public.lean` | Nonempty winner sets, singleton and ambiguity, owned choice, union and permutation; native public terms, evaluation and substitution |
+| `Definitions/Core.lean` | Core/public predicates, syntactic occurrences and supports, deterministic extraction and syntax size |
+| `Definitions/Views.lean` | Player-view states, quotient relation, representatives and induced operations |
+| `Definitions/TestDomains.lean` | Full/reduct equation testing and diagonal certification predicates |
+| `Definitions/Equational.lean` | Relation-free mathlib language, finite identities, satisfaction, theories, derivation, basis, variable bound, algebra structures, full/core signatures and codecs |
 
-These files do not mutually import each other. `Public` introduces algebraic signatures using the chosen term API. `Equational` imports `Public`; `Algorithms` adds mathematical algorithm specifications without game or machine imports. `Strategic` imports `Public` and narrow GameTheory leaves. `Rounds` uses that syntax and strategic interface plus the needed protocol/analysis leaves, not algorithm machinery. Cross-layer adequacy proofs live in bridge modules. Imported GameTheory and ComplexityLib definitions are part of the definition audit where used, not hidden behind local aliases or inherited by unrelated algebraic claims.
+These are the five current algebraic definition modules. `Equational` imports
+`Core`, which imports `Public`; it adds only mathlib dependencies. See the
+[definition index](formalization-definitions.md) for their actual contents and
+imported mathematical surface. Proof constructions live in the corresponding
+proof modules.
+
+Planned separate definition modules are `Algorithms` (encodings, lengths and
+algorithm specifications), `Strategic` (compilation to narrow GameTheory
+leaves, profiles, deviations and SPE), and `Rounds` (finite rounds, imported
+Nash/SE specializations, outcomes and contextual observations). Mathematical
+reset and guard semantics may extend the existing algebraic definitions or
+occupy a small dedicated file. Complexity classes and machine specifications
+belong in an audited `Complexity/Language.lean` facade. None of these branches
+may enlarge the pure algebra's imported surface with game or machine libraries.
+Cross-layer adequacy proofs live in bridge modules. Imported definitions are
+part of the definition audit where used.
 
 ### Public values and syntax
 
@@ -115,7 +130,7 @@ Use `WinnerSet Role := {S : Set Role // S.Nonempty}` as the mathematical carrier
 
 Use `Equiv.Perm Role` for renaming, `Set` inclusion and disjointness, and ordinary `Nonempty`, `Finite`/`Fintype`, and cardinality APIs. General algebraic lemmas should use arbitrary role types and only the distinct-role hypotheses they need. Assume finiteness and cardinality at the boundary that needs them. Avoid a global `K ≥ 3` hypothesis; the two-role appendix should instantiate the same definitions.
 
-The term API is selected by the prototype gate: either mathlib `FirstOrder.Language.Term` for relation-free signatures, or small signature-indexed native terms with a proved algebraic interpretation. Do not commit to a large syntax migration before measuring both uses. Specify separate core, constant, symmetric, reset, owner, and policy signatures, with maps/interpretations between them. Give ergonomic constructors and induction lemmas. Reset and union are derived terms in the core where appropriate; storing them as basic operations in a computational expansion requires a proved term-equivalence theorem. Parameterize an algebra by an explicit signature so unrelated operations cannot silently enter a proof.
+The completed prototype selected native `KFOL.Term` for public traversals. Generic equational proofs use mathlib `FirstOrder.Language.Term` with exact production codecs for full/core signatures; their interpretations use the shared winner-set operations. Specify separate core, constant, symmetric, reset, owner, and policy signatures, with maps/interpretations between them. Give ergonomic constructors and induction lemmas. Reset and union are derived terms in the core where appropriate; storing them as basic operations in a computational expansion requires a proved term-equivalence theorem. Parameterize an algebra by an explicit signature so unrelated operations cannot silently enter a proof.
 
 Public ground games may use a small binary tree datatype to make occurrence-indexed strategies clear. Its equivalence to closed public terms is proved. Full profiles assign actions to every occurrence, including unreached occurrences. Restriction to a subtree is defined independently of the recursive winner evaluator. SPE quantifies over every subtree and every unilateral change to all of a player's decisions there. Distinguish occurrence paths from variable names: repeated variables denote independently solved copies. Uniform-copy strategies are a separate restriction with their own observation theorem.
 
@@ -348,16 +363,41 @@ all tests. The independent existing checkers exhaust their K=3,4 cases and
 check diagonal constructions through K=64. Definitions remain in the same
 four shared definition modules, and the algebra still imports only mathlib.
 
-Next prioritize the required shared equational infrastructure for reset and
-basis proofs. The separate complexity milestone still owes the polynomial-time
-clause of idempotent extraction. The read-only check of GameTheory still finds
-the previously inspected revision; strategic integration remains a separate
-gate and no upstream files have been changed.
+### Shared equational foundation completed
+
+`Definitions/Equational.lean` supplies independent validity and derivation,
+finite identity theories, bases, actual-support variable bounds, and explicit
+local structure values. Generic terms, substitution, homomorphisms,
+substructures and quotient operations are mathlib's. `Equational/Native.lean`
+connects full/core syntax by both round trips, evaluation, variable support and
+substitution compatibility. The comparison test now uses this production
+codec. No additional generic term datatype or category framework was needed.
+
+`Equational/Logic.lean` and `Completeness.lean` prove soundness and completeness
+by quotienting the term algebra by derivability. `isBasis_iff_models` converts
+a semantic characterization into a syntactic basis. `Preservation.lean` proves
+HSP preservation and injective reflection; the reverse Birkhoff representation
+is not part of this milestone. `Locality.lean` transfers identities from
+small-generated subalgebras, counting actual support rather than padded arity,
+and proves the final logical reduction from bounded finite countermodels to
+nonfinite basability. The paper-specific countermodels remain to be built.
+
+The regression suite covers competing structures on `Bool`, arity-100 padding,
+nullary axiom satisfaction in the quotient model, absence of core ground terms,
+empty zero-generator closures, and empty products. All new declarations are in
+the standard-axiom/import audit. Existing paper-claim completion counts stay
+unchanged: shared infrastructure does not finish a particular basis theorem.
+
+Next implement reset semantics and its semantic/table bridges against this
+foundation, then the six-law basis completeness argument. The separate
+complexity milestone still owes the machine-time clause of idempotent
+extraction. Strategic integration remains a separate gate; no upstream
+GameTheory files have been changed.
 
 | Milestone | Prerequisites | Concrete completion gate |
 | --- | --- | --- |
 | 0. First algebra delivery completed | This plan | Lean/mathlib v4.35.0; native syntax selected; `KFOL.Paper.pair_countervaluations` in root `Paper.lean`; definition index; clean builds and compiled axiom/import checks |
-| 1. Shared public and equational foundation | 0 | Extend the validated algebraic interface to validity and derivation, HSP preservation, generated-subalgebra transfer and finite-variable-bound lemma; keep strategic profiles in their separate branch |
+| 1. Shared equational foundation completed | 0 | Independent validity and derivation; quotient completeness; HSP preservation; generated-subalgebra transfer and actual-support variable bounds; exact full/core codecs, all audited |
 | 2. Public paper backbone A–C | 1 | Complete public statements for recurrence/existence, views/tests, idempotent syntax and common source; remaining clone dependency is explicitly tracked, with no conditional result marked complete |
 | 3. Reset and owner D–E | 1–2 | Algorithms with semantics, synthesis and exact finite generators; six-law and forty-law completeness plus lower bounds, not just soundness |
 | 4. Policy and complexity F–G | 1, algorithm specs, relevant milestone 3 results | Verified reductions and representation-sensitive bounds; all fixed/uniform dichotomy clauses including observation-relative cases |

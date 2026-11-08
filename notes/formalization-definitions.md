@@ -271,3 +271,58 @@ incidence conditions yet fail certification, and that a valid ambiguous domain
 may omit a role from every test. Independent Python checks exhaust the small
 reduct/domain cases (K=3,4) and check diagonal constructions through K=64;
 these are cross-checks, not the cardinality proofs.
+
+## Shared equational definitions
+
+`Definitions/Equational.lean` is the fifth current definition module. It
+imports `Definitions/Core.lean` and mathlib's model-theory substructures and
+quotients. The generic proof modules add no primitive notion of validity.
+These definitions prepare the required basis proofs; they do not themselves
+complete any reset, forty-law or core nonfinite-basis statement in `Paper.lean`.
+
+| Definition | Meaning and dependencies |
+| --- | --- |
+| `Equational.language σ` | A mathlib language with operation symbols `σ n` of arity n and no relation symbols |
+| `Equational.Term σ Var` | Mathlib's term type; no new generic syntax datatype |
+| `Equational.Identity σ` | A finite declared arity and two terms on `Fin arity`; arity zero is permitted |
+| `Identity.Holds` | Equality of realizations at every valuation in the supplied algebra |
+| `Identity.support`, `variableCount` | Union of actual variable supports on both sides and its cardinality, independent of unused declared variables |
+| `Theory`, `Models`, `theoryOf` | Sets of identities, satisfaction, and the whole identity theory of a supplied algebra |
+| `InVariety σ A B` | B is nonempty and satisfies every identity of A; independent of derivations or an HSP certificate |
+| `Derives T` | Axiom instantiation, reflexivity, symmetry, transitivity, operation congruence and substitution; independent of semantic validity |
+| `IsBasis`, `HasFiniteBasis` | The algebra's valid identities are exactly the derivable consequences of T; respectively existence of a finite such T |
+| `HasVariableBound` | Every identity in the theory uses at most n distinct variables |
+| `productStructure`, `termStructure` | Coordinatewise product operations and syntactic term constructors as operations |
+| `derivationSetoid`, `termPrestructure` | Derivability as an equivalence relation and operation-compatible congruence, consumed by mathlib's quotient-structure API |
+| `FullSymbol`, `CoreSymbol` | Exactly the full public and constant-free core signatures |
+| `fullStructure`, `coreStructure` | Interpret these symbols using the existing shared winner-set operations |
+| `Full.encode/decode`, `Core.encode/decode` | Structural codecs for the native syntax; core encoding requires `IsCore` |
+
+All structure definitions are named values used locally, not global instances
+on carriers. The left/right projection regressions give different operations
+to `Bool` under the same signature and show that an identity can hold in just
+one of them. Realization, structural substitution, homomorphisms, substructures,
+closure and quotients are mathlib's imported definitions and belong to the
+reviewed definition surface.
+
+`Equational/Completeness.lean` proves soundness/completeness using the quotient
+of the term algebra by derivability. For variables in `Type v` and symbols in
+`Type u`, testing nonempty models in `Type (max u v)` suffices. The quotient is
+inhabited by the term whose equality is being tested, even with no variables.
+The finite-variable basis criterion therefore tests carriers in `Type u`;
+soundness extends a resulting derivation to arbitrary carrier universes. There
+is no universe-sized quantification over a type of all algebras.
+
+`Equational/Preservation.lean` proves preservation by surjective homomorphisms,
+substructures and arbitrary dependent products, and reflection through
+injective homomorphisms. Variety membership requires nonemptiness explicitly;
+substructures may be empty in mathlib. These are the HSP preservation laws,
+not the reverse Birkhoff representation theorem.
+
+`Equational/Locality.lean` transfers identities from closures of at most n
+values using actual support. Evaluating a support-restricted term supplies an
+inhabitant of its generated subalgebra, also for a nullary identity. A core
+zero-generator closure can instead be empty; it is never assumed to be a
+nonempty variety member. The generic bounded-countermodel lemma reduces a
+nonfinite-basis proof to explicit finite countermodels at every support bound.
+Constructing the paper's core countermodels remains separate unfinished work.

@@ -62,7 +62,13 @@ This supports retaining full coNP-completeness in the definition of done. Provin
 
 **The Equational Theories Project has an existing completeness proof, with a signature mismatch.** Its [`Completeness.lean`](https://github.com/teorth/equational_theories/blob/main/equational_theories/Completeness.lean) contains `Soundness`, `Completeness`, a free term quotient, and a universal property. Inspection of [`FreeMagma.lean`](https://github.com/teorth/equational_theories/blob/main/equational_theories/FreeMagma.lean) shows a single binary magma operation. This is a strong proof reference for reset's binary signature and for a generalization, but it is not immediately a many-operation, ternary-operation and permutation-signature library. Its inspected toolchain is Lean 4.29.1, also different from GameTheory's.
 
-Recommendation: adapt the small soundness/completeness argument with attribution to KFOL's one chosen signature/term API, rather than make the whole project a permanent dependency or encode operation labels as extra algebra elements. A direct reset completeness proof through tables is still needed: generic equational completeness alone does not establish that six particular equations generate the theory.
+Implementation: `KFOL/Equational` now proves generic soundness and completeness
+for arbitrary finitary operation signatures using mathlib's own terms and
+quotient operations. The Equational Theories Project remains a proof reference;
+no code or permanent dependency is imported, and operation labels are not
+encoded as algebra elements. Production full/core codecs connect this interface
+to the retained native traversals. HSP preservation and support-based
+subalgebra locality are also checked; reverse HSP representation is not claimed. A direct reset completeness proof through tables is still needed: generic equational completeness alone does not establish that six particular equations generate the theory.
 
 **Lean UALib is a proof reference, not a compatible dependency.** The inspected [`UniversalAlgebra/lean-ualib` package](https://github.com/UniversalAlgebra/lean-ualib/blob/master/leanpkg.toml) targets Lean 3.4.1. The maintained [Agda Universal Algebra Library](https://agda-algebras.universalalgebra.org/) has signatures, varieties and HSP proofs in Agda. Either can inform a Lean proof, but neither gives an importable Lean 4 theorem.
 

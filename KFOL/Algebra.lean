@@ -1,5 +1,6 @@
 module
 
+public import KFOL.Equational
 public import KFOL.Algebra.TestDomainCard
 public import KFOL.Algebra.Idempotent
 public import KFOL.Algebra.Views

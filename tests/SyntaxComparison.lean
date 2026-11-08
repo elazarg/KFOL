@@ -3,8 +3,8 @@ module
 public import KFOL.Algebra
 public import Mathlib.ModelTheory.Semantics
 
-/-! A test-only codec for the alternative mathlib term representation. The library
-keeps native terms; this module is never imported by `KFOL.Algebra` or `Paper`. -/
+/-! Transport the pair-countervaluation theorem through the production codec.
+These tests use arbitrary mathlib terms, not just encoded native examples. -/
 
 @[expose] public section
 
@@ -14,56 +14,12 @@ open KFOL
 
 universe u v w
 
-inductive Symbol (Role : Type u) : Nat → Type u where
-  | winner (r : Role) : Symbol Role 0
-  | choice (r : Role) : Symbol Role 2
-  | rename (p : Equiv.Perm Role) : Symbol Role 1
+abbrev language (Role : Type u) := Equational.language (Equational.FullSymbol Role)
 
-def language (Role : Type u) : FirstOrder.Language :=
-  ⟨Symbol Role, fun _ => Empty⟩
+noncomputable local instance {Role : Type u} : (language Role).Structure (WinnerSet Role) :=
+  Equational.fullStructure Role
 
-noncomputable instance {Role : Type u} : (language Role).Structure (WinnerSet Role) where
-  funMap := fun {n} symbol args => match symbol with
-    | .winner r => WinnerSet.singleton r
-    | .choice r => WinnerSet.choice r (args 0) (args 1)
-    | .rename p => WinnerSet.rename p (args 0)
-  RelMap := fun {_} r => nomatch r
-
-def encode {Role : Type u} {Var : Type v} : Term Role Var → (language Role).Term Var
-  | .winner r => .func (.winner r) Fin.elim0
-  | .var x => .var x
-  | .choice r s t => .func (.choice r) (fun i => if i = 0 then encode s else encode t)
-  | .rename p t => .func (.rename p) (fun _ => encode t)
-
-def decode {Role : Type u} {Var : Type v} : (language Role).Term Var → Term Role Var
-  | .var x => .var x
-  | .func (.winner r) _ => .winner r
-  | .func (.choice r) args => .choice r (decode (args 0)) (decode (args 1))
-  | .func (.rename p) args => .rename p (decode (args 0))
-
-theorem decode_encode {Role : Type u} {Var : Type v} (t : Term Role Var) :
-    decode (encode t) = t := by
-  induction t with
-  | winner => rfl
-  | var => rfl
-  | choice r s t hs ht => simp [encode, decode, hs, ht]
-  | rename p t ht => simp [encode, decode, ht]
-
-theorem eval_decode {Role : Type u} {Var : Type v} (t : (language Role).Term Var)
-    (v : Var → WinnerSet Role) : (decode t).eval v = t.realize v := by
-  induction t with
-  | var => rfl
-  | @func n f args ih =>
-    cases f with
-    | winner => rfl
-    | choice r =>
-      change WinnerSet.choice r ((decode (args 0)).eval v) ((decode (args 1)).eval v) =
-        WinnerSet.choice r ((args 0).realize v) ((args 1).realize v)
-      rw [ih 0, ih 1]
-    | rename p =>
-      change WinnerSet.rename p ((decode (args 0)).eval v) =
-        WinnerSet.rename p ((args 0).realize v)
-      rw [ih 0]
+open Equational.Full (encode decode decode_encode eval_decode)
 
 -- This is a transport of the entire countervaluation theorem, for arbitrary
 -- first-order terms, not just encodings of one chosen example.
