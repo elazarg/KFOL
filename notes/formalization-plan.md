@@ -277,9 +277,36 @@ permutation order, cancellation across a choice node, actual program reduction,
 and the two-role counterexample to the no-winner characterization. The
 independent `check_core.py` also checks 1200 decorated/arbitrary terms.
 
-The next algebra work is intrinsic player views and the full semilattice trace,
-including their representation and clone clauses. GameTheory remains absent
-from this dependency closure; strategic integration is a separate gate.
+### Player views and semilattice trace completed
+
+`KFOL.Paper.player_views` proves the exact contextual classification for unary
+polynomials with arbitrary finite parameter lists, and the K+1 count of the
+actual quotient. `KFOL.Paper.public_subdirect_representation` proves the
+injective homomorphism, coordinate surjectivity and both carrier/factor counts.
+`KFOL.Paper.intrinsic_player_views` extends the homomorphism to all idempotent
+full-language operations and proves irredundance. The concrete view states and
+representatives are in `Definitions/Views.lean`; all are independent of
+contextual equivalence and of the homomorphism claims they certify.
+
+`KFOL.Paper.semilattice_trace` includes the full `gen:cor:trace` statement.
+Its clone portion uses explicit finite-arity support laws: nonempty support,
+exact classification of restricted operations, realization of every nonempty
+support, projections and composition by union. Substitution preserves
+idempotency and agrees with semantic composition. No generic clone or category
+framework is needed for these laws. The theorem also proves essentiality of
+all core arguments, regularity of identities and absence of near-unanimity and
+Mal'cev terms in the full language. All these clauses are kernel checked.
+
+Tests guard three abstraction boundaries: switches need not preserve player
+views, subdirect representations need not fill the product, and equal supports
+determine operations only on ambiguous inputs. Two-role and nullary cases are
+also checked. GameTheory remains absent from this dependency closure.
+
+The next algebra work is the common-source theorem, including its variable
+occurrence clause, followed by the reduct test-domain count and diagonal
+idempotency certificates. The separate complexity milestone still owes the
+polynomial-time clause of idempotent extraction. Strategic integration remains
+a separate gate after the dependency update.
 
 | Milestone | Prerequisites | Concrete completion gate |
 | --- | --- | --- |

@@ -30,6 +30,9 @@ variable {Role : Type u}
 /-- A uniquely determined winner. -/
 def singleton (r : Role) : WinnerSet Role := ⟨{r}, r, rfl⟩
 
+/-- A nonempty winner set is ambiguous exactly when it is no singleton. -/
+def Ambiguous (A : WinnerSet Role) : Prop := ∀ r, A ≠ singleton r
+
 /-- Union of possible winners. -/
 def union (A B : WinnerSet Role) : WinnerSet Role :=
   ⟨A.val ∪ B.val, A.property.mono Set.subset_union_left⟩

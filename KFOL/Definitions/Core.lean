@@ -3,6 +3,7 @@ module
 public import KFOL.Definitions.Public
 public import Mathlib.GroupTheory.Perm.Basic
 public import Mathlib.Data.Fintype.Defs
+public import Mathlib.Data.Finset.Basic
 
 /-!
 # The intrinsic core and permutation elimination
@@ -35,6 +36,13 @@ def inputOccurrences : Term Role Var → List (Var × Equiv.Perm Role)
   | .choice _ s t => s.inputOccurrences ++ t.inputOccurrences
   | .rename p t => t.inputOccurrences.map (fun (x, q) => (x, p * q))
 
+/-- The public reduct allows winner leaves but no internal role switches. -/
+def IsPublic : Term Role Var → Prop
+  | .winner _ => True
+  | .var _ => True
+  | .choice _ s t => s.IsPublic ∧ t.IsPublic
+  | .rename _ _ => False
+
 /-- The constant-free, switch-free owned-choice fragment. -/
 def IsCore : Term Role Var → Prop
   | .winner _ => False
@@ -63,6 +71,13 @@ def extractCore? [Fintype Role] [DecidableEq Role] (p : Equiv.Perm Role) :
     | some s', some t' => some (.choice (p r) s' t')
     | _, _ => none
   | .rename q t => t.extractCore? (p * q)
+
+/-- The finite support of input variables appearing in the syntax. -/
+def vars [DecidableEq Var] : Term Role Var → Finset Var
+  | .winner _ => ∅
+  | .var x => {x}
+  | .choice _ s t => s.vars ∪ t.vars
+  | .rename _ t => t.vars
 
 /-- Number of constructor occurrences in the syntax tree. -/
 def size : Term Role Var → ℕ

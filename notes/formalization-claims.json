@@ -18,7 +18,7 @@
       "Labels inside equations are retained but are not treated as theorem labels.",
       "Files not reachable from the entrypoints are excluded.",
       "Scope dependency selection is reviewed mathematically, not by recursively promoting every appendix citation.",
-      "Existing evidence status reflects source inspection, not a fresh build or completed port.",
+      "The existing_lean_source and partial_lean_source statuses reflect inspection; kernel_checked rows include fresh build and statement-level validation.",
       "Library-module evidence without named declarations is a starting location, not a claim that the complete result is proved."
     ],
     "completion_target": "Entire main.tex, its substantive mathematical prose, and necessary report proof dependencies; not the entire technical report.",
@@ -59,13 +59,13 @@
     },
     "main_prose_obligations": 20,
     "evidence_status_counts": {
-      "existing_lean_source": 8,
+      "existing_lean_source": 6,
+      "kernel_checked": 6,
       "partial_lean_source": 15,
-      "kernel_checked": 2,
       "partial_kernel_checked": 1,
       "written_only": 9,
       "optional": 82,
-      "evidence_review_pending": 27,
+      "evidence_review_pending": 25,
       "external_artifact": 1
     },
     "required_main_prose_obligations": 18
@@ -273,7 +273,7 @@
     },
     {
       "path": "sections/appendix-verification.tex",
-      "sha256": "a32e9644ebdb5786dffc169acd37de35414c4a1d053f4b4c26a3c7affb58dba5",
+      "sha256": "b6c029976468e165505d6dfcdf71c6f158d4b66fbf32a34c0e35a84702572843",
       "document": "technical_report"
     }
   ],
@@ -406,9 +406,11 @@
       "statement_sha256": "6fbab754ae4047a14ca1112fb73760c369f49cf66c8e964a8cd54a4727885a66",
       "work_package": "B",
       "target_surface": "Paper.lean",
-      "public_declarations": [],
-      "status": "existing_lean_source",
-      "existing_evidence": "Requires statement-level reconciliation with sections/appendix-verification.tex and lean/; planned does not mean no partial proofs exist.",
+      "public_declarations": [
+        "KFOL.Paper.player_views"
+      ],
+      "status": "kernel_checked",
+      "existing_evidence": "Exact classification for polynomial contexts with arbitrary finite parameter lists; concrete observation kernel and surjectivity; actual quotient cardinality K+1.",
       "existing_evidence_seed": {
         "reference": "lean/Perspectives.lean: sameView_own; contextualAt_iff",
         "remaining_scope": "Audit exact observational contexts and all classes.",
@@ -419,27 +421,85 @@
       "required": true,
       "cited_from": [],
       "evidence_review": {
-        "level": "source_inspection",
-        "fresh_build": false,
+        "level": "kernel_checked_complete_statement",
+        "fresh_build": true,
         "artifacts": [
           {
-            "source": "lean/Perspectives.lean",
+            "source": "Paper.lean",
             "declarations": [
               {
-                "name_as_written": "sameView_own",
-                "line": 90
-              },
-              {
-                "name_as_written": "contextualAt_iff",
-                "line": 157
+                "name_as_written": "player_views",
+                "line": 113
               }
             ],
-            "sha256": "967f99abd868fe50237024166c150498feefbf64d88a2aab06d01cf938175c78"
+            "sha256": "a3248156ce658ee616f31123c1a906a587b0cc0f85fd0e52396ef0c3dc3ded6b"
+          },
+          {
+            "source": "KFOL/Algebra/Views.lean",
+            "declarations": [
+              {
+                "name_as_written": "polynomial_contextual_iff_sameView",
+                "line": 182
+              },
+              {
+                "name_as_written": "view_eq_view_iff",
+                "line": 96
+              },
+              {
+                "name_as_written": "quotientViewEquiv",
+                "line": 305
+              },
+              {
+                "name_as_written": "card_quotient_view",
+                "line": 309
+              }
+            ],
+            "sha256": "32ca56b3819b0014325ee861f2fbbd93e24fb5e9fe999161737eee4faafe0e09"
+          },
+          {
+            "source": "KFOL/Definitions/Public.lean",
+            "declarations": [],
+            "sha256": "37b1cdd9426e9e9a3176a7f66ac82d813461e16678f1557fb7342d7302de6980"
+          },
+          {
+            "source": "KFOL/Definitions/Core.lean",
+            "declarations": [],
+            "sha256": "8f04aef6c55961efde91ed272b305bc08f22a133e7a8e0ad96a5c102a6686026"
+          },
+          {
+            "source": "KFOL/Audit.lean",
+            "declarations": [],
+            "sha256": "ca314a5fb3e3c1ab21d9dba266a2cc3fc7cf3e88c7108badf0d5a666b1f2acec"
+          },
+          {
+            "source": "KFOL/Definitions/Views.lean",
+            "declarations": [],
+            "sha256": "2b082b5a33e7fb09ca5a54cb920d95a56a6751d1a2a8455919f238a058c0bbac"
+          },
+          {
+            "source": "tests/Views.lean",
+            "declarations": [],
+            "sha256": "5548a1ab620f4ddc6673f90f97168ee19d71a816726e4d989bbcf214bdf82e89"
           }
         ],
-        "remaining_work": "Reconcile the exact K+1 classes and cardinality clause."
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "covered_clauses": "Exact classification for polynomial contexts with arbitrary finite parameter lists; concrete observation kernel and surjectivity; actual quotient cardinality K+1.",
+        "remaining_work": "None for view:thm:view. Other claims retain separate obligations.",
+        "generality": "Any finite role type with three distinct roles; the trace and basic view/congruence proofs separately allow arbitrary role types. Finite arities include zero wherever appropriate.",
+        "definition_index": "notes/formalization-definitions.md",
+        "validation": [
+          "lake clean KFOL; make check-lean",
+          "python3 checks/check_structure.py",
+          "python3 checks/check_core.py",
+          "make paper"
+        ],
+        "context_interface": "Option (Fin n) variables: none is the varying input; some i are arbitrary shared winner-set parameters. Every finite list of coefficients is quantified."
       },
-      "migration_status": "not_started",
+      "migration_status": "complete",
       "editorial_proposal_ids": []
     },
     {
@@ -543,10 +603,10 @@
             "declarations": [
               {
                 "name_as_written": "pair_countervaluations",
-                "line": 28
+                "line": 30
               }
             ],
-            "sha256": "0be0e0af3608faa91ccf744850baa911b5c3e8c49438c116a199ff409883de0c"
+            "sha256": "a3248156ce658ee616f31123c1a906a587b0cc0f85fd0e52396ef0c3dc3ded6b"
           },
           {
             "source": "KFOL/Algebra/PairTests.lean",
@@ -575,12 +635,12 @@
           {
             "source": "KFOL/Definitions/Public.lean",
             "declarations": [],
-            "sha256": "2a146ca3ad0f52391299022765401b9ee072db323285d00f9435ef1558a18a9e"
+            "sha256": "37b1cdd9426e9e9a3176a7f66ac82d813461e16678f1557fb7342d7302de6980"
           },
           {
             "source": "KFOL/Audit.lean",
             "declarations": [],
-            "sha256": "128976b481f204b3cffa131b929beeaa53403e9e2942bf0449443875e67d61a1"
+            "sha256": "ca314a5fb3e3c1ab21d9dba266a2cc3fc7cf3e88c7108badf0d5a666b1f2acec"
           }
         ],
         "axioms": [
@@ -641,96 +701,96 @@
             "declarations": [
               {
                 "name_as_written": "idempotent_elimination",
-                "line": 73
+                "line": 75
               },
               {
                 "name_as_written": "checked_core_extraction",
-                "line": 94
+                "line": 96
               }
             ],
-            "sha256": "0be0e0af3608faa91ccf744850baa911b5c3e8c49438c116a199ff409883de0c"
+            "sha256": "a3248156ce658ee616f31123c1a906a587b0cc0f85fd0e52396ef0c3dc3ded6b"
           },
           {
             "source": "KFOL/Algebra/Idempotent.lean",
             "declarations": [
               {
                 "name_as_written": "exists_constant_on_cell",
-                "line": 81
+                "line": 77
               },
               {
                 "name_as_written": "input_subset_eval",
-                "line": 132
+                "line": 128
               },
               {
                 "name_as_written": "idempotent_iff_clean",
-                "line": 275
+                "line": 271
               },
               {
                 "name_as_written": "idempotent_extraction",
-                "line": 299
+                "line": 295
               },
               {
                 "name_as_written": "idempotent_iff_core",
-                "line": 311
+                "line": 307
               },
               {
                 "name_as_written": "size_pushRenames_le",
-                "line": 289
+                "line": 285
               },
               {
                 "name_as_written": "extractCore?_eq_some_iff",
-                "line": 358
+                "line": 354
               },
               {
                 "name_as_written": "extractCore?_isSome_iff",
-                "line": 369
+                "line": 365
               },
               {
                 "name_as_written": "extractCore?_correct",
-                "line": 383
+                "line": 379
               }
             ],
-            "sha256": "11a9a82511327c331bca24be3192f4393fbe286dcb76d2168f8ac8a4b6681b69"
+            "sha256": "f646e8ad18b15a4c2303ad286d41bb0bd8ce222f104553e38e323eb8aa80512e"
           },
           {
             "source": "KFOL/Definitions/Core.lean",
             "declarations": [
               {
                 "name_as_written": "HasWinner",
-                "line": 24
+                "line": 25
               },
               {
                 "name_as_written": "inputOccurrences",
-                "line": 32
+                "line": 33
               },
               {
                 "name_as_written": "IsCore",
-                "line": 39
+                "line": 47
               },
               {
                 "name_as_written": "pushRenames",
-                "line": 48
+                "line": 56
               },
               {
                 "name_as_written": "extractCore?",
-                "line": 58
+                "line": 66
               },
               {
                 "name_as_written": "size",
-                "line": 68
+                "line": 83
               }
             ],
-            "sha256": "11bc41153c52894003d596bec76ee047b018376f0edca79c374717c0cfc1f269"
+            "sha256": "8f04aef6c55961efde91ed272b305bc08f22a133e7a8e0ad96a5c102a6686026"
           },
           {
             "source": "KFOL/Definitions/Public.lean",
             "declarations": [],
-            "sha256": "2a146ca3ad0f52391299022765401b9ee072db323285d00f9435ef1558a18a9e"
+            "sha256": "37b1cdd9426e9e9a3176a7f66ac82d813461e16678f1557fb7342d7302de6980"
           },
           {
             "source": "KFOL/Audit.lean",
             "declarations": [],
-            "sha256": "128976b481f204b3cffa131b929beeaa53403e9e2942bf0449443875e67d61a1"
+            "sha256": "ca314a5fb3e3c1ab21d9dba266a2cc3fc7cf3e88c7108badf0d5a666b1f2acec"
           },
           {
             "source": "tests/Idempotent.lean",
@@ -1661,9 +1721,11 @@
       "statement_sha256": "ab4f1e0ae807c108bb4f408c7249d4911affe12bcf784af3cb6d3be8d4b3af77",
       "work_package": "B",
       "target_surface": "Paper.lean",
-      "public_declarations": [],
-      "status": "evidence_review_pending",
-      "existing_evidence": "Requires statement-level reconciliation with sections/appendix-verification.tex and lean/; planned does not mean no partial proofs exist.",
+      "public_declarations": [
+        "KFOL.Paper.public_subdirect_representation"
+      ],
+      "status": "kernel_checked",
+      "existing_evidence": "Public homomorphism equation for all terms, injectivity of the coordinate map, surjectivity onto each factor, 2^K-1 carrier count and K+1 factor counts.",
       "scope": "cited_report_result",
       "scope_reason": "Directly cited main-paper assertion; see cited_from.",
       "required": true,
@@ -1674,8 +1736,90 @@
           "line": 16
         }
       ],
-      "migration_status": "not_started",
-      "editorial_proposal_ids": []
+      "migration_status": "complete",
+      "editorial_proposal_ids": [],
+      "evidence_review": {
+        "level": "kernel_checked_complete_statement",
+        "fresh_build": true,
+        "artifacts": [
+          {
+            "source": "Paper.lean",
+            "declarations": [
+              {
+                "name_as_written": "public_subdirect_representation",
+                "line": 137
+              }
+            ],
+            "sha256": "a3248156ce658ee616f31123c1a906a587b0cc0f85fd0e52396ef0c3dc3ded6b"
+          },
+          {
+            "source": "KFOL/Algebra/Views.lean",
+            "declarations": [
+              {
+                "name_as_written": "card_winnerSet",
+                "line": 292
+              },
+              {
+                "name_as_written": "views_injective",
+                "line": 314
+              },
+              {
+                "name_as_written": "view_surjective",
+                "line": 288
+              },
+              {
+                "name_as_written": "card",
+                "line": 232
+              },
+              {
+                "name_as_written": "IsPublic.view_eval",
+                "line": 272
+              }
+            ],
+            "sha256": "32ca56b3819b0014325ee861f2fbbd93e24fb5e9fe999161737eee4faafe0e09"
+          },
+          {
+            "source": "KFOL/Definitions/Public.lean",
+            "declarations": [],
+            "sha256": "37b1cdd9426e9e9a3176a7f66ac82d813461e16678f1557fb7342d7302de6980"
+          },
+          {
+            "source": "KFOL/Definitions/Core.lean",
+            "declarations": [],
+            "sha256": "8f04aef6c55961efde91ed272b305bc08f22a133e7a8e0ad96a5c102a6686026"
+          },
+          {
+            "source": "KFOL/Audit.lean",
+            "declarations": [],
+            "sha256": "ca314a5fb3e3c1ab21d9dba266a2cc3fc7cf3e88c7108badf0d5a666b1f2acec"
+          },
+          {
+            "source": "KFOL/Definitions/Views.lean",
+            "declarations": [],
+            "sha256": "2b082b5a33e7fb09ca5a54cb920d95a56a6751d1a2a8455919f238a058c0bbac"
+          },
+          {
+            "source": "tests/Views.lean",
+            "declarations": [],
+            "sha256": "5548a1ab620f4ddc6673f90f97168ee19d71a816726e4d989bbcf214bdf82e89"
+          }
+        ],
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "covered_clauses": "Public homomorphism equation for all terms, injectivity of the coordinate map, surjectivity onto each factor, 2^K-1 carrier count and K+1 factor counts.",
+        "remaining_work": "None for view:cor:product. Other claims retain separate obligations.",
+        "generality": "Any finite role type with three distinct roles; the trace and basic view/congruence proofs separately allow arbitrary role types. Finite arities include zero wherever appropriate.",
+        "definition_index": "notes/formalization-definitions.md",
+        "validation": [
+          "lake clean KFOL; make check-lean",
+          "python3 checks/check_structure.py",
+          "python3 checks/check_core.py",
+          "make paper"
+        ]
+      }
     },
     {
       "id": "view:thm:tests",
@@ -1802,10 +1946,10 @@
             "declarations": [
               {
                 "name_as_written": "optimal_test_domain",
-                "line": 45
+                "line": 47
               }
             ],
-            "sha256": "0be0e0af3608faa91ccf744850baa911b5c3e8c49438c116a199ff409883de0c"
+            "sha256": "a3248156ce658ee616f31123c1a906a587b0cc0f85fd0e52396ef0c3dc3ded6b"
           },
           {
             "source": "KFOL/Algebra/TestDomains.lean",
@@ -1860,12 +2004,12 @@
           {
             "source": "KFOL/Definitions/Public.lean",
             "declarations": [],
-            "sha256": "2a146ca3ad0f52391299022765401b9ee072db323285d00f9435ef1558a18a9e"
+            "sha256": "37b1cdd9426e9e9a3176a7f66ac82d813461e16678f1557fb7342d7302de6980"
           },
           {
             "source": "KFOL/Audit.lean",
             "declarations": [],
-            "sha256": "128976b481f204b3cffa131b929beeaa53403e9e2942bf0449443875e67d61a1"
+            "sha256": "ca314a5fb3e3c1ab21d9dba266a2cc3fc7cf3e88c7108badf0d5a666b1f2acec"
           }
         ],
         "axioms": [
@@ -1901,9 +2045,11 @@
       "statement_sha256": "a57304cbca2b62e212abc8e5c56c07d075ddd14f6f49a92f38e63d5e871af178",
       "work_package": "C",
       "target_surface": "Paper.lean",
-      "public_declarations": [],
-      "status": "evidence_review_pending",
-      "existing_evidence": "Requires statement-level reconciliation with sections/appendix-verification.tex and lean/; planned does not mean no partial proofs exist.",
+      "public_declarations": [
+        "KFOL.Paper.semilattice_trace"
+      ],
+      "status": "kernel_checked",
+      "existing_evidence": "Complete semilattice trace: nonempty union supports, exact classification, realization, projection/substitution clone laws, no near-unanimity or Malcev terms, essential arguments and regular identities.",
       "scope": "cited_report_result",
       "scope_reason": "Directly cited main-paper assertion; see cited_from.",
       "required": true,
@@ -1914,8 +2060,110 @@
           "line": 14
         }
       ],
-      "migration_status": "not_started",
-      "editorial_proposal_ids": []
+      "migration_status": "complete",
+      "editorial_proposal_ids": [],
+      "evidence_review": {
+        "level": "kernel_checked_complete_statement",
+        "fresh_build": true,
+        "artifacts": [
+          {
+            "source": "Paper.lean",
+            "declarations": [
+              {
+                "name_as_written": "semilattice_trace",
+                "line": 187
+              }
+            ],
+            "sha256": "a3248156ce658ee616f31123c1a906a587b0cc0f85fd0e52396ef0c3dc3ded6b"
+          },
+          {
+            "source": "KFOL/Algebra/SemilatticeTrace.lean",
+            "declarations": [
+              {
+                "name_as_written": "IsCore.eval_mem_iff",
+                "line": 43
+              },
+              {
+                "name_as_written": "eval_mem_iff_of_idempotent",
+                "line": 86
+              },
+              {
+                "name_as_written": "vars_nonempty_of_idempotent",
+                "line": 198
+              },
+              {
+                "name_as_written": "equal_on_ambiguous_iff_vars_eq_of_idempotent",
+                "line": 206
+              },
+              {
+                "name_as_written": "exists_core_vars",
+                "line": 118
+              },
+              {
+                "name_as_written": "vars_subst",
+                "line": 96
+              },
+              {
+                "name_as_written": "idempotent_subst",
+                "line": 73
+              },
+              {
+                "name_as_written": "not_nearUnanimity",
+                "line": 237
+              },
+              {
+                "name_as_written": "not_malcev",
+                "line": 262
+              },
+              {
+                "name_as_written": "IsCore.essential",
+                "line": 219
+              },
+              {
+                "name_as_written": "vars_eq_of_core_identity",
+                "line": 192
+              }
+            ],
+            "sha256": "540f707620a0515cf99d8e555f0536f7212846024d2af3f91d509b30ed9aba16"
+          },
+          {
+            "source": "KFOL/Definitions/Public.lean",
+            "declarations": [],
+            "sha256": "37b1cdd9426e9e9a3176a7f66ac82d813461e16678f1557fb7342d7302de6980"
+          },
+          {
+            "source": "KFOL/Definitions/Core.lean",
+            "declarations": [],
+            "sha256": "8f04aef6c55961efde91ed272b305bc08f22a133e7a8e0ad96a5c102a6686026"
+          },
+          {
+            "source": "KFOL/Audit.lean",
+            "declarations": [],
+            "sha256": "ca314a5fb3e3c1ab21d9dba266a2cc3fc7cf3e88c7108badf0d5a666b1f2acec"
+          },
+          {
+            "source": "tests/SemilatticeTrace.lean",
+            "declarations": [],
+            "sha256": "6154ae5416e0a3dfe6c55bb1b92c2022f6da3953f83988eec45e64c8d1d7a01e"
+          }
+        ],
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "covered_clauses": "Complete semilattice trace: nonempty union supports, exact classification, realization, projection/substitution clone laws, no near-unanimity or Malcev terms, essential arguments and regular identities.",
+        "remaining_work": "None for gen:cor:trace. Other claims retain separate obligations.",
+        "generality": "Any finite role type with three distinct roles; the trace and basic view/congruence proofs separately allow arbitrary role types. Finite arities include zero wherever appropriate.",
+        "definition_index": "notes/formalization-definitions.md",
+        "validation": [
+          "lake clean KFOL; make check-lean",
+          "python3 checks/check_structure.py",
+          "python3 checks/check_core.py",
+          "make paper"
+        ],
+        "clone_interface": "Explicit finite-arity laws: exact classification by nonempty supports, every support realized, projection supports, semantic substitution and union composition, and closure of idempotency. No imported clone axiom or category instance."
+      }
     },
     {
       "id": "gen:cor:views",
@@ -1932,9 +2180,11 @@
       "statement_sha256": "189330594072a6147e5b6d099d03ad5571c38fba25e767062b50f44dcdd2ac29",
       "work_package": "C",
       "target_surface": "Paper.lean",
-      "public_declarations": [],
-      "status": "existing_lean_source",
-      "existing_evidence": "Requires statement-level reconciliation with sections/appendix-verification.tex and lean/; planned does not mean no partial proofs exist.",
+      "public_declarations": [
+        "KFOL.Paper.intrinsic_player_views"
+      ],
+      "status": "kernel_checked",
+      "existing_evidence": "Every idempotent full-language operation descends to each concrete view; joint injectivity, coordinate surjectivity, K+1 factor counts and irredundance.",
       "scope": "cited_report_result",
       "scope_reason": "Directly cited main-paper assertion; see cited_from.",
       "required": true,
@@ -1946,23 +2196,92 @@
         }
       ],
       "evidence_review": {
-        "level": "source_inspection",
-        "fresh_build": false,
+        "level": "kernel_checked_complete_statement",
+        "fresh_build": true,
         "artifacts": [
           {
-            "source": "lean/FullAlgebra.lean",
+            "source": "Paper.lean",
             "declarations": [
               {
-                "name_as_written": "FullTerm.idempotent_sameView",
-                "line": 884
+                "name_as_written": "intrinsic_player_views",
+                "line": 160
               }
             ],
-            "sha256": "468b9892ac0929cffe0644e546ab22f3385ba73c542da0bc89bd8bb597ea0fa9"
+            "sha256": "a3248156ce658ee616f31123c1a906a587b0cc0f85fd0e52396ef0c3dc3ded6b"
+          },
+          {
+            "source": "KFOL/Algebra/Views.lean",
+            "declarations": [
+              {
+                "name_as_written": "eval_sameView_of_idempotent",
+                "line": 203
+              },
+              {
+                "name_as_written": "view_eval_of_idempotent",
+                "line": 260
+              },
+              {
+                "name_as_written": "views_injective",
+                "line": 314
+              },
+              {
+                "name_as_written": "view_surjective",
+                "line": 288
+              },
+              {
+                "name_as_written": "card",
+                "line": 232
+              },
+              {
+                "name_as_written": "views_irredundant",
+                "line": 321
+              }
+            ],
+            "sha256": "32ca56b3819b0014325ee861f2fbbd93e24fb5e9fe999161737eee4faafe0e09"
+          },
+          {
+            "source": "KFOL/Definitions/Public.lean",
+            "declarations": [],
+            "sha256": "37b1cdd9426e9e9a3176a7f66ac82d813461e16678f1557fb7342d7302de6980"
+          },
+          {
+            "source": "KFOL/Definitions/Core.lean",
+            "declarations": [],
+            "sha256": "8f04aef6c55961efde91ed272b305bc08f22a133e7a8e0ad96a5c102a6686026"
+          },
+          {
+            "source": "KFOL/Audit.lean",
+            "declarations": [],
+            "sha256": "ca314a5fb3e3c1ab21d9dba266a2cc3fc7cf3e88c7108badf0d5a666b1f2acec"
+          },
+          {
+            "source": "KFOL/Definitions/Views.lean",
+            "declarations": [],
+            "sha256": "2b082b5a33e7fb09ca5a54cb920d95a56a6751d1a2a8455919f238a058c0bbac"
+          },
+          {
+            "source": "tests/Views.lean",
+            "declarations": [],
+            "sha256": "5548a1ab620f4ddc6673f90f97168ee19d71a816726e4d989bbcf214bdf82e89"
           }
         ],
-        "remaining_work": "Port the main semantics bridge."
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "covered_clauses": "Every idempotent full-language operation descends to each concrete view; joint injectivity, coordinate surjectivity, K+1 factor counts and irredundance.",
+        "remaining_work": "None for gen:cor:views. Other claims retain separate obligations.",
+        "generality": "Any finite role type with three distinct roles; the trace and basic view/congruence proofs separately allow arbitrary role types. Finite arities include zero wherever appropriate.",
+        "definition_index": "notes/formalization-definitions.md",
+        "validation": [
+          "lake clean KFOL; make check-lean",
+          "python3 checks/check_structure.py",
+          "python3 checks/check_core.py",
+          "make paper"
+        ]
       },
-      "migration_status": "not_started",
+      "migration_status": "complete",
       "editorial_proposal_ids": []
     },
     {
@@ -5089,9 +5408,16 @@
       "source": "sections/algebra-perspectives.tex",
       "claim": "Forcing is equivalent to a singleton equilibrium winner set; views are faithful and quotient operations have the stated orders.",
       "work_package": "B",
-      "status": "evidence_review_pending",
+      "status": "partial_kernel_checked",
       "required": true,
-      "editorial_proposal_ids": []
+      "editorial_proposal_ids": [],
+      "completed_components": [
+        {
+          "claim": "Faithful coordinate representation and quotient homomorphism",
+          "public_declaration": "KFOL.Paper.public_subdirect_representation"
+        }
+      ],
+      "remaining_work": "Forcing/SPE interpretation and the stated orders of the quotient operations remain separate obligations."
     },
     {
       "id": "main-prose:switching-observation",
@@ -5125,9 +5451,18 @@
       "source": "sections/algebra-intrinsic.tex",
       "claim": "Ambiguous-input union trace, regular identities and absence of near-unanimity and Malcev terms.",
       "work_package": "C",
-      "status": "evidence_review_pending",
+      "status": "kernel_checked",
       "required": true,
-      "editorial_proposal_ids": []
+      "editorial_proposal_ids": [],
+      "public_declarations": [
+        "KFOL.Paper.semilattice_trace"
+      ],
+      "completed_components": [
+        "Ambiguous-input union trace",
+        "Projection, support realization and substitution clone laws",
+        "Regular identities and essential arguments",
+        "No near-unanimity or Malcev terms"
+      ]
     },
     {
       "id": "main-prose:atomic-behavior",
@@ -5394,7 +5729,7 @@
     }
   },
   "planned_import_boundaries": {
-    "status": "implemented_for_pair_sharp_domain_and_intrinsic_core_slice",
+    "status": "implemented_through_views_and_semilattice_trace",
     "pure_algebra": {
       "dependencies": [
         "mathlib"
@@ -5470,8 +5805,8 @@
     ],
     "does_not_wait_for": "GameTheory newer ComplexityLib integration",
     "next_algebra_work": [
-      "Intrinsic player views including the subdirect representation",
-      "Full semilattice trace including clone and no-special-term clauses"
+      "Common source including the variable-occurrence clause",
+      "Reduct test-domain count and diagonal idempotency certificates"
     ],
     "selected_term_representation": "Native KFOL.Term, with test-only semantic codec to mathlib terms.",
     "validation": {
@@ -5532,5 +5867,37 @@
       "independent_check": "python3 checks/check_core.py passed on 1200 terms and the separate domain cases.",
       "paper": "make paper passed; label snapshots unchanged."
     }
+  },
+  "fourth_delivery_milestone": {
+    "status": "complete",
+    "claims": [
+      "view:thm:view",
+      "view:cor:product",
+      "gen:cor:views",
+      "gen:cor:trace"
+    ],
+    "public_declarations": [
+      "KFOL.Paper.player_views",
+      "KFOL.Paper.public_subdirect_representation",
+      "KFOL.Paper.intrinsic_player_views",
+      "KFOL.Paper.semilattice_trace"
+    ],
+    "dependencies": [
+      "mathlib"
+    ],
+    "deliverable": "Complete player-view classification and counts, public and idempotent subdirect representations with irredundance, and every semilattice-trace clause.",
+    "validation": {
+      "clean_build": "lake clean KFOL followed by make check-lean passed.",
+      "axioms_and_imports": "Root guarded axiom checks and full authored declaration closure passed; GameTheory and complexity excluded.",
+      "regressions": "Role-switch obstruction, two-role realization boundary, incompatible product coordinates, trace restriction to ambiguous inputs and nullary core exclusion.",
+      "independent_checks": "check_structure.py: exact K+1 quotients and faithful product K=3..6, 51397 binary/ternary valuations; check_core.py: 1200 full diagonal/extraction cases.",
+      "paper": "make paper passed; main remains 14 pages; label snapshots unchanged."
+    },
+    "does_not_complete": [
+      "Polynomial machine running time for idempotent extraction",
+      "Diagonal idempotency certificates",
+      "Forcing/SPE equivalence",
+      "Quotient-order and congruence classifications"
+    ]
   }
 }

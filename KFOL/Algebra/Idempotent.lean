@@ -41,10 +41,6 @@ theorem rename_choice (p : Equiv.Perm Role) (r : Role) (A B : WinnerSet Role) :
       fun hh => h ((or_congr hA hB).mp hh)
     simp [choice, h, hn]
 
-/-- Ambiguity means that the value is no singleton; nonemptiness comes from
-its carrier. This local proof predicate does not change the public carrier. -/
-def Ambiguous (A : WinnerSet Role) : Prop := ∀ r, A ≠ singleton r
-
 theorem ambiguous_of_two_mem (A : WinnerSet Role) (a b : Role) (hab : a ≠ b)
     (ha : a ∈ A.val) (hb : b ∈ A.val) : Ambiguous A := by
   intro r he

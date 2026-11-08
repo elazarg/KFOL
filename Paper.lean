@@ -12,6 +12,8 @@ in `KFOL/Definitions/TestDomains.lean`; its full meaning is repeated below.
 The intrinsic-core definitions are in `KFOL/Definitions/Core.lean`.
 This slice covers `sym:thm:pairs`, `sym:thm:optimal` and the algebraic clauses
 of `gen:thm:core`; its machine running-time clause remains outstanding.
+Player views and their subdirect representations, and the full semilattice
+trace, are also included. View definitions are in `Definitions/Views.lean`.
 -/
 
 @[expose] public section
@@ -104,5 +106,143 @@ theorem checked_core_extraction {Role : Type u} {Var : Type v}
 [propext, Classical.choice, Quot.sound] -/
 #guard_msgs (whitespace := lax) in
 #print axioms KFOL.Paper.checked_core_extraction
+
+/-- `view:thm:view`. Contexts in the public signature identify exactly the
+values with the same membership bit and other-player singleton tests. These
+are exactly the fibers of the concrete view, whose quotient has `K + 1` classes. -/
+theorem player_views {Role : Type u} [Fintype Role] (three : Fin 3 ↪ Role) (k : Role) :
+    (∀ A B : WinnerSet Role,
+      (∀ (n : ℕ) (t : Term Role (Option (Fin n))), t.IsPublic →
+        ∀ parameters : Fin n → WinnerSet Role,
+        (k ∈ (t.eval (fun x => x.elim A parameters)).val ↔
+          k ∈ (t.eval (fun x => x.elim B parameters)).val)) ↔
+      ((k ∈ A.val ↔ k ∈ B.val) ∧
+        ∀ r, r ≠ k → (A = WinnerSet.singleton r ↔ B = WinnerSet.singleton r))) ∧
+    (∀ A B : WinnerSet Role, WinnerSet.view k A = WinnerSet.view k B ↔
+      ((k ∈ A.val ↔ k ∈ B.val) ∧
+        ∀ r, r ≠ k → (A = WinnerSet.singleton r ↔ B = WinnerSet.singleton r))) ∧
+    Function.Surjective (WinnerSet.view k) ∧
+    Nat.card (Quotient (Setoid.ker (WinnerSet.view k))) = Fintype.card Role + 1 :=
+  ⟨Term.polynomial_contextual_iff_sameView k, WinnerSet.view_eq_view_iff k,
+    WinnerSet.view_surjective three k, WinnerSet.card_quotient_view three k⟩
+
+/-- info: 'KFOL.Paper.player_views' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Paper.player_views
+
+/-- `view:cor:product`. The canonical coordinate map is an injective
+homomorphism, onto each factor, from the `2^K - 1` winner sets into `K` factors
+of size `K + 1`. The homomorphism equation covers every public reduct term. -/
+theorem public_subdirect_representation {Role : Type u} [Fintype Role]
+    (three : Fin 3 ↪ Role) :
+    Nat.card (WinnerSet Role) = 2 ^ Fintype.card Role - 1 ∧
+    Function.Injective (fun A : WinnerSet Role => fun k => WinnerSet.view k A) ∧
+    (∀ k : Role, Function.Surjective (WinnerSet.view k) ∧
+      Nat.card (PlayerView k) = Fintype.card Role + 1) ∧
+    (∀ (Var : Type v) (t : Term Role Var), t.IsPublic → ∀ (k : Role)
+      (valuation : Var → WinnerSet Role),
+      WinnerSet.view k (t.eval valuation) =
+        PlayerView.eval three k t (fun x => WinnerSet.view k (valuation x))) :=
+  ⟨WinnerSet.card_winnerSet, WinnerSet.views_injective,
+    fun k => ⟨WinnerSet.view_surjective three k, PlayerView.card k⟩,
+    fun _ _ ht => ht.view_eval three⟩
+
+/-- info: 'KFOL.Paper.public_subdirect_representation' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Paper.public_subdirect_representation
+
+/-- `gen:cor:views`. Every idempotent full-language operation descends to each
+player view. The views give an irredundant subdirect representation: the joint
+map is injective, each factor is onto and has `K + 1` states, and omitting any
+one coordinate loses a distinction visible precisely there. -/
+theorem intrinsic_player_views {Role : Type u} [Fintype Role] (three : Fin 3 ↪ Role) :
+    (∀ (Var : Type v) (t : Term Role Var),
+      (∀ A : WinnerSet Role, t.eval (fun _ => A) = A) → ∀ (k : Role)
+      (valuation : Var → WinnerSet Role),
+      WinnerSet.view k (t.eval valuation) =
+        PlayerView.eval three k t (fun x => WinnerSet.view k (valuation x))) ∧
+    Function.Injective (fun A : WinnerSet Role => fun k => WinnerSet.view k A) ∧
+    (∀ k : Role, Function.Surjective (WinnerSet.view k) ∧
+      Nat.card (PlayerView k) = Fintype.card Role + 1) ∧
+    (∀ k : Role, ∃ A B : WinnerSet Role, A ≠ B ∧
+      (∀ j, j ≠ k → WinnerSet.view j A = WinnerSet.view j B) ∧
+        WinnerSet.view k A ≠ WinnerSet.view k B) :=
+  ⟨fun _ t hd => t.view_eval_of_idempotent three hd,
+    WinnerSet.views_injective,
+    fun k => ⟨WinnerSet.view_surjective three k, PlayerView.card k⟩,
+    WinnerSet.views_irredundant three⟩
+
+/-- info: 'KFOL.Paper.intrinsic_player_views' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Paper.intrinsic_player_views
+
+/-- `gen:cor:trace`. On ambiguous inputs, idempotent operations are exactly
+nonempty finite joins of arguments. Supports classify these restrictions,
+realize every join, and preserve projections and substitution: these are the
+explicit laws of the surjective clone homomorphism. The remaining conjuncts
+exclude NU and Mal'cev terms and assert essentiality and regular identities. -/
+theorem semilattice_trace {Role : Type u} (three : Fin 3 ↪ Role) :
+    (∀ (n : ℕ) (t : Term Role (Fin n)),
+      (∀ A : WinnerSet Role, t.eval (fun _ => A) = A) →
+      t.vars.Nonempty ∧ ∀ valuation : Fin n → WinnerSet Role,
+        (∀ x, WinnerSet.Ambiguous (valuation x)) → ∀ r,
+        (r ∈ (t.eval valuation).val ↔ ∃ x ∈ t.vars, r ∈ (valuation x).val)) ∧
+    (∀ (n : ℕ) (s t : Term Role (Fin n)),
+      (∀ A : WinnerSet Role, s.eval (fun _ => A) = A) →
+      (∀ A : WinnerSet Role, t.eval (fun _ => A) = A) →
+      ((∀ valuation : Fin n → WinnerSet Role,
+        (∀ x, WinnerSet.Ambiguous (valuation x)) → s.eval valuation = t.eval valuation) ↔
+        s.vars = t.vars)) ∧
+    (∀ (n : ℕ) (S : Finset (Fin n)), S.Nonempty →
+      ∃ t : Term Role (Fin n), t.IsCore ∧ t.vars = S ∧
+        ∀ A : WinnerSet Role, t.eval (fun _ => A) = A) ∧
+    (∀ (n : ℕ) (i : Fin n),
+      (Term.var i : Term Role (Fin n)).vars = {i} ∧
+      ∀ valuation : Fin n → WinnerSet Role, (Term.var i).eval valuation = valuation i) ∧
+    (∀ (m n : ℕ) (t : Term Role (Fin m)) (replacement : Fin m → Term Role (Fin n)),
+      (∀ A : WinnerSet Role, t.eval (fun _ => A) = A) →
+      (∀ x (A : WinnerSet Role), (replacement x).eval (fun _ => A) = A) →
+      ((∀ A : WinnerSet Role, (t.subst replacement).eval (fun _ => A) = A) ∧
+        (t.subst replacement).vars = t.vars.biUnion (fun x => (replacement x).vars) ∧
+        ∀ valuation : Fin n → WinnerSet Role,
+          (t.subst replacement).eval valuation =
+            t.eval (fun x => (replacement x).eval valuation))) ∧
+    (∀ (n : ℕ), 0 < n → ∀ t : Term Role (Fin n),
+      ¬(∀ A B : WinnerSet Role, ∀ i : Fin n,
+        t.eval (Function.update (fun _ => A) i B) = A)) ∧
+    (∀ t : Term Role (Fin 3),
+      ¬((∀ A B : WinnerSet Role, t.eval (fun i => if i = 0 then A else B) = A) ∧
+        (∀ A B : WinnerSet Role, t.eval (fun i => if i = 2 then B else A) = B))) ∧
+    (∀ (n : ℕ) (t : Term Role (Fin n)), t.IsCore → ∀ x ∈ t.vars,
+      ∃ v w : Fin n → WinnerSet Role,
+        (∀ y, y ≠ x → v y = w y) ∧ t.eval v ≠ t.eval w) ∧
+    (∀ (n : ℕ) (s t : Term Role (Fin n)), s.IsCore → t.IsCore →
+      (∀ valuation : Fin n → WinnerSet Role, s.eval valuation = t.eval valuation) →
+      s.vars = t.vars) := by
+  refine ⟨?_, ?_, ?_, ?_, ?_, Term.not_nearUnanimity three, Term.not_malcev three, ?_, ?_⟩
+  · intro n t ht
+    exact ⟨t.vars_nonempty_of_idempotent three ht, t.eval_mem_iff_of_idempotent three ht⟩
+  · intro n s t hs ht
+    exact Term.equal_on_ambiguous_iff_vars_eq_of_idempotent three s t hs ht
+  · intro n S hS
+    obtain ⟨t, ht, he⟩ := Term.exists_core_vars three S hS
+    exact ⟨t, ht, he, ht.eval_diagonal⟩
+  · intro n i
+    exact ⟨rfl, fun _ => rfl⟩
+  · intro m n t replacement ht hr
+    exact ⟨t.idempotent_subst replacement ht hr, t.vars_subst replacement,
+      t.eval_subst replacement⟩
+  · intro n t ht x hx
+    exact ht.essential three x hx
+  · intro n s t hs ht he
+    exact Term.vars_eq_of_core_identity three hs ht he
+
+/-- info: 'KFOL.Paper.semilattice_trace' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Paper.semilattice_trace
 
 end KFOL.Paper
