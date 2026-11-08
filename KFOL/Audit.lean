@@ -3,6 +3,14 @@ module
 import all KFOL.Definitions.Public
 import all KFOL.Definitions.Core
 import all KFOL.Definitions.Views
+import all KFOL.Definitions.Reset
+import all KFOL.Reset.Basic
+import all KFOL.Reset.Selection
+import all KFOL.Reset.Tables
+import all KFOL.Reset.Chain
+import all KFOL.Reset.Substitution
+import all KFOL.Reset.Public
+import all KFOL.Reset
 import all KFOL.Definitions.Equational
 import all KFOL.Equational.Logic
 import all KFOL.Equational.Native

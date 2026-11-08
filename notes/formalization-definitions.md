@@ -326,3 +326,49 @@ zero-generator closure can instead be empty; it is never assumed to be a
 nonempty variety member. The generic bounded-countermodel lemma reduces a
 nonfinite-basis proof to explicit finite countermodels at every support bound.
 Constructing the paper's core countermodels remains separate unfinished work.
+
+## Reset semantics and canonical tables
+
+`Definitions/Reset.lean` adds the reset-specific definitions in one place,
+bringing the current algebraic definition surface to six small modules. Reset
+uses mathlib terms directly, with no new syntax datatype or evaluator recursion.
+
+| Definition | Meaning and dependencies |
+| --- | --- |
+| `WinnerSet.reset A B` | Return B when B is atomic, and the union when B is ambiguous; the carrier enforces nonemptiness |
+| `Reset.Symbol`, `Reset.Term` | One binary reset symbol, no constants; mathlib's relation-free terms |
+| `Reset.structureOf op` | Interpret the symbol by an explicit binary operation on the supplied carrier; use locally |
+| `Reset.Term.step` | Binary constructor selecting the two mathlib argument positions |
+| `Reset.Term.root` | The rightmost syntactic variable, independent of semantics |
+| `Reset.Term.Selected t B j` | Positive structural recursion describing selection at ambiguity-status set B |
+| `Reset.Term.eval` | Mathlib realization with `WinnerSet.reset`; repeated variables retain their common valuation and independent syntactic copies |
+| `Reset.Term.guards` | Finite structural collection of prerequisites for one output position, before minimization |
+| `Reset.Term.minimize`, `table` | Delete nonminimal prerequisites; the resulting canonical antichain |
+| `Reset.Term.composedGuards` | Finite unions of root-translated outer prerequisites with inner prerequisites; minimize to obtain the substituted table |
+| `Reset.chainValue` | The fixed values {a}, {a,b}, {a,b,c}, from an embedding of `Fin 3` |
+
+`Reset/Selection.lean` proves every clause of `reset:lem:selection`, including
+monotonicity and independence of j's own ambiguity when selecting j.
+`Reset/Tables.lean` identifies table members with the actual minimal finite
+status sets enabling j. It proves the upward-closure formula, antichain property,
+unique empty guard at the root, and exclusion of j from its prerequisites.
+`Reset/Chain.lean` separates every unequal pair of selectors on the fixed
+chain and identifies table equality with validity, uniformly across role sets
+with three distinct roles. `identity_holds_iff_table` exposes this directly to
+the generic equational basis API. Selection and evaluation themselves require
+no role-count assumption, and variable declarations need not be finite.
+
+`Reset/Substitution.lean` proves the exact finite-table substitution formula
+for actual mathlib term substitution, as well as the root and evaluation laws.
+The proofs allow collisions between inner roots and repeated occurrences.
+The finite union ranges over the outer term's actual variable support, so no
+finite ambient variable type or arbitrary bound on variable names is assumed.
+
+`Reset/Public.lean` supplies proof constructions `resetTerm` and `compile`,
+using the existing three-owner union term and suppression traversal. A list
+covering every role yields the same reset operation regardless of order or
+repetitions. Compilation yields a genuine native core term and agrees on every
+mixed valuation. Root `Paper.lean` states the existential expansion and full
+selection result, the semantic clauses of canonical tables, and the explicit
+substitution formula. Certified polynomial machine bounds and six-law basis
+completeness remain separate obligations in the inventory.

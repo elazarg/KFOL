@@ -19,6 +19,7 @@ trace, are also included. View definitions are in `Definitions/Views.lean`.
 Common sources and their atomic consequences use the occurrence enumeration
 in `Definitions/Core.lean`. The reduct and diagonal testing predicates are
 indexed in `Definitions/TestDomains.lean` and expanded in the claims below.
+Reset uses the signature, selector and tables in `Definitions/Reset.lean`.
 -/
 
 @[expose] public section
@@ -381,5 +382,99 @@ theorem idempotency_certificates {Role : Type u} [Fintype Role] (three : Fin 3 �
 [propext, Classical.choice, Quot.sound] -/
 #guard_msgs (whitespace := lax) in
 #print axioms KFOL.Paper.idempotency_certificates
+
+/-- `reset:lem:selection` in full. Selection is defined independently by the
+positive recursion displayed here; it computes the exact union of contributions
+on mixed inputs, is monotone, always includes the root, and ignores an input's
+own status when deciding whether that input contributes. -/
+theorem reset_selection {Role : Type u} {Var : Type v} :
+    (∀ (t : Reset.Term Var) (valuation : Var → WinnerSet Role),
+      (t.eval valuation).Ambiguous ↔ (valuation t.root).Ambiguous) ∧
+    (∀ (i j : Var) (B : Set Var), Reset.Term.Selected (.var i) B j ↔ j = i) ∧
+    (∀ (s t : Reset.Term Var) (B : Set Var) (j : Var),
+      (Reset.Term.step s t).Selected B j ↔
+        t.Selected B j ∨ (t.root ∈ B ∧ s.Selected B j)) ∧
+    (∀ (t : Reset.Term Var) (valuation : Var → WinnerSet Role) (r : Role),
+      r ∈ (t.eval valuation).val ↔
+        ∃ j, t.Selected {i | (valuation i).Ambiguous} j ∧ r ∈ (valuation j).val) ∧
+    (∀ (t : Reset.Term Var) (B C : Set Var), B ⊆ C →
+      ∀ j, t.Selected B j → t.Selected C j) ∧
+    (∀ (t : Reset.Term Var) (B : Set Var), t.Selected B t.root) ∧
+    (∀ (t : Reset.Term Var) (B C : Set Var) (j : Var),
+      (∀ i, i ≠ j → (i ∈ B ↔ i ∈ C)) → (t.Selected B j ↔ t.Selected C j)) :=
+  ⟨Reset.Term.ambiguous_eval, Reset.Term.selected_var, Reset.Term.selected_step,
+    Reset.Term.mem_eval, fun t _ _ h => t.selected_mono h,
+    Reset.Term.selected_root, Reset.Term.selected_self_independent⟩
+
+/-- info: 'KFOL.Paper.reset_selection' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Paper.reset_selection
+
+/-- Reset's main-text definition and its expansion into actual owned choices.
+The expansion works for every term and every mixed valuation. -/
+theorem reset_definability {Role : Type u} [Fintype Role] (three : Fin 3 ↪ Role)
+    {Var : Type v} :
+    (∀ A B : WinnerSet Role,
+      (B.Ambiguous → A.reset B = A.union B) ∧
+      (∀ r, B = WinnerSet.singleton r → A.reset B = B)) ∧
+    (∀ t : Reset.Term Var, ∃ s : Term Role Var, s.IsCore ∧
+      ∀ valuation : Var → WinnerSet Role, s.eval valuation = t.eval valuation) := by
+  classical
+  refine ⟨fun A B => ⟨WinnerSet.reset_of_ambiguous A B, ?_⟩, ?_⟩
+  · rintro r rfl
+    exact WinnerSet.reset_singleton A r
+  · intro t
+    let roles : List Role := Finset.univ.toList
+    exact ⟨t.compile three roles, t.isCore_compile three roles,
+      t.eval_compile three roles (by simp [roles])⟩
+
+/-- info: 'KFOL.Paper.reset_definability' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Paper.reset_definability
+
+/-- `reset:thm:three`, semantic clauses: canonical table equality, the fixed
+three-value chain test, and the common identity theory for every role set with
+three distinct roles. The separate polynomial machine-time clause remains open. -/
+theorem reset_tables_semantics {Role : Type u} {Var : Type v} [DecidableEq Var]
+    (three : Fin 3 ↪ Role) (s t : Reset.Term Var) :
+    ((∀ valuation : Var → WinnerSet Role, s.eval valuation = t.eval valuation) ↔
+      s.table = t.table) ∧
+    ((∀ valuation : Var → WinnerSet Role, s.eval valuation = t.eval valuation) ↔
+      ∀ valuation : Var → WinnerSet Role,
+        (∀ i, ∃ k : Fin 3, valuation i = Reset.chainValue three k) →
+          s.eval valuation = t.eval valuation) ∧
+    (∀ {Role' : Type w} (_three' : Fin 3 ↪ Role'),
+      (∀ valuation : Var → WinnerSet Role, s.eval valuation = t.eval valuation) ↔
+        ∀ valuation : Var → WinnerSet Role', s.eval valuation = t.eval valuation) ∧
+    (∀ i j : Fin 3, (Reset.chainValue three i).reset (Reset.chainValue three j) =
+      Reset.chainValue three (if j = 0 then 0 else max i j)) :=
+  ⟨s.eval_eq_iff_table t three, s.eval_eq_iff_chain t three,
+    (fun three' => s.eval_eq_iff_roles t three three'), Reset.reset_chainValue three⟩
+
+/-- info: 'KFOL.Paper.reset_tables_semantics' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Paper.reset_tables_semantics
+
+/-- Actual term substitution obeys the root, evaluation and explicit canonical
+minimal-guard composition laws (`reset:eq:substitution`). This certifies the
+formula's semantics; complexity bounds belong to the machine branch. -/
+theorem reset_substitution {Var : Type v} {Var' : Type w} [DecidableEq Var] [DecidableEq Var']
+    (t : Reset.Term Var) (inner : Var → Reset.Term Var') :
+    Reset.Term.root (t.subst inner) = (inner t.root).root ∧
+    (∀ {Role : Type u} (valuation : Var' → WinnerSet Role),
+      Reset.Term.eval (t.subst inner) valuation =
+        t.eval (fun i => (inner i).eval valuation)) ∧
+    (∀ j, Reset.Term.table (t.subst inner) j = Reset.Term.minimize
+      (t.varFinset.biUnion (fun i => (t.table i).biUnion (fun A =>
+        ((inner i).table j).image (fun C => A.image (fun k => (inner k).root) ∪ C))))) :=
+  ⟨t.root_subst inner, t.eval_subst inner, t.table_subst inner⟩
+
+/-- info: 'KFOL.Paper.reset_substitution' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Paper.reset_substitution
 
 end KFOL.Paper

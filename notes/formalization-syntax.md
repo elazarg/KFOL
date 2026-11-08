@@ -41,3 +41,11 @@ semantic bridge connects the two representations for every term; generic
 validity and derivation remain separate definitions. No general reverse HSP
 representation theorem is claimed. Reproduce all boundary checks with
 `make check-algebra`.
+
+The reset branch now uses mathlib terms directly: a one-symbol binary signature
+with a small binary induction interface and constructor. Its primitive
+winner-set operation is interpreted through `Reset.structureOf`, and its
+selection/table and substitution proofs work on that syntax. A checked
+compilation to native owned choices supplies the semantic bridge; there is no
+additional reset term datatype. `Reset.identity_holds_iff_table` connects
+canonical tables to generic equational validity without a transport layer.

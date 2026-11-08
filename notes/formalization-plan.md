@@ -36,7 +36,7 @@ The current target includes full machine-level complexity theorems and the full 
 
 1. Use a Lake package, namespace `KFOL`, and the user's pinned GameTheory library with its matching mathlib version. The inspected GameTheory revision `c6650cd861d4a05a64adb2e4fd99a4feafa231b0` uses Lean/mathlib 4.35.0; KFOL now uses Lean/mathlib 4.35.0 for the completed first algebra slice, while the original baseline used Lean 4.34.1. Reuse its canonical PMFs, strategic definitions, Nash/minimax and SE foundations. The user intends GameTheory to update to the newer ComplexityLib; select that updated compatible dependency set at the strategic/complexity integration gate instead of fixing the previously inspected legacy ComplexityLib pin as the implementation target. Start the independent mathlib-only algebra slice meanwhile. Validate the selected imports in an isolated downstream workspace and retain the current build during migration.
 2. Put every main-paper claim in root `Paper.lean`, including prose claims whose formal statements must be supplied from the report. Required report support lemmas normally remain in their natural library modules; export them in `Paper.lean` only when they express a main-paper assertion. Each theorem repeats its complete proposition, with its hypotheses and quantifiers. Its proof may invoke an implementation theorem. Neither `export`, an inferred theorem type, nor `theorem result : NamedClaim` is an acceptable public statement.
-3. Concentrate the intended meaning in a small collection of `KFOL/Definitions/*.lean` modules, reusing imported semantic definitions through a small documented interface. Separate the algebraic public syntax from its strategic interpretation so algebra imports no GameTheory modules. Proof modules may introduce constructions and helper definitions, but every project-defined constant in a public theorem's type must be documented in the definition index, including transitive dependencies. Five algebraic definition files currently suffice; later strategic and round definitions must stay in their own modules.
+3. Concentrate the intended meaning in a small collection of `KFOL/Definitions/*.lean` modules, reusing imported semantic definitions through a small documented interface. Separate the algebraic public syntax from its strategic interpretation so algebra imports no GameTheory modules. Proof modules may introduce constructions and helper definitions, but every project-defined constant in a public theorem's type must be documented in the definition index, including transitive dependencies. Six algebraic definition files currently suffice; later strategic and round definitions must stay in their own modules.
 4. Reuse mathlib's sets, permutations, algebraic languages, homomorphisms, substructures and quotients where they fit. The prototype selected native public traversals. The completed shared equational layer uses mathlib terms with exact production full/core codecs, including evaluation, support and substitution compatibility. It proves generic completeness using mathlib quotient operations; the Equational Theories Project is a proof reference, not an imported dependency. The shared winner-set operations remain the semantic API.
 5. Keep the public-game algebra and closed-round equilibrium semantics separate, joined by explicit correspondence theorems. None is defined by the conclusion it is meant to certify.
 6. Use category theory only in a named, separate portion that specifies objects, morphisms, equality, and laws. Ordinary homomorphisms and dependent equivalences suffice for the algebraic and execution proofs. The refuted mixed-open-game composition is an operation under study, never a `Category` instance.
@@ -105,9 +105,10 @@ For each required inventory row, implementation review records the public declar
 | `Definitions/Core.lean` | Core/public predicates, syntactic occurrences and supports, deterministic extraction and syntax size |
 | `Definitions/Views.lean` | Player-view states, quotient relation, representatives and induced operations |
 | `Definitions/TestDomains.lean` | Full/reduct equation testing and diagonal certification predicates |
+| `Definitions/Reset.lean` | Primitive reset, generic signature, root and selection, structural guards, canonical minimal tables and their finite composition |
 | `Definitions/Equational.lean` | Relation-free mathlib language, finite identities, satisfaction, theories, derivation, basis, variable bound, algebra structures, full/core signatures and codecs |
 
-These are the five current algebraic definition modules. `Equational` imports
+These are the six current algebraic definition modules. `Equational` imports
 `Core`, which imports `Public`; it adds only mathlib dependencies. See the
 [definition index](formalization-definitions.md) for their actual contents and
 imported mathematical surface. Proof constructions live in the corresponding
@@ -388,11 +389,39 @@ empty zero-generator closures, and empty products. All new declarations are in
 the standard-axiom/import audit. Existing paper-claim completion counts stay
 unchanged: shared infrastructure does not finish a particular basis theorem.
 
-Next implement reset semantics and its semantic/table bridges against this
-foundation, then the six-law basis completeness argument. The separate
-complexity milestone still owes the machine-time clause of idempotent
-extraction. Strategic integration remains a separate gate; no upstream
-GameTheory files have been changed.
+### Reset semantics and table bridge completed
+
+`Reset.Term` uses mathlib's term datatype for exactly one binary operation.
+Root and selection are independent structural definitions. `KFOL.Paper.reset_selection`
+repeats all clauses of `reset:lem:selection`: exact mixed-input union semantics,
+root ambiguity, monotonicity, selection of the root and self-independence.
+`KFOL.Paper.reset_definability` proves expansion into the existing native core for
+every finite role set with three distinct roles. Definitions remain together in
+`Definitions/Reset.lean`; the shared public carrier and operations are reused.
+
+Canonical minimal tables have a structural finite collection and a proved
+normalization. Minimal enabling sets, antichains, the unique empty root guard
+and self-exclusion are checked. The fixed three-value chain separates every
+selector difference. `KFOL.Paper.reset_tables_semantics` proves table completeness,
+chain completeness and the common identity theory for all role sets of size
+at least three. `Reset.identity_holds_iff_table` connects this result directly
+to the shared equational basis API.
+
+`KFOL.Paper.reset_substitution` includes the explicit canonical-table formula for
+actual term substitution, and the root and evaluation laws. Tests cover
+alternative prerequisites, repeated occurrences, colliding inner roots,
+unused positions, no nullary terms, nonassociativity and two-role selection.
+The independent existing reset checker also verifies mixed-input semantics,
+all small separators and 1000 substitutions.
+
+The complete main proposition `reset:thm:three` remains partial because its
+polynomial machine-time clause is still owed. The combined derived-reset
+prose obligation also includes the guarded-choice example, and the algorithm
+prose obligation includes recognition and synthesis; those clauses remain open.
+Next prove six-law reset basis completeness against the shared equational
+API. The separate complexity milestone also owes the machine-time clause of
+idempotent extraction. Strategic integration remains a separate gate; no
+upstream GameTheory files have been changed.
 
 | Milestone | Prerequisites | Concrete completion gate |
 | --- | --- | --- |
