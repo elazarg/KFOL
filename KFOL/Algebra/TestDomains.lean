@@ -203,23 +203,6 @@ private theorem exists_pair_expander [Fintype Role] (three : Fin 3 ↪ Role)
     · exact False.elim (hm (Or.inl (hk ▸ hi)))
     · exact False.elim (hm (Or.inr ⟨i, ⟨ha, hb, hk⟩, hi⟩))
 
-private theorem exists_role_outside (three : Fin 3 ↪ Role) (a b : Role) :
-    ∃ k, k ≠ a ∧ k ≠ b := by
-  have h01 := three.injective.ne (show (0 : Fin 3) ≠ 1 by decide)
-  have h02 := three.injective.ne (show (0 : Fin 3) ≠ 2 by decide)
-  have h12 := three.injective.ne (show (1 : Fin 3) ≠ 2 by decide)
-  by_cases h0 : three 0 = a ∨ three 0 = b
-  · by_cases h1 : three 1 = a ∨ three 1 = b
-    · rcases h0 with ha | hb <;> rcases h1 with ha' | hb'
-      · exact False.elim (h01 (ha.trans ha'.symm))
-      · exact ⟨three 2, fun h => h02 (ha.trans h.symm),
-          fun h => h12 (hb'.trans h.symm)⟩
-      · exact ⟨three 2, fun h => h12 (ha'.trans h.symm),
-          fun h => h02 (hb.trans h.symm)⟩
-      · exact False.elim (h01 (hb.trans hb'.symm))
-    · exact ⟨three 1, fun h => h1 (Or.inl h), fun h => h1 (Or.inr h)⟩
-  · exact ⟨three 0, fun h => h0 (Or.inl h), fun h => h0 (Or.inr h)⟩
-
 private theorem eq_pair_of_ambiguous_subset (A : WinnerSet Role) (a b : Role)
     (hA : ∀ r, A ≠ WinnerSet.singleton r) (hsub : A.val ⊆ {a, b}) : A.val = {a, b} := by
   have ha : a ∈ A.val := by
@@ -252,7 +235,7 @@ theorem exists_pair_separator [Fintype Role] (three : Fin 3 ↪ Role)
       s.eval (fun _ => WinnerSet.union (WinnerSet.singleton a) (WinnerSet.singleton b)) ≠
         t.eval (fun _ => WinnerSet.union (WinnerSet.singleton a) (WinnerSet.singleton b)) := by
   classical
-  obtain ⟨k, hka, hkb⟩ := exists_role_outside three a b
+  obtain ⟨k, hka, hkb⟩ := exists_role_outside_pair three a b
   obtain ⟨f, hfsub, hfk, hfother⟩ := exists_pair_expander three a b k hka.symm hkb.symm
   let top : WinnerSet Role := ⟨Set.univ, three 0, trivial⟩
   obtain ⟨ground, hg⟩ := exists_constant (Var := Fin 1) three top
@@ -333,7 +316,7 @@ theorem completeTestDomain_iff [Fintype Role] (three : Fin 3 ↪ Role)
       exact he (v 0) (hv 0)
     have atoms : ∀ a, WinnerSet.singleton a ∈ D := by
       intro a
-      obtain ⟨k, hka, _⟩ := Term.exists_role_outside three a a
+      obtain ⟨k, hka, _⟩ := exists_role_outside_pair three a a
       obtain ⟨s, t, he, hne⟩ := Term.exists_singleton_separator three a k hka.symm
       apply Classical.byContradiction
       intro hn

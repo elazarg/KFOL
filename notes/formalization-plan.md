@@ -244,7 +244,7 @@ The independently buildable **pair-countervaluation slice** is complete on Lean/
 4. Port the existing pair-countervaluation argument. Root `Paper.lean` explicitly states that any failed equation has a failing valuation assigning one or two winners to every input, with all hypotheses and quantifiers visible. The proof may invoke the library theorem; the statement cannot delegate to a named claim predicate.
 5. Pass a clean algebra target and `Paper` build, guarded axiom checks, and a transitive import check excluding GameTheory, GameTheoryComplexity and complexity-machine imports. Supply a short definition index for this theorem's type and record the completed statement in the inventory.
 
-The milestone is complete when that main-paper theorem is checked end to end on the chosen auditable algebraic definitions. It does not require the rest of `Paper.lean`, a new mathematical result, or a GameTheory bridge. It validates the syntax, dependency boundary and paper-facing audit format with an existing substantial proof. The same interface now also proves sharp test domains (see below). Next extend it to idempotent elimination; perform the public-SPE and round integration gates when the updated GameTheory dependency set is ready.
+The milestone is complete when that main-paper theorem is checked end to end on the chosen auditable algebraic definitions. It does not require the rest of `Paper.lean`, a new mathematical result, or a GameTheory bridge. It validates the syntax, dependency boundary and paper-facing audit format with an existing substantial proof. The same interface now also proves sharp test domains (see below). The algebraic idempotent extension is recorded below; perform the public-SPE and round integration gates when the updated GameTheory dependency set is ready.
 
 ### Sharp test domains completed
 
@@ -258,9 +258,28 @@ is indexed in `Definitions/TestDomains.lean`; the root theorem spells it out.
 Only this characterization requires finite roles and three distinct roles.
 The shared definitions and pair theorem keep their original generality.
 
-The next algebra delivery is idempotent elimination and core extraction on the
-same carrier, with view preservation and the semilattice trace tracked as their
-own clauses. GameTheory remains absent from this dependency closure.
+### Idempotent algebra and checked extraction completed
+
+`KFOL.Paper.idempotent_elimination` now states the exact occurrence criterion,
+equivalence with expressibility in the core and semantics-preserving extraction
+at all valuations, with no increase in constructor count. The core is a
+predicate on the existing terms, not a new syntax/evaluator. Input occurrences
+record their accumulated permutations independently of the extraction.
+`KFOL.Paper.checked_core_extraction` additionally proves that the finite-role
+`extractCore?` program succeeds exactly for idempotent terms, and every success
+returns a core with equal semantics and bounded output size.
+
+This completes the algebraic and functional clauses of `gen:thm:core`. That
+inventory row remains partial: a constructor-count bound is not a polynomial
+machine-time proof for encoded permutations. The existing complexity milestone
+must supply that remaining clause. Regression cases check noncommuting
+permutation order, cancellation across a choice node, actual program reduction,
+and the two-role counterexample to the no-winner characterization. The
+independent `check_core.py` also checks 1200 decorated/arbitrary terms.
+
+The next algebra work is intrinsic player views and the full semilattice trace,
+including their representation and clone clauses. GameTheory remains absent
+from this dependency closure; strategic integration is a separate gate.
 
 | Milestone | Prerequisites | Concrete completion gate |
 | --- | --- | --- |

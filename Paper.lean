@@ -9,7 +9,9 @@ Each declaration repeats the complete mathematical claim. Definitions of the
 winner carrier, operations, term syntax and evaluation are in
 `KFOL/Definitions/Public.lean`. The finite-arity testing predicate is indexed
 in `KFOL/Definitions/TestDomains.lean`; its full meaning is repeated below.
-This slice covers `sym:thm:pairs` and `sym:thm:optimal`.
+The intrinsic-core definitions are in `KFOL/Definitions/Core.lean`.
+This slice covers `sym:thm:pairs`, `sym:thm:optimal` and the algebraic clauses
+of `gen:thm:core`; its machine running-time clause remains outstanding.
 -/
 
 @[expose] public section
@@ -62,5 +64,45 @@ theorem optimal_test_domain {Role : Type u} [Fintype Role] (three : Fin 3 ↪ Ro
 [propext, Classical.choice, Quot.sound] -/
 #guard_msgs (whitespace := lax) in
 #print axioms KFOL.Paper.optimal_test_domain
+
+/-- `gen:thm:core`, algebraic clauses. Idempotency is exactly the absence of
+winner leaves and identity accumulated permutation at every input occurrence;
+it is also exactly expressibility in the core. Extraction agrees at every
+valuation and does not increase syntax size. This statement does not certify
+the paper's additional polynomial machine running-time clause. -/
+theorem idempotent_elimination {Role : Type u} {Var : Type v}
+    (three : Fin 3 ↪ Role) (t : Term Role Var) :
+    ((∀ A : WinnerSet Role, t.eval (fun _ => A) = A) ↔
+      ¬t.HasWinner ∧ ∀ x p, (x, p) ∈ t.inputOccurrences → p = 1) ∧
+    ((∀ A : WinnerSet Role, t.eval (fun _ => A) = A) ↔
+      ∃ c : Term Role Var, c.IsCore ∧ ∀ valuation, c.eval valuation = t.eval valuation) ∧
+    ((∀ A : WinnerSet Role, t.eval (fun _ => A) = A) →
+      (t.pushRenames 1).IsCore ∧
+      (∀ valuation : Var → WinnerSet Role, (t.pushRenames 1).eval valuation = t.eval valuation) ∧
+      (t.pushRenames 1).size ≤ t.size) :=
+  ⟨t.idempotent_iff_clean three, t.idempotent_iff_core three, t.idempotent_extraction three⟩
+
+/-- info: 'KFOL.Paper.idempotent_elimination' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Paper.idempotent_elimination
+
+/-- The executable part of `gen:thm:core`: checked extraction succeeds exactly
+on idempotent terms, and every successful output is a core expression with
+equal semantics at every valuation and no larger syntax tree. The running-time
+claim remains a separate encoding/machine obligation. -/
+theorem checked_core_extraction {Role : Type u} {Var : Type v}
+    [Fintype Role] [DecidableEq Role] (three : Fin 3 ↪ Role) (t : Term Role Var) :
+    ((∃ c : Term Role Var, t.extractCore? 1 = some c) ↔
+      ∀ A : WinnerSet Role, t.eval (fun _ => A) = A) ∧
+    (∀ c : Term Role Var, t.extractCore? 1 = some c →
+      c.IsCore ∧ (∀ valuation : Var → WinnerSet Role, c.eval valuation = t.eval valuation) ∧
+        c.size ≤ t.size) :=
+  ⟨t.extractCore?_isSome_iff three, t.extractCore?_correct⟩
+
+/-- info: 'KFOL.Paper.checked_core_extraction' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Paper.checked_core_extraction
 
 end KFOL.Paper

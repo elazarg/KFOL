@@ -20,8 +20,9 @@ def main():
     # The independent algebra build must succeed without importing the paper.
     subprocess.run(["lake", "build", "KFOL.Algebra"], cwd=ROOT, check=True)
     subprocess.run(["lake", "build", "Paper", "KFOL.Audit"], cwd=ROOT, check=True)
-    subprocess.run(["lake", "env", "lean", "-DwarningAsError=true",
-                    "tests/SyntaxComparison.lean"], cwd=ROOT, check=True)
+    for test in sorted((ROOT / "tests").glob("*.lean")):
+        subprocess.run(["lake", "env", "lean", "-DwarningAsError=true",
+                        str(test.relative_to(ROOT))], cwd=ROOT, check=True)
 
 
 if __name__ == "__main__":

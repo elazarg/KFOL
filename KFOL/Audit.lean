@@ -1,9 +1,11 @@
 module
 
 import all KFOL.Definitions.Public
+import all KFOL.Definitions.Core
 import all KFOL.Definitions.TestDomains
 import all KFOL.Algebra.Basic
 import all KFOL.Algebra.PairTests
+import all KFOL.Algebra.Idempotent
 import all KFOL.Algebra.TestDomains
 import all KFOL.Algebra.TestDomainCard
 import all KFOL.Algebra

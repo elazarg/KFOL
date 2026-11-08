@@ -1,6 +1,7 @@
 module
 
 public import KFOL.Definitions.Public
+public import Mathlib.Logic.Embedding.Basic
 
 /-! # Elementary facts about nonempty winner sets and term substitution -/
 
@@ -9,6 +10,24 @@ public import KFOL.Definitions.Public
 namespace KFOL
 
 universe u v w
+
+/-- Three distinct roles ensure a role outside any specified pair. -/
+theorem exists_role_outside_pair {Role : Type u} (three : Fin 3 ↪ Role) (a b : Role) :
+    ∃ k, k ≠ a ∧ k ≠ b := by
+  have h01 := three.injective.ne (show (0 : Fin 3) ≠ 1 by decide)
+  have h02 := three.injective.ne (show (0 : Fin 3) ≠ 2 by decide)
+  have h12 := three.injective.ne (show (1 : Fin 3) ≠ 2 by decide)
+  by_cases h0 : three 0 = a ∨ three 0 = b
+  · by_cases h1 : three 1 = a ∨ three 1 = b
+    · rcases h0 with ha | hb <;> rcases h1 with ha' | hb'
+      · exact False.elim (h01 (ha.trans ha'.symm))
+      · exact ⟨three 2, fun h => h02 (ha.trans h.symm),
+          fun h => h12 (hb'.trans h.symm)⟩
+      · exact ⟨three 2, fun h => h12 (ha'.trans h.symm),
+          fun h => h02 (hb.trans h.symm)⟩
+      · exact False.elim (h01 (hb.trans hb'.symm))
+    · exact ⟨three 1, fun h => h1 (Or.inl h), fun h => h1 (Or.inr h)⟩
+  · exact ⟨three 0, fun h => h0 (Or.inl h), fun h => h0 (Or.inr h)⟩
 
 namespace WinnerSet
 

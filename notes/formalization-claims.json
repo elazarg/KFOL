@@ -60,8 +60,9 @@
     "main_prose_obligations": 20,
     "evidence_status_counts": {
       "existing_lean_source": 8,
-      "partial_lean_source": 16,
+      "partial_lean_source": 15,
       "kernel_checked": 2,
+      "partial_kernel_checked": 1,
       "written_only": 9,
       "optional": 82,
       "evidence_review_pending": 27,
@@ -272,7 +273,7 @@
     },
     {
       "path": "sections/appendix-verification.tex",
-      "sha256": "d3d09e1d15535b65a2761fe064cc08c26fca53fc89c6f6f8e7d405c77c380f45",
+      "sha256": "a32e9644ebdb5786dffc169acd37de35414c4a1d053f4b4c26a3c7affb58dba5",
       "document": "technical_report"
     }
   ],
@@ -542,10 +543,10 @@
             "declarations": [
               {
                 "name_as_written": "pair_countervaluations",
-                "line": 26
+                "line": 28
               }
             ],
-            "sha256": "365c406b5e809f6028fdbef9f24bcc8d7b72451c10cdd6194c566c4069320369"
+            "sha256": "0be0e0af3608faa91ccf744850baa911b5c3e8c49438c116a199ff409883de0c"
           },
           {
             "source": "KFOL/Algebra/PairTests.lean",
@@ -566,10 +567,10 @@
             "declarations": [
               {
                 "name_as_written": "eval_subst",
-                "line": 157
+                "line": 176
               }
             ],
-            "sha256": "da4ef1b0d0fc2181eef89393b2a7efa97900c7735613549eb4e97e1643954a5a"
+            "sha256": "32acbd3b958b9dd19deb0231cc30b53b548500865269ce5356ac8413e75e4bff"
           },
           {
             "source": "KFOL/Definitions/Public.lean",
@@ -579,7 +580,7 @@
           {
             "source": "KFOL/Audit.lean",
             "declarations": [],
-            "sha256": "fa95fe262e09f05a20c4e76e9a5c13b7d6a4ec30ef0c036951a32a927cffe8e8"
+            "sha256": "128976b481f204b3cffa131b929beeaa53403e9e2942bf0449443875e67d61a1"
           }
         ],
         "axioms": [
@@ -616,9 +617,12 @@
       "statement_sha256": "e87114a132c97b82813662880e21674421c697b83fc0665178477ddeb05768b7",
       "work_package": "C",
       "target_surface": "Paper.lean",
-      "public_declarations": [],
-      "status": "partial_lean_source",
-      "existing_evidence": "Requires statement-level reconciliation with sections/appendix-verification.tex and lean/; planned does not mean no partial proofs exist.",
+      "public_declarations": [
+        "KFOL.Paper.idempotent_elimination",
+        "KFOL.Paper.checked_core_extraction"
+      ],
+      "status": "partial_kernel_checked",
+      "existing_evidence": "Algebraic characterization, core expressibility, all-valuation extraction, executable success/failure correctness and syntax-size bound are kernel checked on the canonical shared carrier. Polynomial machine running time remains outstanding.",
       "existing_evidence_seed": {
         "reference": "lean/FullAlgebra.lean: FullTerm.idempotent_iff_clean; FullTerm.idempotent_extraction",
         "remaining_scope": "Polynomial extraction bound requires a cost/encoding proof.",
@@ -629,27 +633,136 @@
       "required": true,
       "cited_from": [],
       "evidence_review": {
-        "level": "source_inspection",
-        "fresh_build": false,
+        "level": "kernel_checked_algebraic_and_functional_clauses",
+        "fresh_build": true,
         "artifacts": [
           {
-            "source": "lean/FullAlgebra.lean",
+            "source": "Paper.lean",
             "declarations": [
               {
-                "name_as_written": "FullTerm.idempotent_iff_clean",
-                "line": 555
+                "name_as_written": "idempotent_elimination",
+                "line": 73
               },
               {
-                "name_as_written": "FullTerm.idempotent_extraction",
-                "line": 567
+                "name_as_written": "checked_core_extraction",
+                "line": 94
               }
             ],
-            "sha256": "468b9892ac0929cffe0644e546ab22f3385ba73c542da0bc89bd8bb597ea0fa9"
+            "sha256": "0be0e0af3608faa91ccf744850baa911b5c3e8c49438c116a199ff409883de0c"
+          },
+          {
+            "source": "KFOL/Algebra/Idempotent.lean",
+            "declarations": [
+              {
+                "name_as_written": "exists_constant_on_cell",
+                "line": 81
+              },
+              {
+                "name_as_written": "input_subset_eval",
+                "line": 132
+              },
+              {
+                "name_as_written": "idempotent_iff_clean",
+                "line": 275
+              },
+              {
+                "name_as_written": "idempotent_extraction",
+                "line": 299
+              },
+              {
+                "name_as_written": "idempotent_iff_core",
+                "line": 311
+              },
+              {
+                "name_as_written": "size_pushRenames_le",
+                "line": 289
+              },
+              {
+                "name_as_written": "extractCore?_eq_some_iff",
+                "line": 358
+              },
+              {
+                "name_as_written": "extractCore?_isSome_iff",
+                "line": 369
+              },
+              {
+                "name_as_written": "extractCore?_correct",
+                "line": 383
+              }
+            ],
+            "sha256": "11a9a82511327c331bca24be3192f4393fbe286dcb76d2168f8ac8a4b6681b69"
+          },
+          {
+            "source": "KFOL/Definitions/Core.lean",
+            "declarations": [
+              {
+                "name_as_written": "HasWinner",
+                "line": 24
+              },
+              {
+                "name_as_written": "inputOccurrences",
+                "line": 32
+              },
+              {
+                "name_as_written": "IsCore",
+                "line": 39
+              },
+              {
+                "name_as_written": "pushRenames",
+                "line": 48
+              },
+              {
+                "name_as_written": "extractCore?",
+                "line": 58
+              },
+              {
+                "name_as_written": "size",
+                "line": 68
+              }
+            ],
+            "sha256": "11bc41153c52894003d596bec76ee047b018376f0edca79c374717c0cfc1f269"
+          },
+          {
+            "source": "KFOL/Definitions/Public.lean",
+            "declarations": [],
+            "sha256": "2a146ca3ad0f52391299022765401b9ee072db323285d00f9435ef1558a18a9e"
+          },
+          {
+            "source": "KFOL/Audit.lean",
+            "declarations": [],
+            "sha256": "128976b481f204b3cffa131b929beeaa53403e9e2942bf0449443875e67d61a1"
+          },
+          {
+            "source": "tests/Idempotent.lean",
+            "declarations": [],
+            "sha256": "ba412a4d9f2877b99c47ffbc17bd1587cdc9b58476dba39627e1e05020b8a083"
           }
         ],
-        "remaining_work": "Certify polynomial extraction on the selected encoding as well as the semantic equivalence."
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "completed_clauses": [
+          "Exact no-winner/identity accumulated-action characterization of idempotency",
+          "Idempotent operations exactly expressible in the existing core fragment",
+          "Deterministic permutation-elimination extraction preserves every valuation",
+          "Output constructor count does not increase",
+          "Executable finite-role extraction succeeds exactly on idempotent terms",
+          "Every successful checked extraction returns a semantically equivalent core with bounded size"
+        ],
+        "remaining_work": "Certify polynomial machine running time for finite encodings of roles, permutations and syntax, using the complexity integration branch. Constructor count is not runtime.",
+        "generality": "Algebraic characterization for arbitrary role and variable types with an embedding Fin 3 \u21aa Role. Checked extraction needs Fintype Role and DecidableEq Role; its soundness and size bound require no lower bound on roles.",
+        "definition_index": "notes/formalization-definitions.md",
+        "validation": [
+          "lake clean KFOL; make check-lean",
+          "python3 checks/check_core.py",
+          "make paper"
+        ],
+        "regression_tests": "Noncommuting permutation order, cancellation through an owned choice, actual finite extractor reduction and the two-role winner-leaf counterexample.",
+        "independent_check": "check_core.py: 1200 arbitrary/decorated terms with complete diagonal checks and extracted-core valuation comparisons; separate idempotency-domain checks K=3..64."
       },
-      "migration_status": "not_started",
+      "migration_status": "algebraic_and_functional_clauses_complete",
       "editorial_proposal_ids": []
     },
     {
@@ -1689,10 +1802,10 @@
             "declarations": [
               {
                 "name_as_written": "optimal_test_domain",
-                "line": 43
+                "line": 45
               }
             ],
-            "sha256": "365c406b5e809f6028fdbef9f24bcc8d7b72451c10cdd6194c566c4069320369"
+            "sha256": "0be0e0af3608faa91ccf744850baa911b5c3e8c49438c116a199ff409883de0c"
           },
           {
             "source": "KFOL/Algebra/TestDomains.lean",
@@ -1707,18 +1820,18 @@
               },
               {
                 "name_as_written": "exists_pair_separator",
-                "line": 247
+                "line": 230
               },
               {
                 "name_as_written": "completeTestDomain_iff",
-                "line": 318
+                "line": 301
               },
               {
                 "name_as_written": "isLeast_completeTestDomain",
-                "line": 369
+                "line": 352
               }
             ],
-            "sha256": "7e1cb2c2c1a59223de903083475beed05af8c328a0709642cfb963a4a055abc5"
+            "sha256": "f1cc1e96e2ff36dc4b811f496cd9d48fc27b705d0b51eebdb806820e73f8165f"
           },
           {
             "source": "KFOL/Algebra/TestDomainCard.lean",
@@ -1752,7 +1865,7 @@
           {
             "source": "KFOL/Audit.lean",
             "declarations": [],
-            "sha256": "fa95fe262e09f05a20c4e76e9a5c13b7d6a4ec30ef0c036951a32a927cffe8e8"
+            "sha256": "128976b481f204b3cffa131b929beeaa53403e9e2942bf0449443875e67d61a1"
           }
         ],
         "axioms": [
@@ -5281,7 +5394,7 @@
     }
   },
   "planned_import_boundaries": {
-    "status": "implemented_for_pair_and_sharp_domain_slice",
+    "status": "implemented_for_pair_sharp_domain_and_intrinsic_core_slice",
     "pure_algebra": {
       "dependencies": [
         "mathlib"
@@ -5357,8 +5470,8 @@
     ],
     "does_not_wait_for": "GameTheory newer ComplexityLib integration",
     "next_algebra_work": [
-      "idempotent elimination and core extraction",
-      "view preservation and semilattice trace"
+      "Intrinsic player views including the subdirect representation",
+      "Full semilattice trace including clone and no-special-term clauses"
     ],
     "selected_term_representation": "Native KFOL.Term, with test-only semantic codec to mathlib terms.",
     "validation": {
@@ -5398,5 +5511,26 @@
       "GameTheory adequacy",
       "Idempotent elimination"
     ]
+  },
+  "third_delivery_milestone": {
+    "status": "algebraic_and_functional_contract_complete",
+    "claim": "gen:thm:core",
+    "full_claim_complete": false,
+    "public_declarations": [
+      "KFOL.Paper.idempotent_elimination",
+      "KFOL.Paper.checked_core_extraction"
+    ],
+    "dependencies": [
+      "mathlib"
+    ],
+    "deliverable": "Exact idempotent occurrence criterion, core expressibility, deterministic extraction, checked finite-role extraction, all-valuation correctness and nonincreasing constructor count.",
+    "remaining_full_claim_obligation": "Polynomial machine running time on a certified finite encoding.",
+    "validation": {
+      "clean_build": "lake clean KFOL followed by make check-lean passed.",
+      "axioms_and_imports": "Guarded root theorem axiom checks and the whole authored declaration closure; no GameTheory or complexity imports.",
+      "regression_cases": "tests/Idempotent.lean passed, including executable reduction and the two-role boundary.",
+      "independent_check": "python3 checks/check_core.py passed on 1200 terms and the separate domain cases.",
+      "paper": "make paper passed; label snapshots unchanged."
+    }
   }
 }

@@ -43,7 +43,7 @@ Layout:
     Paper.lean        Complete statements of the migrated main-paper claims
     lakefile.toml     Lake targets and mathlib v4.35.0 dependency
     lake-manifest.json Immutable resolved dependency revisions
-    tests/            Isolated syntax compatibility checks
+    tests/            Syntax compatibility and algebra regression checks
     checks/           Python models and independent finite checks
     notes/            Exploration not claimed in the paper
     lean-toolchain    Lean version (4.35.0)
@@ -62,8 +62,8 @@ needs only the standard library. make check-legacy-lean builds the Std modules
 in dependency order under build/lean. make check-algebra independently builds
 KFOL.Algebra and Paper, checks transitive imports and all authored axiom
 dependencies (including private helpers), and checks the test-only mathlib
-syntax adapter. make check-lean runs both Lean tracks. Lake artifacts are under
-.lake/; make clean removes build/.
+syntax adapter and algebra regression cases. make check-lean runs both Lean
+tracks. Lake artifacts are under .lake/; make clean removes build/.
 
 Paper.lean currently exposes sym:thm:pairs and sym:thm:optimal as
 KFOL.Paper.pair_countervaluations and KFOL.Paper.optimal_test_domain. Each
@@ -71,7 +71,14 @@ repeats the complete claim, including necessity, leastness and the exact
 K(K+1)/2 count for the optimal domain. The new slice uses mathlib sets and
 permutations, with no GameTheory, complexity, or legacy strategic imports.
 Its definition index and syntax decision are notes/formalization-definitions.md
-and notes/formalization-syntax.md. Other paper claims retain the status below.
+and notes/formalization-syntax.md.
+
+KFOL.Paper.idempotent_elimination and KFOL.Paper.checked_core_extraction also
+state and prove the algebraic criterion and checked extraction from gen:thm:core.
+The executable extractor succeeds exactly for idempotent terms and returns an
+equivalent core whose syntax is no larger. The polynomial machine running-time
+clause remains outstanding, so the full paper result stays partial in the
+inventory. Other paper claims retain the status below.
 
 checks/probe_residual.py is an optional experiment, outside the checks;
 it establishes no residual bound for the whole variety.
