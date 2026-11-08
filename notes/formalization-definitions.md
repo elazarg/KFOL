@@ -346,6 +346,9 @@ uses mathlib terms directly, with no new syntax datatype or evaluator recursion.
 | `Reset.Term.minimize`, `table` | Delete nonminimal prerequisites; the resulting canonical antichain |
 | `Reset.Term.composedGuards` | Finite unions of root-translated outer prerequisites with inner prerequisites; minimize to obtain the substituted table |
 | `Reset.chainValue` | The fixed values {a}, {a,b}, {a,b,c}, from an embedding of `Fin 3` |
+| `Reset.Laws op` | R1--R6 imposed independently on an arbitrary binary operation; no validity or derivability in the definition |
+| `Reset.operation M` | Extract the binary operation from an arbitrary mathlib structure of the one-symbol signature |
+| `Reset.basisAxiom`, `basis` | Six actual finite-arity identities and their range as a theory; these are syntax, not opaque predicates |
 
 `Reset/Selection.lean` proves every clause of `reset:lem:selection`, including
 monotonicity and independence of j's own ambiguity when selecting j.
@@ -370,5 +373,39 @@ covering every role yields the same reset operation regardless of order or
 repetitions. Compilation yields a genuine native core term and agrees on every
 mixed valuation. Root `Paper.lean` states the existential expansion and full
 selection result, the semantic clauses of canonical tables, and the explicit
-substitution formula. Certified polynomial machine bounds and six-law basis
-completeness remain separate obligations in the inventory.
+substitution formula. Certified polynomial machine bounds remain a separate
+obligation in the inventory. The six-law basis is now complete as described below.
+
+## Six-law reset completeness
+
+`KFOL.Paper.reset_basis` repeats the actual six identities in its statement and
+asserts validity iff derivability from precisely that family, together with its
+exact cardinality. The only role assumption is an embedding of `Fin 3`; variables
+and roles need not be finite. `Reset.basis` is independently defined syntactic
+data, `Reset.Laws` is a conjunction of ordinary algebra equations, and
+`Equational.Derives` is the independently defined inference relation.
+`models_basis_iff` proves that these two presentations of the six laws agree.
+
+The proof constructions in `Reset/Basis` do not enlarge the paper theorem's
+definition surface. `path` is a left-associated word with a fixed last value;
+`Term.paths` constructs common-root path prefixes. `interpret` is a wrapper
+around mathlib realization. `Below a b` means `op a b = a`; its reflexivity,
+transitivity, antisymmetry and the needed monotonicity laws are proved from
+R1--R6. It is used locally without installing global order or operation instances.
+
+`Laws.lean` derives the needed algebraic identities. `Words.lean` proves
+repetition deletion, path concatenation bounds and suffix absorption.
+`NormalForm.lean` normalizes every term in an arbitrary six-law algebra.
+`Coverage.lean` shows that selector coverage absorbs paths and that equal
+selectors give equality in every such algebra. Paths may retain repeated
+variables: proved deletion lemmas handle them, avoiding an additional
+normalization algorithm or an assumption that occurrences are distinct.
+
+`Presentation.lean` connects arbitrary language structures to the six laws and
+proves concrete soundness for every role type. A kernel-checked injective
+fingerprint of the six explicit syntax trees proves distinctness; the range of
+`Fin 6` proves exhaustiveness and cardinality. `Basis.lean` then uses the existing
+chain separator and generic equational completeness theorem to obtain actual
+derivations, the independent `IsBasis` predicate and `HasFiniteBasis`.
+Freese et al. (2002), introduction and Section 3, supply the proof reference;
+the published theorem is not a hypothesis or a new Lean axiom.

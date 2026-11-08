@@ -89,5 +89,37 @@ def composedGuards {Var' : Type w} [DecidableEq Var] [DecidableEq Var']
     ((s i).table j).image (fun C => A.image (fun k => (s k).root) ∪ C)))
 
 end Term
+/-- The six reset laws, independently imposed on an arbitrary binary algebra. -/
+structure Laws {M : Type u} (op : M → M → M) : Prop where
+  idem : ∀ x, op x x = x
+  absorb : ∀ x y, op (op x y) x = op y x
+  repeat_right : ∀ x y, op (op x y) y = op x y
+  nested : ∀ x y z, op x (op (op x y) z) = op x (op y z)
+  exchange : ∀ x y z, op (op (op x y) z) y = op (op x z) y
+  left_comm : ∀ x y z, op x (op y z) = op y (op x z)
+
+/-- The binary operation of an arbitrary structure in exactly the reset signature. -/
+def operation (M : Type u) [(Equational.language Symbol).Structure M] (x y : M) : M :=
+  FirstOrder.Language.Structure.funMap (L := Equational.language Symbol) .reset
+    (fun i => if i = 0 then x else y)
+
+/-- R1--R6 as actual finite-arity equations, in their paper order. Unused
+variable declarations in the first three equations do not affect support. -/
+def basisAxiom (i : Fin 6) : Equational.Identity Symbol :=
+  let x : Term (Fin 3) := .var 0
+  let y : Term (Fin 3) := .var 1
+  let z : Term (Fin 3) := .var 2
+  if i = 0 then ⟨3, Term.step x x, x⟩
+  else if i = 1 then ⟨3, Term.step (Term.step x y) x, Term.step y x⟩
+  else if i = 2 then ⟨3, Term.step (Term.step x y) y, Term.step x y⟩
+  else if i = 3 then
+    ⟨3, Term.step x (Term.step (Term.step x y) z), Term.step x (Term.step y z)⟩
+  else if i = 4 then
+    ⟨3, Term.step (Term.step (Term.step x y) z) y, Term.step (Term.step x z) y⟩
+  else ⟨3, Term.step x (Term.step y z), Term.step y (Term.step x z)⟩
+
+/-- Exactly the displayed family of six equations, independent of its consequences. -/
+def basis : Equational.Theory Symbol := Set.range basisAxiom
+
 end Reset
 end KFOL

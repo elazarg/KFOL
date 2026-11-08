@@ -477,4 +477,36 @@ theorem reset_substitution {Var : Type v} {Var' : Type w} [DecidableEq Var] [Dec
 #guard_msgs (whitespace := lax) in
 #print axioms KFOL.Paper.reset_substitution
 
+/-- `reset:thm:basis` in full: validity is exactly equational derivability from
+R1--R6, spelled out as identities below. The family has exactly six members.
+The proof includes arbitrary-model completeness; no outside basis theorem is
+assumed. Variables and role types need not be finite. -/
+theorem reset_basis {Role : Type u} {Var : Type v} (three : Fin 3 ↪ Role)
+    (s t : Reset.Term Var) :
+    let x : Reset.Term (Fin 3) := .var 0
+    let y : Reset.Term (Fin 3) := .var 1
+    let z : Reset.Term (Fin 3) := .var 2
+    let ax : Fin 6 → Equational.Identity Reset.Symbol := fun i =>
+      if i = 0 then ⟨3, Reset.Term.step x x, x⟩
+      else if i = 1 then ⟨3, Reset.Term.step (Reset.Term.step x y) x, Reset.Term.step y x⟩
+      else if i = 2 then ⟨3, Reset.Term.step (Reset.Term.step x y) y, Reset.Term.step x y⟩
+      else if i = 3 then
+        ⟨3, Reset.Term.step x (Reset.Term.step (Reset.Term.step x y) z),
+          Reset.Term.step x (Reset.Term.step y z)⟩
+      else if i = 4 then
+        ⟨3, Reset.Term.step (Reset.Term.step (Reset.Term.step x y) z) y,
+          Reset.Term.step (Reset.Term.step x z) y⟩
+      else ⟨3, Reset.Term.step x (Reset.Term.step y z),
+        Reset.Term.step y (Reset.Term.step x z)⟩
+    ((∀ valuation : Var → WinnerSet Role, s.eval valuation = t.eval valuation) ↔
+      Equational.Derives (Set.range ax) s t) ∧ Nat.card (Set.range ax) = 6 := by
+  change ((∀ valuation : Var → WinnerSet Role, s.eval valuation = t.eval valuation) ↔
+    Equational.Derives Reset.basis s t) ∧ Nat.card Reset.basis = 6
+  exact ⟨(Reset.derives_iff_eval_eq three s t).symm, Reset.card_basis⟩
+
+/-- info: 'KFOL.Paper.reset_basis' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Paper.reset_basis
+
 end KFOL.Paper

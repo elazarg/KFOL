@@ -227,14 +227,14 @@ External mathematical inputs actually used by a main-paper proof need a kernel p
 | Input | Used for | Required route |
 | --- | --- | --- |
 | Classification of the repeat-triple polymorphism clone | Atomic clone and determinacy, then binary classification | Import a verified theorem after checking its exact finite-domain hypotheses, or formalize the needed finite combinatorial classification locally |
-| Freese et al. order-algebra results | Reset basis completeness and minimum generators | Prove the needed special cases via normal forms/explicit models where practical; otherwise formalize the cited theorem and its hypotheses |
+| Freese et al. order-algebra results | Reset basis completeness and minimum generators | The reset six-law special case is now proved by arbitrary-algebra path normalization and suffix absorption; the required minimum-generator special cases remain separate |
 | Antimatroid/dependency representation | Exact representation, realizability, recognition, substitution and stated counts | Formalize finite set systems and both constructions/inverses; prove both directions and the compact-table algorithms rather than adding a name for the citation |
 | Dissemilattice generation | Seven-equation fragment claimed in the main paper | Formalize the precise generation theorem or replace its use by an explicit separating representation proof |
 | Kleene presentation | Two-role finite basis cited in the main discussion | Verify/import the exact theorem, or give a direct normal-form/term proof for the needed case |
 | Mixed Nash existence, finite SE existence and zero-sum value uniqueness | Required round semantics | Reuse the inspected GameTheory Nash, SE existence and minimax interfaces; prove the KFOL finiteness, recall, nonempty-menu, integrability and payoff-shift premises |
 | Polynomial computation theory and 3SAT completeness | All main-paper coNP-completeness conclusions | Use the inspected pinned ComplexityLib machine, Cook–Levin, 3SAT and coNP transport theorems; prove the new encodings, algorithms and reduction machines |
 
-The remaining substantial work is the generic nonfinite-basis proof, six-law/forty-law completeness, special-case clone and generation results, concrete machine bounds, and the paper-specific round bridges. General complexity theory, Nash/SE definitions and existence are reused, while real QE and general syntactic dependent metatheory are outside the target. Estimate delivery after the narrow integration prototypes, rather than extrapolating from the original 140-row catalog.
+The remaining substantial work is the generic nonfinite-basis proof, forty-law completeness, special-case clone and generation results, concrete machine bounds, and the paper-specific round bridges. General complexity theory, Nash/SE definitions and existence are reused, while real QE and general syntactic dependent metatheory are outside the target. Estimate delivery after the narrow integration prototypes, rather than extrapolating from the original 140-row catalog.
 
 The mathlib APIs checked for this design include [relation-free language structures and homomorphisms](https://leanprover-community.github.io/mathlib4_docs/Mathlib/ModelTheory/Basic.html), [substructures and generated closure](https://leanprover-community.github.io/mathlib4_docs/Mathlib/ModelTheory/Substructures.html), and [finite simplexes](https://leanprover-community.github.io/mathlib4_docs/Mathlib/Analysis/Convex/StdSimplex.html). These support the proposed reuse; their presence does not establish availability of the larger external theorems above. Public documentation can move; implementations must use the pinned source.
 
@@ -418,10 +418,37 @@ The complete main proposition `reset:thm:three` remains partial because its
 polynomial machine-time clause is still owed. The combined derived-reset
 prose obligation also includes the guarded-choice example, and the algorithm
 prose obligation includes recognition and synthesis; those clauses remain open.
-Next prove six-law reset basis completeness against the shared equational
-API. The separate complexity milestone also owes the machine-time clause of
+The separate complexity milestone also owes the machine-time clause of
 idempotent extraction. Strategic integration remains a separate gate; no
 upstream GameTheory files have been changed.
+
+### Six-law reset basis completed
+
+`KFOL.Paper.reset_basis` states the full equivalence between equation validity
+and derivability from R1--R6, repeating all six identities in the type. It also
+proves that this family has exactly six distinct members. `Definitions/Reset.lean`
+contains the syntactic family and an independent six-law algebra predicate;
+`Equational.Derives` remains the shared independent inference relation.
+
+`Reset/Basis` proves the special case directly. From the six equations it
+derives the natural-order and common-root multiplication laws, repetition
+deletion and suffix absorption. Every term has a common-root path normal form
+in every six-law algebra. Exact selector coverage then implies arbitrary-model
+equality, and generic equational completeness supplies a derivation. Paths can
+have repeated variables; the proof deletes repetitions algebraically and does
+not assume pairwise distinct occurrences. The published theorem of Freese et al.
+is a proof reference, not an assumption in the completed Lean theorem.
+
+The clean build and full axiom/import audit include all new private helpers.
+Regression cases distinguish right and left projection models, allow empty
+carriers for theory satisfaction, check actual variable counts and a nontrivial
+nested consequence, and prove associativity is not derivable. The main basis
+row is complete; the runtime clause of canonical tables stays partial.
+
+Next formalize the antimatroid representation and its table recognition/synthesis
+bridge, using canonical tables and path normalization. The guarded-choice prose
+example and the separate complexity and strategic milestones retain their own
+obligations.
 
 | Milestone | Prerequisites | Concrete completion gate |
 | --- | --- | --- |

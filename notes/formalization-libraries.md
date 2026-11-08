@@ -72,7 +72,12 @@ subalgebra locality are also checked; reverse HSP representation is not claimed.
 
 **Lean UALib is a proof reference, not a compatible dependency.** The inspected [`UniversalAlgebra/lean-ualib` package](https://github.com/UniversalAlgebra/lean-ualib/blob/master/leanpkg.toml) targets Lean 3.4.1. The maintained [Agda Universal Algebra Library](https://agda-algebras.universalalgebra.org/) has signatures, varieties and HSP proofs in Agda. Either can inform a Lean proof, but neither gives an importable Lean 4 theorem.
 
-No ready-to-import Lean proof of the exact antimatroid representation, repeat-triple clone classification, Freese order-algebra basis/minimum-generator results, or Harding–Romanowska generation theorem was identified in the inspected sources and targeted searches. This is a search outcome, not a nonexistence claim. Plan direct proofs of the special cases used by the main paper; prefer representation and normalization arguments to formalizing an entire external theory.
+No ready-to-import Lean proof of the exact antimatroid representation, repeat-triple clone classification, Freese order-algebra basis/minimum-generator results, or Harding–Romanowska generation theorem was identified in the inspected sources and targeted searches. This is a search outcome, not a nonexistence claim. The reset six-law special case is now implemented in `KFOL/Reset/Basis` by
+arbitrary-algebra path normalization and suffix absorption, followed by the
+shared equational completeness theorem. Freese et al.'s introduction and
+Section 3 are the proof reference; their basis theorem is not an imported
+hypothesis. Continue direct proofs of the remaining special cases used by the
+main paper, using representation and normalization where practical.
 
 ## Supporting syntax libraries and the dependent claim
 

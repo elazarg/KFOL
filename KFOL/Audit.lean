@@ -4,6 +4,12 @@ import all KFOL.Definitions.Public
 import all KFOL.Definitions.Core
 import all KFOL.Definitions.Views
 import all KFOL.Definitions.Reset
+import all KFOL.Reset.Basis.Laws
+import all KFOL.Reset.Basis.Words
+import all KFOL.Reset.Basis.NormalForm
+import all KFOL.Reset.Basis.Coverage
+import all KFOL.Reset.Basis.Presentation
+import all KFOL.Reset.Basis
 import all KFOL.Reset.Basic
 import all KFOL.Reset.Selection
 import all KFOL.Reset.Tables
