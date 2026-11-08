@@ -3,9 +3,11 @@ module
 public import KFOL.Algebra
 
 /-!
-# Kernel-checked claims of the main paper
+# Kernel-checked paper claims
 
-Each declaration repeats the complete mathematical claim. Definitions of the
+Each declaration repeats the complete mathematical claim. The inventory
+distinguishes main-paper obligations from completed supplementary report results.
+Definitions of the
 winner carrier, operations, term syntax and evaluation are in
 `KFOL/Definitions/Public.lean`. The finite-arity testing predicate is indexed
 in `KFOL/Definitions/TestDomains.lean`; its full meaning is repeated below.
@@ -15,7 +17,8 @@ of `gen:thm:core`; its machine running-time clause remains outstanding.
 Player views and their subdirect representations, and the full semilattice
 trace, are also included. View definitions are in `Definitions/Views.lean`.
 Common sources and their atomic consequences use the occurrence enumeration
-in `Definitions/Core.lean`.
+in `Definitions/Core.lean`. The reduct and diagonal testing predicates are
+indexed in `Definitions/TestDomains.lean` and expanded in the claims below.
 -/
 
 @[expose] public section
@@ -300,5 +303,83 @@ theorem no_atomic_if_then_else {Role : Type u} (three : Fin 3 ↪ Role)
 [propext, Classical.choice, Quot.sound] -/
 #guard_msgs (whitespace := lax) in
 #print axioms KFOL.Paper.no_atomic_if_then_else
+
+/-- `view:thm:tests`. The public reduct is tested at every finite arity exactly
+by domains containing every atom and an ambiguous value omitting each role. -/
+theorem reduct_test_domains {Role : Type u} [Fintype Role] (three : Fin 3 ↪ Role)
+    (D : Set (WinnerSet Role)) :
+    (∀ (n : ℕ) (s t : Term Role (Fin n)), s.IsPublic → t.IsPublic →
+      (∀ valuation : Fin n → WinnerSet Role, (∀ x, valuation x ∈ D) →
+        s.eval valuation = t.eval valuation) →
+      ∀ valuation : Fin n → WinnerSet Role, s.eval valuation = t.eval valuation) ↔
+    (∀ r, WinnerSet.singleton r ∈ D) ∧
+      (∀ k, ∃ F ∈ D, WinnerSet.Ambiguous F ∧ k ∉ F.val) :=
+  completePublicTestDomain_iff three D
+
+/-- info: 'KFOL.Paper.reduct_test_domains' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Paper.reduct_test_domains
+
+/-- `view:cor:optimal`. The sharp minimum is six with three roles, and K+2
+with at least four. Leastness states both the bound and an attaining domain. -/
+theorem minimum_reduct_test_domain {Role : Type u} [Fintype Role] (three : Fin 3 ↪ Role) :
+    IsLeast {m : ℕ | ∃ D : Finset (WinnerSet Role),
+      (∀ (n : ℕ) (s t : Term Role (Fin n)), s.IsPublic → t.IsPublic →
+        (∀ valuation : Fin n → WinnerSet Role, (∀ x, valuation x ∈ D) →
+          s.eval valuation = t.eval valuation) →
+        ∀ valuation : Fin n → WinnerSet Role, s.eval valuation = t.eval valuation) ∧ D.card = m}
+      (if Fintype.card Role = 3 then 6 else Fintype.card Role + 2) ∧
+    (Fintype.card Role = 3 → ∃ D : Finset (WinnerSet Role),
+      (∀ (n : ℕ) (s t : Term Role (Fin n)), s.IsPublic → t.IsPublic →
+        (∀ valuation : Fin n → WinnerSet Role, (∀ x, valuation x ∈ D) →
+          s.eval valuation = t.eval valuation) →
+        ∀ valuation : Fin n → WinnerSet Role, s.eval valuation = t.eval valuation) ∧
+      D.card = 6 ∧ ∀ A, A ∈ D ↔ ∃ a b, A.val = {a, b}) ∧
+    (∀ four : Fin 4 ↪ Role, ∃ D : Finset (WinnerSet Role),
+      (∀ (n : ℕ) (s t : Term Role (Fin n)), s.IsPublic → t.IsPublic →
+        (∀ valuation : Fin n → WinnerSet Role, (∀ x, valuation x ∈ D) →
+          s.eval valuation = t.eval valuation) →
+        ∀ valuation : Fin n → WinnerSet Role, s.eval valuation = t.eval valuation) ∧
+      D.card = Fintype.card Role + 2 ∧ ∀ A, A ∈ D ↔
+        (∃ r, A = WinnerSet.singleton r) ∨ A.val = {four 0, four 1} ∨ A.val = {four 2, four 3}) := by
+  refine ⟨public_domain_minimum three, ?_, exists_public_domain_card_add_two three⟩
+  intro hc
+  exact ⟨pairDomain Role, completePublicTestDomain_pairDomain three,
+    by simp [card_pairDomain, hc], mem_pairDomain⟩
+
+/-- info: 'KFOL.Paper.minimum_reduct_test_domain' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Paper.minimum_reduct_test_domain
+
+/-- `gen:thm:idem-domain`. For ambiguous domains, diagonal certification is
+exactly omission of every role and separation of all incidence vectors. The
+minimum among all domains, including mixed ones, is three for K=3 and
+ceil(log₂(K+1)) otherwise, attained with ambiguous values alone. -/
+theorem idempotency_certificates {Role : Type u} [Fintype Role] (three : Fin 3 ↪ Role) :
+    (∀ D : Set (WinnerSet Role), (∀ A ∈ D, WinnerSet.Ambiguous A) →
+      ((∀ (n : ℕ) (t : Term Role (Fin n)),
+        (∀ A ∈ D, t.eval (fun _ => A) = A) →
+          ∀ A : WinnerSet Role, t.eval (fun _ => A) = A) ↔
+        (∀ k, ∃ A ∈ D, k ∉ A.val) ∧
+          (∀ a b, (∀ A ∈ D, a ∈ A.val ↔ b ∈ A.val) → a = b))) ∧
+    (∀ D : Finset (WinnerSet Role),
+      (∀ (n : ℕ) (t : Term Role (Fin n)),
+        (∀ A ∈ D, t.eval (fun _ => A) = A) →
+          ∀ A : WinnerSet Role, t.eval (fun _ => A) = A) →
+      (if Fintype.card Role = 3 then 3 else Nat.clog 2 (Fintype.card Role + 1)) ≤ D.card) ∧
+    (∃ D : Finset (WinnerSet Role), (∀ A ∈ D, WinnerSet.Ambiguous A) ∧
+      (∀ (n : ℕ) (t : Term Role (Fin n)),
+        (∀ A ∈ D, t.eval (fun _ => A) = A) →
+          ∀ A : WinnerSet Role, t.eval (fun _ => A) = A) ∧
+      D.card = if Fintype.card Role = 3 then 3 else Nat.clog 2 (Fintype.card Role + 1)) :=
+  ⟨certifiesIdempotency_iff three, card_optimal_idempotency_domain_lower three,
+    exists_optimal_idempotency_domain three⟩
+
+/-- info: 'KFOL.Paper.idempotency_certificates' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Paper.idempotency_certificates
 
 end KFOL.Paper

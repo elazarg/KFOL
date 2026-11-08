@@ -193,6 +193,29 @@ theorem three_owner_union (r s t : Role) (hrs : r ≠ s) (hrt : r ≠ t)
         show choice s A B = union A B by simp [choice, hs]]
       exact choice_self (union A B) t
 
+theorem eq_pair_of_ambiguous_subset (A : WinnerSet Role) (a b : Role)
+    (hA : Ambiguous A) (hsub : A.val ⊆ {a, b}) : A.val = {a, b} := by
+  have ha : a ∈ A.val := by
+    apply Classical.byContradiction
+    intro ha
+    apply hA b
+    apply WinnerSet.eq_singleton_of_subset
+    intro x hx
+    rcases Set.mem_insert_iff.mp (hsub hx) with h | h
+    · exact False.elim (ha (h ▸ hx))
+    · exact h
+  have hb : b ∈ A.val := by
+    apply Classical.byContradiction
+    intro hb
+    apply hA a
+    apply WinnerSet.eq_singleton_of_subset
+    intro x hx
+    rcases Set.mem_insert_iff.mp (hsub hx) with h | h
+    · exact h
+    · exact False.elim (hb (Set.mem_singleton_iff.mp h ▸ hx))
+  exact Set.Subset.antisymm hsub (Set.pair_subset_iff.mpr ⟨ha, hb⟩)
+
+
 end WinnerSet
 
 namespace Term

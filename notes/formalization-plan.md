@@ -323,10 +323,36 @@ classification remains a separate required input. Boundary tests cover overlap,
 permuted source values, the single-region winner case and an empty index type.
 An independent check enumerates actual leaf paths in 210 finite term cases.
 
-Next complete the reduct test-domain count and diagonal idempotency certificates.
-The separate complexity milestone still owes the polynomial-time clause of
-idempotent extraction. Strategic integration remains a separate gate after the
-dependency update.
+### Reduct domains and supplementary diagonal certificates completed
+
+`KFOL.Paper.reduct_test_domains` proves the exact reduct criterion at every
+finite arity. `KFOL.Paper.minimum_reduct_test_domain` includes the lower bound
+and an attaining domain: six with three roles, K+2 thereafter. Genuine unary
+public separators and the ambiguity-adder give necessity without importing the
+whole unary classification. The all-pairs count and two disjoint pairs supply
+the respective sharp cardinalities. This closes the remaining required
+main-prose test-domain-count obligation.
+
+The accepted follow-on checkpoint also completes the optional report result
+`gen:thm:idem-domain`, as `KFOL.Paper.idempotency_certificates`. Its scope stays
+optional; it is not promoted into the definition of main-paper completeness.
+The full ambiguous-domain criterion, the lower bound allowing mixed domains,
+and attainment by ambiguous domains are all kernel checked. The minimum is
+three at K=3 and ceil(log₂(K+1)) at K≥4. The generic construction reserves
+co-singleton incidence labels and extends to K proper labels; it does not rely
+on unproved enumeration or on the external S2 classification.
+
+Regression cases distinguish diagonal from tuple testing, show why the
+ambiguity restriction matters in the criterion, and allow a role absent from
+all tests. The independent existing checkers exhaust their K=3,4 cases and
+check diagonal constructions through K=64. Definitions remain in the same
+four shared definition modules, and the algebra still imports only mathlib.
+
+Next prioritize the required shared equational infrastructure for reset and
+basis proofs. The separate complexity milestone still owes the polynomial-time
+clause of idempotent extraction. The read-only check of GameTheory still finds
+the previously inspected revision; strategic integration remains a separate
+gate and no upstream files have been changed.
 
 | Milestone | Prerequisites | Concrete completion gate |
 | --- | --- | --- |

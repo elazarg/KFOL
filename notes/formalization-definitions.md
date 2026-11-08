@@ -213,3 +213,61 @@ hypothesis for variable sources, permuted inputs and the empty-index case.
 applies their switches from the leaf outward, comparing with the existing
 winner-set evaluator over 210 finite term cases. It is a finite cross-check;
 the generic index- and role-polymorphic result is proved in Lean.
+
+The two testing notions now have complete characterizations and sharp counts.
+Their reusable predicates remain together in `Definitions/TestDomains.lean`;
+root `Paper.lean` expands all quantifiers in the theorem statements:
+
+| Definition | Meaning and dependencies |
+| --- | --- |
+| `CompletePublicTestDomain D` | At every finite arity, agreement on valuations from D implies agreement everywhere for terms satisfying `IsPublic`; internal role switches are excluded |
+| `CertifiesIdempotency D` | At every finite arity and for every full-language term, diagonal agreement with the identity on D implies diagonal agreement everywhere; this is not equation testing on all tuples from D |
+
+`KFOL.Paper.reduct_test_domains` proves that completeness in the reduct is
+equivalent to including every singleton and, for every observer k, an ambiguous
+member omitting k. `exists_sameView_in_domain` supplies representatives within D
+and the existing view congruence preserves a failed equation. Necessity uses
+actual public unary equations: the singleton separator and a suppression fold
+that fixes atoms while adding k on ambiguous inputs. This avoids requiring the
+whole unary classification. Suppression remains a derived term construction;
+no primitive reset or arbitrary set constant has been added.
+
+`KFOL.Paper.minimum_reduct_test_domain` states leastness of the attained sizes:
+six with three roles and K+2 with at least four. The lower bound counts the K
+singletons and two distinct ambiguous values; with three roles coverage forces
+all pairs as well. The upper bounds use the actual all-pairs domain at K=3, and
+the singletons plus two disjoint pairs at K≥4. Finset inclusion, injectivity and
+the previously proved unordered-pair count establish all counts generically.
+
+`KFOL.Paper.idempotency_certificates` completes the supplementary report result
+`gen:thm:idem-domain`; it remains optional in the scope inventory. For ambiguous
+domains, certification is equivalent to omission of every role somewhere and
+separation of any two roles by a membership test. These express empty
+intersection and distinct incidence vectors, including the empty-family
+convention. Both conditions are necessary even if singleton tests are allowed.
+Sufficiency uses constant persistence and surviving input contributions on the
+ambiguous cell. Finite permutation images contained in a test are equal to it;
+incidence separation then forces every occurrence permutation to be identity.
+
+The full diagonal size result permits arbitrary domains in the lower bound
+and attains the optimum using ambiguous values alone. Roles inject into the
+Boolean incidence words other than all-one, giving K≤2^m−1. `Nat.clog 2 (K+1)`
+is mathlib's natural ceiling logarithm, characterized by K+1≤2^m. At least three
+tests are necessary whenever three roles exist: with two tests, the conditions
+would force every test to be a singleton, which an ambiguity-adder fixes
+without being idempotent. The complements of singletons attain three at K=3.
+
+For K≥4, the generic attaining construction selects K distinct proper subsets
+of an m-element coordinate set, reserving all complements of coordinate
+singletons. Each coordinate consequently contains at least two assigned roles,
+so each test is ambiguous. Properness gives empty intersection; distinct labels
+give incidence separation. Finset extension and cardinal equivalences prove
+existence for every K, independently of a finite list of computed examples.
+This co-singleton reservation is an alternative to the cycle used in the
+written proof and establishes the same asserted minimum.
+
+The regressions verify that two singleton tests on three roles can satisfy both
+incidence conditions yet fail certification, and that a valid ambiguous domain
+may omit a role from every test. Independent Python checks exhaust the small
+reduct/domain cases (K=3,4) and check diagonal constructions through K=64;
+these are cross-checks, not the cardinality proofs.

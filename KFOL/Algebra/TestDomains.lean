@@ -94,12 +94,12 @@ theorem exists_constant [Fintype Role] (three : Fin 3 ↪ Role) (A : WinnerSet R
   exact ⟨fun h => h.elim (fun h => h ▸ ha) (fun ⟨i, hi, hk⟩ => hk ▸ hi),
     fun hk => Or.inr ⟨k, hk, rfl⟩⟩
 
-private def suppress (roles : List Role) (acc base : Term Role Var) : Term Role Var :=
+def suppress (roles : List Role) (acc base : Term Role Var) : Term Role Var :=
   match roles with
   | [] => acc
   | r :: rest => .choice r (suppress rest acc base) base
 
-private theorem eval_suppress_atom (roles : List Role) (acc base : Term Role Var)
+theorem eval_suppress_atom (roles : List Role) (acc base : Term Role Var)
     (v : Var → WinnerSet Role) (a : Role) (ha : a ∈ roles)
     (hbase : base.eval v = WinnerSet.singleton a) :
     (suppress roles acc base).eval v = WinnerSet.singleton a := by
@@ -112,7 +112,7 @@ private theorem eval_suppress_atom (roles : List Role) (acc base : Term Role Var
       simp [suppress, eval, hbase, WinnerSet.choice]
     · simp only [suppress, eval, ih hr, hbase, WinnerSet.choice_self]
 
-private theorem eval_suppress_ambiguous (roles : List Role) (acc base : Term Role Var)
+theorem eval_suppress_ambiguous (roles : List Role) (acc base : Term Role Var)
     (v : Var → WinnerSet Role) (hbase : ∀ r, base.eval v ≠ WinnerSet.singleton r)
     (hsub : (base.eval v).val ⊆ (acc.eval v).val) :
     (suppress roles acc base).eval v = acc.eval v := by
@@ -203,28 +203,6 @@ private theorem exists_pair_expander [Fintype Role] (three : Fin 3 ↪ Role)
     · exact False.elim (hm (Or.inl (hk ▸ hi)))
     · exact False.elim (hm (Or.inr ⟨i, ⟨ha, hb, hk⟩, hi⟩))
 
-private theorem eq_pair_of_ambiguous_subset (A : WinnerSet Role) (a b : Role)
-    (hA : ∀ r, A ≠ WinnerSet.singleton r) (hsub : A.val ⊆ {a, b}) : A.val = {a, b} := by
-  have ha : a ∈ A.val := by
-    apply Classical.byContradiction
-    intro ha
-    apply hA b
-    apply WinnerSet.eq_singleton_of_subset
-    intro x hx
-    rcases Set.mem_insert_iff.mp (hsub hx) with h | h
-    · exact False.elim (ha (h ▸ hx))
-    · exact h
-  have hb : b ∈ A.val := by
-    apply Classical.byContradiction
-    intro hb
-    apply hA a
-    apply WinnerSet.eq_singleton_of_subset
-    intro x hx
-    rcases Set.mem_insert_iff.mp (hsub hx) with h | h
-    · exact h
-    · exact False.elim (hb (Set.mem_singleton_iff.mp h ▸ hx))
-  exact Set.Subset.antisymm hsub (Set.pair_subset_iff.mpr ⟨ha, hb⟩)
-
 /-- A unary full-language equation isolates each particular two-element input.
 Both terms are assembled from the existing primitive constructors. -/
 theorem exists_pair_separator [Fintype Role] (three : Fin 3 ↪ Role)
@@ -272,7 +250,7 @@ theorem exists_pair_separator [Fintype Role] (three : Fin 3 ↪ Role)
     · obtain ⟨r, rfl⟩ := h
       rw [hp_atom, hq_atom]
     · have hA : ∀ r, A ≠ WinnerSet.singleton r := fun r he => h ⟨r, he⟩
-      have hnsub : ¬ A.val ⊆ {a, b} := fun hs => hne (eq_pair_of_ambiguous_subset A a b hA hs)
+      have hnsub : ¬ A.val ⊆ {a, b} := fun hs => hne (WinnerSet.eq_pair_of_ambiguous_subset A a b hA hs)
       rw [hp_amb A hA, hq_amb A hA]
       apply Subtype.ext
       apply Set.eq_univ_of_forall

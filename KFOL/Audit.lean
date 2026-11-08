@@ -10,6 +10,10 @@ import all KFOL.Algebra.Idempotent
 import all KFOL.Algebra.Views
 import all KFOL.Algebra.SemilatticeTrace
 import all KFOL.Algebra.CommonSource
+import all KFOL.Algebra.ReductTests
+import all KFOL.Algebra.ReductTestCard
+import all KFOL.Algebra.IdempotencyTests
+import all KFOL.Algebra.IdempotencyTestCard
 import all KFOL.Algebra.TestDomains
 import all KFOL.Algebra.TestDomainCard
 import all KFOL.Algebra
