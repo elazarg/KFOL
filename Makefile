@@ -9,7 +9,7 @@ PYTHON_CHECKS := $(sort $(wildcard checks/check_*.py))
 LEAN_MODULES := Basic Perspectives CoreModels CoreObstruction CoreMixed CoreConservative CoreQuotients CoreAtomic Synthesis BooleanCore Separation FullAlgebra Reset ResetModels OneConstant Fragments RawFragments OwnerFragments OwnerModels ChainGuards MixedPolicies SealedRounds
 LEAN_OBJECTS := $(addprefix build/lean/,$(addsuffix .olean,$(LEAN_MODULES)))
 
-.PHONY: all paper overleaf check check-python check-lean clean
+.PHONY: all paper overleaf check check-python check-lean check-legacy-lean check-algebra clean
 
 all: paper
 
@@ -34,7 +34,12 @@ check: check-python check-lean
 check-python:
 	@set -e; for script in $(PYTHON_CHECKS); do $(PYTHON) $$script; done
 
-check-lean: $(LEAN_OBJECTS)
+check-lean: check-legacy-lean check-algebra
+
+check-legacy-lean: $(LEAN_OBJECTS)
+
+check-algebra:
+	$(PYTHON) scripts/check_algebra.py
 
 build/lean/%.olean: lean/%.lean lean-toolchain | build/lean
 	cd lean && LEAN_PATH=../build/lean $(LEAN) -DwarningAsError=true -o ../$@ $*.lean

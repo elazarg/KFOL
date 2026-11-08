@@ -39,18 +39,40 @@ Layout:
     sections/         Sections, appendices, macros, and label snapshots
     scripts/          Label export between the two documents
     lean/             Twenty-two Lean proof modules, using only Std
+    KFOL/             Mathlib-based algebra slice, independent of GameTheory
+    Paper.lean        Complete statements of the migrated main-paper claims
+    lakefile.toml     Lake targets and mathlib v4.35.0 dependency
+    lake-manifest.json Immutable resolved dependency revisions
+    tests/            Isolated syntax compatibility checks
     checks/           Python models and independent finite checks
     notes/            Exploration not claimed in the paper
-    lean-toolchain    Lean version (4.34.1)
+    lean-toolchain    Lean version (4.35.0)
     build/            Generated PDF, upload ZIP, and compiled proofs
 
-Run all verification with Python 3 and Lean installed through elan:
+With Python 3 and Lean installed through elan, fetch the pinned dependencies
+and cache, then run verification:
+
+    lake update
+    lake exe cache get Mathlib.Data.Set.Image Mathlib.GroupTheory.Perm.Basic Mathlib.Data.Fintype.List Mathlib.Data.Sym.Card Mathlib.SetTheory.Cardinal.Finite Mathlib.ModelTheory.Semantics
 
     make check
 
 make check-python and make check-lean run either part separately. Python
-needs only the standard library. Lean imports are built in dependency
-order, with generated files under build/lean. make clean removes build/.
+needs only the standard library. make check-legacy-lean builds the Std modules
+in dependency order under build/lean. make check-algebra independently builds
+KFOL.Algebra and Paper, checks transitive imports and all authored axiom
+dependencies (including private helpers), and checks the test-only mathlib
+syntax adapter. make check-lean runs both Lean tracks. Lake artifacts are under
+.lake/; make clean removes build/.
+
+Paper.lean currently exposes sym:thm:pairs and sym:thm:optimal as
+KFOL.Paper.pair_countervaluations and KFOL.Paper.optimal_test_domain. Each
+repeats the complete claim, including necessity, leastness and the exact
+K(K+1)/2 count for the optimal domain. The new slice uses mathlib sets and
+permutations, with no GameTheory, complexity, or legacy strategic imports.
+Its definition index and syntax decision are notes/formalization-definitions.md
+and notes/formalization-syntax.md. Other paper claims retain the status below.
+
 checks/probe_residual.py is an optional experiment, outside the checks;
 it establishes no residual bound for the whole variety.
 checks/probe_core_basis.py optionally enumerates small models of candidate
