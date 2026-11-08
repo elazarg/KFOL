@@ -285,8 +285,9 @@ results in four groups.
   With two active choices and a single doubled point over a non-atomic
   base, every product creating that point is confined to the base's
   atomic unit ideal. A relation extending the identity on this ideal
-  supplies a core cover of the whole extension
-  (\cref{core:prop:single-neutral-unit-localization}).
+  supplies a core cover of the whole extension, but a nine-element
+  core base has a core neutral doubling without such a relation
+  (\cref{core:prop:single-neutral-unit-localization,core:prop:unit-diagonal-obstruction}).
   Flat quotients need not jointly separate a general atomic
   extension, even a five-element core algebra. Matching generation
   over a free atomic base still need not give separation by native
@@ -8689,6 +8690,39 @@ since the neutral variable $x_e$ is fixed. One such witness per
 assignment gives the finite constraint system used above.
 \end{proof}
 
+The typing constraints admit a cancellation rule at selected-choice nodes.
+It depends only on reflection and an inequality at the cloned point.
+
+\begin{lemma}[Cancellation at an extensive coefficient]
+\label{core:lem:upper-clone-extensive-cancellation}
+Let $C\models\Gamma_K$ and suppose $A_e(C)\models\Gamma_K$.
+Fix a choice $f$ and elements $t,u\in C$ such that
+$e\leq f(e,t)$. If $z=f(t,u)\leq e$, then
+\[
+ u\leq e,\qquad f(e,u)\leq f(e,z).
+\]
+In particular, if $z$ has ideal owner type $f$, then so does $u$.
+If $C$ also satisfies all ordered mixed absorption, the hypothesis
+holds for every term $t(e,\vec x)$ whose complementary Boolean
+$f$-profile satisfies $e\leq t^{[f]}$.
+\end{lemma}
+\begin{proof}
+Monotonicity and associativity give
+\[
+ f(e,u)\leq f(f(e,t),u)=f(e,z)\leq f(e,e)=e.
+\]
+Reflection \textup{(R)} of \cref{core:prop:rigid-upper-clone}
+gives $u\leq e$. If $z$ has type $f$, then $f(e,z)<e$;
+the displayed inequality makes $f(e,u)<e$, giving the same type.
+The profile assertion is \cref{core:prop:profile-polarity}.
+\end{proof}
+
+At a foreign-choice or join node, one child satisfying the Boolean
+condition suffices; at an $f$-node, both suffice. Thus the rule
+also applies to arbitrarily nested foreign-choice or join translations
+starting at $e$. Such an operand cannot create an $f$-owned return
+unless the other operand already has that type.
+
 The individual Boolean extension also works with further active choices
 when one owned branch has no return from two points outside that branch.
 The branch may be empty.
@@ -10381,6 +10415,70 @@ both old inputs lie in $I$, where exactness identifies their
 $D$-coordinates with their target values. The product is therefore
 preserved. At every other old output the target fiber is a singleton,
 so preservation is automatic. This gives $S\twoheadrightarrow A$.
+\end{proof}
+
+The diagonal-cover condition can fail even for a core extension.
+
+\begin{proposition}[A unit ideal need not admit a diagonal cover]
+\label{core:prop:unit-diagonal-obstruction}
+For every $K\geq3$ there are core algebras $Q,A$ of sizes $9,10$, with only two
+active choices $f,g$, having the following properties. The reset units
+of $Q$ form $I=\mathord\downarrow e$, and
+\[
+ h(e,x)\leq e\ \Longrightarrow\ x\leq e
+ \qquad(h\in\{+,f,g\}).
+\]
+There is a three-element atomic subalgebra $U=\{0,e,1\}\leq I$
+whose single-neutral bit reconstruction is $A$.
+Nevertheless no subalgebra $R\leq Q\times I$ projects onto $Q$
+and has fiber $\{(i,i)\}$ over every $i\in I$.
+\end{proposition}
+\begin{proof}
+In $D_{\{f,g\}}^3$, with atoms $\alpha,\beta$ owned by $f,g$,
+put
+\[
+\begin{gathered}
+ 0=\alpha\alpha\alpha,\quad a=n\alpha\alpha,\quad
+ e=nnn,\quad b=\beta n\beta,\quad 1=\beta\beta\beta,\\
+ I=\{0,a,e,b,1\},\qquad
+ M=\{\alpha,n\}\times\{n,\beta\}\times\{p\},\qquad Q=I\cup M.
+\end{gathered}
+\]
+The raw $f,g$ order on $I$ is the chain $0<a<e<b<1$.
+Both blocks are closed. A mixed $f$-product can erase the third
+coordinate's $p$ only at $0,a$, and then returns $0$ or $a$;
+$g$ is dual at $b,1$. All other mixed products remain in $M$.
+Thus $Q$ is a proper native subpower. Its units are exactly $I$:
+atomic vectors are units, whereas resetting $e$ by a point of $M$
+changes its third coordinate to $p$. This coordinate also proves
+reflection and $I=\mathord\downarrow e$.
+
+For $x=\alpha\beta p$ we have $f(a,x)=0$ and $g(b,x)=1$.
+A pair $(x,i)\in R$ would therefore require
+$f(a,i)=0$ and $g(b,i)=1$. In the five-element chain these force
+$i=0$ and $i=1$, respectively, a contradiction.
+
+The reconstruction over $U=\{0,e,1\}$ is core as well. Give $0,1$ only bit $0$, double $e$, and give every
+other point of $Q$ only bit $1$, with the usual maximum-bit rule
+and erasure over $0,1$. Its first factor retains the old third native
+coordinate. Its second factor retains the old first two coordinates
+and the bit, identifying only $(nnp,1)$ with $(e,1)$.
+The latter factor is the regional doubling over
+\[
+ J=\{\alpha,n,\beta\}^{2}\setminus\{(\beta,\alpha)\},
+ \qquad U'=\{\alpha\alpha,nn,\beta\beta\}.
+\]
+Here $f,g$ are meet and join, with median marked at $nn$.
+The endpoint regions are singletons; meet with $nn$ reaches the
+bottom only from the bottom, and join with $nn$ reaches the top
+only from the top. The only pair with meet bottom and join top is
+the endpoint pair: the other possible complementary corners would
+require the omitted point $(\beta,\alpha)$.
+Thus \cref{core:thm:atomic-region-doubling} makes this factor core.
+The first map is a base projection, and the second preserves the
+bit rule because its endpoint preimages are exactly $0,1$. The first
+separates the sole pair identified by the second. Their product embeds $A$,
+proving its core membership.
 \end{proof}
 
 The horizontal cover cannot in general be replaced by a subdirect
