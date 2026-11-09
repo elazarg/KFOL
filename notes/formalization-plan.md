@@ -34,7 +34,7 @@ The current target includes full machine-level complexity theorems and the full 
 
 ## Architectural decisions
 
-1. Use a Lake package, namespace `KFOL`, and the user's pinned GameTheory library with its matching mathlib version. The inspected GameTheory revision `c6650cd861d4a05a64adb2e4fd99a4feafa231b0` uses Lean/mathlib 4.35.0; KFOL now uses Lean/mathlib 4.35.0 for the completed first algebra slice, while the original baseline used Lean 4.34.1. Reuse its canonical PMFs, strategic definitions, Nash/minimax and SE foundations. The user intends GameTheory to update to the newer ComplexityLib; select that updated compatible dependency set at the strategic/complexity integration gate instead of fixing the previously inspected legacy ComplexityLib pin as the implementation target. Start the independent mathlib-only algebra slice meanwhile. Validate the selected imports in an isolated downstream workspace and retain the current build during migration.
+1. Use a Lake package, namespace `KFOL`, and the user's pinned GameTheory library with its matching mathlib version. The inspected GameTheory revision `c6650cd861d4a05a64adb2e4fd99a4feafa231b0` uses Lean/mathlib 4.35.0; KFOL now uses Lean/mathlib 4.35.0, while the original baseline used Lean 4.34.1. Reuse its canonical PMFs, strategic definitions, Nash/minimax and SE foundations. The first machine gate now validates the complexity extension's currently pinned ComplexityLib revision `257ad90ec5f547894cc20f27bd828839b1bf7bbf` on that release, with unchanged dependency sources. KFOL pins it directly for the first certified primitive. The user's intended newer GameTheory/ComplexityLib integration remains a separate gate; keep the imported machine facade narrow so that update does not alter the independent word definitions or algebra. No upstream GameTheory files are modified.
 2. Put every main-paper claim in root `Paper.lean`, including prose claims whose formal statements must be supplied from the report. Required report support lemmas normally remain in their natural library modules; export them in `Paper.lean` only when they express a main-paper assertion. Each theorem repeats its complete proposition, with its hypotheses and quantifiers. Its proof may invoke an implementation theorem. Neither `export`, an inferred theorem type, nor `theorem result : NamedClaim` is an acceptable public statement.
 3. Concentrate the intended meaning in a small collection of `KFOL/Definitions/*.lean` modules, reusing imported semantic definitions through a small documented interface. Separate the algebraic public syntax from its strategic interpretation so algebra imports no GameTheory modules. Proof modules may introduce constructions and helper definitions, but every project-defined constant in a public theorem's type must be documented in the definition index, including transitive dependencies. Six algebraic definition files currently suffice; later strategic and round definitions must stay in their own modules.
 4. Reuse mathlib's sets, permutations, algebraic languages, homomorphisms, substructures and quotients where they fit. The prototype selected native public traversals. The completed shared equational layer uses mathlib terms with exact production full/core codecs, including evaluation, support and substitution compatibility. It proves generic completeness using mathlib quotient operations; the Equational Theories Project is a proof reference, not an imported dependency. The shared winner-set operations remain the semantic API.
@@ -69,7 +69,7 @@ flowchart TD
 
 `Definitions/Strategic.lean` compiles the shared public syntax to GameTheory and names its canonical profile, deviation and SPE specializations. A bridge proves that possible SPE winners equal the existing algebraic evaluator. The evaluator remains independent of equilibrium. Keep GameTheory names out of the pure theorem signatures as well as their imports; an unused theorem parameter or typeclass still couples the APIs.
 
-Provide independently buildable module targets such as `lake build KFOL.Algebra`, `lake build KFOL.Strategic`, and `lake build Paper`. A CI import-graph check rejects any transitive dependency from the algebraic branches to `GameTheory`, `GameTheoryComplexity`, `FixedPointTheorems`, the KFOL strategic/round wrappers, or complexity-machine modules. Checking direct import lines alone is insufficient. This boundary is implemented for the pair-countervaluation and sharp-domain slice by `KFOL/Audit.lean` and `scripts/check_algebra.py`; later strategic and complexity branches have not been added.
+Provide independently buildable module targets such as `lake build KFOL.Algebra`, `lake build KFOL.Strategic`, and `lake build Paper`. A CI import-graph check rejects any transitive dependency from the algebraic branches to `GameTheory`, `GameTheoryComplexity`, `FixedPointTheorems`, the KFOL strategic/round wrappers, or complexity-machine modules. Checking direct import lines alone is insufficient. `KFOL.Audit.Algebra` now checks that compiled boundary independently; `KFOL.Audit` checks all authored axiom dependencies, including private machine helpers. `scripts/check_algebra.py` enforces exact source coverage and builds the pure target before the complete Paper target. The first complexity module is present; strategic integration remains separate.
 
 In one Lake package, dependency resolution still fetches the packages declared by that package; Lean module imports control which definitions and proofs an algebra consumer loads and which modules its target needs built. A pinned toolchain is also package-wide. If algebra users must avoid even resolving/downloading GameTheory or must choose another compatible toolchain, split into an algebra package requiring only mathlib and a strategic companion requiring that package plus GameTheory. The same import layout supports that later split without rewriting the mathematics; the initial design does not require multiple packages.
 
@@ -107,20 +107,22 @@ For each required inventory row, implementation review records the public declar
 | `Definitions/TestDomains.lean` | Full/reduct equation testing and diagonal certification predicates |
 | `Definitions/Reset.lean` | Primitive reset, generic signature, selection, canonical tables, independent rooted antimatroids and actual semantic term functions |
 | `Definitions/Equational.lean` | Relation-free mathlib language, finite identities, satisfaction, theories, derivation, basis, variable bound, algebra structures, full/core signatures and codecs |
+| `Definitions/Algorithms.lean` | Exact membership-word bitset codec, independent prerequisite scan and its fixed-arity interface; no machine imports |
 
-These are the six current algebraic definition modules. `Equational` imports
+These are six algebraic definition modules and one word-algorithm module. `Equational` imports
 `Core`, which imports `Public`; it adds only mathlib dependencies. See the
 [definition index](formalization-definitions.md) for their actual contents and
 imported mathematical surface. Proof constructions live in the corresponding
 proof modules.
 
-Planned separate definition modules are `Algorithms` (encodings, lengths and
-algorithm specifications), `Strategic` (compilation to narrow GameTheory
+Extend `Algorithms` for further encodings, lengths and algorithm specifications.
+Planned separate definition modules are `Strategic` (compilation to narrow GameTheory
 leaves, profiles, deviations and SPE), and `Rounds` (finite rounds, imported
 Nash/SE specializations, outcomes and contextual observations). Mathematical
 reset and guard semantics may extend the existing algebraic definitions or
 occupy a small dedicated file. Complexity classes and machine specifications
-belong in an audited `Complexity/Language.lean` facade. None of these branches
+belong in the audited `Complexity/Language.lean` facade, now implemented for
+ComplexityLib's fixed-arity polynomial-time interface. None of these branches
 may enlarge the pure algebra's imported surface with game or machine libraries.
 Cross-layer adequacy proofs live in bridge modules. Imported definitions are
 part of the definition audit where used.
@@ -545,11 +547,34 @@ The same six definition files contain the occurrence counts and collector.
 Regressions distinguish repeated leaves, duplicate raw entries and dominated
 guards, and compute a padded example over ℕ without a finite ambient type.
 
-The remaining reset algorithm work is binary encoding and certified polynomial
-machine running time for extraction, recognition, synthesis and substitution.
-Those adapters belong in the complexity branch; the algebra continues to
-import only mathlib. The full canonical-table and realizability results remain
-partial until their machine-time clauses are checked.
+### Machine foundation and prerequisite primitive checked
+
+An isolated downstream gate builds the pinned ComplexityLib Cobham/FPn API on
+Lean/mathlib 4.35.0 without source patches and checks its standard axiom list.
+The same immutable ComplexityLib and Cslib revisions used by GameTheory's
+complexity extension are now direct KFOL dependencies; the existing mathlib
+pin remains unchanged. There is no GameTheory or GameTheoryComplexity import.
+
+`KFOL.Paper.reset_guard_subset_machine` states polynomial time for the actual
+word-level prerequisite-subset test in the imported Turing-machine model.
+It includes the exact codec, all-width finite-set correspondence, rejection of
+unequal widths and the connection to the independent guard-enabling predicate.
+The program scans positions by input word length with a one-bit recursive
+state; Cobham's bounded-recursion theorem supplies the machine certificate.
+The pure word definitions and correctness proofs remain mathlib-only.
+
+The audit now has separate compiled environments: `KFOL.Audit.Algebra` rejects
+all transitive game/machine imports from the algebra and word semantics;
+`KFOL.Audit` checks every authored declaration and private helper against the
+standard allowed axioms. Exact import-all source coverage is still enforced.
+Regressions compute successful and failed inclusions, coordinate order, invalid
+widths, zero-width inputs and a concrete guard-enabling case.
+
+This establishes a machine component and dependency compatibility, not the
+planned end-to-end reset/union reduction gate. Next connect sparse binary labels
+and compact support indices to framed guard records and certify their scans.
+Full extraction, normalization/equality, recognition, synthesis and substitution
+machine bounds, class transport and the strategic gates remain obligations.
 
 | Milestone | Prerequisites | Concrete completion gate |
 | --- | --- | --- |

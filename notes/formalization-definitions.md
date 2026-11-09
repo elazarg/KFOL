@@ -45,10 +45,12 @@ equality and quantifiers. The dependency is mathlib v4.35.0, locked to revision
 `56a005855ea17e0b0958f73ec801ae140b0a1679` in `lake-manifest.json`.
 
 Root `Paper.lean` guards each theorem's exact axiom list:
-`propext`, `Classical.choice`, `Quot.sound`. `KFOL/Audit.lean` checks all authored
-declarations in the slice, including private helpers, and the compiled
-transitive module list. `scripts/check_algebra.py` checks that the audit's
-explicit import list covers the slice's source modules. Run `make check-algebra`.
+`propext`, `Classical.choice`, `Quot.sound`. `KFOL/Audit.lean` checks every
+authored declaration, including private helpers in the machine branch.
+`KFOL/Audit/Algebra.lean` separately checks the compiled transitive imports of
+the pure algebra and word semantics. `scripts/check_algebra.py` checks exact
+source coverage by the whole-project audit and builds the pure target before
+loading Paper and the machine proofs. Run `make check-algebra`.
 
 The sharp domain theorem adds no primitive term constructors or operations.
 `Term.unionTerm` derives union from three distinct owners; `Term.exists_constant`
@@ -558,3 +560,45 @@ raw entries and self-dependencies removed by normalization. A term over the
 infinite variable type ℕ, using labels 7 and 100000, checks that the bounds
 depend on actual support rather than the size of an ambient declaration.
 All finite checks use kernel `decide`.
+
+## Word representations and the first machine component
+
+The six algebraic definition files remain independent of machine libraries.
+The seventh definition file, `Definitions/Algorithms.lean`, adds the following
+mathlib-only representations and program:
+
+| Definition | Meaning and dependencies |
+| --- | --- |
+| `Algorithms.Bitset.encode` | One membership bit per position in `Fin n`, in increasing index order |
+| `Algorithms.Bitset.decode` | Accept exactly width n and recover the represented finite set |
+| `Algorithms.GuardWords.readBit` | Position lookup, returning false outside the word |
+| `GuardWords.subsetStep` | Conjoin the previous flag with one coordinate implication |
+| `GuardWords.subsetScan` | Visit each position below the ruler's length; ruler bit values do not control the iteration count |
+| `GuardWords.subsetWord`, `subsetFn` | Reject unequal widths, test subset inclusion, and expose the fixed-arity word interface |
+
+`Algorithms/GuardWords.lean` proves both directions of the exact codec, the
+total word semantics and equivalence with finite-set inclusion. Its
+`enabled_iff_subsetWord` theorem connects that test to the existing
+`Reset.GuardTable.Enabled` predicate. These proofs import no complexity classes.
+
+`Complexity/Language.lean` is the imported-definition facade. ComplexityLib's
+`Complexity.Cobham.FPn` means that a unary `Complexity.FP` function computes the
+given fixed-arity function on its canonical tuple encoding. `FP` quantifies
+over an actual deterministic Turing machine, a time function and a polynomial
+asymptotic bound. The facade imports these existing definitions and their
+Cobham correspondence; it does not redefine polynomial time through this
+particular program. Their immutable source is pinned in `lake-manifest.json`.
+
+`Complexity/GuardSubset.lean` expresses the independently defined scan in
+Cobham's bounded-recursion algebra. The recursive state has exactly one bit,
+giving a constant bound at every iteration. The library's proved
+`cobham_iff_FPn` supplies the machine certificate. Root
+`KFOL.Paper.reset_guard_subset_machine` repeats the polynomial-time property,
+codec, total semantics and guard-enabling correspondence, uniformly in width.
+
+This is a dense membership-word intermediate representation, already indexed
+by `Fin n`. Sparse binary variable-name encodings, support compression, record
+framing and full table traversals retain their separate obligations. The
+primitive loops on input word lengths, with no decoded numeric-value clock.
+Regressions cover coordinate order, failed inclusions, unequal widths, the
+empty width, the actual certified fixed-arity function and guard enabling.

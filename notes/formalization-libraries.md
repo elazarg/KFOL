@@ -1,10 +1,10 @@
 # Supporting libraries for the main paper formalization
 
-The recommended foundation is the user's **GameTheory library plus mathlib**, with its forthcoming updated ComplexityLib integration for computational claims. The pins below record the source inspected during the assessment; the user has since indicated that GameTheory will update to the newer ComplexityLib. Select and verify the updated compatible dependency set before the strategic/complexity gate, while the independent algebra milestone proceeds. Mixed Nash existence, minimax, independent sequential equilibrium, finite SE existence, and machine-based complexity foundations have existing implementations. The remaining work is predominantly the paper's algebra and the bridges from its syntax to those implementations.
+The foundation is the user's **GameTheory library plus mathlib**, with its intended updated ComplexityLib integration for computational claims. The current extension's machine API is now validated on KFOL's v4.35.0 toolchain for a first primitive; the successor and strategic integration gates remain separate. Mixed Nash existence, minimax, independent sequential equilibrium, finite SE existence, and machine-based complexity foundations have existing implementations. The remaining work is predominantly the paper's algebra and the bridges from its syntax to those implementations.
 
 The target is the entire **main paper and its necessary report dependencies**. General real quantifier elimination, the semantic/syntactic dependent-calculus development, and the full ambiguity appendix are not prerequisites. The main-paper scope edit `6dff3f0` removed the private-store connection claim and the two numerical free-algebra lists. A pointer to an appendix does not import every theorem in that appendix into the target; substantive mathematical assertions made in the main text still count.
 
-This library assessment inspected source definitions, theorem hypotheses, dependency pins, and delivery documentation; it is not a fresh GameTheory integration build certification. The separate mathlib-only KFOL pair slice has since been built and audited on v4.35.0. The sibling GameTheory checkout has no compiled objects for the inspected analytic leaves at the ordinary build paths; no build, dependency update, or source edit was performed there.
+This assessment is not a fresh GameTheory integration build certification. The independent KFOL algebra has been built and audited on v4.35.0. A separate downstream gate now also builds the currently pinned ComplexityLib Cobham/FPn interface on that release, without dependency source patches, and checks its standard axiom list. KFOL uses that compatible pin for its first prerequisite-subset machine certificate. The successor integration and GameTheory strategic/analytic gates remain separate; no build, dependency update, or source edit was performed in the sibling GameTheory checkout.
 
 ## Pins and package boundaries
 
@@ -12,7 +12,7 @@ The inspected sibling GameTheory revision is `c6650cd861d4a05a64adb2e4fd99a4feaf
 
 Its optional `extensions/complexity` package pins ComplexityLib at `257ad90ec5f547894cc20f27bd828839b1bf7bbf` and CSLib at `94ea80f41a5678fce997a004f0d8d12dbe47cc4b`. That package's published base GameTheory pin is `c7cd6bed7498b9a16edb22262e9522ceff90648c`, which differs from the sibling checkout. Its documented local path override selects the sibling version, but this combination still needs a downstream integration build.
 
-Use immutable git pins for the eventual deliverable. Keep GameTheory's analysis imports confined to the KFOL round proof branch. Keep complexity-machine imports confined to complexity/algorithm modules. Do not import either full umbrella merely to obtain a small theorem. KFOL's first algebra milestone has upgraded its Lean/mathlib pins to v4.35.0. GameTheory and successor ComplexityLib integration remain separate future gates.
+KFOL now directly pins the current extension's ComplexityLib and CSLib revisions, overriding their inherited mathlib snapshot with v4.35.0. This validates that API for the first machine component; it does not settle the intended successor migration. The pure word definitions are independent, and `KFOL.Complexity.Language` confines the imported interface. GameTheory's analysis imports remain confined to the planned round branch. No full GameTheory or complexity umbrella is imported to obtain the primitive.
 
 GameTheory itself stays out of the pure algebraic import closure. `Definitions/Public.lean` contains shared syntax and winner-set evaluation using mathlib; `Definitions/Strategic.lean` imports it and provides the GameTheory interpretation. Views, reset, guards, identities and nonfinite basability depend on the former only. Adequacy connects algebraic evaluation to SPE in the strategic branch. Complexity proofs can import the pinned ComplexityLib directly and reuse GameTheoryComplexity's implementation ideas without importing that companion's game modules. The [plan](formalization-plan.md) specifies independent build targets and transitive import checks. A single Lake package still resolves its declared dependencies; a separate algebra package is needed only if avoiding even GameTheory downloads or the shared toolchain becomes a requirement.
 
@@ -103,6 +103,14 @@ The [plan's mathlib-only pair-countervaluation delivery milestone](formalization
 4. Implement one reset/union reduction on the pinned 3SAT codec, including malformed words and a polynomial-time certificate. Reuse `NPComplete.compl` and transfer to the same encoded KFOL equation language. Record the reusable machine components separately from fragment-specific work, then assess policy-family and DAG reductions before extrapolating the total cost or number of machines.
 5. Use the native-versus-mathlib syntax decision already made in the first algebra milestone. Reopen it only if a concrete strategic or complexity consumer exposes a defect; do not repeat the comparison routinely.
 
+The current-pin Cobham/FPn subgate has passed in isolation and in the production
+package, with only `propext`, `Classical.choice` and `Quot.sound`. The actual
+width-independent prerequisite-subset program is connected to finite-set
+inclusion and the existing guard-enabling predicate. This is a reusable machine
+component, not completion of Gate 1's successor/GameTheory integration or
+Gate 4's end-to-end reduction. Sparse binary labels, support compression and
+framed guard records are the next representation work.
+
 These gates test the actual reuse seams. Once they pass, the remaining effort can be estimated from the paper-specific proof obligations, rather than from rebuilding foundations already available in the user's libraries.
 
 The [plan's editorial proposals](formalization-plan.md) distinguish this current target from possible manuscript changes. Moving the serial-SE correspondence or a discussion-level report claim out of the main text would change the required dependency graph; no such edit is assumed by this library assessment.
@@ -111,5 +119,6 @@ The main antimatroid representation is now proved in `KFOL/Reset/Antimatroid`
 using mathlib finite sets and lists. The model uses the finite feasible-family
 axioms directly, proves both constructions and inverse laws, and identifies
 actual winner-set term functions through the existing selector/chain interface.
-It imports no external representation theorem. Compact table recognition and
-synthesis remain the next part of that branch.
+It imports no external representation theorem. Compact table realizability,
+executable recognition and synthesis, and raw/canonical extraction-size bounds
+are now also checked. Their full encoded machine-time statements remain partial.

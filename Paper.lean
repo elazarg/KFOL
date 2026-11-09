@@ -1,6 +1,8 @@
 module
 
 public import KFOL.Algebra
+public import KFOL.Algorithms.GuardWords
+public import KFOL.Complexity.GuardSubset
 
 /-!
 # Kernel-checked paper claims
@@ -674,5 +676,37 @@ theorem reset_table_size {Var : Type v} [DecidableEq Var] (t : Reset.Term Var) :
 [propext, Classical.choice, Quot.sound] -/
 #guard_msgs (whitespace := lax) in
 #print axioms KFOL.Paper.reset_table_size
+
+/-- The first machine component of the reset table algorithms: the actual
+word program is polynomial-time in ComplexityLib's Turing-machine model,
+uniformly in input width. Its exact bitset codec and its connection to the
+independent guard-enabling predicate are repeated here. This does not assert
+polynomial time for the whole table recognizer or synthesizer. -/
+theorem reset_guard_subset_machine :
+    _root_.Complexity.Cobham.FPn (fun v : Fin 2 → List Bool =>
+      Algorithms.GuardWords.subsetWord (v 0) (v 1)) ∧
+    (∀ (n : ℕ) (A : Finset (Fin n)),
+      (Algorithms.Bitset.encode A).length = n ∧
+      ∀ word : List Bool, Algorithms.Bitset.decode n word = some A ↔
+        word = Algorithms.Bitset.encode A) ∧
+    (∀ (n : ℕ) (A B : Finset (Fin n)),
+      Algorithms.GuardWords.subsetWord (Algorithms.Bitset.encode A)
+        (Algorithms.Bitset.encode B) = [true] ↔ A ⊆ B) ∧
+    (∀ a b : List Bool, Algorithms.GuardWords.subsetWord a b = [true] ↔
+      a.length = b.length ∧ ∀ i < a.length,
+        Algorithms.GuardWords.readBit a i = true → Algorithms.GuardWords.readBit b i = true) ∧
+    (∀ (n : ℕ) (G : Reset.GuardTable (Fin n)) (A : Finset (Fin n)) (j : Fin n),
+      G.Enabled (A : Set (Fin n)) j ↔ ∃ C ∈ G.guards j,
+        Algorithms.GuardWords.subsetWord (Algorithms.Bitset.encode C)
+          (Algorithms.Bitset.encode A) = [true]) :=
+  ⟨Complexity.GuardSubset.subsetFn_mem_FPn,
+    fun _ A => ⟨Algorithms.Bitset.length_encode A, fun w => Algorithms.Bitset.decode_eq_some_iff w A⟩,
+    fun _ A B => Algorithms.GuardWords.subsetWord_encode A B,
+    Algorithms.GuardWords.subsetWord_correct, fun _ G A j => Algorithms.enabled_iff_subsetWord G A j⟩
+
+/-- info: 'KFOL.Paper.reset_guard_subset_machine' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Paper.reset_guard_subset_machine
 
 end KFOL.Paper

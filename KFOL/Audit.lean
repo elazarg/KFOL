@@ -1,5 +1,10 @@
 module
 
+import all KFOL.Audit.Algebra
+import all KFOL.Definitions.Algorithms
+import all KFOL.Algorithms.GuardWords
+import all KFOL.Complexity.Language
+import all KFOL.Complexity.GuardSubset
 import all KFOL.Definitions.Public
 import all KFOL.Definitions.Core
 import all KFOL.Definitions.Views
@@ -61,23 +66,16 @@ meta import Lean.Elab.Command
 meta import Lean.Util.CollectAxioms
 
 /-!
-# The algebra slice's import and axiom boundaries
+# Whole-project axiom audit
 
-Inspect the loaded environment, including private authored declarations and
-every transitively loaded module. A source-only import check would miss an
-unwanted dependency hidden behind another import.
+Inspect every authored declaration, including private helpers and all
+transitive axiom dependencies. The separate KFOL.Audit.Algebra target checks
+the pure module closure before Paper and the machine proofs are loaded.
 -/
 
 open Lean in
 run_cmd do
   let env ← getEnv
-  let forbidden := #[`GameTheory, `GameTheoryComplexity, `FixedPointTheorems,
-    `Complexitylib, `Complexity, `Cslib, `KFOL.Strategic, `KFOL.Rounds,
-    `KFOL.Definitions.Strategic, `KFOL.Definitions.Rounds, `KFOL.Complexity]
-  for moduleName in env.header.moduleNames do
-    for forbiddenRoot in forbidden do
-      if forbiddenRoot.isPrefixOf moduleName then
-        throwError "Algebra audit: forbidden transitive import {moduleName}"
   let allowed := #[``propext, ``Classical.choice, ``Quot.sound]
   let mut checked := 0
   for (name, _) in env.constants.toList do
@@ -90,6 +88,6 @@ run_cmd do
       checked := checked + 1
       for axiomName in (← collectAxioms name) do
         unless allowed.contains axiomName do
-          throwError "Algebra audit: {name} depends on forbidden axiom {axiomName}"
+          throwError "Axiom audit: {name} depends on forbidden axiom {axiomName}"
   if checked == 0 then
-    throwError "Algebra audit: no authored declarations were checked"
+    throwError "Axiom audit: no authored declarations were checked"

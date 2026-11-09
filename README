@@ -39,11 +39,11 @@ Layout:
     sections/         Sections, appendices, macros, and label snapshots
     scripts/          Label export between the two documents
     lean/             Twenty-two Lean proof modules, using only Std
-    KFOL/             Mathlib-based algebra slice, independent of GameTheory
+    KFOL/             Pure algebra, word algorithms, and separate machine proofs
     Paper.lean        Complete statements of the migrated main-paper claims
-    lakefile.toml     Lake targets and mathlib v4.35.0 dependency
+    lakefile.toml     Lake targets, mathlib, and pinned complexity dependencies
     lake-manifest.json Immutable resolved dependency revisions
-    tests/            Syntax compatibility and algebra regression checks
+    tests/            Syntax, algebra, and word/machine regression checks
     checks/           Python models and independent finite checks
     notes/            Exploration not claimed in the paper
     lean-toolchain    Lean version (4.35.0)
@@ -60,9 +60,10 @@ and cache, then run verification:
 make check-python and make check-lean run either part separately. Python
 needs only the standard library. make check-legacy-lean builds the Std modules
 in dependency order under build/lean. make check-algebra independently builds
-KFOL.Algebra and Paper, checks transitive imports and all authored axiom
-dependencies (including private helpers), and checks the production mathlib
-syntax codec and algebra regression cases. make check-lean runs both Lean
+KFOL.Algebra and KFOL.Audit.Algebra, whose compiled import closure excludes
+game and complexity libraries. It then builds Paper and KFOL.Audit, which
+checks all authored axiom dependencies, including private machine helpers,
+and runs the syntax, algebra and word regressions. make check-lean runs both Lean
 tracks. Lake artifacts are under .lake/; make clean removes build/.
 
 Paper.lean currently exposes sym:thm:pairs and sym:thm:optimal as
@@ -72,6 +73,12 @@ K(K+1)/2 count for the optimal domain. The new slice uses mathlib sets and
 permutations, with no GameTheory, complexity, or legacy strategic imports.
 Its definition index and syntax decision are notes/formalization-definitions.md
 and notes/formalization-syntax.md.
+
+The separate KFOL.Complexity branch imports ComplexityLib directly at the
+revision pinned by GameTheory's complexity extension, with mathlib overridden
+to v4.35.0. Paper.lean includes its first machine-certified primitive: the
+membership-word subset test, with exact finite-set and guard-enabling bridges.
+Full table-algorithm running-time proofs remain partial in the inventory.
 
 KFOL.Paper.idempotent_elimination and KFOL.Paper.checked_core_extraction also
 state and prove the algebraic criterion and checked extraction from gen:thm:core.
