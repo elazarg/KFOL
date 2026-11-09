@@ -150,6 +150,15 @@ theorem singleton_union_of_mem (a : Role) (ha : a ∈ A.val) :
   change {a} ∪ A.val = A.val
   rw [Set.singleton_union, Set.insert_eq_of_mem ha]
 
+/-- Each owned choice is associative, including all tie cases. -/
+theorem choice_assoc (C : WinnerSet Role) : choice r (choice r A B) C = choice r A (choice r B C) := by
+  classical
+  by_cases ha : A = singleton r <;> by_cases hb : B = singleton r <;>
+    by_cases hc : C = singleton r
+  all_goals simp_all [choice, union_eq_singleton_iff]
+  apply Subtype.ext
+  exact Set.union_assoc _ _ _
+
 theorem choice_singleton_of_mem (a : Role) (har : a ≠ r) (ha : a ∈ A.val) :
     choice r (singleton a) A = A := by
   classical

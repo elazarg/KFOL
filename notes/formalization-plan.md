@@ -36,7 +36,7 @@ The current target includes full machine-level complexity theorems and the full 
 
 1. Use a Lake package, namespace `KFOL`, and Lean/mathlib 4.35.0. The production manifest pins the authorized GameTheory `port/cslib-complexity` branch at `6f1af625b77215dd9e4454e6120275dbd8b61f51`, its successor ComplexityLib at `054834a4a4e6ac3ec50ed770bacea7fc42eccc7d`, and CSLib at `254e30e6d4299c51323aaeaf5f51a4763b375d4a`. The selected native/protocol and analytic dependency gates have passed, and the independent binary codecs and complete descriptor machines are migrated. Reuse canonical PMFs, strategic definitions, Nash/minimax and SE foundations through narrow imports. No upstream GameTheory files are modified.
 2. Put every main-paper claim in root `Paper.lean`, including prose claims whose formal statements must be supplied from the report. Required report support lemmas normally remain in their natural library modules; export them in `Paper.lean` only when they express a main-paper assertion. Each theorem repeats its complete proposition, with its hypotheses and quantifiers. Its proof may invoke an implementation theorem. Neither `export`, an inferred theorem type, nor `theorem result : NamedClaim` is an acceptable public statement.
-3. Concentrate the intended meaning in a small collection of `KFOL/Definitions/*.lean` modules, reusing imported semantic definitions through a small documented interface. Separate the algebraic public syntax from its strategic interpretation so algebra imports no GameTheory modules. Proof modules may introduce constructions and helper definitions, but every project-defined constant in a public theorem's type must be documented in the definition index, including transitive dependencies. Ten definition files currently suffice, including the two representation files; later strategic and round definitions must stay in their own modules.
+3. Concentrate the intended meaning in a small collection of `KFOL/Definitions/*.lean` modules, reusing imported semantic definitions through a small documented interface. Separate the algebraic public syntax from its strategic interpretation so algebra imports no GameTheory modules. Proof modules may introduce constructions and helper definitions, but every project-defined constant in a public theorem's type must be documented in the definition index, including transitive dependencies. Thirteen definition files currently suffice, including the two representation files; later strategic and round definitions must stay in their own modules.
 4. Reuse mathlib's sets, permutations, algebraic languages, homomorphisms, substructures and quotients where they fit. The prototype selected native public traversals. The completed shared equational layer uses mathlib terms with exact production full/core codecs, including evaluation, support and substitution compatibility. It proves generic completeness using mathlib quotient operations; the Equational Theories Project is a proof reference, not an imported dependency. The shared winner-set operations remain the semantic API.
 5. Keep the public-game algebra and closed-round equilibrium semantics separate, joined by explicit correspondence theorems. None is defined by the conclusion it is meant to certify.
 6. Use category theory only in a named, separate portion that specifies objects, morphisms, equality, and laws. Ordinary homomorphisms and dependent equivalences suffice for the algebraic and execution proofs. The refuted mixed-open-game composition is an operation under study, never a `Category` instance.
@@ -67,7 +67,7 @@ flowchart TD
 
 `KFOL.Algebra` is an aggregate for the pure algebraic branches, including reset, owner/policy semantics and core bases; it is not a new copy of their definitions. These modules never import the strategic bridge, `Rounds`, the full `KFOL` umbrella, or `Paper`. Semantic guard proofs stay below the complexity-machine boundary. Import ComplexityLib directly for class and machine results; GameTheoryComplexity is a source of examples, not a necessary dependency of the algebra or complexity proofs.
 
-`Definitions/Strategic.lean` compiles the shared public syntax to GameTheory and names its canonical profile, deviation and SPE specializations. A bridge proves that possible SPE winners equal the existing algebraic evaluator. The evaluator remains independent of equilibrium. Keep GameTheory names out of the pure theorem signatures as well as their imports; an unused theorem parameter or typeclass still couples the APIs.
+`Definitions/Strategic.lean` defines complete public profiles and whole-player deviations independently of backward recursion. The completed strategic-form bridge proves equivalence with canonical GameTheory Nash in every public subtree; this is exactly the paper’s perfect-information SPE condition. The full syntax compiler proves that possible SPE winners equal the independent algebraic evaluator, including switches and repeated occurrences. A separate protocol translation is unnecessary for public adequacy; hidden rounds retain their canonical behavioral-assessment model. Keep GameTheory names out of the pure theorem signatures as well as their imports; an unused theorem parameter or typeclass still couples the APIs.
 
 Provide independently buildable module targets such as `lake build KFOL.Algebra`, `lake build KFOL.Strategic`, and `lake build Paper`. A CI import-graph check rejects any transitive dependency from the algebraic branches to `GameTheory`, `GameTheoryComplexity`, `FixedPointTheorems`, the KFOL strategic/round wrappers, or complexity-machine modules. Checking direct import lines alone is insufficient. `KFOL.Audit.Algebra` now checks that compiled boundary independently; `KFOL.Audit` checks all authored axiom dependencies, including private machine helpers. `scripts/check_algebra.py` enforces exact source coverage and builds the pure target before the complete Paper target. The first complexity module is present; strategic integration remains separate.
 
@@ -111,17 +111,20 @@ For each required inventory row, implementation review records the public declar
 | `Definitions/Encoding.lean` | Backend-independent binary names/framing, complete descriptors, normalization/recognition, original input codec/extraction and shared-support binary equation checking; mathlib only |
 | `Definitions/Owner.lean` | Guarded-owner signature, root and occurrence guards, coverage/minimal valuations, checker and independent four-state tables |
 | `Definitions/CoreBasis.lean` | Native core tables, omission/quotient maps, pure-core exhaustion identity and Boolean profiles |
+| `Definitions/Strategic.lean` | Public trees/full profiles, independent deviations and SPE, canonical strategic forms, forcing and the full term compiler |
+| `Definitions/Rounds.lean` | Completely revealed Boolean source and accepted serial commitment protocol gate |
+| `Definitions/Reductions.lean` | Native reset/union syntax, binary language and shared CNF reduction construction |
 
-These are eight algebraic definition modules and two representation modules. `Equational` imports
+These are nine pure algebraic/reduction definition modules, two representation modules, and two separate strategic/protocol modules. `Equational` imports
 `Core`, which imports `Public`; it adds only mathlib dependencies. See the
 [definition index](formalization-definitions.md) for their actual contents and
 imported mathematical surface. Proof constructions live in the corresponding
 proof modules.
 
 Extend `Algorithms` for further encodings, lengths and algorithm specifications.
-Planned separate definition modules are `Strategic` (compilation to narrow GameTheory
-leaves, profiles, deviations and SPE), and `Rounds` (finite rounds, imported
-Nash/SE specializations, outcomes and contextual observations). Mathematical
+The implemented separate `Strategic` and `Rounds` definition modules isolate
+GameTheory imports. Extend `Rounds` with general finite menus, canonical
+Nash/SE specializations, outcomes and contextual observations. Mathematical
 reset and guard semantics may extend the existing algebraic definitions or
 occupy a small dedicated file. Complexity classes and machine specifications
 belong in the audited `Complexity/Language.lean` facade, now implemented for

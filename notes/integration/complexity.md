@@ -157,12 +157,98 @@ regression file. The two normalization and two complete recognition endpoints,
 plus the construction bridge and construction machine theorem, depend only on
 `propext`, `Classical.choice` and `Quot.sound`.
 
+## Original binary tree frontend
+
+`TermMachine.termEncoding` is exactly the established injective
+`TermCode.encode`, preserving its prefix code and binary names.
+`TermMachine.decode_polyTime` certifies the actual complete decoder:
+
+```lean
+ComputableInPolyTime KFOL.Algorithms.TermCode.decode encBits
+  (encOption KFOL.Complexity.TermMachine.termEncoding)
+```
+
+The explicit stack parser is proved extensionally equal to the existing decoder
+on every bit word. It preserves the complete original word under reconstruction,
+runs for `3*N` steps, and uses at most `6*N+5` encoded state bits in the concrete
+AST representation. Incomplete trees, noncanonical names and trailing bits are
+rejected. `tests/ComplexityTerms.lean` exercises these boundaries and independent
+repeated occurrences.
+
+`TermMachine.decode_polyTime_of_storage` generalizes the same verified parser to
+any injective storage of annotated terms with certified uniform leaf/binary
+constructors and a proved polynomial storage bound in the original code size.
+Every intermediate annotated subtree and pending frame is charged.
+`TermMachine.fold_polyTime` packages this as a reusable bottom-up evaluation
+rule: certified leaf/node algebra operations and a complete output-storage bound
+produce a native whole-tree fold machine. These are generic closure theorems;
+the concrete frontend below discharges all their premises.
+
+`TermSupport.labels_polyTime` certifies the actual `SupportIndex.labels` under
+the original term codec and native `encList encNat`, including mathlib's exact
+rightmost-occurrence `dedup` order. `GuardExtraction.collect_polyTime` computes
+every raw occurrence/prerequisite in time polynomial in original bits, with a
+proved quadratic complete binary storage bound. `collect_entries` recovers
+exactly the independently defined `Term.guardEntries` by set interpretation of
+prerequisite lists. `GuardCompression.compress_view` and `compressAll_view`
+identify raw binary compression exactly with the established dependent finite
+record compression; no dictionary uniqueness hypothesis is needed for these
+codec bridges.
+
+The complete unconditional original frontend theorem is
+`KFOL.Complexity.GuardCompression.extract_polyTime`:
+
+```lean
+ComputableInPolyTime KFOL.Algorithms.TermCode.extract encBits (encOption encBits)
+```
+
+It includes original parsing, actual support, all raw guards, finite indexing
+and exact dictionary/record framing. Sparse name values never set a dimension
+or loop clock. Polynomial-time equality on shared support is certified below; its comparator
+treats canonical records as sets, ignoring list order and multiplicity.
+
+## Complete original binary reset equality
+
+The exact unconditional endpoints are
+`KFOL.Complexity.ResetEquality.check_polyTime` and `checkWord_polyTime`:
+
+```lean
+ComputableInPolyTime
+  (fun p : KFOL.Reset.Term Nat × KFOL.Reset.Term Nat =>
+    KFOL.Algorithms.ResetEquation.check p.1 p.2)
+  (encPair KFOL.Complexity.TermMachine.termEncoding
+    KFOL.Complexity.TermMachine.termEncoding) encBool
+
+ComputableInPolyTime KFOL.Algorithms.ResetEquation.checkWord encBits encBool
+```
+
+The machine computes the established shared dictionary, compresses every actual
+occurrence guard into that dictionary, reads the exact dependent descriptors,
+normalizes them with the certified semantic normalizer, then checks inclusion
+of the two record sets in both directions. The exact bridge uses the existing
+`ResetEquation.normalized_equal_iff`; it compares canonical guard functions,
+independently of record-list order and duplicate multiplicity. The complete
+word endpoint includes original pair framing, both complete original-tree
+decoders, and rejection of every malformed pair/tree.
+
+The production build passes `2072` jobs. Strict `tests/ComplexityTerms.lean`
+passes, covering noncanonical names, incomplete trees, trailing bits, sparse
+labels, exact repeated-occurrence extraction, R2/R3 identities (including
+multiple minimal records), failed associativity, and malformed equations.
+All eight public parser/fold/support/extraction/equality endpoints print only
+`propext`, `Classical.choice` and `Quot.sound` as axioms.
+
+This closes the polynomial equality clause of `reset:thm:three` together with
+the established canonical-table and fixed-chain semantics. The complete binary
+frontend is now part of the runtime theorem rather than just an output-size
+bound.
+
 ## Remaining work
 
-This checkpoint completes parser, validation, full binary descriptor
-normalization and complete polynomial semantic realizability recognition.
-Together with the existing semantic characterization and bounded realization,
-it discharges the recognition runtime clause of `reset:thm:synthesis`.
-It does not yet certify the whole original-tree equality algorithm. Machine
-construction of synthesis witnesses, substitution, and the end-to-end
-reset/union hardness reduction remain separate obligations.
+Complete native machine certificates now cover original parsing, actual support,
+all guard extraction and compression, descriptor normalization, whole original
+reset equality, and semantic table realizability recognition. The polynomial
+runtime clauses of `reset:thm:three` and `reset:thm:synthesis` are discharged.
+
+Machine construction of synthesis witnesses, owner-table runtime, substitution,
+and the end-to-end reset/union hardness reduction remain separate obligations.

@@ -18,25 +18,26 @@ public import KFOL.Complexity.DescriptorValidation
 public import KFOL.Complexity.NormalizeMachine
 public import KFOL.Complexity.RecognitionMachine
 public import KFOL.Reset.Generator
+public import KFOL.Strategic
+public import KFOL.Complexity.ResetEquality
 
 /-!
 # Kernel-checked paper claims
 
-Each declaration repeats the complete mathematical claim. The inventory
-distinguishes main-paper obligations from completed supplementary report results.
-Definitions of the
-winner carrier, operations, term syntax and evaluation are in
-`KFOL/Definitions/Public.lean`. The finite-arity testing predicate is indexed
-in `KFOL/Definitions/TestDomains.lean`; its full meaning is repeated below.
-The intrinsic-core definitions are in `KFOL/Definitions/Core.lean`.
-This slice covers `sym:thm:pairs`, `sym:thm:optimal` and the algebraic clauses
-of `gen:thm:core`; its machine running-time clause remains outstanding.
-Player views and their subdirect representations, and the full semilattice
-trace, are also included. View definitions are in `Definitions/Views.lean`.
-Common sources and their atomic consequences use the occurrence enumeration
-in `Definitions/Core.lean`. The reduct and diagonal testing predicates are
-indexed in `Definitions/TestDomains.lean` and expanded in the claims below.
-Reset uses the signature, selector and tables in `Definitions/Reset.lean`.
+Each declaration repeats its complete mathematical proposition. The claim
+inventory maps paper labels and prose to these statements and records any
+clauses still missing from a partially migrated result.
+
+Independent algebraic, equational and representation definitions are collected
+under `KFOL/Definitions`. The separate Strategic definition module supplies
+full profiles, whole-player deviations and subtree SPE; its canonical Nash
+bridge does not enter the pure algebra. The Rounds module isolates the
+commitment/disclosure protocol. `notes/formalization-definitions.md` indexes
+both the project definitions and the small imported semantic interfaces.
+
+Proof modules construct witnesses and algorithms below this file. Every public
+statement has a guarded transitive axiom report; the whole-source audit also
+checks private proof helpers and the independent algebra import boundary.
 -/
 
 @[expose] public section
@@ -1035,12 +1036,19 @@ theorem reset_binary_equation_checker {Role : Type u} (three : Fin 3 ↪ Role) :
     (∀ word : List Bool, Algorithms.ResetEquation.checkWord word = true ↔
       ∃ s t : Reset.Term ℕ,
         word = _root_.KFOL.Words.pair (Algorithms.TermCode.encode s) (Algorithms.TermCode.encode t) ∧
-        ∀ valuation : ℕ → WinnerSet Role, s.eval valuation = t.eval valuation) :=
+        ∀ valuation : ℕ → WinnerSet Role, s.eval valuation = t.eval valuation) ∧
+    Turing.MultiTapeTM.ComputableInPolyTime
+      (fun p : Reset.Term ℕ × Reset.Term ℕ => Algorithms.ResetEquation.check p.1 p.2)
+      (Turing.MultiTapeTM.encPair Complexity.TermMachine.termEncoding Complexity.TermMachine.termEncoding)
+      Turing.MultiTapeTM.encBool ∧
+    Turing.MultiTapeTM.ComputableInPolyTime Algorithms.ResetEquation.checkWord
+      Turing.MultiTapeTM.encBits Turing.MultiTapeTM.encBool :=
   ⟨fun s t => ⟨Algorithms.ResetEquation.labels_nodup s t,
       Algorithms.ResetEquation.labels_toFinset s t, Algorithms.ResetEquation.length_labels_le s t,
       Algorithms.ResetEquation.length_labels_le_input s t, Algorithms.ResetEquation.check_eq_true s t,
       Algorithms.ResetEquation.check_iff_eval three s t⟩,
-    Algorithms.ResetEquation.checkWord_eq_true three⟩
+    Algorithms.ResetEquation.checkWord_eq_true three,
+    Complexity.ResetEquality.check_polyTime, Complexity.ResetEquality.checkWord_polyTime⟩
 
 /-- info: 'KFOL.Paper.reset_binary_equation_checker' depends on axioms:
 [propext, Classical.choice, Quot.sound] -/
@@ -1356,5 +1364,143 @@ theorem core_typed_upper_clone_cover {Role : Type u} [DecidableEq Role]
 [propext, Classical.choice, Quot.sound] -/
 #guard_msgs (whitespace := lax) in
 #print axioms KFOL.Paper.core_typed_upper_clone_cover
+
+/-- `game:thm:adequacy`: every finite public tree has a full pure equilibrium,
+and the equilibrium-defined value obeys the leaf and owned-choice equations. -/
+theorem public_backward_induction {Role : Type u} :
+    (∀ g : Strategic.Tree Role, ∃ p : Strategic.Profile g, Strategic.IsSubgamePerfect p) ∧
+    (∀ i : Role, Strategic.value (.leaf i) = WinnerSet.singleton i) ∧
+    (∀ (r : Role) (g h : Strategic.Tree Role),
+      Strategic.value (.node r g h) = WinnerSet.choice r (Strategic.value g) (Strategic.value h)) :=
+  ⟨Strategic.exists_spe, Strategic.value_leaf, Strategic.value_node⟩
+
+/-- info: 'KFOL.Paper.public_backward_induction' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Paper.public_backward_induction
+
+/-- Whole-player optimality in every public subtree equals canonical
+GameTheory Nash optimality of the corresponding complete contingent plans. -/
+theorem public_equilibrium_strategic_form {Role : Type u} [DecidableEq Role]
+    {g : Strategic.Tree Role} (p : Strategic.Profile g) :
+    (Strategic.IsNash p ↔ GameTheory.IsNash (Strategic.gameForm g)
+      (Strategic.winningPreference Role) (fun _ => p)) ∧
+    (Strategic.IsSubgamePerfect p ↔
+      ∀ {h : Strategic.Tree Role} (q : Strategic.Profile h), Strategic.Restriction p q →
+        GameTheory.IsNash (Strategic.gameForm h) (Strategic.winningPreference Role) (fun _ => q)) :=
+  ⟨Strategic.nash_iff_gameTheory p, Strategic.spe_iff_gameTheory p⟩
+
+/-- info: 'KFOL.Paper.public_equilibrium_strategic_form' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Paper.public_equilibrium_strategic_form
+
+/-- `game:thm:union`: three distinct public owners realize neutral union;
+every nonempty subset of a finite role set is the value of a closed game. -/
+theorem public_neutral_union {Role : Type u} [Finite Role]
+    (r s t : Role) (hrs : r ≠ s) (hrt : r ≠ t) (hst : s ≠ t) :
+    (∀ g h : Strategic.Tree Role,
+      Strategic.value (.node t (.node r g h) (.node s g h)) =
+        WinnerSet.union (Strategic.value g) (Strategic.value h)) ∧
+    (∀ A : WinnerSet Role, ∃ g : Strategic.Tree Role, Strategic.value g = A) := by
+  refine ⟨Strategic.value_neutralTree r s t hrs hrt hst, ?_⟩
+  let three : Fin 3 ↪ Role :=
+    ⟨![r, s, t], by intro i j he; fin_cases i <;> fin_cases j <;> simp_all⟩
+  exact fun A => Strategic.exists_value_of_finite three A (Set.toFinite A.val)
+
+/-- info: 'KFOL.Paper.public_neutral_union' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Paper.public_neutral_union
+
+/-- A role has a strategy winning against all joint opponent replacements
+exactly when it is the only possible pure subgame-perfect winner. -/
+theorem public_forcing {Role : Type u} (g : Strategic.Tree Role) (i : Role) :
+    (∃ p : Strategic.Profile g, ∀ q : Strategic.Profile g,
+      Strategic.OpponentDeviation i p q → Strategic.winner q = i) ↔
+        Strategic.value g = WinnerSet.singleton i :=
+  Strategic.canForce_iff_value_singleton g i
+
+/-- info: 'KFOL.Paper.public_forcing' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Paper.public_forcing
+
+/-- Full public syntax, including internal permutations and independently
+solved repeated occurrences, has exactly the algebraic interpretation. -/
+theorem public_term_interpretation {Role : Type u} {Var : Type v}
+    (components : Var → Strategic.Tree Role) (t : Term Role Var) :
+    Strategic.value (Strategic.compile components t) =
+      t.eval (fun x => Strategic.value (components x)) :=
+  Strategic.value_compile components t
+
+/-- info: 'KFOL.Paper.public_term_interpretation' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Paper.public_term_interpretation
+
+/-- The semantic and expanded-tree clauses of `owner:thm:synthesis`, together
+with actual constructor success and saturation order independence. Native
+polynomial machine time is recorded as a separate unfinished obligation. -/
+theorem owner_table_synthesis {Role : Type u} [DecidableEq Role]
+    {Var : Type v} [DecidableEq Var] (T : Owner.GuardTable Var)
+    (owner observer background : Role) (hko : observer ≠ owner) (hkb : observer ≠ background)
+    (hob : owner ≠ background) (positions : List Var) (hcan : T.Canonical) (hlisted : T.Listed positions) :
+    (T.check positions = true ↔ ∃ t : Owner.Term Role Var,
+      t.root = T.root ∧ t.OwnersIn (fun a => a = owner) ∧
+      ∀ k, k ≠ owner → ∀ valuation : Var → WinnerSet Role,
+        k ∈ (t.eval valuation).val ↔
+          T.Enabled {i | (valuation i).Ambiguous} {i | valuation i ≠ WinnerSet.singleton owner}
+            {i | k ∈ (valuation i).val}) ∧
+    ((T.synthesize owner positions).isSome = true ↔ T.check positions = true) ∧
+    (∀ t : Owner.Term Role Var, T.synthesize owner positions = some t →
+      t.root = T.root ∧ t.OwnersIn (fun a => a = owner) ∧
+      (∀ k, k ≠ owner → ∀ valuation : Var → WinnerSet Role,
+        k ∈ (t.eval valuation).val ↔
+          T.Enabled {i | (valuation i).Ambiguous} {i | valuation i ≠ WinnerSet.singleton owner}
+            {i | k ∈ (valuation i).val}) ∧
+      t.size ≤ 1 + T.entries.length * (10 * positions.length + 7)) ∧
+    (∀ (left right : List Var) (j : Var) (g : Owner.GuardPair Var),
+      T.root ∈ g.many → Owner.GuardTable.target j g ⊆ left.toFinset →
+      Owner.GuardTable.target j g ⊆ right.toFinset →
+      (T.run left j g (2 * left.length)).1 = (T.run right j g (2 * right.length)).1) :=
+  ⟨T.check_iff_realizable owner observer background hko hkb hob positions hcan hlisted,
+    T.synthesize_isSome owner positions,
+    fun _ ht => let h := T.synthesize_spec owner positions ht
+                ⟨h.1.1, h.1.2.1, h.1.2.2, h.2⟩,
+    T.run_order_independent⟩
+
+/-- info: 'KFOL.Paper.owner_table_synthesis' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Paper.owner_table_synthesis
+
+/-- `owner:prop:four-variables`: a concrete four-element witness transfers
+all identities with at most three actual variables, but fails the displayed
+valid four-variable identity. Every basis, even infinite, needs four variables. -/
+theorem owner_basis_variable_bound :
+    letI := Owner.fourStructure (Role := Unit)
+    let u : Owner.Term Unit (Fin 4) := .var 0
+    let r : Owner.Term Unit (Fin 4) := .var 1
+    let y : Owner.Term Unit (Fin 4) := .var 2
+    let z : Owner.Term Unit (Fin 4) := .var 3
+    let e : Equational.Identity (Owner.Symbol Unit) :=
+      ⟨4, Owner.Term.guarded () (Owner.Term.step u r) y z,
+        Owner.Term.step (Owner.Term.step u r) (Owner.Term.guarded () r y z)⟩
+    Fintype.card Owner.BasisObstruction.Carrier = 4 ∧
+    (∀ f : Equational.Identity (Owner.Symbol Unit), f.variableCount ≤ 3 →
+      f.Holds Owner.Four → f.Holds Owner.BasisObstruction.Carrier) ∧
+    e.Holds Owner.Four ∧ ¬e.Holds Owner.BasisObstruction.Carrier ∧ e.variableCount = 4 ∧
+    (∀ (T : Equational.Theory (Owner.Symbol Unit)) (n : ℕ),
+      Equational.IsBasis Owner.Four T → (∀ f ∈ T, f.variableCount ≤ n) → 4 ≤ n) := by
+  let _ := Owner.fourStructure (Role := Unit)
+  exact ⟨by decide, Owner.BasisObstruction.holds_of_variableCount_le,
+    Owner.BasisObstruction.rootExpansion_holds, Owner.BasisObstruction.rootExpansion_fails,
+    by decide, Owner.BasisObstruction.variableBound_ge_four⟩
+
+/-- info: 'KFOL.Paper.owner_basis_variable_bound' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Paper.owner_basis_variable_bound
 
 end KFOL.Paper

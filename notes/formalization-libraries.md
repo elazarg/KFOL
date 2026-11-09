@@ -132,3 +132,24 @@ actual winner-set term functions through the existing selector/chain interface.
 It imports no external representation theorem. Compact table realizability,
 executable recognition and synthesis, and raw/canonical extraction-size bounds
 are now also checked. Their full encoded machine-time statements remain partial.
+
+
+## Integrated public and machine bridges
+
+The public branch now uses the narrow canonical `GameTheory.IsNash` strategic
+form at every subtree. Whole-plan deviations and subtree restriction are defined
+independently; both directions of the canonical correspondence are proved.
+Backward induction, forcing, neutral union and the full term compiler follow,
+including internal permutations and independent repeated components. Public
+adequacy therefore needs no second protocol compiler. The hidden-round model
+will use the canonical behavioral assessment and consistency interfaces.
+
+The Boolean source/serial information gate now instantiates the accepted
+MonitoringGame and explicit-order FOSGToEFG construction. Prefix information
+hiding and complete publication are checked at first- and second-round public
+histories. This has not yet proved the Bayes or SE correspondence.
+
+Native runtime now covers complete original-tree parsing, actual support and
+guard extraction/compression, normalization and complete reset equality as well
+as binary descriptor recognition. The first certified hardness reduction and
+owner recognizer/constructor machines remain the next complexity gates.

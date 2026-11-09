@@ -178,3 +178,173 @@ copies after integration; no duplicate lasting semantics are intended.
 The minimum-generator staging files were promoted in checkpoint `e97189b`;
 the pending duplicates have been retired. Root is factoring the generic size≤2
 associativity lemma into the pure algebra infrastructure for reset reuse.
+
+## Complete semantic one-owner synthesis (new, ready for integration)
+
+Production definitions `Definitions/Owner.lean` and modules `Owner/Saturation.lean`,
+`Owner/SynthesisSoundness.lean`, `Owner/Synthesis.lean` and
+`Owner/SynthesisNecessity.lean` now compile. `Owner.lean` exports the result.
+The corresponding pending duplicates have been retired.
+
+This covers the mathematical realization equivalence, an actual synthesizer,
+the complete expanded-tree size bound, and update-order independence in
+`owner:thm:synthesis` (`sections/appendix-owner-synthesis.tex`). The polynomial
+machine-runtime clause remains required and is handed to `/root/complexity`;
+do not mark the entire result complete until that clause is connected. No
+substitution theorem is claimed yet.
+
+Independent definitions are concentrated in `Definitions/Owner.lean`:
+`GuardPair` contains finite ambiguity/nonowner sets, `GuardTable` contains an
+independent root and an explicit list of source/pair records, `Canonical`
+spells out exactly the paper's canonical conditions, and `Realizes` means
+fixed root, the fixed-owner signature, and exact outsider winner semantics
+for arbitrary WinnerSet valuations. `Realizes` does not refer to the checker,
+the saturation, or a synthesized term. The dictionary `positions : List Var`
+need only cover the root and all source/test positions (`Listed`); unused
+positions are permitted and label values do not determine iteration counts.
+No global finite variable type is assumed. Canonical input includes `Nodup`
+on the record list so M is the actual canonical guard count.
+
+Suggested complete paper-facing semantic statement (expand `Realizes` if
+required by the public theorem convention, preserving its complete
+root/owner/observer clauses):
+
+```lean
+theorem owner_table_synthesis {Role : Type u} [DecidableEq Role]
+    {Var : Type v} [DecidableEq Var]
+    (T : KFOL.Owner.GuardTable Var)
+    (owner observer background : Role)
+    (hko : observer ≠ owner) (hkb : observer ≠ background)
+    (hob : owner ≠ background) (positions : List Var)
+    (hcan : T.Canonical) (hlisted : T.Listed positions) :
+    (T.check positions = true ↔
+      ∃ t : KFOL.Owner.Term Role Var,
+        t.root = T.root ∧ t.OwnersIn (fun a => a = owner) ∧
+        ∀ k, k ≠ owner → ∀ v : Var → KFOL.WinnerSet Role,
+          k ∈ (t.eval v).val ↔
+            T.Enabled {i | (v i).Ambiguous}
+              {i | v i ≠ KFOL.WinnerSet.singleton owner}
+              {i | k ∈ (v i).val}) ∧
+    (∀ t : KFOL.Owner.Term Role Var,
+      T.synthesize owner positions = some t →
+        t.root = T.root ∧ t.OwnersIn (fun a => a = owner) ∧
+        (∀ k, k ≠ owner → ∀ v : Var → KFOL.WinnerSet Role,
+          k ∈ (t.eval v).val ↔
+            T.Enabled {i | (v i).Ambiguous}
+              {i | v i ≠ KFOL.WinnerSet.singleton owner}
+              {i | k ∈ (v i).val}) ∧
+        t.size ≤ 1 + T.entries.length * (10 * positions.length + 7))
+```
+
+The first conjunct is `GuardTable.check_iff_realizable`; the second is
+`GuardTable.synthesize_spec` with its first conjunct expanded. To expose
+actual construction from realizability, use `GuardTable.synthesis_iff`:
+
+```lean
+(∃ t : Term Role Var, T.Realizes owner t) ↔
+  ∃ t : Term Role Var, T.synthesize owner positions = some t ∧
+    T.Realizes owner t ∧
+    t.size ≤ 1 + T.entries.length * (10 * positions.length + 7)
+```
+
+Actual option-success is `GuardTable.synthesize_isSome`:
+`(T.synthesize owner positions).isSome = true ↔ T.check positions = true`.
+It needs no realizability hypothesis. Every accepted guard has a path
+constructed by the explicit program `guardPath`, whose per-path bound is
+`10 * positions.length + 6`. Joining M paths adds M binary nodes and one
+root-variable node, giving the stated full bound including all copied
+variable occurrences.
+
+The update-order statement is `GuardTable.run_order_independent`:
+
+```lean
+(T.run left j g (2 * left.length)).1 =
+  (T.run right j g (2 * right.length)).1
+```
+
+under exactly `T.root ∈ g.many`, `target j g ⊆ left.toFinset` and
+`target j g ⊆ right.toFinset`. This proves order independence even for
+lists with different unused positions and repeated dictionary entries.
+The underlying generic statement `run_le_closed` proves every execution
+below every closed extension of the initial tests. `run_fixed` proves the
+2n clock always suffices. `SaturationState.rank_eq` identifies the rank
+with the report's `2*|C|+|D|` on the proved disjoint states.
+
+Necessity is a direct induction through the actual term occurrence guards.
+`Term.root_guard_mem` supplies each subterm's root contribution, and
+`Term.root_mem_guard_many` forces the ambiguity test when a contribution
+leaves that root. Independent minimal three-role valuations turn semantic
+containment into permission of each raw guard, and choose a raw occurrence
+covering each candidate guard. `admissible_finish` then descends the term:
+right reset and first H child preserve the state; left reset and the
+other H children force the necessary roots/tests into the closed state.
+The last frame gives exactly one of the two finish alternatives. This
+proves the paper's pruning argument without assuming a pruning theorem.
+
+Validation completed:
+
+- `lake build KFOL.Owner.SynthesisNecessity`: passed 1112 jobs.
+- `lake env lean -DwarningAsError=true tests/OwnerSynthesis.lean`: passed.
+- Regression examples kernel-check the projection and ternary H tables,
+  two dictionary orders, missing-position rejection, and a canonical
+  unrealizable table needing a nonexistent intermediate contribution.
+- `synthesis_iff` and `run_order_independent` axiom guards pass with only
+  `propext`, `Classical.choice`, and `Quot.sound`.
+
+No proof gaps, outside theorem assumptions, native_decide, or added axioms
+occur in this semantic synthesis slice. Forty-law completeness and the
+no-three-variable basis theorem remain separate active work.
+
+## No-three-variable basis (new, ready)
+
+`Owner/BasisObstruction.lean` now migrates and completes the entire
+`owner:prop:four-variables` statement from `sections/appendix-basis.tex`.
+The witness definitions (W's four constructors, operations, embeddings and
+four-variable root-expansion identity) are in the existing
+`Definitions/Owner.lean`, keeping the independent surface concentrated.
+
+Unlike an arity-three-only certificate, the exported theorem bounds the
+actual number of distinct variables and permits arbitrary padded arities:
+
+```lean
+theorem BasisObstruction.holds_of_variableCount_le
+    (e : Equational.Identity (Symbol Unit))
+    (hn : e.variableCount ≤ 3)
+    (hvalid : letI := fourStructure (Role := Unit); e.Holds Four) :
+    e.Holds BasisObstruction.Carrier
+```
+
+For a valuation, its support image has cardinality at most three, so one
+of W's four elements is missing. Off-support variables are replaced by a
+fixed remaining element; `Equational.realize_eq_of_eqOn` proves this
+preserves both sides. The explicit embedding of the proper subalgebra
+into Four squared then transfers the arbitrary-depth identity. This
+uses the shared actual-support locality API, without imposing an arity
+bound or assuming generation/embedding claims as hypotheses.
+
+`rootExpansion_holds` proves the displayed four-variable identity in
+Four; `rootExpansion_fails` refutes it in W at the paper's valuation.
+Its actual support is independently checked to be four. On that valuation
+the left side is `.middle` and the right side is `.high`.
+
+Suggested complete paper statement:
+
+```lean
+theorem owner_basis_variable_bound
+    (T : KFOL.Equational.Theory (KFOL.Owner.Symbol Unit))
+    (n : ℕ)
+    (hbasis : letI := KFOL.Owner.fourStructure (Role := Unit);
+      KFOL.Equational.IsBasis KFOL.Owner.Four T)
+    (hbound : ∀ e ∈ T, e.variableCount ≤ n) : 4 ≤ n
+```
+
+Proof: `BasisObstruction.variableBound_ge_four T n hbasis hbound`.
+There is no finiteness hypothesis on T; even an infinite three-variable
+basis is excluded. `not_hasVariableBound_three` exports this stronger
+negative form directly. The thirty-four additional equations' soundness
+and forty-law generic completeness remain separate work.
+
+Validation: production `lake build KFOL.Owner.BasisObstruction` passed
+1119 jobs; `tests/OwnerBasisObstruction.lean` checks W's cardinality,
+root-expansion's exact support and the two distinct values, plus standard
+axiom guards for the full actual-support transfer and lower-bound theorems.

@@ -188,5 +188,292 @@ def Term.evalFour {Role : Type u} {Var : Type v} (t : Term Role Var) (v : Var �
   let _ := fourStructure (Role := Role)
   t.realize v
 
+/-! ## Independent canonical tables and their explicit finite synthesis program -/
+
+
+/-- A canonical prerequisite pair, with the output supplied by the table index. -/
+structure GuardPair (Var : Type v) where
+  many : Finset Var
+  outside : Finset Var
+  deriving DecidableEq
+
+/-- Candidate finite tables, independent of term realizability and saturation. -/
+structure GuardTable (Var : Type v) where
+  root : Var
+  entries : List (Var × GuardPair Var)
+
+namespace GuardTable
+
+variable {Var : Type v} [DecidableEq Var]
+
+/-- Set semantics of the explicitly supplied guard records at one source. -/
+def guards (T : GuardTable Var) (j : Var) : Finset (GuardPair Var) :=
+  ((T.entries.filter (fun p => p.1 = j)).map Prod.snd).toFinset
+
+/-- A contribution at j is permitted by some candidate guard when these
+explicit tests are imposed. Ambiguity implies a non-owner-atom test. -/
+def Permitted (T : GuardTable Var) (j : Var) (C D : Finset Var) : Prop :=
+  ∃ g ∈ T.guards j, g.many ⊆ C ∧ g.outside ⊆ C ∪ D ∪ {j}
+
+instance decidablePermitted (T : GuardTable Var) (j : Var) (C D : Finset Var) :
+    Decidable (T.Permitted j C D) := by unfold Permitted; infer_instance
+
+/-- Exact candidate semantics for arbitrary ambiguity, non-owner and source statuses. -/
+def Enabled (T : GuardTable Var) (M N V : Set Var) : Prop :=
+  ∃ j, ∃ g ∈ T.guards j, (g.many : Set Var) ⊆ M ∧ (g.outside : Set Var) ⊆ N ∧ j ∈ V
+
+/-- Canonical input conditions, including the independently supplied root. -/
+def Canonical (T : GuardTable Var) : Prop :=
+  T.entries.Nodup ∧ T.guards T.root = {⟨∅, ∅⟩} ∧
+  ∀ j, j ≠ T.root →
+    (∀ g ∈ T.guards j, T.root ∈ g.many ∧ j ∉ g.many ∧ Disjoint g.outside (insert j g.many)) ∧
+    (∀ g ∈ T.guards j, ∀ h ∈ T.guards j,
+      g.many ⊆ h.many → g.outside ⊆ h.many ∪ h.outside ∪ {j} → g = h)
+
+end GuardTable
+
+/-- The accumulated ambiguity and non-owner tests above the current hole. -/
+structure SaturationState (Var : Type v) where
+  many : Finset Var
+  outside : Finset Var
+  deriving DecidableEq
+
+namespace SaturationState
+
+variable {Var : Type v} [DecidableEq Var]
+
+def initial (r : Var) : SaturationState Var := ⟨{r}, ∅⟩
+
+/-- Promote w to ambiguity and retain all other added non-owner tests. -/
+def update (S : SaturationState Var) (w z : Var) : SaturationState Var :=
+  ⟨insert w S.many, (S.outside ∪ {w, z}) \ insert w S.many⟩
+
+/-- Test strengthening: both ambiguity and the combined non-owner status grow. -/
+def Below (S R : SaturationState Var) : Prop :=
+  S.many ⊆ R.many ∧ S.many ∪ S.outside ⊆ R.many ∪ R.outside
+
+def rank (S : SaturationState Var) : ℕ := S.many.card + (S.many ∪ S.outside).card
+
+end SaturationState
+
+namespace GuardTable
+
+variable {Var : Type v} [DecidableEq Var]
+
+/-- The universe relevant to this one target guard, not an enumeration of subsets. -/
+def target (j : Var) (g : GuardPair Var) : Finset Var := g.many ∪ g.outside ∪ {j}
+
+/-- The report's enabled w,z rule; genuine state changes are required. -/
+def UpdateAllowed (T : GuardTable Var) (j : Var) (g : GuardPair Var)
+    (S : SaturationState Var) (w z : Var) : Prop :=
+  w ∈ g.many ∧ z ∈ target j g ∧
+    T.Permitted w S.many (S.outside ∪ {w, z}) ∧
+    T.Permitted z S.many (S.outside ∪ {w, z}) ∧ S.update w z ≠ S
+
+instance decidableUpdateAllowed (T : GuardTable Var) (j : Var) (g : GuardPair Var)
+    (S : SaturationState Var) (w z : Var) : Decidable (T.UpdateAllowed j g S w z) := by
+  unfold UpdateAllowed
+  infer_instance
+
+/-- Scan an explicit listing of input positions. The dictionary order
+chooses a deterministic execution without changing the mathematical rule. -/
+def next (T : GuardTable Var) (positions : List Var) (j : Var) (g : GuardPair Var)
+    (S : SaturationState Var) : Option (Var × Var) :=
+  (positions.product positions).find? (fun p => decide (T.UpdateAllowed j g S p.1 p.2))
+
+/-- A fixed number of scans, recording the exact sequence of chosen frames. -/
+def run (T : GuardTable Var) (positions : List Var) (j : Var) (g : GuardPair Var) :
+    ℕ → SaturationState Var × List (Var × Var)
+  | 0 => (SaturationState.initial T.root, [])
+  | k + 1 =>
+      let previous := T.run positions j g k
+      match T.next positions j g previous.1 with
+      | none => previous
+      | some p => (previous.1.update p.1 p.2, previous.2 ++ [p])
+
+/-- The two finishing alternatives in the report, at the reached state. -/
+def Finish (T : GuardTable Var) (j : Var) (g : GuardPair Var) (S : SaturationState Var) : Prop :=
+  T.Permitted j S.many S.outside ∨
+    ∃ z ∈ target j g, T.Permitted j S.many (S.outside ∪ {j, z}) ∧
+      T.Permitted z S.many (S.outside ∪ {j, z})
+
+instance decidableFinish (T : GuardTable Var) (j : Var) (g : GuardPair Var) (S : SaturationState Var) :
+    Decidable (T.Finish j g S) := by unfold Finish; infer_instance
+
+/-- The target guard's executable saturation test, using at most twice the
+number of listed input positions as its clock. -/
+def accepts (T : GuardTable Var) (positions : List Var) (j : Var) (g : GuardPair Var) : Bool :=
+  decide (j = T.root ∨ T.Finish j g (T.run positions j g (2 * positions.length)).1)
+
+end GuardTable
+namespace Term
+
+variable {Role : Type u} {Var : Type v}
+
+/-- Primitive signature size, counting each copied variable occurrence. -/
+def size : Term Role Var → ℕ
+  | .var _ => 1
+  | .func .reset args => 1 + size (args 0) + size (args 1)
+  | .func (.guarded _) args => 1 + size (args 0) + size (args 1) + size (args 2)
+
+/-- The exact one-hole frames recorded by saturation, with a supplied final
+filling. Every frame has exactly one recursive occurrence. -/
+def pathBody (owner : Role) (root : Var) : List (Var × Var) → Term Role Var → Term Role Var
+  | [], fill => fill
+  | (w, z) :: rest, fill => guarded owner (.var root)
+      (step (pathBody owner root rest fill) (.var w)) (.var z)
+
+/-- Initial reset frame of the report's root-first path construction. -/
+def pathTerm (owner : Role) (root : Var) (frames : List (Var × Var)) (fill : Term Role Var) :
+    Term Role Var := step (pathBody owner root frames fill) (.var root)
+
+end Term
+
+namespace GuardTable
+
+variable {Var : Type v} [DecidableEq Var]
+
+/-- Choose the second finishing alternative by an explicit scan. -/
+def finishWitness (T : GuardTable Var) (positions : List Var) (j : Var) (g : GuardPair Var)
+    (S : SaturationState Var) : Option Var :=
+  positions.find? (fun z => decide (z ∈ target j g ∧
+    T.Permitted j S.many (S.outside ∪ {j, z}) ∧ T.Permitted z S.many (S.outside ∪ {j, z})))
+
+/-- The report's two actual final fillings, with no assumed certificate. -/
+def finishTerm {Role : Type u} (T : GuardTable Var) (owner : Role) (positions : List Var)
+    (j : Var) (g : GuardPair Var) (S : SaturationState Var) : Option (Term Role Var) :=
+  if T.Permitted j S.many S.outside then some (Term.step (.var j) (.var T.root)) else
+    (T.finishWitness positions j g S).map (fun z => Term.guarded owner (.var T.root) (.var j) (.var z))
+
+/-- Construct the target guard's actual path from the run's recorded frames. -/
+def guardPath {Role : Type u} (T : GuardTable Var) (owner : Role) (positions : List Var)
+    (j : Var) (g : GuardPair Var) : Option (Term Role Var) :=
+  if j = T.root then some (.var T.root) else
+    let result := T.run positions j g (2 * positions.length)
+    (T.finishTerm owner positions j g result.1).map (Term.pathTerm owner T.root result.2)
+
+/-- Input position coverage, independent of numeric names or their maximum. -/
+def Listed (T : GuardTable Var) (positions : List Var) : Prop :=
+  T.root ∈ positions ∧ ∀ p ∈ T.entries, target p.1 p.2 ⊆ positions.toFinset
+
+instance decidableListed (T : GuardTable Var) (positions : List Var) : Decidable (T.Listed positions) := by
+  unfold Listed
+  infer_instance
+
+/-- The finite record formulation of canonicality, without universal scanning
+of the variable type. -/
+def canonicalB (T : GuardTable Var) : Bool :=
+  decide (T.entries.Nodup ∧ T.guards T.root = {⟨∅, ∅⟩} ∧
+    ∀ p ∈ T.entries, p.1 ≠ T.root →
+      (T.root ∈ p.2.many ∧ p.1 ∉ p.2.many ∧ Disjoint p.2.outside (insert p.1 p.2.many)) ∧
+      ∀ q ∈ T.entries, q.1 = p.1 → p.2.many ⊆ q.2.many →
+        p.2.outside ⊆ q.2.many ∪ q.2.outside ∪ {p.1} → p.2 = q.2)
+
+/-- The actual whole-table finite checker. Canonical input, a complete finite
+position dictionary, and every required guard are checked by the program. -/
+def check (T : GuardTable Var) (positions : List Var) : Bool :=
+  T.canonicalB && decide (T.Listed positions) &&
+    T.entries.all (fun p => T.accepts positions p.1 p.2)
+
+end GuardTable
+
+namespace Term
+
+variable {Role : Type u} {Var : Type v}
+
+/-- Join the common-root path terms, with the root projection as empty join. -/
+def joinPaths (root : Var) : List (Term Role Var) → Term Role Var
+  | [] => .var root
+  | t :: rest => step t (joinPaths root rest)
+
+end Term
+
+namespace GuardTable
+
+variable {Var : Type v} [DecidableEq Var]
+
+/-- An independently stated realization of a candidate table: root, signature,
+and exact membership semantics for every non-owner observer. -/
+def Realizes {Role : Type u} (T : GuardTable Var) (owner : Role) (t : Term Role Var) : Prop :=
+  t.root = T.root ∧ t.OwnersIn (fun x => x = owner) ∧
+    ∀ observer, observer ≠ owner → ∀ v : Var → WinnerSet Role,
+      observer ∈ (t.eval v).val ↔
+        T.Enabled {i | (v i).Ambiguous} {i | v i ≠ WinnerSet.singleton owner}
+          {i | observer ∈ (v i).val}
+
+/-- Actual term synthesis from the checked table, with no supplied term or
+realizability certificate. Every copied occurrence contributes to Term.size. -/
+def synthesize {Role : Type u} (T : GuardTable Var) (owner : Role) (positions : List Var) :
+    Option (Term Role Var) :=
+  if T.check positions then
+    (T.entries.mapM (fun p => T.guardPath owner positions p.1 p.2)).map (Term.joinPaths T.root)
+  else none
+
+end GuardTable
+
+
+/-! ## Concrete obstruction to a basis with only three variables -/
+
+namespace BasisObstruction
+
+inductive Carrier where
+  | low | middle | high | isolated
+  deriving DecidableEq, Repr
+
+instance : Fintype Carrier where
+  elems := {.low, .middle, .high, .isolated}
+  complete x := by cases x <;> simp
+
+instance : Nonempty Carrier := ⟨.low⟩
+
+def rank : Carrier → ℕ
+  | .low => 0 | .middle => 1 | .high => 2 | .isolated => 3
+
+def reset (x y : Carrier) : Carrier :=
+  if x = .isolated ∨ y = .isolated then y
+  else if rank x ≤ rank y then y else x
+
+def guarded (x y z : Carrier) : Carrier :=
+  if x = .isolated then x
+  else if y = .isolated ∨ z = .isolated then
+    let other := if y = .isolated then z else y
+    if x = .low ∧ other = .high then .high else x
+  else reset (reset x y) z
+
+instance : (Equational.language (Symbol Unit)).Structure Carrier where
+  funMap f args := match f with
+    | .reset => reset (args 0) (args 1)
+    | .guarded _ => guarded (args 0) (args 1) (args 2)
+  RelMap r := nomatch r
+
+
+/-- Each proper subset embeds into Four squared. -/
+def embed : Carrier → Carrier → Four × Four
+  | .isolated, .low => (.ambiguous, .ambiguous)
+  | .isolated, .middle => (.winning, .ambiguous)
+  | .isolated, .high => (.winning, .winning)
+  | .middle, .low => (.ambiguous, .ambiguous)
+  | .middle, .high => (.winning, .winning)
+  | .middle, .isolated => (.other, .other)
+  | .low, .middle => (.ambiguous, .ambiguous)
+  | .low, .high => (.winning, .winning)
+  | .low, .isolated => (.owner, .owner)
+  | .high, .low => (.ambiguous, .ambiguous)
+  | .high, .middle => (.winning, .winning)
+  | .high, .isolated => (.owner, .owner)
+  | _, _ => (.owner, .owner)
+
+
+/-- The four-variable identity violated by the concrete witness. -/
+def rootExpansion : Equational.Identity (Symbol Unit) :=
+  let u : Term Unit (Fin 4) := .var 0
+  let r : Term Unit (Fin 4) := .var 1
+  let a : Term Unit (Fin 4) := .var 2
+  let b : Term Unit (Fin 4) := .var 3
+  ⟨4, Term.guarded () (Term.step u r) a b,
+    Term.step (Term.step u r) (Term.guarded () r a b)⟩
+
+end BasisObstruction
+
 end Owner
 end KFOL

@@ -881,3 +881,115 @@ checker and external recognizer. Binary values never supply an uncharged clock:
 rounds are bounded by word width and every lookup scans actual encoded records.
 The public semantic and machine claims are combined in
 `Paper.reset_encoded_table_recognition` and `reset_record_normalization`.
+
+
+## Public strategic interpretation
+
+`Definitions/Strategic.lean` is the eleventh definition module. It imports the
+narrow canonical GameTheory equilibrium core; pure algebra never imports it.
+
+| Definition | Meaning |
+| --- | --- |
+| `Strategic.Tree` | Finite binary public game with a role at each decision and a winner at each leaf |
+| `Strategic.Profile`, `winner` | Complete actions in both subtrees, including unreached ones; the selected terminal winner |
+| `Deviation i p q` | Every choice of other roles stays fixed; all choices of i may change simultaneously |
+| `IsNash` | Any unilateral deviation that wins for i already wins for i in the original profile |
+| `Restriction` | Restriction to any actual subtree, without a reach-probability condition |
+| `IsSubgamePerfect` | Every restricted profile is Nash; neither backward induction nor local optimization occurs in the definition |
+| `possibleWinners` | Roles winning under some complete profile satisfying that independent SPE definition |
+| `assemble`, `gameForm` | Canonical GameTheory deterministic strategic form: one plan per role, reading only each actual owner's entries |
+| `winningPreference` | A law is preferred exactly when its probability of the player's own victory is at least the alternative's |
+| `OpponentDeviation`, `CanForce` | Joint changes by all opponents preserving the designated player's actions; a full plan winning against every such change |
+| `Tree.rename`, `Profile.rename`, `compile` | Internal role switches affect owners and leaves; full public terms compile to trees with independent repeated occurrences |
+
+A player-indexed strategic-form plan contains redundant entries at other
+owners' nodes. The evaluator ignores them. Both directions of unilateral
+replacement correspondence are proved in `Strategic/Basic.lean`, so redundancy
+introduces no extra profitable deviations. `spe_iff_gameTheory` identifies the
+independent definition with the library's canonical Nash predicate in every
+subtree. This public perfect-information branch needs no protocol compiler or
+belief model. It does not identify historywise optimality and subgame perfection
+in hidden games.
+
+`Strategic/Adequacy.value` bundles `possibleWinners` using the proved existence
+of an SPE. `neutralTree` is explicitly the three-node, four-copy term.
+`Strategic/Forcing` proves the singleton characterization from independent
+opponent deviations. `Strategic/Compilation` proves the entire term interpreter,
+including switches. Regressions distinguish Nash from SPE at an unreached
+subgame and reproduce the three-role example with an extra inactive role.
+
+## Owner synthesis and variable obstruction
+
+The canonical-table and synthesis definitions were consolidated into the existing
+`Definitions/Owner.lean`. `GuardPair` is the finite ambiguity/non-owner test pair;
+`GuardTable` records an independent root and an explicit source/guard list.
+`Canonical` states root, self-exclusion, disjointness, minimality and duplicate
+conditions. `Enabled` gives table meaning for arbitrary status and membership
+sets. `Realizes` asserts fixed root, single-owner syntax and exact outsider
+semantics on every winner-set valuation; it mentions no checker or saturation.
+
+`SaturationState` stores accumulated ambiguity/non-owner tests. `Below` means
+both sets of effective tests strengthen; `rank` counts their finite sizes.
+`target`, `UpdateAllowed`, `run`, `accepts`, `guardPath`, `check` and `synthesize`
+are the report's explicit finite scans and actual native syntax construction.
+`Listed` requires an explicit dictionary covering every relevant position and
+permits unused/repeated entries. Fixed-point/order-independence and raw-occurrence
+necessity are proved in the Owner proof modules. The returned primitive tree
+has size at most `1+M*(10n+7)`, including every copied variable.
+
+`Owner.BasisObstruction` in the same definition file contains the separate
+four-element W table, proper-subalgebra embeddings and the literal four-variable
+root-expansion identity. Every <=3-actual-variable identity transfers to W,
+even with padded arity and unbounded depth; root-expansion fails. The complete
+root claim repeats that identity and the lower bound for every basis.
+
+## Complete original-tree machine certificates
+
+`TermMachine.termEncoding` is exactly the original `TermCode.encode` together
+with its proved injectivity. The stack parser is proved equal to the original
+decoder on every word. Its reusable charged-fold certificate allows any
+polynomial-size cached annotation with certified leaf/node operations.
+`TermSupport` computes the existing rightmost-deduplicated support dictionary;
+`GuardExtraction` accounts for every original occurrence and prerequisite.
+`GuardCompression` uses binary name membership/index scans and proves exact
+agreement with dependent finite-index records. `ResetEquality` normalizes both
+sides under one actual shared dictionary and compares the sets of records,
+ignoring their incidental order and duplicate representation.
+`Paper.reset_binary_equation_checker` combines exact semantics, malformed-input
+rejection and native polynomial-time machines for the original typed and binary
+word inputs. Encoded owner synthesis and hardness reductions are separate tasks.
+
+## Boolean disclosure protocol gate
+
+`Definitions/Rounds.lean` is the twelfth definition module. `bitDisclosure`
+uses GameTheory's finite-horizon monitoring language: each role commits a bit,
+the complete tuple is the next public signal, and private signals are unit.
+`observed` is its canonical FOSG specialization. `serial` invokes the explicit
+schedule serializer, adding one hidden commitment slot per role and a resolver.
+No equilibrium, continuation recursion or compositional category is defined
+by these wrappers.
+
+`Rounds/Disclosure.hidden_prefix` proves equality of actual information views
+for different hidden prefixes at every supplied public history. `serial_information`
+connects that view to the accepted canonical information model. `public_step`
+proves exact complete publication; `appendPublicHistory` constructs a canonical
+realized continuation history with no strategy-reach hypothesis. Two-bit,
+two-round regressions inspect first- and second-round prefixes. These are
+operational/information results. Product Bayes beliefs, consistency and the
+full strategic round correspondence remain unproved by this gate.
+
+
+## Shared hardness-reduction interface
+
+`Definitions/Reductions.lean` is the thirteenth definition module and remains
+mathlib-only. `ResetUnion.Symbol` has exactly the two binary native operations;
+its terms use the existing equational language, with independent winner-set
+validity and the full binary language. `Code` specifies prefix terms and
+complete equation framing. `Reductions.CNF` is a list of literal lists, with
+independent existential Boolean satisfiability, including empty cases.
+`Reductions.ResetUnion` constructs the report's actual tree equation from the
+listed variable support plus a harmless dummy Boolean variable. This ensures a
+nonempty consistency list and avoids loops on numeric name maxima. Its anchor
+and literal names are explicit and disjoint. These are shared definitions for
+the next reduction correctness/machine gate; no coNP-hardness claim is completed
+merely by introducing this constructor.

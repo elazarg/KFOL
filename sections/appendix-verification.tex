@@ -33,8 +33,9 @@ $2L$. The codecs reject noncanonical indices, invalid ranges and widths,
 and trailing data. The original binary tree codec and executable extraction
 frontend are checked in \path{KFOL/Algorithms/TermCode}: parsing is exact and
 the complete framed output has at most $6N(N+1)+2N+2$ bits for $N$ input bits,
-including sparse names and all framing. These representation and output-size
-bounds do not certify full machine time.
+including sparse names and all framing. \path{KFOL/Complexity/TermMachine},
+\path{TermSupport}, \path{GuardExtraction} and \path{GuardCompression} now
+certify the complete original-tree frontend in native polynomial machine time.
 
 Complete descriptor validation and canonical-table recognition are checked in
 \path{KFOL/Algorithms/GuardDescriptor}. The decoder enforces distinct dictionary
@@ -56,7 +57,18 @@ canonical tables. \path{KFOL/Algorithms/ResetEquation} proves a complete binary
 equation checker using shared support indices; it rejects malformed inputs and
 accepts exactly equations valid on all winner-set valuations when three roles
 exist. These proofs use mathlib variable relabeling and injective renaming of
-minimal guards.
+minimal guards. \path{KFOL/Complexity/ResetEquality} certifies the complete
+original binary equation checker, including both tree decoders and record-set
+comparison that ignores incidental order and duplicates.
+
+\path{KFOL/Strategic} defines full plans and whole-player deviations in every
+subtree independently of backward induction. Its canonical GameTheory Nash
+bridge, equilibrium existence, owned-choice recurrence, forcing and full public
+term compiler are checked, including internal role switches and independently
+solved repeated components. \path{KFOL/Rounds/Disclosure} checks the accepted
+Boolean commitment serializer and exact hiding/publication information gates
+at first- and second-round public histories; Bayes consistency and the full
+round correspondence remain separate.
 
 \path{KFOL/Owner} proves the complete root-status and guard-completeness
 statements, explicit three-role pair countervaluations and the semantic
@@ -65,6 +77,11 @@ and concrete closed embedding. Minimum generation is also kernel-checked:
 the finite reset-table enumeration has proved exhaustive reconstruction,
 followed by transport to arbitrary carriers of size at most three and the
 ternary obstruction. No outside classification theorem is assumed.
+The semantic owner-table recognizer and actual native-tree constructor are
+checked with size bound $1+M(10n+7)$ and update-order independence. The
+four-element obstruction transfers every identity with at most three actual
+variables, even with padded arity, and refutes the displayed root-expansion
+identity. Native owner-machine running times remain separate.
 \path{KFOL/Core} proves the uniform $K+2$-element native obstruction to all
 $K$-variable bases, using arbitrary-generator locality and an explicit valid
 $K+1$-variable exhaustion identity that fails natively. The stronger
@@ -88,7 +105,9 @@ Result & Evidence\\
 \bottomrule
 \endlastfoot
 SPE recurrence, neutral union (\cref{game:thm:adequacy,game:thm:union})
- & Lean: \texttt{winners\_node}, \texttt{three\_owner\_join}, \texttt{every\_winner\_set\_realized}.\\
+ & Complete in root \texttt{Paper.lean}: independent full-profile SPE, canonical
+ GameTheory Nash in every subtree, equilibrium existence, the owned-choice
+ recurrence, neutral union and every nonempty finite winner set realized.\\
 Occurrence lower bound (\cref{game:thm:lower})
  & Lean for the path obstruction (\texttt{no\_single\_use\_union}); syntax-to-path step written.\\
 Player quotient (\cref{view:thm:view})
@@ -108,7 +127,7 @@ Atomic clone (\cref{gen:thm:S2})
 Binary fragment (\cref{reset:thm:binary})
  & Rigidity in Lean (\texttt{OneConstant.Term.rigidity}); remainder written; external $S_2$ step.\\
 Reset semantics, chain (\cref{reset:lem:selection,reset:thm:three})
- & Root \texttt{Paper.lean}: complete mixed-input selection, native core expansion, canonical minimal-table completeness, fixed-chain completeness and the common identity theory for all $K\geq3$. The explicit table-substitution formula is checked for actual term substitution. Executable extraction has one raw entry per variable occurrence; the raw and canonical descriptions have proved quadratic bounds in label occurrences. Polynomial machine running-time bounds remain written.\\
+ & Root \texttt{Paper.lean}: complete mixed-input selection, native core expansion, canonical minimal-table completeness, fixed-chain completeness and the common identity theory for all $K\geq3$. The explicit table-substitution formula is checked for actual term substitution. Executable extraction has one raw entry per variable occurrence; the raw and canonical descriptions have proved quadratic bounds in label occurrences. Complete original-tree binary equality now has a native polynomial-time certificate. Encoded substitution and synthesis runtime remain separate.\\
 Reset basis (\cref{reset:thm:basis})
  & Complete in root \texttt{Paper.lean}: \path{KFOL.Paper.reset_basis}, with all six equations repeated and their exact count proved. Arbitrary-model path normalization and suffix absorption yield equational derivations; \cite[Section~3]{FreeseEtAl2002} is the proof reference, not a Lean hypothesis.\\
 Antimatroid representation (\cref{reset:thm:anti})
@@ -133,7 +152,9 @@ One-owner calculus (\cref{owner:thm:guards,owner:thm:one-table,owner:thm:four})
  minimum-generator exclusion via exhaustive kernel-checked small models.
  Uniform machine time remains separate.\\
 One-owner table realizability and clone (\cref{owner:thm:synthesis})
- & Written safe-path and saturation proofs; independent four-state closure
+ & Root \texttt{Paper.lean} proves full semantic recognition, actual native
+ synthesis, the $1+M(10n+7)$ size bound and saturation order independence.
+ Polynomial machine time remains separate. Legacy independent four-state closure
  and exhaustive candidate-table checks.\\
 Selective reset (\cref{selective:thm:guards,selective:cor:G,selective:prop:disjoint})
  & Lean: \texttt{ChainGuards.Term.policy\_equation\_iff},
