@@ -3,6 +3,7 @@ module
 public import KFOL.Algebra
 public import KFOL.Algorithms.GuardWords
 public import KFOL.Complexity.GuardSubset
+public import KFOL.Algorithms.GuardRecord
 
 /-!
 # Kernel-checked paper claims
@@ -708,5 +709,95 @@ theorem reset_guard_subset_machine :
 [propext, Classical.choice, Quot.sound] -/
 #guard_msgs (whitespace := lax) in
 #print axioms KFOL.Paper.reset_guard_subset_machine
+
+/-- Compact indexing uses exactly the actual support. No bound on the values
+or ambient range of variable names is assumed. Compression and expansion are
+inverse on covered sets and preserve the prerequisite-subset word test. -/
+theorem reset_support_indexing {Var : Type v} [DecidableEq Var] (t : Reset.Term Var) :
+    let D := Algorithms.SupportIndex.labels t
+    D.Nodup ∧ D.toFinset = t.varFinset ∧ D.length = t.varFinset.card ∧
+    D.length ≤ t.leafCount ∧
+    (∃ e : Fin D.length ≃ {j // j ∈ t.varFinset}, ∀ i, (e i).val = D.get i) ∧
+    (∀ j (i : Fin D.length), Algorithms.SupportIndex.locate D j = some i ↔ D.get i = j) ∧
+    (∀ A : Finset Var, A ⊆ t.varFinset →
+      Algorithms.SupportIndex.expand D (Algorithms.SupportIndex.compress D A) = A) ∧
+    (∀ A : Finset (Fin D.length),
+      Algorithms.SupportIndex.compress D (Algorithms.SupportIndex.expand D A) = A) ∧
+    (∀ A B : Finset Var, A ⊆ t.varFinset → (
+      Algorithms.GuardWords.subsetWord
+        (Algorithms.Bitset.encode (Algorithms.SupportIndex.compress D A))
+        (Algorithms.Bitset.encode (Algorithms.SupportIndex.compress D B)) = [true] ↔ A ⊆ B)) := by
+  dsimp only
+  refine ⟨Algorithms.SupportIndex.labels_nodup t, Algorithms.SupportIndex.labels_toFinset t,
+    Algorithms.SupportIndex.length_labels t, Algorithms.SupportIndex.length_labels_le t,
+    Algorithms.SupportIndex.exists_support_equiv t, ?_, ?_, ?_, ?_⟩
+  · exact fun j i => Algorithms.SupportIndex.locate_eq_some_iff _
+      (Algorithms.SupportIndex.labels_nodup t) j i
+  · intro A hA
+    exact Algorithms.SupportIndex.expand_compress _ A (by
+      simpa only [Algorithms.SupportIndex.labels_toFinset] using hA)
+  · exact Algorithms.SupportIndex.compress_expand _ (Algorithms.SupportIndex.labels_nodup t)
+  · intro A B hA
+    exact Algorithms.SupportIndex.subsetWord_compress _ A B (by
+      simpa only [Algorithms.SupportIndex.labels_toFinset] using hA)
+
+/-- info: 'KFOL.Paper.reset_support_indexing' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Paper.reset_support_indexing
+
+/-- Strict binary record and stream codecs, including exact bit lengths.
+Output indices use canonical binary naturals and prerequisite words have
+exactly the dictionary width. These are representation and size results. -/
+theorem reset_guard_record_codec :
+    (∀ (n : ℕ) (r : Fin n × Finset (Fin n)) (word : List Bool),
+      (Algorithms.GuardRecord.decode n word = some r ↔ word = Algorithms.GuardRecord.encode r) ∧
+      (Algorithms.GuardRecord.encode r).length = 2 * r.1.val.size + 2 + n) ∧
+    (∀ (n : ℕ) (records : List (Fin n × Finset (Fin n))) (word : List Bool),
+      (Algorithms.GuardRecord.decodeList n word = some records ↔
+        word = Algorithms.GuardRecord.encodeList records) ∧
+      (Algorithms.GuardRecord.encodeList records).length ≤ 6 * records.length * (n + 1)) ∧
+    (∀ (D : List ℕ) (word : List Bool),
+      (Algorithms.LabelDictionary.decode word = some D ↔ word = Algorithms.LabelDictionary.encode D) ∧
+      (Algorithms.LabelDictionary.encode D).length = 2 * (D.map Nat.size).sum + 2 * D.length) :=
+  ⟨fun _ r w => ⟨Algorithms.GuardRecord.decode_eq_some_iff w r, Algorithms.GuardRecord.length_encode r⟩,
+    fun _ rs w => ⟨Algorithms.GuardRecord.decodeList_eq_some_iff w rs,
+      Algorithms.GuardRecord.length_encodeList_linear rs⟩,
+    fun D w => ⟨Algorithms.LabelDictionary.decode_eq_some_iff w D, Algorithms.LabelDictionary.length_encode D⟩⟩
+
+/-- info: 'KFOL.Paper.reset_guard_record_codec' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Paper.reset_guard_record_codec
+
+/-- The actual term supplies its dictionary and all serializable records.
+Decoded expansion recovers the original occurrence list and therefore the
+canonical tables. Encoded sizes count bits, including sparse binary names. -/
+theorem reset_binary_guard_records (t : Reset.Term ℕ) :
+    let D := Algorithms.SupportIndex.labels t
+    (Algorithms.LabelDictionary.encode D).length ≤
+      2 * (t.guardEntries.map (fun p => p.1.size)).sum + 2 * t.leafCount ∧
+    ∃ records : List (Fin D.length × Finset (Fin D.length)),
+      t.guardEntries.mapM (Algorithms.SupportIndex.compressEntry D) = some records ∧
+      records.length = t.leafCount ∧
+      records.map (fun r => (D.get r.1, Algorithms.SupportIndex.expand D r.2)) = t.guardEntries ∧
+      Algorithms.GuardRecord.decodeList D.length (Algorithms.GuardRecord.encodeList records) =
+        some records ∧
+      (Algorithms.GuardRecord.encodeList records).length ≤ 6 * t.leafCount * (t.leafCount + 1) ∧
+      (∀ j, Reset.Term.minimize
+        ((((records.map (fun r => (D.get r.1, Algorithms.SupportIndex.expand D r.2))).filter
+          (fun p => p.1 = j)).map Prod.snd).toFinset) = t.table j) := by
+  dsimp only
+  refine ⟨Algorithms.LabelDictionary.length_encode_support_le t, ?_⟩
+  obtain ⟨records, hr, hlen, he, hd, hb⟩ := Algorithms.indexed_guard_records t
+  refine ⟨records, hr, hlen, he, hd, hb, ?_⟩
+  intro j
+  rw [he]
+  exact (t.table_eq_entries j).symm
+
+/-- info: 'KFOL.Paper.reset_binary_guard_records' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Paper.reset_binary_guard_records
 
 end KFOL.Paper

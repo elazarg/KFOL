@@ -1,4 +1,4 @@
-# Definitions for the completed algebra slice
+# Definitions and representation boundaries
 
 The public statements `KFOL.Paper.pair_countervaluations` and
 `KFOL.Paper.optimal_test_domain` correspond to `sym:thm:pairs` and
@@ -598,7 +598,61 @@ codec, total semantics and guard-enabling correspondence, uniformly in width.
 
 This is a dense membership-word intermediate representation, already indexed
 by `Fin n`. Sparse binary variable-name encodings, support compression, record
-framing and full table traversals retain their separate obligations. The
+framing and their size bounds are now checked below; native input-tree codecs
+and full table traversals retain their separate obligations. The
 primitive loops on input word lengths, with no decoded numeric-value clock.
 Regressions cover coordinate order, failed inclusions, unequal widths, the
 empty width, the actual certified fixed-arity function and guard enabling.
+
+## Compact support dictionaries and binary records
+
+`Definitions/Algorithms.lean` additionally defines `SupportIndex.labels`,
+`locate`, `compress`, `expand` and `compressEntry`. The dictionary deduplicates
+the collector's actual leaf labels. Lookup returns an optional finite index;
+set compression records membership at dictionary positions and expansion maps
+those positions back to their original labels. Unknown output labels are
+rejected. Prerequisite coverage is proved for all actual collected entries.
+
+`Algorithms/SupportIndex.lean` proves that the dictionary has no duplicates,
+contains exactly the term's support and has length n equal to that support's
+cardinality, with `n ≤ L` for L leaves. Mathlib's list indexing equivalence
+identifies its positions with the supported labels. Compression and expansion
+are inverse on covered sets, and the certified subset-word test remains exact
+when the right status set contains extra unused labels. This extends the
+guard-enabling bridge to arbitrary decidable variable types.
+
+The eighth definition file, `Definitions/Encoding.lean`, marks the external
+binary-codec boundary. It imports ComplexityLib's canonical binary natural
+codes and self-delimiting pairing, separately from the pure indexing branch:
+
+| Definition | Meaning and dependencies |
+| --- | --- |
+| `GuardRecord.Record n` | A compressed output in `Fin n` and a prerequisite subset of `Fin n` |
+| `GuardRecord.encode`, `decode` | One framed canonical binary output index followed by exactly n membership bits; reject invalid framing, index codes, ranges and widths |
+| `GuardRecord.encodeList`, `decodeList` | Independently framed records with complete input consumption |
+| `LabelDictionary.encode`, `decode` | Framed canonical binary names, preserving their list order; uniqueness comes from the support construction |
+
+`Algorithms/Framing.lean` proves successful complete block parsing has no
+unconsumed suffix and supplies exact list-codec lemmas. It uses the existing
+library parser. `Algorithms/GuardRecord.lean` proves both directions of every
+record, record-stream and dictionary codec. A record uses `2 * index.size + 2 + n`
+bits; M framed records use at most `6M(n+1)` bits. The already encoded table
+tail is not repeatedly doubled by nested framing.
+
+`KFOL.Paper.reset_support_indexing` repeats the compact dictionary, indexing
+equivalence and subset-preserving round trips. `reset_guard_record_codec`
+repeats the exact codecs and bit-size statements. `reset_binary_guard_records`
+constructs all records from the actual term, proves decoded expansion recovers
+its occurrence list and canonical tables, and bounds their stream by
+`6L(L+1)` bits. The binary dictionary costs at most twice the sum of input
+leaf-label bit widths plus `2L`, using one copy of each distinct name.
+
+These are representations and encoded output-size proofs. Whole descriptor
+parsing, external dictionary validation and machine-time certificates for
+record scans and complete table algorithms remain separate. The codecs preserve
+a chosen dictionary and record order; comparing two terms will use decoded
+canonical tables or a shared dictionary covering both supports. The generic
+compression lemmas already support that shared-dictionary use. Regressions use
+widely separated labels, a nonzero root index, repeated occurrences, exact
+bit counts and malformed fields or trailing data. Every finite check uses
+kernel `decide`.

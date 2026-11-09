@@ -2,7 +2,11 @@ module
 
 import all KFOL.Audit.Algebra
 import all KFOL.Definitions.Algorithms
+import all KFOL.Definitions.Encoding
 import all KFOL.Algorithms.GuardWords
+import all KFOL.Algorithms.SupportIndex
+import all KFOL.Algorithms.Framing
+import all KFOL.Algorithms.GuardRecord
 import all KFOL.Complexity.Language
 import all KFOL.Complexity.GuardSubset
 import all KFOL.Definitions.Public

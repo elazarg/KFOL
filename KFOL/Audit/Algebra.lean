@@ -2,6 +2,7 @@ module
 
 import all KFOL.Algebra
 import all KFOL.Algorithms.GuardWords
+import all KFOL.Algorithms.SupportIndex
 meta import Lean.Elab.Command
 
 /-! # Independent algebra and representation import boundary

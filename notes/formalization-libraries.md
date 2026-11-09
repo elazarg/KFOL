@@ -108,8 +108,11 @@ package, with only `propext`, `Classical.choice` and `Quot.sound`. The actual
 width-independent prerequisite-subset program is connected to finite-set
 inclusion and the existing guard-enabling predicate. This is a reusable machine
 component, not completion of Gate 1's successor/GameTheory integration or
-Gate 4's end-to-end reduction. Sparse binary labels, support compression and
-framed guard records are the next representation work.
+Gate 4's end-to-end reduction. Compact support indexing and exact framed
+binary record/dictionary codecs are now also checked. They reuse mathlib's
+list-indexing equivalence and ComplexityLib's existing codecs and block parser.
+Native input-tree parsing, whole descriptor validation and machine-certified
+record/table scans remain the next work.
 
 These gates test the actual reuse seams. Once they pass, the remaining effort can be estimated from the paper-specific proof obligations, rather than from rebuilding foundations already available in the user's libraries.
 

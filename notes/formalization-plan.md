@@ -108,8 +108,9 @@ For each required inventory row, implementation review records the public declar
 | `Definitions/Reset.lean` | Primitive reset, generic signature, selection, canonical tables, independent rooted antimatroids and actual semantic term functions |
 | `Definitions/Equational.lean` | Relation-free mathlib language, finite identities, satisfaction, theories, derivation, basis, variable bound, algebra structures, full/core signatures and codecs |
 | `Definitions/Algorithms.lean` | Exact membership-word bitset codec, independent prerequisite scan and its fixed-arity interface; no machine imports |
+| `Definitions/Encoding.lean` | Binary guard records, framed record streams and sparse binary label dictionaries; imports the external word-codec primitives only |
 
-These are six algebraic definition modules and one word-algorithm module. `Equational` imports
+These are six algebraic definition modules and two representation modules. `Equational` imports
 `Core`, which imports `Public`; it adds only mathlib dependencies. See the
 [definition index](formalization-definitions.md) for their actual contents and
 imported mathematical surface. Proof constructions live in the corresponding
@@ -571,10 +572,47 @@ Regressions compute successful and failed inclusions, coordinate order, invalid
 widths, zero-width inputs and a concrete guard-enabling case.
 
 This establishes a machine component and dependency compatibility, not the
-planned end-to-end reset/union reduction gate. Next connect sparse binary labels
-and compact support indices to framed guard records and certify their scans.
+planned end-to-end reset/union reduction gate. Sparse binary labels and compact
+support indices are connected to framed records below; their scan certificates
+remain the next machine work.
 Full extraction, normalization/equality, recognition, synthesis and substitution
 machine bounds, class transport and the strategic gates remain obligations.
+
+### Compact indices and framed binary records checked
+
+`KFOL.Paper.reset_support_indexing` proves that the executable label dictionary
+has exactly the actual support, no repeated labels and at most L entries for
+L variable leaves. Dictionary lookup and the two set maps round-trip exactly;
+the subset-word machine therefore applies to supported guards over arbitrary
+variable-name types. Unused status labels need no dictionary positions.
+Mathlib's list-indexing equivalence supplies the actual finite-support bijection.
+
+`reset_guard_record_codec` states strict two-sided codecs for binary output
+indices, fixed-width prerequisite words, framed record streams and sparse
+natural-name dictionaries. The implementation reuses ComplexityLib's binary
+natural code and block parser. The new framing proof establishes complete
+consumption; invalid fields and trailing data cannot yield a successful parse.
+Each record is framed independently, avoiding repeated duplication of its tail.
+
+`reset_binary_guard_records` obtains the compressed records from the term's
+own traversal, rather than assuming a supplied certificate. Decoded expansion
+recovers every occurrence and therefore exactly the canonical tables. There
+are L raw records on n support positions, `n ≤ L`; their encoding uses at most
+`6L(L+1)` bits. The sparse dictionary uses at most twice the sum of the original
+leaf-label binary widths plus `2L`. Membership-word width depends only on the
+number of distinct labels.
+
+Pure indexing remains mathlib-only and is included in the independent import
+audit. The eight definition files separate algebra, word algorithms and the
+external codec boundary. Regressions exercise separated numeric names, a root
+whose index is nonzero, duplicate occurrences, exact bit lengths, noncanonical
+indices, bad ranges and widths, and truncated streams.
+
+These representation and output-size results do not certify whole-program
+machine time. Next connect ordinary binary input-tree parsing to complete
+dictionary/record descriptors, use shared support indices for identity inputs,
+and certify their field scans and traversals.
+The full table algorithms and end-to-end reduction gate remain partial.
 
 | Milestone | Prerequisites | Concrete completion gate |
 | --- | --- | --- |
