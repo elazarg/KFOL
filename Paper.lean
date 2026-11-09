@@ -12,6 +12,7 @@ public import KFOL.Owner
 public import KFOL.Owner.Four
 public import KFOL.Owner.Minimum
 public import KFOL.Core
+public import KFOL.Core.ChoiceUnion
 public import KFOL.Complexity.Framing
 public import KFOL.Complexity.BlockScan
 public import KFOL.Complexity.DescriptorValidation
@@ -20,6 +21,12 @@ public import KFOL.Complexity.RecognitionMachine
 public import KFOL.Reset.Generator
 public import KFOL.Strategic
 public import KFOL.Complexity.ResetEquality
+public import KFOL.Complexity.ResetUnionHardness
+public import KFOL.Complexity.ResetUnionCompleteness
+public import KFOL.Complexity.ResetUnionWordCompleteness
+public import KFOL.Reductions.ResetUnionSize
+public import KFOL.Congruences
+public import KFOL.Congruences.UniformMatroid
 
 /-!
 # Kernel-checked paper claims
@@ -1502,5 +1509,283 @@ theorem owner_basis_variable_bound :
 [propext, Classical.choice, Quot.sound] -/
 #guard_msgs (whitespace := lax) in
 #print axioms KFOL.Paper.owner_basis_variable_bound
+
+/-- `core:thm:no-basis` and `core:thm:core-nfb`: for every finite role set
+with three distinct roles and every actual-variable bound there is a finite
+countermodel with all small generated subalgebras in the core variety. No
+bounded-variable theory, even infinite, is a basis; in particular no finite
+basis exists. -/
+theorem core_nonfinite_basis {Role : Type u} [DecidableEq Role] [Finite Role]
+    (three : Fin 3 ↪ Role) :
+    letI := Equational.coreStructure Role
+    letI := Core.Native.structureOf (Role := Role)
+    (∀ d : ℕ,
+      ∃ (B : Type u) (_str : (Equational.language (Equational.CoreSymbol Role)).Structure B),
+        Nonempty B ∧ Finite B ∧
+        ¬ Equational.InVariety (Equational.CoreSymbol Role) (Core.Native Role) B ∧
+        ¬ Equational.InVariety (Equational.CoreSymbol Role) (WinnerSet Role) B ∧
+        (∃ e : Equational.Identity (Equational.CoreSymbol Role),
+          e.Holds (WinnerSet Role) ∧ ¬ e.Holds B) ∧
+        (∀ e : Equational.Identity (Equational.CoreSymbol Role),
+          e.variableCount ≤ d → e.Holds (WinnerSet Role) → e.Holds B) ∧
+        (∀ X : Finset B, X.card ≤ d →
+          Nonempty (FirstOrder.Language.Substructure.closure
+            (Equational.language (Equational.CoreSymbol Role)) (X : Set B)) →
+          Equational.InVariety (Equational.CoreSymbol Role) (WinnerSet Role)
+            (FirstOrder.Language.Substructure.closure
+              (Equational.language (Equational.CoreSymbol Role)) (X : Set B)))) ∧
+    (∀ (d : ℕ) (T : Equational.Theory (Equational.CoreSymbol Role)),
+      (∀ e ∈ T, e.variableCount ≤ d) →
+        ¬(∀ e : Equational.Identity (Equational.CoreSymbol Role),
+          e.Holds (WinnerSet Role) ↔ Equational.Derives T e.lhs e.rhs)) ∧
+    (∀ T : Equational.Theory (Equational.CoreSymbol Role), T.Finite →
+      ¬(∀ e : Equational.Identity (Equational.CoreSymbol Role),
+        e.Holds (WinnerSet Role) ↔ Equational.Derives T e.lhs e.rhs)) := by
+  let _ := Equational.coreStructure Role
+  let _ := Core.Native.structureOf (Role := Role)
+  refine ⟨?_, Core.no_basis_with_variable_bound three, ?_⟩
+  · intro d
+    obtain ⟨B, str, hne, hfinite, hnative, hcore, hlocal⟩ := Core.Grid.finite_local_countermodel three d
+    let _ := str
+    let _ := hne
+    have hfail : ∃ e : Equational.Identity (Equational.CoreSymbol Role),
+        e.Holds (WinnerSet Role) ∧ ¬e.Holds B := by
+      classical
+      by_contra! h
+      exact hcore ⟨hne, h⟩
+    exact ⟨B, str, hne, hfinite, hnative, hcore, hfail,
+      fun e he hv => e.holds_of_local_variety d he hv hlocal, hlocal⟩
+  · intro T hfinite hcomplete
+    exact Core.not_hasFiniteBasis three ⟨T, hfinite, hcomplete⟩
+
+/-- info: 'KFOL.Paper.core_nonfinite_basis' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Paper.core_nonfinite_basis
+
+/-- `core:cor:ambient-nfb`: the ambient native algebra also has no
+bounded-variable basis, even infinite, and consequently no finite basis. -/
+theorem native_nonfinite_basis {Role : Type u} [DecidableEq Role] [Finite Role]
+    (three : Fin 3 ↪ Role) :
+    letI := Core.Native.structureOf (Role := Role)
+    (∀ (d : ℕ) (T : Equational.Theory (Equational.CoreSymbol Role)),
+      (∀ e ∈ T, e.variableCount ≤ d) →
+        ¬(∀ e : Equational.Identity (Equational.CoreSymbol Role),
+          e.Holds (Core.Native Role) ↔ Equational.Derives T e.lhs e.rhs)) ∧
+    (∀ T : Equational.Theory (Equational.CoreSymbol Role), T.Finite →
+      ¬(∀ e : Equational.Identity (Equational.CoreSymbol Role),
+        e.Holds (Core.Native Role) ↔ Equational.Derives T e.lhs e.rhs)) := by
+  let _ := Core.Native.structureOf (Role := Role)
+  refine ⟨Core.native_no_basis_with_variable_bound three, ?_⟩
+  intro T hfinite hcomplete
+  exact Core.native_not_hasFiniteBasis three ⟨T, hfinite, hcomplete⟩
+
+/-- info: 'KFOL.Paper.native_nonfinite_basis' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Paper.native_nonfinite_basis
+
+/-- `owner:thm:basis-main` and `owner:thm:finite-basis`: the explicitly
+indexed forty native identities form a complete basis on the intended
+winner-set carrier. Six variables suffice and every basis needs at least four.
+The data family in Definitions/Owner is independent of semantic validity. -/
+theorem owner_forty_equation_basis {Role : Type u} (three : Fin 3 ↪ Role)
+    (owner observer : Role) (ho : observer ≠ owner) :
+    letI := Owner.oneOwnerStructure owner
+    Fintype.card (Fin 40) = 40 ∧
+    (Set.range Owner.FiniteBasis.basisAxiom).Finite ∧
+    (∀ i : Fin 40, (Owner.FiniteBasis.basisAxiom i).variableCount ≤ 6) ∧
+    (∀ e : Equational.Identity (Owner.Symbol Unit), e.Holds (WinnerSet Role) ↔
+      Equational.Derives (Set.range Owner.FiniteBasis.basisAxiom) e.lhs e.rhs) ∧
+    (∀ (T : Equational.Theory (Owner.Symbol Unit)) (n : ℕ),
+      (∀ e : Equational.Identity (Owner.Symbol Unit),
+        e.Holds (WinnerSet Role) ↔ Equational.Derives T e.lhs e.rhs) →
+      (∀ e ∈ T, e.variableCount ≤ n) → 4 ≤ n) := by
+  let _ := Owner.oneOwnerStructure owner
+  exact ⟨Fintype.card_fin 40, Owner.FiniteBasis.theory_finite,
+    (fun i => Owner.FiniteBasis.variable_bound _ ⟨i, rfl⟩),
+    Owner.FiniteBasis.isBasis_winnerSet three owner observer ho,
+    Owner.FiniteBasis.variableBound_ge_four_winnerSet three owner observer ho⟩
+
+/-- info: 'KFOL.Paper.owner_forty_equation_basis' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Paper.owner_forty_equation_basis
+
+/-- The actual native reset/union CNF reduction is correct, has linear
+expanded-tree size, is computed in native polynomial time, and establishes
+machine-level coNP-hardness of the complete original binary equation language.
+The separate coNP upper bound is not included in this component statement. -/
+theorem reset_union_reduction {Role : Type u} (three : Fin 3 ↪ Role) :
+    (∀ formula : Reductions.CNF,
+      ResetUnion.Valid Role (Reductions.ResetUnion.equation formula) ↔
+        ¬Reductions.Satisfiable formula) ∧
+    (∀ formula : Reductions.CNF,
+      (Reductions.ResetUnion.equation formula).1.size +
+        (Reductions.ResetUnion.equation formula).2.size ≤
+          30 * (formula.length + formula.flatten.length) + 36) ∧
+    Turing.MultiTapeTM.ComputableInPolyTime Reductions.ResetUnion.equation
+      Complexity.ResetUnionReduction.cnfEncoding Complexity.ResetUnionMachines.equationEncoding ∧
+    Cslib.Complexity.coNPHard Turing.MultiTapeTM.encBits (ResetUnion.Language Role) :=
+  ⟨Reductions.ResetUnion.valid_equation_iff three, Reductions.ResetUnion.size_equation_linear,
+    Complexity.ResetUnionReduction.reduction_polyTime, Complexity.ResetUnionHardness.language_coNPHard three⟩
+
+/-- info: 'KFOL.Paper.reset_union_reduction' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Paper.reset_union_reduction
+
+/-- `sym:lem:provenance`: on every fixed singleton/ambiguity status cell,
+a term is a finite constant set union finitely permuted ambiguous inputs. -/
+theorem status_cell_provenance {Role : Type u} {Var : Type v} (t : Term Role Var)
+    (base : Var → WinnerSet Role) :
+    ∃ (C : Set Role) (P : Var → Finset (Equiv.Perm Role)), C.Finite ∧
+      (∀ j, ∀ p ∈ P j, (base j).Ambiguous) ∧
+      ∀ valuation : Var → WinnerSet Role,
+        (∀ j r, base j = WinnerSet.singleton r ↔ valuation j = WinnerSet.singleton r) →
+        (t.eval valuation).val = C ∪ ⋃ j, ⋃ p ∈ P j, p '' (valuation j).val :=
+  t.exists_cell_provenance base
+
+/-- info: 'KFOL.Paper.status_cell_provenance' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Paper.status_cell_provenance
+
+open WinnerSet
+
+
+/-- `view:thm:congruences`: every owned-choice congruence is exactly the kernel of a unique admissible closure, equivalently a unique admissible fixed family, with both converse constructions. -/
+theorem congruence_classification {Role : Type u} [Finite Role] [Nonempty Role]
+    (three : Fin 3 ↪ Role) :
+    (∀ θ : WinnerSet.Congruence Role,
+      ∃! c : ClosureOperator (WinnerSet Role),
+        (∀ owner, c (singleton owner) = singleton owner ∨ c (singleton owner) = full) ∧
+        ∀ A B, θ.r A B ↔ c A = c B) ∧
+    (∀ c : ClosureOperator (WinnerSet Role),
+      (∀ owner, c (singleton owner) = singleton owner ∨ c (singleton owner) = full) →
+      ∃ θ : WinnerSet.Congruence Role, ∀ A B, θ.r A B ↔ c A = c B) ∧
+    (∀ θ : WinnerSet.Congruence Role,
+      ∃! F : Set (WinnerSet Role), AdmissibleFamily F ∧
+        ∀ A B, θ.r A B ↔ familyClosureValue F A = familyClosureValue F B) ∧
+    (∀ F : Set (WinnerSet Role), AdmissibleFamily F →
+      ∃ θ : WinnerSet.Congruence Role, ∀ A B,
+        θ.r A B ↔ familyClosureValue F A = familyClosureValue F B) := by
+  refine ⟨WinnerSet.Congruence.exists_unique_closure three,?_,
+    WinnerSet.Congruence.exists_unique_family three,?_⟩
+  · intro c hc
+    exact ⟨WinnerSet.ClosureOperator.kernel c hc,fun _ _ => Iff.rfl⟩
+  · intro F hF
+    exact ⟨WinnerSet.ClosureOperator.kernel (familyClosure F) (familyClosure_atom F hF),
+      fun _ _ => Iff.rfl⟩
+
+/-- info: 'KFOL.Paper.congruence_classification' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Paper.congruence_classification
+
+/-- `view:thm:sym`: the symmetric congruences are precisely the K ambiguity thresholds, with their chain, endpoints and exact quotient cardinalities. -/
+theorem symmetric_congruence_chain {Role : Type u} [Finite Role] [Nonempty Role]
+    (three : Fin 3 ↪ Role) :
+    (∀ θ : SymmetricCongruence Role,
+      ∃! m : Fin (Nat.card Role), ∀ A B : WinnerSet Role,
+        θ.r A B ↔ threshold m.val A = threshold m.val B) ∧
+    (∀ m : Fin (Nat.card Role), ∃ θ : SymmetricCongruence Role, ∀ A B : WinnerSet Role,
+      θ.r A B ↔ threshold m.val A = threshold m.val B) ∧
+    Nat.card (SymmetricCongruence Role) = Nat.card Role ∧
+    (∀ (m n : ℕ), m ≤ n → ∀ A B : WinnerSet Role,
+      threshold n A = threshold n B → threshold m A = threshold m B) ∧
+    (∀ A : WinnerSet Role, threshold 0 A = full) ∧
+    (∀ A : WinnerSet Role, threshold (Nat.card Role - 1) A = A) ∧
+    (∀ m : ℕ, m < Nat.card Role →
+      Nat.card (Quotient (Setoid.ker (threshold (Role := Role) m))) =
+        1 + ∑ j ∈ Finset.Icc 1 m, (Nat.card Role).choose j) := by
+  refine ⟨SymmetricCongruence.exists_unique_threshold three,?_,
+    SymmetricCongruence.card three,?_,threshold_zero,threshold_last,?_⟩
+  · intro m
+    exact ⟨WinnerSet.ClosureOperator.symmetricKernel (thresholdClosure m.val)
+      (thresholdClosure_atom m.val) (thresholdClosure_invariant m.val),fun _ _ => Iff.rfl⟩
+  · intro m n h A B he
+    exact threshold_kernel_antitone h A B he
+  · intro m hm
+    exact card_thresholdQuotient hm
+
+/-- info: 'KFOL.Paper.symmetric_congruence_chain' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Paper.symmetric_congruence_chain
+
+/-- The threshold closures are the restrictions of actual uniform matroids: ground, independent sets, rank and closure are all identified. -/
+theorem uniform_matroid_identification {Role : Type u} [Finite Role] [Nonempty Role]
+    (m : ℕ) (hm : m < Nat.card Role) :
+    ∃ M : Matroid Role,
+      M.E = Set.univ ∧
+      (∀ I : Set Role, M.Indep I ↔ I.ncard ≤ m+1) ∧
+      M.eRank = (m+1 : ℕ) ∧
+      ∀ A : WinnerSet Role, (WinnerSet.threshold m A).val = M.closure A.val :=
+  WinnerSet.uniform_matroid_identification m hm
+
+/-- info: 'KFOL.Paper.uniform_matroid_identification' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Paper.uniform_matroid_identification
+
+/-- Native equation validity for reset and union is coNP-complete at every
+fixed finite role set with at least three roles, under the original tree codec. -/
+theorem reset_union_complexity {Role : Type} [Fintype Role] (three : Fin 3 ↪ Role) :
+    Cslib.Complexity.coNPComplete Complexity.ResetUnionMachines.equationEncoding
+      {equation : ResetUnion.Equation | ∀ valuation : ℕ → WinnerSet Role,
+        equation.1.eval valuation = equation.2.eval valuation} ∧
+    Cslib.Complexity.coNPComplete Turing.MultiTapeTM.encBits (ResetUnion.Language Role) :=
+  ⟨Complexity.ResetUnionCompleteness.coNPComplete three,
+    Complexity.ResetUnionWordCompleteness.coNPComplete three⟩
+
+/-- info: 'KFOL.Paper.reset_union_complexity' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Paper.reset_union_complexity
+
+/-- Internal role switches make every one-player polynomial observation
+faithful, including contexts with arbitrary nonempty ground parameters. -/
+theorem switching_observation {Role : Type u} (k : Role) (A B : WinnerSet Role) :
+    (∀ (n : ℕ) (t : Term Role (Option (Fin n))) (parameters : Fin n → WinnerSet Role),
+      (k ∈ (t.eval (fun x => x.elim A parameters)).val ↔
+        k ∈ (t.eval (fun x => x.elim B parameters)).val)) ↔ A = B :=
+  Term.full_polynomial_contextual_iff_eq k A B
+
+/-- info: 'KFOL.Paper.switching_observation' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Paper.switching_observation
+
+open Dissemilattice in
+/-- All seven laws and their exact generating variety are repeated here;
+the two semilattice orders are not identified by absorption. -/
+theorem choice_union_basis {Role : Type v} (three : Fin 3 ↪ Role) (owner : Role) :
+    letI := winnerStructure owner
+    theory.ncard = 7 ∧ theory.Finite ∧ Equational.IsBasis (WinnerSet Role) theory ∧
+    (∀ (M : Type u) [_str : (Equational.language Symbol).Structure M],
+      Equational.InVariety Symbol (WinnerSet Role) M ↔
+        Nonempty M ∧
+        (∀ x : M, add x x = x) ∧
+        (∀ x y : M, add x y = add y x) ∧
+        (∀ x y z : M, add (add x y) z = add x (add y z)) ∧
+        (∀ x : M, mul x x = x) ∧
+        (∀ x y : M, mul x y = mul y x) ∧
+        (∀ x y z : M, mul (mul x y) z = mul x (mul y z)) ∧
+        (∀ x y z : M, mul x (add y z) = add (mul x y) (mul x z))) := by
+  let _ := winnerStructure owner
+  refine ⟨theory_ncard,theory_finite,basis_winner three owner,?_⟩
+  intro M _
+  constructor
+  · intro hM
+    obtain ⟨hne,hL⟩ := (inVariety_winner_iff_laws three owner M).mp hM
+    exact ⟨hne,hL.add_idem,hL.add_comm,hL.add_assoc,hL.mul_idem,hL.mul_comm,hL.mul_assoc,hL.mul_add⟩
+  · rintro ⟨hne,h1,h2,h3,h4,h5,h6,h7⟩
+    exact (inVariety_winner_iff_laws three owner M).mpr ⟨hne,⟨h1,h2,h3,h4,h5,h6,h7⟩⟩
+
+/-- info: 'KFOL.Paper.choice_union_basis' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Paper.choice_union_basis
 
 end KFOL.Paper

@@ -37,6 +37,15 @@ abbrev Term (Role : Type u) (Var : Type v) := Equational.Term (Symbol Role) Var
     | .guarded r => WinnerSet.guardedChoice r (args 0) (args 1) (args 2)
   RelMap r := nomatch r
 
+/-- The independently interpreted fixed one-owner signature on winner sets.
+Its single ternary symbol is the chosen owner's guarded operation. -/
+@[instance_reducible] noncomputable def oneOwnerStructure {Role : Type u} (owner : Role) :
+    (Equational.language (Symbol Unit)).Structure (WinnerSet Role) where
+  funMap f args := match f with
+    | .reset => (args 0).reset (args 1)
+    | .guarded _ => WinnerSet.guardedChoice owner (args 0) (args 1) (args 2)
+  RelMap r := nomatch r
+
 namespace Term
 
 variable {Role : Type u} {Var : Type v}
@@ -67,6 +76,18 @@ def leafCount : Term Role Var → ℕ
   | .var _ => 1
   | .func .reset args => leafCount (args 0) + leafCount (args 1)
   | .func (.guarded _) args => leafCount (args 0) + leafCount (args 1) + leafCount (args 2)
+
+end Term
+
+namespace Term
+
+/-- Interpret the one ternary owner label by a chosen role, leaving every
+variable occurrence and native reset/H constructor explicit. -/
+def withOwner {Role : Type u} {Var : Type v} (owner : Role) : Term Unit Var → Term Role Var
+  | .var j => .var j
+  | .func .reset args => step (withOwner owner (args 0)) (withOwner owner (args 1))
+  | .func (.guarded _) args => guarded owner (withOwner owner (args 0))
+      (withOwner owner (args 1)) (withOwner owner (args 2))
 
 end Term
 
@@ -474,6 +495,137 @@ def rootExpansion : Equational.Identity (Symbol Unit) :=
     Term.step (Term.step u r) (Term.guarded () r a b)⟩
 
 end BasisObstruction
+
+
+/-! ## The explicitly listed forty-law candidate basis -/
+
+namespace FiniteBasis
+
+/-- Exactly the displayed forty equations, with six declared variable slots.
+The two five-variable split laws reuse the slot unused by their other variables. -/
+def basisAxiom (i : Fin 40) : Equational.Identity (Symbol Unit) :=
+  let pair : Term Unit (Fin 6) × Term Unit (Fin 6) := match i.val with
+    | 0 => ((Term.step (.var 0) (.var 0)), (.var 0)) -- R1
+    | 1 => ((Term.step (Term.step (.var 0) (.var 1)) (.var 0)), (Term.step (.var 1) (.var 0))) -- R2
+    | 2 => ((Term.step (Term.step (.var 0) (.var 1)) (.var 1)), (Term.step (.var 0) (.var 1))) -- R3
+    | 3 => ((Term.step (.var 0) (Term.step (Term.step (.var 0) (.var 1)) (.var 2))), (Term.step (.var 0) (Term.step (.var 1) (.var 2)))) -- R4
+    | 4 => ((Term.step (Term.step (Term.step (.var 0) (.var 1)) (.var 2)) (.var 1)), (Term.step (Term.step (.var 0) (.var 2)) (.var 1))) -- R5
+    | 5 => ((Term.step (.var 0) (Term.step (.var 1) (.var 2))), (Term.step (.var 1) (Term.step (.var 0) (.var 2)))) -- R6
+    | 6 => ((Term.guarded () (.var 0) (.var 1) (.var 2)), (Term.guarded () (.var 0) (.var 2) (.var 1))) -- h_sym
+    | 7 => ((Term.guarded () (.var 0) (.var 1) (.var 1)), (Term.step (.var 1) (.var 0))) -- h_minor
+    | 8 => ((Term.step (Term.guarded () (.var 0) (.var 1) (.var 2)) (.var 0)), (Term.guarded () (.var 0) (.var 1) (.var 2))) -- h_root
+    | 9 => ((Term.guarded () (Term.step (.var 5) (.var 0)) (.var 1) (.var 2)), (Term.step (Term.step (.var 5) (.var 0)) (Term.guarded () (.var 0) (.var 1) (.var 2)))) -- h_expand
+    | 10 => ((Term.guarded () (.var 0) (Term.step (.var 5) (.var 1)) (Term.step (.var 4) (.var 2))), (Term.step (Term.step (Term.guarded () (.var 0) (Term.step (.var 5) (.var 1)) (.var 2)) (.var 0)) (Term.step (Term.guarded () (.var 0) (.var 1) (Term.step (.var 4) (.var 2))) (.var 0)))) -- h_split
+    | 11 => ((Term.guarded () (.var 0) (Term.step (.var 5) (.var 1)) (.var 2)), (Term.guarded () (.var 0) (Term.step (Term.step (.var 5) (.var 0)) (.var 1)) (.var 2))) -- h_back
+    | 12 => ((Term.step (Term.guarded () (.var 1) (.var 5) (.var 2)) (.var 0)), (Term.step (Term.step (Term.guarded () (.var 0) (.var 5) (.var 2)) (.var 1)) (.var 0))) -- h_reroot
+    | 13 => ((Term.guarded () (.var 0) (.var 1) (.var 2)), (Term.guarded () (.var 0) (Term.step (.var 0) (.var 1)) (.var 2))) -- h_insert
+    | 14 => ((Term.step (Term.step (Term.step (.var 5) (.var 1)) (Term.step (.var 4) (.var 1))) (.var 0)), (Term.step (Term.step (Term.step (Term.step (.var 5) (.var 1)) (.var 0)) (.var 0)) (Term.step (Term.step (Term.step (.var 4) (.var 1)) (.var 0)) (.var 0)))) -- project_join
+    | 15 => ((Term.step (.var 5) (Term.step (.var 4) (.var 1))), (Term.step (Term.step (.var 5) (.var 1)) (Term.step (.var 4) (.var 1)))) -- reset_split
+    | 16 => ((Term.step (Term.step (.var 5) (.var 1)) (.var 0)), (Term.step (Term.step (Term.step (.var 5) (.var 0)) (.var 1)) (.var 0))) -- reset_back
+    | 17 => ((Term.step (Term.step (.var 5) (.var 0)) (.var 0)), (Term.step (.var 5) (.var 0))) -- project_idem
+    | 18 => ((Term.step (Term.step (.var 5) (Term.step (.var 4) (.var 0))) (.var 0)), (Term.step (.var 5) (Term.step (.var 4) (.var 0)))) -- root_preserve
+    | 19 => ((Term.step (Term.guarded () (.var 0) (Term.step (Term.step (.var 5) (.var 0)) (.var 1)) (.var 2)) (.var 0)), (Term.guarded () (.var 0) (Term.step (Term.step (.var 5) (.var 0)) (.var 1)) (.var 2))) -- F_closed
+    | 20 => ((Term.guarded () (.var 0) (Term.step (Term.step (Term.step (Term.step (.var 5) (.var 0)) (.var 0)) (Term.step (Term.step (.var 4) (.var 0)) (.var 0))) (.var 1)) (.var 2)), (Term.step (Term.step (Term.guarded () (.var 0) (Term.step (Term.step (.var 5) (.var 0)) (.var 1)) (.var 2)) (.var 0)) (Term.step (Term.guarded () (.var 0) (Term.step (Term.step (.var 4) (.var 0)) (.var 1)) (.var 2)) (.var 0)))) -- F_join
+    | 21 => ((Term.step (Term.step (Term.guarded () (.var 0) (Term.step (Term.step (.var 5) (.var 0)) (.var 1)) (.var 2)) (.var 0)) (Term.step (Term.step (Term.step (Term.guarded () (.var 0) (Term.step (.var 0) (.var 1)) (.var 2)) (.var 0)) (Term.step (Term.step (.var 5) (.var 0)) (.var 0))) (.var 0))), (Term.step (Term.step (Term.guarded () (.var 0) (Term.step (.var 0) (.var 1)) (.var 2)) (.var 0)) (Term.step (Term.step (.var 5) (.var 0)) (.var 0)))) -- F_contract
+    | 22 => ((Term.guarded () (.var 0) (Term.step (Term.guarded () (.var 0) (Term.step (Term.step (.var 5) (.var 0)) (.var 1)) (.var 2)) (.var 1)) (.var 2)), (Term.guarded () (.var 0) (Term.step (Term.step (.var 5) (.var 0)) (.var 1)) (.var 2))) -- F_idem
+    | 23 => ((Term.guarded () (.var 0) (Term.step (Term.guarded () (.var 0) (Term.step (Term.guarded () (.var 0) (Term.step (Term.step (.var 5) (.var 0)) (.var 1)) (.var 2)) (.var 3)) (.var 4)) (.var 1)) (.var 2)), (Term.guarded () (.var 0) (Term.step (Term.guarded () (.var 0) (Term.step (Term.step (.var 5) (.var 0)) (.var 3)) (.var 4)) (.var 1)) (.var 2))) -- F_band
+    | 24 => ((Term.guarded () (.var 0) (Term.step (Term.step (Term.step (Term.step (.var 5) (.var 0)) (.var 1)) (.var 0)) (.var 1)) (.var 2)), (Term.guarded () (.var 0) (Term.step (Term.step (.var 5) (.var 0)) (.var 1)) (.var 2))) -- F_Ga
+    | 25 => ((Term.guarded () (.var 0) (Term.step (Term.guarded () (.var 0) (Term.step (.var 5) (.var 0)) (.var 1)) (.var 1)) (.var 2)), (Term.guarded () (.var 0) (Term.step (Term.step (.var 5) (.var 0)) (.var 1)) (.var 2))) -- F_Ka
+    | 26 => ((Term.guarded () (.var 0) (Term.step (Term.guarded () (.var 0) (Term.step (.var 5) (.var 0)) (.var 2)) (.var 1)) (.var 2)), (Term.guarded () (.var 0) (Term.step (Term.step (.var 5) (.var 0)) (.var 1)) (.var 2))) -- F_Kb
+    | 27 => ((Term.guarded () (.var 0) (Term.step (Term.step (.var 1) (.var 0)) (.var 1)) (.var 2)), (Term.guarded () (.var 0) (Term.step (.var 0) (.var 1)) (.var 2))) -- F_ca
+    | 28 => ((Term.guarded () (.var 0) (Term.step (Term.step (.var 2) (.var 0)) (.var 1)) (.var 2)), (Term.guarded () (.var 0) (Term.step (.var 0) (.var 1)) (.var 2))) -- F_cb
+    | 29 => ((Term.step (Term.step (Term.guarded () (.var 0) (Term.guarded () (.var 0) (Term.step (Term.step (.var 5) (.var 0)) (.var 1)) (.var 2)) (.var 2)) (.var 1)) (.var 0)), (Term.step (Term.step (Term.guarded () (.var 0) (Term.step (.var 5) (.var 0)) (.var 2)) (.var 1)) (.var 0))) -- capture
+    | 30 => ((Term.step (Term.step (Term.guarded () (.var 0) (Term.step (Term.step (.var 5) (.var 0)) (.var 1)) (.var 2)) (.var 1)) (.var 0)), (Term.step (Term.step (Term.guarded () (.var 0) (Term.step (.var 5) (.var 0)) (.var 2)) (.var 1)) (.var 0))) -- weak_gate
+    | 31 => ((Term.guarded () (.var 0) (Term.guarded () (.var 0) (.var 1) (.var 2)) (.var 2)), (Term.guarded () (.var 0) (Term.step (.var 1) (.var 0)) (.var 2))) -- terminal
+    | 32 => ((Term.step (Term.step (Term.guarded () (.var 0) (.var 1) (.var 2)) (.var 0)) (Term.step (Term.step (Term.step (Term.step (.var 1) (.var 0)) (.var 0)) (Term.step (Term.step (.var 2) (.var 0)) (.var 0))) (.var 0))), (Term.step (Term.step (Term.step (.var 1) (.var 0)) (.var 0)) (Term.step (Term.step (.var 2) (.var 0)) (.var 0)))) -- terminal_bound
+    | 33 => ((Term.step (Term.step (Term.guarded () (.var 0) (.var 1) (.var 2)) (.var 0)) (Term.step (Term.guarded () (.var 0) (Term.step (.var 1) (.var 0)) (.var 2)) (.var 0))), (Term.guarded () (.var 0) (Term.step (.var 1) (.var 0)) (.var 2))) -- terminal_weak
+    | 34 => ((Term.step (Term.step (Term.step (.var 5) (.var 0)) (.var 1)) (.var 0)), (Term.guarded () (.var 0) (Term.step (Term.step (.var 5) (.var 0)) (.var 1)) (.var 1))) -- G_def
+    | 35 => ((Term.guarded () (.var 0) (Term.step (.var 5) (.var 0)) (.var 1)), (Term.guarded () (.var 0) (Term.step (Term.step (.var 5) (.var 0)) (.var 0)) (.var 1))) -- K_def
+    | 36 => ((Term.step (Term.step (.var 0) (.var 1)) (.var 0)), (Term.step (.var 1) (.var 0))) -- G_zero
+    | 37 => ((Term.guarded () (.var 0) (Term.step (.var 0) (.var 1)) (.var 2)), (Term.guarded () (.var 0) (.var 1) (.var 2))) -- F_zero
+    | 38 => ((Term.step (Term.step (Term.step (.var 5) (.var 0)) (.var 0)) (.var 0)), (Term.step (.var 5) (.var 0))) -- G_root
+    | _ => ((Term.guarded () (.var 0) (Term.step (.var 5) (.var 0)) (.var 0)), (Term.step (.var 5) (.var 0))) -- K_root
+  ⟨6, pair.1, pair.2⟩
+
+/-- The explicitly listed theory, independent of semantic validity. -/
+def theory : Equational.Theory (Symbol Unit) := Set.range basisAxiom
+
+/-- The semantic law view of the same forty native equations. -/
+structure Laws {M : Type u} (f : M → M → M) (h : M → M → M → M) : Prop where
+  R1 (r : M) : (f r r) = r
+  R2 (r a : M) : (f (f r a) r) = (f a r)
+  R3 (r a : M) : (f (f r a) a) = (f r a)
+  R4 (r a b : M) : (f r (f (f r a) b)) = (f r (f a b))
+  R5 (r a b : M) : (f (f (f r a) b) a) = (f (f r b) a)
+  R6 (r a b : M) : (f r (f a b)) = (f a (f r b))
+  h_sym (r a b : M) : (h r a b) = (h r b a)
+  h_minor (r a : M) : (h r a a) = (f a r)
+  h_root (r a b : M) : (f (h r a b) r) = (h r a b)
+  h_expand (r a b u : M) : (h (f u r) a b) = (f (f u r) (h r a b))
+  h_split (r a b u v : M) : (h r (f u a) (f v b)) = (f (f (h r (f u a) b) r) (f (h r a (f v b)) r))
+  h_back (r a b u : M) : (h r (f u a) b) = (h r (f (f u r) a) b)
+  h_reroot (r a b u : M) : (f (h a u b) r) = (f (f (h r u b) a) r)
+  h_insert (r a b : M) : (h r a b) = (h r (f r a) b)
+  project_join (r a u v : M) : (f (f (f u a) (f v a)) r) = (f (f (f (f u a) r) r) (f (f (f v a) r) r))
+  reset_split (a u v : M) : (f u (f v a)) = (f (f u a) (f v a))
+  reset_back (r a u : M) : (f (f u a) r) = (f (f (f u r) a) r)
+  project_idem (r u : M) : (f (f u r) r) = (f u r)
+  root_preserve (r u v : M) : (f (f u (f v r)) r) = (f u (f v r))
+  F_closed (r a b u : M) : (f (h r (f (f u r) a) b) r) = (h r (f (f u r) a) b)
+  F_join (r a b u v : M) : (h r (f (f (f (f u r) r) (f (f v r) r)) a) b) = (f (f (h r (f (f u r) a) b) r) (f (h r (f (f v r) a) b) r))
+  F_contract (r a b u : M) : (f (f (h r (f (f u r) a) b) r) (f (f (f (h r (f r a) b) r) (f (f u r) r)) r)) = (f (f (h r (f r a) b) r) (f (f u r) r))
+  F_idem (r a b u : M) : (h r (f (h r (f (f u r) a) b) a) b) = (h r (f (f u r) a) b)
+  F_band (r a b c d u : M) : (h r (f (h r (f (h r (f (f u r) a) b) c) d) a) b) = (h r (f (h r (f (f u r) c) d) a) b)
+  F_Ga (r a b u : M) : (h r (f (f (f (f u r) a) r) a) b) = (h r (f (f u r) a) b)
+  F_Ka (r a b u : M) : (h r (f (h r (f u r) a) a) b) = (h r (f (f u r) a) b)
+  F_Kb (r a b u : M) : (h r (f (h r (f u r) b) a) b) = (h r (f (f u r) a) b)
+  F_ca (r a b : M) : (h r (f (f a r) a) b) = (h r (f r a) b)
+  F_cb (r a b : M) : (h r (f (f b r) a) b) = (h r (f r a) b)
+  capture (r a b u : M) : (f (f (h r (h r (f (f u r) a) b) b) a) r) = (f (f (h r (f u r) b) a) r)
+  weak_gate (r a b u : M) : (f (f (h r (f (f u r) a) b) a) r) = (f (f (h r (f u r) b) a) r)
+  terminal (r a b : M) : (h r (h r a b) b) = (h r (f a r) b)
+  terminal_bound (r a b : M) : (f (f (h r a b) r) (f (f (f (f a r) r) (f (f b r) r)) r)) = (f (f (f a r) r) (f (f b r) r))
+  terminal_weak (r a b : M) : (f (f (h r a b) r) (f (h r (f a r) b) r)) = (h r (f a r) b)
+  G_def (r a u : M) : (f (f (f u r) a) r) = (h r (f (f u r) a) a)
+  K_def (r a u : M) : (h r (f u r) a) = (h r (f (f u r) r) a)
+  G_zero (r a : M) : (f (f r a) r) = (f a r)
+  F_zero (r a b : M) : (h r (f r a) b) = (h r a b)
+  G_root (r u : M) : (f (f (f u r) r) r) = (f u r)
+  K_root (r u : M) : (h r (f u r) r) = (f u r)
+
+
+def resetOperation (M : Type u) [(Equational.language (Symbol Unit)).Structure M] (x y : M) : M :=
+  FirstOrder.Language.Structure.funMap (L := Equational.language (Symbol Unit)) .reset
+    (fun i => if i = 0 then x else y)
+
+def guardedOperation (M : Type u) [(Equational.language (Symbol Unit)).Structure M] (x y z : M) : M :=
+  FirstOrder.Language.Structure.funMap (L := Equational.language (Symbol Unit)) (.guarded ())
+    (fun i => if i = 0 then x else if i = 1 then y else z)
+
+/-- Fixed points of right reset by r, independent of the forty-law theory. -/
+abbrev RootFiber {M : Type u} (f : M → M → M) (r : M) := {x : M // f x r = x}
+
+end FiniteBasis
+
+namespace Term
+
+/-- The finite common-root word expansion. Each original variable occurrence
+contributes one word, including independently repeated occurrences. -/
+def actionWords {Var : Type v} : Term Unit Var → List (List (Var × Var))
+  | .var j => [[(j, j)]]
+  | .func .reset args =>
+    ((actionWords (args 0)).map (fun w => (root (args 1), root (args 1)) :: w)) ++
+      (actionWords (args 1))
+  | .func (.guarded _) args =>
+    (actionWords (args 0)) ++
+      (((actionWords (args 1)).map (fun w =>
+        (root (args 0), root (args 0)) ::
+          (root (args 1), root (args 2)) :: w)) ++
+        ((actionWords (args 2)).map (fun w =>
+          (root (args 0), root (args 0)) ::
+            (root (args 2), root (args 1)) :: w)))
+
+end Term
 
 end Owner
 end KFOL

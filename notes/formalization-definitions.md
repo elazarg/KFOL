@@ -990,6 +990,36 @@ independent existential Boolean satisfiability, including empty cases.
 `Reductions.ResetUnion` constructs the report's actual tree equation from the
 listed variable support plus a harmless dummy Boolean variable. This ensures a
 nonempty consistency list and avoids loops on numeric name maxima. Its anchor
-and literal names are explicit and disjoint. These are shared definitions for
-the next reduction correctness/machine gate; no coNP-hardness claim is completed
-merely by introducing this constructor.
+and literal names are explicit and disjoint. The proof modules `Reductions/ResetUnion*` establish exact CNF correctness and expanded linear size. `Complexity/ResetUnion*` certify the generator and finite-algebra countervaluation verifier, yielding full fixed-role coNP-completeness for the same native codec and full binary language. Malformed words are included; uniform-K complexity remains separate.
+
+
+## Completed basis and congruence definitions
+
+The independent owner definition module also contains the literal `Fin 40`
+family `Owner.FiniteBasis.basisAxiom`, its theory, arbitrary-model laws and the
+one-owner winner structure. `Owner/Basis` proves arbitrary-model normalization,
+two-source absorption, full completeness and transport to winner sets. Forty
+counts indexed equations; no unproved distinctness of all forty is asserted.
+
+`Definitions/CoreBasis.lean` supplies the native core structures, Boolean
+profiles and explicit exhaustion syntax used by the full grid proof. The
+finite countermodels are actual algebras, with locality for arbitrary small
+generator sets. `Core/NonfiniteBasis` excludes every bounded-variable basis,
+even infinite, and every finite basis, for both the winner core and ambient
+native algebra. Identity satisfaction and basis remain the independent shared
+equational notions.
+
+`Definitions/Congruences.lean` is the fourteenth definition module. It defines
+ordinary/symmetric owned-choice congruences independently of the classification,
+admissible closure/fixed-family conditions, and ambiguity thresholds. The proof
+modules construct unique representations, classify the symmetric chain, count
+actual quotients, and identify thresholds with mathlib uniform matroids,
+including ground, independent sets, rank and closure. No bespoke matroid
+predicate replaces the imported `Matroid` structure.
+
+`Definitions/Dissemilattice.lean` is the fifteenth definition module. It gives
+the two binary symbols, all seven syntax equations, arbitrary-model laws and
+independent three-state operation tables. `Core/ChoiceUnion` proves full
+seven-law generation/completeness directly. The two semilattice orders remain
+distinct; only the stated meet-over-join distributivity is used. The actual
+set of equations is proved to contain exactly seven members.

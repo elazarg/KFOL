@@ -54,19 +54,15 @@ encodings. The facade is `KFOL/Complexity/Language.lean`. Native composition,
 list folds and input-length-clocked iteration charge full encoded context,
 state and output; these replace the earlier Cobham/FPn implementation.
 
-Current certified consumers are `GuardSubset`, `Framing`, `BlockScan`,
-`Dictionary` and `DescriptorValidation`. The last theorem certifies the actual
-dependent descriptor decoder under its existing injective paper encoding.
-Malformed-input validation followed by copying the original exact code realizes
-that decoder; it assumes no caller certificate or decoded-value clock.
-
-The remaining computational work is complete record normalization/equality,
-recognition, synthesis/substitution, encoded countervaluation verifiers and
-hardness reductions. Use the successor library's machine-based P/NP/coNP and
-reduction APIs; no complexity foundations are re-proved in KFOL. Check the exact
-source problem codec and malformed-word convention when assembling the first
-3SAT reduction, rather than transporting only well-formed formula correctness.
-The first complete reset/union reduction and coNP transport gate remains open.
+Native machine certificates now cover complete reset parsing, sparse support,
+guard extraction/compression, descriptor normalization/recognition and original-tree
+equality. The first reset/union reduction gate is complete: actual CNF correctness,
+linear expanded output size, polynomial generator, exact successor 3SAT codec,
+fixed-role finite-algebra verifier, and coNP-completeness for both typed equations
+and the complete binary language, including malformed words. The verifier does
+not claim constants independent of K. Remaining work covers owner/policy runtime,
+substitution, other native-signature reductions, circuits and uniform-K checking.
+No complexity foundations are re-proved in KFOL.
 
 ## Algebraic supporting libraries
 
@@ -88,8 +84,7 @@ No ready-to-import Lean proof of the exact antimatroid representation, repeat-tr
 arbitrary-algebra path normalization and suffix absorption, followed by the
 shared equational completeness theorem. Freese et al.'s introduction and
 Section 3 are the proof reference; their basis theorem is not an imported
-hypothesis. Continue direct proofs of the remaining special cases used by the
-main paper, using representation and normalization where practical.
+hypothesis. The minimum reset and owner generators and the seven-law generation special case are also now proved directly. The atomic-clone/binary classification remains a local combinatorial proof obligation.
 
 ## Supporting syntax libraries and the dependent claim
 
@@ -116,8 +111,7 @@ The [plan's mathlib-only pair-countervaluation delivery milestone](formalization
 5. Use the native-versus-mathlib syntax decision already made in the first algebra milestone. Reopen it only if a concrete strategic or complexity consumer exposes a defect; do not repeat the comparison routinely.
 
 The successor selected-closure and production native-machine/analytic import
-gates are complete at the pins above. The KFOL public-SPE, sealed-round and
-end-to-end reduction gates remain. Exact reset binary semantics, normalization
+gates are complete at the pins above. The public-SPE and first end-to-end reset/union reduction gates are complete. The sealed-round Bayes/SE gate remains. Exact reset binary semantics, normalization
 and shared-support identity checking are already connected; complete parser,
 dictionary and descriptor-validation machines are now certified as well.
 
@@ -151,5 +145,4 @@ histories. This has not yet proved the Bayes or SE correspondence.
 
 Native runtime now covers complete original-tree parsing, actual support and
 guard extraction/compression, normalization and complete reset equality as well
-as binary descriptor recognition. The first certified hardness reduction and
-owner recognizer/constructor machines remain the next complexity gates.
+as binary descriptor recognition. The first reset/union reduction and fixed-role coNP-completeness gate is complete for both typed and raw binary inputs. Whole owner recognizer/constructor machines and the remaining fragment/policy machines are next.

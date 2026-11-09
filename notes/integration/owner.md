@@ -348,3 +348,109 @@ Validation: production `lake build KFOL.Owner.BasisObstruction` passed
 1119 jobs; `tests/OwnerBasisObstruction.lean` checks W's cardinality,
 root-expansion's exact support and the two distinct values, plus standard
 axiom guards for the full actual-support transfer and lower-bound theorems.
+
+## Forty-law basis completeness (new, ready)
+
+The entire `owner:thm:finite-basis` claim is now proved, including
+arbitrary finite or infinite algebras. `Owner/Basis.lean` exports the exact
+native forty-equation family, soundness, completeness, direct intended
+winner-set interpretation, and the four-to-six variable bounds. No
+external generation theorem, conditional completeness premise, or finite
+closure certificate is substituted for the generic conclusion.
+
+Independent data are concentrated in existing `Definitions/Owner.lean`:
+
+- `FiniteBasis.basisAxiom : Fin 40 → Identity (Symbol Unit)` contains the
+  forty fully expanded native reset/H equations, with comments matching
+  the paper's labels. `theory = Set.range basisAxiom` is defined from this
+  explicit data family, independently of semantic validity. The family
+  intentionally includes redundant equations, as the paper does; no
+  distinct-equation cardinality40 is asserted.
+- `FiniteBasis.Laws` is the semantic forty-law view. The proved
+  `models_theory_iff` connects it to the independent exact data family.
+  `RootFiber`, primitive operation extraction, and `Term.actionWords`
+  provide the generic model interface and actual native normalization.
+- `oneOwnerStructure owner` interprets the single ternary symbol of
+  `Symbol Unit` as the chosen owner's guarded operation on WinnerSet.
+  `Term.withOwner` explicitly maps that signature into the existing
+  owner-labelled native signature, without changing variable occurrences.
+
+Suggested complete paper-facing statement for the basis itself:
+
+```lean
+theorem owner_forty_equation_basis {Role : Type u}
+    (three : Fin 3 ↪ Role) (owner observer : Role)
+    (ho : observer ≠ owner) :
+    (Set.range KFOL.Owner.FiniteBasis.basisAxiom).Finite ∧
+    (∀ i : Fin 40,
+      (KFOL.Owner.FiniteBasis.basisAxiom i).variableCount ≤ 6) ∧
+    (letI := KFOL.Owner.oneOwnerStructure owner
+     ∀ e : KFOL.Equational.Identity (KFOL.Owner.Symbol Unit),
+       e.Holds (KFOL.WinnerSet Role) ↔
+         KFOL.Equational.Derives
+           (Set.range KFOL.Owner.FiniteBasis.basisAxiom) e.lhs e.rhs)
+```
+
+Use `theory_finite`, `variable_bound`, and `isBasis_winnerSet`.
+`FiniteBasis.isBasis` proves the same complete proposition for Four
+itself. `hasFiniteBasis` is the corresponding existential theorem.
+The additional main-paper lower-bound statement can be given directly
+for the intended winner algebra:
+
+```lean
+∀ (T : Equational.Theory (Symbol Unit)) (n : ℕ),
+  (letI := oneOwnerStructure owner
+   ∀ e : Equational.Identity (Symbol Unit),
+     e.Holds (WinnerSet Role) ↔ Equational.Derives T e.lhs e.rhs) →
+  (∀ e ∈ T, e.variableCount ≤ n) → 4 ≤ n
+```
+
+This is `FiniteBasis.variableBound_ge_four_winnerSet`; no finiteness
+hypothesis on T is needed. Thus the exhibited basis proves the upper
+bound6 and the independent four-state obstruction proves the lower
+bound4.
+
+The proof follows the report's mathematical argument, with explicit
+mathlib abstraction at its common-root semilattice boundary:
+
+- `Basis/Presentation.lean` proves every native equation in Four,
+  finite enumeration, actual support≤6, and Models↔Laws.
+- `Basis/CommonRoot.lean` constructs local mathlib `SemilatticeSup` and
+  `OrderBot` on `RootFiber f r`. Primitive actions are `SupHom`; G/K and
+  constants remain derived native operations. Generic words satisfy
+  `P Q P = P Q`, preservation of joins, contractivity by P(bottom), and
+  all test/capture/weak/constant/terminal equations.
+- `Basis/WordNormalForm.lean` proves independent root preservation,
+  the two projected normalization equations, and full arbitrary-depth
+  term normalization to the explicit finite word language. Repeated
+  variable occurrences contribute independently.
+- `Basis/WordAbsorption.lean` proves the uniform covering-word reduction,
+  exceptional terminal case, and the full generic algebraic two-source
+  absorption lemma.
+- `Basis/Completeness.lean` constructs explicit minimal four-state
+  marker valuations. Induction extracts a first source occurrence whose
+  prefix has exactly the guard coverage requirements. Omitting its suffix
+  gives a word witness below the complete upper word value. The two-source
+  lemma then proves containment in every basis model, by induction on
+  prefixes. Two containments yield equality. Independent root separation
+  in Four removes the projection, and shared equational completeness
+  supplies the independently defined Derives conclusion.
+- `Basis/WinnerSet.lean` proves the exact intended-algebra/Four identity
+  theory equivalence using explicit native owner transport and the
+  previously completed Four projection/embedding theorem. It transfers
+  the complete basis and lower variable bound to arbitrary role sets with
+  a three-role embedding.
+
+Validation: `lake build KFOL.Owner` passed1133 jobs after the intended
+winner-set bridge. `tests/OwnerBasis.lean`, `OwnerSynthesis.lean`, and
+`OwnerBasisObstruction.lean` all passed with warnings as errors. The
+complete `isBasis` and `isBasis_winnerSet` axiom guards allow exactly
+`propext`, `Classical.choice`, `Quot.sound`. The finite soundness,
+Models↔Laws and generic term-normalization foundations need only
+`propext` and `Quot.sound`; generic two-source absorption needs only
+`propext`. All promoted staging duplicates have been retired.
+
+The earlier synthesis polynomial machine-runtime clause remains with
+`/root/complexity`. Owner:thm:finite-basis has no analogous runtime clause
+or remaining proof gap. Parent assigned finite policy-family dichotomy
+and strict selective extension as the next pure algebra/reduction task.

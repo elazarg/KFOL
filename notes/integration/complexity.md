@@ -243,12 +243,75 @@ the established canonical-table and fixed-chain semantics. The complete binary
 frontend is now part of the runtime theorem rather than just an output-size
 bound.
 
+## Uniform owner scan gate
+
+`OwnerRuntime.inputEncoding` encodes the dependent input
+`Σ n, Owner.GuardTable (Fin n)` by an explicit unary dimension, binary root and
+source indices, and two complete n-bit prerequisite words per record.
+`view_polyTime` reads that exact injective representation. Native
+`permitted_polyTime`, `update_polyTime`, `allowed_polyTime` and `next_polyTime`
+are connected by `permitted_view`, `update_view`, `allowed_view` and `next_view`
+to the existing independent owner program. In particular the next scan visits
+exactly `List.finRange n × List.finRange n` in the established deterministic
+order. All dimensions, comparisons and captured table data are charged.
+This is an integration-ready scan layer, not the whole owner checker/synthesizer
+runtime.
+
+## Actual machine-level reset/union hardness
+
+The compact mathlib-only shared syntax and actual construction live in
+`Definitions/Reductions.lean`; independent prefix codec proofs are in
+`Algorithms/ResetUnionCode.lean`. The support is `(0 :: actual literal names).dedup`,
+so variable-free CNFs have a harmless dummy consistency pair and sparse numeric
+names never generate ambient-position loops. All native tree operations,
+left/right combs, literal-name arithmetic and copies are certified in
+`ResetUnionMachines` and `ResetUnionReduction`.
+
+`ResetUnionReduction.reduction_polyTime` certifies the actual complete
+`Reductions.ResetUnion.equation` under native binary CNF input and exact original
+one-word equation output. `encoded_reduction_polyTime` writes those same bits.
+`ResetUnionSource.source_encoding_eq` is definitionally the successor library's
+`encCNF`, and `source_satisfiable_iff` connects its SAT semantics to the independent
+local definition. The complete total `threeSATReduction_polyTime` additionally
+maps formulas with wide clauses outside the source 3SAT language to a fixed
+valid equation.
+
+`ResetUnionHardness.coNPHard` and `language_coNPHard` instantiate the actual
+algebraic correctness theorem, native complete generator and imported
+`ThreeSAT_npComplete`, giving respectively:
+
+```lean
+Cslib.Complexity.coNPHard ResetUnionMachines.equationEncoding
+  {equation | KFOL.ResetUnion.Valid Role equation}
+
+Cslib.Complexity.coNPHard encBits (KFOL.ResetUnion.Language Role)
+```
+
+Their sole mathematical hypothesis is `three : Fin 3 ↪ Role`. No correctness,
+size, runtime or source completeness result is left as a caller hypothesis.
+The word language independently rejects malformed equation codes.
+`tests/ComplexityReduction.lean` passes strict compilation, including dummy
+support, empty CNF versus empty clause, exact codec roundtrip, source width
+rejection, sparse-name arithmetic and a `2^30` name producing fewer than 5000
+output bits. The generator, total source reduction, both hardness endpoints and
+imported source completeness theorem print only standard axioms.
+
+The fixed-role coNP upper bound is complete. `FiniteAlgebraVerifier` provides
+sparse first-occurrence lookup, bounded certificates, native polynomial runtime
+and soundness/completeness. `ResetUnionCompleteness.coNPComplete` proves the typed
+endpoint. `ResetUnionDecoding` certifies the complete original equation decoder;
+`ResetUnionWordCompleteness.coNPComplete` transports membership to the complete
+raw word language using a proved total malformed-input fallback. All print only
+standard axioms. No uniform-K bound is asserted by this fixed finite-algebra gate.
+
 ## Remaining work
 
-Complete native machine certificates now cover original parsing, actual support,
-all guard extraction and compression, descriptor normalization, whole original
-reset equality, and semantic table realizability recognition. The polynomial
-runtime clauses of `reset:thm:three` and `reset:thm:synthesis` are discharged.
+Complete native machine certificates cover original reset parsing, actual
+support, all guard extraction/compression, descriptor normalization, whole reset
+equality, and semantic table realizability recognition. The polynomial runtime
+clauses of `reset:thm:three` and `reset:thm:synthesis` are discharged. Reset/union
+has full fixed-role machine-level coNP-completeness for typed equations and the complete binary language, including malformed words.
 
-Machine construction of synthesis witnesses, owner-table runtime, substitution,
-and the end-to-end reset/union hardness reduction remain separate obligations.
+Whole owner-table/synthesis runtime, substitution and further fragment/policy
+reduction machines remain separate obligations. The owner finite scans and
+reset/union constructor/reduction interfaces are ready for that reuse.

@@ -59,14 +59,14 @@
     },
     "main_prose_obligations": 20,
     "evidence_status_counts": {
-      "evidence_review_pending": 18,
+      "evidence_review_pending": 15,
       "existing_lean_source": 1,
       "external_artifact": 1,
-      "kernel_checked": 24,
-      "optional": 81,
+      "kernel_checked": 35,
+      "optional": 80,
       "partial_kernel_checked": 3,
-      "partial_lean_source": 10,
-      "written_only": 7
+      "partial_lean_source": 7,
+      "written_only": 3
     },
     "required_main_prose_obligations": 18
   },
@@ -273,7 +273,7 @@
     },
     {
       "path": "sections/appendix-verification.tex",
-      "sha256": "6b4c8db5257e7a96bd385a916b39d34fccf997b2fdc5287543208e4020ddb009",
+      "sha256": "882ac7d4e89bbe2b51f3cca6a813b886e386e7dc10e37268f9874756605ce4f3",
       "document": "technical_report"
     }
   ],
@@ -371,18 +371,18 @@
             "declarations": [
               {
                 "name_as_written": "public_backward_induction",
-                "line": 1370
+                "line": 1377
               },
               {
                 "name_as_written": "public_equilibrium_strategic_form",
-                "line": 1384
+                "line": 1391
               },
               {
                 "name_as_written": "public_term_interpretation",
-                "line": 1431
+                "line": 1438
               }
             ],
-            "sha256": "97d1f7d8b404f30b3d8665e15f5abb588426c3c5429257a7844b0b9a3d68a02e"
+            "sha256": "e63523d5c8929d6a0e9ba8e5033073e5916875645a98b296a90e8ddf55ace6bf"
           }
         ],
         "completed_components": [
@@ -496,10 +496,10 @@
             "declarations": [
               {
                 "name_as_written": "public_neutral_union",
-                "line": 1400
+                "line": 1407
               }
             ],
-            "sha256": "97d1f7d8b404f30b3d8665e15f5abb588426c3c5429257a7844b0b9a3d68a02e"
+            "sha256": "e63523d5c8929d6a0e9ba8e5033073e5916875645a98b296a90e8ddf55ace6bf"
           }
         ],
         "completed_components": [
@@ -559,10 +559,10 @@
             "declarations": [
               {
                 "name_as_written": "player_views",
-                "line": 137
+                "line": 144
               }
             ],
-            "sha256": "97d1f7d8b404f30b3d8665e15f5abb588426c3c5429257a7844b0b9a3d68a02e"
+            "sha256": "e63523d5c8929d6a0e9ba8e5033073e5916875645a98b296a90e8ddf55ace6bf"
           },
           {
             "source": "KFOL/Algebra/Views.lean",
@@ -599,7 +599,7 @@
           {
             "source": "KFOL/Audit.lean",
             "declarations": [],
-            "sha256": "4f876abbb55d17e0c84b8572bdf7f6bf7082b1a19f2e0511e07f1ee584fb3cd6"
+            "sha256": "0ece917a9221e17de9ecb9009a89994b2277737d813152bd7c546c6142963ea8"
           },
           {
             "source": "KFOL/Definitions/Views.lean",
@@ -648,9 +648,11 @@
       "statement_sha256": "b562b7f3cfdcc3d0266f0e7eae930a6b10231bf1cdabe47b60a651c46bed7af0",
       "work_package": "B",
       "target_surface": "Paper.lean",
-      "public_declarations": [],
-      "status": "partial_lean_source",
-      "existing_evidence": "Requires statement-level reconciliation with sections/appendix-verification.tex and lean/; planned does not mean no partial proofs exist.",
+      "public_declarations": [
+        "KFOL.Paper.status_cell_provenance"
+      ],
+      "status": "kernel_checked",
+      "existing_evidence": "On every fixed singleton/ambiguity status cell, actual full-term evaluation is a finite constant set union finite permutation images of ambiguous inputs. Every selected variable is proved ambiguous on the cell. Arbitrary role/variable types, all internal switches and all term depths are covered.",
       "scope": "main_result",
       "scope_reason": "Main-paper result statement.",
       "required": true,
@@ -662,31 +664,48 @@
         }
       ],
       "evidence_review": {
-        "level": "source_inspection",
-        "fresh_build": false,
+        "level": "kernel_checked_complete_statement",
+        "fresh_build": true,
         "artifacts": [
           {
-            "source": "lean/FullAlgebra.lean",
+            "source": "KFOL/Algebra/Provenance.lean",
             "declarations": [
               {
-                "name_as_written": "FullTerm.sameStatus",
-                "line": 127
-              },
-              {
-                "name_as_written": "FullTerm.status_mono",
-                "line": 139
-              },
-              {
-                "name_as_written": "FullTerm.one_pin",
-                "line": 166
+                "name_as_written": "exists_cell_provenance",
+                "line": 18
               }
             ],
-            "sha256": "468b9892ac0929cffe0644e546ab22f3385ba73c542da0bc89bd8bb597ea0fa9"
+            "sha256": "a8030df54eab4277b62697966148d92c3953794c5e671b553d822086bfd2bb48"
+          },
+          {
+            "source": "Paper.lean",
+            "declarations": [
+              {
+                "name_as_written": "status_cell_provenance",
+                "line": 1640
+              }
+            ],
+            "sha256": "e63523d5c8929d6a0e9ba8e5033073e5916875645a98b296a90e8ddf55ace6bf"
           }
         ],
-        "remaining_work": "Give the explicit status-cell provenance representation of the statement."
+        "completed_components": [
+          "On every fixed singleton/ambiguity status cell, actual full-term evaluation is a finite constant set union finite permutation images of ambiguous inputs. Every selected variable is proved ambiguous on the cell. Arbitrary role/variable types, all internal switches and all term depths are covered."
+        ],
+        "remaining_work": "None for this statement.",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "definition_index": "notes/formalization-definitions.md",
+        "external_theorem_hypotheses": [],
+        "validation": [
+          "lake build Paper",
+          "make check-lean",
+          "make paper"
+        ]
       },
-      "migration_status": "not_started",
+      "migration_status": "complete",
       "editorial_proposal_ids": []
     },
     {
@@ -733,10 +752,10 @@
             "declarations": [
               {
                 "name_as_written": "pair_countervaluations",
-                "line": 54
+                "line": 61
               }
             ],
-            "sha256": "97d1f7d8b404f30b3d8665e15f5abb588426c3c5429257a7844b0b9a3d68a02e"
+            "sha256": "e63523d5c8929d6a0e9ba8e5033073e5916875645a98b296a90e8ddf55ace6bf"
           },
           {
             "source": "KFOL/Algebra/PairTests.lean",
@@ -770,7 +789,7 @@
           {
             "source": "KFOL/Audit.lean",
             "declarations": [],
-            "sha256": "4f876abbb55d17e0c84b8572bdf7f6bf7082b1a19f2e0511e07f1ee584fb3cd6"
+            "sha256": "0ece917a9221e17de9ecb9009a89994b2277737d813152bd7c546c6142963ea8"
           }
         ],
         "axioms": [
@@ -831,14 +850,14 @@
             "declarations": [
               {
                 "name_as_written": "idempotent_elimination",
-                "line": 99
+                "line": 106
               },
               {
                 "name_as_written": "checked_core_extraction",
-                "line": 120
+                "line": 127
               }
             ],
-            "sha256": "97d1f7d8b404f30b3d8665e15f5abb588426c3c5429257a7844b0b9a3d68a02e"
+            "sha256": "e63523d5c8929d6a0e9ba8e5033073e5916875645a98b296a90e8ddf55ace6bf"
           },
           {
             "source": "KFOL/Algebra/Idempotent.lean",
@@ -920,7 +939,7 @@
           {
             "source": "KFOL/Audit.lean",
             "declarations": [],
-            "sha256": "4f876abbb55d17e0c84b8572bdf7f6bf7082b1a19f2e0511e07f1ee584fb3cd6"
+            "sha256": "0ece917a9221e17de9ecb9009a89994b2277737d813152bd7c546c6142963ea8"
           },
           {
             "source": "tests/Idempotent.lean",
@@ -999,18 +1018,18 @@
             "declarations": [
               {
                 "name_as_written": "common_source",
-                "line": 276
+                "line": 283
               },
               {
                 "name_as_written": "atomic_repeated_triples",
-                "line": 295
+                "line": 302
               },
               {
                 "name_as_written": "no_atomic_if_then_else",
-                "line": 313
+                "line": 320
               }
             ],
-            "sha256": "97d1f7d8b404f30b3d8665e15f5abb588426c3c5429257a7844b0b9a3d68a02e"
+            "sha256": "e63523d5c8929d6a0e9ba8e5033073e5916875645a98b296a90e8ddf55ace6bf"
           },
           {
             "source": "KFOL/Algebra/CommonSource.lean",
@@ -1090,7 +1109,7 @@
           {
             "source": "KFOL/Audit.lean",
             "declarations": [],
-            "sha256": "4f876abbb55d17e0c84b8572bdf7f6bf7082b1a19f2e0511e07f1ee584fb3cd6"
+            "sha256": "0ece917a9221e17de9ecb9009a89994b2277737d813152bd7c546c6142963ea8"
           },
           {
             "source": "tests/CommonSource.lean",
@@ -1260,94 +1279,94 @@
             "declarations": [
               {
                 "name_as_written": "reset_tables_semantics",
-                "line": 458
+                "line": 465
               },
               {
                 "name_as_written": "reset_guard_extraction",
-                "line": 647
+                "line": 654
               },
               {
                 "name_as_written": "reset_table_size",
-                "line": 674
+                "line": 681
               },
               {
                 "name_as_written": "reset_support_indexing",
-                "line": 732
+                "line": 739
               },
               {
                 "name_as_written": "reset_guard_record_codec",
-                "line": 768
+                "line": 775
               },
               {
                 "name_as_written": "reset_binary_guard_records",
-                "line": 792
+                "line": 799
               },
               {
                 "name_as_written": "reset_binary_input_codec",
-                "line": 822
+                "line": 829
               },
               {
                 "name_as_written": "reset_binary_extraction",
-                "line": 854
+                "line": 861
               },
               {
                 "name_as_written": "reset_binary_descriptor_codec",
-                "line": 894
+                "line": 901
               },
               {
                 "name_as_written": "reset_encoded_table_recognition",
-                "line": 933
+                "line": 940
               },
               {
                 "name_as_written": "reset_record_normalization",
-                "line": 963
+                "line": 970
               },
               {
                 "name_as_written": "reset_normalized_binary_extraction",
-                "line": 1000
+                "line": 1007
               },
               {
                 "name_as_written": "reset_binary_equation_checker",
-                "line": 1026
+                "line": 1033
               },
               {
                 "name_as_written": "owner_root_status",
-                "line": 1060
+                "line": 1067
               },
               {
                 "name_as_written": "owner_guard_completeness",
-                "line": 1074
+                "line": 1081
               },
               {
                 "name_as_written": "owner_one_table",
-                "line": 1112
+                "line": 1119
               },
               {
                 "name_as_written": "owner_definability",
-                "line": 1130
+                "line": 1137
               },
               {
                 "name_as_written": "owner_four_element_theory",
-                "line": 1180
+                "line": 1187
               },
               {
                 "name_as_written": "guarded_choice_example",
-                "line": 1271
+                "line": 1278
               },
               {
                 "name_as_written": "core_variable_bound_obstruction",
-                "line": 1208
+                "line": 1215
               },
               {
                 "name_as_written": "binary_framing_machines",
-                "line": 1149
+                "line": 1156
               },
               {
                 "name_as_written": "binary_descriptor_machines",
-                "line": 1239
+                "line": 1246
               }
             ],
-            "sha256": "97d1f7d8b404f30b3d8665e15f5abb588426c3c5429257a7844b0b9a3d68a02e"
+            "sha256": "e63523d5c8929d6a0e9ba8e5033073e5916875645a98b296a90e8ddf55ace6bf"
           },
           {
             "source": "KFOL/Definitions/Reset.lean",
@@ -1563,7 +1582,7 @@
           {
             "source": "KFOL/Audit.lean",
             "declarations": [],
-            "sha256": "4f876abbb55d17e0c84b8572bdf7f6bf7082b1a19f2e0511e07f1ee584fb3cd6"
+            "sha256": "0ece917a9221e17de9ecb9009a89994b2277737d813152bd7c546c6142963ea8"
           },
           {
             "source": "KFOL/Definitions/Algorithms.lean",
@@ -2077,7 +2096,7 @@
           {
             "source": "KFOL/Definitions/Owner.lean",
             "declarations": [],
-            "sha256": "35ad35c080b776139ca3e9a94d6d1c8efb60b1277767fedd5dca1fabd2d5ef5c"
+            "sha256": "ee4567b2eb0e57735af9853b95b2d40a5223ad57dab28dd3289c90845c2ac432"
           },
           {
             "source": "KFOL/Definitions/CoreBasis.lean",
@@ -2274,10 +2293,10 @@
             "declarations": [
               {
                 "name_as_written": "reset_basis",
-                "line": 502
+                "line": 509
               }
             ],
-            "sha256": "97d1f7d8b404f30b3d8665e15f5abb588426c3c5429257a7844b0b9a3d68a02e"
+            "sha256": "e63523d5c8929d6a0e9ba8e5033073e5916875645a98b296a90e8ddf55ace6bf"
           },
           {
             "source": "KFOL/Definitions/Reset.lean",
@@ -2401,7 +2420,7 @@
           {
             "source": "KFOL/Audit.lean",
             "declarations": [],
-            "sha256": "4f876abbb55d17e0c84b8572bdf7f6bf7082b1a19f2e0511e07f1ee584fb3cd6"
+            "sha256": "0ece917a9221e17de9ecb9009a89994b2277737d813152bd7c546c6142963ea8"
           }
         ],
         "axioms": [
@@ -2464,14 +2483,14 @@
             "declarations": [
               {
                 "name_as_written": "reset_antimatroids",
-                "line": 534
+                "line": 541
               },
               {
                 "name_as_written": "reset_family_product",
-                "line": 559
+                "line": 566
               }
             ],
-            "sha256": "97d1f7d8b404f30b3d8665e15f5abb588426c3c5429257a7844b0b9a3d68a02e"
+            "sha256": "e63523d5c8929d6a0e9ba8e5033073e5916875645a98b296a90e8ddf55ace6bf"
           },
           {
             "source": "KFOL/Definitions/Reset.lean",
@@ -2609,7 +2628,7 @@
           {
             "source": "KFOL/Audit.lean",
             "declarations": [],
-            "sha256": "4f876abbb55d17e0c84b8572bdf7f6bf7082b1a19f2e0511e07f1ee584fb3cd6"
+            "sha256": "0ece917a9221e17de9ecb9009a89994b2277737d813152bd7c546c6142963ea8"
           }
         ],
         "axioms": [
@@ -2780,47 +2799,47 @@
             "declarations": [
               {
                 "name_as_written": "owner_root_status",
-                "line": 1060
+                "line": 1067
               },
               {
                 "name_as_written": "owner_guard_completeness",
-                "line": 1074
+                "line": 1081
               },
               {
                 "name_as_written": "owner_one_table",
-                "line": 1112
+                "line": 1119
               },
               {
                 "name_as_written": "owner_definability",
-                "line": 1130
+                "line": 1137
               },
               {
                 "name_as_written": "owner_four_element_theory",
-                "line": 1180
+                "line": 1187
               },
               {
                 "name_as_written": "guarded_choice_example",
-                "line": 1271
+                "line": 1278
               },
               {
                 "name_as_written": "core_variable_bound_obstruction",
-                "line": 1208
+                "line": 1215
               },
               {
                 "name_as_written": "binary_framing_machines",
-                "line": 1149
+                "line": 1156
               },
               {
                 "name_as_written": "binary_descriptor_machines",
-                "line": 1239
+                "line": 1246
               }
             ],
-            "sha256": "97d1f7d8b404f30b3d8665e15f5abb588426c3c5429257a7844b0b9a3d68a02e"
+            "sha256": "e63523d5c8929d6a0e9ba8e5033073e5916875645a98b296a90e8ddf55ace6bf"
           },
           {
             "source": "KFOL/Definitions/Owner.lean",
             "declarations": [],
-            "sha256": "35ad35c080b776139ca3e9a94d6d1c8efb60b1277767fedd5dca1fabd2d5ef5c"
+            "sha256": "ee4567b2eb0e57735af9853b95b2d40a5223ad57dab28dd3289c90845c2ac432"
           },
           {
             "source": "KFOL/Definitions/CoreBasis.lean",
@@ -2852,7 +2871,7 @@
           {
             "source": "KFOL/Audit.lean",
             "declarations": [],
-            "sha256": "4f876abbb55d17e0c84b8572bdf7f6bf7082b1a19f2e0511e07f1ee584fb3cd6"
+            "sha256": "0ece917a9221e17de9ecb9009a89994b2277737d813152bd7c546c6142963ea8"
           },
           {
             "source": "KFOL/Audit/Algebra.lean",
@@ -2965,47 +2984,47 @@
             "declarations": [
               {
                 "name_as_written": "owner_root_status",
-                "line": 1060
+                "line": 1067
               },
               {
                 "name_as_written": "owner_guard_completeness",
-                "line": 1074
+                "line": 1081
               },
               {
                 "name_as_written": "owner_one_table",
-                "line": 1112
+                "line": 1119
               },
               {
                 "name_as_written": "owner_definability",
-                "line": 1130
+                "line": 1137
               },
               {
                 "name_as_written": "owner_four_element_theory",
-                "line": 1180
+                "line": 1187
               },
               {
                 "name_as_written": "guarded_choice_example",
-                "line": 1271
+                "line": 1278
               },
               {
                 "name_as_written": "core_variable_bound_obstruction",
-                "line": 1208
+                "line": 1215
               },
               {
                 "name_as_written": "binary_framing_machines",
-                "line": 1149
+                "line": 1156
               },
               {
                 "name_as_written": "binary_descriptor_machines",
-                "line": 1239
+                "line": 1246
               }
             ],
-            "sha256": "97d1f7d8b404f30b3d8665e15f5abb588426c3c5429257a7844b0b9a3d68a02e"
+            "sha256": "e63523d5c8929d6a0e9ba8e5033073e5916875645a98b296a90e8ddf55ace6bf"
           },
           {
             "source": "KFOL/Definitions/Owner.lean",
             "declarations": [],
-            "sha256": "35ad35c080b776139ca3e9a94d6d1c8efb60b1277767fedd5dca1fabd2d5ef5c"
+            "sha256": "ee4567b2eb0e57735af9853b95b2d40a5223ad57dab28dd3289c90845c2ac432"
           },
           {
             "source": "KFOL/Definitions/CoreBasis.lean",
@@ -3037,7 +3056,7 @@
           {
             "source": "KFOL/Audit.lean",
             "declarations": [],
-            "sha256": "4f876abbb55d17e0c84b8572bdf7f6bf7082b1a19f2e0511e07f1ee584fb3cd6"
+            "sha256": "0ece917a9221e17de9ecb9009a89994b2277737d813152bd7c546c6142963ea8"
           },
           {
             "source": "KFOL/Audit/Algebra.lean",
@@ -3158,47 +3177,47 @@
             "declarations": [
               {
                 "name_as_written": "owner_root_status",
-                "line": 1060
+                "line": 1067
               },
               {
                 "name_as_written": "owner_guard_completeness",
-                "line": 1074
+                "line": 1081
               },
               {
                 "name_as_written": "owner_one_table",
-                "line": 1112
+                "line": 1119
               },
               {
                 "name_as_written": "owner_definability",
-                "line": 1130
+                "line": 1137
               },
               {
                 "name_as_written": "owner_four_element_theory",
-                "line": 1180
+                "line": 1187
               },
               {
                 "name_as_written": "guarded_choice_example",
-                "line": 1271
+                "line": 1278
               },
               {
                 "name_as_written": "core_variable_bound_obstruction",
-                "line": 1208
+                "line": 1215
               },
               {
                 "name_as_written": "binary_framing_machines",
-                "line": 1149
+                "line": 1156
               },
               {
                 "name_as_written": "binary_descriptor_machines",
-                "line": 1239
+                "line": 1246
               }
             ],
-            "sha256": "97d1f7d8b404f30b3d8665e15f5abb588426c3c5429257a7844b0b9a3d68a02e"
+            "sha256": "e63523d5c8929d6a0e9ba8e5033073e5916875645a98b296a90e8ddf55ace6bf"
           },
           {
             "source": "KFOL/Definitions/Owner.lean",
             "declarations": [],
-            "sha256": "35ad35c080b776139ca3e9a94d6d1c8efb60b1277767fedd5dca1fabd2d5ef5c"
+            "sha256": "ee4567b2eb0e57735af9853b95b2d40a5223ad57dab28dd3289c90845c2ac432"
           },
           {
             "source": "KFOL/Definitions/CoreBasis.lean",
@@ -3230,7 +3249,7 @@
           {
             "source": "KFOL/Audit.lean",
             "declarations": [],
-            "sha256": "4f876abbb55d17e0c84b8572bdf7f6bf7082b1a19f2e0511e07f1ee584fb3cd6"
+            "sha256": "0ece917a9221e17de9ecb9009a89994b2277737d813152bd7c546c6142963ea8"
           },
           {
             "source": "KFOL/Audit/Algebra.lean",
@@ -3345,51 +3364,51 @@
             "declarations": [
               {
                 "name_as_written": "owner_root_status",
-                "line": 1060
+                "line": 1067
               },
               {
                 "name_as_written": "owner_guard_completeness",
-                "line": 1074
+                "line": 1081
               },
               {
                 "name_as_written": "owner_one_table",
-                "line": 1112
+                "line": 1119
               },
               {
                 "name_as_written": "owner_definability",
-                "line": 1130
+                "line": 1137
               },
               {
                 "name_as_written": "owner_four_element_theory",
-                "line": 1180
+                "line": 1187
               },
               {
                 "name_as_written": "guarded_choice_example",
-                "line": 1271
+                "line": 1278
               },
               {
                 "name_as_written": "core_variable_bound_obstruction",
-                "line": 1208
+                "line": 1215
               },
               {
                 "name_as_written": "binary_framing_machines",
-                "line": 1149
+                "line": 1156
               },
               {
                 "name_as_written": "binary_descriptor_machines",
-                "line": 1239
+                "line": 1246
               },
               {
                 "name_as_written": "owner_minimum_generator",
-                "line": 1288
+                "line": 1295
               }
             ],
-            "sha256": "97d1f7d8b404f30b3d8665e15f5abb588426c3c5429257a7844b0b9a3d68a02e"
+            "sha256": "e63523d5c8929d6a0e9ba8e5033073e5916875645a98b296a90e8ddf55ace6bf"
           },
           {
             "source": "KFOL/Definitions/Owner.lean",
             "declarations": [],
-            "sha256": "35ad35c080b776139ca3e9a94d6d1c8efb60b1277767fedd5dca1fabd2d5ef5c"
+            "sha256": "ee4567b2eb0e57735af9853b95b2d40a5223ad57dab28dd3289c90845c2ac432"
           },
           {
             "source": "KFOL/Definitions/CoreBasis.lean",
@@ -3421,7 +3440,7 @@
           {
             "source": "KFOL/Audit.lean",
             "declarations": [],
-            "sha256": "4f876abbb55d17e0c84b8572bdf7f6bf7082b1a19f2e0511e07f1ee584fb3cd6"
+            "sha256": "0ece917a9221e17de9ecb9009a89994b2277737d813152bd7c546c6142963ea8"
           },
           {
             "source": "KFOL/Audit/Algebra.lean",
@@ -3551,39 +3570,88 @@
       "statement_sha256": "84bd14ee47c2aa591006d4b4ab4525cedf332d63e56705d9847e6c255dec4faa",
       "work_package": "E",
       "target_surface": "Paper.lean",
-      "public_declarations": [],
-      "status": "partial_lean_source",
-      "existing_evidence": "Requires statement-level reconciliation with sections/appendix-verification.tex and lean/; planned does not mean no partial proofs exist.",
+      "public_declarations": [
+        "KFOL.Paper.owner_forty_equation_basis"
+      ],
+      "status": "kernel_checked",
+      "existing_evidence": "Exact independently defined Fin40 native family, every equation supported on at most six variables, and full semantic-validity iff equational-derivability for the intended one-owner WinnerSet algebra. Arbitrary-model normalization and two-source absorption prove completeness; the independent four-state obstruction gives the lower bound four for every basis, including infinite ones. No classification theorem or finite closure certificate is supplied as a premise.",
       "scope": "main_result",
       "scope_reason": "Main-paper result statement.",
       "required": true,
       "cited_from": [],
       "evidence_review": {
-        "level": "source_inspection",
-        "fresh_build": false,
+        "level": "kernel_checked_complete_statement",
+        "fresh_build": true,
         "artifacts": [
           {
-            "source": "lean/OwnerModels.lean",
+            "source": "KFOL/Definitions/Owner.lean",
+            "declarations": [],
+            "sha256": "ee4567b2eb0e57735af9853b95b2d40a5223ad57dab28dd3289c90845c2ac432"
+          },
+          {
+            "source": "KFOL/Owner/Basis/CommonRoot.lean",
+            "declarations": [],
+            "sha256": "f2e75d5cf13646921872b6e55a8997e00d9cb9694eed55fc6e757933be3c6f76"
+          },
+          {
+            "source": "KFOL/Owner/Basis/Completeness.lean",
+            "declarations": [],
+            "sha256": "b473a347738c4957db29098dbe226064458d2d6f288852cb74399baf056bd8d2"
+          },
+          {
+            "source": "KFOL/Owner/Basis/Presentation.lean",
+            "declarations": [],
+            "sha256": "d2fba86fbfaf374d1696fb9c1028411bd7cc64637427e078f81323f224799976"
+          },
+          {
+            "source": "KFOL/Owner/Basis/WinnerSet.lean",
+            "declarations": [],
+            "sha256": "d52b9e72bf76b436604bd589e08b1e1140dfcb87c94ae891c3374e3c1ebaaa32"
+          },
+          {
+            "source": "KFOL/Owner/Basis/WordAbsorption.lean",
+            "declarations": [],
+            "sha256": "8d3ab4c63cd747c2240ed0e6d7549a2cacbfbe4e2a9e95c56dbeebcdd2286ede"
+          },
+          {
+            "source": "KFOL/Owner/Basis/WordNormalForm.lean",
+            "declarations": [],
+            "sha256": "dc54c576ffd96e50252012a6520ad9350f49460060ebe428bb43b74d1ee49d4a"
+          },
+          {
+            "source": "tests/OwnerBasis.lean",
+            "declarations": [],
+            "sha256": "89360c59844720ef7c0141737dbcc501d8764bc046ba45d1c0931570d9ea0239"
+          },
+          {
+            "source": "Paper.lean",
             "declarations": [
               {
-                "name_as_written": "three_variable_transfer",
-                "line": 455
-              },
-              {
-                "name_as_written": "root_expansion_failure",
-                "line": 470
-              },
-              {
-                "name_as_written": "law_h_root",
-                "line": 530
+                "name_as_written": "owner_forty_equation_basis",
+                "line": 1592
               }
             ],
-            "sha256": "ddcd04167083eba9db851a4f95b537210c65d984ec7386a3b48d9cf5623a1343"
+            "sha256": "e63523d5c8929d6a0e9ba8e5033073e5916875645a98b296a90e8ddf55ace6bf"
           }
         ],
-        "remaining_work": "Forty-law generic derivational completeness, expansion/count/variable bound and lower-bound conclusion."
+        "completed_components": [
+          "Exact independently defined Fin40 native family, every equation supported on at most six variables, and full semantic-validity iff equational-derivability for the intended one-owner WinnerSet algebra. Arbitrary-model normalization and two-source absorption prove completeness; the independent four-state obstruction gives the lower bound four for every basis, including infinite ones. No classification theorem or finite closure certificate is supplied as a premise."
+        ],
+        "remaining_work": "None for this statement.",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "definition_index": "notes/formalization-definitions.md",
+        "external_theorem_hypotheses": [],
+        "validation": [
+          "lake build Paper",
+          "make check-lean",
+          "make paper"
+        ]
       },
-      "migration_status": "not_started",
+      "migration_status": "complete",
       "editorial_proposal_ids": []
     },
     {
@@ -3648,9 +3716,11 @@
       "statement_sha256": "19c02146c88778f35ffee865d3c8477e863eca2d9a990a0db5af590486cb6721",
       "work_package": "I",
       "target_surface": "Paper.lean",
-      "public_declarations": [],
-      "status": "written_only",
-      "existing_evidence": "Requires statement-level reconciliation with sections/appendix-verification.tex and lean/; planned does not mean no partial proofs exist.",
+      "public_declarations": [
+        "KFOL.Paper.core_nonfinite_basis"
+      ],
+      "status": "kernel_checked",
+      "existing_evidence": "For every finite role type with a three-role embedding and EVERY actual-variable bound d, including zero, actual finite nonempty countermodels lie outside both ambient native and winner-core varieties. Every arbitrary <=d-generator nonempty subalgebra lies in the core variety, so every <=d-variable identity transfers directly. A failing identity exists. No bounded-variable theory, even infinite, and no finite theory is an equational basis.",
       "existing_evidence_seed": {
         "reference": "sections/appendix-core-basis.tex; checks/check_core_padded_crossing.py",
         "remaining_scope": "Same generic obligation as core:thm:core-nfb.",
@@ -3661,117 +3731,18 @@
       "required": true,
       "cited_from": [],
       "evidence_review": {
-        "level": "kernel_checked_components",
+        "level": "kernel_checked_complete_statement",
         "fresh_build": true,
         "artifacts": [
-          {
-            "source": "Paper.lean",
-            "declarations": [
-              {
-                "name_as_written": "owner_root_status",
-                "line": 1060
-              },
-              {
-                "name_as_written": "owner_guard_completeness",
-                "line": 1074
-              },
-              {
-                "name_as_written": "owner_one_table",
-                "line": 1112
-              },
-              {
-                "name_as_written": "owner_definability",
-                "line": 1130
-              },
-              {
-                "name_as_written": "owner_four_element_theory",
-                "line": 1180
-              },
-              {
-                "name_as_written": "guarded_choice_example",
-                "line": 1271
-              },
-              {
-                "name_as_written": "core_variable_bound_obstruction",
-                "line": 1208
-              },
-              {
-                "name_as_written": "binary_framing_machines",
-                "line": 1149
-              },
-              {
-                "name_as_written": "binary_descriptor_machines",
-                "line": 1239
-              }
-            ],
-            "sha256": "97d1f7d8b404f30b3d8665e15f5abb588426c3c5429257a7844b0b9a3d68a02e"
-          },
-          {
-            "source": "KFOL/Definitions/Owner.lean",
-            "declarations": [],
-            "sha256": "35ad35c080b776139ca3e9a94d6d1c8efb60b1277767fedd5dca1fabd2d5ef5c"
-          },
           {
             "source": "KFOL/Definitions/CoreBasis.lean",
             "declarations": [],
             "sha256": "b66d898efe4fd514ca77e24a3904a679e8007e97274899fe1b13a3e81f4b1621"
           },
           {
-            "source": "KFOL/Algorithms/Words.lean",
-            "declarations": [
-              {
-                "name_as_written": "value_bits",
-                "line": 22
-              },
-              {
-                "name_as_written": "decode?_eq_some_iff",
-                "line": 33
-              },
-              {
-                "name_as_written": "unpair?_eq_some_iff",
-                "line": 124
-              },
-              {
-                "name_as_written": "undelimitBlocks_flatten_delimit",
-                "line": 110
-              }
-            ],
-            "sha256": "17b183f64695a475f8b569a90ee2390881fd7461dfdddc046f8fca5882ecd600"
-          },
-          {
-            "source": "KFOL/Audit.lean",
+            "source": "KFOL/Core/AtomicNative.lean",
             "declarations": [],
-            "sha256": "4f876abbb55d17e0c84b8572bdf7f6bf7082b1a19f2e0511e07f1ee584fb3cd6"
-          },
-          {
-            "source": "KFOL/Audit/Algebra.lean",
-            "declarations": [],
-            "sha256": "abcde9482d4e7b86f05948418e78f3904accebb0e5e5f2ff3e8cc53b9100a3f9"
-          },
-          {
-            "source": "KFOL/Audit/Dependencies.lean",
-            "declarations": [],
-            "sha256": "8d57a646cd3eb51fb36be0269e2eb21238dfcd00453b38e0a60375b25caaaa3b"
-          },
-          {
-            "source": "KFOL/Core/Native.lean",
-            "declarations": [],
-            "sha256": "48997cd777c56f696fd2121fd4aefc21ac85e5a18a9311790ce8df071fe2d014"
-          },
-          {
-            "source": "KFOL/Core/Quotients.lean",
-            "declarations": [],
-            "sha256": "d640da463ef8640c52a282591ebbf4dc6b2a9b00c2edc6a1eee2f29421427de7"
-          },
-          {
-            "source": "KFOL/Core/Locality.lean",
-            "declarations": [],
-            "sha256": "52bae13e11a0f7c9fdc9bbc0df81da02e35d82152fce5877fdfc846baba80dc4"
-          },
-          {
-            "source": "KFOL/Core/Profiles.lean",
-            "declarations": [],
-            "sha256": "d2633d240a1c8857a38f480cd343be47a824978d9b9c9d1d8740f010cfa931f5"
+            "sha256": "14dc475cb3751b1a44aeed8fc10aa4da85a7b789c8a64e504e1e6bd292eda5be"
           },
           {
             "source": "KFOL/Core/Exhaustion.lean",
@@ -3779,22 +3750,204 @@
             "sha256": "24c06a60ca289c2f54ae11449aa8e265b77f77cfb8c46aeacb987531b433e8ae"
           },
           {
-            "source": "tests/CoreBasis.lean",
+            "source": "KFOL/Core/Folds.lean",
             "declarations": [],
-            "sha256": "d92a1d40be62268e3a7a08d90ece3aadb7eb65c0d811185aacf902abc77bf409"
+            "sha256": "62e444320dda4480c82c3e2b700d283d460ae4bb0b68c5b25a305434922f6901"
           },
           {
-            "source": "tests/CoreBasisStatement.lean",
+            "source": "KFOL/Core/GridAlgebra.lean",
             "declarations": [],
-            "sha256": "daed079479e2e5af637d90d78582b239ef6fc2df18f1afae2175ecf1718f025e"
+            "sha256": "c2843585f8174549d5ffc6f4a54046771e599449abe488d0a60a7353aeebf543"
+          },
+          {
+            "source": "KFOL/Core/GridBounded.lean",
+            "declarations": [],
+            "sha256": "c9904398f708b8895663ac5fe8167a4497d9d63bf20d83cc9af98d92b40aba6d"
+          },
+          {
+            "source": "KFOL/Core/GridClone.lean",
+            "declarations": [],
+            "sha256": "4fed30128e669827bfb041ca8fd24a55a7fc8605f1ce0df13fad11e1de8d2b52"
+          },
+          {
+            "source": "KFOL/Core/GridCountermodel.lean",
+            "declarations": [],
+            "sha256": "9b293a044a3049ddc82d92373a1c7682c3893d9147e47cca3f36cd3a195a652a"
+          },
+          {
+            "source": "KFOL/Core/GridCrossing.lean",
+            "declarations": [],
+            "sha256": "f70d40000b9eae6012d867d9330ebdc21dbcd7e4d5164f529e9fccdbaf743595"
+          },
+          {
+            "source": "KFOL/Core/GridData.lean",
+            "declarations": [],
+            "sha256": "dd51a5e001230a0dc655d65d58f2709ddddb21a75b0543d83fa7d932c4f28779"
+          },
+          {
+            "source": "KFOL/Core/GridFoldValues.lean",
+            "declarations": [],
+            "sha256": "d4124e4eedbc256286a4a7305564a280ef04359c2a123711970d9837998d844b"
+          },
+          {
+            "source": "KFOL/Core/GridGuards.lean",
+            "declarations": [],
+            "sha256": "ce81a37f7d1eaee1cb6413f6d438f31f2a487d505e5f8134b050e5daaa74aa0d"
+          },
+          {
+            "source": "KFOL/Core/GridIdeal.lean",
+            "declarations": [],
+            "sha256": "43b6b25d979e9ba3f44e6c4adc3187f11c5d835489a908c759266cc57ca3015b"
+          },
+          {
+            "source": "KFOL/Core/GridIdealLabel.lean",
+            "declarations": [],
+            "sha256": "cf46467b4db365f230d3cd70084e7ac178312b355d167be613f9329aca66daa3"
+          },
+          {
+            "source": "KFOL/Core/GridLocalCover.lean",
+            "declarations": [],
+            "sha256": "483b755f448913ef6f5c34908d75b8aaaedc6b1213a4bccbb676c2b334dc1fde"
+          },
+          {
+            "source": "KFOL/Core/GridOrder.lean",
+            "declarations": [],
+            "sha256": "2b3eeda011ba5fdec505e97b9fc0ef8206efd147a6b36870b4d953d452c2b056"
+          },
+          {
+            "source": "KFOL/Core/GridPatterns.lean",
+            "declarations": [],
+            "sha256": "ac7db2ebb07a2739d028e8efed5f64cd02238cd314872f3e241c739f379c2938"
+          },
+          {
+            "source": "KFOL/Core/GridPigeonhole.lean",
+            "declarations": [],
+            "sha256": "1b69560c0ceb7ae7d076d6792e30fc78911ecc9b7a8468df464d2bb1cc977957"
+          },
+          {
+            "source": "KFOL/Core/GridPrivate.lean",
+            "declarations": [],
+            "sha256": "79fa3386ebb42364aa2ed00800df8b01f613ccacf0c6a4623de61550858caf97"
+          },
+          {
+            "source": "KFOL/Core/GridProfiles.lean",
+            "declarations": [],
+            "sha256": "c1364d09a605cfa6bb76fd24484cf1222261970d50c16668dd5a11237c0aa045"
+          },
+          {
+            "source": "KFOL/Core/GridRows.lean",
+            "declarations": [],
+            "sha256": "b89bbbecb16e502b8b46e17478965becb3d3d4784c59b010df9986fd07fdef8f"
+          },
+          {
+            "source": "KFOL/Core/GridSeparation.lean",
+            "declarations": [],
+            "sha256": "1df1ae1179b7d667e1723929e199550a81436dafa9b7511a41ea754e683e2990"
+          },
+          {
+            "source": "KFOL/Core/GridTerms.lean",
+            "declarations": [],
+            "sha256": "fcc966cae1b93811b743ecf5ddb31e48395e5ee0f68f88f9d7402efe7774b01d"
+          },
+          {
+            "source": "KFOL/Core/HomRange.lean",
+            "declarations": [],
+            "sha256": "20e449807691f433538f4f7f4bdf0f1e766fb102452f85218e42a9881b2f455f"
+          },
+          {
+            "source": "KFOL/Core/Locality.lean",
+            "declarations": [],
+            "sha256": "52bae13e11a0f7c9fdc9bbc0df81da02e35d82152fce5877fdfc846baba80dc4"
+          },
+          {
+            "source": "KFOL/Core/MarkerGap.lean",
+            "declarations": [],
+            "sha256": "b69cd64f561b9d344b4b81b9d7b4407a78ab258eaf90b8a3729ce62a4e68d6b4"
+          },
+          {
+            "source": "KFOL/Core/ModelLaws.lean",
+            "declarations": [],
+            "sha256": "6006ce5c226ee22d6fb0dae4a1b4d04ad8ad16b4b31d217b0d57cedd4a7b2ffa"
+          },
+          {
+            "source": "KFOL/Core/Native.lean",
+            "declarations": [],
+            "sha256": "48997cd777c56f696fd2121fd4aefc21ac85e5a18a9311790ce8df071fe2d014"
+          },
+          {
+            "source": "KFOL/Core/NativeTheory.lean",
+            "declarations": [],
+            "sha256": "f8f3d45fbcb2942ab0b594a3dbe37459c927c4293772495d885448942db963c1"
+          },
+          {
+            "source": "KFOL/Core/NonfiniteBasis.lean",
+            "declarations": [],
+            "sha256": "8e7f0a4fbd4d4c7aa839bcb6524daf4a29539d60c6a199ff629f4025fe132aec"
+          },
+          {
+            "source": "KFOL/Core/PairLabel.lean",
+            "declarations": [],
+            "sha256": "fa7f199228981e94bb64eb9df0b93560d6e248ef2c901f66c49afad49bcb639e"
+          },
+          {
+            "source": "KFOL/Core/PairModel.lean",
+            "declarations": [],
+            "sha256": "46c18c5f950ba2923f09dc05de29e299be1e29d91aa75117d0aadc8c5b429be2"
+          },
+          {
+            "source": "KFOL/Core/Profiles.lean",
+            "declarations": [],
+            "sha256": "d2633d240a1c8857a38f480cd343be47a824978d9b9c9d1d8740f010cfa931f5"
+          },
+          {
+            "source": "KFOL/Core/Protected.lean",
+            "declarations": [],
+            "sha256": "50e3d19530a5344f9ac274fc45d098061ac26098d6b3f5b00e50fa464913b02c"
+          },
+          {
+            "source": "KFOL/Core/Quotients.lean",
+            "declarations": [],
+            "sha256": "d640da463ef8640c52a282591ebbf4dc6b2a9b00c2edc6a1eee2f29421427de7"
+          },
+          {
+            "source": "KFOL/Core/TypedCover.lean",
+            "declarations": [],
+            "sha256": "bdebc321f9d128213e58db0829baf50e86bd945de0c42fc4e310e03ea0401ade"
+          },
+          {
+            "source": "KFOL/Core/UpperClone.lean",
+            "declarations": [],
+            "sha256": "f4f26f907eeb1107007ec72ec5e868343685c73dd36a9a141741420107ec8720"
+          },
+          {
+            "source": "KFOL/Core/UpperMap.lean",
+            "declarations": [],
+            "sha256": "617caba5f06ce392f7e380f9acca21a8719db1980f0308a3534da76988c715c9"
+          },
+          {
+            "source": "tests/CoreBasisGrid.lean",
+            "declarations": [],
+            "sha256": "77c6970d527e9bbbcec6fec75b3a1c6d6edddae22588dcb4d7c13f1e9c70d9e0"
+          },
+          {
+            "source": "Paper.lean",
+            "declarations": [
+              {
+                "name_as_written": "core_nonfinite_basis",
+                "line": 1518
+              },
+              {
+                "name_as_written": "native_nonfinite_basis",
+                "line": 1568
+              }
+            ],
+            "sha256": "e63523d5c8929d6a0e9ba8e5033073e5916875645a98b296a90e8ddf55ace6bf"
           }
         ],
         "completed_components": [
-          "Uniform native quotient/omission and arbitrary-generator local variety membership",
-          "Boolean-profile monotonicity/common source/native interpretation",
-          "Complete K-variable exhaustion obstruction"
+          "For every finite role type with a three-role embedding and EVERY actual-variable bound d, including zero, actual finite nonempty countermodels lie outside both ambient native and winner-core varieties. Every arbitrary <=d-generator nonempty subalgebra lies in the core variety, so every <=d-variable identity transfers directly. A failing identity exists. No bounded-variable theory, even infinite, and no finite theory is an equational basis."
         ],
-        "remaining_work": "Construct the typed upper-clone cover and padded grids for every variable bound; the K-variable obstruction is not the unbounded nonfinite-basis theorem.",
+        "remaining_work": "None for this statement.",
         "axioms": [
           "propext",
           "Classical.choice",
@@ -3803,14 +3956,12 @@
         "definition_index": "notes/formalization-definitions.md",
         "external_theorem_hypotheses": [],
         "validation": [
-          "Selected successor and canonical protocol gate3266 jobs",
-          "Selected production SPE/Nash/minimax/SE-existence audit3803 jobs",
-          "Complete authored closure and pure import boundary audit",
+          "lake build Paper",
           "make check-lean",
           "make paper"
         ]
       },
-      "migration_status": "uniform_native_and_variable_arity_obstruction_checked_grid_pending",
+      "migration_status": "complete",
       "editorial_proposal_ids": []
     },
     {
@@ -4022,10 +4173,10 @@
             "declarations": [
               {
                 "name_as_written": "public_subdirect_representation",
-                "line": 161
+                "line": 168
               }
             ],
-            "sha256": "97d1f7d8b404f30b3d8665e15f5abb588426c3c5429257a7844b0b9a3d68a02e"
+            "sha256": "e63523d5c8929d6a0e9ba8e5033073e5916875645a98b296a90e8ddf55ace6bf"
           },
           {
             "source": "KFOL/Algebra/Views.lean",
@@ -4066,7 +4217,7 @@
           {
             "source": "KFOL/Audit.lean",
             "declarations": [],
-            "sha256": "4f876abbb55d17e0c84b8572bdf7f6bf7082b1a19f2e0511e07f1ee584fb3cd6"
+            "sha256": "0ece917a9221e17de9ecb9009a89994b2277737d813152bd7c546c6142963ea8"
           },
           {
             "source": "KFOL/Definitions/Views.lean",
@@ -4131,10 +4282,10 @@
             "declarations": [
               {
                 "name_as_written": "reduct_test_domains",
-                "line": 328
+                "line": 335
               }
             ],
-            "sha256": "97d1f7d8b404f30b3d8665e15f5abb588426c3c5429257a7844b0b9a3d68a02e"
+            "sha256": "e63523d5c8929d6a0e9ba8e5033073e5916875645a98b296a90e8ddf55ace6bf"
           },
           {
             "source": "KFOL/Algebra/ReductTests.lean",
@@ -4189,7 +4340,7 @@
           {
             "source": "KFOL/Audit.lean",
             "declarations": [],
-            "sha256": "4f876abbb55d17e0c84b8572bdf7f6bf7082b1a19f2e0511e07f1ee584fb3cd6"
+            "sha256": "0ece917a9221e17de9ecb9009a89994b2277737d813152bd7c546c6142963ea8"
           },
           {
             "source": "tests/TestDomains.lean",
@@ -4255,10 +4406,10 @@
             "declarations": [
               {
                 "name_as_written": "minimum_reduct_test_domain",
-                "line": 345
+                "line": 352
               }
             ],
-            "sha256": "97d1f7d8b404f30b3d8665e15f5abb588426c3c5429257a7844b0b9a3d68a02e"
+            "sha256": "e63523d5c8929d6a0e9ba8e5033073e5916875645a98b296a90e8ddf55ace6bf"
           },
           {
             "source": "KFOL/Algebra/ReductTestCard.lean",
@@ -4333,7 +4484,7 @@
           {
             "source": "KFOL/Audit.lean",
             "declarations": [],
-            "sha256": "4f876abbb55d17e0c84b8572bdf7f6bf7082b1a19f2e0511e07f1ee584fb3cd6"
+            "sha256": "0ece917a9221e17de9ecb9009a89994b2277737d813152bd7c546c6142963ea8"
           },
           {
             "source": "tests/TestDomains.lean",
@@ -4427,10 +4578,10 @@
             "declarations": [
               {
                 "name_as_written": "optimal_test_domain",
-                "line": 71
+                "line": 78
               }
             ],
-            "sha256": "97d1f7d8b404f30b3d8665e15f5abb588426c3c5429257a7844b0b9a3d68a02e"
+            "sha256": "e63523d5c8929d6a0e9ba8e5033073e5916875645a98b296a90e8ddf55ace6bf"
           },
           {
             "source": "KFOL/Algebra/TestDomains.lean",
@@ -4490,7 +4641,7 @@
           {
             "source": "KFOL/Audit.lean",
             "declarations": [],
-            "sha256": "4f876abbb55d17e0c84b8572bdf7f6bf7082b1a19f2e0511e07f1ee584fb3cd6"
+            "sha256": "0ece917a9221e17de9ecb9009a89994b2277737d813152bd7c546c6142963ea8"
           }
         ],
         "axioms": [
@@ -4552,10 +4703,10 @@
             "declarations": [
               {
                 "name_as_written": "semilattice_trace",
-                "line": 211
+                "line": 218
               }
             ],
-            "sha256": "97d1f7d8b404f30b3d8665e15f5abb588426c3c5429257a7844b0b9a3d68a02e"
+            "sha256": "e63523d5c8929d6a0e9ba8e5033073e5916875645a98b296a90e8ddf55ace6bf"
           },
           {
             "source": "KFOL/Algebra/SemilatticeTrace.lean",
@@ -4620,7 +4771,7 @@
           {
             "source": "KFOL/Audit.lean",
             "declarations": [],
-            "sha256": "4f876abbb55d17e0c84b8572bdf7f6bf7082b1a19f2e0511e07f1ee584fb3cd6"
+            "sha256": "0ece917a9221e17de9ecb9009a89994b2277737d813152bd7c546c6142963ea8"
           },
           {
             "source": "tests/SemilatticeTrace.lean",
@@ -4685,10 +4836,10 @@
             "declarations": [
               {
                 "name_as_written": "intrinsic_player_views",
-                "line": 184
+                "line": 191
               }
             ],
-            "sha256": "97d1f7d8b404f30b3d8665e15f5abb588426c3c5429257a7844b0b9a3d68a02e"
+            "sha256": "e63523d5c8929d6a0e9ba8e5033073e5916875645a98b296a90e8ddf55ace6bf"
           },
           {
             "source": "KFOL/Algebra/Views.lean",
@@ -4733,7 +4884,7 @@
           {
             "source": "KFOL/Audit.lean",
             "declarations": [],
-            "sha256": "4f876abbb55d17e0c84b8572bdf7f6bf7082b1a19f2e0511e07f1ee584fb3cd6"
+            "sha256": "0ece917a9221e17de9ecb9009a89994b2277737d813152bd7c546c6142963ea8"
           },
           {
             "source": "KFOL/Definitions/Views.lean",
@@ -4800,10 +4951,10 @@
             "declarations": [
               {
                 "name_as_written": "idempotency_certificates",
-                "line": 379
+                "line": 386
               }
             ],
-            "sha256": "97d1f7d8b404f30b3d8665e15f5abb588426c3c5429257a7844b0b9a3d68a02e"
+            "sha256": "e63523d5c8929d6a0e9ba8e5033073e5916875645a98b296a90e8ddf55ace6bf"
           },
           {
             "source": "KFOL/Algebra/IdempotencyTests.lean",
@@ -4888,7 +5039,7 @@
           {
             "source": "KFOL/Audit.lean",
             "declarations": [],
-            "sha256": "4f876abbb55d17e0c84b8572bdf7f6bf7082b1a19f2e0511e07f1ee584fb3cd6"
+            "sha256": "0ece917a9221e17de9ecb9009a89994b2277737d813152bd7c546c6142963ea8"
           },
           {
             "source": "tests/TestDomains.lean",
@@ -5033,10 +5184,10 @@
             "declarations": [
               {
                 "name_as_written": "reset_selection",
-                "line": 408
+                "line": 415
               }
             ],
-            "sha256": "97d1f7d8b404f30b3d8665e15f5abb588426c3c5429257a7844b0b9a3d68a02e"
+            "sha256": "e63523d5c8929d6a0e9ba8e5033073e5916875645a98b296a90e8ddf55ace6bf"
           },
           {
             "source": "KFOL/Definitions/Reset.lean",
@@ -5072,7 +5223,7 @@
           {
             "source": "KFOL/Audit.lean",
             "declarations": [],
-            "sha256": "4f876abbb55d17e0c84b8572bdf7f6bf7082b1a19f2e0511e07f1ee584fb3cd6"
+            "sha256": "0ece917a9221e17de9ecb9009a89994b2277737d813152bd7c546c6142963ea8"
           }
         ],
         "axioms": [
@@ -5150,10 +5301,10 @@
             "declarations": [
               {
                 "name_as_written": "reset_minimum_generator",
-                "line": 1311
+                "line": 1318
               }
             ],
-            "sha256": "97d1f7d8b404f30b3d8665e15f5abb588426c3c5429257a7844b0b9a3d68a02e"
+            "sha256": "e63523d5c8929d6a0e9ba8e5033073e5916875645a98b296a90e8ddf55ace6bf"
           }
         ],
         "completed_components": [
@@ -5325,102 +5476,102 @@
             "declarations": [
               {
                 "name_as_written": "reset_table_realizability",
-                "line": 577
+                "line": 584
               },
               {
                 "name_as_written": "reset_table_recognition",
-                "line": 598
+                "line": 605
               },
               {
                 "name_as_written": "reset_table_local_completeness",
-                "line": 614
+                "line": 621
               },
               {
                 "name_as_written": "reset_table_synthesis",
-                "line": 629
+                "line": 636
               },
               {
                 "name_as_written": "reset_guard_subset_machine",
-                "line": 701
+                "line": 708
               },
               {
                 "name_as_written": "reset_support_indexing",
-                "line": 732
+                "line": 739
               },
               {
                 "name_as_written": "reset_guard_record_codec",
-                "line": 768
+                "line": 775
               },
               {
                 "name_as_written": "reset_binary_guard_records",
-                "line": 792
+                "line": 799
               },
               {
                 "name_as_written": "reset_binary_input_codec",
-                "line": 822
+                "line": 829
               },
               {
                 "name_as_written": "reset_binary_extraction",
-                "line": 854
+                "line": 861
               },
               {
                 "name_as_written": "reset_binary_descriptor_codec",
-                "line": 894
+                "line": 901
               },
               {
                 "name_as_written": "reset_encoded_table_recognition",
-                "line": 933
+                "line": 940
               },
               {
                 "name_as_written": "reset_record_normalization",
-                "line": 963
+                "line": 970
               },
               {
                 "name_as_written": "reset_normalized_binary_extraction",
-                "line": 1000
+                "line": 1007
               },
               {
                 "name_as_written": "reset_binary_equation_checker",
-                "line": 1026
+                "line": 1033
               },
               {
                 "name_as_written": "owner_root_status",
-                "line": 1060
+                "line": 1067
               },
               {
                 "name_as_written": "owner_guard_completeness",
-                "line": 1074
+                "line": 1081
               },
               {
                 "name_as_written": "owner_one_table",
-                "line": 1112
+                "line": 1119
               },
               {
                 "name_as_written": "owner_definability",
-                "line": 1130
+                "line": 1137
               },
               {
                 "name_as_written": "owner_four_element_theory",
-                "line": 1180
+                "line": 1187
               },
               {
                 "name_as_written": "guarded_choice_example",
-                "line": 1271
+                "line": 1278
               },
               {
                 "name_as_written": "core_variable_bound_obstruction",
-                "line": 1208
+                "line": 1215
               },
               {
                 "name_as_written": "binary_framing_machines",
-                "line": 1149
+                "line": 1156
               },
               {
                 "name_as_written": "binary_descriptor_machines",
-                "line": 1239
+                "line": 1246
               }
             ],
-            "sha256": "97d1f7d8b404f30b3d8665e15f5abb588426c3c5429257a7844b0b9a3d68a02e"
+            "sha256": "e63523d5c8929d6a0e9ba8e5033073e5916875645a98b296a90e8ddf55ace6bf"
           },
           {
             "source": "KFOL/Definitions/Reset.lean",
@@ -5636,7 +5787,7 @@
           {
             "source": "KFOL/Audit.lean",
             "declarations": [],
-            "sha256": "4f876abbb55d17e0c84b8572bdf7f6bf7082b1a19f2e0511e07f1ee584fb3cd6"
+            "sha256": "0ece917a9221e17de9ecb9009a89994b2277737d813152bd7c546c6142963ea8"
           },
           {
             "source": "KFOL/Definitions/Algorithms.lean",
@@ -6299,7 +6450,7 @@
           {
             "source": "KFOL/Definitions/Owner.lean",
             "declarations": [],
-            "sha256": "35ad35c080b776139ca3e9a94d6d1c8efb60b1277767fedd5dca1fabd2d5ef5c"
+            "sha256": "ee4567b2eb0e57735af9853b95b2d40a5223ad57dab28dd3289c90845c2ac432"
           },
           {
             "source": "KFOL/Definitions/CoreBasis.lean",
@@ -6496,15 +6647,147 @@
       "statement_sha256": "8a6cfbd0fbccf970ee396255edbe5b3ebf821a02924b00406b379955eb1ca2f5",
       "work_package": "G",
       "target_surface": "KFOL library support module",
-      "public_declarations": [],
-      "status": "evidence_review_pending",
-      "existing_evidence": "Requires statement-level reconciliation with sections/appendix-verification.tex and lean/; planned does not mean no partial proofs exist.",
+      "public_declarations": [
+        "KFOL.Paper.reset_union_reduction",
+        "KFOL.Paper.reset_union_complexity"
+      ],
+      "status": "kernel_checked",
+      "existing_evidence": "Full fixed-role coNP completeness for the actual native reset/union equation encoding AND the complete original binary language, including all malformed-code rejection. Uses actual CNF reduction correctness, exact linear expanded output size, certified generator and source3SAT class theorem, plus a sound complete native short countervaluation verifier.",
       "scope": "proof_dependency",
       "scope_reason": "Reset/union case of the main pair dichotomy.",
       "required": true,
       "cited_from": [],
-      "migration_status": "not_started",
-      "editorial_proposal_ids": []
+      "migration_status": "complete",
+      "editorial_proposal_ids": [],
+      "evidence_review": {
+        "level": "kernel_checked_complete_statement",
+        "fresh_build": true,
+        "artifacts": [
+          {
+            "source": "KFOL/Reductions/ResetUnionCorrectness.lean",
+            "declarations": [],
+            "sha256": "fd573f81d8c47d811f68a974753d2c023792930280ea9146739484a07b0b2227"
+          },
+          {
+            "source": "KFOL/Reductions/ResetUnionMarkers.lean",
+            "declarations": [],
+            "sha256": "fa23d3ee84ac319549d2d1d4fa72abb51a487e14c0da934c33d09b19cdb58a12"
+          },
+          {
+            "source": "KFOL/Reductions/ResetUnionSemantics.lean",
+            "declarations": [],
+            "sha256": "2c46c4570a1afe31f15e16bfc32d35e5712d92faade8a5b8ad09a3152833db6f"
+          },
+          {
+            "source": "KFOL/Reductions/ResetUnionSize.lean",
+            "declarations": [],
+            "sha256": "68f03e018a4cf956a8baa5e7e36c6f608cbbe50c10568c250e158e4b642f19d9"
+          },
+          {
+            "source": "KFOL/Reductions/ValueFolds.lean",
+            "declarations": [],
+            "sha256": "fc75d515cafb92dbbc00a901adc0be818379b8af8b19472905e30b5a107ce0b1"
+          },
+          {
+            "source": "KFOL/Algorithms/ResetUnionCode.lean",
+            "declarations": [],
+            "sha256": "ccd312b31688dec14a7f6ca28914914492b2df0e0b93aa8d45cc676e498cee8b"
+          },
+          {
+            "source": "KFOL/Complexity/ResetUnionCompleteness.lean",
+            "declarations": [],
+            "sha256": "908d9f0bed0d647df86f4d73e7be4257271388dcf07151bae272c25eef8cfafd"
+          },
+          {
+            "source": "KFOL/Complexity/ResetUnionDecoding.lean",
+            "declarations": [],
+            "sha256": "afa16f8e6621c1c80c7afacca139c13c80693cd2e45a1b4843175f1337798ff9"
+          },
+          {
+            "source": "KFOL/Complexity/ResetUnionEvaluation.lean",
+            "declarations": [],
+            "sha256": "caa6115dd275d33a5e11922250abe380143928fc6052cef70890bb6cd2a3aef0"
+          },
+          {
+            "source": "KFOL/Complexity/ResetUnionHardness.lean",
+            "declarations": [],
+            "sha256": "34b9e5f939f92b70f0687d8708ba0394943b540d92311a0dd6cd977286644ac9"
+          },
+          {
+            "source": "KFOL/Complexity/ResetUnionMachines.lean",
+            "declarations": [],
+            "sha256": "b6183be127bdd7dda37d792903d115806f9981d0aa7a4745c5060b9458261a3a"
+          },
+          {
+            "source": "KFOL/Complexity/ResetUnionReduction.lean",
+            "declarations": [],
+            "sha256": "51c9db5954b545808f5de15f84feb41071025c14fa16f31132a253000ea882d4"
+          },
+          {
+            "source": "KFOL/Complexity/ResetUnionSource.lean",
+            "declarations": [],
+            "sha256": "236b68d75661a323b395eb466e4f31068688c6d68b967957acdf00eeb30f4e7a"
+          },
+          {
+            "source": "KFOL/Complexity/ResetUnionVariables.lean",
+            "declarations": [],
+            "sha256": "73ea7fb9881c8b0dd5707a51bba56b046ad499e2d4a334fe20a59b42a1d80f2b"
+          },
+          {
+            "source": "KFOL/Complexity/ResetUnionWordCompleteness.lean",
+            "declarations": [],
+            "sha256": "d196a54ba59b710d1ad4efac29233a7bb19bb10d4dd546aed24890188fffab36"
+          },
+          {
+            "source": "KFOL/Complexity/FiniteAlgebraVerifier.lean",
+            "declarations": [],
+            "sha256": "47a6d47170d1b359b0d4d32a840ea0545d247f0e4e4bc238544ef0ef38c55232"
+          },
+          {
+            "source": "tests/ComplexityReduction.lean",
+            "declarations": [],
+            "sha256": "ab3e22b4703ca497d2a69c59e83f1ef21406443b46cb03f5e19c695b37c08cb3"
+          },
+          {
+            "source": "tests/ResetUnionReduction.lean",
+            "declarations": [],
+            "sha256": "f876736a860d089d80e45d2aabb7c963898838b0642436698babd00dc6da1d42"
+          },
+          {
+            "source": "Paper.lean",
+            "declarations": [
+              {
+                "name_as_written": "reset_union_reduction",
+                "line": 1619
+              },
+              {
+                "name_as_written": "reset_union_complexity",
+                "line": 1734
+              }
+            ],
+            "sha256": "e63523d5c8929d6a0e9ba8e5033073e5916875645a98b296a90e8ddf55ace6bf"
+          }
+        ],
+        "completed_components": [
+          "Every native output tree occurrence and binary name is charged; support contains only actual variables plus one dummy, never a numeric-maximum loop",
+          "Every failed valuation induces a satisfying assignment; every satisfying assignment gives an explicit three-role countervaluation",
+          "Complete native polynomial-time generator and imported certified3SAT theorem yield unconditional typed and binary-language hardness",
+          "A sound complete finite-algebra polynomial verifier yields fixed-role typed coNP completeness",
+          "Complete native equation decoder and polynomial total malformed-word fallback reduce the full binary language to the typed verifier, yielding unconditional raw-language coNP completeness"
+        ],
+        "remaining_work": "None for the fixed-K reset/union claim. Uniform-K and other signatures remain separate obligations.",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "definition_index": "notes/formalization-definitions.md",
+        "external_theorem_hypotheses": [],
+        "validation": [
+          "lake build Paper",
+          "make check-lean"
+        ]
+      }
     },
     {
       "id": "thm:H-hardness",
@@ -6658,7 +6941,7 @@
           {
             "source": "KFOL/Definitions/Owner.lean",
             "declarations": [],
-            "sha256": "35ad35c080b776139ca3e9a94d6d1c8efb60b1277767fedd5dca1fabd2d5ef5c"
+            "sha256": "ee4567b2eb0e57735af9853b95b2d40a5223ad57dab28dd3289c90845c2ac432"
           },
           {
             "source": "KFOL/Owner/Saturation.lean",
@@ -6690,10 +6973,10 @@
             "declarations": [
               {
                 "name_as_written": "owner_table_synthesis",
-                "line": 1445
+                "line": 1452
               }
             ],
-            "sha256": "97d1f7d8b404f30b3d8665e15f5abb588426c3c5429257a7844b0b9a3d68a02e"
+            "sha256": "e63523d5c8929d6a0e9ba8e5033073e5916875645a98b296a90e8ddf55ace6bf"
           }
         ],
         "completed_components": [
@@ -7521,9 +7804,11 @@
       "statement_sha256": "8e47257779eeb607a7f9ef5d6555fc2c383b2bbbf8b3f1b9fc3a9b1fe885012a",
       "work_package": "H",
       "target_surface": "Paper.lean",
-      "public_declarations": [],
-      "status": "written_only",
-      "existing_evidence": "Requires statement-level reconciliation with sections/appendix-verification.tex and lean/; planned does not mean no partial proofs exist.",
+      "public_declarations": [
+        "KFOL.Paper.congruence_classification"
+      ],
+      "status": "kernel_checked",
+      "existing_evidence": "Exact classification by unique ClosureOperator with the explicit atom condition, equivalently unique admissible fixed families; converse kernels and the actual intersection formula are proved. Uses mathlib closures and actual greatest elements of finite congruence classes.",
       "scope": "cited_report_result",
       "scope_reason": "Directly cited main-paper assertion; see cited_from.",
       "required": true,
@@ -7535,12 +7820,98 @@
         }
       ],
       "evidence_review": {
-        "level": "source_inspection",
-        "fresh_build": false,
-        "artifacts": [],
-        "remaining_work": "Formalize the full reduct congruence classification asserted in the main prose."
+        "level": "kernel_checked_complete_statement",
+        "fresh_build": true,
+        "artifacts": [
+          {
+            "source": "KFOL/Definitions/Congruences.lean",
+            "declarations": [],
+            "sha256": "78dd17db865a40cc2daeda80b3eff3c93ef389f1e6a9a5a4b3feb5fc49147aca"
+          },
+          {
+            "source": "KFOL/Congruences/Basic.lean",
+            "declarations": [],
+            "sha256": "b178d7fbf129f1ed4f11bfd4c9c33db4f8d17975eba0b2e395eb59aaf183a642"
+          },
+          {
+            "source": "KFOL/Congruences/Classification.lean",
+            "declarations": [],
+            "sha256": "c2fde45dd887e231a4345999b5d50bb38a0c7662ac4dbd5e7981791a0a7cd1cd"
+          },
+          {
+            "source": "KFOL/Congruences/Closure.lean",
+            "declarations": [],
+            "sha256": "d930eb2d01c94fa71bffcb6ab77b092390a6fa50d5353492193f7cce633c86f8"
+          },
+          {
+            "source": "KFOL/Congruences/Families.lean",
+            "declarations": [],
+            "sha256": "9d4442b7bcd7bc6a8d75ce7dccb688082513a96abad84a777279fada469ca38b"
+          },
+          {
+            "source": "KFOL/Congruences/Quotients.lean",
+            "declarations": [],
+            "sha256": "0916554cff15ba514a4d3695026fab0c1cd068674f33f0553607ce44e48d2b95"
+          },
+          {
+            "source": "KFOL/Congruences/SymmetricClassification.lean",
+            "declarations": [],
+            "sha256": "e0b4f541373cb02c638b2f3230760f5ca8b63fcb4b916d4fa7137bad4cd2bdab"
+          },
+          {
+            "source": "KFOL/Congruences/Symmetry.lean",
+            "declarations": [],
+            "sha256": "8307f20c416ccab921060f2df688620af00591a25ed1638e28cc0896c8a971c8"
+          },
+          {
+            "source": "KFOL/Congruences/Thresholds.lean",
+            "declarations": [],
+            "sha256": "5b31d24942e94c03b8f614adcd777801f9e7cdfd69ac77d8cda2064e11493c00"
+          },
+          {
+            "source": "KFOL/Congruences/UniformMatroid.lean",
+            "declarations": [],
+            "sha256": "5ac6b01b05926e9023f4214dbce66addfd849dc1375e54fc283dc9b1f2c92630"
+          },
+          {
+            "source": "tests/Congruences.lean",
+            "declarations": [],
+            "sha256": "1655b90135895633a8c5050f8bd6b31d00df9ee6997b7707d76f6e3789fffc96"
+          },
+          {
+            "source": "tests/CongruencesUniformMatroid.lean",
+            "declarations": [],
+            "sha256": "128b614567e5bf831106aaaa0c280a0933a3c3b70122b2657ec8077c24a454db"
+          },
+          {
+            "source": "Paper.lean",
+            "declarations": [
+              {
+                "name_as_written": "congruence_classification",
+                "line": 1658
+              }
+            ],
+            "sha256": "e63523d5c8929d6a0e9ba8e5033073e5916875645a98b296a90e8ddf55ace6bf"
+          }
+        ],
+        "completed_components": [
+          "Exact classification by unique ClosureOperator with the explicit atom condition, equivalently unique admissible fixed families; converse kernels and the actual intersection formula are proved. Uses mathlib closures and actual greatest elements of finite congruence classes."
+        ],
+        "remaining_work": "None for this statement.",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "definition_index": "notes/formalization-definitions.md",
+        "external_theorem_hypotheses": [],
+        "validation": [
+          "lake build Paper",
+          "make check-lean",
+          "make paper"
+        ]
       },
-      "migration_status": "not_started",
+      "migration_status": "complete",
       "editorial_proposal_ids": [
         "broader-congruence-classification"
       ]
@@ -7608,9 +7979,12 @@
       "statement_sha256": "bd6f65c76726cdd5dc0026745f83b87498a71c451ab7628d020456967416c860",
       "work_package": "H",
       "target_surface": "Paper.lean",
-      "public_declarations": [],
-      "status": "written_only",
-      "existing_evidence": "Requires statement-level reconciliation with sections/appendix-verification.tex and lean/; planned does not mean no partial proofs exist.",
+      "public_declarations": [
+        "KFOL.Paper.symmetric_congruence_chain",
+        "KFOL.Paper.uniform_matroid_identification"
+      ],
+      "status": "kernel_checked",
+      "existing_evidence": "Unique threshold at every rank, exact K congruences, chain/endpoints, actual quotient equivalence and exhaustive binomial cardinality formula. The final clause constructs actual mathlib uniform Matroids and identifies ground, independence, rank and closure; no uniform-matroid claim is left written.",
       "scope": "cited_report_result",
       "scope_reason": "Directly cited main-paper assertion; see cited_from.",
       "required": true,
@@ -7622,12 +7996,102 @@
         }
       ],
       "evidence_review": {
-        "level": "source_inspection",
-        "fresh_build": false,
-        "artifacts": [],
-        "remaining_work": "Formalize the symmetric ambiguity-threshold congruence chain."
+        "level": "kernel_checked_complete_statement",
+        "fresh_build": true,
+        "artifacts": [
+          {
+            "source": "KFOL/Definitions/Congruences.lean",
+            "declarations": [],
+            "sha256": "78dd17db865a40cc2daeda80b3eff3c93ef389f1e6a9a5a4b3feb5fc49147aca"
+          },
+          {
+            "source": "KFOL/Congruences/Basic.lean",
+            "declarations": [],
+            "sha256": "b178d7fbf129f1ed4f11bfd4c9c33db4f8d17975eba0b2e395eb59aaf183a642"
+          },
+          {
+            "source": "KFOL/Congruences/Classification.lean",
+            "declarations": [],
+            "sha256": "c2fde45dd887e231a4345999b5d50bb38a0c7662ac4dbd5e7981791a0a7cd1cd"
+          },
+          {
+            "source": "KFOL/Congruences/Closure.lean",
+            "declarations": [],
+            "sha256": "d930eb2d01c94fa71bffcb6ab77b092390a6fa50d5353492193f7cce633c86f8"
+          },
+          {
+            "source": "KFOL/Congruences/Families.lean",
+            "declarations": [],
+            "sha256": "9d4442b7bcd7bc6a8d75ce7dccb688082513a96abad84a777279fada469ca38b"
+          },
+          {
+            "source": "KFOL/Congruences/Quotients.lean",
+            "declarations": [],
+            "sha256": "0916554cff15ba514a4d3695026fab0c1cd068674f33f0553607ce44e48d2b95"
+          },
+          {
+            "source": "KFOL/Congruences/SymmetricClassification.lean",
+            "declarations": [],
+            "sha256": "e0b4f541373cb02c638b2f3230760f5ca8b63fcb4b916d4fa7137bad4cd2bdab"
+          },
+          {
+            "source": "KFOL/Congruences/Symmetry.lean",
+            "declarations": [],
+            "sha256": "8307f20c416ccab921060f2df688620af00591a25ed1638e28cc0896c8a971c8"
+          },
+          {
+            "source": "KFOL/Congruences/Thresholds.lean",
+            "declarations": [],
+            "sha256": "5b31d24942e94c03b8f614adcd777801f9e7cdfd69ac77d8cda2064e11493c00"
+          },
+          {
+            "source": "KFOL/Congruences/UniformMatroid.lean",
+            "declarations": [],
+            "sha256": "5ac6b01b05926e9023f4214dbce66addfd849dc1375e54fc283dc9b1f2c92630"
+          },
+          {
+            "source": "tests/Congruences.lean",
+            "declarations": [],
+            "sha256": "1655b90135895633a8c5050f8bd6b31d00df9ee6997b7707d76f6e3789fffc96"
+          },
+          {
+            "source": "tests/CongruencesUniformMatroid.lean",
+            "declarations": [],
+            "sha256": "128b614567e5bf831106aaaa0c280a0933a3c3b70122b2657ec8077c24a454db"
+          },
+          {
+            "source": "Paper.lean",
+            "declarations": [
+              {
+                "name_as_written": "symmetric_congruence_chain",
+                "line": 1687
+              },
+              {
+                "name_as_written": "uniform_matroid_identification",
+                "line": 1718
+              }
+            ],
+            "sha256": "e63523d5c8929d6a0e9ba8e5033073e5916875645a98b296a90e8ddf55ace6bf"
+          }
+        ],
+        "completed_components": [
+          "Unique threshold at every rank, exact K congruences, chain/endpoints, actual quotient equivalence and exhaustive binomial cardinality formula. The final clause constructs actual mathlib uniform Matroids and identifies ground, independence, rank and closure; no uniform-matroid claim is left written."
+        ],
+        "remaining_work": "None for this statement.",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "definition_index": "notes/formalization-definitions.md",
+        "external_theorem_hypotheses": [],
+        "validation": [
+          "lake build Paper",
+          "make check-lean",
+          "make paper"
+        ]
       },
-      "migration_status": "not_started",
+      "migration_status": "complete",
       "editorial_proposal_ids": [
         "broader-congruence-classification"
       ]
@@ -8846,7 +9310,7 @@
           {
             "source": "KFOL/Definitions/Owner.lean",
             "declarations": [],
-            "sha256": "35ad35c080b776139ca3e9a94d6d1c8efb60b1277767fedd5dca1fabd2d5ef5c"
+            "sha256": "ee4567b2eb0e57735af9853b95b2d40a5223ad57dab28dd3289c90845c2ac432"
           },
           {
             "source": "KFOL/Owner/BasisObstruction.lean",
@@ -8872,10 +9336,10 @@
             "declarations": [
               {
                 "name_as_written": "owner_basis_variable_bound",
-                "line": 1481
+                "line": 1488
               }
             ],
-            "sha256": "97d1f7d8b404f30b3d8665e15f5abb588426c3c5429257a7844b0b9a3d68a02e"
+            "sha256": "e63523d5c8929d6a0e9ba8e5033073e5916875645a98b296a90e8ddf55ace6bf"
           }
         ],
         "completed_components": [
@@ -8910,9 +9374,11 @@
       "statement_sha256": "fcdb7c69ee54b1e939e48fd3deafd54ee013ede968c4c4c979824b175c40ab61",
       "work_package": "E",
       "target_surface": "KFOL library support module",
-      "public_declarations": [],
-      "status": "evidence_review_pending",
-      "existing_evidence": "Requires statement-level reconciliation with sections/appendix-verification.tex and lean/; planned does not mean no partial proofs exist.",
+      "public_declarations": [
+        "KFOL.Paper.owner_forty_equation_basis"
+      ],
+      "status": "kernel_checked",
+      "existing_evidence": "Exact independently defined Fin40 native family, every equation supported on at most six variables, and full semantic-validity iff equational-derivability for the intended one-owner WinnerSet algebra. Arbitrary-model normalization and two-source absorption prove completeness; the independent four-state obstruction gives the lower bound four for every basis, including infinite ones. No classification theorem or finite closure certificate is supplied as a premise.",
       "existing_evidence_seed": {
         "reference": "lean/OwnerModels.lean: FiniteBasis soundness certificates",
         "remaining_scope": "Generic normalization, absorption and derivational completeness remain written.",
@@ -8922,8 +9388,80 @@
       "scope_reason": "Completeness of the forty identities asserted in the main paper.",
       "required": true,
       "cited_from": [],
-      "migration_status": "not_started",
-      "editorial_proposal_ids": []
+      "migration_status": "complete",
+      "editorial_proposal_ids": [],
+      "evidence_review": {
+        "level": "kernel_checked_complete_statement",
+        "fresh_build": true,
+        "artifacts": [
+          {
+            "source": "KFOL/Definitions/Owner.lean",
+            "declarations": [],
+            "sha256": "ee4567b2eb0e57735af9853b95b2d40a5223ad57dab28dd3289c90845c2ac432"
+          },
+          {
+            "source": "KFOL/Owner/Basis/CommonRoot.lean",
+            "declarations": [],
+            "sha256": "f2e75d5cf13646921872b6e55a8997e00d9cb9694eed55fc6e757933be3c6f76"
+          },
+          {
+            "source": "KFOL/Owner/Basis/Completeness.lean",
+            "declarations": [],
+            "sha256": "b473a347738c4957db29098dbe226064458d2d6f288852cb74399baf056bd8d2"
+          },
+          {
+            "source": "KFOL/Owner/Basis/Presentation.lean",
+            "declarations": [],
+            "sha256": "d2fba86fbfaf374d1696fb9c1028411bd7cc64637427e078f81323f224799976"
+          },
+          {
+            "source": "KFOL/Owner/Basis/WinnerSet.lean",
+            "declarations": [],
+            "sha256": "d52b9e72bf76b436604bd589e08b1e1140dfcb87c94ae891c3374e3c1ebaaa32"
+          },
+          {
+            "source": "KFOL/Owner/Basis/WordAbsorption.lean",
+            "declarations": [],
+            "sha256": "8d3ab4c63cd747c2240ed0e6d7549a2cacbfbe4e2a9e95c56dbeebcdd2286ede"
+          },
+          {
+            "source": "KFOL/Owner/Basis/WordNormalForm.lean",
+            "declarations": [],
+            "sha256": "dc54c576ffd96e50252012a6520ad9350f49460060ebe428bb43b74d1ee49d4a"
+          },
+          {
+            "source": "tests/OwnerBasis.lean",
+            "declarations": [],
+            "sha256": "89360c59844720ef7c0141737dbcc501d8764bc046ba45d1c0931570d9ea0239"
+          },
+          {
+            "source": "Paper.lean",
+            "declarations": [
+              {
+                "name_as_written": "owner_forty_equation_basis",
+                "line": 1592
+              }
+            ],
+            "sha256": "e63523d5c8929d6a0e9ba8e5033073e5916875645a98b296a90e8ddf55ace6bf"
+          }
+        ],
+        "completed_components": [
+          "Exact independently defined Fin40 native family, every equation supported on at most six variables, and full semantic-validity iff equational-derivability for the intended one-owner WinnerSet algebra. Arbitrary-model normalization and two-source absorption prove completeness; the independent four-state obstruction gives the lower bound four for every basis, including infinite ones. No classification theorem or finite closure certificate is supplied as a premise."
+        ],
+        "remaining_work": "None for this statement.",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "definition_index": "notes/formalization-definitions.md",
+        "external_theorem_hypotheses": [],
+        "validation": [
+          "lake build Paper",
+          "make check-lean",
+          "make paper"
+        ]
+      }
     },
     {
       "id": "owner:lem:two-source",
@@ -9146,47 +9684,47 @@
             "declarations": [
               {
                 "name_as_written": "owner_root_status",
-                "line": 1060
+                "line": 1067
               },
               {
                 "name_as_written": "owner_guard_completeness",
-                "line": 1074
+                "line": 1081
               },
               {
                 "name_as_written": "owner_one_table",
-                "line": 1112
+                "line": 1119
               },
               {
                 "name_as_written": "owner_definability",
-                "line": 1130
+                "line": 1137
               },
               {
                 "name_as_written": "owner_four_element_theory",
-                "line": 1180
+                "line": 1187
               },
               {
                 "name_as_written": "guarded_choice_example",
-                "line": 1271
+                "line": 1278
               },
               {
                 "name_as_written": "core_variable_bound_obstruction",
-                "line": 1208
+                "line": 1215
               },
               {
                 "name_as_written": "binary_framing_machines",
-                "line": 1149
+                "line": 1156
               },
               {
                 "name_as_written": "binary_descriptor_machines",
-                "line": 1239
+                "line": 1246
               }
             ],
-            "sha256": "97d1f7d8b404f30b3d8665e15f5abb588426c3c5429257a7844b0b9a3d68a02e"
+            "sha256": "e63523d5c8929d6a0e9ba8e5033073e5916875645a98b296a90e8ddf55ace6bf"
           },
           {
             "source": "KFOL/Definitions/Owner.lean",
             "declarations": [],
-            "sha256": "35ad35c080b776139ca3e9a94d6d1c8efb60b1277767fedd5dca1fabd2d5ef5c"
+            "sha256": "ee4567b2eb0e57735af9853b95b2d40a5223ad57dab28dd3289c90845c2ac432"
           },
           {
             "source": "KFOL/Definitions/CoreBasis.lean",
@@ -9218,7 +9756,7 @@
           {
             "source": "KFOL/Audit.lean",
             "declarations": [],
-            "sha256": "4f876abbb55d17e0c84b8572bdf7f6bf7082b1a19f2e0511e07f1ee584fb3cd6"
+            "sha256": "0ece917a9221e17de9ecb9009a89994b2277737d813152bd7c546c6142963ea8"
           },
           {
             "source": "KFOL/Audit/Algebra.lean",
@@ -9322,7 +9860,7 @@
           {
             "source": "KFOL/Core/ModelLaws.lean",
             "declarations": [],
-            "sha256": "d0dfce53433d82b22c6efab75a9ce9275f1c941f9a109213a7340f510f2a2fbd"
+            "sha256": "6006ce5c226ee22d6fb0dae4a1b4d04ad8ad16b4b31d217b0d57cedd4a7b2ffa"
           },
           {
             "source": "KFOL/Core/AtomicNative.lean",
@@ -9359,10 +9897,10 @@
             "declarations": [
               {
                 "name_as_written": "core_typed_upper_clone_cover",
-                "line": 1338
+                "line": 1345
               }
             ],
-            "sha256": "97d1f7d8b404f30b3d8665e15f5abb588426c3c5429257a7844b0b9a3d68a02e"
+            "sha256": "e63523d5c8929d6a0e9ba8e5033073e5916875645a98b296a90e8ddf55ace6bf"
           }
         ],
         "completed_components": [
@@ -9398,14 +9936,245 @@
       "work_package": "I",
       "target_surface": "KFOL library support module",
       "public_declarations": [],
-      "status": "evidence_review_pending",
-      "existing_evidence": "Requires statement-level reconciliation with sections/appendix-verification.tex and lean/; planned does not mean no partial proofs exist.",
+      "status": "kernel_checked",
+      "existing_evidence": "Full actual generated padded-grid algebra, exact three-element ideal with all three elements distinct, reflecting lower element, displayed operation products, and a valid actual finite-arity crossing equation refuted by its upper clone. The generated-element reconstruction/protected paths quantify over arbitrary terms; no finite search or supplied representation certificate replaces them.",
       "scope": "proof_dependency",
       "scope_reason": "A prerequisite for the main nonfinite-basis theorem.",
       "required": true,
       "cited_from": [],
-      "migration_status": "not_started",
-      "editorial_proposal_ids": []
+      "migration_status": "complete",
+      "editorial_proposal_ids": [],
+      "evidence_review": {
+        "level": "kernel_checked_complete_statement",
+        "fresh_build": true,
+        "artifacts": [
+          {
+            "source": "KFOL/Definitions/CoreBasis.lean",
+            "declarations": [],
+            "sha256": "b66d898efe4fd514ca77e24a3904a679e8007e97274899fe1b13a3e81f4b1621"
+          },
+          {
+            "source": "KFOL/Core/AtomicNative.lean",
+            "declarations": [],
+            "sha256": "14dc475cb3751b1a44aeed8fc10aa4da85a7b789c8a64e504e1e6bd292eda5be"
+          },
+          {
+            "source": "KFOL/Core/Exhaustion.lean",
+            "declarations": [],
+            "sha256": "24c06a60ca289c2f54ae11449aa8e265b77f77cfb8c46aeacb987531b433e8ae"
+          },
+          {
+            "source": "KFOL/Core/Folds.lean",
+            "declarations": [],
+            "sha256": "62e444320dda4480c82c3e2b700d283d460ae4bb0b68c5b25a305434922f6901"
+          },
+          {
+            "source": "KFOL/Core/GridAlgebra.lean",
+            "declarations": [],
+            "sha256": "c2843585f8174549d5ffc6f4a54046771e599449abe488d0a60a7353aeebf543"
+          },
+          {
+            "source": "KFOL/Core/GridBounded.lean",
+            "declarations": [],
+            "sha256": "c9904398f708b8895663ac5fe8167a4497d9d63bf20d83cc9af98d92b40aba6d"
+          },
+          {
+            "source": "KFOL/Core/GridClone.lean",
+            "declarations": [],
+            "sha256": "4fed30128e669827bfb041ca8fd24a55a7fc8605f1ce0df13fad11e1de8d2b52"
+          },
+          {
+            "source": "KFOL/Core/GridCountermodel.lean",
+            "declarations": [],
+            "sha256": "9b293a044a3049ddc82d92373a1c7682c3893d9147e47cca3f36cd3a195a652a"
+          },
+          {
+            "source": "KFOL/Core/GridCrossing.lean",
+            "declarations": [],
+            "sha256": "f70d40000b9eae6012d867d9330ebdc21dbcd7e4d5164f529e9fccdbaf743595"
+          },
+          {
+            "source": "KFOL/Core/GridData.lean",
+            "declarations": [],
+            "sha256": "dd51a5e001230a0dc655d65d58f2709ddddb21a75b0543d83fa7d932c4f28779"
+          },
+          {
+            "source": "KFOL/Core/GridFoldValues.lean",
+            "declarations": [],
+            "sha256": "d4124e4eedbc256286a4a7305564a280ef04359c2a123711970d9837998d844b"
+          },
+          {
+            "source": "KFOL/Core/GridGuards.lean",
+            "declarations": [],
+            "sha256": "ce81a37f7d1eaee1cb6413f6d438f31f2a487d505e5f8134b050e5daaa74aa0d"
+          },
+          {
+            "source": "KFOL/Core/GridIdeal.lean",
+            "declarations": [],
+            "sha256": "43b6b25d979e9ba3f44e6c4adc3187f11c5d835489a908c759266cc57ca3015b"
+          },
+          {
+            "source": "KFOL/Core/GridIdealLabel.lean",
+            "declarations": [],
+            "sha256": "cf46467b4db365f230d3cd70084e7ac178312b355d167be613f9329aca66daa3"
+          },
+          {
+            "source": "KFOL/Core/GridLocalCover.lean",
+            "declarations": [],
+            "sha256": "483b755f448913ef6f5c34908d75b8aaaedc6b1213a4bccbb676c2b334dc1fde"
+          },
+          {
+            "source": "KFOL/Core/GridOrder.lean",
+            "declarations": [],
+            "sha256": "2b3eeda011ba5fdec505e97b9fc0ef8206efd147a6b36870b4d953d452c2b056"
+          },
+          {
+            "source": "KFOL/Core/GridPatterns.lean",
+            "declarations": [],
+            "sha256": "ac7db2ebb07a2739d028e8efed5f64cd02238cd314872f3e241c739f379c2938"
+          },
+          {
+            "source": "KFOL/Core/GridPigeonhole.lean",
+            "declarations": [],
+            "sha256": "1b69560c0ceb7ae7d076d6792e30fc78911ecc9b7a8468df464d2bb1cc977957"
+          },
+          {
+            "source": "KFOL/Core/GridPrivate.lean",
+            "declarations": [],
+            "sha256": "79fa3386ebb42364aa2ed00800df8b01f613ccacf0c6a4623de61550858caf97"
+          },
+          {
+            "source": "KFOL/Core/GridProfiles.lean",
+            "declarations": [],
+            "sha256": "c1364d09a605cfa6bb76fd24484cf1222261970d50c16668dd5a11237c0aa045"
+          },
+          {
+            "source": "KFOL/Core/GridRows.lean",
+            "declarations": [],
+            "sha256": "b89bbbecb16e502b8b46e17478965becb3d3d4784c59b010df9986fd07fdef8f"
+          },
+          {
+            "source": "KFOL/Core/GridSeparation.lean",
+            "declarations": [],
+            "sha256": "1df1ae1179b7d667e1723929e199550a81436dafa9b7511a41ea754e683e2990"
+          },
+          {
+            "source": "KFOL/Core/GridTerms.lean",
+            "declarations": [],
+            "sha256": "fcc966cae1b93811b743ecf5ddb31e48395e5ee0f68f88f9d7402efe7774b01d"
+          },
+          {
+            "source": "KFOL/Core/HomRange.lean",
+            "declarations": [],
+            "sha256": "20e449807691f433538f4f7f4bdf0f1e766fb102452f85218e42a9881b2f455f"
+          },
+          {
+            "source": "KFOL/Core/Locality.lean",
+            "declarations": [],
+            "sha256": "52bae13e11a0f7c9fdc9bbc0df81da02e35d82152fce5877fdfc846baba80dc4"
+          },
+          {
+            "source": "KFOL/Core/MarkerGap.lean",
+            "declarations": [],
+            "sha256": "b69cd64f561b9d344b4b81b9d7b4407a78ab258eaf90b8a3729ce62a4e68d6b4"
+          },
+          {
+            "source": "KFOL/Core/ModelLaws.lean",
+            "declarations": [],
+            "sha256": "6006ce5c226ee22d6fb0dae4a1b4d04ad8ad16b4b31d217b0d57cedd4a7b2ffa"
+          },
+          {
+            "source": "KFOL/Core/Native.lean",
+            "declarations": [],
+            "sha256": "48997cd777c56f696fd2121fd4aefc21ac85e5a18a9311790ce8df071fe2d014"
+          },
+          {
+            "source": "KFOL/Core/NativeTheory.lean",
+            "declarations": [],
+            "sha256": "f8f3d45fbcb2942ab0b594a3dbe37459c927c4293772495d885448942db963c1"
+          },
+          {
+            "source": "KFOL/Core/NonfiniteBasis.lean",
+            "declarations": [],
+            "sha256": "8e7f0a4fbd4d4c7aa839bcb6524daf4a29539d60c6a199ff629f4025fe132aec"
+          },
+          {
+            "source": "KFOL/Core/PairLabel.lean",
+            "declarations": [],
+            "sha256": "fa7f199228981e94bb64eb9df0b93560d6e248ef2c901f66c49afad49bcb639e"
+          },
+          {
+            "source": "KFOL/Core/PairModel.lean",
+            "declarations": [],
+            "sha256": "46c18c5f950ba2923f09dc05de29e299be1e29d91aa75117d0aadc8c5b429be2"
+          },
+          {
+            "source": "KFOL/Core/Profiles.lean",
+            "declarations": [],
+            "sha256": "d2633d240a1c8857a38f480cd343be47a824978d9b9c9d1d8740f010cfa931f5"
+          },
+          {
+            "source": "KFOL/Core/Protected.lean",
+            "declarations": [],
+            "sha256": "50e3d19530a5344f9ac274fc45d098061ac26098d6b3f5b00e50fa464913b02c"
+          },
+          {
+            "source": "KFOL/Core/Quotients.lean",
+            "declarations": [],
+            "sha256": "d640da463ef8640c52a282591ebbf4dc6b2a9b00c2edc6a1eee2f29421427de7"
+          },
+          {
+            "source": "KFOL/Core/TypedCover.lean",
+            "declarations": [],
+            "sha256": "bdebc321f9d128213e58db0829baf50e86bd945de0c42fc4e310e03ea0401ade"
+          },
+          {
+            "source": "KFOL/Core/UpperClone.lean",
+            "declarations": [],
+            "sha256": "f4f26f907eeb1107007ec72ec5e868343685c73dd36a9a141741420107ec8720"
+          },
+          {
+            "source": "KFOL/Core/UpperMap.lean",
+            "declarations": [],
+            "sha256": "617caba5f06ce392f7e380f9acca21a8719db1980f0308a3534da76988c715c9"
+          },
+          {
+            "source": "tests/CoreBasisGrid.lean",
+            "declarations": [],
+            "sha256": "77c6970d527e9bbbcec6fec75b3a1c6d6edddae22588dcb4d7c13f1e9c70d9e0"
+          },
+          {
+            "source": "Paper.lean",
+            "declarations": [
+              {
+                "name_as_written": "core_nonfinite_basis",
+                "line": 1518
+              },
+              {
+                "name_as_written": "native_nonfinite_basis",
+                "line": 1568
+              }
+            ],
+            "sha256": "e63523d5c8929d6a0e9ba8e5033073e5916875645a98b296a90e8ddf55ace6bf"
+          }
+        ],
+        "completed_components": [
+          "Full actual generated padded-grid algebra, exact three-element ideal with all three elements distinct, reflecting lower element, displayed operation products, and a valid actual finite-arity crossing equation refuted by its upper clone. The generated-element reconstruction/protected paths quantify over arbitrary terms; no finite search or supplied representation certificate replaces them."
+        ],
+        "remaining_work": "None for this statement.",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "definition_index": "notes/formalization-definitions.md",
+        "external_theorem_hypotheses": [],
+        "validation": [
+          "lake build Paper",
+          "make check-lean",
+          "make paper"
+        ]
+      }
     },
     {
       "id": "core:thm:core-nfb",
@@ -9422,9 +10191,11 @@
       "statement_sha256": "417967c9fb7196686db866fe5c715d1d02b0894249be307a1d193ed511114596",
       "work_package": "I",
       "target_surface": "Paper.lean",
-      "public_declarations": [],
-      "status": "written_only",
-      "existing_evidence": "Requires statement-level reconciliation with sections/appendix-verification.tex and lean/; planned does not mean no partial proofs exist.",
+      "public_declarations": [
+        "KFOL.Paper.core_nonfinite_basis"
+      ],
+      "status": "kernel_checked",
+      "existing_evidence": "For every finite role type with a three-role embedding and EVERY actual-variable bound d, including zero, actual finite nonempty countermodels lie outside both ambient native and winner-core varieties. Every arbitrary <=d-generator nonempty subalgebra lies in the core variety, so every <=d-variable identity transfers directly. A failing identity exists. No bounded-variable theory, even infinite, and no finite theory is an equational basis.",
       "existing_evidence_seed": {
         "reference": "sections/appendix-core-basis.tex; checks/check_core_padded_crossing.py",
         "remaining_scope": "Uniform arbitrary-coefficient proof is written; finite checks do not certify locality.",
@@ -9441,117 +10212,18 @@
         }
       ],
       "evidence_review": {
-        "level": "kernel_checked_components",
+        "level": "kernel_checked_complete_statement",
         "fresh_build": true,
         "artifacts": [
-          {
-            "source": "Paper.lean",
-            "declarations": [
-              {
-                "name_as_written": "owner_root_status",
-                "line": 1060
-              },
-              {
-                "name_as_written": "owner_guard_completeness",
-                "line": 1074
-              },
-              {
-                "name_as_written": "owner_one_table",
-                "line": 1112
-              },
-              {
-                "name_as_written": "owner_definability",
-                "line": 1130
-              },
-              {
-                "name_as_written": "owner_four_element_theory",
-                "line": 1180
-              },
-              {
-                "name_as_written": "guarded_choice_example",
-                "line": 1271
-              },
-              {
-                "name_as_written": "core_variable_bound_obstruction",
-                "line": 1208
-              },
-              {
-                "name_as_written": "binary_framing_machines",
-                "line": 1149
-              },
-              {
-                "name_as_written": "binary_descriptor_machines",
-                "line": 1239
-              }
-            ],
-            "sha256": "97d1f7d8b404f30b3d8665e15f5abb588426c3c5429257a7844b0b9a3d68a02e"
-          },
-          {
-            "source": "KFOL/Definitions/Owner.lean",
-            "declarations": [],
-            "sha256": "35ad35c080b776139ca3e9a94d6d1c8efb60b1277767fedd5dca1fabd2d5ef5c"
-          },
           {
             "source": "KFOL/Definitions/CoreBasis.lean",
             "declarations": [],
             "sha256": "b66d898efe4fd514ca77e24a3904a679e8007e97274899fe1b13a3e81f4b1621"
           },
           {
-            "source": "KFOL/Algorithms/Words.lean",
-            "declarations": [
-              {
-                "name_as_written": "value_bits",
-                "line": 22
-              },
-              {
-                "name_as_written": "decode?_eq_some_iff",
-                "line": 33
-              },
-              {
-                "name_as_written": "unpair?_eq_some_iff",
-                "line": 124
-              },
-              {
-                "name_as_written": "undelimitBlocks_flatten_delimit",
-                "line": 110
-              }
-            ],
-            "sha256": "17b183f64695a475f8b569a90ee2390881fd7461dfdddc046f8fca5882ecd600"
-          },
-          {
-            "source": "KFOL/Audit.lean",
+            "source": "KFOL/Core/AtomicNative.lean",
             "declarations": [],
-            "sha256": "4f876abbb55d17e0c84b8572bdf7f6bf7082b1a19f2e0511e07f1ee584fb3cd6"
-          },
-          {
-            "source": "KFOL/Audit/Algebra.lean",
-            "declarations": [],
-            "sha256": "abcde9482d4e7b86f05948418e78f3904accebb0e5e5f2ff3e8cc53b9100a3f9"
-          },
-          {
-            "source": "KFOL/Audit/Dependencies.lean",
-            "declarations": [],
-            "sha256": "8d57a646cd3eb51fb36be0269e2eb21238dfcd00453b38e0a60375b25caaaa3b"
-          },
-          {
-            "source": "KFOL/Core/Native.lean",
-            "declarations": [],
-            "sha256": "48997cd777c56f696fd2121fd4aefc21ac85e5a18a9311790ce8df071fe2d014"
-          },
-          {
-            "source": "KFOL/Core/Quotients.lean",
-            "declarations": [],
-            "sha256": "d640da463ef8640c52a282591ebbf4dc6b2a9b00c2edc6a1eee2f29421427de7"
-          },
-          {
-            "source": "KFOL/Core/Locality.lean",
-            "declarations": [],
-            "sha256": "52bae13e11a0f7c9fdc9bbc0df81da02e35d82152fce5877fdfc846baba80dc4"
-          },
-          {
-            "source": "KFOL/Core/Profiles.lean",
-            "declarations": [],
-            "sha256": "d2633d240a1c8857a38f480cd343be47a824978d9b9c9d1d8740f010cfa931f5"
+            "sha256": "14dc475cb3751b1a44aeed8fc10aa4da85a7b789c8a64e504e1e6bd292eda5be"
           },
           {
             "source": "KFOL/Core/Exhaustion.lean",
@@ -9559,19 +10231,89 @@
             "sha256": "24c06a60ca289c2f54ae11449aa8e265b77f77cfb8c46aeacb987531b433e8ae"
           },
           {
-            "source": "tests/CoreBasis.lean",
-            "declarations": [],
-            "sha256": "d92a1d40be62268e3a7a08d90ece3aadb7eb65c0d811185aacf902abc77bf409"
-          },
-          {
-            "source": "tests/CoreBasisStatement.lean",
-            "declarations": [],
-            "sha256": "daed079479e2e5af637d90d78582b239ef6fc2df18f1afae2175ecf1718f025e"
-          },
-          {
             "source": "KFOL/Core/Folds.lean",
             "declarations": [],
             "sha256": "62e444320dda4480c82c3e2b700d283d460ae4bb0b68c5b25a305434922f6901"
+          },
+          {
+            "source": "KFOL/Core/GridAlgebra.lean",
+            "declarations": [],
+            "sha256": "c2843585f8174549d5ffc6f4a54046771e599449abe488d0a60a7353aeebf543"
+          },
+          {
+            "source": "KFOL/Core/GridBounded.lean",
+            "declarations": [],
+            "sha256": "c9904398f708b8895663ac5fe8167a4497d9d63bf20d83cc9af98d92b40aba6d"
+          },
+          {
+            "source": "KFOL/Core/GridClone.lean",
+            "declarations": [],
+            "sha256": "4fed30128e669827bfb041ca8fd24a55a7fc8605f1ce0df13fad11e1de8d2b52"
+          },
+          {
+            "source": "KFOL/Core/GridCountermodel.lean",
+            "declarations": [],
+            "sha256": "9b293a044a3049ddc82d92373a1c7682c3893d9147e47cca3f36cd3a195a652a"
+          },
+          {
+            "source": "KFOL/Core/GridCrossing.lean",
+            "declarations": [],
+            "sha256": "f70d40000b9eae6012d867d9330ebdc21dbcd7e4d5164f529e9fccdbaf743595"
+          },
+          {
+            "source": "KFOL/Core/GridData.lean",
+            "declarations": [],
+            "sha256": "dd51a5e001230a0dc655d65d58f2709ddddb21a75b0543d83fa7d932c4f28779"
+          },
+          {
+            "source": "KFOL/Core/GridFoldValues.lean",
+            "declarations": [],
+            "sha256": "d4124e4eedbc256286a4a7305564a280ef04359c2a123711970d9837998d844b"
+          },
+          {
+            "source": "KFOL/Core/GridGuards.lean",
+            "declarations": [],
+            "sha256": "ce81a37f7d1eaee1cb6413f6d438f31f2a487d505e5f8134b050e5daaa74aa0d"
+          },
+          {
+            "source": "KFOL/Core/GridIdeal.lean",
+            "declarations": [],
+            "sha256": "43b6b25d979e9ba3f44e6c4adc3187f11c5d835489a908c759266cc57ca3015b"
+          },
+          {
+            "source": "KFOL/Core/GridIdealLabel.lean",
+            "declarations": [],
+            "sha256": "cf46467b4db365f230d3cd70084e7ac178312b355d167be613f9329aca66daa3"
+          },
+          {
+            "source": "KFOL/Core/GridLocalCover.lean",
+            "declarations": [],
+            "sha256": "483b755f448913ef6f5c34908d75b8aaaedc6b1213a4bccbb676c2b334dc1fde"
+          },
+          {
+            "source": "KFOL/Core/GridOrder.lean",
+            "declarations": [],
+            "sha256": "2b3eeda011ba5fdec505e97b9fc0ef8206efd147a6b36870b4d953d452c2b056"
+          },
+          {
+            "source": "KFOL/Core/GridPatterns.lean",
+            "declarations": [],
+            "sha256": "ac7db2ebb07a2739d028e8efed5f64cd02238cd314872f3e241c739f379c2938"
+          },
+          {
+            "source": "KFOL/Core/GridPigeonhole.lean",
+            "declarations": [],
+            "sha256": "1b69560c0ceb7ae7d076d6792e30fc78911ecc9b7a8468df464d2bb1cc977957"
+          },
+          {
+            "source": "KFOL/Core/GridPrivate.lean",
+            "declarations": [],
+            "sha256": "79fa3386ebb42364aa2ed00800df8b01f613ccacf0c6a4623de61550858caf97"
+          },
+          {
+            "source": "KFOL/Core/GridProfiles.lean",
+            "declarations": [],
+            "sha256": "c1364d09a605cfa6bb76fd24484cf1222261970d50c16668dd5a11237c0aa045"
           },
           {
             "source": "KFOL/Core/GridRows.lean",
@@ -9584,29 +10326,109 @@
             "sha256": "1df1ae1179b7d667e1723929e199550a81436dafa9b7511a41ea754e683e2990"
           },
           {
-            "source": "KFOL/Core/GridPrivate.lean",
+            "source": "KFOL/Core/GridTerms.lean",
             "declarations": [],
-            "sha256": "79fa3386ebb42364aa2ed00800df8b01f613ccacf0c6a4623de61550858caf97"
+            "sha256": "fcc966cae1b93811b743ecf5ddb31e48395e5ee0f68f88f9d7402efe7774b01d"
           },
           {
-            "source": "KFOL/Core/GridIdeal.lean",
+            "source": "KFOL/Core/HomRange.lean",
             "declarations": [],
-            "sha256": "43b6b25d979e9ba3f44e6c4adc3187f11c5d835489a908c759266cc57ca3015b"
+            "sha256": "20e449807691f433538f4f7f4bdf0f1e766fb102452f85218e42a9881b2f455f"
           },
           {
-            "source": "KFOL/Core/GridOrder.lean",
+            "source": "KFOL/Core/Locality.lean",
             "declarations": [],
-            "sha256": "2b3eeda011ba5fdec505e97b9fc0ef8206efd147a6b36870b4d953d452c2b056"
+            "sha256": "52bae13e11a0f7c9fdc9bbc0df81da02e35d82152fce5877fdfc846baba80dc4"
+          },
+          {
+            "source": "KFOL/Core/MarkerGap.lean",
+            "declarations": [],
+            "sha256": "b69cd64f561b9d344b4b81b9d7b4407a78ab258eaf90b8a3729ce62a4e68d6b4"
+          },
+          {
+            "source": "KFOL/Core/ModelLaws.lean",
+            "declarations": [],
+            "sha256": "6006ce5c226ee22d6fb0dae4a1b4d04ad8ad16b4b31d217b0d57cedd4a7b2ffa"
+          },
+          {
+            "source": "KFOL/Core/Native.lean",
+            "declarations": [],
+            "sha256": "48997cd777c56f696fd2121fd4aefc21ac85e5a18a9311790ce8df071fe2d014"
+          },
+          {
+            "source": "KFOL/Core/NativeTheory.lean",
+            "declarations": [],
+            "sha256": "f8f3d45fbcb2942ab0b594a3dbe37459c927c4293772495d885448942db963c1"
+          },
+          {
+            "source": "KFOL/Core/NonfiniteBasis.lean",
+            "declarations": [],
+            "sha256": "8e7f0a4fbd4d4c7aa839bcb6524daf4a29539d60c6a199ff629f4025fe132aec"
+          },
+          {
+            "source": "KFOL/Core/PairLabel.lean",
+            "declarations": [],
+            "sha256": "fa7f199228981e94bb64eb9df0b93560d6e248ef2c901f66c49afad49bcb639e"
+          },
+          {
+            "source": "KFOL/Core/PairModel.lean",
+            "declarations": [],
+            "sha256": "46c18c5f950ba2923f09dc05de29e299be1e29d91aa75117d0aadc8c5b429be2"
+          },
+          {
+            "source": "KFOL/Core/Profiles.lean",
+            "declarations": [],
+            "sha256": "d2633d240a1c8857a38f480cd343be47a824978d9b9c9d1d8740f010cfa931f5"
+          },
+          {
+            "source": "KFOL/Core/Protected.lean",
+            "declarations": [],
+            "sha256": "50e3d19530a5344f9ac274fc45d098061ac26098d6b3f5b00e50fa464913b02c"
+          },
+          {
+            "source": "KFOL/Core/Quotients.lean",
+            "declarations": [],
+            "sha256": "d640da463ef8640c52a282591ebbf4dc6b2a9b00c2edc6a1eee2f29421427de7"
+          },
+          {
+            "source": "KFOL/Core/TypedCover.lean",
+            "declarations": [],
+            "sha256": "bdebc321f9d128213e58db0829baf50e86bd945de0c42fc4e310e03ea0401ade"
+          },
+          {
+            "source": "KFOL/Core/UpperClone.lean",
+            "declarations": [],
+            "sha256": "f4f26f907eeb1107007ec72ec5e868343685c73dd36a9a141741420107ec8720"
+          },
+          {
+            "source": "KFOL/Core/UpperMap.lean",
+            "declarations": [],
+            "sha256": "617caba5f06ce392f7e380f9acca21a8719db1980f0308a3534da76988c715c9"
+          },
+          {
+            "source": "tests/CoreBasisGrid.lean",
+            "declarations": [],
+            "sha256": "77c6970d527e9bbbcec6fec75b3a1c6d6edddae22588dcb4d7c13f1e9c70d9e0"
+          },
+          {
+            "source": "Paper.lean",
+            "declarations": [
+              {
+                "name_as_written": "core_nonfinite_basis",
+                "line": 1518
+              },
+              {
+                "name_as_written": "native_nonfinite_basis",
+                "line": 1568
+              }
+            ],
+            "sha256": "e63523d5c8929d6a0e9ba8e5033073e5916875645a98b296a90e8ddf55ace6bf"
           }
         ],
         "completed_components": [
-          "Uniform native quotient/omission and arbitrary-generator local variety membership",
-          "Boolean-profile monotonicity/common source/native interpretation",
-          "Complete K-variable exhaustion obstruction",
-          "Exact padded source generators and arbitrary generated-element term reconstruction",
-          "Three protected-path lemmas and complete three-pattern classification below the reflecting lower tuple"
+          "For every finite role type with a three-role embedding and EVERY actual-variable bound d, including zero, actual finite nonempty countermodels lie outside both ambient native and winner-core varieties. Every arbitrary <=d-generator nonempty subalgebra lies in the core variety, so every <=d-variable identity transfers directly. A failing identity exists. No bounded-variable theory, even infinite, and no finite theory is an equational basis."
         ],
-        "remaining_work": "Complete the full grid countermodel, arbitrary-generator typed locality for each variable bound, and the final unbounded-variable contradiction. The bounded native obstruction and typed-cover theorem are complete dependencies.",
+        "remaining_work": "None for this statement.",
         "axioms": [
           "propext",
           "Classical.choice",
@@ -9615,14 +10437,12 @@
         "definition_index": "notes/formalization-definitions.md",
         "external_theorem_hypotheses": [],
         "validation": [
-          "Selected successor and canonical protocol gate3266 jobs",
-          "Selected production SPE/Nash/minimax/SE-existence audit3803 jobs",
-          "Complete authored closure and pure import boundary audit",
+          "lake build Paper",
           "make check-lean",
           "make paper"
         ]
       },
-      "migration_status": "uniform_native_and_variable_arity_obstruction_checked_grid_pending",
+      "migration_status": "complete",
       "editorial_proposal_ids": []
     },
     {
@@ -9640,15 +10460,248 @@
       "statement_sha256": "98f8a5406d9644566bed0c553e813687d7cea4e6cc0299a84d757dd90920a8ca",
       "work_package": "I",
       "target_surface": "not_required_by_main_paper",
-      "public_declarations": [],
-      "status": "optional",
-      "existing_evidence": "Requires statement-level reconciliation with sections/appendix-verification.tex and lean/; planned does not mean no partial proofs exist.",
+      "public_declarations": [
+        "KFOL.Paper.native_nonfinite_basis"
+      ],
+      "status": "kernel_checked",
+      "existing_evidence": "The same actual finite local countermodels rule out every bounded-variable equational basis and every finite basis of the ambient native algebra.",
       "scope": "optional_report",
       "scope_reason": "Not required by the selected main-paper claims or presently identified proof path.",
       "required": false,
       "cited_from": [],
-      "migration_status": "not_scheduled",
-      "editorial_proposal_ids": []
+      "migration_status": "complete",
+      "editorial_proposal_ids": [],
+      "evidence_review": {
+        "level": "kernel_checked_complete_statement",
+        "fresh_build": true,
+        "artifacts": [
+          {
+            "source": "KFOL/Definitions/CoreBasis.lean",
+            "declarations": [],
+            "sha256": "b66d898efe4fd514ca77e24a3904a679e8007e97274899fe1b13a3e81f4b1621"
+          },
+          {
+            "source": "KFOL/Core/AtomicNative.lean",
+            "declarations": [],
+            "sha256": "14dc475cb3751b1a44aeed8fc10aa4da85a7b789c8a64e504e1e6bd292eda5be"
+          },
+          {
+            "source": "KFOL/Core/Exhaustion.lean",
+            "declarations": [],
+            "sha256": "24c06a60ca289c2f54ae11449aa8e265b77f77cfb8c46aeacb987531b433e8ae"
+          },
+          {
+            "source": "KFOL/Core/Folds.lean",
+            "declarations": [],
+            "sha256": "62e444320dda4480c82c3e2b700d283d460ae4bb0b68c5b25a305434922f6901"
+          },
+          {
+            "source": "KFOL/Core/GridAlgebra.lean",
+            "declarations": [],
+            "sha256": "c2843585f8174549d5ffc6f4a54046771e599449abe488d0a60a7353aeebf543"
+          },
+          {
+            "source": "KFOL/Core/GridBounded.lean",
+            "declarations": [],
+            "sha256": "c9904398f708b8895663ac5fe8167a4497d9d63bf20d83cc9af98d92b40aba6d"
+          },
+          {
+            "source": "KFOL/Core/GridClone.lean",
+            "declarations": [],
+            "sha256": "4fed30128e669827bfb041ca8fd24a55a7fc8605f1ce0df13fad11e1de8d2b52"
+          },
+          {
+            "source": "KFOL/Core/GridCountermodel.lean",
+            "declarations": [],
+            "sha256": "9b293a044a3049ddc82d92373a1c7682c3893d9147e47cca3f36cd3a195a652a"
+          },
+          {
+            "source": "KFOL/Core/GridCrossing.lean",
+            "declarations": [],
+            "sha256": "f70d40000b9eae6012d867d9330ebdc21dbcd7e4d5164f529e9fccdbaf743595"
+          },
+          {
+            "source": "KFOL/Core/GridData.lean",
+            "declarations": [],
+            "sha256": "dd51a5e001230a0dc655d65d58f2709ddddb21a75b0543d83fa7d932c4f28779"
+          },
+          {
+            "source": "KFOL/Core/GridFoldValues.lean",
+            "declarations": [],
+            "sha256": "d4124e4eedbc256286a4a7305564a280ef04359c2a123711970d9837998d844b"
+          },
+          {
+            "source": "KFOL/Core/GridGuards.lean",
+            "declarations": [],
+            "sha256": "ce81a37f7d1eaee1cb6413f6d438f31f2a487d505e5f8134b050e5daaa74aa0d"
+          },
+          {
+            "source": "KFOL/Core/GridIdeal.lean",
+            "declarations": [],
+            "sha256": "43b6b25d979e9ba3f44e6c4adc3187f11c5d835489a908c759266cc57ca3015b"
+          },
+          {
+            "source": "KFOL/Core/GridIdealLabel.lean",
+            "declarations": [],
+            "sha256": "cf46467b4db365f230d3cd70084e7ac178312b355d167be613f9329aca66daa3"
+          },
+          {
+            "source": "KFOL/Core/GridLocalCover.lean",
+            "declarations": [],
+            "sha256": "483b755f448913ef6f5c34908d75b8aaaedc6b1213a4bccbb676c2b334dc1fde"
+          },
+          {
+            "source": "KFOL/Core/GridOrder.lean",
+            "declarations": [],
+            "sha256": "2b3eeda011ba5fdec505e97b9fc0ef8206efd147a6b36870b4d953d452c2b056"
+          },
+          {
+            "source": "KFOL/Core/GridPatterns.lean",
+            "declarations": [],
+            "sha256": "ac7db2ebb07a2739d028e8efed5f64cd02238cd314872f3e241c739f379c2938"
+          },
+          {
+            "source": "KFOL/Core/GridPigeonhole.lean",
+            "declarations": [],
+            "sha256": "1b69560c0ceb7ae7d076d6792e30fc78911ecc9b7a8468df464d2bb1cc977957"
+          },
+          {
+            "source": "KFOL/Core/GridPrivate.lean",
+            "declarations": [],
+            "sha256": "79fa3386ebb42364aa2ed00800df8b01f613ccacf0c6a4623de61550858caf97"
+          },
+          {
+            "source": "KFOL/Core/GridProfiles.lean",
+            "declarations": [],
+            "sha256": "c1364d09a605cfa6bb76fd24484cf1222261970d50c16668dd5a11237c0aa045"
+          },
+          {
+            "source": "KFOL/Core/GridRows.lean",
+            "declarations": [],
+            "sha256": "b89bbbecb16e502b8b46e17478965becb3d3d4784c59b010df9986fd07fdef8f"
+          },
+          {
+            "source": "KFOL/Core/GridSeparation.lean",
+            "declarations": [],
+            "sha256": "1df1ae1179b7d667e1723929e199550a81436dafa9b7511a41ea754e683e2990"
+          },
+          {
+            "source": "KFOL/Core/GridTerms.lean",
+            "declarations": [],
+            "sha256": "fcc966cae1b93811b743ecf5ddb31e48395e5ee0f68f88f9d7402efe7774b01d"
+          },
+          {
+            "source": "KFOL/Core/HomRange.lean",
+            "declarations": [],
+            "sha256": "20e449807691f433538f4f7f4bdf0f1e766fb102452f85218e42a9881b2f455f"
+          },
+          {
+            "source": "KFOL/Core/Locality.lean",
+            "declarations": [],
+            "sha256": "52bae13e11a0f7c9fdc9bbc0df81da02e35d82152fce5877fdfc846baba80dc4"
+          },
+          {
+            "source": "KFOL/Core/MarkerGap.lean",
+            "declarations": [],
+            "sha256": "b69cd64f561b9d344b4b81b9d7b4407a78ab258eaf90b8a3729ce62a4e68d6b4"
+          },
+          {
+            "source": "KFOL/Core/ModelLaws.lean",
+            "declarations": [],
+            "sha256": "6006ce5c226ee22d6fb0dae4a1b4d04ad8ad16b4b31d217b0d57cedd4a7b2ffa"
+          },
+          {
+            "source": "KFOL/Core/Native.lean",
+            "declarations": [],
+            "sha256": "48997cd777c56f696fd2121fd4aefc21ac85e5a18a9311790ce8df071fe2d014"
+          },
+          {
+            "source": "KFOL/Core/NativeTheory.lean",
+            "declarations": [],
+            "sha256": "f8f3d45fbcb2942ab0b594a3dbe37459c927c4293772495d885448942db963c1"
+          },
+          {
+            "source": "KFOL/Core/NonfiniteBasis.lean",
+            "declarations": [],
+            "sha256": "8e7f0a4fbd4d4c7aa839bcb6524daf4a29539d60c6a199ff629f4025fe132aec"
+          },
+          {
+            "source": "KFOL/Core/PairLabel.lean",
+            "declarations": [],
+            "sha256": "fa7f199228981e94bb64eb9df0b93560d6e248ef2c901f66c49afad49bcb639e"
+          },
+          {
+            "source": "KFOL/Core/PairModel.lean",
+            "declarations": [],
+            "sha256": "46c18c5f950ba2923f09dc05de29e299be1e29d91aa75117d0aadc8c5b429be2"
+          },
+          {
+            "source": "KFOL/Core/Profiles.lean",
+            "declarations": [],
+            "sha256": "d2633d240a1c8857a38f480cd343be47a824978d9b9c9d1d8740f010cfa931f5"
+          },
+          {
+            "source": "KFOL/Core/Protected.lean",
+            "declarations": [],
+            "sha256": "50e3d19530a5344f9ac274fc45d098061ac26098d6b3f5b00e50fa464913b02c"
+          },
+          {
+            "source": "KFOL/Core/Quotients.lean",
+            "declarations": [],
+            "sha256": "d640da463ef8640c52a282591ebbf4dc6b2a9b00c2edc6a1eee2f29421427de7"
+          },
+          {
+            "source": "KFOL/Core/TypedCover.lean",
+            "declarations": [],
+            "sha256": "bdebc321f9d128213e58db0829baf50e86bd945de0c42fc4e310e03ea0401ade"
+          },
+          {
+            "source": "KFOL/Core/UpperClone.lean",
+            "declarations": [],
+            "sha256": "f4f26f907eeb1107007ec72ec5e868343685c73dd36a9a141741420107ec8720"
+          },
+          {
+            "source": "KFOL/Core/UpperMap.lean",
+            "declarations": [],
+            "sha256": "617caba5f06ce392f7e380f9acca21a8719db1980f0308a3534da76988c715c9"
+          },
+          {
+            "source": "tests/CoreBasisGrid.lean",
+            "declarations": [],
+            "sha256": "77c6970d527e9bbbcec6fec75b3a1c6d6edddae22588dcb4d7c13f1e9c70d9e0"
+          },
+          {
+            "source": "Paper.lean",
+            "declarations": [
+              {
+                "name_as_written": "core_nonfinite_basis",
+                "line": 1518
+              },
+              {
+                "name_as_written": "native_nonfinite_basis",
+                "line": 1568
+              }
+            ],
+            "sha256": "e63523d5c8929d6a0e9ba8e5033073e5916875645a98b296a90e8ddf55ace6bf"
+          }
+        ],
+        "completed_components": [
+          "The same actual finite local countermodels rule out every bounded-variable equational basis and every finite basis of the ambient native algebra."
+        ],
+        "remaining_work": "None for this statement.",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "definition_index": "notes/formalization-definitions.md",
+        "external_theorem_hypotheses": [],
+        "validation": [
+          "lake build Paper",
+          "make check-lean",
+          "make paper"
+        ]
+      }
     },
     {
       "id": "core:prop:choice-union-basis",
@@ -9665,9 +10718,11 @@
       "statement_sha256": "7a7a2cd2e5caaf0d07a7d9381e0fa848357dd308228975e73cc481631f48910d",
       "work_package": "J",
       "target_surface": "Paper.lean",
-      "public_declarations": [],
-      "status": "partial_lean_source",
-      "existing_evidence": "Requires statement-level reconciliation with sections/appendix-verification.tex and lean/; planned does not mean no partial proofs exist.",
+      "public_declarations": [
+        "KFOL.Paper.choice_union_basis"
+      ],
+      "status": "kernel_checked",
+      "existing_evidence": "Complete seven-law soundness, exact set cardinality, direct arbitrary-model generation and full equational completeness.",
       "scope": "cited_report_result",
       "scope_reason": "Directly cited main-paper assertion; see cited_from.",
       "required": true,
@@ -9679,21 +10734,89 @@
         }
       ],
       "evidence_review": {
-        "level": "source_inspection",
-        "fresh_build": false,
+        "level": "kernel_checked_complete_statement",
+        "fresh_build": true,
         "artifacts": [
           {
-            "source": "lean/CoreModels.lean",
+            "source": "KFOL/Definitions/Dissemilattice.lean",
             "declarations": [],
-            "sha256": "74e5048195098d9f39b23b13805ce73ad1a1984a1b6dd4f94f672e562b76eced"
+            "sha256": "956b8b0fa202a52f707641631ebd40d3e6744a5523fe059bd6e998b8786fc9e0"
+          },
+          {
+            "source": "KFOL/Core/ChoiceUnion.lean",
+            "declarations": [],
+            "sha256": "59e1997e847e703486924e0b74128f8b277e13081ebb8d88633badfd719236e4"
+          },
+          {
+            "source": "KFOL/Core/ChoiceUnion/Basis.lean",
+            "declarations": [],
+            "sha256": "b0919afe1763d976625d1cc449d5b8d13fa24e27b82a9a15f7a171b506e8fdcc"
+          },
+          {
+            "source": "KFOL/Core/ChoiceUnion/Cover.lean",
+            "declarations": [],
+            "sha256": "c1a28fe195180581ca0c7b8197c3aa5a188aebc596bb3ef75cef8a1906e37da3"
+          },
+          {
+            "source": "KFOL/Core/ChoiceUnion/Embedding.lean",
+            "declarations": [],
+            "sha256": "9dfc7ccad791637e2253ab523429e91b02e476575b34c876d12a7e4d735d23b8"
+          },
+          {
+            "source": "KFOL/Core/ChoiceUnion/Laws.lean",
+            "declarations": [],
+            "sha256": "e1826490974d401e1cb87dc3fce8419ef9bce562a7230dff9afc3bfb8e4fe9ce"
+          },
+          {
+            "source": "KFOL/Core/ChoiceUnion/NormalForm.lean",
+            "declarations": [],
+            "sha256": "ebb603cec7fa029db3c82602644268231d71b0e33bf51564a75c6b7db3c0bda1"
+          },
+          {
+            "source": "KFOL/Core/ChoiceUnion/Probe.lean",
+            "declarations": [],
+            "sha256": "ef1072a112bcc73fe0a58b379d74efd1de6bbdabf4fc5511877480b37224008d"
+          },
+          {
+            "source": "KFOL/Core/ChoiceUnion/ThreeCompleteness.lean",
+            "declarations": [],
+            "sha256": "7148d4d132059bbadce35167f756910cddc88b777a499d05a3d2c667b68097f5"
+          },
+          {
+            "source": "tests/ChoiceUnionBasis.lean",
+            "declarations": [],
+            "sha256": "001831503f57fc5545d7994ade9775928c6b0ebebd1f755c11dc50540c258429"
+          },
+          {
+            "source": "Paper.lean",
+            "declarations": [
+              {
+                "name_as_written": "choice_union_basis",
+                "line": 1763
+              }
+            ],
+            "sha256": "e63523d5c8929d6a0e9ba8e5033073e5916875645a98b296a90e8ddf55ace6bf"
           }
         ],
-        "remaining_work": "Native soundness is a starting point; prove/import the precise generation special case for completeness."
+        "completed_components": [
+          "All seven literal equations are sound; their actual set has exactly seven members",
+          "Arbitrary nonempty seven-law models are separated by three-valued probes and embedded in the winner-generated variety",
+          "Full equational completeness for any owner and any role type containing three distinct roles; no external generation theorem hypothesis"
+        ],
+        "remaining_work": "None.",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "definition_index": "notes/formalization-definitions.md",
+        "external_theorem_hypotheses": []
       },
-      "migration_status": "not_started",
+      "migration_status": "complete",
       "editorial_proposal_ids": [
         "seven-equation-basis"
-      ]
+      ],
+      "remaining_work": "None."
     },
     {
       "id": "core:prop:dissemilattice-lift",
@@ -9922,10 +11045,10 @@
             "declarations": [
               {
                 "name_as_written": "public_forcing",
-                "line": 1418
+                "line": 1425
               }
             ],
-            "sha256": "97d1f7d8b404f30b3d8665e15f5abb588426c3c5429257a7844b0b9a3d68a02e"
+            "sha256": "e63523d5c8929d6a0e9ba8e5033073e5916875645a98b296a90e8ddf55ace6bf"
           }
         ],
         "completed_components": [
@@ -9953,11 +11076,48 @@
       "source": "sections/algebra-perspectives.tex",
       "claim": "Internal permutations make one-player contextual observation equality; include the congruence assertions actually stated.",
       "work_package": "H",
-      "status": "evidence_review_pending",
+      "status": "kernel_checked",
       "required": true,
       "editorial_proposal_ids": [
         "broader-congruence-classification"
-      ]
+      ],
+      "public_declarations": [
+        "KFOL.Paper.switching_observation",
+        "KFOL.Paper.congruence_classification",
+        "KFOL.Paper.symmetric_congruence_chain",
+        "KFOL.Paper.uniform_matroid_identification"
+      ],
+      "remaining_work": "None.",
+      "evidence_review": {
+        "level": "kernel_checked_complete_statement",
+        "artifacts": [
+          {
+            "source": "KFOL/Algebra/Switching.lean",
+            "declarations": [
+              {
+                "name_as_written": "full_polynomial_contextual_iff_eq",
+                "line": 15
+              }
+            ],
+            "sha256": "92c446b59a95aec8fdf9d25abb4fae2c94e276042156dbf68b6a9b33b223e867"
+          },
+          {
+            "source": "Paper.lean",
+            "declarations": [
+              {
+                "name_as_written": "switching_observation",
+                "line": 1749
+              }
+            ],
+            "sha256": "e63523d5c8929d6a0e9ba8e5033073e5916875645a98b296a90e8ddf55ace6bf"
+          }
+        ],
+        "completed_components": [
+          "Arbitrary-parameter full polynomial observation at any chosen role is exact equality",
+          "All stated ordinary/symmetric congruence and quotient/matroid claims are fully checked"
+        ],
+        "remaining_work": "None."
+      }
     },
     {
       "id": "main-prose:test-domain-counts",
@@ -9995,18 +11155,18 @@
             "declarations": [
               {
                 "name_as_written": "reduct_test_domains",
-                "line": 328
+                "line": 335
               },
               {
                 "name_as_written": "minimum_reduct_test_domain",
-                "line": 345
+                "line": 352
               },
               {
                 "name_as_written": "optimal_test_domain",
-                "line": 71
+                "line": 78
               }
             ],
-            "sha256": "97d1f7d8b404f30b3d8665e15f5abb588426c3c5429257a7844b0b9a3d68a02e"
+            "sha256": "e63523d5c8929d6a0e9ba8e5033073e5916875645a98b296a90e8ddf55ace6bf"
           }
         ],
         "axioms": [
@@ -10058,14 +11218,14 @@
             "declarations": [
               {
                 "name_as_written": "atomic_repeated_triples",
-                "line": 295
+                "line": 302
               },
               {
                 "name_as_written": "no_atomic_if_then_else",
-                "line": 313
+                "line": 320
               }
             ],
-            "sha256": "97d1f7d8b404f30b3d8665e15f5abb588426c3c5429257a7844b0b9a3d68a02e"
+            "sha256": "e63523d5c8929d6a0e9ba8e5033073e5916875645a98b296a90e8ddf55ace6bf"
           },
           {
             "source": "KFOL/Algebra/CommonSource.lean",
@@ -10118,47 +11278,47 @@
             "declarations": [
               {
                 "name_as_written": "owner_root_status",
-                "line": 1060
+                "line": 1067
               },
               {
                 "name_as_written": "owner_guard_completeness",
-                "line": 1074
+                "line": 1081
               },
               {
                 "name_as_written": "owner_one_table",
-                "line": 1112
+                "line": 1119
               },
               {
                 "name_as_written": "owner_definability",
-                "line": 1130
+                "line": 1137
               },
               {
                 "name_as_written": "owner_four_element_theory",
-                "line": 1180
+                "line": 1187
               },
               {
                 "name_as_written": "guarded_choice_example",
-                "line": 1271
+                "line": 1278
               },
               {
                 "name_as_written": "core_variable_bound_obstruction",
-                "line": 1208
+                "line": 1215
               },
               {
                 "name_as_written": "binary_framing_machines",
-                "line": 1149
+                "line": 1156
               },
               {
                 "name_as_written": "binary_descriptor_machines",
-                "line": 1239
+                "line": 1246
               }
             ],
-            "sha256": "97d1f7d8b404f30b3d8665e15f5abb588426c3c5429257a7844b0b9a3d68a02e"
+            "sha256": "e63523d5c8929d6a0e9ba8e5033073e5916875645a98b296a90e8ddf55ace6bf"
           },
           {
             "source": "KFOL/Definitions/Owner.lean",
             "declarations": [],
-            "sha256": "35ad35c080b776139ca3e9a94d6d1c8efb60b1277767fedd5dca1fabd2d5ef5c"
+            "sha256": "ee4567b2eb0e57735af9853b95b2d40a5223ad57dab28dd3289c90845c2ac432"
           },
           {
             "source": "KFOL/Definitions/CoreBasis.lean",
@@ -10190,7 +11350,7 @@
           {
             "source": "KFOL/Audit.lean",
             "declarations": [],
-            "sha256": "4f876abbb55d17e0c84b8572bdf7f6bf7082b1a19f2e0511e07f1ee584fb3cd6"
+            "sha256": "0ece917a9221e17de9ecb9009a89994b2277737d813152bd7c546c6142963ea8"
           },
           {
             "source": "KFOL/Audit/Algebra.lean",
@@ -10491,110 +11651,110 @@
             "declarations": [
               {
                 "name_as_written": "reset_table_realizability",
-                "line": 577
+                "line": 584
               },
               {
                 "name_as_written": "reset_table_recognition",
-                "line": 598
+                "line": 605
               },
               {
                 "name_as_written": "reset_table_local_completeness",
-                "line": 614
+                "line": 621
               },
               {
                 "name_as_written": "reset_table_synthesis",
-                "line": 629
+                "line": 636
               },
               {
                 "name_as_written": "reset_guard_extraction",
-                "line": 647
+                "line": 654
               },
               {
                 "name_as_written": "reset_table_size",
-                "line": 674
+                "line": 681
               },
               {
                 "name_as_written": "reset_guard_subset_machine",
-                "line": 701
+                "line": 708
               },
               {
                 "name_as_written": "reset_support_indexing",
-                "line": 732
+                "line": 739
               },
               {
                 "name_as_written": "reset_guard_record_codec",
-                "line": 768
+                "line": 775
               },
               {
                 "name_as_written": "reset_binary_guard_records",
-                "line": 792
+                "line": 799
               },
               {
                 "name_as_written": "reset_binary_input_codec",
-                "line": 822
+                "line": 829
               },
               {
                 "name_as_written": "reset_binary_extraction",
-                "line": 854
+                "line": 861
               },
               {
                 "name_as_written": "reset_binary_descriptor_codec",
-                "line": 894
+                "line": 901
               },
               {
                 "name_as_written": "reset_encoded_table_recognition",
-                "line": 933
+                "line": 940
               },
               {
                 "name_as_written": "reset_record_normalization",
-                "line": 963
+                "line": 970
               },
               {
                 "name_as_written": "reset_normalized_binary_extraction",
-                "line": 1000
+                "line": 1007
               },
               {
                 "name_as_written": "reset_binary_equation_checker",
-                "line": 1026
+                "line": 1033
               },
               {
                 "name_as_written": "owner_root_status",
-                "line": 1060
+                "line": 1067
               },
               {
                 "name_as_written": "owner_guard_completeness",
-                "line": 1074
+                "line": 1081
               },
               {
                 "name_as_written": "owner_one_table",
-                "line": 1112
+                "line": 1119
               },
               {
                 "name_as_written": "owner_definability",
-                "line": 1130
+                "line": 1137
               },
               {
                 "name_as_written": "owner_four_element_theory",
-                "line": 1180
+                "line": 1187
               },
               {
                 "name_as_written": "guarded_choice_example",
-                "line": 1271
+                "line": 1278
               },
               {
                 "name_as_written": "core_variable_bound_obstruction",
-                "line": 1208
+                "line": 1215
               },
               {
                 "name_as_written": "binary_framing_machines",
-                "line": 1149
+                "line": 1156
               },
               {
                 "name_as_written": "binary_descriptor_machines",
-                "line": 1239
+                "line": 1246
               }
             ],
-            "sha256": "97d1f7d8b404f30b3d8665e15f5abb588426c3c5429257a7844b0b9a3d68a02e"
+            "sha256": "e63523d5c8929d6a0e9ba8e5033073e5916875645a98b296a90e8ddf55ace6bf"
           },
           {
             "source": "KFOL/Definitions/Reset.lean",
@@ -10826,7 +11986,7 @@
           {
             "source": "KFOL/Audit.lean",
             "declarations": [],
-            "sha256": "4f876abbb55d17e0c84b8572bdf7f6bf7082b1a19f2e0511e07f1ee584fb3cd6"
+            "sha256": "0ece917a9221e17de9ecb9009a89994b2277737d813152bd7c546c6142963ea8"
           },
           {
             "source": "KFOL/Reset/Basic.lean",
@@ -11612,7 +12772,7 @@
           {
             "source": "KFOL/Definitions/Owner.lean",
             "declarations": [],
-            "sha256": "35ad35c080b776139ca3e9a94d6d1c8efb60b1277767fedd5dca1fabd2d5ef5c"
+            "sha256": "ee4567b2eb0e57735af9853b95b2d40a5223ad57dab28dd3289c90845c2ac432"
           },
           {
             "source": "KFOL/Definitions/CoreBasis.lean",
@@ -11744,11 +12904,94 @@
       "source": "sections/algebra-basis.tex",
       "claim": "Seven-equation basis of the choice/union fragment.",
       "work_package": "J",
-      "status": "evidence_review_pending",
+      "status": "kernel_checked",
       "required": true,
       "editorial_proposal_ids": [
         "seven-equation-basis"
-      ]
+      ],
+      "public_declarations": [
+        "KFOL.Paper.choice_union_basis"
+      ],
+      "evidence_review": {
+        "level": "kernel_checked_complete_statement",
+        "fresh_build": true,
+        "artifacts": [
+          {
+            "source": "KFOL/Definitions/Dissemilattice.lean",
+            "declarations": [],
+            "sha256": "956b8b0fa202a52f707641631ebd40d3e6744a5523fe059bd6e998b8786fc9e0"
+          },
+          {
+            "source": "KFOL/Core/ChoiceUnion.lean",
+            "declarations": [],
+            "sha256": "59e1997e847e703486924e0b74128f8b277e13081ebb8d88633badfd719236e4"
+          },
+          {
+            "source": "KFOL/Core/ChoiceUnion/Basis.lean",
+            "declarations": [],
+            "sha256": "b0919afe1763d976625d1cc449d5b8d13fa24e27b82a9a15f7a171b506e8fdcc"
+          },
+          {
+            "source": "KFOL/Core/ChoiceUnion/Cover.lean",
+            "declarations": [],
+            "sha256": "c1a28fe195180581ca0c7b8197c3aa5a188aebc596bb3ef75cef8a1906e37da3"
+          },
+          {
+            "source": "KFOL/Core/ChoiceUnion/Embedding.lean",
+            "declarations": [],
+            "sha256": "9dfc7ccad791637e2253ab523429e91b02e476575b34c876d12a7e4d735d23b8"
+          },
+          {
+            "source": "KFOL/Core/ChoiceUnion/Laws.lean",
+            "declarations": [],
+            "sha256": "e1826490974d401e1cb87dc3fce8419ef9bce562a7230dff9afc3bfb8e4fe9ce"
+          },
+          {
+            "source": "KFOL/Core/ChoiceUnion/NormalForm.lean",
+            "declarations": [],
+            "sha256": "ebb603cec7fa029db3c82602644268231d71b0e33bf51564a75c6b7db3c0bda1"
+          },
+          {
+            "source": "KFOL/Core/ChoiceUnion/Probe.lean",
+            "declarations": [],
+            "sha256": "ef1072a112bcc73fe0a58b379d74efd1de6bbdabf4fc5511877480b37224008d"
+          },
+          {
+            "source": "KFOL/Core/ChoiceUnion/ThreeCompleteness.lean",
+            "declarations": [],
+            "sha256": "7148d4d132059bbadce35167f756910cddc88b777a499d05a3d2c667b68097f5"
+          },
+          {
+            "source": "tests/ChoiceUnionBasis.lean",
+            "declarations": [],
+            "sha256": "001831503f57fc5545d7994ade9775928c6b0ebebd1f755c11dc50540c258429"
+          },
+          {
+            "source": "Paper.lean",
+            "declarations": [
+              {
+                "name_as_written": "choice_union_basis",
+                "line": 1763
+              }
+            ],
+            "sha256": "e63523d5c8929d6a0e9ba8e5033073e5916875645a98b296a90e8ddf55ace6bf"
+          }
+        ],
+        "completed_components": [
+          "All seven literal equations are sound; their actual set has exactly seven members",
+          "Arbitrary nonempty seven-law models are separated by three-valued probes and embedded in the winner-generated variety",
+          "Full equational completeness for any owner and any role type containing three distinct roles; no external generation theorem hypothesis"
+        ],
+        "remaining_work": "None.",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "definition_index": "notes/formalization-definitions.md",
+        "external_theorem_hypotheses": []
+      },
+      "remaining_work": "None."
     },
     {
       "id": "main-prose:reset-dag",
@@ -12056,17 +13299,19 @@
     "status_board": "notes/formalization-status.md",
     "shared_checkout": true,
     "worktrees": false,
-    "main_claims_complete": 11,
+    "main_claims_complete": 14,
     "next_gates": [
-      "Owner machine recognition/construction and first encoded 3SAT hardness reduction",
-      "Forty-law owner completeness and policy-family dichotomy",
-      "Unbounded grid countermodels with arbitrary-generator locality",
-      "Product Bayes beliefs and sequential-equilibrium correspondence for revealed rounds"
+      "Owner/policy runtime, generic finite-signature frontends, uniform-K verifiers and remaining reductions",
+      "Complete policy-family dichotomy and strict extension",
+      "Atomic clone/determinacy, binary classification and retained two-role claims",
+      "General finite-round protocol and Bayes/SE correspondence, scalar/full-abstraction consequences"
     ],
     "integration_notes": [
       "notes/integration/owner.md",
       "notes/integration/core-basis.md",
-      "notes/integration/complexity.md"
+      "notes/integration/complexity.md",
+      "notes/integration/congruences.md",
+      "notes/integration/choice-union.md"
     ],
     "snapshot_policy": "Current evidence is validated by scripts/check_inventory.py; immutable archived delivery milestones retain source-commit fingerprints."
   }

@@ -1,18 +1,11 @@
 module
 
-public import KFOL.Core.Exhaustion
-public import KFOL.Core.TypedCover
-public import KFOL.Core.GridData
-public import KFOL.Core.Protected
-public import KFOL.Core.Folds
-public import KFOL.Core.GridRows
-public import KFOL.Core.GridSeparation
-public import KFOL.Core.GridPrivate
-public import KFOL.Core.GridIdeal
-public import KFOL.Core.GridOrder
+public import KFOL.Core.NonfiniteBasis
 
-/-! # Uniform native obstruction and profiles for the core basis proof
+/-! # Core basis obstructions, typed covers and uniform finite countermodels
 
-The K-variable obstruction and typed upper-clone cover are complete. The
-countermodels for every variable bound require the padded-grid construction.
+The explicit native quotients prove the K-variable obstruction. Actual
+padded-grid algebras and graph-generated typed covers yield finite
+countermodels for every variable bound, and hence the full no-finite-basis
+results for both the winner core and the ambient native variety.
 -/

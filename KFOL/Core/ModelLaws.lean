@@ -80,23 +80,13 @@ theorem operation_comm
     (choiceTerm r (.var (0 : Fin 2)) (.var 1)) (choiceTerm r (.var 1) (.var 0))
     (fun v => WinnerSet.choice_comm (v 0) (v 1) r) ![x, y]
 
-private theorem choice_assoc_winner (r : Role) (x y z : WinnerSet Role) :
-    WinnerSet.choice r (WinnerSet.choice r x y) z =
-      WinnerSet.choice r x (WinnerSet.choice r y z) := by
-  classical
-  by_cases hx : x = WinnerSet.singleton r <;> by_cases hy : y = WinnerSet.singleton r <;>
-    by_cases hz : z = WinnerSet.singleton r
-  all_goals simp_all [WinnerSet.choice, WinnerSet.union_eq_singleton_iff]
-  apply Subtype.ext
-  exact Set.union_assoc _ _ _
-
 theorem operation_assoc
     (hM : Equational.InVariety (Equational.CoreSymbol Role) (WinnerSet Role) M)
     (r : Role) (x y z : M) : operation r (operation r x y) z = operation r x (operation r y z) := by
   simpa using equation_of_inVariety hM
     (choiceTerm r (choiceTerm r (.var (0 : Fin 3)) (.var 1)) (.var 2))
     (choiceTerm r (.var 0) (choiceTerm r (.var 1) (.var 2)))
-    (fun v => choice_assoc_winner r (v 0) (v 1) (v 2)) ![x, y, z]
+    (fun v => WinnerSet.choice_assoc (v 0) (v 1) r (v 2)) ![x, y, z]
 
 theorem join_idem (hM : Equational.InVariety (Equational.CoreSymbol Role) (WinnerSet Role) M)
     (three : Fin 3 ↪ Role) (x : M) : join three x x = x := by
