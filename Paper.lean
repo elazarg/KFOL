@@ -509,4 +509,47 @@ theorem reset_basis {Role : Type u} {Var : Type v} (three : Fin 3 ↪ Role)
 #guard_msgs (whitespace := lax) in
 #print axioms KFOL.Paper.reset_basis
 
+/-- `reset:thm:anti` in full. The bijection is on actual semantic term
+functions, with arbitrary unused ambient positions. Its canonical family is
+exactly the sets selected in their entirety on their own ambiguity status.
+The finite ground and unique root are recovered as part of the correspondence. -/
+theorem reset_antimatroids {Role : Type u} {Var : Type v} [DecidableEq Var]
+    (three : Fin 3 ↪ Role) :
+    ∃ e : {f : (Var → WinnerSet Role) → WinnerSet Role //
+        ∃ t : Reset.Term Var, ∀ valuation, f valuation = t.eval valuation} ≃
+      Reset.RootedAntimatroid Var,
+      ∀ t : Reset.Term Var,
+        let F := e ⟨t.eval, ⟨t, fun _ => rfl⟩⟩
+        F.ground = t.varFinset ∧ F.root = t.root ∧
+        (∀ A : Finset Var, A ∈ F.feasible ↔
+          A ⊆ t.varFinset ∧ ∀ j ∈ A, t.Selected (A : Set Var) j) ∧
+        (∀ (B : Set Var) j, F.Ready B j ↔ t.Selected B j) := by
+  refine ⟨Reset.termFunctionEquiv three, ?_⟩
+  intro t
+  dsimp only
+  rw [Reset.termFunctionEquiv_apply]
+  exact ⟨t.antimatroid_ground, t.antimatroid_root,
+    fun A => by rw [t.feasible_antimatroid]; rfl, t.ready_antimatroid⟩
+
+/-- info: 'KFOL.Paper.reset_antimatroids' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Paper.reset_antimatroids
+
+/-- `reset:eq:family-product`: the induced family operation for a reset node.
+Grounds may overlap and the same variable may occur repeatedly in both terms. -/
+theorem reset_family_product {Var : Type v} [DecidableEq Var] (s t : Reset.Term Var) :
+    (Reset.Term.step s t).feasible =
+      {D : Finset Var | D = ∅ ∨ ∃ A ∈ s.feasible, ∃ C ∈ t.feasible,
+        C.Nonempty ∧ D = A ∪ C} := by
+  change (Reset.Term.step s t).feasible = Reset.familyProduct s.feasible t.feasible
+  rw [← s.feasible_antimatroid, ← t.feasible_antimatroid,
+    ← Reset.Term.feasible_antimatroid, Reset.Term.antimatroid_step]
+  rfl
+
+/-- info: 'KFOL.Paper.reset_family_product' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Paper.reset_family_product
+
 end KFOL.Paper

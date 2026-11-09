@@ -4,6 +4,14 @@ import all KFOL.Definitions.Public
 import all KFOL.Definitions.Core
 import all KFOL.Definitions.Views
 import all KFOL.Definitions.Reset
+import all KFOL.Reset.Antimatroid.Basic
+import all KFOL.Reset.Antimatroid.Product
+import all KFOL.Reset.Antimatroid.Term
+import all KFOL.Reset.Antimatroid.Orders
+import all KFOL.Reset.Antimatroid.Paths
+import all KFOL.Reset.Antimatroid.Synthesis
+import all KFOL.Reset.Antimatroid.Equivalence
+import all KFOL.Reset.Antimatroid
 import all KFOL.Reset.Basis.Laws
 import all KFOL.Reset.Basis.Words
 import all KFOL.Reset.Basis.NormalForm

@@ -105,7 +105,7 @@ For each required inventory row, implementation review records the public declar
 | `Definitions/Core.lean` | Core/public predicates, syntactic occurrences and supports, deterministic extraction and syntax size |
 | `Definitions/Views.lean` | Player-view states, quotient relation, representatives and induced operations |
 | `Definitions/TestDomains.lean` | Full/reduct equation testing and diagonal certification predicates |
-| `Definitions/Reset.lean` | Primitive reset, generic signature, root and selection, structural guards, canonical minimal tables and their finite composition |
+| `Definitions/Reset.lean` | Primitive reset, generic signature, selection, canonical tables, independent rooted antimatroids and actual semantic term functions |
 | `Definitions/Equational.lean` | Relation-free mathlib language, finite identities, satisfaction, theories, derivation, basis, variable bound, algebra structures, full/core signatures and codecs |
 
 These are the six current algebraic definition modules. `Equational` imports
@@ -228,7 +228,7 @@ External mathematical inputs actually used by a main-paper proof need a kernel p
 | --- | --- | --- |
 | Classification of the repeat-triple polymorphism clone | Atomic clone and determinacy, then binary classification | Import a verified theorem after checking its exact finite-domain hypotheses, or formalize the needed finite combinatorial classification locally |
 | Freese et al. order-algebra results | Reset basis completeness and minimum generators | The reset six-law special case is now proved by arbitrary-algebra path normalization and suffix absorption; the required minimum-generator special cases remain separate |
-| Antimatroid/dependency representation | Exact representation, realizability, recognition, substitution and stated counts | Formalize finite set systems and both constructions/inverses; prove both directions and the compact-table algorithms rather than adding a name for the citation |
+| Antimatroid/dependency representation | Main representation and compact table algorithms; report-only counts stay optional | The rooted representation and inverse laws are now proved directly from finite feasible-set axioms. Compact recognition/synthesis and their bounds remain separate |
 | Dissemilattice generation | Seven-equation fragment claimed in the main paper | Formalize the precise generation theorem or replace its use by an explicit separating representation proof |
 | Kleene presentation | Two-role finite basis cited in the main discussion | Verify/import the exact theorem, or give a direct normal-form/term proof for the needed case |
 | Mixed Nash existence, finite SE existence and zero-sum value uniqueness | Required round semantics | Reuse the inspected GameTheory Nash, SE existence and minimax interfaces; prove the KFOL finiteness, recall, nonempty-menu, integrability and payoff-shift premises |
@@ -445,10 +445,32 @@ carriers for theory satisfaction, check actual variable counts and a nontrivial
 nested consequence, and prove associativity is not derivable. The main basis
 row is complete; the runtime clause of canonical tables stays partial.
 
-Next formalize the antimatroid representation and its table recognition/synthesis
-bridge, using canonical tables and path normalization. The guarded-choice prose
-example and the separate complexity and strategic milestones retain their own
-obligations.
+### Antimatroid representation completed
+
+`KFOL.Paper.reset_antimatroids` states a bijection on actual semantic term
+functions and finite antimatroids with exactly one feasible singleton. Its
+natural image formula includes actual variable support, the root, all feasible
+sets and the readiness/selector correspondence. `reset_family_product` states
+the exact family operation, allowing overlapping supports and repeated labels.
+The independently axiomatized family and semantic term-function subtype are in
+`Definitions/Reset.lean`, keeping the definition surface in six files.
+
+The proof constructs the family of each term, derives readiness and family
+recovery, and proves that every independently specified family has a representing
+term. Accessible orders are reversed into paths and joined with a common root.
+Equality of families is exactly selector equality; the chain separator then
+identifies actual semantic functions and proves both inverse laws. No external
+antimatroid representation theorem or finite certificate is a hypothesis.
+
+The existence proof can enumerate all feasible sets. It closes the complete
+main antimatroid theorem while leaving compact table recognition/synthesis and
+polynomial bounds in their own obligations. Tests cover independent axioms,
+overlapping grounds, two different path families, padded inputs, and empty
+ambient types. Clean Lean checks and the full audit cover every new helper.
+
+Next prove the compact table realizability criterion, its constructive synthesis
+and size bound. The guarded-choice prose example, remaining machine bounds,
+forty-law completeness and strategic milestones retain their own obligations.
 
 | Milestone | Prerequisites | Concrete completion gate |
 | --- | --- | --- |

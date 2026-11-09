@@ -106,3 +106,10 @@ The [plan's mathlib-only pair-countervaluation delivery milestone](formalization
 These gates test the actual reuse seams. Once they pass, the remaining effort can be estimated from the paper-specific proof obligations, rather than from rebuilding foundations already available in the user's libraries.
 
 The [plan's editorial proposals](formalization-plan.md) distinguish this current target from possible manuscript changes. Moving the serial-SE correspondence or a discussion-level report claim out of the main text would change the required dependency graph; no such edit is assumed by this library assessment.
+
+The main antimatroid representation is now proved in `KFOL/Reset/Antimatroid`
+using mathlib finite sets and lists. The model uses the finite feasible-family
+axioms directly, proves both constructions and inverse laws, and identifies
+actual winner-set term functions through the existing selector/chain interface.
+It imports no external representation theorem. Compact table recognition and
+synthesis remain the next part of that branch.

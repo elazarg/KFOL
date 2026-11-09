@@ -1,5 +1,6 @@
 module
 
+public import KFOL.Reset.Antimatroid
 public import KFOL.Reset.Basis
 public import KFOL.Reset.Chain
 public import KFOL.Reset.Substitution

@@ -349,6 +349,11 @@ uses mathlib terms directly, with no new syntax datatype or evaluator recursion.
 | `Reset.Laws op` | R1--R6 imposed independently on an arbitrary binary operation; no validity or derivability in the definition |
 | `Reset.operation M` | Extract the binary operation from an arbitrary mathlib structure of the one-symbol signature |
 | `Reset.basisAxiom`, `basis` | Six actual finite-arity identities and their range as a theory; these are syntax, not opaque predicates |
+| `Reset.RootedAntimatroid Var` | A finite ground, feasible subsets, union closure, accessibility, and exactly one feasible singleton, with its unique element recorded |
+| `RootedAntimatroid.Ready` | A feasible witness containing j and contained in B together with j; independent of the selector and term evaluation |
+| `Reset.familyProduct` | Empty set together with unions of a left feasible set and a nonempty right feasible set |
+| `Reset.TermFunction` | Actual functions on winner-set valuations that are represented by a reset term |
+| `Reset.Term.feasible` | Subsets of the term's actual variable support all of whose positions are selected on their own ambiguity status |
 
 `Reset/Selection.lean` proves every clause of `reset:lem:selection`, including
 monotonicity and independence of j's own ambiguity when selecting j.
@@ -409,3 +414,42 @@ chain separator and generic equational completeness theorem to obtain actual
 derivations, the independent `IsBasis` predicate and `HasFiniteBasis`.
 Freese et al. (2002), introduction and Section 3, supply the proof reference;
 the published theorem is not a hypothesis or a new Lean axiom.
+
+## Antimatroid representation
+
+`KFOL.Paper.reset_antimatroids` supplies an actual equivalence between semantic
+term functions and finite rooted antimatroids. Its type repeats the subtype of
+term functions and characterizes the image of every term by its ground, root,
+feasible sets and readiness. `KFOL.Paper.reset_family_product` repeats the
+feasible-family operation, allowing overlapping grounds and repeated labels.
+The algebraic definition surface still occupies the same six definition files.
+
+`RootedAntimatroid` uses the standard finite feasible-set axioms directly:
+empty and full ground feasible, every feasible set inside the ground, binary
+union closure, and removal of one element from every nonempty feasible set.
+The recorded root is a feasible singleton and every feasible singleton equals
+it. These axioms imply that the ground is nonempty, that every nonempty feasible
+set contains the root, and that the family determines both ground and root.
+Thus the record adds no arbitrary padding or extra choices to the represented
+mathematical family. The ambient variable type can be infinite or empty.
+
+`Reset/Antimatroid/Basic.lean` proves finite-union and accessibility lemmas and
+recovers the family from readiness. `Product.lean` proves closure under the
+independent family product and its readiness recursion. `Term.lean` interprets
+reset syntax by that product and proves that readiness is exactly the existing
+selector, with the stated actual-support feasible-set formula.
+
+`Orders.lean` builds accessible orders using finite-cardinality induction.
+`Paths.lean` reverses such orders into genuine left-associated reset paths and
+proves that all their contributions are permitted by the family. `Synthesis.lean`
+joins these paths to realize every rooted antimatroid, without a realizability
+certificate supplied by the caller. This existence construction may enumerate
+all feasible sets; compact polynomial table synthesis remains a separate task.
+
+`Equivalence.lean` proves equality of these families iff equality of selectors,
+and, with three distinct roles, iff equality of actual winner-set functions.
+This makes choice of a representing term immaterial and proves both inverse
+laws of the equivalence. Mathlib finite sets, powersets, list prefixes and
+reversals supply the underlying APIs; no further library or category structure
+is required. Tests include an independently specified family, overlapping
+supports, distinct path orders, unused positions and both empty-domain types.

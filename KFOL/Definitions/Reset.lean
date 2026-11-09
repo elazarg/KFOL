@@ -121,5 +121,39 @@ def basisAxiom (i : Fin 6) : Equational.Identity Symbol :=
 /-- Exactly the displayed family of six equations, independent of its consequences. -/
 def basis : Equational.Theory Symbol := Set.range basisAxiom
 
+/-- A finite antimatroid with exactly one feasible singleton. The ground is
+explicit, so unused ambient variables are not silently added to the support. -/
+structure RootedAntimatroid (Var : Type v) [DecidableEq Var] where
+  ground : Finset Var
+  feasible : Set (Finset Var)
+  root : Var
+  empty_mem : ∅ ∈ feasible
+  ground_mem : ground ∈ feasible
+  subset_ground : ∀ A ∈ feasible, A ⊆ ground
+  union_mem : ∀ A ∈ feasible, ∀ B ∈ feasible, A ∪ B ∈ feasible
+  accessible : ∀ A ∈ feasible, A.Nonempty → ∃ a ∈ A, A.erase a ∈ feasible
+  root_mem : {root} ∈ feasible
+  singleton_unique : ∀ a, {a} ∈ feasible → a = root
+
+/-- Readiness uses only feasible sets: j can be reached using positions in B
+and possibly j itself. It is independent of terms and their selectors. -/
+def RootedAntimatroid.Ready {Var : Type v} [DecidableEq Var]
+    (F : RootedAntimatroid Var) (B : Set Var) (j : Var) : Prop :=
+  ∃ A ∈ F.feasible, j ∈ A ∧ (A : Set Var) ⊆ insert j B
+
+/-- The feasible-family operation corresponding to one reset node. -/
+def familyProduct {Var : Type v} [DecidableEq Var]
+    (F G : Set (Finset Var)) : Set (Finset Var) :=
+  {D | D = ∅ ∨ ∃ A ∈ F, ∃ C ∈ G, C.Nonempty ∧ D = A ∪ C}
+
+/-- Actual semantic term functions, independently of antimatroids or tables. -/
+abbrev TermFunction (Role : Type u) (Var : Type v) :=
+  {f : (Var → WinnerSet Role) → WinnerSet Role //
+    ∃ t : Term Var, ∀ valuation, f valuation = t.eval valuation}
+
+/-- The paper's feasible sets on the actual syntactic support of a term. -/
+def Term.feasible {Var : Type v} [DecidableEq Var] (t : Term Var) : Set (Finset Var) :=
+  {A | A ⊆ t.varFinset ∧ ∀ j ∈ A, t.Selected (A : Set Var) j}
+
 end Reset
 end KFOL
