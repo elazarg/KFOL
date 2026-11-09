@@ -1,9 +1,8 @@
 # Canonical observed mixed-SPE round recursion
 
-The actual canonical runner's root/child winner-law decomposition is complete.
-The equilibrium recursion is still in progress. In particular, the compiled
-production slice through `Observed/RootLaw.lean` does not by itself establish
-`observedValues_round` or the sequential/observed equivalence.
+The complete canonical observed mixed-SPE leaf/round recursion and existence
+are now proved and compiled in production. The sequential/observed equivalence
+is a separate root-owned bridge; it is not claimed by this package alone.
 
 ## Independent semantic boundary
 
@@ -15,7 +14,7 @@ canonical independent mixed Nash winner laws. Its utility is the indicator
 order respected. Neither this operator nor the independently defined
 `observedValues` contains a recursive equilibrium predicate.
 
-## Compiled production through the run-law milestone
+## Canonical run-law foundation
 
 - `Observed/Policies.lean`: actual root Choice equivalence to Fin menu indices;
   identity-on-option child Choice equivalences; a genuine playerwise
@@ -37,23 +36,57 @@ order respected. Neither this operator nor the independently defined
   winner law at fuel `n+1` equals the independent product of actual root menu
   marginals, bound to the actual child canonical winner laws at fuel `n`.
 
-The production live build through RootLaw passes3190 jobs. Strict
+The production live build through RootLaw passes 3190 jobs. Strict
 `tests/ObservedRun.lean` repeats the complete root-law statement and checks
 repeated equal-child policy carriers and a one-round deterministic leaf law.
 Temporary `/tmp/kfol-observed-audit.lean` imports all authored declarations of
 these modules plus the shared independent round definitions, including private
-helpers, and checks standard-three axioms: all160 declarations pass.
+helpers, and checks standard-three axioms: all 160 declarations pass.
 
-## Equilibrium continuation
+## Complete equilibrium recursion
 
-Staged, compiled proof slices additionally establish canonical Nash/SPE iff
-actual winner-coordinate inequalities (bounded indicator integrability is
-proved), whole-profile update transport, SPE in every off-path child by lifting
-one-child whole-policy deviations, root-stage Nash by root-only deviations,
-and the observed-value inclusion in the round operator. A concrete canonical
-leaf SPE establishes the leaf equation. These remain staged during the root
-checkpoint freeze; they must not be counted as a completed two-sided round
-recursion. The reverse direction will combine child optimality, monotonicity of
-PMF mixtures and local stage Nash to bound every whole-policy deviation.
+- `Profiles.lean` proves whole-profile root/child construction and preservation
+  of unilateral policy replacement through both projections.
+- `Optimality.lean` proves canonical Nash and observed SPE are exactly the
+  inequalities of actual winner-PMF coordinates, including all indicator
+  integrability proofs. Every actual public history is a proper subgame.
+- `Children.lean` lifts a deviation in one child occurrence to a whole parent
+  policy, deriving canonical SPE in every child, including zero-reach children.
+- `StageNecessity.lean` lifts arbitrary root-law replacements with all child
+  policies fixed, deriving canonical mixed Nash of the actual finite stage
+  and the forward observed-value inclusion.
+- `Bounds.lean` proves certified-fuel independence of actual canonical laws
+  and monotonicity of a winner coordinate under arbitrary PMF mixtures.
+- `Sufficiency.lean` proves the reverse whole-policy implication. An arbitrary
+  deviation is no better in each actual child by child SPE, hence no better
+  in its mixture by PMF monotonicity, and no better at the root by stage Nash.
+  Future public histories are handled through actual child transport.
+- `Leaf.lean` constructs a concrete canonical terminal profile and proves
+  `observedValues_leaf = {PMF.pure r}`, including the valid zero-fuel witness.
+- `Recursion.lean` proves the complete set equality `observedValues_round`
+  and the fully expanded selected-continuation `observedValues_round_iff`.
+  Arbitrary child certificates are normalized to the parent's certified
+  `bound-1` before assembling its actual canonical policies.
+- `Existence.lean` proves every actual finite stochastic stage has canonical
+  mixed Nash (reusing the library theorem with indicator integrability proved),
+  then proves `observedValues_nonempty` by induction through the exact recursion.
 
-Root owns the separate serial product-Bayes/sequential-equilibrium bridge.
+The public umbrella is `KFOL/Rounds/Observed.lean`. All statements require at
+most `[Fintype Role] [DecidableEq Role]`; there is no K≥3 assumption. The exact
+recursion quantifies over every actual joint Fin-menu tuple, with an actual
+canonical child SPE witness for each, even when syntax repeats or its root
+probability is zero. No recursive equilibrium predicate, outside-result
+hypothesis, certificate assumption or separate unconnected value evaluator
+is introduced.
+
+Live build through Existence: 3820 jobs, success. Strict
+`tests/ObservedRecursion.lean` repeats the complete leaf/round proposition,
+checks the one-player value set and nonempty values with repeated equal-child
+syntax, and prints standard-three axiom dependencies. The expanded temporary
+`/tmp/kfol-observed-audit.lean` imports every authored source with `import all`
+and checks all 200 declarations' transitive axioms: standard-three-only audit
+passes.
+
+Root owns the serial product-Bayes/sequential-equilibrium equivalence. The
+separate SerialRun workstream supplies actual finite-prefix and product-belief
+terminal-deviation run bridges for that argument.

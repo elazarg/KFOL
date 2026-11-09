@@ -319,3 +319,23 @@ theorem equation_size (formula : CNF) :
   omega
 
 end KFOL.Reductions.GuardedPair
+
+namespace KFOL.Reductions.GuardedPair
+
+universe u
+
+/-- The report's observational implication lower bound uses the same actual
+third-role marker as observational equivalence and full equation hardness. -/
+theorem third_role_observation_implication_valid_iff_unsatisfiable {Role : Type u}
+    (a b d : Role) (hab : a ≠ b) (had : a ≠ d) (hbd : b ≠ d) (formula : CNF) :
+    (∀ v : ℕ → WinnerSet Role,
+      d ∈ ((equation formula).1.eval a b v).val → d ∈ ((equation formula).2.eval a b v).val) ↔
+      ¬Satisfiable formula := by
+  constructor
+  · intro hv ⟨assignment, ha⟩
+    obtain ⟨hl, hr⟩ := satisfying_assignment_separates a b d hab had hbd formula assignment ha
+    exact hr (hv _ hl)
+  · intro hu v hl
+    exact valid_of_unsatisfiable a b hab formula hu v ▸ hl
+
+end KFOL.Reductions.GuardedPair

@@ -544,3 +544,29 @@ def clauseBound (plan : Plan Role Label) : ℕ → ℕ
       max plan.zero.overhead plan.one.overhead
 
 end KFOL.Policies.Hardness.Plan
+
+namespace KFOL.Policies.Term
+
+universe u v w
+
+/-- Explicit owned-choice expansion with no added variables. This translation
+is a proof device; native decision procedures never run it. -/
+noncomputable def toPublic {Role : Type u} {Label : Type w} {Var : Type v}
+    (three : Fin 3 ↪ Role) (roles : List Role) (D : Label → Finset Role) :
+    Term Label Var → KFOL.Term Role Var
+  | .var j => .var j
+  | .func .reset args =>
+    let s := toPublic three roles D (args 0)
+    let t := toPublic three roles D (args 1)
+    roles.foldr (fun r acc => .choice r acc t)
+      (.choice (three 2) (.choice (three 0) s t) (.choice (three 1) s t))
+  | .func (.selective d) args =>
+    let x := toPublic three roles D (args 0)
+    let y := toPublic three roles D (args 1)
+    let z := toPublic three roles D (args 2)
+    let selected := (D d).toList.foldr (fun r acc => .choice r acc y)
+      (.choice (three 2) (.choice (three 0) y z) (.choice (three 1) y z))
+    roles.foldr (fun r acc => .choice r acc x)
+      (.choice (three 2) (.choice (three 0) selected x) (.choice (three 1) selected x))
+
+end KFOL.Policies.Term

@@ -4,6 +4,7 @@ public import KFOL.Policies.Strict
 public import KFOL.Policies.Recognition
 public import KFOL.Policies.Families
 public import KFOL.Policies.Sizes
+public import KFOL.Policies.PublicCompilation
 
 /-! Selective reset: exact labelled semantics, the complete single-policy
 checker, policy lattice operations, strict two-owner extension, and the

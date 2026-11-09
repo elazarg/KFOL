@@ -226,3 +226,187 @@ noncomputable def satisfyingValuation {Role : Type u} (a b d : Role) (assignment
   | i + 2 => WinnerSet.singleton (if assignment i then a else b)
 
 end KFOL.Reductions.GuardedPair
+
+/-! ## Original native hard raw binary pairs -/
+
+namespace KFOL.Reductions.RawPair
+
+universe u v
+
+variable {Role : Type u} {Var : Type v}
+
+noncomputable def choiceFold (a : Role) (xs : List (WinnerSet Role)) (base : WinnerSet Role) : WinnerSet Role :=
+  xs.foldr (WinnerSet.choice a) base
+
+noncomputable def unions (xs : List (WinnerSet Role)) (base : WinnerSet Role) : WinnerSet Role :=
+  xs.foldr WinnerSet.union base
+
+end KFOL.Reductions.RawPair
+
+namespace KFOL.RawPair
+
+universe u v
+
+variable {Role : Type u} {Var : Type v}
+
+inductive Symbol : ℕ → Type where
+  | binary : Bool → Symbol 2
+
+abbrev Term (Var : Type v) := Equational.Term Symbol Var
+
+@[instance_reducible] noncomputable def structureOf {Role : Type u}
+    (first second : WinnerSet Role → WinnerSet Role → WinnerSet Role) :
+    (Equational.language Symbol).Structure (WinnerSet Role) where
+  funMap symbol args := match symbol with
+    | .binary sign => (if sign then first else second) (args 0) (args 1)
+  RelMap rel := nomatch rel
+
+namespace Term
+
+variable {Var : Type v} {Role : Type u}
+
+def node (sign : Bool) (s t : Term Var) : Term Var :=
+  .func (.binary sign) (fun i => if i = 0 then s else t)
+
+noncomputable def eval (first second : WinnerSet Role → WinnerSet Role → WinnerSet Role)
+    (t : Term Var) (v : Var → WinnerSet Role) : WinnerSet Role :=
+  let _ := structureOf first second
+  t.realize v
+
+def size : Term Var → ℕ
+  | .var _ => 1
+  | .func (.binary _) args => 1 + size (args 0) + size (args 1)
+
+def fold (sign : Bool) (terms : List (Term Var)) (base : Term Var) : Term Var :=
+  terms.foldr (node sign) base
+
+end Term
+end KFOL.RawPair
+
+namespace KFOL.Reductions.RawPair
+
+universe u v
+
+variable {Role : Type u} {Var : Type v}
+
+noncomputable def outerOp {Role : Type u} : Option Role → WinnerSet Role → WinnerSet Role → WinnerSet Role
+  | none => WinnerSet.union
+  | some b => WinnerSet.choice b
+
+def literalTerm (literal : Literal) : KFOL.RawPair.Term ℕ := .var (ResetUnion.literalName literal)
+
+def rails (formula : CNF) : List (KFOL.RawPair.Term ℕ) :=
+  (ResetUnion.support formula).flatMap (fun i => [literalTerm (i, true), literalTerm (i, false)])
+
+def baseline (formula : CNF) : KFOL.RawPair.Term ℕ :=
+  KFOL.RawPair.Term.fold false (rails formula) (literalTerm (0, true))
+
+def branch (i : ℕ) : KFOL.RawPair.Term ℕ :=
+  KFOL.RawPair.Term.node true (.var 0)
+    (KFOL.RawPair.Term.node true (literalTerm (i, true)) (literalTerm (i, false)))
+
+def right (formula : CNF) : KFOL.RawPair.Term ℕ :=
+  KFOL.RawPair.Term.fold false ((ResetUnion.support formula).map branch) (baseline formula)
+
+def clause : Clause → KFOL.RawPair.Term ℕ
+  | [] => .var 0
+  | literal :: rest => KFOL.RawPair.Term.fold false (rest.map literalTerm) (literalTerm literal)
+
+def left (formula : CNF) : KFOL.RawPair.Term ℕ :=
+  KFOL.RawPair.Term.fold true (formula.map clause) (.var 0)
+
+def coreEquation (formula : CNF) : KFOL.RawPair.Term ℕ × KFOL.RawPair.Term ℕ :=
+  (KFOL.RawPair.Term.node false (left formula) (right formula), right formula)
+
+/-- The exceptional empty cases are part of the actual reduction program. -/
+def equation (formula : CNF) : KFOL.RawPair.Term ℕ × KFOL.RawPair.Term ℕ :=
+  if formula.any List.isEmpty then (.var 0, .var 0)
+  else coreEquation formula
+
+end KFOL.Reductions.RawPair
+
+namespace KFOL.Reductions.RawPair
+
+universe u v
+
+variable {Role : Type u} {Var : Type v}
+
+noncomputable def satisfyingValuation {Role : Type u} (a marker c : Role) (assignment : ℕ → Bool) :
+    ℕ → WinnerSet Role :=
+  Function.extend ResetUnion.literalName
+    (fun literal => WinnerSet.singleton (if assignment literal.1 = literal.2 then c else a))
+    (fun _ => WinnerSet.singleton marker)
+
+end KFOL.Reductions.RawPair
+
+namespace KFOL.Reductions.RawPair
+
+universe u v
+
+variable {Role : Type u} {Var : Type v}
+
+/-- The empty conjunction maps to a fixed invalid equation for two owners. -/
+def twoOwnerEquation (formula : CNF) : KFOL.RawPair.Term ℕ × KFOL.RawPair.Term ℕ :=
+  if formula.isEmpty then (.var 0, .var 1) else equation formula
+
+end KFOL.Reductions.RawPair
+
+namespace KFOL.Reductions.ResetChoice
+
+universe u v
+
+variable {Role : Type u} {Var : Type v}
+
+/-- No macro expansion: every source binary node remains one target node. -/
+def translate {Var : Type v} : KFOL.ResetUnion.Term Var → KFOL.RawPair.Term Var
+  | .var j => .var j
+  | .func .reset args => KFOL.RawPair.Term.node true (translate (args 0)) (translate (args 1))
+  | .func .union args => KFOL.RawPair.Term.node false (translate (args 0)) (translate (args 1))
+
+/-- Empty clauses map to a fixed valid native equation; the empty conjunction
+is already invalid under the core construction's explicit SAT valuation. -/
+def equation (formula : CNF) : KFOL.RawPair.Term ℕ × KFOL.RawPair.Term ℕ :=
+  if formula.any List.isEmpty then (.var 0, .var 0)
+  else (translate (ResetUnion.equation formula).1, translate (ResetUnion.equation formula).2)
+
+end KFOL.Reductions.ResetChoice
+
+
+namespace KFOL.Reductions.Colouring
+
+universe u v
+
+/-- Exactly n ordinary vertex variables, disjoint from root0 and marker1. -/
+def vertexName (n : ℕ) (i : Fin n) : Fin (n + 2) := ⟨i.val + 2, by omega⟩
+
+def edges (n : ℕ) : List (Fin n × Fin n) :=
+  (List.finRange n).flatMap (fun i => ((List.finRange n).filter (fun j => i.val < j.val)).map (i, ·))
+
+def baseline (n : ℕ) : KFOL.ResetUnion.Term (Fin (n + 2)) :=
+  KFOL.ResetUnion.Term.rightComb ((List.finRange n).map (fun i => .var (vertexName n i))) (.var 0)
+
+def right (n : ℕ) : KFOL.ResetUnion.Term (Fin (n + 2)) :=
+  KFOL.ResetUnion.Term.rightComb ((List.finRange n).map
+    (fun i => KFOL.ResetUnion.Term.reset (.var 1) (.var (vertexName n i)))) (baseline n)
+
+def left (n : ℕ) : KFOL.ResetUnion.Term (Fin (n + 2)) :=
+  KFOL.ResetUnion.Term.leftComb (.var 1) ((edges n).map
+    (fun edge => KFOL.ResetUnion.Term.union (.var (vertexName n edge.1)) (.var (vertexName n edge.2))))
+
+def equation (n : ℕ) : Equational.Identity KFOL.ResetUnion.Symbol :=
+  ⟨n + 2, KFOL.ResetUnion.Term.reset (left n) (right n), right n⟩
+
+/-- All n vertex inputs are distinct atoms; the marker is the one unused
+role. The root pair uses only the first two vertex roles. -/
+noncomputable def successorValuation (n : ℕ) (hn : 2 ≤ n) :
+    Fin (n + 2) → WinnerSet (Fin (n + 1)) :=
+  Function.extend (vertexName n) (fun i => WinnerSet.singleton i.castSucc)
+    (fun j => if j = 0 then
+      (WinnerSet.singleton ⟨0, by omega⟩).union (WinnerSet.singleton ⟨1, by omega⟩)
+      else WinnerSet.singleton (Fin.last n))
+
+/-- Inclusion of roles sends a winner set to its nonempty image. -/
+def embedWinnerSet {Role : Type u} {Role' : Type v} (f : Role ↪ Role')
+    (A : WinnerSet Role) : WinnerSet Role' := ⟨f '' A.val, A.property.image f⟩
+
+end KFOL.Reductions.Colouring

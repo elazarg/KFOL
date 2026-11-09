@@ -227,3 +227,52 @@ separate actual Bool checker with correctness already proved.
 (missing meet and injective calibrated meet), instantiates their full native
 CNF reductions, and checks disjoint sparse naming. The final reduction,
 calibration and output-size theorems have standard-three axiom guards.
+
+## Uniform pair-countercertificate existence: complete pure bridge
+
+`KFOL.Policies.PublicCompilation` connects every native policy term to the
+actual existing full public algebra. `Term.toPublic three roles D` is a
+proof-level expansion using only original variable leaves and owned-choice
+nodes; `isCore_toPublic` proves it contains no winner constants or role
+switches. The definition is centralized in Definitions/Policies (now572
+lines), rather than adding another independent semantic surface.
+
+The selected value is the finite owned-choice suppression over r∈D of
+Y∪Z with guard Y. If Y is a D atom the existing atomic suppression theorem
+returns that atom. Otherwise Y remains contained in the union and is none
+of the listed absorbing atoms, so every suppression step keeps Y∪Z. Outer
+reset uses the existing finite core reset construction. `eval_toPublic`
+proves exact agreement on every original valuation, with explicit complete
+role dictionary; no family classification hypothesis or label finiteness is
+needed.
+
+The exact verifier-facing corollary is:
+
+```lean
+{Role : Type u} {Label : Type w} {Var : Type v} [Finite Role]
+(D : Label → Finset Role) (three : Fin 3 ↪ Role)
+(s t : Policies.Term Label Var)
+(failure : ∃ v : Var → WinnerSet Role,
+  s.eval (fun d => (D d : Set Role)) v ≠ t.eval (fun d => (D d : Set Role)) v) :
+∃ v : Var → WinnerSet Role,
+  (s.eval (fun d => (D d : Set Role)) v ≠ t.eval (fun d => (D d : Set Role)) v) ∧
+  ∀ i, ∃ a b, v i = (WinnerSet.singleton a).union (WinnerSet.singleton b)
+```
+
+Proof: `Policies.Term.exists_pair_countervaluation`. The companion
+`exists_pair_val_countervaluation` exposes the existing full-language
+Set-valued property `(v i).val = {a,b}`. Both transfer the already-proved
+full-language pair theorem through the actual public compiler. Original
+native syntax is retained in the conclusion. Var and Label may be infinite;
+all variables, not merely a chosen support, receive pair-valued inputs.
+The compiler can expand exponentially and is never run by the native
+verifier. Its only purpose is the semantic existence proof; runtime remains
+on the original tree and original dictionary.
+
+Validation: Public build passed1213 jobs. Regression
+`tests/PoliciesPublicCompilation.lean` passed warnings-as-errors, checks
+infinite Nat label/variable types, exact sparse variable1000000000
+preservation and all-variable native countercertificate API, with only
+standard-three axioms for compiler semantics, core syntax and pair theorem.
+This closes the pure existence obligation requested by the generic uniform
+policy verifier. The complexity worker has the exact production API.

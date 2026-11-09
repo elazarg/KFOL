@@ -2,6 +2,8 @@ module
 
 import all KFOL.Algebra
 import all KFOL.Definitions.Reductions
+import all KFOL.Reductions.RawPairs
+import all KFOL.Reductions.Colouring
 import all KFOL.Algorithms.GuardWords
 import all KFOL.Algorithms.SupportIndex
 import all KFOL.Algorithms.ResetEquation

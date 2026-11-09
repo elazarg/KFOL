@@ -1141,4 +1141,35 @@ product beliefs in every consistent assessment, including zero-reach limits.
 `Consistency` constructs consistent beliefs for every supplied strategy via
 uniform trembles and imported assessment compactness. `TerminalErasure` proves
 exact terminal source/serial law equality at every public boundary and profile.
-The sequential-rationality correspondence remains a separate required proof.
+`SerialRun` identifies actual finite prefix and terminal continuation laws under arbitrary whole-policy replacements. `Correspondence` proves canonical sequential rationality exactly equivalent to public whole-policy SPE, then equality of the independently defined SE/SPE value sets and the complete all-tuples round recursion. No reachability-of-equilibrium-play hypothesis is used.
+
+
+## Native raw reductions and role-count identities
+
+The existing `Definitions/Reductions` now also contains the two-binary-operation
+raw syntax interpretation, actual CNF gates for all three hard raw pairs,
+and the reset/union complete-graph identities. Names remain ordinary sparse
+natural variables; there are no implicit certificate valuations. Actual native
+tree sizes are charged after expansion. `Colouring.embedWinnerSet` is the
+nonempty image along an injective role map, proved to preserve union/reset;
+its native equation uses exactly root, marker and graph-vertex inputs.
+The smaller-carrier validity and explicit next-carrier separation prove strict
+inclusion of complete independently defined identity theories.
+
+The round definition module also adds binary-menu sizes, literal public choice
+and diagonal game constructors, reciprocal game trees, the threshold trees and
+possible winners (`∃ p ∈ E, p i ≠ 0`). These are syntactic/probability definitions
+without equilibrium assumptions. The scalar game proofs remain separate.
+
+
+The shared fixed-finite-value numbering, lookup and witness construction is
+now consolidated in `Complexity/FiniteValueWitness`, with the original binary
+verifier namespace/API preserved. `FiniteSignatureVerifier` extends the same
+charged native traversal to arbitrary finite arities and independent finite
+interpretations/binary relations. `GuardedPairCompleteness` instantiates it for
+native H-only equations and exact third-role observation. These are fixed-role
+certificates; finite enumeration is not asserted uniform in K. Policy syntax's
+`toPublic` proof interpretation uses the actual complete role dictionary and
+finite selective folds, proves evaluation commutes and preserves core syntax,
+then transfers the full pair-countervaluation theorem. That possibly large
+proof translation is not executed by the policy verifier.

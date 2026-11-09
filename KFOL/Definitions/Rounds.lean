@@ -213,6 +213,40 @@ noncomputable def roundOperator [Fintype Role] [DecidableEq Role] (sizes : Role 
         (GameTheory.euPreference (fun winner i => winnerPayoff id i winner)) μ ∧
       value = (stageForm sizes p).mixed.play μ}
 
+
+/-- Exactly two designated roles have Boolean menus; all others have a
+singleton menu. Distinctness of the designated roles is a theorem hypothesis. -/
+def binarySizes [DecidableEq Role] (a b : Role) (i : Role) : ℕ :=
+  if i = a ∨ i = b then 1 else 0
+
+/-- The actual two-bit diagonal round: matching zeros selects `left`, matching
+ones selects `right`, and either mismatch is won by the column role. -/
+def diagonal [DecidableEq Role] (a b : Role) (left right : Game Role) : Game Role :=
+  .round (binarySizes a b) fun actions =>
+    if (actions a).val = 0 then
+      if (actions b).val = 0 then left else .leaf b
+    else if (actions b).val = 0 then .leaf b else right
+
+/-- A public binary choice is a round with exactly one nontrivial menu. -/
+def publicChoice [DecidableEq Role] (owner : Role) (left right : Game Role) : Game Role :=
+  .round (fun i => if i = owner then 1 else 0) fun actions =>
+    if (actions owner).val = 0 then left else right
+
+/-- The linear-size reciprocal family: `L₀ = leaf a` and
+`Lₙ₊₁ = D(Lₙ, leaf a)`. -/
+def reciprocal [DecidableEq Role] (a b : Role) : ℕ → Game Role
+  | 0 => .leaf a
+  | n + 1 => diagonal a b (reciprocal a b n) (.leaf a)
+
+/-- The paper's threshold context applied to its reciprocal input:
+`Fₘ[Gₙ]`, with `Gₙ = Lₙ₊₁` for roles `a,b` and rival roles `a,c`. -/
+def threshold [DecidableEq Role] (a b c : Role) (n m : ℕ) : Game Role :=
+  publicChoice a (reciprocal a b (n + 1)) (reciprocal a c (m + 1))
+
+/-- Roles with positive mass in at least one actual winner distribution. -/
+def possibleWinners (values : Set (PMF Role)) : Set Role :=
+  {who | ∃ law ∈ values, law who ≠ 0}
+
 end Game
 
 end KFOL.Rounds

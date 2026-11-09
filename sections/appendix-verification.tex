@@ -65,7 +65,7 @@ subtree independently of backward induction. Its canonical GameTheory Nash
 bridge, equilibrium existence, owned-choice recurrence, forcing and full public
 term compiler are checked, including internal role switches and independently
 solved repeated components. \path{KFOL/Rounds/Disclosure} checks the accepted
-Boolean commitment serializer and exact hiding/publication information gates. The general finite-menu tree now has finite actual source/serial histories, certified bounds, full public recall, serial decision recall and canonical sequential-equilibrium existence. Every public prefix is reachable, and actual serial decision fibers contain exactly the earlier current commitments. Canonical reach factorization, Bayes normalization and unique product beliefs at every public history, including zero-reach limits, are checked. Every strategy admits consistent assessments; terminal continuation laws erase exactly. Full sequential-rationality correspondence and round recursion remain separate.
+Boolean commitment serializer and exact hiding/publication information gates. The general finite-menu tree now has finite actual source/serial histories, certified bounds, full public recall, serial decision recall and canonical sequential-equilibrium existence. Every public prefix is reachable, and actual serial decision fibers contain exactly the earlier current commitments. Canonical reach factorization, Bayes normalization and unique product beliefs at every public history, including zero-reach limits, are checked. Every strategy admits consistent assessments; terminal continuation laws erase exactly. The canonical sequential-rationality/SPE correspondence, equality of serial-SE and observed mixed-SPE values, and complete all-tuples round recursion are now checked in \path{KFOL/Rounds/Correspondence}.
 
 \path{KFOL/Owner} proves the complete root-status and guard-completeness
 statements, explicit three-role pair countervaluations and the semantic
@@ -78,7 +78,7 @@ The semantic owner-table recognizer and actual native-tree constructor are
 checked with size bound $1+M(10n+7)$ and update-order independence. The
 complete native table recognizer and synthesizer now have polynomial-time certificates, including rejection and the expanded output tree. The four-element obstruction transfers every identity with at most three actual
 variables, even with padded arity, and refutes the displayed root-expansion
-identity. The original owner-term frontend remains separate.
+identity. The complete original owner-term frontend is certified with runtime independent of the ambient role count.
 \path{KFOL/Core} proves the uniform $K+2$-element native obstruction to all
 $K$-variable bases, using arbitrary-generator locality and an explicit valid
 $K+1$-variable exhaustion identity that fails natively. Its full grid construction also proves finite countermodels at every variable bound, with locality for arbitrary generators and no bounded-variable or finite basis.
@@ -138,9 +138,9 @@ Compact realizability (\cref{reset:thm:synthesis})
 Minimal clone (\cref{reset:thm:minimal})
  & Written; finite checks.\\
 Hardness reductions (\cref{gen:thm:complexity,thm:owner-free-hardness,thm:H-hardness,thm:raw-pairs})
- & Reset/union is complete in root \texttt{Paper.lean}: actual CNF correctness, exact expanded linear size, certified native generator/verifier and coNP-completeness for typed equations and the full original binary language. Two guarded owners now also have an actual pure-ternary native reduction, exact linear tree size and third-role observation correctness. Other raw fragments retain semantic certificates (\texttt{BooleanCore}, \texttt{Fragments}, \texttt{RawFragments}); their complete machines remain separate.\\
+ & Reset/union is complete in root \texttt{Paper.lean}: actual CNF correctness, exact expanded linear size, certified native generator/verifier and coNP-completeness for typed equations and the full original binary language. Two guarded owners are also complete for each fixed finite role set: a pure-ternary native reduction, exact linear tree size, certified native generator/verifier, and typed and full binary-language coNP-completeness for validity and exact third-role observation. All three hard raw pairs now have native ordinary-tree CNF reductions, all-valuation correctness and linear expanded sizes in \path{KFOL/Reductions/RawPairs}; their complete machines remain separate.\\
 Dependence on $K$ (\cref{thm:colouring-theories})
- & Lean: \texttt{colouring\_guard\_obstruction}; identity family and embeddings written; finite checks.\\
+ & Complete in root \texttt{Paper.lean}: strict inclusion of complete reset/union identity theories at every successive role count from three onward, with native graph identities, arbitrary-valuation validity, explicit countervaluations and role-embedding transport.\\
 One-owner calculus (\cref{owner:thm:guards,owner:thm:one-table,owner:thm:four})
  & Root \texttt{Paper.lean} proves full root status and guard completeness,
  explicit three-role pair separators, semantic one-table checking, and the
@@ -260,7 +260,7 @@ Nonconservative irreducible (\cref{owner:prop:nonconservative-si})
  \texttt{NonconservativeWitness.pair\_forces}; variety membership and
  the monolith conclusion are written consequences.\\
 Round recursion (\cref{se:thm:round})
- & Written; local stage checks only.\\
+ & Complete in root \texttt{Paper.lean}: independent canonical serial SE and observed mixed SPE have equal value sets; Dirac leaves and all-tuples continuation selection with canonical mixed Nash give the exact recursion, including off-path histories and whole-policy deviations.\\
 Scalar fragment (\cref{se:prop:parallel,se:thm:rational})
  & Stage and arithmetic in Lean (\texttt{diagonal\_nash\_value}, \texttt{every\_rational}); the algebraic laws of parallel sum and the connection to game syntax written.\\
 Infinite index, full abstraction (\cref{se:thm:infinite,se:cor:scalar})
@@ -370,17 +370,10 @@ With $L$ leaves and $n$ distinct occurring variables, the raw traversal list
 has at most $1+L^2$ label occurrences and the canonical description at most
 $1+nL$. Both counts include the stored root and each guard's output label.
 Dependent script metatheory and hiding also have written proofs.
-For sealed rounds, the SE correspondence, consistency and public-boundary
-pasting, semialgebraic closure, scalar game realization and contextual
-full abstraction have written proofs in \cref{app:proofs-sealed}.
-\texttt{SealedRounds.lean} proves the stage and arithmetic certificates;
-it does not define a general SE assessment or connect the full round
-syntax to the threshold probes internally.
+For sealed rounds, \path{KFOL/Rounds} proves the complete canonical SE/SPE correspondence, consistency, public-boundary pasting and exact recursion. General semialgebraic closure remains report-only. Scalar game realization and contextual full abstraction have written proofs in \cref{app:proofs-sealed}; \texttt{SealedRounds.lean} supplies stage and arithmetic certificates pending their full game-syntax bridges.
 For the smaller hard fragments, \texttt{Fragments.lean} checks the
 semantic certificates under the stated baseline-containment hypotheses,
-including both absorption and fresh-marker separation. Assembly of
-the syntactic reductions, their polynomial tree sizes, and the final
-complexity statements are written proofs in \cref{app:proofs-hard}.
+including both absorption and fresh-marker separation. The native syntactic reductions and linear original-tree sizes are now checked in \path{KFOL/Reductions}; complete machine/class transport remains separate from these semantic proofs.
 \texttt{RawFragments.lean} additionally checks the semantic fold,
 absorption, and guard-transfer certificates for the reductions of the pair dichotomy;
 it does not formalize the CNF syntax assembly or polynomial reductions.
@@ -539,8 +532,7 @@ The core-basis check verifies the seven dissemilattice laws on
 $163484$ native winner-set triples at $K=3,4,5$, and performs
 $3726$ operation comparisons for the three-state embeddings, over
 every ordered triple of distinct roles. It also checks the failed
-reverse distributive law. The classical generation theorem remains an
-external input.
+reverse distributive law. The direct general seven-law completeness proof is now kernel-checked, with no external generation premise.
 
 The core-obstruction check makes $200616$ quotient-map comparisons
 and checks all $446$ generator sets of size at most $K$ in the

@@ -46,3 +46,8 @@ example : let v := satisfyingValuation (0 : Fin 3) 1 2 (fun _ => true)
 #print axioms KFOL.Reductions.GuardedPair.equation_size
 
 end KFOLTest.ReductionsGuardedPair
+
+/-- info: 'KFOL.Reductions.GuardedPair.third_role_observation_implication_valid_iff_unsatisfiable' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Reductions.GuardedPair.third_role_observation_implication_valid_iff_unsatisfiable

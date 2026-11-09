@@ -1,10 +1,14 @@
 module
 
 public import KFOL.Algebra
+public import KFOL.Rounds.Correspondence
+public import KFOL.Reductions.RawPairs
+public import KFOL.Reductions.Colouring
 public import KFOL.Rounds.Values
 public import KFOL.Rounds.TerminalErasure
 public import KFOL.Rounds.ProductBeliefs
 public import KFOL.Reductions.GuardedPair
+public import KFOL.Complexity.GuardedPairCompleteness
 public import KFOL.Complexity.OwnerWordFrontend
 public import KFOL.Algebra.TwoPlayers.Kleene.Syntax
 public import KFOL.Algebra.ViewOrders.Order
@@ -2304,5 +2308,117 @@ theorem two_player_forcing_coordinates {Role : Type u} (labels : Fin 2 ≃ Role)
 [propext, Classical.choice, Quot.sound] -/
 #guard_msgs (whitespace := lax) in
 #print axioms KFOL.Paper.two_player_forcing_coordinates
+
+/-- `se:thm:round`: independently defined serial sequential-equilibrium and
+observed mixed-SPE winner values coincide. Leaves have their Dirac value;
+every round selects a continuation equilibrium at every actual joint action
+and a canonical independent mixed Nash equilibrium of the resulting stage. -/
+theorem round_equilibrium_recursion {Role : Type u} [Fintype Role] [DecidableEq Role]
+    (order : GameTheory.Languages.Bridges.FOSGToEFG.ExplicitOrder Role) :
+    (∀ game : Rounds.Game Role, game.sequentialValues order = game.observedValues) ∧
+    (∀ r : Role, (Rounds.Game.leaf r).sequentialValues order = {PMF.pure r}) ∧
+    (∀ (sizes : Role → ℕ) (next : ((i : Role) → Fin (sizes i+1)) → Rounds.Game Role)
+      (value : PMF Role),
+      value ∈ (Rounds.Game.round sizes next).sequentialValues order ↔
+        ∃ p : ((i : Role) → Fin (sizes i+1)) → PMF Role,
+          (∀ a, p a ∈ (next a).sequentialValues order) ∧
+          ∃ root : GameTheory.Profile (Rounds.Game.stageForm sizes p).sig.mixed,
+            GameTheory.IsNash (Rounds.Game.stageForm sizes p).mixed
+              (GameTheory.euPreference (fun winner i => Rounds.Game.winnerPayoff id i winner)) root ∧
+            value = (Rounds.Game.stageForm sizes p).mixed.play root) :=
+  ⟨fun game => game.sequentialValues_eq_observedValues order,
+    fun r => Rounds.Game.sequentialValues_leaf r order,
+    fun sizes next value => Rounds.Game.sequentialValues_round_iff sizes next order value⟩
+
+/-- info: 'KFOL.Paper.round_equilibrium_recursion' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Paper.round_equilibrium_recursion
+
+/-- The three hard raw pairs have actual native CNF reductions, valid on
+all independent winner-set assignments exactly for unsatisfiable inputs.
+The original binary trees have linear size, including empty-input gates. -/
+theorem raw_pair_reductions {Role : Type u} (a b c : Role)
+    (hab : a ≠ b) (hac : a ≠ c) (hbc : b ≠ c) (formula : Reductions.CNF) :
+    ((∀ v : ℕ → WinnerSet Role,
+      (Reductions.RawPair.equation formula).1.eval (WinnerSet.choice a) WinnerSet.union v =
+        (Reductions.RawPair.equation formula).2.eval (WinnerSet.choice a) WinnerSet.union v) ↔
+      ¬Reductions.Satisfiable formula) ∧
+    ((∀ v : ℕ → WinnerSet Role,
+      (Reductions.RawPair.twoOwnerEquation formula).1.eval (WinnerSet.choice a) (WinnerSet.choice b) v =
+        (Reductions.RawPair.twoOwnerEquation formula).2.eval (WinnerSet.choice a) (WinnerSet.choice b) v) ↔
+      ¬Reductions.Satisfiable formula) ∧
+    ((∀ v : ℕ → WinnerSet Role,
+      (Reductions.ResetChoice.equation formula).1.eval WinnerSet.reset (WinnerSet.choice a) v =
+        (Reductions.ResetChoice.equation formula).2.eval WinnerSet.reset (WinnerSet.choice a) v) ↔
+      ¬Reductions.Satisfiable formula) ∧
+    (Reductions.RawPair.equation formula).1.size + (Reductions.RawPair.equation formula).2.size ≤
+      4 + 20 * (Reductions.ResetUnion.support formula).length + 2 * (formula.map List.length).sum ∧
+    (Reductions.RawPair.twoOwnerEquation formula).1.size + (Reductions.RawPair.twoOwnerEquation formula).2.size ≤
+      4 + 20 * (Reductions.ResetUnion.support formula).length + 2 * (formula.map List.length).sum ∧
+    (Reductions.ResetChoice.equation formula).1.size + (Reductions.ResetChoice.equation formula).2.size ≤
+      28 * (Reductions.ResetUnion.support formula).length +
+        2 * formula.length + 2 * formula.flatten.length + 8 := by
+  exact ⟨Reductions.RawPair.union_equation_valid_iff_unsatisfiable a b c hab hac hbc.symm formula,
+    Reductions.RawPair.twoOwners_equation_valid_iff_unsatisfiable a b c hab hac hbc.symm formula,
+    Reductions.ResetChoice.equation_valid_iff_unsatisfiable a b c hab hac hbc formula,
+    Reductions.RawPair.equation_size_le formula,
+    Reductions.RawPair.twoOwnerEquation_size_le formula,
+    Reductions.ResetChoice.equation_size_le formula⟩
+
+/-- info: 'KFOL.Paper.raw_pair_reductions' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Paper.raw_pair_reductions
+
+/-- `thm:colouring-theories`: the complete reset/union identity theories
+strictly decrease at every successive role count from three onward. -/
+theorem role_count_identity_theories (n : ℕ) (hn : 3 ≤ n) :
+    {e : Equational.Identity ResetUnion.Symbol |
+      letI := ResetUnion.structureOf (Role := Fin (n+1))
+      e.Holds (WinnerSet (Fin (n+1)))} ⊂
+    {e : Equational.Identity ResetUnion.Symbol |
+      letI := ResetUnion.structureOf (Role := Fin n)
+      e.Holds (WinnerSet (Fin n))} :=
+  Reductions.Colouring.theory_succ_ssubset n hn
+
+/-- info: 'KFOL.Paper.role_count_identity_theories' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Paper.role_count_identity_theories
+
+/-- Two distinct guarded owners give coNP-complete native validity and the
+same exact third-role observation problem. Both claims include the full
+binary input languages, with malformed inputs rejected. The role set here
+is fixed; uniform role-parameter complexity is a separate theorem. -/
+theorem guarded_pair_complexity {Role : Type} [Fintype Role]
+    (a b d : Role) (hab : a ≠ b) (had : a ≠ d) (hbd : b ≠ d) :
+    Cslib.Complexity.coNPComplete Complexity.GuardedPairMachines.equationEncoding
+      {equation : GuardedPair.Term ℕ × GuardedPair.Term ℕ |
+        ∀ valuation : ℕ → WinnerSet Role,
+          equation.1.eval a b valuation = equation.2.eval a b valuation} ∧
+    Cslib.Complexity.coNPComplete Turing.MultiTapeTM.encBits
+      {word | ∃ equation : GuardedPair.Term ℕ × GuardedPair.Term ℕ,
+        FiniteTermCode.encodeEquation GuardedPair.Symbol equation = word ∧
+          ∀ valuation : ℕ → WinnerSet Role,
+            equation.1.eval a b valuation = equation.2.eval a b valuation} ∧
+    Cslib.Complexity.coNPComplete Complexity.GuardedPairMachines.equationEncoding
+      {equation : GuardedPair.Term ℕ × GuardedPair.Term ℕ |
+        ∀ valuation : ℕ → WinnerSet Role,
+          d ∈ (equation.1.eval a b valuation).val ↔ d ∈ (equation.2.eval a b valuation).val} ∧
+    Cslib.Complexity.coNPComplete Turing.MultiTapeTM.encBits
+      {word | ∃ equation : GuardedPair.Term ℕ × GuardedPair.Term ℕ,
+        FiniteTermCode.encodeEquation GuardedPair.Symbol equation = word ∧
+          ∀ valuation : ℕ → WinnerSet Role,
+            d ∈ (equation.1.eval a b valuation).val ↔ d ∈ (equation.2.eval a b valuation).val} :=
+  ⟨Complexity.GuardedPairCompleteness.coNPComplete a b d hab had hbd,
+    Complexity.GuardedPairCompleteness.language_coNPComplete a b d hab had hbd,
+    Complexity.GuardedPairCompleteness.observation_coNPComplete a b d hab had hbd,
+    Complexity.GuardedPairCompleteness.observation_language_coNPComplete a b d hab had hbd⟩
+
+/-- info: 'KFOL.Paper.guarded_pair_complexity' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Paper.guarded_pair_complexity
 
 end KFOL.Paper
