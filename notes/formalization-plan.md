@@ -108,7 +108,7 @@ For each required inventory row, implementation review records the public declar
 | `Definitions/Reset.lean` | Primitive reset, generic signature, selection, canonical tables, independent rooted antimatroids and actual semantic term functions |
 | `Definitions/Equational.lean` | Relation-free mathlib language, finite identities, satisfaction, theories, derivation, basis, variable bound, algebra structures, full/core signatures and codecs |
 | `Definitions/Algorithms.lean` | Exact membership-word bitset codec, independent prerequisite scan and its fixed-arity interface; no machine imports |
-| `Definitions/Encoding.lean` | Binary records and dictionaries, complete descriptors and their recognizer, original input-tree codec and binary extraction frontend; imports the external word-codec primitives only |
+| `Definitions/Encoding.lean` | Binary records/dictionaries, complete descriptors, normalization/recognition, original input codec/extraction and shared-support binary equation checking; imports the external word-codec primitives only |
 
 These are six algebraic definition modules and two representation modules. `Equational` imports
 `Core`, which imports `Public`; it adds only mathlib dependencies. See the
@@ -610,8 +610,8 @@ indices, bad ranges and widths, and truncated streams.
 
 These representation and output-size results do not certify whole-program
 machine time. The original binary input-tree connection is now checked below.
-Whole descriptor validation, shared support indices for identity inputs and
-certified field scans remain separate work.
+Whole descriptor validation and shared support indices for identity inputs are
+checked below; certified field scans remain separate work.
 
 ### Binary input parser and executable frontend checked
 
@@ -631,7 +631,7 @@ the canonical tables. For N input bits, the complete output uses at most
 The definition surface remains eight files and the pure import audit is unchanged.
 
 Complete externally supplied dictionary/record descriptors are now validated
-below. Shared support indices for two identity inputs and certified parser
+below, followed by shared support for two identity inputs. Certified parser
 and field/table scans remain. Exact executable semantics and polynomial
 output length do not finish polynomial runtime.
 The full table algorithms and end-to-end reduction gate remain partial.
@@ -655,10 +655,36 @@ descriptor bit length N. Malformed words are rejected by the executable program.
 
 The complete parser also accepts raw extracted descriptors. The semantic
 recognizer checks canonical tables and rejects raw dominated/self-dependent
-guards; the binary raw-to-canonical normalization bridge is still required.
-Next connect normalization and shared support for identity inputs, and certify
-the parser/record scans and whole algorithms in the machine model. Full encoded
-recognition runtime and the end-to-end reduction gate remain partial.
+guards. The binary normalization bridge and shared-support equality checker are
+now proved below. Full encoded recognition runtime and the end-to-end reduction
+gate remain partial.
+
+### Binary normalization and shared-support equation checking checked
+
+`KFOL.Paper.reset_record_normalization` repeats the executable record filter's
+exact relation to mathematical minimization, enabling preservation, idempotence
+and nonincreasing binary length. It retains the original dictionary and minimal
+duplicate records. External normalization accepts exactly parsed descriptors.
+
+`reset_normalized_binary_extraction` proves that the actual original-input
+frontend, followed by normalization, yields recognized canonical tables and
+expands to the original term's independently defined tables. The proof constructs
+finite-index syntax by mathlib variable relabeling; it assumes no certificate.
+The generic renaming and minimization lemmas stay in the mathlib-only algebra.
+
+`reset_binary_equation_checker` gives a complete checker for paired original
+binary tree inputs, including malformed-word rejection. Both sides share the
+union of their supports, with dimension bounded by original input bits. Equality
+of the normalized indexed tables is exactly equality on all mixed winner-set
+valuations whenever three distinct roles exist. Independent dictionary order,
+record order and duplicates do not cause a false result.
+
+The definition surface remains eight files. Next certify parser, dictionary and
+record scans in the machine model, then compose the complete extraction,
+normalization/equality and recognition bounds. Executable semantics and encoded
+size are now connected throughout this reset frontend, but full polynomial
+machine time, synthesis/substitution time and the end-to-end reduction gate
+remain partial.
 
 | Milestone | Prerequisites | Concrete completion gate |
 | --- | --- | --- |

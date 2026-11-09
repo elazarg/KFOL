@@ -9,6 +9,8 @@ import all KFOL.Algorithms.Framing
 import all KFOL.Algorithms.GuardRecord
 import all KFOL.Algorithms.TermCode
 import all KFOL.Algorithms.GuardDescriptor
+import all KFOL.Algorithms.Normalization
+import all KFOL.Algorithms.ResetEquation
 import all KFOL.Complexity.Language
 import all KFOL.Complexity.GuardSubset
 import all KFOL.Definitions.Public

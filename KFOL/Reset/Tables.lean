@@ -65,6 +65,25 @@ theorem exists_minimize_iff (G : Finset (Finset Var)) (B : Set Var) :
     obtain ⟨C, hC, hCA⟩ := exists_mem_minimize_subset G hA
     exact ⟨C, hC, fun _ hi => hB (hCA hi)⟩
 
+/-- Injective renaming preserves minimal prerequisites. The result is
+independent of any chosen term or table representation. -/
+theorem minimize_image {Var' : Type*} [DecidableEq Var'] (f : Var → Var')
+    (hf : Function.Injective f) (G : Finset (Finset Var)) :
+    minimize (G.image (Finset.image f)) = (minimize G).image (Finset.image f) := by
+  ext A
+  simp only [mem_minimize, Finset.mem_image]
+  constructor
+  · rintro ⟨⟨B, hB, rfl⟩, hmin⟩
+    refine ⟨B, ⟨hB, ?_⟩, rfl⟩
+    intro C hC hCB
+    exact (Finset.image_subset_image_iff hf).mp
+      (hmin (C.image f) ⟨C, hC, rfl⟩ ((Finset.image_subset_image_iff hf).mpr hCB))
+  · rintro ⟨B, ⟨hB, hmin⟩, rfl⟩
+    refine ⟨⟨B, hB, rfl⟩, ?_⟩
+    rintro _ ⟨C, hC, rfl⟩ hCB
+    exact (Finset.image_subset_image_iff hf).mpr
+      (hmin C hC ((Finset.image_subset_image_iff hf).mp hCB))
+
 /-- Minimal finite antichains are determined by their upward closures. -/
 theorem minimize_eq_of_upward (G H : Finset (Finset Var))
     (h : ∀ B : Set Var,

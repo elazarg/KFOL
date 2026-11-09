@@ -112,6 +112,21 @@ def recognize (word : List Bool) : Bool :=
   | none => false
   | some d => d.check
 
+/-- Delete dominated prerequisites at each output by scanning only listed
+records. Minimal duplicate records retain their original order and multiplicity. -/
+def minimalRecords (d : GuardDescriptor) : List (GuardRecord.Record d.labels.length) :=
+  d.records.filter (fun p => decide
+    (∀ q ∈ d.records, q.1 = p.1 → q.2 ⊆ p.2 → p.2 ⊆ q.2))
+
+/-- A structural wrapper retaining the original dictionary and its index type. -/
+abbrev normalize (d : GuardDescriptor) : GuardDescriptor :=
+  ⟨d.labels, d.distinct, d.minimalRecords⟩
+
+/-- Normalize a complete external descriptor; malformed inputs are rejected. -/
+def normalizeWord (word : List Bool) : Option (List Bool) := do
+  let d ← decode word
+  return encode d.normalize
+
 end GuardDescriptor
 
 namespace TermCode
@@ -151,4 +166,36 @@ def extract (word : List Bool) : Option (List Bool) := do
   return _root_.Complexity.pair (LabelDictionary.encode D) (GuardRecord.encodeList records)
 
 end TermCode
+
+namespace ResetEquation
+
+/-- Both terms use the same finite dictionary, including all variables of
+either side. Numeric names do not determine its dimension. -/
+def labels (s t : Reset.Term ℕ) : List ℕ :=
+  (SupportIndex.labels s ++ SupportIndex.labels t).dedup
+
+/-- Compare normalized listed guards on a shared dictionary. This uses
+finite positions, not equality of independently serialized descriptors. -/
+def check (s t : Reset.Term ℕ) : Bool := Id.run do
+  let D := labels s t
+  let some left := s.guardEntries.mapM (SupportIndex.compressEntry D) | return false
+  let some right := t.guardEntries.mapM (SupportIndex.compressEntry D) | return false
+  let a : GuardDescriptor := ⟨D, List.nodup_dedup _, left⟩
+  let b : GuardDescriptor := ⟨D, List.nodup_dedup _, right⟩
+  return (List.ofFn (fun i : Fin D.length =>
+    let leftGuards : Finset (Finset (Fin D.length)) := a.normalize.guards i
+    let rightGuards : Finset (Finset (Fin D.length)) := b.normalize.guards i
+    decide (leftGuards = rightGuards))).all id
+
+/-- A binary equation is a pair of original tree codes. Malformed pairs or
+trees are rejected before the shared-support equality check. -/
+def checkWord (word : List Bool) : Bool :=
+  match _root_.Complexity.unpair? word with
+  | none => false
+  | some (left, right) =>
+    match TermCode.decode left, TermCode.decode right with
+    | some s, some t => check s t
+    | _, _ => false
+
+end ResetEquation
 end KFOL.Algorithms

@@ -61,6 +61,31 @@ theorem guardEntries_step (s t : Term Var) :
   rw [collectGuards_root]
   rfl
 
+omit [DecidableEq Var] in
+@[simp] theorem relabel_step {Var' : Type*} (f : Var → Var') (s t : Term Var) :
+    (step s t).relabel f = step (s.relabel f) (t.relabel f) := by
+  simp only [step, FirstOrder.Language.Term.relabel]
+  congr 1
+  funext i
+  by_cases hi : i = 0 <;> simp [hi]
+
+omit [DecidableEq Var] in
+@[simp] theorem root_relabel {Var' : Type*} (f : Var → Var') (t : Term Var) :
+    root (t.relabel f) = f t.root := by
+  induction t using induction_reset with
+  | var => rfl
+  | step s t _ ht => simp only [relabel_step, root_step, ht]
+
+/-- Raw occurrence extraction commutes with every variable renaming,
+including noninjective maps and independent repeated occurrences. -/
+theorem guardEntries_relabel {Var' : Type*} [DecidableEq Var'] (f : Var → Var') (t : Term Var) :
+    guardEntries (t.relabel f) = t.guardEntries.map (fun p => (f p.1, p.2.image f)) := by
+  induction t using induction_reset with
+  | var => rfl
+  | step s t hs ht =>
+    simp only [relabel_step, guardEntries_step, hs, ht, root_relabel,
+      List.map_append, List.map_map, Function.comp_def, Finset.image_insert]
+
 /-- Raw entries are indexed by actual leaf occurrences, before normalization. -/
 @[simp] theorem length_guardEntries (t : Term Var) : t.guardEntries.length = t.leafCount := by
   induction t using induction_reset with

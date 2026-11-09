@@ -118,8 +118,13 @@ descriptor validation and semantic recognition are now also checked, using
 mathlib's finite fiber-cardinality formula and the existing compact realization
 theorem. Dictionary names are validated as distinct; malformed words are
 rejected and accepted canonical candidates have actual primitive-tree witnesses.
-Raw-to-canonical normalization, shared-support identity inputs, and machine
-certificates for the parser and record/table scans remain the next work.
+Raw-to-canonical normalization and shared-support identity checking are now
+connected to original binary inputs. Pure mathlib variable relabeling and
+injective-image/minimal-guard lemmas supply the transport; no new dependency is
+introduced. Normalized extraction passes recognition, and equation checking is
+exact on all winner-set valuations for role sets containing three roles.
+Machine certificates for the parser, dictionary validation and record/table
+scans remain the next work.
 
 These gates test the actual reuse seams. Once they pass, the remaining effort can be estimated from the paper-specific proof obligations, rather than from rebuilding foundations already available in the user's libraries.
 

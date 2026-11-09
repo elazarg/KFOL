@@ -647,12 +647,12 @@ its occurrence list and canonical tables, and bounds their stream by
 `6L(L+1)` bits. The binary dictionary costs at most twice the sum of input
 leaf-label bit widths plus `2L`, using one copy of each distinct name.
 
-These are representations and encoded output-size proofs. Whole descriptor
-parsing, external dictionary validation and machine-time certificates for
-record scans and complete table algorithms remain separate. The codecs preserve
-a chosen dictionary and record order; comparing two terms will use decoded
-canonical tables or a shared dictionary covering both supports. The generic
-compression lemmas already support that shared-dictionary use. Regressions use
+These are representations and encoded output-size proofs. Complete descriptor
+validation and shared-support identity checking are proved below; machine-time
+certificates for record scans and complete table algorithms remain separate.
+The codecs preserve a chosen dictionary and record order; comparison uses the
+decoded canonical tables under a shared dictionary covering both supports.
+The generic compression lemmas support that shared-dictionary use. Regressions use
 widely separated labels, a nonzero root index, repeated occurrences, exact
 bit counts and malformed fields or trailing data. Every finite check uses
 kernel `decide`.
@@ -695,8 +695,8 @@ kernel `rfl` and `decide`.
 
 These are exact executable semantics and bit-size bounds. The parser and
 frontend have not yet been certified in the machine model. Complete candidate
-validation is now checked below; shared support for two identity inputs,
-record/table scans and full algorithm running times retain their own obligations.
+validation and shared support for identity inputs are now checked below;
+record/table machine scans and full algorithm running times retain their own obligations.
 
 ## Complete descriptors and external table recognition
 
@@ -741,5 +741,54 @@ self-dependencies rather than silently minimizing them. Tests exercise this
 distinction, duplicate names and records, unused dictionary positions, a nonzero
 root index, rootless and multi-root candidates, dependency cycles, wrong widths,
 bad output ranges and incomplete frames. All computations use kernel `decide`.
-The full encoded recognition running-time certificate, raw-to-canonical
-normalization frontend and shared-dictionary identity checker remain separate.
+The full encoded recognition running-time certificate remains separate.
+Raw-to-canonical normalization and shared-dictionary identity checking are
+now connected below.
+
+## Binary normalization and shared-support identities
+
+The existing `Definitions/Encoding.lean` adds these definitions:
+
+| Definition | Meaning and dependencies |
+| --- | --- |
+| `GuardDescriptor.minimalRecords` | Filter a record when a strictly smaller prerequisite is listed at the same output; scan only explicit records |
+| `GuardDescriptor.normalize` | A structural wrapper around that filter, preserving the dictionary, index type, order and multiplicity of minimal records |
+| `GuardDescriptor.normalizeWord` | Decode a complete descriptor, normalize it and return its complete encoding; reject malformed inputs |
+| `ResetEquation.labels` | A distinct dictionary covering both terms' actual supports |
+| `ResetEquation.check` | Collect and compress both occurrence lists in that dictionary, normalize them, and compare the finite guards at every position |
+| `ResetEquation.checkWord` | Parse a pair of binary original-tree codes and run the shared-support checker; reject malformed pairs or trees |
+
+`Algorithms/Normalization.lean` proves the record filter yields exactly
+`Reset.Term.minimize` at each output, preserves enabling, is idempotent and
+cannot increase encoded size. Binary normalization succeeds exactly when
+descriptor parsing succeeds and returns a valid stable output.
+`KFOL.Paper.reset_record_normalization` repeats the complete statements.
+This is not a unique byte representation of a term operation: dictionary
+order and minimal duplicates are preserved.
+
+The generic algebraic lemma `Reset.Term.minimize_image` proves minimal guards
+commute with injective renaming. `Reset.Term.guardEntries_relabel` proves raw
+extraction commutes with every mathlib variable relabeling, including noninjective
+maps. These are pure mathlib proofs in `Reset/Tables.lean` and
+`Reset/Extraction.lean`. A dictionary inverse renames actual original syntax
+back to finite positions, giving an actual realization of its normalized
+descriptor. `KFOL.Paper.reset_normalized_binary_extraction` proves these outputs
+pass semantic recognition and expand to exactly the original canonical tables.
+
+`Algorithms/SupportIndex.lean` generalizes compression to every distinct
+dictionary covering a term. `Algorithms/ResetEquation.lean` uses this with the
+union of two supports. The shared dimension is bounded by the sum of leaf counts
+and by original input bits, independently of numeric name values. Comparing
+normalized finite guards is equivalent to equality of the original natural-name
+tables, including outputs absent from either side. The existing chain theorem
+then identifies success with equality on every winner-set valuation for any
+role type containing three distinct roles.
+
+`KFOL.Paper.reset_binary_equation_checker` repeats both the term-level and
+complete binary-language characterizations. It explicitly rejects malformed
+equations and does not compare independently serialized descriptors. Regressions
+include equal terms with different dictionary orders, distinct variables with
+identical local record streams, nonassociativity, repeated-variable elimination,
+normalization before recognition, exact bit counts and invalid equation framing.
+The definition surface remains eight files. Full machine-time certificates for
+parsing, scans, normalization and equality remain outstanding.

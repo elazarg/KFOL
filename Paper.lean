@@ -6,6 +6,8 @@ public import KFOL.Complexity.GuardSubset
 public import KFOL.Algorithms.GuardRecord
 public import KFOL.Algorithms.TermCode
 public import KFOL.Algorithms.GuardDescriptor
+public import KFOL.Algorithms.Normalization
+public import KFOL.Algorithms.ResetEquation
 
 /-!
 # Kernel-checked paper claims
@@ -937,5 +939,90 @@ theorem reset_encoded_table_recognition :
 [propext, Classical.choice, Quot.sound] -/
 #guard_msgs (whitespace := lax) in
 #print axioms KFOL.Paper.reset_encoded_table_recognition
+
+/-- Listed-record normalization is exactly minimal-guard normalization. It
+preserves enabling, order and minimal duplicates, is idempotent, and cannot
+increase binary descriptor size. Malformed external inputs are rejected. -/
+theorem reset_record_normalization :
+    (∀ d : Algorithms.GuardDescriptor,
+      d.normalize.labels = d.labels ∧ d.normalize.records.Sublist d.records ∧
+      d.normalize.normalize = d.normalize ∧
+      (Algorithms.GuardDescriptor.encode d.normalize).length ≤
+        (Algorithms.GuardDescriptor.encode d).length ∧
+      (∀ j : Fin d.labels.length, d.normalize.guards j = Reset.Term.minimize (d.guards j)) ∧
+      (∀ (r j : Fin d.labels.length) (B : Set (Fin d.labels.length)),
+        (d.normalize.table r).Enabled B j ↔ (d.table r).Enabled B j)) ∧
+    (∀ word : List Bool, Algorithms.GuardDescriptor.normalizeWord word = none ↔
+      Algorithms.GuardDescriptor.decode word = none) ∧
+    (∀ (word output : List Bool), Algorithms.GuardDescriptor.normalizeWord word = some output →
+      ∃ d : Algorithms.GuardDescriptor, Algorithms.GuardDescriptor.decode word = some d ∧
+        output = Algorithms.GuardDescriptor.encode d.normalize ∧
+        Algorithms.GuardDescriptor.decode output = some d.normalize ∧ output.length ≤ word.length ∧
+        Algorithms.GuardDescriptor.normalizeWord output = some output) := by
+  refine ⟨fun d => ⟨rfl, d.records_normalize_sublist, d.normalize_idempotent,
+    d.length_normalize_le, d.guards_normalize, d.enabled_normalize⟩,
+    Algorithms.GuardDescriptor.normalizeWord_eq_none_iff, ?_⟩
+  intro word output h
+  obtain ⟨d, hd, he, ho, hb⟩ := Algorithms.GuardDescriptor.normalizeWord_spec h
+  exact ⟨d, hd, he, ho, hb, Algorithms.GuardDescriptor.normalizeWord_idempotent h⟩
+
+/-- info: 'KFOL.Paper.reset_record_normalization' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Paper.reset_record_normalization
+
+/-- Normalizing the actual binary extraction output yields recognized
+canonical tables. Expanding them recovers the independently defined tables
+of the original term; no candidate or realizability hypothesis is supplied. -/
+theorem reset_normalized_binary_extraction (word output : List Bool)
+    (h : Algorithms.TermCode.extract word = some output) :
+    ∃ (d : Algorithms.GuardDescriptor) (t : Reset.Term ℕ),
+      Algorithms.GuardDescriptor.decode output = some d ∧
+      Algorithms.TermCode.decode word = some t ∧ d.labels = Algorithms.SupportIndex.labels t ∧
+      Algorithms.GuardDescriptor.normalizeWord output =
+        some (Algorithms.GuardDescriptor.encode d.normalize) ∧
+      Algorithms.GuardDescriptor.recognize (Algorithms.GuardDescriptor.encode d.normalize) = true ∧
+      (∀ j : Fin d.labels.length, (d.normalize.guards j).image
+        (Algorithms.SupportIndex.expand d.labels) = t.table (d.labels.get j)) := by
+  obtain ⟨d, t, hd, ht, hl, hc, he⟩ := Algorithms.GuardDescriptor.normalized_extraction h
+  refine ⟨d, t, hd, ht, hl, ?_, ?_, he⟩
+  · rw [← Algorithms.GuardDescriptor.encode_of_decode hd]
+    exact Algorithms.GuardDescriptor.normalizeWord_encode d
+  · simp only [Algorithms.GuardDescriptor.recognize,
+      Algorithms.GuardDescriptor.decode_encode]
+    exact hc
+
+/-- info: 'KFOL.Paper.reset_normalized_binary_extraction' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Paper.reset_normalized_binary_extraction
+
+/-- Equality of binary reset equations on shared support. The finite
+checker is exact on all mixed winner-set valuations whenever three roles
+exist. The word checker rejects every malformed pair or syntax tree. -/
+theorem reset_binary_equation_checker {Role : Type u} (three : Fin 3 ↪ Role) :
+    (∀ s t : Reset.Term ℕ,
+      (Algorithms.ResetEquation.labels s t).Nodup ∧
+      (Algorithms.ResetEquation.labels s t).toFinset = s.varFinset ∪ t.varFinset ∧
+      (Algorithms.ResetEquation.labels s t).length ≤ s.leafCount + t.leafCount ∧
+      (Algorithms.ResetEquation.labels s t).length ≤
+        (Algorithms.TermCode.encode s).length + (Algorithms.TermCode.encode t).length ∧
+      (Algorithms.ResetEquation.check s t = true ↔ s.table = t.table) ∧
+      (Algorithms.ResetEquation.check s t = true ↔
+        ∀ valuation : ℕ → WinnerSet Role, s.eval valuation = t.eval valuation)) ∧
+    (∀ word : List Bool, Algorithms.ResetEquation.checkWord word = true ↔
+      ∃ s t : Reset.Term ℕ,
+        word = _root_.Complexity.pair (Algorithms.TermCode.encode s) (Algorithms.TermCode.encode t) ∧
+        ∀ valuation : ℕ → WinnerSet Role, s.eval valuation = t.eval valuation) :=
+  ⟨fun s t => ⟨Algorithms.ResetEquation.labels_nodup s t,
+      Algorithms.ResetEquation.labels_toFinset s t, Algorithms.ResetEquation.length_labels_le s t,
+      Algorithms.ResetEquation.length_labels_le_input s t, Algorithms.ResetEquation.check_eq_true s t,
+      Algorithms.ResetEquation.check_iff_eval three s t⟩,
+    Algorithms.ResetEquation.checkWord_eq_true three⟩
+
+/-- info: 'KFOL.Paper.reset_binary_equation_checker' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Paper.reset_binary_equation_checker
 
 end KFOL.Paper

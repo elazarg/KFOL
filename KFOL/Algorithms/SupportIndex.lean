@@ -155,20 +155,29 @@ theorem compressEntries_spec (D : List Var) (hD : D.Nodup) (entries : List (Var 
     · simp [List.mapM_cons, compressEntry, hl, hread]
     · simp only [List.map_cons, hi, expand_compress D p.2 (hguards p List.mem_cons_self), he]
 
+/-- Any distinct covering dictionary can be used, including a shared
+dictionary for two terms and dictionaries containing unused positions. -/
+theorem compress_guardEntries_of_cover (t : Reset.Term Var) (D : List Var) (hD : D.Nodup)
+    (hcover : t.varFinset ⊆ D.toFinset) :
+    ∃ records : List (Fin D.length × Finset (Fin D.length)),
+      t.guardEntries.mapM (compressEntry D) = some records ∧
+      records.length = t.leafCount ∧
+      records.map (fun r => (D.get r.1, expand D r.2)) = t.guardEntries := by
+  obtain ⟨records, hread, hlen, he⟩ := compressEntries_spec D hD
+    t.guardEntries (by
+      intro p hp
+      apply List.mem_toFinset.mp
+      exact hcover (t.mem_varFinset_of_mem_guards p.1 ((t.mem_guardEntries p.1 p.2).mp hp))) (by
+      intro p hp
+      exact (t.subset_varFinset_of_mem_guards p.1 ((t.mem_guardEntries p.1 p.2).mp hp)).trans hcover)
+  exact ⟨records, hread, by simpa only [Reset.Term.length_guardEntries] using hlen, he⟩
+
 /-- Actual term extraction supplies all coverage hypotheses itself. -/
 theorem compress_guardEntries (t : Reset.Term Var) :
     ∃ records : List (Fin (labels t).length × Finset (Fin (labels t).length)),
       t.guardEntries.mapM (compressEntry (labels t)) = some records ∧
       records.length = t.leafCount ∧
-      records.map (fun r => ((labels t).get r.1, expand (labels t) r.2)) = t.guardEntries := by
-  obtain ⟨records, hread, hlen, he⟩ := compressEntries_spec (labels t) (labels_nodup t)
-    t.guardEntries (by
-      intro p hp
-      rw [mem_labels]
-      exact t.mem_varFinset_of_mem_guards p.1 ((t.mem_guardEntries p.1 p.2).mp hp)) (by
-      intro p hp
-      rw [labels_toFinset]
-      exact t.subset_varFinset_of_mem_guards p.1 ((t.mem_guardEntries p.1 p.2).mp hp))
-  exact ⟨records, hread, by simpa only [Reset.Term.length_guardEntries] using hlen, he⟩
+      records.map (fun r => ((labels t).get r.1, expand (labels t) r.2)) = t.guardEntries :=
+  compress_guardEntries_of_cover t (labels t) (labels_nodup t) (by rw [labels_toFinset])
 
 end KFOL.Algorithms.SupportIndex
