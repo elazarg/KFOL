@@ -38,7 +38,7 @@ Atomic clone (\cref{gen:thm:S2})
 Binary fragment (\cref{reset:thm:binary})
  & Rigidity in Lean (\texttt{OneConstant.Term.rigidity}); remainder written; external $S_2$ step.\\
 Reset semantics, chain (\cref{reset:lem:selection,reset:thm:three})
- & Root \texttt{Paper.lean}: complete mixed-input selection, native core expansion, canonical minimal-table completeness, fixed-chain completeness and the common identity theory for all $K\geq3$. The explicit table-substitution formula is checked for actual term substitution. Polynomial machine running-time bounds remain written.\\
+ & Root \texttt{Paper.lean}: complete mixed-input selection, native core expansion, canonical minimal-table completeness, fixed-chain completeness and the common identity theory for all $K\geq3$. The explicit table-substitution formula is checked for actual term substitution. Executable extraction has one raw entry per variable occurrence; the raw and canonical descriptions have proved quadratic bounds in label occurrences. Polynomial machine running-time bounds remain written.\\
 Reset basis (\cref{reset:thm:basis})
  & Complete in root \texttt{Paper.lean}: \path{KFOL.Paper.reset_basis}, with all six equations repeated and their exact count proved. Arbitrary-model path normalization and suffix absorption yield equational derivations; \cite[Section~3]{FreeseEtAl2002} is the proof reference, not a Lean hypothesis.\\
 Antimatroid representation (\cref{reset:thm:anti})
@@ -285,6 +285,11 @@ The candidate-table criterion, compact realization size and executable
 recognizer and synthesizer are checked in \path{KFOL/Reset/Realizability}.
 The synthesizer computes accessible orders, with one primitive path per
 listed prerequisite; its outputs have exactly the prescribed canonical tables.
+\path{KFOL/Reset/Extraction} checks the root-carrying traversal against the
+independent tables, with at most one raw guard per variable occurrence.
+With $L$ leaves and $n$ distinct occurring variables, the raw traversal list
+has at most $1+L^2$ label occurrences and the canonical description at most
+$1+nL$. Both counts include the stored root and each guard's output label.
 Dependent script metatheory and hiding also have written proofs.
 For sealed rounds, the SE correspondence, consistency and public-boundary
 pasting, semialgebraic closure, scalar game realization and contextual

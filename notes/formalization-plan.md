@@ -517,9 +517,39 @@ actual output guards, unused inputs, primitive counts and rejection, using
 kernel proofs and proved rewrites for finite sorting.
 
 The whole `reset:thm:synthesis` row remains partial because polynomial machine
-running time has not been certified. Next prove the term-to-table size bound
-and provide machine adapters for the algorithms. Minimal clone, guarded-choice,
-forty-law completeness and strategic milestones retain their own obligations.
+running time has not been certified. The term-to-table size bound is checked
+below; machine adapters remain the next algorithm obligation. Minimal clone,
+guarded-choice, forty-law completeness and strategic milestones retain their
+own obligations.
+
+### Guard extraction and table size checked
+
+`KFOL.Paper.reset_guard_extraction` specifies an executable structural traversal
+that returns the root and one raw guard entry per variable occurrence. The
+collector carries child roots instead of recomputing them from child syntax.
+Its root agrees with the independent structural root, and normalizing its
+entries gives exactly the independent canonical tables.
+
+`reset_table_size` bounds both raw and canonical entry counts by the number L
+of leaf occurrences. Each individual output has at most its syntactic
+occurrence count in distinct guards. Raw entry lists, including duplicates,
+have descriptions of at most `1 + L²` label occurrences. Canonical tables have
+the sharper bound `1 + nL`, where n is the actual support cardinality, and
+`n ≤ L`. The primitive-tree measure satisfies `size + 1 = 2L`.
+
+All prerequisites and outputs lie in the actual support; unused inputs have
+empty tables. The proof works over arbitrary variable types with decidable
+equality, including infinite types. It uses syntax induction and mathlib finite
+cardinality and sum APIs, independently of the antimatroid representation.
+The same six definition files contain the occurrence counts and collector.
+Regressions distinguish repeated leaves, duplicate raw entries and dominated
+guards, and compute a padded example over ℕ without a finite ambient type.
+
+The remaining reset algorithm work is binary encoding and certified polynomial
+machine running time for extraction, recognition, synthesis and substitution.
+Those adapters belong in the complexity branch; the algebra continues to
+import only mathlib. The full canonical-table and realizability results remain
+partial until their machine-time clauses are checked.
 
 | Milestone | Prerequisites | Concrete completion gate |
 | --- | --- | --- |

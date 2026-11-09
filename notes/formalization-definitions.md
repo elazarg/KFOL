@@ -472,6 +472,10 @@ All new definitions remain in `Definitions/Reset.lean`:
 | `GuardTable.constructibleCheck` | Test whether the target is reached after as many rounds as its cardinality |
 | `GuardTable.badGuards`, `check` | Executable finite scans of listed guards and ambient positions; no search over arbitrary subsets |
 | `Term.size` | Count of all variable and primitive reset occurrences in the expanded syntax tree |
+| `Term.leafCount` | Number of variable leaves, including repeated copies |
+| `Term.occurrences` | Syntactic occurrences of one variable, independent of guard extraction |
+| `Term.collectGuards` | A structural traversal carrying child roots and one raw prerequisite entry per leaf |
+| `Term.guardEntries` | The traversal's raw entry list, before duplicate removal and minimization |
 | `Term.pathTerm`, `joinPaths` | Left-associated primitive paths and their common-root join; now colocated with the algorithm definitions |
 | `GuardTable.greedyCandidates`, `greedyOrder` | Fresh enabled target positions and a bounded root-first order, choosing the least enabled position at each step |
 | `GuardTable.greedyPath` | Reverse the computed order into a primitive reset path |
@@ -510,8 +514,8 @@ using an arbitrary finite enumeration inside its proof. The earlier separate
 path-choice construction has been removed.
 
 `Recognition.lean` proves correctness of the executable checker and its
-at-most-target-cardinality greedy rounds. Polynomial machine-time bounds and
-the separate bound on the table extracted from an input term remain obligations.
+at-most-target-cardinality greedy rounds. Polynomial machine-time bounds
+remain obligations.
 
 Regression cases independently specify alternative prerequisites, an unused
 input, a dependency cycle, multiple empty-root guards, self-dependency and a
@@ -521,3 +525,36 @@ actual output guards and occurrence counts and check that completed orders
 remain unchanged with extra fuel. Finite computations use kernel `decide`
 after proved sorting rewrites, with no `native_decide` or unchecked enumeration
 assumption.
+
+## Extraction and description size
+
+`KFOL.Paper.reset_guard_extraction` connects the executable traversal to the
+independent structural root, raw guards and canonical tables. Child roots are
+carried in the recursive results. Filtering the entry list by output and
+removing duplicates recovers the existing raw guards; antichain minimization
+then gives exactly the existing canonical table. This correspondence holds
+without a finite ambient variable type or an ordering of variable names.
+
+`KFOL.Paper.reset_table_size` repeats the occurrence and description bounds.
+For L variable leaves and n distinct occurring variables, there are at most L
+raw or canonical entries, and each output has at most as many distinct guards
+as its syntactic occurrences. The actual raw traversal list, including
+duplicates, uses at most `1 + L²` label occurrences. The canonical description
+uses at most `1 + nL`, hence also `1 + L²`. The description counts the root,
+each output label and all its prerequisite labels. Every collected label is
+in the term's actual support; unused ambient positions have empty tables.
+The exact relation to the existing primitive-tree size is `size + 1 = 2L`.
+
+`Reset/Extraction.lean` proves these results directly by binary syntax induction,
+finite sums and cardinality bounds. It imports the table/substitution API and
+does not depend on the antimatroid representation or its synthesis proof.
+The elementary primitive-size constructor lemmas now live in `Reset/Basic.lean`.
+`entryCount_guardTable_le` connects the support-based count to the earlier M
+on arbitrary finite ambient input types. Binary label encodings and certified
+machine running time belong to the separate complexity branch.
+
+Regressions inspect complete traversal lists for alternative paths, duplicate
+raw entries and self-dependencies removed by normalization. A term over the
+infinite variable type ℕ, using labels 7 and 100000, checks that the bounds
+depend on actual support rather than the size of an ambient declaration.
+All finite checks use kernel `decide`.

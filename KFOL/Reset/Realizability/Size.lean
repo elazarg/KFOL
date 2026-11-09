@@ -14,9 +14,6 @@ namespace Term
 
 variable {Var : Type v}
 
-@[simp] theorem size_var (j : Var) : size (.var j) = 1 := rfl
-@[simp] theorem size_step (s t : Term Var) : (step s t).size = 1 + s.size + t.size := rfl
-
 private theorem size_fold (t : Term Var) (xs : List Var) :
     size (xs.foldl (fun t i => step t (.var i)) t) = t.size + 2 * xs.length := by
   induction xs generalizing t with

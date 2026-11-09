@@ -21,6 +21,7 @@ import all KFOL.Reset.Basis
 import all KFOL.Reset.Basic
 import all KFOL.Reset.Selection
 import all KFOL.Reset.Tables
+import all KFOL.Reset.Extraction
 import all KFOL.Reset.Chain
 import all KFOL.Reset.Substitution
 import all KFOL.Reset.Public

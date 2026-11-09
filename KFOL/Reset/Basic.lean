@@ -46,6 +46,9 @@ variable {Var : Type v} {Role : Type u}
 
 @[simp] theorem root_step (s t : Term Var) : (step s t).root = t.root := rfl
 
+@[simp] theorem size_var (j : Var) : size (.var j) = 1 := rfl
+@[simp] theorem size_step (s t : Term Var) : (step s t).size = 1 + s.size + t.size := rfl
+
 @[simp] theorem selected_step (s t : Term Var) (B : Set Var) (j : Var) :
     (step s t).Selected B j ↔ t.Selected B j ∨ (t.root ∈ B ∧ s.Selected B j) := Iff.rfl
 

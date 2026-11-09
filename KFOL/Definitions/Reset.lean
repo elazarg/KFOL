@@ -232,6 +232,31 @@ def Term.size {Var : Type v} : Term Var → ℕ
   | .var _ => 1
   | .func .reset args => 1 + size (args 0) + size (args 1)
 
+/-- Number of variable leaves, counting repeated occurrences independently. -/
+def Term.leafCount {Var : Type v} : Term Var → ℕ
+  | .var _ => 1
+  | .func .reset args => leafCount (args 0) + leafCount (args 1)
+
+/-- Syntactic occurrences of one variable, independent of guard extraction. -/
+def Term.occurrences {Var : Type v} [DecidableEq Var] : Term Var → Var → ℕ
+  | .var i, j => if j = i then 1 else 0
+  | .func .reset args, j => occurrences (args 0) j + occurrences (args 1) j
+
+/-- A traversal returns the root together with one raw prerequisite entry per
+variable occurrence. Child roots are carried with the recursive results. -/
+def Term.collectGuards {Var : Type v} [DecidableEq Var] :
+    Term Var → Var × List (Var × Finset Var)
+  | .var j => (j, [(j, ∅)])
+  | .func .reset args =>
+    let left := collectGuards (args 0)
+    let right := collectGuards (args 1)
+    (right.1, right.2 ++ left.2.map (fun p => (p.1, insert right.1 p.2)))
+
+/-- The explicit raw entries produced by the traversal, before duplicate and
+dominated prerequisites are removed. -/
+def Term.guardEntries {Var : Type v} [DecidableEq Var] (t : Term Var) :
+    List (Var × Finset Var) := t.collectGuards.2
+
 /-- A left-associated path with the specified final variable. -/
 def Term.pathTerm {Var : Type v} (r : Var) : List Var → Term Var
   | [] => .var r

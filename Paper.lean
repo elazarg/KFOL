@@ -623,4 +623,56 @@ theorem reset_table_synthesis {Var : Type v} [LinearOrder Var] [Fintype Var]
 #guard_msgs (whitespace := lax) in
 #print axioms KFOL.Paper.reset_table_synthesis
 
+/-- The traversal claimed in the canonical-table prose: one raw entry per
+actual variable occurrence, with independently correct root and guards.
+Normalization gives exactly the previously defined canonical tables. -/
+theorem reset_guard_extraction {Var : Type v} [DecidableEq Var] (t : Reset.Term Var) :
+    t.collectGuards.1 = t.root ∧ t.guardEntries.length = t.leafCount ∧
+    t.size + 1 = 2 * t.leafCount ∧
+    (∀ j, (t.guardEntries.filter (fun p => p.1 = j)).length = t.occurrences j ∧
+      t.guards j = ((t.guardEntries.filter (fun p => p.1 = j)).map Prod.snd).toFinset ∧
+      t.table j = Reset.Term.minimize
+        (((t.guardEntries.filter (fun p => p.1 = j)).map Prod.snd).toFinset)) ∧
+    (∀ j A, (j, A) ∈ t.guardEntries →
+      j ∈ t.varFinset ∧ A ⊆ t.varFinset ∧ A.card + 1 ≤ t.leafCount) := by
+  refine ⟨t.collectGuards_root, t.length_guardEntries, t.size_add_one, ?_, ?_⟩
+  · intro j
+    refine ⟨?_, t.guards_eq_entries j, t.table_eq_entries j⟩
+    simpa only [List.countP_eq_length_filter] using t.countP_guardEntries j
+  · intro j A hA
+    have hg := (t.mem_guardEntries j A).mp hA
+    exact ⟨t.mem_varFinset_of_mem_guards j hg,
+      t.subset_varFinset_of_mem_guards j hg, t.card_guard_add_one_le j hg⟩
+
+/-- info: 'KFOL.Paper.reset_guard_extraction' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Paper.reset_guard_extraction
+
+/-- Table-size clauses of the main reset prose, before and after minimization.
+The description counts one root label, each output label and its prerequisite
+labels. Machine bit encodings and running time remain separate obligations.
+All sums range over actual support; unused ambient positions have empty tables. -/
+theorem reset_table_size {Var : Type v} [DecidableEq Var] (t : Reset.Term Var) :
+    (∀ j, (t.table j).card ≤ (t.guards j).card ∧
+      (t.guards j).card ≤ t.occurrences j) ∧
+    (∀ j, j ∉ t.varFinset → t.table j = ∅) ∧
+    (∑ j ∈ t.varFinset, (t.guards j).card) ≤ t.leafCount ∧
+    (∑ j ∈ t.varFinset, (t.table j).card) ≤ t.leafCount ∧
+    (1 + (t.guardEntries.map (fun p => p.2.card + 1)).sum ≤ 1 + t.leafCount ^ 2) ∧
+    (1 + ∑ j ∈ t.varFinset, ∑ A ∈ t.table j, (A.card + 1) ≤
+      1 + t.varFinset.card * t.leafCount) ∧
+    (1 + ∑ j ∈ t.varFinset, ∑ A ∈ t.table j, (A.card + 1) ≤ 1 + t.leafCount ^ 2) ∧
+    t.varFinset.card ≤ t.leafCount := by
+  refine ⟨?_, t.table_eq_empty_of_not_mem, t.sum_card_guards_le, t.sum_card_table_le,
+    t.guardEntries_description_le, t.table_description_le, t.table_description_quadratic,
+    t.card_varFinset_le_leafCount⟩
+  intro j
+  exact ⟨Finset.card_le_card (Finset.filter_subset _ _), t.card_guards_le_occurrences j⟩
+
+/-- info: 'KFOL.Paper.reset_table_size' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Paper.reset_table_size
+
 end KFOL.Paper
