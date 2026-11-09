@@ -50,5 +50,7 @@ The production build through Support passes 3855 jobs. Strict
 `tests/TwoRoleRounds.lean` repeats the complete existential finite-menu fold
 proposition and checks singleton menus, a three-row/one-column actual menu,
 and all-context coarse-observation congruence. The all-source transitive axiom
-audit imports all five TwoPlayers modules, including private helpers, and
+audit imports all four TwoPlayers modules, including private helpers, and
 permits only `propext`, `Classical.choice`, and `Quot.sound`.
+
+After consolidation, strict regression and all-source transitive axiom audit pass: all 71 TwoPlayers declarations use only the standard three axioms.

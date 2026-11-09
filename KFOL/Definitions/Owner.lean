@@ -662,3 +662,44 @@ def Term.twoSourceGuards {Var : Type v} (root a b : Var) (P : List (Var × Var))
   ([⟨a, [root], [b, a]⟩, ⟨b, [root], [b, a]⟩] : List (Guard Var)).map (Guard.pathLift root P)
 
 end KFOL.Owner
+
+
+namespace KFOL.Owner
+
+universe u
+
+/-- The report's two guarded owners agree on their own possible-victory
+observations for this equation, although the equation itself can fail. -/
+def jointObservationEquation {Role : Type u} (a b : Role) : Term Role (Fin 4) × Term Role (Fin 4) :=
+  let W := Term.step (.var 1) (Term.step (.var 2) (.var 0))
+  let T := Term.step (Term.guarded a (.var 0) (.var 1) (.var 3))
+    (Term.step (Term.guarded b (.var 0) (.var 2) (.var 3)) W)
+  (Term.step (.var 3) T,T)
+
+/-- Explicit separating input: root {a,b}, the two owner's atoms, and the
+third-role marker. Inputs at repeated leaves are evaluated independently. -/
+def jointObservationValuation {Role : Type u} (a b c : Role) (j : Fin 4) : WinnerSet Role :=
+  if j = 0 then (WinnerSet.singleton a).union (WinnerSet.singleton b)
+  else if j = 1 then WinnerSet.singleton a else if j = 2 then WinnerSet.singleton b
+  else WinnerSet.singleton c
+
+end KFOL.Owner
+
+namespace KFOL.Owner.Term
+
+universe u v
+
+/-- Compile one observer's guard language into the fixed one-owner syntax.
+That observer's own H becomes two resets; every other owner uses the one H
+symbol. Each original child occurs once in either branch. -/
+def compileObservation {Role : Type u} {Var : Type v} [DecidableEq Role]
+    (observer : Role) : Term Role Var → Term Unit Var
+  | .var j => .var j
+  | .func .reset args => step (compileObservation observer (args 0)) (compileObservation observer (args 1))
+  | .func (.guarded r) args =>
+      let root := compileObservation observer (args 0)
+      let left := compileObservation observer (args 1)
+      let right := compileObservation observer (args 2)
+      if r = observer then step right (step left root) else guarded () root left right
+
+end KFOL.Owner.Term

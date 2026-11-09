@@ -7,6 +7,10 @@ import all KFOL.Reductions.Colouring
 import all KFOL.Algorithms.GuardWords
 import all KFOL.Algorithms.SupportIndex
 import all KFOL.Algorithms.ResetEquation
+import all KFOL.Algorithms.FullTermCode
+import all KFOL.Reductions.RawSubsignature
+import all KFOL.Reductions.Circuits
+import all KFOL.Owner.ObservationCompilation
 meta import Lean.Elab.Command
 
 /-! # Independent algebra and representation import boundary

@@ -175,12 +175,12 @@ private theorem parse_eq_decode (word : List Bool) : parse word = TermCode.decod
       cases hp
 
 
-private theorem var_polyTime : ComputableInPolyTime (fun j : ℕ => (FirstOrder.Language.var j : Reset.Term ℕ))
+@[fun_prop] theorem var_polyTime : ComputableInPolyTime (fun j : ℕ => (FirstOrder.Language.var j : Reset.Term ℕ))
     encNat termEncoding := by
   have h := bitsCons (const false) (Framing.delimit_polyTime.comp Dictionary.encode_polyTime)
   exact h.of_enc_eq (fun _ => rfl)
 
-private theorem node_polyTime : ComputableInPolyTime
+@[fun_prop] theorem node_polyTime : ComputableInPolyTime
     (fun p : Reset.Term ℕ × Reset.Term ℕ => Reset.Term.step p.1 p.2)
     (encPair termEncoding termEncoding) termEncoding := by
   have hencode : ComputableInPolyTime TermCode.encode termEncoding encBits := .of_eq (fun _ => rfl)

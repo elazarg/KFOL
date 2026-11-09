@@ -582,3 +582,61 @@ P membership when the independent passing-pattern criterion holds and actual
 coNP-completeness otherwise. The three-role embedding, fixed finite role/label
 types and fixed policy family are explicit; varying-family/uniform-K cost is
 not inferred from finite table constants.
+
+## Uniform original full-term parser and polynomial-annotation folds
+
+`FullTermMachines` uses `FullTermCode.RawSymbol`: winner/choice nodes store
+binary natural labels, rename nodes store complete explicit forward arrays,
+and the operation arity is always0,2,1 respectively. The original format has
+variable/function tags and node-local framing; recursive children concatenate
+without framing their subtrees. Operations have an infinite payload alphabet.
+`decodeOperation_polyTime`, `construct_polyTime` and `arity_polyTime` use direct
+fixed kind-tag analysis, canonical binary-name parsing and actual array scans.
+They do not enumerate operations, roles or permutations.
+
+`FullTermFold` provides independent mathematical `fold leaf node context tree`
+and a native cached original-tree stack machine. Successful original terms have
+exact traces; every transition on arbitrary words preserves cached semantics
+and never increases original source-forest byte weight. The storage theorem
+charges the complete captured context, operation arrays, cached source trees
+and cached values. `FullTermFold.fold_polyTime` requires actual native leaf/node
+callbacks and a proved annotation bound
+`valueBytes≤c*(contextBytes+originalTreeBytes+1)^degree`, then certifies the whole
+original-input fold. The extraction program may use a second such instance
+inside its rename callback, with the explicit array as charged context.
+
+`FullTermDecoding` certifies the independent pure original `FullTermCode.decode`
+on every word, including malformed operation tags, payloads and trailing bits.
+The raw grammar is independent of K; separate original-source validation checks
+labels and permutation arrays against binary K before interpreting them.
+`tests/ComplexityFullTerms` checks the infinite-payload signature, bad operation
+tags, exact array/tree roundtrips and the complete callback/runtime interface.
+The full parser/fold build passes2,048jobs; all public runtime endpoints use
+only standard axioms. Uniform full/core validity certificates remain pending.
+
+## Arbitrary selected raw binary signatures: complete hard branch
+
+`RawSubsignatureMachines.ofRawPair_polyTime` certifies the actual native
+`Raw.Term.ofRawPair` injection into any selected finite raw signature, including
+signatures inside an infinite ambient role type. Its proof bounds exact target
+bytes linearly in source bytes; every original node and variable is preserved.
+`mapEquation_polyTime` also charges both source and target equation framings.
+All four owner-defined actual CNF generators have native certificates:
+`resetUnion_polyTime`, `choiceUnion_polyTime`, `twoChoices_polyTime`, and
+`resetChoice_polyTime`. The reset/union generator uses an actual ungated source
+constructor program and a proved nodewise translation identity.
+
+`RawSubsignatureCompleteness.coNPHard selected three hcard` selects a verified
+native hard pair from every signature with more than one operation. Its
+`coNPComplete` adds the complete fixed finite-algebra upper verifier;
+`language_coNPComplete` is the exact shared `Raw.Language selected`, with
+malformed original prefix codes excluded. No reduction correctness or machine
+runtime is supplied as an assumption. Only the finite role type, three-role
+embedding and independent signature cardinality condition are required.
+The hard direction itself does not require the ambient role type finite.
+
+Strict build passes2,157jobs; regression covers a four-operation selected
+signature, the arbitrary-signature hardness endpoint, original syntax embedding
+runtime and the actual reset/union selected generator. These endpoints and
+embedding/generator machines print only standard axioms. Root's complementary
+small-signature checker uses the same selected-signature codec and language.

@@ -1,10 +1,15 @@
 module
 
 public import KFOL.Algebra
+public import KFOL.Complexity.OwnerObservationFrontend
+public import KFOL.Complexity.CoreExtractionWord
 public import KFOL.Rounds.Scalar.FullAbstraction
 public import KFOL.Rounds.Scalar.Fragment
 public import KFOL.Rounds.TwoPlayers.Support
 public import KFOL.Rounds.TwoPlayers.Values
+public import KFOL.Complexity.RawResetFrontend
+public import KFOL.Complexity.RawSubsignatureCompleteness
+public import KFOL.Reductions.Circuits
 public import KFOL.Complexity.RawPairCompleteness
 public import KFOL.Complexity.PolicyWordFrontend
 public import KFOL.Complexity.PolicyCompleteness
@@ -2757,5 +2762,127 @@ theorem policy_family_dichotomy {Role Label : Type}
 [propext, Classical.choice, Quot.sound] -/
 #guard_msgs (whitespace := lax) in
 #print axioms KFOL.Paper.policy_family_dichotomy
+
+/-- The two owners can agree on every possible-victory observation while
+an actual reset/H equation fails. Four ordinary independent input values
+suffice, without winner constants or a primitive union in the terms. -/
+theorem joint_owner_observation_failure {Role : Type u} (a b c : Role)
+    (hab : a ≠ b) (hac : a ≠ c) (hbc : b ≠ c) :
+    ∃ left right : Owner.Term Role (Fin 4),
+      left.OwnersIn (fun r => r = a ∨ r = b) ∧
+      right.OwnersIn (fun r => r = a ∨ r = b) ∧
+      (∀ valuation : Fin 4 → WinnerSet Role,
+        (a ∈ (left.eval valuation).val ↔ a ∈ (right.eval valuation).val) ∧
+        (b ∈ (left.eval valuation).val ↔ b ∈ (right.eval valuation).val)) ∧
+      ∃ valuation : Fin 4 → WinnerSet Role, left.eval valuation ≠ right.eval valuation := by
+  refine ⟨(Owner.jointObservationEquation a b).1,(Owner.jointObservationEquation a b).2,
+    ?_,?_,Owner.joint_observations_agree a b,Owner.jointObservationValuation a b c,
+    Owner.joint_observations_separate a b c hab hac hbc⟩ <;>
+    simp [Owner.jointObservationEquation]
+
+/-- info: 'KFOL.Paper.joint_owner_observation_failure' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Paper.joint_owner_observation_failure
+
+/-- `thm:raw-pairs`: the complete fixed raw-signature dichotomy. The language
+contains exactly original selected-signature equations valid on every
+winner-set valuation; malformed words are excluded in both branches. -/
+theorem raw_signature_dichotomy {Role : Type} [Fintype Role]
+    (three : Fin 3 ↪ Role) (selected : Finset (Raw.Operation Role)) :
+    let language : Set (List Bool) :=
+      {word | ∃ equation : Raw.Term selected ℕ × Raw.Term selected ℕ,
+        FiniteTermCode.encodeEquation (Raw.Symbol selected) equation = word ∧
+          ∀ valuation : ℕ → WinnerSet Role, equation.1.eval valuation = equation.2.eval valuation}
+    (selected.card ≤ 1 → language ∈ Cslib.Complexity.P Turing.MultiTapeTM.encBits) ∧
+      (1 < selected.card → Cslib.Complexity.coNPComplete Turing.MultiTapeTM.encBits language) :=
+  ⟨Complexity.RawResetFrontend.small_signature_language_mem_P selected three,
+    Complexity.RawSubsignatureCompleteness.language_coNPComplete selected three⟩
+
+/-- info: 'KFOL.Paper.raw_signature_dichotomy' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Paper.raw_signature_dichotomy
+
+/-- The actual native shared reset graph has linear many gates and is valid
+exactly for unsatisfiable source CNFs, including both empty-input cases.
+This semantic/count gate does not replace its separately tracked runtime. -/
+theorem reset_circuit_reduction {Role : Type u} (three : Fin 3 ↪ Role)
+    (formula : Reductions.CNF) :
+    (Circuit.ResetCNF.equation formula).WellFormed ∧
+    (Circuit.ResetCNF.equation formula).gates.length =
+      7 * (Reductions.ResetUnion.support formula).length + 2 * formula.flatten.length + 3 ∧
+    Circuit.operationCount (Circuit.ResetCNF.equation formula).gates =
+      5 * (Reductions.ResetUnion.support formula).length + 2 * formula.flatten.length + 1 ∧
+    (let _ := Reset.structureOf (WinnerSet.reset (Role := Role))
+     (Circuit.ResetCNF.equation formula).Holds (WinnerSet Role) ↔ ¬Reductions.Satisfiable formula) := by
+  exact ⟨Circuit.ResetCNF.equation_wellFormed formula,
+    Circuit.ResetCNF.equation_gate_count formula,Circuit.ResetCNF.equation_reset_gate_count formula,
+    Circuit.ResetCNF.equation_holds_iff_unsatisfiable three formula⟩
+
+/-- info: 'KFOL.Paper.reset_circuit_reduction' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Paper.reset_circuit_reduction
+
+/-- Every wellformed reset DAG has its entire identity theory tested by the
+same actual three-element generator used for reset trees. -/
+theorem reset_circuit_generator {Role : Type u} {Var : Type v}
+    (three : Fin 3 ↪ Role) (equation : Circuit.Equation Reset.Symbol Var) :
+    let _ := Reset.structureOf (WinnerSet.reset (Role := Role))
+    equation.Holds (WinnerSet Role) ↔ equation.WellFormed ∧
+      ∀ valuation : Var → WinnerSet Role,
+        (∀ j, ∃ stage : Fin 3, valuation j = Reset.chainValue three stage) →
+        ∃ value, equation.eval valuation = some (value,value) :=
+  Circuit.Equation.reset_holds_iff_chain three equation
+
+/-- info: 'KFOL.Paper.reset_circuit_generator' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Paper.reset_circuit_generator
+
+/-- The original full-language core extractor has an actual polynomial-time
+machine on every input word. On every typed source it returns exactly the
+already proved checked extraction, preserving the original output format.
+K and names are binary; permutations are explicit arrays. -/
+theorem uniform_core_extraction_runtime :
+    Turing.MultiTapeTM.ComputableInPolyTime FullTermCode.extractWord
+      Turing.MultiTapeTM.encBits (Turing.MultiTapeTM.encOption Turing.MultiTapeTM.encBits) ∧
+    ∀ (K : ℕ) (term : Term (Fin K) ℕ),
+      FullTermCode.extractWord (FullTermCode.encodeInput ⟨K,term⟩) =
+        (term.extractCore? 1).map (fun core => FullTermCode.encodeInput ⟨K,core⟩) :=
+  ⟨Complexity.CoreExtraction.extractWord_polyTime,
+    fun K term => FullTermCode.extractWord_encodeInput ⟨K,term⟩⟩
+
+/-- info: 'KFOL.Paper.uniform_core_extraction_runtime' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Paper.uniform_core_extraction_runtime
+
+/-- The tractable branches of the owner-count dichotomy use complete native
+checkers on original words, including the selected-owner syntax restriction. -/
+theorem owner_count_polynomial_branches {Role : Type} [Fintype Role] [DecidableEq Role]
+    (three : Fin 3 ↪ Role) (owners : Finset Role) :
+    let language (relation : WinnerSet Role → WinnerSet Role → Prop) : Set (List Bool) :=
+      {word | ∃ equation : Owner.Term Role ℕ × Owner.Term Role ℕ,
+        FiniteTermCode.encodeEquation (Owner.Symbol Role) equation = word ∧
+        equation.1.OwnersIn (fun r => r ∈ owners) ∧ equation.2.OwnersIn (fun r => r ∈ owners) ∧
+        ∀ valuation : ℕ → WinnerSet Role,
+          relation (equation.1.eval valuation) (equation.2.eval valuation)}
+    (owners.card ≤ 1 → language Eq ∈ Cslib.Complexity.P Turing.MultiTapeTM.encBits) ∧
+    ∀ observer : Role, (owners.erase observer).card ≤ 1 →
+      language (fun x y => observer ∈ x.val → observer ∈ y.val) ∈
+        Cslib.Complexity.P Turing.MultiTapeTM.encBits ∧
+      language (fun x y => observer ∈ x.val ↔ observer ∈ y.val) ∈
+        Cslib.Complexity.P Turing.MultiTapeTM.encBits :=
+  ⟨Complexity.OwnerObservationFrontend.equality_language_mem_P three owners,
+    fun observer small =>
+      ⟨Complexity.OwnerObservationFrontend.implication_language_mem_P three owners observer small,
+        Complexity.OwnerObservationFrontend.equivalence_language_mem_P three owners observer small⟩⟩
+
+/-- info: 'KFOL.Paper.owner_count_polynomial_branches' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Paper.owner_count_polynomial_branches
 
 end KFOL.Paper

@@ -22,6 +22,7 @@ public import KFOL.Algebra.CommonSource
 public import KFOL.Algebra.ReductTestCard
 public import KFOL.Algebra.IdempotencyTestCard
 public import KFOL.Owner
+public import KFOL.Owner.JointObservation
 public import KFOL.Owner.Minimum
 public import KFOL.Core
 public import KFOL.Core.ChoiceUnion

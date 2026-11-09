@@ -19,6 +19,9 @@ namespace Term
 
 variable {Role : Type u} {Var : Type v}
 
+@[simp] theorem withOwner_var (owner : Role) (j : Var) :
+    withOwner owner (.var j : Term Unit Var) = .var j := rfl
+
 @[simp] theorem root_withOwner (t : Term Unit Var) (owner : Role) :
     (t.withOwner owner).root = t.root := by
   induction t using induction_owner with
@@ -26,10 +29,10 @@ variable {Role : Type u} {Var : Type v}
   | step s t hs ht => exact ht
   | guarded r x y z hx hy hz => exact hx
 
-private theorem withOwner_step_aux (owner : Role) (s t : Term Unit Var) :
+@[simp] theorem withOwner_step (owner : Role) (s t : Term Unit Var) :
     (step s t).withOwner owner = step (s.withOwner owner) (t.withOwner owner) := rfl
 
-private theorem withOwner_guarded_aux (owner : Role) (r : Unit) (x y z : Term Unit Var) :
+@[simp] theorem withOwner_guarded (owner : Role) (r : Unit) (x y z : Term Unit Var) :
     (guarded r x y z).withOwner owner =
       guarded owner (x.withOwner owner) (y.withOwner owner) (z.withOwner owner) := rfl
 
@@ -41,9 +44,9 @@ theorem guards_withOwner_outsider [DecidableEq Role] (t : Term Unit Var)
   induction t using induction_owner with
   | var => rfl
   | step s t hs ht =>
-    simp only [withOwner_step_aux, guards_step, root_withOwner, hs, ht]
+    simp only [withOwner_step, guards_step, root_withOwner, hs, ht]
   | guarded r x y z hx hy hz =>
-    simp only [withOwner_guarded_aux, guards_guarded, hne.symm, Bool.false_eq_true, ite_false,
+    simp only [withOwner_guarded, guards_guarded, hne.symm, Bool.false_eq_true, ite_false,
       root_withOwner, hx, hy, hz]
 
 end Term
@@ -142,7 +145,7 @@ theorem guard_payloadWeight_le_encode (t : Term Unit ℕ) (g : Guard ℕ)
     simp only [Guard.payloadWeight, List.map_nil, List.sum_nil, Nat.mul_zero, Nat.add_zero]
     nlinarith
   | step s t hs ht =>
-    rw [withOwner_step_aux, guards_step] at hg
+    rw [withOwner_step, guards_step] at hg
     have hcode := length_encode_step s t
     rcases List.mem_append.mp hg with hg | hg
     · have hbound := ht g hg
@@ -160,7 +163,7 @@ theorem guard_payloadWeight_le_encode (t : Term Unit ℕ) (g : Guard ℕ)
         (FiniteTermCode.encode (Symbol Unit) (step s t)).length (by omega) (by omega)
       omega
   | guarded r x y z hx hy hz =>
-    rw [withOwner_guarded_aux, guards_guarded] at hg
+    rw [withOwner_guarded, guards_guarded] at hg
     simp only [Bool.false_eq_true, ite_false] at hg
     have hcode := length_encode_guarded r x y z
     rcases List.mem_append.mp hg with hg | hg

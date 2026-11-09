@@ -2,6 +2,7 @@ module
 
 public import KFOL.Definitions.Encoding
 public import KFOL.Definitions.Owner
+public import KFOL.Definitions.Circuits
 
 /-! # Native reset/union syntax and the CNF equation reduction
 
@@ -410,3 +411,311 @@ def embedWinnerSet {Role : Type u} {Role' : Type v} (f : Role ↪ Role')
     (A : WinnerSet Role) : WinnerSet Role' := ⟨f '' A.val, A.property.image f⟩
 
 end KFOL.Reductions.Colouring
+
+/-! Arbitrary finite raw subsignatures. -/
+
+namespace KFOL.Raw
+
+universe u v
+
+/- The raw operations are independent of any chosen presentation. -/
+inductive Operation (Role : Type u) where
+  | choice : Role → Operation Role
+  | union : Operation Role
+  | reset : Operation Role
+  deriving DecidableEq
+
+namespace Operation
+
+noncomputable def eval {Role : Type u} : Operation Role → WinnerSet Role → WinnerSet Role → WinnerSet Role
+  | .choice r => WinnerSet.choice r
+  | .union => WinnerSet.union
+  | .reset => WinnerSet.reset
+
+end Operation
+
+/- A term can use precisely the selected native binary operations. -/
+inductive Symbol {Role : Type u} (selected : Finset (Operation Role)) : ℕ → Type u
+  | binary : {operation // operation ∈ selected} → Symbol selected 2
+
+abbrev Term {Role : Type u} (selected : Finset (Operation Role)) (Var : Type v) := Equational.Term (Symbol selected) Var
+
+@[instance_reducible] noncomputable def structureOf {Role : Type u} (selected : Finset (Operation Role)) :
+    (Equational.language (Symbol selected)).Structure (WinnerSet Role) where
+  funMap symbol args := match symbol with
+    | .binary operation => operation.val.eval (args 0) (args 1)
+  RelMap rel := nomatch rel
+
+namespace Term
+
+variable {Role : Type u} {Var : Type v} {selected : Finset (Operation Role)}
+
+def node (operation : {operation // operation ∈ selected}) (s t : Term selected Var) : Term selected Var :=
+  .func (.binary operation) (fun i => if i = 0 then s else t)
+
+noncomputable def eval (t : Term selected Var) (valuation : Var → WinnerSet Role) : WinnerSet Role :=
+  let _ := structureOf selected
+  t.realize valuation
+
+def size : Term selected Var → ℕ
+  | .var _ => 1
+  | .func (.binary _) args => 1 + size (args 0) + size (args 1)
+
+/- Node-for-node injection. The tag map chooses two actual selected
+operations; no recursive argument is duplicated or deleted. -/
+def ofRawPair (operations : Bool → {operation // operation ∈ selected}) : RawPair.Term Var → Term selected Var
+  | .var j => .var j
+  | .func (.binary sign) args => .func (.binary (operations sign)) (fun i => ofRawPair operations (args i))
+
+end Term
+end KFOL.Raw
+
+namespace KFOL.Raw
+
+universe u v
+
+namespace Term
+
+variable {Role : Type u} {Var : Type v} {selected : Finset (Operation Role)}
+
+def support [DecidableEq Var] : Term selected Var → Finset Var
+  | .var j => {j}
+  | .func (.binary _) args => support (args 0) ∪ support (args 1)
+
+end Term
+end KFOL.Raw
+
+namespace KFOL.Raw
+
+universe u v
+
+namespace Term
+
+variable {Role : Type u} {Var : Type v} {selected : Finset (Operation Role)}
+
+end Term
+
+/- Every signature with at least two operations contains one of the four
+hard pairs, independently of the chosen finite operation numbering. -/
+end KFOL.Raw
+
+namespace KFOL.Raw
+
+universe u v
+
+namespace Term
+
+variable {Role : Type u} {Var : Type v} {selected : Finset (Operation Role)}
+
+def pairOperations (first second : Operation Role) (hf : first ∈ selected) (hs : second ∈ selected) :
+    Bool → {operation // operation ∈ selected}
+  | true => ⟨first, hf⟩
+  | false => ⟨second, hs⟩
+
+def ofResetUnion (hreset : Operation.reset ∈ selected) (hunion : Operation.union ∈ selected) :
+    ResetUnion.Term Var → Term selected Var
+  | .var j => .var j
+  | .func .reset args => .func (.binary ⟨.reset, hreset⟩) (fun i => ofResetUnion hreset hunion (args i))
+  | .func .union args => .func (.binary ⟨.union, hunion⟩) (fun i => ofResetUnion hreset hunion (args i))
+
+def toReset (hselected : selected = {.reset}) : Term selected Var → Reset.Term Var
+  | .var j => .var j
+  | .func (.binary _) args => .func .reset (fun i => toReset hselected (args i))
+
+end Term
+
+/- Validity of native selected terms keeps all valuation quantifiers. -/
+def Valid {Role : Type u} (selected : Finset (Operation Role))
+    (equation : Term selected ℕ × Term selected ℕ) : Prop :=
+  ∀ valuation : ℕ → WinnerSet Role, equation.1.eval valuation = equation.2.eval valuation
+
+namespace Reduction
+
+variable {Role : Type u} (selected : Finset (Operation Role))
+
+def resetUnion (hr : Operation.reset ∈ selected) (hu : Operation.union ∈ selected) (formula : Reductions.CNF) :
+    Term selected ℕ × Term selected ℕ :=
+  let e := Reductions.ResetUnion.equation formula
+  (Term.ofResetUnion hr hu e.1, Term.ofResetUnion hr hu e.2)
+
+def choiceUnion (a : Role) (ha : Operation.choice a ∈ selected) (hu : Operation.union ∈ selected)
+    (formula : Reductions.CNF) : Term selected ℕ × Term selected ℕ :=
+  let operations := Term.pairOperations (.choice a) .union ha hu
+  let e := Reductions.RawPair.equation formula
+  (Term.ofRawPair operations e.1, Term.ofRawPair operations e.2)
+
+def twoChoices (a b : Role) (ha : Operation.choice a ∈ selected) (hb : Operation.choice b ∈ selected)
+    (formula : Reductions.CNF) : Term selected ℕ × Term selected ℕ :=
+  let operations := Term.pairOperations (.choice a) (.choice b) ha hb
+  let e := Reductions.RawPair.twoOwnerEquation formula
+  (Term.ofRawPair operations e.1, Term.ofRawPair operations e.2)
+
+def resetChoice (a : Role) (ha : Operation.choice a ∈ selected) (hr : Operation.reset ∈ selected)
+    (formula : Reductions.CNF) : Term selected ℕ × Term selected ℕ :=
+  let operations := Term.pairOperations .reset (.choice a) hr ha
+  let e := Reductions.ResetChoice.equation formula
+  (Term.ofRawPair operations e.1, Term.ofRawPair operations e.2)
+
+end Reduction
+end KFOL.Raw
+
+namespace KFOL.Raw
+
+universe u v
+
+variable {Role : Type u} {Var : Type v} {selected : Finset (Operation Role)}
+
+def operationEquiv (selected : Finset (Operation Role)) :
+    ((n : ℕ) × Symbol selected n) ≃ {operation // operation ∈ selected} where
+  toFun operation := match operation with | ⟨_, .binary op⟩ => op
+  invFun operation := ⟨2, .binary operation⟩
+  left_inv operation := by rcases operation with ⟨n, symbol⟩; cases symbol; rfl
+  right_inv _ := rfl
+
+noncomputable instance operationFintype (selected : Finset (Operation Role)) :
+    Fintype ((n : ℕ) × Symbol selected n) := Fintype.ofEquiv _ (operationEquiv selected).symm
+
+end KFOL.Raw
+
+namespace KFOL.Raw
+
+universe u
+
+/- The reduction selected from an arbitrary nontrivial raw signature uses
+only its actual operations and introduces no abstraction hypothesis. -/
+end KFOL.Raw
+
+namespace KFOL.Raw
+
+/-- The complete original binary equation language of a fixed selected raw
+signature. Membership requires an exact decoding and independent validity. -/
+noncomputable def Language {Role : Type} (selected : Finset (Operation Role)) : Set (List Bool) :=
+  {word | ∃ equation : Term selected ℕ × Term selected ℕ,
+    FiniteTermCode.encodeEquation (Symbol selected) equation = word ∧ Valid selected equation}
+
+end KFOL.Raw
+
+/-! Sparse-input reset DAG CNF reduction. -/
+
+namespace KFOL.Circuit.ResetCNF
+
+open KFOL.Reductions
+
+def inputNames (formula : CNF) : List ℕ :=
+  0 :: 1 :: (ResetUnion.support formula).flatMap
+    (fun i => [ResetUnion.literalName (i, true), ResetUnion.literalName (i, false)])
+
+def literalRef (formula : CNF) (literal : Literal) : ℕ := (inputNames formula).idxOf (ResetUnion.literalName literal)
+
+def pairs (formula : CNF) : List (ℕ × ℕ) :=
+  (ResetUnion.support formula).map (fun i => (literalRef formula (i, true), literalRef formula (i, false)))
+
+def railRefs (formula : CNF) : List ℕ := (pairs formula).flatMap (fun p => [p.1, p.2])
+
+def clauseRefs (formula : CNF) : List (List ℕ) := formula.map (fun C => C.map (literalRef formula))
+
+def inputs (formula : CNF) : List (Gate Reset.Symbol ℕ) := (inputNames formula).map Gate.input
+
+def baselineBuild (formula : CNF) : BuildResult Reset.Symbol ℕ := buildRightComb (railRefs formula) 0 (inputs formula)
+
+def rightBuild (formula : CNF) : BuildResult Reset.Symbol ℕ :=
+  buildConsistency (pairs formula) 1 (baselineBuild formula).output (baselineBuild formula).gates
+
+def leftBuild (formula : CNF) : BuildResult Reset.Symbol ℕ :=
+  buildCNF (clauseRefs formula) 1 0 (rightBuild formula).gates
+
+def equation (formula : CNF) : Equation Reset.Symbol ℕ :=
+  let left := emit (leftBuild formula).gates (Gate.reset (leftBuild formula).output (rightBuild formula).output)
+  ⟨left.gates, left.output, (rightBuild formula).output⟩
+
+def inputValue {M : Type*} (valuation : ℕ → M) (formula : CNF) (ref : ℕ) : M :=
+  ((inputNames formula).map valuation).getD ref (valuation 0)
+
+def baselineValue {M : Type*} [(Equational.language Reset.Symbol).Structure M]
+    (valuation : ℕ → M) (formula : CNF) : M :=
+  ((railRefs formula).map (inputValue valuation formula)).foldr (Reset.operation M) (valuation 0)
+
+def rightValue {M : Type*} [(Equational.language Reset.Symbol).Structure M]
+    (valuation : ℕ → M) (formula : CNF) : M :=
+  ((pairs formula).map (fun p => Reset.operation M
+    (Reset.operation M (valuation 1) (inputValue valuation formula p.1))
+    (inputValue valuation formula p.2))).foldr (Reset.operation M) (baselineValue valuation formula)
+
+def leftValue {M : Type*} [(Equational.language Reset.Symbol).Structure M]
+    (valuation : ℕ → M) (formula : CNF) : M :=
+  ((clauseRefs formula).map (fun clause => clause.map (inputValue valuation formula))).foldl
+    (fun prior clause => (clause.map (Reset.operation M prior)).foldr (Reset.operation M) (valuation 0)) (valuation 1)
+
+/- Actual shared-cache evaluation, in every reset-signature algebra and for
+EVERY valuation. In particular, sharing never changes the clause recurrence. -/
+end KFOL.Circuit.ResetCNF
+namespace KFOL.Circuit.ResetCNF
+
+open KFOL.Reductions
+
+universe u
+
+variable {Role : Type u}
+
+noncomputable def clauseValue (root previous : WinnerSet Role) (literals : List (WinnerSet Role)) : WinnerSet Role :=
+  (literals.map (WinnerSet.reset previous)).foldr WinnerSet.reset root
+
+end KFOL.Circuit.ResetCNF
+namespace KFOL.Circuit.ResetCNF
+
+open KFOL.Reductions
+
+universe u
+
+variable {Role : Type u}
+
+noncomputable def satisfyingStage (assignment : ℕ → Bool) : ℕ → Fin 3 :=
+  Function.extend ResetUnion.literalName (fun literal => if assignment literal.1 = literal.2 then 1 else 0)
+    (fun j => if j = 0 then 1 else 2)
+
+noncomputable def satisfyingValuation (three : Fin 3 ↪ Role) (assignment : ℕ → Bool) (j : ℕ) : WinnerSet Role :=
+  Reset.chainValue three (satisfyingStage assignment j)
+
+end KFOL.Circuit.ResetCNF
+namespace KFOL.Circuit
+
+universe u v w
+
+/- H(root,left,left) uses the SAME left ref twice. It does not copy a
+previously constructed subgraph or expand its shared continuation. -/
+end KFOL.Circuit
+
+namespace KFOL.Circuit
+
+universe u v w
+
+
+end KFOL.Circuit
+
+namespace KFOL.Circuit
+
+universe u v
+
+end KFOL.Circuit
+
+namespace KFOL.Owner
+
+/-- A selected owner family restricts the original owner-labelled syntax.
+The outcome relation is equality, observational implication, or observational
+equivalence; it is independent of the decision programs. -/
+def Valid {Role : Type} (owners : Finset Role)
+    (relation : WinnerSet Role → WinnerSet Role → Prop)
+    (equation : Term Role ℕ × Term Role ℕ) : Prop :=
+  equation.1.OwnersIn (fun r => r ∈ owners) ∧
+  equation.2.OwnersIn (fun r => r ∈ owners) ∧
+  ∀ valuation : ℕ → WinnerSet Role, relation (equation.1.eval valuation) (equation.2.eval valuation)
+
+/-- Exact original owner-equation codes, rejecting every syntax that uses an
+unselected owner as well as every malformed word. -/
+noncomputable def Language {Role : Type}
+    [Fintype ((n : ℕ) × Symbol Role n)] (owners : Finset Role)
+    (relation : WinnerSet Role → WinnerSet Role → Prop) : Set (List Bool) :=
+  {word | ∃ equation : Term Role ℕ × Term Role ℕ,
+    FiniteTermCode.encodeEquation (Symbol Role) equation = word ∧ Valid owners relation equation}
+
+end KFOL.Owner

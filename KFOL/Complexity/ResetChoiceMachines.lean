@@ -100,6 +100,14 @@ private theorem left_polyTime : ComputableInPolyTime
   funext formula
   simp only [ResetUnion.left, translate_leftComb, List.map_map, Function.comp_def, translate_var]
 
+/-- The ungated original reset/union construction transported one node at a
+time to the native two-binary-operation syntax. -/
+theorem translated_reduction_polyTime : ComputableInPolyTime
+    (fun formula => (ResetChoice.translate (ResetUnion.equation formula).1,
+      ResetChoice.translate (ResetUnion.equation formula).2)) cnfEncoding equationEncoding := by
+  have hl := node_polyTime.comp ((const true).prod (left_polyTime.prod right_polyTime))
+  exact FiniteTermMachines.equationRecode_polyTime.comp (hl.prod right_polyTime)
+
 theorem reduction_polyTime : ComputableInPolyTime ResetChoice.equation cnfEncoding equationEncoding := by
   have hl := node_polyTime.comp ((const true).prod (left_polyTime.prod right_polyTime))
   have hcore := FiniteTermMachines.equationRecode_polyTime.comp (hl.prod right_polyTime)

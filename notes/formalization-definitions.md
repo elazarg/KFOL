@@ -1238,3 +1238,41 @@ rejects malformed/trailing words. Root `policy_family_dichotomy` repeats both
 the passing-pattern criterion and the complete original word language; it
 asserts polynomiality for the positive criterion and coNP-completeness for
 its complement, without assuming that these complexity classes differ.
+
+
+The twentieth definition module, `Definitions/Circuits.lean`, gives the
+independent graph model: a gate list with typed finite argument vectors,
+strictly earlier references, two actual output indices, safe cached evaluation,
+and validity requiring wellformedness and equal actual outputs. A failed parse
+or evaluation is never interpreted as an identity. Proof-only unfolding connects
+graph semantics to the existing term algebra; native machines evaluate the
+original shared graph. The CNF graph program and concrete chain valuation live
+in `Definitions/Reductions.lean`.
+
+`Raw.Operation`, `Raw.Symbol selected`, `Raw.Valid` and `Raw.Language` in
+`Definitions/Reductions.lean` specify an actually selected binary signature.
+Its complete word language existentially encodes original terms and quantifies
+over every winner-set valuation. Cardinality cases cover the empty signature,
+each singleton operation and all four possible hard pairs. The polynomial
+frontends scan sparse original labels or translate each reset node once.
+
+`Owner.Valid` and `Owner.Language` in the same module restrict every H owner to
+the selected finite family, then quantify over actual winner-set evaluations
+and an explicit relation. The relation can be equality, membership implication
+or membership equivalence. `Owner.Term.compileObservation` in
+`Definitions/Owner.lean` replaces an observer-owned H by two resets, preserving
+each source child once. All other H nodes are relabeled to Unit. Exact raw guard
+preservation justifies reusing the certified one-owner guard frontend; semantic
+completeness still requires at most one other owner. `jointObservationEquation`
+and `jointObservationValuation` explicitly exhibit the two-owner observational
+counterexample and its third-role separator on four inputs.
+
+`FullTermCode` in `Definitions/Encoding.lean` uses an infinite-payload raw
+signature for original full terms: binary winner/owner labels and explicit
+forward permutation arrays. Binary K is stored once in the outer input. The
+pure decoder checks bounds, exact array length and bijectivity. It never
+constructs an exponential alphabet of permutations. The extraction algorithm
+in `Algorithms/FullTermCode/Core` uses source annotations and stored arrays;
+its native runtime bound charges actual original bytes, including malformed
+words, and remains uniform for K=0,1,2 and larger K. The shared full/core
+complexity languages separately restrict to K≥3 at their theorem boundary.

@@ -6,6 +6,8 @@ Those adapted parts are under Apache 2.0; see LICENSES/Apache-2.0.txt.
 module
 
 public import KFOL.Definitions.Algorithms
+public import KFOL.Definitions.Core
+public import KFOL.Definitions.Circuits
 public import Mathlib.Data.Nat.Size
 public import Mathlib.Data.Fintype.EquivFin
 
@@ -337,3 +339,215 @@ noncomputable def decodeEquation (word : List Bool) : Option (Equational.Term σ
   return (left, right)
 
 end KFOL.FiniteTermCode
+
+
+/-! Uniform original public syntax uses explicit permutation arrays. The raw
+signature is infinite in its payload labels but has the fixed arity bound two.
+No numbering or enumeration of role permutations is part of the format. -/
+
+namespace KFOL.FullTermCode
+
+/-- Raw original constructors carry binary natural labels or an explicitly
+stored forward permutation array in numerical role order. -/
+inductive RawSymbol : ℕ → Type
+  | winner (role : ℕ) : RawSymbol 0
+  | choice (owner : ℕ) : RawSymbol 2
+  | rename (forward : List ℕ) : RawSymbol 1
+  deriving DecidableEq
+
+abbrev Raw := Equational.Term RawSymbol ℕ
+abbrev Operation := (n : ℕ) × RawSymbol n
+
+/-- A fixed two-bit constructor tag followed by one complete framed payload.
+Arrays are lists of canonical binary labels; every array entry is charged. -/
+def encodeOperation : Operation → List Bool
+  | ⟨_, .winner role⟩ => false :: false :: Words.delimit (Words.BinaryNatCode.encode role)
+  | ⟨_, .choice owner⟩ => false :: true :: Words.delimit (Words.BinaryNatCode.encode owner)
+  | ⟨_, .rename forward⟩ => true :: false :: Words.delimit (Algorithms.LabelDictionary.encode forward)
+
+/-- Operation payloads must fill their complete frame; trailing bits are rejected. -/
+def operationPayload (word : List Bool) : Option (List Bool) := do
+  let (payload,rest) ← Words.unpair? word
+  if rest.isEmpty then some payload else none
+
+/-- Decode the fixed tags and complete canonical payload. No arity or loop
+clock is ever read from an arbitrary binary input number. -/
+def decodeOperation : List Bool → Option Operation
+  | false :: false :: body => do
+      let payload ← operationPayload body
+      let role ← Words.BinaryNatCode.decode? payload
+      return ⟨0,.winner role⟩
+  | false :: true :: body => do
+      let payload ← operationPayload body
+      let owner ← Words.BinaryNatCode.decode? payload
+      return ⟨2,.choice owner⟩
+  | true :: false :: body => do
+      let payload ← operationPayload body
+      let forward ← Algorithms.LabelDictionary.decode payload
+      return ⟨1,.rename forward⟩
+  | _ => none
+
+/-- Original prefix trees have unframed recursive children, in increasing
+actual finite child-index order. Only the node-local payload is framed. -/
+def encode : Raw → List Bool
+  | .var name => false :: Words.delimit (Words.BinaryNatCode.encode name)
+  | @FirstOrder.Language.Term.func _ _ n operation children =>
+      true :: (Words.delimit (encodeOperation ⟨n,operation⟩) ++
+        (List.ofFn (fun i => encode (children i))).flatten)
+
+mutual
+  /-- Parse one complete original subtree with an original-bit-length clock. -/
+  def parse : ℕ → List Bool → Option (Raw × List Bool)
+    | 0, _ => none
+    | _ + 1, [] => none
+    | _ + 1, false :: word => do
+        let (name,rest) ← Words.unpair? word
+        let name ← Words.BinaryNatCode.decode? name
+        return (.var name,rest)
+    | fuel + 1, true :: word => do
+        let (code,body) ← Words.unpair? word
+        let operation ← decodeOperation code
+        let (children,rest) ← parseChildren fuel operation.1 body
+        return (.func operation.2 (fun i => children.getD i.val (.var 0)),rest)
+  termination_by fuel _ => (fuel,0)
+  decreasing_by all_goals simp_wf; omega
+
+  /-- Every decoded operation has arity at most two. -/
+  def parseChildren : ℕ → ℕ → List Bool → Option (List Raw × List Bool)
+    | _, 0, word => some ([],word)
+    | fuel, count + 1, word => do
+        let (term,rest) ← parse fuel word
+        let (children,rest) ← parseChildren fuel count rest
+        return (term :: children,rest)
+  termination_by fuel count _ => (fuel,count+1)
+  decreasing_by all_goals simp_wf; omega
+end
+
+/-- Reject malformed and trailing bytes after parsing one original tree. -/
+def decode (word : List Bool) : Option Raw := do
+  let (term,rest) ← parse word.length word
+  if rest.isEmpty then some term else none
+
+/-- The actual forward array of a role permutation, in numerical Fin order.
+It is stored only at a syntactically occurring rename node. -/
+def permutationArray {K : ℕ} (permutation : Equiv.Perm (Fin K)) : List ℕ :=
+  List.ofFn (fun i : Fin K => (permutation i).val)
+
+/-- Erase proof objects from the original public term while retaining every
+actual node, label, repeated occurrence, and explicit permutation array. -/
+def view {K : ℕ} : KFOL.Term (Fin K) ℕ → Raw
+  | .winner role => .func (.winner role.val) Fin.elim0
+  | .var name => .var name
+  | .choice owner left right =>
+      .func (.choice owner.val) (fun i => if i = 0 then view left else view right)
+  | .rename permutation term =>
+      .func (.rename (permutationArray permutation)) (fun _ => view term)
+
+/-- The original uniform source includes binary K as data. K=0,1,2 are not
+excluded from the syntax or silently handled by a different encoding. -/
+abbrev Input := (K : ℕ) × KFOL.Term (Fin K) ℕ
+
+/-- Binary role count followed by the complete original explicit-array tree. -/
+def encodeInput (input : Input) : List Bool :=
+  Words.pair (Words.BinaryNatCode.encode input.1) (encode (view input.2))
+
+
+/-- Uniform original equation inputs share one binary role count and retain
+both complete original trees, including every explicit permutation array. -/
+abbrev EquationInput := (K : ℕ) × (KFOL.Term (Fin K) ℕ × KFOL.Term (Fin K) ℕ)
+
+/-- The role count and the first original tree are framed independently; the
+second complete tree remains the suffix. No recursive child is re-framed. -/
+def encodeEquationInput (input : EquationInput) : List Bool :=
+  Words.pair (Words.BinaryNatCode.encode input.1)
+    (Words.pair (encode (view input.2.1)) (encode (view input.2.2)))
+
+
+/-- Validate the physically stored array's length before its entries and
+bijection test. No value decoded from binary K is used as a traversal clock. -/
+def validArray (K : ℕ) (forward : List ℕ) : Bool :=
+  if forward.length == K then
+    forward.all (fun role => decide (role < K)) && decide forward.Nodup
+  else false
+
+/-- Original syntax validation uniformly in binary K. All loops traverse
+actual raw children or explicit payload arrays; there is no role enumeration. -/
+def valid (K : ℕ) : Raw → Bool
+  | .var _ => true
+  | .func (.winner role) _ => decide (role < K)
+  | .func (.choice owner) children =>
+      decide (owner < K) && valid K (children 0) && valid K (children 1)
+  | .func (.rename forward) children => validArray K forward && valid K (children 0)
+
+end KFOL.FullTermCode
+
+/-! Original flat shared-circuit binary codec. -/
+
+namespace KFOL.Circuit.Code
+
+open KFOL.Words KFOL.FiniteTermCode
+
+variable (σ : ℕ → Type) [Fintype (Operation σ)]
+
+noncomputable def encodeGate : Gate σ ℕ → List Bool
+  | .input j => false :: BinaryNatCode.encode j
+  | @Gate.func _ _ n symbol refs => true :: pair (encodeOperation σ ⟨n, symbol⟩)
+      (Algorithms.LabelDictionary.encode (List.ofFn refs))
+
+/- Arity is checked against the selected opcode before constructing its
+reference vector. This parser retains invalid/out-of-prefix references as
+actual typed data; graph wellformedness rejects them independently. -/
+noncomputable def decodeGate : List Bool → Option (Gate σ ℕ)
+  | [] => none
+  | false :: word => (BinaryNatCode.decode? word).map Gate.input
+  | true :: word => do
+      let (opcode, body) ← unpair? word
+      let operation ← decodeOperation σ opcode
+      let refs ← Algorithms.LabelDictionary.decode body
+      if refs.length = operation.1 then
+        some (.func operation.2 (fun i => refs.getD i.val 0))
+      else none
+
+noncomputable def encodeGates (gates : List (Gate σ ℕ)) : List Bool :=
+  ((gates.map (encodeGate σ)).map delimit).flatten
+
+noncomputable def decodeGates (word : List Bool) : Option (List (Gate σ ℕ)) := do
+  let blocks ← undelimitBlocks word
+  blocks.mapM (decodeGate σ)
+
+/- One shared gate stream followed by two binary output references. -/
+noncomputable def encode (equation : Equation σ ℕ) : List Bool :=
+  pair (encodeGates σ equation.gates) (pair (BinaryNatCode.encode equation.left) (BinaryNatCode.encode equation.right))
+
+noncomputable def decode (word : List Bool) : Option (Equation σ ℕ) := do
+  let (stream, outputs) ← unpair? word
+  let gates ← decodeGates σ stream
+  let (leftCode, rightCode) ← unpair? outputs
+  let left ← BinaryNatCode.decode? leftCode
+  let right ← BinaryNatCode.decode? rightCode
+  return ⟨gates, left, right⟩
+
+noncomputable def Language (M : Type*) [(Equational.language σ).Structure M] : Set (List Bool) :=
+  {word | ∃ equation : Equation σ ℕ, encode σ equation = word ∧ equation.Holds M}
+
+end KFOL.Circuit.Code
+
+
+namespace KFOL.FullTermCode
+
+/-- The complete uniform full-signature equation language in the main
+paper's role-count range. The role count is binary input data. -/
+def FullLanguage : Set (List Bool) :=
+  {word | ∃ input : EquationInput, 3 ≤ input.1 ∧ encodeEquationInput input = word ∧
+    ∀ valuation : ℕ → WinnerSet (Fin input.1),
+      input.2.1.eval valuation = input.2.2.eval valuation}
+
+/-- The core language uses the same original syntax, input encoding and
+independent validity proposition, restricting both terms by IsCore. -/
+def CoreLanguage : Set (List Bool) :=
+  {word | ∃ input : EquationInput, 3 ≤ input.1 ∧ encodeEquationInput input = word ∧
+    input.2.1.IsCore ∧ input.2.2.IsCore ∧
+    ∀ valuation : ℕ → WinnerSet (Fin input.1),
+      input.2.1.eval valuation = input.2.2.eval valuation}
+
+end KFOL.FullTermCode

@@ -232,3 +232,75 @@ identity, then instantiate validity on three roles, failure on four, and
 strict inclusion of their full theories. All central theorem guards allow
 only propext, Classical.choice and Quot.sound. This result has no remaining
 machine-runtime/class obligation. No paper source was edited by this worker.
+
+## Arbitrary finite raw subsignatures (production)
+
+Exact scope: main `thm:raw-pairs`, whose signature is an arbitrary selection
+from the owned choices, union and reset. The earlier three pair reductions
+and reset/union reduction are now connected to an independently defined
+native selected-operation syntax, rather than only four isolated alphabets.
+
+Definitions are in the existing `KFOL/Definitions/Reductions.lean`:
+`Raw.Operation Role` has exactly choice r, union and reset;
+`Raw.Symbol selected` has one binary constructor labelled by a proof-carrying
+member of the selected finite operation set. Its term evaluation directly
+uses the actual winner-set operations. `Raw.Valid selected (s,t)` means
+`∀ v : Nat → WinnerSet Role, s.eval v = t.eval v`.
+`Raw.operationEquiv selected` identifies its entire dependent operation
+alphabet with the selected subtype, supplying a finite alphabet even for
+infinite Role. There is no function-valued operation parameter in validity.
+
+All proof interfaces are in `KFOL/Reductions/RawSubsignature.lean`:
+
+* `Raw.Term.ofRawPair operations` maps the two tags to actual selected
+  operations, preserves every original node and variable occurrence, and
+  has exact `eval_ofRawPair`, `size_ofRawPair`, `varFinset_ofRawPair` bridges.
+  `ofResetUnion` has exact evaluation and expanded-size bridges as well.
+* `Raw.Reduction.{resetUnion,choiceUnion,twoChoices,resetChoice}` are the
+  actual native CNF reductions; `valid_*_iff` proves each is valid exactly
+  when its original CNF is unsatisfiable. Hypotheses assert only membership
+  of the displayed operations and the required distinct actual roles.
+* `Raw.exists_hard_pair selected (h : 1 < selected.card)` exhausts every
+  possible two-operation selection, finding reset+union, two distinct
+  choices, choice+union or choice+reset. The proof is a direct exhaustive
+  case split over the independent operation datatype.
+* Consequently the full proposed paper-facing pure statement is:
+
+  ```lean
+  theorem raw_signature_cnf_reduction {Role : Type u}
+      (three : Fin 3 ↪ Role) (selected : Finset (Raw.Operation Role))
+      (hcard : 1 < selected.card) :
+      ∃ reduction : Reductions.CNF →
+          Raw.Term selected Nat × Raw.Term selected Nat,
+        ∀ formula,
+          (∀ valuation : Nat → WinnerSet Role,
+            (reduction formula).1.eval valuation =
+              (reduction formula).2.eval valuation) ↔
+            ¬Reductions.Satisfiable formula
+  ```
+
+  Proof: `Raw.exists_cnf_reduction`.
+* `small_signature_cases` exhausts the ≤1-operation case: empty, one owned
+  choice, union or reset. `Term.support_eq_varFinset` identifies the explicit
+  finite support with mathlib's complete variable occurrence set.
+  `support_eq_iff_valid_choice` and `support_eq_iff_valid_union` prove
+  equality iff these exact supports agree, ignoring repeated occurrences;
+  they require only two distinct roles. Empty-signature terms are variables
+  and `valid_empty_iff` proves validity iff syntactic equality. The singleton
+  reset translation `toReset` is node preserving and `eval_toReset` is exact,
+  so the existing native reset checker applies without changing meanings.
+
+This closes the pure semantic coverage of ALL finite raw subsignatures.
+Machine/class transport into each fixed selected alphabet, its small-case
+frontends and the coNP upper bound are owned by the complexity worker;
+no polynomial runtime is inferred from the existential reduction theorem.
+Fixed finite alphabet constants must not be presented as uniform-K bounds.
+The worker has received the compiled syntax and embedding APIs.
+
+Validation: the production `lake build KFOL.Reductions.RawSubsignature`
+passed all1124 jobs. `tests/ReductionsRawSubsignature.lean` checks infinite
+role carriers with sparse owner labels, the exact small-case criteria and
+the arbitrary-selected-signature reduction theorem. Nineteen central
+embedding/classification/correctness theorem axiom checks all contain only
+propext, Classical.choice and Quot.sound; they are guarded in the regression.
+No manuscript, Paper, audit or manifest files were edited by this worker.

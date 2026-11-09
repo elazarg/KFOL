@@ -1,5 +1,6 @@
 module
 
+public import KFOL.Owner.GuardEncoding
 public import KFOL.Owner.Basis.Completeness
 public import KFOL.Owner.BasisObstruction
 
@@ -15,13 +16,6 @@ universe u v
 namespace Term
 
 variable {Role : Type u} {Var : Type v}
-
-@[simp] theorem withOwner_var (owner : Role) (j : Var) :
-    withOwner owner (.var j : Term Unit Var) = .var j := rfl
-@[simp] theorem withOwner_step (owner : Role) (s t : Term Unit Var) :
-    (step s t).withOwner owner = step (s.withOwner owner) (t.withOwner owner) := rfl
-@[simp] theorem withOwner_guarded (owner : Role) (s t q : Term Unit Var) :
-    (guarded () s t q).withOwner owner = guarded owner (s.withOwner owner) (t.withOwner owner) (q.withOwner owner) := rfl
 
 theorem ownersIn_withOwner (owner : Role) (t : Term Unit Var) :
     (t.withOwner owner).OwnersIn (fun a => a = owner) := by
