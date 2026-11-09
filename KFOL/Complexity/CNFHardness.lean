@@ -51,6 +51,37 @@ theorem coNPHard_of_CNF {Target : Type} {encoding : Target ↪ List Bool}
     · exact fun _ => hfallback
     · intro _ hm
       exact hw (List.all_eq_true.mpr (fun clause hc => decide_eq_true (hm.1 clause hc)))
+/-- Width-three source transport allows macro generators whose continuation
+copies are polynomially bounded only on the certified source language. -/
+theorem coNPHard_of_width_three {Target : Type} {encoding : Target ↪ List Bool}
+    (predicate : Target → Prop) (reduction : CNF → Target)
+    (hruntime : ComputableInPolyTime reduction Cslib.Complexity.encCNF encoding)
+    (hcorrect : ∀ formula, (∀ clause ∈ formula, clause.length ≤ 3) →
+      (predicate (reduction formula) ↔ ¬Satisfiable formula))
+    (fallback : Target) (hfallback : predicate fallback) :
+    Cslib.Complexity.coNPHard encoding {value | predicate value} := by
+  apply Cslib.Complexity.coNPHard.trans Cslib.Complexity.ThreeSAT_npComplete.compl.2
+  let total := fun formula : CNF =>
+    if formula.all (fun clause => decide (clause.length ≤ 3)) then reduction formula else fallback
+  refine ⟨total, width_polyTime.ite hruntime (const fallback), ?_⟩
+  intro formula
+  change formula ∉ Cslib.Complexity.ThreeSAT ↔ predicate (total formula)
+  unfold total
+  by_cases hw : formula.all (fun clause => decide (clause.length ≤ 3)) = true
+  · have hwidth := List.all_eq_true.mp hw
+    simp only [decide_eq_true_eq] at hwidth
+    rw [ite_eq_left hw, hcorrect formula hwidth]
+    change ¬((∀ clause ∈ formula, clause.length ≤ 3) ∧ Cslib.Logic.PL.CNF.Satisfiable formula) ↔ ¬Satisfiable formula
+    rw [source_satisfiable_iff]
+    constructor
+    · intro hn hs; exact hn ⟨hwidth, hs⟩
+    · intro hn hs; exact hn hs.2
+  · rw [ite_eq_right hw]
+    constructor
+    · exact fun _ => hfallback
+    · intro _ hm
+      exact hw (List.all_eq_true.mpr (fun clause hc => decide_eq_true (hm.1 clause hc)))
+
 /-- An injective target code transports hardness to its complete binary image,
 whose independent existential clause rejects malformed target words. -/
 theorem coNPHard_encode {Target : Type} (encoding : Target ↪ List Bool)

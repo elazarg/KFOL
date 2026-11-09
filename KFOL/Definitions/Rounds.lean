@@ -2,6 +2,8 @@ module
 
 public import GameTheory.Languages.MultiRound.Monitoring
 public import GameTheory.Languages.Bridges.FOSGToEFG
+public import KFOL.Definitions.Strategic
+public import GameTheory.Math.Probability.Mixture
 public import GameTheory.Core.Form
 public import GameTheory.Protocol.BehavioralContinuation
 public import GameTheory.Analysis.Protocol.Sequential
@@ -246,6 +248,124 @@ def threshold [DecidableEq Role] (a b c : Role) (n m : ℕ) : Game Role :=
 /-- Roles with positive mass in at least one actual winner distribution. -/
 def possibleWinners (values : Set (PMF Role)) : Set Role :=
   {who | ∃ law ∈ values, law who ≠ 0}
+
+/-- Interpret an ordinary public owned-choice tree by literal one-active-role
+rounds. Repeated subtrees remain distinct actual history occurrences. -/
+def publicTree [DecidableEq Role] : Strategic.Tree Role → Game Role
+  | .leaf r => .leaf r
+  | .node owner left right => publicChoice owner (publicTree left) (publicTree right)
+
+/-- Round contexts may contain independently instantiated repeated holes.
+The syntax imposes no equilibrium or observational equivalence condition. -/
+inductive Context (Role : Type u) where
+  | hole
+  | leaf (winner : Role)
+  | round (sizes : Role → Nat)
+      (next : ((i : Role) → Fin (sizes i+1)) → Context Role)
+
+/-- Replace every syntactic hole by a fresh occurrence of the supplied game. -/
+def Context.fill : Context Role → Game Role → Game Role
+  | .hole, game => game
+  | .leaf r, _ => .leaf r
+  | .round sizes next, game => .round sizes (fun a => (next a).fill game)
+
+
+/-- Closed scalar components use winner leaves, diagonal commitment rounds,
+role exchange, and public extrema. This syntax contains no value evaluator or
+equilibrium recursion. -/
+inductive ScalarTerm where
+  | zero
+  | one
+  | diagonal (left right : ScalarTerm)
+  | complement (term : ScalarTerm)
+  | sup (left right : ScalarTerm)
+  | inf (left right : ScalarTerm)
+  deriving DecidableEq
+
+/-- Realize scalar syntax as actual finite-menu game trees. Complement
+exchanges the designated roles throughout its component. -/
+def ScalarTerm.game [DecidableEq Role] (a b : Role) : ScalarTerm → Game Role
+  | .zero => .leaf b
+  | .one => .leaf a
+  | .diagonal left right => Game.diagonal a b (left.game a b) (right.game a b)
+  | .complement term => term.game b a
+  | .sup left right => publicChoice a (left.game a b) (right.game a b)
+  | .inf left right => publicChoice b (left.game a b) (right.game a b)
+
+/-- Only the designated pair may have nontrivial menus, and every terminal
+winner belongs to that pair. All other actual menus remain singleton menus. -/
+def UsesOnly (a b : Role) : Game Role → Prop
+  | .leaf r => r = a ∨ r = b
+  | .round sizes next =>
+      (∀ i, i ≠ a → i ≠ b → sizes i = 0) ∧ ∀ actions, (next actions).UsesOnly a b
+
+/-- A syntactic menu restriction only: every actual menu has at most two
+choices. There is no equilibrium or value predicate in this property. -/
+def BooleanMenus : Game Role → Prop
+  | .leaf _ => True
+  | .round sizes next => (∀ i, sizes i ≤ 1) ∧ ∀ actions, (next actions).BooleanMenus
+
+
+open GameTheory.Math.Probability
+
+namespace Scalar
+
+/-- The actual winner law with probability `x` on `a` and `1-x` on `b`. -/
+def distribution (a b : Role) (x : ℝ) (h0 : 0 ≤ x) (h1 : x ≤ 1) : PMF Role :=
+  mix x h0 h1 (PMF.pure a) (PMF.pure b)
+
+end Scalar
+
+namespace Scalar
+
+/-- Parallel sum includes its zero case without a separate convention:
+Lean's field division by zero is zero. -/
+def parallel (x y : ℝ) : ℝ := x*y/(x+y)
+
+end Scalar
+
+namespace ScalarTerm
+
+/-- Rational arithmetic of the independent closed scalar syntax. Its
+interpretation as actual canonical equilibria is proved separately below. -/
+def rate : ScalarTerm → ℚ
+  | .zero => 0
+  | .one => 1
+  | .diagonal left right => left.rate*right.rate/(left.rate+right.rate)
+  | .complement term => 1-term.rate
+  | .sup left right => max left.rate right.rate
+  | .inf left right => min left.rate right.rate
+
+/-- The small constructor set used by the Euclidean synthesis: leaves,
+complement, and one-occurrence diagonal step `D(term, one)`. -/
+inductive UnaryGenerated : ScalarTerm → Prop
+  | zero : UnaryGenerated .zero
+  | one : UnaryGenerated .one
+  | step {term : ScalarTerm} : UnaryGenerated term → UnaryGenerated (.diagonal term .one)
+  | complement {term : ScalarTerm} : UnaryGenerated term → UnaryGenerated (.complement term)
+
+end ScalarTerm
+
+namespace Scalar
+
+/-- The actual law `δₐ/(n+1) + n δᵦ/(n+1)`. -/
+def reciprocalDistribution (a b : Role) (n : ℕ) : PMF Role :=
+  distribution a b (1/((n:ℝ)+1)) (by positivity)
+    (by apply (div_le_one (by positivity : (0:ℝ) < (n:ℝ)+1)).2; nlinarith [Nat.cast_nonneg (α := ℝ) n])
+
+end Scalar
+
+namespace Public
+
+/-- An ordinary probability segment, using the imported actual PMF mixture. -/
+def segment (p q : PMF Role) : Set (PMF Role) :=
+  {value | ∃ (α : ℝ) (h0 : 0 ≤ α) (h1 : α ≤ 1), value = mix α h0 h1 p q}
+
+/-- The concrete tree in the paper, with separate occurrences when repeated. -/
+def nonconvexTree [DecidableEq Role] (a b c : Role) : Game Role :=
+  publicChoice a (publicChoice c (.leaf a) (.leaf b)) (.leaf c)
+
+end Public
 
 end Game
 

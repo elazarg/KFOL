@@ -16,10 +16,6 @@ open GameTheory.Math.Probability
 universe u
 variable {Role : Type u}
 
-/-- The actual winner law with probability `x` on `a` and `1-x` on `b`. -/
-def distribution (a b : Role) (x : ℝ) (h0 : 0 ≤ x) (h1 : x ≤ 1) : PMF Role :=
-  mix x h0 h1 (PMF.pure a) (PMF.pure b)
-
 @[simp] theorem distribution_a (a b : Role) (hab : a ≠ b) (x : ℝ)
     (h0 : 0 ≤ x) (h1 : x ≤ 1) :
     (distribution a b x h0 h1 a).toReal = x := by

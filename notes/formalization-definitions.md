@@ -1173,3 +1173,68 @@ certificates; finite enumeration is not asserted uniform in K. Policy syntax's
 finite selective folds, proves evaluation commutes and preserves core syntax,
 then transfers the full pair-countervaluation theorem. That possibly large
 proof translation is not executed by the policy verifier.
+
+
+## Complete disclosed-round and scalar surface
+
+`Definitions/Rounds` remains the single round-facing semantic definition file.
+It now also collects the actual one-active-role public constructor, diagonal
+constructor, reciprocal and threshold trees, the public-tree interpretation,
+possible winners, independent `Context`/`fill` syntax, `UsesOnly` (only the
+named pair has nontrivial menus or wins), and `BooleanMenus`. The actual menu
+size parameter is one less than its nonempty cardinality. No role-count lower
+bound is built into these definitions.
+
+The same file contains `ScalarTerm` with leaves, diagonal, complement and
+public extrema, its literal game interpretation, rational `rate`, and
+`UnaryGenerated` (only leaves, complement and D(_,one)). The arithmetic formula
+`Scalar.parallel`, actual PMF `Scalar.distribution`, reciprocal distribution,
+ordinary probability `Public.segment`, and concrete `Public.nonconvexTree`
+were consolidated there from their proof modules without changing their
+names or bodies. Scalar rate correctness is an actual canonical SE theorem,
+not the definition of the game or of its equilibrium values.
+
+`Public/Menus` constructs the exact two owner actions and proves their marginal
+law; `Stage` proves the exact mixed-Nash endpoint conditions; `Values` derives
+the one-active-role mixture equation. `Support` connects public tree mixed
+winners to independently defined pure full-profile SPE, and `Nonconvex`
+calculates the concrete two-segment value set and omitted/attained midpoint.
+`Scalar` proves diagonal payoff uniqueness, parallel laws, reciprocal games,
+thresholds, rational synthesis and all-round-context full abstraction.
+`closedContext`, `thresholdContext` and the synthesized comparison context are
+literal syntax constructions; the general context congruence follows from the
+proved actual SE round equation, including repeated holes.
+
+`TwoPlayers/Stage` proves unique actual winner laws for any finite menu stage
+with only two effective players/winners, by crossed Nash deviations. `Values`
+extends this to all finite games satisfying `UsesOnly`, and proves every game
+on `Fin 2` does so. `matrixAction` is the standard dependent Fin-two product
+equivalence, identifying actual row/column menus. `Endpoints` derives the
+all-winning-row/column criteria from actual mixed-Nash support. `Support`
+uses actual nonempty child winner sets and literal `WinnerSet.choiceFold`
+serializations to prove their union is the parent support and that support is
+a congruence for all two-role round contexts. Its small `serialZero/serialOne`
+helpers are exactly those displayed folds. The generic nonowner-atom fold
+lemma belongs to the pure `Algebra/Semilattice` module.
+
+The fixed-signature raw and policy machine theories have explicit independent
+semantic equations and full word languages in `RawPairCompleteness` and
+`PolicyCompleteness`. Every word-language theorem existentially decodes a
+complete actual original equation and excludes malformed words. Native
+3SAT/CNF transports are internal theorems; source width is checked before
+expanded policy macros are executed. These fixed-signature results are not
+asserted uniform in a varying alphabet. `Canonicalization` proves the generic
+machine-level P=NP consequence with both canonicalization and an arbitrary
+Boolean comparator charged; its original-core instantiation remains tracked.
+
+
+The completed fixed-family policy frontend computes actual `normalGuards`,
+including collision normalization, and performs all blocking/dominance/coverage
+scans on their native encodings. Its proved annotation-byte bound is cubic in
+the original input code, with a fixed-family constant for label widths. The
+chain branch checks every observer; the intersection/repetition branch uses
+the complete palette. `PolicyWordFrontend` decodes full original equations and
+rejects malformed/trailing words. Root `policy_family_dichotomy` repeats both
+the passing-pattern criterion and the complete original word language; it
+asserts polynomiality for the positive criterion and coNP-completeness for
+its complement, without assuming that these complexity classes differ.

@@ -95,6 +95,29 @@ theorem mem_choiceFold_of_no_owner {Index : Type v} (r : Role) (S : Finset Index
     have hle : @LE.le (WinnerSet Role) (choiceSemilattice r).toLE (v i) (choiceFold r S hS v) := Finset.le_sup' v hi
     exact ((choice_le_iff r _ _).mp hle).resolve_left hfold |>.2 ha
 
+/-- A nonempty finite owned-choice fold is a different singleton exactly when
+every actual operand is that singleton. No finite-role assumption is needed. -/
+theorem choiceFold_eq_other_iff {Index : Type v} (owner other : Role) (hne : owner ≠ other)
+    (S : Finset Index) (hS : S.Nonempty) (v : Index → WinnerSet Role) :
+    choiceFold owner S hS v = singleton other ↔ ∀ i ∈ S, v i = singleton other := by
+  classical
+  let := choiceSemilattice owner
+  constructor
+  · intro he i hi
+    have hle : @LE.le (WinnerSet Role) (choiceSemilattice owner).toLE
+        (v i) (choiceFold owner S hS v) := Finset.le_sup' v hi
+    rw [he] at hle
+    rcases (choice_le_iff owner _ _).mp hle with h | ⟨_,hsub⟩
+    · exact (hne (singleton_inj.mp h).symm).elim
+    · exact eq_singleton_of_subset (v i) other hsub
+  · intro hall
+    have hp : ∀ i ∈ S, v i = singleton other := hall
+    apply Finset.sup'_induction hS v (p := fun A : WinnerSet Role => A = singleton other)
+      (fun A hA B hB => by
+        change choice owner A B = singleton other
+        rw [hA,hB,choice_idempotent]) hp
+
+
 end WinnerSet
 
 namespace Term

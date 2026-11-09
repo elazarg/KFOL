@@ -1,6 +1,15 @@
 module
 
 public import KFOL.Algebra
+public import KFOL.Rounds.Scalar.FullAbstraction
+public import KFOL.Rounds.Scalar.Fragment
+public import KFOL.Rounds.TwoPlayers.Support
+public import KFOL.Rounds.TwoPlayers.Values
+public import KFOL.Complexity.RawPairCompleteness
+public import KFOL.Complexity.PolicyWordFrontend
+public import KFOL.Complexity.PolicyCompleteness
+public import KFOL.Rounds.Public.Nonconvex
+public import KFOL.Rounds.Scalar.Reciprocal
 public import KFOL.Rounds.Correspondence
 public import KFOL.Reductions.RawPairs
 public import KFOL.Reductions.Colouring
@@ -2420,5 +2429,333 @@ theorem guarded_pair_complexity {Role : Type} [Fintype Role]
 [propext, Classical.choice, Quot.sound] -/
 #guard_msgs (whitespace := lax) in
 #print axioms KFOL.Paper.guarded_pair_complexity
+
+/-- `se:cor:public`: on every public tree, possible mixed sequential winners
+are exactly the independently defined pure SPE winners. Every such winner
+also remains attainable as its Dirac equilibrium distribution. -/
+theorem public_mixed_support {Role : Type u} [Fintype Role] [DecidableEq Role]
+    (tree : Strategic.Tree Role)
+    (order : GameTheory.Languages.Bridges.FOSGToEFG.ExplicitOrder Role) :
+    Rounds.Game.possibleWinners ((Rounds.Game.publicTree tree).sequentialValues order) =
+      (Strategic.value tree).val ∧
+    ∀ i ∈ (Strategic.value tree).val,
+      PMF.pure i ∈ (Rounds.Game.publicTree tree).sequentialValues order :=
+  ⟨Rounds.Game.possibleWinners_publicTree tree order,
+    (Rounds.Game.publicTree_support_and_dirac tree order).2⟩
+
+/-- info: 'KFOL.Paper.public_mixed_support' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Paper.public_mixed_support
+
+/-- Exact nonconvexity and failure of distribution-level public idempotence.
+The two occurrences in the repeated tree have independent continuation
+policies, so the omitted midpoint becomes attainable there. -/
+theorem public_nonconvexity {Role : Type u} [Fintype Role] [DecidableEq Role]
+    (a b c : Role) (hab : a ≠ b) (hac : a ≠ c) (hbc : b ≠ c)
+    (order : GameTheory.Languages.Bridges.FOSGToEFG.ExplicitOrder Role) :
+    (Rounds.Game.publicChoice a
+      (Rounds.Game.publicChoice c (.leaf a) (.leaf b)) (.leaf c)).sequentialValues order =
+      {value | ∃ (α : ℝ) (h0 : 0 ≤ α) (h1 : α ≤ 1),
+        value = GameTheory.Math.Probability.mix α h0 h1 (PMF.pure a) (PMF.pure b)} ∪
+      {value | ∃ (α : ℝ) (h0 : 0 ≤ α) (h1 : α ≤ 1),
+        value = GameTheory.Math.Probability.mix α h0 h1 (PMF.pure b) (PMF.pure c)} ∧
+    (let midpoint := GameTheory.Math.Probability.mix (1/2 : ℝ) (by norm_num) (by norm_num)
+      (PMF.pure a) (PMF.pure c)
+     midpoint ∉ (Rounds.Game.publicChoice a
+       (Rounds.Game.publicChoice c (.leaf a) (.leaf b)) (.leaf c)).sequentialValues order ∧
+     midpoint ∈ (Rounds.Game.publicChoice b
+       (Rounds.Game.publicChoice a (Rounds.Game.publicChoice c (.leaf a) (.leaf b)) (.leaf c))
+       (Rounds.Game.publicChoice a (Rounds.Game.publicChoice c (.leaf a) (.leaf b)) (.leaf c))).sequentialValues order) :=
+  ⟨Rounds.Game.Public.example_values a b c hab hac hbc order,
+    Rounds.Game.Public.midpoint_not_mem_example a b c hab hac hbc order,
+    Rounds.Game.Public.midpoint_mem_repeated_example a b c hab hac hbc order⟩
+
+/-- info: 'KFOL.Paper.public_nonconvexity' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Paper.public_nonconvexity
+
+/-- Constant-sum games with only the designated pair active have a unique
+actual equilibrium winner law, even in a larger ambient role type. -/
+theorem constant_sum_round_values {Role : Type u} [Fintype Role] [DecidableEq Role]
+    (a b : Role) (hab : a ≠ b) (game : Rounds.Game Role)
+    (uses : game.UsesOnly a b)
+    (order : GameTheory.Languages.Bridges.FOSGToEFG.ExplicitOrder Role) :
+    ∃ (x : ℝ) (h0 : 0 ≤ x) (h1 : x ≤ 1),
+      game.sequentialValues order =
+        {GameTheory.Math.Probability.mix x h0 h1 (PMF.pure a) (PMF.pure b)} :=
+  Rounds.Game.TwoPlayers.sequentialValues_scalar a b hab game uses order
+
+/-- info: 'KFOL.Paper.constant_sum_round_values' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Paper.constant_sum_round_values
+
+/-- The actual diagonal commitment game has parallel-sum value, with the same
+formula at either or both zero boundaries. -/
+theorem scalar_diagonal_values {Role : Type u} [Fintype Role] [DecidableEq Role]
+    (a b : Role) (hab : a ≠ b) (left right : Rounds.Game Role)
+    (x y : ℝ) (hx0 : 0 ≤ x) (hx1 : x ≤ 1) (hy0 : 0 ≤ y) (hy1 : y ≤ 1)
+    (order : GameTheory.Languages.Bridges.FOSGToEFG.ExplicitOrder Role)
+    (hleft : left.sequentialValues order =
+      {GameTheory.Math.Probability.mix x hx0 hx1 (PMF.pure a) (PMF.pure b)})
+    (hright : right.sequentialValues order =
+      {GameTheory.Math.Probability.mix y hy0 hy1 (PMF.pure a) (PMF.pure b)}) :
+    (Rounds.Game.diagonal a b left right).sequentialValues order =
+      {GameTheory.Math.Probability.mix (x*y/(x+y))
+        (Rounds.Game.Scalar.parallel_nonneg x y hx0 hy0)
+        (Rounds.Game.Scalar.parallel_le_one x y hx0 hx1 hy0) (PMF.pure a) (PMF.pure b)} :=
+  Rounds.Game.Scalar.sequentialValues_diagonal a b hab left right x y hx0 hx1 hy0 hy1 order hleft hright
+
+/-- info: 'KFOL.Paper.scalar_diagonal_values' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Paper.scalar_diagonal_values
+
+/-- The complete parallel-sum laws on nonnegative values, hence on the unit
+interval. Division by zero gives the required zero boundary. -/
+theorem scalar_parallel_laws :
+    (∀ x : ℝ, 0*x/(0+x) = 0 ∧ x*0/(x+0) = 0) ∧
+    (∀ x y : ℝ, x*y/(x+y) = y*x/(y+x)) ∧
+    (∀ x y z : ℝ, 0 ≤ x → 0 ≤ y → 0 ≤ z →
+      (x*y/(x+y))*z/(x*y/(x+y)+z) = x*(y*z/(y+z))/(x+y*z/(y+z))) ∧
+    (∀ x y z : ℝ, 0 ≤ x → 0 ≤ y → 0 ≤ z → x ≤ y → x*z/(x+z) ≤ y*z/(y+z)) ∧
+    (∀ x y z : ℝ, 0 ≤ x → 0 ≤ y → 0 ≤ z →
+      x*(min y z)/(x+min y z) = min (x*y/(x+y)) (x*z/(x+z)) ∧
+      x*(max y z)/(x+max y z) = max (x*y/(x+y)) (x*z/(x+z))) :=
+  ⟨fun x => ⟨Rounds.Game.Scalar.parallel_zero_left x,Rounds.Game.Scalar.parallel_zero_right x⟩,
+    Rounds.Game.Scalar.parallel_comm,Rounds.Game.Scalar.parallel_assoc,
+    Rounds.Game.Scalar.parallel_mono_left,fun x y z hx hy hz =>
+      ⟨Rounds.Game.Scalar.parallel_min x y z hx hy hz,Rounds.Game.Scalar.parallel_max x y z hx hy hz⟩⟩
+
+/-- info: 'KFOL.Paper.scalar_parallel_laws' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Paper.scalar_parallel_laws
+
+/-- The literal reciprocal games have their exact canonical SE law, including
+n=0; their actual menus are all Boolean and only the named pair is active. -/
+theorem reciprocal_round_values {Role : Type u} [Fintype Role] [DecidableEq Role]
+    (a b : Role) (hab : a ≠ b) (n : ℕ)
+    (order : GameTheory.Languages.Bridges.FOSGToEFG.ExplicitOrder Role) :
+    (Rounds.Game.reciprocal a b n).sequentialValues order =
+      {Rounds.Game.Scalar.distribution a b (1/((n:ℝ)+1)) (by positivity)
+        (by apply (div_le_one (by positivity : (0:ℝ) < (n:ℝ)+1)).mpr
+            nlinarith [Nat.cast_nonneg (α := ℝ) n])} ∧
+    (Rounds.Game.reciprocal a b n).UsesOnly a b ∧
+    (Rounds.Game.reciprocal a b n).BooleanMenus :=
+  ⟨Rounds.Game.Scalar.sequentialValues_reciprocal a b hab n order,
+    Rounds.Game.usesOnly_reciprocal a b n,Rounds.Game.booleanMenus_reciprocal a b n⟩
+
+/-- info: 'KFOL.Paper.reciprocal_round_values' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Paper.reciprocal_round_values
+
+/-- `se:thm:infinite`: exact possible winners in the actual threshold games,
+and impossibility of any finite compositional observation preserving the
+third role's possible victory. Every displayed game uses Boolean menus. -/
+theorem infinite_winner_algebra {Role : Type u} [Fintype Role] [DecidableEq Role]
+    (a b c : Role) (hab : a ≠ b) (hac : a ≠ c) (hbc : b ≠ c)
+    (order : GameTheory.Languages.Bridges.FOSGToEFG.ExplicitOrder Role) :
+    (∀ n m : ℕ,
+      Rounds.Game.possibleWinners ((Rounds.Game.threshold a b c n m).sequentialValues order) =
+        if n < m then {a,b} else if n = m then {a,b,c} else {a,c}) ∧
+    (∀ n m : ℕ, (Rounds.Game.threshold a b c n m).BooleanMenus) ∧
+    (∀ (Summary : Type v) [Finite Summary] (encode : Rounds.Game Role → Summary),
+      (∀ left right rival : Rounds.Game Role, encode left = encode right →
+        encode (Rounds.Game.publicChoice a left rival) = encode (Rounds.Game.publicChoice a right rival)) →
+      (∀ left right : Rounds.Game Role, encode left = encode right →
+        (c ∈ Rounds.Game.possibleWinners (left.sequentialValues order) ↔
+          c ∈ Rounds.Game.possibleWinners (right.sequentialValues order))) → False) :=
+  ⟨fun n m => Rounds.Game.Scalar.possibleWinners_threshold a b c hab hac n m order,
+    Rounds.Game.booleanMenus_threshold a b c,
+    fun _ _ encode congr adequate =>
+      Rounds.Game.Scalar.no_finite_winner_algebra a b c hab hac hbc order encode congr adequate⟩
+
+/-- info: 'KFOL.Paper.infinite_winner_algebra' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Paper.infinite_winner_algebra
+
+/-- The scalar syntax has exactly the rational unit interval as its actual
+canonical SE values; leaves, complement and the unary diagonal step suffice. -/
+theorem scalar_rational_values {Role : Type u} [Fintype Role] [DecidableEq Role]
+    (a b : Role) (hab : a ≠ b)
+    (order : GameTheory.Languages.Bridges.FOSGToEFG.ExplicitOrder Role) :
+    (∀ term : Rounds.Game.ScalarTerm,
+      (term.game a b).sequentialValues order =
+        {Rounds.Game.Scalar.distribution a b (term.rate:ℝ) term.rate_nonneg_real term.rate_le_one_real}) ∧
+    ({q : ℚ | ∃ term : Rounds.Game.ScalarTerm, term.UnaryGenerated ∧ term.rate = q} = Set.Icc 0 1) ∧
+    (∀ (q : ℚ) (h0 : 0 ≤ q) (h1 : q ≤ 1), ∃ term : Rounds.Game.ScalarTerm,
+      term.UnaryGenerated ∧ (term.game a b).sequentialValues order =
+        {Rounds.Game.Scalar.distribution a b (q:ℝ) (by exact_mod_cast h0) (by exact_mod_cast h1)}) :=
+  ⟨fun term => Rounds.Game.Scalar.sequentialValues_scalarTerm term a b hab order,
+    Rounds.Game.ScalarTerm.unaryGenerated_range,
+    fun q h0 h1 => Rounds.Game.Scalar.exists_rational_game a b hab q h0 h1 order⟩
+
+/-- info: 'KFOL.Paper.scalar_rational_values' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Paper.scalar_rational_values
+
+/-- `se:cor:scalar`: scalar value equality is exactly contextual equality of
+possible winners; the third role alone suffices in every actual round context. -/
+theorem scalar_contextual_equivalence {Role : Type u} [Fintype Role] [DecidableEq Role]
+    (a b c : Role) (hab : a ≠ b) (hac : a ≠ c) (hbc : b ≠ c)
+    (left right : Rounds.Game.ScalarTerm)
+    (order : GameTheory.Languages.Bridges.FOSGToEFG.ExplicitOrder Role) :
+    (left.rate = right.rate ↔ ∀ context : Rounds.Game.Context Role,
+      Rounds.Game.possibleWinners ((context.fill (left.game a b)).sequentialValues order) =
+        Rounds.Game.possibleWinners ((context.fill (right.game a b)).sequentialValues order)) ∧
+    (left.rate = right.rate ↔ ∀ context : Rounds.Game.Context Role,
+      (c ∈ Rounds.Game.possibleWinners ((context.fill (left.game a b)).sequentialValues order) ↔
+        c ∈ Rounds.Game.possibleWinners ((context.fill (right.game a b)).sequentialValues order))) :=
+  ⟨Rounds.Game.Scalar.scalar_full_abstraction left right a b c hab hac hbc order,
+    Rounds.Game.Scalar.scalar_third_full_abstraction left right a b c hab hac hbc order⟩
+
+/-- info: 'KFOL.Paper.scalar_contextual_equivalence' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Paper.scalar_contextual_equivalence
+
+/-- The three hard raw binary pairs have coNP-complete validity, for native
+ordinary syntax and for the complete malformed-rejecting binary languages.
+This is the hard-pair part of the fixed-signature dichotomy. -/
+theorem raw_pair_complexity {Role : Type} [Fintype Role]
+    (a b d : Role) (hab : a ≠ b) (had : a ≠ d) (hbd : b ≠ d) :
+    Cslib.Complexity.coNPComplete Complexity.RawPairMachines.equationEncoding
+      {equation : RawPair.Term ℕ × RawPair.Term ℕ | ∀ valuation : ℕ → WinnerSet Role,
+        equation.1.eval (WinnerSet.choice a) (WinnerSet.union) valuation = equation.2.eval (WinnerSet.choice a) (WinnerSet.union) valuation} ∧
+    Cslib.Complexity.coNPComplete Turing.MultiTapeTM.encBits
+      {word | ∃ equation : RawPair.Term ℕ × RawPair.Term ℕ,
+        FiniteTermCode.encodeEquation RawPair.Symbol equation = word ∧
+          ∀ valuation : ℕ → WinnerSet Role,
+            equation.1.eval (WinnerSet.choice a) (WinnerSet.union) valuation = equation.2.eval (WinnerSet.choice a) (WinnerSet.union) valuation} ∧
+    Cslib.Complexity.coNPComplete Complexity.RawPairMachines.equationEncoding
+      {equation : RawPair.Term ℕ × RawPair.Term ℕ | ∀ valuation : ℕ → WinnerSet Role,
+        equation.1.eval (WinnerSet.choice a) (WinnerSet.choice b) valuation = equation.2.eval (WinnerSet.choice a) (WinnerSet.choice b) valuation} ∧
+    Cslib.Complexity.coNPComplete Turing.MultiTapeTM.encBits
+      {word | ∃ equation : RawPair.Term ℕ × RawPair.Term ℕ,
+        FiniteTermCode.encodeEquation RawPair.Symbol equation = word ∧
+          ∀ valuation : ℕ → WinnerSet Role,
+            equation.1.eval (WinnerSet.choice a) (WinnerSet.choice b) valuation = equation.2.eval (WinnerSet.choice a) (WinnerSet.choice b) valuation} ∧
+    Cslib.Complexity.coNPComplete Complexity.RawPairMachines.equationEncoding
+      {equation : RawPair.Term ℕ × RawPair.Term ℕ | ∀ valuation : ℕ → WinnerSet Role,
+        equation.1.eval (WinnerSet.reset) (WinnerSet.choice a) valuation = equation.2.eval (WinnerSet.reset) (WinnerSet.choice a) valuation} ∧
+    Cslib.Complexity.coNPComplete Turing.MultiTapeTM.encBits
+      {word | ∃ equation : RawPair.Term ℕ × RawPair.Term ℕ,
+        FiniteTermCode.encodeEquation RawPair.Symbol equation = word ∧
+          ∀ valuation : ℕ → WinnerSet Role,
+            equation.1.eval (WinnerSet.reset) (WinnerSet.choice a) valuation = equation.2.eval (WinnerSet.reset) (WinnerSet.choice a) valuation} :=
+  ⟨Complexity.RawPairCompleteness.union_coNPComplete a b d hab had hbd,
+    Complexity.RawPairCompleteness.union_language_coNPComplete a b d hab had hbd,
+    Complexity.RawPairCompleteness.twoOwners_coNPComplete a b d hab had hbd,
+    Complexity.RawPairCompleteness.twoOwners_language_coNPComplete a b d hab had hbd,
+    Complexity.RawPairCompleteness.resetChoice_coNPComplete a b d hab had hbd,
+    Complexity.RawPairCompleteness.resetChoice_language_coNPComplete a b d hab had hbd⟩
+
+/-- info: 'KFOL.Paper.raw_pair_complexity' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Paper.raw_pair_complexity
+
+/-- Every finite policy family outside the independent tractability criterion
+has coNP-complete native and full binary-language equality. The positive
+criterion's runtime is a separate clause of the family dichotomy. -/
+theorem hard_policy_complexity {Role Label : Type} [Fintype Role] [Fintype Label]
+    (D : Label → Set Role) (three : Fin 3 ↪ Role) (code : Role ↪ ℕ)
+    (hard : ¬Policies.FamilyEasy D) :
+    Cslib.Complexity.coNPComplete Complexity.PolicyReductionMachines.equationEncoding
+      {equation : Policies.Term Label ℕ × Policies.Term Label ℕ |
+        ∀ valuation : ℕ → WinnerSet Role, equation.1.eval D valuation = equation.2.eval D valuation} ∧
+    Cslib.Complexity.coNPComplete Turing.MultiTapeTM.encBits
+      {word | ∃ equation : Policies.Term Label ℕ × Policies.Term Label ℕ,
+        FiniteTermCode.encodeEquation (Policies.Symbol Label) equation = word ∧
+          ∀ valuation : ℕ → WinnerSet Role, equation.1.eval D valuation = equation.2.eval D valuation} :=
+  ⟨Complexity.PolicyCompleteness.coNPComplete D three code hard,
+    Complexity.PolicyCompleteness.language_coNPComplete D three code hard⟩
+
+/-- info: 'KFOL.Paper.hard_policy_complexity' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Paper.hard_policy_complexity
+
+/-- `two:prop:rounds`: for every two-player round, the exact possible SE
+winners are the union of the two public serialization values. The latter
+are literal finite owned-choice folds of the actual child winner sets. -/
+theorem two_player_round_support (sizes : Fin 2 → ℕ)
+    (next : ((i : Fin 2) → Fin (sizes i+1)) → Rounds.Game (Fin 2))
+    (order : GameTheory.Languages.Bridges.FOSGToEFG.ExplicitOrder (Fin 2)) :
+    ∃ g : ((i : Fin 2) → Fin (sizes i+1)) → WinnerSet (Fin 2),
+      (∀ actions, (g actions).val =
+        Rounds.Game.possibleWinners ((next actions).sequentialValues order)) ∧
+      let Sa := WinnerSet.choiceFold 0 Finset.univ Finset.univ_nonempty fun row =>
+        WinnerSet.choiceFold 1 Finset.univ Finset.univ_nonempty fun col =>
+          g (Rounds.Game.TwoPlayers.matrixAction sizes row col)
+      let Sb := WinnerSet.choiceFold 1 Finset.univ Finset.univ_nonempty fun col =>
+        WinnerSet.choiceFold 0 Finset.univ Finset.univ_nonempty fun row =>
+          g (Rounds.Game.TwoPlayers.matrixAction sizes row col)
+      Rounds.Game.possibleWinners ((Rounds.Game.round sizes next).sequentialValues order) =
+        (Sa.union Sb).val ∧
+      Sa.union Sb = WinnerSet.choice 1 (WinnerSet.choice 0 Sa
+        ((WinnerSet.singleton 0).union (WinnerSet.singleton 1))) Sb :=
+  Rounds.Game.TwoPlayers.exists_round_support_folds sizes next order
+
+/-- info: 'KFOL.Paper.two_player_round_support' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Paper.two_player_round_support
+
+/-- Two-role possible winners compose through every actual round context,
+and the hidden two-bit matching-pennies round attains the ambiguous class. -/
+theorem two_player_round_contexts
+    (order : GameTheory.Languages.Bridges.FOSGToEFG.ExplicitOrder (Fin 2)) :
+    (∀ (left right : Rounds.Game (Fin 2)),
+      Rounds.Game.possibleWinners (left.sequentialValues order) =
+        Rounds.Game.possibleWinners (right.sequentialValues order) →
+      ∀ context : Rounds.Game.Context (Fin 2),
+        Rounds.Game.possibleWinners ((context.fill left).sequentialValues order) =
+          Rounds.Game.possibleWinners ((context.fill right).sequentialValues order)) ∧
+    Rounds.Game.possibleWinners
+      ((Rounds.Game.diagonal (0 : Fin 2) 1 (.leaf 0) (.leaf 0)).sequentialValues order) = {0,1} :=
+  ⟨fun left right he context =>
+    Rounds.Game.TwoPlayers.possibleWinners_context_congr context left right order he,
+    Rounds.Game.Scalar.possibleWinners_reciprocal_succ (0 : Fin 2) 1 (by decide) 0 order⟩
+
+/-- info: 'KFOL.Paper.two_player_round_contexts' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Paper.two_player_round_contexts
+
+/-- The full finite policy-family dichotomy. Passing patterns are compared by
+inclusion and intersection exactly as stated in the paper. Both branches
+refer to the complete original binary input language and certified machines. -/
+theorem policy_family_dichotomy {Role Label : Type}
+    [Fintype Role] [Fintype Label] [DecidableEq Role] [DecidableEq Label]
+    (D : Label → Finset Role) (three : Fin 3 ↪ Role) :
+    let pattern := fun r : Role => {d : Label | r ∉ D d}
+    let easy :=
+      (∀ r s, pattern r ⊆ pattern s ∨ pattern s ⊆ pattern r) ∨
+      ((∀ r s, ∃ t, pattern t = pattern r ∩ pattern s) ∧
+        ∃ r s, r ≠ s ∧ pattern r = pattern s)
+    let language : Set (List Bool) :=
+      {word | ∃ equation : Policies.Term Label ℕ × Policies.Term Label ℕ,
+        FiniteTermCode.encodeEquation (Policies.Symbol Label) equation = word ∧
+          ∀ valuation : ℕ → WinnerSet Role,
+            equation.1.eval (fun d => (D d : Set Role)) valuation =
+              equation.2.eval (fun d => (D d : Set Role)) valuation}
+    (easy → language ∈ Cslib.Complexity.P Turing.MultiTapeTM.encBits) ∧
+      (¬easy → Cslib.Complexity.coNPComplete Turing.MultiTapeTM.encBits language) := by
+  let code : Role ↪ ℕ :=
+    ⟨fun r => (Fintype.equivFin Role r).val,
+      fun _ _ he => (Fintype.equivFin Role).injective (Fin.ext he)⟩
+  exact Complexity.PolicyTermFrontend.language_dichotomy three D code
+
+/-- info: 'KFOL.Paper.policy_family_dichotomy' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Paper.policy_family_dichotomy
 
 end KFOL.Paper

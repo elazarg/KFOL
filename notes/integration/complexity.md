@@ -484,8 +484,101 @@ has full fixed-role machine-level coNP-completeness for typed equations and the 
 
 Whole owner-table checking and expanded term synthesis are now certified.
 Original one-owner term extraction/equality, including ternary H and complete
-malformed-word handling, are certified uniformly in K. Further pure-H, raw-pair,
-full-signature, policy-family, circuit and colouring reduction/verifier machines
+malformed-word handling, are certified uniformly in K. Pure-H and all four hard raw pairs have complete fixed-role typed and raw
+class endpoints. Arbitrary raw subsignature dichotomy,
+full-signature, circuit and colouring reduction/verifier machines
 remain separate obligations; uniform-K upper bounds are not inferred from the
 fixed finite-algebra verifier. Generic finite-signature constructors, complete
 decoders and polynomial-annotation folds are ready for that reuse.
+
+## Native hard raw pairs and canonicalization
+
+`RawPairMachines` certifies the actual `RawPair.equation` and
+`RawPair.twoOwnerEquation` programs, including their different empty-conjunction
+and empty-clause branches. `ResetChoiceMachines.reduction_polyTime` certifies
+`ResetChoice.equation` by composing actual native constructors and proving that
+translation commutes with each reset/union fold. No translator runtime or hidden
+shared syntax is assumed. All three targets use `RawPair.Symbol.binary Bool`,
+exactly two binary operations, the generic original prefix codec and the paper's
+outer 2N+2 framing. The CNF codec retains sparse binary names.
+
+`RawPairCompleteness.{union_coNPComplete,twoOwners_coNPComplete,
+resetChoice_coNPComplete}` are complete typed class endpoints;
+`{union_language_coNPComplete,twoOwners_language_coNPComplete,
+resetChoice_language_coNPComplete}` are complete raw binary-language endpoints.
+`Theory first second` is the independent universal identity proposition;
+`Language first second` is its exact encoded image and excludes malformed words.
+Only a fixed finite role type and three explicitly distinct roles are required.
+The generators are uniform algorithms; the upper verifier is fixed-algebra,
+so these theorems do not supply a uniform binary-K bound.
+
+`Canonicalization.comparator_implies_P_eq_NP` derives machine-level P=NP from
+an actual coNP-hard theory, polynomial canonical output computation and a
+polynomial Boolean comparator that decides the original relation on those
+outputs. It charges both canonical words and their comparison. Literal equality
+is the specialization `implies_P_eq_NP`; `reset_union` and `guarded_pair` already
+instantiate actual native fragment hardness and codecs. Core instantiation
+still requires the actual core reduction/code bridge.
+
+## Non-easy finite policy families: actual native coNP-completeness
+
+`PolicyTermMachines` specializes the shared codec and native constructors to
+`Policies.Symbol Label` (reset plus the original indexed ternary operations).
+The finite label alphabet is fixed. `PolicyReductionMachines.reduction_polyTime`
+certifies `equationAt code plan`, on the complete sparse-CNF input codec, with
+actual expanded tree output in the original generic equation codec. Each fixed
+lattice macro is compiled by structural constructor composition. Every copied
+continuation is included in the output and charged.
+
+`equationAt` expands clauses to depth three, includes the actual support scan,
+calibration, preliminary tests, all reset folds and final equation framing.
+`equationAt_eq code plan formula width` proves exact equality with both terms of
+`plan.equation formula` after its injective ordinary-Nat variable renaming,
+whenever every clause has length at most three. This is not a certificate or a
+promise at the raw-machine input boundary: `CNFHardness.coNPHard_of_width_three`
+certifies an explicit total width check, and wide sources map to a fixed valid
+equation. Arbitrary-depth macros can copy continuations exponentially, so the
+width guard is essential to the construction rather than an inferred size bound.
+
+`PolicyCompleteness.{coNPHard,coNPComplete,language_coNPComplete}` requires only
+fixed finite Role/Label types, the independent policy interpretation D, three
+distinct roles, an injective sparse role-name code, and `¬Policies.FamilyEasy D`.
+It obtains the actual plan from the proved independent family reduction.
+`Theory D` is universal original-term identity, and `Language D` is its exact
+encoded image, rejecting all malformed words. Fixed-algebra upper membership
+uses the complete generic original-tree decoder/evaluator/witness verifier.
+No external hardness, reduction correctness or runtime premise remains.
+
+The complementary easy-family runtime is complete below. Tests
+include a macro that doubles its continuation: three true literals give size57,
+four unrestricted literals size121, and the explicit three-depth generator stays
+at size57. This distinguishes actual copied tree syntax from sharing.
+
+## Complete fixed-family policy dichotomy
+
+`PolicyGuardWeight.payload_le` proves the actual normalized per-guard byte
+weight is at most `(5+2L)*originalCodeLength²`. Its `annotation_le` proves the
+full root plus all framed guard bytes is at most `(12+4L)*(originalCodeLength+1)³`.
+Here variable names contribute `2*Nat.bits.length+1`, labels contribute
+`2*encFinite.length+1`, and L is the fixed label maximum. The proof follows
+actual passing collision normalization, retains every repeated test, and uses
+exact one-guard-per-leaf semantics. `PolicyTermFrontend` proves these weights
+equal its native machine encodings before applying the generic cached fold.
+
+`PolicyGuardMachines` certifies actual many/pass updates, label filtering,
+blocking union/lookup, collision normalization and all dominance/coverage scans.
+Blocking-set operations use fixed finite role membership tables and native
+loops over the actual input lists. `PolicyTermFrontend.annotation_polyTime`,
+`normalGuards_polyTime`, `observation_polyTime` and `equation_polyTime` certify
+whole original-tree programs, including both branches of `familyEquationB`.
+
+`PolicyWordFrontend` exports `PolicyTermFrontend.checkWord_polyTime` for the
+complete original binary input, rejecting any malformed outer frame, operation
+payload, tree or suffix. `checkWord_iff` identifies its accepted words with the
+independent universal original-term theory under `FamilyEasy` and covered role/
+label dictionaries. `theory_mem_P` and `language_mem_P` close both tractable
+class endpoints. `language_dichotomy three D code` combines actual machine-level
+P membership when the independent passing-pattern criterion holds and actual
+coNP-completeness otherwise. The three-role embedding, fixed finite role/label
+types and fixed policy family are explicit; varying-family/uniform-K cost is
+not inferred from finite table constants.
