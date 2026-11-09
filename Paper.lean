@@ -1,6 +1,14 @@
 module
 
 public import KFOL.Algebra
+public import KFOL.Algebra.Atomic.Classification
+public import KFOL.Algebra.Atomic.Binary
+public import KFOL.Algebra.TwoPlayers.Coordinates
+public import KFOL.Policies.Public
+public import KFOL.Rounds.SequentialExistence
+public import KFOL.Rounds.InformationFibers
+public import KFOL.Complexity.OwnerSynthesisBridge
+public import KFOL.Complexity.OwnerCheckMachine
 public import KFOL.Algorithms.GuardWords
 public import KFOL.Complexity.GuardSubset
 public import KFOL.Algorithms.GuardRecord
@@ -1787,5 +1795,214 @@ theorem choice_union_basis {Role : Type v} (three : Fin 3 ↪ Role) (owner : Rol
 [propext, Classical.choice, Quot.sound] -/
 #guard_msgs (whitespace := lax) in
 #print axioms KFOL.Paper.choice_union_basis
+
+/-- Complete paper-facing S2 statement, including actual term realization. -/
+theorem atomic_functions {Role : Type u} [Finite Role] (three : Fin 3 ↪ Role)
+    {Var : Type v} [Finite Var] [Nonempty Var] (f : (Var → Role) → Role) :
+    (∃ t : Term Role Var,
+      (∀ x : Var → Role, ∃ r,
+        t.eval (fun i => WinnerSet.singleton (x i)) = WinnerSet.singleton r) ∧
+      (∀ x : Var → Role,
+        t.eval (fun i => WinnerSet.singleton (x i)) = WinnerSet.singleton (f x))) ↔
+      (∃ i : Var, ∃ g : Role → Role, ∀ x, f x = g (x i)) ∨
+      (∃ a b : Role, ∀ x, f x = a ∨ f x = b) := by
+  let _ : Nonempty Role := ⟨three 0⟩
+  exact Term.atomic_function_classification_with_preservation f
+
+/-- info: 'KFOL.Paper.atomic_functions' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Paper.atomic_functions
+
+/-- Complete determinacy corollary; no finite label hypothesis is needed. -/
+theorem determinacy {Role : Type u} (three : Fin 3 ↪ Role)
+    {Var : Type v} [Finite Var] (t : Term Role Var)
+    (ha : ∀ x : Var → Role, ∃ r,
+      t.eval (fun i => WinnerSet.singleton (x i)) = WinnerSet.singleton r)
+    (hd : ∀ A : WinnerSet Role, t.eval (fun _ => A) = A) :
+    ∃ i : Var, ∀ x : Var → Role,
+      t.eval (fun j => WinnerSet.singleton (x j)) = WinnerSet.singleton (x i) :=
+  t.atomic_determinacy three ha (fun r => hd (WinnerSet.singleton r))
+
+/-- info: 'KFOL.Paper.determinacy' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Paper.determinacy
+
+/-- Complete binary classification with explicit public-language hypotheses. -/
+theorem binary_atom_preserving {Role : Type u} (three : Fin 3 ↪ Role) (t : Term Role (Fin 2))
+    (ha : ∀ x : Fin 2 → Role, ∃ r,
+      t.eval (fun i => WinnerSet.singleton (x i)) = WinnerSet.singleton r)
+    (hd : ∀ A : WinnerSet Role, t.eval (fun _ => A) = A) :
+    (∀ v : Fin 2 → WinnerSet Role, t.eval v = v 0) ∨
+    (∀ v : Fin 2 → WinnerSet Role, t.eval v = v 1) ∨
+    (∀ v : Fin 2 → WinnerSet Role, t.eval v = (v 0).reset (v 1)) ∨
+    (∀ v : Fin 2 → WinnerSet Role, t.eval v = (v 1).reset (v 0)) :=
+  t.binary_atom_preserving three ha hd
+
+/-- info: 'KFOL.Paper.binary_atom_preserving' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Paper.binary_atom_preserving
+
+/-- Complete converse: all four and only these have a realizing idempotent,
+atom-preserving core term. -/
+theorem binary_atom_preserving_iff {Role : Type u} [Finite Role] (three : Fin 3 ↪ Role)
+    (f : (Fin 2 → WinnerSet Role) → WinnerSet Role) :
+    (∃ t : Term Role (Fin 2), t.IsCore ∧
+      (∀ x : Fin 2 → Role, ∃ r,
+        t.eval (fun i => WinnerSet.singleton (x i)) = WinnerSet.singleton r) ∧
+      (∀ A : WinnerSet Role, t.eval (fun _ => A) = A) ∧ (∀ v, t.eval v = f v)) ↔
+    (∀ v : Fin 2 → WinnerSet Role, f v = v 0) ∨
+    (∀ v : Fin 2 → WinnerSet Role, f v = v 1) ∨
+    (∀ v : Fin 2 → WinnerSet Role, f v = (v 0).reset (v 1)) ∨
+    (∀ v : Fin 2 → WinnerSet Role, f v = (v 1).reset (v 0)) :=
+  Term.binary_operation_classification three f
+
+/-- info: 'KFOL.Paper.binary_atom_preserving_iff' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Paper.binary_atom_preserving_iff
+
+open Classical in
+/-- Complete two-player strong-Kleene identification. -/
+theorem two_player_identification {Role : Type u} (labels : Fin 2 ≃ Role) :
+    ∃ q : WinnerSet Role ≃ Fin 3,
+      (∀ i, q (TwoPlayers.value labels i) = i) ∧
+      (∀ A B, q (WinnerSet.choice (labels 0) A B) = max (q A) (q B)) ∧
+      (∀ A B, q (WinnerSet.choice (labels 1) A B) = min (q A) (q B)) ∧
+      (∀ A, q (WinnerSet.rename (Equiv.swap (labels 0) (labels 1)) A) = (q A).rev) :=
+  TwoPlayers.strong_kleene_identification labels
+
+
+/-- info: 'KFOL.Paper.two_player_identification' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Paper.two_player_identification
+
+/-- Exact two-player degeneracies, atomicity and failure of the three-player
+idempotent-core characterization, using the same winner carrier and syntax. -/
+theorem two_player_degeneracies {Role : Type u} (labels : Fin 2 ≃ Role) :
+    (∀ A B : WinnerSet Role, A.reset B = B) ∧
+    (∀ (r : Role) (X Y Z : WinnerSet Role), WinnerSet.guardedChoice r X Y Z = X) ∧
+    (∀ (D : Set Role) (X Y Z : WinnerSet Role), WinnerSet.policyReset D X Y Z = X) ∧
+    (∀ (Var : Type v) (t : Term Role Var), ∀ x : Var → Role, ∃ r,
+      t.eval (fun i => WinnerSet.singleton (x i)) = WinnerSet.singleton r) ∧
+    (∀ t : Term Role Empty, ∃ r, t.eval Empty.elim = WinnerSet.singleton r) ∧
+    (¬∃ t : Term Role (Fin 2), ∀ x : Fin 2 → WinnerSet Role,
+      t.eval x = (x 0).union (x 1)) ∧
+    (∃ t : Term Role (Fin 2), (∀ A : WinnerSet Role, t.eval (fun _ => A) = A) ∧
+      ¬∃ s : Term Role (Fin 2), s.IsCore ∧ ∀ x, s.eval x = t.eval x) := by
+  refine ⟨TwoPlayers.reset_projection labels,TwoPlayers.guardedChoice_projection labels,
+    TwoPlayers.policyReset_projection labels,?_,?_,TwoPlayers.union_not_definable labels,
+    TwoPlayers.idempotent_not_core labels⟩
+  · intro Var t
+    exact TwoPlayers.atom_preserving labels t
+  · intro t
+    exact TwoPlayers.closed_atomic labels t Empty.elim
+
+/-- info: 'KFOL.Paper.two_player_degeneracies' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Paper.two_player_degeneracies
+
+/-- The fully expanded two-owner selective operation strictly extends reset:
+no reset-only term of any depth defines it. -/
+theorem strict_two_owner_policy {Role : Type u} (a b c : Role)
+    (hab : a ≠ b) (hac : a ≠ c) (hbc : b ≠ c) :
+    ¬∃ t : Reset.Term (Fin 3), ∀ x : Fin 3 → WinnerSet Role,
+      t.eval x = (WinnerSet.choice a (WinnerSet.choice b (x 1) (x 2)) (x 1)).reset (x 0) :=
+  Policies.twoOwnerSelective_not_reset_definable a b c hab hac hbc
+
+/-- info: 'KFOL.Paper.strict_two_owner_policy' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Paper.strict_two_owner_policy
+
+/-- In both independently specified tractable family cases, the actual
+native syntax checker decides full equality on every winner-set valuation. -/
+theorem policy_family_checker {Role : Type u} {Label : Type v} {Var : Type w}
+    [DecidableEq Role] [DecidableEq Label] [DecidableEq Var]
+    (three : Fin 3 ↪ Role) (D : Label → Finset Role)
+    (roles : List Role) (labels : List Label)
+    (hroles : ∀ r, r ∈ roles) (hlabels : ∀ d, d ∈ labels)
+    (heasy :
+      (∀ r s,
+        Policies.passingPattern (fun d => (D d : Set Role)) r ⊆
+          Policies.passingPattern (fun d => (D d : Set Role)) s ∨
+        Policies.passingPattern (fun d => (D d : Set Role)) s ⊆
+          Policies.passingPattern (fun d => (D d : Set Role)) r) ∨
+      ((∀ r s, ∃ t,
+        Policies.passingPattern (fun d => (D d : Set Role)) t =
+          Policies.passingPattern (fun d => (D d : Set Role)) r ∩
+            Policies.passingPattern (fun d => (D d : Set Role)) s) ∧
+        ∃ r s, r ≠ s ∧ Policies.passingPattern (fun d => (D d : Set Role)) r =
+          Policies.passingPattern (fun d => (D d : Set Role)) s))
+    (left right : Policies.Term Label Var) :
+    Policies.Term.familyEquationB D roles labels left right = true ↔
+      ∀ x : Var → WinnerSet Role,
+        left.eval (fun d => (D d : Set Role)) x = right.eval (fun d => (D d : Set Role)) x :=
+  Policies.Term.familyEquationB_correct three D roles labels hroles hlabels heasy left right
+
+/-- info: 'KFOL.Paper.policy_family_checker' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Paper.policy_family_checker
+
+/-- Native polynomial time for the complete independent owner-table checker,
+uniformly in the unary dimension and with no promise about canonicality. -/
+theorem owner_table_runtime :
+    Turing.MultiTapeTM.ComputableInPolyTime
+      (fun input : (n : ℕ) × Owner.GuardTable (Fin n) =>
+        input.2.check (List.finRange input.1))
+      Complexity.OwnerRuntime.inputEncoding Turing.MultiTapeTM.encBool :=
+  Complexity.OwnerRuntime.source_check_polyTime
+
+/-- info: 'KFOL.Paper.owner_table_runtime' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Paper.owner_table_runtime
+
+/-- General finite-menu round execution has actual finite histories, public
+recall, serial decision recall and canonical sequential equilibria. The
+serial/observed equilibrium equivalence and value recursion are separate. -/
+theorem round_protocol_foundations {Role : Type u} [Fintype Role] [DecidableEq Role]
+    (game : Rounds.Game Role)
+    (order : GameTheory.Languages.Bridges.FOSGToEFG.ExplicitOrder Role) :
+    Finite game.execution.History ∧ Finite (game.serialized order).execution.History ∧
+    game.information.PerfectRecall ∧ (game.serialized order).information.DecisionRecall ∧
+    (∀ p : Rounds.Game.Position game, game.execution.Reachable p) ∧
+    (∀ h : game.execution.History, game.information.IsSubgameRoot h) ∧
+    (∃ bound, 0 < bound ∧ game.execution.BoundedHorizon bound) ∧
+    (∃ bound, 0 < bound ∧ (game.serialized order).execution.BoundedHorizon bound) ∧
+    (∀ payoff : Role → (game.serialized order).execution.History → ℝ,
+      ∃ assessment : (game.serialized order).information.BehavioralAssessment,
+        assessment.IsSequentialEquilibrium
+          (game.serial_decision_recall order).decisionInformationAntichain
+          (game.serial_well_founded_histories order) payoff) :=
+  ⟨inferInstance,inferInstance,game.perfect_recall,game.serial_decision_recall order,
+    game.reachable_position,game.every_history_subgame_root,game.exists_bounded_horizon,
+    game.serial_exists_bounded_horizon order,game.serial_exists_sequential_equilibrium order⟩
+
+/-- info: 'KFOL.Paper.round_protocol_foundations' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Paper.round_protocol_foundations
+
+/-- Native polynomial time for the actual owner-table synthesizer, including
+rejection and the complete expanded output tree, for a fixed finite role alphabet. -/
+theorem owner_synthesis_runtime {Role : Type} [Fintype Role] (owner : Role) :
+    Turing.MultiTapeTM.ComputableInPolyTime
+      (fun input : (n : ℕ) × Owner.GuardTable (Fin n) =>
+        (input.2.synthesize owner (List.finRange input.1)).map
+          (fun term => (⟨input.1,term⟩ : (n : ℕ) × Owner.Term Role (Fin n))))
+      Complexity.OwnerRuntime.inputEncoding
+      (Turing.MultiTapeTM.encOption (Complexity.OwnerRuntime.outputEncoding (Role := Role))) :=
+  Complexity.OwnerRuntime.source_synthesize_polyTime owner
+
+/-- info: 'KFOL.Paper.owner_synthesis_runtime' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Paper.owner_synthesis_runtime
 
 end KFOL.Paper

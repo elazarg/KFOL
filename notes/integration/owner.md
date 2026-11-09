@@ -454,3 +454,31 @@ The earlier synthesis polynomial machine-runtime clause remains with
 `/root/complexity`. Owner:thm:finite-basis has no analogous runtime clause
 or remaining proof gap. Parent assigned finite policy-family dichotomy
 and strict selective extension as the next pure algebra/reduction task.
+
+## Literal two-source report wrapper still pending
+
+The completed basis proof does not leave a logical gap, but the exact
+standalone `owner:lem:two-source` statement has not yet been exported from
+its literal two-new-guard coverage hypotheses. Keep that report row partial
+until the wrapper is added after family-hardness mathematics. The current
+connected anchors are:
+
+- `Owner/Basis/WordAbsorption.lean:106`, `Laws.two_source_absorption`: full
+  arbitrary-model absorption with explicit source-free word-witness
+  inclusions and the already-bounded prefix constant.
+- `Owner/Basis/Completeness.lean:144`, private `covering_witness`: semantic
+  containment yields the source-free prefix with exactly the first-index,
+  second-index and terminal coverage requirements.
+- `Completeness.lean:213`, private `witness_le_wordsValue`: the witness
+  prefix value lies below the complete upper word join.
+- `Completeness.lean:256`, `Laws.wordsValue_le_of_four`: finite first-source
+  witnesses are assembled with two-source absorption in every arbitrary
+  basis model.
+- `Completeness.lean:355`, `Laws.equal_of_four`, and line385 `isBasis`:
+  native root separation and generic equational completeness finish the
+  independently defined Derives conclusion.
+
+The missing standalone wrapper is the explicit native Guard.Covers to
+those witness hypotheses conversion for the report lemma's two new guards;
+it must not be counted as a separately matched report statement merely
+because IsBasis now implies its valid equational conclusion.

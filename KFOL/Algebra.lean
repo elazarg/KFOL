@@ -8,6 +8,10 @@ public import KFOL.Algebra.Idempotent
 public import KFOL.Algebra.Views
 public import KFOL.Algebra.Switching
 public import KFOL.Algebra.SemilatticeTrace
+public import KFOL.Algebra.Atomic.Classification
+public import KFOL.Algebra.Atomic.Binary
+public import KFOL.Algebra.TwoPlayers.Coordinates
+public import KFOL.Policies.Public
 public import KFOL.Algebra.CommonSource
 public import KFOL.Algebra.ReductTestCard
 public import KFOL.Algebra.IdempotencyTestCard

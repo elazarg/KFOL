@@ -225,6 +225,54 @@ theorem eq_pair_of_ambiguous_subset (A : WinnerSet Role) (a b : Role)
   exact Set.Subset.antisymm hsub (Set.pair_subset_iff.mpr ⟨ha, hb⟩)
 
 
+theorem choice_idempotent (r : Role) (A : WinnerSet Role) : choice r A A = A := by
+  classical
+  by_cases h : A = singleton r
+  · simp [choice,h]
+  · simp only [choice,h,or_self,ite_false]
+    apply Subtype.ext
+    exact Set.union_self _
+
+/-- A common lower set survives an owned choice. -/
+theorem subset_choice_of_subset_both (r : Role) (X A B : WinnerSet Role)
+    (ha : X.val ⊆ A.val) (hb : X.val ⊆ B.val) : X.val ⊆ (choice r A B).val := by
+  classical
+  unfold choice
+  split
+  · rename_i h
+    rcases h with h | h
+    · simpa only [h] using ha
+    · simpa only [h] using hb
+  · exact ha.trans Set.subset_union_left
+
+/-- The left operand survives unless the right operand is the owner's atom. -/
+theorem subset_choice_of_right_ne (r : Role) (A B : WinnerSet Role)
+    (hb : B ≠ singleton r) : A.val ⊆ (choice r A B).val := by
+  classical
+  unfold choice
+  split
+  · rename_i h
+    rcases h with h | h
+    · exact h ▸ Set.Subset.rfl
+    · exact False.elim (hb h)
+  · exact Set.subset_union_left
+
+
+/-- Owned choice introduces no new possible winner. -/
+theorem choice_subset_union (r : Role) (A B : WinnerSet Role) :
+    (choice r A B).val ⊆ A.val ∪ B.val := by
+  classical
+  unfold choice
+  split
+  · rename_i h
+    rcases h with h | h
+    · rw [h]
+      exact Set.subset_union_left
+    · rw [h]
+      exact Set.subset_union_right
+  · exact Set.Subset.rfl
+
+
 end WinnerSet
 
 namespace Term

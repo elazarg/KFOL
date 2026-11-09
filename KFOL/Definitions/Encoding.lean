@@ -7,6 +7,7 @@ module
 
 public import KFOL.Definitions.Algorithms
 public import Mathlib.Data.Nat.Size
+public import Mathlib.Data.Fintype.EquivFin
 
 /-! # Binary encodings at the external word-codec boundary
 
@@ -254,3 +255,72 @@ def checkWord (word : List Bool) : Bool :=
 
 end ResetEquation
 end KFOL.Algorithms
+
+/-! Fixed finite signatures carry explicit operation-index and maximum-arity bounds.
+Children are concatenated in the original tree code, without recursive framing. -/
+
+namespace KFOL.FiniteTermCode
+
+variable (σ : ℕ → Type)
+
+abbrev Operation := (n : ℕ) × σ n
+
+variable [Fintype (Operation σ)]
+
+noncomputable def operationNumbering : Operation σ ≃ Fin (Fintype.card (Operation σ)) := Fintype.equivFin _
+
+/-- This bound belongs to the fixed signature, rather than the input syntax. -/
+def maxArity : ℕ := Finset.univ.sup (fun operation : Operation σ => operation.1)
+
+noncomputable def encodeOperation (operation : Operation σ) : List Bool :=
+  Words.BinaryNatCode.encode (operationNumbering σ operation).val
+
+noncomputable def decodeOperation (word : List Bool) : Option (Operation σ) := do
+  let index ← Words.BinaryNatCode.decode? word
+  if h : index < Fintype.card (Operation σ) then
+    some ((operationNumbering σ).symm ⟨index, h⟩)
+  else none
+
+/-- A variable has one framed canonical binary name; a function has one
+framed operation index followed by all its children in increasing index order.
+Recursive children are concatenated, never recursively doubled by framing. -/
+noncomputable def encode : Equational.Term σ ℕ → List Bool
+  | .var j => false :: Words.delimit (Words.BinaryNatCode.encode j)
+  | @FirstOrder.Language.Term.func _ _ n function args =>
+      true :: (Words.delimit (encodeOperation σ ⟨n, function⟩) ++
+        (List.ofFn (fun i => encode (args i))).flatten)
+
+mutual
+  /-- Parse one subtree using a bit-length supplied depth clock. -/
+  noncomputable def parse : ℕ → List Bool → Option (Equational.Term σ ℕ × List Bool)
+    | 0, _ => none
+    | _ + 1, [] => none
+    | _ + 1, false :: word => do
+        let (name, rest) ← Words.unpair? word
+        let j ← Words.BinaryNatCode.decode? name
+        return (.var j, rest)
+    | fuel + 1, true :: word => do
+        let (code, body) ← Words.unpair? word
+        let operation ← decodeOperation σ code
+        let (children, rest) ← parseChildren fuel operation.1 body
+        return (.func operation.2 (fun i => children.getD i.val (.var 0)), rest)
+  termination_by fuel _ => (fuel, 0)
+  decreasing_by all_goals simp_wf; omega
+
+  /-- Parse exactly the arity obtained from the fixed operation alphabet. -/
+  noncomputable def parseChildren : ℕ → ℕ → List Bool →
+      Option (List (Equational.Term σ ℕ) × List Bool)
+    | _, 0, word => some ([], word)
+    | fuel, count + 1, word => do
+        let (term, rest) ← parse fuel word
+        let (children, rest) ← parseChildren fuel count rest
+        return (term :: children, rest)
+  termination_by fuel count _ => (fuel, count + 1)
+  decreasing_by all_goals simp_wf; omega
+end
+
+noncomputable def decode (word : List Bool) : Option (Equational.Term σ ℕ) := do
+  let (term, rest) ← parse σ word.length word
+  if rest.isEmpty then some term else none
+
+end KFOL.FiniteTermCode

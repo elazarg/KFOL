@@ -207,7 +207,7 @@ the three outputs are atomic, those outputs repeat too. Atomicity is local to
 those evaluations. `KFOL.Paper.no_atomic_if_then_else` rules out a selector
 between any two distinct control labels, using three available roles. Both
 statements spell out their atomic inputs and outputs directly; they do not
-assume the external S2 classification, which remains a separate obligation.
+assume the external S2 classification. Its full local proof and realizations are now checked in `Algebra/Atomic`, as documented below.
 
 The common-source regressions exercise necessary disjointness, the two-region
 hypothesis for variable sources, permuted inputs and the empty-index case.
@@ -737,7 +737,7 @@ self-dependencies rather than silently minimizing them. Tests exercise this
 distinction, duplicate names and records, unused dictionary positions, a nonzero
 root index, rootless and multi-root candidates, dependency cycles, wrong widths,
 bad output ranges and incomplete frames. All computations use kernel `decide`.
-The full encoded recognition running-time certificate remains separate.
+The full encoded recognition running-time certificate is now in `Complexity/RecognitionMachine`.
 Raw-to-canonical normalization and shared-dictionary identity checking are
 now connected below.
 
@@ -786,8 +786,7 @@ equations and does not compare independently serialized descriptors. Regressions
 include equal terms with different dictionary orders, distinct variables with
 identical local record streams, nonassociativity, repeated-variable elimination,
 normalization before recognition, exact bit counts and invalid equation framing.
-This frontend uses the two representation files. Full machine-time certificates for
-original-tree parsing/extraction and equality remain outstanding. Complete descriptor normalization and recognition now have native polynomial machine certificates.
+This frontend uses the two representation files. Original-tree parsing/extraction, equality, descriptor normalization and recognition now all have native polynomial machine certificates.
 
 
 ## Native machine and strategic dependency interfaces
@@ -957,7 +956,7 @@ sides under one actual shared dictionary and compares the sets of records,
 ignoring their incidental order and duplicate representation.
 `Paper.reset_binary_equation_checker` combines exact semantics, malformed-input
 rejection and native polynomial-time machines for the original typed and binary
-word inputs. Encoded owner synthesis and hardness reductions are separate tasks.
+word inputs. Whole owner-table recognition and synthesis now have native certificates too. Other signature frontends and reductions remain separate.
 
 ## Boolean disclosure protocol gate
 
@@ -1023,3 +1022,59 @@ independent three-state operation tables. `Core/ChoiceUnion` proves full
 seven-law generation/completeness directly. The two semilattice orders remain
 distinct; only the stated meet-over-join distributivity is used. The actual
 set of equations is proved to contain exactly seven members.
+
+
+## Atomic classification, policies and two-player semantics
+
+`Definitions/Atomic.lean` is the sixteenth definition module. Its repeat
+relation, essentially-unary/two-output classes and atomic preservation/realization
+refer directly to ordinary functions and the existing winner evaluator.
+`Algebra/Atomic` proves the finite-product classification directly and constructs
+actual realizing terms. Determinacy and the complete four-operation binary
+classification use no external clone hypothesis. One-constant rigidity uses the
+same core terms with a Boolean marker selecting varying versus fixed leaves.
+General choice identities and inclusion lemmas live in `Algebra/Basic`.
+
+`Definitions/Policies.lean` is the seventeenth module. It defines the labelled
+reset/policy signature, actual set-blocking semantics, root/occurrence guards,
+independent passing patterns and the exact chain-or-intersection/repetition
+criterion. The syntax-only checker and normalized guard comparisons are
+independently specified. Their correctness is proved for both tractable family
+branches; repeated-pattern observations are equation-complete. Strict G
+nondefinability uses actual reset syntax and the displayed two-owner expression.
+Non-easy family hardness and native runtime are still required.
+
+`Definitions/TwoPlayers.lean` is the eighteenth module. Any `Fin 2 ≃ Role`
+identifies the existing nonempty winner sets with the ordinary `Fin 3` chain.
+Max/min/reversal and Boolean forcing coordinates are proved, rather than imposed
+as new winner operations. Reset and policy degeneration, full-language atomicity,
+union nondefinability and semantic failure of idempotent core extraction are
+checked. Finite Kleene-basis completeness remains separate.
+
+## General finite menus and native syntax output
+
+The existing `Definitions/Rounds` now also specifies finite-menu trees, intrinsic
+public prefixes, legal append, actual observed execution and the accepted explicit
+serial implementation. Public and private information remain canonical GameTheory
+interfaces. Finite histories, reachability, proper public subgames, recall,
+serial decision recall and SE existence are proved; exact serial fibers contain
+only earlier current commitments. `notes/integration/rounds.md` distinguishes
+these foundations from the required Bayes/consistency/value bridge.
+
+`Definitions/Encoding` additionally defines the reusable finite-signature prefix
+codec: explicit finite operation alphabet, framed binary operation indices and
+exact arities/children, including nullary and ternary symbols. The codec proofs
+establish exact parsing, reconstruction and injectivity. Native constructors
+reuse that original format; a complete generic parser/evaluator runtime remains
+separate. The `Equational.language` record is now a transparent `abbrev`, allowing
+these dependent syntax interfaces to elaborate without representation changes.
+
+`Complexity/OwnerRuntime` owns the backend encodings at the machine seam.
+Input is a unary dimension together with original finite-table guard bitsets;
+root and output positions are binary labels. The complete source checker is
+certified uniformly in that dimension without a canonicality promise.
+`OwnerSynthesisBridge.outputEncoding` injectively pairs the unary dimension with
+the fully expanded generic original tree, relabeling finite positions by their
+natural values. Its source theorem certifies the actual `GuardTable.synthesize`,
+including rejection, all saturation frames, both finishing branches and every
+output tree occurrence, for a fixed finite role alphabet.

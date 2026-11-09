@@ -20,7 +20,7 @@ namespace KFOL.Equational
 universe u v w w'
 
 /-- The relation-free mathlib language associated with a finitary signature. -/
-def language (σ : ℕ → Type u) : FirstOrder.Language.{u, 0} := ⟨σ, fun _ => Empty⟩
+abbrev language (σ : ℕ → Type u) : FirstOrder.Language.{u, 0} := ⟨σ, fun _ => Empty⟩
 
 /-- Generic terms reuse mathlib's syntax and structural substitution. -/
 abbrev Term (σ : ℕ → Type u) (Var : Type v) := (language σ).Term Var

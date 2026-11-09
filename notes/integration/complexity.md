@@ -304,6 +304,95 @@ endpoint. `ResetUnionDecoding` certifies the complete original equation decoder;
 raw word language using a proved total malformed-input fallback. All print only
 standard axioms. No uniform-K bound is asserted by this fixed finite-algebra gate.
 
+## Finite-signature codec and complete owner checker
+
+`Definitions/Encoding` now also contains `KFOL.FiniteTermCode`, a mathlib-only
+codec for any fixed finite dependent operation alphabet `Operation σ = Σ n, σ n`.
+Canonical binary operation indices are explicitly framed; recursive child codes
+are concatenated. `maxArity σ` exposes the finite alphabet's arity bound.
+`Algorithms/FiniteTermCode` proves operation roundtrips, the maximum-arity bound,
+original-prefix parsing with a bit-length depth clock, accepted-word reconstruction,
+full decoder roundtrip and encoding injectivity. Constants and ternary symbols
+use the same definitions. `Equational.language` is now an `abbrev` with its identical
+record body, making the signature wrapper transparent to generic term proofs.
+`tests/ComplexityFiniteTerms`, the existing `Equational` and `ComplexityCodecs`
+regressions all pass. No native runtime theorem for this generic tree parser is
+claimed yet. `Complexity/FiniteTermMachines` does certify the original-format
+variable constructor, every fixed-arity function constructor and the generic
+finite-operation lookup constructor, under the exact generic term encoding.
+
+`OwnerRunMachine.run_polyTime` certifies the complete owner saturation execution,
+including every recorded `(w,z)` frame, at exactly twice the original target
+membership-word width. Each step increases serialized state by at most `6*n+3`;
+its captured original table and target width are charged on every iteration.
+`iterate_view` and `run_view` identify all states and frames with the independent
+owner program for every table and clock, without canonicality hypotheses.
+
+`OwnerCheckMachine` includes both finishing branches, deterministic finishing
+witness selection, every canonicality scan, duplicate rejection and all target
+acceptance tests. Its full public endpoint is:
+
+```lean
+KFOL.Complexity.OwnerRuntime.source_check_polyTime :
+  ComputableInPolyTime
+    (fun input : KFOL.Complexity.OwnerRuntime.Input =>
+      input.2.check (List.finRange input.1))
+    KFOL.Complexity.OwnerRuntime.inputEncoding encBool
+```
+
+Here `Input = Σ n, Owner.GuardTable (Fin n)`. `inputEncoding` explicitly pairs
+unary `n` with binary root/output positions and full membership words for each
+many/outside prerequisite. `check_view` proves equality with the actual source
+checker on every such table; no canonical-input promise or realizability
+hypothesis is assumed. This certificate is uniform in the table dimension.
+It is a typed table certificate; it does not assert a raw owner-table word decoder
+or a uniform-role tree-signature bound.
+
+`tests/ComplexityOwner` checks a valid singleton table, duplicate rejection,
+missing-root rejection, the exact checker bridge and the native public type.
+Production builds pass 2,069 jobs; the generic codec and owner runtime endpoints
+print only the three standard axioms.
+
+## Complete owner synthesis runtime
+
+`OwnerTermMachines` specializes the generic finite signature to reset plus
+owner-labelled ternary H, with native constructors and exact original-code header
+sizes. `OwnerPathMachines` certifies the actual `Owner.Term.pathBody` and
+`pathTerm` functions; each frame has one recursive occurrence, and its stored
+variable codes plus the captured original root bound accumulator growth.
+
+`OwnerSynthesisMachine` composes the complete independent table check, actual
+saturation run with recorded frames, both finishing alternatives, complete
+`mapM` over every required guard, path construction and the expanded final join.
+`OwnerSynthesisBridge` proves exact `finishTerm_view`, `guardPath_view` and
+`synthesize_view` equalities with the independently defined source programs.
+The complete public native endpoint is:
+
+```lean
+KFOL.Complexity.OwnerRuntime.source_synthesize_polyTime
+  {Role : Type} [Fintype Role] (owner : Role) :
+  ComputableInPolyTime
+    (fun input : KFOL.Complexity.OwnerRuntime.Input =>
+      (input.2.synthesize owner (List.finRange input.1)).map
+        (fun term =>
+          (⟨input.1, term⟩ : KFOL.Complexity.OwnerRuntime.Output Role)))
+    KFOL.Complexity.OwnerRuntime.inputEncoding
+    (encOption KFOL.Complexity.OwnerRuntime.outputEncoding)
+```
+
+`Output Role = Σ n, Owner.Term Role (Fin n)`. Its injective output encoding pairs
+unary `n` with the fully expanded generic original tree code after renaming
+positions by `Fin.val`; no sharing or circuit compression is hidden. The input
+encoding is the same explicit width/bitset table encoding as the whole checker.
+Failed checks and failed construction branches return `none` exactly as in the
+source definition. The runtime is uniform in the table dimension and number of
+records, with the finite role alphabet fixed. No caller-supplied correctness,
+realizability or complexity premise is required.
+
+The regression covers successful actual singleton synthesis, rejected duplicate
+tables, exact native/source output correspondence and the public native type.
+All source synthesis runtime and bridge endpoints print only standard axioms.
+
 ## Remaining work
 
 Complete native machine certificates cover original reset parsing, actual
@@ -312,6 +401,7 @@ equality, and semantic table realizability recognition. The polynomial runtime
 clauses of `reset:thm:three` and `reset:thm:synthesis` are discharged. Reset/union
 has full fixed-role machine-level coNP-completeness for typed equations and the complete binary language, including malformed words.
 
-Whole owner-table/synthesis runtime, substitution and further fragment/policy
-reduction machines remain separate obligations. The owner finite scans and
-reset/union constructor/reduction interfaces are ready for that reuse.
+Whole owner-table checking and expanded term synthesis are now certified.
+Original owner-term guard extraction (including ternary H), substitution and
+further fragment/policy reduction machines remain separate obligations. The
+complete owner scans and generic finite-signature codec are ready for reuse.

@@ -29,7 +29,7 @@ def tableView {n : ℕ} (T : Owner.GuardTable (Fin n)) : RawTable :=
 
 def view (input : Input) : ℕ × RawTable := (input.1, tableView input.2)
 
-private theorem entryView_injective {n : ℕ} : Function.Injective (@entryView n) := by
+theorem entryView_injective {n : ℕ} : Function.Injective (@entryView n) := by
   rintro ⟨i, ⟨A, B⟩⟩ ⟨j, ⟨C, D⟩⟩ he
   have hi := Fin.ext (congrArg Prod.fst he)
   have hA := Bitset.encode_injective (congrArg (fun p => p.2.1) he)
@@ -66,13 +66,13 @@ def inputEncoding : Input ↪ List Bool :=
 def union (p : List Bool × List Bool) : List Bool := p.1.zipWith (· || ·) p.2
 def difference (p : List Bool × List Bool) : List Bool := p.1.zipWith (fun a b => a && !b) p.2
 
-private theorem union_polyTime : ComputableInPolyTime union (encPair encBits encBits) encBits :=
+theorem union_polyTime : ComputableInPolyTime union (encPair encBits encBits) encBits :=
   bitsZipWith (· || ·)
 
 private theorem difference_polyTime : ComputableInPolyTime difference (encPair encBits encBits) encBits :=
   bitsZipWith (fun a b => a && !b)
 
-private theorem union_encode {n : ℕ} (A B : Finset (Fin n)) :
+theorem union_encode {n : ℕ} (A B : Finset (Fin n)) :
     union (Bitset.encode A, Bitset.encode B) = Bitset.encode (A ∪ B) := by
   apply List.ext_getElem (by simp [union, Bitset.encode])
   intro i hi hi'
@@ -86,14 +86,14 @@ private theorem difference_encode {n : ℕ} (A B : Finset (Fin n)) :
 
 def single (p : ℕ × ℕ) : List Bool := (List.range p.1).map (fun i => decide (i = p.2))
 
-private theorem single_polyTime : ComputableInPolyTime single (encPair encUnary encNat) encBits := by
+theorem single_polyTime : ComputableInPolyTime single (encPair encUnary encNat) encBits := by
   let input := encPair encUnary encNat
   have hindices := ComputableInPolyTime.range.comp (fst encUnary encNat)
   have hi := unary_to_binary.comp (snd input encUnary)
   have hj : ComputableInPolyTime (fun p : (ℕ × ℕ) × ℕ => p.1.2) (encPair input encUnary) encNat := by fun_prop
   exact mapToBitsWithInput (f := fun (p : ℕ × ℕ) i => decide (i = p.2)) hindices (decide_eq' hi hj)
 
-private theorem single_encode {n : ℕ} (j : Fin n) :
+theorem single_encode {n : ℕ} (j : Fin n) :
     single (n, j.val) = Bitset.encode {j} := by
   apply List.ext_getElem (by simp [single, Bitset.encode])
   intro i hi hi'
@@ -102,12 +102,12 @@ private theorem single_encode {n : ℕ} (j : Fin n) :
 def member (p : List Bool × ℕ) : Bool :=
   p.1.getD (min p.1.length p.2) false
 
-private theorem member_polyTime : ComputableInPolyTime member (encPair encBits encNat) encBool := by
+theorem member_polyTime : ComputableInPolyTime member (encPair encBits encNat) encBool := by
   have hw := fst encBits encNat
   have hi := binary_min_unary' (length_bits.comp hw) (snd encBits encNat)
   exact bitsGetDWithInput hw hi false
 
-private theorem member_encode {n : ℕ} (A : Finset (Fin n)) (j : Fin n) :
+theorem member_encode {n : ℕ} (A : Finset (Fin n)) (j : Fin n) :
     member (Bitset.encode A, j.val) = decide (j ∈ A) := by
   simp only [member, Bitset.length_encode, Nat.min_eq_right (Nat.le_of_lt j.isLt),
     List.getD_eq_getElem?_getD]
@@ -145,7 +145,7 @@ theorem permitted_polyTime : ComputableInPolyTime
       ReachMachine.subset entry.2.2 (union (p.2.2.1, union (p.2.2.2, single (p.2.2.1.length, p.2.1)))))
     hrecords htest
 
-private theorem mem_guards {n : ℕ} (T : Owner.GuardTable (Fin n)) (j : Fin n)
+theorem mem_guards {n : ℕ} (T : Owner.GuardTable (Fin n)) (j : Fin n)
     (g : Owner.GuardPair (Fin n)) : g ∈ T.guards j ↔ (j, g) ∈ T.entries := by
   simp only [Owner.GuardTable.guards, List.mem_toFinset, List.mem_map, List.mem_filter,
     decide_eq_true_eq]
@@ -269,7 +269,7 @@ theorem allowed_view {n : ℕ} (T : Owner.GuardTable (Fin n)) (j : Fin n)
     exact ⟨⟨⟨⟨ha, hb⟩, decide_eq_true hc⟩, decide_eq_true hd⟩, he⟩
 
 
-private theorem indices_polyTime : ComputableInPolyTime List.range encUnary (encList encNat) := by
+theorem indices_polyTime : ComputableInPolyTime List.range encUnary (encList encNat) := by
   have h := mapWithInput (f := fun (_ : ℕ) (i : ℕ) => i) ComputableInPolyTime.range
     (unary_to_binary.comp (snd encUnary encUnary))
   convert h using 1
@@ -313,7 +313,7 @@ private theorem product_map {A B C D : Type} (f : A → C) (g : B → D) (xs : L
     (xs.product ys).map (fun p => (f p.1, g p.2)) = (xs.map f).product (ys.map g) := by
   simp only [List.product, List.map_flatMap, List.flatMap_map, List.map_map, Function.comp_def]
 
-private theorem finRange_values (n : ℕ) : (List.finRange n).map Fin.val = List.range n := by
+theorem finRange_values (n : ℕ) : (List.finRange n).map Fin.val = List.range n := by
   apply List.ext_getElem (by simp)
   intro i hi hi'
   simp
