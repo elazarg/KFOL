@@ -5,6 +5,7 @@ public import KFOL.Algorithms.GuardWords
 public import KFOL.Complexity.GuardSubset
 public import KFOL.Algorithms.GuardRecord
 public import KFOL.Algorithms.TermCode
+public import KFOL.Algorithms.GuardDescriptor
 
 /-!
 # Kernel-checked paper claims
@@ -871,5 +872,70 @@ theorem reset_binary_extraction :
 [propext, Classical.choice, Quot.sound] -/
 #guard_msgs (whitespace := lax) in
 #print axioms KFOL.Paper.reset_binary_extraction
+
+/-- A complete descriptor has distinct binary names and well-ranged,
+fixed-width records. Its exact codec preserves order and duplicate records;
+expansion and recompression are inverse, and original extraction always
+produces valid descriptors recovering the actual occurrence list. -/
+theorem reset_binary_descriptor_codec :
+    (∀ (word : List Bool) (d : Algorithms.GuardDescriptor),
+      Algorithms.GuardDescriptor.decode word = some d ↔
+        word = Algorithms.GuardDescriptor.encode d) ∧
+    Function.Injective Algorithms.GuardDescriptor.encode ∧
+    (∀ d : Algorithms.GuardDescriptor,
+      d.labels.Nodup ∧
+      (Algorithms.GuardDescriptor.encode d).length = 4 * (d.labels.map Nat.size).sum +
+        4 * d.labels.length + 2 + (Algorithms.GuardRecord.encodeList d.records).length ∧
+      d.labels.length ≤ (Algorithms.GuardDescriptor.encode d).length ∧
+      d.records.length ≤ (Algorithms.GuardDescriptor.encode d).length ∧
+      (d.records.map (fun r => (d.labels.get r.1,
+        Algorithms.SupportIndex.expand d.labels r.2))).mapM
+          (Algorithms.SupportIndex.compressEntry d.labels) = some d.records ∧
+      (∀ (j : Fin d.labels.length) (A : Finset (Fin d.labels.length)),
+        A ∈ d.guards j ↔ (j, A) ∈ d.records) ∧
+      (∀ (r j : Fin d.labels.length) (B : Finset (Fin d.labels.length)),
+        (d.table r).Enabled (B : Set (Fin d.labels.length)) j ↔
+          ∃ A, (j, A) ∈ d.records ∧ Algorithms.GuardWords.subsetWord
+            (Algorithms.Bitset.encode A) (Algorithms.Bitset.encode B) = [true])) ∧
+    (∀ (word output : List Bool), Algorithms.TermCode.extract word = some output →
+      ∃ (d : Algorithms.GuardDescriptor) (t : Reset.Term ℕ),
+        Algorithms.GuardDescriptor.decode output = some d ∧
+        Algorithms.TermCode.decode word = some t ∧ d.labels = Algorithms.SupportIndex.labels t ∧
+        d.records.map (fun r => (d.labels.get r.1, Algorithms.SupportIndex.expand d.labels r.2)) =
+          t.guardEntries) :=
+  ⟨Algorithms.GuardDescriptor.decode_eq_some_iff, Algorithms.GuardDescriptor.encode_injective,
+    fun d => ⟨d.distinct, d.length_encode, d.width_le_length_encode,
+      d.records_le_length_encode, d.recompress_records, d.mem_guards, d.enabled_iff_subsetWord⟩,
+    fun _ _ => Algorithms.GuardDescriptor.decode_extraction⟩
+
+/-- info: 'KFOL.Paper.reset_binary_descriptor_codec' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Paper.reset_binary_descriptor_codec
+
+/-- External canonical-table recognition, with all mathematical conditions
+spelled out and a real primitive-tree witness. This checks executable
+semantics and syntax-size bounds; machine running time remains separate. -/
+theorem reset_encoded_table_recognition :
+    (∀ d : Algorithms.GuardDescriptor, d.check = true ↔
+      ∃ r : Fin d.labels.length,
+        (∀ j, ∀ A ∈ d.guards j, ∀ B ∈ d.guards j, A ⊆ B → A = B) ∧
+        d.guards r = {∅} ∧ (∀ j, ∅ ∈ d.guards j → j = r) ∧
+        (∀ j, ∀ A ∈ d.guards j, j ∉ A) ∧
+        (∀ j, ∀ A ∈ d.guards j, (d.table r).Constructible A)) ∧
+    (∀ d : Algorithms.GuardDescriptor, d.check = true ↔
+      ∃ t : Reset.Term (Fin d.labels.length), t.table = d.guards ∧
+        t.size ≤ 1 + 2 * d.labels.length * d.records.length) ∧
+    (∀ word : List Bool, Algorithms.GuardDescriptor.recognize word = true ↔
+      ∃ (d : Algorithms.GuardDescriptor) (t : Reset.Term (Fin d.labels.length)),
+        word = Algorithms.GuardDescriptor.encode d ∧ t.table = d.guards ∧
+        t.size ≤ 1 + 2 * word.length * word.length) :=
+  ⟨fun d => d.check_eq_true, Algorithms.GuardDescriptor.check_iff_bounded_realization,
+    Algorithms.GuardDescriptor.recognize_eq_true⟩
+
+/-- info: 'KFOL.Paper.reset_encoded_table_recognition' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Paper.reset_encoded_table_recognition
 
 end KFOL.Paper

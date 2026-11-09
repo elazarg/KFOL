@@ -108,7 +108,7 @@ For each required inventory row, implementation review records the public declar
 | `Definitions/Reset.lean` | Primitive reset, generic signature, selection, canonical tables, independent rooted antimatroids and actual semantic term functions |
 | `Definitions/Equational.lean` | Relation-free mathlib language, finite identities, satisfaction, theories, derivation, basis, variable bound, algebra structures, full/core signatures and codecs |
 | `Definitions/Algorithms.lean` | Exact membership-word bitset codec, independent prerequisite scan and its fixed-arity interface; no machine imports |
-| `Definitions/Encoding.lean` | Binary guard records, framed record streams, sparse binary label dictionaries, original input-tree codec and binary extraction frontend; imports the external word-codec primitives only |
+| `Definitions/Encoding.lean` | Binary records and dictionaries, complete descriptors and their recognizer, original input-tree codec and binary extraction frontend; imports the external word-codec primitives only |
 
 These are six algebraic definition modules and two representation modules. `Equational` imports
 `Core`, which imports `Public`; it adds only mathlib dependencies. See the
@@ -630,11 +630,35 @@ the canonical tables. For N input bits, the complete output uses at most
 `6N(N+1) + 2N + 2` bits, including all sparse-name dictionary bits and framing.
 The definition surface remains eight files and the pure import audit is unchanged.
 
-Next validate complete externally supplied dictionary/record descriptors,
-connect shared support indices for two identity inputs, and certify the
-parser and field/table scans in the existing machine model. Exact executable
-semantics and polynomial output length do not finish polynomial runtime.
+Complete externally supplied dictionary/record descriptors are now validated
+below. Shared support indices for two identity inputs and certified parser
+and field/table scans remain. Exact executable semantics and polynomial
+output length do not finish polynomial runtime.
 The full table algorithms and end-to-end reduction gate remain partial.
+
+### Complete descriptor validation and semantic recognition checked
+
+`KFOL.Paper.reset_binary_descriptor_codec` repeats the exact codec of complete
+dictionary-and-record words. The decoder rejects duplicate dictionary names,
+invalid field codes, bad ranges/widths and incomplete frames. Repeated records
+and unused dictionary positions are allowed and preserved. Expansion and
+recompression are inverse, and every actual extraction output decodes to its
+original occurrence list. Width and record count are bounded by input bits.
+
+`reset_encoded_table_recognition` states all independent table conditions and
+proves that external recognition accepts exactly descriptors realized by an
+actual reset tree. The checker infers the root from an empty prerequisite;
+uniqueness follows from the semantic criterion, not dictionary order. The
+entry count equals the distinct-record count. Existing compact realization
+therefore gives a tree of size at most `1 + 2nM`, or `1 + 2N²` in original
+descriptor bit length N. Malformed words are rejected by the executable program.
+
+The complete parser also accepts raw extracted descriptors. The semantic
+recognizer checks canonical tables and rejects raw dominated/self-dependent
+guards; the binary raw-to-canonical normalization bridge is still required.
+Next connect normalization and shared support for identity inputs, and certify
+the parser/record scans and whole algorithms in the machine model. Full encoded
+recognition runtime and the end-to-end reduction gate remain partial.
 
 | Milestone | Prerequisites | Concrete completion gate |
 | --- | --- | --- |

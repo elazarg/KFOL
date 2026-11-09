@@ -694,6 +694,52 @@ sparse names, repeated leaves and the complete decoded frontend output using
 kernel `rfl` and `decide`.
 
 These are exact executable semantics and bit-size bounds. The parser and
-frontend have not yet been certified in the machine model. External candidate
-dictionary validation, shared support for two identity inputs, record/table
-scans and full algorithm running times retain their own obligations.
+frontend have not yet been certified in the machine model. Complete candidate
+validation is now checked below; shared support for two identity inputs,
+record/table scans and full algorithm running times retain their own obligations.
+
+## Complete descriptors and external table recognition
+
+`Definitions/Encoding.lean` defines `GuardDescriptor` with a natural-name
+dictionary, a proof that its names are distinct, and a list of records indexed
+by its length. The descriptor allows unused dictionary positions and repeated
+records. Its list order is preserved by the codec; it does not define a unique
+representation of an algebraic function. No new definition file is introduced.
+
+| Definition | Meaning and dependencies |
+| --- | --- |
+| `GuardDescriptor.encode`, `decode` | The frontend's paired dictionary/record format, with strict complete parsing and an explicit dictionary uniqueness check |
+| `GuardDescriptor.guards` | The finite set of all listed prerequisites at an output; duplicate records merge, dominated guards remain |
+| `GuardDescriptor.root?` | The first listed output with an empty prerequisite; it need not be dictionary position zero |
+| `GuardDescriptor.table` | Candidate guards at a supplied root, independent of recognition |
+| `GuardDescriptor.check` | Run the existing table checker at the inferred root, or reject if no root is listed |
+| `GuardDescriptor.recognize` | Decode an external word and run the semantic check, rejecting malformed words |
+
+`Algorithms/GuardDescriptor.lean` proves the exact two-sided codec and
+injectivity. Successful decoding validates canonical name/index codes,
+dictionary uniqueness, output ranges, prerequisite widths and complete framing.
+Both dictionary length and record count are bounded by encoded input length.
+Expanding and recompressing the records is exact, and enabling is precisely the
+previously certified subset-word predicate applied to a listed record.
+`KFOL.Paper.reset_binary_descriptor_codec` repeats these statements and connects
+every original extraction output to its decoded descriptor and occurrence list.
+
+The semantic check is equivalent to existence of a root satisfying all the
+independent table conditions: antichains, exactly one empty-guard output,
+self-exclusion and constructibility of every prerequisite. The unique
+empty-guard condition justifies the root scan. The table's entry count equals
+the number of distinct records, proved by mathlib's finite fiber-cardinality
+formula. Reusing the existing realizability theorem yields an actual primitive
+tree of size at most `1 + 2nM` for n dictionary positions and M listed records.
+For N external input bits this gives a witness of size at most `1 + 2N²`.
+`KFOL.Paper.reset_encoded_table_recognition` repeats the logical conditions and
+the actual-term characterizations, including malformed-input rejection.
+
+Parsing accepts raw descriptors produced by extraction. Semantic recognition
+checks the listed guards as canonical tables: it rejects dominated guards or
+self-dependencies rather than silently minimizing them. Tests exercise this
+distinction, duplicate names and records, unused dictionary positions, a nonzero
+root index, rootless and multi-root candidates, dependency cycles, wrong widths,
+bad output ranges and incomplete frames. All computations use kernel `decide`.
+The full encoded recognition running-time certificate, raw-to-canonical
+normalization frontend and shared-dictionary identity checker remain separate.

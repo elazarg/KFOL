@@ -60,6 +60,60 @@ def decode (word : List Bool) : Option (List ℕ) := do
 
 end LabelDictionary
 
+/-- Complete dictionary/record data. Distinct names give a faithful map from
+finite positions to labels; records may repeat and dictionary positions may
+be unused. Canonicality and realizability are checked separately. -/
+structure GuardDescriptor where
+  labels : List ℕ
+  distinct : labels.Nodup
+  records : List (GuardRecord.Record labels.length)
+
+namespace GuardDescriptor
+
+/-- The same single-word format produced by original-term extraction. -/
+def encode (d : GuardDescriptor) : List Bool :=
+  _root_.Complexity.pair (LabelDictionary.encode d.labels) (GuardRecord.encodeList d.records)
+
+/-- Validate framing, canonical binary labels, dictionary uniqueness and
+every record's output range and prerequisite width, consuming all input. -/
+def decode (word : List Bool) : Option GuardDescriptor := do
+  let (dict, stream) ← _root_.Complexity.unpair? word
+  let labels ← LabelDictionary.decode dict
+  if h : labels.Nodup then
+    let records ← GuardRecord.decodeList labels.length stream
+    return ⟨labels, h, records⟩
+  else none
+
+/-- All explicitly listed prerequisites at an output, interpreted as a set.
+Duplicate records do not change the table; dominated guards are retained. -/
+def guards (d : GuardDescriptor) (j : Fin d.labels.length) : Finset (Finset (Fin d.labels.length)) :=
+  (d.records.toFinset.filter (fun p => p.1 = j)).image Prod.snd
+
+/-- Choose the first listed output with an empty prerequisite, if present.
+The semantic checker ensures that a valid table has exactly one such output. -/
+def root? (d : GuardDescriptor) : Option (Fin d.labels.length) :=
+  (d.records.find? (fun p => decide (p.2 = ∅))).map Prod.fst
+
+/-- Candidate table at a supplied root, independent of the recognizer. -/
+def table (d : GuardDescriptor) (r : Fin d.labels.length) : Reset.GuardTable (Fin d.labels.length) :=
+  ⟨r, d.guards⟩
+
+/-- Check the actual listed tables, without silently removing dominated
+guards. An empty descriptor parses successfully but fails this semantic check. -/
+def check (d : GuardDescriptor) : Bool :=
+  match d.root? with
+  | none => false
+  | some r => (d.table r).check
+
+/-- Total external recognizer: malformed descriptors and unrealizable
+canonical candidates are both rejected. -/
+def recognize (word : List Bool) : Bool :=
+  match decode word with
+  | none => false
+  | some d => d.check
+
+end GuardDescriptor
+
 namespace TermCode
 
 /-- Prefix binary syntax: `false` introduces a framed canonical binary

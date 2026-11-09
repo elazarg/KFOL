@@ -113,9 +113,13 @@ binary record/dictionary codecs are now also checked. They reuse mathlib's
 list-indexing equivalence and ComplexityLib's existing codecs and block parser.
 The native binary input-tree codec and executable extraction frontend now also
 have exact semantics and bit-size bounds: a single framed output recovers the
-actual raw guards, with size quadratic in original input bits. Whole descriptor
-validation, shared-support identity inputs, and machine certificates for the
-parser and record/table scans remain the next work.
+actual raw guards, with size quadratic in original input bits. Complete
+descriptor validation and semantic recognition are now also checked, using
+mathlib's finite fiber-cardinality formula and the existing compact realization
+theorem. Dictionary names are validated as distinct; malformed words are
+rejected and accepted canonical candidates have actual primitive-tree witnesses.
+Raw-to-canonical normalization, shared-support identity inputs, and machine
+certificates for the parser and record/table scans remain the next work.
 
 These gates test the actual reuse seams. Once they pass, the remaining effort can be estimated from the paper-specific proof obligations, rather than from rebuilding foundations already available in the user's libraries.
 
