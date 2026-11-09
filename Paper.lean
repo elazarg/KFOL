@@ -552,4 +552,56 @@ theorem reset_family_product {Var : Type v} [DecidableEq Var] (s t : Reset.Term 
 #guard_msgs (whitespace := lax) in
 #print axioms KFOL.Paper.reset_family_product
 
+/-- The mathematical realizability and primitive-tree size clauses of
+`reset:thm:synthesis`. Every candidate-table condition is repeated here.
+Constructibility is independently defined by fresh enabled additions.
+The separate polynomial machine-time claim is not asserted here. -/
+theorem reset_table_realizability {Var : Type v} [DecidableEq Var] [Fintype Var]
+    (G : Reset.GuardTable Var) :
+    ((∀ j, ∀ A ∈ G.guards j, ∀ B ∈ G.guards j, A ⊆ B → A = B) ∧
+      G.guards G.root = {∅} ∧
+      (∀ j, ∅ ∈ G.guards j → j = G.root) ∧
+      (∀ j, ∀ A ∈ G.guards j, j ∉ A) ∧
+      (∀ j, ∀ A ∈ G.guards j, G.Constructible A)) ↔
+    ∃ t : Reset.Term Var, t.root = G.root ∧ t.table = G.guards ∧
+      t.size ≤ 1 + 2 * Fintype.card Var * (∑ j, (G.guards j).card) := by
+  change G.WellFormed ↔ _
+  exact ⟨G.exists_term_bounded, fun ⟨t, hr, ht, _⟩ =>
+    G.wellFormed_iff_realizable.mpr ⟨t, hr, ht⟩⟩
+
+/-- info: 'KFOL.Paper.reset_table_realizability' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Paper.reset_table_realizability
+
+/-- The executable table recognizer accepts exactly actual realizable
+canonical tables. Its greedy prerequisite test is complete after at most
+one round per target position, including the empty target. -/
+theorem reset_table_recognition {Var : Type v} [DecidableEq Var] [Fintype Var]
+    (G : Reset.GuardTable Var) :
+    (G.check = true ↔ ∃ t : Reset.Term Var, t.root = G.root ∧ t.table = G.guards) ∧
+    (∀ A : Finset Var, G.reached A A.card = A ↔ G.Constructible A) := by
+  refine ⟨G.check_eq_true.trans G.wellFormed_iff_realizable, ?_⟩
+  intro A
+  simpa only [Reset.GuardTable.constructibleCheck, decide_eq_true_eq] using
+    G.constructibleCheck_eq_true A
+
+/-- info: 'KFOL.Paper.reset_table_recognition' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Paper.reset_table_recognition
+
+/-- The local prerequisite condition `reset:eq:complete`, with precisely its
+self-exclusion hypothesis and no assumed realizability certificate. -/
+theorem reset_table_local_completeness {Var : Type v} [DecidableEq Var]
+    (G : Reset.GuardTable Var) (hself : ∀ j, ∀ A ∈ G.guards j, j ∉ A) :
+    (∀ j, ∀ A ∈ G.guards j, G.Constructible A) ↔
+      ∀ j, ∀ A ∈ G.guards j, ∀ k ∈ A, ∃ B ∈ G.guards k, B ⊆ A :=
+  G.all_constructible_iff_local hself
+
+/-- info: 'KFOL.Paper.reset_table_local_completeness' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Paper.reset_table_local_completeness
+
 end KFOL.Paper

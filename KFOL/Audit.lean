@@ -24,6 +24,13 @@ import all KFOL.Reset.Tables
 import all KFOL.Reset.Chain
 import all KFOL.Reset.Substitution
 import all KFOL.Reset.Public
+import all KFOL.Reset.Realizability.Constructible
+import all KFOL.Reset.Realizability.Model
+import all KFOL.Reset.Realizability.Necessity
+import all KFOL.Reset.Realizability.Size
+import all KFOL.Reset.Realizability.Synthesis
+import all KFOL.Reset.Realizability.Recognition
+import all KFOL.Reset.Realizability
 import all KFOL.Reset
 import all KFOL.Definitions.Equational
 import all KFOL.Equational.Logic

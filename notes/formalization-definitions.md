@@ -444,7 +444,8 @@ selector, with the stated actual-support feasible-set formula.
 proves that all their contributions are permitted by the family. `Synthesis.lean`
 joins these paths to realize every rooted antimatroid, without a realizability
 certificate supplied by the caller. This existence construction may enumerate
-all feasible sets; compact polynomial table synthesis remains a separate task.
+all feasible sets; the compact candidate-table construction below uses one path
+per listed prerequisite instead.
 
 `Equivalence.lean` proves equality of these families iff equality of selectors,
 and, with three distinct roles, iff equality of actual winner-set functions.
@@ -453,3 +454,51 @@ laws of the equivalence. Mathlib finite sets, powersets, list prefixes and
 reversals supply the underlying APIs; no further library or category structure
 is required. Tests include an independently specified family, overlapping
 supports, distinct path orders, unused positions and both empty-domain types.
+
+## Compact candidate tables
+
+All new definitions remain in `Definitions/Reset.lean`:
+
+| Definition | Meaning and dependencies |
+| --- | --- |
+| `Reset.GuardTable` | A candidate root and finite prerequisite family at each ambient position; no assumed term or realizability proof |
+| `GuardTable.Enabled` | Some listed prerequisite is contained in the supplied ambiguity set |
+| `GuardTable.Constructible` | An inductive finite sequence of fresh enabled additions, independent of terms, antimatroids and checkers |
+| `GuardTable.IsAntichain` | No distinct comparable prerequisites at the same output |
+| `GuardTable.WellFormed` | Antichain minimality, exactly the root's empty guard, self-exclusion, and constructibility of all listed prerequisites |
+| `GuardTable.entryCount` | The sum of prerequisite counts over finite ambient positions |
+| `Term.guardTable` | The independently defined term root and canonical minimal tables |
+| `GuardTable.advance`, `reached` | A parallel greedy round restricted to the target, and its finite iteration from the empty set |
+| `GuardTable.constructibleCheck` | Test whether the target is reached after as many rounds as its cardinality |
+| `GuardTable.badGuards`, `check` | Executable finite scans of listed guards and ambient positions; no search over arbitrary subsets |
+| `Term.size` | Count of all variable and primitive reset occurrences in the expanded syntax tree |
+
+`KFOL.Paper.reset_table_realizability` repeats every candidate condition and
+proves equivalence with an actual term whose size is at most `1 + 2nM`.
+`reset_table_recognition` connects the executable Boolean recognizer to actual
+realizations and states the bounded greedy criterion. The local completeness
+condition is repeated in `reset_table_local_completeness`, with just the
+self-exclusion hypothesis needed by its proof.
+
+`Realizability/Constructible.lean` proves union closure, accessibility and
+greedy progress directly from the inductive definition; cardinal induction
+establishes equivalence with local completeness. `Model.lean` builds the finite
+rooted antimatroid of constructible sets on exactly the active positions.
+`Necessity.lean` uses minimality and accessible orders to prove that every
+canonical prerequisite is itself feasible and constructible.
+
+`Size.lean` counts path leaves, reset nodes and joining nodes. `Synthesis.lean`
+chooses one path for each of the M listed prerequisites, bounds its support by
+n positions, and proves that joining those paths gives exactly the candidate
+selectors and minimal tables. It does not enumerate the feasible family.
+This is a mathematical existence construction using choice; it is not an
+executable syntax-producing algorithm. `Recognition.lean` proves correctness
+of the executable checker and its at-most-target-cardinality greedy rounds.
+Polynomial machine-time bounds, executable syntax synthesis, and the separate
+bound on the table extracted from an input term remain open obligations.
+
+Regression cases independently specify alternative prerequisites, an unused
+input, a dependency cycle, multiple empty-root guards, self-dependency and a
+dominated guard. Acceptance yields an actual term and its size bound; rejection
+of the cycle rules out any realizing term. All finite computations use kernel
+`decide`, with no `native_decide` or unchecked enumeration assumption.

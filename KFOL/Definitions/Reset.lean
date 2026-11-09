@@ -155,5 +155,80 @@ abbrev TermFunction (Role : Type u) (Var : Type v) :=
 def Term.feasible {Var : Type v} [DecidableEq Var] (t : Term Var) : Set (Finset Var) :=
   {A | A ⊆ t.varFinset ∧ ∀ j ∈ A, t.Selected (A : Set Var) j}
 
+/-- Candidate guard data, independent of realizability by a term. -/
+structure GuardTable (Var : Type v) where
+  root : Var
+  guards : Var → Finset (Finset Var)
+
+/-- A prerequisite enables an output on a set of ambiguity statuses. -/
+def GuardTable.Enabled {Var : Type v} (G : GuardTable Var) (B : Set Var) (j : Var) : Prop :=
+  ∃ A ∈ G.guards j, (A : Set Var) ⊆ B
+
+/-- Constructibility is a finite sequence of fresh enabled additions. It does
+not refer to terms, antimatroid feasibility or a recognition algorithm. -/
+inductive GuardTable.Constructible {Var : Type v} [DecidableEq Var]
+    (G : GuardTable Var) : Finset Var → Prop
+  | empty : Constructible G ∅
+  | insert {A : Finset Var} (j : Var) (hA : Constructible G A)
+      (fresh : j ∉ A) (enabled : G.Enabled (A : Set Var) j) :
+      Constructible G (insert j A)
+
+/-- A candidate is already minimal at each output position. -/
+def GuardTable.IsAntichain {Var : Type v} [DecidableEq Var] (G : GuardTable Var) : Prop :=
+  ∀ j, ∀ A ∈ G.guards j, ∀ B ∈ G.guards j, A ⊆ B → A = B
+
+/-- Number of explicitly listed distinct prerequisites over a finite input set. -/
+def GuardTable.entryCount {Var : Type v} [Fintype Var] (G : GuardTable Var) : ℕ :=
+  ∑ j, (G.guards j).card
+
+/-- The three realizability conditions, with minimality of the input tables
+explicit. The paper-facing statement repeats every clause. -/
+def GuardTable.WellFormed {Var : Type v} [DecidableEq Var] (G : GuardTable Var) : Prop :=
+  G.IsAntichain ∧ G.guards G.root = {∅} ∧
+    (∀ j, ∅ ∈ G.guards j → j = G.root) ∧
+    (∀ j, ∀ A ∈ G.guards j, j ∉ A) ∧
+    (∀ j, ∀ A ∈ G.guards j, G.Constructible A)
+
+/-- The canonical guard data of a term, using its independently defined root. -/
+def Term.guardTable {Var : Type v} [DecidableEq Var] (t : Term Var) : GuardTable Var :=
+  ⟨t.root, t.table⟩
+
+/-- One parallel greedy round: add every target position already enabled by
+an explicit prerequisite in the reached finite set. -/
+def GuardTable.advance {Var : Type v} [DecidableEq Var] (G : GuardTable Var)
+    (target reached : Finset Var) : Finset Var :=
+  reached ∪ target.filter (fun j => ∃ A ∈ G.guards j, A ⊆ reached)
+
+/-- Run the greedy closure for a fixed number of rounds. -/
+def GuardTable.reached {Var : Type v} [DecidableEq Var] (G : GuardTable Var)
+    (target : Finset Var) : ℕ → Finset Var
+  | 0 => ∅
+  | k + 1 => G.advance target (G.reached target k)
+
+/-- Constructibility recognition uses exactly as many rounds as target labels. -/
+def GuardTable.constructibleCheck {Var : Type v} [DecidableEq Var]
+    (G : GuardTable Var) (target : Finset Var) : Bool :=
+  decide (G.reached target target.card = target)
+
+/-- Scan only listed prerequisites for self-dependency, failed construction,
+or a strictly larger listed guard. This avoids enumerating arbitrary subsets. -/
+def GuardTable.badGuards {Var : Type v} [DecidableEq Var] (G : GuardTable Var)
+    (j : Var) : Finset (Finset Var) :=
+  (G.guards j).filter (fun A => j ∈ A ∨ G.constructibleCheck A = false ∨
+    ∃ B ∈ G.guards j, A ⊆ B ∧ A ≠ B)
+
+/-- Executable recognition scans the finite input set and the supplied guards. -/
+def GuardTable.check {Var : Type v} [DecidableEq Var] [Fintype Var]
+    (G : GuardTable Var) : Bool :=
+  decide (G.guards G.root = {∅} ∧
+    (Finset.univ.filter (fun j => (∅ ∈ G.guards j ∧ j ≠ G.root) ∨
+      G.badGuards j ≠ ∅)) = ∅)
+
+/-- Primitive reset syntax size counts all variable and operation occurrences,
+including independent repeated copies. It is not a machine-time bound. -/
+def Term.size {Var : Type v} : Term Var → ℕ
+  | .var _ => 1
+  | .func .reset args => 1 + size (args 0) + size (args 1)
+
 end Reset
 end KFOL

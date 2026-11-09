@@ -228,7 +228,7 @@ External mathematical inputs actually used by a main-paper proof need a kernel p
 | --- | --- | --- |
 | Classification of the repeat-triple polymorphism clone | Atomic clone and determinacy, then binary classification | Import a verified theorem after checking its exact finite-domain hypotheses, or formalize the needed finite combinatorial classification locally |
 | Freese et al. order-algebra results | Reset basis completeness and minimum generators | The reset six-law special case is now proved by arbitrary-algebra path normalization and suffix absorption; the required minimum-generator special cases remain separate |
-| Antimatroid/dependency representation | Main representation and compact table algorithms; report-only counts stay optional | The rooted representation and inverse laws are now proved directly from finite feasible-set axioms. Compact recognition/synthesis and their bounds remain separate |
+| Antimatroid/dependency representation | Main representation and compact table algorithms; report-only counts stay optional | Rooted representation and inverse laws, the complete realizability criterion, executable recognition correctness and a `1 + 2nM` realization bound are proved. Executable syntax synthesis and machine-time bounds remain separate |
 | Dissemilattice generation | Seven-equation fragment claimed in the main paper | Formalize the precise generation theorem or replace its use by an explicit separating representation proof |
 | Kleene presentation | Two-role finite basis cited in the main discussion | Verify/import the exact theorem, or give a direct normal-form/term proof for the needed case |
 | Mixed Nash existence, finite SE existence and zero-sum value uniqueness | Required round semantics | Reuse the inspected GameTheory Nash, SE existence and minimax interfaces; prove the KFOL finiteness, recall, nonempty-menu, integrability and payoff-shift premises |
@@ -416,8 +416,10 @@ all small separators and 1000 substitutions.
 
 The complete main proposition `reset:thm:three` remains partial because its
 polynomial machine-time clause is still owed. The combined derived-reset
-prose obligation also includes the guarded-choice example, and the algorithm
-prose obligation includes recognition and synthesis; those clauses remain open.
+prose obligation also includes the guarded-choice example. The algorithm prose
+obligation includes recognition and synthesis; the later compact-table milestone
+below checks the criterion, realization size and recognition correctness, with
+executable syntax synthesis and machine bounds still outstanding.
 The separate complexity milestone also owes the machine-time clause of
 idempotent extraction. Strategic integration remains a separate gate; no
 upstream GameTheory files have been changed.
@@ -468,9 +470,37 @@ polynomial bounds in their own obligations. Tests cover independent axioms,
 overlapping grounds, two different path families, padded inputs, and empty
 ambient types. Clean Lean checks and the full audit cover every new helper.
 
-Next prove the compact table realizability criterion, its constructive synthesis
-and size bound. The guarded-choice prose example, remaining machine bounds,
-forty-law completeness and strategic milestones retain their own obligations.
+### Compact table realizability and recognition checked
+
+`KFOL.Paper.reset_table_realizability` repeats the antichain, unique empty-root,
+self-exclusion and constructibility conditions, and proves equivalence with
+actual canonical tables. Its realization has at most `1 + 2nM` primitive syntax
+occurrences, including repeated leaves and joining nodes. The independent
+candidate data and inductive constructibility predicate remain in the existing
+reset definition file. No caller-supplied realization certificate is assumed.
+
+Necessity uses minimality to prove that every canonical prerequisite is feasible
+in the represented antimatroid. Sufficiency builds the family of constructible
+sets and chooses one path per listed prerequisite, rather than enumerating the
+feasible family. Each path's selectors are permitted by the candidate, and
+joining paths recovers every required selector. Minimality then identifies the
+actual canonical table.
+
+`reset_table_recognition` connects a computable finite-scan Boolean checker to
+the existence of an actual realizing term. Greedy closure succeeds after at
+most as many rounds as target positions exactly when the target is constructible.
+`reset_table_local_completeness` proves the report's alternative local condition
+equivalent, using self-exclusion and cardinal induction. Regressions include
+alternative prerequisites, unused inputs, cycles satisfying the root and
+self-exclusion constraints, invalid antichains, and the empty target.
+
+The whole `reset:thm:synthesis` row remains partial: polynomial machine-time
+recognition has not been certified. The size proof is a mathematical choice
+construction, so executable syntax synthesis is also still required by the
+main prose obligation. Next supply that syntax-producing algorithm and its
+correctness, then the term-to-table size bound and machine adapters. Minimal
+clone, guarded-choice, forty-law completeness and strategic milestones retain
+their own obligations.
 
 | Milestone | Prerequisites | Concrete completion gate |
 | --- | --- | --- |
