@@ -9,7 +9,7 @@ public import KFOL.Reset.Chain
 
 namespace KFOL.Algorithms.ResetEquation
 
-open _root_.Complexity
+open _root_.KFOL.Words
 
 @[simp] theorem labels_nodup (s t : Reset.Term ℕ) : (labels s t).Nodup := List.nodup_dedup _
 

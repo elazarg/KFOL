@@ -1,103 +1,72 @@
 module
 
 public import KFOL.Algorithms.GuardWords
-public import KFOL.Complexity.Language
+public import KFOL.Complexity.SuffixFold
+public import Complexity.Computability.Machines.Turing.MultiTape.Complexity.PolyTime.Pi
 
-/-! # A machine-certified prerequisite subset test on membership words -/
+/-! # A native machine-certified prerequisite subset test on membership words -/
 
 @[expose] public section
 
 namespace KFOL.Complexity.GuardSubset
 
 open Algorithms.GuardWords
-open _root_.Complexity _root_.Complexity.Cobham
+open Turing.MultiTapeTM ComputableInPolyTime
 
-private theorem caseBit_value (x yes no : List Bool) :
-    caseBit₀ x yes no = (bif x.headD false then yes else no) := by
-  cases x with
-  | nil => rfl
-  | cons b x => cases b <;> rfl
+private abbrev Context := List Bool × List Bool
+private abbrev contextEncoding := encPair encBits encBits
+private abbrev CallbackInput := (Context × (List Bool × List Bool)) × Bool
+private abbrev callbackEncoding := encPair (encPair contextEncoding (encPair encBits encBits)) encBool
 
-private theorem andBit_value (x y : List Bool) :
-    andBit x y = [x.headD false && y.headD false] := by
-  simp only [andBit, caseBit_value]
-  cases x.headD false <;> cases y.headD false <;> rfl
+private def step (context : Context) (suffix state : List Bool) (_ : Bool) : List Bool :=
+  subsetStep suffix state context.1 context.2
 
-private theorem orBit_value (x y : List Bool) :
-    orBit x y = [x.headD false || y.headD false] := by
-  simp only [orBit, caseBit_value]
-  cases x.headD false <;> cases y.headD false <;> rfl
-
-private theorem notBit_value (x : List Bool) : notBit x = [!x.headD false] := by
-  simp only [notBit, caseBit_value]
-  cases x.headD false <;> rfl
-
-private theorem bitAt_value (r x : List Bool) : bitAt r x = [readBit x r.length] := by
-  rw [bitAt, caseBit_value]
-  have he : (x.drop r.length).headD false = readBit x r.length := by
-    simp only [List.headD_eq_head?_getD, List.head?_drop, readBit]
-  rw [he]
-  cases readBit x r.length <;> rfl
-
-private def stepFn (v : Fin 4 → List Bool) : List Bool :=
-  subsetStep (v 0) (v 1) (v 2) (v 3)
-
-private theorem stepFn_cobham : Cobham stepFn := by
-  have h : Cobham (fun v : Fin 4 → List Bool => andBit (v 1)
-      (orBit (notBit (bitAt (v 0) (v 2))) (bitAt (v 0) (v 3)))) :=
-    Cobham.andFn (.proj 1)
-    (Cobham.orFn (Cobham.notFn (Cobham.comp₂ bitAtFn (.proj 0) (.proj 2)))
-      (Cobham.comp₂ bitAtFn (.proj 0) (.proj 3)))
-  exact h.of_eq (fun v => by
-    simp only [bitAt_value, notBit_value, orBit_value, andBit_value, List.headD_cons]
-    rfl)
-
-private theorem rec_eq (r : List Bool) (v : Fin 2 → List Bool) :
-    recNotation (fun _ : Fin 2 → List Bool => [true]) stepFn stepFn r v =
-      subsetScan r (v 0) (v 1) := by
+private theorem fold_eq (r a b : List Bool) :
+    suffixFold step (a, b) [true] r = subsetScan r a b := by
   induction r with
   | nil => rfl
-  | cons b r ih =>
-    simp only [recNotation_cons, Bool.cond_self, stepFn, Fin.cons_zero]
-    rw [ih]
-    rfl
+  | cons bit r ih => rw [suffixFold_cons, ih]; rfl
 
-/-- A single bounded recursion visits each input position once. Its state is
-always one bit, so the Cobham length bound is the constant one-bit word. -/
-theorem subsetScan_cobham : Cobham fun v : Fin 2 → List Bool =>
-    subsetScan (v 0) (v 0) (v 1) := by
-  have hrec : Cobham fun v : Fin 3 → List Bool =>
-      recNotation (fun _ : Fin 2 → List Bool => [true]) stepFn stepFn (v 0) (Fin.tail v) :=
-    Cobham.boundedRec (Cobham.const [true]) stepFn_cobham stepFn_cobham
-      (Cobham.const [true]) (fun r v => by rw [rec_eq, subsetScan_length]; rfl)
-  have hparams : ∀ i : Fin 3,
-      Cobham (fun v : Fin 2 → List Bool => if i = 2 then v 1 else v 0) := by
-    intro i
-    by_cases hi : i = 2
-    · simp only [hi, ite_true]; exact .proj 1
-    · simp only [hi, ite_false]; exact .proj 0
-  exact (Cobham.comp hrec hparams).of_eq (fun v => by rw [rec_eq]; rfl)
+private theorem step_polyTime : ComputableInPolyTime
+    (fun p : CallbackInput => step p.1.1 p.1.2.1 p.1.2.2 p.2)
+      callbackEncoding encBits := by
+  have hleft : ComputableInPolyTime (fun p : CallbackInput => p.1.1.1) callbackEncoding encBits := by fun_prop
+  have hright : ComputableInPolyTime (fun p : CallbackInput => p.1.1.2) callbackEncoding encBits := by fun_prop
+  have hsuffix : ComputableInPolyTime (fun p : CallbackInput => p.1.2.1) callbackEncoding encBits := by fun_prop
+  have hstate : ComputableInPolyTime (fun p : CallbackInput => p.1.2.2) callbackEncoding encBits := by fun_prop
+  have hindex := length_bits.comp hsuffix
+  have ha := bitsGetDWithInput hleft hindex false
+  have hb := bitsGetDWithInput hright hindex false
+  have htest := bool_or.comp ((bool_not.comp ha).prod hb)
+  have h := bitsCons (bool_and' ((headD false).comp hstate) htest) (const [])
+  simpa only [step, subsetStep, readBit, List.getD_eq_getElem?_getD, Function.comp_def] using h
 
-/-- The actual independently defined word test belongs to Cobham's class. -/
-theorem subsetFn_cobham : Cobham subsetFn := by
-  have h := Cobham.andFn (lenEqFlag_mem (.proj 0) (.proj 1)) subsetScan_cobham
-  exact h.of_eq (fun v => by
-    have hlen : lenEqFlag (v 0) (v 1) = [decide ((v 0).length = (v 1).length)] := by
-      rcases lenEqFlag_flag (v 0) (v 1) with he | he
-      · have hp := (lenEqFlag_eq_true_iff _ _).mp he
-        simpa only [hp, decide_true] using he
-      · rw [he]
-        have hn : (v 0).length ≠ (v 1).length := by
-          intro hh
-          have ht := (lenEqFlag_eq_true_iff _ _).mpr hh
-          rw [he] at ht
-          cases ht
-        simp [hn]
-    rw [andBit_value, hlen]
-    rfl)
+/-- A single native scan implements the independently defined prerequisite
+scan. Its accumulator has one bit for every suffix and every word width. -/
+@[fun_prop] theorem subsetScan_polyTime : ComputableInPolyTime
+    (fun v : Fin 2 → List Bool => subsetScan (v 0) (v 0) (v 1))
+      (encPi encBits) encBits := by
+  have h0 : ComputableInPolyTime (fun v : Fin 2 → List Bool => v 0) (encPi encBits) encBits :=
+    pi_apply encBits 0
+  have h1 : ComputableInPolyTime (fun v : Fin 2 → List Bool => v 1) (encPi encBits) encBits :=
+    pi_apply encBits 1
+  have h := suffixFold_polyTime (context := fun v : Fin 2 → List Bool => (v 0, v 1))
+    (word := fun v => v 0) (initial := fun _ => [true]) (step := step)
+    (h0.prod h1) h0 (const [true]) step_polyTime (PolyBounded.const 1)
+    (fun v suffix _ => by rw [fold_eq, encBits_apply, subsetScan_length])
+  simpa only [fold_eq] using h
 
-/-- Polynomial time in the imported Turing-machine model, uniformly in word
-width. No theorem about the complete table algorithms is claimed here. -/
-theorem subsetFn_mem_FPn : FPn subsetFn := cobham_iff_FPn.mp subsetFn_cobham
+/-- The actual total subset-word test has a deterministic polynomial-time
+machine, including rejection of unequal widths. The index cost is unary in
+the ruler length and independent of the word bits and numeric role names. -/
+@[fun_prop] theorem subsetFn_polyTime :
+    ComputableInPolyTime subsetFn (encPi encBits) encBits := by
+  have h0 : ComputableInPolyTime (fun v : Fin 2 → List Bool => v 0) (encPi encBits) encBits :=
+    pi_apply encBits 0
+  have h1 : ComputableInPolyTime (fun v : Fin 2 → List Bool => v 1) (encPi encBits) encBits :=
+    pi_apply encBits 1
+  have hlen := decide_eq' (length_bits.comp h0) (length_bits.comp h1)
+  have hscan := (headD (encA := encBool) (encL := encBits) false).comp subsetScan_polyTime
+  exact bitsCons (bool_and' hlen hscan) (const [])
 
 end KFOL.Complexity.GuardSubset

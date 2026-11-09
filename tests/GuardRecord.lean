@@ -39,11 +39,11 @@ example : LabelDictionary.decode (LabelDictionary.encode (SupportIndex.labels sp
     some [7, 100000] := by decide
 
 -- Binary zero has the canonical empty code. A redundant high zero is rejected.
-example : GuardRecord.decode 2 (_root_.Complexity.pair [false] [false, false]) = none := by decide
+example : GuardRecord.decode 2 (_root_.KFOL.Words.pair [false] [false, false]) = none := by decide
 -- An output index outside the declared dictionary is invalid.
-example : GuardRecord.decode 2 (_root_.Complexity.pair [true, true] [false, false]) = none := by decide
+example : GuardRecord.decode 2 (_root_.KFOL.Words.pair [true, true] [false, false]) = none := by decide
 -- The entire payload must have exactly the dictionary width.
-example : GuardRecord.decode 2 (_root_.Complexity.pair [] [false]) = none := by decide
+example : GuardRecord.decode 2 (_root_.KFOL.Words.pair [] [false]) = none := by decide
 example : GuardRecord.decodeList 2 (GuardRecord.encodeList records ++ [true]) = none := by decide
 example : GuardRecord.decodeList 0 [] = some [] := by decide
 

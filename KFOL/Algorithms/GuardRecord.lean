@@ -9,7 +9,7 @@ public import KFOL.Algorithms.SupportIndex
 
 namespace KFOL.Algorithms
 
-open _root_.Complexity
+open _root_.KFOL.Words
 
 namespace GuardRecord
 

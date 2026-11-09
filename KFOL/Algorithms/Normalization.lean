@@ -8,7 +8,7 @@ public import KFOL.Algorithms.GuardDescriptor
 
 namespace KFOL.Algorithms.GuardDescriptor
 
-open _root_.Complexity
+open _root_.KFOL.Words
 
 @[simp] theorem labels_normalize (d : GuardDescriptor) : d.normalize.labels = d.labels := rfl
 

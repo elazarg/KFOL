@@ -8,7 +8,7 @@ public import KFOL.Algorithms.GuardRecord
 
 namespace KFOL.Algorithms.TermCode
 
-open _root_.Complexity
+open _root_.KFOL.Words
 
 @[simp] theorem encode_var (j : ℕ) :
     encode (.var j) = false :: delimit (BinaryNatCode.encode j) := rfl

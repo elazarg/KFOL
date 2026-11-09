@@ -9,7 +9,7 @@ public import KFOL.Reset.Realizability
 
 namespace KFOL.Algorithms.GuardDescriptor
 
-open _root_.Complexity
+open _root_.KFOL.Words
 
 @[simp] theorem decode_encode (d : GuardDescriptor) : decode (encode d) = some d := by
   cases d with

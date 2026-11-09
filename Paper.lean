@@ -8,6 +8,13 @@ public import KFOL.Algorithms.TermCode
 public import KFOL.Algorithms.GuardDescriptor
 public import KFOL.Algorithms.Normalization
 public import KFOL.Algorithms.ResetEquation
+public import KFOL.Owner
+public import KFOL.Owner.Four
+public import KFOL.Owner.Minimum
+public import KFOL.Core
+public import KFOL.Complexity.Framing
+public import KFOL.Complexity.BlockScan
+public import KFOL.Complexity.DescriptorValidation
 
 /-!
 # Kernel-checked paper claims
@@ -688,8 +695,9 @@ uniformly in input width. Its exact bitset codec and its connection to the
 independent guard-enabling predicate are repeated here. This does not assert
 polynomial time for the whole table recognizer or synthesizer. -/
 theorem reset_guard_subset_machine :
-    _root_.Complexity.Cobham.FPn (fun v : Fin 2 → List Bool =>
-      Algorithms.GuardWords.subsetWord (v 0) (v 1)) ∧
+    Turing.MultiTapeTM.ComputableInPolyTime (fun v : Fin 2 → List Bool =>
+      Algorithms.GuardWords.subsetWord (v 0) (v 1))
+        (Turing.MultiTapeTM.encPi Turing.MultiTapeTM.encBits) Turing.MultiTapeTM.encBits ∧
     (∀ (n : ℕ) (A : Finset (Fin n)),
       (Algorithms.Bitset.encode A).length = n ∧
       ∀ word : List Bool, Algorithms.Bitset.decode n word = some A ↔
@@ -704,7 +712,7 @@ theorem reset_guard_subset_machine :
       G.Enabled (A : Set (Fin n)) j ↔ ∃ C ∈ G.guards j,
         Algorithms.GuardWords.subsetWord (Algorithms.Bitset.encode C)
           (Algorithms.Bitset.encode A) = [true]) :=
-  ⟨Complexity.GuardSubset.subsetFn_mem_FPn,
+  ⟨Complexity.GuardSubset.subsetFn_polyTime,
     fun _ A => ⟨Algorithms.Bitset.length_encode A, fun w => Algorithms.Bitset.decode_eq_some_iff w A⟩,
     fun _ A B => Algorithms.GuardWords.subsetWord_encode A B,
     Algorithms.GuardWords.subsetWord_correct, fun _ G A j => Algorithms.enabled_iff_subsetWord G A j⟩
@@ -845,7 +853,7 @@ theorem reset_binary_extraction :
     (∀ (word : List Bool) (t : Reset.Term ℕ), Algorithms.TermCode.decode word = some t →
       let D := Algorithms.SupportIndex.labels t
       ∃ records : List (Fin D.length × Finset (Fin D.length)),
-        Algorithms.TermCode.extract word = some (_root_.Complexity.pair
+        Algorithms.TermCode.extract word = some (_root_.KFOL.Words.pair
           (Algorithms.LabelDictionary.encode D) (Algorithms.GuardRecord.encodeList records)) ∧
         records.length = t.leafCount ∧
         records.map (fun r => (D.get r.1, Algorithms.SupportIndex.expand D r.2)) = t.guardEntries ∧
@@ -854,7 +862,7 @@ theorem reset_binary_extraction :
           some records ∧
         (Algorithms.LabelDictionary.encode D).length ≤ word.length ∧
         (Algorithms.GuardRecord.encodeList records).length ≤ 6 * word.length * (word.length + 1) ∧
-        (_root_.Complexity.pair (Algorithms.LabelDictionary.encode D)
+        (_root_.KFOL.Words.pair (Algorithms.LabelDictionary.encode D)
           (Algorithms.GuardRecord.encodeList records)).length ≤
             6 * word.length * (word.length + 1) + 2 * word.length + 2 ∧
         (∀ j, Reset.Term.minimize
@@ -1012,7 +1020,7 @@ theorem reset_binary_equation_checker {Role : Type u} (three : Fin 3 ↪ Role) :
         ∀ valuation : ℕ → WinnerSet Role, s.eval valuation = t.eval valuation)) ∧
     (∀ word : List Bool, Algorithms.ResetEquation.checkWord word = true ↔
       ∃ s t : Reset.Term ℕ,
-        word = _root_.Complexity.pair (Algorithms.TermCode.encode s) (Algorithms.TermCode.encode t) ∧
+        word = _root_.KFOL.Words.pair (Algorithms.TermCode.encode s) (Algorithms.TermCode.encode t) ∧
         ∀ valuation : ℕ → WinnerSet Role, s.eval valuation = t.eval valuation) :=
   ⟨fun s t => ⟨Algorithms.ResetEquation.labels_nodup s t,
       Algorithms.ResetEquation.labels_toFinset s t, Algorithms.ResetEquation.length_labels_le s t,
@@ -1024,5 +1032,256 @@ theorem reset_binary_equation_checker {Role : Type u} (three : Fin 3 ↪ Role) :
 [propext, Classical.choice, Quot.sound] -/
 #guard_msgs (whitespace := lax) in
 #print axioms KFOL.Paper.reset_binary_equation_checker
+
+/-- `owner:lem:root`. Ambiguity and each atomic output are determined
+exactly by the root variable, for the entire guarded-owner signature. -/
+theorem owner_root_status {Role : Type u} {Var : Type v}
+    (t : Owner.Term Role Var) (valuation : Var → WinnerSet Role) :
+    ((t.eval valuation).Ambiguous ↔ (valuation t.root).Ambiguous) ∧
+    (∀ r, t.eval valuation = WinnerSet.singleton r ↔
+      valuation t.root = WinnerSet.singleton r) :=
+  ⟨t.ambiguous_iff valuation, t.eq_singleton_iff valuation⟩
+
+/-- info: 'KFOL.Paper.owner_root_status' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Paper.owner_root_status
+
+/-- `owner:thm:guards`, including the exact occurrence semantics and the
+explicit two-winner countervaluation using the same three distinct roles. -/
+theorem owner_guard_completeness {Role : Type u} {Var : Type v}
+    [DecidableEq Role] [DecidableEq Var] (s t : Owner.Term Role Var)
+    (k a b : Role) (hka : k ≠ a) (hkb : k ≠ b) (hab : a ≠ b)
+    (hs : s.OwnersIn (fun r => r = k ∨ r = a))
+    (ht : t.OwnersIn (fun r => r = k ∨ r = a)) :
+    (∀ valuation : Var → WinnerSet Role, k ∈ (s.eval valuation).val ↔
+      ∃ g ∈ s.guards k, (∀ j ∈ g.many, (valuation j).Ambiguous) ∧
+        (∀ j ∈ g.outside, valuation j ≠ WinnerSet.singleton a) ∧
+          k ∈ (valuation g.source).val) ∧
+    (∀ valuation : Var → WinnerSet Role, k ∈ (t.eval valuation).val ↔
+      ∃ g ∈ t.guards k, (∀ j ∈ g.many, (valuation j).Ambiguous) ∧
+        (∀ j ∈ g.outside, valuation j ≠ WinnerSet.singleton a) ∧
+          k ∈ (valuation g.source).val) ∧
+    (s.guards k).length = s.leafCount ∧ (t.guards k).length = t.leafCount ∧
+    ((∀ g ∈ s.guards k, ∃ h ∈ t.guards k, h.source = g.source ∧
+      (∀ j ∈ h.many, j ∈ g.many) ∧
+      (∀ j ∈ h.outside, j ∈ g.many ∨ j ∈ g.outside ∨ j = g.source)) ↔
+        ∀ valuation : Var → WinnerSet Role,
+          k ∈ (s.eval valuation).val → k ∈ (t.eval valuation).val) ∧
+    (¬(∀ g ∈ s.guards k, ∃ h ∈ t.guards k, h.source = g.source ∧
+      (∀ j ∈ h.many, j ∈ g.many) ∧
+      (∀ j ∈ h.outside, j ∈ g.many ∨ j ∈ g.outside ∨ j = g.source)) →
+      ∃ g ∈ s.guards k,
+        k ∈ (s.eval (Owner.minimalVal k a b g)).val ∧
+        k ∉ (t.eval (Owner.minimalVal k a b g)).val ∧
+        ∀ j, ∃ r ∈ ({k, a, b} : Set Role), ∃ q ∈ ({k, a, b} : Set Role),
+          Owner.minimalVal k a b g j = (WinnerSet.singleton r).union (WinnerSet.singleton q)) :=
+  ⟨s.guard_semantics k a hs, t.guard_semantics k a ht, s.guards_length k, t.guards_length k,
+    s.observation_implication_iff t k a b hka hkb hab hs ht,
+    s.observation_countervaluation t k a b hka hkb hab hs ht⟩
+
+/-- info: 'KFOL.Paper.owner_guard_completeness' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Paper.owner_guard_completeness
+
+/-- The semantic and executable-checker clauses of `owner:thm:one-table`.
+The full paper claim also requires a uniform polynomial machine bound. -/
+theorem owner_one_table {Role : Type u} {Var : Type v}
+    [DecidableEq Role] [DecidableEq Var] (three : Fin 3 ↪ Role)
+    (a k : Role) (hka : k ≠ a) (s t : Owner.Term Role Var)
+    (hs : s.OwnersIn (fun r => r = a)) (ht : t.OwnersIn (fun r => r = a)) :
+    ((∀ valuation : Var → WinnerSet Role, s.eval valuation = t.eval valuation) ↔
+      Owner.Covers (s.guards k) (t.guards k) ∧ Owner.Covers (t.guards k) (s.guards k)) ∧
+    (Owner.Term.equationB k s t = true ↔
+      ∀ valuation : Var → WinnerSet Role, s.eval valuation = t.eval valuation) :=
+  ⟨s.single_table_equation_iff three t a k hka hs ht,
+    Owner.Term.equationB_correct three a k hka s t hs ht⟩
+
+/-- info: 'KFOL.Paper.owner_one_table' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Paper.owner_one_table
+
+/-- Guarded choice is idempotent and preserves every atomic root. Its
+actual expansion into owned choices preserves all valuations and is core. -/
+theorem owner_definability {Role : Type u} {Var : Type v} (three : Fin 3 ↪ Role)
+    (roles : List Role) (covers : ∀ r, r ∈ roles) :
+    (∀ (a : Role) (A : WinnerSet Role), WinnerSet.guardedChoice a A A A = A) ∧
+    (∀ (a i : Role) (A B : WinnerSet Role),
+      WinnerSet.guardedChoice a (WinnerSet.singleton i) A B = WinnerSet.singleton i) ∧
+    (∀ (t : Owner.Term Role Var) (valuation : Var → WinnerSet Role),
+      (t.compile three roles).eval valuation = t.eval valuation ∧
+        (t.compile three roles).IsCore) :=
+  ⟨WinnerSet.guardedChoice_self, WinnerSet.guardedChoice_singleton,
+    fun t valuation => ⟨t.eval_compile three roles covers valuation, t.isCore_compile three roles⟩⟩
+
+/-- info: 'KFOL.Paper.owner_definability' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Paper.owner_definability
+
+/-- Complete binary framing and block-stream parsers have native
+polynomial-time machines, including malformed inputs and all returned data.
+Paper-word framing and native machine tuple encodings remain distinct. -/
+theorem binary_framing_machines :
+    Turing.MultiTapeTM.ComputableInPolyTime Words.unpair? Turing.MultiTapeTM.encBits
+      (Turing.MultiTapeTM.encOption (Turing.MultiTapeTM.encPair
+        Turing.MultiTapeTM.encBits Turing.MultiTapeTM.encBits)) ∧
+    Turing.MultiTapeTM.ComputableInPolyTime Words.undelimitBlocks Turing.MultiTapeTM.encBits
+      (Turing.MultiTapeTM.encOption (Turing.MultiTapeTM.encList Turing.MultiTapeTM.encBits)) ∧
+    Turing.MultiTapeTM.ComputableInPolyTime Words.delimit
+      Turing.MultiTapeTM.encBits Turing.MultiTapeTM.encBits ∧
+    Turing.MultiTapeTM.ComputableInPolyTime
+      (fun p : List Bool × List Bool => Words.pair p.1 p.2)
+      (Turing.MultiTapeTM.encPair Turing.MultiTapeTM.encBits Turing.MultiTapeTM.encBits)
+      Turing.MultiTapeTM.encBits ∧
+    (∀ word left right : List Bool,
+      Words.unpair? word = some (left, right) ↔ word = Words.pair left right) ∧
+    (∀ (word : List Bool) (blocks : List (List Bool)),
+      Words.undelimitBlocks word = some blocks ↔ word = (blocks.map Words.delimit).flatten) := by
+  refine ⟨Complexity.Framing.unpair_polyTime, Complexity.BlockScan.undelimitBlocks_polyTime,
+    Complexity.Framing.delimit_polyTime, Complexity.Framing.pair_polyTime,
+    fun _ _ _ => Words.unpair?_eq_some_iff, ?_⟩
+  intro word blocks
+  exact ⟨fun h => (Algorithms.Framing.undelimitBlocks_sound h).symm,
+    fun h => h ▸ Words.undelimitBlocks_flatten_delimit blocks⟩
+
+/-- info: 'KFOL.Paper.binary_framing_machines' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Paper.binary_framing_machines
+
+/-- The semantic-equivalence part of `owner:thm:four`, with the concrete
+four displayed winner sets closed under both operations. Minimum generation
+requires a separate exclusion of all smaller algebras. -/
+theorem owner_four_element_theory {Role : Type u} {Var : Type v}
+    [DecidableEq Role] [DecidableEq Var] (three : Fin 3 ↪ Role)
+    (a k b : Role) (hka : k ≠ a) (hkb : k ≠ b) (hab : a ≠ b)
+    (s t : Owner.Term Role Var)
+    (hs : s.OwnersIn (fun r => r = a)) (ht : t.OwnersIn (fun r => r = a)) :
+    Fintype.card Owner.Four = 4 ∧
+    (∀ x : Owner.Four, Owner.Four.project a k (Owner.Four.embed a k b x) = x) ∧
+    (∀ x y : Owner.Four, Owner.Four.embed a k b (Owner.Four.reset x y) =
+      (Owner.Four.embed a k b x).reset (Owner.Four.embed a k b y)) ∧
+    (∀ x y z : Owner.Four, Owner.Four.embed a k b (Owner.Four.guarded x y z) =
+      WinnerSet.guardedChoice a (Owner.Four.embed a k b x) (Owner.Four.embed a k b y)
+        (Owner.Four.embed a k b z)) ∧
+    ((∀ valuation : Var → WinnerSet Role, s.eval valuation = t.eval valuation) ↔
+      ∀ valuation : Var → Owner.Four, s.evalFour valuation = t.evalFour valuation) :=
+  ⟨Owner.Four.card, Owner.Four.project_embed a k b hka hkb hab,
+    Owner.Four.embed_reset a k b hab,
+    Owner.Four.embed_guarded a k b hab,
+    s.four_element_complete three t a k hka hs ht⟩
+
+/-- info: 'KFOL.Paper.owner_four_element_theory' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Paper.owner_four_element_theory
+
+/-- Required `core:prop:basis-arity`: a uniform K+2-element obstruction to
+every basis restricted to K actual variables, with an explicit separating
+K+1-variable core identity. This is a bounded-variable obstruction; the
+unbounded nonfinite-basis theorem needs the subsequent grid construction. -/
+theorem core_variable_bound_obstruction {Role : Type u} [DecidableEq Role] [Fintype Role]
+    (three : Fin 3 ↪ Role) :
+    letI := Equational.coreStructure Role
+    letI := Core.Native.structureOf (Role := Role)
+    Fintype.card (Core.Native Role) = Fintype.card Role + 2 ∧
+    (∀ e : Equational.Identity (Equational.CoreSymbol Role),
+      e.variableCount ≤ Fintype.card Role → e.Holds (WinnerSet Role) →
+        e.Holds (Core.Native Role)) ∧
+    (Core.exhaustionIdentity three).Holds (WinnerSet Role) ∧
+    ¬(Core.exhaustionIdentity three).Holds (Core.Native Role) ∧
+    (Core.exhaustionIdentity three).variableCount = Fintype.card Role + 1 ∧
+    ¬Equational.InVariety (Equational.CoreSymbol Role) (WinnerSet Role) (Core.Native Role) ∧
+    (∀ T : Equational.Theory (Equational.CoreSymbol Role),
+      (∀ e ∈ T, e.variableCount ≤ Fintype.card Role) → ¬Equational.IsBasis (WinnerSet Role) T) ∧
+    (∀ T : Equational.Theory (Equational.CoreSymbol Role),
+      Equational.IsBasis (WinnerSet Role) T → ∃ e ∈ T, Fintype.card Role + 1 ≤ e.variableCount) := by
+  let _ := Equational.coreStructure Role
+  let _ := Core.Native.structureOf (Role := Role)
+  exact ⟨Core.Native.card_native, Core.Native.holds_of_variableCount_le three,
+    Core.exhaustion_valid three, Core.exhaustion_not_valid three,
+    Core.exhaustion_variableCount three, Core.native_not_inVariety three,
+    Core.no_basis_with_role_bound three, Core.exists_large_identity_of_basis three⟩
+
+/-- info: 'KFOL.Paper.core_variable_bound_obstruction' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Paper.core_variable_bound_obstruction
+
+/-- Canonical sparse binary names, dictionaries and complete dependent
+descriptor decoding have native polynomial-time machines. The output
+descriptor embedding is exactly its independently defined paper encoding. -/
+theorem binary_descriptor_machines :
+    Turing.MultiTapeTM.ComputableInPolyTime Words.BinaryNatCode.value
+      Turing.MultiTapeTM.encBits Turing.MultiTapeTM.encNat ∧
+    Turing.MultiTapeTM.ComputableInPolyTime Words.BinaryNatCode.encode
+      Turing.MultiTapeTM.encNat Turing.MultiTapeTM.encBits ∧
+    Turing.MultiTapeTM.ComputableInPolyTime Words.BinaryNatCode.decode?
+      Turing.MultiTapeTM.encBits (Turing.MultiTapeTM.encOption Turing.MultiTapeTM.encNat) ∧
+    Turing.MultiTapeTM.ComputableInPolyTime Algorithms.LabelDictionary.decode
+      Turing.MultiTapeTM.encBits
+      (Turing.MultiTapeTM.encOption (Turing.MultiTapeTM.encList Turing.MultiTapeTM.encNat)) ∧
+    Turing.MultiTapeTM.ComputableInPolyTime (fun labels : List ℕ => decide labels.Nodup)
+      (Turing.MultiTapeTM.encList Turing.MultiTapeTM.encNat) Turing.MultiTapeTM.encBool ∧
+    Turing.MultiTapeTM.ComputableInPolyTime
+      (fun word => (Algorithms.GuardDescriptor.decode word).isSome)
+      Turing.MultiTapeTM.encBits Turing.MultiTapeTM.encBool ∧
+    Turing.MultiTapeTM.ComputableInPolyTime Algorithms.GuardDescriptor.decode
+      Turing.MultiTapeTM.encBits
+      (Turing.MultiTapeTM.encOption Complexity.DescriptorValidation.descriptorEncoding) ∧
+    (∀ d : Algorithms.GuardDescriptor,
+      Complexity.DescriptorValidation.descriptorEncoding d = Algorithms.GuardDescriptor.encode d) :=
+  ⟨Complexity.Dictionary.value_polyTime, Complexity.Dictionary.encode_polyTime,
+    Complexity.Dictionary.decode_polyTime, Complexity.Dictionary.dictionary_decode_polyTime,
+    Complexity.Dictionary.dictionary_nodup_polyTime, Complexity.DescriptorValidation.decode_isSome_polyTime,
+    Complexity.DescriptorValidation.decode_polyTime, fun _ => rfl⟩
+
+/-- info: 'KFOL.Paper.binary_descriptor_machines' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Paper.binary_descriptor_machines
+
+/-- The explicit guarded-choice example in the reset section: changing an
+atomic side input changes whether the third role is a possible winner. -/
+theorem guarded_choice_example {Role : Type u} (a b c : Role)
+    (hab : a ≠ b) (hac : a ≠ c) (hbc : b ≠ c) :
+    c ∉ (WinnerSet.guardedChoice a ((WinnerSet.singleton a).union (WinnerSet.singleton b))
+      (WinnerSet.singleton a) (WinnerSet.singleton c)).val ∧
+    c ∈ (WinnerSet.guardedChoice a ((WinnerSet.singleton a).union (WinnerSet.singleton b))
+      (WinnerSet.singleton b) (WinnerSet.singleton c)).val :=
+  WinnerSet.guardedChoice_separates a b c hab hac hbc
+
+/-- info: 'KFOL.Paper.guarded_choice_example' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Paper.guarded_choice_example
+
+/-- `owner:thm:four`: the four-element algebra has exactly the one-owner
+identities, and every finite algebra with that complete identity theory has
+at least four elements. Unit labels the single H operation in the generator
+comparison; arbitrary concrete owner labels are covered by the first clause. -/
+theorem owner_minimum_generator {Role : Type u} {Var : Type v}
+    [DecidableEq Role] [DecidableEq Var] (three : Fin 3 ↪ Role)
+    (a k : Role) (hka : k ≠ a) :
+    Fintype.card Owner.Four = 4 ∧
+    (∀ s t : Owner.Term Role Var,
+      s.OwnersIn (fun r => r = a) → t.OwnersIn (fun r => r = a) →
+        ((∀ valuation : Var → WinnerSet Role, s.eval valuation = t.eval valuation) ↔
+          ∀ valuation : Var → Owner.Four, s.evalFour valuation = t.evalFour valuation)) ∧
+    (∀ (M : Type w) [Fintype M]
+      [(Equational.language (Owner.Symbol Unit)).Structure M],
+      letI := Owner.fourStructure (Role := Unit)
+      (∀ e : Equational.Identity (Owner.Symbol Unit), e.Holds Owner.Four ↔ e.Holds M) →
+        4 ≤ Fintype.card M) :=
+  ⟨Owner.Four.card, fun s t hs ht => s.four_element_complete three t a k hka hs ht,
+    fun _ _ _ => Owner.four_minimum_generator⟩
+
+/-- info: 'KFOL.Paper.owner_minimum_generator' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Paper.owner_minimum_generator
 
 end KFOL.Paper

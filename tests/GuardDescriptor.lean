@@ -51,13 +51,13 @@ example : dominated.check = false := by decide
 example : selfDependent.check = false := by decide
 
 -- Dictionary validation is stricter than the binary list codec.
-example : GuardDescriptor.decode (_root_.Complexity.pair (LabelDictionary.encode [7, 7])
+example : GuardDescriptor.decode (_root_.KFOL.Words.pair (LabelDictionary.encode [7, 7])
     (GuardRecord.encodeList ([(0, ∅)] : List (GuardRecord.Record 2)))) = none := by decide
-example : GuardDescriptor.decode (_root_.Complexity.pair (LabelDictionary.encode [7])
+example : GuardDescriptor.decode (_root_.KFOL.Words.pair (LabelDictionary.encode [7])
     (GuardRecord.encodeList ([(1, ∅)] : List (GuardRecord.Record 2)))) = none := by decide
 -- A valid index but the wrong prerequisite width is also rejected.
-example : GuardDescriptor.decode (_root_.Complexity.pair (LabelDictionary.encode [7])
-    (_root_.Complexity.delimit (_root_.Complexity.pair [] [false, false]))) = none := by decide
+example : GuardDescriptor.decode (_root_.KFOL.Words.pair (LabelDictionary.encode [7])
+    (_root_.KFOL.Words.delimit (_root_.KFOL.Words.pair [] [false, false]))) = none := by decide
 example : GuardDescriptor.decode (GuardDescriptor.encode good ++ [true]) = none := by decide
 example : GuardDescriptor.recognize [true] = false := by decide
 

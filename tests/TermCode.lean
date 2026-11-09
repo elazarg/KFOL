@@ -46,7 +46,7 @@ example : (TermCode.encode repeated).length = 29 := by decide
 -- The frontend runs from the original bits and returns a single framed output word.
 example : (TermCode.extract (TermCode.encode sparse)).map List.length = some 114 := by decide
 example : (TermCode.extract (TermCode.encode sparse)).bind (fun word => do
-    let (dict, stream) ← _root_.Complexity.unpair? word
+    let (dict, stream) ← _root_.KFOL.Words.unpair? word
     let labels ← LabelDictionary.decode dict
     let records ← GuardRecord.decodeList labels.length stream
     return (labels, records.map (fun r => (r.1.val, Bitset.encode r.2)))) =

@@ -1,6 +1,6 @@
 module
 
-public import KFOL.Definitions.Encoding
+public import KFOL.Algorithms.Words
 
 /-! # Complete block framing and reusable exact list-codec proofs -/
 
@@ -8,7 +8,7 @@ public import KFOL.Definitions.Encoding
 
 namespace KFOL.Algorithms.Framing
 
-open _root_.Complexity
+open _root_.KFOL.Words
 
 private theorem undelimitBlocksAux_sound (fuel : ℕ) (word : List Bool)
     (blocks : List (List Bool)) (h : undelimitBlocksAux fuel word = some blocks) :

@@ -1,22 +1,29 @@
 # Supporting libraries for the main paper formalization
 
-The foundation is the user's **GameTheory library plus mathlib**, with its intended updated ComplexityLib integration for computational claims. The current extension's machine API is now validated on KFOL's v4.35.0 toolchain for a first primitive; the successor and strategic integration gates remain separate. Mixed Nash existence, minimax, independent sequential equilibrium, finite SE existence, and machine-based complexity foundations have existing implementations. The remaining work is predominantly the paper's algebra and the bridges from its syntax to those implementations.
+The current dependency selection uses the user-authorized GameTheory branch
+`port/cslib-complexity`, pinned at `6f1af625b77215dd9e4454e6120275dbd8b61f51`.
+Its successor ComplexityLib pin is `054834a4a4e6ac3ec50ed770bacea7fc42eccc7d`,
+CSLib is `254e30e6d4299c51323aaeaf5f51a4763b375d4a`, and Lean/mathlib remain
+4.35.0 (`56a005855ea17e0b0958f73ec801ae140b0a1679`). The fixed-point package
+remains `f06449c5fb1ca49f14ea2b5331ddf71bd2dcd232`.
 
-The target is the entire **main paper and its necessary report dependencies**. General real quantifier elimination, the semantic/syntactic dependent-calculus development, and the full ambiguity appendix are not prerequisites. The main-paper scope edit `6dff3f0` removed the private-store connection claim and the two numerical free-algebra lists. A pointer to an appendix does not import every theorem in that appendix into the target; substantive mathematical assertions made in the main text still count.
+The selected native machine and GameTheory protocol gate passed 3266 jobs in an
+isolated downstream package. Production imports of canonical SPE, Nash,
+minimax and finite SE existence passed 3803 jobs and the explicit standard-axiom
+check in `KFOL/Audit/Dependencies.lean`. These are dependency gates; compiling the
+interfaces does not prove the KFOL strategy or round correspondences.
 
-This assessment is not a fresh GameTheory integration build certification. The independent KFOL algebra has been built and audited on v4.35.0. A separate downstream gate now also builds the currently pinned ComplexityLib Cobham/FPn interface on that release, without dependency source patches, and checks its standard axiom list. KFOL uses that compatible pin for its first prerequisite-subset machine certificate. The successor integration and GameTheory strategic/analytic gates remain separate; no build, dependency update, or source edit was performed in the sibling GameTheory checkout.
+GameTheory is resolved by the root package but excluded from the pure algebra
+and binary frontend import closure. The machine branch imports successor
+ComplexityLib directly. The paper word language now has its own mathlib-only
+codec, retaining the previously proved exact serialization across the backend
+change. Paper pairing has length `2*left.length+2+right.length`; native `encPair`
+has length `2*left.length+1+right.length`. The two are never identified.
 
-## Pins and package boundaries
-
-The inspected sibling GameTheory revision is `c6650cd861d4a05a64adb2e4fd99a4feafa231b0`. It selects Lean `v4.35.0`, mathlib `v4.35.0` (resolved revision `56a005855ea17e0b0958f73ec801ae140b0a1679`), and the fixed-point package `elazarg/fixed-point-theorems-lean4` at `f06449c5fb1ca49f14ea2b5331ddf71bd2dcd232`.
-
-Its optional `extensions/complexity` package pins ComplexityLib at `257ad90ec5f547894cc20f27bd828839b1bf7bbf` and CSLib at `94ea80f41a5678fce997a004f0d8d12dbe47cc4b`. That package's published base GameTheory pin is `c7cd6bed7498b9a16edb22262e9522ceff90648c`, which differs from the sibling checkout. Its documented local path override selects the sibling version, but this combination still needs a downstream integration build.
-
-KFOL now directly pins the current extension's ComplexityLib and CSLib revisions, overriding their inherited mathlib snapshot with v4.35.0. This validates that API for the first machine component; it does not settle the intended successor migration. The pure word definitions are independent, and `KFOL.Complexity.Language` confines the imported interface. GameTheory's analysis imports remain confined to the planned round branch. No full GameTheory or complexity umbrella is imported to obtain the primitive.
-
-GameTheory itself stays out of the pure algebraic import closure. `Definitions/Public.lean` contains shared syntax and winner-set evaluation using mathlib; `Definitions/Strategic.lean` imports it and provides the GameTheory interpretation. Views, reset, guards, identities and nonfinite basability depend on the former only. Adequacy connects algebraic evaluation to SPE in the strategic branch. Complexity proofs can import the pinned ComplexityLib directly and reuse GameTheoryComplexity's implementation ideas without importing that companion's game modules. The [plan](formalization-plan.md) specifies independent build targets and transitive import checks. A single Lake package still resolves its declared dependencies; a separate algebra package is needed only if avoiding even GameTheory downloads or the shared toolchain becomes a requirement.
-
-The former ComplexityLib upstream URL now redirects to [`SamuelSchlesinger/complexitylib-v1`](https://github.com/SamuelSchlesinger/complexitylib-v1). Its successor is [`cslib-community/complexitylib`](https://github.com/cslib-community/complexitylib), whose toolchain at inspection was [Lean 4.36.0-rc2](https://github.com/cslib-community/complexitylib/blob/main/lean-toolchain). Follow GameTheory's planned update to that successor, then verify the selected source-level APIs and pins. The legacy theorem names below establish prior availability of the foundations; they are not promises that the successor preserves those names.
+The target is the main paper and necessary report dependencies. The private-store
+connection, dependent calculus, numerical free-algebra lists and general real
+quantifier elimination remain outside required scope. No sibling repository was
+modified; the earlier v1 pin and API observations are retained in delivery history.
 
 ## GameTheory fit
 
@@ -41,20 +48,25 @@ The reusable declarations can be inspected in the pinned [Nash module](https://g
 
 ## Complexity libraries
 
-The pinned legacy ComplexityLib already contains the foundations the first plan proposed as potentially new work:
+Production uses the native successor predicate
+`Turing.MultiTapeTM.ComputableInPolyTime` with explicit injective input/output
+encodings. The facade is `KFOL/Complexity/Language.lean`. Native composition,
+list folds and input-length-clocked iteration charge full encoded context,
+state and output; these replace the earlier Cobham/FPn implementation.
 
-- `Complexitylib.Classes.NP`, `Classes.NP.Reduction`, `Classes.NP.CoNP`: machine-based NP/coNP, polynomial many-one reductions, `coNPComplete`, reduction transport and complement duality.
-- [`SAT.CookLevin.Assembly`](https://github.com/SamuelSchlesinger/complexitylib-v1/blob/257ad90ec5f547894cc20f27bd828839b1bf7bbf/Complexitylib/SAT/CookLevin/Assembly.lean): `SAT.NPHard_language`, `SAT.NPComplete_language` and an actual polynomial-time reduction machine.
-- [`SAT.ThreeSAT.Completeness`](https://github.com/SamuelSchlesinger/complexitylib-v1/blob/257ad90ec5f547894cc20f27bd828839b1bf7bbf/Complexitylib/SAT/ThreeSAT/Completeness.lean): `ThreeSAT.NPComplete_language` and the CNF-to-3CNF reduction.
-- [`Classes.NP.CoNP`](https://github.com/SamuelSchlesinger/complexitylib-v1/blob/257ad90ec5f547894cc20f27bd828839b1bf7bbf/Complexitylib/Classes/NP/CoNP.lean): `NPComplete.compl`, `coNPComplete.transfer`, and closure of polynomial reductions under complement.
+Current certified consumers are `GuardSubset`, `Framing`, `BlockScan`,
+`Dictionary` and `DescriptorValidation`. The last theorem certifies the actual
+dependent descriptor decoder under its existing injective paper encoding.
+Malformed-input validation followed by copying the original exact code realizes
+that decoder; it assumes no caller certificate or decoded-value clock.
 
-Use these definitions and theorems, with a narrow KFOL complexity facade. GameTheoryComplexity provides examples of exact serialization, malformed-input handling and verified polynomial machines. Its constrained-Nash NP-completeness result is not a reduction to KFOL identities and should not be cited as proving their hardness.
-
-The new work is to implement each KFOL reduction as an actual polynomial-time map, connect it to the semantic guard certificates, encode countervaluations for NP membership of inequivalence, and prove the checkers' machine bounds. Syntax size alone does not prove runtime. The pair theorem supplies short witnesses even when K is input, but role-label/permutation costs, malformed encodings and native tree/DAG differences must be included.
-
-The 3SAT complement includes malformed words as members. A reduction whose mathematical theorem is only for well-formed 3CNFs needs a constant valid-equation fallback on malformed inputs, or a proved equivalence to a well-formed UNSAT language. Otherwise the many-one reduction can have the wrong truth value on invalid codes.
-
-This supports retaining full coNP-completeness in the definition of done. Proving only reduction correctness and sizes is a useful intermediate deliverable, not a completed main-paper complexity theorem. No need to rebuild Cook–Levin locally.
+The remaining computational work is complete record normalization/equality,
+recognition, synthesis/substitution, encoded countervaluation verifiers and
+hardness reductions. Use the successor library's machine-based P/NP/coNP and
+reduction APIs; no complexity foundations are re-proved in KFOL. Check the exact
+source problem codec and malformed-word convention when assembling the first
+3SAT reduction, rather than transporting only well-formed formula correctness.
+The first complete reset/union reduction and coNP transport gate remains open.
 
 ## Algebraic supporting libraries
 
@@ -68,7 +80,7 @@ quotient operations. The Equational Theories Project remains a proof reference;
 no code or permanent dependency is imported, and operation labels are not
 encoded as algebra elements. Production full/core codecs connect this interface
 to the retained native traversals. HSP preservation and support-based
-subalgebra locality are also checked; reverse HSP representation is not claimed. A direct reset completeness proof through tables is still needed: generic equational completeness alone does not establish that six particular equations generate the theory.
+subalgebra locality are also checked; reverse HSP representation is not claimed. The six-law reset completeness proof is now implemented in KFOL/Reset/Basis; generic completeness is its final logical bridge.
 
 **Lean UALib is a proof reference, not a compatible dependency.** The inspected [`UniversalAlgebra/lean-ualib` package](https://github.com/UniversalAlgebra/lean-ualib/blob/master/leanpkg.toml) targets Lean 3.4.1. The maintained [Agda Universal Algebra Library](https://agda-algebras.universalalgebra.org/) has signatures, varieties and HSP proofs in Agda. Either can inform a Lean proof, but neither gives an importable Lean 4 theorem.
 
@@ -103,28 +115,11 @@ The [plan's mathlib-only pair-countervaluation delivery milestone](formalization
 4. Implement one reset/union reduction on the pinned 3SAT codec, including malformed words and a polynomial-time certificate. Reuse `NPComplete.compl` and transfer to the same encoded KFOL equation language. Record the reusable machine components separately from fragment-specific work, then assess policy-family and DAG reductions before extrapolating the total cost or number of machines.
 5. Use the native-versus-mathlib syntax decision already made in the first algebra milestone. Reopen it only if a concrete strategic or complexity consumer exposes a defect; do not repeat the comparison routinely.
 
-The current-pin Cobham/FPn subgate has passed in isolation and in the production
-package, with only `propext`, `Classical.choice` and `Quot.sound`. The actual
-width-independent prerequisite-subset program is connected to finite-set
-inclusion and the existing guard-enabling predicate. This is a reusable machine
-component, not completion of Gate 1's successor/GameTheory integration or
-Gate 4's end-to-end reduction. Compact support indexing and exact framed
-binary record/dictionary codecs are now also checked. They reuse mathlib's
-list-indexing equivalence and ComplexityLib's existing codecs and block parser.
-The native binary input-tree codec and executable extraction frontend now also
-have exact semantics and bit-size bounds: a single framed output recovers the
-actual raw guards, with size quadratic in original input bits. Complete
-descriptor validation and semantic recognition are now also checked, using
-mathlib's finite fiber-cardinality formula and the existing compact realization
-theorem. Dictionary names are validated as distinct; malformed words are
-rejected and accepted canonical candidates have actual primitive-tree witnesses.
-Raw-to-canonical normalization and shared-support identity checking are now
-connected to original binary inputs. Pure mathlib variable relabeling and
-injective-image/minimal-guard lemmas supply the transport; no new dependency is
-introduced. Normalized extraction passes recognition, and equation checking is
-exact on all winner-set valuations for role sets containing three roles.
-Machine certificates for the parser, dictionary validation and record/table
-scans remain the next work.
+The successor selected-closure and production native-machine/analytic import
+gates are complete at the pins above. The KFOL public-SPE, sealed-round and
+end-to-end reduction gates remain. Exact reset binary semantics, normalization
+and shared-support identity checking are already connected; complete parser,
+dictionary and descriptor-validation machines are now certified as well.
 
 These gates test the actual reuse seams. Once they pass, the remaining effort can be estimated from the paper-specific proof obligations, rather than from rebuilding foundations already available in the user's libraries.
 

@@ -50,18 +50,18 @@ example : ResetEquation.check x y = false := by decide
 example : ResetEquation.check (Reset.Term.step (Reset.Term.step x y) z) leftComm = false := by decide
 
 -- A one-variable raw record stream alone cannot identify the original variable.
-example : ((TermCode.extract (TermCode.encode x)).bind _root_.Complexity.unpair?).map Prod.snd =
-    ((TermCode.extract (TermCode.encode y)).bind _root_.Complexity.unpair?).map Prod.snd := by decide
+example : ((TermCode.extract (TermCode.encode x)).bind _root_.KFOL.Words.unpair?).map Prod.snd =
+    ((TermCode.extract (TermCode.encode y)).bind _root_.KFOL.Words.unpair?).map Prod.snd := by decide
 
-example : ResetEquation.checkWord (_root_.Complexity.pair
+example : ResetEquation.checkWord (_root_.KFOL.Words.pair
     (TermCode.encode leftComm) (TermCode.encode rightComm)) = true := by decide
-example : ResetEquation.checkWord (_root_.Complexity.pair
+example : ResetEquation.checkWord (_root_.KFOL.Words.pair
     (TermCode.encode x) (TermCode.encode y)) = false := by decide
 example : ResetEquation.checkWord [] = false := by decide
 example : ResetEquation.checkWord [true, false] = false := by decide
-example : ResetEquation.checkWord (_root_.Complexity.pair [] (TermCode.encode x)) = false := by decide
-example : ResetEquation.checkWord (_root_.Complexity.pair (TermCode.encode x) []) = false := by decide
-example : ResetEquation.checkWord (_root_.Complexity.pair
+example : ResetEquation.checkWord (_root_.KFOL.Words.pair [] (TermCode.encode x)) = false := by decide
+example : ResetEquation.checkWord (_root_.KFOL.Words.pair (TermCode.encode x) []) = false := by decide
+example : ResetEquation.checkWord (_root_.KFOL.Words.pair
     (TermCode.encode x) (TermCode.encode x) ++ [true]) = false := by decide
 
 end KFOLTest.ResetEquation

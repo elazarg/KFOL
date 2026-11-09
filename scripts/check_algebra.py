@@ -4,6 +4,7 @@
 from pathlib import Path
 import re
 import subprocess
+import sys
 import tempfile
 
 
@@ -18,6 +19,7 @@ def main():
                 for path in sources if path != audit}
     if imports != expected:
         raise SystemExit(f"Audit coverage mismatch: missing={expected - imports}, extra={imports - expected}")
+    subprocess.run([sys.executable, "scripts/check_inventory.py"], cwd=ROOT, check=True)
     # The independent algebra build must succeed without importing the paper.
     subprocess.run(["lake", "build", "KFOL.Algebra", "KFOL.Audit.Algebra"], cwd=ROOT, check=True)
     subprocess.run(["lake", "build", "Paper", "KFOL.Audit"], cwd=ROOT, check=True)

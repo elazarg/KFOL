@@ -332,7 +332,7 @@ Constructing the paper's core countermodels remains separate unfinished work.
 ## Reset semantics and canonical tables
 
 `Definitions/Reset.lean` adds the reset-specific definitions in one place,
-bringing the current algebraic definition surface to six small modules. Reset
+alongside the other algebraic definition modules. Reset
 uses mathlib terms directly, with no new syntax datatype or evaluator recursion.
 
 | Definition | Meaning and dependencies |
@@ -563,7 +563,7 @@ All finite checks use kernel `decide`.
 
 ## Word representations and the first machine component
 
-The six algebraic definition files remain independent of machine libraries.
+The algebraic definition files remain independent of machine libraries.
 The seventh definition file, `Definitions/Algorithms.lean`, adds the following
 mathlib-only representations and program:
 
@@ -581,20 +581,13 @@ total word semantics and equivalence with finite-set inclusion. Its
 `enabled_iff_subsetWord` theorem connects that test to the existing
 `Reset.GuardTable.Enabled` predicate. These proofs import no complexity classes.
 
-`Complexity/Language.lean` is the imported-definition facade. ComplexityLib's
-`Complexity.Cobham.FPn` means that a unary `Complexity.FP` function computes the
-given fixed-arity function on its canonical tuple encoding. `FP` quantifies
-over an actual deterministic Turing machine, a time function and a polynomial
-asymptotic bound. The facade imports these existing definitions and their
-Cobham correspondence; it does not redefine polynomial time through this
-particular program. Their immutable source is pinned in `lake-manifest.json`.
-
-`Complexity/GuardSubset.lean` expresses the independently defined scan in
-Cobham's bounded-recursion algebra. The recursive state has exactly one bit,
-giving a constant bound at every iteration. The library's proved
-`cobham_iff_FPn` supplies the machine certificate. Root
-`KFOL.Paper.reset_guard_subset_machine` repeats the polynomial-time property,
-codec, total semantics and guard-enabling correspondence, uniformly in width.
+`Complexity/Language.lean` imports the successor native multitape-machine
+predicate `Turing.MultiTapeTM.ComputableInPolyTime`, with explicit injective
+input/output encodings. It quantifies over actual deterministic machines and
+polynomial bounds. No project-specific efficiency predicate is introduced.
+`Complexity/GuardSubset.lean` certifies the independent word scan using a typed
+suffix fold with a one-bit accumulator. Root `reset_guard_subset_machine`
+repeats the native certificate, exact codec, total semantics and enabling bridge.
 
 This is a dense membership-word intermediate representation, already indexed
 by `Fin n`. Sparse binary variable-name encodings, support compression, record
@@ -621,9 +614,12 @@ are inverse on covered sets, and the certified subset-word test remains exact
 when the right status set contains extra unused labels. This extends the
 guard-enabling bridge to arbitrary decidable variable types.
 
-The eighth definition file, `Definitions/Encoding.lean`, marks the external
-binary-codec boundary. It imports ComplexityLib's canonical binary natural
-codes and self-delimiting pairing, separately from the pure indexing branch:
+The representation definition file `Definitions/Encoding.lean` contains the
+backend-independent binary-codec boundary. `KFOL.Words` defines minimal
+little-endian names, exact decoding, doubled-bit framing, prefix parsing and
+complete block parsing using mathlib only. Proofs are in `Algorithms/Words.lean`,
+with attribution to the original v1 framing proofs. This preserves the earlier
+word language without coupling it to a machine library:
 
 | Definition | Meaning and dependencies |
 | --- | --- |
@@ -790,5 +786,57 @@ equations and does not compare independently serialized descriptors. Regressions
 include equal terms with different dictionary orders, distinct variables with
 identical local record streams, nonassociativity, repeated-variable elimination,
 normalization before recognition, exact bit counts and invalid equation framing.
-The definition surface remains eight files. Full machine-time certificates for
+This frontend uses the two representation files. Full machine-time certificates for
 parsing, scans, normalization and equality remain outstanding.
+
+
+## Native machine and strategic dependency interfaces
+
+The machine model is the successor's native `Turing.MultiTapeTM` interface.
+`encBits` preserves original words, `encNat` stores names in binary, and
+`encUnary` is used only for word/list lengths that are bounded by input size.
+`encOption`, `encList`, `encPair` and `encPi` specify typed intermediate data.
+`Complexity.DescriptorValidation.descriptorEncoding` is the existing
+`GuardDescriptor.encode` bundled with its proved injectivity; it adds no new
+meaning. Full unconditional machine statements appear in
+`Paper.binary_framing_machines` and `Paper.binary_descriptor_machines`.
+
+`Audit/Dependencies.lean` compiles canonical GameTheory Nash, pure SPE, SE,
+existence and minimax declarations and audits their transitive axioms. The KFOL
+strategic and round compilers are still separate obligations. These imports
+remain outside the pure algebra/word audit.
+
+## Guarded-owner definitions
+
+`Definitions/Owner.lean` is the ninth definition module. It defines H by the
+existing choice/reset operations, a mathlib signature with reset and labelled
+ternary H, root/evaluation/owner restrictions, raw occurrence guards and the
+explicit three-role minimal valuation. A guard has a source, ambiguous-input
+tests and non-owner-atom tests, represented as finite lists of conjunctions.
+Coverage is exactly source equality, ambiguous-test inclusion and the displayed
+source-discharge rule for non-owner tests. Separate occurrences produce separate
+guards. No equilibrium concept or GameTheory import enters this signature.
+
+`Owner/Completeness` proves exact implication/separators and one-outsider
+identity checking. `Owner/Public` compiles actual owned-choice syntax and proves
+idempotence, atomic-root preservation and the main H example. `Owner.Four`
+is an independent four-state algebra, with concrete embedding and observer
+projection proved in `Owner/Four.lean`. Both theory equivalence and minimum cardinality are proved.
+`Owner/SmallModels` kernel-checks every three-element reset operation using
+proved reconstruction from its off-diagonal cells. `SmallCarriers` transports
+this to arbitrary finite carriers, and `Minimum` excludes every smaller
+generator by complete finite-arity identity comparison, without an outside
+classification hypothesis.
+
+## Uniform native core obstruction
+
+`Definitions/CoreBasis.lean` is the tenth definition module. The native carrier
+has one atom per role plus lower/upper ambiguity markers, with explicit join
+and owned-choice tables. Omission/quotient maps, the derived pure-core union,
+owner-exhaustion identity and Boolean profiles are independent definitions.
+`Core/Quotients` and `Core/Locality` prove proper omission membership and locality
+for arbitrary generated sets. `Paper.core_variable_bound_obstruction` proves
+that the K+2-element algebra transfers every <=K-variable identity, fails the
+explicit valid exhaustion identity with K+1 actual variables, and excludes
+all bases restricted to K variables. Full nonfinite basability needs the
+subsequent typed-cover and padded-grid construction for every variable bound.
