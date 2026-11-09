@@ -2,7 +2,7 @@
 
 The strong-Kleene identification `two:prop:kleene` and several retained
 main-text discussion clauses are complete. The finite Kleene basis clause
-remains required and in progress; no known-result hypothesis discharges it.
+is now also complete, with a direct proof and no external theorem hypothesis.
 The report's full term-function and complexity classifications are optional
 and are not claimed by this slice. Two-player rounds remain with the strategic
 workstream.
@@ -44,12 +44,46 @@ winner carrier or public evaluator is defined.
 canonical Fin 2 examples, projection degeneration, union nondefinability and
 the semantic core counterexample.
 
+## Complete bounded Kleene presentation
+
+`Definitions/Kleene.lean` lists the canonical five operation symbols (bottom,
+top, meet, join, negation), raw independent laws and fifteen literal ternary
+equations. The finite basis includes semilattice/distributive laws, both
+absorptions and bounds, involution, De Morgan for meet, bottom complement,
+and the Kleene inequality. `winnerStructure` interprets every symbol by the
+actual existing winner constants, owned choices and role switch.
+
+The eight modules under `Algebra/TwoPlayers/Kleene/` give the proof:
+`Model` constructs mathlib bounded distributive lattice structure from the
+raw laws; `NormalForm` proves signed DNF normalization for every generic FOL
+term; `Monomials` proves the exact literal obstruction criterion by actual
+three-valued probes; `Completeness` transfers every three-valued identity to
+arbitrary bounded Kleene models; `Presentation` connects the explicit literal
+equations to the raw laws and reconstructs arbitrary signature structures;
+`Basis` invokes the proved generic equational completeness theorem; `Winner`
+transfers via an actual language homomorphism; `Syntax` classifies all original
+internal role permutations and translates every original full-language term
+into the canonical signature, with exact evaluation preservation.
+
+`Kleene.basis_winner` is a genuine `Equational.IsBasis` for the literal finite
+basis on the actual winner carrier. `hasFiniteBasis_winner` is unconditional
+apart from `labels : Fin 2 ≃ Role`. `inVariety_winner_iff_laws` characterizes
+all models in an arbitrary carrier universe. `public_equational_completeness`
+connects every original full-language identity to derivability of its
+translated equation, so arbitrary internal switches are covered.
+`tests/TwoPlayersKleene.lean` repeats the full finite basis/model claims and
+checks an arity-zero derived equation and the original-syntax bridge.
+
+No claim of minimality or independence of the fifteen equations is made.
+
 ## Validation
 
 - `lake build KFOL.Algebra.TwoPlayers.Coordinates`: 1110 jobs, success.
-- Strict `tests/TwoPlayers.lean`: success.
+- `lake build KFOL.Algebra.TwoPlayers.Kleene.Syntax`: success.
+- Strict `tests/TwoPlayers.lean` and `tests/TwoPlayersKleene.lean`: success.
 - Temporary `/tmp/kfol-two-players-complete-audit.lean`: imports all authored
-  declarations, standard-three-axiom audit and pure import boundary pass.
+  declarations, standard-three-axiom audit and pure import boundary pass (241 authored declarations, including the finite
+  Kleene basis and original-syntax bridge).
 
 The general owned-choice idempotence and inclusion lemmas are now consolidated
 in `Algebra/Basic`. Two-player degeneracies no longer import the unrelated

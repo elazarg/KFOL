@@ -48,4 +48,24 @@ theorem mapMWithInput_polyTime
   funext x
   exact mapM_eq_all_getD (f x) fallback (list x)
 
+/-- Combine two complete partial computations over one captured input. Both
+outputs and their shared input are charged by the native calculus. -/
+theorem optionPairWithInput_polyTime {Input Left Right : Type}
+    {input : Input ↪ List Bool} {leftEncoding : Left ↪ List Bool} {rightEncoding : Right ↪ List Bool}
+    {left : Input → Option Left} {right : Input → Option Right}
+    (hleft : ComputableInPolyTime left input (encOption leftEncoding))
+    (hright : ComputableInPolyTime right input (encOption rightEncoding)) :
+    ComputableInPolyTime (fun x => (left x).bind (fun a => (right x).map (fun b => (a, b))))
+      input (encOption (encPair leftEncoding rightEncoding)) := by
+  have hr := hright.comp (fst input leftEncoding)
+  have ha : ComputableInPolyTime (fun p : (Input × Left) × Right => p.1.2)
+      (encPair (encPair input leftEncoding) rightEncoding) leftEncoding := by fun_prop
+  have hb := snd (encPair input leftEncoding) rightEncoding
+  have hpair := hr.optionMapWithInput (f := fun (p : Input × Left) b => (p.2, b)) (ha.prod hb)
+  have h := hleft.optionElimWithInput
+    (body := fun x a => (right x).map (fun b => (a, b))) (const none) hpair
+  convert h using 1
+  funext x
+  cases left x <;> rfl
+
 end KFOL.Complexity

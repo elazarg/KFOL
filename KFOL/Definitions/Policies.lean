@@ -1,6 +1,7 @@
 module
 
 public import KFOL.Definitions.Owner
+public import KFOL.Definitions.Reductions
 
 /-! # Selective reset with an indexed family of blocking policies
 
@@ -266,3 +267,280 @@ def Term.familyEquationB {Role : Type u} {Label : Type w} {Var : Type v}
 
 end Policies
 end KFOL
+
+/-! ## Fixed-family native CNF reduction and policy lattice macros -/
+
+namespace KFOL.Policies
+
+universe u v w
+
+variable {Role : Type u} {Label : Type w} {Var : Type v}
+
+open KFOL.Reductions
+
+inductive PolicyExpr (Label : Type w) where
+  | atom : Label → PolicyExpr Label
+  | bottom : PolicyExpr Label
+  | top : PolicyExpr Label
+  | sup : PolicyExpr Label → PolicyExpr Label → PolicyExpr Label
+  | inf : PolicyExpr Label → PolicyExpr Label → PolicyExpr Label
+  deriving DecidableEq, Repr
+
+namespace PolicyExpr
+
+
+def eval (D : Label → Set Role) : PolicyExpr Label → Set Role
+  | .atom d => D d
+  | .bottom => ∅
+  | .top => Set.univ
+  | .sup E F => E.eval D ∪ F.eval D
+  | .inf E F => E.eval D ∩ F.eval D
+
+/-- Expand every macro occurrence into the actual original tree syntax. -/
+def expand : PolicyExpr Label → Term Label Var → Term Label Var → Term Label Var → Term Label Var
+  | .atom d, X, Y, Z => Term.selective d X Y Z
+  | .bottom, X, Y, Z => Term.step (Term.step Y X) (Term.step Z X)
+  | .top, X, Y, Z => Term.step (Term.step Z Y) X
+  | .sup E F, X, Y, Z => E.expand X Y (F.expand X Y Z)
+  | .inf E F, X, Y, Z => Term.step (E.expand X Y Z) (F.expand X Y Z)
+
+/-- A literal gate has variable root/test inputs and one continuation. -/
+def gate (E : PolicyExpr Label) (root test : Var) (continuation : Term Label Var) : Term Label Var :=
+  E.expand (.var root) (.var test) continuation
+
+/-- Number of actual continuation copies in a fully expanded gate. -/
+def continuationCopies : PolicyExpr Label → ℕ
+  | .atom _ | .bottom | .top => 1
+  | .sup E F => E.continuationCopies * F.continuationCopies
+  | .inf E F => E.continuationCopies + F.continuationCopies
+
+/-- All other primitive nodes and copied root/test variables in a gate. -/
+def overhead : PolicyExpr Label → ℕ
+  | .atom _ => 3
+  | .bottom => 6
+  | .top => 4
+  | .sup E F => E.continuationCopies * F.overhead + E.overhead
+  | .inf E F => E.overhead + F.overhead + 1
+
+end PolicyExpr
+end KFOL.Policies
+
+namespace KFOL.Policies.PolicyExpr
+
+universe u v w
+
+variable {Role : Type u} {Label : Type w} {Var : Type v}
+
+open KFOL.Reductions
+
+def unionLabels : List Label → PolicyExpr Label
+  | [] => .bottom
+  | d :: ds => .sup (.atom d) (unionLabels ds)
+
+def meetAll : List (PolicyExpr Label) → PolicyExpr Label
+  | [] => .top
+  | E :: Es => .inf E (meetAll Es)
+
+end KFOL.Policies.PolicyExpr
+
+namespace KFOL.Policies.Hardness
+
+universe u v w
+
+variable {Role : Type u} {Label : Type w} {Var : Type v}
+
+open KFOL.Reductions
+
+noncomputable def clauseValue (B₀ B₁ : Set Role) (Z : WinnerSet Role)
+    (Y : ℕ → WinnerSet Role) (C : WinnerSet Role) : Clause → WinnerSet Role
+  | [] => C
+  | literal :: rest => WinnerSet.policyReset (if literal.2 then B₀ else B₁) Z
+      (Y literal.1) (clauseValue B₀ B₁ Z Y C rest)
+
+end KFOL.Policies.Hardness
+
+namespace KFOL.Policies.Hardness
+
+universe u v w
+
+variable {Role : Type u} {Label : Type w} {Var : Type v}
+
+open KFOL.Reductions
+
+inductive Variable (Role : Type u) where
+  | root
+  | marker
+  | boolean : ℕ → Variable Role
+  | calibration : Role → Variable Role
+  deriving DecidableEq, Repr
+
+/-- All dictionaries and lattice macros depend only on the fixed policy
+family. Every syntax leaf below is an ordinary independent input variable. -/
+structure Plan (Role : Type u) (Label : Type v) where
+  zero : PolicyExpr Label
+  one : PolicyExpr Label
+  preliminary : List Label
+  calibration : List (Role × List Label × List Label)
+
+end KFOL.Policies.Hardness
+
+namespace KFOL.Policies.Hardness.Plan
+
+universe u v w
+
+variable {Role : Type u} {Label : Type w} {Var : Type v}
+
+open KFOL.Reductions
+
+abbrev Tree := Term Label (Variable Role)
+
+def rightComb (trees : List (Tree (Role := Role) (Label := Label)))
+    (base : Tree (Role := Role) (Label := Label)) : Tree (Role := Role) (Label := Label) :=
+  trees.foldr Term.step base
+
+def clause (plan : Plan Role Label) : Clause → Tree (Role := Role) (Label := Label)
+  | [] => .var .marker
+  | literal :: rest =>
+      (if literal.2 then plan.zero else plan.one).gate .root (.boolean literal.1) (plan.clause rest)
+
+def inputs (plan : Plan Role Label) (formula : CNF) : List (Variable Role) :=
+  (KFOL.Reductions.ResetUnion.support formula).map Variable.boolean ++
+    plan.calibration.map (fun item => .calibration item.1)
+
+def baseline (plan : Plan Role Label) (formula : CNF) : Tree (Role := Role) (Label := Label) :=
+  rightComb ((plan.inputs formula).map (fun i => .var i)) (.var .root)
+
+def positiveTests (plan : Plan Role Label) (formula : CNF) : List (Label × Variable Role) :=
+  (KFOL.Reductions.ResetUnion.support formula).flatMap
+    (fun i => plan.preliminary.map (fun d => (d, .boolean i))) ++
+  plan.calibration.flatMap (fun item => item.2.1.map (fun d => (d, .calibration item.1)))
+
+def gates (tests : List (Label × Variable Role)) : Tree (Role := Role) (Label := Label) :=
+  tests.foldr (fun test continuation =>
+    Term.selective test.1 (.var .root) (.var test.2) continuation) (.var .marker)
+
+def calibrationBranches (plan : Plan Role Label) : List (Tree (Role := Role) (Label := Label)) :=
+  plan.calibration.flatMap (fun item =>
+    Term.step (.var .marker) (.var (.calibration item.1)) ::
+      item.2.2.map (fun d =>
+        Term.selective d (.var .root) (.var (.calibration item.1)) (.var .marker)))
+
+def right (plan : Plan Role Label) (formula : CNF) : Tree (Role := Role) (Label := Label) :=
+  rightComb (formula.map plan.clause ++ plan.calibrationBranches) (plan.baseline formula)
+
+def left (plan : Plan Role Label) (formula : CNF) : Tree (Role := Role) (Label := Label) :=
+  Term.step (gates (plan.positiveTests formula)) (plan.right formula)
+
+/-- The proposed equation is an actual pair of native tree terms. No DAG,
+shared continuation or semantic operation symbol is added. -/
+def equation (plan : Plan Role Label) (formula : CNF) :
+    Tree (Role := Role) (Label := Label) × Tree (Role := Role) (Label := Label) :=
+  (plan.left formula, plan.right formula)
+
+end KFOL.Policies.Hardness.Plan
+
+namespace KFOL.Policies.Hardness.Plan
+
+universe u v w
+
+variable {Role : Type u} {Label : Type w} {Var : Type v}
+
+open KFOL.Reductions
+
+structure Certificate (D : Label → Set Role) (plan : Plan Role Label) where
+  a : Role
+  b : Role
+  marker : Role
+  a_ne_b : a ≠ b
+  a_ne_marker : a ≠ marker
+  b_ne_marker : b ≠ marker
+  a_zero : a ∈ plan.zero.eval D
+  a_not_one : a ∉ plan.one.eval D
+  b_not_zero : b ∉ plan.zero.eval D
+  b_one : b ∈ plan.one.eval D
+  preliminary_clear : ∀ d ∈ plan.preliminary, a ∉ D d ∧ b ∉ D d
+  calibration_positive : ∀ item ∈ plan.calibration, ∀ d, d ∈ item.2.1 ↔ item.1 ∉ D d
+  calibration_negative : ∀ item ∈ plan.calibration, ∀ d, d ∈ item.2.2 ↔ item.1 ∈ D d
+  calibration_marker : ∀ item ∈ plan.calibration, item.1 ≠ marker
+  calibration_injective : ∀ item ∈ plan.calibration, Function.Injective (passingPattern D)
+  intersection : ∀ w, (∀ item ∈ plan.calibration, w ≠ item.1) → ∀ r,
+    r ∈ plan.zero.eval D → r ∈ plan.one.eval D →
+    (∀ d ∈ plan.preliminary, r ∉ D d) → r = w
+
+end KFOL.Policies.Hardness.Plan
+
+namespace KFOL.Policies.Hardness.Plan
+
+universe u v w
+
+variable {Role : Type u} {Label : Type w} {Var : Type v}
+
+open KFOL.Reductions
+
+noncomputable def satisfyingValuation {D : Label → Set Role} {plan : Plan Role Label}
+    (cert : Certificate D plan) (assignment : ℕ → Bool) : Variable Role → WinnerSet Role
+  | .root => (WinnerSet.singleton cert.a).union (WinnerSet.singleton cert.b)
+  | .marker => WinnerSet.singleton cert.marker
+  | .boolean i => WinnerSet.singleton (if assignment i then cert.a else cert.b)
+  | .calibration r => WinnerSet.singleton r
+
+end KFOL.Policies.Hardness.Plan
+
+namespace KFOL.Policies.Hardness.Variable
+
+universe u v w
+
+variable {Role : Type u} {Label : Type w} {Var : Type v}
+
+open KFOL.Reductions
+
+def toNat (code : Role ↪ ℕ) : Variable Role → ℕ
+  | .root => 0
+  | .marker => 1
+  | .boolean i => 2 * i + 2
+  | .calibration r => 2 * code r + 3
+
+end KFOL.Policies.Hardness.Variable
+
+namespace KFOL.Policies
+
+universe u v w
+
+variable {Role : Type u} {Label : Type w} {Var : Type v}
+
+open KFOL.Reductions
+
+noncomputable def finitePattern [Fintype Label] (D : Label → Set Role) (r : Role) : Finset Label := by
+  classical
+  exact Finset.univ.filter (fun d => r ∉ D d)
+
+end KFOL.Policies
+
+namespace KFOL.Policies.Hardness.Plan
+
+universe u v w
+
+variable {Role : Type u} {Label : Type w} {Var : Type v}
+
+open KFOL.Reductions
+
+noncomputable def calibrationEntries [DecidableEq Label] [Fintype Label]
+    (pattern : Role → Finset Label) (roles : List Role) : List (Role × List Label × List Label) :=
+  roles.map (fun r => (r, (pattern r).toList, (Finset.univ \ pattern r).toList))
+
+end KFOL.Policies.Hardness.Plan
+
+namespace KFOL.Policies.Hardness.Plan
+
+universe u v w
+
+variable {Role : Type u} {Label : Type w} {Var : Type v}
+
+open KFOL.Reductions
+
+def clauseBound (plan : Plan Role Label) : ℕ → ℕ
+  | 0 => 1
+  | n + 1 => max plan.zero.continuationCopies plan.one.continuationCopies * plan.clauseBound n +
+      max plan.zero.overhead plan.one.overhead
+
+end KFOL.Policies.Hardness.Plan

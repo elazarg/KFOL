@@ -3,7 +3,7 @@
 The compiled production candidate is `KFOL/Policies/Public.lean`. It is pure
 mathlib algebra: it imports neither GameTheory nor ComplexityLib. Independent
 policy/signature/guard/criterion/algorithm definitions are concentrated in
-`KFOL/Definitions/Policies.lean` (268 lines). Every result concerns native
+`KFOL/Definitions/Policies.lean` (547 lines, including the fixed-family reduction definitions). Every result concerns native
 mathlib terms with exactly binary reset and the indexed ternary policy
 symbols; there are no winner constants, switches, DAGs, or compressed trees.
 
@@ -22,7 +22,7 @@ symbols; there are no winner constants, switches, DAGs, or compressed trees.
   named owner's observation is equation-complete. Machine runtime remains.
 - Policy endpoint, union/intersection and marker identities are proved,
   including whole-list joint-test absorption. These support the required
-  family reduction; no native hardness assembly is claimed yet.
+  family reduction.
 - Tractable alternatives of `selective:thm:families`: the independent finite
   classification criterion has a correct executable checker. The actual
   native equation checker is proved correct under either stated criterion;
@@ -141,7 +141,7 @@ Machine runtime composition is assigned to the complexity worker.
 
 ## Validation and remaining work
 
-`lake build KFOL.Policies.Public`: passed1119 jobs. The complete staged
+`lake build KFOL.Policies.Public`: passed1207 jobs. The complete staged
 regression file passed with warnings as errors; production regression is
 `tests/Policies.lean`. It checks one-policy asymmetry/minor laws, repeated
 symbols, the five-role example with every pair easy and full family not
@@ -150,10 +150,10 @@ identity in the covering-overlap branch. Central correctness and actual
 countervaluation axiom guards allow only propext, Classical.choice and
 Quot.sound.
 
-For the full required family dichotomy, the remaining mathematics is
-construction of the non-easy-family native 3SAT reduction, including the
-minimal-pattern partition, calibration, correctness and native tree-size
-bound. The machine polynomial and coNP/class transport layers remain with
+The full required family dichotomy now has its non-easy-family native CNF
+reduction proved, including missing-meet macros, calibration, correctness,
+sparse Nat naming and exact affine width-three tree-size bound. The machine
+polynomial and coNP/class transport layers remain with
 the complexity worker. Interpret the complexity conclusion as 'criterion
 implies polynomial; its complement implies coNP-complete', without asserting
 P≠NP. The criterion must not be stated as a literal iff with membership in P.
@@ -161,3 +161,69 @@ P≠NP. The criterion must not be stated as a literal iff with membership in P.
 After family-hardness mathematics, add the literal owner:lem:two-source
 Guard.Covers wrapper noted in owner.md; its arbitrary-model absorption core
 and the full forty-law basis are already proved.
+
+## Complete semantic hardness (ready for Paper integration)
+
+`Policies.non_easy_family_nat_cnf_reduction` proves the full statement:
+
+```lean
+[Fintype Role] [Fintype Label]
+(D : Label → Set Role) (three : Fin 3 ↪ Role) (code : Role ↪ ℕ)
+(hne : ¬FamilyEasy D) :
+∃ plan : Policies.Hardness.Plan Role Label, ∀ formula : Reductions.CNF,
+  (∀ valuation : ℕ → WinnerSet Role,
+    Policies.Term.eval D
+      ((plan.equation formula).1.relabel (Policies.Hardness.Variable.toNat code)) valuation =
+    Policies.Term.eval D
+      ((plan.equation formula).2.relabel (Policies.Hardness.Variable.toNat code)) valuation) ↔
+    ¬Reductions.Satisfiable formula
+```
+
+The non-easy condition can be expanded exactly as the negation of the
+`FamilyEasy` disjunction displayed above. `Plan` contains only fixed native
+policy macros and finite dictionaries; it is independent of the formula.
+`Plan.equation` is the displayed report equation P reset R = R. E/F macro
+occurrences are fully expanded into original reset/labelled selective
+symbols. Formula Boolean names use 2i+2, root/marker are 0/1, calibration
+names are 2code(r)+3. The naming injection and the generic relabel theorem
+prove full valuation equivalence; repeated variable occurrences are not
+identified beyond their actual common name.
+
+`Hardness.Plan.equation_size_le` proves for every Plan and width-three CNF,
+writing N=support.length, F=formula.length, S=preliminary.length,
+C=max(clauseBound 3,4), A=calibration.length,
+P=(calibration.flatMap passedLabels).length, B=calibrationBranches.length:
+
+```
+left.size + right.size ≤ 4+(4+3S)N+2(C+1)F+4A+3P+2(C+1)B.
+```
+
+All S,C,A,P,B are fixed-family constants. `PolicyExpr.size_gate` is exact:
+continuationCopies * continuation.size + overhead. Arbitrary clause lengths
+are semantically handled but no false polynomial macro expansion bound is
+asserted for them; machine reduction will use the explicit width-three
+gate, mapping wider formulas to a fixed valid equation. Nat relabeling
+preserves exact tree size. Binary-code output bound/native runtime and class
+transport remain with the complexity worker.
+
+Proof modules: `PolicyExpr`, `HardPatterns`, `Hardness`, `Reductions`,
+`Families`, `Sizes`, all exported by `Policies.Public`. `HardPatterns` uses
+one minimal passing-pattern extension and the remaining incomparable
+extensions to obtain the same two blocking macros as the report's minimal
+partition. `Families` derives either a missing meet globally or a missing
+meet after deleting its unique role; no outside generation theorem is used.
+`calibration_eq_singleton` and `Plan.calibration_identified` derive the actual
+calibration input singleton from positive/negative tests and atomicity. The
+final reduction theorem assumes no incidence certificate, completeness
+oracle, SAT reduction correctness theorem or published classification.
+
+Exact LaTeX scope: closes all remaining mathematical reduction obligations
+in `selective:thm:families`, and its two-policy consequences use the same
+native operations. Runtime/class assertions stay partial until the machine
+branch is integrated. The positive criterion's polynomial test remains a
+separate actual Bool checker with correctness already proved.
+
+`tests/PoliciesHardness.lean` checks both genuine hard incidence cases
+(missing meet and injective calibrated meet), instantiates their full native
+CNF reductions, and checks disjoint sparse naming. The final reduction,
+calibration and output-size theorems have standard-three axiom guards.

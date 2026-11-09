@@ -393,6 +393,87 @@ The regression covers successful actual singleton synthesis, rejected duplicate
 tables, exact native/source output correspondence and the public native type.
 All source synthesis runtime and bridge endpoints print only standard axioms.
 
+## Generic original-tree folds and complete decoders
+
+`FiniteFoldMachine` implements a generic prefix-tree stack machine for a fixed
+finite dependent signature, including constants and ternary operations. Cached
+ASTs connect each runtime annotation to its actual mathematical subtree.
+`trace_term` proves exact evaluation, preserving surrounding frames and suffixes,
+at a clock charging every node and child return; `cost + 1 ≤ 2*code.length`.
+Every step preserves valid annotations and never increases the serialized
+source-forest weight, including on malformed inputs.
+
+`FiniteFoldStorage.encoded_state_bound` bounds native state by
+`32*(P+1)^3*(c*(P+1)^d+1)`, where `P` is the original encoded context/word budget
+and `c,d` bound mathematical annotation bytes. `FiniteFoldRuntime.fold_polyTime`
+certifies the actual mathematical fold with joint native certificates for its
+leaf and n-ary callbacks. Original captured context, reconstructed ASTs, complete
+child lists and output annotations are all charged. This is a reusable theorem;
+paper-facing applications discharge its callback and annotation premises.
+
+`FiniteTermDecoding.decode_polyTime` certifies the complete independent original
+`FiniteTermCode.decode`, for every raw bit word. A checked candidate re-encoding
+proves agreement with the independent pure parser and rejects malformed/trailing
+words. `decodeEquation_polyTime` certifies the complete outer paper framing and
+both child trees. `equationRecode_polyTime` and `arguments_polyTime` explicitly
+convert between the original paper equation format and native typed tuples.
+The pure `encodeEquation/decodeEquation` definitions reside in the existing
+`Definitions/Encoding`; roundtrip, accepted-word and injectivity proofs reside in
+`Algorithms/FiniteTermCode`. The fixed-alphabet operation decoder uses finite
+canonical-code membership; large binary indices never become loop clocks.
+
+These signature bounds are fixed-signature bounds. Uniform varying-role or
+varying-label signatures require explicit operation codec, decoder and arity
+certificates; enumerating an arbitrary `Fintype.equivFin` alphabet is not a
+uniform-K argument.
+
+## Complete uniform-K one-owner original-word equality
+
+`OwnerTermFrontend` instantiates the generic fold on `Owner.Symbol Unit`, the
+fixed reset/ternary-H alphabet. Its actual mathematical annotation is
+`(t.root, (t.withOwner false).guards true)`; the native encoding uses a binary
+root and complete lists of guards, binary sources and many/outside name lists.
+`Owner.GuardEncoding.guardAnnotationWeight_le_encode` supplies the complete byte
+bound `6*(original code.length+1)^3`, retaining every repeated prerequisite and
+sparse binary variable name. `annotation_polyTime` and `guards_polyTime` certify
+the actual whole extraction. `dominates_polyTime`, `covers_polyTime` and
+`equation_polyTime` certify all finite scans and the full independent original
+syntax checker, with no supplied guard tables or preprocessing promises.
+
+`OwnerWordFrontend.checkWord` decodes both original complete trees, applies that
+actual checker, and returns false on any malformed outer or inner word. Its
+complete native endpoint is `OwnerTermFrontend.checkWord_polyTime`:
+
+```lean
+ComputableInPolyTime KFOL.Complexity.OwnerTermFrontend.checkWord encBits encBool
+```
+
+Its independent complete semantic theorem is
+`OwnerTermFrontend.checkWord_iff three owner observer hne word`:
+
+```lean
+checkWord word = true ↔ ∃ left right : Owner.Term Unit ℕ,
+  FiniteTermCode.encodeEquation (Owner.Symbol Unit) (left,right) = word ∧
+    ∀ valuation : ℕ → WinnerSet Role,
+      (left.withOwner owner).eval valuation =
+        (right.withOwner owner).eval valuation
+```
+
+The only hypotheses are an arbitrary role type with decidable equality, three
+distinct roles, a chosen owner and a distinct observer. The algorithm, input
+codec, machine and polynomial are independent of that role type and its size;
+this is uniform in K. The pure outsider-list correspondence preserves
+list order and repeated tests. `owner:thm:one-table` now has its whole original
+binary-input runtime clause in addition to existing semantics and counts.
+
+Production build passes 2,057 jobs. `ComplexityFiniteTerms` covers constants,
+ternary constructors, exact equation roundtrip, trailing bits, malformed framing
+and native decoder types. `ComplexityOwnerTerms` covers incomplete words,
+original ternary-H identity/nonidentity, a `2^30` sparse variable, exact outside
+tests and the public arbitrary-role word-language theorem. All strict regressions
+pass; extraction, whole equality, complete raw checker, correctness, generic
+decoder and generic fold endpoints print only standard axioms.
+
 ## Remaining work
 
 Complete native machine certificates cover original reset parsing, actual
@@ -402,6 +483,9 @@ clauses of `reset:thm:three` and `reset:thm:synthesis` are discharged. Reset/uni
 has full fixed-role machine-level coNP-completeness for typed equations and the complete binary language, including malformed words.
 
 Whole owner-table checking and expanded term synthesis are now certified.
-Original owner-term guard extraction (including ternary H), substitution and
-further fragment/policy reduction machines remain separate obligations. The
-complete owner scans and generic finite-signature codec are ready for reuse.
+Original one-owner term extraction/equality, including ternary H and complete
+malformed-word handling, are certified uniformly in K. Further pure-H, raw-pair,
+full-signature, policy-family, circuit and colouring reduction/verifier machines
+remain separate obligations; uniform-K upper bounds are not inferred from the
+fixed finite-algebra verifier. Generic finite-signature constructors, complete
+decoders and polynomial-annotation folds are ready for that reuse.

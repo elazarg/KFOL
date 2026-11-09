@@ -54,10 +54,7 @@ round proposition.
 
 ## Remaining required scope
 
-The prefix probability product still needs its exact Bayes/reach-factor bridge,
-including cancellation at fully mixed approximations to unreachable public
-histories. Limit consistency and sequential rationality must connect serial SE
-to observed mixed SPE. The full mixed-SPE recurrence, common winner-value set,
+The exact Bayes/reach-factor bridge is now proved: canonical weights factor, normalized fully mixed beliefs cancel the public factor, and pointwise limits uniquely yield product beliefs even at unreachable limit histories. Every supplied profile has a consistent assessment by uniform trembles and imported compactness. Canonical terminal continuations erase exactly at every public boundary. Sequential rationality must still connect serial SE to observed mixed SPE. The full mixed-SPE recurrence, common winner-value set,
 public support conservativity, concrete scalar games, rational synthesis,
 no finite compositional winner algebra and scalar full abstraction remain.
 Existing scalar arithmetic certificates alone do not discharge these claims.
@@ -71,3 +68,12 @@ actual off-path prefixes, finite canonical histories, recall, arbitrary-utility
 SE existence and exact decision fibers. The principal existence/recall/fiber
 results print only the standard three axioms. The root integration audit covers
 all authored declarations and the separate pure algebra boundary.
+
+
+`Values` now defines actual sequential winner values independently of the
+recursion and proves nonemptiness, the exact leaf equation and indicator
+expected-utility coordinates. `SelectionMass`, `PrefixReach`, `DecisionSites`,
+`ProductBeliefs` and `Consistency` complete the product-Bayes/consistency gate.
+`TerminalErasure` extends the imported arbitrary-boundary finite run theorem
+to complete terminal continuation laws, including every unilateral deviation.
+The observed run-law slice is documented separately in `observed.md`.

@@ -629,3 +629,36 @@ end Term
 
 end Owner
 end KFOL
+
+namespace KFOL.Owner
+
+universe u v
+
+/-- Primitive payload weight for the native root/guard annotation, parameterized
+by the framed length of one variable name. -/
+def Guard.payloadWeight {Var : Type v} (nameWeight : Var → ℕ) (g : Guard Var) : ℕ :=
+  nameWeight g.source + 1 + 2 * (g.many.map nameWeight).sum + (g.outside.map nameWeight).sum
+
+/-- The exact pair/list-framing weight of a root together with its raw guards. -/
+def Term.guardAnnotationWeight {Role : Type u} {Var : Type v} [DecidableEq Role]
+    (nameWeight : Var → ℕ) (observer : Role) (t : Term Role Var) : ℕ :=
+  nameWeight t.root + ((t.guards observer).map (fun g => 2 * g.payloadWeight nameWeight + 1)).sum
+
+end KFOL.Owner
+
+namespace KFOL.Owner
+
+universe v
+
+/-- The raw guard transformer for the report's one-hole action word. -/
+def Guard.pathLift {Var : Type v} (root : Var) : List (Var × Var) → Guard Var → Guard Var
+  | [], g => g
+  | (w, z) :: rest, g =>
+      ((((pathLift root rest g).addMany w).addOutside w).addOutside z).addMany root
+
+/-- Precisely the two new source occurrences in P(C_ab), retaining their
+actual native test lists, including harmless repeated/self tests. -/
+def Term.twoSourceGuards {Var : Type v} (root a b : Var) (P : List (Var × Var)) : List (Guard Var) :=
+  ([⟨a, [root], [b, a]⟩, ⟨b, [root], [b, a]⟩] : List (Guard Var)).map (Guard.pathLift root P)
+
+end KFOL.Owner

@@ -1,6 +1,12 @@
 module
 
 public import KFOL.Reset
+public import KFOL.Algebra.TwoPlayers.Kleene.Syntax
+public import KFOL.Algebra.ViewOrders.Order
+public import KFOL.Algebra.Semilattice
+public import KFOL.Algebra.UnaryReset
+public import KFOL.Algebra.PublicContexts
+public import KFOL.Algebra.NoBooleanProduct
 public import KFOL.Algebra.Provenance
 public import KFOL.Equational
 public import KFOL.Algebra.TestDomainCard

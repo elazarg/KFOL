@@ -183,4 +183,25 @@ theorem encode_injective : Function.Injective (encode σ) := by
   have hd := congrArg (decode σ) h
   simpa only [decode_encode, Option.some.injEq] using hd
 
+@[simp] theorem decodeEquation_encodeEquation (equation : Equational.Term σ ℕ × Equational.Term σ ℕ) :
+    decodeEquation σ (encodeEquation σ equation) = some equation := by
+  rcases equation with ⟨left, right⟩
+  simp [decodeEquation, encodeEquation]
+
+theorem encodeEquation_of_decodeEquation {word : List Bool}
+    {equation : Equational.Term σ ℕ × Equational.Term σ ℕ}
+    (h : decodeEquation σ word = some equation) : encodeEquation σ equation = word := by
+  unfold decodeEquation at h
+  obtain ⟨⟨leftWord, rightWord⟩, hp, h⟩ := Option.bind_eq_some_iff.mp h
+  obtain ⟨left, hl, h⟩ := Option.bind_eq_some_iff.mp h
+  obtain ⟨right, hr, he⟩ := Option.bind_eq_some_iff.mp h
+  cases Option.some.inj he
+  simp only [encodeEquation, encode_of_decode hl, encode_of_decode hr]
+  exact (Words.eq_delimit_append_of_unpair?_eq_some hp).symm
+
+theorem encodeEquation_injective : Function.Injective (encodeEquation σ) := by
+  intro left right he
+  have hd := congrArg (decodeEquation σ) he
+  simpa only [decodeEquation_encodeEquation, Option.some.injEq] using hd
+
 end KFOL.FiniteTermCode

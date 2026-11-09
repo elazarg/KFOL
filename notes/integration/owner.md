@@ -455,30 +455,88 @@ The earlier synthesis polynomial machine-runtime clause remains with
 or remaining proof gap. Parent assigned finite policy-family dichotomy
 and strict selective extension as the next pure algebra/reduction task.
 
-## Literal two-source report wrapper still pending
+## Literal two-source report wrapper complete
 
-The completed basis proof does not leave a logical gap, but the exact
-standalone `owner:lem:two-source` statement has not yet been exported from
-its literal two-new-guard coverage hypotheses. Keep that report row partial
-until the wrapper is added after family-hardness mathematics. The current
-connected anchors are:
+`Owner/Basis/TwoSource.lean` now exports
+`FiniteBasis.two_source_guard_absorption`, with exact full statement:
 
-- `Owner/Basis/WordAbsorption.lean:106`, `Laws.two_source_absorption`: full
-  arbitrary-model absorption with explicit source-free word-witness
-  inclusions and the already-bounded prefix constant.
-- `Owner/Basis/Completeness.lean:144`, private `covering_witness`: semantic
-  containment yields the source-free prefix with exactly the first-index,
-  second-index and terminal coverage requirements.
-- `Completeness.lean:213`, private `witness_le_wordsValue`: the witness
-  prefix value lies below the complete upper word join.
-- `Completeness.lean:256`, `Laws.wordsValue_le_of_four`: finite first-source
-  witnesses are assembled with two-source absorption in every arbitrary
-  basis model.
-- `Completeness.lean:355`, `Laws.equal_of_four`, and line385 `isBasis`:
-  native root separation and generic equational completeness finish the
-  independently defined Derives conclusion.
+```lean
+{Var : Type v} (r a b : Var) (P : List (Var × Var)) (W : Owner.Term Unit Var)
+(hzero : Equational.Derives FiniteBasis.theory
+  (Owner.Term.step (Owner.Term.pathBody () r P (.var r)) W) W)
+(hcover : Owner.Covers (Owner.Term.twoSourceGuards r a b P)
+  ((W.withOwner false).guards true)) :
+Equational.Derives FiniteBasis.theory
+  (Owner.Term.step
+    (Owner.Term.pathBody () r P (Owner.Term.guarded () (.var r) (.var a) (.var b))) W) W
+```
 
-The missing standalone wrapper is the explicit native Guard.Covers to
-those witness hypotheses conversion for the report lemma's two new guards;
-it must not be counted as a separately matched report statement merely
-because IsBasis now implies its valid equational conclusion.
+This is the literal `owner:lem:two-source` statement, strengthened by allowing
+any native upper term W; the report's word-value join is a special case. The
+premise and conclusion use the independent Derives relation and exact forty
+identities, and coverage uses independent Guard.Dominates/Covers. There are
+no root inequalities or selected-role semantic hypotheses replacing either
+required premise. Equal indices and indices already in P are allowed.
+
+Two audit-surface definitions were added to Definitions/Owner:
+`Guard.pathLift` is precisely the native path's guard transformer, and
+`Term.twoSourceGuards` consists of exactly the two new source occurrences
+from C_ab, transformed by P. Native self tests, repeated root tests and
+repeated indices are retained. In particular the initial source-a/source-b
+guards are (source=a,many=[r],outside=[b,a]) and
+(source=b,many=[r],outside=[b,a]); source membership makes the self test
+harmless, just as Guard.Dominates allows a passing test at the source.
+
+`Term.eval_guards_two_sources` independently proves the full Boolean guard
+decomposition of P(C_ab) into P(0) and those two new guards, for arbitrary
+M,N,V predicates. Sound coverage and the derivation premise then give
+observational absorption. The already-proved one-observer completeness,
+Four bridge and generic equational completeness yield the actual Derives
+conclusion. This corollary depends on the complete basis; the basis core
+continues to use WordAbsorption.two_source_absorption, private
+Completeness.covering_witness and witness_le_wordsValue in its arbitrary-model
+word induction, so the formal dependency graph is acyclic.
+
+Validation: production build `KFOL.Owner.Basis.TwoSource` passed1211 jobs.
+`tests/OwnerTwoSource.lean` checks no-prefix guards and actual repeated indices
+and self tests. Both public theorems have standard-three axiom guards.
+This closes the standalone report dependency row; it is no longer justified
+merely by pointing to the complete IsBasis theorem.
+
+## Native original-tree guard annotation gate
+
+`KFOL.Owner.GuardEncoding` is a pure module importing the generic finite
+signature codec, with arbitrary `[Fintype (FiniteTermCode.Operation
+(Owner.Symbol Unit))]`. It uses no concrete complexity-package instance.
+`Term.guards_withOwner_outsider t owner observer (hne : observer ≠ owner)`
+proves exact raw-list equality with `(t.withOwner false).guards true`,
+including list order and all repeated tests, uniformly in role count.
+
+Two generic audit-surface measures were added to Definitions/Owner:
+`Guard.payloadWeight weight g = weight source + 1 + 2*sum(many weights)
++ sum(outside weights)` and `Term.guardAnnotationWeight weight observer t
+= weight(root) + sum(2*guard payload+1)`. With
+`weight j = 2*j.bits.length+1`, these are exactly the native pair/list framed
+annotation payload and full annotation lengths used by the machine worker.
+
+`Term.guard_payloadWeight_le_encode` proves each actual raw guard payload
+is ≤2*N², where N is the original Unit term's generic encoded length.
+`Term.guardAnnotationWeight_le_encode` proves the complete annotation weight
+is ≤6*(N+1)^3. Root-name and leaf-count bounds are proved separately; the
+argument does not bound names by their numeric value, nor bound iterations
+by the maximum variable label. Every repeated long root test is counted.
+`Term.guardAnnotationWeight_withOwner_le_encode` exports the same bound for
+any actual owner/outsider roles. This supplies the pure output-bound and
+semantic bridge requested for native uniform-K original-tree extraction.
+
+Validation: `lake build KFOL.Owner.GuardEncoding` passed1188 jobs;
+`tests/OwnerEncoding.lean` passed with warnings as errors. Regressions keep
+two repeated outside tests at name1000000000 and verify exact outsider
+transport. Full polynomial bound has only standard-three axioms; the exact
+outsider guard-list transport uses only propext and Quot.sound.
+
+Final combined validation after all promotions: `lake build KFOL.Owner
+KFOL.Policies.Public` passed1236 jobs. The six warning-as-error regressions
+OwnerEncoding, OwnerTwoSource, OwnerBasis, OwnerSynthesis, Policies and
+PoliciesHardness all passed. Owner/Policies sources are stable and ready for
+parent Paper/audit/inventory integration; no commits were made by this worker.

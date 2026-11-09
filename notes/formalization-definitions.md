@@ -1042,14 +1042,14 @@ criterion. The syntax-only checker and normalized guard comparisons are
 independently specified. Their correctness is proved for both tractable family
 branches; repeated-pattern observations are equation-complete. Strict G
 nondefinability uses actual reset syntax and the displayed two-owner expression.
-Non-easy family hardness and native runtime are still required.
+Native non-easy family CNF reductions are now proved, including calibration and width-three expanded sizes; machine runtime/class transport remains required.
 
 `Definitions/TwoPlayers.lean` is the eighteenth module. Any `Fin 2 ≃ Role`
 identifies the existing nonempty winner sets with the ordinary `Fin 3` chain.
 Max/min/reversal and Boolean forcing coordinates are proved, rather than imposed
 as new winner operations. Reset and policy degeneration, full-language atomicity,
 union nondefinability and semantic failure of idempotent core extraction are
-checked. Finite Kleene-basis completeness remains separate.
+checked. Finite Kleene-basis completeness is now implemented in the nineteenth definition module and its proofs below.
 
 ## General finite menus and native syntax output
 
@@ -1065,8 +1065,7 @@ these foundations from the required Bayes/consistency/value bridge.
 codec: explicit finite operation alphabet, framed binary operation indices and
 exact arities/children, including nullary and ternary symbols. The codec proofs
 establish exact parsing, reconstruction and injectivity. Native constructors
-reuse that original format; a complete generic parser/evaluator runtime remains
-separate. The `Equational.language` record is now a transparent `abbrev`, allowing
+reuse that original format; the complete original generic decoder and cached annotation fold now have native machine certificates. The `Equational.language` record is now a transparent `abbrev`, allowing
 these dependent syntax interfaces to elaborate without representation changes.
 
 `Complexity/OwnerRuntime` owns the backend encodings at the machine seam.
@@ -1078,3 +1077,68 @@ the fully expanded generic original tree, relabeling finite positions by their
 natural values. Its source theorem certifies the actual `GuardTable.synthesize`,
 including rejection, all saturation frames, both finishing branches and every
 output tree occurrence, for a fixed finite role alphabet.
+
+
+## Complete two-player basis and public observation operations
+
+`Definitions/Kleene.lean` is the nineteenth definition module. Its five-symbol
+signature has bottom/top, join/meet and involution, with explicit fifteen-law
+syntax and independent raw model laws. `Algebra/TwoPlayers/Kleene` proves signed
+normal forms and arbitrary-model separation, full equational completeness, and
+transport to the existing winner carrier. `ofPublic` translates every original
+term, including constants and every internal permutation; evaluation commutes.
+The main full-signature finite-basis assertion is complete. The unused separate
+lattice-reduct assertions in its composite report proposition remain optional.
+
+`Definitions/Views` now specifies `PlayerView.union/choice` directly by their
+finite tables. `ViewOrders/Table` proves actual winner-view homomorphisms before
+`Order` derives the quotient semilattices and all layer comparisons. No
+representative choice or three-role embedding appears in the operations;
+the local three-role premise supplies surjectivity for their order proofs.
+`Algebra/Semilattice` uses mathlib's semilattice construction from the owned
+choice laws and its standard nonempty finite fold. These small generic
+constructions are documented semantic interfaces; the ordinary winner-set
+inclusion order is kept explicit and distinct from the owner-top join order.
+
+## Completed native one-owner boundary
+
+`Owner/GuardEncoding` proves the exact outsider guard-list bridge and encoded
+annotation bound for any finite numbering of the fixed Unit signature.
+The original codec and complete generic cached tree-fold machine then produce
+raw guards without depending on the ambient role set. `OwnerWordFrontend`
+decodes the complete original binary equation, compares guards, and rejects
+all malformed or trailing input. Its correctness interprets the same Unit
+trees via `withOwner` in every role type containing three roles. This closes
+the uniform-K original one-owner equality gate. Generic fold bounds charge
+captured context, actual source trees, every annotation and binary name;
+fixed finite operation numbering is not asserted uniform in a varying alphabet.
+
+The source `Owner/Basis/TwoSource` also proves literal actual guard coverage
+implies equational two-source absorption. Its premises/conclusion are genuine
+`Equational.Derives` judgments and native `Covers`, with no external word-witness
+certificate. The completed basis is used noncircularly after independently
+proving the explicit two-new-source guard decomposition.
+
+## Independent round values and product beliefs
+
+The existing round definition module now defines `sequentialValues` by canonical
+serial assessments, Kreps-Wilson consistency and sequential rationality, and
+`observedValues` by canonical whole-policy Nash in every proper public subgame.
+Both contain actual winner PMFs from canonical runners. The total winner
+readout extends leaf labels; the terminal certificates ensure nonterminal
+readouts are never scored. Indicator expected utility equals the corresponding
+winner PMF coordinate. The independent stage `GameForm` and `roundOperator`
+choose a continuation at every actual tuple and use its canonical mixed Nash
+predicate; they do not define the equilibrium of a round tree by recursion.
+
+`DecisionSites` and `InformationFibers` identify actual serial decision sites
+and their complete history fibers. `PrefixLaw.currentLaw/prefixLaw` construct
+ordinary independent scheduled probability products; `productBelief` maps them
+to those actual fibers. These construction definitions live beside their small
+probability proofs, while equilibrium definitions stay in `Definitions/Rounds`.
+Exact canonical reach factorization and Bayes normalization imply unique
+product beliefs in every consistent assessment, including zero-reach limits.
+`Consistency` constructs consistent beliefs for every supplied strategy via
+uniform trembles and imported assessment compactness. `TerminalErasure` proves
+exact terminal source/serial law equality at every public boundary and profile.
+The sequential-rationality correspondence remains a separate required proof.

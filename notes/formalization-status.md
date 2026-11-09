@@ -2,9 +2,9 @@
 
 The completion target is the entire main paper, its substantive prose and
 necessary report dependencies. The inventory is authoritative for scope.
-The current checkpoint has **16/23 main result rows**, **39/61 required catalog
-rows**, and **7/18 required prose obligations** kernel-checked in full.
-Another three main rows, four required catalog rows and four prose obligations
+The current checkpoint has **17/23 main result rows**, **46/61 required catalog
+rows**, and **9/18 required prose obligations** kernel-checked in full.
+Another two main rows, four required catalog rows and three prose obligations
 have migrated kernel components. Counts measure statements, not effort.
 
 ## Parallel execution
@@ -16,10 +16,10 @@ then commits coherent integrations after complete checks.
 
 | Workstream | Owner | Completed | Next integration gate |
 | --- | --- | --- | --- |
-| Owner E and policies F | `owner` | Semantic tables/synthesis, minimum four-state theory, four-variable lower bound, complete forty-law basis | Single-policy/tractable-family semantics and strict G extension complete; non-easy-family reductions next |
-| Core I, congruences H and basis J | `nonfinite_basis` | Uniform nonfinite basis for every bound, arbitrary-generator locality, congruence/threshold classifications, quotient counts, uniform matroids, complete seven-law basis, direct atomic classification/determinacy/binary theorem, two-player identification | Finite Kleene-basis completeness |
-| Machine complexity G | `complexity` | Complete reset frontend/equality/recognition; original-language fixed-role reset/union coNP-completeness including malformed words | Whole owner-table check/synthesis runtime and generic finite-signature codec/constructors complete; original owner/policy term frontends and further reductions next |
-| Strategic A/K/L and integration | root | Public SPE/Nash correspondence, recurrence/existence, forcing, full compiler; operational Boolean serializer gate; reset/union reduction mathematics | Finite-menu tree, canonical histories/recall/SE existence and exact serial fibers complete; product Bayes/consistency, full recursion and scalar consequences next |
+| Owner E and policies F | `owner` | Semantic tables/synthesis, minimum four-state theory, four-variable lower bound, complete forty-law basis | Single-policy/tractable-family semantics and strict G extension complete; non-easy-family reductions, width-three sizes and literal two-source absorption complete; raw binary/H reductions next |
+| Core I, congruences H and basis J | `nonfinite_basis` | Uniform nonfinite basis for every bound, arbitrary-generator locality, congruence/threshold classifications, quotient counts, uniform matroids, complete seven-law basis, direct atomic classification/determinacy/binary theorem, two-player identification | Finite Kleene basis, pure observation/folds/view orders complete; canonical observed mixed-SPE recursion next |
+| Machine complexity G | `complexity` | Complete reset frontend/equality/recognition; original-language fixed-role reset/union coNP-completeness including malformed words | Whole owner-table check/synthesis runtime and generic finite-signature codec/constructors complete; uniform-K original owner-word checker complete; remaining signature/policy frontends and reductions next |
+| Strategic A/K/L and integration | root | Public SPE/Nash correspondence, recurrence/existence, forcing, full compiler; operational Boolean serializer gate; reset/union reduction mathematics | Finite-menu tree, canonical histories/recall/SE existence and exact serial fibers complete; product Bayes/consistency and exact terminal erasure complete; serial rationality equivalence and scalar consequences next |
 
 The production pins are GameTheory `6f1af625b77215dd9e4454e6120275dbd8b61f51`
 from `port/cslib-complexity`, ComplexityLib
@@ -30,14 +30,15 @@ Algebra and representation imports remain independent of these dependencies.
 
 ## Remaining whole-claim gates
 
-1. Finish original owner-term equality,
-   substitution, full core-extraction runtime and uniform-K verifiers.
+1. Finish substitution, full core-extraction runtime and uniform-K verifiers.
+   Original one-owner tree/word equality is complete with no ambient-K cost.
 2. Finish native tractable policy runtime and the non-easy-family direction; certify the
    remaining native-signature reductions and reset circuits. The first fixed-role
    reset/union gate is complete for typed equations and the full binary language;
    it makes no uniform-K runtime claim.
-3. Complete the finite two-role Kleene basis and retained round-support formula.
-   The atomic/determinacy/binary and two-role identification gates are complete.
+3. Complete the retained two-role round-support formula. The finite Kleene
+   basis, original-language completeness and all retained pure two-role claims
+   are complete; unused report reduct classifications are optional.
 4. Close serial SE versus observed mixed SPE, including unreachable histories,
    and the full recursive equation. Connect the scalar games, rational synthesis,
    no finite winner algebra and full abstraction to this game semantics.

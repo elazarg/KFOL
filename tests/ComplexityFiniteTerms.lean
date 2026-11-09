@@ -1,6 +1,6 @@
 module
 
-public import KFOL.Complexity.FiniteTermMachines
+public import KFOL.Complexity.FiniteTermDecoding
 
 /-! Finite-signature tree boundary checks, including constants and ternary nodes. -/
 
@@ -49,5 +49,22 @@ example : ComputableInPolyTime
       (encList Complexity.FiniteTermMachines.termEncoding))
     Complexity.FiniteTermMachines.termEncoding :=
   Complexity.FiniteTermMachines.construct_polyTime
+
+example (term : Equational.Term σ ℕ) :
+    FiniteTermCode.decode σ (FiniteTermCode.encode σ term ++ [true]) = none := by
+  unfold FiniteTermCode.decode
+  rw [FiniteTermCode.parse_encode term [true] _ (by simp)]
+  rfl
+
+example (equation : Equational.Term σ ℕ × Equational.Term σ ℕ) :
+    FiniteTermCode.decodeEquation σ (FiniteTermCode.encodeEquation σ equation) = some equation :=
+  FiniteTermCode.decodeEquation_encodeEquation equation
+
+example : FiniteTermCode.decodeEquation σ [true, false] = none := by
+  simp [FiniteTermCode.decodeEquation, Words.unpair?]
+
+example : ComputableInPolyTime (FiniteTermCode.decode σ) encBits
+    (encOption Complexity.FiniteTermMachines.termEncoding) :=
+  Complexity.FiniteTermMachines.decode_polyTime
 
 end KFOLTest.ComplexityFiniteTerms

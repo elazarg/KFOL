@@ -2,6 +2,9 @@ module
 
 import KFOL.Rounds.SequentialExistence
 import KFOL.Rounds.InformationFibers
+import KFOL.Rounds.Values
+import KFOL.Rounds.ProductBeliefs
+import KFOL.Rounds.TerminalErasure
 import Mathlib.Logic.Equiv.Bool
 
 namespace KFOLTest.RoundTrees
@@ -45,8 +48,15 @@ example (h : changing.execution.History) (ht : ¬ changing.execution.terminal h.
         Prefix changing.toFOSG order h (order.player.symm i).val) :=
   ⟨changing.informationHistoryEquivPrefix order h ht i⟩
 
+example : (Game.leaf false).sequentialValues order = {PMF.pure false} :=
+  Game.sequentialValues_leaf false order
+
 end KFOLTest.RoundTrees
 
 #print axioms KFOL.Rounds.Serialization.decisionRecall_of_perfectRecall
 #print axioms KFOL.Rounds.Game.serial_exists_sequential_equilibrium
 #print axioms KFOL.Rounds.Game.informationHistoryEquivPrefix
+
+#print axioms KFOL.Rounds.Game.consistent_belief_eq_product
+#print axioms KFOL.Rounds.Game.exists_consistent_product_assessment
+#print axioms KFOL.Rounds.Game.erase_terminal_continuation

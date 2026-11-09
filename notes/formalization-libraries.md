@@ -84,7 +84,7 @@ No ready-to-import Lean proof of the exact antimatroid representation, repeat-tr
 arbitrary-algebra path normalization and suffix absorption, followed by the
 shared equational completeness theorem. Freese et al.'s introduction and
 Section 3 are the proof reference; their basis theorem is not an imported
-hypothesis. The minimum reset and owner generators and the seven-law generation special case are also now proved directly. The atomic-clone/determinacy/binary classification is also now proved locally: finite rectangles and coordinate updates give necessity; explicit unary and Boolean term synthesis gives the converse. Finite Kleene-basis completeness remains.
+hypothesis. The minimum reset and owner generators and the seven-law generation special case are also now proved directly. The atomic-clone/determinacy/binary classification is also now proved locally: finite rectangles and coordinate updates give necessity; explicit unary and Boolean term synthesis gives the converse. Finite Kleene-basis completeness and full original-syntax translation are also now proved directly.
 
 ## Supporting syntax libraries and the dependent claim
 
@@ -145,7 +145,7 @@ histories. This has not yet proved the Bayes or SE correspondence.
 
 Native runtime now covers complete original-tree parsing, actual support and
 guard extraction/compression, normalization and complete reset equality as well
-as binary descriptor recognition. The first reset/union reduction and fixed-role coNP-completeness gate is complete for both typed and raw binary inputs. Whole owner recognition and synthesis are now certified, with unary dimensions, bitset guards and fully expanded syntax output. Original owner/policy term frontends and the remaining fragment machines are next.
+as binary descriptor recognition. The first reset/union reduction and fixed-role coNP-completeness gate is complete for both typed and raw binary inputs. Whole owner recognition and synthesis are now certified, with unary dimensions, bitset guards and fully expanded syntax output. The complete uniform-K one-owner original-word checker is now certified; policy and remaining fragment machines are next.
 
 
 The general finite-menu round tree now has canonical source and serial finite
@@ -153,5 +153,5 @@ histories, certified bounds, source perfect recall, serial decision recall and
 arbitrary-utility sequential-equilibrium existence via the imported theorem.
 An actual serial decision fiber is exactly its earlier commitments at a fixed
 public prefix. Probability products on these prefixes preserve pointwise limits;
-the Bayes/reach-factor and equilibrium/value correspondence remain new KFOL work.
+the Bayes/reach-factor identity and off-path product consistency are now proved. Full sequential-rationality/value correspondence remains.
 No refuted mixed open-game composition law enters this implementation.

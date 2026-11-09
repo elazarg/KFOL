@@ -1,6 +1,7 @@
 module
 
 public import KFOL.Definitions.Encoding
+public import KFOL.Definitions.Owner
 
 /-! # Native reset/union syntax and the CNF equation reduction
 
@@ -161,3 +162,67 @@ def equation (formula : CNF) : Equation :=
 
 end ResetUnion
 end KFOL.Reductions
+
+namespace KFOL.GuardedPair
+
+universe u v
+
+/-- Only two ternary guarded owners. In particular reset is not a symbol. -/
+inductive Symbol : ℕ → Type where
+  | guarded : Bool → Symbol 3
+
+abbrev Term (Var : Type v) := Equational.Term Symbol Var
+
+@[instance_reducible] noncomputable def structureOf {Role : Type u} (a b : Role) :
+    (Equational.language Symbol).Structure (WinnerSet Role) where
+  funMap symbol args := match symbol with
+    | .guarded sign => WinnerSet.guardedChoice (if sign then a else b) (args 0) (args 1) (args 2)
+  RelMap rel := nomatch rel
+
+namespace Term
+
+variable {Var : Type v} {Role : Type u}
+
+def guarded (sign : Bool) (x y z : Term Var) : Term Var :=
+  .func (.guarded sign) (fun i => if i = 0 then x else if i = 1 then y else z)
+
+/-- The genuine native expansion duplicates only its left operand. -/
+def reset (s t : Term Var) : Term Var := guarded true t s s
+
+noncomputable def eval (a b : Role) (t : Term Var) (valuation : Var → WinnerSet Role) : WinnerSet Role :=
+  let _ := structureOf a b
+  t.realize valuation
+
+def size : Term Var → ℕ
+  | .var _ => 1
+  | .func (.guarded _) args => 1 + size (args 0) + size (args 1) + size (args 2)
+
+def rightComb (terms : List (Term Var)) (base : Term Var) : Term Var := terms.foldr reset base
+
+end Term
+end KFOL.GuardedPair
+
+namespace KFOL.Reductions.GuardedPair
+
+universe u
+
+/-- Variable labels are translated sparsely, never enumerated to a maximum. -/
+def booleanName (i : ℕ) : ℕ := i + 2
+
+def clause : Clause → KFOL.GuardedPair.Term ℕ
+  | [] => .var 1
+  | literal :: rest => KFOL.GuardedPair.Term.guarded literal.2 (.var 0) (.var (booleanName literal.1)) (clause rest)
+
+def baseline (formula : CNF) : KFOL.GuardedPair.Term ℕ :=
+  KFOL.GuardedPair.Term.rightComb ((ResetUnion.support formula).map (fun i => .var (booleanName i))) (.var 0)
+
+def right (formula : CNF) : KFOL.GuardedPair.Term ℕ := KFOL.GuardedPair.Term.rightComb (formula.map clause) (baseline formula)
+
+def equation (formula : CNF) : KFOL.GuardedPair.Term ℕ × KFOL.GuardedPair.Term ℕ := (KFOL.GuardedPair.Term.reset (.var 1) (right formula), right formula)
+
+noncomputable def satisfyingValuation {Role : Type u} (a b d : Role) (assignment : ℕ → Bool) : ℕ → WinnerSet Role
+  | 0 => (WinnerSet.singleton a).union (WinnerSet.singleton b)
+  | 1 => WinnerSet.singleton d
+  | i + 2 => WinnerSet.singleton (if assignment i then a else b)
+
+end KFOL.Reductions.GuardedPair

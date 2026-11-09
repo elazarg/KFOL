@@ -323,4 +323,17 @@ noncomputable def decode (word : List Bool) : Option (Equational.Term σ ℕ) :=
   let (term, rest) ← parse σ word.length word
   if rest.isEmpty then some term else none
 
+/-- The original equation format frames the first complete tree and retains
+its second complete tree as the outer suffix. -/
+noncomputable def encodeEquation (equation : Equational.Term σ ℕ × Equational.Term σ ℕ) : List Bool :=
+  Words.pair (encode σ equation.1) (encode σ equation.2)
+
+/-- Both child words must decode completely; malformed outer or inner words
+are rejected by the independent pure decoder. -/
+noncomputable def decodeEquation (word : List Bool) : Option (Equational.Term σ ℕ × Equational.Term σ ℕ) := do
+  let (left, right) ← Words.unpair? word
+  let left ← decode σ left
+  let right ← decode σ right
+  return (left, right)
+
 end KFOL.FiniteTermCode

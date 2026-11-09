@@ -70,4 +70,39 @@ theorem construct_ofFn {n : ℕ} (function : σ n) (children : Fin n → Equatio
   funext i
   simp
 
+/-- Complete strict operation decoding is membership in the fixed finite
+canonical code alphabet, so malformed large indices never become loop clocks. -/
+theorem decodeOperation_polyTime : ComputableInPolyTime
+    (decodeOperation σ) encBits (encOption operationEncoding) := by
+  classical
+  let alphabet : List (Operation σ) := Finset.univ.toList
+  have hmem : ∀ operation, operation ∈ alphabet := by simp [alphabet]
+  have hflag : ComputableInPolyTime (fun word : List Bool =>
+      alphabet.any (fun operation => decide (word = encodeOperation σ operation))) encBits encBool := by
+    have h := anyWithInput (test := fun (word : List Bool) (code : List Bool) => decide (word = code))
+      (const (alphabet.map (encodeOperation σ))) (decide_eq' (fst encBits encBits) (snd encBits encBits))
+    simpa only [List.any_map, Function.comp_def] using h
+  have h := hflag.ite ((optionSome encBits).comp id') (const none)
+  apply h.of_enc_eq
+  intro word
+  cases hd : decodeOperation σ word with
+  | none =>
+    have hn : alphabet.any (fun operation => decide (word = encodeOperation σ operation)) = false := by
+      apply Bool.eq_false_iff.mpr
+      intro hb
+      obtain ⟨operation, _, hb⟩ := List.any_eq_true.mp hb
+      have he : word = encodeOperation σ operation := of_decide_eq_true hb
+      have heq := congrArg (decodeOperation σ) he
+      rw [hd, decodeOperation_encodeOperation] at heq
+      contradiction
+    rw [hn]
+    rfl
+  | some operation =>
+    have he : encodeOperation σ operation = word := encodeOperation_of_decodeOperation hd
+    have hy : alphabet.any (fun operation => decide (word = encodeOperation σ operation)) = true := by
+      exact List.any_eq_true.mpr ⟨operation, hmem operation, decide_eq_true he.symm⟩
+    rw [hy]
+    change true :: encodeOperation σ operation = true :: word
+    exact congrArg (List.cons true) he
+
 end KFOL.Complexity.FiniteTermMachines

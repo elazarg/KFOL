@@ -1,6 +1,17 @@
 module
 
 public import KFOL.Algebra
+public import KFOL.Rounds.Values
+public import KFOL.Rounds.TerminalErasure
+public import KFOL.Rounds.ProductBeliefs
+public import KFOL.Reductions.GuardedPair
+public import KFOL.Complexity.OwnerWordFrontend
+public import KFOL.Algebra.TwoPlayers.Kleene.Syntax
+public import KFOL.Algebra.ViewOrders.Order
+public import KFOL.Algebra.Semilattice
+public import KFOL.Algebra.UnaryReset
+public import KFOL.Algebra.PublicContexts
+public import KFOL.Algebra.NoBooleanProduct
 public import KFOL.Algebra.Atomic.Classification
 public import KFOL.Algebra.Atomic.Binary
 public import KFOL.Algebra.TwoPlayers.Coordinates
@@ -2004,5 +2015,294 @@ theorem owner_synthesis_runtime {Role : Type} [Fintype Role] (owner : Role) :
 [propext, Classical.choice, Quot.sound] -/
 #guard_msgs (whitespace := lax) in
 #print axioms KFOL.Paper.owner_synthesis_runtime
+
+/-- Original Boolean-product statement, with arbitrary product index and
+arbitrary coordinate choice of meet or join for every owned operation. -/
+theorem no_boolean_product {Role : Type u} (three : Fin 3 ↪ Role)
+    {Index : Type v} (M : Index → Type w) [∀ i, BooleanAlgebra (M i)]
+    (select : Role → Index → Bool) :
+    ¬∃ f : WinnerSet Role → ∀ i, M i, Function.Injective f ∧
+      (∀ r A B i, f (WinnerSet.choice r A B) i =
+        if select r i then f A i ⊔ f B i else f A i ⊓ f B i) := by
+  rintro ⟨f,hinj,hf⟩
+  exact WinnerSet.no_boolean_product_embedding three M select f hf hinj
+
+
+/-- info: 'KFOL.Paper.no_boolean_product' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Paper.no_boolean_product
+
+/-- The full unique-winner observation assertion, with arbitrary parameters. -/
+theorem unique_winner_observations {Role : Type u} {Var : Type v} (t : Term Role Var)
+    (ht : t.IsPublic) (active : Var → Bool) (parameters : Var → WinnerSet Role) :
+    ((∃ C : WinnerSet Role, ∀ X : WinnerSet Role,
+      t.eval (fun x => if active x then X else parameters x) = C) ∨
+      (∀ X : WinnerSet Role, X.val ⊆
+        (t.eval (fun x => if active x then X else parameters x)).val)) ∧
+    (∀ A B : WinnerSet Role, A.Ambiguous → B.Ambiguous → ∀ r,
+      (t.eval (fun x => if active x then A else parameters x) = WinnerSet.singleton r) ↔
+        (t.eval (fun x => if active x then B else parameters x) = WinnerSet.singleton r)) :=
+  ⟨ht.unary_constant_or_extensive active parameters,
+    fun A B hA hB r => ht.ambiguous_singleton_observation active parameters A B hA hB r⟩
+
+
+/-- info: 'KFOL.Paper.unique_winner_observations' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Paper.unique_winner_observations
+
+/-- Membership observations at all roles distinguish every winner set already
+through the identity context. -/
+theorem membership_observations {Role : Type u} (A B : WinnerSet Role) :
+    (∀ r : Role, r ∈ A.val ↔ r ∈ B.val) ↔ A = B := by
+  constructor
+  · intro h
+    exact Subtype.ext (Set.ext h)
+  · intro h
+    subst B
+    exact fun _ => Iff.rfl
+
+/-- info: 'KFOL.Paper.membership_observations' depends on axioms:
+[propext, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Paper.membership_observations
+
+/-- Every extensive unary term has an actual term reset fixing each atom and
+preserving its complete behavior on ambiguous inputs. -/
+theorem unary_atomic_reset {Role : Type u} [Finite Role] (t : Term Role (Fin 1))
+    (hext : ∀ X : WinnerSet Role, X.val ⊆ (t.eval (fun _ => X)).val) :
+    ∃ s : Term Role (Fin 1),
+      (∀ r, s.eval (fun _ => WinnerSet.singleton r) = WinnerSet.singleton r) ∧
+      (∀ X : WinnerSet Role, X.Ambiguous → s.eval (fun _ => X) = t.eval (fun _ => X)) ∧
+      (∀ X : WinnerSet Role, X.val ⊆ (s.eval (fun _ => X)).val) :=
+  t.exists_unary_reset hext
+
+/-- info: 'KFOL.Paper.unary_atomic_reset' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Paper.unary_atomic_reset
+
+/-- Every finite nonempty family of continuations folds to an actual binary
+term; its owner-absorption and union cases hold for every valuation. -/
+theorem finite_public_choices {Role : Type u} {Var : Type v} {Index : Type w}
+    (r : Role) (S : Finset Index) (hS : S.Nonempty) (terms : Index → Term Role Var) :
+    (∃ t : Term Role Var, ∀ v : Var → WinnerSet Role,
+      t.eval v = WinnerSet.choiceFold r S hS (fun i => (terms i).eval v)) ∧
+    (∀ v : Var → WinnerSet Role,
+      WinnerSet.choiceFold r S hS (fun i => (terms i).eval v) = WinnerSet.singleton r ↔
+        ∃ i ∈ S, (terms i).eval v = WinnerSet.singleton r) ∧
+    (∀ v : Var → WinnerSet Role, (∀ i ∈ S, (terms i).eval v ≠ WinnerSet.singleton r) →
+      ∀ a : Role, a ∈ (WinnerSet.choiceFold r S hS (fun i => (terms i).eval v)).val ↔
+        ∃ i ∈ S, a ∈ ((terms i).eval v).val) :=
+  ⟨Term.exists_choice_fold r S hS terms,
+    fun v => WinnerSet.choiceFold_eq_owner_iff r S hS (fun i => (terms i).eval v),
+    fun v hn a => WinnerSet.mem_choiceFold_of_no_owner r S hS (fun i => (terms i).eval v) hn a⟩
+
+
+/-- info: 'KFOL.Paper.finite_public_choices' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Paper.finite_public_choices
+
+/-- Complete actual quotient table and explicit layered semilattice order. -/
+theorem player_view_orders {Role : Type u} (three : Fin 3 ↪ Role) (k r : Role) :
+    (∀ A B : WinnerSet Role, WinnerSet.view k (WinnerSet.choice r A B) =
+      PlayerView.choice r (WinnerSet.view k A) (WinnerSet.view k B)) ∧
+    ∃ order : SemilatticeSup (PlayerView k),
+      (let _ := order
+       (∀ p q : PlayerView k, p ⊔ q = PlayerView.choice r p q) ∧
+       (∀ p q : PlayerView k, p ≤ q ↔ match p,q with
+         | .possible,.possible => True
+         | .possible,.impossible => False
+         | .possible,.other j => j.val = r
+         | .impossible,.possible | .impossible,.impossible => True
+         | .impossible,.other j => j.val = r
+         | .other i,.possible | .other i,.impossible => i.val ≠ r
+         | .other i,.other j => i = j ∨ j.val = r)) := by
+  refine ⟨WinnerSet.view_choice k r,PlayerView.semilatticeSup three k r,?_,?_⟩
+  · exact fun _ _ => rfl
+  · exact PlayerView.order_layers three k r
+
+
+/-- info: 'KFOL.Paper.player_view_orders' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Paper.player_view_orders
+
+/-- A concrete finite basis for the full two-player signature, together with
+complete equational derivability for every original public-language identity. -/
+theorem two_player_finite_basis {Role : Type u} (labels : Fin 2 ≃ Role) :
+    let _ := TwoPlayers.Kleene.winnerStructure labels
+    TwoPlayers.Kleene.basis.Finite ∧
+    (∀ e : Equational.Identity TwoPlayers.Kleene.Symbol,
+      e.Holds (WinnerSet Role) ↔ Equational.Derives TwoPlayers.Kleene.basis e.lhs e.rhs) ∧
+    (∀ (n : ℕ) (s t : Term Role (Fin n)),
+      (∀ x : Fin n → WinnerSet Role, s.eval x = t.eval x) ↔
+        Equational.Derives TwoPlayers.Kleene.basis
+          (TwoPlayers.Kleene.ofPublic labels s) (TwoPlayers.Kleene.ofPublic labels t)) := by
+  let _ := TwoPlayers.Kleene.winnerStructure labels
+  exact ⟨TwoPlayers.Kleene.basis_finite,TwoPlayers.Kleene.basis_winner labels,
+    TwoPlayers.Kleene.public_equational_completeness labels⟩
+
+/-- info: 'KFOL.Paper.two_player_finite_basis' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Paper.two_player_finite_basis
+
+/-- Complete original-word equality checking for one owner, with runtime
+independent of the ambient role count. Malformed inner or outer words reject. -/
+theorem owner_original_word_checker {Role : Type u} [DecidableEq Role]
+    (three : Fin 3 ↪ Role) (owner observer : Role) (hne : observer ≠ owner) :
+    Turing.MultiTapeTM.ComputableInPolyTime Complexity.OwnerTermFrontend.checkWord
+      Turing.MultiTapeTM.encBits Turing.MultiTapeTM.encBool ∧
+    ∀ word : List Bool, Complexity.OwnerTermFrontend.checkWord word = true ↔
+      ∃ left right : Owner.Term Unit ℕ,
+        FiniteTermCode.encodeEquation (Owner.Symbol Unit) (left,right) = word ∧
+        ∀ x : ℕ → WinnerSet Role,
+          (left.withOwner owner).eval x = (right.withOwner owner).eval x :=
+  ⟨Complexity.OwnerTermFrontend.checkWord_polyTime,
+    Complexity.OwnerTermFrontend.checkWord_iff three owner observer hne⟩
+
+/-- info: 'KFOL.Paper.owner_original_word_checker' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Paper.owner_original_word_checker
+
+/-- Every finite policy family outside the tractable criterion has an actual
+native CNF reduction, with sparse natural-number names and arbitrary valuations. -/
+theorem policy_family_reduction {Role : Type u} {Label : Type v}
+    [Fintype Role] [Fintype Label] (D : Label → Set Role) (three : Fin 3 ↪ Role)
+    (code : Role ↪ ℕ) (hne : ¬Policies.FamilyEasy D) :
+    ∃ plan : Policies.Hardness.Plan Role Label, ∀ formula : Reductions.CNF,
+      (∀ x : ℕ → WinnerSet Role,
+        Policies.Term.eval D ((plan.equation formula).1.relabel (Policies.Hardness.Variable.toNat code)) x =
+          Policies.Term.eval D ((plan.equation formula).2.relabel (Policies.Hardness.Variable.toNat code)) x) ↔
+        ¬Reductions.Satisfiable formula :=
+  Policies.non_easy_family_nat_cnf_reduction D three code hne
+
+/-- info: 'KFOL.Paper.policy_family_reduction' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Paper.policy_family_reduction
+
+/-- Two guarded owners alone admit the exact native UNSAT reduction, also
+for a third role's membership observation; no primitive reset is in the target. -/
+theorem guarded_pair_reduction {Role : Type u} (a b d : Role)
+    (hab : a ≠ b) (had : a ≠ d) (hbd : b ≠ d) (formula : Reductions.CNF) :
+    ((∀ x : ℕ → WinnerSet Role,
+      (Reductions.GuardedPair.equation formula).1.eval a b x =
+        (Reductions.GuardedPair.equation formula).2.eval a b x) ↔
+      ¬Reductions.Satisfiable formula) ∧
+    ((∀ x : ℕ → WinnerSet Role,
+      d ∈ ((Reductions.GuardedPair.equation formula).1.eval a b x).val ↔
+        d ∈ ((Reductions.GuardedPair.equation formula).2.eval a b x).val) ↔
+      ¬Reductions.Satisfiable formula) ∧
+    ((Reductions.GuardedPair.equation formula).1.size +
+      (Reductions.GuardedPair.equation formula).2.size =
+      5 + 6 * (Reductions.ResetUnion.support formula).length + 6 * formula.length +
+        12 * (formula.map List.length).sum) :=
+  ⟨Reductions.GuardedPair.equation_valid_iff_unsatisfiable a b d hab had hbd formula,
+    Reductions.GuardedPair.third_role_observation_valid_iff_unsatisfiable a b d hab had hbd formula,
+    Reductions.GuardedPair.equation_size formula⟩
+
+/-- info: 'KFOL.Paper.guarded_pair_reduction' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Paper.guarded_pair_reduction
+
+/-- The actual serial-SE winner values are nonempty and have the exact
+Dirac leaf equation. Both statements use independent canonical SE semantics. -/
+theorem round_sequential_values {Role : Type u} [Fintype Role] [DecidableEq Role]
+    (order : GameTheory.Languages.Bridges.FOSGToEFG.ExplicitOrder Role) :
+    (∀ game : Rounds.Game Role, (game.sequentialValues order).Nonempty) ∧
+    (∀ r : Role, (Rounds.Game.leaf r).sequentialValues order = {PMF.pure r}) :=
+  ⟨fun game => game.sequentialValues_nonempty order,
+    fun r => Rounds.Game.sequentialValues_leaf r order⟩
+
+/-- info: 'KFOL.Paper.round_sequential_values' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Paper.round_sequential_values
+
+/-- Arbitrary behavioral strategies admit consistent assessments. At every
+actual serial decision their beliefs are the product of earlier current laws,
+including public histories unreachable under the supplied strategy. -/
+theorem round_profile_consistency {Role : Type u} [DecidableEq Role] [Finite Role]
+    (game : Rounds.Game Role)
+    (order : GameTheory.Languages.Bridges.FOSGToEFG.ExplicitOrder Role)
+    (strategy : (i : Role) → (game.serialized order).information.BehavioralPolicy i) :
+    ∃ assessment : (game.serialized order).information.BehavioralAssessment,
+      assessment.strategy = strategy ∧
+      assessment.IsSequentiallyConsistent
+        (game.serial_decision_recall order).decisionInformationAntichain ∧
+      ∀ (h : game.execution.History) (ht : ¬ game.execution.terminal h.state) (i : Role),
+        assessment.belief i (game.serialSite order h ht i) =
+          game.productBelief order strategy h ht i :=
+  game.exists_consistent_product_assessment order strategy
+
+/-- info: 'KFOL.Paper.round_profile_consistency' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Paper.round_profile_consistency
+
+/-- Consistency uniquely determines the product belief at every public
+history; no positive-reach condition occurs at the limit. -/
+theorem round_product_beliefs {Role : Type u} [DecidableEq Role] [Finite Role]
+    (game : Rounds.Game Role)
+    (order : GameTheory.Languages.Bridges.FOSGToEFG.ExplicitOrder Role)
+    (assessment : (game.serialized order).information.BehavioralAssessment)
+    (consistent : assessment.IsSequentiallyConsistent
+      (game.serial_decision_recall order).decisionInformationAntichain) :
+    ∀ (h : game.execution.History) (ht : ¬ game.execution.terminal h.state) (i : Role),
+      assessment.belief i (game.serialSite order h ht i) =
+        game.productBelief order assessment.strategy h ht i :=
+  game.consistent_belief_eq_product order assessment consistent
+
+/-- info: 'KFOL.Paper.round_product_beliefs' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Paper.round_product_beliefs
+
+/-- Each owned operation is a mathlib semilattice join, with the owner's atom
+as top and the exact underlying set-inclusion order on all other values. -/
+theorem owned_choice_semilattices {Role : Type u} (r : Role) :
+    ∃ s : SemilatticeSup (WinnerSet Role),
+      (∀ A B : WinnerSet Role, @Max.max (WinnerSet Role) s.toMax A B = WinnerSet.choice r A B) ∧
+      (∀ A B : WinnerSet Role, @LE.le (WinnerSet Role) s.toLE A B ↔
+        B = WinnerSet.singleton r ∨ (A ≠ WinnerSet.singleton r ∧ A.val ⊆ B.val)) :=
+  ⟨WinnerSet.choiceSemilattice r,fun _ _ => rfl,WinnerSet.choice_le_iff r⟩
+
+/-- info: 'KFOL.Paper.owned_choice_semilattices' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Paper.owned_choice_semilattices
+
+open Classical in
+/-- The two forcing observations jointly embed the two-player carrier, with
+both owned operations, the role switch and the exact Boolean-coordinate image. -/
+theorem two_player_forcing_coordinates {Role : Type u} (labels : Fin 2 ≃ Role) :
+    Function.Injective (TwoPlayers.forcingCoordinates labels) ∧
+    (∀ A B : WinnerSet Role,
+      TwoPlayers.forcingCoordinates labels (WinnerSet.choice (labels 0) A B) =
+        ((TwoPlayers.forcingCoordinates labels A).1 || (TwoPlayers.forcingCoordinates labels B).1,
+         (TwoPlayers.forcingCoordinates labels A).2 && (TwoPlayers.forcingCoordinates labels B).2)) ∧
+    (∀ A B : WinnerSet Role,
+      TwoPlayers.forcingCoordinates labels (WinnerSet.choice (labels 1) A B) =
+        ((TwoPlayers.forcingCoordinates labels A).1 && (TwoPlayers.forcingCoordinates labels B).1,
+         (TwoPlayers.forcingCoordinates labels A).2 || (TwoPlayers.forcingCoordinates labels B).2)) ∧
+    (∀ A : WinnerSet Role,
+      TwoPlayers.forcingCoordinates labels (WinnerSet.rename (Equiv.swap (labels 0) (labels 1)) A) =
+        ((TwoPlayers.forcingCoordinates labels A).2,(TwoPlayers.forcingCoordinates labels A).1)) ∧
+    (∀ p : Bool × Bool, (∃ A, TwoPlayers.forcingCoordinates labels A = p) ↔
+      ¬(p.1 = true ∧ p.2 = true)) :=
+  ⟨TwoPlayers.forcingCoordinates_injective labels,TwoPlayers.forcingCoordinates_choice_top labels,
+    TwoPlayers.forcingCoordinates_choice_bottom labels,TwoPlayers.forcingCoordinates_swap labels,
+    TwoPlayers.forcingCoordinates_range labels⟩
+
+/-- info: 'KFOL.Paper.two_player_forcing_coordinates' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Paper.two_player_forcing_coordinates
 
 end KFOL.Paper

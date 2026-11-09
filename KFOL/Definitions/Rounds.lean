@@ -2,6 +2,9 @@ module
 
 public import GameTheory.Languages.MultiRound.Monitoring
 public import GameTheory.Languages.Bridges.FOSGToEFG
+public import GameTheory.Core.Form
+public import GameTheory.Protocol.BehavioralContinuation
+public import GameTheory.Analysis.Protocol.Sequential
 
 /-! # Completely disclosed finite commitment rounds
 
@@ -146,6 +149,69 @@ abbrev serialized [DecidableEq Role] (game : Game Role)
     (order : GameTheory.Languages.Bridges.FOSGToEFG.ExplicitOrder Role) :
     GameTheory.Languages.EFG.Game Role :=
   GameTheory.Languages.Bridges.FOSGToEFG.toEFG game.toFOSG order
+
+/-- A total winner readout, extending the actual terminal leaf label. Its
+values at nonterminal histories are never scored by the terminal runner. -/
+def defaultWinner : Game Role → Role
+  | .leaf r => r
+  | .round _ next => (next (fun _ => 0)).defaultWinner
+
+/-- Winner label read from a completed observed history. -/
+def winner (game : Game Role) (h : game.execution.History) : Role :=
+  h.state.current.defaultWinner
+
+/-- Serial terminal outcomes carry the same completed public source history. -/
+def serialWinner [DecidableEq Role] (game : Game Role)
+    (order : GameTheory.Languages.Bridges.FOSGToEFG.ExplicitOrder Role)
+    (h : (game.serialized order).execution.History) : Role :=
+  game.winner (GameTheory.Languages.Bridges.FOSGToEFG.eraseHistory game.toFOSG order h)
+
+/-- Each role receives one exactly when it wins. -/
+noncomputable def winnerPayoff {Outcome : Type u} (label : Outcome → Role)
+    (i : Role) (outcome : Outcome) : ℝ := by
+  classical
+  exact if label outcome = i then 1 else 0
+
+/-- The paper's value set, defined by canonical behavioral sequential
+equilibria of the actual serial implementation, independently of recursion. -/
+def sequentialValues [Finite Role] [DecidableEq Role] (game : Game Role)
+    (order : GameTheory.Languages.Bridges.FOSGToEFG.ExplicitOrder Role) : Set (PMF Role) :=
+  {value | ∃ (certificate : (game.serialized order).execution.WellFoundedHistories)
+      (antichain : (game.serialized order).information.DecisionInformationAntichain)
+      (assessment : (game.serialized order).information.BehavioralAssessment),
+    assessment.IsSequentialEquilibrium antichain certificate
+      (winnerPayoff (game.serialWinner order)) ∧
+    value = ((game.serialized order).information.runBehavioralTerminalFrom certificate
+      assessment.strategy (game.serialized order).execution.initHistory).map (game.serialWinner order)}
+
+/-- Observed-action mixed SPE values use the independent canonical Nash
+predicate in every proper public subgame and a certified global run bound. -/
+def observedValues [Finite Role] [DecidableEq Role] (game : Game Role) : Set (PMF Role) :=
+  {value | ∃ (bound : ℕ) (bounded : game.execution.BoundedHorizon bound)
+      (profile : (i : Role) → game.information.BehavioralPolicy i),
+    game.information.IsBehavioralSubgamePerfect bounded profile (fun h i => winnerPayoff game.winner i h) ∧
+    value = (game.information.runBehavioralFrom profile bound game.execution.initHistory).map game.winner}
+
+/-- The actual finite simultaneous stage game, with continuation winner
+laws as its stochastic outcomes. Every player's pure strategy is its actual
+menu index; there are no padded or fictitious actions. -/
+noncomputable def stageForm (sizes : Role → ℕ)
+    (continuations : ((i : Role) → Fin (sizes i + 1)) → PMF Role) :
+    GameTheory.GameForm Role where
+  sig := { Strategy := fun i => Fin (sizes i + 1), Outcome := Role }
+  play := continuations
+
+/-- The paper's round operator selects a continuation equilibrium law at
+EVERY actual joint action, then takes the winner laws of canonical independent
+mixed Nash equilibria of that finite stage. This definition contains no
+recursive subgame-perfect predicate. -/
+noncomputable def roundOperator [Fintype Role] [DecidableEq Role] (sizes : Role → ℕ)
+    (E : ((i : Role) → Fin (sizes i + 1)) → Set (PMF Role)) : Set (PMF Role) :=
+  {value | ∃ p : ((i : Role) → Fin (sizes i + 1)) → PMF Role,
+    (∀ a, p a ∈ E a) ∧ ∃ μ : GameTheory.Profile (stageForm sizes p).sig.mixed,
+      GameTheory.IsNash (stageForm sizes p).mixed
+        (GameTheory.euPreference (fun winner i => winnerPayoff id i winner)) μ ∧
+      value = (stageForm sizes p).mixed.play μ}
 
 end Game
 

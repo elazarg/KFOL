@@ -98,4 +98,10 @@ def boundaryTrace : ∀ {state : G.execution.State} (trace : G.execution.Trace s
       exact realized
     · rfl
 
+
+/-- The actual complete canonical history at any legal public-boundary prefix. -/
+def historyAtPrefix (h : G.execution.History) (ht : ¬ G.execution.terminal h.state)
+    (n : ℕ) (p : Prefix G order h n) : (execution G order).History :=
+  ⟨.stage h n p,prefixTrace G order (boundaryTrace G order h.trace) ht n p⟩
+
 end KFOL.Rounds.Serialization

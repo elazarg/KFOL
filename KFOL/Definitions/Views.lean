@@ -66,5 +66,22 @@ noncomputable def eval (three : Fin 3 ↪ Role) (k : Role)
     (t : Term Role Var) (v : Var → PlayerView k) : PlayerView k :=
   WinnerSet.view k (t.eval (fun x => representative three k (v x)))
 
+/-- Union on player observations: possible wins dominate; distinct observed
+other-player atoms merge into impossible ambiguity. -/
+noncomputable def union {k : Role} (p q : PlayerView k) : PlayerView k := by
+  classical
+  exact match p,q with
+    | .possible,_ | _,.possible => .possible
+    | .other i,.other j => if i = j then .other i else .impossible
+    | _,_ => .impossible
+
+/-- Owned choice on observations, with the other owner's atom absorbing.
+This is an independent finite table, not evaluation on chosen representatives. -/
+noncomputable def choice {k : Role} (r : Role) (p q : PlayerView k) : PlayerView k := by
+  classical
+  exact if hr : r ≠ k then
+    if p = .other ⟨r,hr⟩ ∨ q = .other ⟨r,hr⟩ then .other ⟨r,hr⟩ else union p q
+  else union p q
+
 end PlayerView
 end KFOL
