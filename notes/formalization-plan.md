@@ -108,7 +108,7 @@ For each required inventory row, implementation review records the public declar
 | `Definitions/Reset.lean` | Primitive reset, generic signature, selection, canonical tables, independent rooted antimatroids and actual semantic term functions |
 | `Definitions/Equational.lean` | Relation-free mathlib language, finite identities, satisfaction, theories, derivation, basis, variable bound, algebra structures, full/core signatures and codecs |
 | `Definitions/Algorithms.lean` | Exact membership-word bitset codec, independent prerequisite scan and its fixed-arity interface; no machine imports |
-| `Definitions/Encoding.lean` | Binary guard records, framed record streams and sparse binary label dictionaries; imports the external word-codec primitives only |
+| `Definitions/Encoding.lean` | Binary guard records, framed record streams, sparse binary label dictionaries, original input-tree codec and binary extraction frontend; imports the external word-codec primitives only |
 
 These are six algebraic definition modules and two representation modules. `Equational` imports
 `Core`, which imports `Public`; it adds only mathlib dependencies. See the
@@ -609,9 +609,31 @@ whose index is nonzero, duplicate occurrences, exact bit lengths, noncanonical
 indices, bad ranges and widths, and truncated streams.
 
 These representation and output-size results do not certify whole-program
-machine time. Next connect ordinary binary input-tree parsing to complete
-dictionary/record descriptors, use shared support indices for identity inputs,
-and certify their field scans and traversals.
+machine time. The original binary input-tree connection is now checked below.
+Whole descriptor validation, shared support indices for identity inputs and
+certified field scans remain separate work.
+
+### Binary input parser and executable frontend checked
+
+`KFOL.Paper.reset_binary_input_codec` repeats the complete codec, injectivity,
+prefix-parser reconstruction and bit-size statements. Reset nodes use a tag
+bit and concatenate their two child codes; variable nodes use a tag bit and
+a framed canonical binary name. Decoding rejects malformed or incomplete trees,
+noncanonical names and every nonempty suffix. Fuel is bounded by input bit
+length, independently of numeric label values.
+
+`reset_binary_extraction` connects the original bits to the actual collector
+and support compressor. The executable frontend accepts exactly the valid
+tree encodings and returns a single framed word containing the dictionary and
+raw record stream. Decoded expansion recovers every original occurrence and
+the canonical tables. For N input bits, the complete output uses at most
+`6N(N+1) + 2N + 2` bits, including all sparse-name dictionary bits and framing.
+The definition surface remains eight files and the pure import audit is unchanged.
+
+Next validate complete externally supplied dictionary/record descriptors,
+connect shared support indices for two identity inputs, and certify the
+parser and field/table scans in the existing machine model. Exact executable
+semantics and polynomial output length do not finish polynomial runtime.
 The full table algorithms and end-to-end reduction gate remain partial.
 
 | Milestone | Prerequisites | Concrete completion gate |

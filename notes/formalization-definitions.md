@@ -598,8 +598,8 @@ codec, total semantics and guard-enabling correspondence, uniformly in width.
 
 This is a dense membership-word intermediate representation, already indexed
 by `Fin n`. Sparse binary variable-name encodings, support compression, record
-framing and their size bounds are now checked below; native input-tree codecs
-and full table traversals retain their separate obligations. The
+framing, native binary input-tree codecs and their size bounds are now checked
+below; full machine traversals retain their separate obligations. The
 primitive loops on input word lengths, with no decoded numeric-value clock.
 Regressions cover coordinate order, failed inclusions, unequal widths, the
 empty width, the actual certified fixed-arity function and guard enabling.
@@ -656,3 +656,44 @@ compression lemmas already support that shared-dictionary use. Regressions use
 widely separated labels, a nonzero root index, repeated occurrences, exact
 bit counts and malformed fields or trailing data. Every finite check uses
 kernel `decide`.
+
+## Original binary input trees and extraction
+
+`Definitions/Encoding.lean` also contains the entire original-input boundary;
+no additional definition file is introduced:
+
+| Definition | Meaning and dependencies |
+| --- | --- |
+| `TermCode.encode` | Prefix binary syntax: `false` followed by a framed canonical binary label for a variable; `true` followed by two successive child codes for reset |
+| `TermCode.parse` | Partial tree parser returning the unconsumed suffix, with structural fuel on recursive depth |
+| `TermCode.decode` | Supplies input bit length as fuel and accepts exactly one complete tree |
+| `TermCode.extract` | Decodes the original input, runs the existing collector and support compressor, then pairs the binary dictionary with its raw record stream |
+
+Only variable labels are framed. Subtree codes are concatenated directly,
+so neither syntax depth nor repeated variables cause repeated framing of
+an already encoded subtree. Numeric label values never provide a loop clock.
+`Algorithms/TermCode.lean` proves the partial parser reconstructs the entire
+input, including its returned suffix. Syntax size is sufficient fuel for any
+suffix, and input bit length always provides enough fuel for complete decoding.
+The exact two-sided codec, injectivity and rejection of every nonempty suffix
+are repeated in `KFOL.Paper.reset_binary_input_codec`.
+
+For a tree t with L leaves and S syntax occurrences, the code length is
+`S + 2L + 2 * sum(label.size)`, where the sum counts every original leaf
+independently. This relates the mathematical syntax measure to actual binary
+input length, including sparse names and repeated occurrences.
+
+`KFOL.Paper.reset_binary_extraction` states that the executable frontend
+accepts exactly valid syntax and recovers the original raw occurrence list
+and canonical tables. For N input bits the dictionary has at most N bits,
+the raw stream has at most `6N(N+1)` bits, and the complete paired output has
+at most `6N(N+1) + 2N + 2` bits. The proof supplies the output of the actual
+program, without assuming a supplied guard certificate. Tests compute prefix
+parses, fuel exhaustion, truncated trees, invalid labels, arbitrary suffixes,
+sparse names, repeated leaves and the complete decoded frontend output using
+kernel `rfl` and `decide`.
+
+These are exact executable semantics and bit-size bounds. The parser and
+frontend have not yet been certified in the machine model. External candidate
+dictionary validation, shared support for two identity inputs, record/table
+scans and full algorithm running times retain their own obligations.

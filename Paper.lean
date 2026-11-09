@@ -4,6 +4,7 @@ public import KFOL.Algebra
 public import KFOL.Algorithms.GuardWords
 public import KFOL.Complexity.GuardSubset
 public import KFOL.Algorithms.GuardRecord
+public import KFOL.Algorithms.TermCode
 
 /-!
 # Kernel-checked paper claims
@@ -799,5 +800,76 @@ theorem reset_binary_guard_records (t : Reset.Term ℕ) :
 [propext, Classical.choice, Quot.sound] -/
 #guard_msgs (whitespace := lax) in
 #print axioms KFOL.Paper.reset_binary_guard_records
+
+/-- Ordinary binary tree inputs use one constructor bit per occurrence and
+canonical framed binary names at leaves. Decoding is exact; the input bit
+length bounds both syntax occurrences and the partial parser's consumption. -/
+theorem reset_binary_input_codec :
+    (∀ (word : List Bool) (t : Reset.Term ℕ),
+      Algorithms.TermCode.decode word = some t ↔ word = Algorithms.TermCode.encode t) ∧
+    Function.Injective Algorithms.TermCode.encode ∧
+    (∀ (t : Reset.Term ℕ) (rest : List Bool),
+      Algorithms.TermCode.decode (Algorithms.TermCode.encode t ++ rest) =
+        if rest.isEmpty then some t else none) ∧
+    (∀ t : Reset.Term ℕ,
+      (Algorithms.TermCode.encode t).length = t.size + 2 * t.leafCount +
+        2 * (t.guardEntries.map (fun p => p.1.size)).sum ∧
+      t.size ≤ (Algorithms.TermCode.encode t).length ∧
+      t.leafCount ≤ (Algorithms.TermCode.encode t).length) ∧
+    (∀ (t : Reset.Term ℕ) (rest : List Bool) (fuel : ℕ), t.size ≤ fuel →
+      Algorithms.TermCode.parse fuel (Algorithms.TermCode.encode t ++ rest) = some (t, rest)) ∧
+    (∀ (fuel : ℕ) (word rest : List Bool) (t : Reset.Term ℕ),
+      Algorithms.TermCode.parse fuel word = some (t, rest) →
+        Algorithms.TermCode.encode t ++ rest = word ∧ t.size + rest.length ≤ word.length) :=
+  ⟨Algorithms.TermCode.decode_eq_some_iff, Algorithms.TermCode.encode_injective,
+    Algorithms.TermCode.decode_encode_append,
+    fun t => ⟨Algorithms.TermCode.length_encode t, Algorithms.TermCode.size_le_length_encode t,
+      Algorithms.TermCode.leafCount_le_length_encode t⟩,
+    Algorithms.TermCode.parse_encode, fun _ _ _ _ h =>
+      ⟨Algorithms.TermCode.encode_append_of_parse h, Algorithms.TermCode.size_add_length_rest_le h⟩⟩
+
+/-- info: 'KFOL.Paper.reset_binary_input_codec' depends on axioms:
+[propext, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Paper.reset_binary_input_codec
+
+/-- The executable binary frontend accepts exactly valid syntax, builds the
+actual occurrence records and recovers the canonical tables. All lengths
+count bits of the original input and output; running time is a separate claim. -/
+theorem reset_binary_extraction :
+    (∀ word : List Bool, Algorithms.TermCode.extract word = none ↔
+      Algorithms.TermCode.decode word = none) ∧
+    (∀ (word : List Bool) (t : Reset.Term ℕ), Algorithms.TermCode.decode word = some t →
+      let D := Algorithms.SupportIndex.labels t
+      ∃ records : List (Fin D.length × Finset (Fin D.length)),
+        Algorithms.TermCode.extract word = some (_root_.Complexity.pair
+          (Algorithms.LabelDictionary.encode D) (Algorithms.GuardRecord.encodeList records)) ∧
+        records.length = t.leafCount ∧
+        records.map (fun r => (D.get r.1, Algorithms.SupportIndex.expand D r.2)) = t.guardEntries ∧
+        Algorithms.LabelDictionary.decode (Algorithms.LabelDictionary.encode D) = some D ∧
+        Algorithms.GuardRecord.decodeList D.length (Algorithms.GuardRecord.encodeList records) =
+          some records ∧
+        (Algorithms.LabelDictionary.encode D).length ≤ word.length ∧
+        (Algorithms.GuardRecord.encodeList records).length ≤ 6 * word.length * (word.length + 1) ∧
+        (_root_.Complexity.pair (Algorithms.LabelDictionary.encode D)
+          (Algorithms.GuardRecord.encodeList records)).length ≤
+            6 * word.length * (word.length + 1) + 2 * word.length + 2 ∧
+        (∀ j, Reset.Term.minimize
+          ((((records.map (fun r => (D.get r.1, Algorithms.SupportIndex.expand D r.2))).filter
+            (fun p => p.1 = j)).map Prod.snd).toFinset) = t.table j)) := by
+  refine ⟨Algorithms.TermCode.extract_eq_none_iff, ?_⟩
+  intro word t h
+  dsimp only
+  obtain ⟨records, he, hl, hr, hd, hb, hp⟩ := Algorithms.TermCode.extract_spec h
+  refine ⟨records, he, hl, hr, Algorithms.LabelDictionary.decode_encode _,
+    Algorithms.GuardRecord.decodeList_encodeList records, hd, hb, hp, ?_⟩
+  intro j
+  rw [hr]
+  exact (t.table_eq_entries j).symm
+
+/-- info: 'KFOL.Paper.reset_binary_extraction' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Paper.reset_binary_extraction
 
 end KFOL.Paper

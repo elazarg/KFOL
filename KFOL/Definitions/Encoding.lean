@@ -59,4 +59,42 @@ def decode (word : List Bool) : Option (List ℕ) := do
   blocks.mapM _root_.Complexity.BinaryNatCode.decode?
 
 end LabelDictionary
+
+namespace TermCode
+
+/-- Prefix binary syntax: `false` introduces a framed canonical binary
+variable name; `true` introduces two successive child trees. Only labels
+are framed, so nesting never duplicates an already encoded subtree. -/
+def encode : Reset.Term ℕ → List Bool
+  | .var j => false :: _root_.Complexity.delimit (_root_.Complexity.BinaryNatCode.encode j)
+  | .func .reset args => true :: (encode (args 0) ++ encode (args 1))
+
+/-- Parse one tree and return its unconsumed suffix. Fuel bounds recursive
+depth and is supplied from the input bit length, never a decoded label value. -/
+def parse : ℕ → List Bool → Option (Reset.Term ℕ × List Bool)
+  | 0, _ => none
+  | _ + 1, [] => none
+  | _ + 1, false :: word => do
+      let (name, rest) ← _root_.Complexity.unpair? word
+      let j ← _root_.Complexity.BinaryNatCode.decode? name
+      return (.var j, rest)
+  | fuel + 1, true :: word => do
+      let (left, rest) ← parse fuel word
+      let (right, rest) ← parse fuel rest
+      return (Reset.Term.step left right, rest)
+
+/-- A term input contains exactly one complete tree, with no trailing bits. -/
+def decode (word : List Bool) : Option (Reset.Term ℕ) := do
+  let (t, rest) ← parse word.length word
+  if rest.isEmpty then some t else none
+
+/-- Executable binary frontend: decode the original tree, collect its actual
+support and raw guards, and pair the dictionary with the compressed record stream. -/
+def extract (word : List Bool) : Option (List Bool) := do
+  let t ← decode word
+  let D := SupportIndex.labels t
+  let records ← t.guardEntries.mapM (SupportIndex.compressEntry D)
+  return _root_.Complexity.pair (LabelDictionary.encode D) (GuardRecord.encodeList records)
+
+end TermCode
 end KFOL.Algorithms

@@ -7,6 +7,7 @@ import all KFOL.Algorithms.GuardWords
 import all KFOL.Algorithms.SupportIndex
 import all KFOL.Algorithms.Framing
 import all KFOL.Algorithms.GuardRecord
+import all KFOL.Algorithms.TermCode
 import all KFOL.Complexity.Language
 import all KFOL.Complexity.GuardSubset
 import all KFOL.Definitions.Public
