@@ -25,6 +25,7 @@ import all KFOL.Reset.Chain
 import all KFOL.Reset.Substitution
 import all KFOL.Reset.Public
 import all KFOL.Reset.Realizability.Constructible
+import all KFOL.Reset.Realizability.GreedyOrder
 import all KFOL.Reset.Realizability.Model
 import all KFOL.Reset.Realizability.Necessity
 import all KFOL.Reset.Realizability.Size

@@ -604,4 +604,23 @@ theorem reset_table_local_completeness {Var : Type v} [DecidableEq Var]
 #guard_msgs (whitespace := lax) in
 #print axioms KFOL.Paper.reset_table_local_completeness
 
+/-- Executable compact synthesis: success is equivalent to the existence of
+an actual realizing term, and every returned term has the requested root and
+canonical tables with the stated bound on primitive syntax occurrences.
+Only this algorithm requires an ordering of the finite input positions. -/
+theorem reset_table_synthesis {Var : Type v} [LinearOrder Var] [Fintype Var]
+    (G : Reset.GuardTable Var) :
+    (G.synthesize.isSome = true ↔
+      ∃ t : Reset.Term Var, t.root = G.root ∧ t.table = G.guards) ∧
+    (∀ t : Reset.Term Var, G.synthesize = some t →
+      t.root = G.root ∧ t.table = G.guards ∧
+        t.size ≤ 1 + 2 * Fintype.card Var * (∑ j, (G.guards j).card)) :=
+  ⟨G.synthesize_isSome_iff.trans G.wellFormed_iff_realizable,
+    fun _ ht => G.synthesize_spec ht⟩
+
+/-- info: 'KFOL.Paper.reset_table_synthesis' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Paper.reset_table_synthesis
+
 end KFOL.Paper

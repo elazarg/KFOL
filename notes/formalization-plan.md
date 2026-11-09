@@ -228,7 +228,7 @@ External mathematical inputs actually used by a main-paper proof need a kernel p
 | --- | --- | --- |
 | Classification of the repeat-triple polymorphism clone | Atomic clone and determinacy, then binary classification | Import a verified theorem after checking its exact finite-domain hypotheses, or formalize the needed finite combinatorial classification locally |
 | Freese et al. order-algebra results | Reset basis completeness and minimum generators | The reset six-law special case is now proved by arbitrary-algebra path normalization and suffix absorption; the required minimum-generator special cases remain separate |
-| Antimatroid/dependency representation | Main representation and compact table algorithms; report-only counts stay optional | Rooted representation and inverse laws, the complete realizability criterion, executable recognition correctness and a `1 + 2nM` realization bound are proved. Executable syntax synthesis and machine-time bounds remain separate |
+| Antimatroid/dependency representation | Main representation and compact table algorithms; report-only counts stay optional | Rooted representation and inverse laws, the complete realizability criterion, executable recognition and synthesis correctness and a `1 + 2nM` realization bound are proved. Machine-time bounds remain separate |
 | Dissemilattice generation | Seven-equation fragment claimed in the main paper | Formalize the precise generation theorem or replace its use by an explicit separating representation proof |
 | Kleene presentation | Two-role finite basis cited in the main discussion | Verify/import the exact theorem, or give a direct normal-form/term proof for the needed case |
 | Mixed Nash existence, finite SE existence and zero-sum value uniqueness | Required round semantics | Reuse the inspected GameTheory Nash, SE existence and minimax interfaces; prove the KFOL finiteness, recall, nonempty-menu, integrability and payoff-shift premises |
@@ -419,7 +419,7 @@ polynomial machine-time clause is still owed. The combined derived-reset
 prose obligation also includes the guarded-choice example. The algorithm prose
 obligation includes recognition and synthesis; the later compact-table milestone
 below checks the criterion, realization size and recognition correctness, with
-executable syntax synthesis and machine bounds still outstanding.
+machine bounds still outstanding. Executable syntax synthesis is checked below.
 The separate complexity milestone also owes the machine-time clause of
 idempotent extraction. Strategic integration remains a separate gate; no
 upstream GameTheory files have been changed.
@@ -481,8 +481,8 @@ reset definition file. No caller-supplied realization certificate is assumed.
 
 Necessity uses minimality to prove that every canonical prerequisite is feasible
 in the represented antimatroid. Sufficiency builds the family of constructible
-sets and chooses one path per listed prerequisite, rather than enumerating the
-feasible family. Each path's selectors are permitted by the candidate, and
+sets and constructs one path per listed prerequisite. Each path's selectors
+are permitted by the candidate, and
 joining paths recovers every required selector. Minimality then identifies the
 actual canonical table.
 
@@ -494,13 +494,32 @@ equivalent, using self-exclusion and cardinal induction. Regressions include
 alternative prerequisites, unused inputs, cycles satisfying the root and
 self-exclusion constraints, invalid antichains, and the empty target.
 
-The whole `reset:thm:synthesis` row remains partial: polynomial machine-time
-recognition has not been certified. The size proof is a mathematical choice
-construction, so executable syntax synthesis is also still required by the
-main prose obligation. Next supply that syntax-producing algorithm and its
-correctness, then the term-to-table size bound and machine adapters. Minimal
-clone, guarded-choice, forty-law completeness and strategic milestones retain
-their own obligations.
+### Executable compact synthesis checked
+
+`KFOL.Paper.reset_table_synthesis` connects the executable option-valued
+synthesizer to actual term realizability. Every successful output has the
+requested root and canonical tables, with the same `1 + 2nM` primitive-tree
+size bound. The independent candidate data and constructibility definition
+are unchanged.
+
+The algorithm uses mathlib's colexicographic order to list supplied guards and
+chooses the least fresh enabled position in each target. The finite input order
+is required only by the executable interface. The greedy-order proof establishes
+feasibility, absence of repeats and support coverage; existing path selection
+lemmas then prove soundness of every generated path. Joining exactly M such
+paths realizes the whole table. No feasible-set or powerset enumeration is used.
+
+The order-free mathematical existence theorem is now derived from this same
+checked algorithm, so the earlier separate choice construction is removed.
+Primitive paths and joins have moved into the existing reset definition file,
+keeping the auditable definition surface in six files. Regressions compute
+actual output guards, unused inputs, primitive counts and rejection, using
+kernel proofs and proved rewrites for finite sorting.
+
+The whole `reset:thm:synthesis` row remains partial because polynomial machine
+running time has not been certified. Next prove the term-to-table size bound
+and provide machine adapters for the algorithms. Minimal clone, guarded-choice,
+forty-law completeness and strategic milestones retain their own obligations.
 
 | Milestone | Prerequisites | Concrete completion gate |
 | --- | --- | --- |

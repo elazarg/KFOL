@@ -472,6 +472,11 @@ All new definitions remain in `Definitions/Reset.lean`:
 | `GuardTable.constructibleCheck` | Test whether the target is reached after as many rounds as its cardinality |
 | `GuardTable.badGuards`, `check` | Executable finite scans of listed guards and ambient positions; no search over arbitrary subsets |
 | `Term.size` | Count of all variable and primitive reset occurrences in the expanded syntax tree |
+| `Term.pathTerm`, `joinPaths` | Left-associated primitive paths and their common-root join; now colocated with the algorithm definitions |
+| `GuardTable.greedyCandidates`, `greedyOrder` | Fresh enabled target positions and a bounded root-first order, choosing the least enabled position at each step |
+| `GuardTable.greedyPath` | Reverse the computed order into a primitive reset path |
+| `GuardTable.guardList`, `synthesisPaths` | Colexicographically list the supplied guards and construct exactly one path per prerequisite |
+| `GuardTable.synthesize` | Return the joined primitive term when recognition succeeds, otherwise return `none` |
 
 `KFOL.Paper.reset_table_realizability` repeats every candidate condition and
 proves equivalence with an actual term whose size is at most `1 + 2nM`.
@@ -487,18 +492,32 @@ rooted antimatroid of constructible sets on exactly the active positions.
 `Necessity.lean` uses minimality and accessible orders to prove that every
 canonical prerequisite is itself feasible and constructible.
 
-`Size.lean` counts path leaves, reset nodes and joining nodes. `Synthesis.lean`
-chooses one path for each of the M listed prerequisites, bounds its support by
-n positions, and proves that joining those paths gives exactly the candidate
-selectors and minimal tables. It does not enumerate the feasible family.
-This is a mathematical existence construction using choice; it is not an
-executable syntax-producing algorithm. `Recognition.lean` proves correctness
-of the executable checker and its at-most-target-cardinality greedy rounds.
-Polynomial machine-time bounds, executable syntax synthesis, and the separate
-bound on the table extracted from an input term remain open obligations.
+`Size.lean` counts path leaves, reset nodes and joining nodes.
+`GreedyOrder.lean` proves that the executable greedy order stays feasible,
+introduces no repeated positions, and covers every constructible target that
+contains the root. Reversing this order yields a path with exactly the requested
+support and only permitted selectors. `Synthesis.lean` proves that joining one
+such path per listed prerequisite gives exactly the candidate selectors and
+minimal tables, with at most `1 + 2nM` primitive occurrences.
+
+`KFOL.Paper.reset_table_synthesis` states that the executable synthesizer
+succeeds exactly when an actual realization exists, and that every returned
+term has the requested root, canonical tables and size bound. The algorithm
+requires `[LinearOrder Var]` locally. Mathlib's finite-set sorting and
+colexicographic order list only supplied guards; no powerset is enumerated.
+The order-free existence theorem is now a corollary of this same construction,
+using an arbitrary finite enumeration inside its proof. The earlier separate
+path-choice construction has been removed.
+
+`Recognition.lean` proves correctness of the executable checker and its
+at-most-target-cardinality greedy rounds. Polynomial machine-time bounds and
+the separate bound on the table extracted from an input term remain obligations.
 
 Regression cases independently specify alternative prerequisites, an unused
 input, a dependency cycle, multiple empty-root guards, self-dependency and a
 dominated guard. Acceptance yields an actual term and its size bound; rejection
-of the cycle rules out any realizing term. All finite computations use kernel
-`decide`, with no `native_decide` or unchecked enumeration assumption.
+of the cycle rules out any realizing term. The synthesis regressions inspect
+actual output guards and occurrence counts and check that completed orders
+remain unchanged with extra fuel. Finite computations use kernel `decide`
+after proved sorting rewrites, with no `native_decide` or unchecked enumeration
+assumption.

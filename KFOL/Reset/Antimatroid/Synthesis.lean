@@ -18,9 +18,6 @@ namespace Term
 
 variable {Var : Type v}
 
-/-- Join common-root terms, with the root projection as the empty join. -/
-def joinPaths (r : Var) (ts : List (Term Var)) : Term Var := ts.foldr step (.var r)
-
 @[simp] theorem root_joinPaths (r : Var) (ts : List (Term Var)) : root (joinPaths r ts) = r := by
   induction ts with
   | nil => rfl

@@ -16,11 +16,6 @@ variable {Var : Type v} [DecidableEq Var]
 
 namespace Term
 
-/-- A left-associated path with the specified final variable. -/
-def pathTerm (r : Var) : List Var → Term Var
-  | [] => .var r
-  | x :: xs => step (xs.foldl (fun t i => step t (.var i)) (.var x)) (.var r)
-
 omit [DecidableEq Var] in
 @[simp] theorem root_pathTerm (r : Var) (xs : List Var) : root (pathTerm r xs) = r := by
   cases xs <;> rfl

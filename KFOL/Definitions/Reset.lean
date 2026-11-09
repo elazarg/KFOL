@@ -1,6 +1,8 @@
 module
 
 public import KFOL.Definitions.Equational
+public import Mathlib.Combinatorics.Colex
+public import Mathlib.Data.Finset.Sort
 
 /-! # Reset values, signature, selection and canonical guard tables
 
@@ -229,6 +231,54 @@ including independent repeated copies. It is not a machine-time bound. -/
 def Term.size {Var : Type v} : Term Var → ℕ
   | .var _ => 1
   | .func .reset args => 1 + size (args 0) + size (args 1)
+
+/-- A left-associated path with the specified final variable. -/
+def Term.pathTerm {Var : Type v} (r : Var) : List Var → Term Var
+  | [] => .var r
+  | x :: xs => Term.step (xs.foldl (fun t i => Term.step t (.var i)) (.var x)) (.var r)
+
+/-- Join common-root terms, with the root projection as the empty join. -/
+def Term.joinPaths {Var : Type v} (r : Var) (ts : List (Term Var)) : Term Var :=
+  ts.foldr Term.step (.var r)
+
+/-- Fresh target positions enabled by the current root-first order. -/
+def GuardTable.greedyCandidates {Var : Type v} [DecidableEq Var]
+    (G : GuardTable Var) (target : Finset Var) (xs : List Var) : Finset Var :=
+  (target \ insert G.root xs.toFinset).filter
+    (fun j => ∃ A ∈ G.guards j, A ⊆ insert G.root xs.toFinset)
+
+/-- The tail of a root-first greedy order. At each step choose the least
+fresh enabled position, stopping when no such position exists. -/
+def GuardTable.greedyOrder {Var : Type v} [LinearOrder Var]
+    (G : GuardTable Var) (target : Finset Var) : ℕ → List Var
+  | 0 => []
+  | k + 1 =>
+    let xs := G.greedyOrder target k
+    let C := G.greedyCandidates target xs
+    if h : C.Nonempty then xs ++ [C.min' h] else xs
+
+/-- Construct a path using at most one greedy addition per target position. -/
+def GuardTable.greedyPath {Var : Type v} [LinearOrder Var]
+    (G : GuardTable Var) (target : Finset Var) : Term Var :=
+  Term.pathTerm G.root (G.greedyOrder target target.card).reverse
+
+/-- A computable listing of the supplied guards in colexicographic order.
+This sorts only the explicit input, without enumerating other subsets. -/
+def GuardTable.guardList {Var : Type v} [LinearOrder Var]
+    (G : GuardTable Var) (j : Var) : List (Finset Var) :=
+  ((G.guards j).map toColex.toEmbedding).sort.map ofColex
+
+/-- Exactly one greedy path per explicitly listed prerequisite. -/
+def GuardTable.synthesisPaths {Var : Type v} [LinearOrder Var] [Fintype Var]
+    (G : GuardTable Var) : List (Term Var) :=
+  Finset.univ.sort.flatMap (fun j => (G.guardList j).map
+    (fun A => G.greedyPath (insert j A)))
+
+/-- Executable synthesis either rejects the candidate or returns an actual
+primitive reset term. All ordering assumptions are local to the algorithm. -/
+def GuardTable.synthesize {Var : Type v} [LinearOrder Var] [Fintype Var]
+    (G : GuardTable Var) : Option (Term Var) :=
+  if G.check then some (Term.joinPaths G.root G.synthesisPaths) else none
 
 end Reset
 end KFOL
