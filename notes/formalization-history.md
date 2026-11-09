@@ -434,4 +434,3 @@ normalization/equality and recognition bounds. Executable semantics and encoded
 size are now connected throughout this reset frontend, but full polynomial
 machine time, synthesis/substitution time and the end-to-end reduction gate
 remain partial.
-

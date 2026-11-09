@@ -174,3 +174,7 @@ Together with `Four.card`, `Four.embed_reset`, `Four.embed_guarded`, and
 The forty-law basis and four-variable lower bound remain separate work.
 Promote the staged files, add their audit imports, and retire the pending
 copies after integration; no duplicate lasting semantics are intended.
+
+The minimum-generator staging files were promoted in checkpoint `e97189b`;
+the pending duplicates have been retired. Root is factoring the generic size≤2
+associativity lemma into the pure algebra infrastructure for reset reuse.

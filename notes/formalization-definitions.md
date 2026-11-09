@@ -787,7 +787,7 @@ include equal terms with different dictionary orders, distinct variables with
 identical local record streams, nonassociativity, repeated-variable elimination,
 normalization before recognition, exact bit counts and invalid equation framing.
 This frontend uses the two representation files. Full machine-time certificates for
-parsing, scans, normalization and equality remain outstanding.
+original-tree parsing/extraction and equality remain outstanding. Complete descriptor normalization and recognition now have native polynomial machine certificates.
 
 
 ## Native machine and strategic dependency interfaces
@@ -840,3 +840,44 @@ that the K+2-element algebra transfers every <=K-variable identity, fails the
 explicit valid exhaustion identity with K+1 actual variables, and excludes
 all bases restricted to K variables. Full nonfinite basability needs the
 subsequent typed-cover and padded-grid construction for every variable bound.
+
+
+## Minimum reset generator and the typed upper clone
+
+`Reset/Generator.lean` interprets the reset symbol on `Fin 3` by
+`if j = 0 then 0 else max i j`. `Paper.reset_minimum_generator` compares every
+finite-arity identity with the winner-set interpretation and excludes every
+smaller finite carrier. `Algebra/SmallCarriers.lean` supplies the shared fact
+that any idempotent operation on at most two elements is associative. The
+three-point reset table is explicitly nonassociative. No additional semantic
+definition or external classification is used.
+
+`Definitions/CoreBasis.lean` also defines `Core.operation` as the interpretation
+of the actual owned symbol, `Core.join` by three distinct owned symbols,
+`upperChoice`/`upperStructure` on `Option C`, and `Native.collapseUpper`.
+`none` is the new upper-clone element; `some c` is the old element. Products
+with the new element use the displayed multiplication in the report.
+`Core.ModelLaws.ideal hC three e` is the induced substructure on
+`{c | Core.join three c e = e}`; its closure is proved from core identities.
+`Native.atomicRestriction R` has the lower marker and the atoms in R.
+`Native.restriction R` additionally has the upper marker; `collapseHom`
+identifies its upper and lower markers. These bundled proof constructions
+carry the induced operations, without new operations supplied by the user.
+`Paper.core_typed_upper_clone_cover` repeats every reflecting, typing, model,
+surjectivity and compatibility premise from the report. It builds the generated
+pair subalgebra and map rather than assuming a cover certificate.
+
+## Whole descriptor machine certificates
+
+`Complexity/RawRecords.lean` translates decoded dependent records to binary
+index/word pairs with exact two-way encoding bridges. `OptionTraversal.lean`
+proves charged traversal and optional-result composition rules in the native
+machine model. `NormalizeMachine.normalize_polyTime` and `normalizeWord_polyTime`
+certify the existing functions, including order and duplicate preservation.
+`ReachMachine.constructible_view` identifies the bounded record scan with the
+independent inductive `Constructible` predicate for every candidate table.
+`RecognitionMachine.check_polyTime` and `recognize_polyTime` certify the actual
+checker and external recognizer. Binary values never supply an uncharged clock:
+rounds are bounded by word width and every lookup scans actual encoded records.
+The public semantic and machine claims are combined in
+`Paper.reset_encoded_table_recognition` and `reset_record_normalization`.

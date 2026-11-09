@@ -4,7 +4,7 @@ The completion target remains the entire main paper, its substantive prose and
 necessary report dependencies. The claim inventory is authoritative for scope;
 the archived delivery history is not a remaining-work list. The orchestrated
 checkpoint has 8/23 main result rows complete, three partially checked;
-16/61 required catalog rows complete, four partial; and 4/18 required prose
+19/61 required catalog rows complete, three partial; and 4/18 required prose
 obligations complete. Baseline before parallel work was `01352a3` (5/23 main).
 These overlapping counts measure statements, not effort.
 
@@ -18,8 +18,8 @@ and manuscript evidence. Workers do not commit independently.
 | Workstream | Owner and paths | Current integration gate |
 | --- | --- | --- |
 | Owner algebra E, then policies F | `owner`: `Definitions/Owner.lean`, `Owner/`, `tests/Owner*`, `notes/integration/owner.md` | Root/guards and minimum four-state theory integrated; one-table semantics proved; synthesis saturation and forty-law completeness next |
-| Uniform core nonfinite basis I | `nonfinite_basis`: `Definitions/CoreBasis.lean`, `Core/`, `tests/CoreBasis*`, integration note | Uniform K-variable obstruction integrated; typed-cover and unbounded grid proof in staged development |
-| Machine complexity G | `complexity`: `Complexity/` except the shared facade, `tests/Complexity*`, integration note | Successor subset/prefix/block/dictionary/full descriptor machines integrated; normalization/equality/recognition and first hardness reduction next |
+| Uniform core nonfinite basis I | `nonfinite_basis`: `Definitions/CoreBasis.lean`, `Core/`, `tests/CoreBasis*`, integration note | Uniform K-variable obstruction integrated; typed-cover integrated; unbounded grid proof in staged development |
+| Machine complexity G | `complexity`: `Complexity/` except the shared facade, `tests/Complexity*`, integration note | Successor subset/prefix/block/dictionary/full descriptor machines integrated; whole normalization/recognition integrated; original-tree equality and first hardness reduction next |
 | Dependencies, strategic A/K/L and integration | root: shared files and strategic/round paths | Authorized branch and canonical analytic import/axiom gates passed; public-SPE compiler and sealed-round off-path bridge next |
 
 The successor probe is isolated under `/tmp/kfol-successor-gate`, with shared
@@ -37,7 +37,7 @@ passed 3266 jobs and the selected canonical analytic gate passed 3803 jobs.
 
 1. Completed: owner root/guard/minimum-generator statements and explicit
    three-role separators. One-table machine time remains partial.
-2. Completed: successor migration preserving the exact paper word language.
+2. Completed: successor migration and whole descriptor normalization/recognition, preserving the exact paper word language.
    Paper framing and native machine pairing stay explicitly separate.
 3. Certify the complete reset equality algorithm and the first 3SAT reduction,
    including malformed words and class transport. Output size alone is partial.

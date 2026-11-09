@@ -11,8 +11,8 @@ Its prerequisite-subset program has a polynomial-time certificate in the
 native deterministic multitape Turing-machine model. Root
 \texttt{Paper.lean} includes its exact membership-word codec, finite-set
 semantics and guard-enabling bridge, including rejection of unequal widths.
-This certifies a component; the full table-algorithm running-time and reduction
-claims retain their separate obligations.
+The complete descriptor machines below build on this component; original-tree
+equality and hardness reductions retain their separate obligations.
 
 \path{KFOL/Complexity/Framing}, \path{BlockScan}, \path{Dictionary} and
 \path{DescriptorValidation} certify complete prefix/block parsing, canonical
@@ -42,9 +42,15 @@ names and exact record fields. Recognition accepts exactly canonical candidates
 realized by reset trees, including unused dictionary positions, and supplies a
 primitive-tree witness of size at most $1+2N^2$ for $N$ descriptor bits.
 Duplicate records contribute once to the table; dominated guards are rejected.
+\path{KFOL/Complexity/RecognitionMachine} certifies this actual checker and
+external recognizer in native polynomial machine time, including malformed
+inputs. Its bounded scans agree with independent constructibility for every
+candidate table.
 
 \path{KFOL/Algorithms/Normalization} connects the executable raw-record filter
 to mathematical minimization, with idempotence and nonincreasing encoded size.
+\path{KFOL/Complexity/NormalizeMachine} certifies both dependent and external
+normalization in native polynomial machine time.
 Normalized original extraction passes recognition and recovers the original
 canonical tables. \path{KFOL/Algorithms/ResetEquation} proves a complete binary
 equation checker using shared support indices; it rejects malformed inputs and
@@ -63,6 +69,10 @@ ternary obstruction. No outside classification theorem is assumed.
 $K$-variable bases, using arbitrary-generator locality and an explicit valid
 $K+1$-variable exhaustion identity that fails natively. The stronger
 unbounded-variable nonfinite-basis construction remains separate.
+The typed upper-clone cover is also checked, including its generated-pair
+subalgebra and actual surjective homomorphism.
+\path{KFOL/Reset/Generator} proves the minimum three-element reset generator
+by full identity comparison and an exhaustive two-element exclusion.
 
 {\small
 \begin{longtable}{>{\raggedright\arraybackslash}p{0.34\linewidth}>{\raggedright\arraybackslash}p{0.60\linewidth}}
@@ -108,7 +118,8 @@ Compact realizability (\cref{reset:thm:synthesis})
  $1+2nM$ primitive-tree realization bound, executable recognition and synthesis correctness,
  and the equivalent local completeness condition. The bounded greedy test
  reaches every constructible target within its cardinality in rounds.
- Polynomial machine running time remains written.\\
+ Complete binary descriptor recognition has a native deterministic
+ polynomial-time certificate in root \texttt{Paper.lean}.\\
 Minimal clone (\cref{reset:thm:minimal})
  & Written; finite checks.\\
 Hardness reductions (\cref{gen:thm:complexity,thm:owner-free-hardness,thm:H-hardness,thm:raw-pairs})
@@ -197,7 +208,8 @@ Canonical atomic quotients and proof lifting (\cref{core:prop:atomic-uniform-lif
  on $32343$ input pairs.\\
 Grid countermodels and nonfinite basability
 (\cref{core:prop:grid-countermodel,core:lem:typed-upper-clone-cover,core:thm:core-nfb,core:cor:ambient-nfb})
- & Written uniform construction and arbitrary-coefficient locality proof.
+ & The typed-cover lemma is complete in root \texttt{Paper.lean}.
+ The uniform grid construction and arbitrary-coefficient locality proof remain written.
  Ordered row and column probes, private padding, and annotation rows
  give three protected-path inductions identifying the entire old ideal
  as a flat atomic triple. The intersecting blocks force failure of the
@@ -372,9 +384,9 @@ For the tractable fragment, \texttt{OwnerFragments.lean} proves the
 generic guard criterion and executable checker correctness, including
 \path{Term.single_table_equation_iff}, \path{Term.equationB_correct},
 and, in \texttt{OwnerModels.lean}, \path{Term.four_element_complete}.
-The minimum-generator proof uses Freese et al.'s three-element
-subalgebra theorem externally; its remaining ternary obstruction is
-kernel-checked as \path{three_state_obstruction}. Polynomial size bounds and the
+The migrated minimum-generator proof in \path{KFOL/Owner/Minimum} uses
+exhaustive kernel-checked reset tables, proved arbitrary-carrier transport
+and the ternary obstruction; it requires no outside classification theorem. Polynomial size bounds and the
 observer-relative complexity dichotomy are written deductions in
 \cref{app:proofs-owner}.
 The coloring proof has a generic Lean pigeonhole/guard certificate;

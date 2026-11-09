@@ -93,11 +93,76 @@ binary size of sparse names, valid zero versus malformed binary zero, and exact
 original-word output for the typed descriptor decoder. All finite checks use
 kernel `decide`.
 
+## Complete descriptor normalization
+
+`KFOL.Complexity.OptionTraversal.mapMWithInput_polyTime` certifies complete
+list traversal of any uniformly certified partial callback, including rejection
+at any element. `RawRecords.view_polyTime` reads the actual existing typed
+descriptor into native `(binary label list, list of (binary output, bitset))`
+data. `RawRecords.encodeData_polyTime` emits its exact original serialization.
+The projection and serializer satisfy `encodeData_view` without normalization.
+
+The complete unconditional normalization statements are:
+
+```lean
+ComputableInPolyTime KFOL.Algorithms.GuardDescriptor.normalize
+  KFOL.Complexity.DescriptorValidation.descriptorEncoding
+  KFOL.Complexity.DescriptorValidation.descriptorEncoding
+
+ComputableInPolyTime KFOL.Algorithms.GuardDescriptor.normalizeWord
+  encBits (encOption encBits)
+```
+
+These are `KFOL.Complexity.NormalizeMachine.normalize_polyTime` and
+`normalizeWord_polyTime`. The implementation scans the actual listed records,
+compares binary output indices and bitset inclusion, filters dominated guards,
+and emits the result. Its exact specification is the pre-existing pure
+`GuardDescriptor.normalize`: minimal repeated records retain their multiplicity
+and original order. The external machine validates complete original bits,
+rejects malformed words, and returns exactly the complete encoded normalized
+descriptor on success. There is no decoded natural-value loop clock.
+
+## Complete semantic realizability recognition
+
+`ReachMachine.constructible_polyTime` certifies greedy closure of the actual
+listed prerequisites. `ReachMachine.constructible_view` proves its Boolean
+answer equivalent to the independently defined `GuardTable.Constructible` for
+every descriptor and target. It assumes no antichain or well-formedness
+certificate. Every round scans the target's explicit width and the actual
+records; the clock is the target width. Output indices stay binary. Self-bit
+lookup uses a unary width to cap the binary output index before lookup.
+
+The complete unconditional recognizer statements are:
+
+```lean
+ComputableInPolyTime KFOL.Algorithms.GuardDescriptor.check
+  KFOL.Complexity.DescriptorValidation.descriptorEncoding encBool
+
+ComputableInPolyTime KFOL.Algorithms.GuardDescriptor.recognize encBits encBool
+```
+
+These are `KFOL.Complexity.RecognitionMachine.check_polyTime` and
+`recognize_polyTime`. The bridge is exact equality with the existing checker,
+via its independently proved well-formedness criterion. A native candidate
+scan checks unique unconditional output, root guards, antichains,
+self-exclusion and constructibility, and is then composed with the complete
+existing descriptor decoder. Sparse names, duplicate minimal records,
+dominated guards, cyclic construction dependencies, self-dependency, multiple
+unconditional outputs and malformed input are exercised in
+`tests/ComplexityRecognition.lean` using kernel `decide`.
+
+Production builds of `NormalizeMachine` and `RecognitionMachine` pass
+(`2065` and `2066` jobs respectively), as does strict compilation of the new
+regression file. The two normalization and two complete recognition endpoints,
+plus the construction bridge and construction machine theorem, depend only on
+`propext`, `Classical.choice` and `Quot.sound`.
+
 ## Remaining work
 
-This checkpoint completes the parser/validation stage, not the full reset
-algorithm runtime. The semantic reset pipeline, normalization and identity
-checker are already proved independently. Next implement certified decoded
-record traversals and compose them with those specifications to obtain whole
-normalization/equality or recognition machine bounds. Synthesis, substitution,
-and the end-to-end reset/union hardness reduction remain separate obligations.
+This checkpoint completes parser, validation, full binary descriptor
+normalization and complete polynomial semantic realizability recognition.
+Together with the existing semantic characterization and bounded realization,
+it discharges the recognition runtime clause of `reset:thm:synthesis`.
+It does not yet certify the whole original-tree equality algorithm. Machine
+construction of synthesis witnesses, substitution, and the end-to-end
+reset/union hardness reduction remain separate obligations.

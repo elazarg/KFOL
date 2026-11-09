@@ -15,6 +15,9 @@ public import KFOL.Core
 public import KFOL.Complexity.Framing
 public import KFOL.Complexity.BlockScan
 public import KFOL.Complexity.DescriptorValidation
+public import KFOL.Complexity.NormalizeMachine
+public import KFOL.Complexity.RecognitionMachine
+public import KFOL.Reset.Generator
 
 /-!
 # Kernel-checked paper claims
@@ -925,7 +928,7 @@ theorem reset_binary_descriptor_codec :
 
 /-- External canonical-table recognition, with all mathematical conditions
 spelled out and a real primitive-tree witness. This checks executable
-semantics and syntax-size bounds; machine running time remains separate. -/
+semantics, syntax-size bounds and native polynomial running time. -/
 theorem reset_encoded_table_recognition :
     (∀ d : Algorithms.GuardDescriptor, d.check = true ↔
       ∃ r : Fin d.labels.length,
@@ -939,9 +942,14 @@ theorem reset_encoded_table_recognition :
     (∀ word : List Bool, Algorithms.GuardDescriptor.recognize word = true ↔
       ∃ (d : Algorithms.GuardDescriptor) (t : Reset.Term (Fin d.labels.length)),
         word = Algorithms.GuardDescriptor.encode d ∧ t.table = d.guards ∧
-        t.size ≤ 1 + 2 * word.length * word.length) :=
+        t.size ≤ 1 + 2 * word.length * word.length) ∧
+    Turing.MultiTapeTM.ComputableInPolyTime Algorithms.GuardDescriptor.check
+      Complexity.DescriptorValidation.descriptorEncoding Turing.MultiTapeTM.encBool ∧
+    Turing.MultiTapeTM.ComputableInPolyTime Algorithms.GuardDescriptor.recognize
+      Turing.MultiTapeTM.encBits Turing.MultiTapeTM.encBool :=
   ⟨fun d => d.check_eq_true, Algorithms.GuardDescriptor.check_iff_bounded_realization,
-    Algorithms.GuardDescriptor.recognize_eq_true⟩
+    Algorithms.GuardDescriptor.recognize_eq_true,
+    Complexity.RecognitionMachine.check_polyTime, Complexity.RecognitionMachine.recognize_polyTime⟩
 
 /-- info: 'KFOL.Paper.reset_encoded_table_recognition' depends on axioms:
 [propext, Classical.choice, Quot.sound] -/
@@ -966,10 +974,16 @@ theorem reset_record_normalization :
       ∃ d : Algorithms.GuardDescriptor, Algorithms.GuardDescriptor.decode word = some d ∧
         output = Algorithms.GuardDescriptor.encode d.normalize ∧
         Algorithms.GuardDescriptor.decode output = some d.normalize ∧ output.length ≤ word.length ∧
-        Algorithms.GuardDescriptor.normalizeWord output = some output) := by
+        Algorithms.GuardDescriptor.normalizeWord output = some output) ∧
+    Turing.MultiTapeTM.ComputableInPolyTime Algorithms.GuardDescriptor.normalize
+      Complexity.DescriptorValidation.descriptorEncoding
+      Complexity.DescriptorValidation.descriptorEncoding ∧
+    Turing.MultiTapeTM.ComputableInPolyTime Algorithms.GuardDescriptor.normalizeWord
+      Turing.MultiTapeTM.encBits (Turing.MultiTapeTM.encOption Turing.MultiTapeTM.encBits) := by
   refine ⟨fun d => ⟨rfl, d.records_normalize_sublist, d.normalize_idempotent,
     d.length_normalize_le, d.guards_normalize, d.enabled_normalize⟩,
-    Algorithms.GuardDescriptor.normalizeWord_eq_none_iff, ?_⟩
+    Algorithms.GuardDescriptor.normalizeWord_eq_none_iff, ?_,
+    Complexity.NormalizeMachine.normalize_polyTime, Complexity.NormalizeMachine.normalizeWord_polyTime⟩
   intro word output h
   obtain ⟨d, hd, he, ho, hb⟩ := Algorithms.GuardDescriptor.normalizeWord_spec h
   exact ⟨d, hd, he, ho, hb, Algorithms.GuardDescriptor.normalizeWord_idempotent h⟩
@@ -1283,5 +1297,64 @@ theorem owner_minimum_generator {Role : Type u} {Var : Type v}
 [propext, Classical.choice, Quot.sound] -/
 #guard_msgs (whitespace := lax) in
 #print axioms KFOL.Paper.owner_minimum_generator
+
+/-- `reset:cor:generator`: the explicit three-element multiplication table
+has exactly the reset identities and is smallest among all finite generators. -/
+theorem reset_minimum_generator {Role : Type u} (three : Fin 3 ↪ Role) :
+    letI := Reset.structureOf (WinnerSet.reset (Role := Role))
+    letI := Reset.structureOf (fun i j : Fin 3 => if j = 0 then 0 else max i j)
+    Fintype.card (Fin 3) = 3 ∧
+    (∀ e : Equational.Identity Reset.Symbol, e.Holds (WinnerSet Role) ↔ e.Holds (Fin 3)) ∧
+    (∀ (M : Type v) [Fintype M] [(Equational.language Reset.Symbol).Structure M],
+      (∀ e : Equational.Identity Reset.Symbol, e.Holds (WinnerSet Role) ↔ e.Holds M) →
+        3 ≤ Fintype.card M) := by
+  let _ := Reset.structureOf (WinnerSet.reset (Role := Role))
+  let _ := Reset.structureOf (fun i j : Fin 3 => if j = 0 then 0 else max i j)
+  refine ⟨Fintype.card_fin 3, Reset.identity_iff_chain three, ?_⟩
+  intro M _ _ h
+  apply Reset.chain_minimum_generator
+  intro e
+  exact (Reset.identity_iff_chain three e).symm.trans (h e)
+
+/-- info: 'KFOL.Paper.reset_minimum_generator' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Paper.reset_minimum_generator
+
+open FirstOrder
+
+/-- `core:lem:typed-upper-clone-cover`: the reflecting-ideal typing and the
+compatible surjective cover imply that the upper clone belongs to the core
+variety. The ideal and native atomic restriction carry their actual induced
+operations; the conclusion requires no supplied presentation certificate. -/
+theorem core_typed_upper_clone_cover {Role : Type u} [DecidableEq Role]
+    {C : Type v} [(Equational.language (Equational.CoreSymbol Role)).Structure C]
+    {P : Type w} [(Equational.language (Equational.CoreSymbol Role)).Structure P]
+    (three : Fin 3 ↪ Role)
+    (hC : letI := Equational.coreStructure Role
+      Equational.InVariety (Equational.CoreSymbol Role) (WinnerSet Role) C)
+    (e : C)
+    (reflecting : ∀ (r : Role) (c : C),
+      Core.join three (Core.operation r e c) e = e → Core.join three c e = e)
+    (R : Set Role) (proper : R ≠ Set.univ)
+    (η : Core.ideal hC three e →[Equational.language (Equational.CoreSymbol Role)]
+      Core.Native.atomicRestriction R)
+    (typed : ∀ (c : Core.ideal hC three e) (r : Role),
+      (η c).val = Core.Native.atom r ↔ Core.operation r e c.val ≠ e)
+    (hP : letI := Equational.coreStructure Role
+      Equational.InVariety (Equational.CoreSymbol Role) (WinnerSet Role) P)
+    (q : P →[Equational.language (Equational.CoreSymbol Role)] C)
+    (onto : Function.Surjective q)
+    (label : P →[Equational.language (Equational.CoreSymbol Role)] Core.Native.atomicRestriction R)
+    (compatible : ∀ (u : P) (hu : Core.join three (q u) e = e), label u = η ⟨q u, hu⟩) :
+    letI := Equational.coreStructure Role
+    letI := Core.upperStructure (Role := Role) e
+    Equational.InVariety (Equational.CoreSymbol Role) (WinnerSet Role) (Option C) :=
+  Core.typed_upper_clone_cover three hC e reflecting R proper η typed hP q onto label compatible
+
+/-- info: 'KFOL.Paper.core_typed_upper_clone_cover' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Paper.core_typed_upper_clone_cover
 
 end KFOL.Paper
