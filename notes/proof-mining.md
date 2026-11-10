@@ -74,10 +74,11 @@ relations and predicates.
 One raw owned choice plus union also embeds faithfully in binary relations on
 `Option Role`, preserving actual relation union and composition. This regular
 representation is owner-specific and is not the document child relation.
-Its existence is a concrete instance of
-[Andréka (1991)](https://doi.org/10.1007/BF01190407): adjoin the empty set as
-an annihilating zero to obtain a distributive lattice-ordered semigroup, then
-forget meet. The direct construction uses K+1 points and remains kernel-checked.
+Its existence does not follow from a general theorem: not every
+semilattice-ordered semigroup is representable by union and composition, and
+the representable ones are not finitely axiomatizable (Andréka and Mikulás,
+Algebra Universalis 66, 2011, Section 3). The direct construction uses K+1
+points and is kernel-checked.
 Reset plus union has no such faithful representation: reset fails right
 distributivity. These generic results need no role finiteness assumption.
 
