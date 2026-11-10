@@ -1,4 +1,4 @@
-"""Core basis constructions, without a claim of a complete finite basis.
+"""Native core models and terms for the retained classification checks.
 
 The extra-marker algebra has one absorbing atom for every owner and two
 unabsorbed levels. Its small generated subalgebras are quotients of the
@@ -7,6 +7,7 @@ winner-set algebra, but it fails the owner-exhaustion identity.
 
 from dataclasses import dataclass
 from functools import lru_cache, reduce
+from itertools import product
 
 from fragments import owned, union, var
 
@@ -176,3 +177,14 @@ def binary_term(count, profile):
         if owners & (1 << i):
             term = owned(i, source, term)
     return term
+
+
+def exhaustion_holds(add, operations):
+    size = len(add)
+    for marker in range(size):
+        choices = [set(table[marker]) for table in operations]
+        for x, y, z in product(*choices):
+            cover = add[x][add[y][z]]
+            if add[marker][cover] != cover:
+                return False
+    return True

@@ -13,7 +13,7 @@ from core_atomic_basis import (atomic_basis, expand_core, lifting_basis,
                                normalization_consequences, variables)
 from core_basis import (MIXED_JOIN, MIXED_OPERATIONS, marker_join,
                         marker_own, mixed_absorption)
-from probe_core_basis import exhaustion_holds
+from core_basis import exhaustion_holds
 
 
 def operation_tables(carrier, join, choice, owners):

@@ -42,7 +42,7 @@ No required mathematical proof remains. Completed verification:
 - `python3 scripts/export_definition_surface.py --check --no-build`: the
   theorem-type graph and readable review index reproduce after the clean build.
 - `make paper`: both manuscripts build; the main paper remains 14 pages and
-  committed label snapshots are unchanged.
+  label snapshots are refreshed.
 
 Every authored proof closure uses only `propext`, `Classical.choice` and
 `Quot.sound` where needed. The pure algebra closure excludes GameTheory,
@@ -76,3 +76,10 @@ The Boolean impossibility quantifies Boolean-only encodings and contexts.
 Finite-action public choice, exponential circuit tables, diagonal security and
 the exact semantic definition of reset tables now have explicit Paper clauses.
 The three previously omitted prose claims are independent inventory obligations.
+
+
+The Python suite is now the explicit 33-entry list in the Makefile, mapped to
+current paper/report claims in `checks/README.md` and the verification appendix.
+Superseded core-basis exploration, probes, unused helpers and unused inputs
+were pruned; the current padded-grid proof and retained classification checks
+remain covered. Historical exploration is available at revision `c5723ac`.

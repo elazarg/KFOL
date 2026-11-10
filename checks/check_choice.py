@@ -1,6 +1,7 @@
 """Checks for the small owned-choice fragment. Only binary choice and atoms.
 
-The generic union and single-use results are checked separately in Basic.lean.
+Generic neutral union is proved in KFOL/Strategic/Adequacy.lean.
+The report gives the single-use occurrence argument; this script checks finite cases.
 The unary closure below is exhaustive at K=3; template synthesis is exhaustive
 over the proposed unary normal forms at K=3 and K=4.
 """
