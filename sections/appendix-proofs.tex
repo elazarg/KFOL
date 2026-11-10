@@ -1,6 +1,6 @@
 \section{Proofs and further results}\label{app:proofs}
 
-This appendix follows the order of the paper. Arguments given in full there are not repeated. As in the paper, $K\geq3$ throughout. We say \emph{atomic} for inputs that are atoms.
+This appendix follows the order of the paper. Arguments given in full there are not repeated. As in the paper, $K\geq3$ unless stated otherwise. We say \emph{atomic} for inputs that are atoms. The public-choice argument also gives a sharp finite support bound for arbitrary action sets; the scalar argument extends to all two-player components and yields finite threshold state bounds.
 
 \subsection{Owned choice}\label{app:proofs-rational}
 
@@ -45,6 +45,35 @@ choose a losing-for-owner SPE in every unchosen continuation; this realizes
 every winner of every continuation. Thus the value is the fold of
 $\star_r$ over $A$, and a binary fold of the continuation games has exactly
 the same possible SPE winners.
+
+\begin{proposition}[Sharp finite support]\label{game:prop:choice-support}
+For finite $K\geq2$, let a public $r$-decision have an arbitrary nonempty
+action set, with a finite public game at each continuation. Its complete
+possible SPE winner set is represented by a nonempty selection of at most
+$K-1$ original continuations. A binary public game using only the selected
+continuations has the same possible SPE winners. The bound is sharp.
+\end{proposition}
+\begin{proof}
+The preceding full-profile argument applies also to an arbitrary action set:
+if an owner-atom continuation exists it determines the value; otherwise
+the value is the union of all continuation values. In the first case,
+select that one continuation.
+
+In the second case every continuation value contains a nonowner role.
+For each nonowner role in the union, choose a continuation containing it.
+If the union contains $r$, first choose an anchor continuation containing
+$r$ and a nonowner role $s$ in that anchor, and use the anchor as the
+representative for $s$. Then all winners, including $r$, are covered by
+at most one continuation per nonowner role. The finite selection has the
+same union and no owner atom, so its binary $\star_r$-fold has the required
+value. For sharpness, take one terminal continuation for each nonowner
+role; every one is needed to retain all $K-1$ winners.
+\end{proof}
+
+This is a bound on the support of the winner observation after continuation
+games are fixed. The proof does not require the action set to be finite;
+it selects a finite subfamily whose fold is a least upper bound in the
+owned-choice semilattice.
 
 For associativity of $\star_r$, a three-input product is $\{r\}$ if any input is $\{r\}$, and is their union otherwise; nonemptiness ensures that a union of inputs different from $\{r\}$ cannot become $\{r\}$. Role permutations transport the
 operations and the leaf constants. External renaming of the roles permutes the operations of every signature. Each $\star_r$ is associative, commutative, and idempotent. 
@@ -1365,6 +1394,46 @@ Each step $L_{n+1}=D(L_n,\at a)$ adds one round and only one occurrence of its p
 The first separator uses rates $1/2$ and $1/3$, against an outside component with probabilities $1/2$ for each of players $a,c$. The first input ties and permits player $b$ to win; the second loses the comparison and excludes player $b$. The obstruction already occurs in the fragment where off-path beliefs and retained private information have been eliminated by
 full revelation.
 
+\begin{proposition}[Finite threshold state bound]\label{se:prop:threshold-states}
+For every $N\geq0$, the $N$ Boolean contexts $F_1,\ldots,F_N$
+distinguish all $N+1$ games $G_0,\ldots,G_N$ from
+\cref{se:thm:infinite}, using only the possible victory of $c$.
+Any assignment of summaries to these games for which equal summaries
+preserve those $N$ observations is injective, and its carrier has
+at least $N+1$ elements. No compositionality assumption is needed.
+\end{proposition}
+\begin{proof}
+By \cref{se:thm:infinite}, $c$ can win in $F_m[G_n]$ exactly when
+$m\leq n$. If $i<j\leq N$, probe $F_{i+1}$ rejects $G_i$ and
+accepts $G_j$. Equal summaries therefore force equal indices.
+\end{proof}
+
+The scalar syntax is not essential to the observation argument.
+
+\begin{proposition}[Boolean observation of two-winner components]\label{se:prop:pair-observation}
+Let $a,b,c$ be distinct. Consider finite round games in which only
+$a,b$ have nontrivial action menus and every terminal winner belongs to
+$\{a,b\}$. For any two such games, equality of their sequential-equilibrium
+winner-law sets is equivalent to equality of $c$'s possible-victory
+observations in every Boolean context. It is also equivalent to equality
+of the full possible-winner sets in those contexts. The components may
+have arbitrary finite action menus. A countable family of one-hole
+contexts suffices: public $a$-choice against a rational scalar component
+over $a,c$, synthesized using only leaves, complement, and $U$.
+\end{proposition}
+\begin{proof}
+The two-player constant-sum argument gives each component a unique
+winner law $x\delta_a+(1-x)\delta_b$, with $x\in[0,1]$.
+Equality of these laws is preserved by every round context.
+For unequal values $x<y$, choose a rational $x<t<y$ and synthesize
+a component with law $t\delta_a+(1-t)\delta_c$.
+Public choice owned by $a$ selects this rival against $x$ and the
+input against $y$. Thus $c$ can win only after the first input.
+The comparison has one hole and Boolean menus, and so does the
+closed rational rival. This separates the laws using the asserted
+countable family, and therefore also separates the full winner sets.
+\end{proof}
+
 \begin{corollary}[Scalar full abstraction]\label{se:cor:scalar}
 For closed components in the scalar fragment with the same
 active pair, equality of scalar values is exactly contextual
@@ -1372,14 +1441,18 @@ equivalence for possible SE winners in the three-role round language.
 It suffices to observe the third role's possible victory.
 \end{corollary}
 \begin{proof}
-Equal values give equal singleton distribution sets, which
-\eqref{se:eq:round} preserves in every context, including repeated
-independent occurrences. For values $v<w$, choose a rational
-$v<t<w$. Realize a component of value $t$ between player $a$ and the
-third player $c$, using \cref{se:thm:rational}. A public choice owned
-by $a$ selects this outside component against value $v$, permitting
-$c$ to win, and selects the input against $w$, excluding $c$.
+Scalar components use only the designated pair and have singleton winner
+laws determined by their scalar values. Apply \cref{se:prop:pair-observation}
+for separation. Equality of laws is preserved in every round context by
+\eqref{se:eq:round}, including repeated independent occurrences.
 \end{proof}
+
+The same probes recover the scalar order, not just equality. Against
+a rival with scalar $t<1$, $c$ can win exactly when $x\leq t$:
+the strict comparison chooses the rival below the threshold, and the
+tie permits it too. Consequently $x\leq y$ exactly when every
+rational-probe victory of $c$ against $y$ also occurs against $x$.
+A rational strictly between two unequal values proves the converse.
 
 \paragraph{What the interface composes.}
 The round operator unifies public and sealed choices in one finite binder scheme. Full publication allows continuation equilibria to be selected independently at each public action tuple, and removes a separate belief parameter from the algebra. Before that boundary the commitments cannot be treated as sequential public choices: revealing one matching-pennies

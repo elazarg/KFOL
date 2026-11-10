@@ -2,7 +2,7 @@ module
 
 public import KFOL.Reductions.Circuits.Builder
 public import KFOL.Reductions.Circuits.Unfold
-public import KFOL.Reset.Tables
+public import KFOL.Reset.Extraction
 
 /-! A linear shared reset graph can have exponentially many minimal guards.
 The explicit selector family is independent of hardness or running-time claims. -/
@@ -108,15 +108,82 @@ theorem guard_subset_iff (n : ℕ) (first second : Fin n → Bool) :
   · rintro rfl
     exact Finset.Subset.refl _
 
-/-- A proved family of 2^n distinct minimal guards in the actual canonical
-reset table. No enumeration or unproved finite exhaustiveness is used. -/
-theorem exponential_table (n : ℕ) : 2^n ≤ ((tree n).table markerName).card := by
-  have hsubset : Finset.univ.image (guard n) ⊆ (tree n).table markerName := by
-    intro A hA
+/-- Every successful status set contains one of the displayed binary guards.
+The orientation chooses the positive rail whenever it is available. -/
+theorem exists_guard_subset_of_selected (n : ℕ) (B : Set Variable)
+    (selected : (tree n).Selected B markerName) :
+    ∃ orientation : Fin n → Bool, (guard n orientation : Set Variable) ⊆ B := by
+  classical
+  obtain ⟨hroot,hpairs⟩ := (selected_marker n B).mp selected
+  let orientation : Fin n → Bool := fun i => if rail i.val true ∈ B then true else false
+  refine ⟨orientation,?_⟩
+  intro x hx
+  rcases Finset.mem_insert.mp hx with rfl | hx
+  · exact hroot
+  · obtain ⟨i,_,rfl⟩ := Finset.mem_image.mp hx
+    by_cases hp : rail i.val true ∈ B
+    · simpa only [orientation,ite_eq_left hp] using hp
+    · have hn := (hpairs i.val i.isLt).resolve_left hp
+      simpa only [orientation,ite_eq_right hp] using hn
+
+/-- The actual canonical table is precisely the product of the n independent
+binary rail choices, with the common root prerequisite added to every guard. -/
+theorem table_marker_eq (n : ℕ) :
+    (tree n).table markerName = Finset.univ.image (guard n) := by
+  apply Finset.Subset.antisymm
+  · intro A hA
+    have hselected := ((tree n).mem_table_iff markerName A).mp hA
+    obtain ⟨orientation,hsubset⟩ := exists_guard_subset_of_selected n (A : Set Variable) hselected.1
+    have hguard := guard_mem_table n orientation
+    have he : guard n orientation = A := (tree n).table_antichain markerName hguard hA hsubset
+    exact Finset.mem_image.mpr ⟨orientation,Finset.mem_univ _,he⟩
+  · intro A hA
     obtain ⟨orientation,_,rfl⟩ := Finset.mem_image.mp hA
     exact guard_mem_table n orientation
-  have hcard := Finset.card_le_card hsubset
-  rw [Finset.card_image_of_injective _ (guard_injective n)] at hcard
-  simpa using hcard
+
+/-- Exact exponential table size, with proved exhaustiveness. -/
+theorem card_table_marker (n : ℕ) : ((tree n).table markerName).card = 2^n := by
+  rw [table_marker_eq,Finset.card_image_of_injective _ (guard_injective n)]
+  simp
+
+/-- Every canonical guard has the same size: one common root and n rails. -/
+theorem card_guard (n : ℕ) (orientation : Fin n → Bool) :
+    (guard n orientation).card = n+1 := by
+  have hroot : rootName ∉ Finset.univ.image (fun i : Fin n => rail i.val (orientation i)) := by
+    simp [rootName,rail]
+  have hinjective : Function.Injective (fun i : Fin n => rail i.val (orientation i)) := by
+    intro i j he
+    exact Fin.ext (congrArg (fun x : ℕ × Bool => x.1) (Sum.inr.inj he))
+  rw [guard,Finset.card_insert_of_notMem hroot,Finset.card_image_of_injective _ hinjective]
+  simp
+
+theorem card_mem_table_marker (n : ℕ) {A : Finset Variable}
+    (hA : A ∈ (tree n).table markerName) : A.card = n+1 := by
+  rw [table_marker_eq] at hA
+  obtain ⟨orientation,_,rfl⟩ := Finset.mem_image.mp hA
+  exact card_guard n orientation
+
+/-- The marker payload alone has exactly (n+1)2^n prerequisite occurrences. -/
+theorem sum_guard_card_marker (n : ℕ) :
+    ∑ A ∈ (tree n).table markerName, A.card = (n+1)*2^n := by
+  calc
+    _ = ∑ _A ∈ (tree n).table markerName, (n+1) :=
+      Finset.sum_congr rfl (fun _ hA => card_mem_table_marker n hA)
+    _ = (n+1)*2^n := by simp [card_table_marker,Nat.mul_comm]
+
+/-- The exhibited unfolded tree attains the marker-occurrence lower bound. -/
+theorem occurrences_marker_tree (n : ℕ) : (tree n).occurrences markerName = 2^n := by
+  induction n with
+  | zero => decide
+  | succ n ih =>
+    simp only [tree,Reset.Term.occurrences_step,Reset.Term.occurrences_var,ih]
+    simp only [markerName,rootName,rail,Sum.inl_ne_inr,ite_false,Bool.true_eq_false,
+      Sum.inl.injEq,Nat.add_zero]
+    rw [pow_succ]
+    omega
+
+/-- The exact table count gives the exponential lower bound. -/
+theorem exponential_table (n : ℕ) : 2^n ≤ ((tree n).table markerName).card := by
+  simpa only [card_table_marker] using Nat.le_refl (2^n)
 
 end KFOL.Circuit.LargeTables

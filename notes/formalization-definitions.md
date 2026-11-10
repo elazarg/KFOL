@@ -1412,11 +1412,12 @@ correct; it does not assume dictionary position zero is the root.
 
 The [readable review index](paper-definition-surface.md) and machine-readable
 [public-type dependency surface](paper-definition-surface.json)
-record all 132 public theorem types. They reach 1,012 project semantic
+record all 138 public theorem types. They reach 1,014 project semantic
 declarations in 57 source files, of which 18 are central definition files.
-Generated declarations are grouped into 565 written source review units;
-11 derived declarations have file-level locations. The four review fixes
-above are included in their corresponding per-theorem slices.
+Generated declarations are grouped into 567 written source review units;
+11 derived declarations have file-level locations. The review fixes and the six proof-mining additions are included in their
+corresponding per-theorem slices. No new independent semantic definitions were
+needed for the additions.
 
 The extractor follows semantic/computational definition bodies and types,
 erases proof-valued subterms under binders, and never follows theorem proof

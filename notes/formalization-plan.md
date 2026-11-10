@@ -1,6 +1,6 @@
 # KFOL formalization design and implementation plan
 
-The target is a complete formalization of **the main paper `main.tex`, including its substantive prose claims, and the parts of the technical report needed for those claims**. Root `Paper.lean` repeats the complete main-paper propositions; a small collection of definition modules supplies an auditable meaning, and reusable proof modules supply the proofs. The entire technical report is not a completion target. This document records the implemented design and completion gates; the status board records completed verification, and the inventory records current statement-level evidence. All 23 main result rows, 62 required catalog rows and 21 required prose obligations now have complete checked proofs.
+The target is a complete formalization of **the main paper `main.tex`, including its substantive prose claims, and the parts of the technical report needed for those claims**. Root `Paper.lean` repeats the complete main-paper propositions; a small collection of definition modules supplies an auditable meaning, and reusable proof modules supply the proofs. The entire technical report is not a completion target. This document records the implemented design and completion gates; the status board records completed verification, and the inventory records current statement-level evidence. All 23 main result rows, 63 required catalog rows and 21 required prose obligations now have complete checked proofs.
 
 The manuscript baseline is revision `6dff3f067151b9fc1cf9b9944718cf39a72d7447`. The single production development uses Lean/mathlib 4.35.0. The former 22 Std modules were retired at this review; their historical sources remain at revision `7014dbb`. `sections/appendix-verification.tex` is the starting evidence inventory. The existing proofs are valuable migration inputs, but a finite certificate, a specialized three-owner proof, and a generic theorem are distinct deliverables.
 
@@ -333,3 +333,12 @@ choice is connected to an independent full-profile/deviation model; exponential
 DAG tables and explicit diagonal security laws are also proved. Root Paper
 states the semantic minimal-ambiguity characterization of reset tables. These
 review fixes strengthen the public contract without silently dropping remarks.
+
+
+The completed [proof-mining session](proof-mining.md) strengthens the report
+without adding required work packages. The general observation proposition is
+one additional completed dependency of the rewritten scalar corollary. Six
+additional literal Paper statements
+cover arbitrary-action finite support, exact circuit-table and semantic tree
+bounds, finite Boolean threshold coding, pair-game observation completeness,
+and reconstruction of the scalar order. The main paper remains unchanged.

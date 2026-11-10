@@ -13,6 +13,7 @@ import all KFOL.Algebra.Atomic.Necessity
 import all KFOL.Algebra.Atomic.OneConstant
 import all KFOL.Algebra.Atomic.Unary
 import all KFOL.Algebra.Basic
+import all KFOL.Algebra.ChoiceSupport
 import all KFOL.Algebra.CommonSource
 import all KFOL.Algebra.IdempotencyTestCard
 import all KFOL.Algebra.IdempotencyTests
@@ -305,6 +306,7 @@ import all KFOL.Reductions.Circuits.Basic
 import all KFOL.Reductions.Circuits.Builder
 import all KFOL.Reductions.Circuits.LargeTables
 import all KFOL.Reductions.Circuits.LargeTables.Graph
+import all KFOL.Reductions.Circuits.LargeTables.Succinctness
 import all KFOL.Reductions.Circuits.ResetCNF
 import all KFOL.Reductions.Circuits.Satisfying
 import all KFOL.Reductions.Circuits.Transfers
@@ -355,6 +357,7 @@ import all KFOL.Reset.Realizability.Records
 import all KFOL.Reset.Realizability.Size
 import all KFOL.Reset.Realizability.Synthesis
 import all KFOL.Reset.Selection
+import all KFOL.Reset.SemanticBounds
 import all KFOL.Reset.Substitution
 import all KFOL.Reset.Tables
 import all KFOL.Rounds.Consistency
@@ -398,6 +401,7 @@ import all KFOL.Rounds.Scalar.Fragment
 import all KFOL.Rounds.Scalar.FullAbstraction
 import all KFOL.Rounds.Scalar.Infinite
 import all KFOL.Rounds.Scalar.Nash
+import all KFOL.Rounds.Scalar.PairFullAbstraction
 import all KFOL.Rounds.Scalar.Rational
 import all KFOL.Rounds.Scalar.Reciprocal
 import all KFOL.Rounds.Scalar.Security
@@ -426,6 +430,7 @@ import all KFOL.Rounds.Values
 import all KFOL.Strategic
 import all KFOL.Strategic.Adequacy
 import all KFOL.Strategic.Basic
+import all KFOL.Strategic.ChoiceSupport
 import all KFOL.Strategic.Compilation
 import all KFOL.Strategic.Examples
 import all KFOL.Strategic.FiniteChoices

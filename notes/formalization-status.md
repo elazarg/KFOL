@@ -3,9 +3,9 @@
 The completion target is the entire main paper, its substantive prose and
 necessary report dependencies. The inventory is authoritative for scope.
 The complete main-paper scope is proved: **23/23 main result rows**,
-**62/62 required catalog rows**, and **21/21 required prose obligations**.
-Root `Paper.lean` contains **132 full public statements**, each with a guarded
-axiom check. The review-fix production build, all regressions, audits and manuscript checks pass.
+**63/63 required catalog rows**, and **21/21 required prose obligations**.
+Root `Paper.lean` contains **138 full public statements**, each with a guarded
+axiom check. The proof-mining production build, all regressions, audits and manuscript checks pass.
 Report-only results remain optional; the historical related-work artifact is
 separately rebuilt and audited under its original pins.
 
@@ -21,7 +21,7 @@ then commits coherent integrations after complete checks.
 | Native reset circuits and synthesis | `owner` | Original-word reset/Fin-three coNP-completeness and native primitive-tree synthesis with independent root/table/winner semantics | Complete |
 | Hardness and review | `nonfinite_basis` | Native DAG generator, full/public/core hardness, certificate bounds, canonicalizer consequence and final semantic scope review | Complete |
 | Full/public/core complexity | `complexity` | All six fixed/uniform endpoints; original-word sparse counterverifier, explicit-array validation, quadratic certificates and arbitrary padding | Complete; definition-surface report reproduced |
-| Owner branches and integration | root | Complete raw/owner/policy dichotomies, 132 literal Paper statements, claim reconciliation and pinned historical rebuild | Complete |
+| Owner branches and integration | root | Complete raw/owner/policy dichotomies, 138 literal Paper statements, claim reconciliation and pinned historical rebuild | Complete |
 
 The production pins are GameTheory `6f1af625b77215dd9e4454e6120275dbd8b61f51`
 from `port/cslib-complexity`, ComplexityLib
@@ -35,10 +35,10 @@ libraries. All round mathematics is complete against actual canonical SE.
 No required mathematical proof remains. Completed verification:
 
 - `make check-lean`: independent algebra build/import
-  audit, full Paper/whole-project axiom audit, negative import check and all 83 strict Lean regressions pass.
+  audit, full Paper/whole-project axiom audit, negative import check and all 85 strict Lean regressions pass.
 - `make check-python`: all independent Python checks pass.
-- `python3 scripts/check_inventory.py`: 146 source statements, 23 prose
-  obligations, current evidence fingerprints and 132 public statements reconcile.
+- `python3 scripts/check_inventory.py`: 149 source statements, 23 prose
+  obligations, current evidence fingerprints and 138 public statements reconcile.
 - `python3 scripts/export_definition_surface.py --check --no-build`: the
   theorem-type graph and readable review index reproduce after the clean build.
 - `make paper`: both manuscripts build; the main paper remains 14 pages and
@@ -83,3 +83,17 @@ current paper/report claims in `checks/README.md` and the verification appendix.
 Superseded core-basis exploration, probes, unused helpers and unused inputs
 were pruned; the current padded-grid proof and retained classification checks
 remain covered. Historical exploration is available at revision `c5723ac`.
+
+
+The [proof-mining session](proof-mining.md) adds six full public statements
+while preserving all main-paper statements. Three report propositions
+record sharp K−1 support for arbitrary root action families, a finite threshold
+state lower bound, and Boolean observation completeness for arbitrary pair-only
+games. The shared-circuit proposition now gives exact tables and exponential
+bounds on every semantically equivalent reset tree. Rational probes also recover
+the scalar order. The source catalog has 149 rows, including these new
+report results; all 63 required rows are complete. The rewritten scalar corollary
+uses the general observation proposition, which is recorded as one additional
+completed proof dependency. No independent semantic
+definitions were added, and the generated public-type surface now has 138
+statements reaching 1,014 semantic declarations in the same 57 files.

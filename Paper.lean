@@ -1,8 +1,8 @@
 module
 
 public import KFOL.Algebra
-public import KFOL.Reductions.Circuits.LargeTables.Graph
-public import KFOL.Strategic.FiniteChoices
+public import KFOL.Reductions.Circuits.LargeTables.Succinctness
+public import KFOL.Strategic.ChoiceSupport
 public import KFOL.Rounds.Scalar.Security
 public import KFOL.Complexity.FullCompleteness
 public import KFOL.Complexity.ResetSynthesisMachine
@@ -12,7 +12,7 @@ public import KFOL.Complexity.Canonicalization
 public import KFOL.Complexity.OwnerObservationFrontend
 public import KFOL.Complexity.CoreExtractionWord
 public import KFOL.Rounds.Scalar.BooleanInfinite
-public import KFOL.Rounds.Scalar.FullAbstraction
+public import KFOL.Rounds.Scalar.PairFullAbstraction
 public import KFOL.Rounds.Scalar.Fragment
 public import KFOL.Rounds.TwoPlayers.Support
 public import KFOL.Rounds.TwoPlayers.Values
@@ -3241,5 +3241,148 @@ theorem reset_circuit_exponential_tables (n : ℕ) :
 [propext, Classical.choice, Quot.sound] -/
 #guard_msgs (whitespace := lax) in
 #print axioms KFOL.Paper.reset_circuit_exponential_tables
+
+/-- `reset:prop:large-circuit-table`: exact guard counts and the minimum
+marker-occurrence budget hold for every semantically equivalent reset tree. -/
+theorem reset_circuit_tree_succinctness (n : ℕ) :
+    ∃ (equation : Circuit.Equation Reset.Symbol (Bool ⊕ (ℕ × Bool)))
+      (term : Reset.Term (Bool ⊕ (ℕ × Bool))),
+      equation.WellFormed ∧ equation.gates.length = 6*n+3 ∧
+      equation.gates.countP (fun gate => match gate with | .input _ => true | .func _ _ => false) = 2*n+2 ∧
+      Circuit.operationCount equation.gates = 4*n+1 ∧
+      Circuit.edgeCount equation.gates = 8*n+2 ∧
+      equation.unfold = some (term,term) ∧
+      (term.table (.inl true)).card = 2^n ∧
+      (∀ A ∈ term.table (.inl true), A.card = n+1) ∧
+      term.occurrences (.inl true) = 2^n ∧
+      ∀ (Role : Type u) (_three : Fin 3 ↪ Role) (other : Reset.Term (Bool ⊕ (ℕ × Bool))),
+        (∀ valuation : (Bool ⊕ (ℕ × Bool)) → WinnerSet Role,
+          other.eval valuation = term.eval valuation) →
+        2^n ≤ other.occurrences (.inl true) ∧
+          2^n+1 ≤ other.leafCount ∧ 2^(n+1)+1 ≤ other.size := by
+  obtain ⟨hwf,hsize,hops,hunfold,_⟩ := Circuit.LargeTables.linear_graph_exponential_table n
+  exact ⟨Circuit.LargeTables.graph n,Circuit.LargeTables.tree n,hwf,hsize,
+    Circuit.LargeTables.graph_input_gate_count n,hops,
+    Circuit.LargeTables.graph_edge_count n,hunfold,Circuit.LargeTables.card_table_marker n,
+    fun _ hA => Circuit.LargeTables.card_mem_table_marker n hA,
+    Circuit.LargeTables.occurrences_marker_tree n,
+    fun _ three other equal => ⟨Circuit.LargeTables.marker_occurrences_le_of_eval_eq three n other equal,
+      Circuit.LargeTables.leafCount_lower_of_eval_eq three n other equal,
+      Circuit.LargeTables.size_lower_of_eval_eq three n other equal⟩⟩
+
+/-- info: 'KFOL.Paper.reset_circuit_tree_succinctness' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Paper.reset_circuit_tree_succinctness
+
+/-- `se:prop:threshold-states`: N actual Boolean probes already require
+N+1 summary states, without a compositionality hypothesis. -/
+theorem boolean_threshold_state_lower_bound {Role : Type u} [Fintype Role] [DecidableEq Role]
+    (a b c : Role) (hab : a ≠ b) (hac : a ≠ c) (hbc : b ≠ c)
+    (order : GameTheory.Languages.Bridges.FOSGToEFG.ExplicitOrder Role)
+    (N : ℕ) {Summary : Type v} [Fintype Summary] (code : Fin (N+1) → Summary)
+    (adequate : ∀ n k, code n = code k → ∀ m : Fin N,
+      (c ∈ Rounds.Game.possibleWinners
+        ((Rounds.Game.threshold a b c n.val (m.val+1)).sequentialValues order) ↔
+       c ∈ Rounds.Game.possibleWinners
+        ((Rounds.Game.threshold a b c k.val (m.val+1)).sequentialValues order))) :
+    Function.Injective code ∧ N+1 ≤ Fintype.card Summary :=
+  ⟨Rounds.Game.Scalar.finite_threshold_codes_injective a b c hab hac hbc order N code adequate,
+    Rounds.Game.Scalar.finite_threshold_summary_card_lower a b c hab hac hbc order N code adequate⟩
+
+/-- info: 'KFOL.Paper.boolean_threshold_state_lower_bound' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Paper.boolean_threshold_state_lower_bound
+
+/-- `se:prop:pair-observation`: arbitrary two-player components are fully
+observed by Boolean contexts, or just the countable rational comparison family. -/
+theorem pair_game_boolean_full_abstraction {Role : Type u} [Fintype Role] [DecidableEq Role]
+    (a b c : Role) (hab : a ≠ b) (hac : a ≠ c) (hbc : b ≠ c)
+    (left right : Rounds.Game Role) (hleft : left.UsesOnly a b) (hright : right.UsesOnly a b)
+    (order : GameTheory.Languages.Bridges.FOSGToEFG.ExplicitOrder Role) :
+    Countable {probe : Rounds.Game.ScalarTerm // probe.UnaryGenerated} ∧
+    (left.sequentialValues order = right.sequentialValues order ↔
+      ∀ context : Rounds.Game.Context Role, context.BooleanMenus →
+        (c ∈ Rounds.Game.possibleWinners ((context.fill left).sequentialValues order) ↔
+         c ∈ Rounds.Game.possibleWinners ((context.fill right).sequentialValues order))) ∧
+    (left.sequentialValues order = right.sequentialValues order ↔
+      ∀ context : Rounds.Game.Context Role, context.BooleanMenus →
+        Rounds.Game.possibleWinners ((context.fill left).sequentialValues order) =
+          Rounds.Game.possibleWinners ((context.fill right).sequentialValues order)) ∧
+    (left.sequentialValues order = right.sequentialValues order ↔
+      ∀ probe : Rounds.Game.ScalarTerm, probe.UnaryGenerated →
+        (c ∈ Rounds.Game.possibleWinners
+          ((Rounds.Game.publicChoice a left (probe.game a c)).sequentialValues order) ↔
+         c ∈ Rounds.Game.possibleWinners
+          ((Rounds.Game.publicChoice a right (probe.game a c)).sequentialValues order))) :=
+  ⟨inferInstance,Rounds.Game.TwoPlayers.sequentialValues_eq_iff_boolean_observation left right a b c hab hac hbc
+      hleft hright order,
+    Rounds.Game.TwoPlayers.sequentialValues_eq_iff_boolean_winners left right a b c hab hac hbc
+      hleft hright order,
+    Rounds.Game.TwoPlayers.sequentialValues_eq_iff_rational_observation left right a b c hab hac hbc
+      hleft hright order⟩
+
+/-- info: 'KFOL.Paper.pair_game_boolean_full_abstraction' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Paper.pair_game_boolean_full_abstraction
+
+/-- `game:prop:choice-support`: the complete SPE winner observation of an
+arbitrary nonempty public action family has support at most K-1, K≥2. -/
+theorem public_choice_small_support {Role : Type u} {Index : Type v}
+    [Fintype Role] [Nontrivial Role] [Nonempty Index]
+    (owner : Role) (branches : Index → Strategic.Tree Role) :
+    ∃ (S : Finset Index) (_ : S.Nonempty) (term : Term Role S),
+      S.card ≤ Fintype.card Role - 1 ∧ term.IsCore ∧
+      Strategic.possibleWinners (Strategic.compile (fun i : S => branches i.val) term) =
+        Strategic.FiniteChoice.possibleWinners owner branches :=
+  Strategic.FiniteChoice.exists_small_binary_tree owner branches
+
+/-- info: 'KFOL.Paper.public_choice_small_support' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Paper.public_choice_small_support
+
+/-- The K-1 support bound is attained by the nonowner terminal actions. -/
+theorem public_choice_support_sharp {Role : Type u} [Fintype Role] [DecidableEq Role]
+    (owner : Role) :
+    Strategic.FiniteChoice.possibleWinners owner
+      (fun i : {r : Role // r ≠ owner} => Strategic.Tree.leaf i.val) = {r | r ≠ owner} ∧
+    ∀ (S : Finset Role) (_hS : S.Nonempty), owner ∉ S →
+      Strategic.FiniteChoice.possibleWinners owner (fun i : S => Strategic.Tree.leaf i.val) =
+        {r | r ≠ owner} →
+      S = Finset.univ.erase owner ∧ S.card = Fintype.card Role - 1 := by
+  constructor
+  · rw [Strategic.FiniteChoice.possibleWinners_eq]
+    simp [Strategic.value_leaf, Strategic.possibleWinners_leaf, WinnerSet.singleton_inj]
+  · exact fun S hS hn he => Strategic.FiniteChoice.terminal_support_sharp owner S hS hn he
+
+/-- info: 'KFOL.Paper.public_choice_support_sharp' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Paper.public_choice_support_sharp
+
+/-- Rational Boolean rival observations recover the exact scalar order;
+a larger scalar permits fewer victories by the third observer. -/
+theorem scalar_rational_observation_order {Role : Type u} [Fintype Role] [DecidableEq Role]
+    (a b c : Role) (hab : a ≠ b) (hac : a ≠ c) (hbc : b ≠ c)
+    (left right : Rounds.Game Role)
+    (order : GameTheory.Languages.Bridges.FOSGToEFG.ExplicitOrder Role)
+    (x y : ℝ) (hx0 : 0 ≤ x) (hx1 : x ≤ 1) (hy0 : 0 ≤ y) (hy1 : y ≤ 1)
+    (hleft : left.sequentialValues order = {Rounds.Game.Scalar.distribution a b x hx0 hx1})
+    (hright : right.sequentialValues order = {Rounds.Game.Scalar.distribution a b y hy0 hy1}) :
+    x ≤ y ↔ ∀ probe : Rounds.Game.ScalarTerm, probe.UnaryGenerated → probe.rate < 1 →
+      (c ∈ Rounds.Game.possibleWinners
+        ((Rounds.Game.publicChoice a right (probe.game a c)).sequentialValues order) →
+       c ∈ Rounds.Game.possibleWinners
+        ((Rounds.Game.publicChoice a left (probe.game a c)).sequentialValues order)) :=
+  Rounds.Game.Scalar.singleton_scalar_le_iff_rational_tests left right a b c hab hac hbc order
+    x y hx0 hx1 hy0 hy1 hleft hright
+
+/-- info: 'KFOL.Paper.scalar_rational_observation_order' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Paper.scalar_rational_observation_order
 
 end KFOL.Paper

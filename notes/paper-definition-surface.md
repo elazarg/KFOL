@@ -1,19 +1,19 @@
 # Paper theorem-type definition surface
 
-132 public theorem types reach 1012 project semantic declarations in 57 source files. 18 of those files are under `KFOL/Definitions`. Generated declarations are grouped into 565 written source review units; 11 derived declarations have file-level locations. Theorem proof bodies are excluded.
+138 public theorem types reach 1014 project semantic declarations in 57 source files. 18 of those files are under `KFOL/Definitions`. Generated declarations are grouped into 567 written source review units; 11 derived declarations have file-level locations. Theorem proof bodies are excluded.
 
 This is a review index. Definitions still require human review against the manuscript; the separate proof/axiom and import audits remain necessary.
 
 | Source | Reachable declarations | Central definitions |
 | --- | ---: | --- |
+| [Paper.lean](../Paper.lean) | 140 |  |
 | [KFOL/Definitions/Owner.lean](../KFOL/Definitions/Owner.lean) | 134 | yes |
-| [Paper.lean](../Paper.lean) | 133 |  |
 | [KFOL/Definitions/Reductions.lean](../KFOL/Definitions/Reductions.lean) | 117 | yes |
 | [KFOL/Definitions/Encoding.lean](../KFOL/Definitions/Encoding.lean) | 109 | yes |
 | [KFOL/Definitions/Rounds.lean](../KFOL/Definitions/Rounds.lean) | 92 | yes |
 | [KFOL/Definitions/Policies.lean](../KFOL/Definitions/Policies.lean) | 87 | yes |
 | [KFOL/Definitions/Reset.lean](../KFOL/Definitions/Reset.lean) | 64 | yes |
-| [KFOL/Definitions/Strategic.lean](../KFOL/Definitions/Strategic.lean) | 58 | yes |
+| [KFOL/Definitions/Strategic.lean](../KFOL/Definitions/Strategic.lean) | 59 | yes |
 | [KFOL/Definitions/Circuits.lean](../KFOL/Definitions/Circuits.lean) | 44 | yes |
 | [KFOL/Definitions/Equational.lean](../KFOL/Definitions/Equational.lean) | 29 | yes |
 | [KFOL/Definitions/CoreBasis.lean](../KFOL/Definitions/CoreBasis.lean) | 26 | yes |
@@ -69,8 +69,8 @@ External interfaces are recorded without unfolding them:
 - Batteries: 2 boundary constants.
 - ComplexityLib/Cslib interface: 13 boundary constants.
 - GameTheory: 95 boundary constants.
-- Lean/Std: 223 boundary constants.
-- mathlib: 203 boundary constants.
+- Lean/Std: 224 boundary constants.
+- mathlib: 205 boundary constants.
 
 Review per public theorem:
 
@@ -82,6 +82,7 @@ Review per public theorem:
 | [binary_atom_preserving_iff](../Paper.lean#L1888) | 23 | 3 |
 | [binary_descriptor_machines](../Paper.lean#L1291) | 33 | 3 |
 | [binary_framing_machines](../Paper.lean#L1201) | 12 | 1 |
+| [boolean_threshold_state_lower_bound](../Paper.lean#L3278) | 45 | 1 |
 | [checked_core_extraction](../Paper.lean#L169) | 27 | 2 |
 | [choice_union_basis](../Paper.lean#L1809) | 38 | 3 |
 | [common_source](../Paper.lean#L325) | 25 | 2 |
@@ -126,12 +127,15 @@ Review per public theorem:
 | [owner_table_synthesis](../Paper.lean#L1497) | 83 | 4 |
 | [owner_thirty_six_equation_basis](../Paper.lean#L1636) | 38 | 4 |
 | [pair_countervaluations](../Paper.lean#L102) | 18 | 1 |
+| [pair_game_boolean_full_abstraction](../Paper.lean#L3298) | 78 | 1 |
 | [player_view_orders](../Paper.lean#L2137) | 18 | 3 |
 | [player_views](../Paper.lean#L187) | 26 | 3 |
 | [policy_family_checker](../Paper.lean#L1962) | 45 | 4 |
 | [policy_family_dichotomy](../Paper.lean#L2764) | 34 | 6 |
 | [policy_family_reduction](../Paper.lean#L2201) | 75 | 5 |
 | [public_backward_induction](../Paper.lean#L1423) | 29 | 3 |
+| [public_choice_small_support](../Paper.lean#L3331) | 57 | 3 |
+| [public_choice_support_sharp](../Paper.lean#L3347) | 32 | 1 |
 | [public_equilibrium_strategic_form](../Paper.lean#L1437) | 40 | 1 |
 | [public_forcing](../Paper.lean#L1471) | 30 | 3 |
 | [public_mixed_support](../Paper.lean#L2449) | 73 | 4 |
@@ -156,6 +160,7 @@ Review per public theorem:
 | [reset_circuit_exponential_tables](../Paper.lean#L3227) | 42 | 3 |
 | [reset_circuit_generator](../Paper.lean#L2855) | 36 | 4 |
 | [reset_circuit_reduction](../Paper.lean#L2834) | 70 | 5 |
+| [reset_circuit_tree_succinctness](../Paper.lean#L3245) | 58 | 5 |
 | [reset_definability](../Paper.lean#L485) | 34 | 4 |
 | [reset_encoded_table_recognition](../Paper.lean#L985) | 72 | 5 |
 | [reset_family_product](../Paper.lean#L611) | 15 | 2 |
@@ -191,6 +196,7 @@ Review per public theorem:
 | [scalar_diagonal_security](../Paper.lean#L3203) | 4 | 2 |
 | [scalar_diagonal_values](../Paper.lean#L2511) | 39 | 1 |
 | [scalar_parallel_laws](../Paper.lean#L2532) | 0 | 0 |
+| [scalar_rational_observation_order](../Paper.lean#L3366) | 64 | 1 |
 | [scalar_rational_values](../Paper.lean#L2614) | 63 | 1 |
 | [semilattice_trace](../Paper.lean#L259) | 26 | 2 |
 | [status_cell_provenance](../Paper.lean#L1686) | 19 | 1 |

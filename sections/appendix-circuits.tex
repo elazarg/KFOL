@@ -68,8 +68,11 @@ carrier gives the coNP upper bounds for all the listed signatures.
 
 \begin{proposition}[Exponential canonical tables]\label{reset:prop:large-circuit-table}
 For every $n\geq0$, a reset circuit with $2n+2$ input gates,
-$4n+1$ reset gates and $8n+2$ edges has at least $2^n$
-minimal guards at one input position.
+$4n+1$ reset gates and $8n+2$ edges has exactly $2^n$
+minimal guards at one input position $c$, each of size $n+1$.
+For $K\geq3$, every reset tree with the same operation has at least
+$2^n$ occurrences of $c$, $2^n+1$ leaves, and $2^{n+1}+1$ total
+nodes. The occurrence bound is attained.
 \end{proposition}
 \begin{proof}
 Use distinct inputs $z,c,p_0,n_0,\ldots,p_{n-1},n_{n-1}$ and set
@@ -90,13 +93,24 @@ positions. The reset selection recursion gives
  z\in B\quad\text{and}\quad
  \forall i<n:\ p_i\in B\ \text{or}\ n_i\in B.
 \]
-Consequently every set consisting of $z$ and exactly one member of
-each pair $\{p_i,n_i\}$ is an inclusion-minimal guard for $c$.
-The $2^n$ binary choices give distinct, pairwise incomparable guards
-in the canonical table of the circuit's unfolded term.
+Every successful set contains $z$ and a member of each pair, so it
+contains a set consisting of $z$ and exactly one member of each pair.
+These sets are successful and inclusion-minimal; hence they are all
+the minimal guards for $c$. There are exactly $2^n$ of them, each
+of size $n+1$.
+
+For any reset tree, each minimal guard at $c$ is supplied by a leaf
+labelled $c$, so the number of these guards is at most the number of
+$c$-leaves. Semantic equivalence preserves canonical tables by
+\cref{reset:thm:three}. Thus every equivalent tree has at least $2^n$
+$c$-leaves. Its rightmost leaf is $z$, again determined by its table,
+so it has at least one more leaf. A binary tree with $l$ leaves has
+$2l-1$ total nodes. Finally, the displayed unfolding has one
+$c$-leaf at stage zero and doubles that count at each stage; it
+attains the occurrence bound.
 \end{proof}
 
-Canonical guard tables can therefore be exponentially larger than
-the original circuit. The circuit equality theorem is compatible
+Both canonical guard tables and every semantically equivalent reset
+tree can therefore be exponentially larger than the original circuit. The circuit equality theorem is compatible
 with a finite equational basis: reset itself has one. Sharing changes
 succinctness, not the valid identities.
