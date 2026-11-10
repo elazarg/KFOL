@@ -1,6 +1,6 @@
 \section{Verification details}\label{app:verification}
 
-The paper's results are kernel-checked in Lean~4.35.0 with mathlib. The root file \texttt{Paper.lean} restates, in the namespace \texttt{KFOL.Paper}, every theorem of the main text, the report results it cites (for two of them only the clauses it uses, \cref{tab:report}), the further facts it asserts, and the strengthened report results below: $138$ statements, listed by result in \cref{tab:status}. Each is followed by a check that its proof uses no axioms beyond \texttt{propext}, \texttt{Classical.choice}, and \texttt{Quot.sound}, and nothing is admitted. No theorem from the literature enters as a hypothesis. Where a written proof cites one, as for the reset basis and the minimum one-owner generator \cite{FreeseEtAl2002}, owned choice with union \cite{HardingRomanowska2017}, and the atomic clone \cite{Szendrei2012}, the Lean proof is direct.
+The paper's results are kernel-checked in Lean~4.35.0 with mathlib. The root file \texttt{Paper.lean} restates, in the namespace \texttt{KFOL.Paper}, every theorem of the main text, the further facts it asserts, the report results it cites (for two of them only the clauses it uses, \cref{tab:report}), and several other report results: $138$ statements, listed by result in \cref{tab:status}. Each is followed by a check that its proof uses no axioms beyond \texttt{propext}, \texttt{Classical.choice}, and \texttt{Quot.sound}, and nothing is admitted. No theorem from the literature enters as a hypothesis. Where a written proof cites one, as for the reset basis and the minimum one-owner generator \cite{FreeseEtAl2002}, owned choice with union \cite{HardingRomanowska2017}, and the atomic clone \cite{Szendrei2012}, the Lean proof is direct.
 
 The definitions are in \path{KFOL/Definitions}, apart from the proofs, and \path{notes/paper-definition-surface.md} lists every definition that each statement depends on. Winner sets are nonempty sets of roles. Subgame-perfect equilibrium is defined by full profiles and whole-player deviations in every subtree, independently of backward induction, and it agrees with Nash equilibrium of the GameTheory library in every subtree. Sealed rounds use assessments: sequential rationality at every information set, and consistency as a limit of completely mixed profiles. Complexity is measured on the deterministic multitape Turing machines of ComplexityLib, and coNP-completeness has its textbook meaning, with polynomial-time many-one reductions. Inputs are binary words encoding tree terms, with binary variable names, explicit permutations, and, when it is part of the input, $K$ in binary; the decoders reject malformed words. The algebraic modules import neither GameTheory nor ComplexityLib.
 
@@ -118,20 +118,18 @@ Dependent layer (\cref{app:dependent})
 
 \subsection{Finite checks}\label{app:finite-checks}
 
-The explicit list in the Makefile runs the $33$ checks in
-\cref{tab:python-checks}; their shared models and fixed data inputs are listed
-in \path{checks/README.md}. Superseded candidate-basis searches and their
-unused certificates are retired to git history.
+\texttt{make check} runs the $33$ programs of \cref{tab:python-checks};
+\path{checks/README.md} lists the models and data they share.
 
 {\small
 \begin{longtable}{>{\raggedright\arraybackslash}p{0.53\linewidth}>{\raggedright\arraybackslash}p{0.41\linewidth}}
-\caption{Retained Python entry points in \texttt{checks/}.}\label{tab:python-checks}\\
+\caption{Programs in \texttt{checks/}.}\label{tab:python-checks}\\
 \toprule
-Scripts & Current coverage\\
+Programs & Subject\\
 \midrule
 \endfirsthead
 \toprule
-Scripts & Current coverage\\
+Programs & Subject\\
 \midrule
 \endhead
 \bottomrule
@@ -153,11 +151,11 @@ Scripts & Current coverage\\
 \path{check_sealed_rounds.py}, \path{check_two_players.py}, \path{check_open_game_obstruction.py}
  & Round values, two roles and the scoped open-game refutation.\\
 \path{check_reset_circuits.py}
- & Shared reset circuits and their three-value test.\\
+ & Shared reset circuits.\\
 \path{check_core_basis.py}, \path{check_core_obstruction.py}, \path{check_core_padded_crossing.py}
- & Seven-law basis, arity obstruction and padded-grid countermodel.\\
+ & Seven-equation basis, arity obstruction, and the grid countermodel.\\
 \path{check_core_atomic.py}, \path{check_core_atomic_basis.py}, \path{check_core_conservative.py}, \path{check_core_unary_polynomials.py}
- & Retained atomic, conservative and unary-polynomial results.\\
+ & Atomic and conservative models, unary polynomials.\\
 \end{longtable}}
 
 The programs in \path{checks/} are independent of the Lean development. Except where a count is itself the result, they test implementations at the stated sizes, and for results in \texttt{Paper.lean} they serve as regression tests. They
@@ -302,9 +300,9 @@ The binary classification is checked on every native valuation of
 all $31176$ products in the free two-generated algebras at $K=3,4,5$,
 of sizes $20,37,70$, respectively.
 
-The padded-grid check \path{checks/check_core_padded_crossing.py} verifies
-the native row and protected-path premises and the finite duplicate-profile
-typing rules used in the current nonfinite-basis proof. It checks five
-rectangular grids without enumerating their generated coefficient algebras.
+For \cref{core:prop:grid-countermodel}, \path{checks/check_core_padded_crossing.py}
+builds the rows of the proof for five grids, checks that each uses at most
+two atoms, evaluates $T$ and $S$ on them, and checks the finite case rules
+of the proof's descents. It does not enumerate $C_{r,s}$.
 
 For the core results that remain written, \path{checks/check_core_unary_polynomials.py} enumerates the entire $131$-function unary polynomial closure at $K=3$ and compares it with the normal forms, and at $K=4$ it verifies all $6575$ functions by explicit synthesis, with their distinctness and stabilization. Conservative models are checked on chains of sizes two through six. The atomic quotient is checked at $K=3,\ldots,6$ and near-unanimity at $K=3,\ldots,8$. \path{checks/check_core_atomic_basis.py} makes $675733$ equation evaluations for the atomic basis, the lifting basis, and its normalization consequences, using every observer and $D_K$ at $K=3,\ldots,6$ and fully expanded core terms at $K=3$. The $236$ lattice and absorber templates leave exactly the $18$ predicted two-element quotients, and $D_K$ passes the lifts and fails exhaustion. All principal ideals of $247$ models verify the closure maps, meets, kernel equality, and normalized operations on $32343$ input pairs.
