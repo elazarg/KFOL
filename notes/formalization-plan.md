@@ -1,10 +1,10 @@
 # KFOL formalization design and implementation plan
 
-The target is a complete formalization of **the main paper `main.tex`, including its substantive prose claims, and the parts of the technical report needed for those claims**. Root `Paper.lean` repeats the complete main-paper propositions; a small collection of definition modules supplies an auditable meaning, and reusable proof modules supply the proofs. The entire technical report is not a completion target. This document records the active design and completion gates; the status board records parallel execution, and the inventory records current statement-level evidence.
+The target is a complete formalization of **the main paper `main.tex`, including its substantive prose claims, and the parts of the technical report needed for those claims**. Root `Paper.lean` repeats the complete main-paper propositions; a small collection of definition modules supplies an auditable meaning, and reusable proof modules supply the proofs. The entire technical report is not a completion target. This document records the implemented design and completion gates; the status board records completed verification, and the inventory records current statement-level evidence. All 23 main result rows, 61 required catalog rows and 18 required prose obligations now have complete checked proofs.
 
 The manuscript baseline is revision `6dff3f067151b9fc1cf9b9944718cf39a72d7447`. The existing 22 Std modules and the new mathlib algebra slice use Lean 4.35.0. `sections/appendix-verification.tex` is the starting evidence inventory. The existing proofs are valuable migration inputs, but a finite certificate, a specialized three-owner proof, and a generic theorem are distinct deliverables.
 
-The [claim inventory](formalization-claims.json) distinguishes the **23 main-paper result environments**, **20 directly cited complete report results**, selected fragments of cited composite results, further proof dependencies, and optional report material. The earlier 140-result extraction is retained as a source catalog, not as the definition of done. Additional main-paper prose obligations are listed separately. Existing source evidence and the work still needed are separate fields. The [supporting-library assessment](formalization-libraries.md) records exact APIs, pins, assumptions and remaining bridges.
+The [claim inventory](formalization-claims.json) distinguishes the **23 main-paper result environments**, **20 directly cited complete report results**, selected fragments of cited composite results, further proof dependencies, and optional report material. The earlier 140-result extraction is retained as a source catalog, not as the definition of done. Additional main-paper prose obligations are listed separately. Existing source evidence and the work still needed are separate fields. The [supporting-library assessment](formalization-libraries.md) records exact APIs, pins, assumptions and completed bridges.
 
 ## Required scope and optional extensions
 
@@ -31,12 +31,15 @@ the nonemptiness-only fragment of `se:prop:round-values`.
 
 The seven-equation choice/union basis was retained and moved to the basis section; its completeness proof remains required. The main text also retains scalar full abstraction, congruence classifications, the canonicalization consequence, and the two-player discussion. Their status remains unchanged. The finite-family policy dichotomy is a main result. No further editorial cut is assumed.
 
-## Decisions after the integration gates
+## Integration-gate outcomes
 
-The current target includes full machine-level complexity theorems and the full SE clause of round recursion. The gates measure how to deliver that target; they do not automatically authorize weakening it.
-
-- **Complexity gate:** certify one reset/union reduction end to end against the pinned 3SAT codec. Record effort separately for semantic correctness, encoding, reusable machine components, polynomial running time and class transport. Then inspect whether policy-family reductions and reset DAGs fit those components. “Roughly fifteen machines” is a planning hypothesis, not a verified count or fifteen necessarily independent implementations. Shared traversals, verifiers, owner instantiations and composition may reduce duplication. Leaving only the final class claim written would be an explicit change to the current definition of done.
-- **Round gate:** compile a sealed two-bit round and establish its information sets, product beliefs and consistency using GameTheory. Include a two-round case with an unreachable public history, since an on-path single-round calculation does not test the off-path cancellation and pasting needed by the theorem. If a change of presentation is later chosen, define values by observed-action mixed SPE and move the serial-SE equivalence to the report. That changes the main definition and proposition and must be reviewed as a manuscript change; the current SE-based definition remains the target meanwhile.
+The full machine-level complexity target and full serial-SE clause were retained
+and completed. The native reset/union end-to-end gate supplied shared encodings,
+parsers, traversals and class transport for the other signatures and circuits.
+Uniform full-language checking uses sparse pairs and explicit arrays, with no
+carrier/permutation enumeration. The round gate was extended to arbitrary finite
+menus, globally consistent perturbations, unreachable histories and independent
+repeated occurrences; the original SE-based main definition is unchanged.
 
 ## Architectural decisions
 
@@ -75,7 +78,7 @@ flowchart TD
 
 `Definitions/Strategic.lean` defines complete public profiles and whole-player deviations independently of backward recursion. The completed strategic-form bridge proves equivalence with canonical GameTheory Nash in every public subtree; this is exactly the paper’s perfect-information SPE condition. The full syntax compiler proves that possible SPE winners equal the independent algebraic evaluator, including switches and repeated occurrences. A separate protocol translation is unnecessary for public adequacy; hidden rounds retain their canonical behavioral-assessment model. Keep GameTheory names out of the pure theorem signatures as well as their imports; an unused theorem parameter or typeclass still couples the APIs.
 
-Provide independently buildable module targets such as `lake build KFOL.Algebra`, `lake build KFOL.Strategic`, and `lake build Paper`. A CI import-graph check rejects any transitive dependency from the algebraic branches to `GameTheory`, `GameTheoryComplexity`, `FixedPointTheorems`, the KFOL strategic/round wrappers, or complexity-machine modules. Checking direct import lines alone is insufficient. `KFOL.Audit.Algebra` now checks that compiled boundary independently; `KFOL.Audit` checks all authored axiom dependencies, including private machine helpers. `scripts/check_algebra.py` enforces exact source coverage and builds the pure target before the complete Paper target. The first complexity module is present; strategic integration remains separate.
+Provide independently buildable module targets such as `lake build KFOL.Algebra`, `lake build KFOL.Strategic`, and `lake build Paper`. A CI import-graph check rejects any transitive dependency from the algebraic branches to `GameTheory`, `GameTheoryComplexity`, `FixedPointTheorems`, the KFOL strategic/round wrappers, or complexity-machine modules. Checking direct import lines alone is insufficient. `KFOL.Audit.Algebra` now checks that compiled boundary independently; `KFOL.Audit` checks all authored axiom dependencies, including private machine helpers. `scripts/check_algebra.py` enforces exact source coverage and builds the pure target before the complete Paper target. The completed complexity and strategic branches preserve those independent import boundaries.
 
 In one Lake package, dependency resolution still fetches the packages declared by that package; Lean module imports control which definitions and proofs an algebra consumer loads and which modules its target needs built. A pinned toolchain is also package-wide. If algebra users must avoid even resolving/downloading GameTheory or must choose another compatible toolchain, split into an algebra package requiring only mathlib and a strategic companion requiring that package plus GameTheory. The same import layout supports that later split without rewriting the mathematics; the initial design does not require multiple packages.
 
@@ -185,26 +188,27 @@ Compile round syntax to GameTheory execution/information models and use its inde
 Consistency must use one perturbation scheme for the whole finite game, handle zero-probability public histories, retain each player's own recall, and prove product beliefs at serial commitments. Every off-path continuation is selected. The serial order and release steps are explicit; prove they have the observations described by the paper. Separate strategic randomization from chance and from shared random seeds.
 
 
-## Proposed proof modules and coverage
+## Implemented proof packages and coverage
 
 The following packages cover the required main-paper areas. The source catalog also lists optional report results; their presence does not make them deliverables. Each package includes the necessary unnumbered main-paper consequences.
 
-| Package | Modules below `KFOL/` | Paper and report obligations | Existing starting points |
-| --- | --- | --- | --- |
-| A | `Public/Strategy`, `Public/BackwardInduction`, `Public/Occurrences` | SPE existence and recurrence, finite action folds, union/ground realization, no Boolean representation; preserve independent repeated occurrences | `Basic`, `Synthesis`; occurrence lower bounds and uniform-repetition classifications are optional |
-| B | `Algebra/Perspectives`, `Algebra/TestDomains`, `Algebra/Status` | Contextual player quotient and faithful subdirect family; reduct and full test sufficiency/necessity and exact minima; status provenance | `Perspectives`, `Synthesis`, `FullAlgebra` |
-| C | `Algebra/Intrinsic`, `Algebra/CommonSource`, `Algebra/AtomicClone` | Exact idempotent syntax, effective extraction, semilattice trace and intrinsic views; common source including the occurrence clause; atomic clone, determinacy, no if-then-else and no special core terms | `Separation`, `FullAlgebra`, `OneConstant`; clone theorem needs a formal proof/import |
-| D | `Reset/Tables`, `Reset/Antimatroid`, `Reset/Basis` | Binary atom-preserving classification, reset compilation and chain completeness, six-law derivational completeness, table realization/recognition/substitution, antimatroid bijection  | `Reset`, `OneConstant`; complete the required normal forms and external special cases |
-| E | `Owner/Guards`, `Owner/Synthesis`, `Owner/Basis` | Root laws, observer implication/equality and one-table checker, minimum four-element generator, realizable tables/synthesis bound, forty-law completeness and four-variable lower bound | `OwnerFragments`, `OwnerModels`; exclude conservative relative presentations and residual theory except any lemma actually used |
-| F | `Policy/Guards`, `Policy/Patterns`, `Policy/Classification` | Selective operations and strictness, chain/nested and overlapping policies, calibrated observers, two-policy classification, arbitrary finite-family pattern criterion and separators | `ChainGuards`, `MixedPolicies`; classification, normalization and reductions need assembly |
-| G | `Complexity/Encoding`, `Complexity/CheckerBounds`, `Complexity/Reductions`, `Complexity/Circuits` | Every tree-fragment and observer dichotomy, fixed/uniform complexity, coloring identities and theory strictness, DAG reset completeness, algorithmic extraction/recognition/synthesis bounds elsewhere | `BooleanCore`, `Fragments`, `RawFragments`, guard checkers; full reductions and complexity foundations remain |
-| H | `Algebra/Congruences`, `Algebra/Observation` | Unique-winner observation, reduct congruence classification and symmetric ambiguity-threshold chain as asserted in the main paper | Most unary/affine/matching/fiber classifications in the report are optional |
-| I | `Core/Native`, `Core/LocalTheory`, `Core/Grid`, `Core/NonfiniteBasis` | Native memberships, typed upper-clone cover, protected paths/private padding, arbitrary-generator local cover, finite countermodels at every variable bound and no finite basis for every K ≥ 3 | `CoreObstruction` is a starting certificate; the uniform theorem is new. Ambient-native nonfinite basability is optional |
-| J | `Core/ChoiceUnion` | Seven-equation choice/union basis claimed in the complexity section, plus structural lemmas needed by package I | `CoreModels`; binary counts, polynomial forms, conservative presentations and atomic basis/lifting are optional |
-| K | `Rounds/Encoding`, `Rounds/Recursion` | Observed mixed SPE equals serial SE, complete recursion, public support conservativity, exact nonconvex/nonidempotent example | Reuse GameTheory SE/Nash/minimax, serializer and one-shot foundations. General compactness/semialgebraicity results are optional |
-| L | `Rounds/Scalar`, `Rounds/Threshold`, `Rounds/Contextual` | Scalar stage values, diagonal formula, rational synthesis needed for thresholds/full abstraction, concrete threshold games, exact winner formula and no finite compositional observation | `SealedRounds` arithmetic plus new syntax/SE bridges. General scalar equation decidability is optional |
-| N | `TwoPlayers/Algebra`, `TwoPlayers/Rounds` | Main discussion: Kleene tables, reachable atoms/forcing, finite basis, projection/union degeneracies, failure of the three-role idempotent characterization and winner support of rounds | Reuse common primitives and GameTheory minimax. Full two-player term-function and complexity classifications are optional |
-| O | Separate historical proof target | Check the pinned historical unit/associativity failure theorems supporting the main related-work sentence | Existing v1-final artifact; no rewrite/port of all convex-repair results required |
+| Package | Principal implemented modules below `KFOL/` | Completed scope |
+| --- | --- | --- |
+| A | `Strategic/Basic`, `Strategic/Adequacy`, `Strategic/Compilation` | Full public profiles, independent deviations, SPE existence/recurrence, occurrence-preserving compiler and forcing |
+| B | `Algebra/PublicContexts`, `Algebra/ReductTests`, `Algebra/PairTests`, `Algebra/Provenance` | Contextual quotients, sharp test domains, faithful subdirect families and provenance |
+| C | `Algebra/Idempotent`, `Algebra/CommonSource`, `Algebra/SemilatticeTrace`, `Algebra/Atomic` | Intrinsic core, source/occurrence theorem, direct atomic classification/determinacy and binary theorem |
+| D | `Reset/Basis`, `Reset/Antimatroid`, `Reset/Realizability`, `Complexity/ResetSynthesisMachine` | Six-law completeness, independent antimatroids, exact tables/substitution and native synthesis |
+| E | `Owner/Guards`, `Owner/Completeness`, `Owner/Synthesis`, `Owner/Minimum`, `Owner/Basis` | Semantic tables, four-element minimum, forty-law basis and four-variable lower bound |
+| F | `Policies`, `Complexity/PolicyCompleteness`, `Complexity/PolicyWordFrontend` | Required policy classifications and complete finite-family native dichotomy |
+| G | `Complexity/FullCompleteness`, `RawResetFrontend`, `RawSubsignatureCompleteness`, `OwnerCountCompleteness`, `CircuitHardness` | All fixed/uniform tree-fragment claims, relative observers, original encodings and native reset DAG classes |
+| H | `Congruences`, `Algebra/ViewOrders`, `Algebra/UnaryReset` | Main-paper congruence, symmetric threshold and observation assertions |
+| I | `Core/Native`, `Core/TypedCover`, `Core/Locality`, `Core/NonfiniteBasis` | Uniform arbitrary-generator local cover and finite countermodels at every variable bound |
+| J | `Core/ChoiceUnion` | Literal seven-equation choice/union basis and complete derivability |
+| K | `Rounds/Observed`, `Rounds/SerialRun`, `Rounds/Correspondence` | Actual finite-menu SE/SPE equivalence, off-path consistency/pasting and exact recurrence |
+| L | `Rounds/Scalar`, `Rounds/Public` | Concrete scalar/rational/threshold games, full abstraction, exact nonconvexity and no finite winner algebra |
+| N | `Algebra/TwoPlayers`, `Rounds/TwoPlayers` | Retained Kleene identification/basis, degeneracies/forcing and arbitrary-menu round support |
+| O | Isolated pinned historical target | Rebuilt unit/associativity/convex-repair counterexamples with standard-axiom audit |
+
 
 Keep proof files at the size of a coherent argument. Splitting a proof into files does not justify defining a second version of winner sets, syntax, validity, or deviation.
 
@@ -248,8 +252,8 @@ External mathematical inputs actually used by a main-paper proof need a kernel p
 | Input | Used for | Required route |
 | --- | --- | --- |
 | Classification of the repeat-triple polymorphism clone | Atomic clone, determinacy and binary classification | Complete directly: no-rainbow rectangle lemma, finite coordinate updates, unary image induction and finite Boolean synthesis; no external theorem premise |
-| Freese et al. order-algebra results | Reset basis completeness and minimum generators | The reset six-law special case is now proved by arbitrary-algebra path normalization and suffix absorption; the required minimum-generator special cases remain separate |
-| Antimatroid/dependency representation | Main representation and compact table algorithms; report-only counts stay optional | Rooted representation and inverse laws, the complete realizability criterion, executable recognition and synthesis correctness and a `1 + 2nM` realization bound are proved. Machine-time bounds remain separate |
+| Freese et al. order-algebra results | Reset basis completeness and minimum generators | The reset six-law special case is now proved by arbitrary-algebra path normalization and suffix absorption; the minimum three-element reset and four-element owner generator cases are also proved |
+| Antimatroid/dependency representation | Main representation and compact table algorithms; report-only counts stay optional | Rooted representation and inverse laws, the complete realizability criterion, executable recognition and synthesis correctness and a `1 + 2nM` realization bound are proved. Native original-word recognition and primitive-tree synthesis runtime are proved |
 | Dissemilattice generation | Seven-equation fragment claimed in the main paper | Completed directly: three-valued separating probes, support coverage and seven-law absorption, followed by a concrete winner-set embedding; no external theorem premise |
 | Kleene presentation | Two-role finite basis cited in the main discussion | Complete directly: signed DNF and separating three-value monomials, arbitrary-model completeness, and full original-syntax translation including all role switches |
 | Mixed Nash existence, finite SE existence and zero-sum value uniqueness | Required round semantics | Reuse the inspected GameTheory Nash, SE existence and minimax interfaces; prove the KFOL finiteness, recall, nonempty-menu, integrability and payoff-shift premises |
@@ -257,7 +261,7 @@ External mathematical inputs actually used by a main-paper proof need a kernel p
 
 The required algebraic and game-semantic proofs are complete: uniform core nonfinite basability, forty-law owner and seven-law choice/union bases, atomic/binary and congruence classifications, the two-player Kleene basis, public mixed support and exact nonconvexity, canonical serial-SE/observed mixed-SPE equality, general constant-sum uniqueness, actual scalar games, rational synthesis, full scalar contextual abstraction, and two-role round support. Native uniform core extraction and the complete arbitrary raw-signature dichotomy are also finished. The complete finite policy-family dichotomy has native polynomial checkers in the positive cases and coNP-completeness in the other cases.
 
-The remaining result gates are full/core original-word complexity (fixed and uniform K), the hard owner-count branches, and native reset-DAG coNP-completeness. Owner equality and relative implication/equivalence already have their complete tractable original-word checkers and generic coNP upper. Reset circuits have independent graph semantics, exact shared CNF assembly/counts, all-valuation correctness, the actual three-generator theorem, and a native cached finite evaluator. Remaining prose gates are reset-table synthesis runtime and the actual core canonicalizer consequence. The pinned historical obstruction was rebuilt and axiom-audited in an isolated archive.
+All required result and prose gates are now proved. Full/public/core original-word validity has complete fixed-K and uniform binary-K coNP-completeness, using actual original syntax, explicit permutation arrays, sparse native counterverification and quadratic padded certificates. Reset-table synthesis has an actual polynomial descriptor-word to primitive-tree-word machine, with exact acceptance, root/table/node-size and arbitrary-role winner semantics. Complete owner-count and raw/policy dichotomies, both required reset-DAG class endpoints, the original-core canonicalizer consequence and the separately rebuilt historical obstruction are also complete. The final integration checks all source, axiom, import and definition dependencies and reconciles their evidence with the main paper.
 
 The reset circuit dependency is the first two clauses of `reset:thm:circuits`: only reset and its three-element generator are asserted in the main paragraph. Its H/policy circuit extensions remain optional report work. Likewise the main text asserts the reset substitution formula, which is proved, rather than a runtime for computing it. Encoded substitution runtime is optional; polynomial reset-table synthesis remains required. These are applications of the existing claim-specific citation rule, not weakenings of main-paper assertions. General complexity theory and equilibrium foundations are reused; real QE and the dependent syntactic metatheory remain outside scope.
 
@@ -267,7 +271,7 @@ The mathlib APIs checked for this design include [relation-free language structu
 
 Start by filling the statement-level existing-evidence map and checking the unchanged baseline. Add a Lake target for the legacy modules or a temporary import path preserving their names. Port in small batches with temporary bridges: predicate sets to `WinnerSet`, `RolePerm` to `Equiv.Perm`, native term datatypes to signature terms, and specialized finite models to bundled algebras. Prove evaluation and substitution commute with each bridge. Preserve old proofs until their public replacement and bridge pass the same build.
 
-Prioritize `Basic → Perspectives → Synthesis → Separation → FullAlgebra`, followed by `Reset`, owner/policy modules, and native core certificates. `CoreQuotients` and `CoreMixed` may provide useful proof ideas; do not migrate them solely to preserve optional report certificates. `SealedRounds` remains a local scalar-certificate module until the extensive-form bridge is complete.
+Prioritize `Basic → Perspectives → Synthesis → Separation → FullAlgebra`, followed by `Reset`, owner/policy modules, and native core certificates. `CoreQuotients` and `CoreMixed` may provide useful proof ideas; do not migrate them solely to preserve optional report certificates. The legacy `SealedRounds` remains independent arithmetic regression evidence; `Rounds/Scalar` proves the actual game-semantic conclusions.
 
 Retire duplicate definitions and compatibility aliases after consumers migrate. Avoid an enduring `Legacy` semantics imported by `Paper`. Do not copy speculative candidate-basis explorations into the new library: only revive them if a maintained argument requires them. Historical searches and superseded results remain in git history.
 
@@ -279,28 +283,29 @@ The [status board](formalization-status.md) is the live integration queue. It
 records file ownership, independently executable work and whole-claim gates.
 The [delivery history](formalization-history.md) preserves the detailed first
 eighteen milestones without mixing them into the active plan. Completed
-foundations and reset frontend semantics are stable interfaces; further work
-should close the remaining complete claims and machine/strategic bridges.
+foundations, algorithm semantics and game correspondences are stable interfaces.
+All required mathematical gates are complete; the status board records final
+reproducibility checks.
 
 | Milestone | Prerequisites | Concrete completion gate |
 | --- | --- | --- |
 | 0. First algebra delivery completed | This plan | Lean/mathlib v4.35.0; native syntax selected; `KFOL.Paper.pair_countervaluations` in root `Paper.lean`; definition index; clean builds and compiled axiom/import checks |
 | 1. Shared equational foundation completed | 0 | Independent validity and derivation; quotient completeness; HSP preservation; generated-subalgebra transfer and actual-support variable bounds; exact full/core codecs, all audited |
-| 2. Public paper backbone A–C: algebraic statements complete | 1 | Complete public statements for recurrence/existence, views/tests, idempotent syntax and common source; remaining clone dependency is explicitly tracked, with no conditional result marked complete |
-| 3. Reset and owner D–E: bases/synthesis complete; frontend runtime partial | 1–2 | Algorithms with semantics, synthesis and exact finite generators; six-law and forty-law completeness plus lower bounds, not just soundness |
-| 4. Policy and complexity F–G | 1, algorithm specs, relevant milestone 3 results | Verified reductions and representation-sensitive bounds; all fixed/uniform dichotomy clauses including observation-relative cases |
-| 5. Required algebra H, J, N | 1–3 and needed external special cases | Main-paper congruences, seven-law basis and two-role discussion claims; no general report-only classification backlog |
+| 2. Public paper backbone A–C completed | 1 | Complete public statements for recurrence/existence, views/tests, idempotent syntax and common source; direct atomic-clone classification with no external theorem premise |
+| 3. Reset and owner D–E: bases/synthesis complete; native frontend runtime complete | 1–2 | Algorithms with semantics, synthesis and exact finite generators; six-law and forty-law completeness plus lower bounds, not just soundness |
+| 4. Policy and complexity F–G completed | 1, algorithm specs, relevant milestone 3 results | Verified reductions and representation-sensitive bounds; all fixed/uniform dichotomy clauses including observation-relative cases |
+| 5. Required algebra H, J, N completed | 1–3 and needed external special cases | Main-paper congruences, seven-law basis and two-role discussion claims; no general report-only classification backlog |
 | 6. Uniform core nonfinite basis I completed | 1–2, native membership | Arbitrary-K typed covers, arbitrary-generator locality and full finite-countermodel theorem for every variable bound; core conclusion |
-| 7. Round semantics K | 1, GameTheory integration gates | Existing independent SE specialized to round syntax; product-belief/pasting proof, observed/serial equality and full recursive equation |
-| 8. Scalar and contextual rounds L | 7, local certificates | Concrete syntax-to-rate bridge, full threshold winner formula, no finite compositional observation and full abstraction; no real-QE dependency |
-| 9. Historical obstruction O | Pinned-source review | Immutable external proof target checks the unit/associativity failures actually asserted in the main text |
-| 10. Final claim reconciliation | All preceding obligations | Every main-paper claim has complete `Paper.lean` statement(s), reviewed definition closure, matching scope and standard-axiom audit; clean reproducible full build |
+| 7. Round semantics K completed | 1, GameTheory integration gates | Existing independent SE specialized to round syntax; product-belief/pasting proof, observed/serial equality and full recursive equation |
+| 8. Scalar and contextual rounds L completed | 7, local certificates | Concrete syntax-to-rate bridge, full threshold winner formula, no finite compositional observation and full abstraction; no real-QE dependency |
+| 9. Historical obstruction O reproduced | Pinned-source review | Immutable external proof target checks the unit/associativity failures actually asserted in the main text |
+| 10. Final claim reconciliation completed | All preceding obligations | Every main-paper claim has complete `Paper.lean` statement(s), reviewed definition closure, matching scope and standard-axiom audit; clean reproducible full build |
 
 Finish each milestone with a small reviewable set of completed public theorems. Do not create a future `Paper.lean` full of admitted stubs: keep incomplete targets in the inventory and add declarations when proofs are available. Root `Paper.lean` may grow as coverage grows; it must accurately describe the coverage of its current revision.
 
 ## Verification and maintenance
 
-The planned CI gates are:
+The verification gates are:
 
 - A clean pinned `lake build KFOL Paper` with warnings as errors, plus the library tests and current independent Python checks.
 - An independent `lake build KFOL.Algebra` and a transitive import-graph check enforcing the algebra/strategy/complexity boundaries above.

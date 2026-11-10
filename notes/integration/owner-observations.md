@@ -27,9 +27,7 @@ and a generic coNP upper for every fixed relation on the finite winner algebra.
 - observer equivalence under that same relative-owner condition.
 
 `Paper.owner_count_polynomial_branches` repeats their complete original-word
-statements. The hard selected-family transports remain a separate completion
-gate; these positive branches do not assert that any coNP-complete language
-lies outside P.
+statements. `OwnerHardnessTransport` relabels each native H node once to two actual selected owners, preserving all child occurrences and actual evaluation. `OwnerCountCompleteness` transports the pinned machine-level 3SAT reductions for equality, membership implication and equivalence. Together with the fixed-algebra verifier, these give both hard branches for every selected finite owner family. `Paper.owner_count_dichotomy` repeats the full six-branch statement. The theorem asserts P membership in the small cases and coNP-completeness in the large cases without assuming that those classes differ.
 
 `Owner/JointObservation` proves an explicit four-variable equation agrees at
 two owners for every valuation, yet fails at a displayed third-role valuation.
@@ -43,3 +41,13 @@ withOwner constructor lemmas into `Owner/GuardEncoding`. Regression examples
 cover both owners' easy observations, zero/one-owner equality, exact raw guard
 compilation and the actual third-role countervaluation. All public declarations
 have their standard-axiom guards in Paper.
+
+
+The hard original-word endpoint uses the same complete full owner-signature
+codec as the easy branch; legality is a checked source predicate rather than
+an informal promise. Source H syntax has only two ternary operations, with no
+primitive reset. Native constructor/fold machines implement the relabeling;
+a proved linear byte bound charges source owner headers. All universal
+correctness clauses are proved before class transport, including the direction
+of the third-role implication. Strict regression examples test both distinct
+selected owners and larger families containing the observer.

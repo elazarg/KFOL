@@ -551,3 +551,15 @@ def CoreLanguage : Set (List Bool) :=
       input.2.1.eval valuation = input.2.2.eval valuation}
 
 end KFOL.FullTermCode
+
+namespace KFOL.FullTermCode
+
+/-- The permutation-free public reduct retains winner constants and the
+same original full-term encoding. IsPublic is independent of the verifier. -/
+def PublicLanguage : Set (List Bool) :=
+  {word | ∃ input : EquationInput, 3 ≤ input.1 ∧ encodeEquationInput input = word ∧
+    input.2.1.IsPublic ∧ input.2.2.IsPublic ∧
+    ∀ valuation : ℕ → WinnerSet (Fin input.1),
+      input.2.1.eval valuation = input.2.2.eval valuation}
+
+end KFOL.FullTermCode

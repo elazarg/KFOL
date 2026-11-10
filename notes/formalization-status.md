@@ -2,10 +2,12 @@
 
 The completion target is the entire main paper, its substantive prose and
 necessary report dependencies. The inventory is authoritative for scope.
-The current integration has **21/23 main result rows**, **58/61 required catalog
-rows**, and **14/18 required prose obligations** kernel-checked in full.
-The other required rows all have checked components. Counts measure complete
-statements, not effort. Root `Paper.lean` now has 118 full public statements.
+The complete main-paper scope is proved: **23/23 main result rows**,
+**61/61 required catalog rows**, and **18/18 required prose obligations**.
+Root `Paper.lean` contains **128 full public statements**, each with a guarded
+axiom check. Final clean builds, all regressions and manuscript checks pass.
+Report-only results remain optional; the historical related-work artifact is
+separately rebuilt and audited under its original pins.
 
 ## Parallel execution
 
@@ -16,10 +18,10 @@ then commits coherent integrations after complete checks.
 
 | Workstream | Owner | Completed | Next integration gate |
 | --- | --- | --- | --- |
-| Native reset circuits | `owner` | Generic graph/codec, CNF assembly and exact counts, SAT/UNSAT semantics, actual three-generator completeness; native cached finite-algebra evaluator | Original-word parser/verifier and coNP upper; assemble reset completeness, then reset-table synthesis runtime |
-| Reset circuit reduction machine | `nonfinite_basis` | All core nonfinite-basis, basis, scalar and two-player mathematics; full original-word uniform core extraction runtime | Native shared CNF graph generator runtime and 3SAT class transport |
-| Full/core complexity | `complexity` | Full raw-signature hard branch and policy dichotomy; original full-word codecs/decoder/fold, sparse pair evaluation and semantic bridge | Uniform verifier/certificate bounds, fixed/uniform full/core coNP-completeness, core canonicalizer consequence; H-pair-to-owner hard branch |
-| Owner branches and integration | root | Full raw-signature polynomial branch; linear relative-observation compilation, generic owner-language coNP upper, all owner polynomial branches, joint-observation counterexample; historical isolated obstruction rebuilt | Integrate class endpoints, reconcile all public statements/definitions, audit and commit |
+| Native reset circuits and synthesis | `owner` | Original-word reset/Fin-three coNP-completeness and native primitive-tree synthesis with independent root/table/winner semantics | Complete |
+| Hardness and review | `nonfinite_basis` | Native DAG generator, full/public/core hardness, certificate bounds, canonicalizer consequence and final semantic scope review | Complete |
+| Full/public/core complexity | `complexity` | All six fixed/uniform endpoints; original-word sparse counterverifier, explicit-array validation, quadratic certificates and arbitrary padding | Complete; definition-surface report reproduced |
+| Owner branches and integration | root | Complete raw/owner/policy dichotomies, 128 literal Paper statements, claim reconciliation and pinned historical rebuild | Complete |
 
 The production pins are GameTheory `6f1af625b77215dd9e4454e6120275dbd8b61f51`
 from `port/cslib-complexity`, ComplexityLib
@@ -28,23 +30,30 @@ from `port/cslib-complexity`, ComplexityLib
 Algebra and representation imports remain independent of those game/machine
 libraries. All round mathematics is complete against actual canonical SE.
 
-## Remaining whole-claim gates
+## Final verification
 
-1. `gen:thm:complexity`: full/core validity with original binary K, sparse names
-   and explicit permutation arrays; fixed-K endpoints and native hardness.
-2. `owner:cor:complexity`: transport the checked H-pair machines to every
-   selected owner family. Complete positive branches and generic coNP upper
-   already compile on the full original word language.
-3. `reset:thm:circuits`: polynomial native graph generator and whole-word
-   verifier/class transport. Main-required fragment is reset and its actual
-   three-element generator; report H/policy circuit extensions are optional.
-4. Prose: polynomial reset-table synthesis; original-core canonicalizer/comparator
-   P=NP consequence; finish the reset-DAG and hard-third-observer class endpoints.
-   The main substitution formula is complete; report-only substitution runtime
-   is optional.
-5. Finish definition/statement reconciliation, complete source/axiom/import
-   audits and reproducible project checks. The historical obstruction target
-   was rebuilt separately under its pinned Lean4.32.2 and standard-axiom audit.
+No required mathematical proof remains. Completed verification:
+
+- `lake clean KFOL`, then `make check-lean`: independent algebra build/import
+  audit, full Paper/whole-project axiom audit, negative import check and all
+  80 strict Lean regressions pass.
+- `make check-python`: all independent Python checks pass.
+- `python3 scripts/check_inventory.py`: 145 source statements, 20 prose
+  obligations, 1479 evidence fingerprints and 128 public statements reconcile.
+- `python3 scripts/export_definition_surface.py --check --no-build`: the
+  theorem-type graph and readable review index reproduce after the clean build.
+- `make paper`: both manuscripts build; the main paper remains 14 pages and
+  committed label snapshots are unchanged.
+
+Every authored proof closure uses only `propext`, `Classical.choice` and
+`Quot.sound` where needed. The pure algebra closure excludes GameTheory,
+ComplexityLib/Cslib and strategic/round modules. The separate historical
+obstruction build and its five axiom closures also pass under the original pins.
+
+The report's encoded substitution runtime, H/policy circuit extensions,
+dependent calculus and general round semialgebraicity remain outside the
+main-paper scope. The main substitution formula and both required reset-DAG
+clauses are proved; these are explicit dependency fragments in the inventory.
 
 ## Integration contract
 

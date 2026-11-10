@@ -23,6 +23,8 @@ def main():
     # The independent algebra build must succeed without importing the paper.
     subprocess.run(["lake", "build", "KFOL.Algebra", "KFOL.Audit.Algebra"], cwd=ROOT, check=True)
     subprocess.run(["lake", "build", "Paper", "KFOL.Audit"], cwd=ROOT, check=True)
+    subprocess.run([sys.executable, "scripts/export_definition_surface.py", "--check", "--no-build"],
+                   cwd=ROOT, check=True)
     # Exercise the actual boundary check in a deliberately contaminated environment.
     with tempfile.TemporaryDirectory(prefix="kfol-import-audit-") as tmp:
         negative = Path(tmp) / "NegativeAudit.lean"

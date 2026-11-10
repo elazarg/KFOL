@@ -1276,3 +1276,59 @@ in `Algorithms/FullTermCode/Core` uses source annotations and stored arrays;
 its native runtime bound charges actual original bytes, including malformed
 words, and remains uniform for K=0,1,2 and larger K. The shared full/core
 complexity languages separately restrict to K≥3 at their theorem boundary.
+
+
+`FullHardness.originalTermEncoding K` is exactly `FullTermCode.encode (view term)`.
+Its core restriction `originalCoreTermEncoding K` uses the existing subtype
+`{term // term.IsCore}` with that same code, without adding a new term language
+or changing any evaluator. `originalEquationEncoding K` is the fixed-K
+instance of the uniform complete original equation word, including its binary
+K header. These three small embeddings are proof-transport interfaces in
+`Complexity/FullHardness.lean`, independently inspectable beside the codec
+roundtrips. The canonicalizer statement permits any polynomial comparator
+whose result agrees with actual semantic equivalence on this subtype.
+
+Circuit word languages use `Circuit.Code.encode` in `Definitions/Encoding.lean`
+and `Algorithms/CircuitCode.lean`: an original list of gate records, explicit
+binary variable/reference labels and binary outputs. Operation arity is checked
+against the exact stored reference list; topological wellformedness is checked
+by actual safe cache evaluation. `Circuit.Code.Language` existentially encodes
+the original graph and uses the independent `Equation.Holds`, requiring both
+wellformedness and equal evaluated outputs for every valuation. Root Paper
+repeats that complete language with the wellformedness/evaluation quantifiers.
+The Fin-three multiplication table is `if j=0 then 0 else max i j` and is
+proved to be the actual reset-chain generator, not an unchecked finite table.
+
+
+The complete uniform complexity layer uses three independent languages on the
+same `FullTermCode.EquationInput` and original equation encoding. `FullLanguage`
+has no syntactic restriction, `PublicLanguage` requires `IsPublic` on both terms
+(no renamings), and `CoreLanguage` requires `IsCore` (no winner constants or
+renamings). All require K≥3 locally. `FullCounterVerifier` proves the polynomial
+sparse-pair countercertificate checker and correctness under arbitrary padding;
+`FullPublicReduction` provides the no-permutation filter; `FullCompleteness`
+combines six fixed/uniform endpoints. No permutation alphabet or carrier is
+enumerated in the uniform machine.
+
+Native reset synthesis reuses the existing independently defined
+`Algorithms.GuardDescriptor`, its canonical table, realizability checker and
+primitive `Reset.Term` syntax. The pure helper `GuardDescriptor.recordTerm` in
+`Reset/Realizability/Records` joins a path for every original raw record,
+retaining duplicate records and unused dictionary slots. The native functions
+`Complexity.ResetSynthesis.synthesize`, `synthesizeWord` and `synthesizeCode`
+in `Complexity/ResetSynthesisMachine` construct the actual primitive tree,
+validate the complete original word and emit its original prefix-tree bytes.
+Their correctness is connected to independent root/table and winner semantics,
+with `1+2*n*m` nodes for physical dictionary width n and raw record count m.
+Root selection is the first genuine empty-prerequisite record and is proved
+correct; it does not assume dictionary position zero is the root.
+
+
+The [readable review index](paper-definition-surface.md) and machine-readable
+[public-type dependency surface](paper-definition-surface.json)
+records each of the 128 Paper theorem types, its reachable project definitions
+and inductive constructors, and imported boundary interfaces. Its extractor
+follows semantic/computational definition bodies and types, erases proof-valued
+subterms under binders, and never follows theorem proof bodies. Source hashes
+and per-theorem slices make the report reproducible; it supplements the manual
+meaning/index above and the separate transitive axiom audit.

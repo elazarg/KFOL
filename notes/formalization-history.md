@@ -434,3 +434,31 @@ normalization/equality and recognition bounds. Executable semantics and encoded
 size are now connected throughout this reset frontend, but full polynomial
 machine time, synthesis/substitution time and the end-to-end reduction gate
 remain partial.
+
+
+### Main-paper completion
+
+The main-paper completion scope is now fully proved: 23 main result rows,
+61 required catalog rows and 18 required prose obligations, with 128 full
+propositions in root `Paper.lean`. Report-only results are still optional.
+
+The final integration completes all six fixed/uniform full/public/core
+coNP-completeness endpoints on the original syntax, using binary K, explicit
+permutation arrays and sparse quadratic countercertificates. It also completes
+the arbitrary raw/owner/policy dichotomies, actual original reset DAG equality
+on winner sets and its three-element generator, and the core canonicalizer
+consequence. Native reset-table synthesis emits actual original primitive-tree
+bytes and has independent exact root/table, node-size and winner semantics.
+
+The earlier complete algebraic bases/nonfinite-basis proofs and canonical
+serial-SE/observed mixed-SPE recursion support the scalar, rational, threshold,
+full-abstraction and two-role round conclusions. The pinned historical
+open-game counterexamples were separately rebuilt and axiom-audited under their
+original Lean version; no refuted category law is used in the KFOL semantics.
+
+Work was integrated in the shared checkout without worktrees and without
+modifying the upstream GameTheory repository. Checkpoint `16631e2` records the
+uniform core extraction and complete raw-signature dichotomy. The final
+integration extends the whole-project import/axiom/source audits and the
+public-type definition report; the current inventory and status board contain
+its reproducible validation evidence.

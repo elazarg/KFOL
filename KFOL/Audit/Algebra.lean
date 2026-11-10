@@ -11,6 +11,7 @@ import all KFOL.Algorithms.FullTermCode
 import all KFOL.Reductions.RawSubsignature
 import all KFOL.Reductions.Circuits
 import all KFOL.Owner.ObservationCompilation
+import all KFOL.Reset.Realizability.Records
 meta import Lean.Elab.Command
 
 /-! # Independent algebra and representation import boundary

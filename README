@@ -37,15 +37,15 @@ Layout:
     tr.tex            Technical report entry point, holding the appendices
     references.bib    Bibliography
     sections/         Sections, appendices, macros, and label snapshots
-    scripts/          Label export between the two documents
+    scripts/          Label, inventory, import and definition-surface audits
     lean/             Twenty-two Lean proof modules, using only Std
     KFOL/             Pure algebra, word algorithms, and separate machine proofs
-    Paper.lean        Complete statements of the migrated main-paper claims
+    Paper.lean        Complete statements of all main-paper claims
     lakefile.toml     Lake targets, mathlib, and pinned complexity dependencies
     lake-manifest.json Immutable resolved dependency revisions
     tests/            Syntax, algebra, and word/machine regression checks
     checks/           Python models and independent finite checks
-    notes/            Exploration not claimed in the paper
+    notes/            Formalization plan, evidence inventory and exploration
     lean-toolchain    Lean version (4.35.0)
     build/            Generated PDF, upload ZIP, and compiled proofs
 
@@ -67,12 +67,16 @@ and runs the syntax, algebra and word regressions. make check-lean runs both Lea
 tracks. Lake artifacts are under .lake/; make clean removes build/.
 
 Root Paper.lean states complete propositions, with guarded axiom checks.
-The active plan is notes/formalization-plan.md; parallel ownership and remaining
-gates are in notes/formalization-status.md. Current statement-level evidence is
+The implemented plan is notes/formalization-plan.md; final coverage and checks
+are in notes/formalization-status.md. All 23 main result rows, 61 required catalog
+rows and 18 required prose obligations are covered by 128 public statements. Current statement-level evidence is
 notes/formalization-claims.json. Detailed completed deliveries and their original
 fingerprints are archived in notes/formalization-history.{md,json}.
 Run python3 scripts/check_inventory.py to validate the current snapshots,
 source fingerprints, declaration locations and public theorem references.
+The reproducible theorem-type definition graph is
+notes/paper-definition-surface.json; its runner is
+scripts/export_definition_surface.py.
 
 The shared algebra uses mathlib only: views and sharp test domains, common
 sources and atomic obstructions, idempotent elimination, generic equational
@@ -100,8 +104,9 @@ GameTheory is pinned to the authorized port/cslib-complexity branch at
 254e30e6d4299c51323aaeaf5f51a4763b375d4a. Lean/mathlib stay on 4.35.0.
 The canonical SPE, Nash, minimax and finite-SE-existence imports compile and pass
 a selected transitive axiom audit. KFOL's public strategic-form correspondence, backward induction, forcing and
-full term compiler are proved. The serial round SE correspondence remains
-a separate proof task. Pure algebra and the complete binary frontend do not
+full term compiler are proved. The complete serial SE/observed mixed-SPE
+correspondence, recursive values, scalar rational synthesis, thresholds, full
+abstraction and two-player round support are also proved. Pure algebra and the complete binary frontend do not
 import GameTheory or machine modules; the root package resolves the pins.
 
 The binary reset frontend has exact tree, dictionary and guard-record codecs,
@@ -114,7 +119,11 @@ dictionary uniqueness, the actual complete dependent descriptor decoder, whole
 normalization and canonical-table recognition. The latter closes the runtime
 clause of compact table realizability. The full original-tree equality algorithm now has a native certificate,
 including both decoders, shared support and semantic record-set comparison.
-Hardness reduction running-time claims remain partial.
+All main-paper native hardness/runtime claims are complete: full/public/core
+validity at fixed and binary-input K; arbitrary raw, owner and policy-family
+dichotomies; reset DAG equality on winner sets and its actual three-element
+generator; and original descriptor-to-primitive-tree synthesis. The latter has
+exact root/table and all-valuation winner semantics.
 
 All current algebraic and representation definitions are indexed in
 notes/formalization-definitions.md. Repeated variables remain independent syntax
@@ -133,18 +142,22 @@ checks/check_fragments.py independently evaluates the reset/union and
 two-owner H hardness reductions, including every mixed valuation in its
 stated finite cases. lean/Fragments.lean checks the semantic guard,
 propagation, and separation certificates and the generic colouring
-obstruction. The reduction-size and complexity arguments are in the paper.
+obstruction. The complete original-syntax reductions, size bounds and native machine/class
+transports are checked in KFOL/Reductions and KFOL/Complexity.
 
 checks/check_sealed_rounds.py compares exact rational Nash support rectangles
 with unilateral deviations, checks the parallel-sum interpretation and rational
 synthesis, and tests the infinite threshold family and nonconvexity witnesses.
 lean/SealedRounds.lean proves ordered-field diagonal-stage certificates,
 rational-generation arithmetic, and the impossibility of a finite summary of
-all threshold probes. The SE round correspondence and the connection from
-game syntax to those probes have written proofs in the paper.
+all threshold probes. The full SE round correspondence and the connection from actual game syntax
+to those probes are proved in KFOL/Rounds and repeated in Paper.lean.
 checks/check_open_game_obstruction.py independently reproduces the
 finite unit, nonassociativity, and failed convex-repair witnesses using
-exact rational laws. It does not replace the pinned historical Lean proofs.
+exact rational laws. The historical Lean proofs were separately rebuilt and
+standard-axiom-audited with their original pins; the reproducible source-hash
+manifest and runner are notes/integration/open-game-v1.json and
+scripts/check_external_open_game.py.
 
 The paper distinguishes kernel-checked results, written generic proofs,
 and finite checks. The dependent data-calculus metatheory and general
@@ -375,23 +388,27 @@ Earlier drafts and tracked reviews are available in Git history through
 
 lean/RawFragments.lean checks semantic certificates for all raw-pair
 hardness reductions; checks/check_raw_pairs.py evaluates the actual native
-reductions. Syntax assembly and complexity bounds have written proofs.
+reductions. Complete native syntax assembly and machine-level complexity
+transport are proved in KFOL/Complexity.
 
 lean/ChainGuards.lean proves guard completeness and checker correctness for the native
 two-owner G operation and, more generally, every one fixed nonempty
 proper blocking policy. The same checker decides every such theory,
 independently of K. checks/check_chain_guards.py evaluates the original
 owned-choice expression and the policies independently. Polynomial size
-bounds are the written guard-size argument in the paper.
+bounds and native runtime are proved in KFOL/Policies and KFOL/Complexity.
 
 sections/appendix-two-players.tex treats K=2, where the body of the paper's
 assumption K>=3 is dropped. checks/check_two_players.py tests it by exact closure
-and exact game values. Its results have written proofs and are not in Lean.
+and exact game values. The retained main-paper algebra, finite Kleene basis
+and round-support claims are proved in KFOL/Algebra/TwoPlayers and
+KFOL/Rounds/TwoPlayers; unused report classifications remain optional.
 
 lean/MixedPolicies.lean proves union/intersection identities for blocking
 policies, joint-test absorption, the abstract least-point coverage lemma,
 and the observer-relative hardness certificates. Polynomiality for chains
-and the complete two-policy complexity classification have written proofs;
+and the complete two-policy and finite-family classifications are proved in
+KFOL/Policies and KFOL/Complexity;
 checks/check_mixed_policies.py compares their guard algorithms with exact
 winner-set tables and checks native hardness reductions.
 

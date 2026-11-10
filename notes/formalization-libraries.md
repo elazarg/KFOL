@@ -10,8 +10,9 @@ remains `f06449c5fb1ca49f14ea2b5331ddf71bd2dcd232`.
 The selected native machine and GameTheory protocol gate passed 3266 jobs in an
 isolated downstream package. Production imports of canonical SPE, Nash,
 minimax and finite SE existence passed 3803 jobs and the explicit standard-axiom
-check in `KFOL/Audit/Dependencies.lean`. These are dependency gates; compiling the
-interfaces does not prove the KFOL strategy or round correspondences.
+check in `KFOL/Audit/Dependencies.lean`. These are dependency gates. The paper-specific public-strategy and complete
+observed-SPE/serial-SE correspondences have since been proved in KFOL, as
+recorded below; they are not consequences of those import checks alone.
 
 GameTheory is resolved by the root package but excluded from the pure algebra
 and binary frontend import closure. The machine branch imports successor
@@ -27,24 +28,26 @@ modified; the earlier v1 pin and API observations are retained in delivery histo
 
 ## GameTheory fit
 
-Paths below are relative to `../GameTheory/`. Declaration names are source-checked anchors; final public declarations must still discharge their exact premises.
+Paths below are relative to the pinned GameTheory checkout. Declaration names
+are source-checked anchors. The KFOL bridges discharge their finite-menu,
+termination, recall and expectation hypotheses explicitly.
 
-| Need in the main paper | Existing API | Fit and KFOL work remaining |
+| Need in the main paper | Existing API | Implemented fit and boundaries |
 | --- | --- | --- |
-| General deviations and equilibrium | `Core/Signature`, game forms, `Core/Utility`, canonical `IsNash` and `Profile.update` | Reuse the canonical strategic definitions. Compile KFOL syntax; prove pure profiles, entire-player replacements, terminal winners, and utilities agree with the existing Std development. Preserve decisions at all occurrences. |
-| Pure SPE and backward induction | `Protocol/SubgamePerfect`, `Protocol/Backward`, `Protocol/HistoryBackward`; `Languages/EFG/SubgamePerfect` | `IsSubgamePerfect` compares whole plans at information-set-closed subgame roots. `IsHistorywiseOptimal` is a stronger separate predicate. Under KFOL public perfect information prove every subtree root is a proper subgame and establish the exact equivalence to the paper's SPE. Instantiate well-foundedness and the one-shot theorem's `ActsOnceWhereItMatters` and expectation hypotheses; do not conflate historywise optimality with SPE in hidden games. |
-| Observation-local strategies | `Protocol/Information`, `Protocol/BehavioralAssessment` | Policy arguments are information states, and menus are information-local with an adequacy proof. Reuse this enforcement rather than functions on hidden state plus an informal promise. Prove KFOL's visibility model produces the stated information sets. |
-| Simultaneous rounds | `Languages/FOSG` | A suitable execution/information target. Encode finite menus and fully public boundaries as a restricted FOSG model with independent current decisions and winner outcomes. No general FOSG equilibrium theorem by itself proves the round recursion. |
-| Serial hidden commitments | `Languages/Bridges/FOSGToEFG`, `.../FOSGToEFGStrategic` | Serializes one hidden choice slot per player followed by a resolver. `isNash_serialized_iff_source` preserves whole-profile behavioral Nash and law erasure. KFOL must show the resolver/full-publication boundary agrees with the paper, prove corresponding subgame structure, and separately prove the SPE/SE correspondence. The serializer does **not** currently export that correspondence. |
-| Independent SE definition | `Analysis/Protocol/Sequential`; `Protocol/BehavioralAssessment`, `BehavioralBayes`, `BehavioralTerminal`; EFG adapter `Analysis/Protocol/EFG` | `BehavioralAssessment.IsSequentialEquilibrium` combines whole-policy terminal rationality with `IsSequentiallyConsistent`, a pointwise limit of fully mixed Bayes assessments. This is the intended independent definition; specialize it instead of introducing another SE predicate. Prove finite-coordinate convergence matches the paper's finite-game convention. |
-| SE one-shot and localization arguments | `Analysis/Protocol/SequentialOneShot`, `InformationLocalization`, `SubgameLocalization`, `SequentialLimits` | Useful proof infrastructure for restriction/pasting. Still prove the restricted round structure, off-path continuation choices, cancellation of public reach factors, and product beliefs at commitment sites. A Nash transport theorem cannot replace these obligations. |
-| Finite SE existence | `Analysis/Protocol/EFGExistence`: `Game.exists_isSequentialEquilibrium`; generic `Analysis/Protocol/SequentialExistence`: `InformationModel.exists_sequentialEquilibrium` | Finite histories, decision recall, total fallback policies, finite players and terminal well-foundedness suffice. A finite KFOL round tree with nonempty menus can supply these. No new general existence proof is needed. Existence is useful, but does not characterize the set of all equilibrium winner laws. |
-| Finite mixed Nash existence | `Analysis/Nash`: `GameTheory.exists_isNash_mixed` | Has finite player and strategy assumptions, nonempty strategy carriers, and `HasIntegrableUtility`. The finite joint-action stage with bounded winner payoffs supplies them. Avoid accidental integrability assumptions in the public theorem; prove them from finiteness. |
-| Constant-sum values and scalar uniqueness | `Analysis/Minimax`: `exists_value`, `exists_isSaddlePoint`; `Core/ZeroSum`: Nash/security equivalences and `IsSaddlePoint.value_eq` | Reuse after an explicit payoff shift from constant sum one to zero sum and an active-player restriction to `Fin 2`. Prove inactive roles have no strategic effect, and preserve all equilibrium winner coordinates. KFOL's diagonal formula and constructor laws remain paper-specific. |
-| Finite real simplexes and PMFs | `Math/Probability/Simplex`: `simplexWeights`, `PMF.ofSimplex`, `ofSimplex_toReal`, `ofSimplex_toReal_weights`; `Product`, `Expectation`, `UniformTremble`, `Convergence`, `ProductConditioning` | Prefer ordinary `PMF` as the semantic probability carrier. Use the existing simplex equivalence for coordinate inequalities and topology. This removes a new competing probability representation. Product and tremble lemmas help with the off-path belief proof but do not complete it by themselves. |
+| General deviations and equilibrium | `Core/Signature`, game forms, `Core/Utility`, canonical `IsNash` and `Profile.update` | Canonical strategic definitions are reused. KFOL public-tree restriction and whole-player replacement agree with the independently defined full-profile SPE predicate, preserving decisions at every occurrence. |
+| Pure SPE and backward induction | `Protocol/SubgamePerfect`, `Protocol/Backward`, `Protocol/HistoryBackward`; `Languages/EFG/SubgamePerfect` | Public adequacy uses canonical `IsNash` at every actual subtree and proves both directions of the independent whole-plan SPE bridge. Hidden rounds use canonical behavioral subgame perfection at every proper public subgame; no hidden-game equivalence with historywise optimality is assumed. |
+| Observation-local strategies | `Protocol/Information`, `Protocol/BehavioralAssessment` | KFOL source and serial policies use the information-local action menus. Intrinsic histories and actual serial decision fibers are identified with public prefixes plus earlier commitments. |
+| Simultaneous rounds | `Languages/FOSG` | Actual finite nonempty menus, independent current decisions and fully public boundaries instantiate the source FOSG. KFOL proves its winner-law recursion and canonical mixed-SPE characterization. |
+| Serial hidden commitments | `Languages/Bridges/FOSGToEFG`, `.../FOSGToEFGStrategic` | The accepted serializer supplies execution and root strategic transport. KFOL separately proves terminal-law erasure at every public history, the product posterior at every commitment site, and complete serial-SE/observed-SPE equivalence in `Rounds/Correspondence`. |
+| Independent SE definition | `Analysis/Protocol/Sequential`; `Protocol/BehavioralAssessment`, `BehavioralBayes`, `BehavioralTerminal`; EFG adapter `Analysis/Protocol/EFG` | The actual `BehavioralAssessment.IsSequentialEquilibrium` predicate is used, including whole-policy terminal rationality and limits of fully mixed Bayes assessments. No recursive equilibrium predicate replaces it. |
+| SE one-shot and localization arguments | `Analysis/Protocol/SequentialOneShot`, `InformationLocalization`, `SubgameLocalization`, `SequentialLimits` | KFOL proves off-path continuation selection, public reach-factor cancellation, product beliefs and arbitrary whole-policy deviation transport. These discharge the serial rationality bridge beyond the imported root Nash theorem. |
+| Finite SE existence | `Analysis/Protocol/EFGExistence`: `Game.exists_isSequentialEquilibrium`; generic `Analysis/Protocol/SequentialExistence`: `InformationModel.exists_sequentialEquilibrium` | KFOL supplies finite histories, decision recall, total fallback policies and terminal well-foundedness. Imported general existence is instantiated, and the independently proved correspondence characterizes every equilibrium winner law. |
+| Finite mixed Nash existence | `Analysis/Nash`: `GameTheory.exists_isNash_mixed` | The actual finite joint-menu stage and bounded winner-indicator payoffs discharge finite, nonempty and integrability hypotheses. Stage equilibria are used in the complete round recurrence and nonemptiness proofs. |
+| Constant-sum values and scalar uniqueness | `Analysis/Minimax`: `exists_value`, `exists_isSaddlePoint`; `Core/ZeroSum`: Nash/security equivalences and `IsSaddlePoint.value_eq` | KFOL proves pair-supported winner-law uniqueness, endpoint characterizations and the diagonal formula using actual stage Nash inequalities. PMF and mixed-Nash foundations are reused; no minimax conclusion is left as an external theorem hypothesis. |
+| Finite real simplexes and PMFs | `Math/Probability/Simplex`: `simplexWeights`, `PMF.ofSimplex`, `ofSimplex_toReal`, `ofSimplex_toReal_weights`; `Product`, `Expectation`, `UniformTremble`, `Convergence`, `ProductConditioning` | Ordinary `PMF` is the winner-law carrier. Product convergence and uniform tremble infrastructure support the actual Bayes/consistency proof, including zero-probability public histories. |
 | Optional report-only dependent fragment observations | `Protocol/Information`, `Protocol/Knowledge`; `Epistemic/Knowledge` | Reuse information partitions, knowledge and canonical profile updates where their carrier assumptions fit. They do not define typed telescopes, stable cell identities, or the paper's legal-view strategy space. In particular, `S_i(P;W)` may have dependently typed answers and may be empty, while a protocol action carrier is fixed per player. Any adapter must handle this honestly. The semantic private-store connection theorem still requires a local construction. |
 
-The reusable declarations can be inspected in the pinned [Nash module](https://github.com/elazarg/GameTheory/blob/c6650cd861d4a05a64adb2e4fd99a4feafa231b0/GameTheory/Analysis/Nash.lean), [SE definition](https://github.com/elazarg/GameTheory/blob/c6650cd861d4a05a64adb2e4fd99a4feafa231b0/GameTheory/Analysis/Protocol/Sequential.lean), [finite SE existence](https://github.com/elazarg/GameTheory/blob/c6650cd861d4a05a64adb2e4fd99a4feafa231b0/GameTheory/Analysis/Protocol/EFGExistence.lean), [serializer strategic bridge](https://github.com/elazarg/GameTheory/blob/c6650cd861d4a05a64adb2e4fd99a4feafa231b0/GameTheory/Languages/Bridges/FOSGToEFGStrategic.lean), and [simplex interface](https://github.com/elazarg/GameTheory/blob/c6650cd861d4a05a64adb2e4fd99a4feafa231b0/GameTheory/Math/Probability/Simplex.lean).
+The reusable declarations can be inspected in the pinned [Nash module](https://github.com/elazarg/GameTheory/blob/6f1af625b77215dd9e4454e6120275dbd8b61f51/GameTheory/Analysis/Nash.lean), [SE definition](https://github.com/elazarg/GameTheory/blob/6f1af625b77215dd9e4454e6120275dbd8b61f51/GameTheory/Analysis/Protocol/Sequential.lean), [finite SE existence](https://github.com/elazarg/GameTheory/blob/6f1af625b77215dd9e4454e6120275dbd8b61f51/GameTheory/Analysis/Protocol/EFGExistence.lean), [serializer strategic bridge](https://github.com/elazarg/GameTheory/blob/6f1af625b77215dd9e4454e6120275dbd8b61f51/GameTheory/Languages/Bridges/FOSGToEFGStrategic.lean), and [simplex interface](https://github.com/elazarg/GameTheory/blob/6f1af625b77215dd9e4454e6120275dbd8b61f51/GameTheory/Math/Probability/Simplex.lean).
 
 ## Complexity libraries
 
@@ -54,15 +57,26 @@ encodings. The facade is `KFOL/Complexity/Language.lean`. Native composition,
 list folds and input-length-clocked iteration charge full encoded context,
 state and output; these replace the earlier Cobham/FPn implementation.
 
-Native machine certificates now cover complete reset parsing, sparse support,
-guard extraction/compression, descriptor normalization/recognition and original-tree
-equality. The first reset/union reduction gate is complete: actual CNF correctness,
-linear expanded output size, polynomial generator, exact successor 3SAT codec,
-fixed-role finite-algebra verifier, and coNP-completeness for both typed equations
-and the complete binary language, including malformed words. The verifier does
-not claim constants independent of K. Remaining work covers owner/policy runtime,
-substitution, other native-signature reductions, circuits and uniform-K checking.
-No complexity foundations are re-proved in KFOL.
+Native machine certificates cover complete reset parsing, sparse support,
+guard extraction/compression, descriptor normalization/recognition and original
+binary-tree equality. Reset/union, the native raw-pair fragments, guarded-owner
+reductions and fixed-policy-family reductions have actual original-word class
+transports. One-owner recognition, synthesis and equality are certified; the
+restricted one-owner checker is independent of the number of ambient roles.
+The generic fixed-algebra verifiers have constants depending on that fixed
+algebra, as their statements require.
+
+The exact sparse-CNF reset DAG generator, original shared-graph word codec,
+cached finite-algebra verifier and both complete reset DAG class endpoints
+(winner sets and the actual three-element multiplication table) are certified.
+Original explicit-array full/public/core lower bounds and the actual-core
+canonicalizer/comparator collapse are complete. The uniform binary-K
+full/public/core verifiers and all six fixed/uniform coNP-completeness
+endpoints are production-certified. Full witnesses have proved exact framed
+length at most `16*(originalWordBytes+1)^2`, including arbitrary padding and
+malformed-word soundness. Native polynomial reset-table synthesis is also complete, with exact original primitive-tree bytes, root/table/node-size correctness and arbitrary-role winner semantics.
+The main substitution formula is proved; encoded substitution runtime is
+report-only. No complexity foundations are re-proved in KFOL.
 
 ## Algebraic supporting libraries
 
@@ -96,62 +110,53 @@ The scoped main paper no longer asserts `dep:thm:connection`. Its semantic typed
 
 ## Historical open games and real quantifier elimination
 
-The main paper's related-work paragraph asserts failed unit and associativity laws and cites an already checked historical artifact. Retain the immutable `v1-final` revision `02898a2d8b918f9b106a683420ca78c99867560e`; the current GameTheory rewrite is a different API and does not automatically contain its historical modules. A separate pinned proof target can check the needed failure theorems. The full convex-repair and incomparable-bracketing development need not be ported into KFOL merely to re-establish that sentence. Never install the refuted composition as a category.
+The main paper's related-work paragraph asserts failed unit and associativity laws and cites an already checked historical artifact. Retain the immutable `v1-final` revision `02898a2d8b918f9b106a683420ca78c99867560e`; the current GameTheory rewrite is a different API and does not automatically contain its historical modules. The isolated historical target has been rebuilt and its five theorem closures
+audited; `notes/integration/open-game-v1.json` records the exact sources and
+`scripts/check_external_open_game.py` reproduces the check. The full convex-repair and incomparable-bracketing development need not be ported into KFOL merely to re-establish that sentence. Never install the refuted composition as a category.
 
 Real quantifier elimination and the general semialgebraicity claim belong to report results not needed for the main-paper round theorem or scalar full abstraction. Exclude them from the required dependency graph. For a later extension, [MathComp real-closed](https://github.com/math-comp/real-closed/blob/master/index.md) supplies an existing Rocq/Coq QE proof, not a Lean import. No compatible completed Lean QE dependency was established here, and none is needed to complete the selected target.
 
-## Revised integration gates
+## Integration gates and current boundary
 
-The [plan's mathlib-only pair-countervaluation delivery milestone](formalization-plan.md) is complete on v4.35.0. The following dependency gates come afterward.
+All five original gates have passed on Lean 4.35.0:
 
-1. In an isolated downstream workspace, resolve the updated GameTheory, fixed-point, mathlib and ComplexityLib pins on their mutually compatible toolchain. Reconcile successor complexity APIs, compile narrow imports and inspect transitive axioms. Do not change the sibling repositories.
-2. Compile a public binary game with an unreached decision; prove its full-profile/SPE bridge and winner recurrence. This tests whether the strategic integration preserves the paper's semantics.
-3. Compile a single sealed two-bit round and its serializer; verify information sets, outcome-law erasure, finite histories and decision recall. Prove the local product-belief and consistency bridge, then test a two-round game with an unreachable public history to exercise off-path cancellation and pasting. Existing root Nash transfer alone does not pass this gate.
-4. Implement one reset/union reduction on the pinned 3SAT codec, including malformed words and a polynomial-time certificate. Reuse `NPComplete.compl` and transfer to the same encoded KFOL equation language. Record the reusable machine components separately from fragment-specific work, then assess policy-family and DAG reductions before extrapolating the total cost or number of machines.
-5. Use the native-versus-mathlib syntax decision already made in the first algebra milestone. Reopen it only if a concrete strategic or complexity consumer exposes a defect; do not repeat the comparison routinely.
+1. Authorized dependency resolution, selected imports and transitive axiom checks.
+2. Complete public-tree full-profile/SPE bridge, including unreached decisions.
+3. Actual finite-menu source and serial histories, information fibers, terminal
+   erasure, off-path product beliefs, consistency, and full SE/SPE correspondence.
+4. Exact original reset/union CNF generation and pinned machine-level 3SAT
+   transport, including the complete binary target language's malformed words.
+5. The shared mathlib equational interface and native frontend syntax choice,
+   with full original-syntax evaluation/support/substitution bridges.
 
-The successor selected-closure and production native-machine/analytic import
-gates are complete at the pins above. The public-SPE and first end-to-end reset/union reduction gates are complete. The sealed-round Bayes/SE gate remains. Exact reset binary semantics, normalization
-and shared-support identity checking are already connected; complete parser,
-dictionary and descriptor-validation machines are now certified as well.
+The round gate was completed with the original SE-based definition retained.
+`Rounds/Observed` proves the mixed-SPE recurrence independently;
+`Rounds/SerialRun` and `Rounds/Correspondence` connect every actual public
+history and whole-policy deviation to the canonical serial SE predicate.
+Specific diagonal, reciprocal and threshold games, public nonconvexity, scalar
+rational synthesis/full abstraction, and arbitrary-menu two-player support
+follow from those semantic bridges. No refuted mixed-open-game category law
+enters this implementation.
 
-These gates test the actual reuse seams. Once they pass, the remaining effort can be estimated from the paper-specific proof obligations, rather than from rebuilding foundations already available in the user's libraries.
+The antimatroid representation is proved in `KFOL/Reset/Antimatroid` from
+mathlib finite sets and lists, with both constructions and inverse laws and
+actual winner-set term functions. Compact table realizability, executable
+recognition/synthesis, the main substitution formula, and raw/canonical
+extraction-size bounds are checked. Encoded recognition and original-tree
+comparison and actual descriptor-to-primitive-tree synthesis have native
+polynomial-time certificates. Report-only encoded substitution runtime
+does not block main-paper completion.
 
-The [plan's editorial proposals](formalization-plan.md) distinguish this current target from possible manuscript changes. Moving the serial-SE correspondence or a discussion-level report claim out of the main text would change the required dependency graph; no such edit is assumed by this library assessment.
+The other required pure branches are proved locally: uniform core
+nonfinite-basis countermodels and local covers, congruence/threshold and
+uniform-matroid identification, the seven-equation choice/union basis,
+atomic-clone/determinacy/binary classification, one-owner forty-law
+completeness with its four-variable lower bound, and the two-role Kleene
+identification and finite basis. Their cited literature is attribution and a
+proof reference, not a theorem assumption in the Lean statements.
 
-The main antimatroid representation is now proved in `KFOL/Reset/Antimatroid`
-using mathlib finite sets and lists. The model uses the finite feasible-family
-axioms directly, proves both constructions and inverse laws, and identifies
-actual winner-set term functions through the existing selector/chain interface.
-It imports no external representation theorem. Compact table realizability,
-executable recognition and synthesis, and raw/canonical extraction-size bounds
-are now also checked. Their full encoded machine-time statements remain partial.
-
-
-## Integrated public and machine bridges
-
-The public branch now uses the narrow canonical `GameTheory.IsNash` strategic
-form at every subtree. Whole-plan deviations and subtree restriction are defined
-independently; both directions of the canonical correspondence are proved.
-Backward induction, forcing, neutral union and the full term compiler follow,
-including internal permutations and independent repeated components. Public
-adequacy therefore needs no second protocol compiler. The hidden-round model
-will use the canonical behavioral assessment and consistency interfaces.
-
-The Boolean source/serial information gate now instantiates the accepted
-MonitoringGame and explicit-order FOSGToEFG construction. Prefix information
-hiding and complete publication are checked at first- and second-round public
-histories. This has not yet proved the Bayes or SE correspondence.
-
-Native runtime now covers complete original-tree parsing, actual support and
-guard extraction/compression, normalization and complete reset equality as well
-as binary descriptor recognition. The first reset/union reduction and fixed-role coNP-completeness gate is complete for both typed and raw binary inputs. Whole owner recognition and synthesis are now certified, with unary dimensions, bitset guards and fully expanded syntax output. The complete uniform-K one-owner original-word checker is now certified; policy and remaining fragment machines are next.
-
-
-The general finite-menu round tree now has canonical source and serial finite
-histories, certified bounds, source perfect recall, serial decision recall and
-arbitrary-utility sequential-equilibrium existence via the imported theorem.
-An actual serial decision fiber is exactly its earlier commitments at a fixed
-public prefix. Probability products on these prefixes preserve pointwise limits;
-the Bayes/reach-factor identity and off-path product consistency are now proved. Full sequential-rationality/value correspondence remains.
-No refuted mixed open-game composition law enters this implementation.
+All required paper-facing mathematical and runtime endpoints are now
+complete and recorded in the live claim inventory. The dependent/private-store
+fragment, unrelated report results, numerical free-algebra enumeration and general real quantifier
+elimination remain optional; no completion claim depends on moving a retained
+main assertion out of scope.

@@ -1,6 +1,11 @@
 module
 
 public import KFOL.Algebra
+public import KFOL.Complexity.FullCompleteness
+public import KFOL.Complexity.ResetSynthesisMachine
+public import KFOL.Complexity.OwnerCountCompleteness
+public import KFOL.Complexity.CircuitHardness
+public import KFOL.Complexity.Canonicalization
 public import KFOL.Complexity.OwnerObservationFrontend
 public import KFOL.Complexity.CoreExtractionWord
 public import KFOL.Rounds.Scalar.FullAbstraction
@@ -2884,5 +2889,213 @@ theorem owner_count_polynomial_branches {Role : Type} [Fintype Role] [DecidableE
 [propext, Classical.choice, Quot.sound] -/
 #guard_msgs (whitespace := lax) in
 #print axioms KFOL.Paper.owner_count_polynomial_branches
+
+/-- Sharing alone makes constant-free reset equality coNP-complete. The
+language consists exactly of original wellformed graphs valid on all inputs. -/
+theorem reset_circuit_complexity {Role : Type u} (three : Fin 3 ↪ Role) :
+    let _ := Reset.structureOf (WinnerSet.reset (Role := Role))
+    Cslib.Complexity.coNPComplete Turing.MultiTapeTM.encBits
+      {word | ∃ equation : Circuit.Equation Reset.Symbol ℕ,
+        Circuit.Code.encode Reset.Symbol equation = word ∧ equation.WellFormed ∧
+        ∀ valuation : ℕ → WinnerSet Role,
+          ∃ value, equation.eval valuation = some (value,value)} :=
+  Complexity.CircuitCompleteness.reset_coNPComplete three
+
+/-- info: 'KFOL.Paper.reset_circuit_complexity' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Paper.reset_circuit_complexity
+
+/-- The same full original graph language is coNP-complete already on the
+actual three-element reset multiplication table. -/
+theorem reset_chain_circuit_complexity :
+    let _ := Reset.structureOf (fun i j : Fin 3 => if j = 0 then 0 else max i j)
+    Cslib.Complexity.coNPComplete Turing.MultiTapeTM.encBits
+      {word | ∃ equation : Circuit.Equation Reset.Symbol ℕ,
+        Circuit.Code.encode Reset.Symbol equation = word ∧ equation.WellFormed ∧
+        ∀ valuation : ℕ → Fin 3,
+          ∃ value, equation.eval valuation = some (value,value)} :=
+  Complexity.CircuitCompleteness.reset_chain_coNPComplete
+
+/-- info: 'KFOL.Paper.reset_chain_circuit_complexity' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Paper.reset_chain_circuit_complexity
+
+/-- A polynomial canonicalization of the actual original core, with any
+polynomial comparator deciding semantic equivalence of its outputs, forces P=NP. -/
+theorem core_canonicalization_collapse {K : ℕ} (three : Fin 3 ↪ Fin K)
+    (canonicalize : {term : Term (Fin K) ℕ // term.IsCore} → List Bool)
+    (runtime : Turing.MultiTapeTM.ComputableInPolyTime canonicalize
+      (Complexity.FullHardness.originalCoreTermEncoding K) Turing.MultiTapeTM.encBits)
+    (compare : List Bool × List Bool → Bool)
+    (comparison : Turing.MultiTapeTM.ComputableInPolyTime compare
+      (Turing.MultiTapeTM.encPair Turing.MultiTapeTM.encBits Turing.MultiTapeTM.encBits)
+      Turing.MultiTapeTM.encBool)
+    (complete : ∀ left right : {term : Term (Fin K) ℕ // term.IsCore},
+      compare (canonicalize left,canonicalize right) = true ↔
+        ∀ valuation : ℕ → WinnerSet (Fin K),left.val.eval valuation = right.val.eval valuation) :
+    Cslib.Complexity.P Turing.MultiTapeTM.encBits = Cslib.Complexity.NP Turing.MultiTapeTM.encBits :=
+  Complexity.Canonicalization.original_core_comparator (three 0) (three 1) (three 2)
+    (three.injective.ne (by decide)) (three.injective.ne (by decide))
+    (three.injective.ne (by decide)) canonicalize runtime compare comparison complete
+
+/-- info: 'KFOL.Paper.core_canonicalization_collapse' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Paper.core_canonicalization_collapse
+
+/-- `owner:cor:complexity`: complete equality and relative-observation
+owner-count dichotomies for the whole selected-owner original-word language. -/
+theorem owner_count_dichotomy {Role : Type} [Fintype Role] [DecidableEq Role]
+    (three : Fin 3 ↪ Role) (owners : Finset Role) :
+    let language (relation : WinnerSet Role → WinnerSet Role → Prop) : Set (List Bool) :=
+      {word | ∃ equation : Owner.Term Role ℕ × Owner.Term Role ℕ,
+        FiniteTermCode.encodeEquation (Owner.Symbol Role) equation = word ∧
+        equation.1.OwnersIn (fun r => r ∈ owners) ∧ equation.2.OwnersIn (fun r => r ∈ owners) ∧
+        ∀ valuation : ℕ → WinnerSet Role,
+          relation (equation.1.eval valuation) (equation.2.eval valuation)}
+    (owners.card ≤ 1 → language Eq ∈ Cslib.Complexity.P Turing.MultiTapeTM.encBits) ∧
+    (1 < owners.card → Cslib.Complexity.coNPComplete Turing.MultiTapeTM.encBits (language Eq)) ∧
+    ∀ observer : Role,
+      ((owners.erase observer).card ≤ 1 →
+        language (fun x y => observer ∈ x.val → observer ∈ y.val) ∈
+          Cslib.Complexity.P Turing.MultiTapeTM.encBits ∧
+        language (fun x y => observer ∈ x.val ↔ observer ∈ y.val) ∈
+          Cslib.Complexity.P Turing.MultiTapeTM.encBits) ∧
+      (1 < (owners.erase observer).card →
+        Cslib.Complexity.coNPComplete Turing.MultiTapeTM.encBits
+          (language (fun x y => observer ∈ x.val → observer ∈ y.val)) ∧
+        Cslib.Complexity.coNPComplete Turing.MultiTapeTM.encBits
+          (language (fun x y => observer ∈ x.val ↔ observer ∈ y.val))) :=
+  ⟨Complexity.OwnerObservationFrontend.equality_language_mem_P three owners,
+    Complexity.OwnerCountCompleteness.equality_language_coNPComplete three owners,
+    fun observer =>
+      ⟨fun small =>
+        ⟨Complexity.OwnerObservationFrontend.implication_language_mem_P three owners observer small,
+          Complexity.OwnerObservationFrontend.equivalence_language_mem_P three owners observer small⟩,
+        fun large =>
+          ⟨Complexity.OwnerCountCompleteness.implication_language_coNPComplete owners observer large,
+            Complexity.OwnerCountCompleteness.equivalence_language_coNPComplete owners observer large⟩⟩⟩
+
+/-- info: 'KFOL.Paper.owner_count_dichotomy' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Paper.owner_count_dichotomy
+
+/-- `gen:thm:complexity`: the full symmetric, public and core equation
+languages are coNP-complete when the binary role count is part of the input.
+All three use the same original syntax and explicit permutation-array codec. -/
+theorem uniform_equational_complexity :
+    Cslib.Complexity.coNPComplete Turing.MultiTapeTM.encBits
+      {word | ∃ input : FullTermCode.EquationInput,
+        3 ≤ input.1 ∧ FullTermCode.encodeEquationInput input = word ∧
+        ∀ valuation : ℕ → WinnerSet (Fin input.1),
+          input.2.1.eval valuation = input.2.2.eval valuation} ∧
+    Cslib.Complexity.coNPComplete Turing.MultiTapeTM.encBits
+      {word | ∃ input : FullTermCode.EquationInput,
+        3 ≤ input.1 ∧ FullTermCode.encodeEquationInput input = word ∧
+        input.2.1.IsPublic ∧ input.2.2.IsPublic ∧
+        ∀ valuation : ℕ → WinnerSet (Fin input.1),
+          input.2.1.eval valuation = input.2.2.eval valuation} ∧
+    Cslib.Complexity.coNPComplete Turing.MultiTapeTM.encBits
+      {word | ∃ input : FullTermCode.EquationInput,
+        3 ≤ input.1 ∧ FullTermCode.encodeEquationInput input = word ∧
+        input.2.1.IsCore ∧ input.2.2.IsCore ∧
+        ∀ valuation : ℕ → WinnerSet (Fin input.1),
+          input.2.1.eval valuation = input.2.2.eval valuation} :=
+  ⟨Complexity.FullCompleteness.full_coNPComplete,
+    Complexity.FullCompleteness.public_coNPComplete,Complexity.FullCompleteness.core_coNPComplete⟩
+
+
+/-- info: 'KFOL.Paper.uniform_equational_complexity' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Paper.uniform_equational_complexity
+
+/-- `gen:thm:complexity`: all three signatures are also coNP-complete for
+every fixed K≥3, on the fixed instance of the same original equation encoding. -/
+theorem fixed_equational_complexity (K : ℕ) (hK : 3 ≤ K) :
+    Cslib.Complexity.coNPComplete (Complexity.FullHardness.originalEquationEncoding K)
+      {equation : Term (Fin K) ℕ × Term (Fin K) ℕ |
+        ∀ valuation : ℕ → WinnerSet (Fin K),equation.1.eval valuation = equation.2.eval valuation} ∧
+    Cslib.Complexity.coNPComplete (Complexity.FullHardness.originalEquationEncoding K)
+      {equation : Term (Fin K) ℕ × Term (Fin K) ℕ |
+        equation.1.IsPublic ∧ equation.2.IsPublic ∧
+        ∀ valuation : ℕ → WinnerSet (Fin K),equation.1.eval valuation = equation.2.eval valuation} ∧
+    Cslib.Complexity.coNPComplete (Complexity.FullHardness.originalEquationEncoding K)
+      {equation : Term (Fin K) ℕ × Term (Fin K) ℕ |
+        equation.1.IsCore ∧ equation.2.IsCore ∧
+        ∀ valuation : ℕ → WinnerSet (Fin K),equation.1.eval valuation = equation.2.eval valuation} :=
+  ⟨Complexity.FullCompleteness.fixed_full_coNPComplete K hK,
+    Complexity.FullCompleteness.fixed_public_coNPComplete K hK,
+    Complexity.FullCompleteness.fixed_core_coNPComplete K hK⟩
+
+
+/-- info: 'KFOL.Paper.fixed_equational_complexity' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Paper.fixed_equational_complexity
+
+/-- The actual descriptor-word to primitive-tree-word synthesis machine
+runs in polynomial time on all inputs, including malformed words. -/
+theorem reset_synthesis_runtime :
+    Turing.MultiTapeTM.ComputableInPolyTime Complexity.ResetSynthesis.synthesizeCode
+      Turing.MultiTapeTM.encBits (Turing.MultiTapeTM.encOption Turing.MultiTapeTM.encBits) :=
+  Complexity.ResetSynthesis.synthesizeCode_polyTime
+
+
+/-- info: 'KFOL.Paper.reset_synthesis_runtime' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Paper.reset_synthesis_runtime
+
+/-- The machine emits a tree exactly when the independent total descriptor
+recognizer accepts; rejection is not replaced by a default output. -/
+theorem reset_synthesis_recognition (word : List Bool) :
+    (Complexity.ResetSynthesis.synthesizeCode word).isSome =
+      Algorithms.GuardDescriptor.recognize word :=
+  Complexity.ResetSynthesis.synthesizeCode_isSome word
+
+
+/-- info: 'KFOL.Paper.reset_synthesis_recognition' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Paper.reset_synthesis_recognition
+
+/-- The actual generated primitive term has the original descriptor's exact
+canonical table and root, with a bound in its raw record count. -/
+theorem reset_synthesis_table (d : Algorithms.GuardDescriptor) (hc : d.check = true) :
+    ∃ (root : Fin d.labels.length) (term : Reset.Term (Fin d.labels.length)),
+      Complexity.ResetSynthesis.synthesize d = some (term.relabel d.labels.get) ∧
+      term.root = root ∧ term.table = d.guards ∧
+      term.size ≤ 1 + 2 * d.labels.length * d.records.length :=
+  Complexity.ResetSynthesis.synthesize_spec d hc
+
+
+/-- info: 'KFOL.Paper.reset_synthesis_table' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Paper.reset_synthesis_table
+
+/-- Output bytes encode the actual sparse-label primitive term, whose winner
+semantics agree with the original raw guard records on every role carrier. -/
+theorem reset_synthesis_output {Role : Type u}
+    (d : Algorithms.GuardDescriptor) (hc : d.check = true) :
+    ∃ output : Reset.Term ℕ,
+      Complexity.ResetSynthesis.synthesizeCode d.encode = some (Algorithms.TermCode.encode output) ∧
+      output.size ≤ 1 + 2 * d.labels.length * d.records.length ∧
+      ∀ (valuation : ℕ → WinnerSet Role) (winner : Role),
+        winner ∈ (output.eval valuation).val ↔
+          ∃ record ∈ d.records,
+            (∀ k ∈ record.2,(valuation (d.labels.get k)).Ambiguous) ∧
+            winner ∈ (valuation (d.labels.get record.1)).val :=
+  Complexity.ResetSynthesis.synthesizeCode_encode_spec d hc
+
+/-- info: 'KFOL.Paper.reset_synthesis_output' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Paper.reset_synthesis_output
+
 
 end KFOL.Paper

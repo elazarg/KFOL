@@ -1,6 +1,7 @@
 module
 public import KFOL.Complexity.ResetUnionHardness
 public import KFOL.Complexity.GuardedPairHardness
+public import KFOL.Complexity.FullHardness
 @[expose] public section
 namespace KFOL.Complexity.Canonicalization
 open Turing.MultiTapeTM ComputableInPolyTime
@@ -80,4 +81,50 @@ theorem guarded_pair {Role : Type} (a b d : Role) (hab : a ≠ b) (had : a ≠ d
   implies_P_eq_NP GuardedPairMachines.termEncoding GuardedPairMachines.equationEncoding
     (fun left right => ∀ valuation : ℕ → WinnerSet Role, KFOL.GuardedPair.Term.eval a b left valuation = KFOL.GuardedPair.Term.eval a b right valuation)
     FiniteTermMachines.arguments_polyTime (GuardedPairHardness.coNPHard a b d hab had hbd) canonicalize runtime complete
+end KFOL.Complexity.Canonicalization
+
+namespace KFOL.Complexity.Canonicalization
+open Turing.MultiTapeTM ComputableInPolyTime
+
+/-- For every role type containing three distinct roles, a polynomial-time
+canonicalizer and polynomial-time comparator on the actual original core
+would collapse the machine-level classes P and NP. No runtime behavior is
+required outside the core subtype. -/
+theorem original_core_comparator {K : ℕ} (a b d : Fin K)
+    (hab : a ≠ b) (had : a ≠ d) (hbd : b ≠ d)
+    (canonicalize : FullHardness.CoreTerm K → List Bool)
+    (runtime : ComputableInPolyTime canonicalize (FullHardness.originalCoreTermEncoding K) encBits)
+    (compare : List Bool × List Bool → Bool)
+    (comparison : ComputableInPolyTime compare (encPair encBits encBits) encBool)
+    (complete : ∀ left right : FullHardness.CoreTerm K,
+      compare (canonicalize left,canonicalize right) = true ↔
+        ∀ v : ℕ → WinnerSet (Fin K),left.val.eval v = right.val.eval v) :
+    Cslib.Complexity.P encBits = Cslib.Complexity.NP encBits := by
+  apply comparator_implies_P_eq_NP RawPairMachines.termEncoding RawPairMachines.equationEncoding
+    (fun left right => ∀ v : ℕ → WinnerSet (Fin K),
+      RawPair.Term.eval (WinnerSet.choice a) (WinnerSet.choice b) left v =
+        RawPair.Term.eval (WinnerSet.choice a) (WinnerSet.choice b) right v)
+    FiniteTermMachines.arguments_polyTime
+    (RawPairCompleteness.twoOwners_coNPHard a b d hab had hbd)
+    (fun t => canonicalize ⟨FullHardness.ofPair a b t,FullHardness.ofPair_isCore a b t⟩)
+    (runtime.comp (FullHardness.ofPair_core_polyTime a b)) compare comparison
+  intro left right
+  simpa only [FullHardness.eval_ofPair] using complete
+    ⟨FullHardness.ofPair a b left,FullHardness.ofPair_isCore a b left⟩
+    ⟨FullHardness.ofPair a b right,FullHardness.ofPair_isCore a b right⟩
+
+/-- Literal equality of canonical output words is the special case with the
+standard native polynomial-time word comparator. -/
+theorem original_core {K : ℕ} (a b d : Fin K)
+    (hab : a ≠ b) (had : a ≠ d) (hbd : b ≠ d)
+    (canonicalize : FullHardness.CoreTerm K → List Bool)
+    (runtime : ComputableInPolyTime canonicalize (FullHardness.originalCoreTermEncoding K) encBits)
+    (complete : ∀ left right : FullHardness.CoreTerm K,
+      canonicalize left = canonicalize right ↔
+        ∀ v : ℕ → WinnerSet (Fin K),left.val.eval v = right.val.eval v) :
+    Cslib.Complexity.P encBits = Cslib.Complexity.NP encBits := by
+  apply original_core_comparator a b d hab had hbd canonicalize runtime
+    (fun p => decide (p.1 = p.2)) (decide_eq' (fst encBits encBits) (snd encBits encBits))
+  intro left right
+  simpa only [decide_eq_true_eq] using complete left right
 end KFOL.Complexity.Canonicalization

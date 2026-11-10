@@ -612,7 +612,8 @@ labels and permutation arrays against binary K before interpreting them.
 `tests/ComplexityFullTerms` checks the infinite-payload signature, bad operation
 tags, exact array/tree roundtrips and the complete callback/runtime interface.
 The full parser/fold build passes2,048jobs; all public runtime endpoints use
-only standard axioms. Uniform full/core validity certificates remain pending.
+only standard axioms. The complete uniform full/core validity certificates and
+all three fixed/uniform class endpoints are now proved below.
 
 ## Arbitrary selected raw binary signatures: complete hard branch
 
@@ -640,3 +641,63 @@ signature, the arbitrary-signature hardness endpoint, original syntax embedding
 runtime and the actual reset/union selected generator. These endpoints and
 embedding/generator machines print only standard axioms. Root's complementary
 small-signature checker uses the same selected-signature codec and language.
+
+
+## Complete full/public/core validity, with binary K
+
+`FullCounterVerifier` and `FullCounterCorrectness` certify the complete original
+word languages, using the shared independent `FullTermCode` definitions.
+`FullLanguage` is the symmetric public signature A^sym, including explicit
+permutation arrays. `PublicLanguage` is A, rejecting all rename nodes;
+`CoreLanguage` is C, rejecting both constants and rename nodes. All three word
+languages require K≥3, exactly the main paper's scope. Their codecs and source
+validation remain meaningful for every K, including zero.
+
+The verifier decodes the original equation and binary K, validates every role
+label and every physical permutation array, and reads a framed list of role
+pairs for the original source dictionary. Dictionary extraction visits actual
+source nodes and array entries; it never loops to the greatest variable name or
+to K. `FullSparseEvaluation.evaluate` evaluates the original tree directly using
+lists of binary role labels. Its set semantics agrees exactly with the original
+WinnerSet interpretation, including all internal permutations. The output has
+at most twice the original tree's node count; the complete encoded annotation
+has a quadratic bound in captured context plus original source bytes.
+
+`FullCounterVerifier.verifier_polyTime` is the native deterministic multitape
+polynomial-time certificate for this whole all-strings program, with input
+encoding `encPair encBits encBits` and output `encBool`. `verifier_sound` and
+`verifier_complete` identify its accepted certificates with the complement of
+the independent full/core languages. Malformed source words, invalid role or
+array payloads, and out-of-scope K are outside these languages and have a trivial
+countercertificate. Malformed certificates are rejected for valid source words.
+A failed original equation has a pair-valued countervaluation; its concrete
+framed certificate is at most `16*(originalWord.length+1)^2` bits. The verifier
+reads only that first frame, so every trailing padding word preserves acceptance.
+No fixed-carrier enumeration or uncharged finite-alphabet parameter enters this
+uniform upper bound.
+
+`FullPublicReduction.check` is the actual constant-context tree scan accepting
+exactly original terms without rename nodes. Its whole-word reduction sends a
+failed scan to the malformed empty word and otherwise preserves the original
+word. `reduce_correct` proves PublicLanguage membership iff FullLanguage
+membership of this actual polynomial-time output.
+
+The six integration-ready class endpoints in `KFOL.Complexity.FullCompleteness`
+are `full_coNPComplete`, `public_coNPComplete`, `core_coNPComplete`, and
+`fixed_full_coNPComplete K hK`, `fixed_public_coNPComplete K hK`,
+`fixed_core_coNPComplete K hK`. Uniform endpoints use `encBits` and the exact
+three original-word languages. Fixed endpoints use
+`FullHardness.originalEquationEncoding K`; the public/core predicates include
+their literal `IsPublic`/`IsCore` syntax checks and universal original evaluation.
+Hardness comes from the actual original two-choice trees and certified generators
+in `FullHardness`/`FullHardnessPublic`, with no reduction or runtime assumptions.
+
+Validation: the strict full class build passes2,187jobs.
+`tests/ComplexityFullCompleteness.lean` checks all six complete statements,
+malformed input and permutation arrays, binary billion-role headers, exact
+constant/rename restrictions and arbitrary certificate padding. All nine printed
+class/runtime/correctness anchors use only `propext`, `Classical.choice` and
+`Quot.sound`; a separate module-owned all-declarations audit checks415 declarations in
+all imported Full complexity modules, including private helpers and their
+transitive axiom closures. The lower/canonicalizer package has its separate
+76-declaration audit recorded in `notes/integration/full-hardness.md`.
