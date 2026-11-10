@@ -8,7 +8,7 @@ Other report results remain optional and have their own evidence status.
 | Audit entrypoint | Mathematical statements | Presentation |
 | --- | ---: | --- |
 | [Paper.lean](../Paper.lean) | 79 | Main text and the report claims it cites; 603 lines |
-| [Report.lean](../Report.lean) | 28 | Further report results and proof ingredients |
+| [Report.lean](../Report.lean) | 33 | Further report results and proof ingredients |
 | [Results/Certificates](../KFOL/Results/Certificates.lean) | 140 preserved contracts | Original full statements, including native machines, codecs and intermediate invariants |
 
 Every root proof names one library theorem. Both root files have no semantic
@@ -19,12 +19,13 @@ weakened them.
 
 The [audit guide](audit-guide.md) explains the human reading order. Natural
 vocabulary is grouped in `Definitions/PaperAlgebra`, `PaperGames` and
-`Complexity`, with their underlying mathematical definitions indexed separately.
+`Complexity`, with their underlying mathematical definitions indexed separately. The report’s
+navigation vocabulary is in `Definitions/Queries`.
 
 | Definition surface | Theorem types | Semantic declarations | Source files | Written review units |
 | --- | ---: | ---: | ---: | ---: |
 | Paper | 79 | 635 | 35 | 333 |
-| Report | 28 | 376 | 23 | 178 |
+| Report | 33 | 440 | 25 | 193 |
 
 The slices overlap and exclude theorem proof bodies. These meaning indexes do
 not replace the human comparison with the manuscript or the proof/axiom audits.
@@ -35,7 +36,7 @@ The production integration checks are:
 
 - `make check-lean`: literal façade and preservation checks, inventory,
   independent algebra build/import audit, Paper/Report and whole-source axiom
-  audits, both definition indexes, actual negative audit fixtures and 86 strict
+  audits, both definition indexes, actual negative audit fixtures and 87 strict
   Lean regressions.
 - `make check-python`: the explicit 33 independent Python checks, mapped to the
   current paper in `checks/README.md` and the verification appendix.
@@ -63,6 +64,12 @@ The binary representation is now certified as an actual recursive owned-choice
 fold, with every retained action compiled exactly once. A regression rejects a
 wrong-owner tree despite agreement of its possible SPE winners. The independent
 SPE definition still uses complete deviations, not the recurrence it certifies.
+
+The TR-only navigation investigation adds exact, quadratic-size Core XPath
+compilation on a nonempty valuation-document schema, a faithful single-owner
+relational representation, and generic impossibility theorems for representing
+reset as relational product and for selecting nonempty intersections. The
+actual libxml2 XPath engine passed 60,208 independent comparisons.
 
 The report's dependent calculus, general real-QE/semialgebraicity, numerical
 free-algebra counts and unused extensions remain outside main-paper completion.

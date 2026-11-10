@@ -15,6 +15,8 @@ import all KFOL.Reset.Realizability.Records
 import all KFOL.Reductions.Circuits.LargeTables.Succinctness
 import all KFOL.Algebra.ChoiceSupport
 import all KFOL.Definitions.PaperAlgebra
+import all KFOL.Query.Compilation
+import all KFOL.Query.Relations
 meta import Lean.Elab.Command
 
 /-! # Independent algebra and representation import boundary

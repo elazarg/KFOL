@@ -148,7 +148,8 @@ def theorem_declarations(text: str) -> dict[str, Theorem]:
 def library_declarations() -> dict[str, Theorem]:
     result = {}
     sources = [*sorted((ROOT / "KFOL/Results").rglob("*.lean")),
-               ROOT / "KFOL/Strategic/Quantified/Fold.lean"]
+               ROOT / "KFOL/Strategic/Quantified/Fold.lean",
+               *sorted((ROOT / "KFOL/Query").rglob("*.lean"))]
     for path in sources:
         for name, declaration in theorem_declarations(read_source(path)).items():
             require(name not in result, f"Duplicate library theorem: {name}")

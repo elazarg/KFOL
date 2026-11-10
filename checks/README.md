@@ -19,6 +19,11 @@ proofs.
 | `check_core_basis.py`, `check_core_obstruction.py`, `check_core_padded_crossing.py` | Seven-law basis, arity obstruction and padded-grid countermodel |
 | `check_core_atomic.py`, `check_core_atomic_basis.py`, `check_core_conservative.py`, `check_core_unary_polynomials.py` | Retained atomic, conservative and unary-polynomial results |
 
+`python3 checks/check_xpath.py` is an additional, optional TR regression using
+`lxml`/libxml2’s actual XPath 1.0 engine. It checks the navigation compiler on
+60,208 term/valuation pairs and an empty-input schema counterexample. It is
+separate from the standard-library-only `make check-python` suite.
+
 The other Python files are shared models imported by these entry points.
 The four files `data/core-{small,six,seven,eight}-models.json` are fixed inputs
 to the atomic-basis check of principal-ideal quotients, as described in the

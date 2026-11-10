@@ -59,3 +59,37 @@ whole-player off-path deviations, the sharp four-role terminal example, insuffic
 exact guard payloads, and semantic bounds for alternative circuit trees.
 The whole-project axiom audit includes all new modules. The separate Paper and
 Report theorem-type indexes record their current public presentations.
+
+## Query-language investigation (technical report only)
+
+The report now includes `sections/appendix-queries.tex`, located after unary
+contexts. The positive connection is exact, not just an analogy: public terms
+compile into two-way Core XPath on height-two valuation trees, preserving and
+reflecting equivalence on that schema. Parent navigation lets each child query
+occur once; linear nonowner tests give the proved bound `12 * t.size ^ 2`.
+No descendant axis, recursion, node-identity comparison or counting is needed.
+The independently defined `Path.Holds`/`Test.Holds` semantics uses ordinary
+relations and predicates.
+
+One raw owned choice plus union also embeds faithfully in binary relations on
+`Option Role`, preserving actual relation union and composition. This regular
+representation is owner-specific and is not the document child relation.
+Reset plus union has no such faithful representation: reset fails right
+distributivity. These generic results need no role finiteness assumption.
+
+Conversely, Core XPath selects the intersection of two input relations, whereas
+even full winner terms with constants and permutations cannot do so on all
+inputs with nonempty intersection. Idempotency eliminates the extra syntax,
+and two ambiguous inputs with atomic intersection give the contradiction.
+This makes the term language a proper query sublanguage, with whole-input
+selection controlled by outcome tests. Reset tables give its reset fragment
+canonical guarded queries and a realizability test.
+
+The XPath comparison follows the two-sorted semantics in
+[ten Cate–Litak–Marx (2010)](https://doi.org/10.1016/j.jal.2009.09.002).
+Equivalence is claimed only on the specified nonempty-input document schema.
+The Lean regression explicitly rejects the analogous identity on an empty-input
+document, and catches a guard evaluated under the candidate output instead of
+at its parent. The optional lxml/libxml2 regression independently executes
+60,208 compiled term/valuation cases, including all nonempty valuations at
+K=3/three inputs and K=4/two inputs. It also checks the empty-input example.

@@ -1,0 +1,227 @@
+\section{Guarded navigation queries}\label{app:queries}
+
+Winner sets can be read as query results, and owned choice as a way to
+combine them. This gives an exact connection with a fragment of Core
+XPath: terms without switches compile to navigation queries on trees of
+height two, with polynomial expansion. The connection also has limits.
+One owned choice with union admits a faithful representation by relations
+under union and composition, whereas reset with union does not. Even
+allowing constants and internal switches, the term language cannot select
+the intersection of two inputs when that intersection is nonempty.
+
+\subsection{A document schema and an exact translation}
+
+We use the set semantics of navigational XPath: paths denote binary
+relations and node tests denote sets of nodes. Union, path composition,
+and filtering have their usual meanings, and $\langle P\rangle$ tests
+whether $P$ has an endpoint. This is the two-sorted setting of
+ten Cate, Litak, and Marx~\cite{TenCateLitakMarx2010}. Our queries use
+only child $\downarrow$, parent $\uparrow$, union, filters, conjunction,
+disjunction, and negations of fixed role tags. They use no descendant
+axis, iteration, counting, or comparison of node identities.
+
+Fix finitely many input names $j$ and the finite role set $I$. Encode a
+valuation $S=(S_j)_j$ by a document $D_S$ with a root $o$, one child
+$v_r$ tagged $r$ for each $r\in I$, and one leaf tagged
+$\mathsf{in}_j$ below $v_r$ exactly when $r\in S_j$. Role and input
+tags are disjoint. Each $S_j$ is nonempty. Thus the document has height
+at most two, and every nonempty valuation is represented. The input query
+\[
+ P_j=\downarrow[\langle\downarrow[\mathsf{in}_j]\rangle]
+\]
+returns precisely the role nodes in $S_j$. Let $R_r$ denote the node test
+for tag $r$.
+
+First compile a test $N_r(t)$ meaning that the result of $t$ contains
+some role other than $r$. For terms without switches, set
+\begin{align*}
+ N_r(\at a)&=\begin{cases}\mathsf{false},&a=r,\\
+                         \mathsf{true},&a\ne r,\end{cases}
+ &N_r(x_j)&=\langle P_j[\neg R_r]\rangle,\\
+ N_r(s\ch a t)&=\begin{cases}
+ N_r(s)\land N_r(t),&a=r,\\
+ N_r(s)\lor N_r(t),&a\ne r.
+ \end{cases}
+\end{align*}
+Each test has size linear in $t$. This uses nonemptiness: failing to be
+$\{r\}$ is the same as containing a role other than $r$.
+The tests can therefore be pushed to input marks without materializing
+the intermediate query results.
+
+Define the output query by
+\begin{align*}
+ Q_{\at r}&=\downarrow[R_r], &Q_{x_j}&=P_j,\\
+ Q_{s\ch r t}
+   &=(Q_s\cup Q_t)
+       [R_r\lor\langle\uparrow[N_r(s)\land N_r(t)]\rangle].
+\end{align*}
+The parent step is important: the tests inspect the common document
+root, while the filter is applied to candidate output roles. Each child
+query occurs once. Duplicating both child queries in a guarded-union
+expansion would instead allow exponential growth.
+
+\begin{theorem}[Exact navigation compilation]\label{query:thm:compilation}
+For every public term $t$ without internal switches and every nonempty
+valuation $S$, the query $Q_t$ at the root of $D_S$ returns exactly
+$\{v_r:r\in t(S)\}$. With constructor size for terms and the displayed
+two-sorted query syntax, $|Q_t|\leq12|t|^2$.
+Consequently two such terms are equal on all valuations if and only if
+their compiled queries agree on all documents of this schema.
+\end{theorem}
+\begin{proof}
+For $N_r$, the owner-atom criterion gives conjunction when the choice
+owner is $r$, and the other-atom criterion gives disjunction otherwise.
+This proves the test's meaning by induction. At an owned node, membership
+of $r$ is membership in either child. For any other candidate role, the
+same union is retained precisely when both child results differ from
+$\{r\}$. The parent filter implements these two cases. Induction proves
+the output assertion, including that all endpoints are role nodes.
+
+Count one constructor for each axis, tag or Boolean constant, filter,
+union, path composition, Boolean connective, and existence test. The
+input query has size six, and $|N_r(t)|\leq9|t|$. If $s,t$ have sizes
+$m,n$, the compiled owned node has size
+$8+|Q_s|+|Q_t|+|N_r(s)|+|N_r(t)|$.
+The bound follows from
+$8+12m^2+12n^2+9m+9n\leq12(m+n+1)^2$.
+Finally, every valuation has its document, and distinct result sets
+give distinct role-node results.
+\end{proof}
+
+The equivalence is relative to the stated document schema; it does not
+assert equivalence on arbitrary XML trees. In particular, both the unique
+role nodes and nonempty input relations are part of its meaning. The
+negated tags are fixed tests, not negations of input predicates, so
+inserting input marks can only add result roles. The game algebra is
+therefore a monotone query language on these nonempty unary relations.
+The polynomial translation gives a precise interface for applying query
+reasoning; it does not make the two languages equally expressive.
+
+\subsection{An ordinary relational representation for one owner}
+
+There is also a connection that does not use the document schema. Fix
+one owner $r$ and adjoin a fresh point $e$ to $I$. Associate to each
+nonempty $A\subseteq I$ the binary relation $L_A$ on $I\cup\{e\}$ given by
+\[
+ L_A(e,y)\iff y\in A,\qquad
+ L_A(x,y)\iff y\in A\star_r\{x\}\quad(x,y\in I),
+ \qquad L_A(x,e)\iff\mathsf{false}.
+\]
+Composition $L;M$ means first an $L$ edge, then an $M$ edge.
+
+\begin{proposition}[Faithful relational representation]\label{query:prop:relations}
+The map $A\mapsto L_A$ is injective and satisfies
+\[
+ L_{A\cup B}=L_A\cup L_B,\qquad
+ L_{A\star_r B}=L_A;L_B.
+\]
+\end{proposition}
+\begin{proof}
+The row at $e$ recovers $A$, proving injectivity. Owned choice
+distributes over union in each argument
+(\cref{core:prop:choice-union-basis}), so the first equation holds in
+every row. For the second, its atomic-column form is
+\[
+ A\star_r B=\bigcup_{b\in B}A\star_r\{b\}.
+\]
+If $A=\{r\}$ or $B=\{r\}$ this is immediate. Otherwise $B$ has a
+member other than $r$; that column retains all of $A$, and the remaining
+columns supply every member of $B$. The equation at row $e$ now follows
+from commutativity, and at an ordinary row from associativity and
+commutativity.
+\end{proof}
+
+Thus $\{\star_r,\cup\}$ is an algebra of actual relations with ordinary
+composition and union. The carrier relations commute and are idempotent
+under composition. In particular $L_A^+=L_A$ and
+$L_A^*=\mathrm{Id}\cup L_A$. These are relations on the enlarged set,
+not a claim that the child axis of an XML tree is owned choice. The
+representation depends on $r$; it does not identify all owned operations
+with one composition.
+
+\subsection{Why reset requires a test}
+
+A guarded-query reading of reset is
+\[
+ P\del Q=Q\cup P[\langle\uparrow[\mathsf{many}(Q)]\rangle],
+\]
+where $P,Q$ select role nodes from the document root, and
+$\mathsf{many}(Q)$ means at least two role endpoints. The parent test
+evaluates this condition at that same root.
+This is a test on the query result, not path composition. On our fixed
+finite set of role nodes it needs no counting primitive:
+\[
+ \mathsf{many}(Q)=
+ \bigvee_{a\ne b}
+   \bigl(\langle Q[R_a]\rangle\land\langle Q[R_b]\rangle\bigr).
+\]
+
+\begin{proposition}[No relational product for reset]\label{query:prop:no-reset-product}
+For $K\geq3$, there is no injective map $f$ from winner sets into binary
+relations on any set such that
+$f(A\cup B)=f(A)\cup f(B)$ and $f(A\del B)=f(A);f(B)$.
+\end{proposition}
+\begin{proof}
+Relational composition distributes over union in its right argument.
+Reset does not: for distinct $a,b,c$,
+\[
+ \{c\}\del(\{a\}\cup\{b\})=\{a,b,c\},\qquad
+ (\{c\}\del\{a\})\cup(\{c\}\del\{b\})=\{a,b\}.
+\]
+A faithful map preserving both operations would identify these different
+sets.
+\end{proof}
+
+The reset tables make this guarded-query reading explicit. Write
+$M_i=\mathsf{many}(P_i)$ and, for input $j$,
+\[
+ \Phi_j(t)=\bigvee_{A\in\mathcal G_j(t)}\;\bigwedge_{i\in A}M_i.
+\]
+Then \cref{reset:lem:selection} gives the query normal form
+\[
+ Q_t=\bigcup_j P_j[\langle\uparrow[\Phi_j(t)]\rangle].
+\]
+The tables specify when a whole input contributes, with alternative
+minimal prerequisites. Their completeness and synthesis theorem
+(\cref{reset:thm:three,reset:thm:synthesis}) therefore provide a canonical
+form and a realizability test for precisely these reset-generated
+guarded queries. They do not say that every union of guarded inputs is
+reset definable; the rooted-antimatroid conditions are essential.
+
+\subsection{A query that no term expresses}
+
+XPath can select nodes satisfying two input marks:
+\[
+ \downarrow[\langle\downarrow[\mathsf{in}_0]\rangle
+              \land\langle\downarrow[\mathsf{in}_1]\rangle].
+\]
+On the valuation documents this returns $S_0\cap S_1$. Its absence from
+the term language is not just the exclusion of empty winner sets.
+
+\begin{proposition}[Intersection cannot be selected]\label{query:prop:no-intersection}
+For $K\geq3$, there is no term in the full signature
+$\mathbf A^{\rm sym}$ whose value is $S\cap T$ whenever $S\cap T$ is
+nonempty.
+\end{proposition}
+\begin{proof}
+On the diagonal, such a term would return $S$, so it is idempotent.
+By \cref{gen:thm:core} it has an equivalent core term. A core term on
+ambiguous inputs is ambiguous (indeed it is the union of its occurring
+inputs, by \cref{gen:cor:trace}). But the ambiguous inputs
+$S=\{a,b\}$ and $T=\{b,c\}$ have the atomic intersection $\{b\}$.
+\end{proof}
+
+This separates the generated query language from Core XPath even after
+restricting attention to nonempty answers. Its basic action is to
+retain, suppress, or unite whole input results; arbitrary filtering by
+overlap is unavailable. Query optimization for this sublanguage can use
+the paper's identities and guard tables, while the navigation translation
+allows it to be embedded in a larger query engine.
+
+The translation concerns semantic equivalence, not derivations. An XPath
+axiomatization may use operations and inference rules absent from the
+source language; the full-path completeness result of
+ten Cate et al.~\cite{TenCateLitakMarx2010}, for example, uses a separation
+rule. Eliminating that extra reasoning is a separate problem. The
+translation therefore supplies no finite basis for the core, whose
+nonfinite-basis theorem is \cref{core:thm:no-basis}.

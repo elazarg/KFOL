@@ -4,6 +4,8 @@ public import KFOL.Results.Certificates
 public import KFOL.Results.Algebra
 public import KFOL.Results.Games
 public import KFOL.Definitions.PaperGames
+public import KFOL.Query.Compilation
+public import KFOL.Query.Relations
 public import KFOL.Audit.Namespace
 
 /-! # Audited report statements and mathematical proof ingredients
@@ -362,6 +364,44 @@ theorem two_player_forcing_coordinates : ∀ {Role : Type u} (labels : Fin 2 ≃
     (∀ p : Bool × Bool, (∃ A, TwoPlayers.forcingCoordinates labels A = p) ↔
       ¬(p.1 = true ∧ p.2 = true)) :=
   @KFOL.Results.two_player_forcing_coordinates
+
+/-! ## Guarded navigation queries and their expressive boundaries -/
+
+theorem public_query_compilation {Role : Type u} {Var : Type v} [DecidableEq Role]
+    (t : Term Role Var) (ht : t.IsPublic) :
+    (∀ (valuation : Var → WinnerSet Role) (node : Query.Node valuation),
+      (Query.compile t ht).Holds (Query.document valuation) .root node ↔
+        ∃ r ∈ (t.eval valuation).val, node = .role r) ∧
+    (Query.compile t ht).size ≤ 12 * t.size ^ 2 :=
+  Query.public_compilation t ht
+
+theorem public_query_equivalence {Role : Type u} {Var : Type v} [DecidableEq Role]
+    (s t : Term Role Var) (hs : s.IsPublic) (ht : t.IsPublic) :
+    (∀ (valuation : Var → WinnerSet Role) (node : Query.Node valuation),
+      (Query.compile s hs).Holds (Query.document valuation) .root node ↔
+        (Query.compile t ht).Holds (Query.document valuation) .root node) ↔ s.Equivalent t :=
+  Query.compile_equivalence s t hs ht
+
+theorem owned_choice_relational_representation {Role : Type u} (owner : Role) :
+    Function.Injective (Query.relation owner) ∧
+    (∀ A B : WinnerSet Role, Query.relation owner (A.union B) =
+      fun x y => Query.relation owner A x y ∨ Query.relation owner B x y) ∧
+    ∀ A B : WinnerSet Role, Query.relation owner (WinnerSet.choice owner A B) =
+      Relation.Comp (Query.relation owner A) (Query.relation owner B) :=
+  Query.relational_representation owner
+
+theorem reset_no_relational_representation {Role : Type u}
+    (a b c : Role) (hab : a ≠ b) (hac : a ≠ c) (hbc : b ≠ c) (Node : Type v) :
+    ¬∃ encode : WinnerSet Role → Node → Node → Prop, Function.Injective encode ∧
+      (∀ A B, encode (A.union B) = fun x y => encode A x y ∨ encode B x y) ∧
+      ∀ A B, encode (A.reset B) = Relation.Comp (encode A) (encode B) :=
+  Query.no_reset_relational_representation a b c hab hac hbc Node
+
+theorem intersection_not_definable {Role : Type u} (three : Fin 3 ↪ Role) :
+    ¬∃ t : Term Role (Fin 2), ∀ valuation : Fin 2 → WinnerSet Role,
+      ((valuation 0).val ∩ (valuation 1).val).Nonempty →
+        (t.eval valuation).val = (valuation 0).val ∩ (valuation 1).val :=
+  Query.no_intersection three
 
 end KFOL.Report
 

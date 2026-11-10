@@ -2,7 +2,7 @@
 
 Read [Paper.lean](../Paper.lean) with the vocabulary below. It contains 79
 mathematical statements and no definitions. [Report.lean](../Report.lean)
-contains 28 further mathematical statements. Their proofs name library theorems;
+contains 33 further mathematical statements. Their proofs name library theorems;
 definitions must still be reviewed independently against the manuscripts.
 
 The [audit guide](audit-guide.md) gives the reading order. The generated
@@ -14,9 +14,9 @@ theorem types. They erase proof-valued subterms and never follow theorem proofs.
 | Entry point | Theorem types | Semantic declarations | Source files | Central definition files | Written review units |
 | --- | ---: | ---: | ---: | ---: | ---: |
 | Paper | 79 | 635 | 35 | 23 | 333 |
-| Report | 28 | 376 | 23 | 12 | 178 |
+| Report | 33 | 440 | 25 | 14 | 193 |
 
-These counts are separate slices and overlap. Three vocabulary files organize
+These counts are separate slices and overlap. The vocabulary files organize
 the presentation; they do not replace their underlying mathematical definitions.
 
 ## Winner algebras
@@ -172,6 +172,23 @@ details, retained below the façade. Duplicate records and unused dictionary
 positions are charged at their actual input sizes. Typed owner-table inputs
 carry their explicit unary position dimension; this is part of their encoding.
 A size bound on a mathematical term alone is not a native polynomial-time proof.
+
+## Report navigation queries
+
+[Queries.lean](../KFOL/Definitions/Queries.lean) defines a fragment of two-way
+Core XPath independently of winner evaluation: paths denote binary relations,
+tests denote node predicates, and composition/filtering have their ordinary
+meanings. The canonical document has one role node per role and an input mark
+below it exactly for membership in that input. Correctness and equivalence are
+relative to this schema, including nonempty inputs.
+
+`nonOwner` compiles a linear Boolean existence test; `compile` uses parent
+navigation to evaluate that test at the common root. The compiler is defined
+only on public terms, with the `IsPublic` proof excluding internal switches.
+Its output has quadratic constructor size. `relation` is a separate regular
+representation for a fixed owner on `Option Role`; it must not be confused
+with the document's child axis. These definitions import neither GameTheory
+nor machine complexity, and are included in the pure import audit.
 
 ## Preservation and verification
 

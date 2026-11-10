@@ -4,13 +4,13 @@ The completion target is the entire main paper, its substantive mathematical
 prose, and the report material those claims require. The entire technical report
 is not a completion target. The [inventory](formalization-claims.json) records
 23 main result rows, 64 required catalog rows and 21 required prose obligations,
-all proved. Its source catalog contains 149 statements.
+all proved. Its source catalog contains 153 statements.
 
 ## Public audit surface
 
 - [Paper.lean](../Paper.lean) contains 79 main-facing mathematical statements in
   about 600 lines, ordered by subject and labelled for the main results.
-- [Report.lean](../Report.lean) contains 28 further mathematical report statements
+- [Report.lean](../Report.lean) contains 33 further mathematical report statements
   and proof ingredients.
 - Every public theorem writes its proposition in mathematical vocabulary.
   Its proof is one application of a named library theorem. Neither root file
@@ -142,3 +142,16 @@ in the verification appendix. A statement remains unfinished if it lacks its
 full mathematical clauses, assumes a needed external theorem, or gives only an
 unconnected certificate. No placeholders, project axioms or `native_decide`
 count as completion.
+
+## Report-only query investigation
+
+The query extension is package Q: four report result environments, with five
+audited `Report` statements. It adds a small independent navigation language
+in `Definitions/Queries` and proofs in `KFOL/Query`. Exact compilation and its
+quadratic constructor bound, schema-relative equivalence, a relational
+representation for one owned choice, and two expressive separations are proved.
+This extension changes no main-paper theorem or definition. The optional
+`checks/check_xpath.py` regression uses lxml/libxml2; the standard Python suite
+remains dependency-free. Future extensions should distinguish the fixed
+nonempty input schema from arbitrary XPath documents and keep runtime claims
+separate from syntax-size bounds.
