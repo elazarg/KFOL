@@ -40,7 +40,9 @@ then $D=\{r\}$ makes the result constant. Otherwise the regular child's
 multiwinner values cannot collapse and the result is $S\cup C\cup D$.
 On an atomic input, the operation preserves $i$ and stays inside
 $\{i\}\cup C\cup D$. Two constants give a constant. This proves closure
-and the upper classification by induction.
+and the upper classification by induction. The Lean theorem
+\texttt{unary\_normal\_form\_upper} formalizes this argument, including
+extensivity of the regular functions.
 
 \emph{Synthesis.} For every $k\in C$, prescribe the allowed singleton
 input roles
@@ -54,7 +56,8 @@ the current value, which contains that other role. On a multiwinner
 input $S$, both operands contain $S$, so the result remains $S\cup\{k\}$.
 The order of these suppressions is irrelevant. Join $x$ with all the
 $g_k(x)$ using $J$. This realizes precisely~\eqref{game:eq:normal}; for empty
-$C$, use $x$. Its terms have only
+$C$, use $x$. The complete construction is the generic theorem
+\texttt{unary\_synthesis} in \texttt{Synthesis.lean}; its terms have only
 singleton leaves and owned choices.
 
 \emph{Uniqueness.} For any $k$, choose a two-element $S$ omitting $k$.
@@ -133,7 +136,10 @@ and $\{k,j\}$ both contain $k$.
 The exact fixed-role contextual quotient is \cref{view:thm:view}.
 \end{proof}
 
-Restricting observations to unique
+The first two statements are proved generically in Lean as
+\texttt{unary\_constant\_or\_extensive} and
+\texttt{ambiguity\_unobservable\_by\_unique\_winner}; they do not depend
+on enumerating the finite carrier. Restricting observations to unique
 winners can therefore discard the ambiguity retained by possible-win
 membership tests.
 
@@ -184,7 +190,7 @@ winners. Induction over the context therefore preserves SPE and the
 selected winner. Take the union over component SPE profiles.
 \end{proof}
 
-The next theorem is the positive case for neutral union.
+The next theorem is the positive case for neutral union, with a generic Lean proof.
 
 \begin{proposition}[Uniform copies suffice]\label{game:thm:uniform}
 Fix pairwise distinct $r,s,t$, a full SPE profile $p$ of $G$,
@@ -210,7 +216,8 @@ $\{g,h\}$. Conversely, a uniform ordinary SPE restricts to SPE profiles
 in its component copies. Taking the union over $p,q$ proves the claim.
 \end{proof}
 
-We \emph{select} profiles with equal component copies from the ordinary SPE
+This is \texttt{uniform\_copies\_winners} in Lean. We
+\emph{select} profiles with equal component copies from the ordinary SPE
 profiles, and deviations remain unrestricted.
 
 The term $D$ above supplies a separating case: it fixes every singleton
