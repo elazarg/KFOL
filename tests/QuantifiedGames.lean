@@ -99,26 +99,55 @@ private theorem nested_possibleWinners : possibleWinners nested = ({0, 2} : Set 
 exactly the two directly witnessed above. -/
 example : ∃ (pruned : QuantifiedTree (Fin 3)) (binary : KFOL.Strategic.Tree (Fin 3))
     (pruning : Prunes 2 nested pruned),
-    pruning.PreservesValues ∧ DepthLE 2 pruned ∧
+    pruning.PreservesValues ∧ DepthLE 2 pruned ∧ Compiles pruned binary ∧
     possibleWinners pruned = ({0, 2} : Set (Fin 3)) ∧
     KFOL.Strategic.possibleWinners binary = ({0, 2} : Set (Fin 3)) := by
   have hd : DepthLE 2 nested := by intro n m; trivial
-  obtain ⟨pruned, binary, pruning, preserved, bounded, represented⟩ :=
-    exists_value_preserving_pruning_binary_of_depthLE nested 2 hd
+  obtain ⟨pruned, binary, pruning, preserved, bounded, compiled, represented⟩ :=
+    exists_value_preserving_pruning_binary_fold_of_depthLE nested 2 hd
   have observed := preserved.possibleWinners_eq.trans nested_possibleWinners
-  exact ⟨pruned, binary, pruning, preserved, bounded, observed, represented.trans observed⟩
+  exact ⟨pruned, binary, pruning, preserved, bounded, compiled, observed, represented.trans observed⟩
 
 /-- No source depth bound is required for the stronger well-founded API;
 every structural pruning nevertheless has a finite uniform target depth. -/
 example (game : QuantifiedTree (Fin 3)) :
     ∃ (pruned : QuantifiedTree (Fin 3)) (binary : KFOL.Strategic.Tree (Fin 3))
       (pruning : Prunes 2 game pruned),
-      pruning.PreservesValues ∧ (∃ depth, DepthLE depth pruned) ∧
+      pruning.PreservesValues ∧ Compiles pruned binary ∧ (∃ depth, DepthLE depth pruned) ∧
       KFOL.Strategic.possibleWinners binary = possibleWinners game := by
-  obtain ⟨pruned, binary, pruning, preserved, represented⟩ :=
-    exists_value_preserving_pruning_binary game
-  exact ⟨pruned, binary, pruning, preserved, pruning.exists_depthLE,
+  obtain ⟨pruned, binary, pruning, preserved, compiled, represented⟩ :=
+    exists_value_preserving_pruning_binary_fold game
+  exact ⟨pruned, binary, pruning, preserved, compiled, pruning.exists_depthLE,
     represented.trans preserved.possibleWinners_eq⟩
+
+/-- A wrong helper owner can preserve SPE winners while violating the
+structural compilation requirement. -/
+private def ownerZeroTree : QuantifiedTree (Fin 4) :=
+  .node 0 Bool ⟨false⟩ (fun b => .leaf (if b then 1 else 2))
+
+private def ownerThreeBinary : KFOL.Strategic.Tree (Fin 4) := .node 3 (.leaf 2) (.leaf 1)
+
+example : KFOL.Strategic.value ownerThreeBinary =
+    KFOL.Strategic.value (.node 0 (.leaf 2) (.leaf 1)) := by
+  simp only [ownerThreeBinary, KFOL.Strategic.value_node, KFOL.Strategic.value_leaf]
+  simp [KFOL.WinnerSet.choice, KFOL.WinnerSet.singleton_inj]
+
+example : Compiles ownerZeroTree (.node 0 (.leaf 2) (.leaf 1)) := by
+  let children : Bool → KFOL.Strategic.Tree (Fin 4) := fun b => .leaf (if b then 1 else 2)
+  exact .node [false, true] (by decide) (by intro b; cases b <;> simp)
+    children (fun b => .leaf _) (.node (.single false) (.single true))
+
+example : ¬Compiles ownerZeroTree ownerThreeBinary := by
+  intro compiled
+  unfold ownerZeroTree ownerThreeBinary at compiled
+  cases compiled with
+  | node actions distinct complete children compiled fold =>
+    rcases fold.root_or_input with ⟨i, _, he⟩ | ⟨left, right, he⟩
+    · have hc := compiled i
+      rw [← he] at hc
+      cases hc
+    · have howner : (3 : Fin 4) = 0 := (KFOL.Strategic.Tree.node.inj he).1
+      exact (by decide : (3 : Fin 4) ≠ 0) howner
 
 /-- info: 'KFOL.Strategic.QuantifiedTree.deviation_refl' does not depend on any axioms -/
 #guard_msgs (whitespace := lax) in
@@ -159,5 +188,29 @@ example (game : QuantifiedTree (Fin 3)) :
 /-- info: 'KFOL.Strategic.QuantifiedTree.exists_value_preserving_pruning_binary_of_depthLE' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 #guard_msgs (whitespace := lax) in
 #print axioms KFOL.Strategic.QuantifiedTree.exists_value_preserving_pruning_binary_of_depthLE
+
+/-- info: 'KFOL.Strategic.QuantifiedTree.BinaryFold.exists_of_ne_nil' depends on axioms: [propext] -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Strategic.QuantifiedTree.BinaryFold.exists_of_ne_nil
+
+/-- info: 'KFOL.Strategic.QuantifiedTree.Compiles.possibleWinners_eq' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Strategic.QuantifiedTree.Compiles.possibleWinners_eq
+
+/-- info: 'KFOL.Strategic.QuantifiedTree.Prunes.exists_binary_compilation' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Strategic.QuantifiedTree.Prunes.exists_binary_compilation
+
+/-- info: 'KFOL.Strategic.QuantifiedTree.exists_value_preserving_pruning_binary_fold' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Strategic.QuantifiedTree.exists_value_preserving_pruning_binary_fold
+
+/-- info: 'KFOL.Strategic.QuantifiedTree.exists_value_preserving_pruning_binary_fold_of_depthLE' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Strategic.QuantifiedTree.exists_value_preserving_pruning_binary_fold_of_depthLE
+
+/-- info: 'KFOL.Strategic.QuantifiedTree.BinaryFold.root_or_input' does not depend on any axioms -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Strategic.QuantifiedTree.BinaryFold.root_or_input
 
 end KFOLTest.QuantifiedGames

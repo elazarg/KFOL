@@ -176,3 +176,15 @@ strategic interpretation, rather than changing any upstream library or adding
 those dependencies to the algebra branch. Nested infinite, history-dependent
 witness sets are tested explicitly. The paper specializes to a uniform finite
 decision-depth bound, while the underlying proof covers every well-founded tree.
+
+
+## Mathematical audit vocabulary
+
+The root statement files now use `Definitions/PaperAlgebra`, `PaperGames` and
+`Complexity` as mathematical vocabulary entrypoints. These contain semantic
+predicates and original encodings, not theorem aliases or algorithm-acceptance
+definitions. `Rounds.Game.value` selects one actual serial-SE schedule;
+`Report.serial_order_independence` proves that every other schedule gives the
+same winner laws. Two-player matrix and public-fold definitions were moved
+unchanged into `PaperGames` so their mathematical meaning is reviewed there.
+The native time/class definitions and all dependency pins are unchanged.

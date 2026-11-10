@@ -5,8 +5,12 @@ and integrated into the technical report, with six complete new Paper statements
 The subsequent nested-quantifier extension adds two more public statements,
 one central semantic definition module, and the strengthened assertion in
 Section 2. The report's support proposition is strengthened in place.
+The audit-surface refactor subsequently grouped the main statements in
+`Paper.lean` and further mathematical statements in `Report.lean`; every
+original complete contract remains in `KFOL.Results` and is recorded in the
+relocation manifest.
 
-| Hidden concept | Proved improvement | Public statements |
+| Hidden concept | Proved improvement | Established contract names |
 | --- | --- | --- |
 | Breadth of the owned-choice semilattice | A nonempty family indexed by any type has a support of at most K−1 values for finite K≥2. Its fold is a mathlib `IsLUB`. The subsequent nested-quantifier extension prunes every finite-depth public game with arbitrary history-dependent nonempty action types to at most K−1 original actions per retained node, preserving each matched subgame's SPE winners and giving a finite binary representation. Nonowner terminal actions attain the bound. | `public_choice_small_support`, `public_choice_support_sharp`, `arbitrary_public_quantifier`, `finite_depth_quantifier_reduction` |
 | Canonical tables as semantic complexity invariants | The linear shared selector circuit has exactly 2^n marker guards, each with n+1 prerequisites. Every equivalent reset tree has at least 2^n marker occurrences, 2^n+1 leaves and 2^(n+1)+1 total nodes. The marker occurrence bound is optimal. | `reset_circuit_tree_succinctness` |
@@ -53,5 +57,5 @@ Proof structure improved along with the statements:
 Regression coverage includes nested infinite, dependent witness domains,
 whole-player off-path deviations, the sharp four-role terminal example, insufficient two-state threshold codes, endpoint/tie probes,
 exact guard payloads, and semantic bounds for alternative circuit trees.
-The whole-project axiom audit includes all new modules, and the theorem-type
-surface index includes all eight public additions.
+The whole-project axiom audit includes all new modules. The separate Paper and
+Report theorem-type indexes record their current public presentations.

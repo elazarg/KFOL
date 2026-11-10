@@ -14,20 +14,6 @@ namespace KFOL.Rounds.Game.TwoPlayers
 open GameTheory GameTheory.Math.Probability
 open GameTheory.Languages.Bridges.FOSGToEFG
 
-/-- The literal public serialization in which player zero commits first. -/
-def serialZero (sizes : Fin 2 → ℕ)
-    (g : ((i : Fin 2) → Fin (sizes i+1)) → WinnerSet (Fin 2)) : WinnerSet (Fin 2) :=
-  WinnerSet.choiceFold 0 Finset.univ Finset.univ_nonempty fun row =>
-    WinnerSet.choiceFold 1 Finset.univ Finset.univ_nonempty fun col =>
-      g (matrixAction sizes row col)
-
-/-- The literal public serialization in which player one commits first. -/
-def serialOne (sizes : Fin 2 → ℕ)
-    (g : ((i : Fin 2) → Fin (sizes i+1)) → WinnerSet (Fin 2)) : WinnerSet (Fin 2) :=
-  WinnerSet.choiceFold 1 Finset.univ Finset.univ_nonempty fun col =>
-    WinnerSet.choiceFold 0 Finset.univ Finset.univ_nonempty fun row =>
-      g (matrixAction sizes row col)
-
 theorem serialZero_eq_zero_iff (sizes : Fin 2 → ℕ)
     (g : ((i : Fin 2) → Fin (sizes i+1)) → WinnerSet (Fin 2)) :
     serialZero sizes g = WinnerSet.singleton 0 ↔

@@ -1,14 +1,16 @@
 \section{Verification details}\label{app:verification}
 
-The paper's results are kernel-checked in Lean~4.35.0 with mathlib. The root file \texttt{Paper.lean} restates, in the namespace \texttt{KFOL.Paper}, every theorem of the main text, the further facts it asserts, the report results it cites (for two of them only the clauses it uses, \cref{tab:report}), and several other report results: $140$ statements, listed by result in \cref{tab:status}. Each is followed by a check that its proof uses no axioms beyond \texttt{propext}, \texttt{Classical.choice}, and \texttt{Quot.sound}, and nothing is admitted. No theorem from the literature enters as a hypothesis. Where a written proof cites one, as for the reset basis and the minimum one-owner generator \cite{FreeseEtAl2002}, owned choice with union \cite{HardingRomanowska2017}, and the atomic clone \cite{Szendrei2012}, the Lean proof is direct.
+The paper's results are kernel-checked in Lean~4.35.0 with mathlib. The two root files separate the mathematical claims from their implementation contracts. In namespace \texttt{KFOL.Paper}, \texttt{Paper.lean} restates $78$ results of the main text and the report clauses it uses (\cref{tab:status}). In namespace \texttt{KFOL.Report}, \texttt{Report.lean} restates $29$ further report results and proof ingredients (\cref{tab:report}). Every statement gives its complete proposition, and every proof is a single application of a named library theorem. Each file ends with a namespace audit that rejects any declaration whose proof depends on an axiom other than \texttt{propext}, \texttt{Classical.choice}, or \texttt{Quot.sound}. The whole-source audit checks the library and private helpers as well. Nothing is admitted, and no theorem from the literature enters as a hypothesis. Where a written proof cites one, as for the reset basis and the minimum one-owner generator \cite{FreeseEtAl2002}, owned choice with union \cite{HardingRomanowska2017}, and the atomic clone \cite{Szendrei2012}, the Lean proof is direct.
 
-The definitions are in \path{KFOL/Definitions}, apart from the proofs, and \path{notes/paper-definition-surface.md} lists every definition that each statement depends on. Winner sets are nonempty sets of roles. Subgame-perfect equilibrium is defined by full profiles and whole-player deviations in every subtree, independently of backward induction, and it agrees with Nash equilibrium of the GameTheory library in every subtree. Sealed rounds use assessments: sequential rationality at every information set, and consistency as a limit of completely mixed profiles. Complexity is measured on the deterministic multitape Turing machines of ComplexityLib, and coNP-completeness has its textbook meaning, with polynomial-time many-one reductions. Inputs are binary words encoding tree terms, with binary variable names, explicit permutations, and, when it is part of the input, $K$ in binary; the decoders reject malformed words. The algebraic modules import neither GameTheory nor ComplexityLib.
+The mathematical reading starts at \path{KFOL/Definitions/PaperAlgebra.lean}, \path{KFOL/Definitions/PaperGames.lean}, and \path{KFOL/Definitions/Complexity.lean}, then follows their underlying definitions. These three files are entry points, not the entire definition surface. The generated \path{notes/paper-definition-surface.md} and \path{notes/report-definition-surface.md} index the project definitions and external semantic interfaces reached from the theorem types; they do not traverse proof bodies. \path{notes/audit-guide.md} gives a reading order. Inspecting these meanings is separate from checking proof axioms.
 
-The other report results have written proofs, most with finite checks (\cref{tab:report}). The programs in \path{checks/} recompute small cases independently of Lean (\cref{app:finite-checks}). \texttt{make check paper} builds the Lean development, runs the audits and checks, and builds both manuscripts.
+Winner sets are nonempty sets of roles. Subgame-perfect equilibrium uses full profiles and whole-player deviations in every subtree, independently of backward induction, and agrees with the GameTheory library's Nash equilibrium in every subtree. Sealed rounds use assessments with sequential rationality at every information set and consistency as a limit of completely mixed profiles. Complexity uses ComplexityLib's deterministic multitape Turing machines, explicit encodings, and polynomial-time many-one reductions. Tree inputs have binary variable names and explicit permutation arrays; uniform inputs also encode $K$ in binary. The decoders reject malformed words. The independent algebra modules import neither GameTheory nor ComplexityLib.
+
+Detailed codec, descriptor, extraction and machine contracts remain in \path{KFOL/Results/Certificates.lean}; all $140$ previous complete statements are preserved there, with signatures recorded in \path{notes/audit-relocations.json}. They support the mathematical results without occupying the paper-facing statement table. Other report results retain the written proofs and finite evidence recorded below. The programs in \path{checks/} recompute small cases independently of Lean (\cref{app:finite-checks}). \texttt{make check paper} builds the Lean development, runs the audits and checks, and builds both manuscripts.
 
 {\small
 \begin{longtable}{>{\raggedright\arraybackslash}p{0.30\linewidth}>{\raggedright\arraybackslash}p{0.64\linewidth}}
-\caption{The statements in \texttt{Paper.lean}, by result.}\label{tab:status}\\
+\caption{The $78$ mathematical statements in \texttt{Paper.lean}, grouped by result.}\label{tab:status}\\
 \toprule
 Result & Statements\\
 \midrule
@@ -19,85 +21,122 @@ Result & Statements\\
 \endhead
 \bottomrule
 \endlastfoot
-Backward induction, neutral union (\cref{game:thm:adequacy,game:thm:union})
- & \path{public_backward_induction}, \path{public_equilibrium_strategic_form}, \path{public_term_interpretation}, \path{public_neutral_union}\\
-Public games, forcing (\cref{sec:rational})
- & \path{owned_choice_semilattices}, \path{finite_public_choices}, \path{finite_action_quantifier}, \path{public_forcing}, \path{player_view_orders}, \path{no_boolean_product}, \path{unique_winner_observations}, \path{membership_observations}\\
-Player views (\cref{view:thm:view,view:cor:product})
- & \path{player_views}, \path{public_subdirect_representation}, \path{switching_observation}\\
-Congruences (\cref{view:thm:congruences,view:thm:sym})
+Public backward induction and realizability (\cref{game:thm:adequacy,game:thm:union})
+ & \path{public_backward_induction}, \path{public_realizability}, \path{neutral_union}\\
+Public choice and quantifiers (\cref{sec:rational,game:prop:choice-support})
+ & \path{owned_choice_semilattices}, \path{finite_depth_quantifier_reduction}\\
+Forcing and Boolean coordinates (\cref{sec:rational,cor:no-boolean-product})
+ & \path{public_forcing}, \path{no_boolean_product}\\
+Player views and quotient orders (\cref{view:thm:view,view:cor:product})
+ & \path{player_views}, \path{public_subdirect_representation}, \path{player_view_orders}\\
+Observation (\cref{game:prop:obs,sec:perspectives})
+ & \path{unique_winner_observations}, \path{switching_observation}\\
+Congruence classifications (\cref{view:thm:congruences,view:thm:sym})
  & \path{congruence_classification}, \path{symmetric_congruence_chain}, \path{uniform_matroid_identification}\\
-Test domains (\cref{view:thm:tests,view:cor:optimal,sym:thm:optimal})
- & \path{reduct_test_domains}, \path{minimum_reduct_test_domain}, \path{optimal_test_domain}, \path{unary_atomic_reset}\\
-Pair theorem (\cref{sym:lem:provenance,sym:thm:pairs})
+Provenance and pair countervaluations (\cref{sym:lem:provenance,sym:thm:pairs})
  & \path{status_cell_provenance}, \path{pair_countervaluations}\\
-Idempotent elimination (\cref{gen:thm:core,gen:cor:views,gen:cor:trace,gen:thm:idem-domain})
- & \path{idempotent_elimination}, \path{checked_core_extraction}, \path{uniform_core_extraction_runtime}, \path{intrinsic_player_views}, \path{semilattice_trace}, \path{idempotency_certificates}\\
-Common source, atomic clone (\cref{gen:thm:source,gen:cor:determinacy,gen:thm:S2})
- & \path{common_source}, \path{atomic_repeated_triples}, \path{no_atomic_if_then_else}, \path{atomic_functions}, \path{determinacy}\\
-Binary operations, derived operations (\cref{reset:thm:binary,sec:reset})
- & \path{binary_atom_preserving}, \path{binary_atom_preserving_iff}, \path{reset_definability}, \path{owner_definability}, \path{guarded_choice_example}\\
-Reset tables (\cref{reset:lem:selection,reset:thm:three,reset:cor:generator})
- & \path{reset_selection}, \path{reset_tables_semantics}, \path{reset_table_semantic_definition}, \path{reset_substitution}, \path{reset_guard_extraction}, \path{reset_table_size}, \path{reset_minimum_generator}\\
-Reset equality on encoded trees (\cref{reset:thm:three})
- & \path{reset_guard_subset_machine}, \path{reset_support_indexing}, \path{reset_guard_record_codec}, \path{reset_binary_guard_records}, \path{reset_binary_input_codec}, \path{reset_binary_extraction}, \path{reset_record_normalization}, \path{reset_normalized_binary_extraction}, \path{reset_binary_equation_checker}, \path{binary_framing_machines}\\
-Reset basis, antimatroids (\cref{reset:thm:basis,reset:thm:anti})
- & \path{reset_basis}, \path{reset_antimatroids}, \path{reset_family_product}\\
-Table recognition and synthesis (\cref{reset:thm:synthesis})
- & \path{reset_table_realizability}, \path{reset_table_recognition}, \path{reset_table_local_completeness}, \path{reset_table_synthesis}, \path{reset_binary_descriptor_codec}, \path{reset_encoded_table_recognition}, \path{binary_descriptor_machines}, \path{reset_synthesis_runtime}, \path{reset_synthesis_recognition}, \path{reset_synthesis_table}, \path{reset_synthesis_output}\\
-Pair dichotomy (\cref{thm:raw-pairs,thm:owner-free-hardness})
- & \path{raw_pair_reductions}, \path{raw_pair_complexity}, \path{raw_signature_dichotomy}, \path{reset_union_reduction}, \path{reset_union_complexity}\\
-Equational complexity (\cref{gen:thm:complexity})
- & \path{fixed_equational_complexity}, \path{uniform_equational_complexity}, \path{core_canonicalization_collapse}\\
-Two owners, shared subterms, role count (\cref{thm:H-hardness,reset:thm:circuits,thm:colouring-theories})
- & \path{guarded_pair_reduction}, \path{guarded_pair_complexity}, \path{reset_circuit_reduction}, \path{reset_circuit_generator}, \path{reset_circuit_exponential_tables}, \path{reset_circuit_complexity}, \path{reset_chain_circuit_complexity}, \path{role_count_identity_theories}\\
-One-owner calculus (\cref{owner:lem:root,owner:thm:guards,owner:thm:one-table,owner:thm:four})
- & \path{owner_root_status}, \path{owner_guard_completeness}, \path{owner_one_table}, \path{owner_table_runtime}, \path{owner_original_word_checker}, \path{owner_four_element_theory}, \path{owner_minimum_generator}\\
-One-owner synthesis and basis (\cref{owner:thm:synthesis,owner:thm:basis-main})
- & \path{owner_table_synthesis}, \path{owner_synthesis_runtime}, \path{owner_thirty_six_equation_basis}, \path{owner_basis_variable_bound}\\
-Owner-count dichotomy, policies (\cref{owner:cor:complexity,selective:thm:families})
- & \path{owner_count_polynomial_branches}, \path{owner_count_dichotomy}, \path{joint_owner_observation_failure}, \path{strict_two_owner_policy}, \path{policy_family_checker}, \path{policy_family_reduction}, \path{hard_policy_complexity}, \path{policy_family_dichotomy}\\
-No finite basis (\cref{core:thm:no-basis,core:prop:choice-union-basis})
- & \path{core_nonfinite_basis}, \path{native_nonfinite_basis}, \path{core_typed_upper_clone_cover}, \path{core_variable_bound_obstruction}, \path{choice_union_basis}\\
-Round recursion (\cref{se:thm:round,se:cor:public})
- & \path{round_protocol_foundations}, \path{round_sequential_values}, \path{round_profile_consistency}, \path{round_product_beliefs}, \path{round_equilibrium_recursion}, \path{public_mixed_support}, \path{public_nonconvexity}\\
-Scalar fragment, infinite index (\cref{se:prop:parallel,se:thm:rational,se:thm:infinite,se:cor:scalar})
- & \path{constant_sum_round_values}, \path{scalar_diagonal_values}, \path{scalar_diagonal_security}, \path{scalar_parallel_laws}, \path{reciprocal_round_values}, \path{scalar_rational_values}, \path{infinite_winner_algebra}, \path{scalar_contextual_equivalence}\\
-Nested quantifiers over arbitrary domains (\cref{game:prop:choice-support})
- & \path{arbitrary_public_quantifier}, \path{finite_depth_quantifier_reduction}, \path{public_choice_small_support}, \path{public_choice_support_sharp}\\
-Exact circuit tables and tree bounds (\cref{reset:prop:large-circuit-table})
- & \path{reset_circuit_tree_succinctness}\\
-Boolean observation and state bounds (\cref{se:prop:threshold-states,se:prop:pair-observation})
- & \path{boolean_threshold_state_lower_bound}, \path{pair_game_boolean_full_abstraction}, \path{scalar_rational_observation_order}\\
+Sharp test domains (\cref{sym:thm:optimal,view:thm:tests,view:cor:optimal})
+ & \path{optimal_test_domain}, \path{reduct_test_domains}, \path{minimum_reduct_test_domain}\\
+The intrinsic core (\cref{gen:thm:core,gen:cor:views,gen:cor:trace})
+ & \path{idempotent_elimination}, \path{intrinsic_player_views}, \path{semilattice_trace}\\
+Common source and atomic obstructions (\cref{gen:thm:source})
+ & \path{common_source}, \path{atomic_repeated_triples}, \path{no_atomic_if_then_else}\\
+Atomic clone and determinacy (\cref{gen:thm:S2,gen:cor:determinacy})
+ & \path{atomic_functions}, \path{determinacy}\\
+Binary classification and rigidity (\cref{reset:thm:binary,reset:lem:rigidity})
+ & \path{binary_atom_preserving_iff}, \path{one_constant_rigidity}\\
+Derived reset and guarded choice (\cref{sec:reset})
+ & \path{reset_definability}, \path{owner_definability}, \path{guarded_choice_example}\\
+Canonical reset tables and generator (\cref{reset:lem:selection,reset:thm:three,reset:cor:generator})
+ & \path{reset_selection}, \path{reset_table_semantic_definition}, \path{reset_tables_semantics}, \path{reset_minimum_generator}\\
+Reset basis and antimatroids (\cref{reset:thm:basis,reset:thm:anti})
+ & \path{reset_basis}, \path{reset_antimatroids}\\
+Reset-table recognition and synthesis (\cref{reset:thm:synthesis})
+ & \path{reset_table_synthesis}, \path{reset_table_recognition_polynomial}, \path{reset_table_synthesis_polynomial}\\
+One-owner root, guards and generator (\cref{owner:lem:root,owner:thm:guards,owner:thm:one-table,owner:thm:four})
+ & \path{owner_root_status}, \path{owner_guard_completeness}, \path{owner_one_table}, \path{owner_minimum_generator}\\
+One-owner synthesis (\cref{owner:thm:synthesis})
+ & \path{owner_table_synthesis}, \path{owner_table_algorithms}\\
+One-owner basis (\cref{owner:thm:basis-main})
+ & \path{owner_thirty_six_equation_basis}\\
+Owner observations and policies (\cref{sec:one-owner,selective:thm:families})
+ & \path{joint_owner_observation_failure}, \path{strict_two_owner_policy}, \path{two_owner_selective}, \path{policy_family_dichotomy}\\
+Finite and nonfinite bases (\cref{core:prop:choice-union-basis,core:thm:no-basis})
+ & \path{choice_union_basis}, \path{core_nonfinite_basis}\\
+Hard fragments (\cref{thm:raw-pairs,thm:H-hardness})
+ & \path{raw_pair_dichotomy}, \path{guarded_pair_complexity}\\
+Equations and original-input algorithms (\cref{gen:thm:complexity,gen:thm:core,reset:thm:three,owner:thm:one-table})
+ & \path{equational_complexity}, \path{canonicalization_collapse}, \path{uniform_equality_algorithms}, \path{core_extraction_polynomial}\\
+Role-count identity theories (\cref{thm:colouring-theories})
+ & \path{role_count_identity_theories}\\
+Owner-count dichotomy (\cref{owner:cor:complexity})
+ & \path{owner_count_dichotomy}\\
+Reset circuits (\cref{reset:thm:circuits,reset:prop:large-circuit-table})
+ & \path{reset_circuit_complexity}, \path{reset_circuit_large_tables}\\
+Sealed-round recursion (\cref{se:thm:round})
+ & \path{round_recursion}\\
+Public mixed support and nonidempotence (\cref{se:cor:public})
+ & \path{public_mixed_support}, \path{public_nonidempotence}\\
+Scalar stage values (\cref{se:prop:parallel,se:thm:infinite})
+ & \path{constant_sum_value}, \path{scalar_diagonal_values}, \path{reciprocal_values}\\
+Infinite winner algebra and scalar observation (\cref{se:thm:infinite,se:cor:scalar})
+ & \path{infinite_winner_algebra}, \path{scalar_contextual_equivalence}\\
 Two players (\cref{app:two-players})
- & \path{two_player_identification}, \path{two_player_degeneracies}, \path{two_player_forcing_coordinates}, \path{two_player_finite_basis}, \path{two_player_round_support}, \path{two_player_round_contexts}\\
+ & \path{two_player_identification}, \path{two_player_degeneracies}, \path{two_player_finite_basis}, \path{two_player_round_support}, \path{two_player_round_contexts}\\
 \end{longtable}}
 
 {\small
 \begin{longtable}{>{\raggedright\arraybackslash}p{0.34\linewidth}>{\raggedright\arraybackslash}p{0.60\linewidth}}
-\caption{The evidence for report results and clauses not restated in \texttt{Paper.lean}.}\label{tab:report}\\
+\caption{The $29$ audited statements in \texttt{Report.lean}, followed by remaining report evidence.}\label{tab:report}\\
 \toprule
-Result & Evidence\\
+Result & Audited statements or other evidence\\
 \midrule
 \endfirsthead
 \toprule
-Result & Evidence\\
+Result & Audited statements or other evidence\\
 \midrule
 \endhead
 \bottomrule
 \endlastfoot
+Idempotency certificates (\cref{gen:thm:idem-domain})
+ & \path{idempotency_certificates}\\
+Reset table size, substitution and feasible families (\cref{app:proofs-reset})
+ & \path{reset_table_size}, \path{reset_substitution}, \path{reset_family_product}\\
+Core proof ingredients and ambient variety (\cref{core:prop:basis-arity,core:lem:typed-upper-clone-cover,core:cor:ambient-nfb})
+ & \path{core_variable_bound_obstruction}, \path{core_typed_upper_clone_cover}, \path{native_nonfinite_basis}\\
+Public strategic and term interpretations (\cref{game:thm:adequacy})
+ & \path{public_equilibrium_strategic_form}, \path{public_term_interpretation}\\
+Strict two-owner extension (\cref{sec:one-owner})
+ & \path{strict_two_owner_policy}\\
+Round protocol, consistency and beliefs (\cref{se:thm:round})
+ & \path{round_protocol_foundations}, \path{round_profile_consistency}, \path{round_product_beliefs}\\
+Scalar laws, synthesis and security (\cref{se:prop:parallel,se:thm:rational})
+ & \path{scalar_parallel_laws}, \path{scalar_rational_values}, \path{scalar_diagonal_security}\\
+Boolean probes and state bounds (\cref{se:prop:pair-observation,se:prop:threshold-states})
+ & \path{pair_game_boolean_full_abstraction}, \path{scalar_rational_observation_order}, \path{boolean_threshold_state_lower_bound}\\
+Quantifier supports and well-founded fold (\cref{game:prop:choice-support})
+ & \path{arbitrary_public_quantifier}, \path{public_choice_small_support}, \path{public_choice_support_sharp}, \path{well_founded_quantifier_fold}\\
+Linear reset DAG reduction and three-value testing (\cref{reset:thm:circuits})
+ & \path{reset_circuit_reduction}, \path{reset_circuit_generator}\\
+Exact circuit tables and tree bounds (\cref{reset:prop:large-circuit-table})
+ & \path{reset_circuit_exponential_tables}, \path{reset_circuit_tree_succinctness}\\
+Two-player forcing coordinates (\cref{app:two-players})
+ & \path{two_player_forcing_coordinates}\\
+Serialization order independence (\cref{se:thm:round})
+ & \path{serial_order_independence}\\
+\midrule
 Occurrence lower bound (\cref{game:thm:lower})
  & Written.\\
 Unary classifications (\cref{app:contexts,app:ambiguity})
  & Written; finite checks.\\
-Further congruence results (\cref{app:congruences})
+Remaining congruence results (\cref{app:congruences})
  & Written; finite checks.\\
 Minimal clone (\cref{reset:thm:minimal})
  & Written.\\
 Forest models, combs (\cref{app:reset-models})
  & Written; finite checks.\\
 Shared subterms with guarded owners or policies (\cref{reset:thm:circuits})
- & Written. The reset clauses are in \texttt{Paper.lean}.\\
+ & Written. The reset-only complexity and large-table statements are in \texttt{Paper.lean}.\\
 Selective reset, mixed policies (\cref{app:selective})
  & Written; finite checks. The family classification, \cref{selective:thm:families}, is in \texttt{Paper.lean}.\\
 Two players (\cref{two:prop:terms,two:prop:complexity})
@@ -106,8 +145,8 @@ One-owner presentations (\cref{owner:thm:conservative-basis,owner:cor:small-four
  & Written; finite checks.\\
 Core subvarieties and presentations (\cref{core:prop:dissemilattice-lift,core:prop:binary,core:prop:unary-polynomials,core:thm:conservative-basis,core:cor:small-countermodel,core:thm:atomic-basis,core:prop:atomic-uniform-lift})
  & Written; finite checks. Congruence distributivity uses \cite{Mitschke1978}.\\
-Round values (\cref{se:prop:round-values})
- & Nonemptiness in \texttt{Paper.lean}; compactness, semialgebraicity, monotonicity, renaming, and reordering written.\\
+Further round-value properties (\cref{se:prop:round-values})
+ & Nonemptiness and serialization order independence are kernel-checked; compactness, semialgebraicity, monotonicity and renaming remain written.\\
 Decidable scalar equations (\cref{se:cor:decidable})
  & Written, by real quantifier elimination.\\
 Open-game obstruction (\cref{se:prop:open-game-obstruction})
@@ -158,7 +197,7 @@ Programs & Subject\\
  & Atomic and conservative models, unary polynomials.\\
 \end{longtable}}
 
-The programs in \path{checks/} are independent of the Lean development. Except where a count is itself the result, they test implementations at the stated sizes, and for results in \texttt{Paper.lean} they serve as regression tests. They
+The programs in \path{checks/} are independent of the Lean development. Except where a count is itself the result, they test implementations at the stated sizes, and for results in \texttt{Paper.lean} and \texttt{Report.lean} they serve as regression tests. They
 enumerate small full profiles and deviations, synthesize the $131$
 reduct and $751$ full three-role unary functions, and compare congruences,
 tests, matching criteria, and fibers with independent constructions.
@@ -222,7 +261,7 @@ as a rejected loss of off-path strategy data.
 Sealed-round checks compare complete rational Nash support rectangles
 with direct unilateral deviations on a grid for $256$ two-by-two
 continuation tables. They check $2209$ diagonal games, rational synthesis
-through denominator $100$, $24$ reciprocal games and $576$ threshold
+through denominator $100$, $29$ reciprocal games and $576$ threshold
 contexts, as well as role transport, commitment exchange, and the
 nonconvex distribution-set witness.
 For the open-game obstruction of \cref{se:sec:open-game-obstruction}, an exact-rational checker reproduces the unit, incomparable-bracketing, and convex-repair witnesses. \path{scripts/check_external_open_game.py} rebuilds the pinned external Lean artifact from an isolated checkout under its original Lean~4.32.2, checks its source hashes, and audits the axioms of its five theorems; it is not part of \texttt{make check}.

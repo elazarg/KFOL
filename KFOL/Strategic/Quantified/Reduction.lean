@@ -1,6 +1,7 @@
 module
 
 public import KFOL.Strategic.Quantified.Basic
+public import KFOL.Strategic.Quantified.Fold
 public import KFOL.Strategic.ChoiceSupport
 
 /-! # Finite structural pruning and binary representation of nested quantifiers
@@ -165,5 +166,29 @@ theorem exists_small_pruning_binary_of_depthLE (game : QuantifiedTree.{u,v} Role
       Strategic.possibleWinners binary = possibleWinners pruned := by
   obtain ⟨pruned,binary,pruning,preserved,represented⟩ := exists_small_pruning_binary game
   exact ⟨pruned,binary,pruning,pruning.depthLE bounded,preserved,represented⟩
+
+
+/-- Strong syntactic realization: the binary game is an actual recursive
+owned-choice fold of the retained children, each used exactly once. -/
+theorem exists_value_preserving_pruning_binary_fold (game : QuantifiedTree.{u,v} Role) :
+    ∃ (pruned : QuantifiedTree.{u,v} Role) (binary : Strategic.Tree Role)
+      (pruning : Prunes (Fintype.card Role-1) game pruned),
+      pruning.PreservesValues ∧ Compiles pruned binary ∧
+      Strategic.possibleWinners binary = possibleWinners pruned := by
+  obtain ⟨pruned, _, pruning, preserved, _⟩ := exists_value_preserving_pruning_binary game
+  obtain ⟨binary, compiled⟩ := pruning.exists_binary_compilation
+  exact ⟨pruned, binary, pruning, preserved, compiled, compiled.possibleWinners_eq⟩
+
+/-- The structural owned-choice fold compilation and nodewise preservation
+inherit a supplied decision-depth bound for the pruned quantified tree. -/
+theorem exists_value_preserving_pruning_binary_fold_of_depthLE
+    (game : QuantifiedTree.{u,v} Role) (depth : ℕ) (bounded : DepthLE depth game) :
+    ∃ (pruned : QuantifiedTree.{u,v} Role) (binary : Strategic.Tree Role)
+      (pruning : Prunes (Fintype.card Role-1) game pruned),
+      pruning.PreservesValues ∧ DepthLE depth pruned ∧ Compiles pruned binary ∧
+      Strategic.possibleWinners binary = possibleWinners pruned := by
+  obtain ⟨pruned, binary, pruning, preserved, compiled, represented⟩ :=
+    exists_value_preserving_pruning_binary_fold game
+  exact ⟨pruned, binary, pruning, preserved, pruning.depthLE bounded, compiled, represented⟩
 
 end KFOL.Strategic.QuantifiedTree

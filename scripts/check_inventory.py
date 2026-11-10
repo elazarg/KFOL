@@ -5,7 +5,8 @@ from collections import Counter
 import hashlib
 import json
 from pathlib import Path
-import re
+
+from check_surfaces import ENTRYPOINTS, MANIFEST, check_facade, library_declarations
 
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -66,24 +67,31 @@ def main():
     require(len(prose) == summary["main_prose_obligations"], "Prose total mismatch")
     require(sum(row["required"] for row in prose) == summary["required_main_prose_obligations"],
             "Required prose total mismatch")
-    paper = (ROOT / "Paper.lean").read_text()
-    declarations = set(re.findall(r"^theorem (\w+)\b", paper, re.M))
+    libraries = library_declarations()
+    surfaces = {entry: check_facade(entry, libraries) for entry in ENTRYPOINTS}
+    declarations = set().union(*(set(surface) for surface in surfaces.values()))
     referenced = set()
+    referenced_library = set()
     for row in claims + prose:
         public = row.get("public_declarations", [])
         require(len(public) == len(set(public)), f"Duplicate public declaration: {row['id']}")
         for name in public:
-            if name.startswith("KFOL.Paper."):
-                referenced.add(name.removeprefix("KFOL.Paper."))
-                require(name.removeprefix("KFOL.Paper.") in declarations,
-                        f"Missing public theorem: {row['id']}: {name}")
+            require(name in declarations, f"Missing public theorem: {row['id']}: {name}")
+            referenced.add(name)
+        library = row.get("library_declarations", [])
+        require(len(library) == len(set(library)), f"Duplicate library declaration: {row['id']}")
+        for name in library:
+            require(name in libraries, f"Missing library theorem: {row['id']}: {name}")
+            referenced_library.add(name)
     require(declarations <= referenced, f"Unmapped public statements: {declarations - referenced}")
-    for declaration in declarations:
-        require(f"#print axioms KFOL.Paper.{declaration}" in paper,
-                f"Missing public axiom guard: {declaration}")
+    preserved = {row["library_name"] for row in json.loads(MANIFEST.read_text())["declarations"]}
+    require(preserved <= referenced_library,
+            f"Unmapped preserved library statements: {preserved - referenced_library}")
     artifacts = check_artifacts(inventory)
     print(f"Inventory: {len(claims)} statement snapshots, {len(prose)} prose obligations, "
-          f"{artifacts} evidence fingerprints, {len(declarations)} public statements checked.")
+          f"{artifacts} evidence fingerprints, {len(surfaces['Paper'])} Paper and "
+          f"{len(surfaces['Report'])} Report public statements, "
+          f"{len(referenced_library)} mapped library statements checked.")
 
 
 if __name__ == "__main__":

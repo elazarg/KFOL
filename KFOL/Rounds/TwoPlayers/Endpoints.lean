@@ -1,18 +1,13 @@
 module
 
 public import KFOL.Rounds.TwoPlayers.Values
-public import Mathlib.Logic.Equiv.Fin.Basic
+public import KFOL.Definitions.PaperGames
 
 /-! # Pure equilibrium endpoints are exactly all-winning rows or columns -/
 @[expose] public section
 noncomputable section
 namespace KFOL.Rounds.Game.TwoPlayers
 open GameTheory GameTheory.Math.Probability
-
-/-- The actual pair of menu choices, without a padded or duplicated action. -/
-def matrixAction (sizes : Fin 2 → Nat) (row : Fin (sizes 0+1)) (col : Fin (sizes 1+1)) :
-    (i : Fin 2) → Fin (sizes i+1) :=
-  (piFinTwoEquiv (fun i => Fin (sizes i+1))).symm (row,col)
 
 @[simp] theorem matrixAction_zero (sizes : Fin 2 → Nat) (row : Fin (sizes 0+1)) (col : Fin (sizes 1+1)) :
     matrixAction sizes row col 0 = row := rfl

@@ -1,9 +1,12 @@
 Rational Owned Choice: Finite Algebras and Sealed Rounds
 
-The paper is main.tex; its technical report is tr.tex. The formalization's
-entry point is root Paper.lean: each public theorem repeats its complete
-proposition. The scope is the entire main paper and the report material its
-claims need, rather than every result in the technical report.
+The paper is main.tex; its technical report is tr.tex. The mathematical audit
+entrypoints are root Paper.lean (78 main-paper and cited results) and
+Report.lean (29 further report statements and proof ingredients). Every theorem
+repeats its complete proposition and has a single named library theorem as its
+proof. The scope is the entire main paper and the report material its claims
+need, rather than every result in the technical report. Start with
+notes/audit-guide.md for a human reading order.
 
 Build and verify
 
@@ -18,9 +21,9 @@ and the mathlib cache, then run the checks:
 make check-python runs the independent finite Python checks using the standard
 library. make check-lean runs the production Lake development: it validates the
 claim inventory, builds the pure algebra and its import-boundary audit, builds
-Paper and the whole-project axiom audit, reproduces the definition-surface
-report, and runs all Lean regressions. Every authored declaration, including
-private helpers, is checked against the standard axioms propext,
+Paper, Report and the whole-project axiom audit, reproduces both definition
+surface reports, and runs all Lean regressions. Every authored declaration,
+including private helpers, is checked against the standard axioms propext,
 Classical.choice and Quot.sound. The finite Python checks are regression
 evidence; they do not replace the generic Lean proofs.
 
@@ -40,14 +43,17 @@ make clean removes build/; Lake's compiled artifacts are under .lake/.
 
 Artifact and review entry points
 
-    Paper.lean        Complete paper-facing statements and axiom guards
-    KFOL/Definitions/ Shared mathematical and word-format definitions
+    Paper.lean        78 complete main-paper and cited mathematical statements
+    Report.lean       29 further audited report statements and proof ingredients
+    KFOL/Definitions/ Mathematical semantics, syntax and word formats
+    KFOL/Results/     Library theorem assembly and detailed certificates
     KFOL/Algebra/     Independent mathlib-only algebra
     KFOL/Algorithms/  Word codecs and executable algorithms
     KFOL/Complexity/  Native machine runtime, reductions and class certificates
     KFOL/Strategic/   Full-profile SPE and arbitrary-domain public quantifiers
     KFOL/Rounds/      Sealed-round and sequential-equilibrium semantics
     KFOL/Audit.lean   All-source, transitive axiom audit
+    notes/audit-guide.md  Reading order and meaning/proof audit distinction
     tests/            Lean statement, semantics and machine regressions
     checks/           Current paper regressions and their shared models
     main.tex, tr.tex  Main paper and technical report
@@ -59,19 +65,33 @@ python3 scripts/check_inventory.py validates its source fingerprints, statement
 snapshots and declaration references. Historical deliveries are archived in
 notes/formalization-history.{md,json}.
 
-Review mathematical definitions separately from proof axioms. The human index
-notes/paper-definition-surface.md and complete JSON graph beside it start from
-every public theorem TYPE, follow project definitions and inductive
+Read the mathematical vocabulary first in KFOL/Definitions/PaperAlgebra.lean,
+PaperGames.lean and Complexity.lean, then follow their underlying definitions.
+They are front doors to the semantics, not the whole definition closure. The
+human indexes notes/paper-definition-surface.md and
+notes/report-definition-surface.md, with complete JSON graphs beside them,
+start from every public theorem TYPE, follow project definitions and inductive
 constructors, and identify external semantic interfaces. They exclude theorem
-proof bodies. Reproduce both with:
+proof bodies. Check both reports with:
 
     python3 scripts/export_definition_surface.py --check
+    python3 scripts/export_definition_surface.py --check --entrypoint Report
+
+This meaning audit complements the kernel and axiom checks. Each entrypoint
+has one #audit_namespace command that rejects any declaration depending on an
+unsupported axiom. The whole-source audit also covers private library helpers.
+The previous 140 full statement contracts remain in
+KFOL/Results/Certificates.lean under KFOL.Results; notes/audit-relocations.json
+records their original signatures. Codec, descriptor and machine contracts
+belong there and in their implementation modules, while the root entrypoints
+state the mathematical results. scripts/check_surfaces.py checks literal
+statements, single-theorem proofs and preservation of those original contracts.
 
 notes/formalization-definitions.md explains the carriers, syntax and semantics;
 notes/formalization-plan.md records the design and completion criteria.
-GameTheory supports the strategic and rounds branches. Pure algebra and word definitions do not
-import it or the machine-complexity libraries; the import audit checks that
-boundary. The machine branch uses ComplexityLib's independent multitape Turing
+GameTheory supports the strategic and rounds branches. Pure algebra and word
+definitions do not import it or the machine-complexity libraries; the import
+audit checks that boundary. The machine branch uses ComplexityLib's independent multitape Turing
 model, with explicit input/output encodings and charged intermediate storage.
 GameTheory is pinned to revision 6f1af625b77215dd9e4454e6120275dbd8b61f51
 from port/cslib-complexity, ComplexityLib to

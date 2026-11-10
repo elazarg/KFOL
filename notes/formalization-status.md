@@ -1,111 +1,71 @@
-# Active formalization status and integration queue
+# Active formalization status
 
-The completion target is the entire main paper, its substantive prose and
-necessary report dependencies. The inventory is authoritative for scope.
-The complete main-paper scope is proved: **23/23 main result rows**,
+The entire main-paper scope is proved: **23/23 main result rows**,
 **64/64 required catalog rows**, and **21/21 required prose obligations**.
-Root `Paper.lean` contains **140 full public statements**, each with a guarded
-axiom check. The production build, all regressions, audits and manuscript checks pass.
-Report-only results remain optional; the historical related-work artifact is
-separately rebuilt and audited under its original pins.
+The [inventory](formalization-claims.json) is authoritative for scope.
+Other report results remain optional and have their own evidence status.
 
-## Parallel execution
+| Audit entrypoint | Mathematical statements | Presentation |
+| --- | ---: | --- |
+| [Paper.lean](../Paper.lean) | 78 | Main text and the report claims it cites; 598 lines |
+| [Report.lean](../Report.lean) | 29 | Further report results and proof ingredients |
+| [Results/Certificates](../KFOL/Results/Certificates.lean) | 140 preserved contracts | Original full statements, including native machines, codecs and intermediate invariants |
 
-Agents share the checkout without worktrees or edits to `../GameTheory`.
-Workers own separate files, compile their results and provide integration notes.
-Root maintains Paper, configuration, audits, inventory and manuscript evidence,
-then commits coherent integrations after complete checks.
+Every root proof names one library theorem. Both root files have no semantic
+definitions and end with a failing namespace axiom audit. The whole-project
+axiom audit also checks private library helpers. The relocation manifest pins
+all 140 previous complete signatures, so consolidation has not dropped or
+weakened them.
 
-| Workstream | Owner | Completed | Next integration gate |
-| --- | --- | --- | --- |
-| Native reset circuits and synthesis | `owner` | Original-word reset/Fin-three coNP-completeness and native primitive-tree synthesis with independent root/table/winner semantics | Complete |
-| Hardness and review | `nonfinite_basis` | Native DAG generator, full/public/core hardness, certificate bounds, canonicalizer consequence and final semantic scope review | Complete |
-| Full/public/core complexity | `complexity` | All six fixed/uniform endpoints; original-word sparse counterverifier, explicit-array validation, quadratic certificates and arbitrary padding | Complete; definition-surface report reproduced |
-| Owner branches and integration | root | Complete raw/owner/policy dichotomies, 140 literal Paper statements, claim reconciliation and pinned historical rebuild | Complete |
+The [audit guide](audit-guide.md) explains the human reading order. Natural
+vocabulary is grouped in `Definitions/PaperAlgebra`, `PaperGames` and
+`Complexity`, with their underlying mathematical definitions indexed separately.
 
-The production pins are GameTheory `6f1af625b77215dd9e4454e6120275dbd8b61f51`
-from `port/cslib-complexity`, ComplexityLib
-`054834a4a4e6ac3ec50ed770bacea7fc42eccc7d`, CSLib
-`254e30e6d4299c51323aaeaf5f51a4763b375d4a`, and Lean/mathlib 4.35.0.
-Algebra and representation imports remain independent of those game/machine
-libraries. All round mathematics is complete against actual canonical SE.
+| Definition surface | Theorem types | Semantic declarations | Source files | Written review units |
+| --- | ---: | ---: | ---: | ---: |
+| Paper | 78 | 635 | 35 | 333 |
+| Report | 29 | 376 | 23 | 178 |
 
-## Final verification
+The slices overlap and exclude theorem proof bodies. These meaning indexes do
+not replace the human comparison with the manuscript or the proof/axiom audits.
 
-No required mathematical proof remains. Completed verification:
+## Verification
 
-- `make check-lean`: independent algebra build/import
-  audit, full Paper/whole-project axiom audit, negative import check and all 86 strict Lean regressions pass.
-- `make check-python`: all independent Python checks pass.
-- `python3 scripts/check_inventory.py`: 149 source statements, 23 prose
-  obligations, current evidence fingerprints and 140 public statements reconcile.
-- `python3 scripts/export_definition_surface.py --check --no-build`: the
-  theorem-type graph and readable review index reproduce after the clean build.
-- `make paper`: both manuscripts build; the main paper remains 14 pages and
-  label snapshots are refreshed.
+The production integration checks are:
+
+- `make check-lean`: literal façade and preservation checks, inventory,
+  independent algebra build/import audit, Paper/Report and whole-source axiom
+  audits, both definition indexes, actual negative audit fixtures and 86 strict
+  Lean regressions.
+- `make check-python`: the explicit 33 independent Python checks, mapped to the
+  current paper in `checks/README.md` and the verification appendix.
+- `make paper`: both manuscripts, with the main paper remaining 14 pages and
+  label snapshots refreshed.
 
 Every authored proof closure uses only `propext`, `Classical.choice` and
-`Quot.sound` where needed. The pure algebra closure excludes GameTheory,
-ComplexityLib/Cslib and strategic/round modules. The retired Std-only tree is preserved at revision `7014dbb`; the single
-production artifact is `KFOL/` and root `Paper.lean`. The separate historical
-obstruction build and its five axiom closures also pass under the original pins.
+`Quot.sound` where needed. Pure algebra remains independent of GameTheory,
+ComplexityLib/Cslib and the strategic/round branches.
 
-The report's encoded substitution runtime, H/policy circuit extensions,
-dependent calculus and general round semialgebraicity remain outside the
-main-paper scope. The main substitution formula and both required reset-DAG
-clauses are proved; these are explicit dependency fragments in the inventory.
+The production pins remain Lean/mathlib 4.35.0, GameTheory
+`6f1af625b77215dd9e4454e6120275dbd8b61f51`, ComplexityLib
+`054834a4a4e6ac3ec50ed770bacea7fc42eccc7d`, and CSLib
+`254e30e6d4299c51323aaeaf5f51a4763b375d4a`.
 
-## Integration contract
+## Mathematical additions retained
 
-Integration notes name exact paper claims, complete public propositions,
-independent definitions, proof modules, validation and residual gaps. Root
-reviews hypotheses and every clause, adds full Paper statements, extends source,
-axiom and import audits, refreshes evidence fingerprints, then validates and
-commits. Partial statements remain partial in the inventory.
+The proof-mining session proved sharp K−1 support, exact exponential circuit
+tables and semantic lower bounds on every equivalent reset tree, finite
+threshold state bounds, and Boolean observation completeness and order recovery
+for pair-only components. The nested-quantifier extension gives nodewise
+preservation over infinite, history-dependent witness domains.
 
-During checkpoints workers freeze production and continue in ignored
-`*.lean.pending` staging files. Only compiled candidates enter KFOL. The main
-paper stays at most 15 pages; proof evidence belongs in its verification appendix.
-No admitted proofs, project axioms, unchecked counts, external-theorem premises
-or detached certificates count as completion.
+The binary representation is now certified as an actual recursive owned-choice
+fold, with every retained action compiled exactly once. A regression rejects a
+wrong-owner tree despite agreement of its possible SPE winners. The independent
+SPE definition still uses complete deviations, not the recurrence it certifies.
 
-
-The review correction removes four alpha/orientation repeats from the owner
-basis, leaving 36 native identities with proved actual range cardinality.
-The Boolean impossibility quantifies Boolean-only encodings and contexts.
-Finite-action public choice, exponential circuit tables, diagonal security and
-the exact semantic definition of reset tables now have explicit Paper clauses.
-The three previously omitted prose claims are independent inventory obligations.
-
-
-The Python suite is now the explicit 33-entry list in the Makefile, mapped to
-current paper/report claims in `checks/README.md` and the verification appendix.
-Superseded core-basis exploration, probes, unused helpers and unused inputs
-were pruned; the current padded-grid proof and retained classification checks
-remain covered. Historical exploration is available at revision `c5723ac`.
-
-
-The [proof-mining session](proof-mining.md) adds six full public statements
-while preserving all main-paper statements. Three report propositions
-record sharp K−1 support for arbitrary root action families, a finite threshold
-state lower bound, and Boolean observation completeness for arbitrary pair-only
-games. The shared-circuit proposition now gives exact tables and exponential
-bounds on every semantically equivalent reset tree. Rational probes also recover
-the scalar order. The source catalog has 149 rows, including these new
-report results. The scalar corollary uses the general observation proposition
-as a completed proof dependency. The nested-quantifier extension below adds two
-more public statements and one central definition module. The current public-
-type surface has 140 statements reaching 1,044 semantic declarations in 58
-files, including 19 central definition files. All 64 required rows are complete.
-
-
-The arbitrary-domain extension closes the gap between one public root and
-nested quantifiers. `Definitions/Quantified` specifies history-dependent
-nonempty action types and independent complete-deviation SPE. Two additional
-literal Paper statements prove the arbitrary-family recurrence and finite-depth
-pruning, with at most K−1 original actions per retained node, preservation of
-each retained subgame's SPE winners, and an actual finite binary representation.
-The construction also works for all well-founded public trees. The strengthened
-report proposition is now cited in Section 2 and is the 64th completed required
-catalog row. Regression coverage includes two nested infinite, dependent menus
-and a complete deviation exposing an off-path threat.
+The report's dependent calculus, general real-QE/semialgebraicity, numerical
+free-algebra counts and unused extensions remain outside main-paper completion.
+The historical mixed-open-game obstruction keeps its separately pinned external
+artifact. The earlier Std-only Lean tree is retired at revision `7014dbb`;
+current production consists of KFOL and the two root audit entrypoints.

@@ -65,6 +65,7 @@ import all KFOL.Algorithms.TermCode
 import all KFOL.Algorithms.Words
 import all KFOL.Audit.Algebra
 import all KFOL.Audit.Dependencies
+import all KFOL.Audit.Namespace
 import all KFOL.Complexity.BlockScan
 import all KFOL.Complexity.CNFHardness
 import all KFOL.Complexity.Canonicalization
@@ -235,6 +236,7 @@ import all KFOL.Core.UpperMap
 import all KFOL.Definitions.Algorithms
 import all KFOL.Definitions.Atomic
 import all KFOL.Definitions.Circuits
+import all KFOL.Definitions.Complexity
 import all KFOL.Definitions.Congruences
 import all KFOL.Definitions.Core
 import all KFOL.Definitions.CoreBasis
@@ -243,6 +245,8 @@ import all KFOL.Definitions.Encoding
 import all KFOL.Definitions.Equational
 import all KFOL.Definitions.Kleene
 import all KFOL.Definitions.Owner
+import all KFOL.Definitions.PaperAlgebra
+import all KFOL.Definitions.PaperGames
 import all KFOL.Definitions.Policies
 import all KFOL.Definitions.Public
 import all KFOL.Definitions.Quantified
@@ -361,6 +365,10 @@ import all KFOL.Reset.Selection
 import all KFOL.Reset.SemanticBounds
 import all KFOL.Reset.Substitution
 import all KFOL.Reset.Tables
+import all KFOL.Results.Algebra
+import all KFOL.Results.Certificates
+import all KFOL.Results.Complexity
+import all KFOL.Results.Games
 import all KFOL.Rounds.Consistency
 import all KFOL.Rounds.Correspondence
 import all KFOL.Rounds.DecisionSites
@@ -437,8 +445,10 @@ import all KFOL.Strategic.Examples
 import all KFOL.Strategic.FiniteChoices
 import all KFOL.Strategic.Forcing
 import all KFOL.Strategic.Quantified.Basic
+import all KFOL.Strategic.Quantified.Fold
 import all KFOL.Strategic.Quantified.Reduction
 import all Paper
+import all Report
 meta import Lean.Elab.Command
 meta import Lean.Util.CollectAxioms
 
@@ -459,7 +469,7 @@ run_cmd do
     let owned := match env.getModuleIdxFor? name with
       | some idx =>
         let owner := env.header.moduleNames[idx.toNat]!
-        (`KFOL).isPrefixOf owner || owner == `Paper
+        (`KFOL).isPrefixOf owner || (owner == `Paper || owner == `Report)
       | none => false
     if owned then
       checked := checked + 1

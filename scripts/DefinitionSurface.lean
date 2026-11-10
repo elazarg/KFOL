@@ -1,6 +1,6 @@
 module
 /-
-Export the semantic dependency graph of the public Paper theorem TYPES.
+Export the semantic dependency graph of the public Paper or Report theorem TYPES.
 
 This is deliberately not a theorem-proof dependency extractor. Traversal starts
 at each theorem's type, follows types and computational/predicate definitions
@@ -13,6 +13,7 @@ Run through scripts/export_definition_surface.py; its temporary output path is
 provided in KFOL_DEFINITION_SURFACE_RAW. No project source is changed here.
 -/
 import all Paper
+import all Report
 import Lean.Meta
 import Lean.Elab.Command
 import Lean.DeclarationRange
@@ -58,9 +59,9 @@ private def moduleName (environment : Environment) (name : Name) : Name :=
   | some index => environment.header.moduleNames[index.toNat]!
   | none => .anonymous
 
-private def projectOwned (environment : Environment) (name : Name) : Bool :=
+private def projectOwned (environment : Environment) (entrypoint name : Name) : Bool :=
   let owner := moduleName environment name
-  (`KFOL).isPrefixOf owner || owner == `Paper
+  (`KFOL).isPrefixOf owner || owner == `Paper || (entrypoint == `Report && owner == `Report)
 
 private def kind : ConstantInfo → String
   | .axiomInfo _ => "axiom"
@@ -101,12 +102,13 @@ private def constructors : ConstantInfo → Array Name
 
 /-- A global graph is computed once; Python computes each root's transitive
 slice from its edges, without re-entering or unfolding any proof. -/
-def exportGraph : MetaM Json := do
+def exportGraph (entrypoint : Name := `Paper) : MetaM Json := do
   let environment ← getEnv
+  let publicNamespace := if entrypoint == `Report then `KFOL.Report else `KFOL.Paper
   let roots := sortedNames <| environment.constants.toList.toArray.filterMap fun (name, info) =>
-    if name.getPrefix == `KFOL.Paper && moduleName environment name == `Paper && info.isTheorem
+    if name.getPrefix == publicNamespace && moduleName environment name == entrypoint && info.isTheorem
     then some name else none
-  if roots.isEmpty then throwError "Definition surface: no public Paper theorem types found"
+  if roots.isEmpty then throwError "Definition surface: no public {entrypoint} theorem types found"
   let mut pending := roots
   let mut visited : NameSet := {}
   let mut externalNames : NameSet := {}
@@ -125,7 +127,7 @@ def exportGraph : MetaM Json := do
       let mut projectEdges : Array Name := #[]
       let mut externalEdges : Array Name := #[]
       for dependency in edges do
-        if projectOwned environment dependency then
+        if projectOwned environment entrypoint dependency then
           projectEdges := projectEdges.push dependency
           if !visited.contains dependency then pending := pending.push dependency
         else
@@ -155,14 +157,20 @@ def exportGraph : MetaM Json := do
       ("type", toJson (← typeText info))]
   return Json.mkObj [
     ("schema_version", toJson (1 : Nat)),
+    ("entrypoint", toJson entrypoint.toString),
     ("roots", strings roots),
     ("project_declarations", toJson nodes),
     ("external_interfaces", toJson externals)]
 end DefinitionSurface
 
 run_cmd Lean.Elab.Command.liftTermElabM do
-  let output ← DefinitionSurface.exportGraph
+  let requested := (← IO.getEnv "KFOL_DEFINITION_SURFACE_ENTRYPOINT").getD "Paper"
+  let entrypoint ← match requested with
+    | "Paper" => pure `Paper
+    | "Report" => pure `Report
+    | _ => throwError "Definition surface: unknown entrypoint {requested}; expected Paper or Report"
+  let output ← DefinitionSurface.exportGraph entrypoint
   let some path ← IO.getEnv "KFOL_DEFINITION_SURFACE_RAW"
     | throwError "Set KFOL_DEFINITION_SURFACE_RAW or run scripts/export_definition_surface.py"
   IO.FS.writeFile path output.compress
-  logInfo "Exported Paper theorem-type definition surface (theorem proof bodies excluded)."
+  logInfo m!"Exported {entrypoint} theorem-type definition surface (theorem proof bodies excluded)."

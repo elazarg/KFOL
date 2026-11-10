@@ -64,6 +64,31 @@ def DepthLE : ℕ → QuantifiedTree.{u,v} Role → Prop
   | 0, .node _ _ _ _ => False
   | n+1, .node _ _ _ next => ∀ a, DepthLE n (next a)
 
+/-- A binary owned-choice fold of an explicitly ordered list of inputs.
+Only helper nodes of the specified owner are added. The list records each
+input occurrence, independently of its compiled game's internal syntax. -/
+inductive BinaryFold {Index : Type v} (owner : Role) (inputs : Index → Strategic.Tree Role) :
+    List Index → Strategic.Tree Role → Prop where
+  | single (i : Index) : BinaryFold owner inputs [i] (inputs i)
+  | node {left right : List Index} {first second : Strategic.Tree Role}
+      (leftFold : BinaryFold owner inputs left first)
+      (rightFold : BinaryFold owner inputs right second) :
+      BinaryFold owner inputs (left ++ right) (.node owner first second)
+
+/-- Structural binary compilation: retain every action exactly once at each
+source node, recursively compile its continuation, and fold the results using
+only the original owner's binary nodes. This definition has no evaluation,
+equilibrium, or semantic equality premise. -/
+inductive Compiles : QuantifiedTree.{u,v} Role → Strategic.Tree Role → Prop where
+  | leaf (r : Role) : Compiles (.leaf r) (.leaf r)
+  | node {owner : Role} {Action : Type v} {nonempty : Nonempty Action}
+      {next : Action → QuantifiedTree.{u,v} Role}
+      (actions : List Action) (distinct : actions.Nodup) (complete : ∀ a, a ∈ actions)
+      (children : Action → Strategic.Tree Role)
+      (compiled : ∀ a, Compiles (next a) (children a))
+      {binary : Strategic.Tree Role} (fold : BinaryFold owner children actions binary) :
+      Compiles (.node owner Action nonempty next) binary
+
 /-- A structural pruning keeps original owners and a nonempty finite subset
 of original actions at each retained node. The bound applies at every node;
 no equilibrium or semantic equality occurs in this definition. -/
