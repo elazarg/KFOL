@@ -252,7 +252,7 @@ private theorem lift_outside {Var : Type v} (v : Var → M) (r x : Var) (P : Lis
   · exact Or.inr (Or.inr ⟨v c, List.mem_map.mpr ⟨(c, x), hc, rfl⟩⟩)
 
 /-- Semantic containment in the concrete four-state algebra entails the
-corresponding inequality in every model of the displayed forty equations. -/
+corresponding inequality in every model of the displayed thirty-six equations. -/
 theorem wordsValue_le_of_four {Var : Type v} (r : Var) (lower upper : List (List (Var × Var)))
     (hsemantic : ∀ w : Var → Four,
       (four_laws.wordsValue .ambiguous w lower).val = .winning →
@@ -351,7 +351,7 @@ variable {M : Type u} [(Equational.language (Symbol Unit)).Structure M]
 include laws
 
 /-- Every Four-valid native identity holds in every arbitrary model of the
-forty explicitly listed identities. All word witnesses are derived internally. -/
+thirty-six explicitly listed identities. All word witnesses are derived internally. -/
 theorem equal_of_four {Var : Type v} (s t : Term Unit Var)
     (hvalid : ∀ w : Var → Four, s.evalFour w = t.evalFour w) (v : Var → M) :
     s.realize v = t.realize v := by
@@ -380,7 +380,7 @@ theorem equal_of_four {Var : Type v} (s t : Term Unit Var)
 
 end Laws
 
-/-- The exact displayed forty-equation family is a complete equational basis,
+/-- The exact displayed thirty-six-equation family is a complete equational basis,
 with the independent derivation relation and arbitrary-depth native syntax. -/
 theorem isBasis : letI := fourStructure (Role := Unit); Equational.IsBasis Four theory := by
   let _ := fourStructure (Role := Unit)

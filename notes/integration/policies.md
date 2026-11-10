@@ -160,7 +160,7 @@ P≠NP. The criterion must not be stated as a literal iff with membership in P.
 
 After family-hardness mathematics, add the literal owner:lem:two-source
 Guard.Covers wrapper noted in owner.md; its arbitrary-model absorption core
-and the full forty-law basis are already proved.
+and the full thirty-six-law basis are already proved.
 
 ## Complete semantic hardness (ready for Paper integration)
 

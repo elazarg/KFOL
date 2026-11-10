@@ -1,8 +1,8 @@
 # KFOL formalization design and implementation plan
 
-The target is a complete formalization of **the main paper `main.tex`, including its substantive prose claims, and the parts of the technical report needed for those claims**. Root `Paper.lean` repeats the complete main-paper propositions; a small collection of definition modules supplies an auditable meaning, and reusable proof modules supply the proofs. The entire technical report is not a completion target. This document records the implemented design and completion gates; the status board records completed verification, and the inventory records current statement-level evidence. All 23 main result rows, 61 required catalog rows and 18 required prose obligations now have complete checked proofs.
+The target is a complete formalization of **the main paper `main.tex`, including its substantive prose claims, and the parts of the technical report needed for those claims**. Root `Paper.lean` repeats the complete main-paper propositions; a small collection of definition modules supplies an auditable meaning, and reusable proof modules supply the proofs. The entire technical report is not a completion target. This document records the implemented design and completion gates; the status board records completed verification, and the inventory records current statement-level evidence. All 23 main result rows, 62 required catalog rows and 21 required prose obligations now have complete checked proofs.
 
-The manuscript baseline is revision `6dff3f067151b9fc1cf9b9944718cf39a72d7447`. The existing 22 Std modules and the new mathlib algebra slice use Lean 4.35.0. `sections/appendix-verification.tex` is the starting evidence inventory. The existing proofs are valuable migration inputs, but a finite certificate, a specialized three-owner proof, and a generic theorem are distinct deliverables.
+The manuscript baseline is revision `6dff3f067151b9fc1cf9b9944718cf39a72d7447`. The single production development uses Lean/mathlib 4.35.0. The former 22 Std modules were retired at this review; their historical sources remain at revision `7014dbb`. `sections/appendix-verification.tex` is the starting evidence inventory. The existing proofs are valuable migration inputs, but a finite certificate, a specialized three-owner proof, and a generic theorem are distinct deliverables.
 
 The [claim inventory](formalization-claims.json) distinguishes the **23 main-paper result environments**, **20 directly cited complete report results**, selected fragments of cited composite results, further proof dependencies, and optional report material. The earlier 140-result extraction is retained as a source catalog, not as the definition of done. Additional main-paper prose obligations are listed separately. Existing source evidence and the work still needed are separate fields. The [supporting-library assessment](formalization-libraries.md) records exact APIs, pins, assumptions and completed bridges.
 
@@ -198,7 +198,7 @@ The following packages cover the required main-paper areas. The source catalog a
 | B | `Algebra/PublicContexts`, `Algebra/ReductTests`, `Algebra/PairTests`, `Algebra/Provenance` | Contextual quotients, sharp test domains, faithful subdirect families and provenance |
 | C | `Algebra/Idempotent`, `Algebra/CommonSource`, `Algebra/SemilatticeTrace`, `Algebra/Atomic` | Intrinsic core, source/occurrence theorem, direct atomic classification/determinacy and binary theorem |
 | D | `Reset/Basis`, `Reset/Antimatroid`, `Reset/Realizability`, `Complexity/ResetSynthesisMachine` | Six-law completeness, independent antimatroids, exact tables/substitution and native synthesis |
-| E | `Owner/Guards`, `Owner/Completeness`, `Owner/Synthesis`, `Owner/Minimum`, `Owner/Basis` | Semantic tables, four-element minimum, forty-law basis and four-variable lower bound |
+| E | `Owner/Guards`, `Owner/Completeness`, `Owner/Synthesis`, `Owner/Minimum`, `Owner/Basis` | Semantic tables, four-element minimum, thirty-six-law basis and four-variable lower bound |
 | F | `Policies`, `Complexity/PolicyCompleteness`, `Complexity/PolicyWordFrontend` | Required policy classifications and complete finite-family native dichotomy |
 | G | `Complexity/FullCompleteness`, `RawResetFrontend`, `RawSubsignatureCompleteness`, `OwnerCountCompleteness`, `CircuitHardness` | All fixed/uniform tree-fragment claims, relative observers, original encodings and native reset DAG classes |
 | H | `Congruences`, `Algebra/ViewOrders`, `Algebra/UnaryReset` | Main-paper congruence, symmetric threshold and observation assertions |
@@ -230,7 +230,7 @@ The public result includes the finite countermodel for each d, satisfaction of *
 
 ### One-owner finite basis
 
-Represent the forty identities as an explicit finite family of terms, not forty opaque predicates. Prove their count and variable bound after expansion of the derived actions. Transfer soundness from the four-element generator using its full theory equivalence. Formalize common-root projection, semilattice decomposition, unary action words, normalization/contraction, guard capture and two-source absorption. Convert mutual guard coverage into an explicit derivation. This supplies completeness over arbitrary algebras and in equational logic. The lower bound uses the countermodel satisfying every three-variable identity, rather than a bounded term search. Keep the conservative 17/13-law relative presentation separate.
+Represent the thirty-six identities as an explicit finite family of terms, not thirty-six opaque predicates. Prove their count and variable bound after expansion of the derived actions. Transfer soundness from the four-element generator using its full theory equivalence. Formalize common-root projection, semilattice decomposition, unary action words, normalization/contraction, guard capture and two-source absorption. Convert mutual guard coverage into an explicit derivation. This supplies completeness over arbitrary algebras and in equational logic. The lower bound uses the countermodel satisfying every three-variable identity, rather than a bounded term search. Keep the conservative 17/13-law relative presentation separate.
 
 ### Round correspondence and infinite index
 
@@ -259,7 +259,7 @@ External mathematical inputs actually used by a main-paper proof need a kernel p
 | Mixed Nash existence, finite SE existence and zero-sum value uniqueness | Required round semantics | Reuse the inspected GameTheory Nash, SE existence and minimax interfaces; prove the KFOL finiteness, recall, nonempty-menu, integrability and payoff-shift premises |
 | Polynomial computation theory and 3SAT completeness | All main-paper coNP-completeness conclusions | Use the inspected pinned ComplexityLib machine, Cook–Levin, 3SAT and coNP transport theorems; prove the new encodings, algorithms and reduction machines |
 
-The required algebraic and game-semantic proofs are complete: uniform core nonfinite basability, forty-law owner and seven-law choice/union bases, atomic/binary and congruence classifications, the two-player Kleene basis, public mixed support and exact nonconvexity, canonical serial-SE/observed mixed-SPE equality, general constant-sum uniqueness, actual scalar games, rational synthesis, full scalar contextual abstraction, and two-role round support. Native uniform core extraction and the complete arbitrary raw-signature dichotomy are also finished. The complete finite policy-family dichotomy has native polynomial checkers in the positive cases and coNP-completeness in the other cases.
+The required algebraic and game-semantic proofs are complete: uniform core nonfinite basability, thirty-six-law owner and seven-law choice/union bases, atomic/binary and congruence classifications, the two-player Kleene basis, public mixed support and exact nonconvexity, canonical serial-SE/observed mixed-SPE equality, general constant-sum uniqueness, actual scalar games, rational synthesis, full scalar contextual abstraction, and two-role round support. Native uniform core extraction and the complete arbitrary raw-signature dichotomy are also finished. The complete finite policy-family dichotomy has native polynomial checkers in the positive cases and coNP-completeness in the other cases.
 
 All required result and prose gates are now proved. Full/public/core original-word validity has complete fixed-K and uniform binary-K coNP-completeness, using actual original syntax, explicit permutation arrays, sparse native counterverification and quadratic padded certificates. Reset-table synthesis has an actual polynomial descriptor-word to primitive-tree-word machine, with exact acceptance, root/table/node-size and arbitrary-role winner semantics. Complete owner-count and raw/policy dichotomies, both required reset-DAG class endpoints, the original-core canonicalizer consequence and the separately rebuilt historical obstruction are also complete. The final integration checks all source, axiom, import and definition dependencies and reconciles their evidence with the main paper.
 
@@ -267,13 +267,14 @@ The reset circuit dependency is the first two clauses of `reset:thm:circuits`: o
 
 The mathlib APIs checked for this design include [relation-free language structures and homomorphisms](https://leanprover-community.github.io/mathlib4_docs/Mathlib/ModelTheory/Basic.html), [substructures and generated closure](https://leanprover-community.github.io/mathlib4_docs/Mathlib/ModelTheory/Substructures.html), and [finite simplexes](https://leanprover-community.github.io/mathlib4_docs/Mathlib/Analysis/Convex/StdSimplex.html). These support the proposed reuse; their presence does not establish availability of the larger external theorems above. Public documentation can move; implementations must use the pinned source.
 
-## Migration of the existing Lean development
+## Retired development
 
-Start by filling the statement-level existing-evidence map and checking the unchanged baseline. Add a Lake target for the legacy modules or a temporary import path preserving their names. Port in small batches with temporary bridges: predicate sets to `WinnerSet`, `RolePerm` to `Equiv.Perm`, native term datatypes to signature terms, and specialized finite models to bundled algebras. Prove evaluation and substitution commute with each bridge. Preserve old proofs until their public replacement and bridge pass the same build.
-
-Prioritize `Basic → Perspectives → Synthesis → Separation → FullAlgebra`, followed by `Reset`, owner/policy modules, and native core certificates. `CoreQuotients` and `CoreMixed` may provide useful proof ideas; do not migrate them solely to preserve optional report certificates. The legacy `SealedRounds` remains independent arithmetic regression evidence; `Rounds/Scalar` proves the actual game-semantic conclusions.
-
-Retire duplicate definitions and compatibility aliases after consumers migrate. Avoid an enduring `Legacy` semantics imported by `Paper`. Do not copy speculative candidate-basis explorations into the new library: only revive them if a maintained argument requires them. Historical searches and superseded results remain in git history.
+The earlier Std-only `lean/` tree and its parallel build targets are retired.
+Its source and optional-report certificates remain available at revision
+`7014dbb`; they are historical evidence, not current build inputs. The single
+production artifact is `KFOL/` plus root `Paper.lean`. Unported report-only
+results keep their written proofs and independent checks and do not enlarge
+the main-paper completion scope.
 
 ## Implementation sequence and completion gates
 
@@ -292,7 +293,7 @@ reproducibility checks.
 | 0. First algebra delivery completed | This plan | Lean/mathlib v4.35.0; native syntax selected; `KFOL.Paper.pair_countervaluations` in root `Paper.lean`; definition index; clean builds and compiled axiom/import checks |
 | 1. Shared equational foundation completed | 0 | Independent validity and derivation; quotient completeness; HSP preservation; generated-subalgebra transfer and actual-support variable bounds; exact full/core codecs, all audited |
 | 2. Public paper backbone A–C completed | 1 | Complete public statements for recurrence/existence, views/tests, idempotent syntax and common source; direct atomic-clone classification with no external theorem premise |
-| 3. Reset and owner D–E: bases/synthesis complete; native frontend runtime complete | 1–2 | Algorithms with semantics, synthesis and exact finite generators; six-law and forty-law completeness plus lower bounds, not just soundness |
+| 3. Reset and owner D–E: bases/synthesis complete; native frontend runtime complete | 1–2 | Algorithms with semantics, synthesis and exact finite generators; six-law and thirty-six-law completeness plus lower bounds, not just soundness |
 | 4. Policy and complexity F–G completed | 1, algorithm specs, relevant milestone 3 results | Verified reductions and representation-sensitive bounds; all fixed/uniform dichotomy clauses including observation-relative cases |
 | 5. Required algebra H, J, N completed | 1–3 and needed external special cases | Main-paper congruences, seven-law basis and two-role discussion claims; no general report-only classification backlog |
 | 6. Uniform core nonfinite basis I completed | 1–2, native membership | Arbitrary-K typed covers, arbitrary-generator locality and full finite-countermodel theorem for every variable bound; core conclusion |
@@ -318,3 +319,17 @@ The verification gates are:
 Keep proof evidence in the verification appendix. Do not modify mathematical prose or the 15-page main paper merely to narrate progress. If formalization discovers a changed theorem or missing hypothesis, repair the relevant argument and surrounding text in the appropriate document. Any renumbering requires `make paper` and committing both label snapshots according to `AGENTS.md`. This plan itself changes no LaTeX numbering.
 
 Completion means every main-paper mathematical assertion is proved with its stated generality, including necessary report support. Report-only results remain optional and do not block completion. Conjectures, open questions, and related-work attributions are classified as such rather than counted as unproved new theorems. An unresolved imported theorem, a conditional theorem replacing an unconditional statement, or an unconnected semantic certificate remains unfinished work.
+
+
+## Review corrections
+
+The owner presentation contains 36 identities after removing four repeats up
+to variable renaming and equation orientation. The cardinality of the actual
+expanded range is kernel-proved; no minimum-size or irredundance assertion is
+made. The removed law assumptions are derived before arbitrary-model proofs.
+The infinite-observation theorem restricts the encoding domain itself to
+Boolean-menu games and composition to Boolean contexts. Finite-action public
+choice is connected to an independent full-profile/deviation model; exponential
+DAG tables and explicit diagonal security laws are also proved. Root Paper
+states the semantic minimal-ambiguity characterization of reset tables. These
+review fixes strengthen the public contract without silently dropping remarks.

@@ -269,6 +269,14 @@ def Context.fill : Context Role → Game Role → Game Role
   | .leaf r, _ => .leaf r
   | .round sizes next, game => .round sizes (fun a => (next a).fill game)
 
+/-- The Boolean-menu context fragment is a restriction on actual syntax.
+Every hole may be filled independently; no observation or equilibrium
+condition occurs in this definition. -/
+def Context.BooleanMenus : Context Role → Prop
+  | .hole => True
+  | .leaf _ => True
+  | .round sizes next => (∀ i, sizes i ≤ 1) ∧ ∀ actions, (next actions).BooleanMenus
+
 
 /-- Closed scalar components use winner leaves, diagonal commitment rounds,
 role exchange, and public extrema. This syntax contains no value evaluator or

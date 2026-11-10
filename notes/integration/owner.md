@@ -81,23 +81,23 @@ theorem owner_one_table {Role : Type u} {Var : Type v}
     Owner.Term.equationB_correct three a k hka s t hs ht⟩
 ```
 
-The final polynomial-time clause remains separate, so do not mark the whole
-one-table main theorem complete yet.
+The initial slice left polynomial time separate. It is now certified by
+`OwnerWordFrontend` and the complete owner-count frontend.
 
 ## Integration chores for root
 
 Import `KFOL.Owner` where desired; extend exact audit coverage with the definition
 and proof modules; include all pure modules in the pure build closure;
 copy full propositions to root `Paper.lean` with axiom guards; update inventory
-and definition index, marking root/guard main results complete and one-table
-partial for machine time. Root and guard semantics have no global K≥3 hypothesis.
+and definition index. The complete one-table and owner-count runtime clauses
+are now checked. Root and guard semantics have no global K≥3 hypothesis.
 The three-role requirements occur only at separation/completeness.
 
-## Current continuation
+## Subsequent completed integrations
 
-Four-element generator semantic equivalence and one-owner realizability/synthesis
-are next in this branch. Minimum-generator exclusion and forty-law completeness
-are explicitly separate and not yet provided.
+Four-element generator equivalence, realizability/synthesis, minimum-generator
+exclusion and the full thirty-six-law completeness theorem are all implemented
+and checked by the production targets.
 
 ## Four-element semantic equivalence now checked
 
@@ -171,7 +171,7 @@ No Freese theorem is assumed or added as an axiom.
 
 Together with `Four.card`, `Four.embed_reset`, `Four.embed_guarded`, and
 `Term.four_element_complete`, this closes the entire `owner:thm:four` main claim.
-The forty-law basis and four-variable lower bound remain separate work.
+The thirty-six-law basis and four-variable lower bound remain separate work.
 Promote the staged files, add their audit imports, and retire the pending
 copies after integration; no duplicate lasting semantics are intended.
 
@@ -292,7 +292,7 @@ Validation completed:
   `propext`, `Classical.choice`, and `Quot.sound`.
 
 No proof gaps, outside theorem assumptions, native_decide, or added axioms
-occur in this semantic synthesis slice. Forty-law completeness and the
+occur in this semantic synthesis slice. Thirty-six-law completeness and the
 no-three-variable basis theorem remain separate active work.
 
 ## No-three-variable basis (new, ready)
@@ -342,31 +342,31 @@ Proof: `BasisObstruction.variableBound_ge_four T n hbasis hbound`.
 There is no finiteness hypothesis on T; even an infinite three-variable
 basis is excluded. `not_hasVariableBound_three` exports this stronger
 negative form directly. The thirty-four additional equations' soundness
-and forty-law generic completeness remain separate work.
+and thirty-six-law generic completeness remain separate work.
 
 Validation: production `lake build KFOL.Owner.BasisObstruction` passed
 1119 jobs; `tests/OwnerBasisObstruction.lean` checks W's cardinality,
 root-expansion's exact support and the two distinct values, plus standard
 axiom guards for the full actual-support transfer and lower-bound theorems.
 
-## Forty-law basis completeness (new, ready)
+## Thirty-six-law basis completeness (new, ready)
 
 The entire `owner:thm:finite-basis` claim is now proved, including
 arbitrary finite or infinite algebras. `Owner/Basis.lean` exports the exact
-native forty-equation family, soundness, completeness, direct intended
+native thirty-six-equation family, soundness, completeness, direct intended
 winner-set interpretation, and the four-to-six variable bounds. No
 external generation theorem, conditional completeness premise, or finite
 closure certificate is substituted for the generic conclusion.
 
 Independent data are concentrated in existing `Definitions/Owner.lean`:
 
-- `FiniteBasis.basisAxiom : Fin 40 → Identity (Symbol Unit)` contains the
-  forty fully expanded native reset/H equations, with comments matching
+- `FiniteBasis.basisAxiom : Fin 36 → Identity (Symbol Unit)` contains the
+  thirty-six fully expanded native reset/H equations, with comments matching
   the paper's labels. `theory = Set.range basisAxiom` is defined from this
-  explicit data family, independently of semantic validity. The family
-  intentionally includes redundant equations, as the paper does; no
-  distinct-equation cardinality40 is asserted.
-- `FiniteBasis.Laws` is the semantic forty-law view. The proved
+  explicit data family, independently of semantic validity. The kernel-checked `basisAxiom_injective` and `theory_ncard` prove
+  that the actual data family has exactly 36 distinct identities. The
+  four repeated equations have been removed; no irredundance claim is made.
+- `FiniteBasis.Laws` is the semantic thirty-six-law view. The proved
   `models_theory_iff` connects it to the independent exact data family.
   `RootFiber`, primitive operation extraction, and `Term.actionWords`
   provide the generic model interface and actual native normalization.
@@ -378,11 +378,12 @@ Independent data are concentrated in existing `Definitions/Owner.lean`:
 Suggested complete paper-facing statement for the basis itself:
 
 ```lean
-theorem owner_forty_equation_basis {Role : Type u}
+theorem owner_thirty_six_equation_basis {Role : Type u}
     (three : Fin 3 ↪ Role) (owner observer : Role)
     (ho : observer ≠ owner) :
+    (Set.range KFOL.Owner.FiniteBasis.basisAxiom).ncard = 36 ∧
     (Set.range KFOL.Owner.FiniteBasis.basisAxiom).Finite ∧
-    (∀ i : Fin 40,
+    (∀ i : Fin 36,
       (KFOL.Owner.FiniteBasis.basisAxiom i).variableCount ≤ 6) ∧
     (letI := KFOL.Owner.oneOwnerStructure owner
      ∀ e : KFOL.Equational.Identity (KFOL.Owner.Symbol Unit),
@@ -391,7 +392,7 @@ theorem owner_forty_equation_basis {Role : Type u}
            (Set.range KFOL.Owner.FiniteBasis.basisAxiom) e.lhs e.rhs)
 ```
 
-Use `theory_finite`, `variable_bound`, and `isBasis_winnerSet`.
+Use `theory_ncard`, `theory_finite`, `variable_bound`, and `isBasis_winnerSet`.
 `FiniteBasis.isBasis` proves the same complete proposition for Four
 itself. `hasFiniteBasis` is the corresponding existential theorem.
 The additional main-paper lower-bound statement can be given directly
@@ -473,7 +474,7 @@ Equational.Derives FiniteBasis.theory
 
 This is the literal `owner:lem:two-source` statement, strengthened by allowing
 any native upper term W; the report's word-value join is a special case. The
-premise and conclusion use the independent Derives relation and exact forty
+premise and conclusion use the independent Derives relation and exact thirty-six
 identities, and coverage uses independent Guard.Dominates/Covers. There are
 no root inequalities or selected-role semantic hypotheses replacing either
 required premise. Equal indices and indices already in P are allowed.
@@ -540,3 +541,45 @@ KFOL.Policies.Public` passed1236 jobs. The six warning-as-error regressions
 OwnerEncoding, OwnerTwoSource, OwnerBasis, OwnerSynthesis, Policies and
 PoliciesHardness all passed. Owner/Policies sources are stable and ready for
 parent Paper/audit/inventory integration; no commits were made by this worker.
+
+
+## Basis audit correction: 36 distinct identities
+
+The literal basis and semantic Laws structure have been reduced from 40 to 36
+assumptions. Original S12 was R3 with variables renamed, A18 was R2, and A19
+was the reverse of S8. The full deterministic alpha/orientation audit then
+found a fourth repeat: original S11 was R5 with variables renamed and sides
+reversed. The exact derivation is `(laws.R5 u r a).symm`. All four are now
+proved consequences, with no retained basis rows or Laws fields:
+
+- `Laws.project_idem r u := laws.R3 u r`;
+- `Laws.G_zero r a := laws.R2 r a`;
+- `Laws.F_zero r a b := (laws.h_insert r a b).symm`;
+- `Laws.reset_back r a u := (laws.R5 u r a).symm`.
+
+The entire arbitrary-model normalization/completeness proof therefore works
+from precisely the 36 retained hypotheses. These four derived lemmas require
+no axioms at all.
+
+The actual list is `basisAxiom : Fin 36 → Identity (Symbol Unit)`, with
+retained order unchanged. After the six reset equations there are eleven
+structural equations S1–S11 and nineteen action equations A1–A19. Old S13 is
+now S11, old A20/A21 are A18/A19, and the normalization projection step cites
+R5 directly. The expanded six-variable action-band equation is source index 21.
+
+`basisAxiom_injective` compares the fully expanded native left/right term
+pairs by kernel `decide`. `theory_ncard` proves
+`(Set.range basisAxiom).ncard = 36`; the public theorem asserts this actual
+set cardinality, replacing the former count of index slots. The independent
+Python check additionally canonicalizes variables by first occurrence across
+BOTH sides and compares both orientations, over the ENTIRE retained list.
+It confirms 36 equivalence classes, ruling out another missed alpha/orientation
+repeat. No minimum-cardinality or irredundant-basis claim is made.
+
+The public declaration is now `KFOL.Paper.owner_thirty_six_equation_basis`;
+only its count/name/doc/guard block changed in Paper. The main owner theorem
+and report list/proof references were updated in place. checks/owner_basis.py
+removes exactly these four rows, and checks/check_owner_finite_basis.py checks
+both literal and alpha/orientation distinctness before soundness enumeration.
+Root should refresh inventory/definition-surface/public axiom references and
+the verification appendix, and run make paper for updated label snapshots.

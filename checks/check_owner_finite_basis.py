@@ -1,7 +1,7 @@
 """Independent soundness and path-certificate checks for the full finite basis.
 
 The cardinality-independent equational completeness proof is written in
-appendix-owner-basis.tex. Lean checks the forty finite soundness certificates.
+appendix-owner-basis.tex. Lean proves soundness and completeness for the thirty-six native identities.
 """
 
 from itertools import product
@@ -24,8 +24,42 @@ def compare(left, right, arity):
     absorption_certificate(second, first, base)
 
 
+
+def canonical_identity(left, right):
+    """Exact alpha/orientation key, with one variable map across both sides.
+
+    First occurrence gives a canonical name to each actual variable. The
+    fixed owner label is an operation parameter, never a renamable variable.
+    Taking both orientations also identifies an equation with its reverse.
+    """
+    def oriented(first, second):
+        names = {}
+
+        def encode(term):
+            if term.op == 'var':
+                original = term.args[0]
+                if original not in names:
+                    names[original] = len(names)
+                return ('var', names[original])
+            if term.op == 'reset':
+                return ('reset', *(encode(child) for child in term.args))
+            assert term.op == 'h', term.op
+            return ('h', term.args[0], *(encode(child) for child in term.args[1:]))
+
+        return encode(first), encode(second)
+
+    return min(oriented(left, right), oriented(right, left))
+
+
 def check():
-    assert len(BASIS) == 40
+    assert len(BASIS) == 36
+    assert len({(left, right) for _, left, right in BASIS}) == 36
+    canonical = {}
+    for name, left, right in BASIS:
+        key = canonical_identity(left, right)
+        assert key not in canonical, (canonical.get(key), name)
+        canonical[key] = name
+    assert len(canonical) == 36
     valuations = 0
     for name, left, right in BASIS:
         names = sorted(variables(left) | variables(right))
@@ -79,9 +113,11 @@ def check():
                 assert denote(projected, env) == denote(expanded, env)
             sampled += 1
 
-    print(f'Full one-owner basis: 40 equations on {valuations} native valuations; '
+    print(f'Full one-owner basis: 36 equations, distinct up to variable renaming '
+          f'and reversal, on {valuations} native valuations; '
           f'two-source certificates for all {products} products of the free '
           f'three-generated algebra and {sampled} larger sampled identities passed.')
+
 
 
 if __name__ == '__main__':

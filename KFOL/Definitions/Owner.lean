@@ -497,13 +497,13 @@ def rootExpansion : Equational.Identity (Symbol Unit) :=
 end BasisObstruction
 
 
-/-! ## The explicitly listed forty-law candidate basis -/
+/-! ## The explicitly listed thirty-six-law basis -/
 
 namespace FiniteBasis
 
-/-- Exactly the displayed forty equations, with six declared variable slots.
+/-- Exactly the displayed thirty-six equations, with six declared variable slots.
 The two five-variable split laws reuse the slot unused by their other variables. -/
-def basisAxiom (i : Fin 40) : Equational.Identity (Symbol Unit) :=
+def basisAxiom (i : Fin 36) : Equational.Identity (Symbol Unit) :=
   let pair : Term Unit (Fin 6) × Term Unit (Fin 6) := match i.val with
     | 0 => ((Term.step (.var 0) (.var 0)), (.var 0)) -- R1
     | 1 => ((Term.step (Term.step (.var 0) (.var 1)) (.var 0)), (Term.step (.var 1) (.var 0))) -- R2
@@ -521,36 +521,32 @@ def basisAxiom (i : Fin 40) : Equational.Identity (Symbol Unit) :=
     | 13 => ((Term.guarded () (.var 0) (.var 1) (.var 2)), (Term.guarded () (.var 0) (Term.step (.var 0) (.var 1)) (.var 2))) -- h_insert
     | 14 => ((Term.step (Term.step (Term.step (.var 5) (.var 1)) (Term.step (.var 4) (.var 1))) (.var 0)), (Term.step (Term.step (Term.step (Term.step (.var 5) (.var 1)) (.var 0)) (.var 0)) (Term.step (Term.step (Term.step (.var 4) (.var 1)) (.var 0)) (.var 0)))) -- project_join
     | 15 => ((Term.step (.var 5) (Term.step (.var 4) (.var 1))), (Term.step (Term.step (.var 5) (.var 1)) (Term.step (.var 4) (.var 1)))) -- reset_split
-    | 16 => ((Term.step (Term.step (.var 5) (.var 1)) (.var 0)), (Term.step (Term.step (Term.step (.var 5) (.var 0)) (.var 1)) (.var 0))) -- reset_back
-    | 17 => ((Term.step (Term.step (.var 5) (.var 0)) (.var 0)), (Term.step (.var 5) (.var 0))) -- project_idem
-    | 18 => ((Term.step (Term.step (.var 5) (Term.step (.var 4) (.var 0))) (.var 0)), (Term.step (.var 5) (Term.step (.var 4) (.var 0)))) -- root_preserve
-    | 19 => ((Term.step (Term.guarded () (.var 0) (Term.step (Term.step (.var 5) (.var 0)) (.var 1)) (.var 2)) (.var 0)), (Term.guarded () (.var 0) (Term.step (Term.step (.var 5) (.var 0)) (.var 1)) (.var 2))) -- F_closed
-    | 20 => ((Term.guarded () (.var 0) (Term.step (Term.step (Term.step (Term.step (.var 5) (.var 0)) (.var 0)) (Term.step (Term.step (.var 4) (.var 0)) (.var 0))) (.var 1)) (.var 2)), (Term.step (Term.step (Term.guarded () (.var 0) (Term.step (Term.step (.var 5) (.var 0)) (.var 1)) (.var 2)) (.var 0)) (Term.step (Term.guarded () (.var 0) (Term.step (Term.step (.var 4) (.var 0)) (.var 1)) (.var 2)) (.var 0)))) -- F_join
-    | 21 => ((Term.step (Term.step (Term.guarded () (.var 0) (Term.step (Term.step (.var 5) (.var 0)) (.var 1)) (.var 2)) (.var 0)) (Term.step (Term.step (Term.step (Term.guarded () (.var 0) (Term.step (.var 0) (.var 1)) (.var 2)) (.var 0)) (Term.step (Term.step (.var 5) (.var 0)) (.var 0))) (.var 0))), (Term.step (Term.step (Term.guarded () (.var 0) (Term.step (.var 0) (.var 1)) (.var 2)) (.var 0)) (Term.step (Term.step (.var 5) (.var 0)) (.var 0)))) -- F_contract
-    | 22 => ((Term.guarded () (.var 0) (Term.step (Term.guarded () (.var 0) (Term.step (Term.step (.var 5) (.var 0)) (.var 1)) (.var 2)) (.var 1)) (.var 2)), (Term.guarded () (.var 0) (Term.step (Term.step (.var 5) (.var 0)) (.var 1)) (.var 2))) -- F_idem
-    | 23 => ((Term.guarded () (.var 0) (Term.step (Term.guarded () (.var 0) (Term.step (Term.guarded () (.var 0) (Term.step (Term.step (.var 5) (.var 0)) (.var 1)) (.var 2)) (.var 3)) (.var 4)) (.var 1)) (.var 2)), (Term.guarded () (.var 0) (Term.step (Term.guarded () (.var 0) (Term.step (Term.step (.var 5) (.var 0)) (.var 3)) (.var 4)) (.var 1)) (.var 2))) -- F_band
-    | 24 => ((Term.guarded () (.var 0) (Term.step (Term.step (Term.step (Term.step (.var 5) (.var 0)) (.var 1)) (.var 0)) (.var 1)) (.var 2)), (Term.guarded () (.var 0) (Term.step (Term.step (.var 5) (.var 0)) (.var 1)) (.var 2))) -- F_Ga
-    | 25 => ((Term.guarded () (.var 0) (Term.step (Term.guarded () (.var 0) (Term.step (.var 5) (.var 0)) (.var 1)) (.var 1)) (.var 2)), (Term.guarded () (.var 0) (Term.step (Term.step (.var 5) (.var 0)) (.var 1)) (.var 2))) -- F_Ka
-    | 26 => ((Term.guarded () (.var 0) (Term.step (Term.guarded () (.var 0) (Term.step (.var 5) (.var 0)) (.var 2)) (.var 1)) (.var 2)), (Term.guarded () (.var 0) (Term.step (Term.step (.var 5) (.var 0)) (.var 1)) (.var 2))) -- F_Kb
-    | 27 => ((Term.guarded () (.var 0) (Term.step (Term.step (.var 1) (.var 0)) (.var 1)) (.var 2)), (Term.guarded () (.var 0) (Term.step (.var 0) (.var 1)) (.var 2))) -- F_ca
-    | 28 => ((Term.guarded () (.var 0) (Term.step (Term.step (.var 2) (.var 0)) (.var 1)) (.var 2)), (Term.guarded () (.var 0) (Term.step (.var 0) (.var 1)) (.var 2))) -- F_cb
-    | 29 => ((Term.step (Term.step (Term.guarded () (.var 0) (Term.guarded () (.var 0) (Term.step (Term.step (.var 5) (.var 0)) (.var 1)) (.var 2)) (.var 2)) (.var 1)) (.var 0)), (Term.step (Term.step (Term.guarded () (.var 0) (Term.step (.var 5) (.var 0)) (.var 2)) (.var 1)) (.var 0))) -- capture
-    | 30 => ((Term.step (Term.step (Term.guarded () (.var 0) (Term.step (Term.step (.var 5) (.var 0)) (.var 1)) (.var 2)) (.var 1)) (.var 0)), (Term.step (Term.step (Term.guarded () (.var 0) (Term.step (.var 5) (.var 0)) (.var 2)) (.var 1)) (.var 0))) -- weak_gate
-    | 31 => ((Term.guarded () (.var 0) (Term.guarded () (.var 0) (.var 1) (.var 2)) (.var 2)), (Term.guarded () (.var 0) (Term.step (.var 1) (.var 0)) (.var 2))) -- terminal
-    | 32 => ((Term.step (Term.step (Term.guarded () (.var 0) (.var 1) (.var 2)) (.var 0)) (Term.step (Term.step (Term.step (Term.step (.var 1) (.var 0)) (.var 0)) (Term.step (Term.step (.var 2) (.var 0)) (.var 0))) (.var 0))), (Term.step (Term.step (Term.step (.var 1) (.var 0)) (.var 0)) (Term.step (Term.step (.var 2) (.var 0)) (.var 0)))) -- terminal_bound
-    | 33 => ((Term.step (Term.step (Term.guarded () (.var 0) (.var 1) (.var 2)) (.var 0)) (Term.step (Term.guarded () (.var 0) (Term.step (.var 1) (.var 0)) (.var 2)) (.var 0))), (Term.guarded () (.var 0) (Term.step (.var 1) (.var 0)) (.var 2))) -- terminal_weak
-    | 34 => ((Term.step (Term.step (Term.step (.var 5) (.var 0)) (.var 1)) (.var 0)), (Term.guarded () (.var 0) (Term.step (Term.step (.var 5) (.var 0)) (.var 1)) (.var 1))) -- G_def
-    | 35 => ((Term.guarded () (.var 0) (Term.step (.var 5) (.var 0)) (.var 1)), (Term.guarded () (.var 0) (Term.step (Term.step (.var 5) (.var 0)) (.var 0)) (.var 1))) -- K_def
-    | 36 => ((Term.step (Term.step (.var 0) (.var 1)) (.var 0)), (Term.step (.var 1) (.var 0))) -- G_zero
-    | 37 => ((Term.guarded () (.var 0) (Term.step (.var 0) (.var 1)) (.var 2)), (Term.guarded () (.var 0) (.var 1) (.var 2))) -- F_zero
-    | 38 => ((Term.step (Term.step (Term.step (.var 5) (.var 0)) (.var 0)) (.var 0)), (Term.step (.var 5) (.var 0))) -- G_root
+    | 16 => ((Term.step (Term.step (.var 5) (Term.step (.var 4) (.var 0))) (.var 0)), (Term.step (.var 5) (Term.step (.var 4) (.var 0)))) -- root_preserve
+    | 17 => ((Term.step (Term.guarded () (.var 0) (Term.step (Term.step (.var 5) (.var 0)) (.var 1)) (.var 2)) (.var 0)), (Term.guarded () (.var 0) (Term.step (Term.step (.var 5) (.var 0)) (.var 1)) (.var 2))) -- F_closed
+    | 18 => ((Term.guarded () (.var 0) (Term.step (Term.step (Term.step (Term.step (.var 5) (.var 0)) (.var 0)) (Term.step (Term.step (.var 4) (.var 0)) (.var 0))) (.var 1)) (.var 2)), (Term.step (Term.step (Term.guarded () (.var 0) (Term.step (Term.step (.var 5) (.var 0)) (.var 1)) (.var 2)) (.var 0)) (Term.step (Term.guarded () (.var 0) (Term.step (Term.step (.var 4) (.var 0)) (.var 1)) (.var 2)) (.var 0)))) -- F_join
+    | 19 => ((Term.step (Term.step (Term.guarded () (.var 0) (Term.step (Term.step (.var 5) (.var 0)) (.var 1)) (.var 2)) (.var 0)) (Term.step (Term.step (Term.step (Term.guarded () (.var 0) (Term.step (.var 0) (.var 1)) (.var 2)) (.var 0)) (Term.step (Term.step (.var 5) (.var 0)) (.var 0))) (.var 0))), (Term.step (Term.step (Term.guarded () (.var 0) (Term.step (.var 0) (.var 1)) (.var 2)) (.var 0)) (Term.step (Term.step (.var 5) (.var 0)) (.var 0)))) -- F_contract
+    | 20 => ((Term.guarded () (.var 0) (Term.step (Term.guarded () (.var 0) (Term.step (Term.step (.var 5) (.var 0)) (.var 1)) (.var 2)) (.var 1)) (.var 2)), (Term.guarded () (.var 0) (Term.step (Term.step (.var 5) (.var 0)) (.var 1)) (.var 2))) -- F_idem
+    | 21 => ((Term.guarded () (.var 0) (Term.step (Term.guarded () (.var 0) (Term.step (Term.guarded () (.var 0) (Term.step (Term.step (.var 5) (.var 0)) (.var 1)) (.var 2)) (.var 3)) (.var 4)) (.var 1)) (.var 2)), (Term.guarded () (.var 0) (Term.step (Term.guarded () (.var 0) (Term.step (Term.step (.var 5) (.var 0)) (.var 3)) (.var 4)) (.var 1)) (.var 2))) -- F_band
+    | 22 => ((Term.guarded () (.var 0) (Term.step (Term.step (Term.step (Term.step (.var 5) (.var 0)) (.var 1)) (.var 0)) (.var 1)) (.var 2)), (Term.guarded () (.var 0) (Term.step (Term.step (.var 5) (.var 0)) (.var 1)) (.var 2))) -- F_Ga
+    | 23 => ((Term.guarded () (.var 0) (Term.step (Term.guarded () (.var 0) (Term.step (.var 5) (.var 0)) (.var 1)) (.var 1)) (.var 2)), (Term.guarded () (.var 0) (Term.step (Term.step (.var 5) (.var 0)) (.var 1)) (.var 2))) -- F_Ka
+    | 24 => ((Term.guarded () (.var 0) (Term.step (Term.guarded () (.var 0) (Term.step (.var 5) (.var 0)) (.var 2)) (.var 1)) (.var 2)), (Term.guarded () (.var 0) (Term.step (Term.step (.var 5) (.var 0)) (.var 1)) (.var 2))) -- F_Kb
+    | 25 => ((Term.guarded () (.var 0) (Term.step (Term.step (.var 1) (.var 0)) (.var 1)) (.var 2)), (Term.guarded () (.var 0) (Term.step (.var 0) (.var 1)) (.var 2))) -- F_ca
+    | 26 => ((Term.guarded () (.var 0) (Term.step (Term.step (.var 2) (.var 0)) (.var 1)) (.var 2)), (Term.guarded () (.var 0) (Term.step (.var 0) (.var 1)) (.var 2))) -- F_cb
+    | 27 => ((Term.step (Term.step (Term.guarded () (.var 0) (Term.guarded () (.var 0) (Term.step (Term.step (.var 5) (.var 0)) (.var 1)) (.var 2)) (.var 2)) (.var 1)) (.var 0)), (Term.step (Term.step (Term.guarded () (.var 0) (Term.step (.var 5) (.var 0)) (.var 2)) (.var 1)) (.var 0))) -- capture
+    | 28 => ((Term.step (Term.step (Term.guarded () (.var 0) (Term.step (Term.step (.var 5) (.var 0)) (.var 1)) (.var 2)) (.var 1)) (.var 0)), (Term.step (Term.step (Term.guarded () (.var 0) (Term.step (.var 5) (.var 0)) (.var 2)) (.var 1)) (.var 0))) -- weak_gate
+    | 29 => ((Term.guarded () (.var 0) (Term.guarded () (.var 0) (.var 1) (.var 2)) (.var 2)), (Term.guarded () (.var 0) (Term.step (.var 1) (.var 0)) (.var 2))) -- terminal
+    | 30 => ((Term.step (Term.step (Term.guarded () (.var 0) (.var 1) (.var 2)) (.var 0)) (Term.step (Term.step (Term.step (Term.step (.var 1) (.var 0)) (.var 0)) (Term.step (Term.step (.var 2) (.var 0)) (.var 0))) (.var 0))), (Term.step (Term.step (Term.step (.var 1) (.var 0)) (.var 0)) (Term.step (Term.step (.var 2) (.var 0)) (.var 0)))) -- terminal_bound
+    | 31 => ((Term.step (Term.step (Term.guarded () (.var 0) (.var 1) (.var 2)) (.var 0)) (Term.step (Term.guarded () (.var 0) (Term.step (.var 1) (.var 0)) (.var 2)) (.var 0))), (Term.guarded () (.var 0) (Term.step (.var 1) (.var 0)) (.var 2))) -- terminal_weak
+    | 32 => ((Term.step (Term.step (Term.step (.var 5) (.var 0)) (.var 1)) (.var 0)), (Term.guarded () (.var 0) (Term.step (Term.step (.var 5) (.var 0)) (.var 1)) (.var 1))) -- G_def
+    | 33 => ((Term.guarded () (.var 0) (Term.step (.var 5) (.var 0)) (.var 1)), (Term.guarded () (.var 0) (Term.step (Term.step (.var 5) (.var 0)) (.var 0)) (.var 1))) -- K_def
+    | 34 => ((Term.step (Term.step (Term.step (.var 5) (.var 0)) (.var 0)) (.var 0)), (Term.step (.var 5) (.var 0))) -- G_root
     | _ => ((Term.guarded () (.var 0) (Term.step (.var 5) (.var 0)) (.var 0)), (Term.step (.var 5) (.var 0))) -- K_root
   ⟨6, pair.1, pair.2⟩
 
 /-- The explicitly listed theory, independent of semantic validity. -/
 def theory : Equational.Theory (Symbol Unit) := Set.range basisAxiom
 
-/-- The semantic law view of the same forty native equations. -/
+/-- The semantic law view of the same thirty-six native equations. -/
 structure Laws {M : Type u} (f : M → M → M) (h : M → M → M → M) : Prop where
   R1 (r : M) : (f r r) = r
   R2 (r a : M) : (f (f r a) r) = (f a r)
@@ -568,8 +564,6 @@ structure Laws {M : Type u} (f : M → M → M) (h : M → M → M → M) : Prop
   h_insert (r a b : M) : (h r a b) = (h r (f r a) b)
   project_join (r a u v : M) : (f (f (f u a) (f v a)) r) = (f (f (f (f u a) r) r) (f (f (f v a) r) r))
   reset_split (a u v : M) : (f u (f v a)) = (f (f u a) (f v a))
-  reset_back (r a u : M) : (f (f u a) r) = (f (f (f u r) a) r)
-  project_idem (r u : M) : (f (f u r) r) = (f u r)
   root_preserve (r u v : M) : (f (f u (f v r)) r) = (f u (f v r))
   F_closed (r a b u : M) : (f (h r (f (f u r) a) b) r) = (h r (f (f u r) a) b)
   F_join (r a b u v : M) : (h r (f (f (f (f u r) r) (f (f v r) r)) a) b) = (f (f (h r (f (f u r) a) b) r) (f (h r (f (f v r) a) b) r))
@@ -588,8 +582,6 @@ structure Laws {M : Type u} (f : M → M → M) (h : M → M → M → M) : Prop
   terminal_weak (r a b : M) : (f (f (h r a b) r) (f (h r (f a r) b) r)) = (h r (f a r) b)
   G_def (r a u : M) : (f (f (f u r) a) r) = (h r (f (f u r) a) a)
   K_def (r a u : M) : (h r (f u r) a) = (h r (f (f u r) r) a)
-  G_zero (r a : M) : (f (f r a) r) = (f a r)
-  F_zero (r a b : M) : (h r (f r a) b) = (h r a b)
   G_root (r u : M) : (f (f (f u r) r) r) = (f u r)
   K_root (r u : M) : (h r (f u r) r) = (f u r)
 
@@ -602,7 +594,7 @@ def guardedOperation (M : Type u) [(Equational.language (Symbol Unit)).Structure
   FirstOrder.Language.Structure.funMap (L := Equational.language (Symbol Unit)) (.guarded ())
     (fun i => if i = 0 then x else if i = 1 then y else z)
 
-/-- Fixed points of right reset by r, independent of the forty-law theory. -/
+/-- Fixed points of right reset by r, independent of the thirty-six-law theory. -/
 abbrev RootFiber {M : Type u} (f : M → M → M) (r : M) := {x : M // f x r = x}
 
 end FiniteBasis

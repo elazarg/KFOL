@@ -1,15 +1,12 @@
 PYTHON ?= python3
-LEAN ?= lean
 LATEXMK ?= latexmk
 ZIP ?= zip
 LATEX = $(LATEXMK) -pdf -interaction=nonstopmode -halt-on-error -outdir=build
 
 PAPER_SOURCES := main.tex tr.tex references.bib $(wildcard sections/*.tex)
 PYTHON_CHECKS := $(sort $(wildcard checks/check_*.py))
-LEAN_MODULES := Basic Perspectives CoreModels CoreObstruction CoreMixed CoreConservative CoreQuotients CoreAtomic Synthesis BooleanCore Separation FullAlgebra Reset ResetModels OneConstant Fragments RawFragments OwnerFragments OwnerModels ChainGuards MixedPolicies SealedRounds
-LEAN_OBJECTS := $(addprefix build/lean/,$(addsuffix .olean,$(LEAN_MODULES)))
 
-.PHONY: all paper overleaf check check-python check-lean check-legacy-lean check-algebra clean
+.PHONY: all paper overleaf check check-python check-lean check-algebra clean
 
 all: paper
 
@@ -34,39 +31,12 @@ check: check-python check-lean
 check-python:
 	@set -e; for script in $(PYTHON_CHECKS); do $(PYTHON) $$script; done
 
-check-lean: check-legacy-lean check-algebra
-
-check-legacy-lean: $(LEAN_OBJECTS)
+check-lean: check-algebra
 
 check-algebra:
 	$(PYTHON) scripts/check_algebra.py
 
-build/lean/%.olean: lean/%.lean lean-toolchain | build/lean
-	cd lean && LEAN_PATH=../build/lean $(LEAN) -DwarningAsError=true -o ../$@ $*.lean
-
-build/lean/Perspectives.olean: build/lean/Basic.olean
-build/lean/CoreModels.olean: build/lean/Perspectives.olean
-build/lean/CoreObstruction.olean: build/lean/CoreModels.olean
-build/lean/CoreMixed.olean: build/lean/CoreModels.olean
-build/lean/CoreConservative.olean: build/lean/CoreModels.olean
-build/lean/CoreQuotients.olean: build/lean/CoreObstruction.olean
-build/lean/CoreAtomic.olean: build/lean/CoreObstruction.olean build/lean/Reset.olean
-build/lean/Synthesis.olean: build/lean/Perspectives.olean
-build/lean/BooleanCore.olean: build/lean/Synthesis.olean
-build/lean/Separation.olean: build/lean/Synthesis.olean
-build/lean/FullAlgebra.olean: build/lean/Separation.olean
-build/lean/Reset.olean: build/lean/Separation.olean
-build/lean/ResetModels.olean: build/lean/Reset.olean
-build/lean/OneConstant.olean: build/lean/Separation.olean
-build/lean/Fragments.olean: build/lean/Reset.olean
-build/lean/OwnerFragments.olean: build/lean/FullAlgebra.olean build/lean/Fragments.olean
-build/lean/RawFragments.olean: build/lean/Fragments.olean
-
-build/lean/OwnerModels.olean: build/lean/OwnerFragments.olean
-build/lean/ChainGuards.olean: build/lean/OwnerFragments.olean
-build/lean/MixedPolicies.olean: build/lean/ChainGuards.olean
-
-build build/lean:
+build:
 	mkdir -p $@
 
 clean:

@@ -63,7 +63,7 @@ theorem reset_chainValue (three : Fin 3 ↪ Role) (i j : Fin 3) :
 namespace Term
 
 /-- Assign the marker value only to j, with all other statuses given by B. -/
-private noncomputable def markerValuation (three : Fin 3 ↪ Role) (B : Set Var)
+noncomputable def markerValuation (three : Fin 3 ↪ Role) (B : Set Var)
     (j i : Var) : WinnerSet Role := by
   classical
   exact chainValue three (if i = j then 2 else if i ∈ B then 1 else 0)
@@ -80,7 +80,7 @@ private theorem markerValuation_mem (three : Fin 3 ↪ Role) (B : Set Var) (j i 
   by_cases hij : i = j <;> by_cases hi : i ∈ B <;>
     simp [markerValuation, hij, hi]
 
-private theorem marker_eval (t : Term Var) (three : Fin 3 ↪ Role) (B : Set Var) (j : Var) :
+theorem marker_eval (t : Term Var) (three : Fin 3 ↪ Role) (B : Set Var) (j : Var) :
     three 2 ∈ (t.eval (markerValuation three B j)).val ↔ t.Selected B j := by
   let C : Set Var := {i | (markerValuation three B j i).Ambiguous}
   have hc : ∀ i, i ≠ j → (i ∈ C ↔ i ∈ B) := by

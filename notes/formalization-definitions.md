@@ -109,10 +109,11 @@ decidable equality.
 The extractor's success is proved equivalent to idempotency for three or more
 roles; every successful output has equal semantics at all valuations and no
 more constructor nodes, without a three-role assumption for soundness. These
-facts certify its functional behavior and output size. Polynomial machine
-running time still needs a finite permutation encoding, an evaluation-cost
-proof and the complexity-library bridge; the full `gen:thm:core` row remains
-partial until those are checked.
+facts certify its functional behavior and output size. The native
+`Complexity/CoreExtraction*` branch also certifies the complete original-word
+algorithm, uniformly in binary K and every physically stored permutation
+array. Its validation and output-size proofs cover malformed inputs and
+K=0,1,2; the algebraic characterization uses three distinct roles.
 
 The player-view claims are now fully stated in `KFOL.Paper.player_views`,
 `KFOL.Paper.public_subdirect_representation` and
@@ -279,8 +280,9 @@ these are cross-checks, not the cardinality proofs.
 `Definitions/Equational.lean` is the fifth current definition module. It
 imports `Definitions/Core.lean` and mathlib's model-theory substructures and
 quotients. The generic proof modules add no primitive notion of validity.
-These definitions prepare the required basis proofs; they do not themselves
-complete any reset, forty-law or core nonfinite-basis statement in `Paper.lean`.
+These shared definitions support the completed reset six-law basis,
+one-owner thirty-six-law basis and core nonfinite-basis proofs. Satisfaction
+and derivation remain independent notions throughout those proofs.
 
 | Definition | Meaning and dependencies |
 | --- | --- |
@@ -327,7 +329,8 @@ inhabitant of its generated subalgebra, also for a nullary identity. A core
 zero-generator closure can instead be empty; it is never assumed to be a
 nonempty variety member. The generic bounded-countermodel lemma reduces a
 nonfinite-basis proof to explicit finite countermodels at every support bound.
-Constructing the paper's core countermodels remains separate unfinished work.
+`Core/GridCountermodel` and `Core/GridLocalCover` construct those finite countermodels at every support bound,
+including zero, with actual generated-subalgebra covers.
 
 ## Reset semantics and canonical tables
 
@@ -362,11 +365,26 @@ monotonicity and independence of j's own ambiguity when selecting j.
 `Reset/Tables.lean` identifies table members with the actual minimal finite
 status sets enabling j. It proves the upward-closure formula, antichain property,
 unique empty guard at the root, and exclusion of j from its prerequisites.
-`Reset/Chain.lean` separates every unequal pair of selectors on the fixed
-chain and identifies table equality with validity, uniformly across role sets
-with three distinct roles. `identity_holds_iff_table` exposes this directly to
-the generic equational basis API. Selection and evaluation themselves require
-no role-count assumption, and variable declarations need not be finite.
+`Reset/Chain.lean` connects this structural selector to an independent semantic
+probe. For the chain Z={a}, U={a,b}, T={a,b,c}, its marker valuation assigns T
+to j, U to every other position in B, and Z elsewhere. Only j contains c;
+selection's independence from j's own ambiguity makes c appear exactly when
+`Selected B j` holds, even when j is not in B.
+
+`Paper.reset_table_semantic_definition` spells out this probe rather than
+referring to a correctness predicate. It states both the full winner formula
+for arbitrary valuations and the semantic minimality condition: A is in the
+canonical table at j precisely when c survives the A probe and every subset
+B of A whose probe retains c also contains A. The public type uses literal
+`chainValue` valuations; `Reset.Term.markerValuation` is only a small proof
+construction. Thus structural guard minimization is proved to be the semantic
+table of minimal ambiguity prerequisites, not assumed to be that table.
+
+The same chain separates every unequal pair of selectors and identifies table
+equality with validity, uniformly across role carriers with three distinct
+roles. `identity_holds_iff_table` exposes this to the shared equational basis
+API. Selection and evaluation have no role-count assumption, and the variable
+type need not be finite.
 
 `Reset/Substitution.lean` proves the exact finite-table substitution formula
 for actual mathlib term substitution, as well as the root and evaluation laws.
@@ -380,8 +398,9 @@ covering every role yields the same reset operation regardless of order or
 repetitions. Compilation yields a genuine native core term and agrees on every
 mixed valuation. Root `Paper.lean` states the existential expansion and full
 selection result, the semantic clauses of canonical tables, and the explicit
-substitution formula. Certified polynomial machine bounds remain a separate
-obligation in the inventory. The six-law basis is now complete as described below.
+substitution formula. The original-word recognition, equality and reset-table
+synthesis algorithms also have native polynomial-time certificates, described
+below. The six-law basis is complete as described in the next section.
 
 ## Six-law reset completeness
 
@@ -516,8 +535,9 @@ using an arbitrary finite enumeration inside its proof. The earlier separate
 path-choice construction has been removed.
 
 `Recognition.lean` proves correctness of the executable checker and its
-at-most-target-cardinality greedy rounds. Polynomial machine-time bounds
-remain obligations.
+at-most-target-cardinality greedy rounds. `Complexity/RecognitionMachine` and
+`Complexity/ResetSynthesisMachine` supply native polynomial-time certificates
+and connect the physical-width greedy scan to this same construction.
 
 Regression cases independently specify alternative prerequisites, an unused
 input, a dependency cycle, multiple empty-root guards, self-dependency and a
@@ -643,9 +663,9 @@ its occurrence list and canonical tables, and bounds their stream by
 `6L(L+1)` bits. The binary dictionary costs at most twice the sum of input
 leaf-label bit widths plus `2L`, using one copy of each distinct name.
 
-These are representations and encoded output-size proofs. Complete descriptor
-validation and shared-support identity checking are proved below; machine-time
-certificates for record scans and complete table algorithms remain separate.
+These representation and encoded output-size proofs are reused by the
+complete native record scans, descriptor validation, shared-support identity
+checker and table synthesis algorithm. Their exact bridges are described below.
 The codecs preserve a chosen dictionary and record order; comparison uses the
 decoded canonical tables under a shared dictionary covering both supports.
 The generic compression lemmas support that shared-dictionary use. Regressions use
@@ -689,10 +709,11 @@ parses, fuel exhaustion, truncated trees, invalid labels, arbitrary suffixes,
 sparse names, repeated leaves and the complete decoded frontend output using
 kernel `rfl` and `decide`.
 
-These are exact executable semantics and bit-size bounds. The parser and
-frontend have not yet been certified in the machine model. Complete candidate
-validation and shared support for identity inputs are now checked below;
-record/table machine scans and full algorithm running times retain their own obligations.
+The same parser and frontend also have native machine certificates in
+`Complexity/TermMachine`, `GuardExtraction` and `GuardCompression`; the last
+also certifies the complete original-word extraction frontend. Candidate
+validation and the shared-support identity checker use these representations
+and are described below.
 
 ## Complete descriptors and external table recognition
 
@@ -917,6 +938,28 @@ opponent deviations. `Strategic/Compilation` proves the entire term interpreter,
 including switches. Regressions distinguish Nash from SPE at an unreached
 subgame and reproduce the three-role example with an extra inactive role.
 
+`Definitions/Strategic.lean` also defines `Strategic.FiniteChoice` for one
+observed finite-action root above the existing binary continuation games.
+These definitions do not use a fold or the backward-induction rule:
+
+| Definition | Meaning |
+| --- | --- |
+| `FiniteChoice.Profile branches` | One actual root action and a full continuation profile for every action, including all unchosen actions |
+| `FiniteChoice.winner` | The winner of the selected continuation profile |
+| `FiniteChoice.Deviation owner player` | Every continuation changes by that player's existing whole-plan deviation; only the root owner may change the chosen action |
+| `FiniteChoice.IsNash` | No such whole-player replacement can turn a loss into that player's victory |
+| `FiniteChoice.IsSubgamePerfect` | Root Nash together with the independently defined subtree SPE condition in every continuation |
+| `FiniteChoice.possibleWinners` | Winners of actual profiles satisfying this finite-root SPE predicate |
+
+`Strategic/FiniteChoices` proves the exact SPE criterion and winner recurrence
+from these definitions. For every finite nonempty action type,
+`possibleWinners_eq_fold` identifies the result with the literal semilattice
+`WinnerSet.choiceFold`, and `exists_binary_tree` constructs an actual binary
+public game with exactly those SPE winners. `Paper.finite_action_quantifier`
+repeats the finite-root profile predicate and both conclusions. The separate
+`finite_public_choices` statement gives algebraic term folding; the new
+strategic bridge supplies the finite-action quantifier's game semantics.
+
 ## Owner synthesis and variable obstruction
 
 The canonical-table and synthesis definitions were consolidated into the existing
@@ -974,8 +1017,9 @@ connects that view to the accepted canonical information model. `public_step`
 proves exact complete publication; `appendPublicHistory` constructs a canonical
 realized continuation history with no strategy-reach hypothesis. Two-bit,
 two-round regressions inspect first- and second-round prefixes. These are
-operational/information results. Product Bayes beliefs, consistency and the
-full strategic round correspondence remain unproved by this gate.
+operational/information results. The complete product-Bayes, consistency and
+strategic correspondence proofs are separate modules, documented in the
+complete round surface below.
 
 
 ## Shared hardness-reduction interface
@@ -994,11 +1038,29 @@ and literal names are explicit and disjoint. The proof modules `Reductions/Reset
 
 ## Completed basis and congruence definitions
 
-The independent owner definition module also contains the literal `Fin 40`
-family `Owner.FiniteBasis.basisAxiom`, its theory, arbitrary-model laws and the
-one-owner winner structure. `Owner/Basis` proves arbitrary-model normalization,
-two-source absorption, full completeness and transport to winner sets. Forty
-counts indexed equations; no unproved distinctness of all forty is asserted.
+The independent owner definition module contains the literal `Fin 36`
+family `Owner.FiniteBasis.basisAxiom`, with six declared variable slots and
+fully expanded primitive reset/H syntax. Its `theory` is exactly
+`Set.range basisAxiom`. The arbitrary-model `Laws f h` record states these
+same thirty-six equations, without referring to semantic validity or to the
+normalization proof. The intended `oneOwnerStructure` is independently
+interpreted on the existing winner-set carrier.
+
+`Owner.FiniteBasis.basisAxiom_injective` in `Owner/Basis/Presentation` proves
+that the expanded identity values are distinct, and `theory_ncard` concludes
+`(Set.range basisAxiom).ncard = 36`. This is the cardinality of the actual set
+of identities, not just of its index type. Six bounds actual variable support;
+it does not assert that every equation uses all six declared slots.
+
+The four additional rewrite lemmas `Laws.reset_back`, `Laws.project_idem`,
+`Laws.G_zero` and `Laws.F_zero` are derived laws in `Owner/Basis/Presentation`.
+They follow respectively from R5 with renamed variables and exchanged sides,
+R3, R2, and the symmetric form of `h_insert`. They are not extra fields of
+`Laws` or additional members of the basis family. `Owner/Basis` then proves
+arbitrary-model normalization, two-source absorption and full completeness.
+`Paper.owner_thirty_six_equation_basis` combines the actual range cardinality,
+finiteness, six-variable upper bound, semantic validity iff derivability and
+the independent four-variable lower bound for every possible basis.
 
 `Definitions/CoreBasis.lean` supplies the native core structures, Boolean
 profiles and explicit exhaustion syntax used by the full grid proof. The
@@ -1042,7 +1104,10 @@ criterion. The syntax-only checker and normalized guard comparisons are
 independently specified. Their correctness is proved for both tractable family
 branches; repeated-pattern observations are equation-complete. Strict G
 nondefinability uses actual reset syntax and the displayed two-owner expression.
-Native non-easy family CNF reductions are now proved, including calibration and width-three expanded sizes; machine runtime/class transport remains required.
+Native non-easy family CNF reductions, calibration and width-three expanded
+sizes are proved. `PolicyTermFrontend`, `PolicyWordFrontend` and
+`PolicyCompleteness` connect both tractable branches and the remaining hard
+cases to complete original-word machine-level complexity statements.
 
 `Definitions/TwoPlayers.lean` is the eighteenth module. Any `Fin 2 ≃ Role`
 identifies the existing nonempty winner sets with the ordinary `Fin 3` chain.
@@ -1181,7 +1246,11 @@ proof translation is not executed by the policy verifier.
 It now also collects the actual one-active-role public constructor, diagonal
 constructor, reciprocal and threshold trees, the public-tree interpretation,
 possible winners, independent `Context`/`fill` syntax, `UsesOnly` (only the
-named pair has nontrivial menus or wins), and `BooleanMenus`. The actual menu
+named pair has nontrivial menus or wins), `BooleanMenus`, and
+`Context.BooleanMenus`. A game is Boolean when every actual menu has size at
+most two and each child game is Boolean. A context has the same structural
+restriction, with holes and leaves admitted directly. Neither restriction
+mentions values, strategies, observations or equilibrium. The actual menu
 size parameter is one less than its nonempty cardinality. No role-count lower
 bound is built into these definitions.
 
@@ -1203,7 +1272,22 @@ calculates the concrete two-segment value set and omitted/attained midpoint.
 thresholds, rational synthesis and all-round-context full abstraction.
 `closedContext`, `thresholdContext` and the synthesized comparison context are
 literal syntax constructions; the general context congruence follows from the
-proved actual SE round equation, including repeated holes.
+proved actual SE round equation, including repeated holes. Filling a Boolean
+context with a Boolean game preserves that syntactic fragment.
+
+`Paper.infinite_winner_algebra` excludes finite encodings with domain exactly
+`{game : Game Role // game.BooleanMenus}`. Its public-choice congruence and
+single-observer adequacy hypotheses quantify only over Boolean games; the
+contextual version quantifies only over Boolean contexts as well. The proof
+uses the actual Boolean reciprocal and threshold games. No extension of a
+fragment semantics to non-Boolean games is a premise.
+
+`Scalar/Security` also constructs the two displayed actual menu laws for the
+D stage. Each puts y/(x+y) on literal action zero, and replacing either role's
+law fixes a's actual winner coordinate at xy/(x+y) against every opposing
+mixed profile, without a Nash premise. These are the canonical finite menus
+and `diagonalTable` used by the actual diagonal game's value theorem.
+`Paper.scalar_diagonal_security` spells out the laws and unilateral replacements.
 
 `TwoPlayers/Stage` proves unique actual winner laws for any finite menu stage
 with only two effective players/winners, by crossed Nash deviations. `Values`
@@ -1225,7 +1309,9 @@ complete actual original equation and excludes malformed words. Native
 expanded policy macros are executed. These fixed-signature results are not
 asserted uniform in a varying alphabet. `Canonicalization` proves the generic
 machine-level P=NP consequence with both canonicalization and an arbitrary
-Boolean comparator charged; its original-core instantiation remains tracked.
+Boolean comparator charged. The original-core instantiation uses the actual
+`IsCore` subtype and its restricted original encoding, with no runtime
+requirement outside that subtype.
 
 
 The completed fixed-family policy frontend computes actual `normalGuards`,
@@ -1326,9 +1412,15 @@ correct; it does not assume dictionary position zero is the root.
 
 The [readable review index](paper-definition-surface.md) and machine-readable
 [public-type dependency surface](paper-definition-surface.json)
-records each of the 128 Paper theorem types, its reachable project definitions
-and inductive constructors, and imported boundary interfaces. Its extractor
-follows semantic/computational definition bodies and types, erases proof-valued
-subterms under binders, and never follows theorem proof bodies. Source hashes
-and per-theorem slices make the report reproducible; it supplements the manual
-meaning/index above and the separate transitive axiom audit.
+record all 132 public theorem types. They reach 1,012 project semantic
+declarations in 57 source files, of which 18 are central definition files.
+Generated declarations are grouped into 565 written source review units;
+11 derived declarations have file-level locations. The four review fixes
+above are included in their corresponding per-theorem slices.
+
+The extractor follows semantic/computational definition bodies and types,
+erases proof-valued subterms under binders, and never follows theorem proof
+bodies. Source hashes and exact per-theorem slices make the report reproducible;
+it supplements the manual meaning/index above and the separate transitive
+axiom audit. The freshly regenerated JSON and Markdown pass
+`python3 scripts/export_definition_surface.py --check --no-build`.

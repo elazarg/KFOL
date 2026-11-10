@@ -3,7 +3,7 @@ module
 public import KFOL.Owner.Basis.Presentation
 
 /-! Common-root semilattices and join-preserving unary actions in every
-arbitrary model of the explicitly listed forty native identities. -/
+arbitrary model of the explicitly listed thirty-six native identities. -/
 
 @[expose] public section
 

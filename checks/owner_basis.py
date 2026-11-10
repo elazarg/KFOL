@@ -1,4 +1,4 @@
-"""Forty identities and path certificates for the unrestricted one-owner basis.
+"""Thirty-six identities and path certificates for the unrestricted one-owner basis.
 
 Completeness is proved in appendix-owner-basis.tex. The variables and map
 notations here expand to the original reset/H signature; no new operations
@@ -31,8 +31,6 @@ BASIS += [
  ('h_insert',h(0,r,a,b),h(0,r,reset(r,a),b)),
  ('project_join',p(reset(reset(u,a),reset(v,a))),J(p(reset(u,a)),p(reset(v,a)))),
  ('reset_split',reset(u,reset(v,a)),reset(reset(u,a),reset(v,a))),
- ('reset_back',p(reset(u,a)),G(a,p(u))),
- ('project_idem',p(p(u)),p(u)),
  ('root_preserve',p(reset(u,p(v))),reset(u,p(v))),
 ]
 # All action laws have their argument in U_r via X=u delta r.
@@ -54,8 +52,6 @@ BASIS += [
  ('terminal_weak',J(C(a,b),K(b,c0(a))),K(b,c0(a))),
  ('G_def',G(a,X),F(a,a,X)),
  ('K_def',K(a,X),F(r,a,X)),
- ('G_zero',G(a,r),c0(a)),
- ('F_zero',F(a,b,r),C(a,b)),
  ('G_root',G(r,X),X),
  ('K_root',K(r,X),X),
 ]

@@ -3,7 +3,7 @@ module
 public import KFOL.Owner.Basis.CommonRoot
 
 /-! Normalization of arbitrary native terms into finite joins of common-root
-unary action words in every algebra satisfying the forty equations. -/
+unary action words in every algebra satisfying the thirty-six equations. -/
 
 @[expose] public section
 
@@ -161,7 +161,7 @@ variable {M : Type u} [(Equational.language (Symbol Unit)).Structure M]
     (laws : FiniteBasis.Laws (resetOperation M) (guardedOperation M))
 
 /-- The explicit finite language normalizes every native term in every model
-of the forty identities. No finite carrier or intended-model equality is used. -/
+of the thirty-six identities. No finite carrier or intended-model equality is used. -/
 theorem word_normal_form {Var : Type v} (r : M) (t : Term Unit Var) (v : Var → M) :
     (laws.wordsValue r v t.actionWords).val = resetOperation M (t.realize v) r := by
   let _ := laws.fiberSemilattice r

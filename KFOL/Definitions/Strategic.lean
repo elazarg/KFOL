@@ -124,3 +124,38 @@ def compile {Role : Type u} {Var : Type v} (components : Var → Tree Role) :
   | .rename p t => (compile components t).rename p
 
 end KFOL.Strategic
+
+namespace KFOL.Strategic.FiniteChoice
+
+universe u v
+variable {Role : Type u} {Index : Type v}
+
+/-- A simultaneous full plan for one observed finite-action decision and all
+of its continuation subgames, including every unchosen action. -/
+structure Profile (branches : Index → Tree Role) where
+  action : Index
+  continuation : ∀ i, Strategic.Profile (branches i)
+
+def winner {branches : Index → Tree Role} (plan : Profile branches) : Role :=
+  Strategic.winner (plan.continuation plan.action)
+
+/-- One player's replacement changes all its continuation decisions and may
+change the initial action precisely when that player owns the decision. -/
+def Deviation (owner player : Role) {branches : Index → Tree Role}
+    (source target : Profile branches) : Prop :=
+  (owner ≠ player → source.action = target.action) ∧
+    ∀ i, Strategic.Deviation player (source.continuation i) (target.continuation i)
+
+def IsNash (owner : Role) {branches : Index → Tree Role} (plan : Profile branches) : Prop :=
+  ∀ player, ∀ replacement : Profile branches,
+    Deviation owner player plan replacement → winner replacement = player → winner plan = player
+
+/-- Nash at the observed root and every subtree. Continuation perfection is
+the existing full-deviation/subtree predicate; no winner recurrence is assumed. -/
+def IsSubgamePerfect (owner : Role) {branches : Index → Tree Role} (plan : Profile branches) : Prop :=
+  IsNash owner plan ∧ ∀ i, Strategic.IsSubgamePerfect (plan.continuation i)
+
+def possibleWinners (owner : Role) (branches : Index → Tree Role) : Set Role :=
+  {player | ∃ plan : Profile branches, IsSubgamePerfect owner plan ∧ winner plan = player}
+
+end KFOL.Strategic.FiniteChoice

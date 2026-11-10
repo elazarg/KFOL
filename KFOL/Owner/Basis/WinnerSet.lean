@@ -4,7 +4,7 @@ public import KFOL.Owner.GuardEncoding
 public import KFOL.Owner.Basis.Completeness
 public import KFOL.Owner.BasisObstruction
 
-/-! The forty native equations are a basis of the intended one-owner
+/-! The thirty-six native equations are a basis of the intended one-owner
 winner-set algebra, on every carrier with at least three roles. -/
 
 @[expose] public section
@@ -96,7 +96,7 @@ theorem winnerSet_holds_iff_four {Role : Type u} (three : Fin 3 ↪ Role)
       _ = (Term.withOwner owner e.rhs).eval v := h.mpr hfour v
       _ = _ := Term.eval_withOwner owner e.rhs v
 
-/-- The displayed forty equations form a complete basis on the intended
+/-- The displayed thirty-six equations form a complete basis on the intended
 winner-set algebra for every three-role embedding and chosen owner. -/
 theorem isBasis_winnerSet {Role : Type u} (three : Fin 3 ↪ Role)
     (owner observer : Role) (ho : observer ≠ owner) :

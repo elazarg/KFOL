@@ -303,6 +303,8 @@ import all KFOL.Policies.Strict
 import all KFOL.Reductions.Circuits
 import all KFOL.Reductions.Circuits.Basic
 import all KFOL.Reductions.Circuits.Builder
+import all KFOL.Reductions.Circuits.LargeTables
+import all KFOL.Reductions.Circuits.LargeTables.Graph
 import all KFOL.Reductions.Circuits.ResetCNF
 import all KFOL.Reductions.Circuits.Satisfying
 import all KFOL.Reductions.Circuits.Transfers
@@ -387,6 +389,7 @@ import all KFOL.Rounds.Public.Values
 import all KFOL.Rounds.Reachability
 import all KFOL.Rounds.Scalar.Arithmetic
 import all KFOL.Rounds.Scalar.Binary
+import all KFOL.Rounds.Scalar.BooleanInfinite
 import all KFOL.Rounds.Scalar.Contexts
 import all KFOL.Rounds.Scalar.Diagonal
 import all KFOL.Rounds.Scalar.Distribution
@@ -397,6 +400,7 @@ import all KFOL.Rounds.Scalar.Infinite
 import all KFOL.Rounds.Scalar.Nash
 import all KFOL.Rounds.Scalar.Rational
 import all KFOL.Rounds.Scalar.Reciprocal
+import all KFOL.Rounds.Scalar.Security
 import all KFOL.Rounds.Scalar.Support
 import all KFOL.Rounds.Scalar.Synthesis
 import all KFOL.Rounds.Scalar.Threshold
@@ -424,6 +428,7 @@ import all KFOL.Strategic.Adequacy
 import all KFOL.Strategic.Basic
 import all KFOL.Strategic.Compilation
 import all KFOL.Strategic.Examples
+import all KFOL.Strategic.FiniteChoices
 import all KFOL.Strategic.Forcing
 import all Paper
 meta import Lean.Elab.Command

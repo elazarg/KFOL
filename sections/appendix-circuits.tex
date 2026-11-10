@@ -66,7 +66,37 @@ This transfers hardness. Direct evaluation over the fixed finite
 carrier gives the coNP upper bounds for all the listed signatures.
 \end{proof}
 
-Thus the guard algorithms are polynomial in tree size and cannot in
-general be made polynomial in circuit size unless $\mathrm P=\mathrm{NP}$.
-This is compatible with a finite equational basis: reset itself has
-one. Sharing changes succinctness, not the valid identities.
+\begin{proposition}[Exponential canonical tables]\label{reset:prop:large-circuit-table}
+For every $n\geq0$, a reset circuit with $2n+2$ input gates,
+$4n+1$ reset gates and $8n+2$ edges has at least $2^n$
+minimal guards at one input position.
+\end{proposition}
+\begin{proof}
+Use distinct inputs $z,c,p_0,n_0,\ldots,p_{n-1},n_{n-1}$ and set
+\[
+ A_0=c\del z,\qquad
+ A_{i+1}=(A_i\del p_i)\del((A_i\del n_i)\del z).
+\]
+Both references to $A_i$ name the same earlier output. Each stage
+adds two input gates and four reset gates, so there are $6n+3$
+gates in total and two input edges per reset gate.
+
+Let $B$ be the set of ambiguous input positions. The rightmost root
+of every $A_i$ is $z$. Write $E_{A_n}(B)$ for the selected input
+positions. The reset selection recursion gives
+\[
+ c\in E_{A_n}(B)
+ \quad\Longleftrightarrow\quad
+ z\in B\quad\text{and}\quad
+ \forall i<n:\ p_i\in B\ \text{or}\ n_i\in B.
+\]
+Consequently every set consisting of $z$ and exactly one member of
+each pair $\{p_i,n_i\}$ is an inclusion-minimal guard for $c$.
+The $2^n$ binary choices give distinct, pairwise incomparable guards
+in the canonical table of the circuit's unfolded term.
+\end{proof}
+
+Canonical guard tables can therefore be exponentially larger than
+the original circuit. The circuit equality theorem is compatible
+with a finite equational basis: reset itself has one. Sharing changes
+succinctness, not the valid identities.

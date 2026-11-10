@@ -6,7 +6,7 @@ public import KFOL.Algebra.Basic
 # Singleton-or-pair countervaluations
 
 Port of the status, single-membership and refinement argument in
-`lean/FullAlgebra.lean`. Singleton tests determine every choice's status. Within
+`the historical FullAlgebra module (revision 7014dbb)`. Singleton tests determine every choice's status. Within
 a fixed status cell evaluation is monotone, and preserving one input membership
 suffices to preserve any specified output membership. Shrink inputs to pairs
 while retaining that membership.

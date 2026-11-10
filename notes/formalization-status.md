@@ -3,9 +3,9 @@
 The completion target is the entire main paper, its substantive prose and
 necessary report dependencies. The inventory is authoritative for scope.
 The complete main-paper scope is proved: **23/23 main result rows**,
-**61/61 required catalog rows**, and **18/18 required prose obligations**.
-Root `Paper.lean` contains **128 full public statements**, each with a guarded
-axiom check. Final clean builds, all regressions and manuscript checks pass.
+**62/62 required catalog rows**, and **21/21 required prose obligations**.
+Root `Paper.lean` contains **132 full public statements**, each with a guarded
+axiom check. The review-fix production build, all regressions, audits and manuscript checks pass.
 Report-only results remain optional; the historical related-work artifact is
 separately rebuilt and audited under its original pins.
 
@@ -21,7 +21,7 @@ then commits coherent integrations after complete checks.
 | Native reset circuits and synthesis | `owner` | Original-word reset/Fin-three coNP-completeness and native primitive-tree synthesis with independent root/table/winner semantics | Complete |
 | Hardness and review | `nonfinite_basis` | Native DAG generator, full/public/core hardness, certificate bounds, canonicalizer consequence and final semantic scope review | Complete |
 | Full/public/core complexity | `complexity` | All six fixed/uniform endpoints; original-word sparse counterverifier, explicit-array validation, quadratic certificates and arbitrary padding | Complete; definition-surface report reproduced |
-| Owner branches and integration | root | Complete raw/owner/policy dichotomies, 128 literal Paper statements, claim reconciliation and pinned historical rebuild | Complete |
+| Owner branches and integration | root | Complete raw/owner/policy dichotomies, 132 literal Paper statements, claim reconciliation and pinned historical rebuild | Complete |
 
 The production pins are GameTheory `6f1af625b77215dd9e4454e6120275dbd8b61f51`
 from `port/cslib-complexity`, ComplexityLib
@@ -34,12 +34,11 @@ libraries. All round mathematics is complete against actual canonical SE.
 
 No required mathematical proof remains. Completed verification:
 
-- `lake clean KFOL`, then `make check-lean`: independent algebra build/import
-  audit, full Paper/whole-project axiom audit, negative import check and all
-  80 strict Lean regressions pass.
+- `make check-lean`: independent algebra build/import
+  audit, full Paper/whole-project axiom audit, negative import check and all 83 strict Lean regressions pass.
 - `make check-python`: all independent Python checks pass.
-- `python3 scripts/check_inventory.py`: 145 source statements, 20 prose
-  obligations, 1479 evidence fingerprints and 128 public statements reconcile.
+- `python3 scripts/check_inventory.py`: 146 source statements, 23 prose
+  obligations, current evidence fingerprints and 132 public statements reconcile.
 - `python3 scripts/export_definition_surface.py --check --no-build`: the
   theorem-type graph and readable review index reproduce after the clean build.
 - `make paper`: both manuscripts build; the main paper remains 14 pages and
@@ -47,7 +46,8 @@ No required mathematical proof remains. Completed verification:
 
 Every authored proof closure uses only `propext`, `Classical.choice` and
 `Quot.sound` where needed. The pure algebra closure excludes GameTheory,
-ComplexityLib/Cslib and strategic/round modules. The separate historical
+ComplexityLib/Cslib and strategic/round modules. The retired Std-only tree is preserved at revision `7014dbb`; the single
+production artifact is `KFOL/` and root `Paper.lean`. The separate historical
 obstruction build and its five axiom closures also pass under the original pins.
 
 The report's encoded substitution runtime, H/policy circuit extensions,
@@ -68,3 +68,11 @@ During checkpoints workers freeze production and continue in ignored
 paper stays at most 15 pages; proof evidence belongs in its verification appendix.
 No admitted proofs, project axioms, unchecked counts, external-theorem premises
 or detached certificates count as completion.
+
+
+The review correction removes four alpha/orientation repeats from the owner
+basis, leaving 36 native identities with proved actual range cardinality.
+The Boolean impossibility quantifies Boolean-only encodings and contexts.
+Finite-action public choice, exponential circuit tables, diagonal security and
+the exact semantic definition of reset tables now have explicit Paper clauses.
+The three previously omitted prose claims are independent inventory obligations.

@@ -150,7 +150,7 @@ does not block main-paper completion.
 The other required pure branches are proved locally: uniform core
 nonfinite-basis countermodels and local covers, congruence/threshold and
 uniform-matroid identification, the seven-equation choice/union basis,
-atomic-clone/determinacy/binary classification, one-owner forty-law
+atomic-clone/determinacy/binary classification, one-owner thirty-six-law
 completeness with its four-variable lower bound, and the two-role Kleene
 identification and finite basis. Their cited literature is attribution and a
 proof reference, not a theorem assumption in the Lean statements.

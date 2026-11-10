@@ -462,3 +462,22 @@ uniform core extraction and complete raw-signature dichotomy. The final
 integration extends the whole-project import/axiom/source audits and the
 public-type definition report; the current inventory and status board contain
 its reproducible validation evidence.
+
+
+### Review corrections after 7014dbb
+
+The subsequent manuscript audit exposed three omitted prose clauses and a
+Boolean-domain generality gap. The corrected scope has 132 Paper statements,
+62 required catalog results and 21 required prose obligations. New proofs cover
+actual finite-action profiles/deviations and binary folding, linear reset graphs
+with exponentially many minimal guards, actual diagonal security strategies,
+and finite semantics whose domain is only the Boolean fragment. The exact
+semantic definition of reset tables is now stated in Paper. Stale open-clause
+docstrings were corrected.
+
+A complete alpha/orientation duplicate audit found four repeated owner laws,
+including one beyond the three initially reported. The remaining 36 native
+identities have proved range cardinality; all four removed assumptions are
+proved consequences and completeness is unchanged. The redundant Std-only
+`lean/` tree and its build targets were retired, with historical certificates
+preserved at revision `7014dbb` and removed from current evidence artifacts.

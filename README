@@ -1,426 +1,103 @@
 Rational Owned Choice: Finite Algebras and Sealed Rounds
 
-The paper is main.tex, and its appendices form a technical report, tr.tex.
-Below, "the paper" includes both. Select either one as the main document in
-Overleaf and use pdfLaTeX, or build both locally with TeX Live and latexmk:
+The paper is main.tex; its technical report is tr.tex. The formalization's
+entry point is root Paper.lean: each public theorem repeats its complete
+proposition. The scope is the entire main paper and the report material its
+claims need, rather than every result in the technical report.
+
+Build and verify
+
+Use Lean through elan; lean-toolchain selects Lean 4.35.0. The dependency
+versions are fixed by lakefile.toml and lake-manifest.json. Fetch dependencies
+and the mathlib cache, then run the checks:
+
+    lake update
+    lake exe cache get
+    make check
+
+make check-python runs the independent finite Python checks using the standard
+library. make check-lean runs the production Lake development: it validates the
+claim inventory, builds the pure algebra and its import-boundary audit, builds
+Paper and the whole-project axiom audit, reproduces the definition-surface
+report, and runs all Lean regressions. Every authored declaration, including
+private helpers, is checked against the standard axioms propext,
+Classical.choice and Quot.sound. The finite Python checks are regression
+evidence; they do not replace the generic Lean proofs.
+
+To build the manuscripts with TeX Live and latexmk:
 
     make paper
 
 The PDFs are build/main.pdf and build/tr.pdf. Each document reads the other's
-numbering from a committed snapshot, sections/labels-main.tex or
-sections/labels-tr.tex, so it builds alone. make paper refreshes these
-snapshots; commit them after a change that renumbers anything. To create an
-upload containing only the paper sources and bibliography:
+numbering from committed sections/labels-main.tex and sections/labels-tr.tex,
+so either builds alone. make paper refreshes these snapshots; commit them after
+changes that renumber results. To prepare a source-only Overleaf upload:
 
     make overleaf
 
-Upload build/overleaf.zip to Overleaf. The mathematical statements,
-proofs, attribution, and proof-status inventory are all in the paper.
+Upload build/overleaf.zip and select either main.tex or tr.tex with pdfLaTeX.
+make clean removes build/; Lake's compiled artifacts are under .lake/.
 
-Known source refutation: Ghani--Kupke--Lambert--Nordvall Forsberg's
-"Compositional Game Theory with Mixed Strategies" (arXiv:2009.06831v1)
-has finite counterexamples to the unit law Id;K = K in Lemma 16
-(a right unit in the source's circle notation) and associativity in
-Theorem 15. Convex closing does not repair associativity.
-The paper gives a self-contained proof in sections/appendix-open-games.tex,
-"Finite obstructions to the proposed mixed open-game category". The
+Artifact and review entry points
+
+    Paper.lean        Complete paper-facing statements and axiom guards
+    KFOL/Definitions/ Shared mathematical and word-format definitions
+    KFOL/Algebra/     Independent mathlib-only algebra
+    KFOL/Algorithms/  Word codecs and executable algorithms
+    KFOL/Complexity/  Native machine runtime, reductions and class certificates
+    KFOL/Rounds/      Sealed-round and sequential-equilibrium semantics
+    KFOL/Audit.lean   All-source, transitive axiom audit
+    tests/            Lean statement, semantics and machine regressions
+    checks/           Independent finite Python models
+    main.tex, tr.tex  Main paper and technical report
+    sections/         Manuscript sections and committed label snapshots
+
+Start with notes/formalization-status.md for coverage and validation, and
+notes/formalization-claims.json for the statement-level evidence inventory.
+python3 scripts/check_inventory.py validates its source fingerprints, statement
+snapshots and declaration references. Historical deliveries are archived in
+notes/formalization-history.{md,json}.
+
+Review mathematical definitions separately from proof axioms. The human index
+notes/paper-definition-surface.md and complete JSON graph beside it start from
+every public theorem TYPE, follow project definitions and inductive
+constructors, and identify external semantic interfaces. They exclude theorem
+proof bodies. Reproduce both with:
+
+    python3 scripts/export_definition_surface.py --check
+
+notes/formalization-definitions.md explains the carriers, syntax and semantics;
+notes/formalization-plan.md records the design and completion criteria.
+GameTheory supports the rounds branch. Pure algebra and word definitions do not
+import it or the machine-complexity libraries; the import audit checks that
+boundary. The machine branch uses ComplexityLib's independent multitape Turing
+model, with explicit input/output encodings and charged intermediate storage.
+GameTheory is pinned to revision 6f1af625b77215dd9e4454e6120275dbd8b61f51
+from port/cslib-complexity, ComplexityLib to
+054834a4a4e6ac3ec50ed770bacea7fc42eccc7d, and Cslib to
+254e30e6d4299c51323aaeaf5f51a4763b375d4a. Lean and mathlib use 4.35.0.
+
+The earlier Std-only development is retired. Its sources and historical
+certificates remain available at commit 7014dbb, for example with
+`git show 7014dbb:lean/FullAlgebra.lean`; they are not a second current build or
+evidence for unfinished report-only results.
+
+Known source refutation
+
+Ghani--Kupke--Lambert--Nordvall Forsberg's "Compositional Game Theory with
+Mixed Strategies" (arXiv:2009.06831v1), Definitions 11--12, has finite
+counterexamples to the unit law Id;K = K in Lemma 16 (a right unit in the
+source's circle notation) and associativity in Theorem 15. Convex closing does
+not repair associativity. Do not use those laws as established mixed-game
+composition results.
+
+The self-contained argument is in sections/appendix-open-games.tex,
+"Finite obstructions to the proposed mixed open-game category". The external
 Lean proofs are pinned to GameTheory v1-final, revision
-02898a2d8b918f9b106a683420ca78c99867560e, under
-GameTheory/Languages/OpenGame/{Mixed,Examples}.lean:
+02898a2d8b918f9b106a683420ca78c99867560e:
 https://github.com/elazarg/GameTheory/tree/02898a2d8b918f9b106a683420ca78c99867560e/GameTheory/Languages/OpenGame
-This refutes the specified composition, not probabilistic open games
-generally. The paper's closed-round SE recursion is proved separately.
-
-Layout:
-
-    main.tex          Paper entry point
-    tr.tex            Technical report entry point, holding the appendices
-    references.bib    Bibliography
-    sections/         Sections, appendices, macros, and label snapshots
-    scripts/          Label, inventory, import and definition-surface audits
-    lean/             Twenty-two Lean proof modules, using only Std
-    KFOL/             Pure algebra, word algorithms, and separate machine proofs
-    Paper.lean        Complete statements of all main-paper claims
-    lakefile.toml     Lake targets, mathlib, and pinned complexity dependencies
-    lake-manifest.json Immutable resolved dependency revisions
-    tests/            Syntax, algebra, and word/machine regression checks
-    checks/           Python models and independent finite checks
-    notes/            Formalization plan, evidence inventory and exploration
-    lean-toolchain    Lean version (4.35.0)
-    build/            Generated PDF, upload ZIP, and compiled proofs
-
-With Python 3 and Lean installed through elan, fetch the pinned dependencies
-and cache, then run verification:
-
-    lake update
-    lake exe cache get Mathlib.Data.Set.Image Mathlib.GroupTheory.Perm.Basic Mathlib.Data.Fintype.List Mathlib.Data.Sym.Card Mathlib.SetTheory.Cardinal.Finite Mathlib.ModelTheory.Substructures Mathlib.ModelTheory.Quotients Mathlib.Data.Set.Finite.Range
-
-    make check
-
-make check-python and make check-lean run either part separately. Python
-needs only the standard library. make check-legacy-lean builds the Std modules
-in dependency order under build/lean. make check-algebra independently builds
-KFOL.Algebra and KFOL.Audit.Algebra, whose compiled import closure excludes
-game and complexity libraries. It then builds Paper and KFOL.Audit, which
-checks all authored axiom dependencies, including private machine helpers,
-and runs the syntax, algebra and word regressions. make check-lean runs both Lean
-tracks. Lake artifacts are under .lake/; make clean removes build/.
-
-Root Paper.lean states complete propositions, with guarded axiom checks.
-The implemented plan is notes/formalization-plan.md; final coverage and checks
-are in notes/formalization-status.md. All 23 main result rows, 61 required catalog
-rows and 18 required prose obligations are covered by 128 public statements. Current statement-level evidence is
-notes/formalization-claims.json. Detailed completed deliveries and their original
-fingerprints are archived in notes/formalization-history.{md,json}.
-Run python3 scripts/check_inventory.py to validate the current snapshots,
-source fingerprints, declaration locations and public theorem references.
-The reproducible theorem-type definition graph is
-notes/paper-definition-surface.json; its runner is
-scripts/export_definition_surface.py.
-
-The shared algebra uses mathlib only: views and sharp test domains, common
-sources and atomic obstructions, idempotent elimination, generic equational
-logic, reset tables and six-law completeness, antimatroids and compact synthesis.
-The owner branch adds exact root/guard semantics, three-role pair separators,
-one-outsider equality and a four-element theory. The core branch adds a uniform
-K+2-element obstruction to every K-variable basis. Minimum four-element generation is proved directly through exhaustive
-small-model classification. Semantic owner synthesis and the obstruction to
-every three-variable basis, full forty-law completeness and unbounded core
-nonfinite basability are proved. Congruence classifications, threshold quotient
-counts and the uniform-matroid identification are also checked, as is the direct
-seven-law choice/union basis. Atomic clone/determinacy and the binary
-classification are now proved directly, with actual converse term synthesis.
-Two-player strong-Kleene identification, degeneration and full finite-basis
-completeness use the same carrier. Public unary observations, semilattice
-folds and exact view orders are checked. The whole one-owner original-word
-checker has polynomial runtime independent of the ambient role count.
-The reset/union fragment has complete fixed-role
-machine-level coNP-completeness under its original typed and binary codecs. The minimum three-element reset generator
-and typed upper-clone cover are also proved.
-
-GameTheory is pinned to the authorized port/cslib-complexity branch at
-6f1af625b77215dd9e4454e6120275dbd8b61f51, with successor ComplexityLib
-054834a4a4e6ac3ec50ed770bacea7fc42eccc7d and CSLib
-254e30e6d4299c51323aaeaf5f51a4763b375d4a. Lean/mathlib stay on 4.35.0.
-The canonical SPE, Nash, minimax and finite-SE-existence imports compile and pass
-a selected transitive axiom audit. KFOL's public strategic-form correspondence, backward induction, forcing and
-full term compiler are proved. The complete serial SE/observed mixed-SPE
-correspondence, recursive values, scalar rational synthesis, thresholds, full
-abstraction and two-player round support are also proved. Pure algebra and the complete binary frontend do not
-import GameTheory or machine modules; the root package resolves the pins.
-
-The binary reset frontend has exact tree, dictionary and guard-record codecs,
-normalization and shared-support identity checking, all connected to independent
-term evaluation. The paper word codec is mathlib-only and preserves its two-bit
-separator; native machine tuple encodings are explicitly separate. Polynomial
-time in the successor native Turing-machine model is checked for the subset
-primitive, framing and complete block parsing, canonical sparse binary names,
-dictionary uniqueness, the actual complete dependent descriptor decoder, whole
-normalization and canonical-table recognition. The latter closes the runtime
-clause of compact table realizability. The full original-tree equality algorithm now has a native certificate,
-including both decoders, shared support and semantic record-set comparison.
-All main-paper native hardness/runtime claims are complete: full/public/core
-validity at fixed and binary-input K; arbitrary raw, owner and policy-family
-dichotomies; reset DAG equality on winner sets and its actual three-element
-generator; and original descriptor-to-primitive-tree synthesis. The latter has
-exact root/table and all-valuation winner semantics.
-
-All current algebraic and representation definitions are indexed in
-notes/formalization-definitions.md. Repeated variables remain independent syntax
-occurrences; the generic locality theorem counts actual variable support.
-Finite checks provide regression evidence and do not replace generic proofs.
-
-checks/probe_residual.py is an optional experiment, outside the checks;
-it establishes no residual bound for the whole variety.
-checks/probe_core_basis.py optionally enumerates small models of candidate
-core laws, checks their entire two-variable theory, and tests owner
-exhaustion and mixed absorption. The candidate without mixed absorption
-has a six-state countermodel. Passing the extended search is not a
-completeness proof.
-
-checks/check_fragments.py independently evaluates the reset/union and
-two-owner H hardness reductions, including every mixed valuation in its
-stated finite cases. lean/Fragments.lean checks the semantic guard,
-propagation, and separation certificates and the generic colouring
-obstruction. The complete original-syntax reductions, size bounds and native machine/class
-transports are checked in KFOL/Reductions and KFOL/Complexity.
-
-checks/check_sealed_rounds.py compares exact rational Nash support rectangles
-with unilateral deviations, checks the parallel-sum interpretation and rational
-synthesis, and tests the infinite threshold family and nonconvexity witnesses.
-lean/SealedRounds.lean proves ordered-field diagonal-stage certificates,
-rational-generation arithmetic, and the impossibility of a finite summary of
-all threshold probes. The full SE round correspondence and the connection from actual game syntax
-to those probes are proved in KFOL/Rounds and repeated in Paper.lean.
-checks/check_open_game_obstruction.py independently reproduces the
-finite unit, nonassociativity, and failed convex-repair witnesses using
-exact rational laws. The historical Lean proofs were separately rebuilt and
-standard-axiom-audited with their original pins; the reproducible source-hash
-manifest and runner are notes/integration/open-game-v1.json and
-scripts/check_external_open_game.py.
-
-The paper distinguishes kernel-checked results, written generic proofs,
-and finite checks. The dependent data-calculus metatheory and general
-hidden-game composition are not certified by the algebraic Lean modules.
-
-lean/FullAlgebra.lean proves the full-signature singleton-or-pair theorem,
-sharp test-domain necessity and sufficiency, exact idempotent elimination,
-equivalent core extraction, and preservation of player views by every
-idempotent full-language term. It uses the existing FullTerm semantics,
-including internal role permutations, with no added axioms.
-
-lean/OwnerFragments.lean proves exact guard comparison and executable
-checker correctness for reset with one H owner, including single-outsider
-completeness for every K >= 3. It
-also checks observational comparison with the observer's own H and one
-other owner's H. lean/OwnerModels.lean proves four-element completeness
-and the three-state obstruction used in the minimum-generator proof;
-the order-algebra reduction uses a published theorem. checks/check_one_owner.py compares these tables with
-the existing winner-set evaluator and constructs three-role separators.
-
-sections/appendix-owner-synthesis.tex characterizes the realizable
-one-owner guard tables and constructs native terms of size O(nM).
-checks/check_owner_synthesis.py compares the algorithm with independent
-four-state term closure through arity three and all 8000 root-fixed
-four-input candidate tables. The synthesis theorem now has checked semantic and native machine proofs,
-including the expanded output tree. The optional clone substitution formula
-retains its written proof; it does not establish a finite identity basis.
-
-sections/appendix-owner-basis.tex separately proves a finite basis over
-arbitrary algebras for the one-owner signature {reset, H_a}. Its explicit
-forty-equation basis uses at most six variables. Common-root word
-normalization and two-source absorption give the completeness proof, now
-formalized in KFOL/Owner/Basis and repeated fully in root Paper.lean.
-lean/OwnerModels.lean retains the earlier soundness certificates. checks/check_owner_finite_basis.py
-independently checks native soundness, every product of the free
-three-generated algebra, and larger sampled normalization and absorption
-certificates. The minimum variable bound is between four and six.
-
-Any one-owner equational basis needs at least four variables.
-lean/OwnerModels.lean constructs a four-element countermodel, embeds every
-proper subalgebra in F squared, and proves that every three-variable
-identity transfers, with no term-size bound. A valid four-variable identity
-fails in that model. This lower bound applies to the unrestricted basis.
-
-For the K-owner core, every equational basis needs at least K+1 variables.
-sections/appendix-core-basis.tex constructs a (K+2)-element algebra that
-satisfies every K-variable identity but fails owner exhaustion. The same
-section classifies all binary core terms: the free two-generated algebra
-has 2^(K+1)+K+1 elements. The general proofs are written.
-lean/CoreObstruction.lean kernel-checks the owner-exhaustion membership law
-and, for three owners, the quotient maps, transfer of every three-variable
-identity, and the four-variable failure. checks/check_core_obstruction.py
-checks the quotients at K=3..6 and complete binary tables at K=3,4,5.
-For every fixed K>=3, the core has no identity basis with a bounded
-number of variables, and hence no finite basis. The technical report
-proves this using rectangular native sources with private padding:
-their upper clones fail a global mixed-choice coverage identity, while
-duplicate row and column profiles give exact atomic typing relations
-and core covers for every sufficiently small generated subalgebra.
-The argument covers arbitrary coefficient generators, not only the
-displayed source columns.
-The same proof gives no bounded-variable basis for the ambient native
-variety V(D_K) for every K>=3. checks/check_core_padded_crossing.py
-reconstructs the finite row templates, checks the protected-path premises
-and Boolean typing rules, and verifies the failed native identity.
-The arbitrary-arity and local representation arguments are written proofs.
-
-Unary polynomial functions, with arbitrary fixed parameters, also have an
-exact normal form. Apart from constants, they preserve their input, add a
-fixed set U on ambiguous inputs, and add an arbitrary subset of U minus i
-at each singleton i. Every such profile is realizable. The exact count is
-(1+2^(K-1))^K + 2^K - 2. Consequently every unary polynomial satisfies
-p^3=p^2 throughout the core variety, and the exponent two is sharp.
-checks/check_core_unary_polynomials.py verifies the entire 131-function
-closure at K=3 and all 6575 synthesized functions at K=4. The normal form
-classifies functions on the generator, not derivations from the candidate.
-
-The same section gives a complete relative presentation for conservative
-core models: 3+4K+binom(K,2) identities, with an optimal bound of three
-variables. All but at most one owner operation equal derived union.
-lean/CoreConservative.lean proves this structural lemma for arbitrary
-carriers; completeness uses the cited dissemilattice generation theorem.
-A written corollary makes the K+2-state witness above smallest possible:
-for s >= 3, every algebra of size at most s+1 satisfying the entire
-s-variable core theory already belongs to the core variety.
-
-Every nonempty proper-owner fragment with m owners has an exact
-(m+2)-state generator, also when union is retained. The union expansion
-is term equivalent to the core subvariety in which unused owners equal
-union; any finite core basis would yield a finite basis for that fragment.
-The core variety is the join of these subvarieties with one unused owner.
-The raw two-owner
-reduct is the classical four-element bichain B; this observation does
-not give a finite basis. lean/CoreMixed.lean proves a generic mixed
-absorption identity and checks a six-state countermodel to the candidate
-core laws even with owner exhaustion. checks/check_core_mixed.py checks
-these certificates, all proper-owner maps at K=3,4,5, and the conservative
-structural lemma on chains of sizes two through six.
-
-Homomorphic images are essential in that variety join. A K+2-state
-irreducible core model Q_K has every owner different from union, and cannot
-embed into any product of proper-owner models. It is an explicit quotient
-of a K+5-state subalgebra of two observer factors. lean/CoreQuotients.lean
-proves the K=3 certificate, transfer of all identities at every arity,
-and the monolith property. checks/check_core_quotients.py checks the generic
-construction at K=3..8; its arbitrary-K proof is in the technical report.
-
-The earlier six-state candidate countermodel is smallest possible.
-checks/check_core_small_models.py exhaustively verifies that every model
-of the candidate laws plus exhaustion on at most five elements is a core
-model. It uses twenty explicit HSP certificates, each with at most thirteen
-source elements, stored in checks/data/core-small-models.json. This finite
-result does not prove an unrestricted basis.
-
-For three owners, adding mixed absorption makes the candidate complete
-through eight elements. The exhaustive verifications are run separately:
-
-    python3 checks/probe_core_six_models.py
-    python3 checks/probe_core_seven_models.py --size 8 --audit-six
-
-The second command requires a C++17 compiler and uses a second semilattice
-enumeration, audited against the original Python enumeration at size six.
-Sizes six, seven, eight use 17, 46, 163 HSP certificates, with source sizes
-at most 24, 47, 117. All certificates in checks/data/core-{six,seven,eight}-models.json
-are checked by make check without a compiler. The remaining irreducibles
-are conservative, one-owner dissemilattice expansions, or extensions by a
-common absorbing element. Any three-owner countermodel to the strengthened
-candidate has at least nine elements. The rectangular construction gives
-a finite countermodel even with the entire atomic-fiber schema; its
-smallest rectangle fails an explicit nine-variable native identity.
-For every K>=4, a 115-element subdirectly irreducible countermodel disproves
-completeness even after adding the entire atomic-fiber, heterogeneous
-overlap, and star schemas. It is a quotient of an explicit 193-element
-extension with common semilattice fibers over a 59-element atomic algebra.
-The failed five-variable identity is proved native-valid in the technical
-report; checks/check_core_five_edge_countermodel.py reconstructs and verifies
-the countermodel without external data.
-
-Observer tests can be reduced at every arity d to assignments with exactly
-one upper marker. Recording only whether the output is that marker recovers
-all outputs, including atoms. Across all K observers this uses d K^d bits;
-full-valued evaluation on the same tests embeds the free d-generated core.
-checks/check_core_sparse_tests.py independently reconstructs complete
-sampled term tables from these bits.
-
-For a separate family, membership is decided exactly by exhaustion:
-incomparable owner atoms below an arbitrary chain of markers, with each
-owner absorbing up to its own threshold. The technical report constructs
-an explicit quotient of a subalgebra of the atomic quotient times proper
-observer factors whenever the least threshold is zero, and proves the
-corresponding criterion for infinite chains. checks/check_core_thresholds.py
-verifies 441 instances of the construction and 295 exhaustion failures.
-This excludes the whole threshold family as a source of countermodels
-to the strengthened candidate.
-
-Identifying all ambiguous winner sets gives an explicitly based quotient
-over arbitrary algebras. Its variety is exactly the core subvariety
-satisfying x reset y = y. Its basis has K^2+3K+4 equations in at most
-three variables. The proof uses the explicit two-element quotients and
-the canonical normalization below a bound.
-A sequential-veto term is near-unanimity of optimal arity K+1.
-The K^2+3K+3 basic core equations (semilattice laws, distribution over
-union, pair coverage, and pairwise Birkhoff laws) already construct the
-largest atomic quotient of every principal ideal. For x below u, u reset x
-is the greatest lower bound of the values x *_i u and is the greatest
-element in its quotient class. These three-variable equations uniformly
-lift every atomic identity s=t to U reset s = U reset t, where U is a
-common upper bound formed from all variables and one fresh variable.
-The proof works under substitution and in contexts, over arbitrary algebras.
-lean/CoreAtomic.lean proves generic reset comparison and the three-owner
-veto certificate. checks/check_core_atomic.py checks the quotient at K=3..6
-and near-unanimity at K=3..8. checks/check_core_atomic_basis.py checks the
-explicit basis, its lifts, and two-element lattice/common-absorber templates
-at K=3..6, and
-expands the lifting basis into core syntax at K=3. It also checks the
-closure homomorphisms, meet formula, quotient kernels, and normalized
-operations on every principal ideal of all 246 stored core models and
-the six-state mixed countermodel. The lifting equations
-also hold in D_K, which fails exhaustion. Even adding exhaustion is
-insufficient: the earlier six-element countermodel passes both and still
-fails mixed absorption.
-The original core has no near-unanimity term, and its Q_K models show that
-reset commutation need not be transitive.
-
-sections/appendix-basis.tex gives a finite presentation of all conservative
-one-owner models: seventeen equations, reducible to thirteen in that class,
-with an optimal bound of four variables. Every algebra with at most five
-elements satisfying the entire four-variable theory is in the intended
-variety; a countermodel to that theory must have at least six elements.
-Its completeness proof uses forest thresholds and guard coverage, and is
-written rather than formalized. lean/OwnerModels.lean checks the equations
-and a nonconservative four-element countermodel showing that the seventeen
-equations are not a full basis. It also checks a six-element subalgebra of
-F squared mapping onto a nonconservative irreducible four-element model,
-with collapse and pair-separation certificates for its monolith.
-checks/check_owner_presentation.py independently checks the finite witnesses,
-all 569 forest-based four-element candidates, and sampled guard thresholds.
-Finite basability of the expansion by role switches remains open.
-
-sections/appendix-core-basis.tex identifies raw owned choice with union as
-the classical variety of meet-distributive bisemilattices, with a basis of
-seven equations. The core contains expansions of that entire variety with
-the same congruences. KFOL/Core/ChoiceUnion proves the generation result
-directly by three-valued probes and seven-law absorption; the literature
-reference is Harding and Romanowska, Section 3.3. lean/CoreModels.lean proves the generic semantic
-laws and the concrete three-state embedding; checks/check_core_basis.py
-checks these with native winner sets at K=3,4,5.
-
-An explicit alternating ladder of size 2r+1 is a core model for every r.
-The written proof constructs it as a quotient of a subalgebra of r
-three-element core factors and identifies its two-element monolith.
-These ladders rule out both a finite residual bound and bounded critical
-depth, including when union is basic. Thus the bounded-critical-depth
-extension of Willard's theorem also does not supply a core basis; this
-does not prove nonfinite basability. checks/check_core_ladders.py verifies
-all pairs of the HSP sources at lengths 1..6 and the monoliths, through
-all principal congruences, and level bound at lengths 1..10.
-
-sections/connections.tex gives private-store connection for fixed-schedule
-disclosure fragments. It retains dependent witnesses, pending obligations,
-audience views, full off-path strategies, and sealing certificates.
-checks/check_connections.py enumerates finite profiles and fragment cuts.
-The generic connection theorem has a written proof, not a Lean formalization
-or a marginal-equilibrium composition claim.
-
-Earlier drafts and tracked reviews are available in Git history through
-69f763a. Uncommitted reviews are retained locally in .git/local-notes/.
-
-lean/RawFragments.lean checks semantic certificates for all raw-pair
-hardness reductions; checks/check_raw_pairs.py evaluates the actual native
-reductions. Complete native syntax assembly and machine-level complexity
-transport are proved in KFOL/Complexity.
-
-lean/ChainGuards.lean proves guard completeness and checker correctness for the native
-two-owner G operation and, more generally, every one fixed nonempty
-proper blocking policy. The same checker decides every such theory,
-independently of K. checks/check_chain_guards.py evaluates the original
-owned-choice expression and the policies independently. Polynomial size
-bounds and native runtime are proved in KFOL/Policies and KFOL/Complexity.
-
-sections/appendix-two-players.tex treats K=2, where the body of the paper's
-assumption K>=3 is dropped. checks/check_two_players.py tests it by exact closure
-and exact game values. The retained main-paper algebra, finite Kleene basis
-and round-support claims are proved in KFOL/Algebra/TwoPlayers and
-KFOL/Rounds/TwoPlayers; unused report classifications remain optional.
-
-lean/MixedPolicies.lean proves union/intersection identities for blocking
-policies, joint-test absorption, the abstract least-point coverage lemma,
-and the observer-relative hardness certificates. Polynomiality for chains
-and the complete two-policy and finite-family classifications are proved in
-KFOL/Policies and KFOL/Complexity;
-checks/check_mixed_policies.py compares their guard algorithms with exact
-winner-set tables and checks native hardness reductions.
-
-The arbitrary-family classification is in
-sections/appendix-policy-families.tex. Passing patterns give a complete
-polynomial/coNP-complete dichotomy for every fixed finite policy family.
-checks/check_policy_families.py tests the guard algorithm and expanded
-native reductions; the generic classification has a written proof.
-
-Shared reset circuits have coNP-complete equality even on the three-element
-generator (sections/appendix-circuits.tex). lean/Fragments.lean proves
-the clause and CNF marker recurrences. checks/check_reset_circuits.py
-checks the actual DAG reduction, all mixed valuations in its finite cases,
-the fixed-chain witnesses, and the linear gate count. Circuit syntax
-assembly and the complexity theorem have written proofs.
+The immutable manifest is notes/integration/open-game-v1.json;
+scripts/check_external_open_game.py rebuilds and audits an isolated checkout
+at that pin. Do not modify the sibling GameTheory checkout. This refutes the
+specified composition, not probabilistic open games generally. The paper's
+closed-round sequential-equilibrium recursion is proved separately.

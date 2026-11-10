@@ -101,7 +101,7 @@ theorem source_absorption (r j k t : M) (P Q : List (M × M))
     rw [hreduce, laws.word_exceptional_terminal r j k t P ht] at hpref
     exact (laws.word_mono r P (laws.action_zero_le_tested_constant r j k)).trans hpref
 
-/-- Two-source absorption is derived from the forty laws in an arbitrary
+/-- Two-source absorption is derived from the thirty-six laws in an arbitrary
 algebra. Each source is either old or has an explicit covering word witness. -/
 theorem two_source_absorption (r a b : M) (P : List (M × M)) :
     letI := laws.fiberSemilattice r

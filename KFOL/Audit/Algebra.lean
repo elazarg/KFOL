@@ -12,6 +12,7 @@ import all KFOL.Reductions.RawSubsignature
 import all KFOL.Reductions.Circuits
 import all KFOL.Owner.ObservationCompilation
 import all KFOL.Reset.Realizability.Records
+import all KFOL.Reductions.Circuits.LargeTables.Graph
 meta import Lean.Elab.Command
 
 /-! # Independent algebra and representation import boundary

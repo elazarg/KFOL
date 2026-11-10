@@ -1,6 +1,9 @@
 module
 
 public import KFOL.Algebra
+public import KFOL.Reductions.Circuits.LargeTables.Graph
+public import KFOL.Strategic.FiniteChoices
+public import KFOL.Rounds.Scalar.Security
 public import KFOL.Complexity.FullCompleteness
 public import KFOL.Complexity.ResetSynthesisMachine
 public import KFOL.Complexity.OwnerCountCompleteness
@@ -8,6 +11,7 @@ public import KFOL.Complexity.CircuitHardness
 public import KFOL.Complexity.Canonicalization
 public import KFOL.Complexity.OwnerObservationFrontend
 public import KFOL.Complexity.CoreExtractionWord
+public import KFOL.Rounds.Scalar.BooleanInfinite
 public import KFOL.Rounds.Scalar.FullAbstraction
 public import KFOL.Rounds.Scalar.Fragment
 public import KFOL.Rounds.TwoPlayers.Support
@@ -143,8 +147,8 @@ theorem optimal_test_domain {Role : Type u} [Fintype Role] (three : Fin 3 ↪ Ro
 /-- `gen:thm:core`, algebraic clauses. Idempotency is exactly the absence of
 winner leaves and identity accumulated permutation at every input occurrence;
 it is also exactly expressibility in the core. Extraction agrees at every
-valuation and does not increase syntax size. This statement does not certify
-the paper's additional polynomial machine running-time clause. -/
+valuation and does not increase syntax size. `uniform_core_extraction_runtime`
+certifies the original-input polynomial machine bound. -/
 theorem idempotent_elimination {Role : Type u} {Var : Type v}
     (three : Fin 3 ↪ Role) (t : Term Role Var) :
     ((∀ A : WinnerSet Role, t.eval (fun _ => A) = A) ↔
@@ -164,8 +168,8 @@ theorem idempotent_elimination {Role : Type u} {Var : Type v}
 
 /-- The executable part of `gen:thm:core`: checked extraction succeeds exactly
 on idempotent terms, and every successful output is a core expression with
-equal semantics at every valuation and no larger syntax tree. The running-time
-claim remains a separate encoding/machine obligation. -/
+equal semantics at every valuation and no larger syntax tree. The original-word
+runtime is certified by `uniform_core_extraction_runtime`. -/
 theorem checked_core_extraction {Role : Type u} {Var : Type v}
     [Fintype Role] [DecidableEq Role] (three : Fin 3 ↪ Role) (t : Term Role Var) :
     ((∃ c : Term Role Var, t.extractCore? 1 = some c) ↔
@@ -503,7 +507,8 @@ theorem reset_definability {Role : Type u} [Fintype Role] (three : Fin 3 ↪ Rol
 
 /-- `reset:thm:three`, semantic clauses: canonical table equality, the fixed
 three-value chain test, and the common identity theory for every role set with
-three distinct roles. The separate polynomial machine-time clause remains open. -/
+three distinct roles. `reset_binary_equation_checker` supplies the complete
+original-word polynomial checker. -/
 theorem reset_tables_semantics {Role : Type u} {Var : Type v} [DecidableEq Var]
     (three : Fin 3 ↪ Role) (s t : Reset.Term Var) :
     ((∀ valuation : Var → WinnerSet Role, s.eval valuation = t.eval valuation) ↔
@@ -622,7 +627,7 @@ theorem reset_family_product {Var : Type v} [DecidableEq Var] (s t : Reset.Term 
 /-- The mathematical realizability and primitive-tree size clauses of
 `reset:thm:synthesis`. Every candidate-table condition is repeated here.
 Constructibility is independently defined by fresh enabled additions.
-The separate polynomial machine-time claim is not asserted here. -/
+The native polynomial synthesis bound is proved in `reset_synthesis_runtime`. -/
 theorem reset_table_realizability {Var : Type v} [DecidableEq Var] [Fintype Var]
     (G : Reset.GuardTable Var) :
     ((∀ j, ∀ A ∈ G.guards j, ∀ B ∈ G.guards j, A ⊆ B → A = B) ∧
@@ -718,7 +723,8 @@ theorem reset_guard_extraction {Var : Type v} [DecidableEq Var] (t : Reset.Term 
 
 /-- Table-size clauses of the main reset prose, before and after minimization.
 The description counts one root label, each output label and its prerequisite
-labels. Machine bit encodings and running time remain separate obligations.
+labels. `reset_synthesis_runtime` and `reset_synthesis_output` certify the
+complete machine runtime and original primitive-tree output.
 All sums range over actual support; unused ambient positions have empty tables. -/
 theorem reset_table_size {Var : Type v} [DecidableEq Var] (t : Reset.Term Var) :
     (∀ j, (t.table j).card ≤ (t.guards j).card ∧
@@ -1157,7 +1163,7 @@ theorem owner_guard_completeness {Role : Type u} {Var : Type v}
 #print axioms KFOL.Paper.owner_guard_completeness
 
 /-- The semantic and executable-checker clauses of `owner:thm:one-table`.
-The full paper claim also requires a uniform polynomial machine bound. -/
+`owner_original_word_checker` supplies the uniform original-word polynomial bound. -/
 theorem owner_one_table {Role : Type u} {Var : Type v}
     [DecidableEq Role] [DecidableEq Var] (three : Fin 3 ↪ Role)
     (a k : Role) (hka : k ≠ a) (s t : Owner.Term Role Var)
@@ -1224,8 +1230,8 @@ theorem binary_framing_machines :
 #print axioms KFOL.Paper.binary_framing_machines
 
 /-- The semantic-equivalence part of `owner:thm:four`, with the concrete
-four displayed winner sets closed under both operations. Minimum generation
-requires a separate exclusion of all smaller algebras. -/
+four displayed winner sets closed under both operations. The exclusion of
+smaller generators is proved in `owner_minimum_generator`. -/
 theorem owner_four_element_theory {Role : Type u} {Var : Type v}
     [DecidableEq Role] [DecidableEq Var] (three : Fin 3 ↪ Role)
     (a k b : Role) (hka : k ≠ a) (hkb : k ≠ b) (hab : a ≠ b)
@@ -1628,15 +1634,15 @@ theorem native_nonfinite_basis {Role : Type u} [DecidableEq Role] [Finite Role]
 #print axioms KFOL.Paper.native_nonfinite_basis
 
 /-- `owner:thm:basis-main` and `owner:thm:finite-basis`: the explicitly
-indexed forty native identities form a complete basis on the intended
+indexed thirty-six distinct native identities form a complete basis on the intended
 winner-set carrier. Six variables suffice and every basis needs at least four.
 The data family in Definitions/Owner is independent of semantic validity. -/
-theorem owner_forty_equation_basis {Role : Type u} (three : Fin 3 ↪ Role)
+theorem owner_thirty_six_equation_basis {Role : Type u} (three : Fin 3 ↪ Role)
     (owner observer : Role) (ho : observer ≠ owner) :
     letI := Owner.oneOwnerStructure owner
-    Fintype.card (Fin 40) = 40 ∧
+    (Set.range Owner.FiniteBasis.basisAxiom).ncard = 36 ∧
     (Set.range Owner.FiniteBasis.basisAxiom).Finite ∧
-    (∀ i : Fin 40, (Owner.FiniteBasis.basisAxiom i).variableCount ≤ 6) ∧
+    (∀ i : Fin 36, (Owner.FiniteBasis.basisAxiom i).variableCount ≤ 6) ∧
     (∀ e : Equational.Identity (Owner.Symbol Unit), e.Holds (WinnerSet Role) ↔
       Equational.Derives (Set.range Owner.FiniteBasis.basisAxiom) e.lhs e.rhs) ∧
     (∀ (T : Equational.Theory (Owner.Symbol Unit)) (n : ℕ),
@@ -1644,15 +1650,15 @@ theorem owner_forty_equation_basis {Role : Type u} (three : Fin 3 ↪ Role)
         e.Holds (WinnerSet Role) ↔ Equational.Derives T e.lhs e.rhs) →
       (∀ e ∈ T, e.variableCount ≤ n) → 4 ≤ n) := by
   let _ := Owner.oneOwnerStructure owner
-  exact ⟨Fintype.card_fin 40, Owner.FiniteBasis.theory_finite,
+  exact ⟨Owner.FiniteBasis.theory_ncard, Owner.FiniteBasis.theory_finite,
     (fun i => Owner.FiniteBasis.variable_bound _ ⟨i, rfl⟩),
     Owner.FiniteBasis.isBasis_winnerSet three owner observer ho,
     Owner.FiniteBasis.variableBound_ge_four_winnerSet three owner observer ho⟩
 
-/-- info: 'KFOL.Paper.owner_forty_equation_basis' depends on axioms:
+/-- info: 'KFOL.Paper.owner_thirty_six_equation_basis' depends on axioms:
 [propext, Classical.choice, Quot.sound] -/
 #guard_msgs (whitespace := lax) in
-#print axioms KFOL.Paper.owner_forty_equation_basis
+#print axioms KFOL.Paper.owner_thirty_six_equation_basis
 
 /-- The actual native reset/union CNF reduction is correct, has linear
 expanded-tree size, is computed in native polynomial time, and establishes
@@ -2563,9 +2569,10 @@ theorem reciprocal_round_values {Role : Type u} [Fintype Role] [DecidableEq Role
 #guard_msgs (whitespace := lax) in
 #print axioms KFOL.Paper.reciprocal_round_values
 
-/-- `se:thm:infinite`: exact possible winners in the actual threshold games,
-and impossibility of any finite compositional observation preserving the
-third role's possible victory. Every displayed game uses Boolean menus. -/
+/-- `se:thm:infinite`: exact possible winners in the actual threshold games.
+No finite semantics whose domain is ONLY Boolean-menu games preserves the third
+role's possible victory and public-choice composition. The contextual version
+also restricts every context to Boolean menus. -/
 theorem infinite_winner_algebra {Role : Type u} [Fintype Role] [DecidableEq Role]
     (a b c : Role) (hab : a ≠ b) (hac : a ≠ c) (hbc : b ≠ c)
     (order : GameTheory.Languages.Bridges.FOSGToEFG.ExplicitOrder Role) :
@@ -2573,16 +2580,31 @@ theorem infinite_winner_algebra {Role : Type u} [Fintype Role] [DecidableEq Role
       Rounds.Game.possibleWinners ((Rounds.Game.threshold a b c n m).sequentialValues order) =
         if n < m then {a,b} else if n = m then {a,b,c} else {a,c}) ∧
     (∀ n m : ℕ, (Rounds.Game.threshold a b c n m).BooleanMenus) ∧
-    (∀ (Summary : Type v) [Finite Summary] (encode : Rounds.Game Role → Summary),
-      (∀ left right rival : Rounds.Game Role, encode left = encode right →
-        encode (Rounds.Game.publicChoice a left rival) = encode (Rounds.Game.publicChoice a right rival)) →
-      (∀ left right : Rounds.Game Role, encode left = encode right →
-        (c ∈ Rounds.Game.possibleWinners (left.sequentialValues order) ↔
-          c ∈ Rounds.Game.possibleWinners (right.sequentialValues order))) → False) :=
+    (∀ (Summary : Type v) [Finite Summary]
+      (encode : {game : Rounds.Game Role // game.BooleanMenus} → Summary),
+      (∀ left right rival : {game : Rounds.Game Role // game.BooleanMenus},
+        encode left = encode right →
+        encode ⟨Rounds.Game.publicChoice a left.val rival.val,
+          left.property.publicChoice rival.property⟩ =
+        encode ⟨Rounds.Game.publicChoice a right.val rival.val,
+          right.property.publicChoice rival.property⟩) →
+      (∀ left right : {game : Rounds.Game Role // game.BooleanMenus},
+        encode left = encode right →
+        (c ∈ Rounds.Game.possibleWinners (left.val.sequentialValues order) ↔
+          c ∈ Rounds.Game.possibleWinners (right.val.sequentialValues order))) → False) ∧
+    (∀ (Summary : Type v) [Finite Summary]
+      (encode : {game : Rounds.Game Role // game.BooleanMenus} → Summary),
+      (∀ left right : {game : Rounds.Game Role // game.BooleanMenus},
+        encode left = encode right →
+        ∀ context : Rounds.Game.Context Role, context.BooleanMenus →
+          (c ∈ Rounds.Game.possibleWinners ((context.fill left.val).sequentialValues order) ↔
+            c ∈ Rounds.Game.possibleWinners ((context.fill right.val).sequentialValues order))) → False) :=
   ⟨fun n m => Rounds.Game.Scalar.possibleWinners_threshold a b c hab hac n m order,
     Rounds.Game.booleanMenus_threshold a b c,
     fun _ _ encode congr adequate =>
-      Rounds.Game.Scalar.no_finite_winner_algebra a b c hab hac hbc order encode congr adequate⟩
+      Rounds.Game.Scalar.no_finite_boolean_winner_algebra a b c hab hac hbc order encode congr adequate,
+    fun _ _ encode adequate =>
+      Rounds.Game.Scalar.no_finite_boolean_contextual_summary a b c hab hac hbc order encode adequate⟩
 
 /-- info: 'KFOL.Paper.infinite_winner_algebra' depends on axioms:
 [propext, Classical.choice, Quot.sound] -/
@@ -2811,7 +2833,7 @@ theorem raw_signature_dichotomy {Role : Type} [Fintype Role]
 
 /-- The actual native shared reset graph has linear many gates and is valid
 exactly for unsatisfiable source CNFs, including both empty-input cases.
-This semantic/count gate does not replace its separately tracked runtime. -/
+`reset_circuit_complexity` also supplies the complete native machine/class endpoint. -/
 theorem reset_circuit_reduction {Role : Type u} (three : Fin 3 ↪ Role)
     (formula : Reductions.CNF) :
     (Circuit.ResetCNF.equation formula).WellFormed ∧
@@ -3097,5 +3119,127 @@ theorem reset_synthesis_output {Role : Type u}
 #guard_msgs (whitespace := lax) in
 #print axioms KFOL.Paper.reset_synthesis_output
 
+
+/-- Canonical reset tables are exactly the minimal semantic ambiguity sets.
+The third chain role is present precisely when the distinguished input
+contributes; the other inputs carry no occurrence of that marker. -/
+theorem reset_table_semantic_definition {Role : Type u} {Var : Type v}
+    [DecidableEq Var] (three : Fin 3 ↪ Role) (term : Reset.Term Var) :
+    (∀ (valuation : Var → WinnerSet Role) (winner : Role),
+      winner ∈ (term.eval valuation).val ↔
+        ∃ j, ∃ A ∈ term.table j,
+          (∀ k ∈ A, (valuation k).Ambiguous) ∧ winner ∈ (valuation j).val) ∧
+    (∀ (j : Var) (A : Finset Var),
+      A ∈ term.table j ↔
+        (three 2 ∈ (term.eval (fun i => Reset.chainValue three
+          (if i = j then 2 else if i ∈ A then 1 else 0))).val) ∧
+        ∀ B : Finset Var, B ⊆ A →
+          (three 2 ∈ (term.eval (fun i => Reset.chainValue three
+            (if i = j then 2 else if i ∈ B then 1 else 0))).val) → A ⊆ B) := by
+  constructor
+  · intro valuation winner
+    rw [term.mem_eval]
+    constructor
+    · rintro ⟨j,hj,hw⟩
+      obtain ⟨A,hA,hstatus⟩ := (term.selected_iff_table _ j).mp hj
+      exact ⟨j,A,hA,fun k hk => hstatus hk,hw⟩
+    · rintro ⟨j,A,hA,hstatus,hw⟩
+      exact ⟨j,(term.selected_iff_table _ j).mpr ⟨A,hA,hstatus⟩,hw⟩
+  · intro j A
+    have hm (B : Finset Var) :
+        (three 2 ∈ (term.eval (fun i => Reset.chainValue three
+          (if i = j then 2 else if i ∈ B then 1 else 0))).val) ↔ term.Selected (B : Set Var) j := by
+      have hf : Reset.Term.markerValuation three (B : Set Var) j =
+          (fun i => Reset.chainValue three (if i = j then 2 else if i ∈ B then 1 else 0)) := by
+        funext i
+        by_cases hij : i = j <;> by_cases hi : i ∈ B <;>
+          simp [Reset.Term.markerValuation,hij,hi]
+      have h := term.marker_eval three (B : Set Var) j
+      rw [hf] at h
+      exact h
+    simp only [hm]
+    exact term.mem_table_iff j A
+
+/-- info: 'KFOL.Paper.reset_table_semantic_definition' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Paper.reset_table_semantic_definition
+
+
+/-- A finite-action public quantifier uses full contingent profiles and
+whole-player deviations, and its possible SPE winners equal the binary fold.
+There is an actual binary public game with exactly those equilibrium winners. -/
+theorem finite_action_quantifier {Role : Type u} {Index : Type v}
+    [Fintype Index] [Nonempty Index] (owner : Role) (branches : Index → Strategic.Tree Role) :
+    (∀ player : Role,
+      (∃ plan : Strategic.FiniteChoice.Profile branches,
+        Strategic.FiniteChoice.IsSubgamePerfect owner plan ∧
+        Strategic.FiniteChoice.winner plan = player) ↔
+      player ∈ (WinnerSet.choiceFold owner Finset.univ Finset.univ_nonempty
+        (fun i => Strategic.value (branches i))).val) ∧
+    (∃ binary : Strategic.Tree Role, ∀ player : Role,
+      (∃ plan : Strategic.Profile binary,
+        Strategic.IsSubgamePerfect plan ∧ Strategic.winner plan = player) ↔
+      ∃ plan : Strategic.FiniteChoice.Profile branches,
+        Strategic.FiniteChoice.IsSubgamePerfect owner plan ∧
+        Strategic.FiniteChoice.winner plan = player) := by
+  constructor
+  · intro player
+    change player ∈ Strategic.FiniteChoice.possibleWinners owner branches ↔ _
+    rw [Strategic.FiniteChoice.possibleWinners_eq_fold]
+  · obtain ⟨binary,he⟩ := Strategic.FiniteChoice.exists_binary_tree owner branches
+    refine ⟨binary,?_⟩
+    intro player
+    change player ∈ Strategic.possibleWinners binary ↔
+      player ∈ Strategic.FiniteChoice.possibleWinners owner branches
+    rw [he]
+
+/-- info: 'KFOL.Paper.finite_action_quantifier' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Paper.finite_action_quantifier
+
+open GameTheory GameTheory.Math.Probability Rounds.Game Rounds.Game.Scalar in
+/-- The displayed security laws in the actual diagonal D stage fix a's win
+probability against every opposing mixed law, without a Nash assumption. -/
+theorem scalar_diagonal_security {Role : Type u} [DecidableEq Role] [Fintype Role] (a b : Role) (hab : a ≠ b) (x y : ℝ)
+    (hx0 : 0 ≤ x) (hx1 : x ≤ 1) (hy0 : 0 ≤ y) (hy1 : y ≤ 1) (hs : 0 < x+y) :
+    ∃ (row : PMF (Fin (binarySizes a b a+1)))
+      (col : PMF (Fin (binarySizes a b b+1))),
+      (row 0).toReal = y/(x+y) ∧
+      (col 0).toReal = y/(x+y) ∧
+      ∀ profile : (i : Role) → PMF (Fin (binarySizes a b i+1)),
+        ((stageForm (binarySizes a b) (diagonalTable a b
+          (distribution a b x hx0 hx1) (distribution a b y hy0 hy1))).mixed.play
+            (Profile.update (sig := {Strategy := fun i => PMF (Fin (binarySizes a b i+1)),Outcome := Role})
+              profile a row) a).toReal = x*y/(x+y) ∧
+        ((stageForm (binarySizes a b) (diagonalTable a b
+          (distribution a b x hx0 hx1) (distribution a b y hy0 hy1))).mixed.play
+            (Profile.update (sig := {Strategy := fun i => PMF (Fin (binarySizes a b i+1)),Outcome := Role})
+              profile b col) a).toReal = x*y/(x+y) :=
+  Rounds.Game.Scalar.diagonal_security a b hab x y hx0 hx1 hy0 hy1 hs
+
+/-- info: 'KFOL.Paper.scalar_diagonal_security' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Paper.scalar_diagonal_security
+
+/-- Shared reset circuits can have exponentially many actual canonical
+minimal guards despite a linear number of original gates and edges. -/
+theorem reset_circuit_exponential_tables (n : ℕ) :
+    ∃ (equation : Circuit.Equation Reset.Symbol (Bool ⊕ (ℕ × Bool)))
+      (term : Reset.Term (Bool ⊕ (ℕ × Bool))),
+      equation.WellFormed ∧ equation.gates.length = 6*n+3 ∧
+      Circuit.operationCount equation.gates = 4*n+1 ∧
+      Circuit.edgeCount equation.gates = 8*n+2 ∧
+      equation.unfold = some (term,term) ∧ 2^n ≤ (term.table (.inl true)).card := by
+  obtain ⟨hwf,hsize,hops,hunfold,htable⟩ := Circuit.LargeTables.linear_graph_exponential_table n
+  exact ⟨Circuit.LargeTables.graph n,Circuit.LargeTables.tree n,hwf,hsize,hops,
+    Circuit.LargeTables.graph_edge_count n,hunfold,htable⟩
+
+/-- info: 'KFOL.Paper.reset_circuit_exponential_tables' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Paper.reset_circuit_exponential_tables
 
 end KFOL.Paper
