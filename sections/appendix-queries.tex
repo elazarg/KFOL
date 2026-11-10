@@ -1,15 +1,13 @@
 \section{Guarded navigation queries}\label{app:queries}
 
 Winner sets can be read as query results, and owned choice as a way to
-combine them. This gives an exact connection with a fragment of Core
-XPath: terms without switches compile to navigation queries on trees of
-height two, with polynomial expansion. The connection also has limits.
-One owned choice with union admits a faithful representation by relations
-under union and composition, whereas reset with union does not. Even
-allowing constants and internal switches, the term language cannot select
-the intersection of two inputs when that intersection is nonempty.
+combine them. We give a polynomial translation into Core XPath on a
+fixed document format: terms without switches compile to navigation
+queries on trees of height two. We also give a concrete instance of a
+classical relational representation theorem for one owner, and read
+reset tables as guarded queries.
 
-\subsection{A document schema and an exact translation}
+\subsection{Polynomial translation on valuation documents}
 
 We use the set semantics of navigational XPath: paths denote binary
 relations and node tests denote sets of nodes. Union, path composition,
@@ -45,8 +43,6 @@ some role other than $r$. For terms without switches, set
 \end{align*}
 Each test has size linear in $t$. This uses nonemptiness: failing to be
 $\{r\}$ is the same as containing a role other than $r$.
-The tests can therefore be pushed to input marks without materializing
-the intermediate query results.
 
 Define the output query by
 \begin{align*}
@@ -94,13 +90,20 @@ role nodes and nonempty input relations are part of its meaning. The
 negated tags are fixed tests, not negations of input predicates, so
 inserting input marks can only add result roles. The game algebra is
 therefore a monotone query language on these nonempty unary relations.
-The polynomial translation gives a precise interface for applying query
-reasoning; it does not make the two languages equally expressive.
 
 \subsection{An ordinary relational representation for one owner}
 
-There is also a connection that does not use the document schema. Fix
-one owner $r$ and adjoin a fresh point $e$ to $I$. Associate to each
+Existence of such a representation is classical. Adjoin $\varnothing$ as
+an annihilating zero for $\star_r$, so
+$A\star_r\varnothing=\varnothing\star_r A=\varnothing$. The resulting
+algebra $(\mathcal P(I),\cup,\cap,\star_r)$ has a distributive lattice
+reduct and an associative multiplication distributing over union.
+It is thus a distributive lattice-ordered semigroup in the sense of
+Andr\'eka~\cite{Andreka1991}, whose result shows that its
+reduct obtained by forgetting meet is representable by relation union
+and composition. Here is a concrete representation on $K+1$ points.
+
+Fix one owner $r$ and adjoin a fresh point $e$ to $I$. Associate to each
 nonempty $A\subseteq I$ the binary relation $L_A$ on $I\cup\{e\}$ given by
 \[
  L_A(e,y)\iff y\in A,\qquad
@@ -109,7 +112,7 @@ nonempty $A\subseteq I$ the binary relation $L_A$ on $I\cup\{e\}$ given by
 \]
 Composition $L;M$ means first an $L$ edge, then an $M$ edge.
 
-\begin{proposition}[Faithful relational representation]\label{query:prop:relations}
+\begin{proposition}[A concrete relational representation]\label{query:prop:relations}
 The map $A\mapsto L_A$ is injective and satisfies
 \[
  L_{A\cup B}=L_A\cup L_B,\qquad
@@ -139,7 +142,7 @@ not a claim that the child axis of an XML tree is owned choice. The
 representation depends on $r$; it does not identify all owned operations
 with one composition.
 
-\subsection{Why reset requires a test}
+\subsection{Reset as a guarded query}
 
 A guarded-query reading of reset is
 \[
@@ -156,13 +159,11 @@ finite set of role nodes it needs no counting primitive:
    \bigl(\langle Q[R_a]\rangle\land\langle Q[R_b]\rangle\bigr).
 \]
 
-\begin{proposition}[No relational product for reset]\label{query:prop:no-reset-product}
+\begin{remark}[No relational product for reset]\label{query:prop:no-reset-product}
 For $K\geq3$, there is no injective map $f$ from winner sets into binary
 relations on any set such that
 $f(A\cup B)=f(A)\cup f(B)$ and $f(A\del B)=f(A);f(B)$.
-\end{proposition}
-\begin{proof}
-Relational composition distributes over union in its right argument.
+Indeed, relational composition distributes over union in its right argument.
 Reset does not: for distinct $a,b,c$,
 \[
  \{c\}\del(\{a\}\cup\{b\})=\{a,b,c\},\qquad
@@ -170,7 +171,7 @@ Reset does not: for distinct $a,b,c$,
 \]
 A faithful map preserving both operations would identify these different
 sets.
-\end{proof}
+\end{remark}
 
 The reset tables make this guarded-query reading explicit. Write
 $M_i=\mathsf{many}(P_i)$ and, for input $j$,
@@ -195,33 +196,6 @@ XPath can select nodes satisfying two input marks:
  \downarrow[\langle\downarrow[\mathsf{in}_0]\rangle
               \land\langle\downarrow[\mathsf{in}_1]\rangle].
 \]
-On the valuation documents this returns $S_0\cap S_1$. Its absence from
-the term language is not just the exclusion of empty winner sets.
-
-\begin{proposition}[Intersection cannot be selected]\label{query:prop:no-intersection}
-For $K\geq3$, there is no term in the full signature
-$\mathbf A^{\rm sym}$ whose value is $S\cap T$ whenever $S\cap T$ is
-nonempty.
-\end{proposition}
-\begin{proof}
-On the diagonal, such a term would return $S$, so it is idempotent.
-By \cref{gen:thm:core} it has an equivalent core term. A core term on
-ambiguous inputs is ambiguous (indeed it is the union of its occurring
-inputs, by \cref{gen:cor:trace}). But the ambiguous inputs
-$S=\{a,b\}$ and $T=\{b,c\}$ have the atomic intersection $\{b\}$.
-\end{proof}
-
-This separates the generated query language from Core XPath even after
-restricting attention to nonempty answers. Its basic action is to
-retain, suppress, or unite whole input results; arbitrary filtering by
-overlap is unavailable. Query optimization for this sublanguage can use
-the paper's identities and guard tables, while the navigation translation
-allows it to be embedded in a larger query engine.
-
-The translation concerns semantic equivalence, not derivations. An XPath
-axiomatization may use operations and inference rules absent from the
-source language; the full-path completeness result of
-ten Cate et al.~\cite{TenCateLitakMarx2010}, for example, uses a separation
-rule. Eliminating that extra reasoning is a separate problem. The
-translation therefore supplies no finite basis for the core, whose
-nonfinite-basis theorem is \cref{core:thm:no-basis}.
+On the valuation documents this returns $S_0\cap S_1$.
+By \cref{query:prop:no-intersection}, no term in the full signature
+agrees with this query even on all valuations with nonempty intersection.

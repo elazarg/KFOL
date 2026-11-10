@@ -63,7 +63,7 @@ Report theorem-type indexes record their current public presentations.
 ## Query-language investigation (technical report only)
 
 The report now includes `sections/appendix-queries.tex`, located after unary
-contexts. The positive connection is exact, not just an analogy: public terms
+contexts; its intersection corollary is placed beside the semilattice trace. The positive connection is exact, not just an analogy: public terms
 compile into two-way Core XPath on height-two valuation trees, preserving and
 reflecting equivalence on that schema. Parent navigation lets each child query
 occur once; linear nonowner tests give the proved bound `12 * t.size ^ 2`.
@@ -74,6 +74,10 @@ relations and predicates.
 One raw owned choice plus union also embeds faithfully in binary relations on
 `Option Role`, preserving actual relation union and composition. This regular
 representation is owner-specific and is not the document child relation.
+Its existence is a concrete instance of
+[Andréka (1991)](https://doi.org/10.1007/BF01190407): adjoin the empty set as
+an annihilating zero to obtain a distributive lattice-ordered semigroup, then
+forget meet. The direct construction uses K+1 points and remains kernel-checked.
 Reset plus union has no such faithful representation: reset fails right
 distributivity. These generic results need no role finiteness assumption.
 
@@ -81,9 +85,8 @@ Conversely, Core XPath selects the intersection of two input relations, whereas
 even full winner terms with constants and permutations cannot do so on all
 inputs with nonempty intersection. Idempotency eliminates the extra syntax,
 and two ambiguous inputs with atomic intersection give the contradiction.
-This makes the term language a proper query sublanguage, with whole-input
-selection controlled by outcome tests. Reset tables give its reset fragment
-canonical guarded queries and a realizability test.
+This gives an inexpressibility boundary for the term language. Reset tables
+provide canonical guarded forms on the chosen document schema.
 
 The XPath comparison follows the two-sorted semantics in
 [ten Cate–Litak–Marx (2010)](https://doi.org/10.1016/j.jal.2009.09.002).

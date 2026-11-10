@@ -145,8 +145,9 @@ count as completion.
 
 ## Report-only query investigation
 
-The query extension is package Q: four report result environments, with five
-audited `Report` statements. It adds a small independent navigation language
+The query extension is package Q: three report result environments and one
+audited mathematical remark, with five audited `Report` statements. It adds a
+small independent navigation language
 in `Definitions/Queries` and proofs in `KFOL/Query`. Exact compilation and its
 quadratic constructor bound, schema-relative equivalence, a relational
 representation for one owned choice, and two expressive separations are proved.
