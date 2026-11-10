@@ -6,6 +6,7 @@ public import KFOL.Results.Games
 public import KFOL.Definitions.PaperGames
 public import KFOL.Query.Compilation
 public import KFOL.Query.Relations
+public import KFOL.Query.ZeroExtension
 public import KFOL.Audit.Namespace
 
 /-! # Audited report statements and mathematical proof ingredients
@@ -381,6 +382,44 @@ theorem public_query_equivalence {Role : Type u} {Var : Type v} [DecidableEq Rol
       (Query.compile s hs).Holds (Query.document valuation) .root node ↔
         (Query.compile t ht).Holds (Query.document valuation) .root node) ↔ s.Equivalent t :=
   Query.compile_equivalence s t hs ht
+
+theorem finite_powerset_relational_representation {α : Type u} [Finite α] (mul : Set α → Set α → Set α)
+    (assoc : ∀ A B C, mul (mul A B) C = mul A (mul B C))
+    (add_left : ∀ A B C, mul (A ∪ B) C = mul A C ∪ mul B C)
+    (add_right : ∀ A B C, mul A (B ∪ C) = mul A B ∪ mul A C)
+    (zero_left : ∀ A, mul ∅ A = ∅) (zero_right : ∀ A, mul A ∅ = ∅) :
+    Function.Injective (Relational.regularRelation mul) ∧
+    Relational.regularRelation mul ∅ = (fun _ _ => False) ∧
+    (∀ A B, Relational.regularRelation mul (A ∪ B) = fun x y =>
+      Relational.regularRelation mul A x y ∨ Relational.regularRelation mul B x y) ∧
+    ∀ A B, Relational.regularRelation mul (mul A B) =
+      Relation.Comp (Relational.regularRelation mul A) (Relational.regularRelation mul B) :=
+  Relational.finite_powerset_representation mul assoc add_left add_right zero_left zero_right
+
+theorem owned_choice_zero_extension {Role : Type u} (owner : Role) :
+    (∀ A B : WinnerSet Role, choiceWithZero owner A.val B.val = (choice owner A B).val) ∧
+    (∀ A B C, choiceWithZero owner (choiceWithZero owner A B) C =
+      choiceWithZero owner A (choiceWithZero owner B C)) ∧
+    (∀ A B, choiceWithZero owner A B = choiceWithZero owner B A) ∧
+    (∀ A, choiceWithZero owner A A = A) ∧
+    (∀ A B C, choiceWithZero owner (A ∪ B) C =
+      choiceWithZero owner A C ∪ choiceWithZero owner B C) ∧
+    (∀ A B C, choiceWithZero owner A (B ∪ C) =
+      choiceWithZero owner A B ∪ choiceWithZero owner A C) ∧
+    (∀ A, choiceWithZero owner ∅ A = ∅) ∧
+    ∀ A, choiceWithZero owner A ∅ = ∅ :=
+  WinnerSet.choiceWithZero_laws owner
+
+theorem owned_choice_zero_representation {Role : Type u} (owner : Role) :
+    Function.Injective (Relational.regularRelation (choiceWithZero owner)) ∧
+    Relational.regularRelation (choiceWithZero owner) ∅ = (fun _ _ => False) ∧
+    (∀ A B, Relational.regularRelation (choiceWithZero owner) (A ∪ B) = fun x y =>
+      Relational.regularRelation (choiceWithZero owner) A x y ∨
+      Relational.regularRelation (choiceWithZero owner) B x y) ∧
+    ∀ A B, Relational.regularRelation (choiceWithZero owner) (choiceWithZero owner A B) =
+      Relation.Comp (Relational.regularRelation (choiceWithZero owner) A)
+        (Relational.regularRelation (choiceWithZero owner) B) :=
+  WinnerSet.choiceWithZero_representation owner
 
 theorem owned_choice_relational_representation {Role : Type u} (owner : Role) :
     Function.Injective (Query.relation owner) ∧

@@ -74,22 +74,41 @@ relations and predicates.
 One raw owned choice plus union also embeds faithfully in binary relations on
 `Option Role`, preserving actual relation union and composition. This regular
 representation is owner-specific and is not the document child relation.
-The general semilattice, semigroup and additivity laws alone do not guarantee
+
+Adjoining an annihilating empty set gives an associative, commutative,
+idempotent multiplication on the ordinary powerset Boolean lattice, preserving
+union in each argument. `choiceWithZero_laws` proves all these assertions and
+agreement with the original algebra. `choiceWithZero_representation` extends
+the faithful representation to empty inputs as well, with no finiteness
+assumption. `choiceWithZero_relation` proves that its nonempty restriction is
+the previous representation.
+
+The general finite-powerset theorem is also proved directly: any associative
+product preserving binary unions and annihilating the empty set embeds into
+relations on `Option X`. At the fresh point the row is A; at an ordinary x it
+is `{x} · A`. This orientation works without commutativity. Finite additivity
+gives atomic expansion, which proves the composition law. The same library
+proof applies to infinite powersets when atomic expansion is given. The
+regression uses a noncommutative left-zero product to detect reversed
+composition, and verifies that owned choice need not preserve intersection.
+
+The [1991 publisher abstract](https://doi.org/10.1007/BF01190407) explicitly
+defines DLOS using a distributive lattice, an associative product and
+additivity over joins, and states that deleting any one operation leaves a
+representable reduct. Thus it applies after adjoining zero and dropping meet.
+The report credits that result **at the abstract**, without assigning an
+unverified theorem number; its finite powerset lemma and owned-choice instance
+have independent Lean proofs. The full 1991 theorem text has not been checked.
+There is no novelty claim for existence of a representation.
+
+The broader semilattice-ordered semigroup laws alone do not guarantee
 representability. [Andréka–Mikulás (2011), Section 3, Theorem 3.1](https://old.renyi.hu/pub/algebraic-logic/AMikAU11.pdf)
 proves that the full class R(+,;) of union/composition-representable algebras
-is not finitely axiomatizable in first-order logic. This is a statement about
-the representation class, not the equational theory of the variety it
-generates. The direct construction uses K+1 points and is kernel-checked.
-
-This source check does not establish novelty or rule out an applicable
-representation theorem under stronger hypotheses. In particular, the
-[1991 publisher abstract](https://doi.org/10.1007/BF01190407) separately asserts
-positive representation results for operation-deleted reducts of distributive
-lattice-ordered semigroups. The negative result for the larger class does not
-refute that narrower assertion. The report relies on the explicit construction.
-The authors' [erratum](https://old.renyi.hu/pub/algebraic-logic/AM-AU-err7.pdf)
-withdraws Section 4 finite-basis claims for varieties with an identity constant;
-it does not withdraw the Section 3 result cited here.
+is not finitely axiomatizable in first-order logic. This representation-class
+result does not contradict the positive DLOS reduct theorem. The authors'
+[erratum](https://old.renyi.hu/pub/algebraic-logic/AM-AU-err7.pdf) withdraws
+Section 4 finite-basis claims for varieties with an identity constant, not the
+Section 3 result cited here.
 
 Reset plus union has no such faithful representation: reset fails right
 distributivity. These generic results need no role finiteness assumption.

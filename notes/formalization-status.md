@@ -8,7 +8,7 @@ Other report results remain optional and have their own evidence status.
 | Audit entrypoint | Mathematical statements | Presentation |
 | --- | ---: | --- |
 | [Paper.lean](../Paper.lean) | 79 | Main text and the report claims it cites; 603 lines |
-| [Report.lean](../Report.lean) | 33 | Further report results and proof ingredients |
+| [Report.lean](../Report.lean) | 36 | Further report results and proof ingredients |
 | [Results/Certificates](../KFOL/Results/Certificates.lean) | 140 preserved contracts | Original full statements, including native machines, codecs and intermediate invariants |
 
 Every root proof names one library theorem. Both root files have no semantic
@@ -20,12 +20,13 @@ weakened them.
 The [audit guide](audit-guide.md) explains the human reading order. Natural
 vocabulary is grouped in `Definitions/PaperAlgebra`, `PaperGames` and
 `Complexity`, with their underlying mathematical definitions indexed separately. The report’s
-navigation vocabulary is in `Definitions/Queries`.
+navigation vocabulary is in `Definitions/Queries`; the zero extension and
+regular representation are in `Definitions/Relational`.
 
 | Definition surface | Theorem types | Semantic declarations | Source files | Written review units |
 | --- | ---: | ---: | ---: | ---: |
 | Paper | 79 | 635 | 35 | 333 |
-| Report | 33 | 440 | 25 | 193 |
+| Report | 36 | 443 | 26 | 195 |
 
 The slices overlap and exclude theorem proof bodies. These meaning indexes do
 not replace the human comparison with the manuscript or the proof/axiom audits.
@@ -36,7 +37,7 @@ The production integration checks are:
 
 - `make check-lean`: literal façade and preservation checks, inventory,
   independent algebra build/import audit, Paper/Report and whole-source axiom
-  audits, both definition indexes, actual negative audit fixtures and 87 strict
+  audits, both definition indexes, actual negative audit fixtures and 88 strict
   Lean regressions.
 - `make check-python`: the explicit 33 independent Python checks, mapped to the
   current paper in `checks/README.md` and the verification appendix.
@@ -70,6 +71,13 @@ compilation on a nonempty valuation-document schema, a faithful single-owner
 relational representation, and generic impossibility theorems for representing
 reset as relational product and for selecting nonempty intersections. The
 actual libxml2 XPath engine passed 60,208 independent comparisons.
+
+The zero extension is a commutative idempotent powerset semigroup with an
+annihilating empty set, preserving union in both arguments. A general direct
+representation theorem covers every finite powerset with an associative,
+union-preserving product and zero. The owned-choice instance also works over
+infinite role sets. Andréka's publisher abstract explicitly states the broader
+DLOS reduct theorem; the report credits that abstract and uses direct proofs.
 
 The report's dependent calculus, general real-QE/semialgebraicity, numerical
 free-algebra counts and unused extensions remain outside main-paper completion.

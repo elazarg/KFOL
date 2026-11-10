@@ -4,8 +4,8 @@ Winner sets can be read as query results, and owned choice as a way to
 combine them. We give a polynomial translation into Core XPath on a
 fixed document format: terms without switches compile to navigation
 queries on trees of height two. We also represent one owner's choice
-with union by relations under union and composition, and read reset
-tables as guarded queries.
+with union by relations under union and composition, using a general
+finite powerset representation, and read reset tables as guarded queries.
 
 \subsection{Polynomial translation on valuation documents}
 
@@ -93,43 +93,86 @@ therefore a monotone query language on these nonempty unary relations.
 
 \subsection{An ordinary relational representation for one owner}
 
-Since $\star_r$ is associative and distributes over union,
-$(\Pow,\cup,\star_r)$ is a semilattice-ordered semigroup. Not every such
-algebra is isomorphic to an algebra of relations under union and
-composition: the full class of union/composition-representable algebras
-is not finitely axiomatizable in first-order logic
-\cite[Section~3, Theorem~3.1]{AndrekaMikulas2011}. This one is representable,
-on $K+1$ points, by the following construction.
+Adjoin $\varnothing$ as an annihilating zero for $\star_r$, writing
+$A\mathbin{\widehat\star_r}B=\varnothing$ when either operand is empty
+and $A\star_r B$ otherwise. The Boolean lattice
+$(\mathcal P(I),\cup,\cap)$ with this product is a distributive
+lattice-ordered semigroup: multiplication is associative and preserves
+union in each argument. Andr\'eka's abstract states that deleting any
+one operation from a distributive lattice-ordered semigroup leaves a
+representable reduct~\cite[abstract]{Andreka1991}. Thus the
+union--composition representation follows from that result. The
+following elementary powerset case gives an explicit bound on the base
+and a direct proof.
 
-Fix one owner $r$ and adjoin a fresh point $e$ to $I$. Associate to each
-nonempty $A\subseteq I$ the binary relation $L_A$ on $I\cup\{e\}$ given by
+\begin{lemma}[Finite powerset representation]\label{query:lem:powerset}
+Let $X$ be finite and let $\odot$ be an associative operation on
+$\mathcal P(X)$ that preserves binary unions in each argument and has
+$\varnothing$ as an annihilating zero. Then
+$(\mathcal P(X),\cup,\odot,\varnothing)$ embeds into binary relations
+under union, composition and the empty relation on $|X|+1$ points.
+\end{lemma}
+\begin{proof}
+Adjoin a fresh point $e$ to $X$ and define
 \[
- L_A(e,y)\iff y\in A,\qquad
- L_A(x,y)\iff y\in A\star_r\{x\}\quad(x,y\in I),
- \qquad L_A(x,e)\iff\mathsf{false}.
+ R_A(e,y)\iff y\in A,\qquad
+ R_A(x,y)\iff y\in\{x\}\odot A\quad(x,y\in X),
+ \qquad R_A(x,e)\iff\mathsf{false}.
 \]
-Composition $L;M$ means first an $L$ edge, then an $M$ edge.
+The row at $e$ proves injectivity. Right distributivity gives
+$R_{A\cup B}=R_A\cup R_B$, and annihilation gives
+$R_\varnothing=\varnothing$. Finite left distributivity, including the
+empty case, gives the atomic expansion
+\[
+ A\odot B=\bigcup_{a\in A}\{a\}\odot B.
+\]
+This is exactly the equation $R_{A\odot B}=R_A;R_B$ at row $e$, where
+composition means first an $R_A$ edge, then an $R_B$ edge. At row $x$,
+apply the same expansion to
+$(\{x\}\odot A)\odot B=\{x\}\odot(A\odot B)$.
+\end{proof}
+
+The hypotheses are stronger than the semilattice-ordered semigroup
+laws alone. The full class of union/composition-representable algebras
+is not finitely axiomatizable in first-order logic
+\cite[Section~3, Theorem~3.1]{AndrekaMikulas2011}.
+
+For owned choice, write the resulting relation as $L_A$. Commutativity
+lets its ordinary rows be written as
+$L_A(x,y)\iff y\in A\mathbin{\widehat\star_r}\{x\}$.
 
 \begin{proposition}[A concrete relational representation]\label{query:prop:relations}
-The map $A\mapsto L_A$ is injective and satisfies
+The zero extension $\widehat\star_r$ agrees with $\star_r$ on nonempty
+sets, is associative, commutative and idempotent, preserves binary
+unions in each argument, and has $\varnothing$ as a two-sided
+annihilator. The map $A\mapsto L_A$ is injective on all subsets of $I$
+and satisfies
 \[
+ L_\varnothing=\varnothing,\qquad
  L_{A\cup B}=L_A\cup L_B,\qquad
- L_{A\star_r B}=L_A;L_B.
+ L_{A\mathbin{\widehat\star_r} B}=L_A;L_B.
 \]
+Restricting to nonempty subsets represents $(\Pow,\cup,\star_r)$
+on the same $K+1$ points.
 \end{proposition}
 \begin{proof}
-The row at $e$ recovers $A$, proving injectivity. Owned choice
-distributes over union in each argument
-(\cref{core:prop:choice-union-basis}), so the first equation holds in
-every row. For the second, its atomic-column form is
+When all operands are nonempty, the product laws are the original
+owned-choice laws. An empty operand reduces associativity and
+annihilation to $\varnothing=\varnothing$; in a distributivity equation,
+an empty summand can simply be removed. Idempotency also holds at the
+empty set. Apply \cref{query:lem:powerset}.
+
+The same construction works for infinite $I$. The needed atomic
+expansion follows directly from
 \[
- A\star_r B=\bigcup_{b\in B}A\star_r\{b\}.
+ A\star_r B=\bigcup_{b\in B}A\star_r\{b\}
+ \qquad(A,B\ne\varnothing).
 \]
 If $A=\{r\}$ or $B=\{r\}$ this is immediate. Otherwise $B$ has a
 member other than $r$; that column retains all of $A$, and the remaining
-columns supply every member of $B$. The equation at row $e$ now follows
-from commutativity, and at an ordinary row from associativity and
-commutativity.
+columns supply every member of $B$. Commutativity supplies the left
+atomic expansion used in the lemma's proof. Empty operands give empty
+unions.
 \end{proof}
 
 Thus $\{\star_r,\cup\}$ is an algebra of actual relations with ordinary

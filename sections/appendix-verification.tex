@@ -1,6 +1,6 @@
 \section{Verification details}\label{app:verification}
 
-The paper's results are kernel-checked in Lean~4.35.0 with mathlib. \texttt{Paper.lean} restates, in the namespace \texttt{KFOL.Paper}, every theorem of the main text and the clauses of the report results that it cites: $79$ statements, listed by result in \cref{tab:status}. \texttt{Report.lean} restates $33$ further report results in the namespace \texttt{KFOL.Report} (\cref{tab:report}). Each proof is a single library theorem, and each file ends with a check that no declaration in its namespace uses an axiom beyond \texttt{propext}, \texttt{Classical.choice}, and \texttt{Quot.sound}; a separate audit covers the whole library. Nothing is admitted, and no theorem from the literature enters as a hypothesis. Where a written proof cites one, as for the reset basis and the minimum one-owner generator \cite{FreeseEtAl2002}, owned choice with union \cite{HardingRomanowska2017}, and the atomic clone \cite{Szendrei2012}, the Lean proof is direct.
+The paper's results are kernel-checked in Lean~4.35.0 with mathlib. \texttt{Paper.lean} restates, in the namespace \texttt{KFOL.Paper}, every theorem of the main text and the clauses of the report results that it cites: $79$ statements, listed by result in \cref{tab:status}. \texttt{Report.lean} restates $36$ further report results in the namespace \texttt{KFOL.Report} (\cref{tab:report}). Each proof is a single library theorem, and each file ends with a check that no declaration in its namespace uses an axiom beyond \texttt{propext}, \texttt{Classical.choice}, and \texttt{Quot.sound}; a separate audit covers the whole library. Nothing is admitted, and no theorem from the literature enters as a hypothesis. Where a written proof cites one, as for the reset basis and the minimum one-owner generator \cite{FreeseEtAl2002}, owned choice with union \cite{HardingRomanowska2017}, and the atomic clone \cite{Szendrei2012}, the Lean proof is direct.
 
 The vocabulary of the statements is in \path{KFOL/Definitions/PaperAlgebra.lean}, \path{PaperGames.lean}, and \path{Complexity.lean}, which build on the other files of \path{KFOL/Definitions}. \path{notes/audit-guide.md} gives a reading order, and \path{notes/paper-definition-surface.md} and \path{notes/report-definition-surface.md} list every definition that each statement depends on.
 
@@ -87,7 +87,7 @@ Two players (\cref{app:two-players})
 
 {\small
 \begin{longtable}{>{\raggedright\arraybackslash}p{0.34\linewidth}>{\raggedright\arraybackslash}p{0.60\linewidth}}
-\caption{The $33$ audited statements in \texttt{Report.lean}, followed by remaining report evidence.}\label{tab:report}\\
+\caption{The $36$ audited statements in \texttt{Report.lean}, followed by remaining report evidence.}\label{tab:report}\\
 \toprule
 Result & Audited statements or other evidence\\
 \midrule
@@ -110,8 +110,12 @@ Round protocol, consistency and beliefs (\cref{se:thm:round})
  & \path{round_protocol_foundations}, \path{round_profile_consistency}, \path{round_product_beliefs}\\
 Navigation queries (\cref{query:thm:compilation})
  & \path{public_query_compilation}, \path{public_query_equivalence}\\
-Relational representation and reset (\cref{query:prop:relations,query:prop:no-reset-product})
- & \path{owned_choice_relational_representation}, \path{reset_no_relational_representation}\\
+Finite powerset representation (\cref{query:lem:powerset})
+ & \path{finite_powerset_relational_representation}\\
+Owned choice with zero (\cref{query:prop:relations})
+ & \path{owned_choice_zero_extension}, \path{owned_choice_zero_representation}, \path{owned_choice_relational_representation}\\
+Reset obstruction (\cref{query:prop:no-reset-product})
+ & \path{reset_no_relational_representation}\\
 Intersection obstruction (\cref{gen:cor:trace,query:prop:no-intersection})
  & \path{intersection_not_definable}\\
 Scalar laws, synthesis and security (\cref{se:prop:parallel,se:thm:rational})
@@ -202,6 +206,13 @@ Programs & Subject\\
 \end{longtable}}
 
 The navigation definitions are in \path{KFOL/Definitions/Queries.lean}, with proofs in \path{KFOL/Query/}. The optional command \texttt{python3 checks/check\_xpath.py} runs the translated queries in libxml2 through \texttt{lxml}: 60,208 term/valuation comparisons over all nonempty valuations at $K=3$ with three inputs and $K=4$ with two inputs. It also checks the empty-input counterexample. \path{tests/NavigationQueries.lean} checks that schema boundary and distinguishes the correct parent guard from a guard evaluated below an output role.
+
+The powerset representation is proved directly in
+\path{KFOL/Query/PowersetRepresentation.lean};
+\path{KFOL/Query/ZeroExtension.lean} verifies the zero extension and its
+agreement with owned choice. The regression in
+\path{tests/PowersetRepresentation.lean} also checks a noncommutative
+product, which detects reversal of relational composition.
 
 The programs in \path{checks/} are independent of the Lean development. Except where a count is itself the result, they test implementations at the stated sizes, and for results in \texttt{Paper.lean} and \texttt{Report.lean} they serve as regression tests. They
 enumerate small full profiles and deviations, synthesize the $131$

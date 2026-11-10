@@ -252,6 +252,7 @@ import all KFOL.Definitions.Public
 import all KFOL.Definitions.Quantified
 import all KFOL.Definitions.Queries
 import all KFOL.Definitions.Reductions
+import all KFOL.Definitions.Relational
 import all KFOL.Definitions.Reset
 import all KFOL.Definitions.Rounds
 import all KFOL.Definitions.Strategic
@@ -308,7 +309,9 @@ import all KFOL.Policies.SinglePolicy
 import all KFOL.Policies.Sizes
 import all KFOL.Policies.Strict
 import all KFOL.Query.Compilation
+import all KFOL.Query.PowersetRepresentation
 import all KFOL.Query.Relations
+import all KFOL.Query.ZeroExtension
 import all KFOL.Reductions.Circuits
 import all KFOL.Reductions.Circuits.Basic
 import all KFOL.Reductions.Circuits.Builder

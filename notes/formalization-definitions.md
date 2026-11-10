@@ -2,7 +2,7 @@
 
 Read [Paper.lean](../Paper.lean) with the vocabulary below. It contains 79
 mathematical statements and no definitions. [Report.lean](../Report.lean)
-contains 33 further mathematical statements. Their proofs name library theorems;
+contains 36 further mathematical statements. Their proofs name library theorems;
 definitions must still be reviewed independently against the manuscripts.
 
 The [audit guide](audit-guide.md) gives the reading order. The generated
@@ -14,7 +14,7 @@ theorem types. They erase proof-valued subterms and never follow theorem proofs.
 | Entry point | Theorem types | Semantic declarations | Source files | Central definition files | Written review units |
 | --- | ---: | ---: | ---: | ---: | ---: |
 | Paper | 79 | 635 | 35 | 23 | 333 |
-| Report | 33 | 440 | 25 | 14 | 193 |
+| Report | 36 | 443 | 26 | 15 | 195 |
 
 These counts are separate slices and overlap. The vocabulary files organize
 the presentation; they do not replace their underlying mathematical definitions.
@@ -189,6 +189,15 @@ Its output has quadratic constructor size. `relation` is a separate regular
 representation for a fixed owner on `Option Role`; it must not be confused
 with the document's child axis. These definitions import neither GameTheory
 nor machine complexity, and are included in the pure import audit.
+
+[Relational.lean](../KFOL/Definitions/Relational.lean) defines the zero
+extension on all subsets and the general right regular relation. Empty operands
+annihilate; nonempty operands use the original independently defined choice.
+The fresh point records membership in the represented set; an ordinary row
+records right multiplication by that set. No associativity, distributivity or
+representation law is built into these definitions. The finite powerset theorem
+proves representation for any associative, union-preserving product with zero;
+owned choice also satisfies the atomic expansion needed for infinite role types.
 
 ## Preservation and verification
 
