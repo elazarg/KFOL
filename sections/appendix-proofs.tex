@@ -30,7 +30,7 @@ Conversely, a parent SPE selects the winner of a child SPE. These facts
 give both inclusions in~\eqref{game:eq:own}.
 \end{proof}
 
-Every element of $\den G\ow r\den H$ has a full SPE witness. Leaves carry only a winner label. The dependent interface of \cref{app:dependent} also permits return records, and a simultaneous decision at such a boundary lies outside this perfect-information recurrence.
+\texttt{Basic.lean} proves this as \texttt{winners\_node}, from full profiles and whole-player deviations. Every element of $\den G\ow r\den H$ has a full SPE witness. Leaves carry only a winner label. The dependent interface of \cref{app:dependent} also permits return records, and a simultaneous decision at such a boundary lies outside this perfect-information recurrence.
 
 For associativity of $\star_r$, a three-input product is $\{r\}$ if any input is $\{r\}$, and is their union otherwise; nonemptiness ensures that a union of inputs different from $\{r\}$ cannot become $\{r\}$. Role permutations transport the
 operations and the leaf constants. External renaming of the roles permutes the operations of every signature. Each $\star_r$ is associative, commutative, and idempotent. 
@@ -42,7 +42,7 @@ owner singletons; the outer operation returns their union. Folding $J$
 over the leaf singletons realizes every nonempty subset.
 \end{proof}
 
-The denotation of $J$ is independent of the distinct
+Ground realization is \texttt{every\_winner\_set\_realized} in \texttt{Synthesis.lean}. The denotation of $J$ is independent of the distinct
 triple of owners chosen, and $J$ cannot use fewer occurrences.
 
 \begin{proposition}[Occurrence lower bound]\label{game:thm:lower}
@@ -77,7 +77,7 @@ $k$. No later step can remove it. The required result $\{j,r\}$ excludes
 $k$, a contradiction. Interchange the variables for the other bound.
 \end{proof}
 
-The syntax-to-path correspondence is the direct decomposition of a term at its unique input occurrence. The cost measured is syntactic occurrence: a play enters just one of the four
+The syntax-to-path correspondence is the direct decomposition of a term at its unique input occurrence, and the path obstruction is \texttt{no\_single\_use\_union} in Lean. The cost measured is syntactic occurrence: a play enters just one of the four
 component occurrences, and additive branching may use a context in both exclusive branches.
 
 Role $a$ must choose winner $a$ in the subtree of $(\at a\ch a\at b)\ch b\at c$, and the root owner $b$ is then indifferent between prescribed winners $a$ and $c$. This calculation gives the following.
@@ -130,7 +130,7 @@ contexts distinguish all the listed cases. The class $\nv$ is inhabited
 because there are two distinct roles other than $k$.
 \end{proof}
 
-Ground constants suffice to represent arbitrary polynomial parameters, because union realizes every nonempty subset.
+Ground constants suffice to represent arbitrary polynomial parameters, because union realizes every nonempty subset. \texttt{sameView\_own} and \texttt{contextualAt\_iff} prove the congruence and its contextual characterization in Lean.
 
 The operations of $C_k$ have a short description. For an owner $r\ne k$, an input $a_r$ absorbs. Without that absorber, an input $\pv$ gives $\pv$, two equal atoms $a_i$ give $a_i$, and all other cases give $\nv$. For owner $k$, omit the absorbing case.
 
@@ -202,6 +202,8 @@ This differs from the identity exactly on ambiguous sets omitting $k$.
 At least one such input must be tested.
 \end{proof}
 
+The sufficiency and necessity statements are \path{complete_test_domain} and \path{test_domain_necessary} in Lean.
+
 \begin{corollary}[Sharp size]\label{view:cor:optimal}
 The minimum size of a complete fixed test domain is
 \[
@@ -259,7 +261,8 @@ the unique minimum domain is
 \begin{proof}
 Sufficiency is \cref{sym:thm:pairs}. Each singleton is necessary
 already in the reduct: its unary synthesis gives a term differing from
-the constant $I$ only at that singleton.
+the constant $I$ only at that singleton. These separators are
+kernel-checked in \texttt{Synthesis.lean}.
 
 For necessity of a particular pair $P$, choose $k\notin P$, put
 $C=I\setminus\{k\}$, and form the extensive term
@@ -275,9 +278,9 @@ singleton and every ambiguous input other than $P$, and disagree at
 $P$. Every complete input domain must therefore contain $P$.
 \end{proof}
 
-These results hold in the full term syntax. Singleton-status equivalence is preserved by every constructor; on a fixed status cell, shrinking inputs shrinks the output; and one input membership suffices to preserve any selected output
-winner, which the refinement keeps while reducing every input to a singleton or pair. For four roles $D_2$ has ten values, while the reduct admits six, and the
-explicit pair separators show why that domain cannot be reused after adding internal switches.
+\texttt{FullAlgebra.lean} proves these results in the full term syntax. Singleton-status equivalence is preserved by every constructor; on a fixed status cell, shrinking inputs shrinks the output; and one input membership suffices to preserve any selected output
+winner, which the formal refinement keeps while reducing every input to a singleton or pair (\path{FullTerm.status_mono}, \path{FullTerm.one_pin}). The explicit separators are \path{FullTerm.pair_separator}. For four roles $D_2$ has ten values, while the reduct admits six, and the
+pair separator shows why that domain cannot be reused after adding internal switches.
 
 \subsection{The intrinsic core}\label{app:proofs-core}
 
@@ -360,7 +363,7 @@ $q_k$ identifies $I\setminus\{k\}$ and $I$, which every other player
 views as $\pv$.
 \end{proof}
 
-Each $q_k$ is a quotient by \cref{view:thm:view}. The representation is subdirect, not the full Cartesian product.
+Each $q_k$ is a quotient by \cref{view:thm:view}, and this is \path{FullTerm.idempotent_sameView} in Lean. The representation is subdirect, not the full Cartesian product.
 
 A fixed domain $D\subseteq\Pow$ \emph{certifies idempotency} when, for terms of every arity, agreement $t(S,\ldots,S)=S$ for $S\in D$ implies idempotency.
 
@@ -459,7 +462,8 @@ the constant $\{r\}$ returns the constant when the owner is $r$;
 otherwise it remains inflationary, because the constant operand cannot
 give a different owner an outright win. Two constant expressions remain
 constant. An inflationary function cannot send $\{q\}$ to $\{r\}$ when
-$q\ne r$.
+$q\ne r$. The dichotomy and this rigidity consequence are
+kernel-checked in \texttt{OneConstant.lean}.
 \end{proof}
 
 \begin{proof}[Proof of \cref{reset:thm:binary}]
@@ -516,7 +520,7 @@ always selected. Otherwise its new guard concerns a different position,
 and both child selection predicates are independent of $j$ by induction.
 \end{proof}
 
-For each position $j$, let $\mathcal G_j(t)$ be the antichain of inclusion-minimal sets $A\subseteq N$ such that $j\in E_t(A)$; an empty antichain means the position is unused. Then
+This exact mixed-input semantics is \path{ResetCalculus.Term.denote_membership} in Lean. For each position $j$, let $\mathcal G_j(t)$ be the antichain of inclusion-minimal sets $A\subseteq N$ such that $j\in E_t(A)$; an empty antichain means the position is unused. Then
 \begin{equation}\label{reset:eq:guards}
  j\in E_t(B)\quad\Longleftrightarrow\quad
        \exists A\in\mathcal G_j(t)\; A\subseteq B.
@@ -538,7 +542,7 @@ on finite guard tables are polynomial.
 
 A failed equality thus has a polynomially constructible countervaluation using only $Z,U,T$.
 
-Numbering the chain $0<1<2$, its table is
+This is \path{ResetCalculus.Term.three_chain_complete} in Lean. Numbering the chain $0<1<2$, its table is
 \begin{equation}\label{reset:eq:three-table}
 \begin{array}{c|ccc}
 \del&0&1&2\\\hline
@@ -576,7 +580,7 @@ $O_{2+1}$. These are exactly (R1)--(R6) under the isomorphism above.
 those of winner-set reset for every $K\geq3$.
 \end{proof}
 
-The inference rules are the ordinary rules of equational logic: reflexivity, symmetry, transitivity, substitution, and congruence under $\del$.
+The inference rules are the ordinary rules of equational logic: reflexivity, symmetry, transitivity, substitution, and congruence under $\del$. Soundness of the six equations is kernel-checked in \texttt{Reset.lean}, and the completeness argument uses the external theorem.
 
 \paragraph{Path normal forms.}
 Freese et al.\ already develop common-root path normal forms and a
@@ -928,7 +932,7 @@ status are preserved. Equations valid in the latter hold in the
 former, and the displayed equation makes this inclusion strict.
 \end{proof}
 
-The edge guards express proper colorings of a complete graph. A fresh marker requires an unused role, which is precisely what fails at $K=n$.
+The edge guards express proper colorings of a complete graph. A fresh marker requires an unused role, which is precisely what fails at $K=n$. \texttt{Fragments.lean} has the generic pigeonhole certificate.
 
 \begin{proof}[Proof of \cref{thm:raw-pairs}]
 A single owned operation and union are semilattices: equality is equality
@@ -1005,6 +1009,8 @@ times. Hardness passes to every larger signature.
 
 Each minimal hard pair therefore has a linear-size reduction in its native tree syntax.
 
+\path{lean/RawFragments.lean} proves the fold tests, the absorption arguments, and the generic UNSAT transfer for the owned guards; the CNF syntax assembly, size bounds, and complexity conclusions are written proofs, and \path{checks/check_raw_pairs.py} evaluates the actual native reductions independently.
+
 \input{sections/appendix-circuits}
 
 \subsection{One owner}\label{app:proofs-owner}
@@ -1065,6 +1071,8 @@ Thus $g$ holds, and a right guard holds exactly when it covers $g$.
 No right guard does. This is the required countervaluation.
 \end{proof}
 
+The criterion is \path{Term.observation_implication_iff} in \texttt{OwnerFragments.lean}.
+
 \paragraph{Canonical tables and bounds.}
 The criterion also gives canonical tables: for each source, remove its index and the $M$ indices from its $N$ tests, then retain only the minimal guards under \eqref{owner:eq:cover}. No minimal guard has its source in its $M$ tests. Indeed, a guard $(j,A,B)$ with $j\in A$ has a covering guard $(j,A',B')$ with $j\notin A'$,
 $A'\subseteq A$, and $B'\subseteq B$. Induct on the term: if its root is $j$, the root occurrence supplies $(j,\varnothing,\varnothing)$; otherwise apply the induction hypothesis to the contributing child and reattach the node's tests. Any newly attached $M$ test is the node's different root. Minimal antichains are unique
@@ -1089,7 +1097,7 @@ hence equality of that membership. These memberships determine the set.
 \end{proof}
 
 One outsider suffices for identities, meaning equality of its observation on \emph{all valuations}; it does not determine the
-complete winner set of an individual execution.
+complete winner set of an individual execution. \path{Term.single_table_equation_iff} and \path{Term.equationB_correct} prove the criterion and the executable checker in Lean.
 
 \paragraph{The four-element algebra.}
 Name the elements of $\mathbf F$ by $A=\{a\}$, $B=\{b\}$, $N=\{a,b\}$, $P=\{a,b,k\}$. Both operations are conservative: each returns one of its arguments. Explicitly,
@@ -1149,7 +1157,7 @@ This is impossible. Smaller reducts are associative, so they cannot
 generate the theory either.
 \end{proof}
 
-The four-state quotient
+The completeness theorem, conservative operations, required identities, and generic three-state obstruction are kernel-checked in \path{lean/OwnerModels.lean} (\path{Term.four_element_complete}, \path{three_state_obstruction}); the reduction of arbitrary smaller models to the three-element chain uses the published theorem. The four-state quotient
 is also the exact outsider contextual quotient when parameters are permitted. The observation distinguishes $P$ from the other states; the context $P\del x$ distinguishes $N$ from $A,B$; and $H_a(N,x,P)$ distinguishes $A$ from $B$.
 
 \begin{proof}[Proof of \cref{owner:cor:complexity}]
@@ -1280,7 +1288,7 @@ winner-set algebra is a property of its observation.
 
 \paragraph{The scalar fragment.}
 In the round language with two active roles, induction reduces every stage to a finite zero-sum matrix game, whose equilibrium value is unique, so $\mathcal E(G)=\{v(G)\delta_a+(1-v(G))\delta_b\}$. For public choices owned by $a$ and $b$, the scalar operations are $\max$ and $\min$, and exchanging the roles throughout a component gives $C(x)=1-x$. In
-$D(G,H)$ the bits are committed privately and both published before entering the selected continuation. If $v(G)=x$ and $v(H)=y$, the stage payoff matrix for $a$ is $\left(\begin{smallmatrix}x&0\\0&y\end{smallmatrix}\right)$. The \emph{scalar fragment} consists of the games built from $\at a$ and $\at b$ by $\ch a$, $\ch b$, $C$, and $D$.
+$D(G,H)$ the bits are committed privately and both published before entering the selected continuation. If $v(G)=x$ and $v(H)=y$, the stage payoff matrix for $a$ is $\left(\begin{smallmatrix}x&0\\0&y\end{smallmatrix}\right)$.
 
 \begin{proposition}[Parallel sum]\label{se:prop:parallel}
 The constructor $D$ denotes
@@ -1303,7 +1311,7 @@ are immediate. Monotonicity follows from the displayed formula, and
 a monotone unary map on a chain preserves binary minima and maxima.
 \end{proof}
 
-The reciprocal-sum value and reciprocal-proportional optimal strategies are the classical diagonal matrix-game formula \cite[Part~II, Section~3.3]{FergusonNotes}, and parallel sum is an established operation in network and matrix theory \cite{AndersonDuffin1969}. The constructor has two Boolean commitments and one occurrence of each continuation, and it introduces neither chance nor numerical rewards at leaves.
+The stage certificate is \texttt{diagonal\_nash\_value} in Lean. The reciprocal-sum value and reciprocal-proportional optimal strategies are the classical diagonal matrix-game formula \cite[Part~II, Section~3.3]{FergusonNotes}, and parallel sum is an established operation in network and matrix theory \cite{AndersonDuffin1969}. The constructor has two Boolean commitments and one occurrence of each continuation, and it introduces neither chance nor numerical rewards at leaves.
 
 \begin{proposition}[Rational values]\label{se:thm:rational}
 The scalar values generated by the winner leaves, role exchange, and
@@ -1325,7 +1333,7 @@ Each recursive denominator is smaller. Reduction of fractions is not
 needed. This gives an explicit synthesis procedure.
 \end{proof}
 
-Rational values of finite rational zero-sum games are standard; the point is the small constructor set realizing them with stable Boolean commitments and complete-revelation boundaries.
+The arithmetic is \texttt{every\_rational} in Lean. Rational values of finite rational zero-sum games are standard; the point is the small constructor set realizing them with stable Boolean commitments and complete-revelation boundaries.
 
 \begin{corollary}[Decidable scalar equations]\label{se:cor:decidable}
 Equations in $0,1,C,\parallel,\min,\max$ hold on rational scalar
@@ -1352,7 +1360,7 @@ The first separator uses rates $1/2$ and $1/3$, against an outside component wit
 full revelation.
 
 \begin{corollary}[Scalar full abstraction]\label{se:cor:scalar}
-For closed components in the scalar fragment with the same
+For closed components in the rational scalar fragment with the same
 active pair, equality of scalar values is exactly contextual
 equivalence for possible SE winners in the three-role round language.
 It suffices to observe the third role's possible victory.

@@ -1,75 +1,10 @@
 \section{Verification details}\label{app:verification}
 
-The paper's results are kernel-checked in Lean~4.35.0 with mathlib. The root file \texttt{Paper.lean} restates, in the namespace \texttt{KFOL.Paper}, every theorem of the main text, every report result the main text cites, and the further facts the main text asserts: $128$ statements, listed by result in \cref{tab:status}. Three remarks are not restated: that a quantifier over a finite action set is a fold of binary choices (\cref{sec:rational}), that a shared reset circuit can have a large table (\cref{sec:complexity}), and the security strategies for $D$ (\cref{sec:sealed-rounds}). Each is followed by a check that its proof uses no axioms beyond \texttt{propext}, \texttt{Classical.choice}, and \texttt{Quot.sound}, and nothing is admitted. No theorem from the literature enters as a hypothesis. Where a written proof cites one, as for the reset basis and the minimum one-owner generator \cite{FreeseEtAl2002}, owned choice with union \cite{HardingRomanowska2017}, and the atomic clone \cite{Szendrei2012}, the Lean proof is direct.
-
-The definitions are in \path{KFOL/Definitions}, apart from the proofs, and \path{notes/paper-definition-surface.md} lists every definition that each statement depends on. Winner sets are nonempty sets of roles. Subgame-perfect equilibrium is defined by full profiles and whole-player deviations in every subtree, independently of backward induction, and it agrees with Nash equilibrium of the GameTheory library in every subtree. Sealed rounds use assessments: sequential rationality at every information set, and consistency as a limit of completely mixed profiles. Complexity is measured on the deterministic multitape Turing machines of ComplexityLib, and coNP-completeness has its textbook meaning, with polynomial-time many-one reductions. Inputs are binary words encoding tree terms, with binary variable names, explicit permutations, and, when it is part of the input, $K$ in binary; the decoders reject malformed words. The algebraic modules import neither GameTheory nor ComplexityLib.
-
-The older modules in \path{lean/} use only \texttt{Std}. They prove parts of report results that \texttt{Paper.lean} does not restate (\cref{tab:report,tab:modules}). The programs in \path{checks/} recompute small cases independently of both developments (\cref{app:finite-checks}). \texttt{make check paper} builds both developments, runs the audits and checks, and builds both manuscripts.
-
-{\small
-\begin{longtable}{>{\raggedright\arraybackslash}p{0.30\linewidth}>{\raggedright\arraybackslash}p{0.64\linewidth}}
-\caption{The statements in \texttt{Paper.lean}, by result.}\label{tab:status}\\
-\toprule
-Result & Statements\\
-\midrule
-\endfirsthead
-\toprule
-Result & Statements\\
-\midrule
-\endhead
-\bottomrule
-\endlastfoot
-Backward induction, neutral union (\cref{game:thm:adequacy,game:thm:union})
- & \path{public_backward_induction}, \path{public_equilibrium_strategic_form}, \path{public_term_interpretation}, \path{public_neutral_union}\\
-Public games, forcing (\cref{sec:rational})
- & \path{owned_choice_semilattices}, \path{finite_public_choices}, \path{public_forcing}, \path{player_view_orders}, \path{no_boolean_product}, \path{unique_winner_observations}, \path{membership_observations}\\
-Player views (\cref{view:thm:view,view:cor:product})
- & \path{player_views}, \path{public_subdirect_representation}, \path{switching_observation}\\
-Congruences (\cref{view:thm:congruences,view:thm:sym})
- & \path{congruence_classification}, \path{symmetric_congruence_chain}, \path{uniform_matroid_identification}\\
-Test domains (\cref{view:thm:tests,view:cor:optimal,sym:thm:optimal})
- & \path{reduct_test_domains}, \path{minimum_reduct_test_domain}, \path{optimal_test_domain}, \path{unary_atomic_reset}\\
-Pair theorem (\cref{sym:lem:provenance,sym:thm:pairs})
- & \path{status_cell_provenance}, \path{pair_countervaluations}\\
-Idempotent elimination (\cref{gen:thm:core,gen:cor:views,gen:cor:trace,gen:thm:idem-domain})
- & \path{idempotent_elimination}, \path{checked_core_extraction}, \path{uniform_core_extraction_runtime}, \path{intrinsic_player_views}, \path{semilattice_trace}, \path{idempotency_certificates}\\
-Common source, atomic clone (\cref{gen:thm:source,gen:cor:determinacy,gen:thm:S2})
- & \path{common_source}, \path{atomic_repeated_triples}, \path{no_atomic_if_then_else}, \path{atomic_functions}, \path{determinacy}\\
-Binary operations, derived operations (\cref{reset:thm:binary,sec:reset})
- & \path{binary_atom_preserving}, \path{binary_atom_preserving_iff}, \path{reset_definability}, \path{owner_definability}, \path{guarded_choice_example}\\
-Reset tables (\cref{reset:lem:selection,reset:thm:three,reset:cor:generator})
- & \path{reset_selection}, \path{reset_tables_semantics}, \path{reset_substitution}, \path{reset_guard_extraction}, \path{reset_table_size}, \path{reset_minimum_generator}\\
-Reset equality on encoded trees (\cref{reset:thm:three})
- & \path{reset_guard_subset_machine}, \path{reset_support_indexing}, \path{reset_guard_record_codec}, \path{reset_binary_guard_records}, \path{reset_binary_input_codec}, \path{reset_binary_extraction}, \path{reset_record_normalization}, \path{reset_normalized_binary_extraction}, \path{reset_binary_equation_checker}, \path{binary_framing_machines}\\
-Reset basis, antimatroids (\cref{reset:thm:basis,reset:thm:anti})
- & \path{reset_basis}, \path{reset_antimatroids}, \path{reset_family_product}\\
-Table recognition and synthesis (\cref{reset:thm:synthesis})
- & \path{reset_table_realizability}, \path{reset_table_recognition}, \path{reset_table_local_completeness}, \path{reset_table_synthesis}, \path{reset_binary_descriptor_codec}, \path{reset_encoded_table_recognition}, \path{binary_descriptor_machines}, \path{reset_synthesis_runtime}, \path{reset_synthesis_recognition}, \path{reset_synthesis_table}, \path{reset_synthesis_output}\\
-Pair dichotomy (\cref{thm:raw-pairs,thm:owner-free-hardness})
- & \path{raw_pair_reductions}, \path{raw_pair_complexity}, \path{raw_signature_dichotomy}, \path{reset_union_reduction}, \path{reset_union_complexity}\\
-Equational complexity (\cref{gen:thm:complexity})
- & \path{fixed_equational_complexity}, \path{uniform_equational_complexity}, \path{core_canonicalization_collapse}\\
-Two owners, shared subterms, role count (\cref{thm:H-hardness,reset:thm:circuits,thm:colouring-theories})
- & \path{guarded_pair_reduction}, \path{guarded_pair_complexity}, \path{reset_circuit_reduction}, \path{reset_circuit_generator}, \path{reset_circuit_complexity}, \path{reset_chain_circuit_complexity}, \path{role_count_identity_theories}\\
-One-owner calculus (\cref{owner:lem:root,owner:thm:guards,owner:thm:one-table,owner:thm:four})
- & \path{owner_root_status}, \path{owner_guard_completeness}, \path{owner_one_table}, \path{owner_table_runtime}, \path{owner_original_word_checker}, \path{owner_four_element_theory}, \path{owner_minimum_generator}\\
-One-owner synthesis and basis (\cref{owner:thm:synthesis,owner:thm:basis-main})
- & \path{owner_table_synthesis}, \path{owner_synthesis_runtime}, \path{owner_forty_equation_basis}, \path{owner_basis_variable_bound}\\
-Owner-count dichotomy, policies (\cref{owner:cor:complexity,selective:thm:families})
- & \path{owner_count_polynomial_branches}, \path{owner_count_dichotomy}, \path{joint_owner_observation_failure}, \path{strict_two_owner_policy}, \path{policy_family_checker}, \path{policy_family_reduction}, \path{hard_policy_complexity}, \path{policy_family_dichotomy}\\
-No finite basis (\cref{core:thm:no-basis,core:prop:choice-union-basis})
- & \path{core_nonfinite_basis}, \path{native_nonfinite_basis}, \path{core_typed_upper_clone_cover}, \path{core_variable_bound_obstruction}, \path{choice_union_basis}\\
-Round recursion (\cref{se:thm:round,se:cor:public})
- & \path{round_protocol_foundations}, \path{round_sequential_values}, \path{round_profile_consistency}, \path{round_product_beliefs}, \path{round_equilibrium_recursion}, \path{public_mixed_support}, \path{public_nonconvexity}\\
-Scalar fragment, infinite index (\cref{se:prop:parallel,se:thm:rational,se:thm:infinite,se:cor:scalar})
- & \path{constant_sum_round_values}, \path{scalar_diagonal_values}, \path{scalar_parallel_laws}, \path{reciprocal_round_values}, \path{scalar_rational_values}, \path{infinite_winner_algebra}, \path{scalar_contextual_equivalence}\\
-Two players (\cref{app:two-players})
- & \path{two_player_identification}, \path{two_player_degeneracies}, \path{two_player_forcing_coordinates}, \path{two_player_finite_basis}, \path{two_player_round_support}, \path{two_player_round_contexts}\\
-\end{longtable}}
+The formal development in \texttt{lean/} uses Lean 4.34.1 with only \texttt{Std}. It has no admitted proofs or added axioms; audits report only \texttt{propext}, \texttt{Classical.choice}, and \texttt{Quot.sound} where needed. \Cref{tab:status} records the evidence for each main result: ``Lean'' names kernel-checked theorems, ``written'' means a mathematical proof in this paper, and ``external'' means a theorem imported from the literature, which is not a Lean axiom. Finite checks test their implementations at stated sizes. Run \texttt{make check paper} to reproduce them.
 
 {\small
 \begin{longtable}{>{\raggedright\arraybackslash}p{0.34\linewidth}>{\raggedright\arraybackslash}p{0.60\linewidth}}
-\caption{The evidence for report results and clauses not restated in \texttt{Paper.lean}.}\label{tab:report}\\
+\caption{The evidence for the main results.}\label{tab:status}\\
 \toprule
 Result & Evidence\\
 \midrule
@@ -80,41 +15,177 @@ Result & Evidence\\
 \endhead
 \bottomrule
 \endlastfoot
+SPE recurrence, neutral union (\cref{game:thm:adequacy,game:thm:union})
+ & Lean: \texttt{winners\_node}, \texttt{three\_owner\_join}, \texttt{every\_winner\_set\_realized}.\\
 Occurrence lower bound (\cref{game:thm:lower})
- & Path obstruction in Lean (\texttt{no\_single\_use\_union}); syntax-to-path step written.\\
-Unary classifications (\cref{app:contexts,app:ambiguity})
- & Written. Reduct synthesis, input separators, and the relative-reset laws in Lean (\texttt{Synthesis}, \texttt{Separation}); finite checks.\\
-Further congruence results (\cref{app:congruences})
+ & Lean for the path obstruction (\texttt{no\_single\_use\_union}); syntax-to-path step written.\\
+Player quotient (\cref{view:thm:view})
+ & Lean: \texttt{sameView\_own}, \texttt{contextualAt\_iff}.\\
+Reduct test domains (\cref{view:thm:tests})
+ & Lean: \texttt{complete\_test\_domain}, \texttt{test\_domain\_necessary}. Cardinality written.\\
+Pair theorem, optimal domain (\cref{sym:thm:pairs,sym:thm:optimal})
+ & Lean: \texttt{FullTerm.pair\_countervaluation}, \texttt{full\_test\_domain\_iff}.\\
+Idempotent elimination, intrinsic views (\cref{gen:thm:core,gen:cor:views})
+ & Lean: \texttt{FullTerm.idempotent\_iff\_clean}, \texttt{FullTerm.idempotent\_extraction}, \texttt{FullTerm.idempotent\_sameView}.\\
+Semilattice trace, diagonal tests (\cref{gen:cor:trace,gen:thm:idem-domain})
  & Written; finite checks.\\
-Minimal clone (\cref{reset:thm:minimal})
+Common source (\cref{gen:thm:source})
+ & Lean: \texttt{FullTerm.separation}; the variable-occurrence clause written.\\
+Atomic clone (\cref{gen:thm:S2})
+ & Written; external $\operatorname{Pol}(\iota_3)=S_2$ \cite{Szendrei2012}; finite checks.\\
+Binary fragment (\cref{reset:thm:binary})
+ & Rigidity in Lean (\texttt{OneConstant.Term.rigidity}); remainder written; external $S_2$ step.\\
+Reset semantics, chain (\cref{reset:lem:selection,reset:thm:three})
+ & Lean: \texttt{Term.denote\_membership}, \texttt{Term.three\_chain\_complete}, \texttt{ResetCalculus.Term.compile\_correct}.\\
+Reset basis (\cref{reset:thm:basis})
+ & Soundness in Lean (\texttt{basis\_*}); completeness external \cite{FreeseEtAl2002}.\\
+Antimatroids, realizability, minimality (\cref{reset:thm:anti,reset:thm:synthesis,reset:thm:minimal})
  & Written; finite checks.\\
-Forest models, combs (\cref{app:reset-models})
- & Order reconstruction and the least congruence in Lean (\texttt{ResetModels}); forest membership written.\\
-Shared subterms with guarded owners or policies (\cref{reset:thm:circuits})
- & Written. The reset clauses are in \texttt{Paper.lean}.\\
-Selective reset, mixed policies (\cref{app:selective})
- & Written. Guard recursions, coverage completeness, and the checker in Lean (\texttt{ChainGuards}); policy identities, least-point coverage, and reduction certificates (\texttt{MixedPolicies}). The family classification, \cref{selective:thm:families}, is in \texttt{Paper.lean}. Finite checks.\\
-Two players (\cref{two:prop:terms,two:prop:complexity})
- & Written; finite checks.\\
-One-owner presentations (\cref{owner:thm:conservative-basis,owner:cor:small-four-variable,owner:prop:relative-not-full,owner:prop:nonconservative-si,owner:prop:residual})
- & Written. In Lean (\texttt{OwnerModels}): soundness of the conservative presentation and a countermodel to its completeness over arbitrary algebras; the product, quotient, and collapse maps for the nonconservative irreducible; three-state closure for residual largeness. Finite checks.\\
-Core subvarieties and presentations (\cref{core:prop:dissemilattice-lift,core:prop:binary,core:prop:unary-polynomials,core:thm:conservative-basis,core:cor:small-countermodel,core:thm:atomic-basis,core:prop:atomic-uniform-lift})
- & Written. In Lean: at most one conservative owner operation differs from join (\texttt{CoreConservative}); reset comparison, the three-owner quotient kernel, and four-variable near-unanimity (\texttt{CoreAtomic}). Congruence distributivity uses \cite{Mitschke1978}. Finite checks.\\
-Round values (\cref{se:prop:round-values})
- & Nonemptiness in \texttt{Paper.lean}; compactness, semialgebraicity, monotonicity, renaming, and reordering written.\\
-Decidable scalar equations (\cref{se:cor:decidable})
- & Written, by real quantifier elimination.\\
+Hardness reductions (\cref{gen:thm:complexity,thm:owner-free-hardness,thm:H-hardness,thm:raw-pairs})
+ & Semantic certificates in Lean (\texttt{BooleanCore}, \texttt{Fragments}, \texttt{RawFragments}); CNF assembly, sizes, and complexity written; finite checks.\\
+Dependence on $K$ (\cref{thm:colouring-theories})
+ & Lean: \texttt{colouring\_guard\_obstruction}; identity family and embeddings written; finite checks.\\
+One-owner calculus (\cref{owner:thm:guards,owner:thm:one-table,owner:thm:four})
+ & Lean: \texttt{Term.observation\_implication\_iff}, \texttt{Term.single\_table\_equation\_iff}, \texttt{Term.equationB\_correct}, \texttt{Term.four\_element\_complete}, \texttt{three\_state\_obstruction}. Minimality also uses external \cite[Theorem~3.2]{FreeseEtAl2002}.\\
+One-owner table realizability and clone (\cref{owner:thm:synthesis})
+ & Written safe-path and saturation proofs; independent four-state closure
+ and exhaustive candidate-table checks.\\
+Selective reset (\cref{selective:thm:guards,selective:cor:G,selective:prop:disjoint})
+ & Lean: \texttt{ChainGuards.Term.policy\_equation\_iff},
+ \texttt{ChainGuards.Term.policy\_checker\_correct},
+ \texttt{selective\_inner}; size bounds, strictness, and the two-policy reduction written;
+ independent native-term checks.\\
+Mixed policies (\cref{selective:thm:nested,selective:cor:two-policies,selective:prop:hard-view,selective:prop:empty-inter})
+ & Lean: \texttt{MixedPolicies} policy identities, abstract least-point lemma,
+joint-test absorption, marker propagation, atomic calibration, and observer-relative UNSAT/SAT certificates;
+ classifications and complexity bounds written; exact finite checks.\\
+Two players (\cref{app:two-players})
+ & Written; finite checks. Not in Lean.\\
+Owner-count dichotomy (\cref{owner:cor:complexity})
+ & Written deductions from the above.\\
+Arbitrary policy families (\cref{selective:thm:families})
+ & Written pattern criterion, guard completeness, and native 3-CNF reductions;
+ exact finite checks in \texttt{check\_policy\_families.py}.\\
+Reset circuits (\cref{reset:thm:circuits})
+ & Lean clause and CNF marker laws (\texttt{circuitClause\_marker},
+ \texttt{circuitCNF\_marker}); circuit assembly and coNP-completeness written;
+ exact native DAG checks.\\
+One-owner residual largeness (\cref{owner:prop:residual})
+ & Lean three-state closure and term-definition certificates
+ (\texttt{Four.owner\_free\_closed}, \texttt{Four.owner\_free\_h});
+ lifting all reset models and preservation of congruences written.\\
+Owned choice with union
+(\cref{core:prop:choice-union-basis,core:prop:dissemilattice-lift})
+ & Lean associativity, distribution over union, and three-state embedding
+ (\texttt{CoreModels}); dissemilattice generation external
+ \cite[Section~3.3]{HardingRomanowska2017}; expansion and congruence
+ preservation written.\\
+Core basis arity and binary functions
+(\cref{core:prop:basis-arity,core:prop:binary})
+ & Arbitrary-$K$ local-model proof and binary classification written.
+ Lean indexed owner-exhaustion law; for $K=3$, quotient maps,
+ transfer of every three-variable identity, and the failed four-variable
+ equation (\texttt{CoreObstruction}). Native quotient checks at
+ $K=3,4,5,6$ and complete binary multiplication tables at $K=3,4,5$.\\
+Unary polynomial normal forms (\cref{core:prop:unary-polynomials})
+ & Written closure and synthesis proof for arbitrary $K$, exact count,
+ and the sharp identity schema $p^3=p^2$. The native check
+ \texttt{check\_core\_unary\_polynomials.py} enumerates the entire
+ $131$-function polynomial closure at $K=3$ and compares it with the
+ normal forms. At $K=4$ it verifies all $6575$ functions by explicit
+ synthesis and checks their distinctness and stabilization.\\
+Conservative core presentation and minimum countermodel size
+(\cref{core:thm:conservative-basis,core:cor:small-countermodel})
+ & Lean structural lemma: at most one conservative owner operation differs
+ from join (\texttt{CoreConservative}). Completeness via dissemilattice
+ generation, the optimal three-variable bound, and the cardinality
+ consequence written. Finite chain checks at sizes two through six.\\
+Atomic subvariety and finite basis (\cref{core:thm:atomic-basis})
+ & Subvariety equality, explicit $(K^2+3K+4)$-equation basis,
+ arbitrary-$K$ veto construction, and optimal near-unanimity arity
+ written. Basis completeness follows from the canonical quotient proof.
+ Lean generic reset comparison and
+ three-owner quotient kernel, right-projection reset, and four-variable
+ near-unanimity (\texttt{CoreAtomic}). Congruence distributivity uses
+ \cite{Mitschke1978}.
+ Native checks of the quotient at $K=3,\ldots,6$ and of
+ near-unanimity at $K=3,\ldots,8$.\\
+Canonical atomic quotients and proof lifting (\cref{core:prop:atomic-uniform-lift})
+ & Written proof from $K^2+3K+3$ three-variable equations, including
+ closure homomorphisms, the meet formula, and the universal quotient
+ property. \texttt{check\_core\_atomic\_basis.py} checks
+ $675733$ equation evaluations for the atomic basis, the lifting basis,
+ and its normalization consequences,
+ using every observer and $D_K$ at $K=3,\ldots,6$ and fully expanded
+ core terms at $K=3$. The $236$ lattice/absorber templates leave exactly the $18$
+ predicted two-element quotients. $D_K$ passes the lifts and fails
+ exhaustion. All principal ideals of $247$ models
+ verify the closure maps, meets, kernel equality, and normalized operations
+ on $32343$ input pairs.\\
+Grid countermodels and nonfinite basability
+(\cref{core:prop:grid-countermodel,core:lem:typed-upper-clone-cover,core:thm:core-nfb,core:cor:ambient-nfb})
+ & Written uniform construction and arbitrary-coefficient locality proof.
+ Ordered row and column probes, private padding, and annotation rows
+ give three protected-path inductions identifying the entire old ideal
+ as a flat atomic triple. The intersecting blocks force failure of the
+ mixed-choice coverage law. For $m$ arbitrary coefficients and more than
+ $2^m$ rows and columns, duplicate profiles protect every wrongly typed
+ owned return; monotone profile bounds type the neutral returns. The
+ resulting exact relation gives a core cover of every small generated
+ subalgebra. This proves the unbounded-variable conclusion.
+ \texttt{check\_core\_padded\_crossing.py} checks the finite premises of
+ these inductions on rectangles of sizes $2\times2$, $2\times3$,
+ $3\times2$, $3\times3$, and $4\times5$. It reconstructs their
+ $16,32,32,57,192$ native rows and verifies the protected-path incidence
+ conditions and duplicate-profile annotation conditions. For the
+ nine-variable base identity it exhausts $6561$ atomic assignments,
+ $390625$ full-native coefficient assignments, and $125$ source/output
+ cases. It also checks $1792$ common-source Boolean cases, $512$
+ monotonic-profile cases, $512$ local signed-path cases, and all $1033$
+ profile lists just above the pigeonhole threshold for $m\leq2$.
+ The source carriers are not enumerated; the ideal computation and
+ the locality assertion are the written inductions.\\
+One-owner basis arity (\cref{owner:prop:four-variables})
+ & Lean: \texttt{Four.root\_expansion},
+ \texttt{BasisObstruction.three\_variable\_transfer}, and
+ \texttt{BasisObstruction.root\_expansion\_failure}.
+ The equational nonderivability conclusion and minimum witness size
+ are written consequences.\\
+Unrestricted one-owner finite basis (\cref{owner:thm:finite-basis})
+ & Lean soundness of all forty equations (\texttt{FiniteBasis});
+ common-root normalization, action-word identities, two-source absorption,
+ and equational completeness written. Finite checks of normalization
+ and the absorption certificates.\\
+Conservative one-owner presentation (\cref{owner:thm:conservative-basis,owner:cor:small-four-variable,owner:prop:relative-not-full})
+ & Written forest-threshold and guard-coverage proof; Lean soundness of
+ the equations and a countermodel to their completeness over arbitrary
+ algebras (\texttt{PresentationObstruction}); the six-element lower bound
+ for countermodels to all four-variable identities is written.\\
+Nonconservative irreducible (\cref{owner:prop:nonconservative-si})
+ & Lean product and quotient maps, collapse homomorphism, and
+ \texttt{NonconservativeWitness.pair\_forces}; variety membership and
+ the monolith conclusion are written consequences.\\
+Round recursion (\cref{se:thm:round})
+ & Written; local stage checks only.\\
+Scalar fragment (\cref{se:prop:parallel,se:thm:rational})
+ & Stage and arithmetic in Lean (\texttt{diagonal\_nash\_value}, \texttt{every\_rational}); the algebraic laws of parallel sum and the connection to game syntax written.\\
+Infinite index, full abstraction (\cref{se:thm:infinite,se:cor:scalar})
+ & Written; finite checks. Lean has only the arithmetic \texttt{no\_finite\_summary}, not connected to game syntax.\\
 Open-game obstruction (\cref{se:prop:open-game-obstruction})
- & Written; external Lean artifact \cite{GameTheoryOpenGameObstructions2026}, rebuilt separately; exact-rational checker.\\
-Dependent layer (\cref{app:dependent})
- & Written; finite models of the phase and sealing rules, full strategy factorization, and the dependent-store connection.\\
+ & Written; pinned external Lean artifact \cite{GameTheoryOpenGameObstructions2026}, not rebuilt here; exact-rational checker.\\
+Forest models, combs (\cref{app:reset-models})
+ & Reconstruction and generic monolith in Lean (\texttt{ResetModels}); forest membership written.\\
+Congruences, unary classifications (\cref{app:contexts,app:congruences,app:ambiguity})
+ & Reduct synthesis in Lean (\texttt{unary\_synthesis}); remainder written; finite checks.\\
+Dependent layer and private connection (\cref{app:dependent,dep:thm:connection})
+ & Written; finite models of phase and sealing rules, full strategy
+ factorization, and dependent-store connection.\\
 \end{longtable}}
 
-\subsection{Modules in \texttt{lean/}}
+\subsection{Lean modules}
 
 {\small
 \begin{longtable}{>{\raggedright\arraybackslash}p{0.20\linewidth}>{\raggedright\arraybackslash}p{0.71\linewidth}}
-\caption{The older \texttt{Std}-only modules.}\label{tab:modules}\\
 \toprule
 Module & Kernel-checked results\\
 \midrule
@@ -192,9 +263,43 @@ over an ordered field, rational-generation arithmetic, reciprocal
 terms, and the impossibility of a finite summary for all threshold probes.\\
 \end{longtable}}
 
-\subsection{Finite checks}\label{app:finite-checks}
+\subsection{Written proofs and finite checks}
 
-The programs in \path{checks/} are independent of both Lean developments. Except where a count is itself the result, they test implementations at the stated sizes, and for results in \texttt{Paper.lean} they serve as regression tests. They
+Optimal diagonal tests, complete congruence classifications,
+the external $S_2$ step, unary fibers,
+antimatroid representation and synthesis, forest membership in the reset
+variety, and full complexity reduction have written proofs here. Finite
+checks do not make them generic Lean theorems. Reset basis completeness
+is imported mathematically from Freese et al., not as a Lean axiom.
+Dependent script metatheory and hiding also have written proofs.
+For sealed rounds, the SE correspondence, consistency and public-boundary
+pasting, semialgebraic closure, scalar game realization and contextual
+full abstraction have written proofs in \cref{app:proofs-sealed}.
+\texttt{SealedRounds.lean} proves the stage and arithmetic certificates;
+it does not define a general SE assessment or connect the full round
+syntax to the threshold probes internally.
+For the smaller hard fragments, \texttt{Fragments.lean} checks the
+semantic certificates under the stated baseline-containment hypotheses,
+including both absorption and fresh-marker separation. Assembly of
+the syntactic reductions, their polynomial tree sizes, and the final
+complexity statements are written proofs in \cref{app:proofs-hard}.
+\texttt{RawFragments.lean} additionally checks the semantic fold,
+absorption, and guard-transfer certificates for the reductions of the pair dichotomy;
+it does not formalize the CNF syntax assembly or polynomial reductions.
+For the tractable fragment, \texttt{OwnerFragments.lean} proves the
+generic guard criterion and executable checker correctness, including
+\path{Term.single_table_equation_iff}, \path{Term.equationB_correct},
+and, in \texttt{OwnerModels.lean}, \path{Term.four_element_complete}.
+The minimum-generator proof uses Freese et al.'s three-element
+subalgebra theorem externally; its remaining ternary obstruction is
+kernel-checked as \path{three_state_obstruction}. Polynomial size bounds and the
+observer-relative complexity dichotomy are written deductions in
+\cref{app:proofs-owner}.
+The coloring proof has a generic Lean pigeonhole/guard certificate;
+the complete identity family and its role-set embeddings are proved
+mathematically there.
+
+Run \texttt{make check paper}. Independent finite checks in \texttt{checks/}
 enumerate small full profiles and deviations, synthesize the $131$
 reduct and $751$ full three-role unary functions, and compare congruences,
 tests, matching criteria, and fibers with independent constructions.
@@ -235,12 +340,14 @@ seventeen equations on $\mathbf F$, compares them with passing-relation
 coherence on all $569$ forest-based four-element candidates ($281$ pass),
 and samples the guard-threshold assertions. It also checks the
 nonconservative countermodel and the irreducible quotient using native
-winner-set operations. The unrestricted-basis check evaluates all forty
+winner-set operations. The generic relative completeness theorem remains
+a written proof. The unrestricted-basis check evaluates all forty
 equations on $10420$ native valuations of $\mathbf F$. It checks
 the two-source certificates in both directions for all $20412$ reset
 and $H_a$ products of the free three-generated algebra, and checks
 normalization and certificates for $240$ sampled identities at
-arities $4,6,8$.
+arities $4,6,8$. The arbitrary-algebra completeness proof is written;
+these finite tests do not replace its word induction.
 The pair-dichotomy checks cover all
 $604$ two-variable CNFs at $K=3$: $16807$ valuations per equation
 for two owned choices and $823543$ for reset with owned choice.
@@ -260,15 +367,21 @@ with direct unilateral deviations on a grid for $256$ two-by-two
 continuation tables. They check $2209$ diagonal games, rational synthesis
 through denominator $100$, $24$ reciprocal games and $576$ threshold
 contexts, as well as role transport, commitment exchange, and the
-nonconvex distribution-set witness.
-For the open-game obstruction of \cref{se:sec:open-game-obstruction}, an exact-rational checker reproduces the unit, incomparable-bracketing, and convex-repair witnesses. \path{scripts/check_external_open_game.py} rebuilds the pinned external Lean artifact from an isolated checkout under its original Lean~4.32.2, checks its source hashes, and audits the axioms of its five theorems; it is not part of \texttt{make check}.
+nonconvex distribution-set witness. These are local stage and arithmetic
+checks, not a solver for beliefs in general imperfect-information games.
+The raw mixed open-game refutation in
+\cref{se:sec:open-game-obstruction} has a self-contained finite proof and
+pinned historical Lean sources. A separate exact-rational checker
+reproduces its unit, incomparable-bracketing, and convex-repair witnesses.
+Those historical sources are not rebuilt by the current check target.
 
 Selective-reset checks compare $123$ native two-owner terms at each
 of $K=3,4,5$, exhaustively on the $7^3$ three-role valuations and by
 sampling larger carriers. They compare the original two-owned-choice
 expression with selective reset on every triple of winner sets at those
 sizes. Every nonempty proper blocking policy receives guard-semantics
-and explicit-separator checks.
+and explicit-separator checks. The generic coverage theorem, rather than
+those finite samples, establishes the uniform result.
 
 Mixed-policy checks compare $70$ three-input terms, hence $4900$ ordered
 pairs, in each of eleven configurations. Nested chains including both
@@ -291,6 +404,8 @@ two-variable CNFs at $K=3$, with $117649$ valuations per equation,
 and all $11$ one-variable CNFs at $K=4$, with $11390625$ valuations
 per equation. A fifth-role countervaluation checks the resulting
 separation of equational theories.
+These finite tables test the written proofs; generic mixed-policy
+checker correctness and complexity are not kernel-checked.
 
 Two-player checks compute the term functions by exact closure at arities
 $1$ and $2$, with counts $6$, $84$ and, with the middle constant, $11$, $197$.
@@ -320,13 +435,15 @@ $604$ two-variable CNFs on every three-role valuation, respectively
 $2401$ and $117649$ per circuit equation, and the one-variable cases
 on all $50625$ four-role valuations. They independently check every
 valuation on the fixed three-element reset chain and the exact linear
-gate count.
+gate count. These are finite checks of the constructions, not generic
+formalizations of the complexity theorems.
 
 The core-basis check verifies the seven dissemilattice laws on
 $163484$ native winner-set triples at $K=3,4,5$, and performs
 $3726$ operation comparisons for the three-state embeddings, over
 every ordered triple of distinct roles. It also checks the failed
-reverse distributive law.
+reverse distributive law. The classical generation theorem remains an
+external input.
 
 The core-obstruction check makes $200616$ quotient-map comparisons
 and checks all $446$ generator sets of size at most $K$ in the
@@ -334,6 +451,5 @@ countermodels at $K=3,4,5,6$. It verifies their owner-exhaustion failures
 and all $2401$ native valuations of that identity at $K=3$.
 The binary classification is checked on every native valuation of
 all $31176$ products in the free two-generated algebras at $K=3,4,5$,
-of sizes $20,37,70$, respectively.
-
-For the core results that remain written, \path{checks/check_core_unary_polynomials.py} enumerates the entire $131$-function unary polynomial closure at $K=3$ and compares it with the normal forms, and at $K=4$ it verifies all $6575$ functions by explicit synthesis, with their distinctness and stabilization. Conservative models are checked on chains of sizes two through six. The atomic quotient is checked at $K=3,\ldots,6$ and near-unanimity at $K=3,\ldots,8$. \path{checks/check_core_atomic_basis.py} makes $675733$ equation evaluations for the atomic basis, the lifting basis, and its normalization consequences, using every observer and $D_K$ at $K=3,\ldots,6$ and fully expanded core terms at $K=3$. The $236$ lattice and absorber templates leave exactly the $18$ predicted two-element quotients, and $D_K$ passes the lifts and fails exhaustion. All principal ideals of $247$ models verify the closure maps, meets, kernel equality, and normalized operations on $32343$ input pairs.
+of sizes $20,37,70$, respectively. These finite checks do not replace
+the arbitrary-$K$ proofs.
