@@ -3,9 +3,9 @@
 The completion target is the entire main paper, its substantive prose and
 necessary report dependencies. The inventory is authoritative for scope.
 The complete main-paper scope is proved: **23/23 main result rows**,
-**63/63 required catalog rows**, and **21/21 required prose obligations**.
-Root `Paper.lean` contains **138 full public statements**, each with a guarded
-axiom check. The proof-mining production build, all regressions, audits and manuscript checks pass.
+**64/64 required catalog rows**, and **21/21 required prose obligations**.
+Root `Paper.lean` contains **140 full public statements**, each with a guarded
+axiom check. The production build, all regressions, audits and manuscript checks pass.
 Report-only results remain optional; the historical related-work artifact is
 separately rebuilt and audited under its original pins.
 
@@ -21,7 +21,7 @@ then commits coherent integrations after complete checks.
 | Native reset circuits and synthesis | `owner` | Original-word reset/Fin-three coNP-completeness and native primitive-tree synthesis with independent root/table/winner semantics | Complete |
 | Hardness and review | `nonfinite_basis` | Native DAG generator, full/public/core hardness, certificate bounds, canonicalizer consequence and final semantic scope review | Complete |
 | Full/public/core complexity | `complexity` | All six fixed/uniform endpoints; original-word sparse counterverifier, explicit-array validation, quadratic certificates and arbitrary padding | Complete; definition-surface report reproduced |
-| Owner branches and integration | root | Complete raw/owner/policy dichotomies, 138 literal Paper statements, claim reconciliation and pinned historical rebuild | Complete |
+| Owner branches and integration | root | Complete raw/owner/policy dichotomies, 140 literal Paper statements, claim reconciliation and pinned historical rebuild | Complete |
 
 The production pins are GameTheory `6f1af625b77215dd9e4454e6120275dbd8b61f51`
 from `port/cslib-complexity`, ComplexityLib
@@ -35,10 +35,10 @@ libraries. All round mathematics is complete against actual canonical SE.
 No required mathematical proof remains. Completed verification:
 
 - `make check-lean`: independent algebra build/import
-  audit, full Paper/whole-project axiom audit, negative import check and all 85 strict Lean regressions pass.
+  audit, full Paper/whole-project axiom audit, negative import check and all 86 strict Lean regressions pass.
 - `make check-python`: all independent Python checks pass.
 - `python3 scripts/check_inventory.py`: 149 source statements, 23 prose
-  obligations, current evidence fingerprints and 138 public statements reconcile.
+  obligations, current evidence fingerprints and 140 public statements reconcile.
 - `python3 scripts/export_definition_surface.py --check --no-build`: the
   theorem-type graph and readable review index reproduce after the clean build.
 - `make paper`: both manuscripts build; the main paper remains 14 pages and
@@ -92,8 +92,20 @@ state lower bound, and Boolean observation completeness for arbitrary pair-only
 games. The shared-circuit proposition now gives exact tables and exponential
 bounds on every semantically equivalent reset tree. Rational probes also recover
 the scalar order. The source catalog has 149 rows, including these new
-report results; all 63 required rows are complete. The rewritten scalar corollary
-uses the general observation proposition, which is recorded as one additional
-completed proof dependency. No independent semantic
-definitions were added, and the generated public-type surface now has 138
-statements reaching 1,014 semantic declarations in the same 57 files.
+report results. The scalar corollary uses the general observation proposition
+as a completed proof dependency. The nested-quantifier extension below adds two
+more public statements and one central definition module. The current public-
+type surface has 140 statements reaching 1,044 semantic declarations in 58
+files, including 19 central definition files. All 64 required rows are complete.
+
+
+The arbitrary-domain extension closes the gap between one public root and
+nested quantifiers. `Definitions/Quantified` specifies history-dependent
+nonempty action types and independent complete-deviation SPE. Two additional
+literal Paper statements prove the arbitrary-family recurrence and finite-depth
+pruning, with at most K−1 original actions per retained node, preservation of
+each retained subgame's SPE winners, and an actual finite binary representation.
+The construction also works for all well-founded public trees. The strengthened
+report proposition is now cited in Section 2 and is the 64th completed required
+catalog row. Regression coverage includes two nested infinite, dependent menus
+and a complete deviation exposing an off-path threat.

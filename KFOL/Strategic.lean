@@ -5,5 +5,6 @@ public import KFOL.Strategic.Forcing
 public import KFOL.Strategic.Examples
 public import KFOL.Strategic.Compilation
 public import KFOL.Strategic.ChoiceSupport
+public import KFOL.Strategic.Quantified.Reduction
 
 /-! # Public games and their independent strategic interpretation -/

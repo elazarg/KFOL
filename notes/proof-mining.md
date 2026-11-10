@@ -1,22 +1,26 @@
 # Proof-mining session
 
-The session produced four mathematical improvements, all proved in Lean and
-integrated into the technical report. The main paper's scope is unchanged.
-Root `Paper.lean` restates the six added public propositions in full.
-No new independent semantic definitions were needed.
+The initial session produced four mathematical improvements, all proved in Lean
+and integrated into the technical report, with six complete new Paper statements.
+The subsequent nested-quantifier extension adds two more public statements,
+one central semantic definition module, and the strengthened assertion in
+Section 2. The report's support proposition is strengthened in place.
 
 | Hidden concept | Proved improvement | Public statements |
 | --- | --- | --- |
-| Breadth of the owned-choice semilattice | A nonempty family indexed by any type has a support of at most K−1 values for finite K≥2. Its fold is a mathlib `IsLUB`. For actual continuation games the support compiles to a binary core game with the same full-profile SPE winners. Nonowner terminal actions attain the bound. | `public_choice_small_support`, `public_choice_support_sharp` |
+| Breadth of the owned-choice semilattice | A nonempty family indexed by any type has a support of at most K−1 values for finite K≥2. Its fold is a mathlib `IsLUB`. The subsequent nested-quantifier extension prunes every finite-depth public game with arbitrary history-dependent nonempty action types to at most K−1 original actions per retained node, preserving each matched subgame's SPE winners and giving a finite binary representation. Nonowner terminal actions attain the bound. | `public_choice_small_support`, `public_choice_support_sharp`, `arbitrary_public_quantifier`, `finite_depth_quantifier_reduction` |
 | Canonical tables as semantic complexity invariants | The linear shared selector circuit has exactly 2^n marker guards, each with n+1 prerequisites. Every equivalent reset tree has at least 2^n marker occurrences, 2^n+1 leaves and 2^(n+1)+1 total nodes. The marker occurrence bound is optimal. | `reset_circuit_tree_succinctness` |
 | Threshold profiles as codes | N actual Boolean comparison contexts distinguish N+1 reciprocal games. Any summary preserving just those observations is injective and needs N+1 states, without a compositionality assumption. | `boolean_threshold_state_lower_bound` |
 | Scalar values as observable order | Every finite game using only a designated pair of effective players and terminal winners is observed completely by Boolean contexts and one third role's possible victory. A proved countable family of one-hole rational comparisons suffices. These probes recover the scalar order as well as equality. | `pair_game_boolean_full_abstraction`, `scalar_rational_observation_order` |
 
-The support selection is made after the continuation values are fixed. It is
-not a uniform pruning of game syntax under all substitutions, nor a construction
-of arbitrary infinitely recursive games. Only the root action family may be
-infinite. The semilattice theorem explicitly selects the owned-choice order;
-ordinary subset inclusion is a different order on the same carrier.
+The support selection is made after the original continuation values are fixed
+and may depend on the complete history. The nested-quantifier extension removes
+the earlier restriction to one arbitrary root above finite binary continuations:
+all quantifier occurrences may now have infinite action sets. The main-paper
+statement assumes a uniform finite depth; the library construction works for
+all well-founded public trees. The semilattice theorem explicitly selects the
+owned-choice order; ordinary subset inclusion is a different order on the same
+carrier.
 
 The general real-valued separator needs only actual singleton two-winner law
 hypotheses, rather than scalar syntax. The pair-game theorem derives those
@@ -46,8 +50,8 @@ Proof structure improved along with the statements:
   interpretation and actual sequential-equilibrium observation stay in their
   respective import branches.
 
-Regression coverage includes infinite Nat action indices, the sharp four-role
-terminal example, insufficient two-state threshold codes, endpoint/tie probes,
+Regression coverage includes nested infinite, dependent witness domains,
+whole-player off-path deviations, the sharp four-role terminal example, insufficient two-state threshold codes, endpoint/tie probes,
 exact guard payloads, and semantic bounds for alternative circuit trees.
 The whole-project axiom audit includes all new modules, and the theorem-type
-surface index includes all six public additions.
+surface index includes all eight public additions.

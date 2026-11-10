@@ -1,6 +1,6 @@
 \section{Proofs and further results}\label{app:proofs}
 
-This appendix follows the order of the paper. Arguments given in full there are not repeated. As in the paper, $K\geq3$ unless stated otherwise. We say \emph{atomic} for inputs that are atoms.
+This appendix follows the order of the paper. Arguments given in full there are not repeated. As in the paper, $K\geq3$ unless stated otherwise. We say \emph{atomic} for inputs that are atoms. The owned-choice argument also covers nested quantifiers with arbitrary nonempty witness domains, by pruning each decision to a sharp finite support.
 
 \subsection{Owned choice}\label{app:proofs-rational}
 
@@ -46,29 +46,47 @@ every winner of every continuation. Thus the value is the fold of
 $\star_r$ over $A$, and a binary fold of the continuation games has exactly
 the same possible SPE winners.
 
-\begin{proposition}[Sharp finite support]\label{game:prop:choice-support}
-Let $K\geq2$, and let a public decision of $r$ have an arbitrary nonempty
-set of actions, each followed by a finite public game. Then at most $K-1$
-of the continuations suffice: a binary public game built from them alone
-has the same possible SPE winners as the whole decision. The bound $K-1$
-is attained.
+\begin{proposition}[Sharp finite support for nested quantifiers]\label{game:prop:choice-support}
+Let $K\geq2$. Every public game with a finite bound on the number of
+decisions along a play and arbitrary nonempty action sets has a finite
+pruning with the same possible SPE winners. At each retained decision,
+the pruning keeps its owner and at most $K-1$ original actions, and every
+retained subgame preserves the possible SPE winners of its original
+subgame. The pruning has a finite binary representation with the same
+possible SPE winners. The bound $K-1$ is attained already at one decision.
 \end{proposition}
 \begin{proof}
-The argument above does not use finiteness of the action set: if some
-continuation has value $\{r\}$, so does the decision; otherwise its value
-is the union of the continuation values. In the first case, select that
-continuation.
+Full profiles prescribe continuation profiles at every action, however
+large the action set. The whole-deviation argument above gives the same
+root optimality condition and equilibrium recurrence: a continuation of
+value $\{r\}$ forces value $\{r\}$ at an $r$-decision; otherwise the
+value is the union of all continuation values. Choosing a profile in
+each continuation supplies all off-path plans.
 
-In the second case every continuation value contains a nonowner role.
-For each nonowner role in the union, choose a continuation containing it.
-If the union contains $r$, first choose an anchor continuation containing
-$r$ and a nonowner role $s$ in that anchor, and use the anchor as the
-representative for $s$. Then all winners, including $r$, are covered by
-at most one continuation per nonowner role. The selection has the
-same union and no continuation of value $\{r\}$, so its binary
-$\star_r$-fold has the required value. For sharpness, take one terminal continuation for each nonowner
-role; every one is needed to retain all $K-1$ winners.
+Induct on the depth bound. A leaf needs no pruning. At a decision,
+first choose a finite support of the original continuation values.
+If some continuation has value $\{r\}$, choose it alone. Otherwise
+every continuation value contains a nonowner role. Choose one continuation
+for each nonowner role in their union. If the union contains $r$, first
+choose an anchor containing $r$ and a nonowner role $s$ in it, and use
+the anchor as the representative for $s$. Thus all winners, including
+$r$, are covered with at most one continuation per nonowner role.
+The selected family has the same union and no value $\{r\}$.
+
+Apply the induction hypothesis to each selected continuation. Each keeps
+its original value, so the root recurrence preserves the original value
+too. This gives the asserted preservation at every retained subgame.
+The pruning is finite, since its depth is bounded and each node has
+finite branching. Replace each retained decision by a binary fold of
+$\star_r$; the finite-action result above preserves its value.
+For sharpness, one terminal action for each nonowner role requires all
+$K-1$ actions to retain all their winners.
 \end{proof}
+
+The support can depend on the history: no common finite witness set is
+required across quantifier occurrences. Thus a finite formula can use
+nested binders over any nonempty domains. The construction also works by
+structural induction for arbitrary well-founded public trees.
 
 For associativity of $\star_r$, a three-input product is $\{r\}$ if any input is $\{r\}$, and is their union otherwise; nonemptiness ensures that a union of inputs different from $\{r\}$ cannot become $\{r\}$. Role permutations transport the
 operations and the leaf constants. External renaming of the roles permutes the operations of every signature. Each $\star_r$ is associative, commutative, and idempotent. 

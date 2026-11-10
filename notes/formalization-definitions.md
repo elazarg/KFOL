@@ -960,6 +960,43 @@ repeats the finite-root profile predicate and both conclusions. The separate
 `finite_public_choices` statement gives algebraic term folding; the new
 strategic bridge supplies the finite-action quantifier's game semantics.
 
+## Arbitrary-domain nested quantifiers
+
+The twenty-first definition module, `Definitions/Quantified.lean`, adds
+`Strategic.QuantifiedTree`. Its public nodes carry an owner, an arbitrary
+nonempty action type, and a continuation for each action. Later action types
+may depend on the complete history. The inductive type permits well-founded
+trees of unbounded height; `DepthLE n game` states the uniform finite bound
+used in the main paper.
+
+| Definition | Meaning |
+| --- | --- |
+| `QuantifiedTree.Profile` | An actual root action together with independent profiles for every continuation, including all unchosen actions |
+| `winner` | The leaf reached by the profile's choices |
+| `Deviation` | A complete replacement of one player's actions at every node; other owners' actions are fixed |
+| `IsNash` | No complete unilateral replacement turns a loss into that player's victory |
+| `IsSubgamePerfect` | Nash equilibrium at the root and recursively at every continuation; no winner-set recursion or local optimality is assumed |
+| `possibleWinners` | Winners of these actual full-profile SPEs |
+| `DepthLE` | At most n decisions along every play, with no restriction on action cardinalities |
+| `Prunes bound source target` | A structural relation retaining the original owner and a nonempty finite subset of at most `bound` original actions at every retained node |
+| `Prunes.PreservesValues` | Every retained subgame has the same actual SPE winners as its matched original subgame, in addition to structural pruning |
+
+`Strategic/Quantified/Basic` proves complete-deviation backward induction and
+SPE existence without finite action sets or a finite-role premise. Its derived
+`value` bundles `possibleWinners` after proving nonemptiness, as in the existing
+binary interface. `Strategic/Quantified/Reduction` chooses supports from these
+actual original continuation values and recursively prunes their continuations.
+For finite K≥2, the bound is K−1 at every retained decision. A supplied finite
+depth bound is preserved, and the result has an actual finite binary game with
+the same SPE winners. The representation need not preserve the set of profiles
+or give the same binary decision depth.
+
+`Paper.arbitrary_public_quantifier` restates the arbitrary-family winner
+recurrence. `Paper.finite_depth_quantifier_reduction` restates existence,
+nodewise preservation, the per-node structural bound, the inherited depth bound,
+and actual binary representation. The earlier finite-root statements remain
+useful specializations and support the binary compilation proof.
+
 ## Owner synthesis and variable obstruction
 
 The canonical-table and synthesis definitions were consolidated into the existing
@@ -1412,12 +1449,12 @@ correct; it does not assume dictionary position zero is the root.
 
 The [readable review index](paper-definition-surface.md) and machine-readable
 [public-type dependency surface](paper-definition-surface.json)
-record all 138 public theorem types. They reach 1,014 project semantic
-declarations in 57 source files, of which 18 are central definition files.
-Generated declarations are grouped into 567 written source review units;
-11 derived declarations have file-level locations. The review fixes and the six proof-mining additions are included in their
-corresponding per-theorem slices. No new independent semantic definitions were
-needed for the additions.
+record all 140 public theorem types. They reach 1,044 project semantic
+declarations in 58 source files, of which 19 are central definition files.
+Generated declarations are grouped into 577 written source review units;
+11 derived declarations have file-level locations. The review fixes, the six
+initial proof-mining additions and the two nested-quantifier statements are included in their corresponding per-theorem slices.
+The nested-quantifier model adds one central definition module, indexed above.
 
 The extractor follows semantic/computational definition bodies and types,
 erases proof-valued subterms under binders, and never follows theorem proof

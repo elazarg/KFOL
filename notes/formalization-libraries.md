@@ -160,3 +160,19 @@ complete and recorded in the live claim inventory. The dependent/private-store
 fragment, unrelated report results, numerical free-algebra enumeration and general real quantifier
 elimination remain optional; no completion claim depends on moving a retained
 main assertion out of scope.
+
+
+## Arbitrary-domain public quantifiers
+
+`GameTheory.Protocol.Tree` allows arbitrary action types but fixes each player's
+action type globally. Its existing tree interface does not supply the required
+whole-profile subtree SPE theorem for history-dependent witness sets. The
+protocol Zermelo existence theorem requires finite decision choices, which are
+precisely what the new reduction must establish downstream. Consequently the
+small independent `Definitions/Quantified` extension represents these public
+trees directly and proves complete-deviation SPE existence by structural
+induction. It reuses the existing pure winner-set support theorem and binary
+strategic interpretation, rather than changing any upstream library or adding
+those dependencies to the algebra branch. Nested infinite, history-dependent
+witness sets are tested explicitly. The paper specializes to a uniform finite
+decision-depth bound, while the underlying proof covers every well-founded tree.

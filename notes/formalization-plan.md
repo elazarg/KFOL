@@ -1,10 +1,10 @@
 # KFOL formalization design and implementation plan
 
-The target is a complete formalization of **the main paper `main.tex`, including its substantive prose claims, and the parts of the technical report needed for those claims**. Root `Paper.lean` repeats the complete main-paper propositions; a small collection of definition modules supplies an auditable meaning, and reusable proof modules supply the proofs. The entire technical report is not a completion target. This document records the implemented design and completion gates; the status board records completed verification, and the inventory records current statement-level evidence. All 23 main result rows, 63 required catalog rows and 21 required prose obligations now have complete checked proofs.
+The target is a complete formalization of **the main paper `main.tex`, including its substantive prose claims, and the parts of the technical report needed for those claims**. Root `Paper.lean` repeats the complete main-paper propositions; a small collection of definition modules supplies an auditable meaning, and reusable proof modules supply the proofs. The entire technical report is not a completion target. This document records the implemented design and completion gates; the status board records completed verification, and the inventory records current statement-level evidence. All 23 main result rows, 64 required catalog rows and 21 required prose obligations now have complete checked proofs.
 
 The manuscript baseline is revision `6dff3f067151b9fc1cf9b9944718cf39a72d7447`. The single production development uses Lean/mathlib 4.35.0. The former 22 Std modules were retired at this review; their historical sources remain at revision `7014dbb`. `sections/appendix-verification.tex` is the starting evidence inventory. The existing proofs are valuable migration inputs, but a finite certificate, a specialized three-owner proof, and a generic theorem are distinct deliverables.
 
-The [claim inventory](formalization-claims.json) distinguishes the **23 main-paper result environments**, **20 directly cited complete report results**, selected fragments of cited composite results, further proof dependencies, and optional report material. The earlier 140-result extraction is retained as a source catalog, not as the definition of done. Additional main-paper prose obligations are listed separately. Existing source evidence and the work still needed are separate fields. The [supporting-library assessment](formalization-libraries.md) records exact APIs, pins, assumptions and completed bridges.
+The [claim inventory](formalization-claims.json) distinguishes the **23 main-paper result environments**, **21 directly cited complete report results**, selected fragments of cited composite results, further proof dependencies, and optional report material. The earlier 140-result extraction is retained as a source catalog, not as the definition of done. Additional main-paper prose obligations are listed separately. Existing source evidence and the work still needed are separate fields. The [supporting-library assessment](formalization-libraries.md) records exact APIs, pins, assumptions and completed bridges.
 
 ## Required scope and optional extensions
 
@@ -157,7 +157,7 @@ Use `Equiv.Perm Role` for renaming, `Set` inclusion and disjointness, and ordina
 
 The completed prototype selected native `KFOL.Term` for public traversals. Generic equational proofs use mathlib `FirstOrder.Language.Term` with exact production codecs for full/core signatures; their interpretations use the shared winner-set operations. Specify separate core, constant, symmetric, reset, owner, and policy signatures, with maps/interpretations between them. Give ergonomic constructors and induction lemmas. Reset and union are derived terms in the core where appropriate; storing them as basic operations in a computational expansion requires a proved term-equivalence theorem. Parameterize an algebra by an explicit signature so unrelated operations cannot silently enter a proof.
 
-Public ground games may use a small binary tree datatype to make occurrence-indexed strategies clear. Its equivalence to closed public terms is proved. Full profiles assign actions to every occurrence, including unreached occurrences. Restriction to a subtree is defined independently of the recursive winner evaluator. SPE quantifies over every subtree and every unilateral change to all of a player's decisions there. Distinguish occurrence paths from variable names: repeated variables denote independently solved copies. Uniform-copy strategies are a separate restriction with their own observation theorem.
+Public ground games may use a small binary tree datatype to make occurrence-indexed strategies clear. Its equivalence to closed public terms is proved. Full profiles assign actions to every occurrence, including unreached occurrences. Restriction to a subtree is defined independently of the recursive winner evaluator. SPE quantifies over every subtree and every unilateral change to all of a player's decisions there. Distinguish occurrence paths from variable names: repeated variables denote independently solved copies. Uniform-copy strategies are a separate restriction with their own observation theorem. The arbitrary-domain extension uses a separate well-founded public tree with history-dependent nonempty action types. Full-profile SPE remains defined by complete deviations in every subgame. Its `DepthLE` predicate gives the finite-depth main-paper class; a structural pruning certificate keeps at most K−1 original actions at every retained node and records equality of each matched subgame's actual SPE winners. The theorem constructs a finite binary representation. Supports depend on original continuation values and may vary with history.
 
 ### Equational semantics
 
@@ -342,3 +342,11 @@ additional literal Paper statements
 cover arbitrary-action finite support, exact circuit-table and semantic tree
 bounds, finite Boolean threshold coding, pair-game observation completeness,
 and reconstruction of the scalar order. The main paper remains unchanged.
+
+
+The arbitrary-domain public-quantifier theorem strengthens the existing
+choice-support result in place. It is now a completed cited report assertion
+supporting Section 2. `Definitions/Quantified` keeps the new semantic surface
+central, and the two additional full Paper statements bring the current total
+to 140. Infinite dependent menus and off-path deviations are covered by the
+connected regression in `tests/QuantifiedGames.lean`.

@@ -3,6 +3,7 @@ module
 public import KFOL.Algebra
 public import KFOL.Reductions.Circuits.LargeTables.Succinctness
 public import KFOL.Strategic.ChoiceSupport
+public import KFOL.Strategic.Quantified.Reduction
 public import KFOL.Rounds.Scalar.Security
 public import KFOL.Complexity.FullCompleteness
 public import KFOL.Complexity.ResetSynthesisMachine
@@ -3328,8 +3329,8 @@ theorem pair_game_boolean_full_abstraction {Role : Type u} [Fintype Role] [Decid
 #guard_msgs (whitespace := lax) in
 #print axioms KFOL.Paper.pair_game_boolean_full_abstraction
 
-/-- `game:prop:choice-support`: the complete SPE winner observation of an
-arbitrary nonempty public action family has support at most K-1, K≥2. -/
+/-- The one-decision specialization of `game:prop:choice-support`, with
+finite binary continuation games and an arbitrary nonempty action family. -/
 theorem public_choice_small_support {Role : Type u} {Index : Type v}
     [Fintype Role] [Nontrivial Role] [Nonempty Index]
     (owner : Role) (branches : Index → Strategic.Tree Role) :
@@ -3384,5 +3385,45 @@ theorem scalar_rational_observation_order {Role : Type u} [Fintype Role] [Decida
 [propext, Classical.choice, Quot.sound] -/
 #guard_msgs (whitespace := lax) in
 #print axioms KFOL.Paper.scalar_rational_observation_order
+
+open Classical in
+/-- The arbitrary-domain quantifier obeys the owner-atom/union recurrence
+for actual full-profile SPE, including independently chosen off-path plans. -/
+theorem arbitrary_public_quantifier {Role : Type u}
+    (owner : Role) (Action : Type v) (nonempty : Nonempty Action)
+    (next : Action → Strategic.QuantifiedTree.{u,v} Role) :
+    Strategic.QuantifiedTree.possibleWinners (.node owner Action nonempty next) =
+      if ∃ a, Strategic.QuantifiedTree.possibleWinners (next a) = {owner} then {owner}
+      else {player | ∃ a, player ∈ Strategic.QuantifiedTree.possibleWinners (next a)} :=
+  Strategic.QuantifiedTree.possibleWinners_node owner Action nonempty next
+
+/-- info: 'KFOL.Paper.arbitrary_public_quantifier' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Paper.arbitrary_public_quantifier
+
+/-- `game:prop:choice-support`: nested arbitrary-domain quantifiers admit
+nodewise faithful pruning to K-1 original witnesses per retained decision
+and an actual finite binary game with the same possible SPE winners. -/
+theorem finite_depth_quantifier_reduction {Role : Type u} [Fintype Role] [Nontrivial Role]
+    (depth : ℕ) (game : Strategic.QuantifiedTree.{u,v} Role)
+    (bounded : Strategic.QuantifiedTree.DepthLE depth game) :
+    (∃ plan : Strategic.QuantifiedTree.Profile game,
+      Strategic.QuantifiedTree.IsSubgamePerfect plan) ∧
+    ∃ (pruned : Strategic.QuantifiedTree.{u,v} Role) (binary : Strategic.Tree Role)
+      (pruning : Strategic.QuantifiedTree.Prunes (Fintype.card Role-1) game pruned),
+      pruning.PreservesValues ∧ Strategic.QuantifiedTree.DepthLE depth pruned ∧
+      Strategic.QuantifiedTree.possibleWinners pruned = Strategic.QuantifiedTree.possibleWinners game ∧
+      Strategic.possibleWinners binary = Strategic.QuantifiedTree.possibleWinners game := by
+  refine ⟨Strategic.QuantifiedTree.exists_spe game,?_⟩
+  obtain ⟨pruned,binary,pruning,preserved,depth_bound,represented⟩ :=
+    Strategic.QuantifiedTree.exists_value_preserving_pruning_binary_of_depthLE game depth bounded
+  exact ⟨pruned,binary,pruning,preserved,depth_bound,preserved.possibleWinners_eq,
+    represented.trans preserved.possibleWinners_eq⟩
+
+/-- info: 'KFOL.Paper.finite_depth_quantifier_reduction' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms KFOL.Paper.finite_depth_quantifier_reduction
 
 end KFOL.Paper

@@ -245,6 +245,7 @@ import all KFOL.Definitions.Kleene
 import all KFOL.Definitions.Owner
 import all KFOL.Definitions.Policies
 import all KFOL.Definitions.Public
+import all KFOL.Definitions.Quantified
 import all KFOL.Definitions.Reductions
 import all KFOL.Definitions.Reset
 import all KFOL.Definitions.Rounds
@@ -435,6 +436,8 @@ import all KFOL.Strategic.Compilation
 import all KFOL.Strategic.Examples
 import all KFOL.Strategic.FiniteChoices
 import all KFOL.Strategic.Forcing
+import all KFOL.Strategic.Quantified.Basic
+import all KFOL.Strategic.Quantified.Reduction
 import all Paper
 meta import Lean.Elab.Command
 meta import Lean.Util.CollectAxioms
