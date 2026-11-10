@@ -3,14 +3,14 @@
 The completion target is the entire main paper, its substantive mathematical
 prose, and the report material those claims require. The entire technical report
 is not a completion target. The [inventory](formalization-claims.json) records
-23 main result rows, 64 required catalog rows and 21 required prose obligations,
-all proved. Its source catalog contains 154 statements.
+23 main result rows, 66 required catalog rows and 21 required prose obligations,
+all proved. Its source catalog contains 156 statements.
 
 ## Public audit surface
 
-- [Paper.lean](../Paper.lean) contains 79 main-facing mathematical statements in
+- [Paper.lean](../Paper.lean) contains 80 main-facing mathematical statements in
   about 600 lines, ordered by subject and labelled for the main results.
-- [Report.lean](../Report.lean) contains 36 further mathematical report statements
+- [Report.lean](../Report.lean) contains 38 further mathematical report statements
   and proof ingredients.
 - Every public theorem writes its proposition in mathematical vocabulary.
   Its proof is one application of a named library theorem. Neither root file
@@ -88,6 +88,10 @@ Equational satisfaction and derivation are independent. Basis completeness
 concerns arbitrary algebras and every finite arity. Nonfinite-basability uses
 finite countermodels for every genuine variable bound, not bounded searches.
 Literal equation families have proved cardinalities and expanded variable bounds.
+The unbounded variable obstruction is proved in C, A and A^sym. A flat
+permutation envelope transfers bounded identity theories from the core; exact
+idempotent purity justifies its label and constant semantics. All three
+signatures have independent definitions, and no residual bound is assumed.
 
 Algorithms use original syntax and binary words. Charge binary variable/role
 names, explicit permutation arrays, binary K, physical dictionary slots and raw

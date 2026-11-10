@@ -91,6 +91,29 @@ theorem encode_subst (t : KFOL.Term Role Var) (replacement : Var → KFOL.Term R
 
 end Full
 
+namespace Public
+
+theorem eval_decode (t : Term (PublicSymbol Role) Var) (v : Var → WinnerSet Role) :
+    let _ := publicStructure Role
+    (decode t).eval v = t.realize v := by
+  let _ := publicStructure Role
+  induction t with
+  | var => rfl
+  | @func n f args ih =>
+    cases f with
+    | winner => rfl
+    | choice r => exact congrArg₂ (WinnerSet.choice r) (ih 0) (ih 1)
+
+theorem decode_ofCore (t : Term (CoreSymbol Role) Var) :
+    decode (ofCore t) = Core.decode t := by
+  induction t with
+  | var => rfl
+  | @func n f args ih =>
+    cases f with
+    | choice r => simp only [ofCore, decode, Core.decode, ih]
+
+end Public
+
 namespace Core
 
 theorem isCore_decode (t : Term (CoreSymbol Role) Var) : (decode t).IsCore := by

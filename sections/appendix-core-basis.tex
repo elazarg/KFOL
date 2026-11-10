@@ -1,8 +1,9 @@
-\section{No finite basis for the core}\label{app:core-basis}
+\section{No finite basis for owned choice}\label{app:core-basis}
 
-For every fixed $K\geq3$, the core $\mathbf C_K$ has no finite equational
-basis, and no basis uses a bounded number of variables
-(\cref{core:thm:core-nfb}). The proof constructs, for every $d$, a finite
+For every fixed $K\geq3$, none of $\mathbf C_K$, $\mathbf A_K$,
+and $\mathbf A_K^{\rm sym}$ has a finite equational basis, or a basis
+using a bounded number of variables
+(\cref{core:thm:core-nfb,full:thm:nonfinite-basis}). The proof constructs, for every $d$, a finite
 algebra whose $d$-generated subalgebras all belong to
 $\operatorname V(\mathbf C_K)$ while the algebra itself does not.
 \Cref{app:core-native} introduces the native algebras from which these
@@ -14,8 +15,8 @@ owned choice with union has a seven-equation basis
 three-variable presentation (\cref{app:core-conservative}), the binary
 terms and unary polynomials are classified (\cref{app:core-binary}), and
 identifying all ambiguous winner sets gives a finitely based subvariety
-(\cref{app:core-atomic}). \Cref{app:full-signature} discusses the full
-signature, where the question is open. Throughout, $+$ is the derived
+(\cref{app:core-atomic}). \Cref{app:full-signature} transfers the obstruction to winner
+constants and internal role permutations by a permutation envelope. Throughout, $+$ is the derived
 union term, which on winner sets is union.
 
 \subsection{Native algebras and a first countermodel}
@@ -433,8 +434,9 @@ $\operatorname V(D_K)$.
 \end{proof}
 
 Every owned choice is a semilattice operation, so the core variety is
-congruence meet-semidistributive, by the argument in
-\cref{app:full-signature}, which uses a single owned choice. Willard's
+congruence meet-semidistributive: the semilattice witness terms before
+Theorem~2.1 of \cite{Willard2000} satisfy its condition $C_2(T)$ when
+interpreted using any fixed $\star_r$. Willard's
 theorem \cite{Willard2000} and its extension by Baker, McNulty, and Wang
 \cite{BakerMcNultyWang2005} give a finite basis to such a variety in a
 finite signature if it has a finite residual bound or finite critical
@@ -1005,13 +1007,106 @@ gives derivability, including substitution and replacement in contexts.
 
 \subsection{The full signature}\label{app:full-signature}
 
-For the full signature a conditional route remains. Each owned choice is a semilattice operation, and for fixed $K$ the full finite-signature variety is congruence meet-semidistributive. Concretely, the semilattice witness terms displayed just before Willard's Theorem~2.1 satisfy his condition $C_2(T)$ when their product is interpreted as any fixed $\star_r$
-\cite{Willard2000}; the characterization then supplies meet-semidistributivity, and the expansion by other operations preserves those term identities. Willard's finite-basis theorem applies if the variety has a finite residual bound \cite{Willard2000}. Classifying quotients of the generator does not bound irreducibles throughout the variety, and reset's residual
-largeness does not transfer automatically to an expansion by other operations.
+Idempotent elimination also transfers the obstruction to the signatures
+with winner constants and internal role permutations. The construction
+uses an absorbing element and a separate copy of a core algebra for
+every role permutation.
 
-Two specific obstacles stand in the way of a residual bound. The pair test domain is not a subalgebra, and testing all identities on that domain does not bound the irreducible models of those identities. Likewise, the $K+1$-state player quotients describe the generator's reduct, not every subalgebra and quotient of arbitrary powers. In the opposite direction, the reset
-combs would prove residual largeness for full owned choice if each could be expanded to a member of the full generated variety with the prescribed reset term operation. Such an expansion would remain subdirectly irreducible: every nonidentity congruence of the expansion is a reset congruence and therefore contains the comb's nontrivial monolith. The missing step is
-constructing expansions satisfying all full-signature identities.
+Let $B$ be a nonempty algebra in the core signature and let
+$G=\operatorname{Sym}(I)$. Its \emph{permutation envelope} is
+\[
+ E(B)=\{\top\}\mathbin{\dot\cup}(G\times B).
+\]
+Every winner constant denotes $\top$, which absorbs each owned choice,
+and permutations fix $\top$. On the remaining elements put
+\begin{align*}
+ (g,x)\star_r(h,y)
+   &=\begin{cases}
+       (g,x\star_{g^{-1}(r)}y),&g=h,\\
+       \top,&g\ne h,
+     \end{cases}\\
+ \pi(g,x)&=(\pi g,x).
+\end{align*}
+Write $E^{\rm pub}(B)$ for the reduct without the permutation operations.
+The map $x\mapsto(1,x)$ embeds the original core algebra into both
+reducts to owned choices. For finite $B$, the envelope has
+$1+K!|B|$ elements.
+
+\begin{lemma}[Permutation envelope]\label{full:lem:envelope}
+For every nonempty core algebra $B$,
+\[
+ B\in\operatorname V(\mathbf C)
+ \quad\Longleftrightarrow\quad
+ E^{\rm pub}(B)\in\operatorname V(\mathbf A)
+ \quad\Longleftrightarrow\quad
+ E(B)\in\operatorname V(\mathbf A^{\rm sym}).
+\]
+\end{lemma}
+\begin{proof}
+We prove an identity-transfer statement. Suppose $s=t$ holds in
+$\mathbf A^{\rm sym}$ and a valuation $v$ in $E(B)$ makes
+$s(v)=(g,b)\ne\top$. Fix a role $a$ and substitute
+\[
+ \rho(x_j)=\begin{cases}
+   \pi_j(x_j),&v_j=(\pi_j,b_j),\\
+   \at a,&v_j=\top.
+ \end{cases}
+\]
+Every subtree in this evaluation also lies outside $\top$. At a choice
+its two children have the same copy label; at a switch the labels are
+multiplied. Induction therefore gives
+\[
+ (s\rho)(S,\ldots,S)=gS
+ \qquad(S\in\Pow).
+\]
+The valid identity gives the same diagonal for $t\rho$. Thus
+$g^{-1}(s\rho)$ and $g^{-1}(t\rho)$ are idempotent. By
+\cref{gen:thm:core}, neither has a winner leaf and every input
+occurrence has identity accumulated permutation. Pushing the
+permutations to the leaves produces a valid core identity.
+
+The same purity condition makes the corresponding envelope
+evaluations stay in copy $g$, with payloads obtained from these core
+terms at the $b_j$. Hence their payloads agree whenever $B$ satisfies
+that core identity. Variables whose envelope value is $\top$ cannot
+occur in either purified term, since their substitutions would leave a
+winner leaf. An extra variable can supply an arbitrary fallback payload
+when writing this construction for all arities, including zero.
+
+It follows that if $B$ satisfies the core identities in at most $n+1$
+variables, then $E(B)$ satisfies every valid full-signature identity of
+arity at most $n$. If one side evaluates to $\top$ and the other does
+not, interchange the sides and apply the same argument; if both do,
+they agree. In particular, $B\in\operatorname V(\mathbf C)$ implies
+$E(B)\in\operatorname V(\mathbf A^{\rm sym})$. The public assertion
+follows by forgetting permutations. Both converses follow from the
+embedded copy $x\mapsto(1,x)$ and preservation of identities under
+reducts and subalgebras.
+\end{proof}
+
+\begin{theorem}[No finite basis for the expansions]\label{full:thm:nonfinite-basis}
+For every fixed $K\geq3$, neither $\mathbf A$ nor
+$\mathbf A^{\rm sym}$ has an identity basis using a bounded number of
+variables. For every $n$ there is a finite carrier with a public and a
+symmetric algebra structure, each satisfying all identities of its
+corresponding winner algebra in at most $n$ variables but failing one
+of its identities. In particular, neither algebra is finitely based.
+\end{theorem}
+\begin{proof}
+Take the finite core counteralgebra $B$ from
+\cref{core:thm:core-nfb}, with the bound $n+1$. The proof of
+\cref{full:lem:envelope} makes $E(B)$ satisfy every valid symmetric
+identity of arity at most $n$, and its public reduct satisfies every
+valid public identity of that arity. Restricting an identity to the
+variables actually occurring and relabelling them proves the assertion
+even when its declared arity is larger.
+
+A failed core identity remains false in the copy $\{1\}\times B$.
+It is also an identity of both winner expansions, so neither envelope
+belongs to its generated variety. Both envelopes are finite. Any basis
+using at most $n$ variables would hold in these countermodels and imply
+the failed identity, a contradiction.
+\end{proof}
 
 The tractable fragments are also constrained by symmetry. With role switching, one owned choice defines every other:
 \[

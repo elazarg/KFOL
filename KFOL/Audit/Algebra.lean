@@ -18,6 +18,7 @@ import all KFOL.Definitions.PaperAlgebra
 import all KFOL.Query.Compilation
 import all KFOL.Query.Relations
 import all KFOL.Query.ZeroExtension
+import all KFOL.Algebra.FullBasis.NonfiniteBasis
 meta import Lean.Elab.Command
 
 /-! # Independent algebra and representation import boundary

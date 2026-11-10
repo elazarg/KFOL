@@ -403,6 +403,29 @@ theorem core_nonfinite_basis [DecidableEq Role] [Finite Role] (three : Fin 3 ↪
       ∃ e : Equational.Identity (Equational.CoreSymbol Role), e.Holds (WinnerSet Role) ∧ ¬e.Holds B :=
   Results.Algebra.core_nonfinite_basis three
 
+/-- `core:thm:no-basis`, `full:thm:nonfinite-basis`. -/
+theorem expanded_nonfinite_basis [DecidableEq Role] [Finite Role] (three : Fin 3 ↪ Role) :
+    (let _ := Equational.publicStructure Role
+     ¬Equational.HasFiniteBasis (Equational.PublicSymbol Role) (WinnerSet Role)) ∧
+    (let _ := Equational.fullStructure Role
+     ¬Equational.HasFiniteBasis (Equational.FullSymbol Role) (WinnerSet Role)) ∧
+    ∀ n : ℕ,
+    ∃ (B : Type u)
+      (full : (Equational.language (Equational.FullSymbol Role)).Structure B)
+      (publicChoice : (Equational.language (Equational.PublicSymbol Role)).Structure B),
+      Nonempty B ∧ Finite B ∧
+      (∀ e : Equational.Identity (Equational.FullSymbol Role), e.variableCount ≤ n →
+        (let _ := Equational.fullStructure Role; e.Holds (WinnerSet Role)) →
+        @Equational.Identity.Holds _ e B full) ∧
+      (∀ e : Equational.Identity (Equational.PublicSymbol Role), e.variableCount ≤ n →
+        (let _ := Equational.publicStructure Role; e.Holds (WinnerSet Role)) →
+        @Equational.Identity.Holds _ e B publicChoice) ∧
+      (let _ := Equational.fullStructure Role
+       ¬@Equational.InVariety _ (WinnerSet Role) B inferInstance full) ∧
+      (let _ := Equational.publicStructure Role
+       ¬@Equational.InVariety _ (WinnerSet Role) B inferInstance publicChoice) :=
+  Results.Algebra.expanded_nonfinite_basis three
+
 theorem reset_circuit_large_tables (n : ℕ) :
     ∃ (C : Circuit.Equation Reset.Symbol (Bool ⊕ (ℕ × Bool))) (t : Reset.Term (Bool ⊕ (ℕ × Bool))),
       C.WellFormed ∧ C.gates.length = 6*n+3 ∧ C.unfold = some (t,t) ∧ 2^n ≤ (t.table (.inl true)).card :=

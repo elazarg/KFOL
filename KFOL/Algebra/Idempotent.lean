@@ -182,7 +182,7 @@ private theorem cleanUnder_rename {p q : Equiv.Perm Role} {t : Term Role Var}
   have hh := h.2 x (q * s) (List.mem_map.mpr ⟨(x, s), hs, rfl⟩)
   simpa only [mul_assoc] using hh
 
-private theorem cleanUnder_choice_iff {p : Equiv.Perm Role} {r : Role}
+theorem cleanUnder_choice_iff {p : Equiv.Perm Role} {r : Role}
     {s t : Term Role Var} :
     CleanUnder p (.choice r s t) ↔ CleanUnder p s ∧ CleanUnder p t := by
   constructor
@@ -192,7 +192,7 @@ private theorem cleanUnder_choice_iff {p : Equiv.Perm Role} {r : Role}
     intro x q hq
     exact (List.mem_append.mp hq).elim (hs.2 x q) (ht.2 x q)
 
-private theorem cleanUnder_rename_iff {p q : Equiv.Perm Role} {t : Term Role Var} :
+theorem cleanUnder_rename_iff {p q : Equiv.Perm Role} {t : Term Role Var} :
     CleanUnder p (.rename q t) ↔ CleanUnder (p * q) t := by
   constructor
   · exact cleanUnder_rename

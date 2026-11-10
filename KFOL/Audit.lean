@@ -15,6 +15,10 @@ import all KFOL.Algebra.Atomic.Unary
 import all KFOL.Algebra.Basic
 import all KFOL.Algebra.ChoiceSupport
 import all KFOL.Algebra.CommonSource
+import all KFOL.Algebra.FullBasis.Envelope
+import all KFOL.Algebra.FullBasis.NonfiniteBasis
+import all KFOL.Algebra.FullBasis.Signatures
+import all KFOL.Algebra.FullBasis.Transfer
 import all KFOL.Algebra.IdempotencyTestCard
 import all KFOL.Algebra.IdempotencyTests
 import all KFOL.Algebra.Idempotent
@@ -242,6 +246,7 @@ import all KFOL.Definitions.Core
 import all KFOL.Definitions.CoreBasis
 import all KFOL.Definitions.Dissemilattice
 import all KFOL.Definitions.Encoding
+import all KFOL.Definitions.Envelope
 import all KFOL.Definitions.Equational
 import all KFOL.Definitions.Kleene
 import all KFOL.Definitions.Owner

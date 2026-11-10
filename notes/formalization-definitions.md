@@ -1,8 +1,8 @@
 # Definitions and representation boundaries
 
-Read [Paper.lean](../Paper.lean) with the vocabulary below. It contains 79
+Read [Paper.lean](../Paper.lean) with the vocabulary below. It contains 80
 mathematical statements and no definitions. [Report.lean](../Report.lean)
-contains 36 further mathematical statements. Their proofs name library theorems;
+contains 38 further mathematical statements. Their proofs name library theorems;
 definitions must still be reviewed independently against the manuscripts.
 
 The [audit guide](audit-guide.md) gives the reading order. The generated
@@ -13,8 +13,8 @@ theorem types. They erase proof-valued subterms and never follow theorem proofs.
 
 | Entry point | Theorem types | Semantic declarations | Source files | Central definition files | Written review units |
 | --- | ---: | ---: | ---: | ---: | ---: |
-| Paper | 79 | 635 | 35 | 23 | 333 |
-| Report | 36 | 443 | 26 | 15 | 195 |
+| Paper | 80 | 652 | 35 | 23 | 337 |
+| Report | 38 | 472 | 27 | 16 | 204 |
 
 These counts are separate slices and overlap. The vocabulary files organize
 the presentation; they do not replace their underlying mathematical definitions.
@@ -198,6 +198,28 @@ records right multiplication by that set. No associativity, distributivity or
 representation law is built into these definitions. The finite powerset theorem
 proves representation for any associative, union-preserving product with zero;
 owned choice also satisfies the atomic expansion needed for infinite role types.
+
+## Nonfinite bases with constants and permutations
+
+The actual signatures are `Equational.CoreSymbol` (owned choices),
+`PublicSymbol` (choices and winner constants) and `FullSymbol` (also internal
+role permutations). Their independent winner structures are in
+[Equational.lean](../KFOL/Definitions/Equational.lean).
+
+[Envelope.lean](../KFOL/Definitions/Envelope.lean) defines
+`Option (Equiv.Perm Role × M)`. Every winner denotes `none`, which absorbs
+all owned choices. In a copy labelled g, owner r uses the payload's owner
+`g⁻¹ r`; mixing labels gives `none`. A role permutation acts by left
+multiplication on the labels and fixes `none`. These definitions assume no
+identity, variety membership or finite-basis conclusion. The root Report
+statement proves that the envelope belongs to each expanded variety exactly
+when its payload belongs to the core variety, and states its exact size.
+
+The Paper statement uses independently defined actual variable support,
+semantic variety membership and equational derivability. Its finite witnesses
+satisfy every identity within each requested support bound and fail a genuine
+identity; it has no residual-bound or classification hypothesis. Purity,
+shadow evaluation and the transfer proof are library lemmas.
 
 ## Preservation and verification
 

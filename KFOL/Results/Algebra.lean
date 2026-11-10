@@ -2,6 +2,7 @@ module
 
 public import KFOL.Definitions.PaperAlgebra
 public import KFOL.Results.Certificates
+public import KFOL.Algebra.FullBasis.NonfiniteBasis
 
 @[expose] public section
 namespace KFOL.Results.Algebra
@@ -443,5 +444,50 @@ theorem owner_table_realization [DecidableEq Role] [DecidableEq Var] (T : Owner.
   cases output : T.synthesize a positions with
   | none => simp only [output,Option.isSome_none,Bool.false_eq_true] at success
   | some t => exact ⟨t,correct t output⟩
+
+/-- Named winners and internal role permutations retain the unbounded
+variable obstruction, witnessed by finite algebras in the actual signatures. -/
+theorem expanded_nonfinite_basis [DecidableEq Role] [Finite Role] (three : Fin 3 ↪ Role) :
+    (let _ := Equational.publicStructure Role
+     ¬Equational.HasFiniteBasis (Equational.PublicSymbol Role) (WinnerSet Role)) ∧
+    (let _ := Equational.fullStructure Role
+     ¬Equational.HasFiniteBasis (Equational.FullSymbol Role) (WinnerSet Role)) ∧
+    ∀ n : ℕ,
+    ∃ (B : Type u)
+      (full : (Equational.language (Equational.FullSymbol Role)).Structure B)
+      (publicChoice : (Equational.language (Equational.PublicSymbol Role)).Structure B),
+      Nonempty B ∧ Finite B ∧
+      (∀ e : Equational.Identity (Equational.FullSymbol Role), e.variableCount ≤ n →
+        (let _ := Equational.fullStructure Role; e.Holds (WinnerSet Role)) →
+        @Equational.Identity.Holds _ e B full) ∧
+      (∀ e : Equational.Identity (Equational.PublicSymbol Role), e.variableCount ≤ n →
+        (let _ := Equational.publicStructure Role; e.Holds (WinnerSet Role)) →
+        @Equational.Identity.Holds _ e B publicChoice) ∧
+      (let _ := Equational.fullStructure Role
+       ¬@Equational.InVariety _ (WinnerSet Role) B inferInstance full) ∧
+      (let _ := Equational.publicStructure Role
+       ¬@Equational.InVariety _ (WinnerSet Role) B inferInstance publicChoice) :=
+  ⟨FullBasis.not_hasFiniteBasis_public three, FullBasis.not_hasFiniteBasis_full three,
+    FullBasis.finite_countermodels three⟩
+
+/-- A general semantic connection between the core and its flat permutation
+ envelope, in both public signatures. -/
+theorem expanded_variety_envelope (three : Fin 3 ↪ Role) (M : Type v)
+    [(Equational.language (Equational.CoreSymbol Role)).Structure M] [Nonempty M] :
+    let _ := Equational.coreStructure Role
+    let _ := Equational.publicStructure Role
+    let _ := Equational.fullStructure Role
+    let _ := Envelope.structureOf (Role := Role) (M := M)
+    let _ := Envelope.publicStructureOf (Role := Role) (M := M)
+    (Equational.InVariety (Equational.CoreSymbol Role) (WinnerSet Role) M ↔
+      Equational.InVariety (Equational.PublicSymbol Role) (WinnerSet Role) (Envelope.Carrier Role M)) ∧
+    (Equational.InVariety (Equational.CoreSymbol Role) (WinnerSet Role) M ↔
+      Equational.InVariety (Equational.FullSymbol Role) (WinnerSet Role) (Envelope.Carrier Role M)) :=
+  Envelope.variety_iff three
+
+theorem permutation_envelope_cardinality [DecidableEq Role] [Fintype Role] (M : Type v) [Fintype M] :
+    Fintype.card (Envelope.Carrier Role M) =
+      1 + (Fintype.card Role).factorial * Fintype.card M :=
+  Envelope.card_carrier
 
 end KFOL.Results.Algebra

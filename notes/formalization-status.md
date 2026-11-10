@@ -1,14 +1,14 @@
 # Active formalization status
 
 The entire main-paper scope is proved: **23/23 main result rows**,
-**64/64 required catalog rows**, and **21/21 required prose obligations**.
+**66/66 required catalog rows**, and **21/21 required prose obligations**.
 The [inventory](formalization-claims.json) is authoritative for scope.
 Other report results remain optional and have their own evidence status.
 
 | Audit entrypoint | Mathematical statements | Presentation |
 | --- | ---: | --- |
-| [Paper.lean](../Paper.lean) | 79 | Main text and the report claims it cites; 603 lines |
-| [Report.lean](../Report.lean) | 36 | Further report results and proof ingredients |
+| [Paper.lean](../Paper.lean) | 80 | Main text and the report claims it cites; 626 lines |
+| [Report.lean](../Report.lean) | 38 | Further report results and proof ingredients |
 | [Results/Certificates](../KFOL/Results/Certificates.lean) | 140 preserved contracts | Original full statements, including native machines, codecs and intermediate invariants |
 
 Every root proof names one library theorem. Both root files have no semantic
@@ -25,8 +25,8 @@ regular representation are in `Definitions/Relational`.
 
 | Definition surface | Theorem types | Semantic declarations | Source files | Written review units |
 | --- | ---: | ---: | ---: | ---: |
-| Paper | 79 | 635 | 35 | 333 |
-| Report | 36 | 443 | 26 | 195 |
+| Paper | 80 | 652 | 35 | 337 |
+| Report | 38 | 472 | 27 | 204 |
 
 The slices overlap and exclude theorem proof bodies. These meaning indexes do
 not replace the human comparison with the manuscript or the proof/axiom audits.
@@ -37,7 +37,7 @@ The production integration checks are:
 
 - `make check-lean`: literal façade and preservation checks, inventory,
   independent algebra build/import audit, Paper/Report and whole-source axiom
-  audits, both definition indexes, actual negative audit fixtures and 88 strict
+  audits, both definition indexes, actual negative audit fixtures and 89 strict
   Lean regressions.
 - `make check-python`: the explicit 33 independent Python checks, mapped to the
   current paper in `checks/README.md` and the verification appendix.
@@ -78,6 +78,12 @@ representation theorem covers every finite powerset with an associative,
 union-preserving product and zero. The owned-choice instance also works over
 infinite role sets. Andréka's publisher abstract explicitly states the broader
 DLOS reduct theorem; the report credits that abstract and uses direct proofs.
+
+The nonfinite-basis result now covers C, A and A^sym for every finite K≥3.
+Finite permutation envelopes retain the core countermodels' unbounded
+actual-variable obstruction, with exact preservation and reflection of variety
+membership. No residual-bound hypothesis is used. The main theorem, abstract,
+results list and open-problems paragraph reflect this conclusion.
 
 The report's dependent calculus, general real-QE/semialgebraicity, numerical
 free-algebra counts and unused extensions remain outside main-paper completion.

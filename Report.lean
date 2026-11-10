@@ -442,6 +442,25 @@ theorem intersection_not_definable {Role : Type u} (three : Fin 3 ↪ Role) :
         (t.eval valuation).val = (valuation 0).val ∩ (valuation 1).val :=
   Query.no_intersection three
 
+theorem expanded_variety_envelope {Role : Type u} (three : Fin 3 ↪ Role) (M : Type v)
+    [(Equational.language (Equational.CoreSymbol Role)).Structure M] [Nonempty M] :
+    let _ := Equational.coreStructure Role
+    let _ := Equational.publicStructure Role
+    let _ := Equational.fullStructure Role
+    let _ := Envelope.structureOf (Role := Role) (M := M)
+    let _ := Envelope.publicStructureOf (Role := Role) (M := M)
+    (Equational.InVariety (Equational.CoreSymbol Role) (WinnerSet Role) M ↔
+      Equational.InVariety (Equational.PublicSymbol Role) (WinnerSet Role) (Envelope.Carrier Role M)) ∧
+    (Equational.InVariety (Equational.CoreSymbol Role) (WinnerSet Role) M ↔
+      Equational.InVariety (Equational.FullSymbol Role) (WinnerSet Role) (Envelope.Carrier Role M)) :=
+  Results.Algebra.expanded_variety_envelope three M
+
+theorem permutation_envelope_cardinality {Role : Type u} [DecidableEq Role] [Fintype Role]
+    (M : Type v) [Fintype M] :
+    Fintype.card (Envelope.Carrier Role M) =
+      1 + (Fintype.card Role).factorial * Fintype.card M :=
+  Results.Algebra.permutation_envelope_cardinality M
+
 end KFOL.Report
 
 #audit_namespace KFOL.Report

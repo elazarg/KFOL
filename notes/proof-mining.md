@@ -128,3 +128,32 @@ document, and catches a guard evaluated under the candidate output instead of
 at its parent. The optional lxml/libxml2 regression independently executes
 60,208 compiled term/valuation cases, including all nonempty valuations at
 K=3/three inputs and K=4/two inputs. It also checks the empty-input example.
+
+## Finite basability of A and A^sym
+
+Both expansions are nonfinitely based for every finite K≥3, with no bound on
+basis variables. The complete claim, including finite countermodels for every
+actual variable bound, is `Paper.expanded_nonfinite_basis`. The report's former
+conditional route through a residual bound is replaced by the construction.
+
+The hidden concept is a flat permutation envelope of any core algebra B:
+`E(B) = Option (Sym(Role) × B)`. Winner constants all denote its absorber;
+permutations act freely on the labels. Equal-label products transport the
+owner inversely; mixed-label products are absorbing. The unit-label copy is
+an actual core subalgebra. The envelope preserves and reflects variety
+membership in both expansions; its finite size is 1 + K! * |B|.
+
+A nonabsorbing evaluation of a valid full identity becomes an idempotent
+identity after decorating variables by their copy labels and undoing the
+output label. The exact syntactic idempotency theorem forces it back into
+the core. This works without assuming any law on the payload algebra before
+transfer. Applied to the existing finite core countermodels, it proves the
+two expansion results without constructing new grids or assuming outside
+classification theorems. A general support-compression lemma removes all
+padding from an identity's declared arity, including the nullary case.
+
+Definitions are in `KFOL/Definitions/Envelope.lean`; purity, transfer and
+countermodel proofs are in `KFOL/Algebra/FullBasis/`. Strict regressions check
+inverse owner transport, composition of copy-label permutations, the failure
+of the purity premise at two roles, and a two-variable identity declared at
+arity 100. The existing core proof and all original contracts are preserved.

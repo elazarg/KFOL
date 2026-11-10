@@ -1,6 +1,6 @@
 # Report theorem-type definition surface
 
-36 public theorem types reach 443 project semantic declarations in 26 source files. 15 of those files are under `KFOL/Definitions`. Generated declarations are grouped into 195 written source review units; 15 derived declarations have file-level locations. Theorem proof bodies are excluded.
+38 public theorem types reach 472 project semantic declarations in 27 source files. 16 of those files are under `KFOL/Definitions`. Generated declarations are grouped into 204 written source review units; 15 derived declarations have file-level locations. Theorem proof bodies are excluded.
 
 This is a review index. Definitions still require human review against the manuscript; the separate proof/axiom and import audits remain necessary.
 
@@ -9,14 +9,15 @@ This is a review index. Definitions still require human review against the manus
 | [KFOL/Definitions/Rounds.lean](../KFOL/Definitions/Rounds.lean) | 86 | yes |
 | [KFOL/Definitions/Queries.lean](../KFOL/Definitions/Queries.lean) | 59 | yes |
 | [KFOL/Definitions/Strategic.lean](../KFOL/Definitions/Strategic.lean) | 56 | yes |
+| [KFOL/Definitions/Equational.lean](../KFOL/Definitions/Equational.lean) | 46 | yes |
 | [KFOL/Definitions/Circuits.lean](../KFOL/Definitions/Circuits.lean) | 44 | yes |
-| [Report.lean](../Report.lean) | 37 |  |
+| [Report.lean](../Report.lean) | 39 |  |
 | [KFOL/Definitions/Quantified.lean](../KFOL/Definitions/Quantified.lean) | 36 | yes |
 | [KFOL/Definitions/Reset.lean](../KFOL/Definitions/Reset.lean) | 30 | yes |
-| [KFOL/Definitions/Equational.lean](../KFOL/Definitions/Equational.lean) | 29 | yes |
 | [KFOL/Definitions/CoreBasis.lean](../KFOL/Definitions/CoreBasis.lean) | 26 | yes |
 | [KFOL/Definitions/Public.lean](../KFOL/Definitions/Public.lean) | 19 | yes |
 | [KFOL/Definitions/Reductions.lean](../KFOL/Definitions/Reductions.lean) | 16 | yes |
+| [KFOL/Definitions/Envelope.lean](../KFOL/Definitions/Envelope.lean) | 12 | yes |
 | [KFOL/Definitions/Core.lean](../KFOL/Definitions/Core.lean) | 7 | yes |
 | [KFOL/Rounds/SerializationTrace.lean](../KFOL/Rounds/SerializationTrace.lean) | 7 |  |
 | [KFOL/Rounds/PrefixLaw.lean](../KFOL/Rounds/PrefixLaw.lean) | 6 |  |
@@ -37,8 +38,8 @@ External interfaces are recorded without unfolding them:
 
 - Batteries: 1 boundary constants.
 - GameTheory: 92 boundary constants.
-- Lean/Std: 141 boundary constants.
-- mathlib: 114 boundary constants.
+- Lean/Std: 145 boundary constants.
+- mathlib: 119 boundary constants.
 
 Review per public theorem:
 
@@ -48,6 +49,7 @@ Review per public theorem:
 | [boolean_threshold_state_lower_bound](../Report.lean#L213) | 45 | 1 |
 | [core_typed_upper_clone_cover](../Report.lean#L78) | 46 | 6 |
 | [core_variable_bound_obstruction](../Report.lean#L60) | 53 | 4 |
+| [expanded_variety_envelope](../Report.lean#L445) | 51 | 4 |
 | [finite_powerset_relational_representation](../Report.lean#L386) | 2 | 1 |
 | [idempotency_certificates](../Report.lean#L24) | 19 | 1 |
 | [intersection_not_definable](../Report.lean#L439) | 18 | 1 |
@@ -56,6 +58,7 @@ Review per public theorem:
 | [owned_choice_zero_extension](../Report.lean#L399) | 5 | 2 |
 | [owned_choice_zero_representation](../Report.lean#L413) | 7 | 2 |
 | [pair_game_boolean_full_abstraction](../Report.lean#L192) | 78 | 1 |
+| [permutation_envelope_cardinality](../Report.lean#L458) | 1 | 1 |
 | [public_choice_small_support](../Report.lean#L257) | 57 | 3 |
 | [public_choice_support_sharp](../Report.lean#L266) | 32 | 1 |
 | [public_equilibrium_strategic_form](../Report.lean#L103) | 40 | 1 |

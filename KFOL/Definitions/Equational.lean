@@ -131,6 +131,19 @@ inductive FullSymbol (Role : Type u) : ℕ → Type u
 inductive CoreSymbol (Role : Type u) : ℕ → Type u
   | choice (r : Role) : CoreSymbol Role 2
 
+/-- Public choice with named winners, without internal role permutations. -/
+inductive PublicSymbol (Role : Type u) : ℕ → Type u
+  | winner (r : Role) : PublicSymbol Role 0
+  | choice (r : Role) : PublicSymbol Role 2
+
+/-- The original public signature with winner constants and owned choices. -/
+@[instance_reducible] noncomputable def publicStructure (Role : Type u) :
+    (language (PublicSymbol Role)).Structure (WinnerSet Role) where
+  funMap f args := match f with
+    | .winner r => WinnerSet.singleton r
+    | .choice r => WinnerSet.choice r (args 0) (args 1)
+  RelMap r := nomatch r
+
 /-- Canonical interpretation of the full signature; use as a local instance. -/
 @[instance_reducible] noncomputable def fullStructure (Role : Type u) :
     (language (FullSymbol Role)).Structure (WinnerSet Role) where
@@ -166,6 +179,23 @@ def decode : Term (FullSymbol Role) Var → KFOL.Term Role Var
   | .func (.rename p) args => .rename p (decode (args 0))
 
 end Full
+
+namespace Public
+
+variable {Role : Type u} {Var : Type v}
+
+/-- The no-switch public signature interpreted in native syntax. -/
+def decode : Term (PublicSymbol Role) Var → KFOL.Term Role Var
+  | .var x => .var x
+  | .func (.winner r) _ => .winner r
+  | .func (.choice r) args => .choice r (decode (args 0)) (decode (args 1))
+
+/-- Include a constant-free owned-choice term in the public signature. -/
+def ofCore : Term (CoreSymbol Role) Var → Term (PublicSymbol Role) Var
+  | .var x => .var x
+  | .func (.choice r) args => .func (.choice r) (fun i => ofCore (args i))
+
+end Public
 
 namespace Core
 

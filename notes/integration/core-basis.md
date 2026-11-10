@@ -21,6 +21,17 @@ named proposition alias. `Grid.grid_countermodel` in
 `KFOL/Core/GridCountermodel.lean` similarly states the complete report grid
 claim with an existential algebra and concrete finite-arity identity.
 
+## Expansion transfer
+
+`KFOL/Algebra/FullBasis/NonfiniteBasis.lean` now proves the same unbounded
+actual-variable obstruction for A and A^sym, via a flat permutation envelope.
+`Paper.expanded_nonfinite_basis` repeats the full result. The independent
+construction in `Definitions/Envelope` uses inverse owner transport within a
+labelled copy, an absorber across copies, and left multiplication for role
+switches. `Report.expanded_variety_envelope` gives exact preservation and
+reflection of core variety membership; `Report.permutation_envelope_cardinality`
+gives 1 + K! * |B|. No residual-bound hypothesis remains.
+
 ## Public results
 
 - `Core.typed_upper_clone_cover` (`Core/TypedCover.lean`): the full reflecting
