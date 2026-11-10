@@ -4,6 +4,7 @@ public import KFOL.Definitions.PaperAlgebra
 public import KFOL.Results.Certificates
 public import KFOL.Algebra.FullBasis.NonfiniteBasis
 public import KFOL.Owner.FourVariableObstruction
+public import KFOL.Owner.Basis.Exchange
 
 @[expose] public section
 namespace KFOL.Results.Algebra
@@ -361,17 +362,18 @@ theorem owner_table_synthesis [DecidableEq Role] [DecidableEq Var] (T : Owner.Gu
       have hh := h.2.2.1 t ht
       exact ⟨⟨hh.1,hh.2.1,hh.2.2.1⟩,hh.2.2.2⟩⟩
 
-/-- Thirty-six equations on six variables suffice; every basis needs five variables. -/
+/-- Thirty-six equations on five variables suffice; every basis needs five variables. -/
 theorem owner_thirty_six_equation_basis (three : Fin 3 ↪ Role) (a k : Role) (hka : k ≠ a) :
     letI := Owner.oneOwnerStructure a
-    (Set.range Owner.FiniteBasis.basisAxiom).ncard = 36 ∧
-    (∀ i : Fin 36, (Owner.FiniteBasis.basisAxiom i).variableCount ≤ 6) ∧
-    Equational.IsBasis (WinnerSet Role) (Set.range Owner.FiniteBasis.basisAxiom) ∧
+    (Set.range Owner.FiniteBasis.fiveVariableAxiom).ncard = 36 ∧
+    (∀ i : Fin 36, (Owner.FiniteBasis.fiveVariableAxiom i).variableCount ≤ 5) ∧
+    Equational.IsBasis (WinnerSet Role) (Set.range Owner.FiniteBasis.fiveVariableAxiom) ∧
     ∀ (T : Equational.Theory (Owner.Symbol Unit)) n,
       Equational.IsBasis (WinnerSet Role) T → Equational.HasVariableBound T n → 5 ≤ n :=
-  by
-    have h := Results.owner_thirty_six_equation_basis three a k hka
-    exact ⟨h.1,h.2.2.1,h.2.2.2.1,Owner.FourVariableObstruction.variableBound_ge_five_winnerSet three a k hka⟩
+  ⟨Owner.FiniteBasis.FiveVariables.theory_ncard,
+    fun i => Owner.FiniteBasis.FiveVariables.variable_bound _ ⟨i, rfl⟩,
+    Owner.FiniteBasis.FiveVariables.isBasis_winnerSet three a k hka,
+    Owner.FourVariableObstruction.variableBound_ge_five_winnerSet three a k hka⟩
 
 /-- The six-element witness satisfies the entire four-variable theory and
 fails a valid five-variable action law. -/

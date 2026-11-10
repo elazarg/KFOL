@@ -11,7 +11,7 @@ from check_one_owner import arbitrary
 from check_owner_synthesis import tables
 from fragments import denote, h, reset, var
 from one_owner import admissible, normal, synthesize
-from owner_basis import (BASIS, absorption_certificate, join_words, root,
+from owner_basis import (BASIS, FIVE_VARIABLE_BASIS, absorption_certificate, join_words, root,
                          variables, words)
 
 
@@ -123,6 +123,24 @@ def check():
             env = dict(zip(names, values))
             assert denote(left, env) == denote(right, env), (name, env)
             valuations += 1
+
+    # Independently check the five-variable replacement, with one alpha map
+    # shared by the two sides of each equation.
+    assert len(FIVE_VARIABLE_BASIS) == 36
+    assert len({canonical_identity(left, right)
+                for _, left, right in FIVE_VARIABLE_BASIS}) == 36
+    five_valuations = 0
+    for name, left, right in FIVE_VARIABLE_BASIS:
+        names = sorted(variables(left) | variables(right))
+        assert len(names) <= 5
+        assert normal(left, 0, 7) == normal(right, 0, 7), name
+        for values in product((1, 2, 3, 7), repeat=len(names)):
+            env = dict(zip(names, values))
+            assert denote(left, env) == denote(right, env), (name, env)
+            five_valuations += 1
+    assert five_valuations == 7188
+    print('Five-variable presentation: 36 distinct equations; exchange and '
+          f'all retained laws passed on {five_valuations} native valuations.')
 
     # The weak-companion branch needs four distinct variables. Here the
     # source-2 witness has a prefix F_13, whose second index is the target

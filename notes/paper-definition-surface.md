@@ -1,13 +1,13 @@
 # Paper theorem-type definition surface
 
-75 public theorem types reach 627 project semantic declarations in 35 source files. 23 of those files are under `KFOL/Definitions`. Generated declarations are grouped into 327 written source review units; 7 derived declarations have file-level locations. Theorem proof bodies are excluded.
+75 public theorem types reach 629 project semantic declarations in 35 source files. 23 of those files are under `KFOL/Definitions`. Generated declarations are grouped into 329 written source review units; 7 derived declarations have file-level locations. Theorem proof bodies are excluded.
 
 This is a review index. Definitions still require human review against the manuscript; the separate proof/axiom and import audits remain necessary.
 
 | Source | Reachable declarations | Central definitions |
 | --- | ---: | --- |
+| [KFOL/Definitions/Owner.lean](../KFOL/Definitions/Owner.lean) | 75 | yes |
 | [Paper.lean](../Paper.lean) | 75 |  |
-| [KFOL/Definitions/Owner.lean](../KFOL/Definitions/Owner.lean) | 73 | yes |
 | [KFOL/Definitions/Rounds.lean](../KFOL/Definitions/Rounds.lean) | 65 | yes |
 | [KFOL/Definitions/Encoding.lean](../KFOL/Definitions/Encoding.lean) | 48 | yes |
 | [KFOL/Definitions/Equational.lean](../KFOL/Definitions/Equational.lean) | 48 | yes |
@@ -87,7 +87,7 @@ Review per public theorem:
 | [owner_root_status](../Paper.lean#L315) | 22 | 4 |
 | [owner_table_algorithms](../Paper.lean#L520) | 80 | 12 |
 | [owner_table_synthesis](../Paper.lean#L349) | 45 | 4 |
-| [owner_thirty_six_equation_basis](../Paper.lean#L357) | 40 | 4 |
+| [owner_thirty_six_equation_basis](../Paper.lean#L357) | 42 | 4 |
 | [pair_countervaluations](../Paper.lean#L152) | 19 | 2 |
 | [player_view_orders](../Paper.lean#L90) | 19 | 3 |
 | [player_views](../Paper.lean#L74) | 28 | 4 |

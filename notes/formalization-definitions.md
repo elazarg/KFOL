@@ -13,7 +13,7 @@ theorem types. They erase proof-valued subterms and never follow theorem proofs.
 
 | Entry point | Theorem types | Semantic declarations | Source files | Central definition files | Written review units |
 | --- | ---: | ---: | ---: | ---: | ---: |
-| Paper | 75 | 627 | 35 | 23 | 327 |
+| Paper | 75 | 629 | 35 | 23 | 329 |
 | Report | 44 | 530 | 28 | 17 | 227 |
 
 These counts are separate slices and overlap. The vocabulary files organize
@@ -45,7 +45,7 @@ The underlying definitions are grouped by subject:
 | `TestDomains` | Completeness of a test domain over every finite arity |
 | `Atomic` | Atomic preservation/realization and the repeat-triple relation |
 | `Reset` | Reset syntax, rightmost root, selection, minimal guard tables, rooted antimatroids and table realizability |
-| `Owner` | Guarded-owner syntax, root/status, guards, coverage, the independent four-state algebra, literal 36-equation basis and six-element obstruction to four-variable axiomatization |
+| `Owner` | Guarded-owner syntax, root/status, guards, coverage, the independent four-state algebra, literal 36-equation action presentation, its five-variable exchange replacement and six-element obstruction to four-variable axiomatization |
 | `Policies` | Indexed policies, passing patterns, selective reset, native syntax and the chain/intersection/repetition criterion |
 | `Congruences` | Operation-compatible equivalence relations, admissible closure families and ambiguity thresholds |
 | `Equational` | Identities, satisfaction, derivation, bases, variable bounds and generated varieties |

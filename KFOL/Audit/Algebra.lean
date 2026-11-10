@@ -20,6 +20,7 @@ import all KFOL.Query.Relations
 import all KFOL.Query.ZeroExtension
 import all KFOL.Algebra.FullBasis.NonfiniteBasis
 import all KFOL.Owner.FourVariableObstruction
+import all KFOL.Owner.Basis.Exchange
 meta import Lean.Elab.Command
 
 /-! # Independent algebra and representation import boundary

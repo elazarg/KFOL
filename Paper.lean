@@ -357,9 +357,9 @@ theorem owner_table_synthesis [DecidableEq Role] [DecidableEq Var] (T : Owner.Gu
 /-- `owner:thm:basis-main`. -/
 theorem owner_thirty_six_equation_basis (three : Fin 3 ↪ Role) (a k : Role) (hka : k ≠ a) :
     letI := Owner.oneOwnerStructure a
-    (Set.range Owner.FiniteBasis.basisAxiom).ncard = 36 ∧
-    (∀ i : Fin 36, (Owner.FiniteBasis.basisAxiom i).variableCount ≤ 6) ∧
-    Equational.IsBasis (WinnerSet Role) (Set.range Owner.FiniteBasis.basisAxiom) ∧
+    (Set.range Owner.FiniteBasis.fiveVariableAxiom).ncard = 36 ∧
+    (∀ i : Fin 36, (Owner.FiniteBasis.fiveVariableAxiom i).variableCount ≤ 5) ∧
+    Equational.IsBasis (WinnerSet Role) (Set.range Owner.FiniteBasis.fiveVariableAxiom) ∧
     ∀ (T : Equational.Theory (Owner.Symbol Unit)) n,
       Equational.IsBasis (WinnerSet Role) T → Equational.HasVariableBound T n → 5 ≤ n :=
   Results.Algebra.owner_thirty_six_equation_basis three a k hka

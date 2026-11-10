@@ -610,6 +610,24 @@ def basisAxiom (i : Fin 36) : Equational.Identity (Symbol Unit) :=
     | _ => ((Term.guarded () (.var 0) (Term.step (.var 5) (.var 0)) (.var 0)), (Term.step (.var 5) (.var 0))) -- K_root
   ⟨6, pair.1, pair.2⟩
 
+/-- A five-variable exchange law, in the original reset/guarded signature. -/
+def exchangeAxiom : Equational.Identity (Symbol Unit) :=
+  let r : Term Unit (Fin 5) := .var 0
+  let u : Term Unit (Fin 5) := .var 1
+  let a : Term Unit (Fin 5) := .var 2
+  let b : Term Unit (Fin 5) := .var 3
+  let c : Term Unit (Fin 5) := .var 4
+  ⟨5, Term.guarded () r (Term.guarded () r (Term.step u a) b) c,
+    Term.guarded () r c (Term.guarded () r (Term.guarded () a u c) b)⟩
+
+/-- The thirty-six-law five-variable presentation: replace only the action-band
+axiom (index 21) by exchange. Every other displayed native equation is retained. -/
+def fiveVariableAxiom (i : Fin 36) : Equational.Identity (Symbol Unit) :=
+  if i = 21 then exchangeAxiom else basisAxiom i
+
+/-- The independent native five-variable presentation. -/
+def fiveVariableTheory : Equational.Theory (Symbol Unit) := Set.range fiveVariableAxiom
+
 /-- The explicitly listed theory, independent of semantic validity. -/
 def theory : Equational.Theory (Symbol Unit) := Set.range basisAxiom
 

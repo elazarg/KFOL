@@ -596,3 +596,16 @@ proved for Four and every intended winner-set algebra with at least three
 roles in `KFOL/Owner/FourVariableObstruction.lean`. The displayed basis still
 gives upper bound six. Earlier four-variable lower bounds in this note record
 historical milestones; the conservative relative bound is still optimal.
+
+## Optimal five-variable presentation
+
+Five variables suffice. `FiniteBasis.fiveVariableAxiom` retains the thirty-five
+non-band axioms and replaces the six-variable action-band law by the native
+five-variable exchange law. `Owner/Basis/Exchange` gives an ordinary Lean
+congruence/transitivity derivation of the action-band law, followed by the
+arbitrary-model bridge and completeness. The new family has exactly thirty-six
+equations. The original word/action presentation stays available with its
+original theorem contracts. Together with the six-element local obstruction,
+this proves that five is the least possible variable bound, even when infinite
+bases are allowed. Earlier upper bounds of six in this chronological note are
+superseded by this presentation.

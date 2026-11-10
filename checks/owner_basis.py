@@ -57,6 +57,18 @@ BASIS += [
 ]
 
 
+# The paper presentation replaces the six-variable action-band law by a
+# five-variable exchange equation. The action presentation remains the
+# interface for the word certificates and the independent local-model check.
+_r, _u, _a, _b, _c = map(var, range(5))
+EXCHANGE = (h(0, _r, h(0, _r, reset(_u, _a), _b), _c),
+            h(0, _r, _c, h(0, _r, h(0, _a, _u, _c), _b)))
+FIVE_VARIABLE_BASIS = [
+    ('exchange', *EXCHANGE) if name == 'F_band' else (name, left, right)
+    for name, left, right in BASIS
+]
+
+
 def root(term):
     if term.op == 'var':
         return term.args[0]

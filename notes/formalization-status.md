@@ -25,7 +25,7 @@ regular representation are in `Definitions/Relational`.
 
 | Definition surface | Theorem types | Semantic declarations | Source files | Written review units |
 | --- | ---: | ---: | ---: | ---: |
-| Paper | 75 | 627 | 35 | 327 |
+| Paper | 75 | 629 | 35 | 329 |
 | Report | 44 | 530 | 28 | 227 |
 
 The slices overlap and exclude theorem proof bodies. These meaning indexes do
@@ -37,7 +37,7 @@ The production integration checks are:
 
 - `make check-lean`: literal façade and preservation checks, inventory,
   independent algebra build/import audit, Paper/Report and whole-source axiom
-  audits, both definition indexes, actual negative audit fixtures and 90 strict
+  audits, both definition indexes, actual negative audit fixtures and 91 strict
   Lean regressions.
 - `make check-python`: the explicit 33 independent Python checks, mapped to the
   current paper in `checks/README.md` and the verification appendix.
@@ -91,6 +91,7 @@ The historical mixed-open-game obstruction keeps its separately pinned external
 artifact. The earlier Std-only Lean tree is retired at revision `7014dbb`;
 current production consists of KFOL and the two root audit entrypoints.
 
-The one-owner basis now has variable bounds five to six. The new audited
-six-element countermodel satisfies the entire four-variable theory and fails a
-five-variable action-band identity; the relative conservative bound stays four.
+The one-owner basis now has optimal variable bound five: thirty-six native
+laws, with five-variable exchange replacing the six-variable action-band
+axiom. The six-element countermodel rules out every four-variable basis;
+the relative conservative bound stays four.

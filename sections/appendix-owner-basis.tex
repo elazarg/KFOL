@@ -6,7 +6,7 @@ absorption.
 
 \begin{theorem}[Finite basis for one owner]\label{owner:thm:finite-basis}
 The equational theory of $\{\del,H_a\}$ has a basis of thirty-six
-identities, each using at most six variables. The basis below is
+identities, each using at most five variables. The basis below is
 complete over arbitrary algebras, finite or infinite.
 \end{theorem}
 
@@ -47,14 +47,14 @@ The first six identities are (R1)--(R6). The next eleven are
  &\text{(S10)}\quad u\del(v\del a)=(u\del a)\del(v\del a),\\
  &\text{(S11)}\quad p_r(u\del p_r(v))=u\del p_r(v).
 \end{align*}
-The remaining nineteen identities are the following action laws:
+The remaining nineteen identities consist of exchange and the action laws below:
 \begin{align*}
  &\text{(A1)}\quad p_r(F_{ab}(x))=F_{ab}(x),\\
  &\text{(A2)}\quad F_{ab}(x\vee_r y)=F_{ab}(x)\vee_r F_{ab}(y),\\
  &\text{(A3)}\quad F_{ab}(x)\leq F_{ab}(0)\vee_r x,\\
  &\text{(A4)}\quad F_{ab}F_{ab}(x)=F_{ab}(x),\\
  &\text{(A5)}\quad
- F_{ab}F_{cd}F_{ab}(x)=F_{ab}F_{cd}(x),\\
+ h(r,h(r,u\del a,b),c)=h(r,c,h(r,h(a,u,c),b)),\\
  &\text{(A6)}\quad F_{ab}G_a(x)=F_{ab}(x),\\
  &\text{(A7)}\quad F_{ab}K_a(x)=F_{ab}(x),\\
  &\text{(A8)}\quad F_{ab}K_b(x)=F_{ab}(x),\\
@@ -72,7 +72,68 @@ The remaining nineteen identities are the following action laws:
 \end{align*}
 All thirty-six identities hold in $\mathbf F$. This is a finite soundness
 check, independent of the completeness proof below. The largest
-variable set occurs in (A5): $r,a,b,c,d,u$, with $x=u\del r$.
+variable sets have five members: (A5) uses $r,u,a,b,c$, while (S5)
+and (A2) use $r,a,b,u,v$.
+
+\paragraph{Exchange implies the action-band law.}
+We first derive the six-variable equation used in word reduction:
+\begin{equation}\label{owner:eq:action-band}
+ F_{ab}F_{cd}F_{ab}(x)=F_{ab}F_{cd}(x)\qquad(x\in U_r).
+\end{equation}
+For this calculation only, write $R_a(t)=t\del a$, $L_a(t)=a\del t$, and
+$T_{a,b}(t)=h(a,t,b)$ for maps on the whole algebra. These are term
+abbreviations, not added operations. Composition acts from right to left.
+The structural equations and (A4), (A10), (A13)--(A15) give
+\begin{align}
+ T_{r,b}R_r&=L_bT_{r,b},\label{owner:eq:exchange-projection}\\
+ T_{r,b}R_a&=T_{r,b}T_{a,b},\label{owner:eq:exchange-transport}\\
+ T_{r,b}T_{a,d}L_b&=T_{r,b}T_{a,d}.
+ \label{owner:eq:exchange-absorb}
+\end{align}
+Here is one way to organize the calculation. Symmetry and (S6), (A10)
+first give $h(r,b,b\del a)=h(r,b,a)$. Combining the source identity with (A13)--(A15) and the
+structural/reset equations gives
+\[
+ h(r,b\del r,c)
+   =h(r,b,c)\del h(r,c,b\del r)
+   =c\del h(r,b,c),
+\]
+which is \eqref{owner:eq:exchange-projection}. Reroot (A4) using (S7), then use (S6), the projection identity,
+and the source identity to obtain
+\eqref{owner:eq:exchange-transport}. To obtain
+\eqref{owner:eq:exchange-absorb}, reroot the inner $h$, use (S8) to
+remove the inserted reset, and apply the same source identity.
+No use of (A5) is made in these three consequences.
+
+Equation (A5) says
+\[
+ T_{r,b}T_{r,d}T_{c,b}=T_{r,b}T_{r,d}R_c.
+\]
+This extends to different outer and middle roots:
+\begin{equation}\label{owner:eq:exchange-context}
+ T_{r,b}T_{a,d}T_{c,b}=T_{r,b}T_{a,d}R_c.
+\end{equation}
+Indeed, \eqref{owner:eq:exchange-transport} and (S3) allow insertion of
+$T_{a,b}$ between $T_{r,b}$ and $T_{a,d}$:
+$T_{r,b}T_{a,b}T_{a,d}=T_{r,b}R_aT_{a,d}=T_{r,b}T_{a,d}$.
+Apply (A5) at root $a$ to these three inner maps, then remove $T_{a,b}$
+by the same calculation.
+
+Finally, (S3), (S6)--(S7),
+\eqref{owner:eq:exchange-projection}--\eqref{owner:eq:exchange-absorb},
+and reset's equations give
+\begin{align*}
+ F_{ab}F_{cd}(p_r(u))
+   &=T_{r,b}T_{a,d}R_c(p_r(u)),\\
+ F_{ab}F_{cd}F_{ab}(p_r(u))
+   &=T_{r,b}T_{a,d}T_{c,b}(p_r(u)).
+\end{align*}
+For the first equality, reroot the inner $h$ by (S7), then remove its
+root projection using (S6) and (S3). For the second, do this twice;
+\eqref{owner:eq:exchange-projection} moves the remaining projection to
+$b$, where \eqref{owner:eq:exchange-absorb} removes it.
+Equation \eqref{owner:eq:exchange-context} identifies the two values,
+proving \eqref{owner:eq:action-band}.
 
 \paragraph{Common-root words.}
 Work now in an arbitrary model of these thirty-six identities.
@@ -120,13 +181,13 @@ $G$ by an $F$. This proves the asserted normal form by induction.
 
 \paragraph{Word identities.}
 The following consequences are equational derivations, valid in
-every model of the displayed basis. By (A4)--(A5), a repeated
+every model of the displayed basis. By (A4) and \eqref{owner:eq:action-band}, a repeated
 primitive action can be removed even across an arbitrary word:
 \[
  FQF=FQ.
 \]
 Indeed, for $Q=GV$, insert an $F$ after $G$, apply the induction
-hypothesis to $FVF$, then remove the inserted $F$ using (A5).
+hypothesis to $FVF$, then remove the inserted $F$ using \eqref{owner:eq:action-band}.
 The empty case is (A4). Removing the letters of a repeated word
 one at a time therefore gives
 \begin{equation}\label{owner:eq:word-band}

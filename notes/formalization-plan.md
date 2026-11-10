@@ -163,11 +163,13 @@ separate from syntax-size bounds.
 
 ## One-owner variable bound
 
-Four variables do not suffice, even for an infinite basis. The six-element
-model in `Definitions/Owner` has five closed five-element local models covering
-every four inputs. `Owner/FourVariableObstruction` proves each local model
-satisfies the complete thirty-six-equation basis, transfers all identities with
-at most four actual variables, and refutes a valid five-variable action-band
-consequence. `Paper.owner_thirty_six_equation_basis` therefore gives bounds
-five to six. The optimal bound within conservative algebras remains four.
-The remaining unrestricted question is whether five variables suffice.
+The optimal unrestricted bound is exactly five. The paper's thirty-six-law
+presentation replaces the six-variable action-band axiom by one five-variable
+exchange law, retaining the other thirty-five laws. Its independent native
+family is `FiniteBasis.fiveVariableAxiom` in `Definitions/Owner`.
+`Owner/Basis/Exchange` derives the action-band law from the new presentation and
+connects every new-theory model to the complete word/action theory. The
+original action presentation remains available for word proofs and the pinned
+complete library contracts. `Paper.owner_thirty_six_equation_basis` states the
+new presentation's exact cardinality, five-variable bound, completeness and
+optimality. The conservative relative bound remains four.
