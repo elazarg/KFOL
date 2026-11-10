@@ -74,11 +74,23 @@ relations and predicates.
 One raw owned choice plus union also embeds faithfully in binary relations on
 `Option Role`, preserving actual relation union and composition. This regular
 representation is owner-specific and is not the document child relation.
-Its existence does not follow from a general theorem: not every
-semilattice-ordered semigroup is representable by union and composition, and
-the representable ones are not finitely axiomatizable (Andréka and Mikulás,
-Algebra Universalis 66, 2011, Section 3). The direct construction uses K+1
-points and is kernel-checked.
+The general semilattice, semigroup and additivity laws alone do not guarantee
+representability. [Andréka–Mikulás (2011), Section 3, Theorem 3.1](https://old.renyi.hu/pub/algebraic-logic/AMikAU11.pdf)
+proves that the full class R(+,;) of union/composition-representable algebras
+is not finitely axiomatizable in first-order logic. This is a statement about
+the representation class, not the equational theory of the variety it
+generates. The direct construction uses K+1 points and is kernel-checked.
+
+This source check does not establish novelty or rule out an applicable
+representation theorem under stronger hypotheses. In particular, the
+[1991 publisher abstract](https://doi.org/10.1007/BF01190407) separately asserts
+positive representation results for operation-deleted reducts of distributive
+lattice-ordered semigroups. The negative result for the larger class does not
+refute that narrower assertion. The report relies on the explicit construction.
+The authors' [erratum](https://old.renyi.hu/pub/algebraic-logic/AM-AU-err7.pdf)
+withdraws Section 4 finite-basis claims for varieties with an identity constant;
+it does not withdraw the Section 3 result cited here.
+
 Reset plus union has no such faithful representation: reset fails right
 distributivity. These generic results need no role finiteness assumption.
 
