@@ -13,8 +13,8 @@ theorem types. They erase proof-valued subterms and never follow theorem proofs.
 
 | Entry point | Theorem types | Semantic declarations | Source files | Central definition files | Written review units |
 | --- | ---: | ---: | ---: | ---: | ---: |
-| Paper | 80 | 652 | 35 | 23 | 337 |
-| Report | 38 | 472 | 27 | 16 | 204 |
+| Paper | 75 | 627 | 35 | 23 | 327 |
+| Report | 43 | 478 | 27 | 16 | 210 |
 
 These counts are separate slices and overlap. The vocabulary files organize
 the presentation; they do not replace their underlying mathematical definitions.

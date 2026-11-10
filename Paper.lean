@@ -546,28 +546,10 @@ theorem round_recursion :
       (Rounds.Game.round sizes next).value = roundOperator sizes (fun a => (next a).value)) :=
   Results.Games.round_recursion
 
+/-- `se:cor:public`. -/
 theorem public_mixed_support (G : Strategic.Tree Role) :
     possibleWinners (publicTree G).value = (Strategic.value G).val :=
   Results.Games.public_mixed_support G
-
-theorem public_nonidempotence (a b c : Role) (hab : a ≠ b) (hac : a ≠ c) (hbc : b ≠ c) :
-    midpointLaw (PMF.pure a) (PMF.pure c) ∉ (Public.nonconvexTree a b c).value ∧
-    midpointLaw (PMF.pure a) (PMF.pure c) ∈
-      (publicChoice b (Public.nonconvexTree a b c) (Public.nonconvexTree a b c)).value :=
-  Results.Games.public_nonidempotence a b c hab hac hbc
-
-theorem constant_sum_value (a b : Role) (hab : a ≠ b) (G : Rounds.Game Role) (uses : G.UsesOnly a b) :
-    ∃ x : ℝ, G.HasScalarValue a b x :=
-  Results.Games.constant_sum_value a b hab G uses
-
-theorem scalar_diagonal_values (a b : Role) (hab : a ≠ b) (G H : Rounds.Game Role) (x y : ℝ)
-    (hx : G.HasScalarValue a b x) (hy : H.HasScalarValue a b y) :
-    (diagonal a b G H).HasScalarValue a b (Scalar.parallel x y) :=
-  Results.Games.diagonal_value a b hab G H x y hx hy
-
-theorem reciprocal_values (a b : Role) (hab : a ≠ b) (n : ℕ) :
-    (reciprocal a b n).HasScalarValue a b (1/((n:ℝ)+1)) :=
-  Results.Games.reciprocal_values a b hab n
 
 /-- `se:thm:infinite`. -/
 theorem infinite_winner_algebra (a b c : Role) (hab : a ≠ b) (hac : a ≠ c) (hbc : b ≠ c) :
@@ -577,11 +559,6 @@ theorem infinite_winner_algebra (a b c : Role) (hab : a ≠ b) (hac : a ≠ c) (
     (∀ (Carrier : Type w) [Finite Carrier], ¬Nonempty (WinnerSummary a c Carrier)) :=
   Results.Games.infinite_winner_algebra a b c hab hac hbc
 
-theorem scalar_contextual_equivalence (a b c : Role) (hab : a ≠ b) (hac : a ≠ c) (hbc : b ≠ c)
-    (G H : ScalarTerm) :
-    (G.rate = H.rate ↔ SameContextualWinners (G.game a b) (H.game a b)) ∧
-    (G.rate = H.rate ↔ ContextuallyEquivalent c (G.game a b) (H.game a b)) :=
-  Results.Games.scalar_full_abstraction a b c hab hac hbc G H
 end Rounds
 
 /-! ## The two-player boundary case -/

@@ -461,6 +461,42 @@ theorem permutation_envelope_cardinality {Role : Type u} [DecidableEq Role] [Fin
       1 + (Fintype.card Role).factorial * Fintype.card M :=
   Results.Algebra.permutation_envelope_cardinality M
 
+/-! ## Sealed rounds: distribution sets and the scalar fragment -/
+
+open Rounds.Game in
+theorem public_nonidempotence {Role : Type u} [Fintype Role] [DecidableEq Role]
+    (a b c : Role) (hab : a ≠ b) (hac : a ≠ c) (hbc : b ≠ c) :
+    midpointLaw (PMF.pure a) (PMF.pure c) ∉ (Public.nonconvexTree a b c).value ∧
+    midpointLaw (PMF.pure a) (PMF.pure c) ∈
+      (publicChoice b (Public.nonconvexTree a b c) (Public.nonconvexTree a b c)).value :=
+  Results.Games.public_nonidempotence a b c hab hac hbc
+
+open Rounds.Game in
+theorem constant_sum_value {Role : Type u} [Fintype Role] [DecidableEq Role]
+    (a b : Role) (hab : a ≠ b) (G : Rounds.Game Role) (uses : G.UsesOnly a b) :
+    ∃ x : ℝ, G.HasScalarValue a b x :=
+  Results.Games.constant_sum_value a b hab G uses
+
+open Rounds.Game in
+theorem scalar_diagonal_values {Role : Type u} [Fintype Role] [DecidableEq Role]
+    (a b : Role) (hab : a ≠ b) (G H : Rounds.Game Role) (x y : ℝ)
+    (hx : G.HasScalarValue a b x) (hy : H.HasScalarValue a b y) :
+    (diagonal a b G H).HasScalarValue a b (Scalar.parallel x y) :=
+  Results.Games.diagonal_value a b hab G H x y hx hy
+
+open Rounds.Game in
+theorem reciprocal_values {Role : Type u} [Fintype Role] [DecidableEq Role]
+    (a b : Role) (hab : a ≠ b) (n : ℕ) :
+    (reciprocal a b n).HasScalarValue a b (1/((n:ℝ)+1)) :=
+  Results.Games.reciprocal_values a b hab n
+
+open Rounds.Game in
+theorem scalar_contextual_equivalence {Role : Type u} [Fintype Role] [DecidableEq Role]
+    (a b c : Role) (hab : a ≠ b) (hac : a ≠ c) (hbc : b ≠ c) (G H : ScalarTerm) :
+    (G.rate = H.rate ↔ SameContextualWinners (G.game a b) (H.game a b)) ∧
+    (G.rate = H.rate ↔ ContextuallyEquivalent c (G.game a b) (H.game a b)) :=
+  Results.Games.scalar_full_abstraction a b c hab hac hbc G H
+
 end KFOL.Report
 
 #audit_namespace KFOL.Report

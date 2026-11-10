@@ -1,14 +1,14 @@
 # Active formalization status
 
-The entire main-paper scope is proved: **23/23 main result rows**,
-**66/66 required catalog rows**, and **21/21 required prose obligations**.
+The entire main-paper scope is proved: **21/21 main result rows**,
+**63/63 required catalog rows**, and **17/17 required prose obligations**.
 The [inventory](formalization-claims.json) is authoritative for scope.
 Other report results remain optional and have their own evidence status.
 
 | Audit entrypoint | Mathematical statements | Presentation |
 | --- | ---: | --- |
-| [Paper.lean](../Paper.lean) | 80 | Main text and the report claims it cites; 626 lines |
-| [Report.lean](../Report.lean) | 38 | Further report results and proof ingredients |
+| [Paper.lean](../Paper.lean) | 75 | Main text and the report claims it cites; 603 lines |
+| [Report.lean](../Report.lean) | 43 | Further report results and proof ingredients |
 | [Results/Certificates](../KFOL/Results/Certificates.lean) | 140 preserved contracts | Original full statements, including native machines, codecs and intermediate invariants |
 
 Every root proof names one library theorem. Both root files have no semantic
@@ -25,8 +25,8 @@ regular representation are in `Definitions/Relational`.
 
 | Definition surface | Theorem types | Semantic declarations | Source files | Written review units |
 | --- | ---: | ---: | ---: | ---: |
-| Paper | 80 | 652 | 35 | 337 |
-| Report | 38 | 472 | 27 | 204 |
+| Paper | 75 | 627 | 35 | 327 |
+| Report | 43 | 478 | 27 | 210 |
 
 The slices overlap and exclude theorem proof bodies. These meaning indexes do
 not replace the human comparison with the manuscript or the proof/axiom audits.

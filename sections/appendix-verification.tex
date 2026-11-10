@@ -1,6 +1,6 @@
 \section{Verification details}\label{app:verification}
 
-The paper's results are kernel-checked in Lean~4.35.0 with mathlib. \texttt{Paper.lean} restates, in the namespace \texttt{KFOL.Paper}, every theorem of the main text and the clauses of the report results that it cites: $80$ statements, listed by result in \cref{tab:status}. \texttt{Report.lean} restates $38$ further report results in the namespace \texttt{KFOL.Report} (\cref{tab:report}). Each proof is a single library theorem, and each file ends with a check that no declaration in its namespace uses an axiom beyond \texttt{propext}, \texttt{Classical.choice}, and \texttt{Quot.sound}; a separate audit covers the whole library. Nothing is admitted, and no theorem from the literature enters as a hypothesis. Where a written proof cites one, as for the reset basis and the minimum one-owner generator \cite{FreeseEtAl2002}, owned choice with union \cite{HardingRomanowska2017}, and the atomic clone \cite{Szendrei2012}, the Lean proof is direct.
+The paper's results are kernel-checked in Lean~4.35.0 with mathlib. \texttt{Paper.lean} restates, in the namespace \texttt{KFOL.Paper}, every theorem of the main text and the clauses of the report results that it cites: $75$ statements, listed by result in \cref{tab:status}. \texttt{Report.lean} restates $43$ further report results in the namespace \texttt{KFOL.Report} (\cref{tab:report}). Each proof is a single library theorem, and each file ends with a check that no declaration in its namespace uses an axiom beyond \texttt{propext}, \texttt{Classical.choice}, and \texttt{Quot.sound}; a separate audit covers the whole library. Nothing is admitted, and no theorem from the literature enters as a hypothesis. Where a written proof cites one, as for the reset basis and the minimum one-owner generator \cite{FreeseEtAl2002}, owned choice with union \cite{HardingRomanowska2017}, and the atomic clone \cite{Szendrei2012}, the Lean proof is direct.
 
 The vocabulary of the statements is in \path{KFOL/Definitions/PaperAlgebra.lean}, \path{PaperGames.lean}, and \path{Complexity.lean}, which build on the other files of \path{KFOL/Definitions}. \path{notes/audit-guide.md} gives a reading order, and \path{notes/paper-definition-surface.md} and \path{notes/report-definition-surface.md} list every definition that each statement depends on.
 
@@ -10,7 +10,7 @@ The library also proves the contracts of the implementation, such as codecs, des
 
 {\small
 \begin{longtable}{>{\raggedright\arraybackslash}p{0.30\linewidth}>{\raggedright\arraybackslash}p{0.64\linewidth}}
-\caption{The $80$ mathematical statements in \texttt{Paper.lean}, grouped by result.}\label{tab:status}\\
+\caption{The $75$ mathematical statements in \texttt{Paper.lean}, grouped by result.}\label{tab:status}\\
 \toprule
 Result & Statements\\
 \midrule
@@ -75,19 +75,17 @@ Reset circuits (\cref{reset:thm:circuits,reset:prop:large-circuit-table})
  & \path{reset_circuit_complexity}, \path{reset_circuit_large_tables}\\
 Sealed-round recursion (\cref{se:thm:round})
  & \path{round_recursion}\\
-Public mixed support and nonidempotence (\cref{se:cor:public})
- & \path{public_mixed_support}, \path{public_nonidempotence}\\
-Scalar stage values (\cref{se:prop:parallel,se:thm:infinite})
- & \path{constant_sum_value}, \path{scalar_diagonal_values}, \path{reciprocal_values}\\
-Infinite winner algebra and scalar observation (\cref{se:thm:infinite,se:cor:scalar})
- & \path{infinite_winner_algebra}, \path{scalar_contextual_equivalence}\\
+Public mixed support (\cref{se:cor:public})
+ & \path{public_mixed_support}\\
+Infinite winner algebra (\cref{se:thm:infinite})
+ & \path{infinite_winner_algebra}\\
 Two players (\cref{app:two-players})
  & \path{two_player_identification}, \path{two_player_degeneracies}, \path{two_player_finite_basis}, \path{two_player_round_support}, \path{two_player_round_contexts}\\
 \end{longtable}}
 
 {\small
 \begin{longtable}{>{\raggedright\arraybackslash}p{0.34\linewidth}>{\raggedright\arraybackslash}p{0.60\linewidth}}
-\caption{The $38$ audited statements in \texttt{Report.lean}, followed by remaining report evidence.}\label{tab:report}\\
+\caption{The $43$ audited statements in \texttt{Report.lean}, followed by remaining report evidence.}\label{tab:report}\\
 \toprule
 Result & Audited statements or other evidence\\
 \midrule
@@ -120,8 +118,14 @@ Reset obstruction (\cref{query:prop:no-reset-product})
  & \path{reset_no_relational_representation}\\
 Intersection obstruction (\cref{gen:cor:trace,query:prop:no-intersection})
  & \path{intersection_not_definable}\\
+Public nonidempotence (\cref{se:eq:nonconvex})
+ & \path{public_nonidempotence}\\
+Scalar stage values (\cref{se:prop:parallel,se:thm:infinite})
+ & \path{constant_sum_value}, \path{scalar_diagonal_values}, \path{reciprocal_values}\\
 Scalar laws, synthesis and security (\cref{se:prop:parallel,se:thm:rational})
  & \path{scalar_parallel_laws}, \path{scalar_rational_values}, \path{scalar_diagonal_security}\\
+Scalar full abstraction (\cref{se:cor:scalar})
+ & \path{scalar_contextual_equivalence}\\
 Boolean probes and state bounds (\cref{se:prop:pair-observation,se:prop:threshold-states})
  & \path{pair_game_boolean_full_abstraction}, \path{scalar_rational_observation_order}, \path{boolean_threshold_state_lower_bound}\\
 Quantifier supports and well-founded fold (\cref{game:prop:choice-support})

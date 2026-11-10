@@ -8,9 +8,9 @@ all proved. Its source catalog contains 156 statements.
 
 ## Public audit surface
 
-- [Paper.lean](../Paper.lean) contains 80 main-facing mathematical statements in
+- [Paper.lean](../Paper.lean) contains 75 main-facing mathematical statements in
   about 600 lines, ordered by subject and labelled for the main results.
-- [Report.lean](../Report.lean) contains 38 further mathematical report statements
+- [Report.lean](../Report.lean) contains 43 further mathematical report statements
   and proof ingredients.
 - Every public theorem writes its proposition in mathematical vocabulary.
   Its proof is one application of a named library theorem. Neither root file
