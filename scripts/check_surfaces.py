@@ -147,7 +147,9 @@ def theorem_declarations(text: str) -> dict[str, Theorem]:
 
 def library_declarations() -> dict[str, Theorem]:
     result = {}
-    for path in sorted((ROOT / "KFOL/Results").rglob("*.lean")):
+    sources = [*sorted((ROOT / "KFOL/Results").rglob("*.lean")),
+               ROOT / "KFOL/Strategic/Quantified/Fold.lean"]
+    for path in sources:
         for name, declaration in theorem_declarations(read_source(path)).items():
             require(name not in result, f"Duplicate library theorem: {name}")
             result[name] = declaration
@@ -155,16 +157,17 @@ def library_declarations() -> dict[str, Theorem]:
 
 
 def named_library_application(proof: str) -> str:
-    """A named Results theorem with optional simple explicit arguments.
+    """A named library theorem with optional simple explicit arguments.
 
     Arguments may be names, numerals, underscores, or parenthesized named
     arguments. Nested proof construction, lambdas and tactic blocks fail.
     """
     proof = mask_noncode(proof, strings=False).strip()
-    head = re.match(r"@?((?:KFOL\.)?Results\." + NAME + r")", proof)
+    head = re.match(r"@?(" + NAME + r")", proof)
     require(head is not None, "Public proof must name one library theorem")
     name = head.group(1)
-    if name.startswith("Results."):
+    require("." in name, "Public proof must use a qualified library theorem name")
+    if not name.startswith("KFOL."):
         name = "KFOL." + name
     rest = proof[head.end():].strip()
     universe = re.match(r"^\.\{[\w', \t\n]+\}", rest)

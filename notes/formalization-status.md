@@ -7,8 +7,8 @@ Other report results remain optional and have their own evidence status.
 
 | Audit entrypoint | Mathematical statements | Presentation |
 | --- | ---: | --- |
-| [Paper.lean](../Paper.lean) | 78 | Main text and the report claims it cites; 598 lines |
-| [Report.lean](../Report.lean) | 29 | Further report results and proof ingredients |
+| [Paper.lean](../Paper.lean) | 79 | Main text and the report claims it cites; 603 lines |
+| [Report.lean](../Report.lean) | 28 | Further report results and proof ingredients |
 | [Results/Certificates](../KFOL/Results/Certificates.lean) | 140 preserved contracts | Original full statements, including native machines, codecs and intermediate invariants |
 
 Every root proof names one library theorem. Both root files have no semantic
@@ -23,8 +23,8 @@ vocabulary is grouped in `Definitions/PaperAlgebra`, `PaperGames` and
 
 | Definition surface | Theorem types | Semantic declarations | Source files | Written review units |
 | --- | ---: | ---: | ---: | ---: |
-| Paper | 78 | 635 | 35 | 333 |
-| Report | 29 | 376 | 23 | 178 |
+| Paper | 79 | 635 | 35 | 333 |
+| Report | 28 | 376 | 23 | 178 |
 
 The slices overlap and exclude theorem proof bodies. These meaning indexes do
 not replace the human comparison with the manuscript or the proof/axiom audits.

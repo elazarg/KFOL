@@ -1,6 +1,6 @@
 \section{Verification details}\label{app:verification}
 
-The paper's results are kernel-checked in Lean~4.35.0 with mathlib. \texttt{Paper.lean} restates, in the namespace \texttt{KFOL.Paper}, every theorem of the main text and the clauses of the report results that it cites: $78$ statements, listed by result in \cref{tab:status}. \texttt{Report.lean} restates $29$ further report results in the namespace \texttt{KFOL.Report} (\cref{tab:report}). Each proof is a single library theorem, and each file ends with a check that no declaration in its namespace uses an axiom beyond \texttt{propext}, \texttt{Classical.choice}, and \texttt{Quot.sound}; a separate audit covers the whole library. Nothing is admitted, and no theorem from the literature enters as a hypothesis. Where a written proof cites one, as for the reset basis and the minimum one-owner generator \cite{FreeseEtAl2002}, owned choice with union \cite{HardingRomanowska2017}, and the atomic clone \cite{Szendrei2012}, the Lean proof is direct.
+The paper's results are kernel-checked in Lean~4.35.0 with mathlib. \texttt{Paper.lean} restates, in the namespace \texttt{KFOL.Paper}, every theorem of the main text and the clauses of the report results that it cites: $79$ statements, listed by result in \cref{tab:status}. \texttt{Report.lean} restates $28$ further report results in the namespace \texttt{KFOL.Report} (\cref{tab:report}). Each proof is a single library theorem, and each file ends with a check that no declaration in its namespace uses an axiom beyond \texttt{propext}, \texttt{Classical.choice}, and \texttt{Quot.sound}; a separate audit covers the whole library. Nothing is admitted, and no theorem from the literature enters as a hypothesis. Where a written proof cites one, as for the reset basis and the minimum one-owner generator \cite{FreeseEtAl2002}, owned choice with union \cite{HardingRomanowska2017}, and the atomic clone \cite{Szendrei2012}, the Lean proof is direct.
 
 The vocabulary of the statements is in \path{KFOL/Definitions/PaperAlgebra.lean}, \path{PaperGames.lean}, and \path{Complexity.lean}, which build on the other files of \path{KFOL/Definitions}. \path{notes/audit-guide.md} gives a reading order, and \path{notes/paper-definition-surface.md} and \path{notes/report-definition-surface.md} list every definition that each statement depends on.
 
@@ -10,7 +10,7 @@ The library also proves the contracts of the implementation, such as codecs, des
 
 {\small
 \begin{longtable}{>{\raggedright\arraybackslash}p{0.30\linewidth}>{\raggedright\arraybackslash}p{0.64\linewidth}}
-\caption{The $78$ mathematical statements in \texttt{Paper.lean}, grouped by result.}\label{tab:status}\\
+\caption{The $79$ mathematical statements in \texttt{Paper.lean}, grouped by result.}\label{tab:status}\\
 \toprule
 Result & Statements\\
 \midrule
@@ -24,7 +24,7 @@ Result & Statements\\
 Public backward induction and realizability (\cref{game:thm:adequacy,game:thm:union})
  & \path{public_backward_induction}, \path{public_realizability}, \path{neutral_union}\\
 Public choice and quantifiers (\cref{sec:rational,game:prop:choice-support})
- & \path{owned_choice_semilattices}, \path{finite_depth_quantifier_reduction}\\
+ & \path{owned_choice_semilattices}, \path{quantifier_fold}, \path{finite_depth_quantifier_reduction}\\
 Forcing and Boolean coordinates (\cref{sec:rational,cor:no-boolean-product})
  & \path{public_forcing}, \path{no_boolean_product}\\
 Player views and quotient orders (\cref{view:thm:view,view:cor:product})
@@ -87,7 +87,7 @@ Two players (\cref{app:two-players})
 
 {\small
 \begin{longtable}{>{\raggedright\arraybackslash}p{0.34\linewidth}>{\raggedright\arraybackslash}p{0.60\linewidth}}
-\caption{The $29$ audited statements in \texttt{Report.lean}, followed by remaining report evidence.}\label{tab:report}\\
+\caption{The $28$ audited statements in \texttt{Report.lean}, followed by remaining report evidence.}\label{tab:report}\\
 \toprule
 Result & Audited statements or other evidence\\
 \midrule
@@ -106,8 +106,6 @@ Core proof ingredients and ambient variety (\cref{core:prop:basis-arity,core:lem
  & \path{core_variable_bound_obstruction}, \path{core_typed_upper_clone_cover}, \path{native_nonfinite_basis}\\
 Public strategic and term interpretations (\cref{game:thm:adequacy})
  & \path{public_equilibrium_strategic_form}, \path{public_term_interpretation}\\
-Strict two-owner extension (\cref{sec:one-owner})
- & \path{strict_two_owner_policy}\\
 Round protocol, consistency and beliefs (\cref{se:thm:round})
  & \path{round_protocol_foundations}, \path{round_profile_consistency}, \path{round_product_beliefs}\\
 Scalar laws, synthesis and security (\cref{se:prop:parallel,se:thm:rational})

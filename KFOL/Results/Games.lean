@@ -154,11 +154,11 @@ theorem finite_depth_quantifier_fold [Fintype Role] [Nontrivial Role]
       (pruning : Strategic.QuantifiedTree.Prunes (Fintype.card Role-1) game pruned),
       pruning.PreservesValues ∧ Strategic.QuantifiedTree.DepthLE depth pruned ∧
       Strategic.QuantifiedTree.Compiles pruned binary ∧
-      Strategic.value binary = Strategic.QuantifiedTree.value game := by
+      Strategic.possibleWinners binary = Strategic.QuantifiedTree.possibleWinners game := by
   obtain ⟨pruned,binary,pruning,preserved,bounded',compiled,represented⟩ :=
     Strategic.QuantifiedTree.exists_value_preserving_pruning_binary_fold_of_depthLE game depth bounded
   exact ⟨Strategic.QuantifiedTree.exists_spe game,pruned,binary,pruning,preserved,bounded',compiled,
-    Subtype.ext (represented.trans preserved.possibleWinners_eq)⟩
+    represented.trans preserved.possibleWinners_eq⟩
 
 theorem reset_circuit_large_tables (n : ℕ) :
     ∃ (circuit : Circuit.Equation Reset.Symbol (Bool ⊕ (ℕ × Bool)))

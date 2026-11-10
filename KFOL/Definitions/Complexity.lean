@@ -32,8 +32,9 @@ abbrev PolynomialTime {Input Output : Type} (f : Input → Output)
   Turing.MultiTapeTM.ComputableInPolyTime f input output
 
 /-- Binary membership means that an actual original instance with this exact
-code satisfies its independently specified mathematical predicate. -/
-def encodedLanguage {Instance : Type u} (code : Instance → List Bool)
+code satisfies its independently specified mathematical predicate. The
+embedding ensures that distinct original instances have distinct codes. -/
+def encodedLanguage {Instance : Type u} (code : Instance ↪ List Bool)
     (valid : Instance → Prop) : Set (List Bool) :=
   {word | ∃ input, code input = word ∧ valid input}
 
@@ -60,50 +61,66 @@ def fullEquationEncoding (K : ℕ) : (Term (Fin K) ℕ × Term (Fin K) ℕ) ↪ 
     rfl⟩
 
 def uniformFullLanguage (signature : PublicSignature) : Set (List Bool) :=
-  encodedLanguage FullTermCode.encodeEquationInput (fun input =>
-    3 ≤ input.1 ∧ input.2 ∈ fullEquations signature input.1)
+  encodedLanguage ⟨FullTermCode.encodeEquationInput,FullTermCode.encodeEquationInput_injective⟩
+    (fun input => 3 ≤ input.1 ∧ input.2 ∈ fullEquations signature input.1)
 
 /-- A fixed selected raw signature; only its explicitly selected operations
 are in the input alphabet. -/
 noncomputable def rawLanguage {Role : Type} (selected : Finset (Raw.Operation Role)) : Set (List Bool) :=
-  encodedLanguage (FiniteTermCode.encodeEquation (Raw.Symbol selected)) (fun equation : Raw.Term selected ℕ × Raw.Term selected ℕ =>
-    ∀ valuation : ℕ → WinnerSet Role, Raw.Term.eval equation.1 valuation = Raw.Term.eval equation.2 valuation)
+  encodedLanguage
+    ⟨FiniteTermCode.encodeEquation (Raw.Symbol selected),FiniteTermCode.encodeEquation_injective⟩
+    (fun equation : Raw.Term selected ℕ × Raw.Term selected ℕ =>
+      ∀ valuation : ℕ → WinnerSet Role,
+        Raw.Term.eval equation.1 valuation = Raw.Term.eval equation.2 valuation)
 
 noncomputable def ownerLanguage {Role : Type} [Fintype Role] (owners : Finset Role)
     (relation : WinnerSet Role → WinnerSet Role → Prop) : Set (List Bool) :=
-  encodedLanguage (FiniteTermCode.encodeEquation (Owner.Symbol Role)) (fun equation : Owner.Term Role ℕ × Owner.Term Role ℕ =>
-    Owner.Term.OwnersIn (fun owner => owner ∈ owners) equation.1 ∧
-    Owner.Term.OwnersIn (fun owner => owner ∈ owners) equation.2 ∧
-    ∀ valuation : ℕ → WinnerSet Role,
-      relation (Owner.Term.eval equation.1 valuation) (Owner.Term.eval equation.2 valuation))
+  encodedLanguage
+    ⟨FiniteTermCode.encodeEquation (Owner.Symbol Role),FiniteTermCode.encodeEquation_injective⟩
+    (fun equation : Owner.Term Role ℕ × Owner.Term Role ℕ =>
+      Owner.Term.OwnersIn (fun owner => owner ∈ owners) equation.1 ∧
+      Owner.Term.OwnersIn (fun owner => owner ∈ owners) equation.2 ∧
+      ∀ valuation : ℕ → WinnerSet Role,
+        relation (Owner.Term.eval equation.1 valuation) (Owner.Term.eval equation.2 valuation))
 
 /-- One owner is interpreted after decoding a fixed Unit-labelled signature,
 so this original input format is independent of the ambient role count. -/
 noncomputable def oneOwnerLanguage {Role : Type u} (owner : Role) : Set (List Bool) :=
-  encodedLanguage (FiniteTermCode.encodeEquation (Owner.Symbol Unit)) (fun equation : Owner.Term Unit ℕ × Owner.Term Unit ℕ =>
-    ∀ valuation : ℕ → WinnerSet Role,
-      Owner.Term.eval (Owner.Term.withOwner owner equation.1) valuation =
-        Owner.Term.eval (Owner.Term.withOwner owner equation.2) valuation)
+  encodedLanguage
+    ⟨FiniteTermCode.encodeEquation (Owner.Symbol Unit),FiniteTermCode.encodeEquation_injective⟩
+    (fun equation : Owner.Term Unit ℕ × Owner.Term Unit ℕ =>
+      ∀ valuation : ℕ → WinnerSet Role,
+        Owner.Term.eval (Owner.Term.withOwner owner equation.1) valuation =
+          Owner.Term.eval (Owner.Term.withOwner owner equation.2) valuation)
 
 def policySets {Role : Type u} {Label : Type v} (policies : Label → Finset Role) : Label → Set Role :=
   fun label => (policies label : Set Role)
 
 noncomputable def policyLanguage {Role Label : Type} [Fintype Label]
     (policies : Label → Finset Role) : Set (List Bool) :=
-  encodedLanguage (FiniteTermCode.encodeEquation (Policies.Symbol Label)) (fun equation : Policies.Term Label ℕ × Policies.Term Label ℕ =>
-    ∀ valuation : ℕ → WinnerSet Role,
-      Policies.Term.eval (policySets policies) equation.1 valuation =
-        Policies.Term.eval (policySets policies) equation.2 valuation)
+  encodedLanguage
+    ⟨FiniteTermCode.encodeEquation (Policies.Symbol Label),FiniteTermCode.encodeEquation_injective⟩
+    (fun equation : Policies.Term Label ℕ × Policies.Term Label ℕ =>
+      ∀ valuation : ℕ → WinnerSet Role,
+        Policies.Term.eval (policySets policies) equation.1 valuation =
+          Policies.Term.eval (policySets policies) equation.2 valuation)
 
 noncomputable def guardedLanguage {Role : Type u} (first second : Role) : Set (List Bool) :=
-  encodedLanguage (FiniteTermCode.encodeEquation GuardedPair.Symbol) (fun equation : GuardedPair.Term ℕ × GuardedPair.Term ℕ =>
-    ∀ valuation : ℕ → WinnerSet Role,
-      GuardedPair.Term.eval first second equation.1 valuation =
-        GuardedPair.Term.eval first second equation.2 valuation)
+  encodedLanguage
+    ⟨FiniteTermCode.encodeEquation GuardedPair.Symbol,FiniteTermCode.encodeEquation_injective⟩
+    (fun equation : GuardedPair.Term ℕ × GuardedPair.Term ℕ =>
+      ∀ valuation : ℕ → WinnerSet Role,
+        GuardedPair.Term.eval first second equation.1 valuation =
+          GuardedPair.Term.eval first second equation.2 valuation)
 
 def resetLanguage (Role : Type u) : Set (List Bool) :=
-  encodedLanguage (fun equation : Reset.Term ℕ × Reset.Term ℕ =>
-    Words.pair (Algorithms.TermCode.encode equation.1) (Algorithms.TermCode.encode equation.2))
+  encodedLanguage ⟨fun equation : Reset.Term ℕ × Reset.Term ℕ =>
+    Words.pair (Algorithms.TermCode.encode equation.1) (Algorithms.TermCode.encode equation.2),by
+      intro first second equal
+      have paired := congrArg Words.unpair? equal
+      simp only [Words.unpair?_pair,Option.some.injEq,Prod.mk.injEq] at paired
+      exact Prod.ext (Algorithms.TermCode.encode_injective paired.1)
+        (Algorithms.TermCode.encode_injective paired.2)⟩
     (fun equation => ∀ valuation : ℕ → WinnerSet Role,
       equation.1.eval valuation = equation.2.eval valuation)
 
@@ -113,7 +130,8 @@ def ResetTableRealizable (table : Algorithms.GuardDescriptor) : Prop :=
   ∃ term : Reset.Term (Fin table.labels.length), term.table = table.guards
 
 def resetTableLanguage : Set (List Bool) :=
-  encodedLanguage Algorithms.GuardDescriptor.encode ResetTableRealizable
+  encodedLanguage ⟨Algorithms.GuardDescriptor.encode,Algorithms.GuardDescriptor.encode_injective⟩
+    ResetTableRealizable
 
 /-- Synthesis returns an original primitive tree, with exact canonical table
 and the report's O(nM) constructor bound, using the original sparse labels. -/
@@ -169,11 +187,11 @@ def coreTermEncoding (K : ℕ) : CoreTerm K ↪ List Bool :=
 with its actual cache references rather than by expanding it to a tree. -/
 noncomputable def resetCircuitLanguage (Role : Type u) : Set (List Bool) :=
   let _ := Reset.structureOf (WinnerSet.reset (Role := Role))
-  encodedLanguage (Circuit.Code.encode Reset.Symbol) (fun equation => equation.Holds (WinnerSet Role))
+  encodedLanguage (Circuit.Code.encoding Reset.Symbol) (fun equation => equation.Holds (WinnerSet Role))
 
 /-- The same exact graph word format on reset's fixed three-element algebra. -/
 noncomputable def resetChainCircuitLanguage : Set (List Bool) :=
   let _ := Reset.structureOf (fun i j : Fin 3 => if j = 0 then 0 else max i j)
-  encodedLanguage (Circuit.Code.encode Reset.Symbol) (fun equation => equation.Holds (Fin 3))
+  encodedLanguage (Circuit.Code.encoding Reset.Symbol) (fun equation => equation.Holds (Fin 3))
 
 end KFOL.Problems

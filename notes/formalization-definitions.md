@@ -1,8 +1,8 @@
 # Definitions and representation boundaries
 
-Read [Paper.lean](../Paper.lean) with the vocabulary below. It contains 78
+Read [Paper.lean](../Paper.lean) with the vocabulary below. It contains 79
 mathematical statements and no definitions. [Report.lean](../Report.lean)
-contains 29 further mathematical statements. Their proofs name library theorems;
+contains 28 further mathematical statements. Their proofs name library theorems;
 definitions must still be reviewed independently against the manuscripts.
 
 The [audit guide](audit-guide.md) gives the reading order. The generated
@@ -13,8 +13,8 @@ theorem types. They erase proof-valued subterms and never follow theorem proofs.
 
 | Entry point | Theorem types | Semantic declarations | Source files | Central definition files | Written review units |
 | --- | ---: | ---: | ---: | ---: | ---: |
-| Paper | 78 | 635 | 35 | 23 | 333 |
-| Report | 29 | 376 | 23 | 12 | 178 |
+| Paper | 79 | 635 | 35 | 23 | 333 |
+| Report | 28 | 376 | 23 | 12 | 178 |
 
 These counts are separate slices and overlap. Three vocabulary files organize
 the presentation; they do not replace their underlying mathematical definitions.
@@ -146,7 +146,8 @@ its definition contains no impossibility assertion.
 languages and input/output relations. A language is never defined by a checker's
 acceptance. `encodedLanguage code valid` means that the word is the exact code
 of an original instance satisfying the independently specified predicate.
-Malformed words have no witness.
+The code is an embedding, so distinct instances have distinct words. Malformed
+words have no witness.
 
 | Names | Surface to inspect |
 | --- | --- |

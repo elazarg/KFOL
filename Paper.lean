@@ -35,6 +35,11 @@ theorem public_forcing (G : Strategic.Tree Role) (r : Role) :
     Strategic.CanForce G r ↔ Strategic.value G = WinnerSet.singleton r :=
   Results.public_forcing G r
 
+theorem quantifier_fold {G : Strategic.QuantifiedTree.{u,v} Role} {binary : Strategic.Tree Role}
+    (compiled : Strategic.QuantifiedTree.Compiles G binary) :
+    Strategic.possibleWinners binary = Strategic.QuantifiedTree.possibleWinners G :=
+  Strategic.QuantifiedTree.Compiles.possibleWinners_eq compiled
+
 theorem finite_depth_quantifier_reduction [Fintype Role] [Nontrivial Role]
     (depth : ℕ) (G : Strategic.QuantifiedTree.{u,v} Role)
     (bounded : Strategic.QuantifiedTree.DepthLE depth G) :
@@ -43,7 +48,7 @@ theorem finite_depth_quantifier_reduction [Fintype Role] [Nontrivial Role]
       (pruning : Strategic.QuantifiedTree.Prunes (Fintype.card Role-1) G pruned),
       pruning.PreservesValues ∧ Strategic.QuantifiedTree.DepthLE depth pruned ∧
       Strategic.QuantifiedTree.Compiles pruned binary ∧
-      Strategic.value binary = Strategic.QuantifiedTree.value G :=
+      Strategic.possibleWinners binary = Strategic.QuantifiedTree.possibleWinners G :=
   Results.Games.finite_depth_quantifier_fold depth G bounded
 
 /-! ## Winner algebras, reset and guarded choice -/

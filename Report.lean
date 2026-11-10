@@ -124,12 +124,6 @@ theorem native_nonfinite_basis : ∀ {Role : Type u} [DecidableEq Role] [Finite 
         e.Holds (Core.Native Role) ↔ Equational.Derives T e.lhs e.rhs)) :=
   @KFOL.Results.native_nonfinite_basis
 
-theorem strict_two_owner_policy : ∀ {Role : Type u} (a b c : Role)
-    (_hab : a ≠ b) (_hac : a ≠ c) (_hbc : b ≠ c),
-    ¬∃ t : Reset.Term (Fin 3), ∀ x : Fin 3 → WinnerSet Role,
-      t.eval x = (WinnerSet.choice a (WinnerSet.choice b (x 1) (x 2)) (x 1)).reset (x 0) :=
-  @KFOL.Results.strict_two_owner_policy
-
 theorem round_protocol_foundations : ∀ {Role : Type u} [Fintype Role] [DecidableEq Role]
     (game : Rounds.Game Role)
     (order : GameTheory.Languages.Bridges.FOSGToEFG.ExplicitOrder Role),

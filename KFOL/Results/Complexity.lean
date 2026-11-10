@@ -25,13 +25,13 @@ theorem equational_complexity (signature : PublicSignature) :
     · intro K hK
       exact (_root_.KFOL.Results.fixed_equational_complexity K hK).2.2
     · simpa only [uniformFullLanguage,encodedLanguage,fullEquations,PublicSignature.Admissible,
-        Set.mem_ofPred_eq,and_left_comm] using (_root_.KFOL.Results.uniform_equational_complexity).2.2
+        Function.Embedding.coeFn_mk,Set.mem_ofPred_eq,and_left_comm] using (_root_.KFOL.Results.uniform_equational_complexity).2.2
   | publicLanguage =>
     constructor
     · intro K hK
       exact (_root_.KFOL.Results.fixed_equational_complexity K hK).2.1
     · simpa only [uniformFullLanguage,encodedLanguage,fullEquations,PublicSignature.Admissible,
-        Set.mem_ofPred_eq,and_left_comm] using (_root_.KFOL.Results.uniform_equational_complexity).2.1
+        Function.Embedding.coeFn_mk,Set.mem_ofPred_eq,and_left_comm] using (_root_.KFOL.Results.uniform_equational_complexity).2.1
   | symmetric =>
     constructor
     · intro K hK
@@ -39,7 +39,7 @@ theorem equational_complexity (signature : PublicSignature) :
         _root_.KFOL.Complexity.FullHardness.originalEquationEncoding] using
         (_root_.KFOL.Results.fixed_equational_complexity K hK).1
     · simpa only [uniformFullLanguage,encodedLanguage,fullEquations,PublicSignature.Admissible,
-        Set.mem_ofPred_eq,true_and,and_left_comm] using (_root_.KFOL.Results.uniform_equational_complexity).1
+        Function.Embedding.coeFn_mk,Set.mem_ofPred_eq,true_and,and_left_comm] using (_root_.KFOL.Results.uniform_equational_complexity).1
 
 theorem raw_pair_dichotomy {Role : Type} [Fintype Role] (three : Fin 3 ↪ Role)
     (selected : Finset (Raw.Operation Role)) :
@@ -172,6 +172,7 @@ private theorem reset_recognize_iff (word : List Bool) :
     obtain ⟨table,term,hcode,realizes,_⟩ := Algorithms.GuardDescriptor.recognize_eq_true word |>.mp accepted
     exact ⟨table,hcode.symm,term,realizes⟩
   · rintro ⟨table,hcode,realizes⟩
+    change table.encode = word at hcode
     rw [← hcode]
     simp only [Algorithms.GuardDescriptor.recognize,Algorithms.GuardDescriptor.decode_encode]
     exact (reset_check_iff_realizable table).mpr realizes
@@ -209,6 +210,7 @@ theorem reset_table_synthesis_polynomial :
   intro input output produced
   have success := Option.isSome_iff_exists.mpr ⟨output,produced⟩
   obtain ⟨table,hcode,realizable⟩ := (accepted input).mp success
+  change table.encode = input at hcode
   obtain ⟨word,emitted,spec⟩ := typed table realizable
   rw [hcode] at emitted
   have equal := Option.some.inj (emitted.symm.trans produced)
