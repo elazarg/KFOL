@@ -1,10 +1,10 @@
 \section{Verification details}\label{app:verification}
 
-The paper's results are kernel-checked in Lean~4.35.0 with mathlib. The root file \texttt{Paper.lean} restates, in the namespace \texttt{KFOL.Paper}, every theorem of the main text, the required clauses of report results cited by the main text, and the further facts the main text asserts: $132$ statements, listed by result in \cref{tab:status}. Each is followed by a check that its proof uses no axioms beyond \texttt{propext}, \texttt{Classical.choice}, and \texttt{Quot.sound}, and nothing is admitted. No theorem from the literature enters as a hypothesis. Where a written proof cites one, as for the reset basis and the minimum one-owner generator \cite{FreeseEtAl2002}, owned choice with union \cite{HardingRomanowska2017}, and the atomic clone \cite{Szendrei2012}, the Lean proof is direct.
+The paper's results are kernel-checked in Lean~4.35.0 with mathlib. The root file \texttt{Paper.lean} restates, in the namespace \texttt{KFOL.Paper}, every theorem of the main text, the report results it cites (for two of them only the clauses it uses, \cref{tab:report}), and the further facts it asserts: $132$ statements, listed by result in \cref{tab:status}. Each is followed by a check that its proof uses no axioms beyond \texttt{propext}, \texttt{Classical.choice}, and \texttt{Quot.sound}, and nothing is admitted. No theorem from the literature enters as a hypothesis. Where a written proof cites one, as for the reset basis and the minimum one-owner generator \cite{FreeseEtAl2002}, owned choice with union \cite{HardingRomanowska2017}, and the atomic clone \cite{Szendrei2012}, the Lean proof is direct.
 
 The definitions are in \path{KFOL/Definitions}, apart from the proofs, and \path{notes/paper-definition-surface.md} lists every definition that each statement depends on. Winner sets are nonempty sets of roles. Subgame-perfect equilibrium is defined by full profiles and whole-player deviations in every subtree, independently of backward induction, and it agrees with Nash equilibrium of the GameTheory library in every subtree. Sealed rounds use assessments: sequential rationality at every information set, and consistency as a limit of completely mixed profiles. Complexity is measured on the deterministic multitape Turing machines of ComplexityLib, and coNP-completeness has its textbook meaning, with polynomial-time many-one reductions. Inputs are binary words encoding tree terms, with binary variable names, explicit permutations, and, when it is part of the input, $K$ in binary; the decoders reject malformed words. The algebraic modules import neither GameTheory nor ComplexityLib.
 
-The production artifact is the single development in \path{KFOL/}. The earlier \texttt{Std}-only sources were retired and remain available at revision \texttt{7014dbb}; they are not current proof evidence. Report-only claims not represented below have written proofs and finite checks (\cref{tab:report}). The programs in \path{checks/} recompute small cases independently of Lean (\cref{app:finite-checks}). \texttt{make check paper} builds the production proofs, runs the audits and checks, and builds both manuscripts.
+The other report results have written proofs, most with finite checks (\cref{tab:report}). The programs in \path{checks/} recompute small cases independently of Lean (\cref{app:finite-checks}). \texttt{make check paper} builds the Lean development, runs the audits and checks, and builds both manuscripts.
 
 {\small
 \begin{longtable}{>{\raggedright\arraybackslash}p{0.30\linewidth}>{\raggedright\arraybackslash}p{0.64\linewidth}}
@@ -81,25 +81,25 @@ Result & Evidence\\
 \bottomrule
 \endlastfoot
 Occurrence lower bound (\cref{game:thm:lower})
- & Written; finite checks.\\
+ & Written.\\
 Unary classifications (\cref{app:contexts,app:ambiguity})
- & Written; finite checks. Main-paper quotient and observation claims are in \texttt{Paper.lean}.\\
+ & Written; finite checks.\\
 Further congruence results (\cref{app:congruences})
  & Written; finite checks.\\
 Minimal clone (\cref{reset:thm:minimal})
- & Written; finite checks.\\
+ & Written.\\
 Forest models, combs (\cref{app:reset-models})
  & Written; finite checks.\\
 Shared subterms with guarded owners or policies (\cref{reset:thm:circuits})
  & Written. The reset clauses are in \texttt{Paper.lean}.\\
 Selective reset, mixed policies (\cref{app:selective})
- & The required guard, classification and native complexity claims are in \texttt{Paper.lean}. Other report extensions have written proofs and finite checks.\\
+ & Written; finite checks. The family classification, \cref{selective:thm:families}, is in \texttt{Paper.lean}.\\
 Two players (\cref{two:prop:terms,two:prop:complexity})
  & Written; finite checks.\\
 One-owner presentations (\cref{owner:thm:conservative-basis,owner:cor:small-four-variable,owner:prop:relative-not-full,owner:prop:nonconservative-si,owner:prop:residual})
- & Written; finite checks. The required unrestricted basis and generator claims are in \texttt{Paper.lean}.\\
+ & Written; finite checks.\\
 Core subvarieties and presentations (\cref{core:prop:dissemilattice-lift,core:prop:binary,core:prop:unary-polynomials,core:thm:conservative-basis,core:cor:small-countermodel,core:thm:atomic-basis,core:prop:atomic-uniform-lift})
- & Written; finite checks. Congruence distributivity uses \cite{Mitschke1978}. The required core nonfinite-basis and choice/union basis claims are in \texttt{Paper.lean}.\\
+ & Written; finite checks. Congruence distributivity uses \cite{Mitschke1978}.\\
 Round values (\cref{se:prop:round-values})
  & Nonemptiness in \texttt{Paper.lean}; compactness, semialgebraicity, monotonicity, renaming, and reordering written.\\
 Decidable scalar equations (\cref{se:cor:decidable})
