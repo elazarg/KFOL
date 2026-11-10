@@ -75,6 +75,17 @@ theorem core_variable_bound_obstruction : ∀ {Role : Type u} [DecidableEq Role]
       Equational.IsBasis (WinnerSet Role) T → ∃ e ∈ T, Fintype.card Role + 1 ≤ e.variableCount) :=
   @KFOL.Results.core_variable_bound_obstruction
 
+/-- `owner:thm:no-four-variable-basis`: the concrete local obstruction. -/
+theorem owner_four_variable_obstruction :
+    letI := Owner.fourStructure (Role := Unit)
+    Fintype.card Owner.FourVariableObstruction.Carrier = 6 ∧
+    (∀ e : Equational.Identity (Owner.Symbol Unit), e.variableCount ≤ 4 →
+      e.Holds Owner.Four → e.Holds Owner.FourVariableObstruction.Carrier) ∧
+    Owner.FourVariableObstruction.actionBand.Holds Owner.Four ∧
+    ¬Owner.FourVariableObstruction.actionBand.Holds Owner.FourVariableObstruction.Carrier ∧
+    Owner.FourVariableObstruction.actionBand.variableCount = 5 :=
+  Results.Algebra.owner_four_variable_obstruction
+
 theorem core_typed_upper_clone_cover : ∀ {Role : Type u} [DecidableEq Role]
     {C : Type v} [(Equational.language (Equational.CoreSymbol Role)).Structure C]
     {P : Type w} [(Equational.language (Equational.CoreSymbol Role)).Structure P]

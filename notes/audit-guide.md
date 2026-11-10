@@ -1,8 +1,8 @@
 # Reading the formalization
 
-Start with [Paper.lean](../Paper.lean): its 80 theorem statements cover the main
+Start with [Paper.lean](../Paper.lean): its 75 theorem statements cover the main
 paper, its mathematical prose claims and the report clauses it uses.
-[Report.lean](../Report.lean) gives 38 further audited report statements and
+[Report.lean](../Report.lean) gives 44 further audited report statements and
 proof ingredients. Both files write out the propositions; each proof names one
 library theorem. Detailed codecs, descriptors, intermediate certificates and
 machine contracts are in the library, including

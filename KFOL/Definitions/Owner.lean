@@ -497,6 +497,73 @@ def rootExpansion : Equational.Identity (Symbol Unit) :=
 end BasisObstruction
 
 
+/-! ## A six-element obstruction to a four-variable basis -/
+
+namespace FourVariableObstruction
+
+/-- The six-element countermodel. The value `join` is retained in every local model. -/
+inductive Carrier where
+  | root | block | left | right | input | join
+  deriving DecidableEq, Repr
+
+instance : Fintype Carrier where
+  elems := {.root, .block, .left, .right, .input, .join}
+  complete x := by cases x <;> simp
+
+instance : Nonempty Carrier := ⟨.join⟩
+
+/-- Reset in the countermodel. -/
+def reset : Carrier → Carrier → Carrier
+  | _, .block => .block
+  | _, .input => .input
+  | .input, _ => .input
+  | .left, .root | .right, .root | .join, .root => .join
+  | _, y => y
+
+/-- The exceptional root-zero table. -/
+def zeroGuard : Carrier → Carrier → Carrier
+  | .root, .root | .root, .block | .block, .root | .block, .block => .root
+  | .left, .right | .right, .left => .root
+  | .input, .block | .block, .input => .join
+  | .input, _ | _, .input => .input
+  | _, _ => .join
+
+/-- Guarded choice in the countermodel. -/
+def guarded : Carrier → Carrier → Carrier → Carrier
+  | .root, y, z => zeroGuard y z
+  | .block, _, _ => .block
+  | .input, _, _ => .input
+  | x, .block, _ | x, _, .block => x
+  | _, .input, _ | _, _, .input => .input
+  | x, _, _ => x
+
+instance : (Equational.language (Symbol Unit)).Structure Carrier where
+  funMap f args := match f with
+    | .reset => reset (args 0) (args 1)
+    | .guarded _ => guarded (args 0) (args 1) (args 2)
+  RelMap r := nomatch r
+
+/-- The five values that can be omitted; `join` is never omitted. -/
+def excluded : Fin 5 → Carrier := ![.root, .block, .left, .right, .input]
+
+/-- The five specified subalgebras. -/
+abbrev Local (e : Fin 5) := {x : Carrier // x ≠ excluded e}
+
+/-- The five-variable action-band consequence that separates the countermodel. -/
+def actionBand : Equational.Identity (Symbol Unit) :=
+  let r : Term Unit (Fin 5) := .var 0
+  let b : Term Unit (Fin 5) := .var 1
+  let c : Term Unit (Fin 5) := .var 2
+  let d : Term Unit (Fin 5) := .var 3
+  let u : Term Unit (Fin 5) := .var 4
+  let p := Term.step u r
+  let K := fun x => Term.guarded () r x b
+  let F := fun x => Term.guarded () r (Term.step x c) d
+  ⟨5, K (F (K p)), K (F p)⟩
+
+end FourVariableObstruction
+
+
 /-! ## The explicitly listed thirty-six-law basis -/
 
 namespace FiniteBasis

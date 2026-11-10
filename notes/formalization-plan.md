@@ -3,14 +3,14 @@
 The completion target is the entire main paper, its substantive mathematical
 prose, and the report material those claims require. The entire technical report
 is not a completion target. The [inventory](formalization-claims.json) records
-23 main result rows, 66 required catalog rows and 21 required prose obligations,
-all proved. Its source catalog contains 156 statements.
+21 main result rows, 63 required catalog rows and 17 required prose obligations,
+all proved. Its source catalog contains 157 statements.
 
 ## Public audit surface
 
 - [Paper.lean](../Paper.lean) contains 75 main-facing mathematical statements in
   about 600 lines, ordered by subject and labelled for the main results.
-- [Report.lean](../Report.lean) contains 43 further mathematical report statements
+- [Report.lean](../Report.lean) contains 44 further mathematical report statements
   and proof ingredients.
 - Every public theorem writes its proposition in mathematical vocabulary.
   Its proof is one application of a named library theorem. Neither root file
@@ -160,3 +160,14 @@ This extension changes no main-paper theorem or definition. The optional
 remains dependency-free. Future extensions should distinguish the fixed
 nonempty input schema from arbitrary XPath documents and keep runtime claims
 separate from syntax-size bounds.
+
+## One-owner variable bound
+
+Four variables do not suffice, even for an infinite basis. The six-element
+model in `Definitions/Owner` has five closed five-element local models covering
+every four inputs. `Owner/FourVariableObstruction` proves each local model
+satisfies the complete thirty-six-equation basis, transfers all identities with
+at most four actual variables, and refutes a valid five-variable action-band
+consequence. `Paper.owner_thirty_six_equation_basis` therefore gives bounds
+five to six. The optimal bound within conservative algebras remains four.
+The remaining unrestricted question is whether five variables suffice.

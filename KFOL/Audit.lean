@@ -283,6 +283,7 @@ import all KFOL.Owner.Basis.WordNormalForm
 import all KFOL.Owner.BasisObstruction
 import all KFOL.Owner.Completeness
 import all KFOL.Owner.Four
+import all KFOL.Owner.FourVariableObstruction
 import all KFOL.Owner.GuardEncoding
 import all KFOL.Owner.Guards
 import all KFOL.Owner.JointObservation

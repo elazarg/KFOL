@@ -51,7 +51,61 @@ def canonical_identity(left, right):
     return min(oriented(left, right), oriented(right, left))
 
 
+def check_four_variable_obstruction():
+    """Check full laws on the six-element witness, then its local cover.
+
+    This checks a finite certificate for the entire four-variable theory:
+    completeness of BASIS turns its closed local models into full models.
+    It does not enumerate terms to a fixed depth.
+    """
+    from itertools import combinations
+    from check_owner_presentation import evaluate
+
+    reset_table = [
+        [0, 1, 2, 3, 4, 5], [0, 1, 2, 3, 4, 5],
+        [5, 1, 2, 3, 4, 5], [5, 1, 2, 3, 4, 5],
+        [4, 1, 4, 4, 4, 4], [5, 1, 2, 3, 4, 5],
+    ]
+    root_zero = [
+        [0, 0, 5, 5, 4, 5], [0, 0, 5, 5, 5, 5],
+        [5, 5, 5, 0, 4, 5], [5, 5, 0, 5, 4, 5],
+        [4, 5, 4, 4, 4, 4], [5, 5, 5, 5, 4, 5],
+    ]
+
+    def guarded(x, y, z):
+        if x == 0:
+            return root_zero[y][z]
+        if x in (1, 4):
+            return x
+        return 4 if (y == 4 or z == 4) and y != 1 and z != 1 else x
+
+    guarded_table = [[[guarded(x, y, z) for z in range(6)]
+                      for y in range(6)] for x in range(6)]
+    local = [set(range(6)) - {e} for e in range(5)]
+    for subset in local:
+        assert all(reset_table[x][y] in subset for x, y in product(subset, repeat=2))
+        assert all(guarded(x, y, z) in subset for x, y, z in product(subset, repeat=3))
+    assert all(any(set(xs) <= subset for subset in local)
+               for xs in combinations(range(6), 4))
+
+    failures = []
+    for name, left, right in BASIS:
+        names = sorted(variables(left) | variables(right))
+        for xs in product(range(6), repeat=len(names)):
+            env = dict(zip(names, xs))
+            lhs = evaluate(left, env, reset_table, guarded_table)
+            rhs = evaluate(right, env, reset_table, guarded_table)
+            if lhs != rhs:
+                failures.append((name, xs, lhs, rhs))
+                assert not any(set(xs) <= subset for subset in local)
+    assert failures == [('F_band', (0, 0, 1, 2, 3, 4), 0, 5),
+                        ('F_band', (0, 0, 1, 3, 2, 4), 0, 5)]
+    print('Four-variable obstruction: five closed local models cover every '
+          'four inputs; the only two basis failures are the action-band law.')
+
+
 def check():
+    check_four_variable_obstruction()
     assert len(BASIS) == 36
     assert len({(left, right) for _, left, right in BASIS}) == 36
     canonical = {}

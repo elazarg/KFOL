@@ -3,8 +3,10 @@
 The one-owner expansion has a finite equational basis over arbitrary
 algebras: \cref{owner:thm:finite-basis} gives thirty-six identities with
 at most six variables, proved complete by word normalization and two-source
-absorption. At least four variables are necessary, and whether four suffice is
-open. Within conservative algebras, thirteen equations suffice, with an
+absorption. Four variables do not suffice: a six-element algebra satisfies
+every four-variable identity but fails a five-variable action law
+(\cref{owner:thm:no-four-variable-basis}). Thus the least variable bound is
+five or six. Within conservative algebras, thirteen equations suffice, with an
 optimal four-variable bound (\cref{owner:thm:conservative-basis}).
 \Cref{app:core-basis} treats the core.
 
@@ -75,6 +77,82 @@ satisfying all three-variable identities satisfies every identity, by
 identifying variables that take the same value in a proposed countervaluation.
 
 \input{sections/appendix-owner-basis}
+
+\subsection{Four variables do not suffice}
+
+The six-element algebra below is nonconservative: applying reset to
+$2,0$ produces $5$. Its five specified subalgebras cover every four-element
+set, while its common-root actions fail the left regular band law.
+
+\begin{theorem}[No four-variable basis]\label{owner:thm:no-four-variable-basis}
+There is a six-element algebra satisfying every identity of $\mathbf F$
+using at most four distinct variables but failing a valid five-variable
+identity. Consequently every equational basis, even an infinite one,
+contains an identity using at least five distinct variables.
+\end{theorem}
+\begin{proof}
+Define $\mathbf Q$ on $\{0,1,2,3,4,5\}$ by the following reset table
+and root-zero guarded table. Rows index $x$ on the left and $y$ on the right.
+\[
+\begin{array}{c|rrrrrr}
+ x\del y&0&1&2&3&4&5\\\hline
+ 0&0&1&2&3&4&5\\
+ 1&0&1&2&3&4&5\\
+ 2&5&1&2&3&4&5\\
+ 3&5&1&2&3&4&5\\
+ 4&4&1&4&4&4&4\\
+ 5&5&1&2&3&4&5
+\end{array}
+\qquad
+\begin{array}{c|rrrrrr}
+ h(0,y,z)&0&1&2&3&4&5\\\hline
+ 0&0&0&5&5&4&5\\
+ 1&0&0&5&5&5&5\\
+ 2&5&5&5&0&4&5\\
+ 3&5&5&0&5&4&5\\
+ 4&4&5&4&4&4&4\\
+ 5&5&5&5&5&4&5
+\end{array}
+\]
+For the other roots, put $h(1,y,z)=1$, $h(4,y,z)=4$, and, for
+$x\in\{2,3,5\}$, put
+\[
+ h(x,y,z)=
+ \begin{cases}
+ 4,&(y=4\text{ or }z=4)\text{ and }y,z\ne1,\\
+ x,&\text{otherwise}.
+ \end{cases}
+\]
+For each $e\in\{0,1,2,3,4\}$, the set
+$Q_e=Q\setminus\{e\}$ is closed under both operations.
+Substitution in the thirty-six equations of
+\cref{owner:thm:finite-basis} verifies that each $Q_e$ satisfies them all.
+Their completeness therefore gives $Q_e\in\operatorname V(\mathbf F)$.
+Every assignment to at most four distinct variables omits at least one of
+$0,1,2,3,4$ and hence lies in some $Q_e$. Its entire term evaluation stays
+there, so every four-variable identity of $\mathbf F$ holds in $\mathbf Q$.
+
+Write $p_r(u)=u\del r$, $K_b(x)=h(r,x,b)$ and
+$F_{cd}(x)=h(r,x\del c,d)$, with the root $r$ fixed. The identity
+\begin{equation}\label{owner:eq:five-variable-band}
+ K_bF_{cd}K_b(p_r(u))=K_bF_{cd}(p_r(u))
+\end{equation}
+is valid on $\mathbf F$: it is the action-band law (A5) with $a=r$,
+since $F_{rb}=K_b$ on the common-root fibre.
+It has five variables $r,b,c,d,u$.
+In $\mathbf Q$, choose $(r,b,c,d,u)=(0,1,2,3,4)$.
+The fibre at $0$ is the chain $0<5<4$. On its listed values,
+\[
+ \begin{array}{c|ccc}
+ x&0&5&4\\\hline
+ K_1(x)&0&5&5\\
+ F_{23}(x)&0&0&4
+ \end{array}
+\]
+Thus the two sides of \eqref{owner:eq:five-variable-band} are $0$ and $5$.
+Soundness of equational logic rules out a basis consisting of
+four-variable identities.
+\end{proof}
 
 \subsection{A finite presentation within conservative algebras}
 

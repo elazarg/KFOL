@@ -583,3 +583,16 @@ removes exactly these four rows, and checks/check_owner_finite_basis.py checks
 both literal and alpha/orientation distinctness before soundness enumeration.
 Root should refresh inventory/definition-surface/public axiom references and
 the verification appendix, and run make paper for updated label snapshots.
+
+## Four-variable basis obstruction
+
+A six-element model now rules out every four-variable basis, including infinite
+ones. Its five subalgebras obtained by omitting one of the first five values
+cover every four inputs and satisfy the entire thirty-six-law basis. The full
+carrier satisfies the other thirty-five laws; the action-band law has exactly
+two failing assignments, both using all five indispensable values. A native
+five-variable consequence separates it. The resulting lower bound of five is
+proved for Four and every intended winner-set algebra with at least three
+roles in `KFOL/Owner/FourVariableObstruction.lean`. The displayed basis still
+gives upper bound six. Earlier four-variable lower bounds in this note record
+historical milestones; the conservative relative bound is still optimal.

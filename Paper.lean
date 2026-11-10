@@ -361,7 +361,7 @@ theorem owner_thirty_six_equation_basis (three : Fin 3 ↪ Role) (a k : Role) (h
     (∀ i : Fin 36, (Owner.FiniteBasis.basisAxiom i).variableCount ≤ 6) ∧
     Equational.IsBasis (WinnerSet Role) (Set.range Owner.FiniteBasis.basisAxiom) ∧
     ∀ (T : Equational.Theory (Owner.Symbol Unit)) n,
-      Equational.IsBasis (WinnerSet Role) T → Equational.HasVariableBound T n → 4 ≤ n :=
+      Equational.IsBasis (WinnerSet Role) T → Equational.HasVariableBound T n → 5 ≤ n :=
   Results.Algebra.owner_thirty_six_equation_basis three a k hka
 
 theorem joint_owner_observation_failure (a b c : Role) (hab : a ≠ b) (hac : a ≠ c) (hbc : b ≠ c) :

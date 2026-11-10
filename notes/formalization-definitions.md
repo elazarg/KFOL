@@ -1,8 +1,8 @@
 # Definitions and representation boundaries
 
-Read [Paper.lean](../Paper.lean) with the vocabulary below. It contains 80
+Read [Paper.lean](../Paper.lean) with the vocabulary below. It contains 75
 mathematical statements and no definitions. [Report.lean](../Report.lean)
-contains 38 further mathematical statements. Their proofs name library theorems;
+contains 44 further mathematical statements. Their proofs name library theorems;
 definitions must still be reviewed independently against the manuscripts.
 
 The [audit guide](audit-guide.md) gives the reading order. The generated
@@ -14,7 +14,7 @@ theorem types. They erase proof-valued subterms and never follow theorem proofs.
 | Entry point | Theorem types | Semantic declarations | Source files | Central definition files | Written review units |
 | --- | ---: | ---: | ---: | ---: | ---: |
 | Paper | 75 | 627 | 35 | 23 | 327 |
-| Report | 43 | 478 | 27 | 16 | 210 |
+| Report | 44 | 530 | 28 | 17 | 227 |
 
 These counts are separate slices and overlap. The vocabulary files organize
 the presentation; they do not replace their underlying mathematical definitions.
@@ -45,7 +45,7 @@ The underlying definitions are grouped by subject:
 | `TestDomains` | Completeness of a test domain over every finite arity |
 | `Atomic` | Atomic preservation/realization and the repeat-triple relation |
 | `Reset` | Reset syntax, rightmost root, selection, minimal guard tables, rooted antimatroids and table realizability |
-| `Owner` | Guarded-owner syntax, root/status, guards, coverage, the independent four-state algebra and literal 36-equation basis |
+| `Owner` | Guarded-owner syntax, root/status, guards, coverage, the independent four-state algebra, literal 36-equation basis and six-element obstruction to four-variable axiomatization |
 | `Policies` | Indexed policies, passing patterns, selective reset, native syntax and the chain/intersection/repetition criterion |
 | `Congruences` | Operation-compatible equivalence relations, admissible closure families and ambiguity thresholds |
 | `Equational` | Identities, satisfaction, derivation, bases, variable bounds and generated varieties |
