@@ -151,6 +151,9 @@ theorem core_ternary_obstruction {Role : Type u} (three : Fin 3 ↪ Role) :
     (∃ s : Term Role (Fin 3), s.IsCore ∧ ∀ v r,
       (Core.threewiseCounterexample three v = WinnerSet.singleton r ↔
         s.eval v = WinnerSet.singleton r)) ∧
+    (∀ i : Fin 3, ∃ t : Term Role (Fin 3), t.IsCore ∧ ∀ v,
+      WinnerSet.view (three i) (Core.threewiseCounterexample three v) =
+        WinnerSet.view (three i) (t.eval v)) ∧
     ¬∃ t : Term Role (Fin 3), t.IsCore ∧ ∀ v, t.eval v = Core.threewiseCounterexample three v :=
   Core.Threewise.counterexample three
 
@@ -160,6 +163,22 @@ theorem core_singleton_profiles {Role : Type u} [DecidableEq Role] [Fintype Role
     (∃ t : Equational.Term (Equational.CoreSymbol Role) Var,
       ∀ i v, Core.profile i v t = F i v) ↔ Core.AdmissibleProfiles F :=
   Results.Algebra.core_singleton_profiles three F
+
+theorem core_colored_graph_representation {Role : Type u} {Var : Type v} [Nonempty Role]
+    (f : (Var → WinnerSet Role) → WinnerSet Role) :
+    Core.ColoredGraph.Represents f ↔
+      ∃ t : Term Role Var, t.IsCore ∧ ∀ v, t.eval v = f v :=
+  Core.ColoredGraph.represents_iff f
+
+theorem core_colored_graph_guards {Role : Type u} {Var : Type v}
+    [Fintype Role] [Fintype Var] (three : Fin 3 ↪ Role)
+    (G : ∀ (k : Role) (j : Var), Finset (Core.Sources.Guard k j)) :
+    (∃ t : Term Role Var, t.IsCore ∧ Core.Sources.normalForm three (fun v => t.eval v) = G) ↔
+      ∃ (n : ℕ) (H : Core.ColoredGraph.Graph Role (Fin n)) (label : Fin n → Var),
+        0 < n ∧ H.NoRainbow ∧ H.NoAlternatingPath ∧ ∀ k j g,
+          g ∈ G k j ↔ Core.Sources.Prime
+            (fun p => H.Wins Set.univ label (Core.Sources.probe three k j p) k) g :=
+  Core.ColoredGraph.guard_realization_iff three G
 
 theorem core_three_valuation_persistence {Role : Type u} {Var : Type v} (a b c : Role)
     (hab : a ≠ b) (hac : a ≠ c) (hbc : b ≠ c)

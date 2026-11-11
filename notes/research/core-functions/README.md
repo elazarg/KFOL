@@ -1,10 +1,31 @@
 # All-arity core functions
 
 Exact recognition, synthesis and canonical prime source-guard normal forms
-are proved. A concise intrinsic description of jointly realizable families
-remains open. Pairwise compatibility and correct singleton profiles together
+are proved. Jointly realizable families now have an exact structural graph
+representation, described below. A direct criterion on the canonical guards
+without an auxiliary realization remains open. Pairwise compatibility and correct singleton profiles together
 are proved insufficient, uniformly for every K ≥ 3. Three-point interpolation
 is also proved insufficient, with a symbolic four-valuation persistence law.
+
+## Structural graph representation
+
+`Definitions/CoreGraph` specifies finite graphs whose vertices are independent
+input occurrences, labeled by variables. Edges have owner colors. Exclude
+rainbow triangles and the two-colored four-vertex path together with its
+complement. A vertex supplies winner k when its input contains k; it survives
+when, for each other owner r, some maximal r-clique through it has no other
+vertex whose input is {r}.
+
+`Core/ColoredGraphRealization.represents_iff` proves that the resulting operations
+are exactly all core term operations. `Core/ColoredGraphGuards.guard_realization_iff`
+gives the equivalent prime-source-family criterion. The proof includes the
+finite colored-graph decomposition theorem, clique recurrences and reconstruction
+of one common term. It works without enumerating the operation clone. The
+operation theorem allows arbitrary variable and nonempty role types.
+
+This is a structural representation theorem: the graph witness need not be
+unique, while the prime source guards remain canonical. It does not establish
+a fixed relational arity bound or eliminate the auxiliary graph.
 
 ## Profiles and source-guard normal forms
 

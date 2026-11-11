@@ -14,9 +14,11 @@ constants and internal role permutations by a permutation envelope. The remainin
 owned choice with union has a seven-equation basis
 (\cref{app:core-dissemilattice}); the binary terms have explicit normal
 forms (\cref{app:core-binary}); at every arity, singleton profiles and their
-greatest completions are characterized (\cref{app:core-profiles}), prime source-guard
-normal forms describe their full values (\cref{app:core-source-guards}), their
-binary and ternary compatibility tests are shown insufficient (\cref{app:core-pairwise}),
+greatest completions are characterized (\cref{app:core-profiles}), prime
+source-guard normal forms describe their full values
+(\cref{app:core-source-guards}), and finite colored graphs characterize
+their joint realizability (\cref{app:core-colored-graphs}). Binary and
+ternary compatibility tests are insufficient (\cref{app:core-pairwise});
 joint compatibility is tested on source probes (\cref{app:core-compatibility}), and a finite
 saturation decides which operations are terms (\cref{app:core-cuts});
 unary polynomials are classified (\cref{core:prop:unary-polynomials});
@@ -953,6 +955,76 @@ the next subsection shows. \Cref{app:core-cuts} gives a finite test for term
 operations, and \cref{app:core-compatibility} applies it directly to the
 joint source data.
 
+\subsection{A colored-graph characterization}
+\label{app:core-colored-graphs}
+
+Jointly realizable source guards have a structural graph representation.
+Vertices are occurrences of variables, so a variable may label several
+vertices. Every edge of the complete graph has an owner as its color.
+Two induced patterns are excluded: a triangle with three different colors,
+and four vertices whose three path edges have one color and whose other
+three edges have a different color. These are local conditions on the graph.
+
+For an owner $r$, an \emph{$r$-clique} is a set of vertices whose distinct
+pairs all have color $r$. Maximality means inclusion maximality in the
+whole vertex set. For a valuation $v$, a vertex $x$ \emph{supplies $k$} if
+$k\in v_{\lambda(x)}$. It \emph{survives} if, for each $r\ne k$, some
+maximal $r$-clique $D$ contains $x$ and satisfies
+\[
+  v_{\lambda(y)}\ne\{r\}\qquad(y\in D\setminus\{x\}).
+\]
+Write $W_G(v)$ for the set of winners supplied by surviving vertices.
+
+\begin{theorem}[Colored-graph characterization]
+\label{core:thm:colored-graphs}
+An operation $f$ on nonempty winner sets is a core term operation if and
+only if there is a finite nonempty vertex-labeled graph with neither
+forbidden pattern such that $f(v)=W_G(v)$ for every valuation $v$.
+The roles and variables may be arbitrary types, provided the role type
+is nonempty.
+\end{theorem}
+\begin{proof}
+A core term gives a graph by replacing each variable occurrence by a
+vertex. At a choice owned by $r$, join the graphs of its children and
+color every crossing edge by $r$. Absence of both excluded patterns is preserved
+by this construction.
+
+Conversely, Gurvich's decomposition theorem \cite{Gurvich2009} gives a
+nontrivial partition with all crossing edges of one color whenever such
+a graph has at least two vertices. Recurse on its two parts and use that color as the root owner.
+To verify the resulting term's meaning, observe that maximal cliques of
+a different color stay inside one part. Maximal cliques of the crossing
+color are exactly unions of maximal cliques from both parts.
+Consequently an owner $r$ forces its singleton precisely when every
+maximal $r$-clique contains an occurrence assigned $\{r\}$. At a cut of
+color $r$ this blocking condition is disjunctive; for every other owner
+it is conjunctive. These are the singleton-output laws of owned choice.
+A supplying vertex survives the cut exactly when it survives its own
+part and the other part does not force the cut owner's different
+singleton. This is the possible-winner law of owned choice.
+\end{proof}
+
+\begin{corollary}[Joint guard realization]\label{core:cor:graph-guards}
+For finite role and variable sets, a family of canonical prime source
+guards is jointly realizable if and only if it is the prime clique-guard family of one finite nonempty
+occurrence graph with neither forbidden pattern.
+\end{corollary}
+\begin{proof}
+For a source vertex labeled $j$ and a possible winner $k$, choose one maximal
+$r$-clique through the source for each $r\ne k$. Collect the literals
+$v_{\lambda(y)}\ne\{r\}$ from their other vertices, omitting those with
+label $j$. The source already supplies $k$, so those omitted literals
+hold automatically. The disjunction over all choices of cliques and
+source occurrences describes the coefficient on source probes. Taking
+all inclusion-minimal sufficient guards of this predicate gives the
+canonical prime source-guard family. The characterization
+therefore follows in both directions from \cref{core:thm:colored-graphs}.
+\end{proof}
+
+The witness graph need not be unique; the prime source-guard family
+remains the canonical description of the operation. This is a structural
+representation, rather than a condition on the canonical guards alone.
+
 \subsection{Relational compatibility}\label{app:core-pairwise}
 
 A \emph{binary invariant relation} is a relation $R\subseteq\Pow^2$
@@ -1153,7 +1225,8 @@ equivalently, $F=P_0$ when $P_0=P_1$, and $F=P_2$ otherwise.
 \begin{theorem}[Ternary interpolation obstruction]\label{core:thm:ternary-obstruction}
 For every $K\geq3$, the operation $F$ is three-point interpolable and
 preserves every ternary invariant relation. It has exactly the singleton
-profiles of a core term, but is not a core term operation.
+profiles of a core term. Each of the three views $a,b,c$ is also
+realized by a core term, but $F$ is not a core term operation.
 \end{theorem}
 \begin{proof}
 To check coherence, split each input into its four statuses: the $a$-,
@@ -1180,6 +1253,18 @@ Finally,
 \end{array}
 \]
 These values violate \cref{core:prop:four-persistence}.
+
+For the separate views, take
+\[
+\begin{aligned}
+ T_a&=Y+(X\star_bY)+\bigl(Z\star_c(X+Y)\bigr),\\
+ T_b&=X+\bigl(Y\star_a(Z\star_c(X+Y))\bigr),\\
+ T_c&=X+(X\star_bY)+(Y\star_aZ).
+\end{aligned}
+\]
+The same input-status cases give $F\equiv_k T_k$ pointwise for $k=a,b,c$.
+Thus, already for $K=3$, all individual views can be realizable without
+one common realization.
 \end{proof}
 
 \begin{corollary}[Core realizability within a profile class]\label{core:cor:profile-nonconvex}

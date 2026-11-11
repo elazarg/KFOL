@@ -157,3 +157,30 @@ countermodel proofs are in `KFOL/Algebra/FullBasis/`. Strict regressions check
 inverse owner transport, composition of copy-label permutations, the failure
 of the purity premise at two roles, and a two-variable identity declared at
 arity 100. The existing core proof and all original contracts are preserved.
+# Colored occurrence graphs (proved)
+
+All core term operations have an exact structural representation by finite
+owner-colored graphs. Exclude rainbow triangles and the two-colored induced
+four-vertex path whose complement is the other color. Vertices are independent
+input occurrences, so several vertices may carry one variable label.
+
+A vertex supplies winner k when its input contains k. It survives precisely
+when every other owner r has some maximal monochromatic r-clique through it
+whose other vertices avoid the singleton {r}. The resulting winner map is a
+core operation, and every core operation has such a representation.
+
+The graph decomposition is Gurvich's theorem, proved here in Lean rather than
+assumed. The new semantic bridge is the clique law: singleton output r means
+every maximal r-clique meets an input assigned {r}. On a monochromatic cut this
+is OR for its owner and AND for the other owners. Source survival then gives
+the exact possible-winner choice recursion. This proves the full iff and the
+equivalent prime-source-family representation without enumerating term functions.
+
+The definitions are grouped in `Definitions/CoreGraph`; the reconstruction,
+clique semantics and two representation theorems are in `Core/ColoredGraph*`.
+The graph need not be canonical. A direct criterion on prime guard tables
+without an auxiliary realization remains a stronger question.
+
+The existing ternary obstruction also has explicit short realizations of all
+three player views separately. For three roles, viewwise realizability therefore
+does not supply the common graph or term required for joint realization.

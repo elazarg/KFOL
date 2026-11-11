@@ -8,7 +8,7 @@ Other report results remain optional and have their own evidence status.
 | Audit entrypoint | Mathematical statements | Presentation |
 | --- | ---: | --- |
 | [Paper.lean](../Paper.lean) | 77 | Main text and the report claims it cites; 620 lines |
-| [Report.lean](../Report.lean) | 64 | Further report results and proof ingredients |
+| [Report.lean](../Report.lean) | 66 | Further report results and proof ingredients |
 | [Results/Certificates](../KFOL/Results/Certificates.lean) | 140 preserved contracts | Original full statements, including native machines, codecs and intermediate invariants |
 
 Every root proof names one library theorem. Both root files have no semantic
@@ -26,7 +26,7 @@ regular representation are in `Definitions/Relational`.
 | Definition surface | Theorem types | Semantic declarations | Source files | Written review units |
 | --- | ---: | ---: | ---: | ---: |
 | Paper | 77 | 648 | 36 | 342 |
-| Report | 64 | 615 | 32 | 276 |
+| Report | 66 | 624 | 33 | 283 |
 
 The slices overlap and exclude theorem proof bodies. These meaning indexes do
 not replace the human comparison with the manuscript or the proof/axiom audits.
@@ -37,7 +37,7 @@ The production integration checks are:
 
 - `make check-lean`: literal façade and preservation checks, inventory,
   independent algebra build/import audit, Paper/Report and whole-source axiom
-  audits, both definition indexes, actual negative audit fixtures and 97 strict
+  audits, both definition indexes, actual negative audit fixtures and 98 strict
   Lean regressions.
 - `make check-python`: the explicit 33 independent Python checks, mapped to the
   current paper in `checks/README.md` and the verification appendix.
@@ -165,5 +165,21 @@ finite arity. No role finiteness is used for source decomposition itself.
 `Core/ProfileEnvelope` constructs each core profile's greatest completion by
 reset against the union of all inputs. Core realizability within one profile
 class is not order-convex: explicit core lower and upper bounds contain the non-core
-ternary obstruction between them. These three further report claims are
-kernel-checked; they do not assert the full intrinsic characterization.
+ternary obstruction between them. These three further report claims are kernel-checked.
+
+`Definitions/CoreGraph` now gives a structural representation at every arity:
+finite occurrence graphs exclude rainbow triangles and complementary
+two-colored four-vertex paths, and maximal monochromatic cliques determine
+singleton blocking and source survival. `Core/ColoredGraphDecomposition`
+proves the graph cut theorem; the semantic and reconstruction modules prove
+the full representation in both directions. `Core/ColoredGraphGuards` identifies
+jointly realizable prime families with the prime clique guards of one such
+graph. These two new Report statements use no enumerated clone certificate
+or outside theorem hypothesis. The operation theorem also allows infinite role
+and variable types, assuming a nonempty role type.
+
+The ternary obstruction has short separate realizations of each named
+owner's full view. Thus, for three roles, even realizability on every individual
+view does not ensure one common realization. The graph witness is not unique;
+a direct condition on canonical guard tables, without an auxiliary realization,
+is still not proved.

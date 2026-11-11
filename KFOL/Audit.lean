@@ -477,6 +477,13 @@ import all KFOL.Strategic.Forcing
 import all KFOL.Strategic.Quantified.Basic
 import all KFOL.Strategic.Quantified.Fold
 import all KFOL.Strategic.Quantified.Reduction
+import all KFOL.Definitions.CoreGraph
+import all KFOL.Core.ColoredGraphConstruction
+import all KFOL.Core.ColoredGraphDecomposition
+import all KFOL.Core.ColoredGraphSemantics
+import all KFOL.Core.ColoredGraphReconstruction
+import all KFOL.Core.ColoredGraphRealization
+import all KFOL.Core.ColoredGraphGuards
 import all Paper
 import all Report
 meta import Lean.Elab.Command

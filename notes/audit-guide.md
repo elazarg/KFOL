@@ -2,7 +2,7 @@
 
 Start with [Paper.lean](../Paper.lean): its 77 theorem statements cover the main
 paper, its mathematical prose claims and the report clauses it uses.
-[Report.lean](../Report.lean) gives 64 further audited report statements and
+[Report.lean](../Report.lean) gives 66 further audited report statements and
 proof ingredients. Both files write out the propositions; each proof names one
 library theorem. Detailed codecs, descriptors, intermediate certificates and
 machine contracts are in the library, including
@@ -23,6 +23,7 @@ claim, then open the relevant vocabulary file:
 | Nonfinite-basis envelope | [Envelope.lean](../KFOL/Definitions/Envelope.lean), [Equational.lean](../KFOL/Definitions/Equational.lean) | Explicit copy-labelled operations; the three actual signatures and independent basis/variety predicates |
 | Powerset representation | [Relational.lean](../KFOL/Definitions/Relational.lean) | Annihilating zero extension and a right regular relation with a fresh point |
 | Report navigation queries | [Queries.lean](../KFOL/Definitions/Queries.lean) | Independent path/test semantics, valuation documents, compiler and regular relations |
+| Core graph representations | [CoreGraph.lean](../KFOL/Definitions/CoreGraph.lean) | Symmetric owner colors, the two forbidden induced patterns, maximal cliques, singleton blocking and source survival; repeated vertex labels are independent occurrences |
 
 These files are front doors, not the entire semantic surface. The
 [Paper definition index](paper-definition-surface.md) and

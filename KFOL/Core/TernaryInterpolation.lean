@@ -249,15 +249,83 @@ theorem counterexample_lower {Role : Type*} (three : Fin 3 ↪ Role) :
   ⟨lowerTerm three, by trivial, lower_subset three,
     fun v r => (lower_profiles three v r).symm⟩
 
-/-- The full obstruction: three-point interpolation, relational preservation,
-correct singleton profiles and failure of a global core realization. -/
+private def observerTerm {Role : Type*} (three : Fin 3 ↪ Role) : Fin 3 → Term Role (Fin 3) :=
+  let X := Term.var 0
+  let Y := Term.var 1
+  let Z := Term.var 2
+  let U := Term.unionTerm three X Y
+  let H := Term.choice (three 1) X Y
+  ![Term.unionTerm three (Term.unionTerm three Y H) (.choice (three 2) Z U),
+    Term.unionTerm three X (.choice (three 0) Y (.choice (three 2) Z U)),
+    Term.unionTerm three (Term.unionTerm three X H) (.choice (three 0) Y Z)]
+
+set_option maxHeartbeats 4000000 in
+set_option linter.unusedSimpArgs false in
+private theorem observer_membership {Role : Type*} (three : Fin 3 ↪ Role)
+    (i : Fin 3) (v : Fin 3 → WinnerSet Role) :
+    three i ∈ (threewiseCounterexample three v).val ↔
+      three i ∈ ((observerTerm three i).eval v).val := by
+  classical
+  unfold threewiseCounterexample
+  rw [repeated_predicate (fun A => three i ∈ A.val) _ (candidates_coherent three v)]
+  have hab := three.injective.ne (show (0 : Fin 3) ≠ 1 by decide)
+  have hac := three.injective.ne (show (0 : Fin 3) ≠ 2 by decide)
+  have hbc := three.injective.ne (show (1 : Fin 3) ≠ 2 by decide)
+  have hba := hab.symm
+  have hca := hac.symm
+  have hcb := hbc.symm
+  fin_cases i <;> dsimp [fourPatchCandidates, observerTerm] <;>
+    simp only [Term.eval, Term.eval_unionTerm] <;>
+    by_cases hxa : v 0 = singleton (three 0) <;>
+    by_cases hxb : v 0 = singleton (three 1) <;>
+    by_cases hxc : v 0 = singleton (three 2) <;>
+    by_cases hya : v 1 = singleton (three 0) <;>
+    by_cases hyb : v 1 = singleton (three 1) <;>
+    by_cases hyc : v 1 = singleton (three 2) <;>
+    by_cases hza : v 2 = singleton (three 0) <;>
+    by_cases hzb : v 2 = singleton (three 1) <;>
+    by_cases hzc : v 2 = singleton (three 2) <;>
+    simp_all [choice, union_eq_singleton_iff, singleton_inj] <;> tauto
+
+private theorem observer_other {Role : Type*} (three : Fin 3 ↪ Role)
+    (i : Fin 3) (v : Fin 3 → WinnerSet Role) (r : Role) (hr : r ≠ three i) :
+    threewiseCounterexample three v = singleton r ↔
+      (observerTerm three i).eval v = singleton r := by
+  classical
+  unfold threewiseCounterexample
+  rw [repeated_predicate (fun A => A = singleton r) _ (candidates_coherent three v)]
+  have hab := three.injective.ne (show (0 : Fin 3) ≠ 1 by decide)
+  have hac := three.injective.ne (show (0 : Fin 3) ≠ 2 by decide)
+  have hbc := three.injective.ne (show (1 : Fin 3) ≠ 2 by decide)
+  fin_cases i <;> dsimp [fourPatchCandidates, observerTerm] <;>
+    simp only [Term.eval, Term.eval_unionTerm] <;>
+    by_cases ha : three 0 = r <;> by_cases hb : three 1 = r <;>
+    by_cases hc : three 2 = r <;>
+    simp_all [choice_atom, union_eq_singleton_iff] <;> tauto
+
+theorem counterexample_named_views {Role : Type*} (three : Fin 3 ↪ Role) (i : Fin 3) :
+    ∃ t : Term Role (Fin 3), t.IsCore ∧ ∀ v,
+      WinnerSet.view (three i) (threewiseCounterexample three v) =
+        WinnerSet.view (three i) (t.eval v) := by
+  refine ⟨observerTerm three i, ?_, ?_⟩
+  · fin_cases i <;> trivial
+  · intro v
+    apply (WinnerSet.view_eq_view_iff _ _ _).mpr
+    exact ⟨observer_membership three i v, fun r hr => observer_other three i v r hr⟩
+
+
+/-- Three-point interpolation and separate player-view realizations do not
+suffice for one common core realization. -/
 theorem counterexample {Role : Type*} (three : Fin 3 ↪ Role) :
     LocallyInterpolable 3 (threewiseCounterexample three) ∧
     PreservesInvariants 3 (threewiseCounterexample three) ∧
     (∃ s : Term Role (Fin 3), s.IsCore ∧ ∀ v r,
       (threewiseCounterexample three v = singleton r ↔ s.eval v = singleton r)) ∧
+    (∀ i : Fin 3, ∃ t : Term Role (Fin 3), t.IsCore ∧ ∀ v,
+      WinnerSet.view (three i) (threewiseCounterexample three v) =
+        WinnerSet.view (three i) (t.eval v)) ∧
     ¬∃ t : Term Role (Fin 3), t.IsCore ∧ ∀ v, t.eval v = threewiseCounterexample three v :=
   ⟨counterexample_interpolable three, counterexample_preserves three,
-    counterexample_profiles three, counterexample_not_term three⟩
+    counterexample_profiles three, counterexample_named_views three, counterexample_not_term three⟩
 
 end KFOL.Core.Threewise

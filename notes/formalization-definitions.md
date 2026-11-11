@@ -1,8 +1,8 @@
 # Definitions and representation boundaries
 
-Read [Paper.lean](../Paper.lean) with the vocabulary below. It contains 75
+Read [Paper.lean](../Paper.lean) with the vocabulary below. It contains 77
 mathematical statements and no definitions. [Report.lean](../Report.lean)
-contains 44 further mathematical statements. Their proofs name library theorems;
+contains 66 further mathematical statements. Their proofs name library theorems;
 definitions must still be reviewed independently against the manuscripts.
 
 The [audit guide](audit-guide.md) gives the reading order. The generated
@@ -13,8 +13,8 @@ theorem types. They erase proof-valued subterms and never follow theorem proofs.
 
 | Entry point | Theorem types | Semantic declarations | Source files | Central definition files | Written review units |
 | --- | ---: | ---: | ---: | ---: | ---: |
-| Paper | 75 | 629 | 35 | 23 | 329 |
-| Report | 44 | 530 | 28 | 17 | 227 |
+| Paper | 77 | 648 | 36 | 24 | 342 |
+| Report | 66 | 624 | 33 | 22 | 283 |
 
 These counts are separate slices and overlap. The vocabulary files organize
 the presentation; they do not replace their underlying mathematical definitions.
@@ -44,6 +44,7 @@ The underlying definitions are grouped by subject:
 | `Views` | Player-view states, observations and induced owned operations |
 | `TestDomains` | Completeness of a test domain over every finite arity |
 | `Atomic` | Atomic preservation/realization and the repeat-triple relation |
+| `CoreGraph` | Finite occurrence graphs with symmetric owner colors, forbidden rainbow triangles and complementary two-colored paths, maximal monochromatic cliques, blocking, source survival and graph representation |
 | `Reset` | Reset syntax, rightmost root, selection, minimal guard tables, rooted antimatroids and table realizability |
 | `Owner` | Guarded-owner syntax, root/status, guards, coverage, the independent four-state algebra, literal 36-equation action presentation, its five-variable exchange replacement and six-element obstruction to four-variable axiomatization |
 | `Policies` | Indexed policies, passing patterns, selective reset, native syntax and the chain/intersection/repetition criterion |
