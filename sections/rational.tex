@@ -3,22 +3,31 @@
 Throughout, $I$ is a finite set of $K\geq3$ \emph{roles}, or players; $a,b,c$ are distinct roles, $r$ is a role acting as an owner, and $k$ is a role acting as an observer. The case $K=2$ is different, and \cref{sec:discussion} returns to it. We present games as finite binary trees: a leaf $\at i$ declares that $i$ wins, and a node $G\ch r H$ is
 a public choice by its \emph{owner} $r$. A role values its own win at one and every other outcome at zero, so a role that cannot win has no opinion about who does. Ties are therefore everywhere, and we keep all of them.
 
-A \emph{full profile} $\sigma$ of $G$ selects a branch at every node, including nodes that play never reaches. Its \emph{outcome} is the winner of the leaf reached by following $\sigma$ from the root. A \emph{deviation} by $i$ from $\sigma$ is a full profile that differs from $\sigma$ only at nodes owned by $i$, possibly at all of them. The profile $\sigma$ is a \emph{Nash equilibrium} if no role that loses under $\sigma$ has a deviation that it wins, and a \emph{subgame-perfect equilibrium} (SPE) if its restriction to every subtree, reached or not, is a Nash equilibrium of that subtree. The \emph{value} $\den G$ is the set of outcomes of the SPEs of $G$.
-
-Behavior at unreached nodes is what equilibria are made of. In
+\begin{definition}[Equilibria and values]\label{game:def:spe}
+A \emph{profile} $\sigma$ of a game $G$ selects a branch at every node of $G$, including nodes that play never reaches. Its \emph{outcome} $\operatorname{out}(\sigma)$ is the winner of the leaf reached by following $\sigma$ from the root, and its \emph{restriction} $\sigma|_H$ to a subtree $H$ is the profile of $H$ that it contains. Write $\sigma'\sim_i\sigma$ when $\sigma'$ differs from $\sigma$ only at nodes owned by $i$. Then $\sigma$ is a \emph{Nash equilibrium} of $G$ if no losing role can win by changing only its own choices: for every role $i$,
 \[
- D=(\at a\ch b\at c)\ch a(\at b\ch b\at c),
+ \operatorname{out}(\sigma')=i\text{ for some }\sigma'\sim_i\sigma
+ \quad\Longrightarrow\quad\operatorname{out}(\sigma)=i.
 \]
-player $b$ takes its own win on the right and is indifferent on the left. If it prescribes winner $c$ on the left, the root owner $a$ loses either way and may go right. So $b$ can win, thanks to what it would do in a subtree never entered, and $\den D=\{a,b,c\}$.
+It is a \emph{subgame-perfect equilibrium} (SPE) of $G$ if $\sigma|_H$ is a Nash equilibrium of $H$ for every subtree $H$ of $G$, reached or not. The \emph{value} of $G$ is the set of its SPE outcomes,
+\[
+ \den G=\{\operatorname{out}(\sigma):\sigma\text{ is an SPE of }G\}.
+\]
+\end{definition}
 
-Values range over the set $\Pow$ of nonempty subsets of $I$. Call a singleton an \emph{atom} and a larger set \emph{ambiguous}. For each role $r$, \emph{owned choice} by $r$ is the operation on $\Pow$ given by
+Choices that play never reaches can decide who wins. Consider
+\[
+ D=(\at a\ch b\at c)\ch a(\at b\ch b\at c).
+\]
+On the right $b$ takes its own win, and on the left it loses whichever branch it picks. If it picks $c$ on the left, the root owner $a$ loses on both sides and may go right, so $b$ wins by a choice in a subtree that play never enters. Other SPEs are won by $a$ and by $c$, so $\den D=\{a,b,c\}$.
+
+Backward induction finds values without examining whole profiles: the value of a choice depends only on the values of its branches, through an operation on the set $\Pow$ of nonempty subsets of $I$. For each role $r$, \emph{owned choice} by $r$ is the operation on $\Pow$ given by
 \begin{equation}\label{game:eq:own}
  S\ow r T=\begin{cases}
  \{r\},&S=\{r\}\text{ or }T=\{r\},\\
  S\cup T,&\text{otherwise}.
  \end{cases}
 \end{equation}
-Values compose by owned choice:
 
 \begin{proposition}[Backward induction]\label{game:thm:adequacy}
 Every game has an SPE, and
@@ -26,8 +35,10 @@ $\den{\at i}=\{i\}$, $\den{G\ch r H}=\den G\ow r\den H$.
 \end{proposition}
 
 \begin{idea}
-If $r$ is the only equilibrium winner of a branch, every parent equilibrium is won by $r$, since $r$ can always enter that branch. Otherwise each branch has an equilibrium in which $r$ loses. Playing it in one branch lets $r$ rationally go to the other, whichever equilibrium is played there, so every equilibrium winner of either branch can be realized. In $D$ the branches have values $\{a,c\}$ and $\{b\}$, and $\den D=\{a,c\}\ow a\{b\}=\{a,b,c\}$.
+If $r$ is the only equilibrium winner of a branch, every parent equilibrium is won by $r$, since $r$ can always enter that branch. Otherwise each branch has an equilibrium in which $r$ loses. Playing it in one branch lets $r$ rationally go to the other, whichever equilibrium is played there, so every equilibrium winner of either branch wins some SPE of the choice. In $D$ the branches have values $\{a,c\}$ and $\{b\}$, and $\den D=\{a,c\}\ow a\{b\}=\{a,b,c\}$.
 \end{idea}
+
+Call a singleton an \emph{atom} and a larger set \emph{ambiguous}. Induction on $G$ shows that $\den G=\{r\}$ exactly when $r$ can force a win in $G$, that is, has choices at its own nodes that win whatever the others choose. So an atom records a forced win, and an ambiguous value records that nobody can force one. Owned choice is thus choice by guarantee: the owner takes a branch where it can force a win if there is one, and otherwise neither branch guarantees it anything and all their equilibrium winners remain possible.
 
 Terms extend games with variables and renamings:
 \[
