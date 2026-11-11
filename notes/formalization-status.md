@@ -1,14 +1,14 @@
 # Active formalization status
 
-The entire main-paper scope is proved: **21/21 main result rows**,
-**64/64 required catalog rows**, and **17/17 required prose obligations**.
+The entire main-paper scope is proved: **22/22 main result rows**,
+**67/67 required catalog rows**, and **17/17 required prose obligations**.
 The [inventory](formalization-claims.json) is authoritative for scope.
 Other report results remain optional and have their own evidence status.
 
 | Audit entrypoint | Mathematical statements | Presentation |
 | --- | ---: | --- |
-| [Paper.lean](../Paper.lean) | 77 | Main text and the report claims it cites; 620 lines |
-| [Report.lean](../Report.lean) | 66 | Further report results and proof ingredients |
+| [Paper.lean](../Paper.lean) | 79 | Main text and the report claims it cites; 631 lines |
+| [Report.lean](../Report.lean) | 73 | Further report results and proof ingredients |
 | [Results/Certificates](../KFOL/Results/Certificates.lean) | 140 preserved contracts | Original full statements, including native machines, codecs and intermediate invariants |
 
 Every root proof names one library theorem. Both root files have no semantic
@@ -25,8 +25,8 @@ regular representation are in `Definitions/Relational`.
 
 | Definition surface | Theorem types | Semantic declarations | Source files | Written review units |
 | --- | ---: | ---: | ---: | ---: |
-| Paper | 77 | 648 | 36 | 342 |
-| Report | 66 | 624 | 33 | 283 |
+| Paper | 79 | 654 | 38 | 345 |
+| Report | 73 | 645 | 35 | 293 |
 
 The slices overlap and exclude theorem proof bodies. These meaning indexes do
 not replace the human comparison with the manuscript or the proof/axiom audits.
@@ -37,9 +37,9 @@ The production integration checks are:
 
 - `make check-lean`: literal façade and preservation checks, inventory,
   independent algebra build/import audit, Paper/Report and whole-source axiom
-  audits, both definition indexes, actual negative audit fixtures and 98 strict
+  audits, both definition indexes, actual negative audit fixtures and 99 strict
   Lean regressions.
-- `make check-python`: the explicit 33 independent Python checks, mapped to the
+- `make check-python`: the explicit 34 independent Python checks, mapped to the
   current paper in `checks/README.md` and the verification appendix.
 - `make paper`: both manuscripts, with the main paper remaining 13 pages and
   label snapshots refreshed.

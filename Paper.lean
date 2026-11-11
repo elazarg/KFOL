@@ -31,6 +31,17 @@ theorem public_realizability [Finite Role] (three : Fin 3 ↪ Role) (A : WinnerS
     ∃ G : Strategic.Tree Role, Strategic.value G = A :=
   Results.Games.public_realizability three A
 
+/-- `game:prop:winner-budget`: the minimum number of individual decisions. -/
+theorem public_optimal_realizability [Finite Role] (three : Fin 3 ↪ Role) (A : WinnerSet Role) :
+    (∃ G : Strategic.Tree Role, Strategic.value G = A ∧ G.choiceCount = A.val.ncard - 1) ∧
+      ∀ G : Strategic.Tree Role, Strategic.value G = A → A.val.ncard - 1 ≤ G.choiceCount :=
+  Results.Games.public_optimal_realizability three A
+
+/-- `game:prop:winner-budget`: input values count at each occurrence. -/
+theorem winner_budget [Finite Role] (t : Term Role Var) (ν : Var → WinnerSet Role) :
+    (t.eval ν).val.ncard ≤ min (Nat.card Role) (t.leafMass ν) :=
+  Results.Algebra.winner_budget t ν
+
 theorem public_forcing (G : Strategic.Tree Role) (r : Role) :
     Strategic.CanForce G r ↔ Strategic.value G = WinnerSet.singleton r :=
   Results.public_forcing G r

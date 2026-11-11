@@ -19,6 +19,7 @@ public import KFOL.Algebra.Atomic.Binary
 public import KFOL.Algebra.TwoPlayers.Coordinates
 public import KFOL.Policies.Public
 public import KFOL.Algebra.CommonSource
+public import KFOL.Algebra.Counting
 public import KFOL.Algebra.ReductTestCard
 public import KFOL.Algebra.IdempotencyTestCard
 public import KFOL.Owner

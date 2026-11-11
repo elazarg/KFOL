@@ -1,6 +1,10 @@
 module
 
 import all KFOL
+import all KFOL.Strategic.Counting
+import all KFOL.Definitions.StrategicCounting
+import all KFOL.Definitions.Counting
+import all KFOL.Algebra.Counting
 import all KFOL.Algebra
 import all KFOL.Algebra.Atomic.Binary
 import all KFOL.Algebra.Atomic.BinaryCore

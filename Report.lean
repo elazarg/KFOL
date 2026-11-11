@@ -24,6 +24,50 @@ namespace KFOL.Report
 open FirstOrder WinnerSet Classical
 universe u v w
 
+/-- `game:prop:winner-count`: overlap and absorption exhaust the losses. -/
+theorem winner_accounting {Role : Type u} {Var : Type v} [Finite Role]
+    (t : Term Role Var) (ν : Var → WinnerSet Role) :
+    (t.eval ν).val.ncard + t.overlapLoss ν + t.absorptionLoss ν = t.leafMass ν :=
+  Results.Algebra.winner_accounting t ν
+
+theorem winner_leaf_mass {Role : Type u} {Var : Type v} [Finite Role]
+    (t : Term Role Var) (ν : Var → WinnerSet Role) :
+    t.leafMass ν = t.choiceCount + 1 + t.inputExcess ν :=
+  Results.Algebra.winner_leaf_mass t ν
+
+theorem winner_budget_eq_iff {Role : Type u} {Var : Type v} [Finite Role]
+    (t : Term Role Var) (ν : Var → WinnerSet Role) :
+    (t.eval ν).val.ncard = t.leafMass ν ↔ t.DisjointChoices ν :=
+  Results.Algebra.winner_budget_eq_iff t ν
+
+theorem atomic_winner_budget {Role : Type u} {Var : Type v} [Finite Role]
+    (t : Term Role Var) (ν : Var → WinnerSet Role) (atomic : ∀ x, (ν x).val.ncard = 1) :
+    (t.eval ν).val.ncard ≤ min (Nat.card Role) (t.choiceCount + 1) :=
+  Results.Algebra.atomic_winner_budget t ν atomic
+
+theorem absorbing_winner_budget {Role : Type u} {Var : Type v} [Finite Role]
+    (t : Term Role Var) (ν : Var → WinnerSet Role) :
+    (t.eval ν).val.ncard + t.absorbingCount ν ≤ t.leafMass ν :=
+  Results.Algebra.absorbing_winner_budget t ν
+
+/-- `game:cor:ground-size`: the best value at each exact syntax size. -/
+theorem public_sharp_winner_budget {Role : Type u} [Finite Role]
+    (three : Fin 3 ↪ Role) (n : ℕ) :
+    (∀ G : Strategic.Tree Role, G.choiceCount = n →
+      (Strategic.value G).val.ncard ≤ min (Nat.card Role) (n + 1)) ∧
+    ∃ G : Strategic.Tree Role, G.choiceCount = n ∧
+      (Strategic.value G).val.ncard = min (Nat.card Role) (n + 1) :=
+  Results.Games.public_sharp_winner_budget three n
+
+theorem public_sharp_absorbing_budget {Role : Type u} [Finite Role]
+    (three : Fin 3 ↪ Role) (n h : ℕ) (hn : h ≤ n) :
+    (∀ G : Strategic.Tree Role, G.choiceCount = n → G.absorbingCount = h →
+      (Strategic.value G).val.ncard ≤ min (Nat.card Role) (n + 1 - h)) ∧
+    ∃ G : Strategic.Tree Role, G.choiceCount = n ∧ G.absorbingCount = h ∧
+      (Strategic.value G).val.ncard = min (Nat.card Role) (n + 1 - h) :=
+  Results.Games.public_sharp_absorbing_budget three n h hn
+
+
 theorem core_source_reconstruction {Role : Type u} {Var : Type v}
     (three : Fin 3 ↪ Role) (t : Term Role Var) (ht : t.IsCore)
     (v : Var → WinnerSet Role) (k : Role) :

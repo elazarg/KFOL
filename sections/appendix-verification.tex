@@ -1,6 +1,6 @@
 \section{Verification details}\label{app:verification}
 
-The paper's results are kernel-checked in Lean~4.35.0 with mathlib. \texttt{Paper.lean} restates, in the namespace \texttt{KFOL.Paper}, every theorem of the main text and the clauses of the report results that it cites: $77$ statements, listed by result in \cref{tab:status}. \texttt{Report.lean} restates $66$ further report results in the namespace \texttt{KFOL.Report} (\cref{tab:report}). Each proof is a single library theorem, and each file ends with a check that no declaration in its namespace uses an axiom beyond \texttt{propext}, \texttt{Classical.choice}, and \texttt{Quot.sound}; a separate audit covers the whole library. Nothing is admitted, and no theorem from the literature enters as a hypothesis. Where a written proof cites one, as for the reset basis and the minimum one-owner generator \cite{FreeseEtAl2002}, owned choice with union \cite{HardingRomanowska2017}, the atomic clone \cite{Szendrei2012}, and colored-graph decomposition \cite{Gurvich2009}, the Lean proof is direct.
+The paper's results are kernel-checked in Lean~4.35.0 with mathlib. \texttt{Paper.lean} restates, in the namespace \texttt{KFOL.Paper}, every theorem of the main text and the clauses of the report results that it cites: $79$ statements, listed by result in \cref{tab:status}. \texttt{Report.lean} restates $73$ further report results in the namespace \texttt{KFOL.Report} (\cref{tab:report}). Each proof is a single library theorem, and each file ends with a check that no declaration in its namespace uses an axiom beyond \texttt{propext}, \texttt{Classical.choice}, and \texttt{Quot.sound}; a separate audit covers the whole library. Nothing is admitted, and no theorem from the literature enters as a hypothesis. Where a written proof cites one, as for the reset basis and the minimum one-owner generator \cite{FreeseEtAl2002}, owned choice with union \cite{HardingRomanowska2017}, the atomic clone \cite{Szendrei2012}, and colored-graph decomposition \cite{Gurvich2009}, the Lean proof is direct.
 
 The vocabulary of the statements is in \path{KFOL/Definitions/PaperAlgebra.lean}, \path{PaperGames.lean}, and \path{Complexity.lean}, which build on the other files of \path{KFOL/Definitions}. \path{notes/audit-guide.md} gives a reading order, and \path{notes/paper-definition-surface.md} and \path{notes/report-definition-surface.md} list every definition that each statement depends on.
 
@@ -10,7 +10,7 @@ The library also proves the contracts of the implementation, such as codecs, des
 
 {\small
 \begin{longtable}{>{\raggedright\arraybackslash}p{0.30\linewidth}>{\raggedright\arraybackslash}p{0.64\linewidth}}
-\caption{The $75$ mathematical statements in \texttt{Paper.lean}, grouped by result.}\label{tab:status}\\
+\caption{The $79$ mathematical statements in \texttt{Paper.lean}, grouped by result.}\label{tab:status}\\
 \toprule
 Result & Statements\\
 \midrule
@@ -23,6 +23,8 @@ Result & Statements\\
 \endlastfoot
 Public backward induction and realizability (\cref{game:thm:adequacy,game:thm:union})
  & \path{public_backward_induction}, \path{public_realizability}, \path{neutral_union}\\
+Winner budget and optimal realizations (\cref{game:prop:winner-budget})
+ & \path{winner_budget}, \path{public_optimal_realizability}\\
 Public choice and quantifiers (\cref{sec:rational,game:prop:choice-support})
  & \path{owned_choice_semilattices}, \path{quantifier_fold}, \path{finite_depth_quantifier_reduction}\\
 Forcing and Boolean coordinates (\cref{sec:rational,cor:no-boolean-product})
@@ -87,7 +89,7 @@ Two players (\cref{app:two-players})
 
 {\small
 \begin{longtable}{>{\raggedright\arraybackslash}p{0.34\linewidth}>{\raggedright\arraybackslash}p{0.60\linewidth}}
-\caption{The $66$ audited statements in \texttt{Report.lean}, followed by remaining report evidence.}\label{tab:report}\\
+\caption{The $73$ audited statements in \texttt{Report.lean}, followed by remaining report evidence.}\label{tab:report}\\
 \toprule
 Result & Audited statements or other evidence\\
 \midrule
@@ -160,11 +162,13 @@ Two-player forcing coordinates (\cref{app:two-players})
  & \path{two_player_forcing_coordinates}\\
 Serialization order independence (\cref{se:thm:round})
  & \path{serial_order_independence}\\
+Winner accounting (\cref{game:prop:winner-count})
+ & \path{winner_accounting}, \path{winner_leaf_mass}, \path{winner_budget_eq_iff}, \path{atomic_winner_budget}, \path{absorbing_winner_budget}\\
+Exact-size maxima (\cref{game:cor:ground-size})
+ & \path{public_sharp_winner_budget}, \path{public_sharp_absorbing_budget}\\
 \midrule
 Occurrence lower bound (\cref{game:thm:lower})
  & Written.\\
-Winner counting and optimal ground size (\cref{game:prop:winner-count,game:cor:ground-size})
- & Written; exhaustive ground terms, full-signature valuations, and optimal constructions.\\
 Unary classifications (\cref{app:contexts,app:ambiguity})
  & Written; finite checks.\\
 Unrepeated ownership (\cref{context:prop:unrepeated,context:cor:injective-matching})
@@ -245,8 +249,13 @@ Programs & Subject\\
  & Atomic and conservative models, unary polynomials.\\
 \end{longtable}}
 
-For \cref{game:prop:winner-count,game:cor:ground-size},
-\path{check_structure.py} verifies the exact overlap and absorption
+For \cref{game:prop:winner-budget,game:prop:winner-count,game:cor:ground-size},
+\path{KFOL/Algebra/Counting.lean} proves the full-signature accounting,
+its equality criterion, and the absorption-refined bound.
+\path{KFOL/Strategic/Counting.lean} proves optimal realizability for
+actual SPE values and the sharp maximum at every exact size and
+absorption count. These arguments use induction and cardinality laws,
+without enumeration. Independently, \path{check_structure.py} verifies the exact overlap and absorption
 accounting on all $11451$ three-role ground terms with at most three
 choices, and on $33005$ valuations of sampled binary full-signature
 terms at $K=3,4,5$, with repeated variables and internal permutations.

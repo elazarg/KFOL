@@ -1,12 +1,12 @@
 # Paper theorem-type definition surface
 
-77 public theorem types reach 648 project semantic declarations in 36 source files. 24 of those files are under `KFOL/Definitions`. Generated declarations are grouped into 342 written source review units; 8 derived declarations have file-level locations. Theorem proof bodies are excluded.
+79 public theorem types reach 654 project semantic declarations in 38 source files. 26 of those files are under `KFOL/Definitions`. Generated declarations are grouped into 345 written source review units; 8 derived declarations have file-level locations. Theorem proof bodies are excluded.
 
 This is a review index. Definitions still require human review against the manuscript; the separate proof/axiom and import audits remain necessary.
 
 | Source | Reachable declarations | Central definitions |
 | --- | ---: | --- |
-| [Paper.lean](../Paper.lean) | 77 |  |
+| [Paper.lean](../Paper.lean) | 79 |  |
 | [KFOL/Definitions/Owner.lean](../KFOL/Definitions/Owner.lean) | 75 | yes |
 | [KFOL/Definitions/Rounds.lean](../KFOL/Definitions/Rounds.lean) | 65 | yes |
 | [KFOL/Definitions/Encoding.lean](../KFOL/Definitions/Encoding.lean) | 48 | yes |
@@ -32,6 +32,8 @@ This is a review index. Definitions still require human review against the manus
 | [KFOL/Definitions/Atomic.lean](../KFOL/Definitions/Atomic.lean) | 5 | yes |
 | [KFOL/Complexity/PolicyTermMachines.lean](../KFOL/Complexity/PolicyTermMachines.lean) | 4 |  |
 | [KFOL/Complexity/GuardedPairMachines.lean](../KFOL/Complexity/GuardedPairMachines.lean) | 3 |  |
+| [KFOL/Definitions/Counting.lean](../KFOL/Definitions/Counting.lean) | 3 | yes |
+| [KFOL/Definitions/StrategicCounting.lean](../KFOL/Definitions/StrategicCounting.lean) | 3 | yes |
 | [KFOL/Algebra/Semilattice.lean](../KFOL/Algebra/Semilattice.lean) | 2 |  |
 | [KFOL/Complexity/CircuitGeneratorRecords.lean](../KFOL/Complexity/CircuitGeneratorRecords.lean) | 2 |  |
 | [KFOL/Complexity/OwnerSynthesisBridge.lean](../KFOL/Complexity/OwnerSynthesisBridge.lean) | 2 |  |
@@ -47,90 +49,92 @@ External interfaces are recorded without unfolding them:
 
 - ComplexityLib/Cslib interface: 11 boundary constants.
 - GameTheory: 45 boundary constants.
-- Lean/Std: 155 boundary constants.
+- Lean/Std: 156 boundary constants.
 - mathlib: 149 boundary constants.
 
 Review per public theorem:
 
 | Public theorem | Semantic declarations | Project modules |
 | --- | ---: | ---: |
-| [atomic_functions](../Paper.lean#L223) | 21 | 2 |
-| [atomic_repeated_triples](../Paper.lean#L211) | 19 | 2 |
-| [binary_atom_preserving_iff](../Paper.lean#L233) | 25 | 5 |
-| [canonicalization_collapse](../Paper.lean#L511) | 51 | 6 |
-| [choice_union_basis](../Paper.lean#L386) | 40 | 3 |
-| [common_source](../Paper.lean#L202) | 25 | 2 |
-| [congruence_classification](../Paper.lean#L113) | 11 | 2 |
-| [core_extraction_polynomial](../Paper.lean#L546) | 55 | 6 |
-| [core_nonfinite_basis](../Paper.lean#L412) | 31 | 2 |
-| [core_prime_guard_equality](../Paper.lean#L405) | 44 | 4 |
-| [core_prime_guard_normal_form](../Paper.lean#L395) | 49 | 4 |
-| [determinacy](../Paper.lean#L227) | 20 | 3 |
-| [equational_complexity](../Paper.lean#L454) | 61 | 5 |
-| [expanded_nonfinite_basis](../Paper.lean#L423) | 43 | 2 |
-| [finite_depth_quantifier_reduction](../Paper.lean#L43) | 60 | 2 |
-| [guarded_choice_example](../Paper.lean#L258) | 7 | 3 |
-| [guarded_pair_complexity](../Paper.lean#L493) | 34 | 8 |
-| [idempotent_elimination](../Paper.lean#L176) | 28 | 3 |
-| [infinite_winner_algebra](../Paper.lean#L571) | 51 | 2 |
-| [intrinsic_player_views](../Paper.lean#L182) | 29 | 3 |
-| [joint_owner_observation_failure](../Paper.lean#L367) | 23 | 5 |
-| [minimum_reduct_test_domain](../Paper.lean#L171) | 22 | 3 |
-| [neutral_union](../Paper.lean#L56) | 4 | 1 |
-| [no_atomic_if_then_else](../Paper.lean#L218) | 18 | 1 |
-| [no_boolean_product](../Paper.lean#L68) | 4 | 1 |
-| [one_constant_rigidity](../Paper.lean#L240) | 21 | 2 |
-| [optimal_test_domain](../Paper.lean#L158) | 19 | 2 |
-| [owned_choice_semilattices](../Paper.lean#L61) | 4 | 1 |
-| [owner_count_dichotomy](../Paper.lean#L467) | 39 | 7 |
-| [owner_definability](../Paper.lean#L252) | 7 | 3 |
-| [owner_guard_completeness](../Paper.lean#L321) | 35 | 4 |
-| [owner_minimum_generator](../Paper.lean#L339) | 44 | 5 |
-| [owner_one_table](../Paper.lean#L332) | 36 | 5 |
-| [owner_root_status](../Paper.lean#L315) | 22 | 4 |
-| [owner_table_algorithms](../Paper.lean#L537) | 80 | 12 |
-| [owner_table_synthesis](../Paper.lean#L349) | 45 | 4 |
-| [owner_thirty_six_equation_basis](../Paper.lean#L357) | 42 | 4 |
-| [pair_countervaluations](../Paper.lean#L152) | 19 | 2 |
-| [player_view_orders](../Paper.lean#L90) | 19 | 3 |
-| [player_views](../Paper.lean#L74) | 28 | 4 |
-| [policy_family_dichotomy](../Paper.lean#L483) | 42 | 7 |
+| [atomic_functions](../Paper.lean#L234) | 21 | 2 |
+| [atomic_repeated_triples](../Paper.lean#L222) | 19 | 2 |
+| [binary_atom_preserving_iff](../Paper.lean#L244) | 25 | 5 |
+| [canonicalization_collapse](../Paper.lean#L522) | 51 | 6 |
+| [choice_union_basis](../Paper.lean#L397) | 40 | 3 |
+| [common_source](../Paper.lean#L213) | 25 | 2 |
+| [congruence_classification](../Paper.lean#L124) | 11 | 2 |
+| [core_extraction_polynomial](../Paper.lean#L557) | 55 | 6 |
+| [core_nonfinite_basis](../Paper.lean#L423) | 31 | 2 |
+| [core_prime_guard_equality](../Paper.lean#L416) | 44 | 4 |
+| [core_prime_guard_normal_form](../Paper.lean#L406) | 49 | 4 |
+| [determinacy](../Paper.lean#L238) | 20 | 3 |
+| [equational_complexity](../Paper.lean#L465) | 61 | 5 |
+| [expanded_nonfinite_basis](../Paper.lean#L434) | 43 | 2 |
+| [finite_depth_quantifier_reduction](../Paper.lean#L54) | 60 | 2 |
+| [guarded_choice_example](../Paper.lean#L269) | 7 | 3 |
+| [guarded_pair_complexity](../Paper.lean#L504) | 34 | 8 |
+| [idempotent_elimination](../Paper.lean#L187) | 28 | 3 |
+| [infinite_winner_algebra](../Paper.lean#L582) | 51 | 2 |
+| [intrinsic_player_views](../Paper.lean#L193) | 29 | 3 |
+| [joint_owner_observation_failure](../Paper.lean#L378) | 23 | 5 |
+| [minimum_reduct_test_domain](../Paper.lean#L182) | 22 | 3 |
+| [neutral_union](../Paper.lean#L67) | 4 | 1 |
+| [no_atomic_if_then_else](../Paper.lean#L229) | 18 | 1 |
+| [no_boolean_product](../Paper.lean#L79) | 4 | 1 |
+| [one_constant_rigidity](../Paper.lean#L251) | 21 | 2 |
+| [optimal_test_domain](../Paper.lean#L169) | 19 | 2 |
+| [owned_choice_semilattices](../Paper.lean#L72) | 4 | 1 |
+| [owner_count_dichotomy](../Paper.lean#L478) | 39 | 7 |
+| [owner_definability](../Paper.lean#L263) | 7 | 3 |
+| [owner_guard_completeness](../Paper.lean#L332) | 35 | 4 |
+| [owner_minimum_generator](../Paper.lean#L350) | 44 | 5 |
+| [owner_one_table](../Paper.lean#L343) | 36 | 5 |
+| [owner_root_status](../Paper.lean#L326) | 22 | 4 |
+| [owner_table_algorithms](../Paper.lean#L548) | 80 | 12 |
+| [owner_table_synthesis](../Paper.lean#L360) | 45 | 4 |
+| [owner_thirty_six_equation_basis](../Paper.lean#L368) | 42 | 4 |
+| [pair_countervaluations](../Paper.lean#L163) | 19 | 2 |
+| [player_view_orders](../Paper.lean#L101) | 19 | 3 |
+| [player_views](../Paper.lean#L85) | 28 | 4 |
+| [policy_family_dichotomy](../Paper.lean#L494) | 42 | 7 |
 | [public_backward_induction](../Paper.lean#L22) | 29 | 3 |
-| [public_forcing](../Paper.lean#L34) | 31 | 3 |
-| [public_mixed_support](../Paper.lean#L566) | 75 | 5 |
+| [public_forcing](../Paper.lean#L45) | 31 | 3 |
+| [public_mixed_support](../Paper.lean#L577) | 75 | 5 |
+| [public_optimal_realizability](../Paper.lean#L34) | 34 | 4 |
 | [public_realizability](../Paper.lean#L30) | 26 | 3 |
-| [public_subdirect_representation](../Paper.lean#L82) | 31 | 3 |
-| [quantifier_fold](../Paper.lean#L38) | 51 | 2 |
-| [raw_pair_dichotomy](../Paper.lean#L460) | 41 | 6 |
-| [reduct_test_domains](../Paper.lean#L166) | 23 | 3 |
-| [reset_antimatroids](../Paper.lean#L300) | 28 | 3 |
-| [reset_basis](../Paper.lean#L295) | 33 | 4 |
-| [reset_circuit_complexity](../Paper.lean#L498) | 53 | 8 |
-| [reset_circuit_large_tables](../Paper.lean#L446) | 39 | 3 |
-| [reset_definability](../Paper.lean#L247) | 23 | 3 |
-| [reset_minimum_generator](../Paper.lean#L287) | 20 | 3 |
-| [reset_selection](../Paper.lean#L265) | 22 | 3 |
-| [reset_table_recognition_polynomial](../Paper.lean#L528) | 33 | 5 |
-| [reset_table_semantic_definition](../Paper.lean#L271) | 26 | 4 |
-| [reset_table_synthesis](../Paper.lean#L310) | 27 | 2 |
-| [reset_table_synthesis_polynomial](../Paper.lean#L531) | 42 | 5 |
-| [reset_tables_semantics](../Paper.lean#L279) | 26 | 4 |
-| [role_count_identity_theories](../Paper.lean#L503) | 21 | 4 |
-| [round_recursion](../Paper.lean#L558) | 42 | 2 |
-| [semilattice_trace](../Paper.lean#L191) | 26 | 3 |
-| [status_cell_provenance](../Paper.lean#L144) | 19 | 1 |
-| [strict_two_owner_policy](../Paper.lean#L375) | 17 | 3 |
-| [switching_observation](../Paper.lean#L107) | 18 | 1 |
-| [symmetric_congruence_chain](../Paper.lean#L124) | 13 | 2 |
-| [two_owner_selective](../Paper.lean#L380) | 40 | 7 |
-| [two_player_degeneracies](../Paper.lean#L591) | 27 | 6 |
-| [two_player_finite_basis](../Paper.lean#L599) | 43 | 3 |
-| [two_player_identification](../Paper.lean#L583) | 6 | 2 |
-| [two_player_round_contexts](../Paper.lean#L612) | 55 | 2 |
-| [two_player_round_support](../Paper.lean#L604) | 49 | 4 |
-| [uniform_equality_algorithms](../Paper.lean#L519) | 56 | 7 |
-| [uniform_matroid_identification](../Paper.lean#L138) | 3 | 2 |
-| [unique_winner_observations](../Paper.lean#L98) | 22 | 2 |
+| [public_subdirect_representation](../Paper.lean#L93) | 31 | 3 |
+| [quantifier_fold](../Paper.lean#L49) | 51 | 2 |
+| [raw_pair_dichotomy](../Paper.lean#L471) | 41 | 6 |
+| [reduct_test_domains](../Paper.lean#L177) | 23 | 3 |
+| [reset_antimatroids](../Paper.lean#L311) | 28 | 3 |
+| [reset_basis](../Paper.lean#L306) | 33 | 4 |
+| [reset_circuit_complexity](../Paper.lean#L509) | 53 | 8 |
+| [reset_circuit_large_tables](../Paper.lean#L457) | 39 | 3 |
+| [reset_definability](../Paper.lean#L258) | 23 | 3 |
+| [reset_minimum_generator](../Paper.lean#L298) | 20 | 3 |
+| [reset_selection](../Paper.lean#L276) | 22 | 3 |
+| [reset_table_recognition_polynomial](../Paper.lean#L539) | 33 | 5 |
+| [reset_table_semantic_definition](../Paper.lean#L282) | 26 | 4 |
+| [reset_table_synthesis](../Paper.lean#L321) | 27 | 2 |
+| [reset_table_synthesis_polynomial](../Paper.lean#L542) | 42 | 5 |
+| [reset_tables_semantics](../Paper.lean#L290) | 26 | 4 |
+| [role_count_identity_theories](../Paper.lean#L514) | 21 | 4 |
+| [round_recursion](../Paper.lean#L569) | 42 | 2 |
+| [semilattice_trace](../Paper.lean#L202) | 26 | 3 |
+| [status_cell_provenance](../Paper.lean#L155) | 19 | 1 |
+| [strict_two_owner_policy](../Paper.lean#L386) | 17 | 3 |
+| [switching_observation](../Paper.lean#L118) | 18 | 1 |
+| [symmetric_congruence_chain](../Paper.lean#L135) | 13 | 2 |
+| [two_owner_selective](../Paper.lean#L391) | 40 | 7 |
+| [two_player_degeneracies](../Paper.lean#L602) | 27 | 6 |
+| [two_player_finite_basis](../Paper.lean#L610) | 43 | 3 |
+| [two_player_identification](../Paper.lean#L594) | 6 | 2 |
+| [two_player_round_contexts](../Paper.lean#L623) | 55 | 2 |
+| [two_player_round_support](../Paper.lean#L615) | 49 | 4 |
+| [uniform_equality_algorithms](../Paper.lean#L530) | 56 | 7 |
+| [uniform_matroid_identification](../Paper.lean#L149) | 3 | 2 |
+| [unique_winner_observations](../Paper.lean#L109) | 22 | 2 |
+| [winner_budget](../Paper.lean#L40) | 21 | 2 |
 
 The JSON contains every theorem's complete project slice, exact declaration/type/body edges, external interface types, declaration locations and source fingerprints.
 

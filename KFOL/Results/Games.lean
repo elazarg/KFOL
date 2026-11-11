@@ -3,6 +3,7 @@ module
 public import KFOL.Results.Certificates
 public import KFOL.Definitions.PaperGames
 public import KFOL.Definitions.PaperAlgebra
+public import KFOL.Strategic.Counting
 
 /-! # Mathematical public-game and round statements
 
@@ -21,6 +22,26 @@ variable {Role : Type u}
 theorem public_realizability [Finite Role] (three : Fin 3 ↪ Role) (A : WinnerSet Role) :
     ∃ game : Strategic.Tree Role, Strategic.value game = A :=
   Strategic.exists_value_of_finite three A (Set.toFinite A.val)
+
+theorem public_optimal_realizability [Finite Role] (three : Fin 3 ↪ Role) (A : WinnerSet Role) :
+    (∃ G : Strategic.Tree Role, Strategic.value G = A ∧ G.choiceCount = A.val.ncard - 1) ∧
+      ∀ G : Strategic.Tree Role, Strategic.value G = A → A.val.ncard - 1 ≤ G.choiceCount :=
+  Strategic.optimal_realizability three A
+
+theorem public_sharp_winner_budget [Finite Role] (three : Fin 3 ↪ Role) (n : ℕ) :
+    (∀ G : Strategic.Tree Role, G.choiceCount = n →
+      (Strategic.value G).val.ncard ≤ min (Nat.card Role) (n + 1)) ∧
+    ∃ G : Strategic.Tree Role, G.choiceCount = n ∧
+      (Strategic.value G).val.ncard = min (Nat.card Role) (n + 1) :=
+  Strategic.sharp_budget three n
+
+theorem public_sharp_absorbing_budget [Finite Role] (three : Fin 3 ↪ Role)
+    (n h : ℕ) (hn : h ≤ n) :
+    (∀ G : Strategic.Tree Role, G.choiceCount = n → G.absorbingCount = h →
+      (Strategic.value G).val.ncard ≤ min (Nat.card Role) (n + 1 - h)) ∧
+    ∃ G : Strategic.Tree Role, G.choiceCount = n ∧ G.absorbingCount = h ∧
+      (Strategic.value G).val.ncard = min (Nat.card Role) (n + 1 - h) :=
+  Strategic.sharp_absorbing_budget three n h hn
 
 open Rounds.Game
 variable [Fintype Role] [DecidableEq Role]

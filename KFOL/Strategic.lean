@@ -1,6 +1,7 @@
 module
 
 public import KFOL.Strategic.Adequacy
+public import KFOL.Strategic.Counting
 public import KFOL.Strategic.Forcing
 public import KFOL.Strategic.Examples
 public import KFOL.Strategic.Compilation
