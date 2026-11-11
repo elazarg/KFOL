@@ -1,6 +1,7 @@
 # All-arity core functions
 
-The full winner-set term-function classification is not settled here.
+Exact finite recognition and synthesis are proved. A concise structural
+classification of the full winner-set term functions remains open.
 
 The singleton-output predicates are settled in every finite arity by
 `KFOL.Core.exists_term_iff_admissibleProfiles`, exported with its complete
@@ -72,6 +73,23 @@ The finite counterexample properties are checked in Python. The two uniform
 theorems and their constructive proofs are checked in Lean and covered by the
 ordinary namespace and transitive axiom audits.
 
-The next proposed synthesis method is specified in [cuts.md](cuts.md).
-Its finite prototype is exercised by the same checker; its general proof is
-not yet formalized.
+## Atomic-cut recognition and synthesis
+
+The method is now defined independently of terms in
+`KFOL/Definitions/CoreFunctions.lean`, using the generic finite Horn rules in
+`KFOL/Definitions/FiniteHorn.lean`. `Core.Cuts.recognizes_iff` proves exact
+recognition and joint synthesis for any finite nonempty family of sampled
+valuations. `Core.Cuts.operation_iff` applies it to the whole table of any
+finite-arity operation, including arity zero.
+
+`Core.Cuts.maximum_of_saturated` proves that all memberships derived at one
+bound have one common term witness, and `Core.Cuts.round_bound` proves the
+stopping bound `K*m*(K+2)^m`. The proof uses atomic cuts at absorbing operands
+and finite unions of bounded witnesses. It does not enumerate all term tables.
+The complete claims are restated in `Report.lean`.
+
+`tests/CoreCuts.lean` checks an interpolation problem whose rows are individually
+realizable but jointly impossible, the arity-zero boundary, and the round
+count. The independent Python maximum-value implementation is retained as a
+numerical regression; its executable equivalence to the Lean Horn algorithm
+is not asserted.

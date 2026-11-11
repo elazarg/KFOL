@@ -62,6 +62,7 @@ import all KFOL.Algorithms.FullTermCode.View
 import all KFOL.Algorithms.GuardDescriptor
 import all KFOL.Algorithms.GuardRecord
 import all KFOL.Algorithms.GuardWords
+import all KFOL.Algorithms.FiniteHorn
 import all KFOL.Algorithms.Normalization
 import all KFOL.Algorithms.ResetEquation
 import all KFOL.Algorithms.ResetUnionCode
@@ -234,6 +235,7 @@ import all KFOL.Core.PairLabel
 import all KFOL.Core.PairModel
 import all KFOL.Core.Profiles
 import all KFOL.Core.Interpolation
+import all KFOL.Core.Cuts
 import all KFOL.Core.ProfileSynthesis
 import all KFOL.Core.Protected
 import all KFOL.Core.Quotients
@@ -248,6 +250,7 @@ import all KFOL.Definitions.Congruences
 import all KFOL.Definitions.Core
 import all KFOL.Definitions.CoreBasis
 import all KFOL.Definitions.CoreFunctions
+import all KFOL.Definitions.FiniteHorn
 import all KFOL.Definitions.Dissemilattice
 import all KFOL.Definitions.Encoding
 import all KFOL.Definitions.Envelope

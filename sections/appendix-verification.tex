@@ -1,6 +1,6 @@
 \section{Verification details}\label{app:verification}
 
-The paper's results are kernel-checked in Lean~4.35.0 with mathlib. \texttt{Paper.lean} restates, in the namespace \texttt{KFOL.Paper}, every theorem of the main text and the clauses of the report results that it cites: $75$ statements, listed by result in \cref{tab:status}. \texttt{Report.lean} restates $46$ further report results in the namespace \texttt{KFOL.Report} (\cref{tab:report}). Each proof is a single library theorem, and each file ends with a check that no declaration in its namespace uses an axiom beyond \texttt{propext}, \texttt{Classical.choice}, and \texttt{Quot.sound}; a separate audit covers the whole library. Nothing is admitted, and no theorem from the literature enters as a hypothesis. Where a written proof cites one, as for the reset basis and the minimum one-owner generator \cite{FreeseEtAl2002}, owned choice with union \cite{HardingRomanowska2017}, and the atomic clone \cite{Szendrei2012}, the Lean proof is direct.
+The paper's results are kernel-checked in Lean~4.35.0 with mathlib. \texttt{Paper.lean} restates, in the namespace \texttt{KFOL.Paper}, every theorem of the main text and the clauses of the report results that it cites: $75$ statements, listed by result in \cref{tab:status}. \texttt{Report.lean} restates $50$ further report results in the namespace \texttt{KFOL.Report} (\cref{tab:report}). Each proof is a single library theorem, and each file ends with a check that no declaration in its namespace uses an axiom beyond \texttt{propext}, \texttt{Classical.choice}, and \texttt{Quot.sound}; a separate audit covers the whole library. Nothing is admitted, and no theorem from the literature enters as a hypothesis. Where a written proof cites one, as for the reset basis and the minimum one-owner generator \cite{FreeseEtAl2002}, owned choice with union \cite{HardingRomanowska2017}, and the atomic clone \cite{Szendrei2012}, the Lean proof is direct.
 
 The vocabulary of the statements is in \path{KFOL/Definitions/PaperAlgebra.lean}, \path{PaperGames.lean}, and \path{Complexity.lean}, which build on the other files of \path{KFOL/Definitions}. \path{notes/audit-guide.md} gives a reading order, and \path{notes/paper-definition-surface.md} and \path{notes/report-definition-surface.md} list every definition that each statement depends on.
 
@@ -104,6 +104,8 @@ Core proof ingredients and ambient variety (\cref{core:prop:basis-arity,core:lem
  & \path{core_variable_bound_obstruction}, \path{core_typed_upper_clone_cover}, \path{native_nonfinite_basis}\\
 All-arity singleton profiles and interpolation (\cref{core:thm:profiles,core:prop:persistence})
  & \path{core_singleton_profiles}, \path{core_three_valuation_persistence}\\
+Atomic-cut recognition and synthesis (\cref{core:thm:cuts,core:cor:cut-functions})
+ & \path{core_cut_synthesis}, \path{core_cut_maximum}, \path{core_cut_round_bound}, \path{core_cut_recognition}\\
 One-owner four-variable obstruction (\cref{owner:thm:no-four-variable-basis})
  & \path{owner_four_variable_obstruction}\\
 Permutation envelope (\cref{full:lem:envelope})
@@ -400,5 +402,14 @@ For \cref{core:prop:grid-countermodel}, \path{checks/check_core_padded_crossing.
 builds the rows of the proof for five grids, checks that each uses at most
 two atoms, evaluates $T$ and $S$ on them, and checks the finite case rules
 of the proof's descents. It does not enumerate $C_{r,s}$.
+
+The cut rules of \cref{core:thm:cuts} are defined independently of terms in
+\path{KFOL/Definitions/CoreFunctions.lean} and
+\path{KFOL/Definitions/FiniteHorn.lean}. \path{KFOL/Algorithms/FiniteHorn.lean}
+proves saturation after the number of possible facts. \path{KFOL/Core/Cuts.lean}
+proves a simultaneous term witness for every fact, completeness by root cuts,
+and one common witness for all memberships at a bound.
+\path{tests/CoreCuts.lean} rejects a table whose rows are individually
+realizable but jointly impossible, and checks the arity-zero boundary.
 
 For the core results that remain written, \path{checks/check_core_unary_polynomials.py} enumerates the entire $131$-function unary polynomial closure at $K=3$ and compares it with the normal forms, and at $K=4$ it verifies all $6575$ functions by explicit synthesis, with their distinctness and stabilization. Conservative models are checked on chains of sizes two through six. The atomic quotient is checked at $K=3,\ldots,6$ and near-unanimity at $K=3,\ldots,8$. \path{checks/check_core_atomic_basis.py} makes $675733$ equation evaluations for the atomic basis, the lifting basis, and its normalization consequences, using every observer and $D_K$ at $K=3,\ldots,6$ and fully expanded core terms at $K=3$. The $236$ lattice and absorber templates leave exactly the $18$ predicted two-element quotients, and $D_K$ passes the lifts and fails exhaustion. All principal ideals of $247$ models verify the closure maps, meets, kernel equality, and normalized operations on $32343$ input pairs.

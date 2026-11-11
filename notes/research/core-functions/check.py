@@ -16,7 +16,7 @@ def own(r, a, b):
 
 
 def cut_maxima(columns, target):
-    """Prototype from cuts.md; its general correctness is not Lean-proved."""
+    """Independent regression implementation of maximum-value cut propagation."""
     states = list(itertools.product(*(sorted({1, 2, 4, 7, u}) for u in target)))
     maxima = {}
     rules = []

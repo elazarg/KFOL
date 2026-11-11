@@ -41,6 +41,41 @@ theorem core_three_valuation_persistence {Role : Type u} {Var : Type v} (a b c :
       WinnerSet.singleton c] (tag x))).val :=
   Results.Algebra.core_three_valuation_persistence a b c hab hac hbc tag t ht hf hs
 
+theorem core_cut_synthesis {Role : Type u} {Var : Type v} {Row : Type w}
+    [Fintype Role] [Fintype Row] [Nonempty Row] (three : Fin 3 ↪ Role)
+    (values : Row → Var → WinnerSet Role) (U : Row → WinnerSet Role) :
+    (∃ t : Term Role Var, t.IsCore ∧ ∀ i, t.eval (values i) = U i) ↔
+      Core.Cuts.Recognizes values U :=
+  Results.Algebra.core_cut_synthesis three values U
+
+theorem core_cut_maximum {Role : Type u} {Var : Type v} {Row : Type w}
+    [Fintype Role] [Fintype Row] (three : Fin 3 ↪ Role)
+    (values : Row → Var → WinnerSet Role) (U : Row → WinnerSet Role)
+    (B : Core.Cuts.State Role Row)
+    (h : ∃ i r, (⟨B, i, r⟩ : Core.Cuts.Fact Role Row) ∈
+      FiniteHorn.saturate (Core.Cuts.system values U)) :
+    ∃ t : Term Role Var, t.IsCore ∧
+      (∀ i, (t.eval (values i)).val ⊆ Core.Cuts.region U B i) ∧
+      ∀ i r, r ∈ (t.eval (values i)).val ↔ (⟨B, i, r⟩ : Core.Cuts.Fact Role Row) ∈
+        FiniteHorn.saturate (Core.Cuts.system values U) :=
+  Results.Algebra.core_cut_maximum three values U B h
+
+theorem core_cut_round_bound {Role : Type u} {Var : Type v} {Row : Type w}
+    [Fintype Role] [Fintype Row]
+    (values : Row → Var → WinnerSet Role) (U : Row → WinnerSet Role) :
+    let N := Fintype.card Role * Fintype.card Row *
+      (Fintype.card Role + 2) ^ Fintype.card Row
+    FiniteHorn.step (Core.Cuts.system values U)
+      (FiniteHorn.stage (Core.Cuts.system values U) N) =
+        FiniteHorn.stage (Core.Cuts.system values U) N :=
+  Results.Algebra.core_cut_round_bound values U
+
+theorem core_cut_recognition {Role : Type u} {Var : Type v}
+    [Fintype Role] [Fintype Var] (three : Fin 3 ↪ Role)
+    (f : (Var → WinnerSet Role) → WinnerSet Role) :
+    (∃ t : Term Role Var, t.IsCore ∧ ∀ v, t.eval v = f v) ↔ Core.CutRecognizes f :=
+  Results.Algebra.core_cut_recognition three f
+
 theorem idempotency_certificates : ∀ {Role : Type u} [Fintype Role] (_three : Fin 3 ↪ Role),
     (∀ D : Set (WinnerSet Role), (∀ A ∈ D, WinnerSet.Ambiguous A) →
       ((∀ (n : ℕ) (t : Term Role (Fin n)),

@@ -5,6 +5,7 @@ public import KFOL.Results.Certificates
 public import KFOL.Algebra.FullBasis.NonfiniteBasis
 public import KFOL.Owner.FourVariableObstruction
 public import KFOL.Owner.Basis.Exchange
+public import KFOL.Core.Cuts
 
 @[expose] public section
 namespace KFOL.Results.Algebra
@@ -31,6 +32,41 @@ theorem core_three_valuation_persistence (a b c : Role)
     b ∈ (t.eval (fun x => ![WinnerSet.singleton a, WinnerSet.singleton b,
       WinnerSet.singleton c] (tag x))).val :=
   Core.three_valuation_persistence a b c hab hac hbc tag t ht hf hs
+
+/-- Exact finite-row recognition and synthesis, including shared witnesses. -/
+theorem core_cut_synthesis {Row : Type w} [Fintype Role] [Fintype Row] [Nonempty Row]
+    (three : Fin 3 ↪ Role) (values : Row → Var → WinnerSet Role) (U : Row → WinnerSet Role) :
+    (∃ t : Term Role Var, t.IsCore ∧ ∀ i, t.eval (values i) = U i) ↔
+      Core.Cuts.Recognizes values U :=
+  (Core.Cuts.recognizes_iff three values U).symm
+
+/-- Saturated memberships at one bound have a single common realizing term. -/
+theorem core_cut_maximum {Row : Type w} [Fintype Role] [Fintype Row]
+    (three : Fin 3 ↪ Role) (values : Row → Var → WinnerSet Role)
+    (U : Row → WinnerSet Role) (B : Core.Cuts.State Role Row)
+    (h : ∃ i r, (⟨B, i, r⟩ : Core.Cuts.Fact Role Row) ∈
+      FiniteHorn.saturate (Core.Cuts.system values U)) :
+    ∃ t : Term Role Var, t.IsCore ∧
+      (∀ i, (t.eval (values i)).val ⊆ Core.Cuts.region U B i) ∧
+      ∀ i r, r ∈ (t.eval (values i)).val ↔ (⟨B, i, r⟩ : Core.Cuts.Fact Role Row) ∈
+        FiniteHorn.saturate (Core.Cuts.system values U) :=
+  Core.Cuts.maximum_of_saturated three values U B h
+
+/-- The explicit round bound used by the cut test. -/
+theorem core_cut_round_bound {Row : Type w} [Fintype Role] [Fintype Row]
+    (values : Row → Var → WinnerSet Role) (U : Row → WinnerSet Role) :
+    let N := Fintype.card Role * Fintype.card Row *
+      (Fintype.card Role + 2) ^ Fintype.card Row
+    FiniteHorn.step (Core.Cuts.system values U)
+      (FiniteHorn.stage (Core.Cuts.system values U) N) =
+        FiniteHorn.stage (Core.Cuts.system values U) N :=
+  Core.Cuts.round_bound values U
+
+/-- Complete operation recognition, using every input valuation as a row. -/
+theorem core_cut_recognition [Fintype Role] [Fintype Var] (three : Fin 3 ↪ Role)
+    (f : (Var → WinnerSet Role) → WinnerSet Role) :
+    (∃ t : Term Role Var, t.IsCore ∧ ∀ v, t.eval v = f v) ↔ Core.CutRecognizes f :=
+  (Core.Cuts.operation_iff three f).symm
 
 /-- Neutral union, game:thm:union. -/
 theorem neutral_union (r s t : Role) (hrs : r ≠ s) (hrt : r ≠ t) (hst : s ≠ t) (A B : WinnerSet Role) :
