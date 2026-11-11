@@ -11,6 +11,13 @@ namespace KFOL.Results.Algebra
 universe u v w
 variable {Role : Type u} {Var : Type v}
 
+/-- All-arity synthesis of the core's singleton-output predicates. -/
+theorem core_singleton_profiles [DecidableEq Role] [Fintype Role] [Fintype Var]
+    (three : Fin 3 ↪ Role) (F : Role → (Var → Bool) → Bool) :
+    (∃ t : Equational.Term (Equational.CoreSymbol Role) Var,
+      ∀ i v, Core.profile i v t = F i v) ↔ Core.AdmissibleProfiles F :=
+  Core.exists_term_iff_admissibleProfiles three F
+
 /-- Neutral union, game:thm:union. -/
 theorem neutral_union (r s t : Role) (hrs : r ≠ s) (hrt : r ≠ t) (hst : s ≠ t) (A B : WinnerSet Role) :
     WinnerSet.choice t (WinnerSet.choice r A B) (WinnerSet.choice s A B) = A.union B :=

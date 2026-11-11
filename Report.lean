@@ -21,6 +21,13 @@ namespace KFOL.Report
 open FirstOrder WinnerSet Classical
 universe u v w
 
+theorem core_singleton_profiles {Role : Type u} [DecidableEq Role] [Fintype Role]
+    {Var : Type v} [Fintype Var] (three : Fin 3 ↪ Role)
+    (F : Role → (Var → Bool) → Bool) :
+    (∃ t : Equational.Term (Equational.CoreSymbol Role) Var,
+      ∀ i v, Core.profile i v t = F i v) ↔ Core.AdmissibleProfiles F :=
+  Results.Algebra.core_singleton_profiles three F
+
 theorem idempotency_certificates : ∀ {Role : Type u} [Fintype Role] (_three : Fin 3 ↪ Role),
     (∀ D : Set (WinnerSet Role), (∀ A ∈ D, WinnerSet.Ambiguous A) →
       ((∀ (n : ℕ) (t : Term Role (Fin n)),

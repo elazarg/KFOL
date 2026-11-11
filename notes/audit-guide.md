@@ -2,7 +2,7 @@
 
 Start with [Paper.lean](../Paper.lean): its 75 theorem statements cover the main
 paper, its mathematical prose claims and the report clauses it uses.
-[Report.lean](../Report.lean) gives 44 further audited report statements and
+[Report.lean](../Report.lean) gives 45 further audited report statements and
 proof ingredients. Both files write out the propositions; each proof names one
 library theorem. Detailed codecs, descriptors, intermediate certificates and
 machine contracts are in the library, including
@@ -17,7 +17,7 @@ claim, then open the relevant vocabulary file:
 
 | Subject | Vocabulary entrypoint | Underlying definitions to inspect |
 | --- | --- | --- |
-| Winner algebras, views, reset and guarded choice | [PaperAlgebra.lean](../KFOL/Definitions/PaperAlgebra.lean) | `Public`, `Core`, `Views`, `Reset`, `Owner`, `Equational`, `Congruences` |
+| Winner algebras, views, reset and guarded choice | [PaperAlgebra.lean](../KFOL/Definitions/PaperAlgebra.lean) | `Public`, `Core`, `Views`, `Reset`, `Owner`, `Equational`, `Congruences`; the report's singleton-profile conditions are in `CoreFunctions` |
 | Public games and sealed rounds | [PaperGames.lean](../KFOL/Definitions/PaperGames.lean) | `Strategic`, `Quantified`, `Rounds`; GameTheory's strategy and equilibrium interfaces |
 | Decision problems and algorithms | [Complexity.lean](../KFOL/Definitions/Complexity.lean) | `Encoding`, the original term/circuit syntax, and ComplexityLib's machine and class definitions |
 | Nonfinite-basis envelope | [Envelope.lean](../KFOL/Definitions/Envelope.lean), [Equational.lean](../KFOL/Definitions/Equational.lean) | Explicit copy-labelled operations; the three actual signatures and independent basis/variety predicates |

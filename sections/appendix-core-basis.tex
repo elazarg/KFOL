@@ -14,7 +14,9 @@ constants and internal role permutations by a permutation envelope. The remainin
 owned choice with union has a seven-equation basis
 (\cref{app:core-dissemilattice}), conservative models have a
 three-variable presentation (\cref{app:core-conservative}), the binary
-terms and unary polynomials are classified (\cref{app:core-binary}), and
+terms and unary polynomials are classified (\cref{app:core-binary}),
+singleton-output predicates are characterized at every arity
+(\cref{core:thm:profiles}), and
 identifying all ambiguous winner sets gives a finitely based subvariety
 (\cref{app:core-atomic}). Throughout, $+$ is the derived
 union term, which on winner sets is union.
@@ -703,6 +705,60 @@ of the supports and replaces the two left-owner sets $A,A'$ by
 \]
 and similarly for the right-owner sets. This follows from the
 singleton recursion, and it gives the entire finite operation table.
+
+\subsection{Singleton-output predicates at every arity}
+\label{app:core-profiles}
+
+Let $V$ be a finite nonempty set of input positions. For a core term $t$
+and owner $i$, write $\phi_i^t:2^V\to\{0,1\}$ for its Boolean profile:
+interpret $\star_i$ as disjunction and every other choice as conjunction.
+Thus, for arbitrary winner sets $S_j$,
+\[
+ t(S_j:j\in V)=\{i\}
+ \quad\Longleftrightarrow\quad
+ \phi_i^t(\{j:S_j=\{i\}\})=1.
+\]
+Call $A\subseteq V$ a winning coalition for $\phi_i$ when $\phi_i(A)=1$.
+
+\begin{theorem}[All-arity singleton profiles]\label{core:thm:profiles}
+For $K\geq3$, a family $(\phi_i:2^V\to\{0,1\})_{i\in I}$ is the
+family of Boolean profiles of a single core term if and only if:
+\begin{enumerate}
+\item each $\phi_i$ is monotone and $\phi_i(V)=1$;
+\item whenever $A_i$ is a winning coalition for every $i\in I$,
+  $\bigcap_{i\in I}A_i$ is nonempty.
+\end{enumerate}
+\end{theorem}
+\begin{proof}
+Monotonicity and unanimity follow by induction on the term.
+For the intersection condition, at a choice by owner $r$, every
+other owner's positive profile holds in both children, and owner $r$'s
+holds in at least one. Descend to that child. At a leaf its variable
+lies in every selected coalition.
+
+Conversely, fix any ordering of the owners. Owner $i$ chooses a winning
+coalition $A_i$; after all choices, return
+$\sum_{j\in\bigcap_i A_i}x_j$. Every leaf sum is nonempty by the
+intersection condition. Each owner has finitely many choices and at least
+one, namely $V$, so binary folds give a finite core term.
+
+Fix an owner $r$ and a Boolean input $B\subseteq V$. Its profile
+interprets owner $r$'s choice existentially and all other choices
+universally. If $\phi_r(B)=1$, owner $r$ chooses $A_r=B$.
+Every subsequent leaf sum then uses only variables in $B$, so its
+profile is true regardless of the other choices. If $\phi_r(B)=0$,
+let every other owner choose $V$. The leaf intersection is then $A_r$;
+no winning $A_r$ is contained in $B$, by monotonicity. Thus the
+profile is false for every choice by $r$. These choices are independent
+of the earlier history, so the argument holds in the fixed owner order.
+The constructed term has exactly the prescribed profiles.
+\end{proof}
+
+Different core functions can have the same profiles and the same variable
+support. For example, $x\del(y\del z)$ and $(x\del y)\del z$ both
+return a singleton $\{i\}$ precisely when $z=\{i\}$. At
+$x=\{c\}$, $y=\{a\}$ and $z=\{a,b\}$, for distinct $a,b,c$,
+they return $\{a,b,c\}$ and $\{a,b\}$ respectively.
 
 \subsection{Unary polynomials}
 

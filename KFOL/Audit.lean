@@ -232,6 +232,7 @@ import all KFOL.Core.NonfiniteBasis
 import all KFOL.Core.PairLabel
 import all KFOL.Core.PairModel
 import all KFOL.Core.Profiles
+import all KFOL.Core.ProfileSynthesis
 import all KFOL.Core.Protected
 import all KFOL.Core.Quotients
 import all KFOL.Core.TypedCover
@@ -244,6 +245,7 @@ import all KFOL.Definitions.Complexity
 import all KFOL.Definitions.Congruences
 import all KFOL.Definitions.Core
 import all KFOL.Definitions.CoreBasis
+import all KFOL.Definitions.CoreFunctions
 import all KFOL.Definitions.Dissemilattice
 import all KFOL.Definitions.Encoding
 import all KFOL.Definitions.Envelope
