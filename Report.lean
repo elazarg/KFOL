@@ -28,6 +28,19 @@ theorem core_singleton_profiles {Role : Type u} [DecidableEq Role] [Fintype Role
       ∀ i v, Core.profile i v t = F i v) ↔ Core.AdmissibleProfiles F :=
   Results.Algebra.core_singleton_profiles three F
 
+theorem core_three_valuation_persistence {Role : Type u} {Var : Type v} (a b c : Role)
+    (hab : a ≠ b) (hac : a ≠ c) (hbc : b ≠ c)
+    (tag : Var → Fin 3) (t : Term Role Var) (ht : t.IsCore)
+    (hf : t.eval (fun x => ![(WinnerSet.singleton a).union (WinnerSet.singleton b),
+      WinnerSet.singleton b, WinnerSet.singleton b] (tag x)) = WinnerSet.singleton b)
+    (hs : t.eval (fun x => ![WinnerSet.singleton b,
+      (WinnerSet.singleton b).union (WinnerSet.singleton c),
+      (WinnerSet.singleton a).union (WinnerSet.singleton b)] (tag x)) =
+        (WinnerSet.singleton b).union (WinnerSet.singleton c)) :
+    b ∈ (t.eval (fun x => ![WinnerSet.singleton a, WinnerSet.singleton b,
+      WinnerSet.singleton c] (tag x))).val :=
+  Results.Algebra.core_three_valuation_persistence a b c hab hac hbc tag t ht hf hs
+
 theorem idempotency_certificates : ∀ {Role : Type u} [Fintype Role] (_three : Fin 3 ↪ Role),
     (∀ D : Set (WinnerSet Role), (∀ A ∈ D, WinnerSet.Ambiguous A) →
       ((∀ (n : ℕ) (t : Term Role (Fin n)),

@@ -16,7 +16,8 @@ owned choice with union has a seven-equation basis
 three-variable presentation (\cref{app:core-conservative}), the binary
 terms and unary polynomials are classified (\cref{app:core-binary}),
 singleton-output predicates are characterized at every arity
-(\cref{core:thm:profiles}), and
+(\cref{core:thm:profiles}), a three-valuation law couples singleton and
+ambiguous outputs (\cref{core:prop:persistence}), and
 identifying all ambiguous winner sets gives a finitely based subvariety
 (\cref{app:core-atomic}). Throughout, $+$ is the derived
 union term, which on winner sets is union.
@@ -759,6 +760,62 @@ support. For example, $x\del(y\del z)$ and $(x\del y)\del z$ both
 return a singleton $\{i\}$ precisely when $z=\{i\}$. At
 $x=\{c\}$, $y=\{a\}$ and $z=\{a,b\}$, for distinct $a,b,c$,
 they return $\{a,b,c\}$ and $\{a,b\}$ respectively.
+
+Singleton and ambiguous outputs also constrain one another across
+different valuations. Partition the input positions into three groups,
+and write $t(U,V,W)$ for assigning $U,V,W$ to the respective groups.
+
+\begin{proposition}[Three-valuation persistence]\label{core:prop:persistence}
+For distinct roles $a,b,c$, every core term satisfies
+\[
+\begin{split}
+ t(\{a,b\},\{b\},\{b\})&=\{b\},\\
+ t(\{b\},\{b,c\},\{a,b\})&=\{b,c\}
+\end{split}
+\quad\Longrightarrow\quad
+ b\in t(\{a\},\{b\},\{c\}).
+\]
+The groups may be empty, and additional owners are unrestricted.
+\end{proposition}
+\begin{proof}
+For a subterm $u$, let $A(u),B(u),C(u)$ be its values at the three
+displayed valuations. Every $B(u)$ contains $b$, since each input does
+and owned choice preserves a member common to both operands.
+
+Two absorbing atoms can be excluded using the constant-or-extensive
+dichotomy for unary contexts (\cref{game:prop:obs}). First,
+\[
+ A(u)=\{b\}\quad\Longrightarrow\quad C(u)\ne\{a\}.
+\]
+Otherwise the context $h(U)=u(U,\{b\},\{b\})$ has
+$h(\{a\})=\{a\}$ and $h(\{a,b\})=\{b\}$. The first equality
+follows from $C(u)=\{a\}$: changing inputs other than the singleton
+$\{a\}$ does not change that singleton test. The two values make
+$h$ neither constant nor extensive, a contradiction.
+Second,
+\[
+ B(u)\subseteq\{b,c\}\quad\Longrightarrow\quad C(u)\ne\{c\}.
+\]
+If $C(u)=\{c\}$, then $h(U)=u(\{b\},\{b,c\},U)$ has
+$h(\{c\})=\{c\}$ by the same singleton-test argument, whereas
+$h(\{a,b\})=B(u)$ contains $b$. Thus $h$ is nonconstant and so
+extensive; it would put $a$ in $B(u)$.
+
+Now induct on $u$ to prove the displayed implication. A variable in
+the first or third group fails an antecedent; one in the second group
+satisfies the conclusion. At a choice by $b$, an ambiguous $B$-value
+$\{b,c\}$ means neither child has $B$-value $\{b\}$. Both child
+$B$-values are therefore $\{b,c\}$. Choose a child with $A$-value
+$\{b\}$ and apply induction. Choice by $b$ retains its possible $b$.
+
+At a choice by $r\ne b$, both child $A$-values are $\{b\}$.
+Their $B$-values have union $\{b,c\}$ and both contain $b$, so one
+child has $B$-value $\{b,c\}$. Induction puts $b$ in its $C$-value.
+Neither child $C$-value can be the absorbing atom $\{r\}$: for
+$r=a$ or $r=c$ use the two exclusions above; for every other
+$r\ne b$, all third-valuation inputs lie in $\{a,b,c\}$.
+The parent $C$-value is consequently the union and retains $b$.
+\end{proof}
 
 \subsection{Unary polynomials}
 

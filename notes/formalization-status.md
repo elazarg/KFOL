@@ -8,7 +8,7 @@ Other report results remain optional and have their own evidence status.
 | Audit entrypoint | Mathematical statements | Presentation |
 | --- | ---: | --- |
 | [Paper.lean](../Paper.lean) | 75 | Main text and the report claims it cites; 603 lines |
-| [Report.lean](../Report.lean) | 45 | Further report results and proof ingredients |
+| [Report.lean](../Report.lean) | 46 | Further report results and proof ingredients |
 | [Results/Certificates](../KFOL/Results/Certificates.lean) | 140 preserved contracts | Original full statements, including native machines, codecs and intermediate invariants |
 
 Every root proof names one library theorem. Both root files have no semantic
@@ -26,7 +26,7 @@ regular representation are in `Definitions/Relational`.
 | Definition surface | Theorem types | Semantic declarations | Source files | Written review units |
 | --- | ---: | ---: | ---: | ---: |
 | Paper | 75 | 629 | 35 | 329 |
-| Report | 45 | 535 | 29 | 229 |
+| Report | 46 | 535 | 29 | 229 |
 
 The slices overlap and exclude theorem proof bodies. These meaning indexes do
 not replace the human comparison with the manuscript or the proof/axiom audits.
@@ -37,7 +37,7 @@ The production integration checks are:
 
 - `make check-lean`: literal façade and preservation checks, inventory,
   independent algebra build/import audit, Paper/Report and whole-source axiom
-  audits, both definition indexes, actual negative audit fixtures and 92 strict
+  audits, both definition indexes, actual negative audit fixtures and 93 strict
   Lean regressions.
 - `make check-python`: the explicit 33 independent Python checks, mapped to the
   current paper in `checks/README.md` and the verification appendix.
@@ -97,8 +97,13 @@ every family of winning coalitions, one per owner. The independent conditions
 are in `Definitions/CoreFunctions`; `Core/ProfileSynthesis` proves necessity
 and synthesizes a term, and `Report.core_singleton_profiles` exports the full
 statement. This does not classify the surviving members of ambiguous outputs.
-An independently checked ternary obstruction to several stronger candidate
-conditions is recorded in `notes/research/core-functions`.
+The kernel-checked three-valuation persistence law additionally couples
+singleton and ambiguous outputs, at every input arity and without restricting
+extra owners. `Algebra/Monotone` proves ordinary inclusion monotonicity for
+the full syntax. The independently checked ternary examples in
+`notes/research/core-functions` separate these conditions from full
+realizability, including a candidate that preserves the first law under
+core substitutions and contexts.
 
 The one-owner basis now has optimal variable bound five: thirty-six native
 laws, with five-variable exchange replacing the six-variable action-band

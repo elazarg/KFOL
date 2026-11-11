@@ -13,6 +13,25 @@ universe u v
 
 variable {Role : Type u} {Var : Type v}
 
+/-- A singleton test depends only on the corresponding singleton tests of
+the inputs. Other singleton labels and ambiguous values are unrestricted. -/
+theorem IsPublic.eval_singleton_iff_of_tests {t : Term Role Var} (ht : t.IsPublic)
+    (r : Role) (v w : Var → WinnerSet Role)
+    (h : ∀ x, v x = WinnerSet.singleton r ↔ w x = WinnerSet.singleton r) :
+    t.eval v = WinnerSet.singleton r ↔ t.eval w = WinnerSet.singleton r := by
+  classical
+  induction t with
+  | winner => exact Iff.rfl
+  | var x => exact h x
+  | rename => exact False.elim ht
+  | choice i s t hs ht' =>
+    by_cases hir : i = r
+    · subst i
+      simp only [eval, WinnerSet.choice_eq_owner_iff]
+      exact or_congr (hs ht.1) (ht' ht.2)
+    · simp only [eval, WinnerSet.choice_eq_other_iff _ _ i hir]
+      exact and_congr (hs ht.1) (ht' ht.2)
+
 /-- A public unary context with arbitrary fixed winner-set parameters is
 constant or extensive. Every active input occurrence receives the same
 independent input value. No normal form or finite-role assumption is needed. -/

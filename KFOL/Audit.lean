@@ -26,6 +26,7 @@ import all KFOL.Algebra.NoBooleanProduct
 import all KFOL.Algebra.PairTests
 import all KFOL.Algebra.Provenance
 import all KFOL.Algebra.PublicContexts
+import all KFOL.Algebra.Monotone
 import all KFOL.Algebra.ReductTestCard
 import all KFOL.Algebra.ReductTests
 import all KFOL.Algebra.Semilattice
@@ -232,6 +233,7 @@ import all KFOL.Core.NonfiniteBasis
 import all KFOL.Core.PairLabel
 import all KFOL.Core.PairModel
 import all KFOL.Core.Profiles
+import all KFOL.Core.Interpolation
 import all KFOL.Core.ProfileSynthesis
 import all KFOL.Core.Protected
 import all KFOL.Core.Quotients

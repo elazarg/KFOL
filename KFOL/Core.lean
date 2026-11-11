@@ -2,6 +2,7 @@ module
 
 public import KFOL.Core.NonfiniteBasis
 public import KFOL.Core.ProfileSynthesis
+public import KFOL.Core.Interpolation
 
 /-! # Core basis obstructions, typed covers and uniform finite countermodels
 

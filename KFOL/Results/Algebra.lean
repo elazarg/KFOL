@@ -18,6 +18,20 @@ theorem core_singleton_profiles [DecidableEq Role] [Fintype Role] [Fintype Var]
       ∀ i v, Core.profile i v t = F i v) ↔ Core.AdmissibleProfiles F :=
   Core.exists_term_iff_admissibleProfiles three F
 
+/-- A mixed singleton and ambiguous-output interpolation law. -/
+theorem core_three_valuation_persistence (a b c : Role)
+    (hab : a ≠ b) (hac : a ≠ c) (hbc : b ≠ c)
+    (tag : Var → Fin 3) (t : Term Role Var) (ht : t.IsCore)
+    (hf : t.eval (fun x => ![(WinnerSet.singleton a).union (WinnerSet.singleton b),
+      WinnerSet.singleton b, WinnerSet.singleton b] (tag x)) = WinnerSet.singleton b)
+    (hs : t.eval (fun x => ![WinnerSet.singleton b,
+      (WinnerSet.singleton b).union (WinnerSet.singleton c),
+      (WinnerSet.singleton a).union (WinnerSet.singleton b)] (tag x)) =
+        (WinnerSet.singleton b).union (WinnerSet.singleton c)) :
+    b ∈ (t.eval (fun x => ![WinnerSet.singleton a, WinnerSet.singleton b,
+      WinnerSet.singleton c] (tag x))).val :=
+  Core.three_valuation_persistence a b c hab hac hbc tag t ht hf hs
+
 /-- Neutral union, game:thm:union. -/
 theorem neutral_union (r s t : Role) (hrs : r ≠ s) (hrt : r ≠ t) (hst : s ≠ t) (A B : WinnerSet Role) :
     WinnerSet.choice t (WinnerSet.choice r A B) (WinnerSet.choice s A B) = A.union B :=
