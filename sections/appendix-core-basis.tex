@@ -12,16 +12,14 @@ satisfying every $K$-variable identity of the core. \Cref{app:core-nfb}
 proves the theorem, and \cref{app:full-signature} transfers it to winner
 constants and internal role permutations by a permutation envelope. The remaining subsections settle smaller questions:
 owned choice with union has a seven-equation basis
-(\cref{app:core-dissemilattice}), conservative models have a
-three-variable presentation (\cref{app:core-conservative}), the binary
-terms and unary polynomials are classified (\cref{app:core-binary}),
-singleton-output predicates are characterized at every arity
-(\cref{core:thm:profiles}), a three-valuation law couples singleton and
-ambiguous outputs (\cref{core:prop:persistence}), and
-atomic cuts give an exact finite recognition and synthesis test at every arity
-(\cref{core:thm:cuts,core:cor:cut-functions}). Finally,
-identifying all ambiguous winner sets gives a finitely based subvariety
-(\cref{app:core-atomic}). Throughout, $+$ is the derived
+(\cref{app:core-dissemilattice}); the binary terms have explicit normal
+forms (\cref{app:core-binary}); at every arity, the singleton outputs of
+terms are characterized (\cref{app:core-profiles}) and a finite
+saturation decides which operations are terms (\cref{app:core-cuts});
+unary polynomials are classified (\cref{core:prop:unary-polynomials});
+conservative models have a three-variable presentation
+(\cref{app:core-conservative}); and identifying all ambiguous winner
+sets gives a finitely based subvariety (\cref{app:core-atomic}). Throughout, $+$ is the derived
 union term, which on winner sets is union.
 
 \subsection{Native algebras and a first countermodel}
@@ -709,35 +707,34 @@ of the supports and replaces the two left-owner sets $A,A'$ by
 and similarly for the right-owner sets. This follows from the
 singleton recursion, and it gives the entire finite operation table.
 
-\subsection{Singleton-output predicates at every arity}
+\subsection{Singleton outputs at every arity}
 \label{app:core-profiles}
 
-Let $V$ be a finite nonempty set of input positions. For a core term $t$
-and owner $i$, write $\phi_i^t:2^V\to\{0,1\}$ for its Boolean profile:
-interpret $\star_i$ as disjunction and every other choice as conjunction.
-Thus, for arbitrary winner sets $S_j$,
+Fix a finite nonempty set $V$ of variables, and read the profiles
+$\Phi_i(t)$ of a core term $t$ over $V$ (\cref{app:core-nfb}) as
+functions $2^V\to\{0,1\}$. Since $\star_i$ returns $\{i\}$ when either
+operand does, and every other choice only when both do, for all winner
+sets $S_j$
 \[
  t(S_j:j\in V)=\{i\}
  \quad\Longleftrightarrow\quad
- \phi_i^t(\{j:S_j=\{i\}\})=1.
+ \Phi_i(t)(\{j:S_j=\{i\}\})=1.
 \]
-Call $A\subseteq V$ a winning coalition for $\phi_i$ when $\phi_i(A)=1$.
+Call $A\subseteq V$ a winning coalition for $\phi:2^V\to\{0,1\}$ when
+$\phi(A)=1$.
 
-\begin{theorem}[All-arity singleton profiles]\label{core:thm:profiles}
+\begin{theorem}[Singleton profiles at every arity]\label{core:thm:profiles}
 For $K\geq3$, a family $(\phi_i:2^V\to\{0,1\})_{i\in I}$ is the
-family of Boolean profiles of a single core term if and only if:
+family of profiles of a core term over $V$ if and only if:
 \begin{enumerate}
 \item each $\phi_i$ is monotone and $\phi_i(V)=1$;
-\item whenever $A_i$ is a winning coalition for every $i\in I$,
-  $\bigcap_{i\in I}A_i$ is nonempty.
+\item whenever $A_i$ is a winning coalition for $\phi_i$ for every
+  $i\in I$, $\bigcap_{i\in I}A_i$ is nonempty.
 \end{enumerate}
 \end{theorem}
 \begin{proof}
-Monotonicity and unanimity follow by induction on the term.
-For the intersection condition, at a choice by owner $r$, every
-other owner's positive profile holds in both children, and owner $r$'s
-holds in at least one. Descend to that child. At a leaf its variable
-lies in every selected coalition.
+Profiles are monotone and true at $V$ by induction on the term, and
+condition~(2) is their common source (\cref{app:core-nfb}).
 
 Conversely, fix any ordering of the owners. Owner $i$ chooses a winning
 coalition $A_i$; after all choices, return
@@ -757,15 +754,13 @@ of the earlier history, so the argument holds in the fixed owner order.
 The constructed term has exactly the prescribed profiles.
 \end{proof}
 
-Different core functions can have the same profiles and the same variable
-support. For example, $x\del(y\del z)$ and $(x\del y)\del z$ both
-return a singleton $\{i\}$ precisely when $z=\{i\}$. At
-$x=\{c\}$, $y=\{a\}$ and $z=\{a,b\}$, for distinct $a,b,c$,
-they return $\{a,b,c\}$ and $\{a,b\}$ respectively.
-
-Singleton and ambiguous outputs also constrain one another across
-different valuations. Partition the input positions into three groups,
-and write $t(U,V,W)$ for assigning $U,V,W$ to the respective groups.
+Profiles do not determine a term function, even together with its
+variables: $x\del(y\del z)$ and $(x\del y)\del z$ both return $\{i\}$
+exactly when $z=\{i\}$, but at $x=\{c\}$, $y=\{a\}$, $z=\{a,b\}$ they
+return $\{a,b,c\}$ and $\{a,b\}$. Singleton and ambiguous outputs also
+constrain one another across valuations. Partition the variables into
+three groups, and write $t(X,Y,Z)$ for the valuation assigning $X,Y,Z$
+to the respective groups.
 
 \begin{proposition}[Three-valuation persistence]\label{core:prop:persistence}
 For distinct roles $a,b,c$, every core term satisfies
@@ -821,27 +816,28 @@ The parent $C$-value is consequently the union and retains $b$.
 
 \subsection{Recognition by atomic cuts}\label{app:core-cuts}
 
-The singleton profiles admit a short intrinsic description, but full values
-also retain ambiguous contributions. The following finite test recognizes
-those values jointly. Fix $m\geq1$ sampled valuations $v_i$ of a finite set
-of input variables, and requested values $U_i\in P$. A \emph{bound vector}
-$B$ chooses, at each row $i$, one of the $K+2$ symbols
+Full values are recognized by a finite saturation, on any finite set of
+sample valuations. Its rule for an owned node is the case split in the
+proof of \cref{gen:thm:source}: in each valuation the node either returns
+the absorbing owner atom or is a union. Fix valuations
+$v_1,\ldots,v_m$, the \emph{rows}, of a finite set of variables, with
+$m\geq1$, and requested values $U_i\in\Pow$. A \emph{bound vector} $B$
+chooses, at each row $i$, one of the $K+2$ symbols
 \[
  \mathsf{target},\quad\mathsf{top},\quad\mathsf{atom}(r)\ (r\in I),
 \]
-interpreted as $U_i$, $I$, and $\{r\}$ respectively. Different symbols
-are kept even when their interpreted regions coincide. Write $|B|_i$
-for the region at row $i$, and $B_0$ for the all-target vector.
+interpreted as the regions $U_i$, $I$, and $\{r\}$ respectively.
+Different symbols are kept even when their regions coincide. Write
+$|B|_i$ for the region at row $i$, and $B_0$ for the all-target vector.
+A term $s$ is \emph{bounded by} $B$ if $s(v_j)\subseteq|B|_j$ at every
+row $j$.
 
-A fact $[B,i,a]$ records a possible membership at a bounded operation.
-The following Horn rules define a finite test without quantifying over terms.
-An input column $x$ seeds $[B,i,a]$ when
-\[
- v_j(x)\subseteq |B|_j\quad\text{for every row }j,
- \qquad a\in v_i(x).
-\]
-For an owner $r$, a \emph{cut} of $B$ is a pair $(L,R)$ chosen row by row
-from the following possibilities:
+A fact $[B,i,a]$ is meant to say that some core term bounded by $B$ has
+winner $a$ at row $i$. The following Horn rules derive facts without
+reference to terms. A variable $x$ bounded by $B$ seeds $[B,i,a]$ for
+every row $i$ and every $a\in v_i(x)$. For an owner $r$, a \emph{cut}
+of $B$ is a pair $(L,R)$ of bound vectors chosen row by row from the
+following possibilities, the last two being \emph{atomic}:
 \[
 \begin{array}{c|cc}
  \text{condition}&L_j&R_j\\\hline
@@ -850,10 +846,9 @@ from the following possibilities:
  r\in|B|_j&\mathsf{top}&\mathsf{atom}(r).
 \end{array}
 \]
-From $[L,i,a]$ and $[R,i,b]$, add $[B,i,c]$ for every
-$c\in\{a\}\star_r\{b\}$. A round keeps the existing facts and adds all
-seeds and all such consequences whose premises were already present.
-Start with no facts.
+From $[L,i,a]$ and $[R,i,b]$, derive $[B,i,c]$ for every
+$c\in\{a\}\star_r\{b\}$. Starting from no facts, each round adds all
+seeds and every consequence of facts already present.
 
 \begin{theorem}[Exact cut recognition and synthesis]\label{core:thm:cuts}
 For $K\geq3$, the facts stabilize after at most
@@ -861,9 +856,10 @@ For $K\geq3$, the facts stabilize after at most
  N=Km(K+2)^m
 \]
 rounds. There is a core term $t$ with $t(v_i)=U_i$ for every row $i$
-if and only if every fact $[B_0,i,a]$ with $a\in U_i$ is present.
-At any bound with at least one present fact, a single bounded core term
-realizes exactly all the memberships present at that bound.
+if and only if every fact $[B_0,i,a]$ with $a\in U_i$ is then present.
+For every bound vector $B$ with a present fact, a single core term $s$
+bounded by $B$ has $s(v_i)=\{a:[B,i,a]\text{ is present}\}$ at every
+row $i$.
 \end{theorem}
 \begin{proof}
 There are $N$ possible facts. The sequence of fact sets is increasing,
@@ -872,52 +868,51 @@ all add a fact, every possible fact is present by then; otherwise the
 sequence has already stabilized. Thus presence after $N$ rounds is
 equivalent to finite derivability from the rules.
 
-For soundness, each derived fact $[B,i,a]$ has a single witnessing core
-term $s$ such that $s(v_j)\subseteq|B|_j$ at every row and
-$a\in s(v_i)$. A seed is witnessed by its input variable. For a cut
-rule, combine its two witness terms by $\star_r$. At each row either
-both are bounded by $|B|_j$, or one is exactly the absorbing singleton
-$\{r\}$ and $r\in|B|_j$. The result is bounded. Monotonicity of owned
-choice carries $c\in\{a\}\star_r\{b\}$ into its actual value.
+For soundness, each derived fact $[B,i,a]$ has a witness: a core term
+bounded by $B$ with $a$ in its value at row $i$. A seed is witnessed by
+its variable. For a cut rule, combine the two witnesses by $\star_r$.
+At each row either both are bounded by $|B|_j$, or one is exactly the
+absorbing atom $\{r\}$ and $r\in|B|_j$, so the result is bounded by
+$B$. Owned choice is monotone for inclusion, so $c\in\{a\}\star_r\{b\}$
+lies in its value at row $i$.
 
-For completeness, induct on a core term $s$ bounded by $B$.
-At an owned root $p\star_r q$, choose the left atomic cut in every
-row where $p(v_j)=\{r\}$; otherwise choose the right atomic cut where
-$q(v_j)=\{r\}$. In the other rows the root is union, so both children
-are bounded by $|B|_j$. Atomic cuts are allowed because the root's
-singleton $\{r\}$ belongs to its bound. These choices give two
-permitted bound vectors for the children.
+For completeness, induct on a core term $s$ bounded by $B$, showing that
+$[B,i,a]$ is derived whenever $a\in s(v_i)$. A variable seeds these
+facts. At an owned root $p\star_r q$, choose the left atomic cut in every
+row where $p(v_j)=\{r\}$, and otherwise the right atomic cut where
+$q(v_j)=\{r\}$; atomic cuts are allowed there because the root's value
+$\{r\}$ lies in its bound. In the other rows the root is a union, so
+both children are bounded by $|B|_j$. Thus $p$ and $q$ are bounded by
+the two halves of a cut of $B$. Every winner of $A\star_r C$ already
+occurs in $\{a\}\star_r\{c\}$ for some $a\in A$ and $c\in C$: if an
+operand is $\{r\}$, take $a$ or $c$ to be $r$; otherwise take the
+winner itself with a member of the other operand, chosen different
+from $r$ when the winner is not $r$. The induction hypotheses and a cut rule therefore derive
+each membership of $s$.
 
-Every winner of $A\star_r C$ already occurs in
-$\{a\}\star_r\{c\}$ for some $a\in A,c\in C$.
-If an operand absorbs, choose that owner atom. Otherwise choose the
-contributing winner and, when it is not $r$, a nonowner member of
-the other operand, which is not $\{r\}$. The induction hypotheses
-and a cut rule therefore derive each membership of $s$.
-
-Finally, at a fixed bound take the neutral union of one witness for
-each present fact. There are finitely many, and the set is nonempty
-by hypothesis. This is one core term bounded at every row. It contains
-all present memberships; completeness shows that it contains no others.
-At $B_0$, if all requested memberships are present, this term has
-exactly the requested values. The reverse implication is completeness.
+Finally, for a bound vector $B$ with a present fact, let $s$ be the
+$+$-sum of one witness for each present fact $[B,i,a]$. It is bounded by
+$B$ and has every present membership, and by completeness no other. At
+$B_0$, if all requested memberships are present, $s$ has exactly the
+requested values. The converse is completeness.
 \end{proof}
 
-\begin{corollary}[All-arity operation recognition]\label{core:cor:cut-functions}
-For every finite input arity and $K\geq3$, an operation $f:P^V\to P$
-is realized by a core term exactly when the cut test accepts its entire
-table, using all valuations as rows and $U_v=f(v)$. Acceptance supplies
-one term realizing the whole operation. At arity zero the test rejects
-every operation.
+\begin{corollary}[Recognizing term operations]\label{core:cor:cut-functions}
+Let $V$ be a finite set of variables and $K\geq3$. An operation
+$f:\Pow^V\to\Pow$ is a core term operation exactly when the test
+accepts its table, with all valuations as rows and $U_v=f(v)$; the
+resulting term realizes $f$. When $V$ is empty the test rejects every
+operation.
 \end{corollary}
 \begin{proof}
 Apply \cref{core:thm:cuts} to the nonempty finite set of all valuations.
 With no variables there are no seeds, so no membership is derived.
 \end{proof}
 
-This criterion uses $(K+2)^m$ bound vectors and their membership facts.
-It gives recognition and synthesis; a concise normal form for all higher-arity
-functions is a separate question.
+For an $n$-ary operation the table has $(2^K-1)^n$ rows, so the test
+ranges over $(K+2)^{(2^K-1)^n}$ bound vectors. It decides which
+operations are terms and produces a term for each, but unlike
+\cref{core:prop:binary} it does not describe them.
 
 \subsection{Unary polynomials}
 
