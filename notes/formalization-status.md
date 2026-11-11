@@ -8,7 +8,7 @@ Other report results remain optional and have their own evidence status.
 | Audit entrypoint | Mathematical statements | Presentation |
 | --- | ---: | --- |
 | [Paper.lean](../Paper.lean) | 75 | Main text and the report claims it cites; 603 lines |
-| [Report.lean](../Report.lean) | 50 | Further report results and proof ingredients |
+| [Report.lean](../Report.lean) | 55 | Further report results and proof ingredients |
 | [Results/Certificates](../KFOL/Results/Certificates.lean) | 140 preserved contracts | Original full statements, including native machines, codecs and intermediate invariants |
 
 Every root proof names one library theorem. Both root files have no semantic
@@ -26,7 +26,7 @@ regular representation are in `Definitions/Relational`.
 | Definition surface | Theorem types | Semantic declarations | Source files | Written review units |
 | --- | ---: | ---: | ---: | ---: |
 | Paper | 75 | 629 | 35 | 329 |
-| Report | 50 | 568 | 30 | 243 |
+| Report | 55 | 600 | 32 | 261 |
 
 The slices overlap and exclude theorem proof bodies. These meaning indexes do
 not replace the human comparison with the manuscript or the proof/axiom audits.
@@ -37,7 +37,7 @@ The production integration checks are:
 
 - `make check-lean`: literal façade and preservation checks, inventory,
   independent algebra build/import audit, Paper/Report and whole-source axiom
-  audits, both definition indexes, actual negative audit fixtures and 94 strict
+  audits, both definition indexes, actual negative audit fixtures and 95 strict
   Lean regressions.
 - `make check-python`: the explicit 33 independent Python checks, mapped to the
   current paper in `checks/README.md` and the verification appendix.
@@ -112,8 +112,16 @@ specifies their finite saturation. `Algorithms/FiniteHorn` proves the uniform
 round limit, and `Core/Cuts` proves soundness, completeness and one common
 witness for all derived memberships. The four report statements include the
 round bound K*m*(K+2)^m and synthesis across every sampled valuation at once.
-The remaining main-text question is phrased specifically in terms of concise
-normal forms.
+Canonical prime source-guard normal forms are now proved for the full
+operations. A winner is supplied by one variable, tested against the other
+inputs' nonobserver singleton statuses. There are exactly n K^n indexed
+Boolean observations. `Definitions/CoreNormalForm` groups the passive statuses,
+probes, sufficient prime guards and their meaning; `Core/SourceProbes` and
+`Core/SourceNormalForm` prove reconstruction, canonicity and local synthesis.
+The five complete report statements retain the antichain clause. Both excluded
+ternary functions also have sourcewise reconstructions, so the remaining
+main-text question concerns a concise intrinsic characterization of jointly
+realizable functions, beyond the exact finite recognition procedure.
 
 The one-owner basis now has optimal variable bound five: thirty-six native
 laws, with five-variable exchange replacing the six-variable action-band

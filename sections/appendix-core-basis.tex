@@ -14,7 +14,8 @@ constants and internal role permutations by a permutation envelope. The remainin
 owned choice with union has a seven-equation basis
 (\cref{app:core-dissemilattice}); the binary terms have explicit normal
 forms (\cref{app:core-binary}); at every arity, the singleton outputs of
-terms are characterized (\cref{app:core-profiles}) and a finite
+terms are characterized (\cref{app:core-profiles}), prime source-guard
+normal forms describe their full values (\cref{app:core-source-guards}), and a finite
 saturation decides which operations are terms (\cref{app:core-cuts});
 unary polynomials are classified (\cref{core:prop:unary-polynomials});
 conservative models have a three-variable presentation
@@ -813,6 +814,113 @@ $r=a$ or $r=c$ use the two exclusions above; for every other
 $r\ne b$, all third-valuation inputs lie in $\{a,b,c\}$.
 The parent $C$-value is consequently the union and retains $b$.
 \end{proof}
+
+\subsection{Prime source-guard normal forms}\label{app:core-source-guards}
+
+The full operation can be recovered from smaller, sourcewise predicates.
+Fix a potential winner $k$. A \emph{passive status} is either an atom
+$r\ne k$ or a neutral symbol $\nu$. Write $\sigma_k(S)=r$ if
+$S=\{r\}$ with $r\ne k$, and $\sigma_k(S)=\nu$ otherwise.
+Order these $K$ statuses with every atom below $\nu$ and distinct atoms
+incomparable. For a source $j\in V$ and a pattern
+$p\in (I\setminus\{k\}\cup\{\nu\})^{V\setminus\{j\}}$, define the
+\emph{isolated-source probe}
+\[
+ v^{k,j,p}_i=\begin{cases}
+ \{k\},&i=j,\\
+ \{r\},&i\ne j\text{ and }p_i=r,\\
+ I\setminus\{k\},&i\ne j\text{ and }p_i=\nu.
+ \end{cases}
+\]
+Here $I\setminus\{k\}$ is ambiguous because $K\geq3$.
+Put $c^t_{k,j}(p)=1$ when $k\in t(v^{k,j,p})$.
+
+A \emph{guard} at $(k,j)$ is a set
+$G\subseteq(V\setminus\{j\})\times(I\setminus\{k\})$.
+It is enabled at $p$ when $p_i\ne r$ for every $(i,r)\in G$.
+It is sufficient for $c$ when every pattern enabling it satisfies $c$,
+and \emph{prime} when it is inclusion-minimal among sufficient guards.
+Let $\Gamma^t_{k,j}$ contain \emph{all} prime guards for $c^t_{k,j}$.
+
+\begin{theorem}[Prime source-guard normal form]\label{core:thm:source-guards}
+For every core term $t$ over a finite nonempty set $V$, and every valuation
+$S=(S_i)_{i\in V}$,
+\[
+ k\in t(S)\quad\Longleftrightarrow\quad
+ \exists j\in V\ \bigl(k\in S_j\ \text{ and }\
+ \exists G\in\Gamma^t_{k,j}\ \forall(i,r)\in G,\ S_i\ne\{r\}\bigr).
+\]
+Each $\Gamma^t_{k,j}$ is an inclusion antichain. Two core terms induce
+the same operation if and only if all their families $\Gamma_{k,j}$
+agree. Writing $n=|V|$, the $nK^n$ Boolean observations
+$c^t_{k,j}(p)$ determine the entire operation.
+\end{theorem}
+\begin{proof}
+First prove the source decomposition
+\[
+ k\in t(S)\quad\Longleftrightarrow\quad
+ \exists j\in V\ \bigl(k\in S_j\text{ and }
+ c^t_{k,j}(\sigma_k(S_i):i\ne j)=1\bigr).
+\]
+This step does not require $V$ to be finite. Induct on $t$.
+At a variable only its own source can supply $k$. At a choice by $k$,
+membership is disjunction. At a choice by $r\ne k$, membership survives
+precisely when it occurs in a child and neither child is $\{r\}$.
+For a source with $k\in S_j$, passing to its probe preserves every
+input test $S_i=\{r\}$: the source passes neither test, and the other
+positions preserve it by construction. The singleton profiles therefore
+preserve both child tests, so induction transfers membership in both
+directions.
+
+The coefficient $c^t_{k,j}$ is monotone in the passive order: replacing
+an atom by $\nu$ enlarges its probe value, and owned choice is monotone
+under inclusion. If $c(p)=1$, form the guard containing every $(i,r)$
+with $p_i\ne r$. Its enabled patterns are exactly the patterns above
+$p$, so it is sufficient by monotonicity. Delete exclusions until it is
+prime; it still enables $p$. Conversely, a sufficient enabled guard
+implies $c(p)=1$. Substituting this equivalence in the source decomposition
+gives the formula. Minimality gives the antichain property. Equal
+operations give equal coefficients and hence equal prime families; the
+formula gives the converse. There are $K$ observers, $n$ sources, and
+$K^{n-1}$ passive patterns per source, for $nK^n$ indexed observations.
+\end{proof}
+
+These predicates also compose directly. For $t=s\star_r u$, fix $(k,j,p)$
+and put $E_r=\{i\ne j:p_i=r\}$. If $r=k$, then
+$c^t_{k,j}=c^s_{k,j}\lor c^u_{k,j}$. If $r\ne k$, then
+\[
+ c^t_{k,j}(p)=
+ (c^s_{k,j}(p)\lor c^u_{k,j}(p))\land
+ \neg\Phi_r(s)(E_r)\land\neg\Phi_r(u)(E_r).
+\]
+The source is never an $r$-atom, so the two profiles test exactly the
+absorbing operands on the probe. Thus the coefficients can be computed
+alongside the singleton profiles, without enumerating the full value table.
+
+For a projection $x_j$, the only guard at its source is the empty guard;
+all other source families are empty. A union of variables likewise has
+one empty guard at each source that occurs. The construction gives no polynomial size bound on the guard families. Using all prime guards makes it canonical;
+it does not assert that this is a smallest disjunctive presentation.
+
+\begin{proposition}[Local guard synthesis]\label{core:prop:guard-synthesis}
+Fix $k$ and $j$. Every nonempty finite family $\mathcal G$ of guards at
+$(k,j)$ is realized by a core term $t$ at that source:
+\[
+ c^t_{k,j}(p)=1\quad\Longleftrightarrow\quad
+ \exists G\in\mathcal G\ \forall(i,r)\in G,\ p_i\ne r.
+\]
+\end{proposition}
+\begin{proof}
+For one guard, start with $x_j$ and, for every $(i,r)\in G$, replace
+the current term $u$ by $u\star_r x_i$. On a probe, $x_i$ cannot
+supply $k$, and this step retains $k$ precisely when it was present
+before and $p_i\ne r$. The resulting spine realizes the guard.
+Take the derived union of these spines over the nonempty family.
+\end{proof}
+
+Local synthesis prescribes only one coefficient. Families at different
+sources and observers need not be jointly realizable. The next subsection
+gives an exact finite test for this global condition.
 
 \subsection{Recognition by atomic cuts}\label{app:core-cuts}
 

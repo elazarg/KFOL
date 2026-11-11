@@ -1,6 +1,6 @@
 # Report theorem-type definition surface
 
-50 public theorem types reach 568 project semantic declarations in 30 source files. 19 of those files are under `KFOL/Definitions`. Generated declarations are grouped into 243 written source review units; 21 derived declarations have file-level locations. Theorem proof bodies are excluded.
+55 public theorem types reach 600 project semantic declarations in 32 source files. 21 of those files are under `KFOL/Definitions`. Generated declarations are grouped into 261 written source review units; 22 derived declarations have file-level locations. Theorem proof bodies are excluded.
 
 This is a review index. Definitions still require human review against the manuscript; the separate proof/axiom and import audits remain necessary.
 
@@ -9,18 +9,20 @@ This is a review index. Definitions still require human review against the manus
 | [KFOL/Definitions/Rounds.lean](../KFOL/Definitions/Rounds.lean) | 88 | yes |
 | [KFOL/Definitions/Queries.lean](../KFOL/Definitions/Queries.lean) | 59 | yes |
 | [KFOL/Definitions/Strategic.lean](../KFOL/Definitions/Strategic.lean) | 56 | yes |
+| [Report.lean](../Report.lean) | 56 |  |
 | [KFOL/Definitions/Owner.lean](../KFOL/Definitions/Owner.lean) | 52 | yes |
-| [Report.lean](../Report.lean) | 51 |  |
 | [KFOL/Definitions/Equational.lean](../KFOL/Definitions/Equational.lean) | 46 | yes |
 | [KFOL/Definitions/Circuits.lean](../KFOL/Definitions/Circuits.lean) | 44 | yes |
 | [KFOL/Definitions/Quantified.lean](../KFOL/Definitions/Quantified.lean) | 36 | yes |
 | [KFOL/Definitions/Reset.lean](../KFOL/Definitions/Reset.lean) | 30 | yes |
 | [KFOL/Definitions/CoreBasis.lean](../KFOL/Definitions/CoreBasis.lean) | 29 | yes |
 | [KFOL/Definitions/CoreFunctions.lean](../KFOL/Definitions/CoreFunctions.lean) | 26 | yes |
+| [KFOL/Definitions/CoreNormalForm.lean](../KFOL/Definitions/CoreNormalForm.lean) | 23 | yes |
 | [KFOL/Definitions/Public.lean](../KFOL/Definitions/Public.lean) | 19 | yes |
 | [KFOL/Definitions/Reductions.lean](../KFOL/Definitions/Reductions.lean) | 16 | yes |
 | [KFOL/Definitions/Envelope.lean](../KFOL/Definitions/Envelope.lean) | 12 | yes |
 | [KFOL/Definitions/FiniteHorn.lean](../KFOL/Definitions/FiniteHorn.lean) | 9 | yes |
+| [KFOL/Definitions/Views.lean](../KFOL/Definitions/Views.lean) | 9 | yes |
 | [KFOL/Definitions/Core.lean](../KFOL/Definitions/Core.lean) | 7 | yes |
 | [KFOL/Rounds/SerializationTrace.lean](../KFOL/Rounds/SerializationTrace.lean) | 7 |  |
 | [KFOL/Definitions/PaperGames.lean](../KFOL/Definitions/PaperGames.lean) | 6 | yes |
@@ -41,63 +43,68 @@ External interfaces are recorded without unfolding them:
 
 - Batteries: 1 boundary constants.
 - GameTheory: 92 boundary constants.
-- Lean/Std: 151 boundary constants.
-- mathlib: 131 boundary constants.
+- Lean/Std: 153 boundary constants.
+- mathlib: 136 boundary constants.
 
 Review per public theorem:
 
 | Public theorem | Semantic declarations | Project modules |
 | --- | ---: | ---: |
-| [arbitrary_public_quantifier](../Report.lean#L404) | 21 | 1 |
-| [boolean_threshold_state_lower_bound](../Report.lean#L279) | 45 | 1 |
-| [constant_sum_value](../Report.lean#L541) | 43 | 2 |
-| [core_cut_maximum](../Report.lean#L51) | 52 | 4 |
-| [core_cut_recognition](../Report.lean#L73) | 54 | 4 |
-| [core_cut_round_bound](../Report.lean#L63) | 31 | 3 |
-| [core_cut_synthesis](../Report.lean#L44) | 53 | 4 |
-| [core_singleton_profiles](../Report.lean#L24) | 11 | 3 |
-| [core_three_valuation_persistence](../Report.lean#L31) | 21 | 2 |
-| [core_typed_upper_clone_cover](../Report.lean#L144) | 46 | 6 |
-| [core_variable_bound_obstruction](../Report.lean#L115) | 53 | 4 |
-| [expanded_variety_envelope](../Report.lean#L511) | 51 | 4 |
-| [finite_powerset_relational_representation](../Report.lean#L452) | 2 | 1 |
-| [idempotency_certificates](../Report.lean#L79) | 19 | 1 |
-| [intersection_not_definable](../Report.lean#L505) | 18 | 1 |
-| [native_nonfinite_basis](../Report.lean#L184) | 36 | 2 |
-| [owned_choice_relational_representation](../Report.lean#L490) | 6 | 2 |
-| [owned_choice_zero_extension](../Report.lean#L465) | 5 | 2 |
-| [owned_choice_zero_representation](../Report.lean#L479) | 7 | 2 |
-| [owner_four_variable_obstruction](../Report.lean#L133) | 62 | 2 |
-| [pair_game_boolean_full_abstraction](../Report.lean#L258) | 78 | 1 |
-| [permutation_envelope_cardinality](../Report.lean#L524) | 1 | 1 |
-| [public_choice_small_support](../Report.lean#L323) | 57 | 3 |
-| [public_choice_support_sharp](../Report.lean#L332) | 32 | 1 |
-| [public_equilibrium_strategic_form](../Report.lean#L169) | 40 | 1 |
-| [public_nonidempotence](../Report.lean#L533) | 42 | 2 |
-| [public_query_compilation](../Report.lean#L437) | 80 | 3 |
-| [public_query_equivalence](../Report.lean#L445) | 74 | 4 |
-| [public_term_interpretation](../Report.lean#L178) | 54 | 3 |
-| [reciprocal_values](../Report.lean#L554) | 46 | 2 |
-| [reset_circuit_exponential_tables](../Report.lean#L342) | 42 | 3 |
-| [reset_circuit_generator](../Report.lean#L394) | 36 | 4 |
-| [reset_circuit_reduction](../Report.lean#L383) | 70 | 5 |
-| [reset_circuit_tree_succinctness](../Report.lean#L351) | 58 | 5 |
-| [reset_family_product](../Report.lean#L109) | 15 | 2 |
-| [reset_no_relational_representation](../Report.lean#L498) | 5 | 2 |
-| [reset_substitution](../Report.lean#L98) | 24 | 3 |
-| [reset_table_size](../Report.lean#L412) | 21 | 2 |
-| [round_product_beliefs](../Report.lean#L225) | 45 | 5 |
-| [round_profile_consistency](../Report.lean#L212) | 45 | 5 |
-| [round_protocol_foundations](../Report.lean#L196) | 28 | 1 |
-| [scalar_contextual_equivalence](../Report.lean#L560) | 74 | 2 |
-| [scalar_diagonal_security](../Report.lean#L306) | 4 | 2 |
-| [scalar_diagonal_values](../Report.lean#L547) | 44 | 2 |
-| [scalar_parallel_laws](../Report.lean#L236) | 0 | 0 |
-| [scalar_rational_observation_order](../Report.lean#L291) | 64 | 1 |
-| [scalar_rational_values](../Report.lean#L246) | 63 | 1 |
-| [serial_order_independence](../Report.lean#L378) | 39 | 2 |
-| [two_player_forcing_coordinates](../Report.lean#L418) | 6 | 2 |
-| [well_founded_quantifier_fold](../Report.lean#L369) | 60 | 2 |
+| [arbitrary_public_quantifier](../Report.lean#L441) | 21 | 1 |
+| [boolean_threshold_state_lower_bound](../Report.lean#L316) | 45 | 1 |
+| [constant_sum_value](../Report.lean#L578) | 43 | 2 |
+| [core_cut_maximum](../Report.lean#L88) | 52 | 4 |
+| [core_cut_recognition](../Report.lean#L110) | 54 | 4 |
+| [core_cut_round_bound](../Report.lean#L100) | 31 | 3 |
+| [core_cut_synthesis](../Report.lean#L81) | 53 | 4 |
+| [core_guard_synthesis](../Report.lean#L53) | 41 | 4 |
+| [core_prime_guard_equality](../Report.lean#L40) | 44 | 4 |
+| [core_prime_guard_normal_form](../Report.lean#L31) | 49 | 4 |
+| [core_singleton_profiles](../Report.lean#L61) | 11 | 3 |
+| [core_source_probe_count](../Report.lean#L47) | 11 | 1 |
+| [core_source_reconstruction](../Report.lean#L24) | 42 | 4 |
+| [core_three_valuation_persistence](../Report.lean#L68) | 21 | 2 |
+| [core_typed_upper_clone_cover](../Report.lean#L181) | 46 | 6 |
+| [core_variable_bound_obstruction](../Report.lean#L152) | 53 | 4 |
+| [expanded_variety_envelope](../Report.lean#L548) | 51 | 4 |
+| [finite_powerset_relational_representation](../Report.lean#L489) | 2 | 1 |
+| [idempotency_certificates](../Report.lean#L116) | 19 | 1 |
+| [intersection_not_definable](../Report.lean#L542) | 18 | 1 |
+| [native_nonfinite_basis](../Report.lean#L221) | 36 | 2 |
+| [owned_choice_relational_representation](../Report.lean#L527) | 6 | 2 |
+| [owned_choice_zero_extension](../Report.lean#L502) | 5 | 2 |
+| [owned_choice_zero_representation](../Report.lean#L516) | 7 | 2 |
+| [owner_four_variable_obstruction](../Report.lean#L170) | 62 | 2 |
+| [pair_game_boolean_full_abstraction](../Report.lean#L295) | 78 | 1 |
+| [permutation_envelope_cardinality](../Report.lean#L561) | 1 | 1 |
+| [public_choice_small_support](../Report.lean#L360) | 57 | 3 |
+| [public_choice_support_sharp](../Report.lean#L369) | 32 | 1 |
+| [public_equilibrium_strategic_form](../Report.lean#L206) | 40 | 1 |
+| [public_nonidempotence](../Report.lean#L570) | 42 | 2 |
+| [public_query_compilation](../Report.lean#L474) | 80 | 3 |
+| [public_query_equivalence](../Report.lean#L482) | 74 | 4 |
+| [public_term_interpretation](../Report.lean#L215) | 54 | 3 |
+| [reciprocal_values](../Report.lean#L591) | 46 | 2 |
+| [reset_circuit_exponential_tables](../Report.lean#L379) | 42 | 3 |
+| [reset_circuit_generator](../Report.lean#L431) | 36 | 4 |
+| [reset_circuit_reduction](../Report.lean#L420) | 70 | 5 |
+| [reset_circuit_tree_succinctness](../Report.lean#L388) | 58 | 5 |
+| [reset_family_product](../Report.lean#L146) | 15 | 2 |
+| [reset_no_relational_representation](../Report.lean#L535) | 5 | 2 |
+| [reset_substitution](../Report.lean#L135) | 24 | 3 |
+| [reset_table_size](../Report.lean#L449) | 21 | 2 |
+| [round_product_beliefs](../Report.lean#L262) | 45 | 5 |
+| [round_profile_consistency](../Report.lean#L249) | 45 | 5 |
+| [round_protocol_foundations](../Report.lean#L233) | 28 | 1 |
+| [scalar_contextual_equivalence](../Report.lean#L597) | 74 | 2 |
+| [scalar_diagonal_security](../Report.lean#L343) | 4 | 2 |
+| [scalar_diagonal_values](../Report.lean#L584) | 44 | 2 |
+| [scalar_parallel_laws](../Report.lean#L273) | 0 | 0 |
+| [scalar_rational_observation_order](../Report.lean#L328) | 64 | 1 |
+| [scalar_rational_values](../Report.lean#L283) | 63 | 1 |
+| [serial_order_independence](../Report.lean#L415) | 39 | 2 |
+| [two_player_forcing_coordinates](../Report.lean#L455) | 6 | 2 |
+| [well_founded_quantifier_fold](../Report.lean#L406) | 60 | 2 |
 
 The JSON contains every theorem's complete project slice, exact declaration/type/body edges, external interface types, declaration locations and source fingerprints.
 

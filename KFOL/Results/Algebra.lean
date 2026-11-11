@@ -6,11 +6,50 @@ public import KFOL.Algebra.FullBasis.NonfiniteBasis
 public import KFOL.Owner.FourVariableObstruction
 public import KFOL.Owner.Basis.Exchange
 public import KFOL.Core.Cuts
+public import KFOL.Core.SourceNormalForm
 
 @[expose] public section
 namespace KFOL.Results.Algebra
 universe u v w
 variable {Role : Type u} {Var : Type v}
+
+theorem core_source_reconstruction {Role : Type u} {Var : Type v}
+    (three : Fin 3 ↪ Role) (t : Term Role Var) (ht : t.IsCore)
+    (v : Var → WinnerSet Role) (k : Role) :
+    k ∈ (t.eval v).val ↔ ∃ j, k ∈ (v j).val ∧
+      k ∈ (t.eval (Core.Sources.probe three k j (Core.Sources.pattern k j v))).val :=
+  Core.Sources.membership_iff_source three t ht v k
+
+theorem core_prime_guard_normal_form {Role : Type u} [Fintype Role]
+    {Var : Type v} [Fintype Var] (three : Fin 3 ↪ Role)
+    (t : Term Role Var) (ht : t.IsCore) (v : Var → WinnerSet Role) :
+    (Core.Sources.meaning (Core.Sources.normalForm three (fun w => t.eval w)) v =
+      (t.eval v).val) ∧ ∀ k j, IsAntichain (· ≤ ·)
+        (Core.Sources.normalForm three (fun w => t.eval w) k j :
+          Set (Core.Sources.Guard k j)) :=
+  ⟨Core.Sources.normalForm_correct three t ht v,
+    Core.Sources.normalForm_antichain three (fun w => t.eval w)⟩
+
+theorem core_prime_guard_equality {Role : Type u} [Fintype Role]
+    {Var : Type v} [Fintype Var] (three : Fin 3 ↪ Role)
+    (s t : Term Role Var) (hs : s.IsCore) (ht : t.IsCore) :
+    Core.Sources.normalForm three (fun v => s.eval v) =
+      Core.Sources.normalForm three (fun v => t.eval v) ↔ ∀ v, s.eval v = t.eval v :=
+  Core.Sources.normalForm_eq_iff three s t hs ht
+
+theorem core_source_probe_count {Role : Type u} [Fintype Role]
+    {Var : Type v} [Fintype Var] [DecidableEq Var] :
+    Fintype.card (Core.Sources.ProbeIndex Role Var) =
+      Fintype.card Var * Fintype.card Role ^ Fintype.card Var :=
+  Core.Sources.card_probeIndex
+
+theorem core_guard_synthesis {Role : Type u} {Var : Type v}
+    (three : Fin 3 ↪ Role) {k : Role} {j : Var}
+    (G : Finset (Core.Sources.Guard k j)) (hG : G.Nonempty) :
+    ∃ t : Term Role Var, t.IsCore ∧ ∀ p : Core.Sources.Pattern k j,
+      (k ∈ (t.eval (Core.Sources.probe three k j p)).val ↔
+        ∃ g ∈ G, Core.Sources.Enabled g p) :=
+  Core.Sources.exists_guard_family_term three G hG
 
 /-- All-arity synthesis of the core's singleton-output predicates. -/
 theorem core_singleton_profiles [DecidableEq Role] [Fintype Role] [Fintype Var]

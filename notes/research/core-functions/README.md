@@ -1,7 +1,8 @@
 # All-arity core functions
 
-Exact finite recognition and synthesis are proved. A concise structural
-classification of the full winner-set term functions remains open.
+Exact finite recognition, synthesis and canonical prime source-guard normal
+forms are proved. A concise intrinsic description of jointly realizable
+source families remains open.
 
 The singleton-output predicates are settled in every finite arity by
 `KFOL.Core.exists_term_iff_admissibleProfiles`, exported with its complete
@@ -93,3 +94,29 @@ realizable but jointly impossible, the arity-zero boundary, and the round
 count. The independent Python maximum-value implementation is retained as a
 numerical regression; its executable equivalence to the Lean Horn algorithm
 is not asserted.
+
+## Canonical prime source-guard normal forms
+
+`Core.Sources.membership_iff_source` reconstructs membership of a winner k
+from one supplying variable j at a time. Set j to {k}; every other input
+is either another owner's atom or neutral ambiguity I\{k}. This structural
+result needs neither a finite role type nor a finite variable type.
+For K owners and n variables the observation index has exactly n K^n elements.
+
+Each resulting coefficient is monotone on the flat passive poset. Its
+canonical representation is the set of all inclusion-minimal sufficient
+exclusion guards. `Core.Sources.normalForm_correct` reconstructs the whole
+operation, and `normalForm_eq_iff` makes these families a complete equality
+invariant. A projection has exactly one empty guard at its source. Using all
+prime guards does not claim minimum disjunctive size or a polynomial size bound.
+The vocabulary is centralized in `Definitions/CoreNormalForm.lean`.
+
+`Core.Sources.exists_guard_family_term` realizes any nonempty finite family
+at one chosen source by a union of owned-choice spines. The other source
+coefficients are not prescribed. The independent checker confirms that both
+excluded operations above nevertheless satisfy sourcewise reconstruction.
+Thus this semantic normal form does not by itself solve joint realizability;
+the atomic-cut test still supplies exact global recognition.
+
+The report places these results between singleton profiles and atomic cuts;
+five complete audited statements are in `Report.lean`.

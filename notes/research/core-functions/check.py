@@ -53,6 +53,21 @@ def check(filename):
     assert len(table) == 343 and all(x in domain for x in table)
     function = dict(zip(valuations, table))
 
+    # Sourcewise reconstruction is necessary, but does not characterize the
+    # clone image: both independently excluded operations satisfy it.
+    for valuation in valuations:
+        for k in range(3):
+            bit = 1 << k
+            supplied = False
+            for j in range(3):
+                if not valuation[j] & bit:
+                    continue
+                probe = tuple(bit if i == j else
+                              value if value in (1, 2, 4) and value != bit else 7 ^ bit
+                              for i, value in enumerate(valuation))
+                supplied |= bool(function[probe] & bit)
+            assert bool(function[valuation] & bit) == supplied
+
     rows = data["rows"]
     assert len(rows) == 3 and all(len(row) == 3 for row in rows)
     output = tuple(function[tuple(row)] for row in rows)
