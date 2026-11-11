@@ -5,8 +5,9 @@ public import KFOL.Definitions.FiniteHorn
 public import Mathlib.Tactic.DeriveFintype
 public import Mathlib.Data.Fintype.Pi
 public import Mathlib.Data.Fintype.Powerset
+public import Mathlib.Data.Fin.VecNotation
 
-/-! # Intrinsic singleton profiles and finite atomic-cut recognition
+/-! # Singleton profiles, relational tests and finite atomic-cut recognition
 
 The predicates below are specified independently of terms. A Boolean input
 marks the variables assigned one owner's singleton. The atomic-cut system
@@ -107,5 +108,36 @@ noncomputable def CutRecognizes {Role : Type u} {Var : Type v}
   classical
   letI := Fintype.ofFinite (WinnerSet Role)
   exact Cuts.Recognizes (fun valuation x => valuation x) f
+
+/-- Closure of a binary relation under every coordinatewise owned choice. -/
+def BinaryInvariant {Role : Type u} (R : Set (WinnerSet Role × WinnerSet Role)) : Prop :=
+  ∀ r x y, x ∈ R → y ∈ R →
+    (WinnerSet.choice r x.1 y.1, WinnerSet.choice r x.2 y.2) ∈ R
+
+/-- Preservation of all binary core-invariant relations. -/
+def PreservesBinary {Role : Type u} {Var : Type v}
+    (f : (Var → WinnerSet Role) → WinnerSet Role) : Prop :=
+  ∀ R, BinaryInvariant R → ∀ v w, (∀ i, (v i, w i) ∈ R) → (f v, f w) ∈ R
+
+/-- Every two evaluations have a common core-term interpolant. -/
+def PairwiseInterpolable {Role : Type u} {Var : Type v}
+    (f : (Var → WinnerSet Role) → WinnerSet Role) : Prop :=
+  ∀ v w, ∃ t : Term Role Var, t.IsCore ∧ t.eval v = f v ∧ t.eval w = f w
+
+/-- Three short core operations used in the pairwise interpolation obstruction. -/
+noncomputable def patchCandidates {Role : Type u} (three : Fin 3 ↪ Role)
+    (v : Fin 3 → WinnerSet Role) : Fin 3 → WinnerSet Role :=
+  let h := WinnerSet.choice (three 1) (v 0) (v 2)
+  ![(v 1).union h,
+    WinnerSet.choice (three 0) h (WinnerSet.choice (three 2) (v 1) (v 2)),
+    WinnerSet.choice (three 2) (WinnerSet.choice (three 0) (v 0) (v 1)) h]
+
+/-- Take the repeated candidate value. The coherence theorem proves that a
+repeated value exists at every valuation, for arbitrary role types. -/
+noncomputable def pairwiseCounterexample {Role : Type u} (three : Fin 3 ↪ Role)
+    (v : Fin 3 → WinnerSet Role) : WinnerSet Role := by
+  classical
+  exact if patchCandidates three v 0 = patchCandidates three v 1 then
+    patchCandidates three v 0 else patchCandidates three v 2
 
 end KFOL.Core

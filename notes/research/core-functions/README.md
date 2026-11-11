@@ -1,168 +1,134 @@
 # All-arity core functions
 
-Exact finite recognition, synthesis and canonical prime source-guard normal
-forms are proved. A concise intrinsic description of jointly realizable
-source families remains open.
+Exact recognition, synthesis and canonical prime source-guard normal forms
+are proved. A concise intrinsic description of jointly realizable families
+remains open. Pairwise compatibility and correct singleton profiles together
+are now proved insufficient, uniformly for every K ≥ 3.
 
-The singleton-output predicates are settled in every finite arity by
-`KFOL.Core.exists_term_iff_admissibleProfiles`, exported with its complete
-statement in `Report.core_singleton_profiles`. The intrinsic conditions are
-monotonicity, unanimity, and a nonempty intersection for every selection of
-one winning coalition per owner. The proof constructs an actual core term:
-each owner chooses a winning coalition, and a leaf returns the union of
-variables in the common intersection. The interpretation on actual winner
-sets is `Core.winnerSet_eq_singleton_iff_profile`.
+## Profiles and source-guard normal forms
 
-Singleton profiles and variable support do not specify the whole function.
-The two reset terms `x δ (y δ z)` and `(x δ y) δ z` have the same profiles
-and support, but differ at `x={c}`, `y={a}`, `z={a,b}`.
+`Core.exists_term_iff_admissibleProfiles` classifies singleton-output predicates
+at every finite arity: monotonicity, unanimity and a common variable in every
+selection of one winning coalition per owner. `Core/ProfileSynthesis` constructs
+a core term realizing every admissible family. Singleton profiles do not specify
+the full function: the two reset associations have equal profiles and support
+but different ambiguous outputs.
 
-## Three-valuation persistence
+`Core.Sources.membership_iff_source` reconstructs a possible winner k from one
+supplying variable j at a time. The probe sets j to {k}; every other input is
+another owner's atom or neutral ambiguity I\{k}. No finiteness assumption is
+needed for this decomposition. With K owners and n variables its observation
+index has exactly n K^n elements.
 
-For three distinct roles, a core operation satisfies
+Each source coefficient is monotone on the passive poset. Its canonical form
+contains all inclusion-minimal sufficient exclusion guards.
+`normalForm_correct` reconstructs the operation, and `normalForm_eq_iff` proves
+canonicity. A projection has just an empty guard at its source.
+`exists_guard_family_term` realizes any nonempty guard family at one chosen
+source by a union of owned-choice spines; it does not prescribe the others.
+The vocabulary is centralized in `Definitions/CoreNormalForm.lean`.
+
+## Pairwise compatibility and the uniform obstruction
+
+`Core.pairwiseInterpolable_iff_preservesBinary` identifies simultaneous
+interpolation at any two valuations with preservation of every binary relation
+closed under coordinatewise owned choice. This includes unary tests through
+diagonal relations. It allows empty invariant relations and arbitrary role and
+variable types.
+
+`Core.Pairwise` constructs an explicit operation from three short core terms.
+Writing H = X ⋆_b Z, the candidates are
 
 ```
-t({a,b}, {b},   {b})   = {b}
-t({b},   {b,c}, {a,b}) = {b,c}
---------------------------------
-b belongs to t({a}, {b}, {c}).
+P = Y ∪ H
+Q = H ⋆_a (Y ⋆_c Z)
+R = (X ⋆_a Y) ⋆_c H.
 ```
 
-Each argument can stand for any group of input variables, including an empty
-group. Extra owners are unrestricted. This is proved by induction, with no
-finite enumeration, in `Core.three_valuation_persistence` and restated in
-`Report.core_three_valuation_persistence`. Unary constant-or-extensive
-contexts exclude the two atoms that could erase the required membership.
-Ordinary monotonicity and singleton-test invariance are separate reusable
-library lemmas.
+At least two agree at every input. Their repeated-value patch M has one common
+candidate interpolating any two valuations. It is monotone, idempotent, and has
+exactly the singleton profiles of Q ⋆_b R. Nevertheless, its values
 
-## Independently checked counterexamples
+```
+M({a,b}, {b},   {b})   = {b}
+M({b},   {b,c}, {a,b}) = {b,c}
+M({a},   {b},   {c})   = {a,c}
+```
 
-Both JSON files describe ternary operations on the seven nonempty subsets
-of three roles. Values are bitsets 1 through 7. The table is ordered
-lexicographically by the inputs, seven consecutive outputs per line.
+violate `Core.three_valuation_persistence`. Coherence, two-point interpolation,
+profile equality and non-realizability are proved symbolically in Lean for
+any three distinct roles, with all additional roles unrestricted.
+`Report.core_pairwise_obstruction` states the complete result. The numerical
+first counterexample has been retired; the research checker generates M from
+its formula.
 
-`certificate.json` violates the proved persistence law: its three `rows`
-give outputs `(2,6,5)`, corresponding to `({b},{b,c},{a,c})`.
+## The retained stronger finite obstruction
 
-`remaining.json` satisfies that law for every owner order and input partition.
-Its three rows nevertheless give `(5,3,5)`, outside its 63-element ternary
-relation. The three input columns belong to that relation, which is closed
-under every coordinatewise owned choice. Structural induction excludes any
-core realization. Closure suffices; exhaustiveness is unnecessary.
-It also preserves all role permutations of the relation generated by the
-first law's input columns. Thus applying that law through further core
-substitutions and contexts does not reject this second candidate.
+`remaining.json` describes a ternary operation on the seven nonempty subsets
+of three roles. Its table uses bitsets 1 through 7, ordered lexicographically
+by the inputs, seven consecutive outputs per line.
 
-Both operations are idempotent and monotone for ordinary inclusion, satisfy
-the exact admissible singleton-profile conditions, and have the union of all
-three variables on the all-ambiguous cell. Every status cell has union
-provenance. Both pass every disjoint-region common-source test and all
-substitutions of three unary polynomial functions. Such a substitution yields
-the identity only when all three functions are the identity. This identity
-reflection is necessary for a full-support core term by idempotent extraction:
-any nonidentity unary polynomial needs a winner parameter, and an identity
-term cannot contain such a leaf.
+It satisfies three-valuation persistence in every owner order and under every
+partition of input variables. Its three recorded rows nevertheless give
+outputs (5,3,5), outside its recorded 63-element relation. That relation contains
+the three input columns and is closed under every coordinatewise owned choice.
+Structural induction excludes a core realization; exhaustiveness is unnecessary.
 
-Verify these finite properties without a solver or added package:
+It also preserves the 34-element relation generated by the first persistence
+law's columns, in every role order. Consequently, substitutions and further
+core contexts do not make that law reject it. These certificate properties
+are independently checked in Python, rather than stated as Lean theorems.
+
+## Exact saturation and the greatest realizable minorant
+
+`Core.Cuts.recognizes_iff` proves exact simultaneous interpolation on any finite
+nonempty family of valuations. `operation_iff` applies it to entire operation
+tables, including arity zero. `maximum_of_saturated` gives one common witness
+for every reachable membership at a bound; `round_bound` proves the stopping
+bound K*m*(K+2)^m. The rules and finite saturation are specified independently
+of terms in `Definitions/CoreFunctions` and `Definitions/FiniteHorn`.
+
+`Core.Sources.interior` instead imposes one bit constraint per source probe:
+a negative bit forbids its observer and a positive bit permits every winner.
+`interior_iff_witness` characterizes each retained bit by a term obeying all
+negative constraints. The operator is monotone, contractive and idempotent.
+Every nonzero result has one common term and is the greatest realizable array
+below its input; zero means no term obeys all negative constraints.
+`guard_fixed_iff` gives direct compatibility as canonicality, nonzero array,
+and equality with its interior. This remains a saturation criterion.
+
+The independent Python maximum-value regression is not asserted to be an
+executable implementation of the Lean Horn system. `tests/CoreCuts.lean`
+checks incompatible sampled rows and the nullary boundary; the source tests
+check the empty array, a positive inconsistent unary array, and arity zero.
+
+## Reproducing the finite research checks
+
+The standard-library Python checker verifies both the explicit patch and the
+retained finite operation:
 
 ```
 python3 notes/research/core-functions/check.py
 ```
 
-The finite counterexample properties are checked in Python. The two uniform
-theorems and their constructive proofs are checked in Lean and covered by the
-ordinary namespace and transitive axiom audits.
+For both it checks idempotence, inclusion monotonicity, the exact singleton
+profiles, provenance on each status cell, common-source tests for every finite
+family of disjoint regions, source reconstruction, and every substitution of
+three of the 131 unary polynomial functions. Identity reflection also holds:
+a full-support core term can become unary identity only when each input is
+identity, by idempotent extraction.
 
-## Atomic-cut recognition and synthesis
-
-The method is now defined independently of terms in
-`KFOL/Definitions/CoreFunctions.lean`, using the generic finite Horn rules in
-`KFOL/Definitions/FiniteHorn.lean`. `Core.Cuts.recognizes_iff` proves exact
-recognition and joint synthesis for any finite nonempty family of sampled
-valuations. `Core.Cuts.operation_iff` applies it to the whole table of any
-finite-arity operation, including arity zero.
-
-`Core.Cuts.maximum_of_saturated` proves that all memberships derived at one
-bound have one common term witness, and `Core.Cuts.round_bound` proves the
-stopping bound `K*m*(K+2)^m`. The proof uses atomic cuts at absorbing operands
-and finite unions of bounded witnesses. It does not enumerate all term tables.
-The complete claims are restated in `Report.lean`.
-
-`tests/CoreCuts.lean` checks an interpolation problem whose rows are individually
-realizable but jointly impossible, the arity-zero boundary, and the round
-count. The independent Python maximum-value implementation is retained as a
-numerical regression; its executable equivalence to the Lean Horn algorithm
-is not asserted.
-
-## Canonical prime source-guard normal forms
-
-`Core.Sources.membership_iff_source` reconstructs membership of a winner k
-from one supplying variable j at a time. Set j to {k}; every other input
-is either another owner's atom or neutral ambiguity I\{k}. This structural
-result needs neither a finite role type nor a finite variable type.
-For K owners and n variables the observation index has exactly n K^n elements.
-
-Each resulting coefficient is monotone on the flat passive poset. Its
-canonical representation is the set of all inclusion-minimal sufficient
-exclusion guards. `Core.Sources.normalForm_correct` reconstructs the whole
-operation, and `normalForm_eq_iff` makes these families a complete equality
-invariant. A projection has exactly one empty guard at its source. Using all
-prime guards does not claim minimum disjunctive size or a polynomial size bound.
-The vocabulary is centralized in `Definitions/CoreNormalForm.lean`.
-
-`Core.Sources.exists_guard_family_term` realizes any nonempty finite family
-at one chosen source by a union of owned-choice spines. The other source
-coefficients are not prescribed. The independent checker confirms that both
-excluded operations above nevertheless satisfy sourcewise reconstruction.
-Thus this semantic normal form does not by itself solve joint realizability;
-the atomic-cut test still supplies exact global recognition.
-
-The report places these results between singleton profiles and atomic cuts;
-the reconstruction and equality statements are in `Paper.lean`, with the
-other three statements in `Report.lean`.
-
-## Direct compatibility and the greatest realizable minorant
-
-`Core.Sources.interior` uses one Boolean constraint per isolated-source probe.
-A negative bit forbids its observer; a positive bit leaves the whole winner
-set allowed. This is a partial interpolation problem, with no completed value
-table or nonemptiness assumption on a proposed semantic expression.
-
-`interior_iff_witness` characterizes each retained bit by a term obeying all
-negative constraints. `interior_mono`, `interior_le` and `interior_idem` prove
-that the resulting operator is an interior on the finite lattice of bit arrays.
-`interior_realizes` joins the bounded witnesses into one common term when the
-result is nonzero; `interior_greatest` makes this the largest realizable array
-below the specification. Zero means that no term obeys all negative constraints.
-
-`guard_fixed_iff` gives exact direct compatibility of a family: canonicality,
-a nonzero coefficient array, and equality with its interior. Nullary arrays
-are rejected. The tests also reject a positive monotone one-variable array
-that permits only one observer: idempotence forces every observer at that arity.
-
-These are source-level saturation and synthesis results. They do not provide
-a short intrinsic law list comparable to `AdmissibleProfiles`. The stronger
-main-text classification question remains open.
-
-## Full unary substitutions are also insufficient
-
-The stronger candidate “preserves the full role-switching unary fragment”
-also fails. Both excluded ternary operations preserve that 751-function
-fragment under every triple of unary substitutions. This is an exhaustive
-finite regression, not a Lean theorem. It strengthens the earlier test with
-131 unary polynomial functions and eliminates this candidate criterion.
-
-Reproduce with a C++20 compiler and the standard-library Python driver:
+An optional C++20 regression also checks all binary invariant relations and all
+full role-switching unary substitutions:
 
 ```
 python3 notes/research/core-functions/check.py --full-unary
 ```
 
-`full_unary.cpp` independently enumerates the partial-permutation normal forms
-and constants, cross-checks them against the generated unary clone under
-owned choice and permutations, packs each unary table into 21 bits, and checks all
-423,564,751 triples for each JSON operation. It exits at the first output
-outside the unary fragment. The ordinary checker still independently verifies
-the operations' non-core obstructions. No claim of Lean-verified exhaustion
-is made for this experiment.
+`full_unary.cpp` checks the closure generated by every triple of pairs on the
+seven-value carrier, with every argument order: 117,649 ordered triples. This
+establishes two-point interpolation for the retained finite operation as well.
+It independently enumerates the 751 unary normal forms and compares them with
+the generated unary clone. Both operations then pass all 423,564,751 unary
+substitution triples. These numerical results are separate from the uniform
+Lean proof and do not claim Lean-verified enumeration.

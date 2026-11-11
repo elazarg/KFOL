@@ -8,6 +8,7 @@ public import KFOL.Owner.Basis.Exchange
 public import KFOL.Core.Cuts
 public import KFOL.Core.SourceNormalForm
 public import KFOL.Core.SourceCompatibility
+public import KFOL.Core.PairwiseInterpolation
 
 @[expose] public section
 namespace KFOL.Results.Algebra
@@ -84,6 +85,27 @@ theorem core_source_interior_realization {Role : Type u} [Fintype Role]
         ∀ k j p, k ∈ (s.eval (Core.Sources.probe three k j p)).val →
           Core.Sources.interior three F k j p :=
   ⟨Core.Sources.interior_realizes three F h, Core.Sources.interior_greatest three F⟩
+
+theorem core_binary_interpolation {Role : Type u} {Var : Type v}
+    (f : (Var → WinnerSet Role) → WinnerSet Role) :
+    Core.PairwiseInterpolable f ↔ Core.PreservesBinary f :=
+  Core.pairwiseInterpolable_iff_preservesBinary f
+
+theorem core_pairwise_obstruction {Role : Type u} (three : Fin 3 ↪ Role) :
+    Core.PairwiseInterpolable (Core.pairwiseCounterexample three) ∧
+    Core.PreservesBinary (Core.pairwiseCounterexample three) ∧
+    (∀ v w : Fin 3 → WinnerSet Role, (∀ i, (v i).val ⊆ (w i).val) →
+      (Core.pairwiseCounterexample three v).val ⊆ (Core.pairwiseCounterexample three w).val) ∧
+    (∀ A, Core.pairwiseCounterexample three (fun _ => A) = A) ∧
+    (∃ s : Term Role (Fin 3), s.IsCore ∧ ∀ v r,
+      (Core.pairwiseCounterexample three v = WinnerSet.singleton r ↔
+        s.eval v = WinnerSet.singleton r)) ∧
+    ¬∃ t : Term Role (Fin 3), t.IsCore ∧ ∀ v, t.eval v = Core.pairwiseCounterexample three v :=
+  by
+    have h := Core.Pairwise.counterexample_pairwise three
+    exact ⟨h, (Core.pairwiseInterpolable_iff_preservesBinary _).mp h,
+      h.monotone, h.diagonal, Core.Pairwise.counterexample_profiles three,
+      Core.Pairwise.counterexample_not_term three⟩
 
 /-- All-arity synthesis of the core's singleton-output predicates. -/
 theorem core_singleton_profiles [DecidableEq Role] [Fintype Role] [Fintype Var]

@@ -16,6 +16,7 @@ owned choice with union has a seven-equation basis
 forms (\cref{app:core-binary}); at every arity, the singleton outputs of
 terms are characterized (\cref{app:core-profiles}), prime source-guard
 normal forms describe their full values (\cref{app:core-source-guards}), their
+pairwise compatibility is shown insufficient (\cref{app:core-pairwise}),
 joint compatibility is tested on source probes (\cref{app:core-compatibility}), and a finite
 saturation decides which operations are terms (\cref{app:core-cuts});
 unary polynomials are classified (\cref{core:prop:unary-polynomials});
@@ -925,9 +926,89 @@ The $+$-sum of the spines for the guards in $\mathcal G$ realizes the family.
 
 \Cref{core:prop:guard-synthesis} prescribes one coefficient at a time:
 families at different sources and observers need not come from a single
-term. The next subsection gives a finite test for whether an operation is
-a term operation, and \cref{app:core-compatibility} applies it directly to
-the joint source data.
+term. Even all pairwise compatibility tests together are insufficient, as
+the next subsection shows. \Cref{app:core-cuts} gives a finite test for term
+operations, and \cref{app:core-compatibility} applies it directly to the
+joint source data.
+
+\subsection{Pairwise compatibility does not suffice}\label{app:core-pairwise}
+
+A \emph{binary invariant relation} is a relation $R\subseteq\Pow^2$
+closed under every coordinatewise owned choice. An operation $f$ preserves
+$R$ when $f$ applied to any family of pairs in $R$ gives a pair in $R$.
+Call $f$ \emph{pairwise interpolable} when, for every two valuations $v,w$,
+one core term $t$ satisfies $t(v)=f(v)$ and $t(w)=f(w)$.
+
+\begin{lemma}[Binary relations and interpolation]\label{core:lem:binary-interpolation}
+An operation is pairwise interpolable if and only if it preserves every
+binary invariant relation.
+\end{lemma}
+\begin{proof}
+Terms preserve invariant relations by induction. Conversely, for fixed
+$v,w$ the pairs $(t(v),t(w))$, with $t$ a core term, form an invariant
+relation containing all input columns $(v_j,w_j)$. Preservation puts
+$(f(v),f(w))$ in this relation and supplies the common term.
+\end{proof}
+
+Correct singleton profiles and preservation of all binary invariant relations
+still leave a constraint involving three valuations. Fix distinct owners $a,b,c$
+and define three core operations by
+\[
+\begin{aligned}
+ H&=X\star_b Z, & P&=Y+H,\\
+ Q&=H\star_a(Y\star_c Z), &
+ R&=(X\star_a Y)\star_c H.
+\end{aligned}
+\]
+At every input at least two of $P,Q,R$ agree. Let $M$ be their repeated
+value; explicitly, $M=P$ when $P=Q$, and $M=R$ otherwise.
+
+\begin{theorem}[Pairwise interpolation obstruction]\label{core:thm:pairwise-obstruction}
+For every $K\geq3$, the ternary operation $M$ is pairwise interpolable
+and preserves every binary invariant relation. It is monotone and
+idempotent, and has exactly the singleton profiles of the core operation
+$Q\star_bR$. Nevertheless, $M$ is not a core term operation.
+\end{theorem}
+\begin{proof}
+First check that the repeated value exists. If $X=\{b\}$ then $P=R$;
+if $Z=\{b\}$ then $P=Q$. Otherwise $H=X\cup Z$. Splitting according
+to whether $X,Y,Z$ are the $a$- or $c$-atoms gives one of $P=Q$,
+$P=R$, or $Q=R$: every remaining choice is a union, and a union is
+an atom exactly when both operands are that atom. This argument uses
+only the three named owners, so additional roles are unrestricted.
+
+At each valuation at least two of the three candidate terms give $M$.
+For two valuations these two subsets of a three-element set intersect,
+giving a common candidate term. The lemma gives preservation of every
+binary invariant relation. Monotonicity follows by using a common
+interpolant at comparable valuations, and idempotence by interpolating
+at a diagonal valuation.
+
+For the singleton profiles, put $x=[X=\{r\}]$, $y=[Y=\{r\}]$,
+and $z=[Z=\{r\}]$. Since $M$ is the repeated value, its singleton
+predicate is the Boolean majority of the three candidates' predicates.
+The singleton recursion gives
+\[
+ [M=\{r\}]=\begin{cases}
+ x\land z,&r=a\text{ or }r=c,\\
+ y\land(x\lor z),&r=b,\\
+ x\land y\land z,&r\notin\{a,b,c\}.
+ \end{cases}
+\]
+These are exactly the profiles of $Q\star_bR$.
+
+Finally, direct evaluation gives
+\[
+\begin{array}{c|c|c|c}
+ X&Y&Z&M(X,Y,Z)\\\hline
+ \{a,b\}&\{b\}&\{b\}&\{b\}\\
+ \{b\}&\{b,c\}&\{a,b\}&\{b,c\}\\
+ \{a\}&\{b\}&\{c\}&\{a,c\}.
+\end{array}
+\]
+These values violate \cref{core:prop:persistence}, which every core term
+satisfies.
+\end{proof}
 
 \subsection{Recognition by atomic cuts}\label{app:core-cuts}
 

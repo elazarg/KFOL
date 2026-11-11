@@ -1,4 +1,5 @@
-// Exhaustive research regression, run through check.py --full-unary.
+// Exhaustive binary-relation and unary-substitution research regressions.
+// Run through check.py --full-unary.
 // Packed unary functions use three bits for each nonempty input subset.
 #include <algorithm>
 #include <array>
@@ -99,11 +100,45 @@ int main() {
   }
   if (generated.size() != forms.size()) return 2;
   for (int code : forms) if (!reached[code]) return 2;
+  int binary_choice[3][49][49];
+  auto own = [](int r, int a, int b) { return a == (1 << r) || b == (1 << r) ? 1 << r : a | b; };
+  for (int r = 0; r < 3; ++r) for (int a = 0; a < 49; ++a) for (int b = 0; b < 49; ++b)
+    binary_choice[r][a][b] = (own(r, a / 7 + 1, b / 7 + 1) - 1) * 7 +
+                            own(r, a % 7 + 1, b % 7 + 1) - 1;
   int count;
   if (!(std::cin >> count)) return 3;
   for (int test = 0; test < count; ++test) {
     std::array<int, 343> table{};
     for (int &x : table) if (!(std::cin >> x) || x < 1 || x > 7) return 3;
+    std::uint64_t binary_checked = 0;
+    for (int a = 0; a < 49; ++a) for (int b = a; b < 49; ++b) for (int c = b; c < 49; ++c) {
+      std::uint64_t seen = 0;
+      int generated_pairs[49], length = 0;
+      auto insert = [&](int value) {
+        if (!(seen >> value & 1)) {
+          seen |= 1ULL << value;
+          generated_pairs[length++] = value;
+        }
+      };
+      insert(a); insert(b); insert(c);
+      for (int i = 0; i < length; ++i) for (int j = 0; j < length; ++j)
+        for (int r = 0; r < 3; ++r)
+          insert(binary_choice[r][generated_pairs[i]][generated_pairs[j]]);
+      std::array<int, 3> columns{a, b, c};
+      do {
+        int first = columns[0] / 7 * 49 + columns[1] / 7 * 7 + columns[2] / 7;
+        int second = columns[0] % 7 * 49 + columns[1] % 7 * 7 + columns[2] % 7;
+        int output = (table[first] - 1) * 7 + table[second] - 1;
+        if (!(seen >> output & 1)) {
+          std::cerr << "Binary invariant violated in test " << test << '\n';
+          return 1;
+        }
+        ++binary_checked;
+      } while (std::next_permutation(columns.begin(), columns.end()));
+    }
+    if (binary_checked != 117649) return 2;
+    std::cout << "Binary-relation test " << test << ": " << binary_checked
+              << " ordered generator triples preserved.\n";
     std::uint64_t checked = 0;
     for (const auto &a : functions)
       for (const auto &b : functions) {

@@ -8,7 +8,7 @@ Other report results remain optional and have their own evidence status.
 | Audit entrypoint | Mathematical statements | Presentation |
 | --- | ---: | --- |
 | [Paper.lean](../Paper.lean) | 77 | Main text and the report claims it cites; 620 lines |
-| [Report.lean](../Report.lean) | 56 | Further report results and proof ingredients |
+| [Report.lean](../Report.lean) | 58 | Further report results and proof ingredients |
 | [Results/Certificates](../KFOL/Results/Certificates.lean) | 140 preserved contracts | Original full statements, including native machines, codecs and intermediate invariants |
 
 Every root proof names one library theorem. Both root files have no semantic
@@ -26,7 +26,7 @@ regular representation are in `Definitions/Relational`.
 | Definition surface | Theorem types | Semantic declarations | Source files | Written review units |
 | --- | ---: | ---: | ---: | ---: |
 | Paper | 77 | 648 | 36 | 342 |
-| Report | 56 | 604 | 32 | 265 |
+| Report | 58 | 609 | 32 | 270 |
 
 The slices overlap and exclude theorem proof bodies. These meaning indexes do
 not replace the human comparison with the manuscript or the proof/axiom audits.
@@ -37,7 +37,7 @@ The production integration checks are:
 
 - `make check-lean`: literal façade and preservation checks, inventory,
   independent algebra build/import audit, Paper/Report and whole-source axiom
-  audits, both definition indexes, actual negative audit fixtures and 96 strict
+  audits, both definition indexes, actual negative audit fixtures and 97 strict
   Lean regressions.
 - `make check-python`: the explicit 33 independent Python checks, mapped to the
   current paper in `checks/README.md` and the verification appendix.
@@ -140,3 +140,15 @@ and fixed by this operator. Three complete statements are in `Report.lean`.
 This refines the algorithmic criterion. The main-text question asks for an
 intrinsic characterization comparable to singleton-profile admissibility;
 that stronger question is not declared solved.
+
+Pairwise compatibility is now proved insufficient uniformly for every K ≥ 3.
+`Core/PairwiseInterpolation` defines a repeated-value patch of three short core
+operations. Every two valuations have a common candidate term, so the patch
+preserves all binary invariant relations and is monotone and idempotent. Its
+singleton profiles equal those of one explicit core term. Three-valuation
+persistence nevertheless excludes a global realization. No finite enumeration
+is used. `Report.core_binary_interpolation` states the general relational bridge;
+`core_pairwise_obstruction` states all properties of the uniform counterexample.
+The old first numerical certificate was retired; the checker generates this
+operation directly. The retained second finite operation still passes the first
+law under contexts and substitutions, and its ternary invariant excludes it.

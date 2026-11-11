@@ -71,6 +71,23 @@ theorem core_source_interior_realization {Role : Type u} [Fintype Role]
           Core.Sources.interior three F k j p :=
   Results.Algebra.core_source_interior_realization three F h
 
+theorem core_binary_interpolation {Role : Type u} {Var : Type v}
+    (f : (Var → WinnerSet Role) → WinnerSet Role) :
+    Core.PairwiseInterpolable f ↔ Core.PreservesBinary f :=
+  Results.Algebra.core_binary_interpolation f
+
+theorem core_pairwise_obstruction {Role : Type u} (three : Fin 3 ↪ Role) :
+    Core.PairwiseInterpolable (Core.pairwiseCounterexample three) ∧
+    Core.PreservesBinary (Core.pairwiseCounterexample three) ∧
+    (∀ v w : Fin 3 → WinnerSet Role, (∀ i, (v i).val ⊆ (w i).val) →
+      (Core.pairwiseCounterexample three v).val ⊆ (Core.pairwiseCounterexample three w).val) ∧
+    (∀ A, Core.pairwiseCounterexample three (fun _ => A) = A) ∧
+    (∃ s : Term Role (Fin 3), s.IsCore ∧ ∀ v r,
+      (Core.pairwiseCounterexample three v = WinnerSet.singleton r ↔
+        s.eval v = WinnerSet.singleton r)) ∧
+    ¬∃ t : Term Role (Fin 3), t.IsCore ∧ ∀ v, t.eval v = Core.pairwiseCounterexample three v :=
+  Results.Algebra.core_pairwise_obstruction three
+
 theorem core_singleton_profiles {Role : Type u} [DecidableEq Role] [Fintype Role]
     {Var : Type v} [Fintype Var] (three : Fin 3 ↪ Role)
     (F : Role → (Var → Bool) → Bool) :

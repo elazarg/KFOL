@@ -47,8 +47,24 @@ def cut_maxima(columns, target):
             return maxima[target]
 
 
+def load_problem(name):
+    if name != "pairwise":
+        return json.loads(Path(__file__).with_name(name).read_text())
+    values = []
+    for x, y, z in itertools.product(range(1, 8), repeat=3):
+        h = own(1, x, z)
+        p = y | h
+        q = own(0, h, own(2, y, z))
+        r = own(2, own(0, x, y), h)
+        assert len({p, q, r}) <= 2
+        values.append(p if p == q else r)
+    return {"roles": 3, "arity": 3, "persistence": False,
+            "rows": [[3, 2, 2], [2, 6, 3], [1, 2, 4]],
+            "table": [values[i:i + 7] for i in range(0, len(values), 7)]}
+
+
 def check(filename):
-    data = json.loads(Path(__file__).with_name(filename).read_text())
+    data = load_problem(filename)
     assert (data["roles"], data["arity"]) == (3, 3)
     domain = range(1, 8)
     valuations = list(itertools.product(domain, repeat=3))
@@ -190,8 +206,8 @@ def check_full_unary():
     """Optional exhaustive substitution check; requires a C++20 compiler."""
     root = Path(__file__).resolve().parent
     data = "2\n" + "\n".join(
-        " ".join(map(str, sum(json.loads((root / name).read_text())["table"], [])))
-        for name in ("certificate.json", "remaining.json")) + "\n"
+        " ".join(map(str, sum(load_problem(name)["table"], [])))
+        for name in ("pairwise", "remaining.json")) + "\n"
     with tempfile.TemporaryDirectory(prefix="kfol-full-unary-") as temporary:
         binary = Path(temporary) / "full-unary"
         subprocess.run(["g++", "-O3", "-std=c++20", str(root / "full_unary.cpp"),
@@ -202,9 +218,9 @@ def check_full_unary():
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--full-unary", action="store_true",
-                        help="also exhaust all 751^3 full-signature unary substitutions")
+                        help="also exhaust binary invariants and all 751^3 unary substitutions")
     args = parser.parse_args()
-    check("certificate.json")
+    check("pairwise")
     check("remaining.json")
     if args.full_unary:
         check_full_unary()

@@ -239,6 +239,7 @@ import all KFOL.Core.SourceNormalForm
 import all KFOL.Core.SourceCompatibility
 import all KFOL.Core.Profiles
 import all KFOL.Core.Interpolation
+import all KFOL.Core.PairwiseInterpolation
 import all KFOL.Core.Cuts
 import all KFOL.Core.ProfileSynthesis
 import all KFOL.Core.Protected
