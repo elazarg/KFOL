@@ -817,29 +817,33 @@ The parent $C$-value is consequently the union and retains $b$.
 
 \subsection{Prime source-guard normal forms}\label{app:core-source-guards}
 
-The full operation can be recovered from smaller, sourcewise predicates.
-Fix a potential winner $k$. A \emph{passive status} is either an atom
-$r\ne k$ or a neutral symbol $\nu$. Write $\sigma_k(S)=r$ if
-$S=\{r\}$ with $r\ne k$, and $\sigma_k(S)=\nu$ otherwise.
-Order these $K$ statuses with every atom below $\nu$ and distinct atoms
-incomparable. For a source $j\in V$ and a pattern
-$p\in (I\setminus\{k\}\cup\{\nu\})^{V\setminus\{j\}}$, define the
-\emph{isolated-source probe}
+Fix a potential winner $k$. Whether $k\in t(S)$ depends only on $k$'s
+views of the inputs (\cref{view:thm:view}): which inputs contain $k$,
+and which are atoms $\{r\}$ with $r\ne k$. The normal form separates
+the two. The winner $k$ enters through one input containing it, its
+\emph{source}, and survives according to the atoms among the other
+inputs. Write $\sigma_k(S)=r$ if $S=\{r\}$ with $r\ne k$, and
+$\sigma_k(S)=\nv$ otherwise. These $K$ \emph{passive statuses} are
+ordered as in $k$'s view: distinct atoms are incomparable and lie below
+$\nv$. For a source $j\in V$ and a \emph{pattern}
+$p\in((I\setminus\{k\})\cup\{\nv\})^{V\setminus\{j\}}$, the \emph{probe}
+$v^{k,j,p}$ is the valuation
 \[
  v^{k,j,p}_i=\begin{cases}
  \{k\},&i=j,\\
  \{r\},&i\ne j\text{ and }p_i=r,\\
- I\setminus\{k\},&i\ne j\text{ and }p_i=\nu.
+ I\setminus\{k\},&i\ne j\text{ and }p_i=\nv,
  \end{cases}
 \]
-Here $I\setminus\{k\}$ is ambiguous because $K\geq3$.
-Put $c^t_{k,j}(p)=1$ when $k\in t(v^{k,j,p})$.
+where $I\setminus\{k\}$ is ambiguous because $K\geq3$.
+Put $c^t_{k,j}(p)=1$ when $k\in t(v^{k,j,p})$, and $0$ otherwise.
 
 A \emph{guard} at $(k,j)$ is a set
 $G\subseteq(V\setminus\{j\})\times(I\setminus\{k\})$.
 It is enabled at $p$ when $p_i\ne r$ for every $(i,r)\in G$.
-It is sufficient for $c$ when every pattern enabling it satisfies $c$,
-and \emph{prime} when it is inclusion-minimal among sufficient guards.
+It is \emph{sufficient} for a predicate $c$ on patterns when every
+pattern enabling it satisfies $c$, and \emph{prime} when it is
+inclusion-minimal among sufficient guards.
 Let $\Gamma^t_{k,j}$ contain \emph{all} prime guards for $c^t_{k,j}$.
 
 \begin{theorem}[Prime source-guard normal form]\label{core:thm:source-guards}
@@ -862,18 +866,18 @@ First prove the source decomposition
  \exists j\in V\ \bigl(k\in S_j\text{ and }
  c^t_{k,j}(\sigma_k(S_i):i\ne j)=1\bigr).
 \]
-This step does not require $V$ to be finite. Induct on $t$.
-At a variable only its own source can supply $k$. At a choice by $k$,
-membership is disjunction. At a choice by $r\ne k$, membership survives
-precisely when it occurs in a child and neither child is $\{r\}$.
-For a source with $k\in S_j$, passing to its probe preserves every
-input test $S_i=\{r\}$: the source passes neither test, and the other
-positions preserve it by construction. The singleton profiles therefore
-preserve both child tests, so induction transfers membership in both
-directions.
+Induct on $t$. At a variable only its own source can supply $k$. At a
+choice by $k$, membership is disjunction. At a choice by $r\ne k$,
+membership survives precisely when it occurs in a child and neither
+child is $\{r\}$. For a source with $k\in S_j$, passing to its probe
+preserves which inputs equal $\{r\}$: the source equals $\{r\}$ in
+neither valuation, and the other inputs keep their passive status.
+Whether a child equals $\{r\}$ depends only on these inputs
+(\cref{app:core-profiles}), so it is the same at $S$ and at the probe,
+and induction transfers membership in both directions.
 
 The coefficient $c^t_{k,j}$ is monotone in the passive order: replacing
-an atom by $\nu$ enlarges its probe value, and owned choice is monotone
+an atom by $\nv$ enlarges its probe value, and owned choice is monotone
 under inclusion. If $c(p)=1$, form the guard containing every $(i,r)$
 with $p_i\ne r$. Its enabled patterns are exactly the patterns above
 $p$, so it is sufficient by monotonicity. Delete exclusions until it is
@@ -897,10 +901,10 @@ The source is never an $r$-atom, so the two profiles test exactly the
 absorbing operands on the probe. Thus the coefficients can be computed
 alongside the singleton profiles, without enumerating the full value table.
 
-For a projection $x_j$, the only guard at its source is the empty guard;
-all other source families are empty. A union of variables likewise has
-one empty guard at each source that occurs. The construction gives no polynomial size bound on the guard families. Using all prime guards makes it canonical;
-it does not assert that this is a smallest disjunctive presentation.
+For a projection $x_j$, the only guard at its source is the empty guard,
+and all other families are empty. A union of variables likewise has one
+empty guard at each source that occurs. Taking all prime guards makes the
+form canonical, not small.
 
 \begin{proposition}[Local guard synthesis]\label{core:prop:guard-synthesis}
 Fix $k$ and $j$. Every nonempty finite family $\mathcal G$ of guards at
@@ -915,12 +919,13 @@ For one guard, start with $x_j$ and, for every $(i,r)\in G$, replace
 the current term $u$ by $u\star_r x_i$. On a probe, $x_i$ cannot
 supply $k$, and this step retains $k$ precisely when it was present
 before and $p_i\ne r$. The resulting spine realizes the guard.
-Take the derived union of these spines over the nonempty family.
+The $+$-sum of the spines for the guards in $\mathcal G$ realizes the family.
 \end{proof}
 
-Local synthesis prescribes only one coefficient. Families at different
-sources and observers need not be jointly realizable. The next subsection
-gives an exact finite test for this global condition.
+\Cref{core:prop:guard-synthesis} prescribes one coefficient at a time:
+families at different sources and observers need not come from a single
+term. The next subsection gives a finite test for whether an operation is
+a term operation.
 
 \subsection{Recognition by atomic cuts}\label{app:core-cuts}
 
@@ -1019,8 +1024,9 @@ With no variables there are no seeds, so no membership is derived.
 
 For an $n$-ary operation the table has $(2^K-1)^n$ rows, so the test
 ranges over $(K+2)^{(2^K-1)^n}$ bound vectors. It decides which
-operations are terms and produces a term for each, but unlike
-\cref{core:prop:binary} it does not describe them.
+operations are terms and produces a term for each, but it does not
+characterize them intrinsically, as \cref{core:thm:profiles} does for
+singleton outputs.
 
 \subsection{Unary polynomials}
 
