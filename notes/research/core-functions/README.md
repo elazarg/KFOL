@@ -144,3 +144,25 @@ that permits only one observer: idempotence forces every observer at that arity.
 These are source-level saturation and synthesis results. They do not provide
 a short intrinsic law list comparable to `AdmissibleProfiles`. The stronger
 main-text classification question remains open.
+
+## Full unary substitutions are also insufficient
+
+The stronger candidate “preserves the full role-switching unary fragment”
+also fails. Both excluded ternary operations preserve that 751-function
+fragment under every triple of unary substitutions. This is an exhaustive
+finite regression, not a Lean theorem. It strengthens the earlier test with
+131 unary polynomial functions and eliminates this candidate criterion.
+
+Reproduce with a C++20 compiler and the standard-library Python driver:
+
+```
+python3 notes/research/core-functions/check.py --full-unary
+```
+
+`full_unary.cpp` independently enumerates the partial-permutation normal forms
+and constants, cross-checks them against the generated unary clone under
+owned choice and permutations, packs each unary table into 21 bits, and checks all
+423,564,751 triples for each JSON operation. It exits at the first output
+outside the unary fragment. The ordinary checker still independently verifies
+the operations' non-core obstructions. No claim of Lean-verified exhaustion
+is made for this experiment.

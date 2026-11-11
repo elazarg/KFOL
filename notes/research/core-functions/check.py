@@ -5,7 +5,10 @@ This exploratory certificate is separate from the production Lean artifact.
 Run: python3 notes/research/core-functions/check.py
 """
 
+import argparse
 import itertools
+import subprocess
+import tempfile
 import json
 from functools import reduce
 from pathlib import Path
@@ -183,6 +186,25 @@ def check(filename):
     print("common source and all 131^3 polynomial substitutions with identity reflection.")
 
 
+def check_full_unary():
+    """Optional exhaustive substitution check; requires a C++20 compiler."""
+    root = Path(__file__).resolve().parent
+    data = "2\n" + "\n".join(
+        " ".join(map(str, sum(json.loads((root / name).read_text())["table"], [])))
+        for name in ("certificate.json", "remaining.json")) + "\n"
+    with tempfile.TemporaryDirectory(prefix="kfol-full-unary-") as temporary:
+        binary = Path(temporary) / "full-unary"
+        subprocess.run(["g++", "-O3", "-std=c++20", str(root / "full_unary.cpp"),
+                        "-o", str(binary)], check=True)
+        subprocess.run([str(binary)], input=data, text=True, check=True)
+
+
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--full-unary", action="store_true",
+                        help="also exhaust all 751^3 full-signature unary substitutions")
+    args = parser.parse_args()
     check("certificate.json")
     check("remaining.json")
+    if args.full_unary:
+        check_full_unary()
