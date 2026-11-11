@@ -53,19 +53,11 @@ For pairwise distinct $r,s,t$,
 If just one inner choice collapses, its owner's atom belongs to the other result, and the outer owner is different; if both collapse, the outer choice unites them. We simply write $\cup$ from now on.
 
 \begin{proposition}[Winner budget]\label{game:prop:winner-budget}
-For a term $t$ at a valuation $\nu$, let $V_\ell$ be the value at leaf
-occurrence $\ell$: a singleton at a winner leaf, or $\nu(x_j)$ at an
-occurrence of $x_j$. Then
-\[
- |t(\nu)|\leq\min\left(K,\sum_\ell|V_\ell|\right).
-\]
-In particular, a game with $n$ choices has at most $\min(K,n+1)$
-possible winners. Every nonempty $S\subseteq I$ is the value of a game
-with exactly $|S|-1$ choices, and no smaller game realizes it.
+At every valuation, the value of a term has at most $K$ members, and at most as many as its leaves supply: one at each winner leaf, and the size of the variable's value at each occurrence of a variable. So the value of a game with $n$ choices has at most $\min(K,n+1)$ members. Every nonempty $S\subseteq I$ is the value of a game with exactly $|S|-1$ choices, and of no smaller game.
 \end{proposition}
 
-Overlap and absorption can only reduce the leaf sum; permutations preserve
-sizes. The exact accounting and an optimal construction are in
-\cref{game:prop:winner-count,game:cor:ground-size}.
+\begin{idea}
+The value of a choice lies within the union of its branches' values, and renaming preserves sizes. For the construction, start from $\at a\ch c\at b$ with $a,b\in S$ and $c\notin\{a,b\}$, and add each further member of $S$ by a choice owned by $a$; the value is ambiguous and the new winner is not $a$, so each step is a union. The report counts the losses exactly (\cref{game:prop:winner-count,game:cor:ground-size}).
+\end{idea}
 
 The algebra is not Boolean in any coordinates. Indifference breaks distributivity: $\den{(\at a\ch a\at b)\ch b\at c}=\{a,c\}$, whereas distributing $\ch b$ over $\ch a$ gives $D$ (\cref{cor:no-boolean-product}).
