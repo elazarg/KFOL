@@ -3,9 +3,8 @@
 Exact recognition, synthesis and canonical prime source-guard normal forms
 are proved. A concise intrinsic description of jointly realizable families
 remains open. Pairwise compatibility and correct singleton profiles together
-are proved insufficient, uniformly for every K ≥ 3. A stronger research
-certificate rules out three-point interpolation as well. The finite relation
-and the symbolic coherence calculation have not been formalized in Lean.
+are proved insufficient, uniformly for every K ≥ 3. Three-point interpolation
+is also proved insufficient, with a symbolic four-valuation persistence law.
 
 ## Profiles and source-guard normal forms
 
@@ -66,23 +65,26 @@ its formula.
 
 ## Three-point interpolation is insufficient
 
-`threewise.json` specifies four ternary core terms P₀,…,P₃ as a shared,
-topologically ordered expression graph. A `var` node is an input, a `choice`
-node applies the indicated owner's choice, and a `union` node is derived
-neutral union. Values are bitsets 1 through 7 for the nonempty subsets of
-{a,b,c}. The graph has 25 nodes; its four roots are listed in `patches`.
-There is no supplied operation table: the checker evaluates the terms on all
-343 valuations and generates it.
+The stronger obstruction also has a complete uniform Lean proof. Put
 
-At every valuation, at least three of the four terms agree. Define F to be
-their common value; equivalently, take P₀ when P₀=P₁ and P₂ otherwise. Every
-valuation excludes at most one candidate, so any three valuations have a
-common candidate. Consequently F preserves **every ternary invariant
-relation**: given three valuations whose input columns belong to such a
-relation, use their common candidate term and closure under core operations.
-The same argument covers relations of smaller positive arity by repetition.
+```
+H = X ⋆_b Y,           T = Y ⋆_a Z,
+P₀ = H ⋆_c (H ⋆_a T),
+P₁ = Z ∪ (H ⋆_a (X ⋆_c Z)),
+P₂ = X ∪ (H ⋆_c T),
+P₃ = H ⋆_c (Y ⋆_a (Z ⋆_c (X ⋆_a Y))).
+```
 
-Nevertheless, F is not a core term. Its four recorded evaluations are
+At least three candidates agree at every valuation, uniformly in all other
+roles. Their common value F is P₀ if P₀=P₁ and P₂ otherwise. Each valuation
+excludes at most one candidate, so any three valuations have a common
+candidate term. `Core/RelationalInterpolation` proves the general n-point
+interpolation/relational-preservation equivalence, including n=0 and empty
+relations, and the (n+1)-patch argument. Thus F preserves every ternary
+invariant relation. Its singleton profiles are those of the actual core term
+`((X ∪ Y) ⋆_a Z) ⋆_c (X ∪ Y)`.
+
+Nevertheless, F is not a core term:
 
 | X | Y | Z | F(X,Y,Z) |
 |---|---|---|---|
@@ -91,34 +93,26 @@ Nevertheless, F is not a core term. Its four recorded evaluations are
 | {a} | {b} | {c} | {b,c} |
 | {b} | {c} | {a} | {a,b} |
 
-The recorded 148-element quaternary relation contains the three input
-columns, is closed under every coordinatewise owned choice, and excludes
-the output column (7,3,6,3). Structural induction therefore excludes a core
-term; exhaustive generation of the relation is unnecessary. The checker
-also independently runs the cut propagation on these four rows: the
-maximum bounded output is (3,3,6,3), which misses c in the first row.
+`Core/FourValuation` proves that the three exclusions in the last three rows
+force c to be absent in the first row for every core term. The proof couples
+six binary atomic implications with one membership implication. For example,
+the relation `A={a} → (B={a} or c∈B)` is invariant: its consequent is a
+subalgebra and absorbs arbitrary operands under the antecedent's owner.
+Together these implications prevent any of the three negative rows from
+hiding an absorption that would let c survive in the first row.
 
-This replaces the weaker 63-element ternary obstruction. It passes all the
-previous example's additional checks, including persistence in every owner
-order, all common-source tests, and the unary substitution tests below.
-These additional tests are finite computations at K=3, not Lean theorems.
+`Core/TernaryInterpolation` proves coherence by the 64 input status cases,
+the exact profiles, the four evaluations, and non-realizability. All additional
+roles are unrestricted; there is no role finiteness assumption. No finite
+relation enumeration or native computation enters these proofs. The original
+25-node patch graph and 148-element relation have been replaced by the short
+formulas and the symbolic argument.
 
-The interpolation obstruction itself extends to any role type with three
-distinct roles. For coherence, split each input into four statuses: {a},
-{b}, {c}, or passive (any other nonempty set). Normalize every expression as
-a formal union of distinguished atoms and tagged passive inputs. A union
-containing a passive input cannot equal one of those three atoms, so choice
-tests during normalization are exact and remain exact under interpretation.
-The checker verifies that three patches have identical formal unions on
-each of the 4³ status cells. Thus three patches agree under every
-interpretation, even with infinitely many additional roles. Embed the
-recorded relation using a,b,c. It is also union-closed, which the checker
-verifies directly; any additional owner's choice acts as union on it.
-The same four rows therefore still exclude a global core term.
-
-This is a symbolic proof schema supported by finite checks. It supplies no
-completeness theorem for four-point tests, nor the requested intrinsic
-characterization of jointly realizable source-guard families.
+`Report.core_local_interpolation`, `core_four_valuation_persistence` and
+`core_ternary_obstruction` repeat the complete claims. The Python regression
+independently evaluates the formulas, checks the status cases and all the
+properties below, and computes the maximum bounded output on the four rows
+as (3,3,6,3). It generates the operation rather than trusting a supplied table.
 
 ## Exact saturation and the greatest realizable minorant
 
@@ -145,8 +139,8 @@ check the empty array, a positive inconsistent unary array, and arity zero.
 
 ## Reproducing the finite research checks
 
-The standard-library Python checker verifies both the explicit patch and the
-retained finite operation:
+The standard-library Python checker independently verifies both explicit
+patch operations:
 
 ```
 python3 notes/research/core-functions/check.py

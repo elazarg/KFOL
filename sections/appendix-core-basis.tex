@@ -16,7 +16,7 @@ owned choice with union has a seven-equation basis
 forms (\cref{app:core-binary}); at every arity, the singleton outputs of
 terms are characterized (\cref{app:core-profiles}), prime source-guard
 normal forms describe their full values (\cref{app:core-source-guards}), their
-pairwise compatibility is shown insufficient (\cref{app:core-pairwise}),
+binary and ternary compatibility tests are shown insufficient (\cref{app:core-pairwise}),
 joint compatibility is tested on source probes (\cref{app:core-compatibility}), and a finite
 saturation decides which operations are terms (\cref{app:core-cuts});
 unary polynomials are classified (\cref{core:prop:unary-polynomials});
@@ -931,7 +931,7 @@ the next subsection shows. \Cref{app:core-cuts} gives a finite test for term
 operations, and \cref{app:core-compatibility} applies it directly to the
 joint source data.
 
-\subsection{Pairwise compatibility does not suffice}\label{app:core-pairwise}
+\subsection{Relational compatibility}\label{app:core-pairwise}
 
 A \emph{binary invariant relation} is a relation $R\subseteq\Pow^2$
 closed under every coordinatewise owned choice. An operation $f$ preserves
@@ -1008,6 +1008,118 @@ Finally, direct evaluation gives
 \]
 These values violate \cref{core:prop:persistence}, which every core term
 satisfies.
+\end{proof}
+
+\paragraph{Three-point tests.}
+The same notion applies to relations of any arity. Call an operation
+\emph{$m$-point interpolable} if every $m$ valuations have one common
+core-term interpolant, allowing repetitions.
+
+\begin{lemma}[Finite relational tests]\label{core:lem:finite-interpolation}
+For every $m\geq0$, an operation is $m$-point interpolable if and only
+if it preserves every $m$-ary invariant relation.
+\end{lemma}
+\begin{proof}
+Use the proof of \cref{core:lem:binary-interpolation}, with $m$ evaluations
+in place of two. This also covers empty relations and $m=0$.
+\end{proof}
+
+A four-valuation constraint will separate three-point interpolation from
+global realizability. As in \cref{core:prop:persistence}, the three input
+positions may stand for arbitrary groups of variables.
+
+\begin{proposition}[Four-valuation persistence]\label{core:prop:four-persistence}
+For distinct roles $a,b,c$, every core term satisfies
+\[
+\begin{split}
+ c&\notin t(\{a,b\},\{a\},\{b,c\}),\\
+ a&\notin t(\{a\},\{b\},\{c\}),\\
+ c&\notin t(\{b\},\{c\},\{a\})
+\end{split}
+\quad\Longrightarrow\quad
+c\notin t(\{a,c\},\{b\},\{a\}).
+\]
+The groups may be empty, and additional owners are unrestricted.
+\end{proposition}
+\begin{proof}
+Write $A,B,C,D$ for the four evaluations, with $A$ the conclusion's
+evaluation. Their input columns satisfy the six implications
+\[
+\begin{array}{lll}
+ D=\{a\}\Rightarrow A=\{a\},&
+ B=\{a\}\Rightarrow(D=\{a\}\text{ or }c\in D),&
+ C=\{b\}\Rightarrow A=\{b\},\\
+ D=\{b\}\Rightarrow(A=\{b\}\text{ or }c\in A),&
+ C=\{c\}\Rightarrow c\in B,&B\ne\{b\}.
+\end{array}
+\]
+Each is preserved by owned choice. For example,
+$U=\{a\}\Rightarrow(V=\{a\}\text{ or }c\in V)$ is preserved because
+$\{\{a\}\}\cup\{V:c\in V\}$ is closed under every choice and absorbs
+arbitrary operands under $\star_a$. All four outputs remain subsets of
+$\{a,b,c\}$ by provenance.
+
+Inductively preserve these conditions together with
+$c\in A\Rightarrow(c\in B\text{ or }a\in C\text{ or }c\in D)$.
+Suppose the three exclusions hold at a parent while $c\in A$.
+At an $a$-node, neither child of $A$ is $\{a\}$. The first implication
+rules out absorption in $D$, and the second then rules it out in $B$.
+The three exclusions therefore hold in both children, contradicting
+the induction hypothesis in a child supplying $c$ to $A$.
+
+At a $b$-node, neither child of $A$ is $\{b\}$. The third implication
+rules out absorption in $C$, and the sixth rules it out in $B$.
+If a child of $D$ were $\{b\}$, the fourth implication would put $c$
+in that child's $A$; its three exclusions would contradict induction.
+Thus $D$ is a union too, and the same contradiction follows.
+At a $c$-node, the exclusions in $B,D$ pass to both children; the fifth
+implication rules out absorption in $C$, so all three pass down.
+Every other owner's choice is union on these subsets. This completes
+the induction.
+\end{proof}
+
+For a second patch construction, put $H=X\star_bY$ and $T=Y\star_aZ$, and let
+\[
+\begin{aligned}
+ P_0&=H\star_c(H\star_aT),&
+ P_1&=Z+(H\star_a(X\star_cZ)),\\
+ P_2&=X+(H\star_cT),&
+ P_3&=H\star_c\bigl(Y\star_a(Z\star_c(X\star_aY))\bigr).
+\end{aligned}
+\]
+At every valuation at least three agree. Let $F$ be their common value;
+equivalently, $F=P_0$ when $P_0=P_1$, and $F=P_2$ otherwise.
+
+\begin{theorem}[Ternary interpolation obstruction]\label{core:thm:ternary-obstruction}
+For every $K\geq3$, the operation $F$ is three-point interpolable and
+preserves every ternary invariant relation. It has exactly the singleton
+profiles of a core term, but is not a core term operation.
+\end{theorem}
+\begin{proof}
+To check coherence, split each input into its four statuses: the $a$-,
+$b$-, or $c$-atom, or any other nonempty set. On each of the $4^3$ status
+patterns, the choice rule and the fact that a union is an atom exactly
+when both operands are that atom reduce three candidates to the same
+union. This treats all additional roles uniformly.
+At most one candidate differs from $F$ at each valuation. Three
+valuations therefore exclude at most three of the four candidates,
+leaving a common interpolant. \Cref{core:lem:finite-interpolation}
+gives relational preservation.
+
+The singleton recursion gives $[F=\{r\}]=x\land y$ for $r=a,c$ and
+$x\land y\land z$ otherwise, where $x=[X=\{r\}]$, and similarly for
+$y,z$. These are the profiles of $((X+Y)\star_aZ)\star_c(X+Y)$.
+Finally,
+\[
+\begin{array}{c|c|c|c}
+ X&Y&Z&F(X,Y,Z)\\\hline
+ \{a,c\}&\{b\}&\{a\}&\{a,b,c\}\\
+ \{a,b\}&\{a\}&\{b,c\}&\{a,b\}\\
+ \{a\}&\{b\}&\{c\}&\{b,c\}\\
+ \{b\}&\{c\}&\{a\}&\{a,b\}.
+\end{array}
+\]
+These values violate \cref{core:prop:four-persistence}.
 \end{proof}
 
 \subsection{Recognition by atomic cuts}\label{app:core-cuts}

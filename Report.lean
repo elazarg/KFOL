@@ -7,6 +7,7 @@ public import KFOL.Definitions.PaperGames
 public import KFOL.Query.Compilation
 public import KFOL.Query.Relations
 public import KFOL.Query.ZeroExtension
+public import KFOL.Core.TernaryInterpolation
 public import KFOL.Audit.Namespace
 
 /-! # Audited report statements and mathematical proof ingredients
@@ -87,6 +88,38 @@ theorem core_pairwise_obstruction {Role : Type u} (three : Fin 3 ↪ Role) :
         s.eval v = WinnerSet.singleton r)) ∧
     ¬∃ t : Term Role (Fin 3), t.IsCore ∧ ∀ v, t.eval v = Core.pairwiseCounterexample three v :=
   Results.Algebra.core_pairwise_obstruction three
+
+theorem core_local_interpolation {Role : Type u} {Var : Type v} (n : ℕ)
+    (f : (Var → WinnerSet Role) → WinnerSet Role) :
+    Core.LocallyInterpolable n f ↔ Core.PreservesInvariants n f :=
+  Core.locallyInterpolable_iff_preservesInvariants n f
+
+theorem core_four_valuation_persistence {Role : Type u} {Var : Type v} (three : Fin 3 ↪ Role)
+    (tag : Var → Fin 3) (t : Term Role Var) (ht : t.IsCore)
+    (hB : three 2 ∉ (t.eval (fun x =>
+      ![(WinnerSet.singleton (three 0)).union (WinnerSet.singleton (three 1)),
+        WinnerSet.singleton (three 0),
+        (WinnerSet.singleton (three 1)).union (WinnerSet.singleton (three 2))] (tag x))).val)
+    (hC : three 0 ∉ (t.eval (fun x =>
+      ![WinnerSet.singleton (three 0), WinnerSet.singleton (three 1),
+        WinnerSet.singleton (three 2)] (tag x))).val)
+    (hD : three 2 ∉ (t.eval (fun x =>
+      ![WinnerSet.singleton (three 1), WinnerSet.singleton (three 2),
+        WinnerSet.singleton (three 0)] (tag x))).val) :
+    three 2 ∉ (t.eval (fun x =>
+      ![(WinnerSet.singleton (three 0)).union (WinnerSet.singleton (three 2)),
+        WinnerSet.singleton (three 1), WinnerSet.singleton (three 0)] (tag x))).val :=
+  Core.four_valuation_persistence three tag t ht hB hC hD
+
+
+theorem core_ternary_obstruction {Role : Type u} (three : Fin 3 ↪ Role) :
+    Core.LocallyInterpolable 3 (Core.threewiseCounterexample three) ∧
+    Core.PreservesInvariants 3 (Core.threewiseCounterexample three) ∧
+    (∃ s : Term Role (Fin 3), s.IsCore ∧ ∀ v r,
+      (Core.threewiseCounterexample three v = WinnerSet.singleton r ↔
+        s.eval v = WinnerSet.singleton r)) ∧
+    ¬∃ t : Term Role (Fin 3), t.IsCore ∧ ∀ v, t.eval v = Core.threewiseCounterexample three v :=
+  Core.Threewise.counterexample three
 
 theorem core_singleton_profiles {Role : Type u} [DecidableEq Role] [Fintype Role]
     {Var : Type v} [Fintype Var] (three : Fin 3 ↪ Role)

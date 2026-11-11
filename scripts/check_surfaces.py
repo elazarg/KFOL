@@ -149,6 +149,9 @@ def library_declarations() -> dict[str, Theorem]:
     result = {}
     sources = [*sorted((ROOT / "KFOL/Results").rglob("*.lean")),
                ROOT / "KFOL/Strategic/Quantified/Fold.lean",
+               ROOT / "KFOL/Core/RelationalInterpolation.lean",
+               ROOT / "KFOL/Core/FourValuation.lean",
+               ROOT / "KFOL/Core/TernaryInterpolation.lean",
                *sorted((ROOT / "KFOL/Query").rglob("*.lean"))]
     for path in sources:
         for name, declaration in theorem_declarations(read_source(path)).items():

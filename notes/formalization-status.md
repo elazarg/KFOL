@@ -8,7 +8,7 @@ Other report results remain optional and have their own evidence status.
 | Audit entrypoint | Mathematical statements | Presentation |
 | --- | ---: | --- |
 | [Paper.lean](../Paper.lean) | 77 | Main text and the report claims it cites; 620 lines |
-| [Report.lean](../Report.lean) | 58 | Further report results and proof ingredients |
+| [Report.lean](../Report.lean) | 61 | Further report results and proof ingredients |
 | [Results/Certificates](../KFOL/Results/Certificates.lean) | 140 preserved contracts | Original full statements, including native machines, codecs and intermediate invariants |
 
 Every root proof names one library theorem. Both root files have no semantic
@@ -26,7 +26,7 @@ regular representation are in `Definitions/Relational`.
 | Definition surface | Theorem types | Semantic declarations | Source files | Written review units |
 | --- | ---: | ---: | ---: | ---: |
 | Paper | 77 | 648 | 36 | 342 |
-| Report | 58 | 609 | 32 | 270 |
+| Report | 61 | 614 | 32 | 275 |
 
 The slices overlap and exclude theorem proof bodies. These meaning indexes do
 not replace the human comparison with the manuscript or the proof/axiom audits.
@@ -149,6 +149,12 @@ singleton profiles equal those of one explicit core term. Three-valuation
 persistence nevertheless excludes a global realization. No finite enumeration
 is used. `Report.core_binary_interpolation` states the general relational bridge;
 `core_pairwise_obstruction` states all properties of the uniform counterexample.
-The old first numerical certificate was retired; the checker generates this
-operation directly. The retained second finite operation still passes the first
-law under contexts and substitutions, and its ternary invariant excludes it.
+`Core/RelationalInterpolation` extends the relational bridge to every finite
+arity and proves the coherent-patch construction. `Core/FourValuation` derives
+a four-row persistence law from six invariant atomic implications.
+`Core/TernaryInterpolation` uses four short patches to prove three-point
+interpolation, preservation of every ternary invariant relation, exact core
+singleton profiles and non-realizability. These uniform symbolic proofs replace
+the second finite operation's enumerated separating relation. Three further
+complete claims are in `Report.lean`. The independent research checker generates
+both patches from their formulas and retains the exhaustive unary checks.

@@ -124,6 +124,44 @@ def PairwiseInterpolable {Role : Type u} {Var : Type v}
     (f : (Var → WinnerSet Role) → WinnerSet Role) : Prop :=
   ∀ v w, ∃ t : Term Role Var, t.IsCore ∧ t.eval v = f v ∧ t.eval w = f w
 
+/-- Closure of an n-ary relation under coordinatewise owned choice. -/
+def InvariantRelation {Role : Type u} (n : ℕ)
+    (R : Set (Fin n → WinnerSet Role)) : Prop :=
+  ∀ r x y, x ∈ R → y ∈ R → (fun i => WinnerSet.choice r (x i) (y i)) ∈ R
+
+/-- Preservation of every core-invariant relation of the indicated arity. -/
+def PreservesInvariants {Role : Type u} {Var : Type v} (n : ℕ)
+    (f : (Var → WinnerSet Role) → WinnerSet Role) : Prop :=
+  ∀ R, InvariantRelation n R → ∀ v : Fin n → Var → WinnerSet Role,
+    (∀ j, (fun i => v i j) ∈ R) → (fun i => f (v i)) ∈ R
+
+/-- Every n evaluations have one common core-term interpolant. -/
+def LocallyInterpolable {Role : Type u} {Var : Type v} (n : ℕ)
+    (f : (Var → WinnerSet Role) → WinnerSet Role) : Prop :=
+  ∀ v : Fin n → Var → WinnerSet Role,
+    ∃ t : Term Role Var, t.IsCore ∧ ∀ i, t.eval (v i) = f (v i)
+
+/-- Four core operations whose common value has three-point interpolants. -/
+noncomputable def fourPatchCandidates {Role : Type u} (three : Fin 3 ↪ Role)
+    (v : Fin 3 → WinnerSet Role) : Fin 4 → WinnerSet Role :=
+  let X := v 0
+  let Y := v 1
+  let Z := v 2
+  let H := WinnerSet.choice (three 1) X Y
+  let T := WinnerSet.choice (three 0) Y Z
+  ![WinnerSet.choice (three 2) H (WinnerSet.choice (three 0) H T),
+    Z.union (WinnerSet.choice (three 0) H (WinnerSet.choice (three 2) X Z)),
+    X.union (WinnerSet.choice (three 2) H T),
+    WinnerSet.choice (three 2) H (WinnerSet.choice (three 0) Y
+      (WinnerSet.choice (three 2) Z (WinnerSet.choice (three 0) X Y)))]
+
+/-- Select the value shared by at least three of the four candidates. -/
+noncomputable def threewiseCounterexample {Role : Type u} (three : Fin 3 ↪ Role)
+    (v : Fin 3 → WinnerSet Role) : WinnerSet Role := by
+  classical
+  exact if fourPatchCandidates three v 0 = fourPatchCandidates three v 1 then
+    fourPatchCandidates three v 0 else fourPatchCandidates three v 2
+
 /-- Three short core operations used in the pairwise interpolation obstruction. -/
 noncomputable def patchCandidates {Role : Type u} (three : Fin 3 ↪ Role)
     (v : Fin 3 → WinnerSet Role) : Fin 3 → WinnerSet Role :=

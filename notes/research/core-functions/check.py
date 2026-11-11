@@ -9,7 +9,6 @@ import argparse
 import itertools
 import subprocess
 import tempfile
-import json
 from collections import Counter
 from functools import reduce
 from pathlib import Path
@@ -48,72 +47,49 @@ def cut_maxima(columns, target):
             return maxima[target]
 
 
-def evaluate_patches(data, valuation):
-    evaluated = []
-    for node in data["nodes"]:
-        if node[0] == "var":
-            value = valuation[node[1]]
-        elif node[0] == "choice":
-            value = own(node[1], evaluated[node[2]], evaluated[node[3]])
-        else:
-            value = evaluated[node[1]] | evaluated[node[2]]
-        evaluated.append(value)
-    return [evaluated[root] for root in data["patches"]]
+def four_patches(valuation):
+    x, y, z = valuation
+    h = own(1, x, y)
+    t = own(0, y, z)
+    return (own(2, h, own(0, h, t)),
+            z | own(0, h, own(2, x, z)),
+            x | own(2, h, t),
+            own(2, h, own(0, y, own(2, z, own(0, x, y)))))
 
 
 def load_problem(name):
-    if name != "pairwise":
-        data = json.loads(Path(__file__).with_name(name).read_text())
-        assert (data["roles"], data["arity"]) == (3, 3)
-        nodes, patches = data["nodes"], data["patches"]
-        assert len(patches) == 4 and len(set(patches)) == 4
-        assert all(0 <= root < len(nodes) for root in patches)
-        for i, node in enumerate(nodes):
-            if node[0] == "var":
-                assert len(node) == 2 and 0 <= node[1] < 3
-            elif node[0] == "choice":
-                assert len(node) == 4 and 0 <= node[1] < 3
-                assert all(0 <= child < i for child in node[2:])
-            else:
-                assert node[0] == "union" and len(node) == 3
-                assert all(0 <= child < i for child in node[1:])
-        # Normalize the terms as formal unions on each status cell. Bits
-        # 0..2 are a,b,c; each passive input has its own independent tag.
-        # Such an input may be any nonempty set other than these three atoms.
-        # No union containing a passive input can become one of these atoms,
-        # so this normalization commutes with arbitrary interpretations of
-        # the tags. Formal equality therefore proves universal equality.
+    assert name in ("pairwise", "threewise")
+    if name == "threewise":
+        # Independent tags normalize formal unions in all 64 status cells.
+        # Equality is preserved by interpreting each passive tag as any
+        # nonempty set other than the three distinguished atoms.
         for status in itertools.product(range(4), repeat=3):
             symbolic = tuple(1 << s if s < 3 else 1 << (3 + i)
                              for i, s in enumerate(status))
-            assert max(Counter(evaluate_patches(data, symbolic)).values()) >= 3
-        values, agreements = [], set()
-        for valuation in itertools.product(range(1, 8), repeat=3):
-            candidates = evaluate_patches(data, valuation)
+            assert max(Counter(four_patches(symbolic)).values()) >= 3
+    values, agreements = [], set()
+    for x, y, z in itertools.product(range(1, 8), repeat=3):
+        if name == "pairwise":
+            h = own(1, x, z)
+            p = y | h
+            q = own(0, h, own(2, y, z))
+            r = own(2, own(0, x, y), h)
+            assert len({p, q, r}) <= 2
+            values.append(p if p == q else r)
+        else:
+            candidates = four_patches((x, y, z))
             common, count = Counter(candidates).most_common(1)[0]
             assert count >= 3
-            # This expression selects the common value without enumerating
-            # the carrier; three of the four candidates agree.
             assert common == (candidates[0] if candidates[0] == candidates[1]
                               else candidates[2])
             values.append(common)
             agreements.add(sum(1 << i for i, value in enumerate(candidates)
                                if value == common))
-        # Any three evaluations have one common candidate term. Checking
-        # their agreement masks suffices, including repeated evaluations.
+    if name == "threewise":
         assert all(a & b & c for a, b, c in itertools.product(agreements, repeat=3))
-        data["table"] = [values[i:i + 7] for i in range(0, len(values), 7)]
-        return data
-    values = []
-    for x, y, z in itertools.product(range(1, 8), repeat=3):
-        h = own(1, x, z)
-        p = y | h
-        q = own(0, h, own(2, y, z))
-        r = own(2, own(0, x, y), h)
-        assert len({p, q, r}) <= 2
-        values.append(p if p == q else r)
-    return {"roles": 3, "arity": 3, "persistence": False,
-            "rows": [[3, 2, 2], [2, 6, 3], [1, 2, 4]],
+    return {"roles": 3, "arity": 3, "persistence": name == "threewise",
+            "rows": [[5, 2, 1], [3, 1, 6], [1, 2, 4], [2, 4, 1]] if name == "threewise"
+                    else [[3, 2, 2], [2, 6, 3], [1, 2, 4]],
             "table": [values[i:i + 7] for i in range(0, len(values), 7)]}
 
 
@@ -145,26 +121,13 @@ def check(filename):
     assert rows and all(len(row) == 3 for row in rows)
     output = tuple(function[tuple(row)] for row in rows)
     columns = [tuple(row[j] for row in rows) for j in range(3)]
-    if "relation" in data:
-        # Closure, rather than exhaustiveness, suffices for the obstruction.
-        relation = {tuple(row) for row in data["relation"]}
-        assert len(relation) == len(data["relation"]) == 148
-        assert all(len(row) == len(rows) and all(value in domain for value in row)
-                   for row in relation)
-        assert all(tuple(row[j] for row in rows) in relation for j in range(3))
-        assert all(tuple(own(r, a, b) for a, b in zip(left, right)) in relation
-                   for r in range(3) for left in relation for right in relation)
-        # At any additional owner the embedded relation's values cannot
-        # absorb, so its operation is union. This also checks that closure.
-        assert all(tuple(a | b for a, b in zip(left, right)) in relation
-                   for left in relation for right in relation)
-        assert output == tuple(data["target"]) and output not in relation
-        bounded = [v for v in relation if all(not a & ~b for a, b in zip(v, output))]
-        expected_maximum = tuple(data["bounded_maximum"])
-        assert expected_maximum == tuple(reduce(int.__or__, (v[i] for v in bounded), 0)
-                                         for i in range(len(rows)))
+    if data["persistence"]:
+        # These four values violate Core.four_valuation_persistence, whose
+        # symbolic Lean proof replaces the finite relation certificate.
+        assert output == (7, 3, 6, 3)
+        assert output[0] & 4 and not output[1] & 4 and not output[2] & 1 and not output[3] & 4
+        expected_maximum = (3, 3, 6, 3)
     else:
-        # These entries contradict Core.three_valuation_persistence in Lean.
         assert rows == [[3, 2, 2], [2, 6, 3], [1, 2, 4]]
         assert output == (2, 6, 5)
         expected_maximum = (2, 2, 5)
@@ -261,9 +224,9 @@ def check(filename):
         assert result in polynomials
         assert result != identity or left == middle == right == identity
     print(f"{filename}: nonterm obstruction verified; persistence={persistence}.")
-    if "patches" in data:
+    if data["persistence"]:
         print("Verified four core patches and all 64 formal status cells for uniform coherence.")
-        print("Any three valuations have a common patch; the obstruction is union-closed.")
+        print("Any three valuations have a common patch; four-valuation persistence fails.")
     print("Verified idempotence, monotonicity, profiles, support, cell provenance,")
     print("common source and all 131^3 polynomial substitutions with identity reflection.")
 
@@ -273,7 +236,7 @@ def check_full_unary():
     root = Path(__file__).resolve().parent
     data = "2\n" + "\n".join(
         " ".join(map(str, sum(load_problem(name)["table"], [])))
-        for name in ("pairwise", "threewise.json")) + "\n"
+        for name in ("pairwise", "threewise")) + "\n"
     with tempfile.TemporaryDirectory(prefix="kfol-full-unary-") as temporary:
         binary = Path(temporary) / "full-unary"
         subprocess.run(["g++", "-O3", "-std=c++20", str(root / "full_unary.cpp"),
@@ -287,6 +250,6 @@ if __name__ == "__main__":
                         help="also exhaust binary invariants and all 751^3 unary substitutions")
     args = parser.parse_args()
     check("pairwise")
-    check("threewise.json")
+    check("threewise")
     if args.full_unary:
         check_full_unary()
