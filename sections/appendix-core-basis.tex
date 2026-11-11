@@ -18,7 +18,8 @@ greatest completions are characterized (\cref{app:core-profiles}), prime
 source-guard normal forms describe their full values
 (\cref{app:core-source-guards}), and finite colored graphs characterize
 their joint realizability (\cref{app:core-colored-graphs}). Binary and
-ternary compatibility tests are insufficient (\cref{app:core-pairwise});
+ternary compatibility tests are insufficient, even for the existence of
+a pointwise core minorant (\cref{app:core-pairwise});
 joint compatibility is tested on source probes (\cref{app:core-compatibility}), and a finite
 saturation decides which operations are terms (\cref{app:core-cuts});
 unary polynomials are classified (\cref{core:prop:unary-polynomials});
@@ -1288,6 +1289,87 @@ Thus the ternary obstruction already has a correct canonical source-guard
 form, by \cref{core:prop:local-guards}. Its failure of realizability is a
 joint constraint, even inside the interval between two core operations
 with the same profiles.
+
+At four inputs the local tests can leave no core operation below the
+candidate at all.
+
+\begin{theorem}[Local interpolation without a core minorant]\label{core:thm:no-local-minorant}
+For every $K\geq3$, there is a four-input operation $Q$ that is
+three-point interpolable and preserves every ternary invariant relation,
+but no core term $t$ satisfies $t(S)\subseteq Q(S)$ at every valuation.
+\end{theorem}
+\begin{proof}
+Fix distinct $a,b,c$. Put $A=X\star_aW$ and $E=Y\star_c(X+Z)$, and define
+\[
+\begin{aligned}
+ Q_0&=\bigl(A\star_b(Y\star_cZ)\bigr)
+       +\bigl(X\star_b(Y\star_a(Z\star_aW))\bigr),\\
+ Q_1&=\bigl(W\star_a(X\star_c(Y\star_aZ))\bigr)
+       +\bigl(E\star_b(Y\star_a(X\star_bW))\bigr),\\
+ Q_2&=(Z\star_cA)
+       +\bigl(Z\star_b((X\star_cY)\star_a(Y+W))\bigr),\\
+ Q_3&=(Z\star_aW)+\bigl(W\star_b(X\star_aY)\bigr)
+       +\bigl(E\star_b(W\star_a(X\star_cZ))\bigr).
+\end{aligned}
+\]
+As with the preceding patches, split each input into its $a$-, $b$-,
+$c$-atom or other status. The choice rule reduces at least three of
+these four expressions to the same union in each case. Let $Q$ be
+their common value. Every three valuations have a common candidate,
+which proves interpolation and relational preservation.
+
+The obstruction is a cover law satisfied by every core term. Write
+\[
+\begin{array}{c|cccc}
+ &X&Y&Z&W\\\hline
+ v_A&\{a\}&\{c\}&\{c\}&\{b\}\\
+ v_B&\{b\}&\{c\}&\{b\}&\{b\}\\
+ v_C&\{a,c\}&\{c\}&\{b\}&\{a\}\\
+ v_D&\{a\}&\{a\}&\{a,c\}&\{b\}.
+\end{array}
+\]
+For $A_t=t(v_A)$, and similarly $B_t,C_t,D_t$, the law is
+\[
+ a\in A_t\quad\text{or}\quad c\in B_t\quad\text{or}\quad
+ b\in C_t\quad\text{or}\quad b\in D_t.                 \tag{$*$}
+\]
+The singleton tests of the input columns give
+$A_t=\{b\}\iff D_t=\{b\}$ and
+$B_t=\{c\}\iff C_t=\{c\}$. Also $c\in D_t\Rightarrow a\in D_t$:
+each input in row $D$ satisfies this implication, and every choice
+preserves it. A further induction gives the bridge
+\[
+ B_t=\{b\},\quad D_t=\{a\}\quad\Longrightarrow\quad a\in A_t.
+\]
+At an $a$-root follow a child with $D=\{a\}$; both children have
+$B=\{b\}$. At a $b$-root follow a child with $B=\{b\}$;
+both have $D=\{a\}$, which rules out absorption at $A$ by the first
+singleton equivalence. Every other root passes both atomic premises
+to both children, whose inductive memberships rule out absorption at $A$.
+
+Now prove $(*)$ by induction. It holds at each leaf. Suppose all four
+memberships fail at a parent. Provenance forces $B=\{b\}$.
+At an $a$-root, both children have this value at $B$ and omit $a$ at
+$A$. The bridge prevents $D=\{a\}$ in either child, so both omit $b$
+at $D$. Induction forces $b\in C$ in both children, preventing
+$a$-absorption and contradicting the parent's exclusion at $C$.
+At a $b$-root, the exclusions at $C,D$ pass to both children.
+The first singleton equivalence prevents $b$-absorption at $A$;
+follow a child with $B=\{b\}$ to contradict induction.
+At a $c$-root, both children have $B=\{b\}$. The second singleton
+equivalence prevents $c$-absorption at $C$, and the implication in
+row $D$ prevents it there. Induction then forces $a\in A$ in both
+children, preventing $c$-absorption at $A$. Every other owner acts
+by union on these rows. This proves the cover law.
+
+Finally, direct evaluation gives
+\[
+ Q(v_A)=\{b,c\},\qquad Q(v_B)=\{b\},\qquad
+ Q(v_C)=Q(v_D)=\{a,c\}.
+\]
+Every pointwise minorant of $Q$ fails all four memberships in $(*)$,
+so none can be a core operation.
+\end{proof}
 
 \subsection{Recognition by atomic cuts}\label{app:core-cuts}
 

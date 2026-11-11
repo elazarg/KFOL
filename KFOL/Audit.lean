@@ -203,6 +203,8 @@ import all KFOL.Core.ProfileEnvelope
 import all KFOL.Core.FourValuation
 import all KFOL.Core.RelationalInterpolation
 import all KFOL.Core.TernaryInterpolation
+import all KFOL.Core.MinorantObstruction
+import all KFOL.Core.MinorantPatches
 import all KFOL.Core.AtomicNative
 import all KFOL.Core.ChoiceUnion
 import all KFOL.Core.ChoiceUnion.Basis

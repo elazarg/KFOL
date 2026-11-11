@@ -6,6 +6,10 @@ representation, described below. A direct criterion on the canonical guards
 without an auxiliary realization remains open. Pairwise compatibility and correct singleton profiles together
 are proved insufficient, uniformly for every K ≥ 3. Three-point interpolation
 is also proved insufficient, with a symbolic four-valuation persistence law.
+At four inputs it need not even leave one pointwise core minorant: four short
+patches agree three at a time, while their common value violates a four-row
+cover law. This stronger obstruction is proved in `Core/MinorantPatches` and
+restated as `Report.core_three_local_without_minorant`.
 
 ## Structural graph representation
 

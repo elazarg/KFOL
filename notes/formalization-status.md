@@ -183,3 +183,12 @@ owner's full view. Thus, for three roles, even realizability on every individual
 view does not ensure one common realization. The graph witness is not unique;
 a direct condition on canonical guard tables, without an auxiliary realization,
 is still not proved.
+
+`Core/MinorantObstruction` proves a four-row cover law and its atomic bridge
+uniformly in all additional roles and arbitrary groups of variables.
+`Core/MinorantPatches` gives four explicit four-input core operations agreeing
+three at a time. Their common value has no pointwise core minorant at all,
+although it preserves every ternary invariant relation and therefore has a
+correct canonical source-guard form at finite role sets. The complete existential
+claim is `Report.core_three_local_without_minorant`. Its helpers are private;
+it adds no semantic definitions to the audit surface.
