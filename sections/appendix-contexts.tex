@@ -1,6 +1,5 @@
 \section{Unary contexts and the meaning of repetition}\label{app:contexts}
-This appendix classifies the one-variable contexts of the reduct, explains which observations retain ambiguity, and
-separates three readings of a repeated component: independent copies, uniform equilibrium selection, and a shared hidden decision.
+This appendix classifies the one-variable contexts of the reduct, explains which observations retain ambiguity, and determines when a bottom can stand for an omitted contribution. It then separates three readings of a repeated component: independent copies, uniform equilibrium selection, and a shared hidden decision.
 
 \subsection{Unary contexts without internal switches}
 
@@ -159,6 +158,172 @@ Thus the mutual distributivity axiom of their multiplayer algebras
 fails here, even though every $\star_r$ distributes over the neutral
 union operation. Reusing their complete equational calculus would
 therefore change the semantics.
+
+\subsection{Bottom, top, and omitted subtrees}\label{app:contexts-bottom}
+
+An empty contribution to a union, an identity for owned choice, and a
+terminal at which everyone loses are three different constructions.
+The first already occurs in the status forms of
+\cref{view:thm:normal}: either field of $(C,\Lambda)$ may be empty.
+Once the singleton tests have been fixed, an absent contribution can
+therefore be omitted. The following obstruction concerns putting such
+a unit into the game algebra itself.
+
+\begin{proposition}[A common unit removes ownership]\label{context:prop:common-unit}
+Let $B$ satisfy all identities of the constant-free core $\mathbf C_K$,
+and let $+$ denote its derived union $J$. If $e\star_r x=x$ for every
+owner $r$ and every $x\in B$, then $x\star_r y=x+y$ for every $r$.
+Consequently no extension containing $\mathbf C_K$ as a subalgebra can
+adjoin a common unit while preserving all its identities.
+\end{proposition}
+\begin{proof}
+The core validates the semilattice laws for $+$, commutativity of each
+$\star_r$, distribution over $+$, and
+$(x\star_r y)+x+y=x+y$. These follow directly from the owner-singleton
+rule. A common unit gives $e+y=J(e,y)=y$, hence
+\[
+ x\star_r y=x\star_r(e+y)=x+(x\star_r y).
+\]
+Thus $x\leq x\star_r y$ in the join order. Commutativity gives the
+same inequality for $y$, while the displayed coverage identity gives
+$x\star_r y\leq x+y$. All choices are therefore join. In the original
+algebra, $\{a\}\star_r\{r\}=\{r\}\ne\{a,r\}$ for $a\ne r$.
+\end{proof}
+
+Keeping the formula~\eqref{game:eq:own} on all subsets does give
+$\varnothing\star_r S=S$, and each choice remains a semilattice.
+But it breaks distribution: for $a\ne r$,
+\[
+ \{a\}\star_r(\varnothing\cup\{r\})=\{r\},\qquad
+ (\{a\}\star_r\varnothing)\cup(\{a\}\star_r\{r\})=\{a,r\}.
+\]
+Here $J$ still denotes actual union: with an empty operand all three
+choices in $J$ return the other operand, and nonempty operands use
+\cref{game:thm:union}. Even a unit used only in proofs would therefore
+prevent unrestricted use of the original identities.
+
+An annihilator has a different outcome.
+Adjoin $0$ with $0\star_r x=0$ for every $r$. This preserves exactly
+the identities in the original constant-free core signature: by
+\cref{gen:cor:trace}, both sides of a valid identity have the same
+variables, so assigning $0$ to any occurring variable makes both sides
+$0$; otherwise the original identity applies. The original algebra is
+a subalgebra, so no new identity in that signature becomes valid.
+This is the zero extension used in \cref{query:prop:relations}.
+Its actual set union has $\varnothing$ as unit, whereas its derived
+$J$ has $\varnothing$ as annihilator. Thus the zero extension does not
+preserve the additional equation $J(x,y)=x\cup y$ on empty inputs.
+It helps the relational representation of one owner, but cannot erase
+a branch of an owned-choice term.
+
+Nor is the existing value $I$ a common annihilator:
+$I\star_r\{r\}=\{r\}$. It is the greatest value under inclusion,
+recording that every role is a possible winner.
+
+\paragraph{A unit after restricting the observer and the owners.}
+There is a smaller setting in which a bottom does work. Fix an observer
+$k$ and a set $O\subseteq I$ of allowed choice owners. Contexts may
+use arbitrary nonempty constants and only the $\star_r$ with $r\in O$;
+they have no internal role switches. Write $S\equiv_{k,O}T$ when these
+contexts agree on whether $k$ belongs to their output.
+
+\begin{proposition}[Restricted player views]\label{context:prop:restricted-view}
+The classes of $\equiv_{k,O}$ are exactly
+\[
+ \pv:\ k\in S,\qquad
+ a_i:\ S=\{i\}\quad(i\in O\setminus\{k\}),\qquad
+ \nv:\ \text{all remaining values}.
+\]
+There are $|O\setminus\{k\}|+2$ classes. If $O$ is nonempty, this
+quotient has a common unit for its allowed choices exactly when
+$|O|=1$; that unit is $\nv$.
+\end{proposition}
+\begin{proof}
+For owner $k$, output membership of $k$ is disjunction of input
+membership. For owner $r\ne k$, it is that disjunction provided
+neither input is $\{r\}$. An output equals an active opponent atom
+$\{i\}$ exactly when either the owner is $i$ and an input is
+$\{i\}$, or both inputs are $\{i\}$. Thus the displayed information
+is preserved by every allowed operation. Membership separates $\pv$;
+the context $x\star_i\{k\}$ separates each $a_i$ from every other
+negative class. All classes are inhabited: any two-element set omitting
+$k$ represents $\nv$.
+
+A unit must fix $\nv$. The class $\pv$ fails this under every owner,
+and $a_i$ fails it under owner $i$, so only $\nv$ is possible. With
+one owner, combining $\nv$ with any class returns that class. With
+two or more owners, choose $i\in O\setminus\{k\}$ and
+$j\in O\setminus\{i\}$. Then
+$\nv\star_j a_i=\nv\ne a_i$, excluding a common unit.
+\end{proof}
+
+This gives an exact meaning to an omitted subtree for one observer
+under one surrounding owner. With more owners, its negative summary
+must still distinguish their singleton traps. Having no choices owned
+by $k$ inside the subtree is insufficient: the leaves $\at b$ and
+$\at c$ both have that property and both lose for $k$, but
+$x\star_b\{k\}$ distinguishes them, for distinct $b,c,k$.
+
+\paragraph{Playable losses and simultaneous wins.}
+If terminals may declare any winning set $W\subseteq I$, including
+$\varnothing$ and $I$, each player still receives payoff one precisely
+when it belongs to $W$. An exact value is the nonempty family
+$\mathcal F\subseteq\mathcal P(I)$ of terminal winning sets reached
+in SPE. Put $\mathcal F_r=\{W\in\mathcal F:r\in W\}$.
+
+\begin{proposition}[Winning-set families]\label{context:prop:outcome-families}
+For finite public games with arbitrary terminal winning sets, the SPE
+families compose by
+\[
+ \mathcal F\mathbin{\odot_r}\mathcal H=
+ \begin{cases}
+ \mathcal F_r\cup\mathcal H_r,
+   &\mathcal F_r=\mathcal F\text{ or }\mathcal H_r=\mathcal H,\\
+ \mathcal F\cup\mathcal H,&\text{otherwise}.
+ \end{cases}
+\]
+Their unions, which record only possible winning players, do not
+determine the union after a choice. This already fails when the only
+new terminal is one where everyone loses.
+\end{proposition}
+\begin{proof}
+Fix an SPE in each child. The owner selects an owner-winning outcome
+if either prescribed outcome wins for it, and otherwise either branch.
+If a child always wins for the owner, only owner-winning outcomes can
+be selected, and each such outcome is realized by selecting its child.
+Otherwise both children admit owner-losing SPEs. Prescribing one off
+the path realizes every outcome in the other child. The whole-player
+deviation argument of \cref{game:thm:adequacy} applies unchanged.
+
+For the obstruction, let $d$ be an everyone-loses terminal and take
+$G=d\ch b\at a$ and $H=\at a$, with $a\ne b$. Their families are
+$\{\varnothing,\{a\}\}$ and $\{\{a\}\}$, whose unions both equal
+$\{a\}$. In the context $x\ch a\at b$, the resulting unions are
+$\{a,b\}$ and $\{a\}$, respectively. For $G$, prescribing $d$ in
+the left child lets $a$ rationally choose the right child. For $H$,
+$a$ must choose its certain win.
+\end{proof}
+
+With only the extra terminal $d$, these families can be encoded as
+nonempty subsets of $I\cup\{d\}$, retaining $d$ as a possible outcome
+but never as an owner. This preserves the owned-choice formula, with
+$\{d\}$ an ordinary outcome atom rather than a unit. With simultaneous
+wins, a family distinguishes $\{I\}$ from
+$\{\{i\}:i\in I\}$, although their unions agree. Bottom and top as
+playable outcomes therefore require more information than the present
+winner sets retain.
+
+In the guarantee algebra of Olde Loohuis and Venema, the same symbols
+have a different use. Their Definition~3.20
+\cite{OldeLoohuisVenema2010} gives
+\[
+ \bot\vee_r S=S\cap\{r\},\qquad
+ \top\vee_r S=S\cup\{r\},
+\]
+so bottom isolates one player's guarantee. The unit for $\vee_r$ is
+$I\setminus\{r\}$, and its annihilator is $\{r\}$. These are useful
+observer operations, but their laws concern guarantees rather than
+possible SPE winners.
 
 \subsection{Repeated descriptions with uniform component strategies}
 

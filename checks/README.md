@@ -7,7 +7,7 @@ proofs.
 
 | Scripts in `checks/` | Current paper/report coverage |
 | --- | --- |
-| `check_choice.py`, `check_core.py`, `check_common_source.py`, `check_structure.py`, `check_symmetric.py` | Owned choice, contexts, tests, core extraction and common source |
+| `check_choice.py`, `check_core.py`, `check_common_source.py`, `check_structure.py`, `check_symmetric.py` | Owned choice, contexts, bottom extensions, restricted views, winning-set families, tests, core extraction and common source |
 | `check_fibers.py`, `check_general.py` | Unary contexts, ambiguity and fibers |
 | `check_reset.py`, `check_forest.py` | Reset tables, antimatroids and forest models |
 | `check_fragments.py`, `check_raw_pairs.py` | Hard fragments and role-count identities |

@@ -157,6 +157,8 @@ Occurrence lower bound (\cref{game:thm:lower})
  & Written.\\
 Unary classifications (\cref{app:contexts,app:ambiguity})
  & Written; finite checks.\\
+Bottom and subtree abstraction (\cref{context:prop:common-unit,context:prop:restricted-view,context:prop:outcome-families})
+ & Written; finite checks of restricted quotients, empty-set extensions, and full-profile SPE families.\\
 Remaining congruence results (\cref{app:congruences})
  & Written; finite checks.\\
 Minimal clone (\cref{reset:thm:minimal})
@@ -202,7 +204,7 @@ Programs & Subject\\
 \bottomrule
 \endlastfoot
 \path{check_choice.py}, \path{check_core.py}, \path{check_common_source.py}, \path{check_structure.py}, \path{check_symmetric.py}
- & Owned choice, contexts, tests, core extraction and common source.\\
+ & Owned choice, contexts, bottom extensions, tests, core extraction and common source.\\
 \path{check_fibers.py}, \path{check_general.py}
  & Unary contexts, ambiguity and fibers.\\
 \path{check_reset.py}, \path{check_forest.py}
@@ -224,6 +226,18 @@ Programs & Subject\\
 \path{check_core_atomic.py}, \path{check_core_atomic_basis.py}, \path{check_core_conservative.py}, \path{check_core_unary_polynomials.py}
  & Atomic and conservative models, unary polynomials.\\
 \end{longtable}}
+
+For \cref{app:contexts-bottom}, \path{check_structure.py} independently
+computes the contextual partitions by closing membership observations
+under all allowed unary translations. It checks all $248$ choices of
+observer and owner set at $K=3,4,5$, including the common-unit criterion.
+It checks the unit and annihilator extensions on all operands through
+$K=5$. Separately, it enumerates all $9416$ three-player binary games
+with at most two decision nodes and arbitrary terminal winning sets,
+and compares the family recurrence with full profiles checked against
+whole-player deviations in every subgame. These include the
+everyone-loses counterexample; no equilibrium recurrence is used by
+the full-profile checker.
 
 The navigation definitions are in \path{KFOL/Definitions/Queries.lean}, with proofs in \path{KFOL/Query/}. The optional command \texttt{python3 checks/check\_xpath.py} runs the translated queries in libxml2 through \texttt{lxml}: 60,208 term/valuation comparisons over all nonempty valuations at $K=3$ with three inputs and $K=4$ with two inputs. It also checks the empty-input counterexample. \path{tests/NavigationQueries.lean} checks that schema boundary and distinguishes the correct parent guard from a guard evaluated below an output role.
 
