@@ -1,6 +1,6 @@
 \section{Verification details}\label{app:verification}
 
-The paper's results are kernel-checked in Lean~4.35.0 with mathlib. \texttt{Paper.lean} restates, in the namespace \texttt{KFOL.Paper}, every theorem of the main text and the clauses of the report results that it cites: $77$ statements, listed by result in \cref{tab:status}. \texttt{Report.lean} restates $61$ further report results in the namespace \texttt{KFOL.Report} (\cref{tab:report}). Each proof is a single library theorem, and each file ends with a check that no declaration in its namespace uses an axiom beyond \texttt{propext}, \texttt{Classical.choice}, and \texttt{Quot.sound}; a separate audit covers the whole library. Nothing is admitted, and no theorem from the literature enters as a hypothesis. Where a written proof cites one, as for the reset basis and the minimum one-owner generator \cite{FreeseEtAl2002}, owned choice with union \cite{HardingRomanowska2017}, and the atomic clone \cite{Szendrei2012}, the Lean proof is direct.
+The paper's results are kernel-checked in Lean~4.35.0 with mathlib. \texttt{Paper.lean} restates, in the namespace \texttt{KFOL.Paper}, every theorem of the main text and the clauses of the report results that it cites: $77$ statements, listed by result in \cref{tab:status}. \texttt{Report.lean} restates $64$ further report results in the namespace \texttt{KFOL.Report} (\cref{tab:report}). Each proof is a single library theorem, and each file ends with a check that no declaration in its namespace uses an axiom beyond \texttt{propext}, \texttt{Classical.choice}, and \texttt{Quot.sound}; a separate audit covers the whole library. Nothing is admitted, and no theorem from the literature enters as a hypothesis. Where a written proof cites one, as for the reset basis and the minimum one-owner generator \cite{FreeseEtAl2002}, owned choice with union \cite{HardingRomanowska2017}, and the atomic clone \cite{Szendrei2012}, the Lean proof is direct.
 
 The vocabulary of the statements is in \path{KFOL/Definitions/PaperAlgebra.lean}, \path{PaperGames.lean}, and \path{Complexity.lean}, which build on the other files of \path{KFOL/Definitions}. \path{notes/audit-guide.md} gives a reading order, and \path{notes/paper-definition-surface.md} and \path{notes/report-definition-surface.md} list every definition that each statement depends on.
 
@@ -106,6 +106,10 @@ Core proof ingredients and ambient variety (\cref{core:prop:basis-arity,core:lem
  & \path{core_variable_bound_obstruction}, \path{core_typed_upper_clone_cover}, \path{native_nonfinite_basis}\\
 Singleton profiles and three-valuation persistence (\cref{core:thm:profiles,core:prop:persistence})
  & \path{core_singleton_profiles}, \path{core_three_valuation_persistence}\\
+Profile maxima and gaps in core realizability (\cref{core:prop:profile-maximum,core:cor:profile-nonconvex})
+ & \path{core_profile_maximum}, \path{core_profile_nonconvexity}\\
+Normal forms from ternary tests (\cref{core:prop:local-guards})
+ & \path{core_local_normal_forms}\\
 Prime source-guard normal forms (\cref{core:thm:source-guards,core:prop:guard-synthesis})
  & \path{core_source_reconstruction}, \path{core_source_probe_count}, \path{core_guard_synthesis}\\
 Atomic-cut recognition and synthesis (\cref{core:thm:cuts,core:cor:cut-functions})
@@ -471,6 +475,13 @@ finiteness assumptions; \path{KFOL/Core/SourceNormalForm.lean} proves the
 prime-guard representation, complete equality invariant, exact probe count,
 and local guard synthesis. \path{tests/CoreSourceGuards.lean} checks the
 projection and arity-zero boundaries and a concrete probe count.
+\path{KFOL/Core/LocalNormalForm.lean} proves source decomposition and
+canonical reconstruction for every three-point interpolable operation.
+Source decomposition needs only finitely many inputs; the role type may be
+infinite, as checked in \path{tests/CorePairwiseInterpolation.lean}.
+\path{KFOL/Core/ProfileEnvelope.lean} constructs the greatest completion
+by reset and proves nonconvexity of core realizability at fixed profiles using the explicit
+core lower bound in \path{KFOL/Core/TernaryInterpolation.lean}.
 \path{KFOL/Core/SourceCompatibility.lean} proves direct compatibility, the
 monotone idempotent interior, and its greatest common realization.
 \path{KFOL/Core/PairwiseInterpolation.lean} proves the uniform binary-test

@@ -188,6 +188,67 @@ theorem counterexample_profiles {Role : Type*} (three : Fin 3 ↪ Role) :
   by_cases ha : three 0 = r <;> by_cases hb : three 1 = r <;> by_cases hc : three 2 = r <;>
     simp_all [choice_atom, union_eq_singleton_iff] <;> tauto
 
+private def lowerTerm {Role : Type*} (three : Fin 3 ↪ Role) : Term Role (Fin 3) :=
+  let X := Term.var 0
+  let Y := Term.var 1
+  let Z := Term.var 2
+  let H := Term.choice (three 1) X Y
+  let T := Term.choice (three 0) Y Z
+  let J := Term.choice (three 2) X Z
+  .choice (three 2) H (.choice (three 0) H (.choice (three 0) T J))
+
+private theorem lower_profiles {Role : Type*} (three : Fin 3 ↪ Role)
+    (v : Fin 3 → WinnerSet Role) (r : Role) :
+    threewiseCounterexample three v = singleton r ↔ (lowerTerm three).eval v = singleton r := by
+  classical
+  unfold threewiseCounterexample
+  rw [repeated_predicate (fun A => A = singleton r) _ (candidates_coherent three v)]
+  have hab := three.injective.ne (show (0 : Fin 3) ≠ 1 by decide)
+  have hac := three.injective.ne (show (0 : Fin 3) ≠ 2 by decide)
+  have hbc := three.injective.ne (show (1 : Fin 3) ≠ 2 by decide)
+  dsimp [fourPatchCandidates, lowerTerm]
+  simp only [Term.eval]
+  by_cases ha : three 0 = r <;> by_cases hb : three 1 = r <;> by_cases hc : three 2 = r <;>
+    simp_all [choice_atom, union_eq_singleton_iff] <;> tauto
+
+set_option maxHeartbeats 3000000 in
+set_option linter.unusedSimpArgs false in
+private theorem lower_subset {Role : Type*} (three : Fin 3 ↪ Role)
+    (v : Fin 3 → WinnerSet Role) : (lowerTerm three).eval v ≤ threewiseCounterexample three v := by
+  classical
+  intro r hr
+  change r ∈ (if fourPatchCandidates three v 0 = fourPatchCandidates three v 1 then
+    fourPatchCandidates three v 0 else fourPatchCandidates three v 2).val
+  rw [repeated_predicate (fun A => r ∈ A.val) _ (candidates_coherent three v)]
+  have hab := three.injective.ne (show (0 : Fin 3) ≠ 1 by decide)
+  have hac := three.injective.ne (show (0 : Fin 3) ≠ 2 by decide)
+  have hbc := three.injective.ne (show (1 : Fin 3) ≠ 2 by decide)
+  have hba := hab.symm
+  have hca := hac.symm
+  have hcb := hbc.symm
+  dsimp [fourPatchCandidates]
+  dsimp [lowerTerm] at hr
+  simp only [Term.eval] at hr
+  by_cases hxa : v 0 = singleton (three 0) <;>
+    by_cases hxb : v 0 = singleton (three 1) <;>
+    by_cases hxc : v 0 = singleton (three 2) <;>
+    by_cases hya : v 1 = singleton (three 0) <;>
+    by_cases hyb : v 1 = singleton (three 1) <;>
+    by_cases hyc : v 1 = singleton (three 2) <;>
+    by_cases hza : v 2 = singleton (three 0) <;>
+    by_cases hzb : v 2 = singleton (three 1) <;>
+    by_cases hzc : v 2 = singleton (three 2) <;>
+    simp_all [choice, union_eq_singleton_iff, singleton_inj, union_comm,
+      union_assoc, union_left_comm, union_self, union_left_idem] <;> tauto
+
+/-- A core operation with the same profiles lies below the obstruction. -/
+theorem counterexample_lower {Role : Type*} (three : Fin 3 ↪ Role) :
+    ∃ s : Term Role (Fin 3), s.IsCore ∧
+      (∀ v, s.eval v ≤ threewiseCounterexample three v) ∧
+      ∀ v r, s.eval v = singleton r ↔ threewiseCounterexample three v = singleton r :=
+  ⟨lowerTerm three, by trivial, lower_subset three,
+    fun v r => (lower_profiles three v r).symm⟩
+
 /-- The full obstruction: three-point interpolation, relational preservation,
 correct singleton profiles and failure of a global core realization. -/
 theorem counterexample {Role : Type*} (three : Fin 3 ↪ Role) :

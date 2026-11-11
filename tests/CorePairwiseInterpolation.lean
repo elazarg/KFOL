@@ -1,5 +1,7 @@
 import KFOL.Core.PairwiseInterpolation
 import KFOL.Core.TernaryInterpolation
+import KFOL.Core.LocalNormalForm
+import KFOL.Core.ProfileEnvelope
 
 open KFOL Core
 
@@ -44,3 +46,18 @@ example (f : (Fin 0 → WinnerSet (Fin 3)) → WinnerSet (Fin 3)) :
 example (A : WinnerSet (Fin 3)) :
     LocallyInterpolable 0 (fun v : Fin 1 → WinnerSet (Fin 3) => (v 0).union A) :=
   fun _ => ⟨.var 0, trivial, fun i => Fin.elim0 i⟩
+
+-- The non-core operation already has a correct canonical source form.
+example (v : Fin 3 → WinnerSet (Fin 4)) :
+    let three := Fin.castLEEmb (by decide : 3 ≤ 4)
+    Sources.meaning (Sources.normalForm three (threewiseCounterexample three)) v =
+      (threewiseCounterexample three v).val :=
+  Sources.local_normalForm_correct _ _ (Threewise.counterexample_interpolable _) v
+
+-- Source decomposition itself allows infinitely many roles.
+example (v : Fin 3 → WinnerSet ℕ) (k : ℕ) :
+    let three : Fin 3 ↪ ℕ := ⟨Fin.val, Fin.val_injective⟩
+    k ∈ (threewiseCounterexample three v).val ↔ ∃ j, k ∈ (v j).val ∧
+      k ∈ (threewiseCounterexample three
+        (Sources.probe three k j (Sources.pattern k j v))).val :=
+  Sources.local_membership_iff_source _ _ (Threewise.counterexample_interpolable _) v k

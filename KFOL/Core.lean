@@ -2,11 +2,13 @@ module
 
 public import KFOL.Core.NonfiniteBasis
 public import KFOL.Core.ProfileSynthesis
+public import KFOL.Core.ProfileEnvelope
 public import KFOL.Core.Interpolation
 public import KFOL.Core.PairwiseInterpolation
 public import KFOL.Core.TernaryInterpolation
 public import KFOL.Core.Cuts
 public import KFOL.Core.SourceNormalForm
+public import KFOL.Core.LocalNormalForm
 public import KFOL.Core.SourceCompatibility
 
 /-! # Core basis obstructions, typed covers and uniform finite countermodels

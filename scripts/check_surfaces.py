@@ -151,6 +151,8 @@ def library_declarations() -> dict[str, Theorem]:
                ROOT / "KFOL/Strategic/Quantified/Fold.lean",
                ROOT / "KFOL/Core/RelationalInterpolation.lean",
                ROOT / "KFOL/Core/FourValuation.lean",
+               ROOT / "KFOL/Core/LocalNormalForm.lean",
+               ROOT / "KFOL/Core/ProfileEnvelope.lean",
                ROOT / "KFOL/Core/TernaryInterpolation.lean",
                *sorted((ROOT / "KFOL/Query").rglob("*.lean"))]
     for path in sources:

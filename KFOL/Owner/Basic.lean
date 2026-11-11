@@ -12,20 +12,6 @@ namespace KFOL
 
 universe u v
 
-namespace WinnerSet
-
-variable {Role : Type u}
-
-theorem reset_eq_singleton (A B : WinnerSet Role) (r : Role) :
-    A.reset B = singleton r ↔ B = singleton r := by
-  classical
-  by_cases hB : B.Ambiguous
-  · have hout : (A.reset B).Ambiguous := (ambiguous_reset A B).mpr hB
-    exact ⟨fun he => False.elim (hout r he), fun he => False.elim (hB r he)⟩
-  · simp [reset, hB]
-
-end WinnerSet
-
 namespace Owner.Term
 
 variable {Role : Type u} {Var : Type v}

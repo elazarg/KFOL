@@ -13,8 +13,8 @@ proves the theorem, and \cref{app:full-signature} transfers it to winner
 constants and internal role permutations by a permutation envelope. The remaining subsections settle smaller questions:
 owned choice with union has a seven-equation basis
 (\cref{app:core-dissemilattice}); the binary terms have explicit normal
-forms (\cref{app:core-binary}); at every arity, the singleton outputs of
-terms are characterized (\cref{app:core-profiles}), prime source-guard
+forms (\cref{app:core-binary}); at every arity, singleton profiles and their
+greatest completions are characterized (\cref{app:core-profiles}), prime source-guard
 normal forms describe their full values (\cref{app:core-source-guards}), their
 binary and ternary compatibility tests are shown insufficient (\cref{app:core-pairwise}),
 joint compatibility is tested on source probes (\cref{app:core-compatibility}), and a finite
@@ -757,7 +757,29 @@ of the earlier history, so the argument holds in the fixed owner order.
 The constructed term has exactly the prescribed profiles.
 \end{proof}
 
-Profiles do not determine a term function, even together with its
+Although profiles do not determine a term function, they determine a
+greatest completion.
+
+\begin{proposition}[Greatest profile completion]\label{core:prop:profile-maximum}
+For every core term $t$ over a finite variable set $V$, there is a core
+term $t^{\max}$ with the same singleton outputs, at every valuation, such
+that whenever $t(S)$ is ambiguous,
+\[
+ t^{\max}(S)=\bigcup_{j\in V}S_j.
+\]
+Among all operations $f$ with $f(S)\subseteq\bigcup_jS_j$ and the same
+singleton outputs as $t$, this is the greatest under pointwise inclusion.
+\end{proposition}
+\begin{proof}
+A core term has a variable, so $V$ is nonempty. Let $U$ be the union of
+all variables and put $t^{\max}=U\del t$. Reset is a core operation:
+when $t(S)$ is atomic it returns that atom, and otherwise it returns
+$U(S)\cup t(S)=U(S)$ by provenance. Thus it preserves exactly the
+singleton outputs. Any operation with those outputs agrees with
+$t^{\max}$ on its atomic outputs and is bounded by $U$ on the others.
+\end{proof}
+
+Profiles do not determine a term function even together with its
 variables: $x\del(y\del z)$ and $(x\del y)\del z$ both return $\{i\}$
 exactly when $z=\{i\}$, but at $x=\{c\}$, $y=\{a\}$, $z=\{a,b\}$ they
 return $\{a,b,c\}$ and $\{a,b\}$. Singleton and ambiguous outputs also
@@ -1024,6 +1046,44 @@ Use the proof of \cref{core:lem:binary-interpolation}, with $m$ evaluations
 in place of two. This also covers empty relations and $m=0$.
 \end{proof}
 
+The probe construction also makes sense for an arbitrary operation $f$:
+define $c^f_{k,j}$ by evaluating $f$ on the probes and let $\Gamma^f_{k,j}$
+contain all its prime sufficient guards.
+
+\begin{proposition}[Normal forms from ternary tests]\label{core:prop:local-guards}
+For every three-point interpolable operation $f$ at finite arity,
+\[
+ k\in f(S)\quad\Longleftrightarrow\quad
+ \exists j\in V\ \bigl(k\in S_j\text{ and }
+ c^f_{k,j}(\sigma_k(S_i):i\ne j)=1\bigr).
+\]
+The family $\Gamma^f$ is canonical and its interpretation by the
+prime-guard formula of \cref{core:thm:source-guards} is exactly $f$.
+\end{proposition}
+\begin{proof}
+Fix $k$ and a valuation $S$. For $A\subseteq V$, retain $S_j$ at the
+positions in $A$ and replace each other position by the canonical
+representative of its passive status, omitting $k$; call this valuation
+$S^A$. Every $S^A$ has the original passive statuses. Source decomposition
+for a core term $t$ therefore gives
+\[
+ k\in t(S^{A\cup B})\quad\Longleftrightarrow\quad
+ k\in t(S^A)\text{ or }k\in t(S^B).
+\]
+A common interpolant at these three valuations transfers the equivalence
+to $f$. A single interpolant also gives $k\notin f(S^\varnothing)$.
+Finite union then shows that $k\in f(S)$ exactly when
+$k\in f(S^{\{j\}})$ for some $j$. Interpolating at $S^{\{j\}}$ and
+its corresponding probe identifies this last predicate with
+$k\in S_j$ and $c^f_{k,j}=1$.
+
+Two-point interpolation transfers inclusion monotonicity, hence
+monotonicity of each coefficient in the passive order. The prime-box
+argument of \cref{core:thm:source-guards} reconstructs those coefficients
+and proves that their prime guards are canonical. Substitution in the
+source decomposition gives the claimed interpretation.
+\end{proof}
+
 A four-valuation constraint will separate three-point interpolation from
 global realizability. As in \cref{core:prop:persistence}, the three input
 positions may stand for arbitrary groups of variables.
@@ -1121,6 +1181,28 @@ Finally,
 \]
 These values violate \cref{core:prop:four-persistence}.
 \end{proof}
+
+\begin{corollary}[Core realizability within a profile class]\label{core:cor:profile-nonconvex}
+Within a fixed singleton-profile class, the core operations need not be
+order-convex under pointwise inclusion: for every $K\geq3$, there are
+core operations $G,E$ with $G\subseteq F\subseteq E$ pointwise and exactly the same singleton
+outputs as $F$, although $F$ is not a core operation.
+\end{corollary}
+\begin{proof}
+Using the $H,T$ above, put
+\[
+ G=H\star_c\bigl(H\star_a(T\star_a(X\star_cZ))\bigr).
+\]
+The same status cases give $G\subseteq F$, and the singleton recursion
+gives the profiles of $F$. Let $E=G^{\max}$ from
+\cref{core:prop:profile-maximum}. Since $F$ has those profiles and
+obeys provenance, maximality gives $F\subseteq E$.
+\end{proof}
+
+Thus the ternary obstruction already has a correct canonical source-guard
+form, by \cref{core:prop:local-guards}. Its failure of realizability is a
+joint constraint, even inside the interval between two core operations
+with the same profiles.
 
 \subsection{Recognition by atomic cuts}\label{app:core-cuts}
 

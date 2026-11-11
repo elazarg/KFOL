@@ -29,6 +29,47 @@ canonicity. A projection has just an empty guard at its source.
 source by a union of owned-choice spines; it does not prescribe the others.
 The vocabulary is centralized in `Definitions/CoreNormalForm.lean`.
 
+## Three-point tests already force the normal form
+
+`Core/LocalNormalForm` extends source decomposition to every three-point
+interpolable operation at finite arity. Fix the passive statuses and vary the
+set of active sources. Core membership preserves the union of two source
+sets; interpolation at the three relevant valuations transfers this law to
+the operation. An empty source set contributes no winner. Finite additivity
+therefore reduces membership to one source. Two-point interpolation identifies
+that single-source observation with its canonical probe and transfers
+coefficient monotonicity.
+
+The resulting prime guards are canonical for their own reconstructed
+coefficients and their meaning is the original operation. The decomposition
+allows infinitely many roles; guard finiteness additionally assumes finitely
+many roles. The regression instantiates decomposition at Role=ℕ and canonical
+reconstruction for the non-core four-role obstruction.
+
+## Greatest completions and gaps in core realizability
+
+For a core term t, let U be the union of every input variable and set
+`t^max = U δ t`. Reset preserves t's atomic outputs and returns U on every
+ambiguous output. This is itself a core term, and is greatest among all
+operations with those singleton outputs and provenance, whether or not they
+are terms. `Core/ProfileEnvelope.exists_profile_maximum` proves this without
+assuming the ambient variable type is nonempty; the core term supplies a leaf.
+
+Even inside one profile fiber, the core operations are not order-convex.
+For the four patches below, the core term
+
+```
+G = H ⋆_c (H ⋆_a (T ⋆_a (X ⋆_c Z)))
+```
+
+has F's singleton profiles and satisfies G ≤ F. Its greatest profile
+completion E satisfies F ≤ E, but F is not a core operation. All of this is
+proved uniformly for every finite role type with three distinct roles.
+`Report.core_local_normal_forms`, `core_profile_maximum` and
+`core_profile_nonconvexity` state the complete results. These results separate
+representability by source guards and bounds within a profile fiber from
+actual joint realizability.
+
 ## Pairwise compatibility and the uniform obstruction
 
 `Core.pairwiseInterpolable_iff_preservesBinary` identifies simultaneous

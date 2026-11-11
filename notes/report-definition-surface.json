@@ -32,29 +32,29 @@
     }
   ],
   "summary": {
-    "public_theorem_types": 61,
-    "project_declarations": 675,
-    "semantic_project_declarations": 614,
+    "public_theorem_types": 64,
+    "project_declarations": 679,
+    "semantic_project_declarations": 615,
     "kind_counts": {
       "constructor": 102,
-      "definition": 450,
+      "definition": 451,
       "inductive": 39,
       "recursor": 23,
-      "theorem": 61
+      "theorem": 64
     },
     "project_source_files": 32,
     "central_definition_files": 21,
-    "external_boundary_constants": 389,
+    "external_boundary_constants": 390,
     "external_boundary_by_family": {
       "Batteries": 1,
       "GameTheory": 92,
       "Lean/Std": 156,
-      "mathlib": 140
+      "mathlib": 141
     },
     "proof_valued_subterms_erased": 731,
     "theorem_proof_bodies_traversed": 0,
-    "source_review_groups": 297,
-    "written_semantic_review_units": 275,
+    "source_review_groups": 298,
+    "written_semantic_review_units": 276,
     "semantic_declarations_without_source_anchor": 22
   },
   "review_order": [
@@ -292,7 +292,7 @@
       "central_definition_file": true,
       "kind_counts": {
         "constructor": 2,
-        "definition": 23,
+        "definition": 24,
         "inductive": 1,
         "recursor": 1
       },
@@ -318,6 +318,7 @@
         "KFOL.Core.Sources.compatibilitySystem",
         "KFOL.Core.Sources.instFintypePassive",
         "KFOL.Core.Sources.interior",
+        "KFOL.Core.Sources.meaning",
         "KFOL.Core.Sources.normalForm",
         "KFOL.Core.Sources.passive",
         "KFOL.Core.Sources.passive.match_1",
@@ -1062,11 +1063,11 @@
     {
       "module": "Report",
       "path": "Report.lean",
-      "sha256": "1aba7fd772146d1e61625eccff12e05db5364d88991f9c4f3e91886d49a1286c",
+      "sha256": "d7a6e24a8ec39877771fa5f2271e41c03d316f1a075eec68e965932722291765",
       "central_definition_file": false,
       "kind_counts": {
         "definition": 1,
-        "theorem": 61
+        "theorem": 64
       },
       "declarations": [
         "KFOL.Report.arbitrary_public_quantifier",
@@ -1081,7 +1082,10 @@
         "KFOL.Report.core_guard_compatibility",
         "KFOL.Report.core_guard_synthesis",
         "KFOL.Report.core_local_interpolation",
+        "KFOL.Report.core_local_normal_forms",
         "KFOL.Report.core_pairwise_obstruction",
+        "KFOL.Report.core_profile_maximum",
+        "KFOL.Report.core_profile_nonconvexity",
         "KFOL.Report.core_singleton_profiles",
         "KFOL.Report.core_source_interior",
         "KFOL.Report.core_source_interior_realization",
@@ -2527,6 +2531,22 @@
       },
       "kernel_declarations": [
         "KFOL.Core.Sources.interior"
+      ]
+    },
+    {
+      "source": "KFOL/Definitions/CoreNormalForm.lean",
+      "declaration_group": "KFOL.Core.Sources.meaning",
+      "written_declaration": "KFOL.Core.Sources.meaning",
+      "location": {
+        "declaration": "KFOL.Core.Sources.meaning",
+        "line": 108,
+        "column": 0,
+        "end_line": 112,
+        "end_column": 67,
+        "exact_declaration": true
+      },
+      "kernel_declarations": [
+        "KFOL.Core.Sources.meaning"
       ]
     },
     {
@@ -6040,9 +6060,9 @@
       "written_declaration": "KFOL.Report.reset_circuit_tree_succinctness",
       "location": {
         "declaration": "KFOL.Report.reset_circuit_tree_succinctness",
-        "line": 450,
+        "line": 483,
         "column": 0,
-        "end_line": 466,
+        "end_line": 499,
         "end_column": 47,
         "exact_declaration": false
       },
@@ -6057,7 +6077,7 @@
       "type": "∀ {Role : Type u} (owner : Role) (Action : Type v) (nonempty : Nonempty Action)\n  (next : Action → KFOL.Strategic.QuantifiedTree Role),\n  (KFOL.Strategic.QuantifiedTree.node owner Action nonempty next).possibleWinners =\n    if ∃ a, (next a).possibleWinners = {owner} then {owner} else {player | ∃ a, player ∈ (next a).possibleWinners}",
       "location": {
         "column": 0,
-        "line": 504
+        "line": 537
       },
       "direct_type_dependencies": [
         "Classical.propDecidable",
@@ -6130,7 +6150,7 @@
       "type": "∀ {Role : Type u} [inst : Fintype Role] [inst_1 : DecidableEq Role] (a b c : Role),\n  a ≠ b →\n    a ≠ c →\n      b ≠ c →\n        ∀ (order : GameTheory.Languages.Bridges.FOSGToEFG.ExplicitOrder Role) (N : ℕ) {Summary : Type v}\n          [inst_2 : Fintype Summary] (code : Fin (N + 1) → Summary),\n          (∀ (n k : Fin (N + 1)),\n              code n = code k →\n                ∀ (m : Fin N),\n                  c ∈\n                      KFOL.Rounds.Game.possibleWinners\n                        ((KFOL.Rounds.Game.threshold a b c (↑n) (↑m + 1)).sequentialValues order) ↔\n                    c ∈\n                      KFOL.Rounds.Game.possibleWinners\n                        ((KFOL.Rounds.Game.threshold a b c (↑k) (↑m + 1)).sequentialValues order)) →\n            Function.Injective code ∧ N + 1 ≤ Fintype.card Summary",
       "location": {
         "column": 0,
-        "line": 379
+        "line": 412
       },
       "direct_type_dependencies": [
         "And",
@@ -6311,7 +6331,7 @@
       "type": "∀ {Role : Type u} [inst : Fintype Role] [inst_1 : DecidableEq Role] (a b : Role),\n  a ≠ b → ∀ (G : KFOL.Rounds.Game Role), KFOL.Rounds.Game.UsesOnly a b G → ∃ x, G.HasScalarValue a b x",
       "location": {
         "column": 0,
-        "line": 641
+        "line": 674
       },
       "direct_type_dependencies": [
         "DecidableEq",
@@ -6466,7 +6486,7 @@
       "type": "∀ {Role : Type u} {Var : Type v} (f : (Var → KFOL.WinnerSet Role) → KFOL.WinnerSet Role),\n  KFOL.Core.PairwiseInterpolable f ↔ KFOL.Core.PreservesBinary f",
       "location": {
         "column": 0,
-        "line": 75
+        "line": 77
       },
       "direct_type_dependencies": [
         "Iff",
@@ -6548,7 +6568,7 @@
       "type": "∀ {Role : Type u} {Var : Type v} {Row : Type w} [inst : Fintype Role] [inst_1 : Fintype Row] (three : Fin 3 ↪ Role)\n  (values : Row → Var → KFOL.WinnerSet Role) (U : Row → KFOL.WinnerSet Role) (B : KFOL.Core.Cuts.State Role Row),\n  (∃ i r, { bounds := B, row := i, winner := r } ∈ KFOL.FiniteHorn.saturate (KFOL.Core.Cuts.system values U)) →\n    ∃ t,\n      t.IsCore ∧\n        (∀ (i : Row), ↑(KFOL.Term.eval (values i) t) ⊆ KFOL.Core.Cuts.region U B i) ∧\n          ∀ (i : Row) (r : Role),\n            r ∈ ↑(KFOL.Term.eval (values i) t) ↔\n              { bounds := B, row := i, winner := r } ∈ KFOL.FiniteHorn.saturate (KFOL.Core.Cuts.system values U)",
       "location": {
         "column": 0,
-        "line": 151
+        "line": 184
       },
       "direct_type_dependencies": [
         "And",
@@ -6725,7 +6745,7 @@
       "type": "∀ {Role : Type u} {Var : Type v} [inst : Fintype Role] [inst_1 : Fintype Var] (three : Fin 3 ↪ Role)\n  (f : (Var → KFOL.WinnerSet Role) → KFOL.WinnerSet Role),\n  (∃ t, t.IsCore ∧ ∀ (v : Var → KFOL.WinnerSet Role), KFOL.Term.eval v t = f v) ↔ KFOL.Core.CutRecognizes f",
       "location": {
         "column": 0,
-        "line": 173
+        "line": 206
       },
       "direct_type_dependencies": [
         "And",
@@ -6890,7 +6910,7 @@
       "type": "∀ {Role : Type u} {Var : Type v} {Row : Type w} [inst : Fintype Role] [inst_1 : Fintype Row]\n  (values : Row → Var → KFOL.WinnerSet Role) (U : Row → KFOL.WinnerSet Role),\n  have N := Fintype.card Role * Fintype.card Row * (Fintype.card Role + 2) ^ Fintype.card Row;\n  KFOL.FiniteHorn.step (KFOL.Core.Cuts.system values U) (KFOL.FiniteHorn.stage (KFOL.Core.Cuts.system values U) N) =\n    KFOL.FiniteHorn.stage (KFOL.Core.Cuts.system values U) N",
       "location": {
         "column": 0,
-        "line": 163
+        "line": 196
       },
       "direct_type_dependencies": [
         "Eq",
@@ -7032,7 +7052,7 @@
       "type": "∀ {Role : Type u} {Var : Type v} {Row : Type w} [inst : Fintype Role] [inst_1 : Fintype Row] [Nonempty Row]\n  (three : Fin 3 ↪ Role) (values : Row → Var → KFOL.WinnerSet Role) (U : Row → KFOL.WinnerSet Role),\n  (∃ t, t.IsCore ∧ ∀ (i : Row), KFOL.Term.eval (values i) t = U i) ↔ KFOL.Core.Cuts.Recognizes values U",
       "location": {
         "column": 0,
-        "line": 144
+        "line": 177
       },
       "direct_type_dependencies": [
         "And",
@@ -7197,7 +7217,7 @@
       "type": "∀ {Role : Type u} {Var : Type v} (three : Fin 3 ↪ Role) (tag : Var → Fin 3) (t : KFOL.Term Role Var),\n  t.IsCore →\n    three 2 ∉\n        ↑(KFOL.Term.eval\n            (fun x =>\n              ![(KFOL.WinnerSet.singleton (three 0)).union (KFOL.WinnerSet.singleton (three 1)),\n                  KFOL.WinnerSet.singleton (three 0),\n                  (KFOL.WinnerSet.singleton (three 1)).union (KFOL.WinnerSet.singleton (three 2))]\n                (tag x))\n            t) →\n      three 0 ∉\n          ↑(KFOL.Term.eval\n              (fun x =>\n                ![KFOL.WinnerSet.singleton (three 0), KFOL.WinnerSet.singleton (three 1),\n                    KFOL.WinnerSet.singleton (three 2)]\n                  (tag x))\n              t) →\n        three 2 ∉\n            ↑(KFOL.Term.eval\n                (fun x =>\n                  ![KFOL.WinnerSet.singleton (three 1), KFOL.WinnerSet.singleton (three 2),\n                      KFOL.WinnerSet.singleton (three 0)]\n                    (tag x))\n                t) →\n          three 2 ∉\n            ↑(KFOL.Term.eval\n                (fun x =>\n                  ![(KFOL.WinnerSet.singleton (three 0)).union (KFOL.WinnerSet.singleton (three 2)),\n                      KFOL.WinnerSet.singleton (three 1), KFOL.WinnerSet.singleton (three 0)]\n                    (tag x))\n                t)",
       "location": {
         "column": 0,
-        "line": 97
+        "line": 130
       },
       "direct_type_dependencies": [
         "DFunLike.coe",
@@ -7299,7 +7319,7 @@
       "type": "∀ {Role : Type u} [inst : Fintype Role] {Var : Type v} [inst_1 : Fintype Var] (three : Fin 3 ↪ Role)\n  (G : (k : Role) → (j : Var) → Finset (KFOL.Core.Sources.Guard k j)),\n  KFOL.Core.Sources.Canonical G ∧\n      (∃ k j p, KFOL.Core.Sources.coefficients G k j p) ∧\n        KFOL.Core.Sources.interior three (KFOL.Core.Sources.coefficients G) = KFOL.Core.Sources.coefficients G ↔\n    ∃ t, t.IsCore ∧ (KFOL.Core.Sources.normalForm three fun v => KFOL.Term.eval v t) = G",
       "location": {
         "column": 0,
-        "line": 46
+        "line": 48
       },
       "direct_type_dependencies": [
         "And",
@@ -7521,7 +7541,7 @@
       "type": "∀ {Role : Type u} {Var : Type v} (three : Fin 3 ↪ Role) {k : Role} {j : Var} (G : Finset (KFOL.Core.Sources.Guard k j)),\n  G.Nonempty →\n    ∃ t,\n      t.IsCore ∧\n        ∀ (p : KFOL.Core.Sources.Pattern k j),\n          k ∈ ↑(KFOL.Term.eval (KFOL.Core.Sources.probe three k j p) t) ↔ ∃ g ∈ G, KFOL.Core.Sources.Enabled g p",
       "location": {
         "column": 0,
-        "line": 38
+        "line": 40
       },
       "direct_type_dependencies": [
         "And",
@@ -7656,7 +7676,7 @@
       "type": "∀ {Role : Type u} {Var : Type v} (n : ℕ) (f : (Var → KFOL.WinnerSet Role) → KFOL.WinnerSet Role),\n  KFOL.Core.LocallyInterpolable n f ↔ KFOL.Core.PreservesInvariants n f",
       "location": {
         "column": 0,
-        "line": 92
+        "line": 125
       },
       "direct_type_dependencies": [
         "Iff",
@@ -7733,11 +7753,167 @@
       ]
     },
     {
+      "theorem": "KFOL.Report.core_local_normal_forms",
+      "type": "∀ {Role : Type u} [inst : Fintype Role] {Var : Type v} [inst_1 : Fintype Var] (three : Fin 3 ↪ Role)\n  (f : (Var → KFOL.WinnerSet Role) → KFOL.WinnerSet Role),\n  KFOL.Core.LocallyInterpolable 3 f →\n    (∀ (v : Var → KFOL.WinnerSet Role) (k : Role),\n        k ∈ ↑(f v) ↔ ∃ j, k ∈ ↑(v j) ∧ k ∈ ↑(f (KFOL.Core.Sources.probe three k j (KFOL.Core.Sources.pattern k j v)))) ∧\n      KFOL.Core.Sources.Canonical (KFOL.Core.Sources.normalForm three f) ∧\n        ∀ (v : Var → KFOL.WinnerSet Role), KFOL.Core.Sources.meaning (KFOL.Core.Sources.normalForm three f) v = ↑(f v)",
+      "location": {
+        "column": 0,
+        "line": 94
+      },
+      "direct_type_dependencies": [
+        "And",
+        "Eq",
+        "Exists",
+        "Fin",
+        "Fintype",
+        "Function.Embedding",
+        "Iff",
+        "KFOL.Core.LocallyInterpolable",
+        "KFOL.Core.Sources.Canonical",
+        "KFOL.Core.Sources.meaning",
+        "KFOL.Core.Sources.normalForm",
+        "KFOL.Core.Sources.pattern",
+        "KFOL.Core.Sources.probe",
+        "KFOL.WinnerSet",
+        "Membership.mem",
+        "Nat",
+        "OfNat.ofNat",
+        "Set",
+        "Set.Nonempty",
+        "Set.instMembership",
+        "Subtype.val",
+        "instOfNatNat"
+      ],
+      "semantic_project_declarations": [
+        "KFOL.Core.LocallyInterpolable",
+        "KFOL.Core.Sources.Canonical",
+        "KFOL.Core.Sources.Enabled",
+        "KFOL.Core.Sources.Guard",
+        "KFOL.Core.Sources.Literal",
+        "KFOL.Core.Sources.Passive",
+        "KFOL.Core.Sources.Passive.atom",
+        "KFOL.Core.Sources.Passive.casesOn",
+        "KFOL.Core.Sources.Passive.equivOption.match_1",
+        "KFOL.Core.Sources.Passive.neutral",
+        "KFOL.Core.Sources.Passive.rec",
+        "KFOL.Core.Sources.Pattern",
+        "KFOL.Core.Sources.Prime",
+        "KFOL.Core.Sources.Sound",
+        "KFOL.Core.Sources.coefficients",
+        "KFOL.Core.Sources.meaning",
+        "KFOL.Core.Sources.normalForm",
+        "KFOL.Core.Sources.passive",
+        "KFOL.Core.Sources.passive.match_1",
+        "KFOL.Core.Sources.pattern",
+        "KFOL.Core.Sources.probe",
+        "KFOL.Core.Sources.representative",
+        "KFOL.PlayerView",
+        "KFOL.PlayerView.casesOn",
+        "KFOL.PlayerView.impossible",
+        "KFOL.PlayerView.other",
+        "KFOL.PlayerView.possible",
+        "KFOL.PlayerView.rec",
+        "KFOL.PlayerView.representative",
+        "KFOL.PlayerView.representative.match_1",
+        "KFOL.Term",
+        "KFOL.Term.HasWinner.match_1",
+        "KFOL.Term.IsCore",
+        "KFOL.Term.IsCore._f",
+        "KFOL.Term.below",
+        "KFOL.Term.brecOn",
+        "KFOL.Term.brecOn.go",
+        "KFOL.Term.casesOn",
+        "KFOL.Term.choice",
+        "KFOL.Term.eval",
+        "KFOL.Term.eval._f",
+        "KFOL.Term.eval.match_1",
+        "KFOL.Term.rec",
+        "KFOL.Term.rename",
+        "KFOL.Term.var",
+        "KFOL.Term.winner",
+        "KFOL.WinnerSet",
+        "KFOL.WinnerSet.choice",
+        "KFOL.WinnerSet.rename",
+        "KFOL.WinnerSet.singleton",
+        "KFOL.WinnerSet.union",
+        "KFOL.WinnerSet.view"
+      ],
+      "project_modules": [
+        "KFOL.Definitions.Core",
+        "KFOL.Definitions.CoreFunctions",
+        "KFOL.Definitions.CoreNormalForm",
+        "KFOL.Definitions.Public",
+        "KFOL.Definitions.Views"
+      ],
+      "external_interfaces": [
+        "And",
+        "Classical.propDecidable",
+        "DFunLike.coe",
+        "Eq",
+        "Equiv.Perm",
+        "Equiv.instEquivLike",
+        "EquivLike.toFunLike",
+        "Exists",
+        "Exists.choose",
+        "False",
+        "Fin",
+        "Finset",
+        "Finset.filter",
+        "Finset.fintype",
+        "Finset.instPartialOrder",
+        "Finset.instSetLike",
+        "Finset.univ",
+        "Fintype",
+        "Function.Embedding",
+        "Iff",
+        "Membership.mem",
+        "Minimal",
+        "Nat",
+        "Ne",
+        "Not",
+        "OfNat.ofNat",
+        "Or",
+        "PProd",
+        "PProd.mk",
+        "PUnit",
+        "PUnit.unit",
+        "PartialOrder.toPreorder",
+        "Preorder.toLE",
+        "Prod",
+        "Prod.fst",
+        "Prod.snd",
+        "Set",
+        "Set.Nonempty",
+        "Set.decidableEq",
+        "Set.image",
+        "Set.instMembership",
+        "Set.instSingletonSet",
+        "Set.instUnion",
+        "Set.ofPred",
+        "SetLike.instMembership",
+        "Singleton.singleton",
+        "Subtype",
+        "Subtype.fintype",
+        "Subtype.instDecidableEq",
+        "Subtype.mk",
+        "Subtype.val",
+        "True",
+        "Union.union",
+        "Unit",
+        "Unit.unit",
+        "dite",
+        "instDecidableNot",
+        "instDecidableOr",
+        "instFintypeProd",
+        "instOfNatNat",
+        "ite"
+      ]
+    },
+    {
       "theorem": "KFOL.Report.core_pairwise_obstruction",
       "type": "∀ {Role : Type u} (three : Fin 3 ↪ Role),\n  KFOL.Core.PairwiseInterpolable (KFOL.Core.pairwiseCounterexample three) ∧\n    KFOL.Core.PreservesBinary (KFOL.Core.pairwiseCounterexample three) ∧\n      (∀ (v w : Fin 3 → KFOL.WinnerSet Role),\n          (∀ (i : Fin 3), ↑(v i) ⊆ ↑(w i)) →\n            ↑(KFOL.Core.pairwiseCounterexample three v) ⊆ ↑(KFOL.Core.pairwiseCounterexample three w)) ∧\n        (∀ (A : KFOL.WinnerSet Role), (KFOL.Core.pairwiseCounterexample three fun x => A) = A) ∧\n          (∃ s,\n              s.IsCore ∧\n                ∀ (v : Fin 3 → KFOL.WinnerSet Role) (r : Role),\n                  KFOL.Core.pairwiseCounterexample three v = KFOL.WinnerSet.singleton r ↔\n                    KFOL.Term.eval v s = KFOL.WinnerSet.singleton r) ∧\n            ¬∃ t,\n                t.IsCore ∧\n                  ∀ (v : Fin 3 → KFOL.WinnerSet Role), KFOL.Term.eval v t = KFOL.Core.pairwiseCounterexample three v",
       "location": {
         "column": 0,
-        "line": 80
+        "line": 82
       },
       "direct_type_dependencies": [
         "And",
@@ -7848,11 +8024,218 @@
       ]
     },
     {
+      "theorem": "KFOL.Report.core_profile_maximum",
+      "type": "∀ {Role : Type u} [Fintype Role] {Var : Type v} [Fintype Var] (three : Fin 3 ↪ Role) (t : KFOL.Term Role Var),\n  t.IsCore →\n    ∃ e,\n      e.IsCore ∧\n        (∀ (v : Var → KFOL.WinnerSet Role) (r : Role),\n            KFOL.Term.eval v e = KFOL.WinnerSet.singleton r ↔ KFOL.Term.eval v t = KFOL.WinnerSet.singleton r) ∧\n          (∀ (v : Var → KFOL.WinnerSet Role), (KFOL.Term.eval v t).Ambiguous → ↑(KFOL.Term.eval v e) = ⋃ j, ↑(v j)) ∧\n            ∀ (f : (Var → KFOL.WinnerSet Role) → KFOL.WinnerSet Role),\n              (∀ (v : Var → KFOL.WinnerSet Role), ↑(f v) ⊆ ⋃ j, ↑(v j)) →\n                (∀ (v : Var → KFOL.WinnerSet Role) (r : Role),\n                    f v = KFOL.WinnerSet.singleton r ↔ KFOL.Term.eval v t = KFOL.WinnerSet.singleton r) →\n                  ∀ (v : Var → KFOL.WinnerSet Role), ↑(f v) ⊆ ↑(KFOL.Term.eval v e)",
+      "location": {
+        "column": 0,
+        "line": 103
+      },
+      "direct_type_dependencies": [
+        "And",
+        "Eq",
+        "Exists",
+        "Fin",
+        "Fintype",
+        "Function.Embedding",
+        "Iff",
+        "KFOL.Term",
+        "KFOL.Term.IsCore",
+        "KFOL.Term.eval",
+        "KFOL.WinnerSet",
+        "KFOL.WinnerSet.Ambiguous",
+        "KFOL.WinnerSet.singleton",
+        "LE.le",
+        "Nat",
+        "OfNat.ofNat",
+        "Set",
+        "Set.Nonempty",
+        "Set.iUnion",
+        "Set.instLE",
+        "Subtype.val",
+        "instOfNatNat"
+      ],
+      "semantic_project_declarations": [
+        "KFOL.Term",
+        "KFOL.Term.HasWinner.match_1",
+        "KFOL.Term.IsCore",
+        "KFOL.Term.IsCore._f",
+        "KFOL.Term.below",
+        "KFOL.Term.brecOn",
+        "KFOL.Term.brecOn.go",
+        "KFOL.Term.casesOn",
+        "KFOL.Term.choice",
+        "KFOL.Term.eval",
+        "KFOL.Term.eval._f",
+        "KFOL.Term.eval.match_1",
+        "KFOL.Term.rec",
+        "KFOL.Term.rename",
+        "KFOL.Term.var",
+        "KFOL.Term.winner",
+        "KFOL.WinnerSet",
+        "KFOL.WinnerSet.Ambiguous",
+        "KFOL.WinnerSet.choice",
+        "KFOL.WinnerSet.rename",
+        "KFOL.WinnerSet.singleton",
+        "KFOL.WinnerSet.union"
+      ],
+      "project_modules": [
+        "KFOL.Definitions.Core",
+        "KFOL.Definitions.Public"
+      ],
+      "external_interfaces": [
+        "And",
+        "DFunLike.coe",
+        "Eq",
+        "Equiv.Perm",
+        "Equiv.instEquivLike",
+        "EquivLike.toFunLike",
+        "Exists",
+        "False",
+        "Fin",
+        "Fintype",
+        "Function.Embedding",
+        "Iff",
+        "LE.le",
+        "Nat",
+        "Ne",
+        "OfNat.ofNat",
+        "Or",
+        "PProd",
+        "PProd.mk",
+        "PUnit",
+        "PUnit.unit",
+        "Set",
+        "Set.Nonempty",
+        "Set.decidableEq",
+        "Set.iUnion",
+        "Set.image",
+        "Set.instLE",
+        "Set.instSingletonSet",
+        "Set.instUnion",
+        "Singleton.singleton",
+        "Subtype",
+        "Subtype.instDecidableEq",
+        "Subtype.mk",
+        "Subtype.val",
+        "True",
+        "Union.union",
+        "instDecidableOr",
+        "instOfNatNat",
+        "ite"
+      ]
+    },
+    {
+      "theorem": "KFOL.Report.core_profile_nonconvexity",
+      "type": "∀ {Role : Type u} [Fintype Role] (three : Fin 3 ↪ Role),\n  ∃ s t,\n    s.IsCore ∧\n      t.IsCore ∧\n        (∀ (v : Fin 3 → KFOL.WinnerSet Role) (r : Role),\n            KFOL.Term.eval v s = KFOL.WinnerSet.singleton r ↔ KFOL.Term.eval v t = KFOL.WinnerSet.singleton r) ∧\n          (∀ (v : Fin 3 → KFOL.WinnerSet Role) (r : Role),\n              KFOL.Core.threewiseCounterexample three v = KFOL.WinnerSet.singleton r ↔\n                KFOL.Term.eval v t = KFOL.WinnerSet.singleton r) ∧\n            (∀ (v : Fin 3 → KFOL.WinnerSet Role),\n                ↑(KFOL.Term.eval v s) ⊆ ↑(KFOL.Core.threewiseCounterexample three v) ∧\n                  ↑(KFOL.Core.threewiseCounterexample three v) ⊆ ↑(KFOL.Term.eval v t)) ∧\n              ¬∃ u,\n                  u.IsCore ∧\n                    ∀ (v : Fin 3 → KFOL.WinnerSet Role), KFOL.Term.eval v u = KFOL.Core.threewiseCounterexample three v",
+      "location": {
+        "column": 0,
+        "line": 115
+      },
+      "direct_type_dependencies": [
+        "And",
+        "Eq",
+        "Exists",
+        "Fin",
+        "Fintype",
+        "Function.Embedding",
+        "Iff",
+        "KFOL.Core.threewiseCounterexample",
+        "KFOL.Term",
+        "KFOL.Term.IsCore",
+        "KFOL.Term.eval",
+        "KFOL.WinnerSet",
+        "KFOL.WinnerSet.singleton",
+        "LE.le",
+        "Nat",
+        "Not",
+        "OfNat.ofNat",
+        "Set",
+        "Set.Nonempty",
+        "Set.instLE",
+        "Subtype.val",
+        "instOfNatNat"
+      ],
+      "semantic_project_declarations": [
+        "KFOL.Core.fourPatchCandidates",
+        "KFOL.Core.threewiseCounterexample",
+        "KFOL.Term",
+        "KFOL.Term.HasWinner.match_1",
+        "KFOL.Term.IsCore",
+        "KFOL.Term.IsCore._f",
+        "KFOL.Term.below",
+        "KFOL.Term.brecOn",
+        "KFOL.Term.brecOn.go",
+        "KFOL.Term.casesOn",
+        "KFOL.Term.choice",
+        "KFOL.Term.eval",
+        "KFOL.Term.eval._f",
+        "KFOL.Term.eval.match_1",
+        "KFOL.Term.rec",
+        "KFOL.Term.rename",
+        "KFOL.Term.var",
+        "KFOL.Term.winner",
+        "KFOL.WinnerSet",
+        "KFOL.WinnerSet.choice",
+        "KFOL.WinnerSet.rename",
+        "KFOL.WinnerSet.singleton",
+        "KFOL.WinnerSet.union"
+      ],
+      "project_modules": [
+        "KFOL.Definitions.Core",
+        "KFOL.Definitions.CoreFunctions",
+        "KFOL.Definitions.Public"
+      ],
+      "external_interfaces": [
+        "And",
+        "DFunLike.coe",
+        "Eq",
+        "Equiv.Perm",
+        "Equiv.instEquivLike",
+        "EquivLike.toFunLike",
+        "Exists",
+        "False",
+        "Fin",
+        "Fin.instOfNat",
+        "Fintype",
+        "Function.Embedding",
+        "Function.instFunLikeEmbedding",
+        "Iff",
+        "LE.le",
+        "Matrix.vecCons",
+        "Matrix.vecEmpty",
+        "Nat",
+        "Not",
+        "OfNat.ofNat",
+        "Or",
+        "PProd",
+        "PProd.mk",
+        "PUnit",
+        "PUnit.unit",
+        "Set",
+        "Set.Nonempty",
+        "Set.decidableEq",
+        "Set.image",
+        "Set.instLE",
+        "Set.instSingletonSet",
+        "Set.instUnion",
+        "Singleton.singleton",
+        "Subtype",
+        "Subtype.instDecidableEq",
+        "Subtype.mk",
+        "Subtype.val",
+        "True",
+        "Union.union",
+        "instDecidableOr",
+        "instOfNatNat",
+        "ite"
+      ]
+    },
+    {
       "theorem": "KFOL.Report.core_singleton_profiles",
       "type": "∀ {Role : Type u} [inst : DecidableEq Role] [Fintype Role] {Var : Type v} [Fintype Var] (three : Fin 3 ↪ Role)\n  (F : Role → (Var → Bool) → Bool),\n  (∃ t, ∀ (i : Role) (v : Var → Bool), KFOL.Core.profile i v t = F i v) ↔ KFOL.Core.AdmissibleProfiles F",
       "location": {
         "column": 0,
-        "line": 124
+        "line": 157
       },
       "direct_type_dependencies": [
         "Bool",
@@ -7930,7 +8313,7 @@
       "type": "∀ {Role : Type u} [inst : Fintype Role] {Var : Type v} [inst_1 : Fintype Var] (three : Fin 3 ↪ Role),\n  Monotone (KFOL.Core.Sources.interior three) ∧\n    (∀ (F : (k : Role) → (j : Var) → KFOL.Core.Sources.Pattern k j → Prop), KFOL.Core.Sources.interior three F ≤ F) ∧\n      ∀ (F : (k : Role) → (j : Var) → KFOL.Core.Sources.Pattern k j → Prop),\n        KFOL.Core.Sources.interior three (KFOL.Core.Sources.interior three F) = KFOL.Core.Sources.interior three F",
       "location": {
         "column": 0,
-        "line": 54
+        "line": 56
       },
       "direct_type_dependencies": [
         "And",
@@ -8108,7 +8491,7 @@
       "type": "∀ {Role : Type u} [inst : Fintype Role] {Var : Type v} [inst_1 : Fintype Var] (three : Fin 3 ↪ Role)\n  (F : (k : Role) → (j : Var) → KFOL.Core.Sources.Pattern k j → Prop),\n  (∃ k j p, KFOL.Core.Sources.interior three F k j p) →\n    (∃ t,\n        t.IsCore ∧\n          ∀ (k : Role) (j : Var) (p : KFOL.Core.Sources.Pattern k j),\n            k ∈ ↑(KFOL.Term.eval (KFOL.Core.Sources.probe three k j p) t) ↔ KFOL.Core.Sources.interior three F k j p) ∧\n      ∀ (s : KFOL.Term Role Var),\n        s.IsCore →\n          (∀ (k : Role) (j : Var) (p : KFOL.Core.Sources.Pattern k j),\n              k ∈ ↑(KFOL.Term.eval (KFOL.Core.Sources.probe three k j p) s) → F k j p) →\n            ∀ (k : Role) (j : Var) (p : KFOL.Core.Sources.Pattern k j),\n              k ∈ ↑(KFOL.Term.eval (KFOL.Core.Sources.probe three k j p) s) → KFOL.Core.Sources.interior three F k j p",
       "location": {
         "column": 0,
-        "line": 62
+        "line": 64
       },
       "direct_type_dependencies": [
         "And",
@@ -8316,7 +8699,7 @@
       "type": "∀ {Role : Type u} [inst : Fintype Role] {Var : Type v} [inst_1 : Fintype Var] [inst_2 : DecidableEq Var],\n  Fintype.card (KFOL.Core.Sources.ProbeIndex Role Var) = Fintype.card Var * Fintype.card Role ^ Fintype.card Var",
       "location": {
         "column": 0,
-        "line": 32
+        "line": 34
       },
       "direct_type_dependencies": [
         "DecidableEq",
@@ -8402,7 +8785,7 @@
       "type": "∀ {Role : Type u} {Var : Type v} (three : Fin 3 ↪ Role) (t : KFOL.Term Role Var),\n  t.IsCore →\n    ∀ (v : Var → KFOL.WinnerSet Role) (k : Role),\n      k ∈ ↑(KFOL.Term.eval v t) ↔\n        ∃ j, k ∈ ↑(v j) ∧ k ∈ ↑(KFOL.Term.eval (KFOL.Core.Sources.probe three k j (KFOL.Core.Sources.pattern k j v)) t)",
       "location": {
         "column": 0,
-        "line": 25
+        "line": 27
       },
       "direct_type_dependencies": [
         "And",
@@ -8527,7 +8910,7 @@
       "type": "∀ {Role : Type u} (three : Fin 3 ↪ Role),\n  KFOL.Core.LocallyInterpolable 3 (KFOL.Core.threewiseCounterexample three) ∧\n    KFOL.Core.PreservesInvariants 3 (KFOL.Core.threewiseCounterexample three) ∧\n      (∃ s,\n          s.IsCore ∧\n            ∀ (v : Fin 3 → KFOL.WinnerSet Role) (r : Role),\n              KFOL.Core.threewiseCounterexample three v = KFOL.WinnerSet.singleton r ↔\n                KFOL.Term.eval v s = KFOL.WinnerSet.singleton r) ∧\n        ¬∃ t,\n            t.IsCore ∧\n              ∀ (v : Fin 3 → KFOL.WinnerSet Role), KFOL.Term.eval v t = KFOL.Core.threewiseCounterexample three v",
       "location": {
         "column": 0,
-        "line": 115
+        "line": 148
       },
       "direct_type_dependencies": [
         "And",
@@ -8631,7 +9014,7 @@
       "type": "∀ {Role : Type u} {Var : Type v} (a b c : Role),\n  a ≠ b →\n    a ≠ c →\n      b ≠ c →\n        ∀ (tag : Var → Fin 3) (t : KFOL.Term Role Var),\n          t.IsCore →\n            KFOL.Term.eval\n                  (fun x =>\n                    ![(KFOL.WinnerSet.singleton a).union (KFOL.WinnerSet.singleton b), KFOL.WinnerSet.singleton b,\n                        KFOL.WinnerSet.singleton b]\n                      (tag x))\n                  t =\n                KFOL.WinnerSet.singleton b →\n              KFOL.Term.eval\n                    (fun x =>\n                      ![KFOL.WinnerSet.singleton b, (KFOL.WinnerSet.singleton b).union (KFOL.WinnerSet.singleton c),\n                          (KFOL.WinnerSet.singleton a).union (KFOL.WinnerSet.singleton b)]\n                        (tag x))\n                    t =\n                  (KFOL.WinnerSet.singleton b).union (KFOL.WinnerSet.singleton c) →\n                b ∈\n                  ↑(KFOL.Term.eval\n                      (fun x =>\n                        ![KFOL.WinnerSet.singleton a, KFOL.WinnerSet.singleton b, KFOL.WinnerSet.singleton c] (tag x))\n                      t)",
       "location": {
         "column": 0,
-        "line": 131
+        "line": 164
       },
       "direct_type_dependencies": [
         "Eq",
@@ -8727,7 +9110,7 @@
       "type": "∀ {Role : Type u} [inst : DecidableEq Role] {C : Type v}\n  [inst_1 : (KFOL.Equational.language (KFOL.Equational.CoreSymbol Role)).Structure C] {P : Type w}\n  [inst_2 : (KFOL.Equational.language (KFOL.Equational.CoreSymbol Role)).Structure P] (_three : Fin 3 ↪ Role)\n  (hC : KFOL.Equational.InVariety (KFOL.Equational.CoreSymbol Role) (KFOL.WinnerSet Role) C) (e : C),\n  (∀ (r : Role) (c : C), KFOL.Core.join _three (KFOL.Core.operation r e c) e = e → KFOL.Core.join _three c e = e) →\n    ∀ (R : Set Role),\n      R ≠ Set.univ →\n        ∀\n          (η :\n            (KFOL.Equational.language (KFOL.Equational.CoreSymbol Role)).Hom ↥(KFOL.Core.ideal hC _three e)\n              ↥(KFOL.Core.Native.atomicRestriction R)),\n          (∀ (c : ↥(KFOL.Core.ideal hC _three e)) (r : Role),\n              ↑(η c) = KFOL.Core.Native.atom r ↔ KFOL.Core.operation r e ↑c ≠ e) →\n            KFOL.Equational.InVariety (KFOL.Equational.CoreSymbol Role) (KFOL.WinnerSet Role) P →\n              ∀ (q : (KFOL.Equational.language (KFOL.Equational.CoreSymbol Role)).Hom P C),\n                Function.Surjective ⇑q →\n                  ∀\n                    (label :\n                      (KFOL.Equational.language (KFOL.Equational.CoreSymbol Role)).Hom P\n                        ↥(KFOL.Core.Native.atomicRestriction R)),\n                    (∀ (u : P) (hu : KFOL.Core.join _three (q u) e = e), label u = η ⟨q u, hu⟩) →\n                      KFOL.Equational.InVariety (KFOL.Equational.CoreSymbol Role) (KFOL.WinnerSet Role) (Option C)",
       "location": {
         "column": 0,
-        "line": 244
+        "line": 277
       },
       "direct_type_dependencies": [
         "DFunLike.coe",
@@ -8901,7 +9284,7 @@
       "type": "∀ {Role : Type u} [inst : DecidableEq Role] [inst_1 : Fintype Role] (_three : Fin 3 ↪ Role),\n  Fintype.card (KFOL.Core.Native Role) = Fintype.card Role + 2 ∧\n    (∀ (e : KFOL.Equational.Identity (KFOL.Equational.CoreSymbol Role)),\n        e.variableCount ≤ Fintype.card Role → e.Holds (KFOL.WinnerSet Role) → e.Holds (KFOL.Core.Native Role)) ∧\n      (KFOL.Core.exhaustionIdentity _three).Holds (KFOL.WinnerSet Role) ∧\n        ¬(KFOL.Core.exhaustionIdentity _three).Holds (KFOL.Core.Native Role) ∧\n          (KFOL.Core.exhaustionIdentity _three).variableCount = Fintype.card Role + 1 ∧\n            ¬KFOL.Equational.InVariety (KFOL.Equational.CoreSymbol Role) (KFOL.WinnerSet Role) (KFOL.Core.Native Role) ∧\n              (∀ (T : KFOL.Equational.Theory (KFOL.Equational.CoreSymbol Role)),\n                  (∀ e ∈ T, e.variableCount ≤ Fintype.card Role) → ¬KFOL.Equational.IsBasis (KFOL.WinnerSet Role) T) ∧\n                ∀ (T : KFOL.Equational.Theory (KFOL.Equational.CoreSymbol Role)),\n                  KFOL.Equational.IsBasis (KFOL.WinnerSet Role) T → ∃ e ∈ T, Fintype.card Role + 1 ≤ e.variableCount",
       "location": {
         "column": 0,
-        "line": 215
+        "line": 248
       },
       "direct_type_dependencies": [
         "And",
@@ -9087,7 +9470,7 @@
       "type": "∀ {Role : Type u} (three : Fin 3 ↪ Role) (M : Type v)\n  [inst : (KFOL.Equational.language (KFOL.Equational.CoreSymbol Role)).Structure M] [Nonempty M],\n  have x := KFOL.Equational.coreStructure Role;\n  have x_1 := KFOL.Equational.publicStructure Role;\n  have x_2 := KFOL.Equational.fullStructure Role;\n  have x_3 := KFOL.Envelope.structureOf;\n  have x_4 := KFOL.Envelope.publicStructureOf;\n  (KFOL.Equational.InVariety (KFOL.Equational.CoreSymbol Role) (KFOL.WinnerSet Role) M ↔\n      KFOL.Equational.InVariety (KFOL.Equational.PublicSymbol Role) (KFOL.WinnerSet Role)\n        (KFOL.Envelope.Carrier Role M)) ∧\n    (KFOL.Equational.InVariety (KFOL.Equational.CoreSymbol Role) (KFOL.WinnerSet Role) M ↔\n      KFOL.Equational.InVariety (KFOL.Equational.FullSymbol Role) (KFOL.WinnerSet Role) (KFOL.Envelope.Carrier Role M))",
       "location": {
         "column": 0,
-        "line": 611
+        "line": 644
       },
       "direct_type_dependencies": [
         "And",
@@ -9240,7 +9623,7 @@
       "type": "∀ {α : Type u} [Finite α] (mul : Set α → Set α → Set α),\n  (∀ (A B C : Set α), mul (mul A B) C = mul A (mul B C)) →\n    (∀ (A B C : Set α), mul (A ∪ B) C = mul A C ∪ mul B C) →\n      (∀ (A B C : Set α), mul A (B ∪ C) = mul A B ∪ mul A C) →\n        (∀ (A : Set α), mul ∅ A = ∅) →\n          (∀ (A : Set α), mul A ∅ = ∅) →\n            Function.Injective (KFOL.Relational.regularRelation mul) ∧\n              (KFOL.Relational.regularRelation mul ∅ = fun x x_1 => False) ∧\n                (∀ (A B : Set α),\n                    KFOL.Relational.regularRelation mul (A ∪ B) = fun x y =>\n                      KFOL.Relational.regularRelation mul A x y ∨ KFOL.Relational.regularRelation mul B x y) ∧\n                  ∀ (A B : Set α),\n                    KFOL.Relational.regularRelation mul (mul A B) =\n                      Relation.Comp (KFOL.Relational.regularRelation mul A) (KFOL.Relational.regularRelation mul B)",
       "location": {
         "column": 0,
-        "line": 552
+        "line": 585
       },
       "direct_type_dependencies": [
         "And",
@@ -9295,7 +9678,7 @@
       "type": "∀ {Role : Type u} [inst : Fintype Role] (_three : Fin 3 ↪ Role),\n  (∀ (D : Set (KFOL.WinnerSet Role)),\n      (∀ A ∈ D, A.Ambiguous) →\n        ((∀ (n : ℕ) (t : KFOL.Term Role (Fin n)),\n            (∀ A ∈ D, KFOL.Term.eval (fun x => A) t = A) →\n              ∀ (A : KFOL.WinnerSet Role), KFOL.Term.eval (fun x => A) t = A) ↔\n          (∀ (k : Role), ∃ A ∈ D, k ∉ ↑A) ∧ ∀ (a b : Role), (∀ A ∈ D, a ∈ ↑A ↔ b ∈ ↑A) → a = b)) ∧\n    (∀ (D : Finset (KFOL.WinnerSet Role)),\n        (∀ (n : ℕ) (t : KFOL.Term Role (Fin n)),\n            (∀ A ∈ D, KFOL.Term.eval (fun x => A) t = A) →\n              ∀ (A : KFOL.WinnerSet Role), KFOL.Term.eval (fun x => A) t = A) →\n          (if Fintype.card Role = 3 then 3 else Nat.clog 2 (Fintype.card Role + 1)) ≤ D.card) ∧\n      ∃ D,\n        (∀ A ∈ D, A.Ambiguous) ∧\n          (∀ (n : ℕ) (t : KFOL.Term Role (Fin n)),\n              (∀ A ∈ D, KFOL.Term.eval (fun x => A) t = A) →\n                ∀ (A : KFOL.WinnerSet Role), KFOL.Term.eval (fun x => A) t = A) ∧\n            D.card = if Fintype.card Role = 3 then 3 else Nat.clog 2 (Fintype.card Role + 1)",
       "location": {
         "column": 0,
-        "line": 179
+        "line": 212
       },
       "direct_type_dependencies": [
         "And",
@@ -9413,7 +9796,7 @@
       "type": "∀ {Role : Type u} (three : Fin 3 ↪ Role),\n  ¬∃ t,\n      ∀ (valuation : Fin 2 → KFOL.WinnerSet Role),\n        (↑(valuation 0) ∩ ↑(valuation 1)).Nonempty → ↑(KFOL.Term.eval valuation t) = ↑(valuation 0) ∩ ↑(valuation 1)",
       "location": {
         "column": 0,
-        "line": 605
+        "line": 638
       },
       "direct_type_dependencies": [
         "Eq",
@@ -9499,7 +9882,7 @@
       "type": "∀ {Role : Type u} [inst : DecidableEq Role] [Finite Role] (_three : Fin 3 ↪ Role),\n  (∀ (d : ℕ) (T : KFOL.Equational.Theory (KFOL.Equational.CoreSymbol Role)),\n      (∀ e ∈ T, e.variableCount ≤ d) →\n        ¬∀ (e : KFOL.Equational.Identity (KFOL.Equational.CoreSymbol Role)),\n            e.Holds (KFOL.Core.Native Role) ↔ KFOL.Equational.Derives T e.lhs e.rhs) ∧\n    ∀ (T : KFOL.Equational.Theory (KFOL.Equational.CoreSymbol Role)),\n      Set.Finite T →\n        ¬∀ (e : KFOL.Equational.Identity (KFOL.Equational.CoreSymbol Role)),\n            e.Holds (KFOL.Core.Native Role) ↔ KFOL.Equational.Derives T e.lhs e.rhs",
       "location": {
         "column": 0,
-        "line": 284
+        "line": 317
       },
       "direct_type_dependencies": [
         "And",
@@ -9626,7 +10009,7 @@
       "type": "∀ {Role : Type u} (owner : Role),\n  Function.Injective (KFOL.Query.relation owner) ∧\n    (∀ (A B : KFOL.WinnerSet Role),\n        KFOL.Query.relation owner (A.union B) = fun x y =>\n          KFOL.Query.relation owner A x y ∨ KFOL.Query.relation owner B x y) ∧\n      ∀ (A B : KFOL.WinnerSet Role),\n        KFOL.Query.relation owner (KFOL.WinnerSet.choice owner A B) =\n          Relation.Comp (KFOL.Query.relation owner A) (KFOL.Query.relation owner B)",
       "location": {
         "column": 0,
-        "line": 590
+        "line": 623
       },
       "direct_type_dependencies": [
         "And",
@@ -9687,7 +10070,7 @@
       "type": "∀ {Role : Type u} (owner : Role),\n  (∀ (A B : KFOL.WinnerSet Role), KFOL.WinnerSet.choiceWithZero owner ↑A ↑B = ↑(KFOL.WinnerSet.choice owner A B)) ∧\n    (∀ (A B C : Set Role),\n        KFOL.WinnerSet.choiceWithZero owner (KFOL.WinnerSet.choiceWithZero owner A B) C =\n          KFOL.WinnerSet.choiceWithZero owner A (KFOL.WinnerSet.choiceWithZero owner B C)) ∧\n      (∀ (A B : Set Role), KFOL.WinnerSet.choiceWithZero owner A B = KFOL.WinnerSet.choiceWithZero owner B A) ∧\n        (∀ (A : Set Role), KFOL.WinnerSet.choiceWithZero owner A A = A) ∧\n          (∀ (A B C : Set Role),\n              KFOL.WinnerSet.choiceWithZero owner (A ∪ B) C =\n                KFOL.WinnerSet.choiceWithZero owner A C ∪ KFOL.WinnerSet.choiceWithZero owner B C) ∧\n            (∀ (A B C : Set Role),\n                KFOL.WinnerSet.choiceWithZero owner A (B ∪ C) =\n                  KFOL.WinnerSet.choiceWithZero owner A B ∪ KFOL.WinnerSet.choiceWithZero owner A C) ∧\n              (∀ (A : Set Role), KFOL.WinnerSet.choiceWithZero owner ∅ A = ∅) ∧\n                ∀ (A : Set Role), KFOL.WinnerSet.choiceWithZero owner A ∅ = ∅",
       "location": {
         "column": 0,
-        "line": 565
+        "line": 598
       },
       "direct_type_dependencies": [
         "And",
@@ -9743,7 +10126,7 @@
       "type": "∀ {Role : Type u} (owner : Role),\n  Function.Injective (KFOL.Relational.regularRelation (KFOL.WinnerSet.choiceWithZero owner)) ∧\n    (KFOL.Relational.regularRelation (KFOL.WinnerSet.choiceWithZero owner) ∅ = fun x x_1 => False) ∧\n      (∀ (A B : Set Role),\n          KFOL.Relational.regularRelation (KFOL.WinnerSet.choiceWithZero owner) (A ∪ B) = fun x y =>\n            KFOL.Relational.regularRelation (KFOL.WinnerSet.choiceWithZero owner) A x y ∨\n              KFOL.Relational.regularRelation (KFOL.WinnerSet.choiceWithZero owner) B x y) ∧\n        ∀ (A B : Set Role),\n          KFOL.Relational.regularRelation (KFOL.WinnerSet.choiceWithZero owner)\n              (KFOL.WinnerSet.choiceWithZero owner A B) =\n            Relation.Comp (KFOL.Relational.regularRelation (KFOL.WinnerSet.choiceWithZero owner) A)\n              (KFOL.Relational.regularRelation (KFOL.WinnerSet.choiceWithZero owner) B)",
       "location": {
         "column": 0,
-        "line": 579
+        "line": 612
       },
       "direct_type_dependencies": [
         "And",
@@ -9814,7 +10197,7 @@
       "type": "Fintype.card KFOL.Owner.FourVariableObstruction.Carrier = 6 ∧\n  (∀ (e : KFOL.Equational.Identity (KFOL.Owner.Symbol Unit)),\n      e.variableCount ≤ 4 → e.Holds KFOL.Owner.Four → e.Holds KFOL.Owner.FourVariableObstruction.Carrier) ∧\n    KFOL.Owner.FourVariableObstruction.actionBand.Holds KFOL.Owner.Four ∧\n      ¬KFOL.Owner.FourVariableObstruction.actionBand.Holds KFOL.Owner.FourVariableObstruction.Carrier ∧\n        KFOL.Owner.FourVariableObstruction.actionBand.variableCount = 5",
       "location": {
         "column": 0,
-        "line": 233
+        "line": 266
       },
       "direct_type_dependencies": [
         "And",
@@ -9966,7 +10349,7 @@
       "type": "∀ {Role : Type u} [inst : Fintype Role] [inst_1 : DecidableEq Role] (a b c : Role),\n  a ≠ b →\n    a ≠ c →\n      b ≠ c →\n        ∀ (left right : KFOL.Rounds.Game Role),\n          KFOL.Rounds.Game.UsesOnly a b left →\n            KFOL.Rounds.Game.UsesOnly a b right →\n              ∀ (order : GameTheory.Languages.Bridges.FOSGToEFG.ExplicitOrder Role),\n                Countable { probe // probe.UnaryGenerated } ∧\n                  (left.sequentialValues order = right.sequentialValues order ↔\n                      ∀ (context : KFOL.Rounds.Game.Context Role),\n                        context.BooleanMenus →\n                          (c ∈ KFOL.Rounds.Game.possibleWinners ((context.fill left).sequentialValues order) ↔\n                            c ∈ KFOL.Rounds.Game.possibleWinners ((context.fill right).sequentialValues order))) ∧\n                    (left.sequentialValues order = right.sequentialValues order ↔\n                        ∀ (context : KFOL.Rounds.Game.Context Role),\n                          context.BooleanMenus →\n                            KFOL.Rounds.Game.possibleWinners ((context.fill left).sequentialValues order) =\n                              KFOL.Rounds.Game.possibleWinners ((context.fill right).sequentialValues order)) ∧\n                      (left.sequentialValues order = right.sequentialValues order ↔\n                        ∀ (probe : KFOL.Rounds.Game.ScalarTerm),\n                          probe.UnaryGenerated →\n                            (c ∈\n                                KFOL.Rounds.Game.possibleWinners\n                                  ((KFOL.Rounds.Game.publicChoice a left\n                                        (KFOL.Rounds.Game.ScalarTerm.game a c probe)).sequentialValues\n                                    order) ↔\n                              c ∈\n                                KFOL.Rounds.Game.possibleWinners\n                                  ((KFOL.Rounds.Game.publicChoice a right\n                                        (KFOL.Rounds.Game.ScalarTerm.game a c probe)).sequentialValues\n                                    order)))",
       "location": {
         "column": 0,
-        "line": 358
+        "line": 391
       },
       "direct_type_dependencies": [
         "And",
@@ -10174,7 +10557,7 @@
       "type": "∀ {Role : Type u} [inst : DecidableEq Role] [inst_1 : Fintype Role] (M : Type v) [inst_2 : Fintype M],\n  Fintype.card (KFOL.Envelope.Carrier Role M) = 1 + (Fintype.card Role).factorial * Fintype.card M",
       "location": {
         "column": 0,
-        "line": 624
+        "line": 657
       },
       "direct_type_dependencies": [
         "DecidableEq",
@@ -10232,7 +10615,7 @@
       "type": "∀ {Role : Type u} {Index : Type v} [inst : Fintype Role] [Nontrivial Role] [Nonempty Index] (owner : Role)\n  (branches : Index → KFOL.Strategic.Tree Role),\n  ∃ S,\n    ∃ (_ : S.Nonempty),\n      ∃ term,\n        S.card ≤ Fintype.card Role - 1 ∧\n          term.IsCore ∧\n            KFOL.Strategic.possibleWinners (KFOL.Strategic.compile (fun i => branches ↑i) term) =\n              KFOL.Strategic.FiniteChoice.possibleWinners owner branches",
       "location": {
         "column": 0,
-        "line": 423
+        "line": 456
       },
       "direct_type_dependencies": [
         "And",
@@ -10380,7 +10763,7 @@
       "type": "∀ {Role : Type u} [inst : Fintype Role] [inst_1 : DecidableEq Role] (owner : Role),\n  (KFOL.Strategic.FiniteChoice.possibleWinners owner fun i => KFOL.Strategic.Tree.leaf ↑i) = {r | r ≠ owner} ∧\n    ∀ (S : Finset Role),\n      S.Nonempty →\n        owner ∉ S →\n          (KFOL.Strategic.FiniteChoice.possibleWinners owner fun i => KFOL.Strategic.Tree.leaf ↑i) = {r | r ≠ owner} →\n            S = Finset.univ.erase owner ∧ S.card = Fintype.card Role - 1",
       "location": {
         "column": 0,
-        "line": 432
+        "line": 465
       },
       "direct_type_dependencies": [
         "And",
@@ -10492,7 +10875,7 @@
       "type": "∀ {Role : Type u} [inst : DecidableEq Role] {g : KFOL.Strategic.Tree Role} (p : KFOL.Strategic.Profile g),\n  (KFOL.Strategic.IsNash p ↔\n      GameTheory.IsNash (KFOL.Strategic.gameForm g) (KFOL.Strategic.winningPreference Role) fun x => p) ∧\n    (KFOL.Strategic.IsSubgamePerfect p ↔\n      ∀ {h : KFOL.Strategic.Tree Role} (q : KFOL.Strategic.Profile h),\n        KFOL.Strategic.Restriction p q →\n          GameTheory.IsNash (KFOL.Strategic.gameForm h) (KFOL.Strategic.winningPreference Role) fun x => q)",
       "location": {
         "column": 0,
-        "line": 269
+        "line": 302
       },
       "direct_type_dependencies": [
         "And",
@@ -10590,7 +10973,7 @@
       "type": "∀ {Role : Type u} [inst : Fintype Role] [inst_1 : DecidableEq Role] (a b c : Role),\n  a ≠ b →\n    a ≠ c →\n      b ≠ c →\n        KFOL.Rounds.Game.midpointLaw (PMF.pure a) (PMF.pure c) ∉ (KFOL.Rounds.Game.Public.nonconvexTree a b c).value ∧\n          KFOL.Rounds.Game.midpointLaw (PMF.pure a) (PMF.pure c) ∈\n            (KFOL.Rounds.Game.publicChoice b (KFOL.Rounds.Game.Public.nonconvexTree a b c)\n                (KFOL.Rounds.Game.Public.nonconvexTree a b c)).value",
       "location": {
         "column": 0,
-        "line": 633
+        "line": 666
       },
       "direct_type_dependencies": [
         "And",
@@ -10756,7 +11139,7 @@
       "type": "∀ {Role : Type u} {Var : Type v} [inst : DecidableEq Role] (t : KFOL.Term Role Var) (ht : t.IsPublic),\n  (∀ (valuation : Var → KFOL.WinnerSet Role) (node : KFOL.Query.Node valuation),\n      KFOL.Query.Path.Holds (KFOL.Query.document valuation) (KFOL.Query.compile t ht) KFOL.Query.Node.root node ↔\n        ∃ r ∈ ↑(KFOL.Term.eval valuation t), node = KFOL.Query.Node.role r) ∧\n    (KFOL.Query.compile t ht).size ≤ 12 * t.size ^ 2",
       "location": {
         "column": 0,
-        "line": 537
+        "line": 570
       },
       "direct_type_dependencies": [
         "And",
@@ -10943,7 +11326,7 @@
       "type": "∀ {Role : Type u} {Var : Type v} [inst : DecidableEq Role] (s t : KFOL.Term Role Var) (hs : s.IsPublic)\n  (ht : t.IsPublic),\n  (∀ (valuation : Var → KFOL.WinnerSet Role) (node : KFOL.Query.Node valuation),\n      KFOL.Query.Path.Holds (KFOL.Query.document valuation) (KFOL.Query.compile s hs) KFOL.Query.Node.root node ↔\n        KFOL.Query.Path.Holds (KFOL.Query.document valuation) (KFOL.Query.compile t ht) KFOL.Query.Node.root node) ↔\n    s.Equivalent t",
       "location": {
         "column": 0,
-        "line": 545
+        "line": 578
       },
       "direct_type_dependencies": [
         "DecidableEq",
@@ -11084,7 +11467,7 @@
       "type": "∀ {Role : Type u} {Var : Type v} (components : Var → KFOL.Strategic.Tree Role) (t : KFOL.Term Role Var),\n  KFOL.Strategic.value (KFOL.Strategic.compile components t) =\n    KFOL.Term.eval (fun x => KFOL.Strategic.value (components x)) t",
       "location": {
         "column": 0,
-        "line": 278
+        "line": 311
       },
       "direct_type_dependencies": [
         "Eq",
@@ -11196,7 +11579,7 @@
       "type": "∀ {Role : Type u} [inst : Fintype Role] [inst_1 : DecidableEq Role] (a b : Role),\n  a ≠ b → ∀ (n : ℕ), (KFOL.Rounds.Game.reciprocal a b n).HasScalarValue a b (1 / (↑n + 1))",
       "location": {
         "column": 0,
-        "line": 654
+        "line": 687
       },
       "direct_type_dependencies": [
         "DecidableEq",
@@ -11379,7 +11762,7 @@
       "type": "∀ (n : ℕ),\n  ∃ equation term,\n    equation.WellFormed ∧\n      equation.gates.length = 6 * n + 3 ∧\n        KFOL.Circuit.operationCount equation.gates = 4 * n + 1 ∧\n          KFOL.Circuit.edgeCount equation.gates = 8 * n + 2 ∧\n            equation.unfold = some (term, term) ∧ 2 ^ n ≤ (term.table (Sum.inl true)).card",
       "location": {
         "column": 0,
-        "line": 442
+        "line": 475
       },
       "direct_type_dependencies": [
         "And",
@@ -11599,7 +11982,7 @@
       "type": "∀ {Role : Type u} {Var : Type v} (three : Fin 3 ↪ Role) (equation : KFOL.Circuit.Equation KFOL.Reset.Symbol Var),\n  have x := KFOL.Reset.structureOf KFOL.WinnerSet.reset;\n  equation.Holds (KFOL.WinnerSet Role) ↔\n    equation.WellFormed ∧\n      ∀ (valuation : Var → KFOL.WinnerSet Role),\n        (∀ (j : Var), ∃ stage, valuation j = KFOL.Reset.chainValue three stage) →\n          ∃ value, equation.eval valuation = some (value, value)",
       "location": {
         "column": 0,
-        "line": 494
+        "line": 527
       },
       "direct_type_dependencies": [
         "And",
@@ -11752,7 +12135,7 @@
       "type": "∀ {Role : Type u} (_three : Fin 3 ↪ Role) (formula : KFOL.Reductions.CNF),\n  (KFOL.Circuit.ResetCNF.equation formula).WellFormed ∧\n    (KFOL.Circuit.ResetCNF.equation formula).gates.length =\n        7 * (KFOL.Reductions.ResetUnion.support formula).length + 2 * (List.flatten formula).length + 3 ∧\n      KFOL.Circuit.operationCount (KFOL.Circuit.ResetCNF.equation formula).gates =\n          5 * (KFOL.Reductions.ResetUnion.support formula).length + 2 * (List.flatten formula).length + 1 ∧\n        have x := KFOL.Reset.structureOf KFOL.WinnerSet.reset;\n        (KFOL.Circuit.ResetCNF.equation formula).Holds (KFOL.WinnerSet Role) ↔ ¬KFOL.Reductions.Satisfiable formula",
       "location": {
         "column": 0,
-        "line": 483
+        "line": 516
       },
       "direct_type_dependencies": [
         "And",
@@ -11966,7 +12349,7 @@
       "type": "∀ (n : ℕ),\n  ∃ equation term,\n    equation.WellFormed ∧\n      equation.gates.length = 6 * n + 3 ∧\n        List.countP\n              (fun gate =>\n                match gate with\n                | KFOL.Circuit.Gate.input a => true\n                | KFOL.Circuit.Gate.func a a_1 => false)\n              equation.gates =\n            2 * n + 2 ∧\n          KFOL.Circuit.operationCount equation.gates = 4 * n + 1 ∧\n            KFOL.Circuit.edgeCount equation.gates = 8 * n + 2 ∧\n              equation.unfold = some (term, term) ∧\n                (term.table (Sum.inl true)).card = 2 ^ n ∧\n                  (∀ A ∈ term.table (Sum.inl true), A.card = n + 1) ∧\n                    term.occurrences (Sum.inl true) = 2 ^ n ∧\n                      ∀ (Role : Type u) (_three : Fin 3 ↪ Role) (other : KFOL.Reset.Term (Bool ⊕ ℕ × Bool)),\n                        (∀ (valuation : Bool ⊕ ℕ × Bool → KFOL.WinnerSet Role),\n                            other.eval valuation = term.eval valuation) →\n                          2 ^ n ≤ other.occurrences (Sum.inl true) ∧\n                            2 ^ n + 1 ≤ other.leafCount ∧ 2 ^ (n + 1) + 1 ≤ other.size",
       "location": {
         "column": 0,
-        "line": 451
+        "line": 484
       },
       "direct_type_dependencies": [
         "And",
@@ -12228,7 +12611,7 @@
       "type": "∀ {Var : Type v} [inst : DecidableEq Var] (s t : KFOL.Reset.Term Var),\n  (s.step t).feasible = {D | D = ∅ ∨ ∃ A ∈ s.feasible, ∃ C ∈ t.feasible, C.Nonempty ∧ D = A ∪ C}",
       "location": {
         "column": 0,
-        "line": 209
+        "line": 242
       },
       "direct_type_dependencies": [
         "And",
@@ -12326,7 +12709,7 @@
       "type": "∀ {Role : Type u} (a b c : Role),\n  a ≠ b →\n    a ≠ c →\n      b ≠ c →\n        ∀ (Node : Type v),\n          ¬∃ encode,\n              Function.Injective encode ∧\n                (∀ (A B : KFOL.WinnerSet Role), encode (A.union B) = fun x y => encode A x y ∨ encode B x y) ∧\n                  ∀ (A B : KFOL.WinnerSet Role), encode (A.reset B) = Relation.Comp (encode A) (encode B)",
       "location": {
         "column": 0,
-        "line": 598
+        "line": 631
       },
       "direct_type_dependencies": [
         "And",
@@ -12379,7 +12762,7 @@
       "type": "∀ {Var : Type v} {Var' : Type w} [inst : DecidableEq Var] [inst_1 : DecidableEq Var'] (t : KFOL.Reset.Term Var)\n  (inner : Var → KFOL.Reset.Term Var'),\n  KFOL.Reset.Term.root (FirstOrder.Language.Term.subst t inner) = (inner t.root).root ∧\n    (∀ {Role : Type u} (valuation : Var' → KFOL.WinnerSet Role),\n        KFOL.Reset.Term.eval (FirstOrder.Language.Term.subst t inner) valuation =\n          t.eval fun i => (inner i).eval valuation) ∧\n      ∀ (j : Var'),\n        KFOL.Reset.Term.table (FirstOrder.Language.Term.subst t inner) j =\n          KFOL.Reset.Term.minimize\n            ((FirstOrder.Language.Term.varFinset t).biUnion fun i =>\n              (t.table i).biUnion fun A =>\n                Finset.image (fun C => Finset.image (fun k => (inner k).root) A ∪ C) ((inner i).table j))",
       "location": {
         "column": 0,
-        "line": 198
+        "line": 231
       },
       "direct_type_dependencies": [
         "And",
@@ -12505,7 +12888,7 @@
       "type": "∀ {Var : Type v} [inst : DecidableEq Var] (t : KFOL.Reset.Term Var),\n  (∀ (j : Var), (t.table j).card ≤ t.occurrences j) ∧\n    ∑ j ∈ FirstOrder.Language.Term.varFinset t, (t.table j).card ≤ t.leafCount ∧ t.size + 1 = 2 * t.leafCount",
       "location": {
         "column": 0,
-        "line": 512
+        "line": 545
       },
       "direct_type_dependencies": [
         "And",
@@ -12629,7 +13012,7 @@
       "type": "∀ {Role : Type u} [inst : DecidableEq Role] [inst_1 : Finite Role] (game : KFOL.Rounds.Game Role)\n  (order : GameTheory.Languages.Bridges.FOSGToEFG.ExplicitOrder Role)\n  (assessment : (game.serialized order).information.BehavioralAssessment),\n  assessment.IsSequentiallyConsistent ⋯ →\n    ∀ (h : game.execution.History) (ht : ¬game.execution.terminal h.state) (i : Role),\n      assessment.belief i (game.serialSite order h ht i) = game.productBelief order assessment.strategy h ht i",
       "location": {
         "column": 0,
-        "line": 325
+        "line": 358
       },
       "direct_type_dependencies": [
         "DecidableEq",
@@ -12852,7 +13235,7 @@
       "type": "∀ {Role : Type u} [inst : DecidableEq Role] [inst_1 : Finite Role] (game : KFOL.Rounds.Game Role)\n  (order : GameTheory.Languages.Bridges.FOSGToEFG.ExplicitOrder Role)\n  (strategy : (i : Role) → (game.serialized order).information.BehavioralPolicy i),\n  ∃ assessment,\n    assessment.strategy = strategy ∧\n      assessment.IsSequentiallyConsistent ⋯ ∧\n        ∀ (h : game.execution.History) (ht : ¬game.execution.terminal h.state) (i : Role),\n          assessment.belief i (game.serialSite order h ht i) = game.productBelief order strategy h ht i",
       "location": {
         "column": 0,
-        "line": 312
+        "line": 345
       },
       "direct_type_dependencies": [
         "And",
@@ -13079,7 +13462,7 @@
       "type": "∀ {Role : Type u} [inst : Fintype Role] [inst_1 : DecidableEq Role] (game : KFOL.Rounds.Game Role)\n  (order : GameTheory.Languages.Bridges.FOSGToEFG.ExplicitOrder Role),\n  Finite game.execution.History ∧\n    Finite (game.serialized order).execution.History ∧\n      game.information.PerfectRecall ∧\n        (game.serialized order).information.DecisionRecall ∧\n          (∀ (p : game.Position), game.execution.Reachable p) ∧\n            (∀ (h : game.execution.History), game.information.IsSubgameRoot h) ∧\n              (∃ bound, 0 < bound ∧ game.execution.BoundedHorizon bound) ∧\n                (∃ bound, 0 < bound ∧ (game.serialized order).execution.BoundedHorizon bound) ∧\n                  ∀ (payoff : Role → (game.serialized order).execution.History → ℝ),\n                    ∃ assessment, assessment.IsSequentialEquilibrium ⋯ ⋯ payoff",
       "location": {
         "column": 0,
-        "line": 296
+        "line": 329
       },
       "direct_type_dependencies": [
         "And",
@@ -13219,7 +13602,7 @@
       "type": "∀ {Role : Type u} [inst : Fintype Role] [inst_1 : DecidableEq Role] (a b c : Role),\n  a ≠ b →\n    a ≠ c →\n      b ≠ c →\n        ∀ (G H : KFOL.Rounds.Game.ScalarTerm),\n          (G.rate = H.rate ↔\n              (KFOL.Rounds.Game.ScalarTerm.game a b G).SameContextualWinners (KFOL.Rounds.Game.ScalarTerm.game a b H)) ∧\n            (G.rate = H.rate ↔\n              KFOL.Rounds.Game.ContextuallyEquivalent c (KFOL.Rounds.Game.ScalarTerm.game a b G)\n                (KFOL.Rounds.Game.ScalarTerm.game a b H))",
       "location": {
         "column": 0,
-        "line": 660
+        "line": 693
       },
       "direct_type_dependencies": [
         "And",
@@ -13431,7 +13814,7 @@
       "type": "∀ {Role : Type u} [inst : DecidableEq Role] [inst_1 : Fintype Role] (a b : Role),\n  a ≠ b →\n    ∀ (x y : ℝ) (hx0 : 0 ≤ x) (hx1 : x ≤ 1) (hy0 : 0 ≤ y) (hy1 : y ≤ 1),\n      0 < x + y →\n        ∃ row col,\n          (row 0).toReal = y / (x + y) ∧\n            (col 0).toReal = y / (x + y) ∧\n              ∀ (profile : (i : Role) → PMF (Fin (KFOL.Rounds.Game.binarySizes a b i + 1))),\n                (((KFOL.Rounds.Game.stageForm (KFOL.Rounds.Game.binarySizes a b)\n                                (KFOL.Rounds.Game.Scalar.diagonalTable a b\n                                  (KFOL.Rounds.Game.Scalar.distribution a b x hx0 hx1)\n                                  (KFOL.Rounds.Game.Scalar.distribution a b y hy0 hy1))).mixed.play\n                          (GameTheory.Profile.update profile a row))\n                        a).toReal =\n                    x * y / (x + y) ∧\n                  (((KFOL.Rounds.Game.stageForm (KFOL.Rounds.Game.binarySizes a b)\n                                (KFOL.Rounds.Game.Scalar.diagonalTable a b\n                                  (KFOL.Rounds.Game.Scalar.distribution a b x hx0 hx1)\n                                  (KFOL.Rounds.Game.Scalar.distribution a b y hy0 hy1))).mixed.play\n                          (GameTheory.Profile.update profile b col))\n                        a).toReal =\n                    x * y / (x + y)",
       "location": {
         "column": 0,
-        "line": 406
+        "line": 439
       },
       "direct_type_dependencies": [
         "And",
@@ -13550,7 +13933,7 @@
       "type": "∀ {Role : Type u} [inst : Fintype Role] [inst_1 : DecidableEq Role] (a b : Role),\n  a ≠ b →\n    ∀ (G H : KFOL.Rounds.Game Role) (x y : ℝ),\n      G.HasScalarValue a b x →\n        H.HasScalarValue a b y →\n          (KFOL.Rounds.Game.diagonal a b G H).HasScalarValue a b (KFOL.Rounds.Game.Scalar.parallel x y)",
       "location": {
         "column": 0,
-        "line": 647
+        "line": 680
       },
       "direct_type_dependencies": [
         "DecidableEq",
@@ -13717,7 +14100,7 @@
       "type": "(∀ (x : ℝ), 0 * x / (0 + x) = 0 ∧ x * 0 / (x + 0) = 0) ∧\n  (∀ (x y : ℝ), x * y / (x + y) = y * x / (y + x)) ∧\n    (∀ (x y z : ℝ),\n        0 ≤ x →\n          0 ≤ y → 0 ≤ z → x * y / (x + y) * z / (x * y / (x + y) + z) = x * (y * z / (y + z)) / (x + y * z / (y + z))) ∧\n      (∀ (x y z : ℝ), 0 ≤ x → 0 ≤ y → 0 ≤ z → x ≤ y → x * z / (x + z) ≤ y * z / (y + z)) ∧\n        ∀ (x y z : ℝ),\n          0 ≤ x →\n            0 ≤ y →\n              0 ≤ z →\n                x * min y z / (x + min y z) = min (x * y / (x + y)) (x * z / (x + z)) ∧\n                  x * max y z / (x + max y z) = max (x * y / (x + y)) (x * z / (x + z))",
       "location": {
         "column": 0,
-        "line": 336
+        "line": 369
       },
       "direct_type_dependencies": [
         "And",
@@ -13775,7 +14158,7 @@
       "type": "∀ {Role : Type u} [inst : Fintype Role] [inst_1 : DecidableEq Role] (a b c : Role),\n  a ≠ b →\n    a ≠ c →\n      b ≠ c →\n        ∀ (left right : KFOL.Rounds.Game Role) (order : GameTheory.Languages.Bridges.FOSGToEFG.ExplicitOrder Role)\n          (x y : ℝ) (hx0 : 0 ≤ x) (hx1 : x ≤ 1) (hy0 : 0 ≤ y) (hy1 : y ≤ 1),\n          left.sequentialValues order = {KFOL.Rounds.Game.Scalar.distribution a b x hx0 hx1} →\n            right.sequentialValues order = {KFOL.Rounds.Game.Scalar.distribution a b y hy0 hy1} →\n              (x ≤ y ↔\n                ∀ (probe : KFOL.Rounds.Game.ScalarTerm),\n                  probe.UnaryGenerated →\n                    probe.rate < 1 →\n                      c ∈\n                          KFOL.Rounds.Game.possibleWinners\n                            ((KFOL.Rounds.Game.publicChoice a right\n                                  (KFOL.Rounds.Game.ScalarTerm.game a c probe)).sequentialValues\n                              order) →\n                        c ∈\n                          KFOL.Rounds.Game.possibleWinners\n                            ((KFOL.Rounds.Game.publicChoice a left\n                                  (KFOL.Rounds.Game.ScalarTerm.game a c probe)).sequentialValues\n                              order))",
       "location": {
         "column": 0,
-        "line": 391
+        "line": 424
       },
       "direct_type_dependencies": [
         "DecidableEq",
@@ -13999,7 +14382,7 @@
       "type": "∀ {Role : Type u} [inst : Fintype Role] [inst_1 : DecidableEq Role] (a b : Role),\n  a ≠ b →\n    ∀ (order : GameTheory.Languages.Bridges.FOSGToEFG.ExplicitOrder Role),\n      (∀ (term : KFOL.Rounds.Game.ScalarTerm),\n          (KFOL.Rounds.Game.ScalarTerm.game a b term).sequentialValues order =\n            {KFOL.Rounds.Game.Scalar.distribution a b ↑term.rate ⋯ ⋯}) ∧\n        {q | ∃ term, term.UnaryGenerated ∧ term.rate = q} = Set.Icc 0 1 ∧\n          ∀ (q : ℚ) (h0 : 0 ≤ q) (h1 : q ≤ 1),\n            ∃ term,\n              term.UnaryGenerated ∧\n                (KFOL.Rounds.Game.ScalarTerm.game a b term).sequentialValues order =\n                  {KFOL.Rounds.Game.Scalar.distribution a b ↑q ⋯ ⋯}",
       "location": {
         "column": 0,
-        "line": 346
+        "line": 379
       },
       "direct_type_dependencies": [
         "And",
@@ -14213,7 +14596,7 @@
       "type": "∀ {Role : Type u} [inst : Fintype Role] [inst_1 : DecidableEq Role] (G : KFOL.Rounds.Game Role)\n  (order : GameTheory.Languages.Bridges.FOSGToEFG.ExplicitOrder Role), G.value = G.sequentialValues order",
       "location": {
         "column": 0,
-        "line": 478
+        "line": 511
       },
       "direct_type_dependencies": [
         "DecidableEq",
@@ -14359,7 +14742,7 @@
       "type": "∀ {Role : Type u} (labels : Fin 2 ≃ Role),\n  Function.Injective (KFOL.TwoPlayers.forcingCoordinates labels) ∧\n    (∀ (A B : KFOL.WinnerSet Role),\n        KFOL.TwoPlayers.forcingCoordinates labels (KFOL.WinnerSet.choice (labels 0) A B) =\n          ((KFOL.TwoPlayers.forcingCoordinates labels A).1 || (KFOL.TwoPlayers.forcingCoordinates labels B).1,\n            (KFOL.TwoPlayers.forcingCoordinates labels A).2 && (KFOL.TwoPlayers.forcingCoordinates labels B).2)) ∧\n      (∀ (A B : KFOL.WinnerSet Role),\n          KFOL.TwoPlayers.forcingCoordinates labels (KFOL.WinnerSet.choice (labels 1) A B) =\n            ((KFOL.TwoPlayers.forcingCoordinates labels A).1 && (KFOL.TwoPlayers.forcingCoordinates labels B).1,\n              (KFOL.TwoPlayers.forcingCoordinates labels A).2 || (KFOL.TwoPlayers.forcingCoordinates labels B).2)) ∧\n        (∀ (A : KFOL.WinnerSet Role),\n            KFOL.TwoPlayers.forcingCoordinates labels (KFOL.WinnerSet.rename (Equiv.swap (labels 0) (labels 1)) A) =\n              ((KFOL.TwoPlayers.forcingCoordinates labels A).2, (KFOL.TwoPlayers.forcingCoordinates labels A).1)) ∧\n          ∀ (p : Bool × Bool), (∃ A, KFOL.TwoPlayers.forcingCoordinates labels A = p) ↔ ¬(p.1 = true ∧ p.2 = true)",
       "location": {
         "column": 0,
-        "line": 518
+        "line": 551
       },
       "direct_type_dependencies": [
         "And",
@@ -14454,7 +14837,7 @@
       "type": "∀ {Role : Type u} [inst : Fintype Role] [Nontrivial Role] (G : KFOL.Strategic.QuantifiedTree Role),\n  ∃ pruned binary,\n    ∃ (pruning : KFOL.Strategic.QuantifiedTree.Prunes (Fintype.card Role - 1) G pruned),\n      pruning.PreservesValues ∧\n        (∃ depth, KFOL.Strategic.QuantifiedTree.DepthLE depth pruned) ∧\n          pruned.Compiles binary ∧ KFOL.Strategic.possibleWinners binary = G.possibleWinners",
       "location": {
         "column": 0,
-        "line": 469
+        "line": 502
       },
       "direct_type_dependencies": [
         "And",
@@ -20429,6 +20812,68 @@
         "column": 0,
         "end_line": 147,
         "end_column": 53,
+        "exact_declaration": true
+      }
+    },
+    {
+      "constructor_dependencies": [],
+      "definition_body_traversed": true,
+      "definition_dependencies": [
+        "And",
+        "Exists",
+        "Finset",
+        "Finset.instSetLike",
+        "KFOL.Core.Sources.Enabled",
+        "KFOL.Core.Sources.Guard",
+        "KFOL.Core.Sources.pattern",
+        "KFOL.WinnerSet",
+        "Membership.mem",
+        "Set",
+        "Set.Nonempty",
+        "Set.instMembership",
+        "Set.ofPred",
+        "SetLike.instMembership",
+        "Subtype.val"
+      ],
+      "external_dependencies": [
+        "And",
+        "Exists",
+        "Finset",
+        "Finset.instSetLike",
+        "Membership.mem",
+        "Set",
+        "Set.Nonempty",
+        "Set.instMembership",
+        "Set.ofPred",
+        "SetLike.instMembership",
+        "Subtype.val"
+      ],
+      "kind": "definition",
+      "location": null,
+      "module": "KFOL.Definitions.CoreNormalForm",
+      "name": "KFOL.Core.Sources.meaning",
+      "project_dependencies": [
+        "KFOL.Core.Sources.Enabled",
+        "KFOL.Core.Sources.Guard",
+        "KFOL.Core.Sources.pattern",
+        "KFOL.WinnerSet"
+      ],
+      "proof_subterms_erased": 0,
+      "theorem_proof_traversed": false,
+      "type": "{Role : Type u} →\n  {Var : Type v} →\n    ((k : Role) → (j : Var) → Finset (KFOL.Core.Sources.Guard k j)) → (Var → KFOL.WinnerSet Role) → Set Role",
+      "type_dependencies": [
+        "Finset",
+        "KFOL.Core.Sources.Guard",
+        "KFOL.WinnerSet",
+        "Set"
+      ],
+      "source": "KFOL/Definitions/CoreNormalForm.lean",
+      "source_anchor": {
+        "declaration": "KFOL.Core.Sources.meaning",
+        "line": 108,
+        "column": 0,
+        "end_line": 112,
+        "end_column": 67,
         "exact_declaration": true
       }
     },
@@ -30786,7 +31231,7 @@
       "kind": "theorem",
       "location": {
         "column": 0,
-        "line": 504
+        "line": 537
       },
       "module": "Report",
       "name": "KFOL.Report.arbitrary_public_quantifier",
@@ -30817,9 +31262,9 @@
       "source": "Report.lean",
       "source_anchor": {
         "declaration": "KFOL.Report.arbitrary_public_quantifier",
-        "line": 503,
+        "line": 536,
         "column": 0,
-        "end_line": 509,
+        "end_line": 542,
         "end_column": 43,
         "exact_declaration": true
       }
@@ -30855,7 +31300,7 @@
       "kind": "theorem",
       "location": {
         "column": 0,
-        "line": 379
+        "line": 412
       },
       "module": "Report",
       "name": "KFOL.Report.boolean_threshold_state_lower_bound",
@@ -30897,9 +31342,9 @@
       "source": "Report.lean",
       "source_anchor": {
         "declaration": "KFOL.Report.boolean_threshold_state_lower_bound",
-        "line": 378,
+        "line": 411,
         "column": 0,
-        "end_line": 388,
+        "end_line": 421,
         "end_column": 51,
         "exact_declaration": true
       }
@@ -30918,7 +31363,7 @@
       "kind": "theorem",
       "location": {
         "column": 0,
-        "line": 641
+        "line": 674
       },
       "module": "Report",
       "name": "KFOL.Report.constant_sum_value",
@@ -30943,9 +31388,9 @@
       "source": "Report.lean",
       "source_anchor": {
         "declaration": "KFOL.Report.constant_sum_value",
-        "line": 640,
+        "line": 673,
         "column": 0,
-        "end_line": 643,
+        "end_line": 676,
         "end_column": 49,
         "exact_declaration": true
       }
@@ -30960,7 +31405,7 @@
       "kind": "theorem",
       "location": {
         "column": 0,
-        "line": 75
+        "line": 77
       },
       "module": "Report",
       "name": "KFOL.Report.core_binary_interpolation",
@@ -30981,9 +31426,9 @@
       "source": "Report.lean",
       "source_anchor": {
         "declaration": "KFOL.Report.core_binary_interpolation",
-        "line": 74,
+        "line": 76,
         "column": 0,
-        "end_line": 77,
+        "end_line": 79,
         "end_column": 45,
         "exact_declaration": true
       }
@@ -31016,7 +31461,7 @@
       "kind": "theorem",
       "location": {
         "column": 0,
-        "line": 151
+        "line": 184
       },
       "module": "Report",
       "name": "KFOL.Report.core_cut_maximum",
@@ -31071,9 +31516,9 @@
       "source": "Report.lean",
       "source_anchor": {
         "declaration": "KFOL.Report.core_cut_maximum",
-        "line": 150,
+        "line": 183,
         "column": 0,
-        "end_line": 160,
+        "end_line": 193,
         "end_column": 53,
         "exact_declaration": true
       }
@@ -31097,7 +31542,7 @@
       "kind": "theorem",
       "location": {
         "column": 0,
-        "line": 173
+        "line": 206
       },
       "module": "Report",
       "name": "KFOL.Report.core_cut_recognition",
@@ -31131,9 +31576,9 @@
       "source": "Report.lean",
       "source_anchor": {
         "declaration": "KFOL.Report.core_cut_recognition",
-        "line": 172,
+        "line": 205,
         "column": 0,
-        "end_line": 176,
+        "end_line": 209,
         "end_column": 46,
         "exact_declaration": true
       }
@@ -31165,7 +31610,7 @@
       "kind": "theorem",
       "location": {
         "column": 0,
-        "line": 163
+        "line": 196
       },
       "module": "Report",
       "name": "KFOL.Report.core_cut_round_bound",
@@ -31209,9 +31654,9 @@
       "source": "Report.lean",
       "source_anchor": {
         "declaration": "KFOL.Report.core_cut_round_bound",
-        "line": 162,
+        "line": 195,
         "column": 0,
-        "end_line": 170,
+        "end_line": 203,
         "end_column": 47,
         "exact_declaration": true
       }
@@ -31236,7 +31681,7 @@
       "kind": "theorem",
       "location": {
         "column": 0,
-        "line": 144
+        "line": 177
       },
       "module": "Report",
       "name": "KFOL.Report.core_cut_synthesis",
@@ -31271,9 +31716,9 @@
       "source": "Report.lean",
       "source_anchor": {
         "declaration": "KFOL.Report.core_cut_synthesis",
-        "line": 143,
+        "line": 176,
         "column": 0,
-        "end_line": 148,
+        "end_line": 181,
         "end_column": 51,
         "exact_declaration": true
       }
@@ -31304,7 +31749,7 @@
       "kind": "theorem",
       "location": {
         "column": 0,
-        "line": 97
+        "line": 130
       },
       "module": "Report",
       "name": "KFOL.Report.core_four_valuation_persistence",
@@ -31347,9 +31792,9 @@
       "source": "Report.lean",
       "source_anchor": {
         "declaration": "KFOL.Report.core_four_valuation_persistence",
-        "line": 96,
+        "line": 129,
         "column": 0,
-        "end_line": 111,
+        "end_line": 144,
         "end_column": 57,
         "exact_declaration": true
       }
@@ -31374,7 +31819,7 @@
       "kind": "theorem",
       "location": {
         "column": 0,
-        "line": 46
+        "line": 48
       },
       "module": "Report",
       "name": "KFOL.Report.core_guard_compatibility",
@@ -31419,9 +31864,9 @@
       "source": "Report.lean",
       "source_anchor": {
         "declaration": "KFOL.Report.core_guard_compatibility",
-        "line": 45,
+        "line": 47,
         "column": 0,
-        "end_line": 51,
+        "end_line": 53,
         "end_column": 50,
         "exact_declaration": true
       }
@@ -31452,7 +31897,7 @@
       "kind": "theorem",
       "location": {
         "column": 0,
-        "line": 38
+        "line": 40
       },
       "module": "Report",
       "name": "KFOL.Report.core_guard_synthesis",
@@ -31497,9 +31942,9 @@
       "source": "Report.lean",
       "source_anchor": {
         "declaration": "KFOL.Report.core_guard_synthesis",
-        "line": 37,
+        "line": 39,
         "column": 0,
-        "end_line": 43,
+        "end_line": 45,
         "end_column": 49,
         "exact_declaration": true
       }
@@ -31515,7 +31960,7 @@
       "kind": "theorem",
       "location": {
         "column": 0,
-        "line": 92
+        "line": 125
       },
       "module": "Report",
       "name": "KFOL.Report.core_local_interpolation",
@@ -31537,10 +31982,84 @@
       "source": "Report.lean",
       "source_anchor": {
         "declaration": "KFOL.Report.core_local_interpolation",
-        "line": 91,
+        "line": 124,
         "column": 0,
-        "end_line": 94,
+        "end_line": 127,
         "end_column": 54,
+        "exact_declaration": true
+      }
+    },
+    {
+      "constructor_dependencies": [],
+      "definition_body_traversed": false,
+      "definition_dependencies": [],
+      "external_dependencies": [
+        "And",
+        "Eq",
+        "Exists",
+        "Fin",
+        "Fintype",
+        "Function.Embedding",
+        "Iff",
+        "Membership.mem",
+        "Nat",
+        "OfNat.ofNat",
+        "Set",
+        "Set.Nonempty",
+        "Set.instMembership",
+        "Subtype.val",
+        "instOfNatNat"
+      ],
+      "kind": "theorem",
+      "location": {
+        "column": 0,
+        "line": 94
+      },
+      "module": "Report",
+      "name": "KFOL.Report.core_local_normal_forms",
+      "project_dependencies": [
+        "KFOL.Core.LocallyInterpolable",
+        "KFOL.Core.Sources.Canonical",
+        "KFOL.Core.Sources.meaning",
+        "KFOL.Core.Sources.normalForm",
+        "KFOL.Core.Sources.pattern",
+        "KFOL.Core.Sources.probe",
+        "KFOL.WinnerSet"
+      ],
+      "proof_subterms_erased": 0,
+      "theorem_proof_traversed": false,
+      "type": "∀ {Role : Type u} [inst : Fintype Role] {Var : Type v} [inst_1 : Fintype Var] (three : Fin 3 ↪ Role)\n  (f : (Var → KFOL.WinnerSet Role) → KFOL.WinnerSet Role),\n  KFOL.Core.LocallyInterpolable 3 f →\n    (∀ (v : Var → KFOL.WinnerSet Role) (k : Role),\n        k ∈ ↑(f v) ↔ ∃ j, k ∈ ↑(v j) ∧ k ∈ ↑(f (KFOL.Core.Sources.probe three k j (KFOL.Core.Sources.pattern k j v)))) ∧\n      KFOL.Core.Sources.Canonical (KFOL.Core.Sources.normalForm three f) ∧\n        ∀ (v : Var → KFOL.WinnerSet Role), KFOL.Core.Sources.meaning (KFOL.Core.Sources.normalForm three f) v = ↑(f v)",
+      "type_dependencies": [
+        "And",
+        "Eq",
+        "Exists",
+        "Fin",
+        "Fintype",
+        "Function.Embedding",
+        "Iff",
+        "KFOL.Core.LocallyInterpolable",
+        "KFOL.Core.Sources.Canonical",
+        "KFOL.Core.Sources.meaning",
+        "KFOL.Core.Sources.normalForm",
+        "KFOL.Core.Sources.pattern",
+        "KFOL.Core.Sources.probe",
+        "KFOL.WinnerSet",
+        "Membership.mem",
+        "Nat",
+        "OfNat.ofNat",
+        "Set",
+        "Set.Nonempty",
+        "Set.instMembership",
+        "Subtype.val",
+        "instOfNatNat"
+      ],
+      "source": "Report.lean",
+      "source_anchor": {
+        "declaration": "KFOL.Report.core_local_normal_forms",
+        "line": 93,
+        "column": 0,
+        "end_line": 100,
+        "end_column": 44,
         "exact_declaration": true
       }
     },
@@ -31568,7 +32087,7 @@
       "kind": "theorem",
       "location": {
         "column": 0,
-        "line": 80
+        "line": 82
       },
       "module": "Report",
       "name": "KFOL.Report.core_pairwise_obstruction",
@@ -31613,10 +32132,158 @@
       "source": "Report.lean",
       "source_anchor": {
         "declaration": "KFOL.Report.core_pairwise_obstruction",
-        "line": 79,
+        "line": 81,
         "column": 0,
-        "end_line": 89,
+        "end_line": 91,
         "end_column": 49,
+        "exact_declaration": true
+      }
+    },
+    {
+      "constructor_dependencies": [],
+      "definition_body_traversed": false,
+      "definition_dependencies": [],
+      "external_dependencies": [
+        "And",
+        "Eq",
+        "Exists",
+        "Fin",
+        "Fintype",
+        "Function.Embedding",
+        "Iff",
+        "LE.le",
+        "Nat",
+        "OfNat.ofNat",
+        "Set",
+        "Set.Nonempty",
+        "Set.iUnion",
+        "Set.instLE",
+        "Subtype.val",
+        "instOfNatNat"
+      ],
+      "kind": "theorem",
+      "location": {
+        "column": 0,
+        "line": 103
+      },
+      "module": "Report",
+      "name": "KFOL.Report.core_profile_maximum",
+      "project_dependencies": [
+        "KFOL.Term",
+        "KFOL.Term.IsCore",
+        "KFOL.Term.eval",
+        "KFOL.WinnerSet",
+        "KFOL.WinnerSet.Ambiguous",
+        "KFOL.WinnerSet.singleton"
+      ],
+      "proof_subterms_erased": 0,
+      "theorem_proof_traversed": false,
+      "type": "∀ {Role : Type u} [Fintype Role] {Var : Type v} [Fintype Var] (three : Fin 3 ↪ Role) (t : KFOL.Term Role Var),\n  t.IsCore →\n    ∃ e,\n      e.IsCore ∧\n        (∀ (v : Var → KFOL.WinnerSet Role) (r : Role),\n            KFOL.Term.eval v e = KFOL.WinnerSet.singleton r ↔ KFOL.Term.eval v t = KFOL.WinnerSet.singleton r) ∧\n          (∀ (v : Var → KFOL.WinnerSet Role), (KFOL.Term.eval v t).Ambiguous → ↑(KFOL.Term.eval v e) = ⋃ j, ↑(v j)) ∧\n            ∀ (f : (Var → KFOL.WinnerSet Role) → KFOL.WinnerSet Role),\n              (∀ (v : Var → KFOL.WinnerSet Role), ↑(f v) ⊆ ⋃ j, ↑(v j)) →\n                (∀ (v : Var → KFOL.WinnerSet Role) (r : Role),\n                    f v = KFOL.WinnerSet.singleton r ↔ KFOL.Term.eval v t = KFOL.WinnerSet.singleton r) →\n                  ∀ (v : Var → KFOL.WinnerSet Role), ↑(f v) ⊆ ↑(KFOL.Term.eval v e)",
+      "type_dependencies": [
+        "And",
+        "Eq",
+        "Exists",
+        "Fin",
+        "Fintype",
+        "Function.Embedding",
+        "Iff",
+        "KFOL.Term",
+        "KFOL.Term.IsCore",
+        "KFOL.Term.eval",
+        "KFOL.WinnerSet",
+        "KFOL.WinnerSet.Ambiguous",
+        "KFOL.WinnerSet.singleton",
+        "LE.le",
+        "Nat",
+        "OfNat.ofNat",
+        "Set",
+        "Set.Nonempty",
+        "Set.iUnion",
+        "Set.instLE",
+        "Subtype.val",
+        "instOfNatNat"
+      ],
+      "source": "Report.lean",
+      "source_anchor": {
+        "declaration": "KFOL.Report.core_profile_maximum",
+        "line": 102,
+        "column": 0,
+        "end_line": 112,
+        "end_column": 40,
+        "exact_declaration": true
+      }
+    },
+    {
+      "constructor_dependencies": [],
+      "definition_body_traversed": false,
+      "definition_dependencies": [],
+      "external_dependencies": [
+        "And",
+        "Eq",
+        "Exists",
+        "Fin",
+        "Fintype",
+        "Function.Embedding",
+        "Iff",
+        "LE.le",
+        "Nat",
+        "Not",
+        "OfNat.ofNat",
+        "Set",
+        "Set.Nonempty",
+        "Set.instLE",
+        "Subtype.val",
+        "instOfNatNat"
+      ],
+      "kind": "theorem",
+      "location": {
+        "column": 0,
+        "line": 115
+      },
+      "module": "Report",
+      "name": "KFOL.Report.core_profile_nonconvexity",
+      "project_dependencies": [
+        "KFOL.Core.threewiseCounterexample",
+        "KFOL.Term",
+        "KFOL.Term.IsCore",
+        "KFOL.Term.eval",
+        "KFOL.WinnerSet",
+        "KFOL.WinnerSet.singleton"
+      ],
+      "proof_subterms_erased": 0,
+      "theorem_proof_traversed": false,
+      "type": "∀ {Role : Type u} [Fintype Role] (three : Fin 3 ↪ Role),\n  ∃ s t,\n    s.IsCore ∧\n      t.IsCore ∧\n        (∀ (v : Fin 3 → KFOL.WinnerSet Role) (r : Role),\n            KFOL.Term.eval v s = KFOL.WinnerSet.singleton r ↔ KFOL.Term.eval v t = KFOL.WinnerSet.singleton r) ∧\n          (∀ (v : Fin 3 → KFOL.WinnerSet Role) (r : Role),\n              KFOL.Core.threewiseCounterexample three v = KFOL.WinnerSet.singleton r ↔\n                KFOL.Term.eval v t = KFOL.WinnerSet.singleton r) ∧\n            (∀ (v : Fin 3 → KFOL.WinnerSet Role),\n                ↑(KFOL.Term.eval v s) ⊆ ↑(KFOL.Core.threewiseCounterexample three v) ∧\n                  ↑(KFOL.Core.threewiseCounterexample three v) ⊆ ↑(KFOL.Term.eval v t)) ∧\n              ¬∃ u,\n                  u.IsCore ∧\n                    ∀ (v : Fin 3 → KFOL.WinnerSet Role), KFOL.Term.eval v u = KFOL.Core.threewiseCounterexample three v",
+      "type_dependencies": [
+        "And",
+        "Eq",
+        "Exists",
+        "Fin",
+        "Fintype",
+        "Function.Embedding",
+        "Iff",
+        "KFOL.Core.threewiseCounterexample",
+        "KFOL.Term",
+        "KFOL.Term.IsCore",
+        "KFOL.Term.eval",
+        "KFOL.WinnerSet",
+        "KFOL.WinnerSet.singleton",
+        "LE.le",
+        "Nat",
+        "Not",
+        "OfNat.ofNat",
+        "Set",
+        "Set.Nonempty",
+        "Set.instLE",
+        "Subtype.val",
+        "instOfNatNat"
+      ],
+      "source": "Report.lean",
+      "source_anchor": {
+        "declaration": "KFOL.Report.core_profile_nonconvexity",
+        "line": 114,
+        "column": 0,
+        "end_line": 122,
+        "end_column": 36,
         "exact_declaration": true
       }
     },
@@ -31640,7 +32307,7 @@
       "kind": "theorem",
       "location": {
         "column": 0,
-        "line": 124
+        "line": 157
       },
       "module": "Report",
       "name": "KFOL.Report.core_singleton_profiles",
@@ -31673,9 +32340,9 @@
       "source": "Report.lean",
       "source_anchor": {
         "declaration": "KFOL.Report.core_singleton_profiles",
-        "line": 123,
+        "line": 156,
         "column": 0,
-        "end_line": 128,
+        "end_line": 161,
         "end_column": 49,
         "exact_declaration": true
       }
@@ -31704,7 +32371,7 @@
       "kind": "theorem",
       "location": {
         "column": 0,
-        "line": 54
+        "line": 56
       },
       "module": "Report",
       "name": "KFOL.Report.core_source_interior",
@@ -31737,9 +32404,9 @@
       "source": "Report.lean",
       "source_anchor": {
         "declaration": "KFOL.Report.core_source_interior",
-        "line": 53,
+        "line": 55,
         "column": 0,
-        "end_line": 59,
+        "end_line": 61,
         "end_column": 44,
         "exact_declaration": true
       }
@@ -31767,7 +32434,7 @@
       "kind": "theorem",
       "location": {
         "column": 0,
-        "line": 62
+        "line": 64
       },
       "module": "Report",
       "name": "KFOL.Report.core_source_interior_realization",
@@ -31807,9 +32474,9 @@
       "source": "Report.lean",
       "source_anchor": {
         "declaration": "KFOL.Report.core_source_interior_realization",
-        "line": 61,
+        "line": 63,
         "column": 0,
-        "end_line": 72,
+        "end_line": 74,
         "end_column": 60,
         "exact_declaration": true
       }
@@ -31844,7 +32511,7 @@
       "kind": "theorem",
       "location": {
         "column": 0,
-        "line": 32
+        "line": 34
       },
       "module": "Report",
       "name": "KFOL.Report.core_source_probe_count",
@@ -31887,9 +32554,9 @@
       "source": "Report.lean",
       "source_anchor": {
         "declaration": "KFOL.Report.core_source_probe_count",
-        "line": 31,
+        "line": 33,
         "column": 0,
-        "end_line": 35,
+        "end_line": 37,
         "end_column": 41,
         "exact_declaration": true
       }
@@ -31916,7 +32583,7 @@
       "kind": "theorem",
       "location": {
         "column": 0,
-        "line": 25
+        "line": 27
       },
       "module": "Report",
       "name": "KFOL.Report.core_source_reconstruction",
@@ -31955,9 +32622,9 @@
       "source": "Report.lean",
       "source_anchor": {
         "declaration": "KFOL.Report.core_source_reconstruction",
-        "line": 24,
+        "line": 26,
         "column": 0,
-        "end_line": 29,
+        "end_line": 31,
         "end_column": 59,
         "exact_declaration": true
       }
@@ -31981,7 +32648,7 @@
       "kind": "theorem",
       "location": {
         "column": 0,
-        "line": 115
+        "line": 148
       },
       "module": "Report",
       "name": "KFOL.Report.core_ternary_obstruction",
@@ -32021,9 +32688,9 @@
       "source": "Report.lean",
       "source_anchor": {
         "declaration": "KFOL.Report.core_ternary_obstruction",
-        "line": 114,
+        "line": 147,
         "column": 0,
-        "end_line": 121,
+        "end_line": 154,
         "end_column": 37,
         "exact_declaration": true
       }
@@ -32051,7 +32718,7 @@
       "kind": "theorem",
       "location": {
         "column": 0,
-        "line": 131
+        "line": 164
       },
       "module": "Report",
       "name": "KFOL.Report.core_three_valuation_persistence",
@@ -32091,9 +32758,9 @@
       "source": "Report.lean",
       "source_anchor": {
         "declaration": "KFOL.Report.core_three_valuation_persistence",
-        "line": 130,
+        "line": 163,
         "column": 0,
-        "end_line": 141,
+        "end_line": 174,
         "end_column": 83,
         "exact_declaration": true
       }
@@ -32132,7 +32799,7 @@
       "kind": "theorem",
       "location": {
         "column": 0,
-        "line": 244
+        "line": 277
       },
       "module": "Report",
       "name": "KFOL.Report.core_typed_upper_clone_cover",
@@ -32197,9 +32864,9 @@
       "source": "Report.lean",
       "source_anchor": {
         "declaration": "KFOL.Report.core_typed_upper_clone_cover",
-        "line": 243,
+        "line": 276,
         "column": 0,
-        "end_line": 266,
+        "end_line": 299,
         "end_column": 44,
         "exact_declaration": true
       }
@@ -32232,7 +32899,7 @@
       "kind": "theorem",
       "location": {
         "column": 0,
-        "line": 215
+        "line": 248
       },
       "module": "Report",
       "name": "KFOL.Report.core_variable_bound_obstruction",
@@ -32291,9 +32958,9 @@
       "source": "Report.lean",
       "source_anchor": {
         "declaration": "KFOL.Report.core_variable_bound_obstruction",
-        "line": 214,
+        "line": 247,
         "column": 0,
-        "end_line": 230,
+        "end_line": 263,
         "end_column": 47,
         "exact_declaration": true
       }
@@ -32316,7 +32983,7 @@
       "kind": "theorem",
       "location": {
         "column": 0,
-        "line": 611
+        "line": 644
       },
       "module": "Report",
       "name": "KFOL.Report.expanded_variety_envelope",
@@ -32363,9 +33030,9 @@
       "source": "Report.lean",
       "source_anchor": {
         "declaration": "KFOL.Report.expanded_variety_envelope",
-        "line": 610,
+        "line": 643,
         "column": 0,
-        "end_line": 621,
+        "end_line": 654,
         "end_column": 51,
         "exact_declaration": true
       }
@@ -32392,7 +33059,7 @@
       "kind": "theorem",
       "location": {
         "column": 0,
-        "line": 552
+        "line": 585
       },
       "module": "Report",
       "name": "KFOL.Report.finite_powerset_relational_representation",
@@ -32421,9 +33088,9 @@
       "source": "Report.lean",
       "source_anchor": {
         "declaration": "KFOL.Report.finite_powerset_relational_representation",
-        "line": 551,
+        "line": 584,
         "column": 0,
-        "end_line": 562,
+        "end_line": 595,
         "end_column": 93,
         "exact_declaration": true
       }
@@ -32466,7 +33133,7 @@
       "kind": "theorem",
       "location": {
         "column": 0,
-        "line": 179
+        "line": 212
       },
       "module": "Report",
       "name": "KFOL.Report.idempotency_certificates",
@@ -32517,9 +33184,9 @@
       "source": "Report.lean",
       "source_anchor": {
         "declaration": "KFOL.Report.idempotency_certificates",
-        "line": 178,
+        "line": 211,
         "column": 0,
-        "end_line": 195,
+        "end_line": 228,
         "end_column": 40,
         "exact_declaration": true
       }
@@ -32547,7 +33214,7 @@
       "kind": "theorem",
       "location": {
         "column": 0,
-        "line": 605
+        "line": 638
       },
       "module": "Report",
       "name": "KFOL.Report.intersection_not_definable",
@@ -32581,9 +33248,9 @@
       "source": "Report.lean",
       "source_anchor": {
         "declaration": "KFOL.Report.intersection_not_definable",
-        "line": 604,
+        "line": 637,
         "column": 0,
-        "end_line": 608,
+        "end_line": 641,
         "end_column": 29,
         "exact_declaration": true
       }
@@ -32612,7 +33279,7 @@
       "kind": "theorem",
       "location": {
         "column": 0,
-        "line": 284
+        "line": 317
       },
       "module": "Report",
       "name": "KFOL.Report.native_nonfinite_basis",
@@ -32663,9 +33330,9 @@
       "source": "Report.lean",
       "source_anchor": {
         "declaration": "KFOL.Report.native_nonfinite_basis",
-        "line": 283,
+        "line": 316,
         "column": 0,
-        "end_line": 293,
+        "end_line": 326,
         "end_column": 38,
         "exact_declaration": true
       }
@@ -32685,7 +33352,7 @@
       "kind": "theorem",
       "location": {
         "column": 0,
-        "line": 590
+        "line": 623
       },
       "module": "Report",
       "name": "KFOL.Report.owned_choice_relational_representation",
@@ -32713,9 +33380,9 @@
       "source": "Report.lean",
       "source_anchor": {
         "declaration": "KFOL.Report.owned_choice_relational_representation",
-        "line": 589,
+        "line": 622,
         "column": 0,
-        "end_line": 595,
+        "end_line": 628,
         "end_column": 39,
         "exact_declaration": true
       }
@@ -32738,7 +33405,7 @@
       "kind": "theorem",
       "location": {
         "column": 0,
-        "line": 565
+        "line": 598
       },
       "module": "Report",
       "name": "KFOL.Report.owned_choice_zero_extension",
@@ -32767,9 +33434,9 @@
       "source": "Report.lean",
       "source_anchor": {
         "declaration": "KFOL.Report.owned_choice_zero_extension",
-        "line": 564,
+        "line": 597,
         "column": 0,
-        "end_line": 576,
+        "end_line": 609,
         "end_column": 37,
         "exact_declaration": true
       }
@@ -32795,7 +33462,7 @@
       "kind": "theorem",
       "location": {
         "column": 0,
-        "line": 579
+        "line": 612
       },
       "module": "Report",
       "name": "KFOL.Report.owned_choice_zero_representation",
@@ -32825,9 +33492,9 @@
       "source": "Report.lean",
       "source_anchor": {
         "declaration": "KFOL.Report.owned_choice_zero_representation",
-        "line": 578,
+        "line": 611,
         "column": 0,
-        "end_line": 587,
+        "end_line": 620,
         "end_column": 47,
         "exact_declaration": true
       }
@@ -32851,7 +33518,7 @@
       "kind": "theorem",
       "location": {
         "column": 0,
-        "line": 233
+        "line": 266
       },
       "module": "Report",
       "name": "KFOL.Report.owner_four_variable_obstruction",
@@ -32895,9 +33562,9 @@
       "source": "Report.lean",
       "source_anchor": {
         "declaration": "KFOL.Report.owner_four_variable_obstruction",
-        "line": 232,
+        "line": 265,
         "column": 0,
-        "end_line": 241,
+        "end_line": 274,
         "end_column": 49,
         "exact_declaration": true
       }
@@ -32924,7 +33591,7 @@
       "kind": "theorem",
       "location": {
         "column": 0,
-        "line": 358
+        "line": 391
       },
       "module": "Report",
       "name": "KFOL.Report.pair_game_boolean_full_abstraction",
@@ -32973,9 +33640,9 @@
       "source": "Report.lean",
       "source_anchor": {
         "declaration": "KFOL.Report.pair_game_boolean_full_abstraction",
-        "line": 357,
+        "line": 390,
         "column": 0,
-        "end_line": 376,
+        "end_line": 409,
         "end_column": 50,
         "exact_declaration": true
       }
@@ -33008,7 +33675,7 @@
       "kind": "theorem",
       "location": {
         "column": 0,
-        "line": 624
+        "line": 657
       },
       "module": "Report",
       "name": "KFOL.Report.permutation_envelope_cardinality",
@@ -33043,9 +33710,9 @@
       "source": "Report.lean",
       "source_anchor": {
         "declaration": "KFOL.Report.permutation_envelope_cardinality",
-        "line": 623,
+        "line": 656,
         "column": 0,
-        "end_line": 627,
+        "end_line": 660,
         "end_column": 52,
         "exact_declaration": true
       }
@@ -33083,7 +33750,7 @@
       "kind": "theorem",
       "location": {
         "column": 0,
-        "line": 423
+        "line": 456
       },
       "module": "Report",
       "name": "KFOL.Report.public_choice_small_support",
@@ -33133,9 +33800,9 @@
       "source": "Report.lean",
       "source_anchor": {
         "declaration": "KFOL.Report.public_choice_small_support",
-        "line": 422,
+        "line": 455,
         "column": 0,
-        "end_line": 429,
+        "end_line": 462,
         "end_column": 43,
         "exact_declaration": true
       }
@@ -33174,7 +33841,7 @@
       "kind": "theorem",
       "location": {
         "column": 0,
-        "line": 432
+        "line": 465
       },
       "module": "Report",
       "name": "KFOL.Report.public_choice_support_sharp",
@@ -33217,9 +33884,9 @@
       "source": "Report.lean",
       "source_anchor": {
         "declaration": "KFOL.Report.public_choice_support_sharp",
-        "line": 431,
+        "line": 464,
         "column": 0,
-        "end_line": 439,
+        "end_line": 472,
         "end_column": 43,
         "exact_declaration": true
       }
@@ -33237,7 +33904,7 @@
       "kind": "theorem",
       "location": {
         "column": 0,
-        "line": 269
+        "line": 302
       },
       "module": "Report",
       "name": "KFOL.Report.public_equilibrium_strategic_form",
@@ -33269,9 +33936,9 @@
       "source": "Report.lean",
       "source_anchor": {
         "declaration": "KFOL.Report.public_equilibrium_strategic_form",
-        "line": 268,
+        "line": 301,
         "column": 0,
-        "end_line": 275,
+        "end_line": 308,
         "end_column": 49,
         "exact_declaration": true
       }
@@ -33295,7 +33962,7 @@
       "kind": "theorem",
       "location": {
         "column": 0,
-        "line": 633
+        "line": 666
       },
       "module": "Report",
       "name": "KFOL.Report.public_nonidempotence",
@@ -33327,9 +33994,9 @@
       "source": "Report.lean",
       "source_anchor": {
         "declaration": "KFOL.Report.public_nonidempotence",
-        "line": 632,
+        "line": 665,
         "column": 0,
-        "end_line": 637,
+        "end_line": 670,
         "end_column": 55,
         "exact_declaration": true
       }
@@ -33366,7 +34033,7 @@
       "kind": "theorem",
       "location": {
         "column": 0,
-        "line": 537
+        "line": 570
       },
       "module": "Report",
       "name": "KFOL.Report.public_query_compilation",
@@ -33427,9 +34094,9 @@
       "source": "Report.lean",
       "source_anchor": {
         "declaration": "KFOL.Report.public_query_compilation",
-        "line": 536,
+        "line": 569,
         "column": 0,
-        "end_line": 542,
+        "end_line": 575,
         "end_column": 31,
         "exact_declaration": true
       }
@@ -33445,7 +34112,7 @@
       "kind": "theorem",
       "location": {
         "column": 0,
-        "line": 545
+        "line": 578
       },
       "module": "Report",
       "name": "KFOL.Report.public_query_equivalence",
@@ -33479,9 +34146,9 @@
       "source": "Report.lean",
       "source_anchor": {
         "declaration": "KFOL.Report.public_query_equivalence",
-        "line": 544,
+        "line": 577,
         "column": 0,
-        "end_line": 549,
+        "end_line": 582,
         "end_column": 37,
         "exact_declaration": true
       }
@@ -33496,7 +34163,7 @@
       "kind": "theorem",
       "location": {
         "column": 0,
-        "line": 278
+        "line": 311
       },
       "module": "Report",
       "name": "KFOL.Report.public_term_interpretation",
@@ -33523,9 +34190,9 @@
       "source": "Report.lean",
       "source_anchor": {
         "declaration": "KFOL.Report.public_term_interpretation",
-        "line": 277,
+        "line": 310,
         "column": 0,
-        "end_line": 281,
+        "end_line": 314,
         "end_column": 42,
         "exact_declaration": true
       }
@@ -33556,7 +34223,7 @@
       "kind": "theorem",
       "location": {
         "column": 0,
-        "line": 654
+        "line": 687
       },
       "module": "Report",
       "name": "KFOL.Report.reciprocal_values",
@@ -33591,9 +34258,9 @@
       "source": "Report.lean",
       "source_anchor": {
         "declaration": "KFOL.Report.reciprocal_values",
-        "line": 653,
+        "line": 686,
         "column": 0,
-        "end_line": 656,
+        "end_line": 689,
         "end_column": 43,
         "exact_declaration": true
       }
@@ -33641,7 +34308,7 @@
       "kind": "theorem",
       "location": {
         "column": 0,
-        "line": 442
+        "line": 475
       },
       "module": "Report",
       "name": "KFOL.Report.reset_circuit_exponential_tables",
@@ -33711,9 +34378,9 @@
       "source": "Report.lean",
       "source_anchor": {
         "declaration": "KFOL.Report.reset_circuit_exponential_tables",
-        "line": 441,
+        "line": 474,
         "column": 0,
-        "end_line": 448,
+        "end_line": 481,
         "end_column": 48,
         "exact_declaration": true
       }
@@ -33741,7 +34408,7 @@
       "kind": "theorem",
       "location": {
         "column": 0,
-        "line": 494
+        "line": 527
       },
       "module": "Report",
       "name": "KFOL.Report.reset_circuit_generator",
@@ -33789,9 +34456,9 @@
       "source": "Report.lean",
       "source_anchor": {
         "declaration": "KFOL.Report.reset_circuit_generator",
-        "line": 493,
+        "line": 526,
         "column": 0,
-        "end_line": 500,
+        "end_line": 533,
         "end_column": 39,
         "exact_declaration": true
       }
@@ -33823,7 +34490,7 @@
       "kind": "theorem",
       "location": {
         "column": 0,
-        "line": 483
+        "line": 516
       },
       "module": "Report",
       "name": "KFOL.Report.reset_circuit_reduction",
@@ -33885,9 +34552,9 @@
       "source": "Report.lean",
       "source_anchor": {
         "declaration": "KFOL.Report.reset_circuit_reduction",
-        "line": 482,
+        "line": 515,
         "column": 0,
-        "end_line": 491,
+        "end_line": 524,
         "end_column": 39,
         "exact_declaration": true
       }
@@ -33942,7 +34609,7 @@
       "kind": "theorem",
       "location": {
         "column": 0,
-        "line": 451
+        "line": 484
       },
       "module": "Report",
       "name": "KFOL.Report.reset_circuit_tree_succinctness",
@@ -34031,9 +34698,9 @@
       "source": "Report.lean",
       "source_anchor": {
         "declaration": "KFOL.Report.reset_circuit_tree_succinctness",
-        "line": 450,
+        "line": 483,
         "column": 0,
-        "end_line": 466,
+        "end_line": 499,
         "end_column": 47,
         "exact_declaration": true
       }
@@ -34088,9 +34755,9 @@
       "source": "Report.lean",
       "source_anchor": {
         "declaration": "KFOL.Report.reset_circuit_tree_succinctness",
-        "line": 450,
+        "line": 483,
         "column": 0,
-        "end_line": 466,
+        "end_line": 499,
         "end_column": 47,
         "exact_declaration": false
       }
@@ -34119,7 +34786,7 @@
       "kind": "theorem",
       "location": {
         "column": 0,
-        "line": 209
+        "line": 242
       },
       "module": "Report",
       "name": "KFOL.Report.reset_family_product",
@@ -34154,9 +34821,9 @@
       "source": "Report.lean",
       "source_anchor": {
         "declaration": "KFOL.Report.reset_family_product",
-        "line": 208,
+        "line": 241,
         "column": 0,
-        "end_line": 212,
+        "end_line": 245,
         "end_column": 36,
         "exact_declaration": true
       }
@@ -34178,7 +34845,7 @@
       "kind": "theorem",
       "location": {
         "column": 0,
-        "line": 598
+        "line": 631
       },
       "module": "Report",
       "name": "KFOL.Report.reset_no_relational_representation",
@@ -34206,9 +34873,9 @@
       "source": "Report.lean",
       "source_anchor": {
         "declaration": "KFOL.Report.reset_no_relational_representation",
-        "line": 597,
+        "line": 630,
         "column": 0,
-        "end_line": 602,
+        "end_line": 635,
         "end_column": 65,
         "exact_declaration": true
       }
@@ -34233,7 +34900,7 @@
       "kind": "theorem",
       "location": {
         "column": 0,
-        "line": 198
+        "line": 231
       },
       "module": "Report",
       "name": "KFOL.Report.reset_substitution",
@@ -34274,9 +34941,9 @@
       "source": "Report.lean",
       "source_anchor": {
         "declaration": "KFOL.Report.reset_substitution",
-        "line": 197,
+        "line": 230,
         "column": 0,
-        "end_line": 206,
+        "end_line": 239,
         "end_column": 34,
         "exact_declaration": true
       }
@@ -34309,7 +34976,7 @@
       "kind": "theorem",
       "location": {
         "column": 0,
-        "line": 512
+        "line": 545
       },
       "module": "Report",
       "name": "KFOL.Report.reset_table_size",
@@ -34356,9 +35023,9 @@
       "source": "Report.lean",
       "source_anchor": {
         "declaration": "KFOL.Report.reset_table_size",
-        "line": 511,
+        "line": 544,
         "column": 0,
-        "end_line": 515,
+        "end_line": 548,
         "end_column": 36,
         "exact_declaration": true
       }
@@ -34392,7 +35059,7 @@
       "kind": "theorem",
       "location": {
         "column": 0,
-        "line": 325
+        "line": 358
       },
       "module": "Report",
       "name": "KFOL.Report.round_product_beliefs",
@@ -34436,9 +35103,9 @@
       "source": "Report.lean",
       "source_anchor": {
         "declaration": "KFOL.Report.round_product_beliefs",
-        "line": 324,
+        "line": 357,
         "column": 0,
-        "end_line": 333,
+        "end_line": 366,
         "end_column": 37,
         "exact_declaration": true
       }
@@ -34475,7 +35142,7 @@
       "kind": "theorem",
       "location": {
         "column": 0,
-        "line": 312
+        "line": 345
       },
       "module": "Report",
       "name": "KFOL.Report.round_profile_consistency",
@@ -34522,9 +35189,9 @@
       "source": "Report.lean",
       "source_anchor": {
         "declaration": "KFOL.Report.round_profile_consistency",
-        "line": 311,
+        "line": 344,
         "column": 0,
-        "end_line": 322,
+        "end_line": 355,
         "end_column": 41,
         "exact_declaration": true
       }
@@ -34561,7 +35228,7 @@
       "kind": "theorem",
       "location": {
         "column": 0,
-        "line": 296
+        "line": 329
       },
       "module": "Report",
       "name": "KFOL.Report.round_protocol_foundations",
@@ -34608,9 +35275,9 @@
       "source": "Report.lean",
       "source_anchor": {
         "declaration": "KFOL.Report.round_protocol_foundations",
-        "line": 295,
+        "line": 328,
         "column": 0,
-        "end_line": 309,
+        "end_line": 342,
         "end_column": 42,
         "exact_declaration": true
       }
@@ -34631,7 +35298,7 @@
       "kind": "theorem",
       "location": {
         "column": 0,
-        "line": 660
+        "line": 693
       },
       "module": "Report",
       "name": "KFOL.Report.scalar_contextual_equivalence",
@@ -34662,9 +35329,9 @@
       "source": "Report.lean",
       "source_anchor": {
         "declaration": "KFOL.Report.scalar_contextual_equivalence",
-        "line": 659,
+        "line": 692,
         "column": 0,
-        "end_line": 663,
+        "end_line": 696,
         "end_column": 61,
         "exact_declaration": true
       }
@@ -34720,7 +35387,7 @@
       "kind": "theorem",
       "location": {
         "column": 0,
-        "line": 406
+        "line": 439
       },
       "module": "Report",
       "name": "KFOL.Report.scalar_diagonal_security",
@@ -34784,9 +35451,9 @@
       "source": "Report.lean",
       "source_anchor": {
         "declaration": "KFOL.Report.scalar_diagonal_security",
-        "line": 405,
+        "line": 438,
         "column": 0,
-        "end_line": 420,
+        "end_line": 453,
         "end_column": 40,
         "exact_declaration": true
       }
@@ -34804,7 +35471,7 @@
       "kind": "theorem",
       "location": {
         "column": 0,
-        "line": 647
+        "line": 680
       },
       "module": "Report",
       "name": "KFOL.Report.scalar_diagonal_values",
@@ -34830,9 +35497,9 @@
       "source": "Report.lean",
       "source_anchor": {
         "declaration": "KFOL.Report.scalar_diagonal_values",
-        "line": 646,
+        "line": 679,
         "column": 0,
-        "end_line": 650,
+        "end_line": 683,
         "end_column": 52,
         "exact_declaration": true
       }
@@ -34868,7 +35535,7 @@
       "kind": "theorem",
       "location": {
         "column": 0,
-        "line": 336
+        "line": 369
       },
       "module": "Report",
       "name": "KFOL.Report.scalar_parallel_laws",
@@ -34903,9 +35570,9 @@
       "source": "Report.lean",
       "source_anchor": {
         "declaration": "KFOL.Report.scalar_parallel_laws",
-        "line": 335,
+        "line": 368,
         "column": 0,
-        "end_line": 343,
+        "end_line": 376,
         "end_column": 36,
         "exact_declaration": true
       }
@@ -34943,7 +35610,7 @@
       "kind": "theorem",
       "location": {
         "column": 0,
-        "line": 391
+        "line": 424
       },
       "module": "Report",
       "name": "KFOL.Report.scalar_rational_observation_order",
@@ -34999,9 +35666,9 @@
       "source": "Report.lean",
       "source_anchor": {
         "declaration": "KFOL.Report.scalar_rational_observation_order",
-        "line": 390,
+        "line": 423,
         "column": 0,
-        "end_line": 402,
+        "end_line": 435,
         "end_column": 49,
         "exact_declaration": true
       }
@@ -35037,7 +35704,7 @@
       "kind": "theorem",
       "location": {
         "column": 0,
-        "line": 346
+        "line": 379
       },
       "module": "Report",
       "name": "KFOL.Report.scalar_rational_values",
@@ -35085,9 +35752,9 @@
       "source": "Report.lean",
       "source_anchor": {
         "declaration": "KFOL.Report.scalar_rational_values",
-        "line": 345,
+        "line": 378,
         "column": 0,
-        "end_line": 355,
+        "end_line": 388,
         "end_column": 38,
         "exact_declaration": true
       }
@@ -35107,7 +35774,7 @@
       "kind": "theorem",
       "location": {
         "column": 0,
-        "line": 478
+        "line": 511
       },
       "module": "Report",
       "name": "KFOL.Report.serial_order_independence",
@@ -35133,9 +35800,9 @@
       "source": "Report.lean",
       "source_anchor": {
         "declaration": "KFOL.Report.serial_order_independence",
-        "line": 477,
+        "line": 510,
         "column": 0,
-        "end_line": 480,
+        "end_line": 513,
         "end_column": 39,
         "exact_declaration": true
       }
@@ -35174,7 +35841,7 @@
       "kind": "theorem",
       "location": {
         "column": 0,
-        "line": 518
+        "line": 551
       },
       "module": "Report",
       "name": "KFOL.Report.two_player_forcing_coordinates",
@@ -35221,9 +35888,9 @@
       "source": "Report.lean",
       "source_anchor": {
         "declaration": "KFOL.Report.two_player_forcing_coordinates",
-        "line": 517,
+        "line": 550,
         "column": 0,
-        "end_line": 532,
+        "end_line": 565,
         "end_column": 46,
         "exact_declaration": true
       }
@@ -35250,7 +35917,7 @@
       "kind": "theorem",
       "location": {
         "column": 0,
-        "line": 469
+        "line": 502
       },
       "module": "Report",
       "name": "KFOL.Report.well_founded_quantifier_fold",
@@ -35293,9 +35960,9 @@
       "source": "Report.lean",
       "source_anchor": {
         "declaration": "KFOL.Report.well_founded_quantifier_fold",
-        "line": 468,
+        "line": 501,
         "column": 0,
-        "end_line": 475,
+        "end_line": 508,
         "end_column": 46,
         "exact_declaration": true
       }
@@ -50768,6 +51435,13 @@
       "module": "Mathlib.Data.Set.Basic",
       "name": "Set.decidableEq",
       "type": "{α : Type u} → DecidableEq (Set α)",
+      "family": "mathlib"
+    },
+    {
+      "kind": "definition",
+      "module": "Mathlib.Order.SetNotation",
+      "name": "Set.iUnion",
+      "type": "{α : Type u} → {ι : Sort v} → (ι → Set α) → Set α",
       "family": "mathlib"
     },
     {

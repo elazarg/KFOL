@@ -8,7 +8,7 @@ Other report results remain optional and have their own evidence status.
 | Audit entrypoint | Mathematical statements | Presentation |
 | --- | ---: | --- |
 | [Paper.lean](../Paper.lean) | 77 | Main text and the report claims it cites; 620 lines |
-| [Report.lean](../Report.lean) | 61 | Further report results and proof ingredients |
+| [Report.lean](../Report.lean) | 64 | Further report results and proof ingredients |
 | [Results/Certificates](../KFOL/Results/Certificates.lean) | 140 preserved contracts | Original full statements, including native machines, codecs and intermediate invariants |
 
 Every root proof names one library theorem. Both root files have no semantic
@@ -26,7 +26,7 @@ regular representation are in `Definitions/Relational`.
 | Definition surface | Theorem types | Semantic declarations | Source files | Written review units |
 | --- | ---: | ---: | ---: | ---: |
 | Paper | 77 | 648 | 36 | 342 |
-| Report | 61 | 614 | 32 | 275 |
+| Report | 64 | 615 | 32 | 276 |
 
 The slices overlap and exclude theorem proof bodies. These meaning indexes do
 not replace the human comparison with the manuscript or the proof/axiom audits.
@@ -158,3 +158,12 @@ singleton profiles and non-realizability. These uniform symbolic proofs replace
 the second finite operation's enumerated separating relation. Three further
 complete claims are in `Report.lean`. The independent research checker generates
 both patches from their formulas and retains the exhaustive unary checks.
+
+`Core/LocalNormalForm` proves that ternary relational tests already force
+source decomposition, canonicality and correct prime-guard interpretation at
+finite arity. No role finiteness is used for source decomposition itself.
+`Core/ProfileEnvelope` constructs each core profile's greatest completion by
+reset against the union of all inputs. Core realizability within one profile
+class is not order-convex: explicit core lower and upper bounds contain the non-core
+ternary obstruction between them. These three further report claims are
+kernel-checked; they do not assert the full intrinsic characterization.

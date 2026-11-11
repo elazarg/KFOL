@@ -40,6 +40,18 @@ variable {Role : Type u} {Var : Type v}
       cases h
     simp [representative, hn]
 
+@[simp] theorem passive_representative (three : Fin 3 ↪ Role) (k : Role) (p : Passive k) :
+    passive k (representative three k p) = p := by
+  cases p with
+  | atom r => exact (passive_eq_atom_iff _ _ _).mpr rfl
+  | neutral =>
+    cases h : passive k (representative three k .neutral) with
+    | neutral => rfl
+    | atom r =>
+      have he := (passive_eq_atom_iff _ _ _).mp h
+      have hp := (representative_atom_iff three k .neutral r).mp he
+      cases hp
+
 @[simp] theorem probe_source (three : Fin 3 ↪ Role) (k : Role) (j : Var) (p : Pattern k j) :
     probe three k j p j = WinnerSet.singleton k := by
   classical

@@ -194,6 +194,8 @@ import all KFOL.Congruences.Symmetry
 import all KFOL.Congruences.Thresholds
 import all KFOL.Congruences.UniformMatroid
 import all KFOL.Core
+import all KFOL.Core.LocalNormalForm
+import all KFOL.Core.ProfileEnvelope
 import all KFOL.Core.FourValuation
 import all KFOL.Core.RelationalInterpolation
 import all KFOL.Core.TernaryInterpolation

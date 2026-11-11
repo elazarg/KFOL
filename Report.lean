@@ -8,6 +8,8 @@ public import KFOL.Query.Compilation
 public import KFOL.Query.Relations
 public import KFOL.Query.ZeroExtension
 public import KFOL.Core.TernaryInterpolation
+public import KFOL.Core.LocalNormalForm
+public import KFOL.Core.ProfileEnvelope
 public import KFOL.Audit.Namespace
 
 /-! # Audited report statements and mathematical proof ingredients
@@ -88,6 +90,37 @@ theorem core_pairwise_obstruction {Role : Type u} (three : Fin 3 ↪ Role) :
         s.eval v = WinnerSet.singleton r)) ∧
     ¬∃ t : Term Role (Fin 3), t.IsCore ∧ ∀ v, t.eval v = Core.pairwiseCounterexample three v :=
   Results.Algebra.core_pairwise_obstruction three
+
+theorem core_local_normal_forms {Role : Type u} [Fintype Role]
+    {Var : Type v} [Fintype Var] (three : Fin 3 ↪ Role)
+    (f : (Var → WinnerSet Role) → WinnerSet Role) (hf : Core.LocallyInterpolable 3 f) :
+    (∀ v k, k ∈ (f v).val ↔ ∃ j, k ∈ (v j).val ∧
+      k ∈ (f (Core.Sources.probe three k j (Core.Sources.pattern k j v))).val) ∧
+    Core.Sources.Canonical (Core.Sources.normalForm three f) ∧
+    ∀ v, Core.Sources.meaning (Core.Sources.normalForm three f) v = (f v).val :=
+  Core.Sources.local_normal_forms three f hf
+
+theorem core_profile_maximum {Role : Type u} [Fintype Role]
+    {Var : Type v} [Fintype Var] (three : Fin 3 ↪ Role)
+    (t : Term Role Var) (ht : t.IsCore) :
+    ∃ e : Term Role Var, e.IsCore ∧
+      (∀ v r, e.eval v = WinnerSet.singleton r ↔ t.eval v = WinnerSet.singleton r) ∧
+      (∀ v, (t.eval v).Ambiguous → (e.eval v).val = ⋃ j, (v j).val) ∧
+      ∀ f : (Var → WinnerSet Role) → WinnerSet Role,
+        (∀ v, (f v).val ⊆ ⋃ j, (v j).val) →
+        (∀ v r, f v = WinnerSet.singleton r ↔ t.eval v = WinnerSet.singleton r) →
+        ∀ v, (f v).val ⊆ (e.eval v).val :=
+  Core.exists_profile_maximum three t ht
+
+theorem core_profile_nonconvexity {Role : Type u} [Fintype Role] (three : Fin 3 ↪ Role) :
+    ∃ s t : Term Role (Fin 3), s.IsCore ∧ t.IsCore ∧
+      (∀ v r, s.eval v = WinnerSet.singleton r ↔ t.eval v = WinnerSet.singleton r) ∧
+      (∀ v r, Core.threewiseCounterexample three v = WinnerSet.singleton r ↔
+        t.eval v = WinnerSet.singleton r) ∧
+      (∀ v, (s.eval v).val ⊆ (Core.threewiseCounterexample three v).val ∧
+        (Core.threewiseCounterexample three v).val ⊆ (t.eval v).val) ∧
+      ¬∃ u : Term Role (Fin 3), u.IsCore ∧ ∀ v, u.eval v = Core.threewiseCounterexample three v :=
+  Core.profile_fiber_nonconvex three
 
 theorem core_local_interpolation {Role : Type u} {Var : Type v} (n : ℕ)
     (f : (Var → WinnerSet Role) → WinnerSet Role) :
