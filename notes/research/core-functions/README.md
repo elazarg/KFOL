@@ -10,6 +10,17 @@ At four inputs it need not even leave one pointwise core minorant: four short
 patches agree three at a time, while their common value violates a four-row
 cover law. This stronger obstruction is proved in `Core/MinorantPatches` and
 restated as `Report.core_three_local_without_minorant`.
+Five explicit five-input patches raise this to four-point interpolation,
+still without a core minorant, in `Core/MinorantFivePatches`; the root statement
+is `Report.core_four_local_without_minorant`. The finite status certificate is
+connected to arbitrary role types by the union-extension lemmas in `Core/StatusModel`.
+
+The independent `four-point-candidate.py` reproduces those witnesses and their
+seven-value maximality. `five-point-candidate.py` checks a further six-patch
+example at K=3: it is five-point interpolable, has a core minorant, and violates
+a six-row persistence law. This latter example is research evidence, with no
+Lean theorem yet. `transport-orders.md` records the conditional owner-elimination
+criterion suggested by its separating relation; no completeness claim is made.
 
 ## Structural graph representation
 

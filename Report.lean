@@ -9,6 +9,7 @@ public import KFOL.Query.Relations
 public import KFOL.Query.ZeroExtension
 public import KFOL.Core.TernaryInterpolation
 public import KFOL.Core.MinorantPatches
+public import KFOL.Core.MinorantFivePatches
 public import KFOL.Core.LocalNormalForm
 public import KFOL.Core.ProfileEnvelope
 public import KFOL.Audit.Namespace
@@ -207,6 +208,12 @@ theorem core_three_local_without_minorant {Role : Type u} (three : Fin 3 ↪ Rol
       Core.LocallyInterpolable 3 f ∧ Core.PreservesInvariants 3 f ∧
         ¬∃ t : Term Role (Fin 4), t.IsCore ∧ ∀ v, (t.eval v).val ⊆ (f v).val :=
   Core.exists_three_local_without_core_minorant three
+
+theorem core_four_local_without_minorant {Role : Type u} (three : Fin 3 ↪ Role) :
+    ∃ f : (Fin 5 → WinnerSet Role) → WinnerSet Role,
+      Core.LocallyInterpolable 4 f ∧ Core.PreservesInvariants 4 f ∧
+        ¬∃ t : Term Role (Fin 5), t.IsCore ∧ ∀ v, (t.eval v).val ⊆ (f v).val :=
+  Core.exists_four_local_without_core_minorant three
 
 theorem core_singleton_profiles {Role : Type u} [DecidableEq Role] [Fintype Role]
     {Var : Type v} [Fintype Var] (three : Fin 3 ↪ Role)

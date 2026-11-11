@@ -1,4 +1,5 @@
 import KFOL.Core.MinorantPatches
+import KFOL.Core.MinorantFivePatches
 
 open KFOL Core
 
@@ -19,3 +20,10 @@ example : ∃ f : (Fin 4 → WinnerSet ℕ) → WinnerSet ℕ,
   refine ⟨f, hf, ?_⟩
   rintro ⟨t, ht, he⟩
   exact hn ⟨t, ht, fun v => by rw [he v]⟩
+
+-- Five explicit patches raise the obstruction to four-point tests, uniformly
+-- in extra roles. Their finite status certificate is checked by the kernel.
+example : ∃ f : (Fin 5 → WinnerSet ℕ) → WinnerSet ℕ,
+    LocallyInterpolable 4 f ∧ PreservesInvariants 4 f ∧
+      ¬∃ t : Term ℕ (Fin 5), t.IsCore ∧ ∀ v, (t.eval v).val ⊆ (f v).val :=
+  exists_four_local_without_core_minorant ⟨Fin.val, Fin.val_injective⟩

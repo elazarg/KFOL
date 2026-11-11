@@ -17,8 +17,7 @@ forms (\cref{app:core-binary}); at every arity, singleton profiles and their
 greatest completions are characterized (\cref{app:core-profiles}), prime
 source-guard normal forms describe their full values
 (\cref{app:core-source-guards}), and finite colored graphs characterize
-their joint realizability (\cref{app:core-colored-graphs}). Binary and
-ternary compatibility tests are insufficient, even for the existence of
+their joint realizability (\cref{app:core-colored-graphs}). Tests on at most four valuations are insufficient, even for the existence of
 a pointwise core minorant (\cref{app:core-pairwise});
 joint compatibility is tested on source probes (\cref{app:core-compatibility}), and a finite
 saturation decides which operations are terms (\cref{app:core-cuts});
@@ -1369,6 +1368,94 @@ Finally, direct evaluation gives
 \]
 Every pointwise minorant of $Q$ fails all four memberships in $(*)$,
 so none can be a core operation.
+\end{proof}
+
+
+The same failure occurs for four-point interpolation with five inputs.
+
+\begin{theorem}[Four-point interpolation without a core minorant]\label{core:thm:four-local-minorant}
+For every $K\geq3$, there is a five-input operation $R$ that is
+four-point interpolable and preserves every quaternary invariant relation,
+but no core term $t$ satisfies $t(S)\subseteq R(S)$ at every valuation.
+\end{theorem}
+\begin{proof}
+Fix distinct $a,b,c$. Use the following five core expressions, where every
+$+$ denotes the fixed derived union term:
+{\small
+\[
+\begin{aligned}
+ R_0&=((X\star_cW)\star_a(Y\star_c(Z+V)))+(X\star_b(V\star_a(Z\star_b(Y+W))))\\
+ &\quad+((X\star_cZ)+(X\star_b(W\star_bV)))+(Y\star_a(X\star_b(V\star_b(Z\star_cW))))\\
+ R_1&=(Y\star_c(V+(Z\star_b(X+W))))+(Y\star_b(X+(X\star_c(Z+W))))\\
+ &\quad+(X\star_c(Y\star_c(V\star_c(Z\star_aW))))+(Y\star_c(Z\star_a(W\star_bV)))\\
+ &\quad+(X\star_b(Y\star_b(Z\star_aV)))+(X\star_b(Y\star_b(W\star_bV)))\\
+ R_2&=(Z+(X\star_b(Y\star_a(Z\star_bV))))+((Z\star_bW)\star_a(Y\star_b(X\star_cW)))\\
+ &\quad+(X\star_b(W\star_b(V\star_b(Y\star_aZ))))+(Z\star_a(Y\star_c(W\star_bV)))\\
+ &\quad+(Z\star_a(X\star_c(Y\star_cV)))+((Y\star_aX)\star_bZ)\\
+ R_3&=((Y\star_cV)\star_a(W\star_c(X\star_bZ)))+(W\star_a((X\star_bY)\star_c(Y+Z)))\\
+ &\quad+((Z\star_cW)\star_a(X\star_b(Y\star_bV)))+((Z\star_cW)\star_a(X\star_c(Y\star_cV)))\\
+ &\quad+(((Y\star_aX)\star_bZ)\star_cW)\\
+ R_4&=(V\star_a(Y+(Z\star_b(X+W))))+(X\star_c(V\star_c(W+(Y\star_aZ))))\\
+ &\quad+(V\star_b(Z\star_c(W\star_a(X\star_bY))))
+\end{aligned}
+\]}
+Split each input into its three named singleton statuses or a passive
+status. In each of the $4^5$ cases, at least four expressions reduce to
+the same union of named atoms and passive inputs. This finite identity
+check treats each passive input as an independent marker: replacing it by
+any nonempty set other than the named atoms preserves the choice branches,
+because no union containing it can be a named singleton. Let $R$ be the
+common value. Every four valuations leave one common candidate, giving
+four-point interpolation and relational preservation.
+
+For non-realizability, evaluate a core term at the five rows
+\[
+\begin{array}{c|ccccc|c}
+ &X&Y&Z&W&V&R\\\hline
+ A&\{a\}&\{b\}&\{b\}&\{b,c\}&\{c\}&\{b,c\}\\
+ B&\{a\}&\{b\}&\{a\}&\{a\}&\{a\}&\{a\}\\
+ C&\{c\}&\{c\}&\{b\}&\{c\}&\{a\}&\{a,c\}\\
+ D&\{c\}&\{b,c\}&\{b\}&\{a\}&\{b\}&\{b,c\}\\
+ E&\{b\}&\{c\}&\{b,c\}&\{b,c\}&\{a\}&\{b,c\}.
+\end{array}
+\]
+Writing the row letters for their term values, every core term satisfies
+\[
+ a\in A\quad\text{or}\quad b\in B\quad\text{or}\quad b\in C
+ \quad\text{or}\quad a\in D\quad\text{or}\quad a\in E.       \tag{$\dagger$}
+\]
+Here are the induction ingredients for this cover. Singleton tests give
+$C=\{a\}\iff E=\{a\}$, and exclude the simultaneous atomic outputs
+$(A,B,C)=(\{b\},\{a\},\{a\})$,
+$(B,E)=(\{a\},\{c\})$, and $(D,A)=(\{c\},\{b\})$.
+Choice induction then gives
+\[
+\begin{array}{rcl}
+ B=\{a\},\ A=\{b\}&\Longrightarrow&b\in C,\\
+ B=\{a\},\ A=\{c\}&\Longrightarrow&a\in E,\\
+ B=\{a\},\ D=\{c\}&\Longrightarrow&a\in A\text{ or }a\in E,\\
+ B=\{a\},\ E=\{b\}&\Longrightarrow&a\in A\text{ or }b\in C.
+\end{array}
+\]
+For example, in the first bridge a $b$-root selects a child with
+$A=\{b\}$, an $a$-root selects one with $B=\{a\}$, and the
+incompatible $A,C$ atoms prevent absorption at $C$; other owners pass
+both atomic premises to both children. The remaining bridges use the
+same atomic tests, with the preceding bridges preventing absorptions.
+
+To prove $(\dagger)$, suppose all its memberships fail at a parent;
+then $B=\{a\}$ by provenance. At an $a$-root, the $A,D,E$ exclusions
+pass to both children, the singleton equivalence blocks $C=\{a\}$,
+and a child with $B=\{a\}$ contradicts induction.
+At a $b$-root, both children have $B=\{a\}$ and omit $b$ at $C$.
+The first and fourth bridges block $A=\{b\}$ and then $E=\{b\}$.
+Induction forces $a\in D$ in both children, preventing absorption there.
+At a $c$-root, $B=\{a\}$ blocks $E=\{c\}$; the second and third
+bridges then block $A=\{c\}$ and $D=\{c\}$. Induction forces
+$b\in C$ in both children, again preventing absorption. Other owners
+act by union. Each leaf satisfies the cover, completing the induction.
+The displayed values of $R$ exclude all five memberships, as does every
+pointwise minorant of $R$.
 \end{proof}
 
 \subsection{Recognition by atomic cuts}\label{app:core-cuts}

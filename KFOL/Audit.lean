@@ -205,6 +205,10 @@ import all KFOL.Core.RelationalInterpolation
 import all KFOL.Core.TernaryInterpolation
 import all KFOL.Core.MinorantObstruction
 import all KFOL.Core.MinorantPatches
+import all KFOL.Core.MinorantFive
+import all KFOL.Core.MinorantFiveCertificate
+import all KFOL.Core.MinorantFivePatches
+import all KFOL.Core.StatusModel
 import all KFOL.Core.AtomicNative
 import all KFOL.Core.ChoiceUnion
 import all KFOL.Core.ChoiceUnion.Basis

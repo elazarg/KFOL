@@ -192,3 +192,14 @@ although it preserves every ternary invariant relation and therefore has a
 correct canonical source-guard form at finite role sets. The complete existential
 claim is `Report.core_three_local_without_minorant`. Its helpers are private;
 it adds no semantic definitions to the audit surface.
+
+`Core/MinorantFive` raises the symbolic cover to five rows.
+`Core/MinorantFiveCertificate` checks five explicit patches on all 1,024 formal
+named-atom/passive-marker assignments with kernel `decide`. `Core/StatusModel`
+proves that replacing those markers by arbitrary passive winner sets preserves
+union and the named owned choices. `Core/MinorantFivePatches` connects the
+certificate to actual core terms and proves the existence of a five-input,
+four-point interpolable operation with no core minorant, uniformly for arbitrary
+role types containing three distinct roles. The complete existential statement
+is `Report.core_four_local_without_minorant`; it introduces no new semantic
+definitions in the report's theorem types.
