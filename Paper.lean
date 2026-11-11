@@ -4,7 +4,7 @@ public import KFOL.Results.Algebra
 public import KFOL.Results.Complexity
 public import KFOL.Results.Games
 public import KFOL.Core.SourcePeeling
-public import KFOL.Core.FivePointInterpolation
+public import KFOL.Core.FiniteRelationObstruction
 public import KFOL.Audit.Namespace
 
 /-! # Claims of the main paper and the report results it cites
@@ -436,12 +436,23 @@ theorem core_guard_peeling {Role : Type u} {Var : Type v}
           (Core.Sources.negativeProbes G) ∅ (some (q,q.1)) :=
   Core.Sources.guard_table_iff_negative_peels three G
 
-/-- The five-valuation lower bound asserted in the discussion. -/
-theorem core_five_local_obstruction {Role : Type u} (three : Fin 3 ↪ Role) :
-    ∃ f : (Fin 5 → WinnerSet Role) → WinnerSet Role,
-      Core.LocallyInterpolable 5 f ∧
-        ¬∃ t : Term Role (Fin 5), t.IsCore ∧ ∀ v, t.eval v = f v :=
-  Core.exists_five_local_obstruction three
+/-- `core:thm:not-finitely-related`: no bounded relational test recognizes core operations. -/
+theorem core_not_finitely_related {Role : Type u} [Fintype Role]
+    (three : Fin 3 ↪ Role) (m : ℕ) :
+    ∃ f : (Fin (m+3) → WinnerSet Role) → WinnerSet Role,
+      Core.LocallyInterpolable m f ∧
+        ¬∃ t : Term Role (Fin (m+3)), t.IsCore ∧ ∀ v, t.eval v = f v :=
+  Core.Crown.exists_local_obstruction three m
+
+/-- No finite family of core-invariant relations defines exactly the core operations. -/
+theorem core_no_finite_relation_basis {Role : Type u} [Fintype Role]
+    {Index : Type v} [Finite Index] (three : Fin 3 ↪ Role) (arity : Index → ℕ)
+    (relations : ∀ i, Set (Fin (arity i) → WinnerSet Role))
+    (hrelations : ∀ i, Core.InvariantRelation (arity i) (relations i)) :
+    ∃ n : ℕ, ∃ f : (Fin n → WinnerSet Role) → WinnerSet Role,
+      (∀ i, Core.PreservesRelation (relations i) f) ∧
+        ¬∃ t : Term Role (Fin n), t.IsCore ∧ ∀ v, t.eval v = f v :=
+  Core.Crown.exists_finite_family_obstruction three arity relations hrelations
 
 /-- `core:thm:no-basis`. -/
 theorem core_nonfinite_basis [DecidableEq Role] [Finite Role] (three : Fin 3 ↪ Role) :

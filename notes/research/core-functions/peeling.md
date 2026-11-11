@@ -119,6 +119,5 @@ bounded witness. Both versions avoid auxiliary term or invariant-clause
 witnesses in the stated test, while retaining the finite peeling recursion.
 
 This is recursive recognition, not the sought short structural guard
-characterization. Finite relatedness remains unsettled; the five-local
-counterexample rules out defining families of invariant relations with arity
-at most five.
+characterization. The separate cyclic construction now disproves finite relatedness for every
+fixed finite K≥3; see [target.md](target.md).

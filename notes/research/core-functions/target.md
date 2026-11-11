@@ -1,64 +1,61 @@
-# Characterization target — unresolved
+# Characterization target and the nonfinite-relatedness theorem
 
-The goal is a short structural characterization of the jointly realizable
-canonical source guards, comparable to the closed monotonicity and
-common-source conditions for singleton profiles.
+The original target is a short structural characterization of jointly
+realizable canonical source guards, comparable to the monotonicity and
+common-source conditions for singleton profiles. Row deletion is exact
+recursive recognition; it does not replace recursion by closed conditions.
 
-The recursive row-deletion theorem is a correct recognition procedure. It
-does not settle that goal. It reduces full-value interpolation to repeated
-singleton-profile tests; it does not replace the recursion by closed structural
-conditions. The main discussion and verification appendix must preserve this
-distinction.
+The concrete finite-relatedness question is now settled negatively.
+Fix any finite role set K≥3. For every m≥0, there is an operation
 
-## Concrete next question: finite relatedness
+    F : A_K^(m+3) → A_K
 
-Fix K ≥ 3 and let A_K be the nonempty subsets of the K roles, with owned
-choice operations. Let C_K be their term clone, and let L_m(f) mean that,
-for every tuple of m valuations, some core term agrees with f on all of them.
-Valuations may repeat. The existing finite-interpolation theorem identifies
-L_m(f) with preservation of every invariant m-ary relation.
+such that every m valuations have a common core-term interpolant, yet F is
+not a core term operation. K stays fixed as m grows. The proof treats all
+ambient role sets with three distinguished owners and proves each patch on
+every valuation, including ambiguous values and additional owners.
 
-The question is whether
+The complete statements are `Paper.core_not_finitely_related` and
+`Paper.core_no_finite_relation_basis`. The latter says explicitly that, for
+any finite family of core-invariant relations, some nonterm operation
+preserves every member of the family. `Core/RelationalInterpolation`
+identifies m-point interpolation with preservation of every m-ary invariant
+relation; `Core/PatchInterpolation` proves its antitonicity in m.
 
-    ∃ m ≥ 1, ∀ n ≥ 1, ∀ f : A_K^n → A_K, L_m(f) ⇒ f ∈ C_K.
+## The cyclic construction
 
-The bound may depend on K; it must not depend on n. A positive answer can be
-proved by an explicit finite relational basis and a completeness argument.
-A negative answer requires
+Take n=m+3 inputs with cyclic successor i↦i+1, and distinct owners a,b,c.
+Normally F returns the union of all inputs. On the region with input i
+exactly {c}, input i+1 neither {b} nor {c}, and all other inputs {b}, it
+returns {b,c}. The n exceptional regions are disjoint.
 
-    ∀ m ≥ 1, ∃ n ≥ 1, ∃ f : A_K^n → A_K,
-      L_m(f) and f ∉ C_K.
+Deleting any one exceptional region gives a core operation. The proof cuts
+the cycle into a path and separates Boolean intervals by prefix disjunctions,
+nonadjacent-pair conjunctions and cardinality thresholds. Greatest singleton
+profile completions turn these Boolean separators into actual core terms,
+whose finite union is exactly the deletion patch on every input.
+Each valuation disagrees with at most one deletion patch. Any m valuations
+therefore share a patch, since n>m.
 
-Increasing K with m does not prove a negative answer for any fixed K. A
-counterexample at locality six, or at any other single locality, does not
-prove a negative answer either. A construction for K=3 does not automatically
-transfer to larger carriers: finite relatedness need not pass to subalgebras.
-A uniform family of coherent core patches using three named owners would
-supply such a transfer if its coherence is proved for arbitrary additional
-passive values.
+The full cycle violates cyclic persistence. At its forward rows, with c at i,
+a at i+1 and b elsewhere, F omits a; at the opposite rows it includes a.
+Every core term that includes a at an opposite row must include a at some
+forward row. In the observer-a quotient, core terms expand into finite unions
+of lattice polynomials on b<a<c. Each polynomial induces a monotone Boolean
+function. Vanishing derivatives on all forward edges force vanishing on the
+opposite edges by finite cyclic propagation.
 
-The current theorem `Core.exists_five_local_obstruction` rules out locality
-five for every role type containing three distinct roles. The stronger
-`Core.exists_five_local_profile_fiber_nonconvex` also fixes the singleton
-profiles and core lower/upper bounds. Neither theorem quantifies over all m.
+Definitions are in `Definitions/CoreCrown`; the proof runs through
+`CrownBoolean`, `CrownPatch`, `CrownBasePatch`, `CrownRotation`, `CrownPatches`,
+`CyclicPersistence` and `CrownObstruction`. `CrownFullSyntax` also proves the
+counterexample idempotent, so idempotent extraction rules out full-language
+realizations. Thus the expansions by constants and role switches are not
+finitely related either. `FiniteRelationObstruction` takes
+the maximum arity of an arbitrary finite relation family, including empty
+families and nullary relations. All proof closures use only propext,
+Classical.choice and Quot.sound. The sole finite observer-table check uses
+kernel `decide`, with a general induction supplying the all-term theorem.
 
-Finite relatedness is a concrete part of the characterization question. A
-negative answer rules out every characterization by a fixed finite family of
-invariant relations, but does not rule out all possible short structural laws
+Nonfinite relatedness excludes characterization by a fixed finite family of
+invariant relations. It does not exclude every possible short structural law
 with unbounded quantification.
-
-## Identification-minor route
-
-A useful equivalent criterion asks whether sufficiently high-arity operations
-whose every variable-identification minor is a term operation are themselves
-term operations. For arities larger than |A_K|, every input tuple has repeated
-values, so a consistent family of such minors determines the operation.
-The unresolved issue is whether these compatible local term representations
-can be glued to one term.
-
-Primary references for this criterion are Peter Mayr, *On finitely related
-semigroups*, Lemma 2.1
-(https://doi.org/10.1007/s00233-012-9455-6), and Daniel Glasson,
-*Finitely and non-finitely related words*, Theorem 2.1
-(https://doi.org/10.1007/s00233-024-10452-8). The semigroup-specific conclusions
-of those papers do not apply to the core without a separate argument.

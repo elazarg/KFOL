@@ -1,6 +1,6 @@
 \section{Verification details}\label{app:verification}
 
-The paper's results are kernel-checked in Lean~4.35.0 with mathlib. \texttt{Paper.lean} restates, in the namespace \texttt{KFOL.Paper}, every theorem of the main text and the clauses of the report results that it cites: $81$ statements, listed by result in \cref{tab:status}. \texttt{Report.lean} restates $71$ further report results in the namespace \texttt{KFOL.Report} (\cref{tab:report}). Each proof is a single library theorem, and each file ends with a check that no declaration in its namespace uses an axiom beyond \texttt{propext}, \texttt{Classical.choice}, and \texttt{Quot.sound}; a separate audit covers the whole library. Nothing is admitted, and no theorem from the literature enters as a hypothesis. Where a written proof cites one, as for the reset basis and the minimum one-owner generator \cite{FreeseEtAl2002}, owned choice with union \cite{HardingRomanowska2017}, the atomic clone \cite{Szendrei2012}, and colored-graph decomposition \cite{Gurvich2009}, the Lean proof is direct.
+The paper's results are kernel-checked in Lean~4.35.0 with mathlib. \texttt{Paper.lean} restates, in the namespace \texttt{KFOL.Paper}, every theorem of the main text and the clauses of the report results that it cites: $82$ statements, listed by result in \cref{tab:status}. \texttt{Report.lean} restates $73$ further report results in the namespace \texttt{KFOL.Report} (\cref{tab:report}). Each proof is a single library theorem, and each file ends with a check that no declaration in its namespace uses an axiom beyond \texttt{propext}, \texttt{Classical.choice}, and \texttt{Quot.sound}; a separate audit covers the whole library. Nothing is admitted, and no theorem from the literature enters as a hypothesis. Where a written proof cites one, as for the reset basis and the minimum one-owner generator \cite{FreeseEtAl2002}, owned choice with union \cite{HardingRomanowska2017}, the atomic clone \cite{Szendrei2012}, and colored-graph decomposition \cite{Gurvich2009}, the Lean proof is direct.
 
 The vocabulary of the statements is in \path{KFOL/Definitions/PaperAlgebra.lean}, \path{PaperGames.lean}, and \path{Complexity.lean}, which build on the other files of \path{KFOL/Definitions}. \path{notes/audit-guide.md} gives a reading order, and \path{notes/paper-definition-surface.md} and \path{notes/report-definition-surface.md} list every definition that each statement depends on.
 
@@ -10,7 +10,7 @@ The library also proves the contracts of the implementation, such as codecs, des
 
 {\small
 \begin{longtable}{>{\raggedright\arraybackslash}p{0.30\linewidth}>{\raggedright\arraybackslash}p{0.64\linewidth}}
-\caption{The $81$ mathematical statements in \texttt{Paper.lean}, grouped by result.}\label{tab:status}\\
+\caption{The $82$ mathematical statements in \texttt{Paper.lean}, grouped by result.}\label{tab:status}\\
 \toprule
 Result & Statements\\
 \midrule
@@ -45,8 +45,8 @@ Canonical core normal forms (\cref{core:thm:source-guards})
  & \path{core_prime_guard_normal_form}, \path{core_prime_guard_equality}\\
 Recursive source-guard recognition (\cref{core:cor:guard-peeling})
  & \path{core_guard_peeling}\\
-Five-point tests do not suffice (\cref{core:thm:five-local-profile})
- & \path{core_five_local_obstruction}\\
+No finite relational characterization (\cref{core:thm:not-finitely-related})
+ & \path{core_not_finitely_related}, \path{core_no_finite_relation_basis}\\
 Common source and atomic obstructions (\cref{gen:thm:source})
  & \path{common_source}, \path{atomic_repeated_triples}, \path{no_atomic_if_then_else}\\
 Atomic clone and determinacy (\cref{gen:thm:S2,gen:cor:determinacy})
@@ -93,7 +93,7 @@ Two players (\cref{app:two-players})
 
 {\small
 \begin{longtable}{>{\raggedright\arraybackslash}p{0.34\linewidth}>{\raggedright\arraybackslash}p{0.60\linewidth}}
-\caption{The $71$ audited statements in \texttt{Report.lean}, followed by remaining report evidence.}\label{tab:report}\\
+\caption{The $73$ audited statements in \texttt{Report.lean}, followed by remaining report evidence.}\label{tab:report}\\
 \toprule
 Result & Audited statements or other evidence\\
 \midrule
@@ -130,8 +130,10 @@ Four-point interpolation without a core minorant (\cref{core:thm:four-local-mino
  & \path{core_four_local_without_minorant}\\
 Five-point interpolation in one profile class (\cref{core:thm:five-local-profile})
  & \path{core_five_local_profile_obstruction}\\
-Complete membership-clause certificates (\cref{core:thm:clause-completeness})
- & \path{core_membership_certificates}\\
+Cyclic winner persistence (\cref{core:lem:cyclic-persistence})
+ & \path{core_cyclic_persistence}\\
+Constant and role-switch expansions (\cref{core:cor:full-not-finitely-related})
+ & \path{full_not_finitely_related}, \path{full_no_finite_relation_basis}\\
 Recursive constrained interpolation (\cref{core:thm:peeling})
  & \path{core_peeling_interpolation}\\
 One-owner four-variable obstruction (\cref{owner:thm:no-four-variable-basis})
@@ -567,18 +569,33 @@ certificate and excludes a core realizer. Its transport to arbitrary role
 types uses \path{KFOL/Core/RoleRestriction.lean}, which replaces outside
 owners by derived union without a finiteness assumption on the role type.
 
-The clause vocabulary, raw set interpretation, and finite owner-order checks
-are grouped in \path{KFOL/Definitions/CoreCertificates.lean}; canonical
-source probes remain in \path{KFOL/Definitions/CoreNormalForm.lean}.
+The cyclic obstruction is specified directly in
+\path{KFOL/Definitions/CoreCrown.lean}.
+\path{KFOL/Core/CrownBoolean.lean} proves Boolean interval separation by
+prefixes, pairs and thresholds. \path{KFOL/Core/CrownPatch.lean} constructs
+actual core completions of those profiles, and
+\path{KFOL/Core/CrownBasePatch.lean} proves the deletion patch on every
+winner-set valuation, including arbitrary ambiguous values and additional
+owners. \path{KFOL/Core/CrownRotation.lean} and
+\path{KFOL/Core/CrownPatches.lean} transport it to every deleted edge.
+\path{KFOL/Core/CyclicPersistence.lean} proves the cyclic winner law by
+expansion into lattice polynomials in an observer's quotient. Its finite
+three-role tables use \texttt{decide +kernel}; the expansion and cyclic
+propagation are symbolic proofs. \path{KFOL/Core/PatchInterpolation.lean}
+turns the patches into local interpolants and proves antitonicity in the
+sample size. \path{KFOL/Core/CrownObstruction.lean} gives the unbounded
+local obstructions for each fixed finite role set, and
+\path{KFOL/Core/FiniteRelationObstruction.lean} rules out every finite
+family of invariant relations. \path{KFOL/Core/CrownFullSyntax.lean}
+uses idempotent extraction to exclude realizations with winner constants
+and internal role permutations as well.
+
+The finite owner-elimination certificate used by the six-row obstruction
+has its clauses and order checks in
+\path{KFOL/Definitions/CoreCertificates.lean}.
 \path{KFOL/Core/OwnerElimination.lean} proves simultaneous certificate
-soundness. \path{KFOL/Core/OwnerEliminationComplete.lean} proves completeness
-by owner folds and dual-Horn separation (\cref{core:thm:clause-completeness}).
-Its checked families define the entire relation even among raw set tuples;
-finite-sample targets need no separate nonemptiness assumption. \path{KFOL/Core/SourceCertificates.lean}
-connects these auxiliary-clause certificates to canonical source probes.
-\path{tests/CoreOwnerCertificates.lean} rejects empty raw targets and empty
-guard families, including arity zero, and uses a semantic choice
-counterexample to reject every proposed order for an invalid clause family.
+soundness. \path{tests/CoreOwnerCertificates.lean} checks the raw set
+interpretation and rejects an invalid certificate family.
 
 The recursive row-deletion test is specified in
 \path{KFOL/Definitions/CoreInterpolation.lean}, with negative source probes
@@ -596,7 +613,8 @@ of bounded rows. \path{KFOL/Core/FiniteInterpolation.lean} combines membership
 witnesses into one exact tuple, and \path{KFOL/Core/SourcePeeling.lean}
 applies the test to negative source observations, proving
 \cref{core:cor:guard-peeling}. This is a recursive recognition procedure;
-the short intrinsic characterization problem remains open.
+\cref{core:thm:not-finitely-related} rules out a fixed invariant-relation
+arity bound as a replacement.
 \path{tests/CorePeeling.lean} checks empty row and variable types, empty
 allowed sets, conflicting requests, and two same-owner demands realized by
 owned choice although neither projection satisfies both.

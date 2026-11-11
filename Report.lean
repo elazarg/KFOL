@@ -14,6 +14,8 @@ public import KFOL.Core.FivePointInterpolation
 public import KFOL.Core.SourceCertificates
 public import KFOL.Core.LocalNormalForm
 public import KFOL.Core.ProfileEnvelope
+public import KFOL.Core.CyclicPersistence
+public import KFOL.Core.CrownFullSyntax
 public import KFOL.Audit.Namespace
 
 /-! # Audited report statements and mathematical proof ingredients
@@ -198,23 +200,30 @@ theorem core_five_local_profile_obstruction {Role : Type u} [Fintype Role]
       ¬∃ u : Term Role (Fin 5), u.IsCore ∧ ∀ v, u.eval v = f v :=
   Core.exists_five_local_profile_fiber_nonconvex three
 
-open Core.OwnerElimination in
-theorem core_membership_certificates {Role : Type u} {Row : Type v} {Var : Type w}
-    [DecidableEq Role] [Fintype Role] [DecidableEq Row] [Fintype Row]
-    (three : Fin 3 ↪ Role) (R : (Row → WinnerSet Role) → Prop)
-    (values : Row → Var → WinnerSet Role) (target : Row → Set Role) :
-    (ChoiceClosed R ↔
-      ∃ (F : Finset (Clause Row Role))
-        (orders : Clause Row Role → Role → List (Atom Row Role)),
-        checkFamily F orders = true ∧
-          (∀ x : Row → Set Role,
-            (∃ y : Row → WinnerSet Role, R y ∧ ∀ i, (y i).val = x i) ↔ SatisfiesSets F x)) ∧
-    ((∃ t : Term Role Var, t.IsCore ∧ ∀ i, (t.eval (values i)).val = target i) ↔
-      ∀ (F : Finset (Clause Row Role))
-        (orders : Clause Row Role → Role → List (Atom Row Role)),
-        checkFamily F orders = true →
-        (∀ j, Satisfies F (fun i => values i j)) → SatisfiesSets F target) :=
-  Core.OwnerElimination.complete_certificates three R values target
+/-- `core:lem:cyclic-persistence`: cyclic derivatives cannot point in only one direction. -/
+theorem core_cyclic_persistence {Role : Type u} {Var : Type v} [Finite Var]
+    (three : Fin 3 ↪ Role) (next : Equiv.Perm Var) (i : Var) (hi : next i ≠ i)
+    (t : Term Role Var) (ht : t.IsCore) :
+    three 0 ∈ (t.eval (Core.Crown.positive three next i)).val →
+      ∃ j, three 0 ∈ (t.eval (Core.Crown.negative three next j)).val :=
+  Core.Crown.persistence three next i hi t ht
+
+/-- `core:cor:full-not-finitely-related`: constants and role switches do not remove the obstruction. -/
+theorem full_not_finitely_related {Role : Type u} [Fintype Role]
+    (three : Fin 3 ↪ Role) (m : ℕ) :
+    ∃ f : (Fin (m+3) → WinnerSet Role) → WinnerSet Role,
+      Core.LocallyInterpolable m f ∧
+        ¬∃ t : Term Role (Fin (m+3)), ∀ v, t.eval v = f v :=
+  Core.Crown.exists_full_syntax_obstruction three m
+
+theorem full_no_finite_relation_basis {Role : Type u} [Fintype Role]
+    {Index : Type v} [Finite Index] (three : Fin 3 ↪ Role) (arity : Index → ℕ)
+    (relations : ∀ i, Set (Fin (arity i) → WinnerSet Role))
+    (hrelations : ∀ i, Core.InvariantRelation (arity i) (relations i)) :
+    ∃ n : ℕ, ∃ f : (Fin n → WinnerSet Role) → WinnerSet Role,
+      (∀ i, Core.PreservesRelation (relations i) f) ∧
+        ¬∃ t : Term Role (Fin n), ∀ v, t.eval v = f v :=
+  Core.Crown.exists_full_finite_family_obstruction three arity relations hrelations
 
 theorem core_peeling_interpolation {Role : Type u} {Row : Type v} {Var : Type w}
     [Fintype Role] [Fintype Row] [DecidableEq Role] [DecidableEq Row]

@@ -1,8 +1,8 @@
 # Definitions and representation boundaries
 
-Read [Paper.lean](../Paper.lean) with the vocabulary below. It contains 81
+Read [Paper.lean](../Paper.lean) with the vocabulary below. It contains 82
 mathematical statements and no definitions. [Report.lean](../Report.lean)
-contains 71 further mathematical statements. Their proofs name library theorems;
+contains 73 further mathematical statements. Their proofs name library theorems;
 definitions must still be reviewed independently against the manuscripts.
 
 The [audit guide](audit-guide.md) gives the reading order. The generated
@@ -13,8 +13,8 @@ theorem types. They erase proof-valued subterms and never follow theorem proofs.
 
 | Entry point | Theorem types | Semantic declarations | Source files | Central definition files | Written review units |
 | --- | ---: | ---: | ---: | ---: | ---: |
-| Paper | 81 | 676 | 40 | 28 | 360 |
-| Report | 71 | 643 | 36 | 25 | 301 |
+| Paper | 82 | 678 | 40 | 28 | 362 |
+| Report | 73 | 621 | 36 | 25 | 286 |
 
 These counts are separate slices and overlap. The vocabulary files organize
 the presentation; they do not replace their underlying mathematical definitions.
@@ -46,7 +46,8 @@ The underlying definitions are grouped by subject:
 | `Atomic` | Atomic preservation/realization and the repeat-triple relation |
 | `CoreNormalForm` | Passive statuses, canonical isolated-source probes, exclusion guards, prime families, canonicality and raw set meaning |
 | `CoreInterpolation` | Upper bounds, atomic demands, optional positive observations, rainbow common-source conditions, and strict row-deletion recognition |
-| `CoreCertificates` | Membership clauses with optional premises, raw truth, syntactic weakening, owner-elimination checks and finite certificates from input columns |
+| `CoreCrown` | Explicit cyclic matching/cross rows, exceptional cylinders, input union and the selected-cylinder operation; no reference to core realizability |
+| `CoreFunctions` | Singleton profiles and admissibility, invariant relations, individual relation preservation and m-point core interpolation |
 | `CoreGraph` | Finite occurrence graphs with symmetric owner colors, forbidden rainbow triangles and complementary two-colored paths, maximal monochromatic cliques, blocking, source survival and graph representation |
 | `Reset` | Reset syntax, rightmost root, selection, minimal guard tables, rooted antimatroids and table realizability |
 | `Owner` | Guarded-owner syntax, root/status, guards, coverage, the independent four-state algebra, literal 36-equation action presentation, its five-variable exchange replacement and six-element obstruction to four-variable axiomatization |

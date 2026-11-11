@@ -8,6 +8,11 @@ guard table and its fixed source probes, proved in `Core/Peeling` and
 [peeling.md](peeling.md) gives the equations and their proof; the independent
 stdlib checker is `peeling.py`.
 
+Finite relatedness is now disproved for every fixed finite K≥3: for each m,
+`Core.Crown.exists_local_obstruction` gives an (m+3)-ary nonterm operation
+with a common core interpolant on every m valuations. The cycle construction
+and its limits are summarized in [target.md](target.md).
+
 Local tests do not suffice even within a fixed singleton-profile fiber.
 Pairwise, three-point and four-point interpolation obstructions are proved
 uniformly for every role type containing three distinct owners. The four-point

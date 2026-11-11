@@ -129,6 +129,13 @@ def InvariantRelation {Role : Type u} (n : ℕ)
     (R : Set (Fin n → WinnerSet Role)) : Prop :=
   ∀ r x y, x ∈ R → y ∈ R → (fun i => WinnerSet.choice r (x i) (y i)) ∈ R
 
+/-- Coordinatewise application of an operation preserves this relation. -/
+def PreservesRelation {Role : Type u} {Var : Type v} {n : ℕ}
+    (R : Set (Fin n → WinnerSet Role))
+    (f : (Var → WinnerSet Role) → WinnerSet Role) : Prop :=
+  ∀ v : Fin n → Var → WinnerSet Role,
+    (∀ j, (fun i => v i j) ∈ R) → (fun i => f (v i)) ∈ R
+
 /-- Preservation of every core-invariant relation of the indicated arity. -/
 def PreservesInvariants {Role : Type u} {Var : Type v} (n : ℕ)
     (f : (Var → WinnerSet Role) → WinnerSet Role) : Prop :=

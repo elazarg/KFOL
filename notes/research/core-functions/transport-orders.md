@@ -362,7 +362,8 @@ the proposed transport proof.
 
 ## The local-interpolation hierarchy
 
-A parameterized family of matrices with transport certificates could
-establish an unbounded local-interpolation hierarchy. The existing four- and
-five-point obstructions do not by themselves establish such a family, and
-recursive recognition does not settle finite relatedness.
+The arbitrary-length cyclic construction now proves an unbounded hierarchy
+at every fixed finite K≥3. `Core/CyclicPersistence` supplies the transport
+law; `Core/CrownBasePatch` constructs every cut-cycle patch, and
+`Core/CrownObstruction` gives m-point interpolation without global
+realizability for every m. See [target.md](target.md).

@@ -19,14 +19,13 @@ Prime source-guard normal forms describe full values
 (\cref{app:core-source-guards}). Their joint realizability has a recursive
 recognition criterion using atomic challenges and strict row deletion
 (\cref{core:cor:guard-peeling}), and a colored-graph representation
-(\cref{app:core-colored-graphs}). Four-point tests need not leave a
-pointwise core minorant (\cref{app:core-pairwise}), and five-point tests
-need not give realizability even between core bounds with the same
-singleton outputs (\cref{core:thm:five-local-profile}).
-
-A complete membership-clause calculus proves the persistence laws used
-in these obstructions (\cref{app:core-certificates}). Unary polynomials
-are classified (\cref{core:prop:unary-polynomials}); conservative models
+(\cref{app:core-colored-graphs}). At every fixed $K\geq3$, no finite
+family of invariant relations determines the core clone
+(\cref{core:thm:not-finitely-related}). Some local tests do not even
+leave a pointwise core minorant (\cref{app:core-pairwise}), and failure
+can also occur between core bounds with the same singleton outputs
+(\cref{core:thm:five-local-profile}). Unary polynomials are classified
+(\cref{core:prop:unary-polynomials}); conservative models
 have a three-variable presentation (\cref{app:core-conservative}); and
 identifying all ambiguous winner sets gives a finitely based subvariety
 (\cref{app:core-atomic}). Throughout, $+$ is the derived
@@ -1110,7 +1109,7 @@ These values violate \cref{core:prop:persistence}, which every core term
 satisfies.
 \end{proof}
 
-\paragraph{Three-point tests.}
+\paragraph{Finite relational tests.}
 The same notion applies to relations of any arity. Call an operation
 \emph{$m$-point interpolable} if every $m$ valuations have one common
 core-term interpolant, allowing repetitions.
@@ -1464,6 +1463,204 @@ The displayed values of $R$ exclude all five memberships, as does every
 pointwise minorant of $R$.
 \end{proof}
 
+\begin{theorem}[Five-point interpolation inside a profile interval]
+\label{core:thm:five-local-profile}
+For every $K\geq3$, there are five-input core terms $g,h$ and an
+operation $R$ such that:
+\begin{enumerate}[label=(\roman*)]
+\item $R$ is five-point interpolable and preserves every five-ary
+invariant relation;
+\item $g$, $R$, and $h$ have exactly the same singleton outputs;
+\item $g(S)\subseteq R(S)\subseteq h(S)$ at every valuation;
+\item $R$ is not a core term operation.
+\end{enumerate}
+\end{theorem}
+\begin{proof}
+The finite certificate specified in \cref{app:verification} gives six
+five-input core terms, agreeing five at a time, whose common value $F$
+has the first term $g$ as a pointwise minorant. Their evaluations violate
+a six-row persistence implication satisfied by every core term.
+At its positive row $g$ is ambiguous. Set $R=F\del g$.
+Reset preserves the common interpolants and gives $R$ exactly $g$'s
+singleton outputs. At the positive row it retains $F$; at the negative
+rows it is contained in $F$. Thus the same implication excludes a core
+realization of $R$. The core upper bound
+$h=(X+Y+Z+W+V)\del g$ has these profiles and contains $R$ by provenance.
+\end{proof}
+
+\subsection{No finite relational characterization}
+\label{app:core-crown}
+
+The obstruction extends to every bound on the number of simultaneous
+valuations. A finite algebra is \emph{finitely related} if a fixed finite
+family of its invariant relations determines its term operations by
+preservation.
+
+\begin{theorem}[The core is not finitely related]
+\label{core:thm:not-finitely-related}
+Fix $K\geq3$. For every $m\geq0$ there is an $(m+3)$-ary operation
+that is $m$-point interpolable, and hence preserves every invariant
+relation of arity at most $m$, but is not a core term operation.
+Consequently the core clone is not finitely related.
+\end{theorem}
+
+We construct the operations on the variable set $V=\mathbb Z/n\mathbb Z$
+for $n\geq3$. Fix distinct owners $a,b,c$. Let $C_i$ be the input region
+\[
+ S_i=\{c\},\qquad S_{i+1}\notin\{\{b\},\{c\}\},\qquad
+ S_j=\{b\}\quad(j\notin\{i,i+1\}).
+\]
+These regions are pairwise disjoint: $i$ is the unique position whose
+value is exactly $\{c\}$. Put
+\[
+ F(S)=\begin{cases}
+ \{b,c\},&S\in C_i\text{ for some }i,\\
+ \displaystyle\bigcup_j S_j,&\text{otherwise}.
+ \end{cases}
+\]
+Both $b$ and $c$ occur on every $C_i$, since $n\geq3$.
+For each $h$, let $F_h$ use the same definition with $C_h$ omitted.
+
+\paragraph{The cyclic constraint.}
+Write $N_i$ for the valuation with $\{c\}$ at $i$, $\{a\}$ at
+$i+1$, and $\{b\}$ elsewhere. Let $Q_i$ interchange the $a$- and
+$c$-positions. Put $L_i=\{i\}$ and $U_i=\{i,i+1\}$.
+
+\begin{lemma}[Cyclic winner persistence]\label{core:lem:cyclic-persistence}
+Every core term $t$ satisfies
+\[
+ a\in t(Q_i)\quad\Longrightarrow\quad
+ a\in t(N_j)\text{ for some }j.
+\]
+\end{lemma}
+\begin{proof}
+Work in the $a$-view. Choice by $a$ is union, as is choice by any
+owner outside $\{a,b,c\}$ on these inputs. Choices by $b,c$
+distribute over union. Thus $t$ expands in this view into a nonempty
+union of $b/c$ lattice expressions. Each component evaluates on the
+three-element chain $b<\mathsf p<c$, where $\mathsf p$ records that
+$a$ is possible; choices by $b,c$ are meet and join on this chain.
+Let $\varphi$ be the component's monotone Boolean restriction, with
+$b$ false and $c$ true. On a valuation with one $a$ input, it returns
+$\mathsf p$ precisely when
+\[
+ \varphi(L)=0,\qquad\varphi(U)=1,
+\]
+where $L$ lists the $c$ positions and $U$ lists the positions not
+assigned $b$. This follows by induction on meet and join.
+
+Suppose $a$ is absent from every $t(N_j)$. Each component then satisfies
+$\varphi(L_j)=\varphi(U_j)$. Monotonicity gives
+\[
+ \varphi(L_{j+1})\leq\varphi(U_j)=\varphi(L_j).
+\]
+Around the cycle these inequalities force all displayed values equal.
+At $Q_i$ the relevant interval is $L_{i+1}\subseteq U_i$, so no
+component returns $\mathsf p$. Their union also omits $a$.
+\end{proof}
+
+Every $N_i$ belongs to $C_i$, whereas no $Q_i$ belongs to any $C_j$.
+Thus $F(N_i)=\{b,c\}$ and $F(Q_i)=\{a,b,c\}$, violating
+\cref{core:lem:cyclic-persistence}. In particular, $F$ is not core.
+
+\paragraph{Deleting one region.}
+We next realize every $F_h$ by one core term. Let $\mathcal B_h$ be
+all monotone Boolean functions $\varphi:2^V\to\{0,1\}$
+with $\varphi(\varnothing)=0$, $\varphi(V)=1$, and
+\[
+ \varphi(L_i)=\varphi(U_i)\qquad(i\ne h).
+\]
+For $L\subseteq U$, a function in $\mathcal B_h$ separates $L$ from
+$U$ if and only if
+\begin{equation}\label{core:eq:crown-separation}
+ L\ne U\quad\text{and}\quad
+ (L,U)\ne(L_i,U_i)\text{ for every }i\ne h.
+\end{equation}
+Here separation means $\varphi(L)=0$, $\varphi(U)=1$.
+The reverse implication follows from the following members of
+$\mathcal B_h$:
+\begin{itemize}
+\item $[X\cap S\ne\varnothing]$, where $S$ is any nonempty prefix
+  of the cut order $h+1,h+2,\ldots,h$;
+\item $[P\subseteq X]$, where $|P|=2$ and $P\ne U_i$ for $i\ne h$;
+\item $[|X|\geq d]$, for $3\leq d\leq n$.
+\end{itemize}
+They are constant on the required matching edges. To separate a strict
+interval, use the full prefix when $L=\varnothing$, and a threshold
+with $d=\max(3,|L|+1)$ when $|U|\geq3$. The remaining case has
+$|U|=2$ and $|L|=1$. If $U$ is an allowed pair, its pair test
+separates. Otherwise $U=U_i$ for $i\ne h$; unless $L=L_i$, it is
+$\{i+1\}$, and the prefix ending at $i$ separates. The forward
+implication of \eqref{core:eq:crown-separation} follows immediately
+from the definition of $\mathcal B_h$.
+
+\begin{lemma}[One-region deletion patches]\label{core:lem:crown-patch}
+For every $h$, the operation $F_h$ is a core term operation.
+\end{lemma}
+\begin{proof}
+For $\varphi\in\mathcal B_h$, prescribe owner-$c$ profile
+$\varphi(E)$, owner-$b$ profile $1-\varphi(V\setminus E)$, and
+unanimity for every other owner. These profiles are admissible:
+if the first two profiles win on coalitions $E_c,E_b$, then
+$E_c\cap E_b\ne\varnothing$, since otherwise monotonicity would give
+$1=\varphi(E_c)\leq\varphi(V\setminus E_b)=0$.
+Every other winning coalition is $V$.
+By \cref{core:thm:profiles,core:prop:profile-maximum}, there is a core
+completion $E_\varphi$ with these singleton profiles and full input
+union on every ambiguous output. At an input $S$, put
+\[
+ L=\{j:S_j=\{c\}\},\qquad U=\{j:S_j\ne\{b\}\}.
+\]
+Then $L\subseteq U$. The completion returns $\{c\}$ when
+$\varphi(L)=1$, and $\{b\}$ when $\varphi(U)=0$. If the interval
+is separated, it returns the full input union: any remaining singleton
+case requires all inputs to be the same other owner's atom, whose
+value already equals that union.
+
+Take the finite derived union of $E_\varphi$ over
+$\varphi\in\mathcal B_h$. If the interval is separated, one summand
+is the full union and every other summand is contained in it by
+provenance. If $L=U$, all inputs are $b/c$ atoms; the full-prefix
+and all-variable conjunction profiles ensure that the resulting union
+contains every input winner. In the remaining case,
+$(L,U)=(L_i,U_i)$ for some $i\ne h$, exactly describing $C_i$.
+Every summand is then $\{b\}$ or $\{c\}$; the full prefix gives
+$c$ and the all-variable conjunction gives $b$. Thus the union is
+$\{b,c\}$. These are precisely the values of $F_h$.
+\end{proof}
+
+\begin{proof}[Proof of \cref{core:thm:not-finitely-related}]
+Set $n=m+3$ and use $F$ above. Each valuation lies in at most one
+$C_i$, so at most one of the $n$ core patches $F_h$ can differ from
+$F$ there. Any $m$ valuations exclude at most $m<n$ patches, leaving
+one common core interpolant. \Cref{core:lem:finite-interpolation}
+gives preservation of invariant relations. Smaller positive arities follow
+by repeating valuations, and a projection handles the empty collection.
+Cyclic persistence excludes a global core realizer.
+Finally, any fixed finite family of invariant relations has a finite upper
+bound $m$ on its arities, and this operation preserves the family without
+being core.
+\end{proof}
+
+\begin{corollary}[Adding constants and role switches]
+\label{core:cor:full-not-finitely-related}
+For every fixed $K\geq3$ and every $m\geq0$, the same $(m+3)$-ary
+operation has core interpolants on every $m$ valuations but has no term
+realization even with winner constants and internal role permutations.
+Consequently neither $\mathbf A_K$ nor $\mathbf A_K^{\rm sym}$
+is finitely related.
+\end{corollary}
+\begin{proof}
+The cyclic operation is idempotent: a constant input tuple cannot belong
+to any $C_i$, and its input union is its common value. By
+\cref{gen:thm:core}, an idempotent full-language term is equivalent
+to a core term, so the preceding obstruction also excludes full-language
+realizations. A finite family of invariant relations of either expansion
+is a finite family of core-invariant relations. Choosing $m$ bounding all its
+arities gives the same counterexample to its defining the expanded
+term clone.
+\end{proof}
+
 \subsection{Recognition by repeated singleton tests}
 \label{app:core-peeling}
 
@@ -1592,211 +1789,9 @@ families by $(*)$. For empty variables, the empty rainbow challenge fails,
 matching the absence of nullary core terms.
 \end{proof}
 
-This recursive recognition criterion leaves finite relatedness (a fixed
-finite defining family of invariant relations) unsettled, while
-\cref{core:thm:five-local-profile} rules out such a family of arity at most five.
-
-\subsection{Complete membership-clause certificates}\label{app:core-certificates}
-
-The joint constraints on a guard table can also be expressed by finite
-membership clauses, with a complete syntactic check for the auxiliary
-clauses used in a proof. Fix a finite set $Q$ of rows. A membership atom
-is a pair $(q,k)\in Q\times I$, read as $k\in S_q$. A clause has the form
-\[
- P\ \Longrightarrow\ \bigvee H,
-\]
-where $H\subseteq Q\times I$ and the premise $P$ is either one atom or
-$\top$. Empty heads are allowed. Clauses are interpreted on arbitrary
-set tuples $S\in(2^I)^Q$, including tuples with empty coordinates.
-
-A finite clause family $\mathcal F$ \emph{supports} a clause if it is a
-tautology, with its premise atom in its head, or if a clause in
-$\mathcal F$ has a subset of its head and either the same premise or
-premise $\top$. This is a syntactic weakening check.
-For a clause $C=(P\Rightarrow\bigvee H)$ and an owner $r$, start with
-\[
- S=\{(q,k)\in H:k=r\}.
-\]
-An \emph{owner-elimination order} is a list of distinct atoms of $H$
-not yet in $S$. At a step adding $(i,k)$, require $k\ne r$ and put
-\[
- B_r(S,i)=S\cup\{(i,s):s\ne r\}.
-\]
-The following blockers must be supported by $\mathcal F$:
-\begin{itemize}
-\item if $P=\top$ or $P=(q,r)$, the clause
-  $\top\Rightarrow\bigvee B_r(S,i)$;
-\item if $P=(q,a)$ with $a\ne r$, every clause
-  $(q,s)\Rightarrow\bigvee B_r(S,i)$ for $s\ne r$.
-\end{itemize}
-Then add $(i,k)$ to $S$. At the end require support for
-$P\Rightarrow\bigvee S$. Call $\mathcal F$ \emph{checked} when such
-an order is supplied and passes these checks for each of its clauses
-and each owner. An order has at most $|H|$ steps. All tests concern only
-the displayed finite clauses and lists; no validity oracle is used.
-
-\begin{theorem}[Complete clause certificates]\label{core:thm:clause-completeness}
-Fix $K\geq3$ and a finite row set $Q$.
-A relation $R\subseteq\Pow^Q$ is closed under every coordinatewise
-owned choice if and only if it is exactly the set of raw set tuples
-satisfying some checked finite clause family.
-Consequently, for any variable set $V$, rows of inputs
-$v^q\in\Pow^V$, and raw target sets $U_q\subseteq I$, one core term
-satisfies $t(v^q)=U_q$ at every row if and only if every checked clause
-family satisfied by all projection columns $(v^q_j)_{q\in Q}$ is
-satisfied by $(U_q)_{q\in Q}$.
-\end{theorem}
-\begin{proof}
-For tuples of nonempty values, first prove that satisfying a checked
-family is preserved by each owned choice. Suppose a clause fails at a parent owned by $r$, while
-both children satisfy the family.
-Its head atoms with owner $r$ are absent in both children, since
-$r$-membership is preserved by $\star_r$. Maintain absence of the
-current $S$ in both children. If a child at row $i$ were $\{r\}$,
-it would also omit every off-owner atom at that row, hence omit
-$B_r(S,i)$. For a pure blocker this contradicts its supported clause.
-For a premise $(q,a)$ with $a\ne r$, positive membership at the parent
-forces both children at $q$ to differ from $\{r\}$; each therefore
-contains some $s\ne r$, contradicting the corresponding blocker.
-Thus neither operand at $i$ absorbs, and the absence of $k$ there
-passes to both children. Follow the supplied order. Its terminal
-clause contradicts the absence of $S$ in a child satisfying the
-premise: such a child exists by provenance. Syntactic support is sound
-also on raw set tuples.
-
-For completeness, take $\mathcal F$ to contain all clauses valid on
-$R$. Only finitely many clauses are possible. Fix a valid
-clause $P\Rightarrow\bigvee H$, an owner $r$, and a current $S$
-containing its $r$-owned head atoms. If the restricted clause
-$P\Rightarrow\bigvee S$ is valid, stop. Otherwise choose
-$x\in R$ satisfying $P$ and omitting $S$. If no remaining head atom
-has all its required blockers valid, choose a failed blocker for each
-$(i,k)\in H\setminus S$, and a tuple $y^i\in R$ violating it.
-Each $y^i$ omits $S$ and has $y^i_i=\{r\}$. When
-$P=(q,a)$ with $a\ne r$, choose a failed blocker with premise
-$(q,s)$, $s\ne r$; then $y^i_q\ne\{r\}$.
-
-Fold $x$ and these tuples by coordinatewise $\star_r$. The result
-remains in $R$. Absence of $S$ persists by provenance, and each
-remaining head row becomes $\{r\}$, which subsequent factors
-preserve. The premise persists too: an $r$-membership cannot be
-erased, while a nonowner premise persists because no factor at its
-row is $\{r\}$. Every remaining head atom has owner different
-from $r$, so the final tuple violates the original valid clause.
-This contradiction supplies a supported blocker step. Each step
-strictly shrinks $H\setminus S$, giving a checked order.
-
-It remains to show that the valid clauses define $R$ exactly.
-Closure under owned choices implies closure under coordinatewise
-union, since union is a derived core term. For a raw tuple $u\notin R$,
-consider the members of $R$ contained coordinatewise in $u$. If there
-are none, the pure clause saying that some membership outside $u$
-holds is valid on $R$ and false at $u$. Otherwise their union is a
-greatest such member $y\in R$, because the carrier is finite.
-Choose an atom $p$ in $u$ but not in $y$. The clause asserting that
-$p$ implies some membership outside $u$ is valid on $R$ and false
-at $u$. This separates every rejected raw tuple. In particular, the valid
-clauses include the pure full-row covers $\bigvee_{k\in I}(q,k)$,
-so their raw models have no empty coordinates.
-
-Finally, apply this presentation to the relation of all row tuples
-$(t(v^q))_q$ obtained from core terms. It is closed under owned
-choice and contains every projection column. The clause condition
-puts the target in that relation. The converse follows from soundness.
-The argument permits empty $Q$, empty $V$, and empty relations.
-\end{proof}
-
-\begin{theorem}[Five-point interpolation inside a profile interval]
-\label{core:thm:five-local-profile}
-For every $K\geq3$, there are five-input core terms $g,h$ and an
-operation $R$ such that:
-\begin{enumerate}[label=(\roman*)]
-\item $R$ is five-point interpolable and preserves every five-ary
-invariant relation;
-\item $g$, $R$, and $h$ have exactly the same singleton outputs;
-\item $g(S)\subseteq R(S)\subseteq h(S)$ at every valuation;
-\item $R$ is not a core term operation.
-\end{enumerate}
-\end{theorem}
-\begin{proof}
-Fix distinct $a,b,c$. Write $p=X\star_aY$, $q=p\star_aZ$, and
-\[
- d=((X\star_cY)\star_bW)+((X\star_bW)\star_cY).
-\]
-The following six core expressions use only these three owners and
-union:
-{\small
-\begin{align*}
- P_0&=(((X\star_bV)\star_aY)\star_bW)\star_bV
-       +(d\star_cZ)\\
- &\quad+\bigl((((Y+V)\star_aW)\star_cV)
-                  +((Y\star_bW)\star_c(Z+V))\bigr)\star_cX,\\
- P_1&=\bigl(((p+q+(Y\star_cZ)+Y)\star_bV)
-             +(((Y\star_bZ)\star_aX)\star_cV)
-             +((X\star_aZ)\star_cV)\bigr)\star_bW\\
- &\quad+((X\star_cV)+(Z\star_cW))\star_cY+(Z\star_cW),\\
- P_2&=\bigl(((Z+V)\star_bY)\star_aX
-                  +((X\star_aZ)+V)\star_bX+(X\star_cY)\bigr)\star_bW\\
- &\quad+((Y\star_bW)\star_c(Z+V))\star_cX+(d\star_cZ),\\
- P_3&=\bigl((p\star_b(W+V))+(q\star_bY)\bigr)\star_bW
-                +((X\star_cW)\star_bY)\star_cZ\\
- &\quad+(Y\star_bW)\star_c((X\star_cV)+Z)
-                +(((W\star_cV)+Z)\star_cX)\star_cY,\\
- P_4&=\bigl(( ((X\star_bV)\star_aY)+(q\star_bY))\star_bW
-                      +((X+Y)\star_cY)\star_cZ\bigr)\star_bV\\
- &\quad+((X\star_cY)\star_b(X\star_cW))\star_cZ
-                  +((X\star_cY)\star_bW)\star_c(Z+V)\\
- &\quad+\bigl(((Y\star_bZ)\star_aX)
-                   +(((Y\star_cW)+Z)\star_aX)+(Y\star_cW)\bigr)\star_cV,\\
- P_5&=((p\star_b(Z+V))\star_bW)
-             +((X\star_bW)\star_c(X+Y))\star_cZ
-             +((Y+W)\star_cX)\star_cV+Z.
-\end{align*}}
-At each of the $4^5$ named-singleton/passive-marker assignments, at
-least five expressions agree, and $P_0$ is contained in their common
-value $F$. The passive-marker interpretation used above
-makes these two facts valid over every role set containing $a,b,c$.
-Any five valuations exclude at most five candidates, so one $P_i$
-interpolates $F$ on all of them.
-
-Here are six critical valuations and the common values:
-\[
-\begin{array}{c|ccccc|c}
- &X&Y&Z&W&V&F\\\hline
- Q&\{c\}&\{b\}&\{c\}&\{a\}&\{b\}&\{a,b,c\}\\
- A&\{b\}&\{b\}&\{b,c\}&\{a\}&\{c\}&\{b,c\}\\
- B&\{b\}&\{a\}&\{c\}&\{c\}&\{c\}&\{a,c\}\\
- C&\{c\}&\{a\}&\{b\}&\{c\}&\{b\}&\{b,c\}\\
- D&\{c\}&\{b,c\}&\{b,c\}&\{b\}&\{a\}&\{b,c\}\\
- E&\{a\}&\{c\}&\{b\}&\{c\}&\{a,c\}&\{a,c\}.
-\end{array}
-\]
-For every core term, writing the row letters for its values,
-\begin{equation}\label{core:eq:six-row-persistence}
- a\in Q\quad\Longrightarrow\quad
- a\in A\ \text{or}\ b\in B\ \text{or}\ a\in C\
- \text{or}\ a\in D\ \text{or}\ b\in E.
-\end{equation}
-This implication has a finite owner-elimination certificate of the kind
-just proved sound: $32$ membership clauses, each with an elimination
-order for each of $a,b,c$. Checking the orders and the five input columns
-proves the implication by structural induction, without enumerating term
-operations. The certificate is recorded in the verification appendix.
-At these valuations, owners outside $\{a,b,c\}$ act by union. Replacing
-them by the derived union term therefore extends the implication to all
-$K\geq3$. The displayed values violate it, so $F$ is not core.
-
-Set $g=P_0$ and $R=F\del g$. Since $g\subseteq F$, reset returns
-$g$ when $g$ is a singleton and $F$ otherwise. Thus $g\subseteq R\subseteq F$,
-and $R$ has exactly $g$'s singleton outputs. Resetting each $P_i$
-against $g$ gives core interpolants for $R$ on every five valuations.
-At $Q$, $g=\{b,c\}$, so $R(Q)=F(Q)$ still contains $a$; at the other
-five critical rows $R\subseteq F$ still omits the required winner.
-Hence \eqref{core:eq:six-row-persistence} also excludes a core realization
-of $R$. Finally, let $h=(X+Y+Z+W+V)\del g$. It has exactly $g$'s
-singleton outputs and bounds $R$ above by provenance. The interpolation
-bridge gives the stated preservation of five-ary invariant relations.
-\end{proof}
+These repeated singleton tests give recursive recognition, while
+\cref{core:thm:not-finitely-related} shows that no fixed bound on
+invariant-relation arity suffices for recognizing core operations.
 
 \subsection{Unary polynomials}
 

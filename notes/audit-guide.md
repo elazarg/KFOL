@@ -1,8 +1,8 @@
 # Reading the formalization
 
-Start with [Paper.lean](../Paper.lean): its 81 theorem statements cover the main
+Start with [Paper.lean](../Paper.lean): its 82 theorem statements cover the main
 paper, its mathematical prose claims and the report clauses it uses.
-[Report.lean](../Report.lean) gives 71 further audited report statements and
+[Report.lean](../Report.lean) gives 73 further audited report statements and
 proof ingredients. Both files write out the propositions; each proof names one
 library theorem. Detailed codecs, descriptors, intermediate certificates and
 machine contracts are in the library, including
@@ -17,14 +17,14 @@ claim, then open the relevant vocabulary file:
 
 | Subject | Vocabulary entrypoint | Underlying definitions to inspect |
 | --- | --- | --- |
-| Winner algebras, views, reset and guarded choice | [PaperAlgebra.lean](../KFOL/Definitions/PaperAlgebra.lean) | `Public`, `Core`, `Views`, `Reset`, `Owner`, `Equational`, `Congruences`; the report's singleton profiles, binary relational tests, explicit patch operation and atomic cuts are in `CoreFunctions`, source-guard normal forms and the finite compatibility interior are in `CoreNormalForm`, with bounded rule saturation in `FiniteHorn` |
+| Winner algebras, views, reset and guarded choice | [PaperAlgebra.lean](../KFOL/Definitions/PaperAlgebra.lean) | `Public`, `Core`, `Views`, `Reset`, `Owner`, `Equational`, `Congruences`; singleton profiles, invariant relations and local interpolation are in `CoreFunctions`, and source-guard normal forms are in `CoreNormalForm` |
 | Public games and sealed rounds | [PaperGames.lean](../KFOL/Definitions/PaperGames.lean) | `Strategic`, `Quantified`, `Rounds`; GameTheory's strategy and equilibrium interfaces |
 | Decision problems and algorithms | [Complexity.lean](../KFOL/Definitions/Complexity.lean) | `Encoding`, the original term/circuit syntax, and ComplexityLib's machine and class definitions |
 | Nonfinite-basis envelope | [Envelope.lean](../KFOL/Definitions/Envelope.lean), [Equational.lean](../KFOL/Definitions/Equational.lean) | Explicit copy-labelled operations; the three actual signatures and independent basis/variety predicates |
 | Powerset representation | [Relational.lean](../KFOL/Definitions/Relational.lean) | Annihilating zero extension and a right regular relation with a fresh point |
 | Report navigation queries | [Queries.lean](../KFOL/Definitions/Queries.lean) | Independent path/test semantics, valuation documents, compiler and regular relations |
 | Recursive core interpolation | [CoreInterpolation.lean](../KFOL/Definitions/CoreInterpolation.lean) | Atomic demands, raw upper bounds, rainbow intersections and the positive escape condition; recursive calls strictly erase a bounded row, with no generated relation or auxiliary certificate |
-| Core clause certificates | [CoreCertificates.lean](../KFOL/Definitions/CoreCertificates.lean) | Optional membership premises, finite heads, raw truth, syntactic weakening and owner-elimination orders; certificates are checked from input-column memberships without a term or validity oracle |
+| Cyclic clone obstruction | [CoreCrown.lean](../KFOL/Definitions/CoreCrown.lean), [CoreFunctions.lean](../KFOL/Definitions/CoreFunctions.lean) | Explicit matching/cross rows, exceptional input cylinders, full-union operation, independent local interpolation and relation preservation predicates |
 | Core graph representations | [CoreGraph.lean](../KFOL/Definitions/CoreGraph.lean) | Symmetric owner colors, the two forbidden induced patterns, maximal cliques, singleton blocking and source survival; repeated vertex labels are independent occurrences |
 
 These files are front doors, not the entire semantic surface. The
@@ -51,6 +51,11 @@ A few meanings deserve particular attention:
 - `UsesOnly a b` restricts effective actors as well as terminal winners.
   `BooleanMenus` restricts menus to at most two actions. The no-finite-summary
   claim concerns a semantics defined on that Boolean fragment itself.
+- Nonfinite relatedness fixes the finite role set before varying the locality
+  bound. The explicit operation has m+3 inputs and core interpolants on every
+  m valuations. Its definition uses only input positions and singleton tests;
+  it does not refer to realizability. Finite relation families include empty
+  families and nullary relations.
 - Equational validity quantifies over all winner-set valuations. Derivability
   has independent inference rules; a basis theorem connects the two.
 - Complexity problems refer to the original encoded inputs. Binary names,

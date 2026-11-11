@@ -1,19 +1,21 @@
 # Active formalization status
 
 The entire main-paper scope is proved: **22/22 main result rows**,
-**72/72 required catalog rows**, and **17/17 required prose obligations**.
+**74/74 required catalog rows**, and **17/17 required prose obligations**.
 The [inventory](formalization-claims.json) is authoritative for scope.
 Other report results remain optional and have their own evidence status.
 
-The research goal is unresolved. Row deletion is a recursive recognition
-procedure, not the requested short intrinsic characterization. Five-point
-local interpolation does not suffice; finite relatedness for fixed K is open.
-The precise target is recorded in [research/core-functions/target.md](research/core-functions/target.md).
+Finite relatedness is now settled negatively for every fixed finite K≥3.
+For every m, `Paper.core_not_finitely_related` gives an (m+3)-ary nonterm
+operation with core interpolants on every m valuations;
+`Paper.core_no_finite_relation_basis` rules out every finite defining family
+of invariant relations. This does not rule out short structural laws with
+unbounded quantification. See [the research target](research/core-functions/target.md).
 
 | Audit entrypoint | Mathematical statements | Presentation |
 | --- | ---: | --- |
-| [Paper.lean](../Paper.lean) | 81 | Main text and the report claims it cites |
-| [Report.lean](../Report.lean) | 71 | Further report results and proof ingredients |
+| [Paper.lean](../Paper.lean) | 82 | Main text and the report claims it cites |
+| [Report.lean](../Report.lean) | 73 | Further report results and proof ingredients |
 | [Results/Certificates](../KFOL/Results/Certificates.lean) | 140 preserved contracts | Original full statements, including native machines, codecs and intermediate invariants |
 
 Every root proof names one library theorem. Both root files have no semantic
@@ -30,8 +32,8 @@ regular representation are in `Definitions/Relational`.
 
 | Definition surface | Theorem types | Semantic declarations | Source files | Written review units |
 | --- | ---: | ---: | ---: | ---: |
-| Paper | 81 | 676 | 40 | 360 |
-| Report | 71 | 643 | 36 | 301 |
+| Paper | 82 | 678 | 40 | 362 |
+| Report | 73 | 621 | 36 | 286 |
 
 The slices overlap and exclude theorem proof bodies. These meaning indexes do
 not replace the human comparison with the manuscript or the proof/axiom audits.
@@ -110,13 +112,8 @@ the full syntax. The independently checked ternary examples in
 realizability, including a candidate that preserves the first law under
 core substitutions and contexts.
 
-Atomic-cut recognition and synthesis are now proved for entire operations
-at every finite arity, including arity zero. `Definitions/CoreFunctions`
-specifies bounds and local rules independently of terms; `Definitions/FiniteHorn`
-specifies their finite saturation. `Algorithms/FiniteHorn` proves the uniform
-round limit, and `Core/Cuts` proves soundness, completeness and one common
-witness for all derived memberships. The four report statements include the
-round bound K*m*(K+2)^m and synthesis across every sampled valuation at once.
+The superseded atomic-cut recognizer remains proved in the library; the
+report uses the row-deletion criterion below.
 Canonical prime source-guard normal forms are now proved for the full
 operations. A winner is supplied by one variable, tested against the other
 inputs' nonobserver singleton statuses. There are exactly n K^n indexed
@@ -137,8 +134,8 @@ the relative conservative bound stays four.
 
 The report retains recognition by repeated singleton tests. The superseded
 cut-saturation and source-interior presentations are retired from the report;
-their library proofs remain available. Recognition is distinct from the
-unresolved structural and finite-relatedness questions.
+their library proofs remain available. Recognition is distinct from the structural characterization question. The
+new cyclic obstruction settles finite relatedness negatively.
 
 Pairwise compatibility is now proved insufficient uniformly for every K ≥ 3.
 `Core/PairwiseInterpolation` defines a repeated-value patch of three short core
@@ -234,9 +231,20 @@ strict induction on the number of bounds, and `recognizes_iff` joins positive
 witnesses to recognize full raw tables. `Core/SourcePeeling` needs only negative
 source-probe bounds and the positive observer bits. The recursive guard-table test is `Paper.core_guard_peeling`; the general
 interpolation theorem is `Report.core_peeling_interpolation`. The main
-discussion explicitly leaves the short characterization open and states
-finite relatedness as a concrete question. `Paper.core_five_local_obstruction`
-records the known five-valuation lower bound.
+discussion states the parametric obstruction and its finite-relation
+consequence. `Core/CrownBoolean` proves the cut-cycle separation lemma;
+`Core/CrownPatch` builds greatest profile completions, and
+`Core/CrownBasePatch` unions them into an actual core patch. Rotation gives
+one patch for each missing edge. `Core/CyclicPersistence` proves the
+permutation-cycle winner law, using a finite union of lattice polynomials
+in the observer quotient. `Core/CrownObstruction` combines the patches and
+the violated law, while `Core/FiniteRelationObstruction` handles arbitrary
+finite families of relations, including nullary relations and empty families.
+`Core/CrownFullSyntax` proves idempotence and applies core extraction to
+exclude every full-language realization; its finite-family theorem extends
+nonfinite relatedness to both expansions with constants and role switches.
+The only new semantic vocabulary is grouped in `Definitions/CoreCrown` and
+the relation-preservation predicate in `Definitions/CoreFunctions`.
 
 `tests/CorePeeling` checks the nullary and empty-bound boundaries, conflicting
 queries, and same-owner demands where no input column suffices but an actual
@@ -244,8 +252,7 @@ owned-choice term does. The independent stdlib `peeling.py` compares the test
 with unpruned subpower generation at three and four roles, including the exact
 six-row obstruction. It does not use generated subpowers inside the recognizer.
 
-The general owner-elimination calculus remains useful for invariant relations
-and the six-row persistence proof. `Core/OwnerEliminationComplete` gives its
-complete raw presentations and sampled-row tests, stated as
-`Report.core_membership_certificates`. It does not establish a fixed relational
-arity bound or an unbounded interpolation hierarchy.
+The general owner-elimination calculus remains a library tool for the older
+six-row persistence proof. Its complete presentations and sampled-row tests
+are no longer repeated in the report after the cyclic construction supersedes
+that particular recognition presentation.
