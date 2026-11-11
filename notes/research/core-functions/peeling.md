@@ -1,4 +1,4 @@
-# Recognition by strict row peeling
+# Recognition by repeated singleton tests
 
 `peeling.py` independently checks the finite row-deletion equations below.
 It uses only Python's standard library. Run:
@@ -49,8 +49,7 @@ atomic demands, and the optional positive query. Define G and F by:
 This is well founded: first define G at rank |N| using F at smaller ranks,
 then define F at that rank from G. Atomic challenges and positive queries may
 change, but every recursive call that returns from G to F deletes a bounded
-row. The maximum deletion rank is |N|. These are finite recursive tests;
-no polynomial-time or nonrecursive characterization is asserted.
+row. The maximum deletion rank is |N|.
 
 Their exact meaning is that F_N(D;p) holds precisely when one core term fits
 all N-bounds, D-demands and the optional positive query. Empty bounds are
@@ -71,23 +70,24 @@ owned choice is contained in the union of its operands, so bounded tuples
 remain bounded under every core operation. Equation (1) describes exactly
 this generator set through a smaller bound set and one new atomic demand.
 
-For each atomic demand (i,r), let E_i be the generators whose row-i value is
-{r}. The least required owner-r singleton profile is generated upward by
-these E_i and by the full generator set, which enforces unanimity even when
+For each atomic demand (i,r), let E_(i,r) be the generators whose row-i value
+is {r}. The least required owner-r singleton profile is generated upward by
+these E_(i,r) and by the full generator set, which enforces unanimity even when
 owner r has no demands. The constructive profile classification says that
 these profiles can be realized exactly when every rainbow selection of the
-E_i has nonempty intersection. Unselected owners use the full generator set.
+E_(i,r) has nonempty intersection. Unselected owners use the full generator set.
 This is equation (2), including the empty selection that requires at least
 one generator.
 
 For a positive query (q,k), the base positive generator makes the union of all
 generators contain k at q. For any demand (i,r) with r≠k, the last condition in
-(3) says E_i is not contained in the generators whose row-q value is {r}.
+(3) says E_(i,r) is not contained in the generators whose row-q value is {r}.
 The base positive generator also lies outside that wrong-singleton set,
 so even the unanimity coalition does not force it. Consequently the least
 demanded r-profile does not force that wrong singleton at q. Synthesize the
 least admissible profiles and take their greatest profile
-completion. At q the result is either {k} or ambiguous; in either case it
+completion. At q it returns {k} when the synthesized term is atomic, and
+otherwise returns the union of all generator values there. Either value
 contains k. This proves (3). Necessity follows from the same profile tests and
 provenance.
 
@@ -117,3 +117,8 @@ One may instead use the full raw probe meaning as upper bounds, requiring a
 positive witness for every membership in every target row, together with one
 bounded witness. Both versions avoid auxiliary term or invariant-clause
 witnesses in the stated test, while retaining the finite peeling recursion.
+
+This is recursive recognition, not the sought short structural guard
+characterization. Finite relatedness remains unsettled; the five-local
+counterexample rules out defining families of invariant relations with arity
+at most five.

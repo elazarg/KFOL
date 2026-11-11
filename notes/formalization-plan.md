@@ -3,14 +3,14 @@
 The completion target is the entire main paper, its substantive mathematical
 prose, and the report material those claims require. The entire technical report
 is not a completion target. The [inventory](formalization-claims.json) records
-22 main result rows, 71 required catalog rows and 17 required prose obligations,
-all proved. Its source catalog contains 185 statements.
+22 main result rows, 72 required catalog rows and 17 required prose obligations,
+all proved. Its source catalog contains 182 statements.
 
 ## Public audit surface
 
-- [Paper.lean](../Paper.lean) contains 80 main-facing mathematical statements in
+- [Paper.lean](../Paper.lean) contains 81 main-facing mathematical statements in
   about 600 lines, ordered by subject and labelled for the main results.
-- [Report.lean](../Report.lean) contains 78 further mathematical report statements
+- [Report.lean](../Report.lean) contains 71 further mathematical report statements
   and proof ingredients.
 - Every public theorem writes its proposition in mathematical vocabulary.
   Its proof is one application of a named library theorem. Neither root file
@@ -173,3 +173,12 @@ original action presentation remains available for word proofs and the pinned
 complete library contracts. `Paper.owner_thirty_six_equation_basis` states the
 new presentation's exact cardinality, five-variable bound, completeness and
 optimality. The conservative relative bound remains four.
+
+## Unfinished characterization research
+
+The short intrinsic characterization has not been proved. Row deletion is an
+exact recursive recognition procedure, and replaces the superseded saturation
+presentations in the report. It does not count as completion of this research
+goal. Finite relatedness is the next concrete question: the locality bound must
+be independent of operation arity at a fixed K. The current lower bound only
+rules out locality five. See [the precise target](research/core-functions/target.md).

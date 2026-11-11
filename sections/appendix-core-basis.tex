@@ -16,19 +16,16 @@ smaller fragments. Owned choice with union has a seven-equation basis
 forms (\cref{app:core-binary}). At every arity, singleton profiles and
 their greatest completions are characterized (\cref{app:core-profiles}).
 Prime source-guard normal forms describe full values
-(\cref{app:core-source-guards}). Their joint realizability is characterized
-intrinsically by finite atomic challenges and strict row deletion
-(\cref{core:cor:guard-peeling}); it also has a colored-graph representation
+(\cref{app:core-source-guards}). Their joint realizability has a recursive
+recognition criterion using atomic challenges and strict row deletion
+(\cref{core:cor:guard-peeling}), and a colored-graph representation
 (\cref{app:core-colored-graphs}). Four-point tests need not leave a
 pointwise core minorant (\cref{app:core-pairwise}), and five-point tests
 need not give realizability even between core bounds with the same
 singleton outputs (\cref{core:thm:five-local-profile}).
 
 A complete membership-clause calculus proves the persistence laws used
-in these obstructions (\cref{app:core-certificates}). Joint compatibility
-is also tested on source probes (\cref{app:core-compatibility}), and a
-finite saturation recognizes and synthesizes term operations
-(\cref{app:core-cuts}). Unary polynomials
+in these obstructions (\cref{app:core-certificates}). Unary polynomials
 are classified (\cref{core:prop:unary-polynomials}); conservative models
 have a three-variable presentation (\cref{app:core-conservative}); and
 identifying all ambiguous winner sets gives a finitely based subvariety
@@ -960,10 +957,8 @@ The $+$-sum of the spines for the guards in $\mathcal G$ realizes the family.
 families at different sources and observers need not come from a single
 term. Even all pairwise compatibility tests together are insufficient
 (\cref{app:core-pairwise}). The following colored-graph representation
-describes a joint witness; \cref{core:cor:guard-peeling} gives an intrinsic
-condition on the canonical probes. The atomic-cut test of
-\cref{app:core-cuts} also gives simultaneous synthesis on the source
-data (\cref{app:core-compatibility}).
+describes a joint witness; \cref{core:cor:guard-peeling} gives a recursive
+recognition test on the canonical probes.
 
 \subsection{A colored-graph characterization}
 \label{app:core-colored-graphs}
@@ -1033,8 +1028,8 @@ therefore follows in both directions from \cref{core:thm:colored-graphs}.
 
 The witness graph need not be unique; the prime source-guard family
 remains the canonical description of the operation. This is a structural
-representation; \cref{core:cor:guard-peeling} gives the corresponding
-intrinsic condition on the canonical guards.
+representation; \cref{core:cor:guard-peeling} gives a recursive recognition
+test on the canonical guards.
 
 \subsection{Relational compatibility}\label{app:core-pairwise}
 
@@ -1469,7 +1464,7 @@ The displayed values of $R$ exclude all five memberships, as does every
 pointwise minorant of $R$.
 \end{proof}
 
-\subsection{An intrinsic recognition test by row deletion}
+\subsection{Recognition by repeated singleton tests}
 \label{app:core-peeling}
 
 Joint realizability of the canonical guards is determined by atomic
@@ -1570,7 +1565,7 @@ are precisely $p$. Hence
  F^\Gamma_{k,j}(p)=1.                                      \tag{$*$}
 \]
 
-\begin{corollary}[Intrinsic canonical guard recognition]
+\begin{corollary}[Canonical guard recognition]
 \label{core:cor:guard-peeling}
 Fix $K\geq3$ and a finite variable set. For a guard family $\Gamma$,
 write $C(k,j,p)=F^\Gamma_{k,j}(p)$, and use the fixed
@@ -1594,9 +1589,12 @@ realizes them simultaneously, while the negative bounds forbid every
 false coefficient. The first test supplies one witness even if there
 are no positive coefficients. Canonicity then identifies the prime guard
 families by $(*)$. For empty variables, the empty rainbow challenge fails,
-matching
-the absence of nullary core terms.
+matching the absence of nullary core terms.
 \end{proof}
+
+This recursive recognition criterion leaves finite relatedness (a fixed
+finite defining family of invariant relations) unsettled, while
+\cref{core:thm:five-local-profile} rules out such a family of arity at most five.
 
 \subsection{Complete membership-clause certificates}\label{app:core-certificates}
 
@@ -1799,176 +1797,6 @@ of $R$. Finally, let $h=(X+Y+Z+W+V)\del g$. It has exactly $g$'s
 singleton outputs and bounds $R$ above by provenance. The interpolation
 bridge gives the stated preservation of five-ary invariant relations.
 \end{proof}
-
-\subsection{Recognition by atomic cuts}\label{app:core-cuts}
-
-Full values are recognized by a finite saturation, on any finite set of
-sample valuations. Its rule for an owned node is the case split in the
-proof of \cref{gen:thm:source}: in each valuation the node either returns
-the absorbing owner atom or is a union. Fix valuations
-$v_1,\ldots,v_m$, the \emph{rows}, of a finite set of variables, with
-$m\geq1$, and requested values $U_i\in\Pow$. A \emph{bound vector} $B$
-chooses, at each row $i$, one of the $K+2$ symbols
-\[
- \mathsf{target},\quad\mathsf{top},\quad\mathsf{atom}(r)\ (r\in I),
-\]
-interpreted as the regions $U_i$, $I$, and $\{r\}$ respectively.
-Different symbols are kept even when their regions coincide. Write
-$|B|_i$ for the region at row $i$, and $B_0$ for the all-target vector.
-A term $s$ is \emph{bounded by} $B$ if $s(v_j)\subseteq|B|_j$ at every
-row $j$.
-
-A fact $[B,i,a]$ is meant to say that some core term bounded by $B$ has
-winner $a$ at row $i$. The following Horn rules derive facts without
-reference to terms. A variable $x$ bounded by $B$ seeds $[B,i,a]$ for
-every row $i$ and every $a\in v_i(x)$. For an owner $r$, a \emph{cut}
-of $B$ is a pair $(L,R)$ of bound vectors chosen row by row from the
-following possibilities, the last two being \emph{atomic}:
-\[
-\begin{array}{c|cc}
- \text{condition}&L_j&R_j\\\hline
- \text{always}&B_j&B_j\\
- r\in|B|_j&\mathsf{atom}(r)&\mathsf{top}\\
- r\in|B|_j&\mathsf{top}&\mathsf{atom}(r).
-\end{array}
-\]
-From $[L,i,a]$ and $[R,i,b]$, derive $[B,i,c]$ for every
-$c\in\{a\}\star_r\{b\}$. Starting from no facts, each round adds all
-seeds and every consequence of facts already present.
-
-\begin{theorem}[Exact cut recognition and synthesis]\label{core:thm:cuts}
-For $K\geq3$, the facts stabilize after at most
-\[
- N=Km(K+2)^m
-\]
-rounds. There is a core term $t$ with $t(v_i)=U_i$ for every row $i$
-if and only if every fact $[B_0,i,a]$ with $a\in U_i$ is then present.
-For every bound vector $B$ with a present fact, a single core term $s$
-bounded by $B$ has $s(v_i)=\{a:[B,i,a]\text{ is present}\}$ at every
-row $i$.
-\end{theorem}
-\begin{proof}
-There are $N$ possible facts. The sequence of fact sets is increasing,
-and a round with no new fact is a fixed point. If the first $N$ rounds
-all add a fact, every possible fact is present by then; otherwise the
-sequence has already stabilized. Thus presence after $N$ rounds is
-equivalent to finite derivability from the rules.
-
-For soundness, each derived fact $[B,i,a]$ has a witness: a core term
-bounded by $B$ with $a$ in its value at row $i$. A seed is witnessed by
-its variable. For a cut rule, combine the two witnesses by $\star_r$.
-At each row either both are bounded by $|B|_j$, or one is exactly the
-absorbing atom $\{r\}$ and $r\in|B|_j$, so the result is bounded by
-$B$. Owned choice is monotone for inclusion, so $c\in\{a\}\star_r\{b\}$
-lies in its value at row $i$.
-
-For completeness, induct on a core term $s$ bounded by $B$, showing that
-$[B,i,a]$ is derived whenever $a\in s(v_i)$. A variable seeds these
-facts. At an owned root $p\star_r q$, choose the left atomic cut in every
-row where $p(v_j)=\{r\}$, and otherwise the right atomic cut where
-$q(v_j)=\{r\}$; atomic cuts are allowed there because the root's value
-$\{r\}$ lies in its bound. In the other rows the root is a union, so
-both children are bounded by $|B|_j$. Thus $p$ and $q$ are bounded by
-the two halves of a cut of $B$. Every winner of $A\star_r C$ already
-occurs in $\{a\}\star_r\{c\}$ for some $a\in A$ and $c\in C$: if an
-operand is $\{r\}$, take $a$ or $c$ to be $r$; otherwise take the
-winner itself with a member of the other operand, chosen different
-from $r$ when the winner is not $r$. The induction hypotheses and a cut rule therefore derive
-each membership of $s$.
-
-Finally, for a bound vector $B$ with a present fact, let $s$ be the
-$+$-sum of one witness for each present fact $[B,i,a]$. It is bounded by
-$B$ and has every present membership, and by completeness no other. At
-$B_0$, if all requested memberships are present, $s$ has exactly the
-requested values. The converse is completeness.
-\end{proof}
-
-\begin{corollary}[Recognizing term operations]\label{core:cor:cut-functions}
-Let $V$ be a finite set of variables and $K\geq3$. An operation
-$f:\Pow^V\to\Pow$ is a core term operation exactly when the test
-accepts its table, with all valuations as rows and $U_v=f(v)$; the
-resulting term realizes $f$. When $V$ is empty the test rejects every
-operation.
-\end{corollary}
-\begin{proof}
-Apply \cref{core:thm:cuts} to the nonempty finite set of all valuations.
-With no variables there are no seeds, so no membership is derived.
-\end{proof}
-
-For an $n$-ary operation the table has $(2^K-1)^n$ rows, so the test
-ranges over $(K+2)^{(2^K-1)^n}$ bound vectors. It decides which
-operations are terms and produces a term for each. The source probes
-give a smaller test when the input is already a proposed normal form.
-
-\subsection{Joint compatibility on source probes}\label{app:core-compatibility}
-
-The cut test also applies directly to proposed source coefficients. Let
-$F_{k,j}(p)$ be any Boolean array on the $M=nK^n$ indexed probes; no
-operation table is assumed. At the row $q=(k,j,p)$ use valuation $v^q$
-and upper bound
-\[
- U_q=\begin{cases}I,&F_{k,j}(p)=1,\\
- I\setminus\{k\},&F_{k,j}(p)=0.
- \end{cases}
-\]
-Thus a negative bit forbids just its observer, and a positive bit leaves
-all winners allowed. Both upper bounds are nonempty. Run the atomic-cut
-rules with these rows and bounds, and write
-\[
- (\mathcal IF)_{k,j}(p)=1
- \quad\Longleftrightarrow\quad
- [B_0,(k,j,p),k]\text{ is present after saturation}.
-\]
-This specifies $\mathcal I$ by finite rules on the coefficient array.
-In particular, it requires neither nonempty values for the expression
-represented by $F$ nor agreement between its different sources.
-
-Use $F^\Gamma$ and canonical guard families as defined in
-\cref{app:core-peeling}.
-
-\begin{theorem}[Joint source compatibility]\label{core:thm:source-compatibility}
-For $K\geq3$ and any finite variable set $V$, the operator $\mathcal I$
-is monotone, contractive and idempotent. If $\mathcal IF\ne0$, there is
-one core term $t$ with $c^t=\mathcal IF$. Moreover, a guard family
-$\Gamma$ is the prime source-guard normal form of one core term if and
-only if
-\begin{enumerate}
-\item $\Gamma$ is canonical;
-\item $F^\Gamma\ne0$;
-\item $\mathcal I F^\Gamma=F^\Gamma$.
-\end{enumerate}
-\end{theorem}
-\begin{proof}
-By soundness and completeness of the cut rules,
-$(\mathcal IF)_q=1$ exactly when there is a core term $s$ such that
-$c^s\leq F$ and $c^s_q=1$. Indeed, being bounded by $U$ means exactly
-that $s$ obeys every negative observation. It follows that
-$\mathcal IF\leq F$ and that $\mathcal I$ is monotone. Each witness
-$s$ also satisfies $c^s\leq\mathcal IF$, since all its bits have the
-same bounded witness. Applying the characterization again proves
-$\mathcal IF\leq\mathcal I(\mathcal IF)$; contractivity gives equality.
-
-When $\mathcal IF\ne0$, take the $+$-sum of one bounded witness for
-every positive bit of $\mathcal IF$. The family is finite and nonempty,
-and the sum still obeys every negative constraint. It has coefficient
-array exactly $\mathcal IF$, by completeness. Equivalently, this is the
-maximum bounded witness from \cref{core:thm:cuts}.
-
-Every core term has a nonzero array: assign every input $\{k\}$, use
-idempotence, and apply the source decomposition. Thus an array is
-realized by one core term exactly when it is a nonzero fixed point.
-For a canonical $\Gamma$, equality $c^t=F^\Gamma$ is equivalent to
-equality of their prime guard families. This proves all three conditions.
-It also handles $V=\varnothing$, where every array is zero and no
-constant-free core term exists.
-\end{proof}
-
-In particular, $\mathcal IF$ is the greatest realizable coefficient array
-below $F$ whenever it is nonzero; when it is zero, no core array lies below
-$F$. The test uses $(K+2)^M$ bound vectors and reaches saturation within
-$KM(K+2)^M$ rounds. It gives a direct compatibility test and simultaneous
-synthesis on the source data. Its finite saturation is still the mechanism
-that checks the joint constraints.
 
 \subsection{Unary polynomials}
 

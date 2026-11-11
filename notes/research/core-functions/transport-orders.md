@@ -3,10 +3,10 @@
 This note records the complete finite owner-elimination certificate calculus
 for persistence proofs. Soundness is proved in `Core/OwnerElimination`;
 completeness and finite-sample separation are proved in
-`Core/OwnerEliminationComplete`. The intrinsic characterization of canonical
-guards is now the row-peeling criterion in [peeling.md](peeling.md), proved in
-`Core/Peeling` and `Core/SourcePeeling`. It does not require auxiliary clause
-families. The calculus here gives compact certificates for particular laws.
+`Core/OwnerEliminationComplete`. The row-peeling criterion in
+[peeling.md](peeling.md), proved in `Core/Peeling` and `Core/SourcePeeling`,
+is a recursive recognizer for canonical guards. The calculus here gives
+compact certificates for particular laws.
 
 The six-row five-point counterexample has a kernel-checked 32-clause
 certificate in `Core/SixValuation`. Its six-patch witnesses work uniformly for
@@ -124,8 +124,8 @@ family and fails at X.
 Thus one positive membership premise, or a pure positive cover, suffices for
 *extensional separation*. Atomic tests in transport proofs are auxiliary
 abbreviations that make the induction easier. The owner orders below give
-syntactic proofs of the required clauses. Row peeling supplies the intrinsic
-guard criterion independently of this clause presentation.
+syntactic proofs of the required clauses. Row peeling supplies a recursive
+guard recognizer independently of this clause presentation.
 
 ## A complete finite certificate calculus
 
@@ -362,7 +362,7 @@ the proposed transport proof.
 
 ## The local-interpolation hierarchy
 
-Row peeling gives the intrinsic guard characterization. A parameterized
-family of matrices with transport certificates could additionally establish
-an unbounded local-interpolation hierarchy. The existing four- and five-point
-obstructions do not by themselves establish such a family.
+A parameterized family of matrices with transport certificates could
+establish an unbounded local-interpolation hierarchy. The existing four- and
+five-point obstructions do not by themselves establish such a family, and
+recursive recognition does not settle finite relatedness.

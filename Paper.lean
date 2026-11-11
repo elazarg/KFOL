@@ -4,6 +4,7 @@ public import KFOL.Results.Algebra
 public import KFOL.Results.Complexity
 public import KFOL.Results.Games
 public import KFOL.Core.SourcePeeling
+public import KFOL.Core.FivePointInterpolation
 public import KFOL.Audit.Namespace
 
 /-! # Claims of the main paper and the report results it cites
@@ -421,7 +422,7 @@ theorem core_prime_guard_equality {Role : Type u} [Fintype Role]
       Core.Sources.normalForm three (fun v => t.eval v) ↔ ∀ v, s.eval v = t.eval v :=
   Results.Algebra.core_prime_guard_equality three s t hs ht
 
-/-- Intrinsic realizability, asserted in the discussion. -/
+/-- Recursive recognition, asserted in the discussion. -/
 theorem core_guard_peeling {Role : Type u} {Var : Type v}
     [Fintype Role] [DecidableEq Role] [Fintype Var] [DecidableEq Var]
     (three : Fin 3 ↪ Role)
@@ -434,6 +435,13 @@ theorem core_guard_peeling {Role : Type u} {Var : Type v}
         Core.Interpolation.Peels (fun q => Core.Sources.probeAt three q) Core.Sources.exclusionBounds
           (Core.Sources.negativeProbes G) ∅ (some (q,q.1)) :=
   Core.Sources.guard_table_iff_negative_peels three G
+
+/-- The five-valuation lower bound asserted in the discussion. -/
+theorem core_five_local_obstruction {Role : Type u} (three : Fin 3 ↪ Role) :
+    ∃ f : (Fin 5 → WinnerSet Role) → WinnerSet Role,
+      Core.LocallyInterpolable 5 f ∧
+        ¬∃ t : Term Role (Fin 5), t.IsCore ∧ ∀ v, t.eval v = f v :=
+  Core.exists_five_local_obstruction three
 
 /-- `core:thm:no-basis`. -/
 theorem core_nonfinite_basis [DecidableEq Role] [Finite Role] (three : Fin 3 ↪ Role) :

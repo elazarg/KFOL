@@ -1,8 +1,8 @@
 # Definitions and representation boundaries
 
-Read [Paper.lean](../Paper.lean) with the vocabulary below. It contains 80
+Read [Paper.lean](../Paper.lean) with the vocabulary below. It contains 81
 mathematical statements and no definitions. [Report.lean](../Report.lean)
-contains 78 further mathematical statements. Their proofs name library theorems;
+contains 71 further mathematical statements. Their proofs name library theorems;
 definitions must still be reviewed independently against the manuscripts.
 
 The [audit guide](audit-guide.md) gives the reading order. The generated
@@ -13,8 +13,8 @@ theorem types. They erase proof-valued subterms and never follow theorem proofs.
 
 | Entry point | Theorem types | Semantic declarations | Source files | Central definition files | Written review units |
 | --- | ---: | ---: | ---: | ---: | ---: |
-| Paper | 80 | 675 | 39 | 27 | 359 |
-| Report | 78 | 679 | 37 | 26 | 318 |
+| Paper | 81 | 676 | 40 | 28 | 360 |
+| Report | 71 | 643 | 36 | 25 | 301 |
 
 These counts are separate slices and overlap. The vocabulary files organize
 the presentation; they do not replace their underlying mathematical definitions.
@@ -69,7 +69,7 @@ inclusion or install competing global instances.
 Guard tables are defined from actual selection and minimality. The semantic
 marker theorem connects them to winner observations. Coverage, canonicality
 and realizability are specified independently of the algorithms deciding them.
-The direct guard criterion is in [CoreInterpolation.lean](../KFOL/Definitions/CoreInterpolation.lean).
+The recursive recognition criterion is in [CoreInterpolation.lean](../KFOL/Definitions/CoreInterpolation.lean).
 `Peels` uses only the supplied input columns, allowed winner sets, atomic
 demands and one optional positive observation. `ProfileCondition` makes
 rainbow intersection and competing-singleton tests. Every recursive call

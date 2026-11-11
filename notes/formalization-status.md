@@ -1,14 +1,19 @@
 # Active formalization status
 
 The entire main-paper scope is proved: **22/22 main result rows**,
-**71/71 required catalog rows**, and **17/17 required prose obligations**.
+**72/72 required catalog rows**, and **17/17 required prose obligations**.
 The [inventory](formalization-claims.json) is authoritative for scope.
 Other report results remain optional and have their own evidence status.
 
+The research goal is unresolved. Row deletion is a recursive recognition
+procedure, not the requested short intrinsic characterization. Five-point
+local interpolation does not suffice; finite relatedness for fixed K is open.
+The precise target is recorded in [research/core-functions/target.md](research/core-functions/target.md).
+
 | Audit entrypoint | Mathematical statements | Presentation |
 | --- | ---: | --- |
-| [Paper.lean](../Paper.lean) | 80 | Main text and the report claims it cites |
-| [Report.lean](../Report.lean) | 78 | Further report results and proof ingredients |
+| [Paper.lean](../Paper.lean) | 81 | Main text and the report claims it cites |
+| [Report.lean](../Report.lean) | 71 | Further report results and proof ingredients |
 | [Results/Certificates](../KFOL/Results/Certificates.lean) | 140 preserved contracts | Original full statements, including native machines, codecs and intermediate invariants |
 
 Every root proof names one library theorem. Both root files have no semantic
@@ -25,8 +30,8 @@ regular representation are in `Definitions/Relational`.
 
 | Definition surface | Theorem types | Semantic declarations | Source files | Written review units |
 | --- | ---: | ---: | ---: | ---: |
-| Paper | 80 | 675 | 39 | 359 |
-| Report | 78 | 679 | 37 | 318 |
+| Paper | 81 | 676 | 40 | 360 |
+| Report | 71 | 643 | 36 | 301 |
 
 The slices overlap and exclude theorem proof bodies. These meaning indexes do
 not replace the human comparison with the manuscript or the proof/axiom audits.
@@ -121,24 +126,19 @@ probes, sufficient prime guards and their meaning; `Core/SourceProbes` and
 The five complete statements retain the antichain clause. The main
 discussion now explicitly asserts the normal forms, so their reconstruction
 and equality statements reside in `Paper.lean`; the source decomposition,
-probe count and local synthesis remain in `Report.lean`. The direct hereditary characterization of jointly realizable guard families
-is also stated in `Paper.lean`, with no auxiliary realization graph or clause
-family in its condition.
+probe count and local synthesis remain in `Report.lean`. The recursive recognition procedure for jointly realizable guard families
+is also stated in `Paper.lean`. Its lack of auxiliary clauses does not make
+it a short structural characterization.
 
 The one-owner basis now has optimal variable bound five: thirty-six native
 laws, with five-variable exchange replacing the six-variable action-band
 axiom. The six-element countermodel rules out every four-variable basis;
 the relative conservative bound stays four.
 
-Direct joint compatibility is now checked on the n K^n source observations.
-`Core/SourceCompatibility` proves a monotone, contractive, idempotent interior
-operator specified by finite Horn rules. Every nonzero result has one common
-term witness and is the greatest realizable coefficient array below its input.
-Canonical guard families are realizable exactly when their array is nonzero
-and fixed by this operator. Three complete statements are in `Report.lean`.
-The hereditary test below replaces fixed-point iteration for direct
-recognition; the interior theorem still supplies a greatest realizable
-minorant of arbitrary Boolean data.
+The report retains recognition by repeated singleton tests. The superseded
+cut-saturation and source-interior presentations are retired from the report;
+their library proofs remain available. Recognition is distinct from the
+unresolved structural and finite-relatedness questions.
 
 Pairwise compatibility is now proved insufficient uniformly for every K ≥ 3.
 `Core/PairwiseInterpolation` defines a repeated-value patch of three short core
@@ -180,8 +180,8 @@ and variable types, assuming a nonempty role type.
 The ternary obstruction has short separate realizations of each named
 owner's full view. Thus, for three roles, even realizability on every individual
 view does not ensure one common realization. The graph witness need not be
-unique. The direct hereditary criterion recognizes the same guard families
-without an auxiliary graph or clause family.
+unique. The recursive row-deletion test recognizes the same guard families.
+Neither representation settles the short intrinsic characterization.
 
 `Core/MinorantObstruction` proves a four-row cover law and its atomic bridge
 uniformly in all additional roles and arbitrary groups of variables.
@@ -232,10 +232,11 @@ proves the exact singleton/positive condition using least demanded profiles and
 their maximum completion. `Core/Peeling.peels_iff` combines these results by
 strict induction on the number of bounds, and `recognizes_iff` joins positive
 witnesses to recognize full raw tables. `Core/SourcePeeling` needs only negative
-source-probe bounds and the positive observer bits. The complete guard-table
-criterion is `Paper.core_guard_peeling`; the general interpolation theorem is
-`Report.core_peeling_interpolation`. The main discussion no longer lists the
-intrinsic characterization as open.
+source-probe bounds and the positive observer bits. The recursive guard-table test is `Paper.core_guard_peeling`; the general
+interpolation theorem is `Report.core_peeling_interpolation`. The main
+discussion explicitly leaves the short characterization open and states
+finite relatedness as a concrete question. `Paper.core_five_local_obstruction`
+records the known five-valuation lower bound.
 
 `tests/CorePeeling` checks the nullary and empty-bound boundaries, conflicting
 queries, and same-owner demands where no input column suffices but an actual

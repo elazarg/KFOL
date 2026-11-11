@@ -157,6 +157,15 @@ theorem exists_five_local_noncore {Role : Type*} (three : Fin 3 ↪ Role) :
     (locallyInterpolable_iff_preservesInvariants _ _).mp (SixPatch.interpolable three),
     SixPatch.has_minorant three, SixPatch.not_core three⟩
 
+/-- Five-point agreement with core terms does not characterize a core
+operation. This is the local-test lower bound used in the discussion. -/
+theorem exists_five_local_obstruction {Role : Type*} (three : Fin 3 ↪ Role) :
+    ∃ f : (Fin 5 → WinnerSet Role) → WinnerSet Role,
+      LocallyInterpolable 5 f ∧
+        ¬∃ t : Term Role (Fin 5), t.IsCore ∧ ∀ v, t.eval v = f v := by
+  obtain ⟨f, hf, _, _, hn⟩ := exists_five_local_noncore three
+  exact ⟨f, hf, hn⟩
+
 end KFOL.Core
 
 namespace KFOL.Core

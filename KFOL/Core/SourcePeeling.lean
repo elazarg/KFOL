@@ -3,7 +3,7 @@ module
 public import KFOL.Core.Peeling
 public import KFOL.Core.SourceNormalForm
 
-/-! # A hereditary characterization of canonical source guards
+/-! # Recognizing canonical source guards by row deletion
 
 The direct row-deletion test is applied to the canonical source probes. Its
 inputs are computed from the guard table, with no auxiliary clauses or graph.

@@ -1,13 +1,12 @@
 # All-arity core functions
 
-The intrinsic characterization is proved at every finite arity for finite
-role sets with at least three owners. A canonical prime source-guard family
-is jointly realizable exactly when it passes the finite
-atomic-challenge and row-deletion conditions in `Definitions/CoreInterpolation`.
-The test reads only the guard table and its fixed source probes. Its soundness
-and completeness are proved in `Core/Peeling` and `Core/SourcePeeling`.
-[peeling.md](peeling.md) gives the three equations and their proof; the
-independent stdlib checker is `peeling.py`.
+Canonical prime source-guard normal forms and exact recursive recognition
+are proved at every finite arity for finite role sets with at least three
+owners. Row deletion gives a recursive test of joint realizability from the
+guard table and its fixed source probes, proved in `Core/Peeling` and
+`Core/SourcePeeling`. A short structural characterization remains open.
+[peeling.md](peeling.md) gives the equations and their proof; the independent
+stdlib checker is `peeling.py`.
 
 Local tests do not suffice even within a fixed singleton-profile fiber.
 Pairwise, three-point and four-point interpolation obstructions are proved
@@ -27,7 +26,7 @@ exact factored expressions used by the uniform five-point Lean theorem,
 including all formal passive-marker cells. `transport-orders.md` records the
 complete clause calculus used to prove its six-row persistence law.
 
-## Intrinsic recognition on the canonical probes
+## Recursive recognition on the canonical probes
 
 `Core.Interpolation.peels_iff` characterizes fitting upper bounds, exact atomic
 demands and one optional positive membership. The recursion first checks
@@ -219,29 +218,6 @@ independently evaluates the formulas, checks the status cases and all the
 properties below, and computes the maximum bounded output on the four rows
 as (3,3,6,3). It generates the operation rather than trusting a supplied table.
 
-## Exact saturation and the greatest realizable minorant
-
-`Core.Cuts.recognizes_iff` proves exact simultaneous interpolation on any finite
-nonempty family of valuations. `operation_iff` applies it to entire operation
-tables, including arity zero. `maximum_of_saturated` gives one common witness
-for every reachable membership at a bound; `round_bound` proves the stopping
-bound K*m*(K+2)^m. The rules and finite saturation are specified independently
-of terms in `Definitions/CoreFunctions` and `Definitions/FiniteHorn`.
-
-`Core.Sources.interior` instead imposes one bit constraint per source probe:
-a negative bit forbids its observer and a positive bit permits every winner.
-`interior_iff_witness` characterizes each retained bit by a term obeying all
-negative constraints. The operator is monotone, contractive and idempotent.
-Every nonzero result has one common term and is the greatest realizable array
-below its input; zero means no term obeys all negative constraints.
-`guard_fixed_iff` gives direct compatibility as canonicality, nonzero array,
-and equality with its interior. This remains a saturation criterion.
-
-The independent Python maximum-value regression is not asserted to be an
-executable implementation of the Lean Horn system. `tests/CoreCuts.lean`
-checks incompatible sampled rows and the nullary boundary; the source tests
-check the empty array, a positive inconsistent unary array, and arity zero.
-
 ## Complete owner-elimination certificates
 
 `Core/OwnerElimination` proves simultaneous-induction soundness of checked
@@ -255,8 +231,8 @@ sample rows are finite; the finite-sample theorem permits arbitrary variable
 types, including the empty type.
 
 `Core/SourceCertificates` also retains the clause presentation on source
-probes. The primary intrinsic guard test is now row peeling above. The
-certificate calculus remains useful for short proofs of particular
+probes. Row peeling gives the recursive recognizer above. The certificate
+calculus remains useful for short proofs of particular
 persistence laws: `Core/SixValuation` checks the six-row five-point law by one
 finite family of clauses and owner orders, without a subpower enumeration.
 

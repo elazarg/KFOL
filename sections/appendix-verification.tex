@@ -1,6 +1,6 @@
 \section{Verification details}\label{app:verification}
 
-The paper's results are kernel-checked in Lean~4.35.0 with mathlib. \texttt{Paper.lean} restates, in the namespace \texttt{KFOL.Paper}, every theorem of the main text and the clauses of the report results that it cites: $80$ statements, listed by result in \cref{tab:status}. \texttt{Report.lean} restates $78$ further report results in the namespace \texttt{KFOL.Report} (\cref{tab:report}). Each proof is a single library theorem, and each file ends with a check that no declaration in its namespace uses an axiom beyond \texttt{propext}, \texttt{Classical.choice}, and \texttt{Quot.sound}; a separate audit covers the whole library. Nothing is admitted, and no theorem from the literature enters as a hypothesis. Where a written proof cites one, as for the reset basis and the minimum one-owner generator \cite{FreeseEtAl2002}, owned choice with union \cite{HardingRomanowska2017}, the atomic clone \cite{Szendrei2012}, and colored-graph decomposition \cite{Gurvich2009}, the Lean proof is direct.
+The paper's results are kernel-checked in Lean~4.35.0 with mathlib. \texttt{Paper.lean} restates, in the namespace \texttt{KFOL.Paper}, every theorem of the main text and the clauses of the report results that it cites: $81$ statements, listed by result in \cref{tab:status}. \texttt{Report.lean} restates $71$ further report results in the namespace \texttt{KFOL.Report} (\cref{tab:report}). Each proof is a single library theorem, and each file ends with a check that no declaration in its namespace uses an axiom beyond \texttt{propext}, \texttt{Classical.choice}, and \texttt{Quot.sound}; a separate audit covers the whole library. Nothing is admitted, and no theorem from the literature enters as a hypothesis. Where a written proof cites one, as for the reset basis and the minimum one-owner generator \cite{FreeseEtAl2002}, owned choice with union \cite{HardingRomanowska2017}, the atomic clone \cite{Szendrei2012}, and colored-graph decomposition \cite{Gurvich2009}, the Lean proof is direct.
 
 The vocabulary of the statements is in \path{KFOL/Definitions/PaperAlgebra.lean}, \path{PaperGames.lean}, and \path{Complexity.lean}, which build on the other files of \path{KFOL/Definitions}. \path{notes/audit-guide.md} gives a reading order, and \path{notes/paper-definition-surface.md} and \path{notes/report-definition-surface.md} list every definition that each statement depends on.
 
@@ -10,7 +10,7 @@ The library also proves the contracts of the implementation, such as codecs, des
 
 {\small
 \begin{longtable}{>{\raggedright\arraybackslash}p{0.30\linewidth}>{\raggedright\arraybackslash}p{0.64\linewidth}}
-\caption{The $80$ mathematical statements in \texttt{Paper.lean}, grouped by result.}\label{tab:status}\\
+\caption{The $81$ mathematical statements in \texttt{Paper.lean}, grouped by result.}\label{tab:status}\\
 \toprule
 Result & Statements\\
 \midrule
@@ -43,8 +43,10 @@ The intrinsic core (\cref{gen:thm:core,gen:cor:views,gen:cor:trace})
  & \path{idempotent_elimination}, \path{intrinsic_player_views}, \path{semilattice_trace}\\
 Canonical core normal forms (\cref{core:thm:source-guards})
  & \path{core_prime_guard_normal_form}, \path{core_prime_guard_equality}\\
-Intrinsic higher-arity characterization (\cref{core:cor:guard-peeling})
+Recursive source-guard recognition (\cref{core:cor:guard-peeling})
  & \path{core_guard_peeling}\\
+Five-point tests do not suffice (\cref{core:thm:five-local-profile})
+ & \path{core_five_local_obstruction}\\
 Common source and atomic obstructions (\cref{gen:thm:source})
  & \path{common_source}, \path{atomic_repeated_triples}, \path{no_atomic_if_then_else}\\
 Atomic clone and determinacy (\cref{gen:thm:S2,gen:cor:determinacy})
@@ -91,7 +93,7 @@ Two players (\cref{app:two-players})
 
 {\small
 \begin{longtable}{>{\raggedright\arraybackslash}p{0.34\linewidth}>{\raggedright\arraybackslash}p{0.60\linewidth}}
-\caption{The $78$ audited statements in \texttt{Report.lean}, followed by remaining report evidence.}\label{tab:report}\\
+\caption{The $71$ audited statements in \texttt{Report.lean}, followed by remaining report evidence.}\label{tab:report}\\
 \toprule
 Result & Audited statements or other evidence\\
 \midrule
@@ -118,8 +120,6 @@ Prime source-guard normal forms (\cref{core:thm:source-guards,core:prop:guard-sy
  & \path{core_source_reconstruction}, \path{core_source_probe_count}, \path{core_guard_synthesis}\\
 Colored-graph representation and joint guard realization (\cref{core:thm:colored-graphs,core:cor:graph-guards})
  & \path{core_colored_graph_representation}, \path{core_colored_graph_guards}\\
-Atomic-cut recognition and synthesis (\cref{core:thm:cuts,core:cor:cut-functions})
- & \path{core_cut_synthesis}, \path{core_cut_maximum}, \path{core_cut_round_bound}, \path{core_cut_recognition}\\
 Binary tests and pairwise obstruction (\cref{core:lem:binary-interpolation,core:thm:pairwise-obstruction})
  & \path{core_binary_interpolation}, \path{core_pairwise_obstruction}\\
 Finite relational tests and the four-valuation obstruction (\cref{core:lem:finite-interpolation,core:prop:four-persistence,core:thm:ternary-obstruction})
@@ -132,10 +132,8 @@ Five-point interpolation in one profile class (\cref{core:thm:five-local-profile
  & \path{core_five_local_profile_obstruction}\\
 Complete membership-clause certificates (\cref{core:thm:clause-completeness})
  & \path{core_membership_certificates}\\
-Direct constrained interpolation (\cref{core:thm:peeling})
+Recursive constrained interpolation (\cref{core:thm:peeling})
  & \path{core_peeling_interpolation}\\
-Joint source compatibility (\cref{core:thm:source-compatibility})
- & \path{core_guard_compatibility}, \path{core_source_interior}, \path{core_source_interior_realization}\\
 One-owner four-variable obstruction (\cref{owner:thm:no-four-variable-basis})
  & \path{owner_four_variable_obstruction}\\
 Permutation envelope (\cref{full:lem:envelope})
@@ -531,8 +529,6 @@ infinite, as checked in \path{tests/CorePairwiseInterpolation.lean}.
 \path{KFOL/Core/ProfileEnvelope.lean} constructs the greatest completion
 by reset and proves nonconvexity of core realizability at fixed profiles using the explicit
 core lower bound in \path{KFOL/Core/TernaryInterpolation.lean}.
-\path{KFOL/Core/SourceCompatibility.lean} proves direct compatibility, the
-monotone idempotent interior, and its greatest common realization.
 \path{KFOL/Core/PairwiseInterpolation.lean} proves the uniform binary-test
 obstruction by an algebraic repeated-value argument and three-valuation
 persistence; it uses no finite enumeration.
@@ -557,8 +553,6 @@ actual core expressions and the complete four-point obstruction.
 obstructions and the five-point obstruction with infinitely many roles.
 \path{tests/CorePairwiseInterpolation.lean} also checks the four-role instance
 and the empty-relation and zero-arity boundaries.
-\path{tests/CoreSourceCompatibility.lean} checks the zero-array and nullary
-boundaries and a positive monotone array rejected by joint consistency.
 
 For \cref{core:thm:five-local-profile},
 \path{KFOL/Core/SixPatchCertificate.lean} checks five-of-six agreement
@@ -586,7 +580,7 @@ connects these auxiliary-clause certificates to canonical source probes.
 guard families, including arity zero, and uses a semantic choice
 counterexample to reject every proposed order for an invalid clause family.
 
-The direct hereditary test is specified in
+The recursive row-deletion test is specified in
 \path{KFOL/Definitions/CoreInterpolation.lean}, with negative source probes
 in \path{KFOL/Definitions/CoreNormalForm.lean}.
 \path{KFOL/Core/AtomicInterpolation.lean} reduces singleton demands and one
@@ -601,8 +595,8 @@ row. \path{KFOL/Core/Peeling.lean} removes that row and proves
 of bounded rows. \path{KFOL/Core/FiniteInterpolation.lean} combines membership
 witnesses into one exact tuple, and \path{KFOL/Core/SourcePeeling.lean}
 applies the test to negative source observations, proving
-\cref{core:cor:guard-peeling}. No auxiliary clauses, graph, or saturation
-operator enter the hereditary predicate.
+\cref{core:cor:guard-peeling}. This is a recursive recognition procedure;
+the short intrinsic characterization problem remains open.
 \path{tests/CorePeeling.lean} checks empty row and variable types, empty
 allowed sets, conflicting requests, and two same-owner demands realized by
 owned choice although neither projection satisfies both.
@@ -623,14 +617,5 @@ to canonical prime source guards. \path{tests/CoreColoredGraph.lean}
 checks both forbidden patterns, arity zero, a single role, repeated labels,
 and infinite role and variable types. No enumerated operation clone is
 used in these proofs.
-
-The cut rules of \cref{core:thm:cuts} are defined independently of terms in
-\path{KFOL/Definitions/CoreFunctions.lean} and
-\path{KFOL/Definitions/FiniteHorn.lean}. \path{KFOL/Algorithms/FiniteHorn.lean}
-proves that saturation is reached within the number of possible facts. \path{KFOL/Core/Cuts.lean}
-proves a simultaneous term witness for every fact, completeness by root cuts,
-and one common witness for all memberships at a bound.
-\path{tests/CoreCuts.lean} rejects a table whose rows are individually
-realizable but jointly impossible, and checks the arity-zero boundary.
 
 For the core results that remain written, \path{checks/check_core_unary_polynomials.py} enumerates the entire $131$-function unary polynomial closure at $K=3$ and compares it with the normal forms, and at $K=4$ it verifies all $6575$ functions by explicit synthesis, with their distinctness and stabilization. Conservative models are checked on chains of sizes two through six. The atomic quotient is checked at $K=3,\ldots,6$ and near-unanimity at $K=3,\ldots,8$. \path{checks/check_core_atomic_basis.py} makes $675733$ equation evaluations for the atomic basis, the lifting basis, and its normalization consequences, using every observer and $D_K$ at $K=3,\ldots,6$ and fully expanded core terms at $K=3$. The $236$ lattice and absorber templates leave exactly the $18$ predicted two-element quotients, and $D_K$ passes the lifts and fails exhaustion. All principal ideals of $247$ models verify the closure maps, meets, kernel equality, and normalized operations on $32343$ input pairs.
