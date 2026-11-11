@@ -154,7 +154,7 @@ noncomputable def Compatible {Role : Type u} [Fintype Role] {Var : Type v} [Fint
   classical
   exact (∃ k j p, F k j p) ∧ ∀ k j p, F k j p → interior three F k j p
 
-/-- The intrinsic joint-realizability criterion for canonical source families. -/
+/-- Joint realizability of canonical source families by the finite cut test. -/
 noncomputable def Admissible {Role : Type u} [Fintype Role] {Var : Type v} [Fintype Var]
     (three : Fin 3 ↪ Role) (G : ∀ (k : Role) (j : Var), Finset (Guard k j)) : Prop :=
   Canonical G ∧ Compatible three (coefficients G)
