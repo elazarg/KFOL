@@ -7,7 +7,7 @@ proofs.
 
 | Scripts in `checks/` | Current paper/report coverage |
 | --- | --- |
-| `check_choice.py`, `check_core.py`, `check_common_source.py`, `check_structure.py`, `check_symmetric.py` | Owned choice, contexts, bottom extensions, restricted views, winning-set families, collective choice and team refinement, tests, core extraction and common source |
+| `check_choice.py`, `check_core.py`, `check_common_source.py`, `check_structure.py`, `check_symmetric.py` | Owned choice, contexts, unrepeated ownership and injective matchings, bottom extensions, restricted views, winning-set families, collective choice and team refinement, tests, core extraction and common source |
 | `check_decision_rules.py` | Atomic decision rules and transport, scalar-utility SPE, and majority approval, preference and ballot rules |
 | `check_fibers.py`, `check_general.py` | Unary contexts, ambiguity and fibers |
 | `check_reset.py`, `check_forest.py` | Reset tables, antimatroids and forest models |

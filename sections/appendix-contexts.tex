@@ -1,5 +1,5 @@
 \section{Unary contexts and the meaning of repetition}\label{app:contexts}
-This appendix classifies the one-variable contexts of the reduct, explains which observations retain ambiguity, separates bottom from omitted contributions, and relates collective decision rules through their outcome interpretations. It then separates three readings of a repeated component: independent copies, uniform equilibrium selection, and a shared hidden decision.
+This appendix classifies the one-variable contexts of the reduct, explains which observations retain ambiguity, and identifies a restriction under which Nash and subgame-perfect equilibria have the same possible winners. It separates bottom from omitted contributions and relates collective decision rules through their outcome interpretations. It then separates three readings of a repeated component: independent copies, uniform equilibrium selection, and a shared hidden decision.
 
 \subsection{Unary contexts without internal switches}
 
@@ -158,6 +158,82 @@ Thus the mutual distributivity axiom of their multiplayer algebras
 fails here, even though every $\star_r$ distributes over the neutral
 union operation. Reusing their complete equational calculus would
 therefore change the semantics.
+
+\subsection{Choices paired with distinct winning leaves}\label{app:contexts-unrepeated}
+
+A finite binary tree with $n$ choice nodes has $n+1$ leaves, so its
+individual choices and leaves cannot be in bijection. More generally,
+a finite tree whose choice nodes all have at least two children has
+more leaves than choices. The closest binary case assigns every choice
+a different winning leaf and leaves one leaf with no choices of its
+own. In the standard presentation, each controller then owns one
+choice and each outcome occurs at one leaf. This case admits a simple
+structural calculation, and a larger class has the same simplification.
+
+Say that ownership is \emph{unrepeated on plays} if no root-to-leaf
+path contains two choices owned by the same role. A role may still own
+choices in separate branches. For a subtree $H$, write $L(H)$ for
+the set of all its leaf winners, before any equilibrium selection.
+
+\begin{proposition}[Unrepeated ownership]\label{context:prop:unrepeated}
+For a finite public game with ownership unrepeated on plays, define
+\[
+ P(\at i)=\{i\},\qquad
+ P(G\ch r H)=
+ \begin{cases}
+ \{r\},&L(G)=\{r\}\text{ or }L(H)=\{r\},\\
+ P(G)\cup P(H),&\text{otherwise}.
+ \end{cases}
+\]
+Then $P(G)$ is both the set of possible SPE winners and the set of
+possible Nash winners, for the paper's one-winner payoffs.
+\end{proposition}
+\begin{proof}
+If a subtree contains no choices owned by $r$, its SPE value equals
+$\{r\}$ exactly when all its leaves are won by $r$. Indeed, a choice
+owned by $s\ne r$ either returns $\{s\}$ or takes union. Returning
+$\{r\}$ therefore requires both children to return $\{r\}$, so the
+claim follows inductively; the converse is immediate.
+
+At a node owned by $r$, neither child contains an $r$-choice. The
+owner-singleton test in backward induction is consequently exactly
+$L(G)=\{r\}$ or $L(H)=\{r\}$. Thus the displayed recursion computes
+the possible SPE winners.
+
+Every SPE is Nash. Conversely, restrict a Nash profile to its reached
+child; this is a Nash profile of that child, since any profitable
+deviation there extends to the whole game while retaining the prefix.
+By induction, its winner belongs to that child's $P$ value. If neither
+child is monochromatic for the root owner, it therefore belongs to
+the parent's union. If a child is monochromatic for $r$, the root
+owner can win by selecting it regardless of all subsequent actions,
+so every Nash profile is won by $r$. This proves the other inclusion.
+\end{proof}
+
+\begin{corollary}[Injective matching is local pruning]\label{context:cor:injective-matching}
+Suppose each choice is paired with a different winning leaf, and
+different leaves have different winners. The possible Nash and SPE
+winners are the leaves remaining after the following pruning: whenever
+a choice has its own winning leaf as an immediate child, replace that
+choice subtree by the winning leaf; retain both children at every
+other choice. In particular, a game with an internal root has a unique
+equilibrium winner exactly when its root is paired with an immediate
+leaf child.
+\end{corollary}
+\begin{proof}
+Distinct owners give unrepeated ownership. With distinct leaf winners,
+a child subtree is monochromatic for the parent owner exactly when it
+is that owner's leaf. Thus the recursion for $P$ is precisely this
+pruning. If the root is not pruned, its two child values are nonempty
+and disjoint, so its value is ambiguous.
+\end{proof}
+
+The equality concerns possible winners, not complete profiles. For
+example, in $\at a\ch a(\at b\ch b\at c)$, choosing $a$ at the
+root and prescribing $c$ on the right is Nash but not subgame perfect.
+The unique winner is $a$ under either solution concept. A separation
+of their possible-winner observations therefore requires a repeated
+owner on some play in the present payoff model.
 
 \subsection{Bottom, top, and omitted subtrees}\label{app:contexts-bottom}
 

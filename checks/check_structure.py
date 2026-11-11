@@ -1,6 +1,6 @@
 """Cross-checks for the new arbitrary-arity representation and optimal tests."""
 
-from functools import reduce
+from functools import lru_cache, reduce
 from itertools import permutations, product
 from random import Random
 
@@ -271,7 +271,7 @@ def bottom_extension_checks():
     print("Bottom extensions: unit and annihilator laws, derived unions and the distributivity obstruction passed (K=3..5).")
 
 
-def full_profile_outcomes(tree, payoff):
+def full_profile_outcomes(tree, payoff, subgame_perfect=True):
     nodes = []
 
     def index(t):
@@ -287,6 +287,7 @@ def full_profile_outcomes(tree, payoff):
     root = index(tree)
     profiles = tuple(product((0, 1), repeat=len(nodes)))
     controllers = {node[0] for node in nodes}
+    subgames = nodes if subgame_perfect else nodes[:1]
 
     def outcome(t, profile):
         while not isinstance(t, int):
@@ -296,10 +297,10 @@ def full_profile_outcomes(tree, payoff):
 
     result = set()
     for profile in profiles:
-        # Enumerate whole-controller deviations in every subgame. This uses
-        # neither backward induction nor an algebraic equilibrium recurrence.
+        # Enumerate whole-controller deviations at the root or every subgame.
+        # Neither backward induction nor an algebraic recurrence is used.
         perfect = True
-        for subgame in nodes:
+        for subgame in subgames:
             actual = outcome(subgame, profile)
             for controller in controllers:
                 for deviation in profiles:
@@ -315,6 +316,75 @@ def full_profile_outcomes(tree, payoff):
         if perfect:
             result.add(outcome(root, profile))
     return frozenset(result)
+
+
+def unrepeated_ownership_checks():
+    def structural_values(tree):
+        if isinstance(tree, int):
+            return (1 << tree,) * 3
+        owner, left, right = tree
+        left_leaves, left_pruned, left_actual = structural_values(left)
+        right_leaves, right_pruned, right_actual = structural_values(right)
+        atom = 1 << owner
+        pruned = atom if atom in (left_leaves, right_leaves) else left_pruned | right_pruned
+        return left_leaves | right_leaves, pruned, own(owner, left_actual, right_actual)
+
+    def check(tree):
+        leaves, pruned, actual = structural_values(tree)
+        assert pruned == actual and actual & ~leaves == 0
+        payoff = lambda controller, winner: int(controller == winner)
+        spe = full_profile_outcomes(tree, payoff)
+        nash = full_profile_outcomes(tree, payoff, subgame_perfect=False)
+        assert spe == nash
+        assert reduce(int.__or__, (1 << winner for winner in spe), 0) == pruned
+        return pruned
+
+    @lru_cache(None)
+    def games(nodes, ancestors=()):
+        if nodes == 0:
+            return tuple(range(3))
+        return tuple((owner, left, right)
+                     for owner in range(3) if owner not in ancestors
+                     for left_size in range(nodes)
+                     for left in games(left_size, ancestors + (owner,))
+                     for right in games(nodes - 1 - left_size, ancestors + (owner,)))
+
+    cases = 0
+    for nodes in range(4):
+        for tree in games(nodes):
+            check(tree)
+            cases += 1
+    print(f"Unrepeated ownership: structural pruning and Nash/SPE winner equality passed on all {cases} three-role games with at most three choices.")
+
+    @lru_cache(None)
+    def shapes(nodes):
+        if nodes == 0:
+            return (None,)
+        return tuple((left, right) for left_size in range(nodes)
+                     for left in shapes(left_size)
+                     for right in shapes(nodes - 1 - left_size))
+
+    def label(shape, owners, winners):
+        if shape is None:
+            return next(winners)
+        owner = next(owners)
+        return (owner, label(shape[0], owners, winners), label(shape[1], owners, winners))
+
+    matched = 0
+    for nodes in range(5):
+        for shape in shapes(nodes):
+            for owners in permutations(range(nodes + 1), nodes):
+                winners = iter(range(nodes + 1))
+                tree = label(shape, iter(owners), winners)
+                assert next(winners, None) is None
+                pruned = check(tree)
+                if nodes:
+                    owner, left, right = tree
+                    immediate = any(isinstance(child, int) and child == owner
+                                    for child in (left, right))
+                    assert (pruned.bit_count() == 1) == immediate
+                matched += 1
+    print(f"Injective matching: all {matched} binary trees/matchings through four choices passed; singleton winners are exactly immediate root matches.")
 
 
 def winning_family_checks():
@@ -480,5 +550,6 @@ if __name__ == "__main__":
     congruence_checks()
     restricted_view_checks()
     bottom_extension_checks()
+    unrepeated_ownership_checks()
     winning_family_checks()
     collective_checks()
