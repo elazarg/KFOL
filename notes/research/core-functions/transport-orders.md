@@ -1,10 +1,18 @@
 # Ordered transport certificates
 
-This note records an induction principle and a complete finite certificate
-calculus suggested by the six-row five-point counterexample. It is a way to
-organize persistence proofs, not a direct characterization of core operations.
-A standalone Python checker verifies a 32-clause certificate below; the
-generic soundness theorem has not yet been formalized in Lean.
+This note records the complete finite owner-elimination certificate calculus
+and its application to canonical source guards. Soundness is proved in
+`Core/OwnerElimination`; completeness and finite-sample separation are proved
+in `Core/OwnerEliminationComplete`. `Core/SourceCertificates` gives the exact
+canonical-guard criterion. The calculus permits finite families of auxiliary
+clauses; it does not supply a concise auxiliary-free list of guard laws.
+
+The six-row five-point counterexample has a kernel-checked 32-clause
+certificate in `Core/SixValuation`. Its six-patch witnesses work uniformly for
+every role type containing three distinct roles. For finite role types, the
+non-core operation can also be placed between actual core lower and upper
+bounds in one singleton-profile fiber. The independent Python certificate
+checker below remains a separate regression.
 
 ## The owner-elimination lemma
 
@@ -53,10 +61,10 @@ work: they cannot be singleton outputs, so their choices act as union on
 these valuations. Thus a finite matrix can support a certificate even when
 the role type itself is infinite.
 
-The useful content of a certificate is an acyclic order for blocking
-absorbers. Its premises are semantic transport implications; the lemma does
-not prove those premises, and no completeness theorem for such certificates
-is asserted.
+The useful content of this step is an acyclic order for blocking absorbers.
+Its premises are transport implications. The complete finite calculus below
+supplies their expanded clauses as simultaneous auxiliary invariants, with
+soundness and completeness proved in Lean.
 
 ## One pivot per owner
 
@@ -225,11 +233,25 @@ every tuple outside the generated relation, as proved above. The certificate
 itself is entirely syntactic; semantic validity is used only to show that a
 certificate exists.
 
-This gives no bounded family of auxiliaries, no arity bound, and no direct
-test on one operation's guard table. The completeness construction uses the
-whole evaluation relation to choose its family. Thus the calculus explains
-and verifies a structural proof pattern, but does not yet settle the direct
-intrinsic-characterization problem.
+`OwnerEliminationComplete.exists_complete_certificate` formalizes this
+construction. `choiceClosed_iff_checked_clauses` identifies finite
+choice-closed relations with checked clause presentations, assuming three
+distinct owners for union definability. `finite_sample_iff_checked_clauses`
+and `truth_table_iff_checked_clauses` give exact interpolation criteria.
+Roles and rows are finite; variables need not be finite for the sampled-row
+criterion. No bound on the number of auxiliaries or a fixed relational arity
+bound is asserted.
+
+`SourceCertificates.source_probes_iff_checked_clauses` specializes the tests to
+canonical source probes. For finite role and variable types,
+`Sources.guard_table_iff_certified_clauses` states that a guard family is a
+core normal form if and only if it is canonical and its raw probe values
+satisfy every clause with a checked certificate from the projection columns.
+The tests force nonempty probe values as well. This is an exact syntactic
+criterion on canonical guards; certificates may contain arbitrary finite
+auxiliary families. The completeness construction uses the evaluation
+relation to prove existence, while a supplied certificate is checked using
+only its finite clauses, owner orders and input columns.
 
 ## Reproducing the six-row certificate
 
@@ -258,11 +280,12 @@ family clause or marks a tautological expanded blocker. The verifier checks
 every variable column, every addition to an owner order, every auxiliary
 subclause inclusion, and every terminal restricted-head obligation.
 
-Conditional on these finite obligations, the simultaneous-induction
-soundness proof above proves the root conclusion for every core term in the
-three-role algebra. Thus this artifact supplies a finite symbolic certificate
-independent of subpower enumeration. This is research evidence with a
-mathematical soundness argument, not yet a kernel-checked Lean theorem.
+`Core/SixValuation` checks the corresponding finite obligations in Lean and
+applies the generic simultaneous-induction soundness theorem. Role
+restriction transports the root conclusion to every role type containing
+three distinct roles. Thus the six-row law now has a kernel-checked proof
+independent of subpower enumeration. The Python artifact independently checks
+the same certificate pattern.
 
 ## The six-row matrix
 
@@ -318,10 +341,10 @@ computed by the independent checker. The equal-atom implications and
 short independent term-induction proof has also been derived for
 `E=a ⇒ bB or aC`: it uses `B=a ⇔ C=a` and the incompatible atom pair
 `E=a, B=c`, whose input supports `{X}` and `{Z,W,V}` are disjoint.
-The simultaneous certificate above proves the expanded clauses required for
-the root persistence law. Separate direct proofs of all displayed transports
-have not been written, and no six-row persistence theorem is yet claimed in
-Lean.
+The simultaneous certificate proves the expanded clauses needed for the
+root persistence law; Lean now checks that certificate and the resulting
+uniform six-row theorem. The displayed transports explain an economical
+owner order, while the certified expanded clauses carry the formal proof.
 
 ## Why singleton profiles do not finish the proof
 
@@ -341,11 +364,11 @@ membership consequent by a singleton consequent. The full value semantics,
 not merely the admissible singleton-profile classification, is needed for
 the proposed transport proof.
 
-## Possible next step
+## Remaining simplification questions
 
-A parameterized family of matrices with these ordered transport certificates
-would explain the growing local-interpolation obstructions. Merely finding
-longer finite matrices does not establish such a family. The completeness
-proof gives a finite simultaneous certificate in principle; extracting a
-small uniform family of auxiliary clauses, or eliminating them in favor of
-direct guard conditions, remains the substantive next step.
+The complete certificate criterion settles exact recognition by checked
+owner-elimination proofs, including its canonical source-guard specialization.
+A concise fixed family of auxiliary-free guard laws is not obtained. A
+parameterized family of matrices with these certificates could also establish
+an unbounded local-interpolation hierarchy, but the existing four- and
+five-point obstructions do not by themselves establish such a family.

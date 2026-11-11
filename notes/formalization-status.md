@@ -8,7 +8,7 @@ Other report results remain optional and have their own evidence status.
 | Audit entrypoint | Mathematical statements | Presentation |
 | --- | ---: | --- |
 | [Paper.lean](../Paper.lean) | 79 | Main text and the report claims it cites; 631 lines |
-| [Report.lean](../Report.lean) | 73 | Further report results and proof ingredients |
+| [Report.lean](../Report.lean) | 78 | Further report results and proof ingredients |
 | [Results/Certificates](../KFOL/Results/Certificates.lean) | 140 preserved contracts | Original full statements, including native machines, codecs and intermediate invariants |
 
 Every root proof names one library theorem. Both root files have no semantic
@@ -26,7 +26,7 @@ regular representation are in `Definitions/Relational`.
 | Definition surface | Theorem types | Semantic declarations | Source files | Written review units |
 | --- | ---: | ---: | ---: | ---: |
 | Paper | 79 | 654 | 38 | 345 |
-| Report | 73 | 645 | 35 | 293 |
+| Report | 78 | 675 | 36 | 313 |
 
 The slices overlap and exclude theorem proof bodies. These meaning indexes do
 not replace the human comparison with the manuscript or the proof/axiom audits.
@@ -37,7 +37,7 @@ The production integration checks are:
 
 - `make check-lean`: literal façade and preservation checks, inventory,
   independent algebra build/import audit, Paper/Report and whole-source axiom
-  audits, both definition indexes, actual negative audit fixtures and 99 strict
+  audits, both definition indexes, actual negative audit fixtures and 101 strict
   Lean regressions.
 - `make check-python`: the explicit 34 independent Python checks, mapped to the
   current paper in `checks/README.md` and the verification appendix.
@@ -137,9 +137,10 @@ operator specified by finite Horn rules. Every nonzero result has one common
 term witness and is the greatest realizable coefficient array below its input.
 Canonical guard families are realizable exactly when their array is nonzero
 and fixed by this operator. Three complete statements are in `Report.lean`.
-This refines the algorithmic criterion. The main-text question asks for an
-intrinsic characterization comparable to singleton-profile admissibility;
-that stronger question is not declared solved.
+This refines the algorithmic criterion. A complete owner-elimination certificate criterion is now also proved on
+these canonical probes, as described below. Concise conditions comparable
+to singleton-profile admissibility, without auxiliary certificates, remain
+a separate simplification question.
 
 Pairwise compatibility is now proved insufficient uniformly for every K ≥ 3.
 `Core/PairwiseInterpolation` defines a repeated-value patch of three short core
@@ -180,9 +181,9 @@ and variable types, assuming a nonempty role type.
 
 The ternary obstruction has short separate realizations of each named
 owner's full view. Thus, for three roles, even realizability on every individual
-view does not ensure one common realization. The graph witness is not unique;
-a direct condition on canonical guard tables, without an auxiliary realization,
-is still not proved.
+view does not ensure one common realization. The graph witness is not unique. The newer owner-elimination criterion
+characterizes canonical guard tables by finite checked clause proofs; it does
+not eliminate all auxiliary clauses or give a short fixed list of guard laws.
 
 `Core/MinorantObstruction` proves a four-row cover law and its atomic bridge
 uniformly in all additional roles and arbitrary groups of variables.
@@ -203,3 +204,33 @@ four-point interpolable operation with no core minorant, uniformly for arbitrary
 role types containing three distinct roles. The complete existential statement
 is `Report.core_four_local_without_minorant`; it introduces no new semantic
 definitions in the report's theorem types.
+
+`Core/SixValuation` checks a finite owner-elimination certificate for the
+six-row persistence law. `Core/SixPatchCertificate` checks six factored core
+expressions on the formal status model, and `Core/FivePointInterpolation`
+proves five-point interpolation and preservation of every invariant relation
+of arity at most five, while excluding a global core realization. The
+operation has an actual core minorant. This holds for every role type
+containing three distinct roles, with no finiteness hypothesis. For finite
+role types, `exists_five_local_profile_fiber_nonconvex` strengthens it to a
+non-core operation between core lower and upper bounds, all sharing exactly
+the same singleton-output predicates. The base result is
+`Core.exists_five_local_noncore`; the stronger finite-role statement is
+`Report.core_five_local_profile_obstruction`. The
+independent five-point checker uses the exact 133-operation Lean expressions;
+the superseded discovery family has been removed.
+
+`Core/OwnerElimination` proves soundness of finite checked clause families by
+simultaneous induction on core terms. `Core/OwnerEliminationComplete` proves
+the converse: when three distinct owners are available, every finite
+choice-closed relation has a checked clause presentation. These presentations
+characterize simultaneous sampled-row interpolation and whole operation
+tables. `Core/SourceCertificates` reduces the tests to source probes.
+A canonical guard family is a core normal form exactly when its raw probe
+values satisfy every clause certified from the projection columns; the tests
+also force nonempty probe values. `Report.core_guard_certificates` states
+the canonical guard criterion; `Report.core_membership_certificates` states the general raw presentation
+and sampled-row criteria.
+The proof permits unrestricted finite auxiliary clause families. It does
+not establish a concise auxiliary-free guard characterization, a fixed
+relational arity bound, or an unbounded interpolation hierarchy.

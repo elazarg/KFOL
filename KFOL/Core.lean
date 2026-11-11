@@ -8,6 +8,8 @@ public import KFOL.Core.PairwiseInterpolation
 public import KFOL.Core.TernaryInterpolation
 public import KFOL.Core.MinorantPatches
 public import KFOL.Core.MinorantFivePatches
+public import KFOL.Core.FivePointInterpolation
+public import KFOL.Core.SourceCertificates
 public import KFOL.Core.Cuts
 public import KFOL.Core.SourceNormalForm
 public import KFOL.Core.LocalNormalForm

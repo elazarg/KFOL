@@ -1,26 +1,31 @@
 # All-arity core functions
 
 Exact recognition, synthesis and canonical prime source-guard normal forms
-are proved. Jointly realizable families now have an exact structural graph
-representation, described below. A direct criterion on the canonical guards
-without an auxiliary realization remains open. Pairwise compatibility and correct singleton profiles together
-are proved insufficient, uniformly for every K ≥ 3. Three-point interpolation
-is also proved insufficient, with a symbolic four-valuation persistence law.
-At four inputs it need not even leave one pointwise core minorant: four short
-patches agree three at a time, while their common value violates a four-row
-cover law. This stronger obstruction is proved in `Core/MinorantPatches` and
-restated as `Report.core_three_local_without_minorant`.
-Five explicit five-input patches raise this to four-point interpolation,
-still without a core minorant, in `Core/MinorantFivePatches`; the root statement
-is `Report.core_four_local_without_minorant`. The finite status certificate is
-connected to arbitrary role types by the union-extension lemmas in `Core/StatusModel`.
+are proved. Jointly realizable families have both a structural graph
+representation and a complete syntactic owner-elimination certificate criterion.
+For finite role and variable types, a canonical guard table is realizable
+exactly when its probe values satisfy every clause with a checked proof from
+the projection columns. Certificates may use arbitrary finite families of
+auxiliary clauses. Concise conditions on the guards without such auxiliaries
+remain a separate question.
 
-The independent `four-point-candidate.py` reproduces those witnesses and their
-seven-value maximality. `five-point-candidate.py` checks a further six-patch
-example at K=3: it is five-point interpolable, has a core minorant, and violates
-a six-row persistence law. This latter example is research evidence, with no
-Lean theorem yet. `transport-orders.md` records the conditional owner-elimination
-criterion suggested by its separating relation; no completeness claim is made.
+Local tests do not suffice even within a fixed singleton-profile fiber.
+Pairwise, three-point and four-point interpolation obstructions are proved
+uniformly for every role type containing three distinct owners. The four-point
+obstruction has no pointwise core minorant. Six explicit five-input patches
+raise the non-realizability obstruction to five-point interpolation in
+`Core/FivePointInterpolation`: `Core.exists_five_local_noncore` gives a
+five-point interpolable non-core operation above an actual core minorant,
+without assuming that the role type is finite. For finite role types,
+`Core.exists_five_local_profile_fiber_nonconvex` strengthens this to an operation
+between core lower and upper bounds with the same singleton profiles. The
+operation preserves every invariant relation of arity at most five.
+
+The independent `four-point-candidate.py` reproduces the four-point witnesses
+and their seven-value discovery maxima. `five-point-candidate.py` checks the
+exact factored expressions used by the uniform five-point Lean theorem,
+including all formal passive-marker cells. `transport-orders.md` describes the
+complete checked certificate calculus and its connection to canonical guards.
 
 ## Structural graph representation
 
@@ -92,19 +97,17 @@ are terms. `Core/ProfileEnvelope.exists_profile_maximum` proves this without
 assuming the ambient variable type is nonempty; the core term supplies a leaf.
 
 Even inside one profile fiber, the core operations are not order-convex.
-For the four patches below, the core term
+`Core.exists_five_local_profile_fiber_nonconvex` gives actual core operations
+G and E and a non-core operation F with G ≤ F ≤ E. All three have the same
+singleton-output predicates, and F is five-point interpolable and preserves
+every invariant relation of arity at most five. This strengthening holds for
+every finite role type containing three distinct roles; clipping by reset
+against the lower core term preserves the critical separation.
 
-```
-G = H ⋆_c (H ⋆_a (T ⋆_a (X ⋆_c Z)))
-```
-
-has F's singleton profiles and satisfies G ≤ F. Its greatest profile
-completion E satisfies F ≤ E, but F is not a core operation. All of this is
-proved uniformly for every finite role type with three distinct roles.
-`Report.core_local_normal_forms`, `core_profile_maximum` and
-`core_profile_nonconvexity` state the complete results. These results separate
-representability by source guards and bounds within a profile fiber from
-actual joint realizability.
+`Report.core_local_normal_forms`, `core_profile_maximum`,
+`core_profile_nonconvexity` and `core_five_local_profile_obstruction` state these
+results. They separate correct source-guard interpretation and bounds within
+a profile fiber from actual joint realizability.
 
 ## Pairwise compatibility and the uniform obstruction
 
@@ -213,6 +216,32 @@ The independent Python maximum-value regression is not asserted to be an
 executable implementation of the Lean Horn system. `tests/CoreCuts.lean`
 checks incompatible sampled rows and the nullary boundary; the source tests
 check the empty array, a positive inconsistent unary array, and arity zero.
+
+## Complete owner-elimination certificates
+
+`Core/OwnerElimination` proves simultaneous-induction soundness of checked
+membership clauses and their owner orders. `Core/OwnerEliminationComplete`
+proves completeness: with three distinct owners, every finite choice-closed
+relation has a finite checked clause presentation. Union is then term-definable,
+and these presentations separate every tuple outside the generated relation.
+`finite_sample_iff_checked_clauses` characterizes simultaneous interpolation,
+and `truth_table_iff_checked_clauses` applies it to whole operations. Roles and
+sample rows are finite; the finite-sample theorem permits arbitrary variable
+types, including the empty type.
+
+`Core/SourceCertificates.source_probes_iff_checked_clauses` reduces operation
+realizability to source reconstruction and these checks on the n K^n probes.
+`Sources.guard_table_iff_certified_clauses` states the canonical guard criterion:
+a guard family is a core normal form exactly when it is canonical and its raw
+probe meaning satisfies every clause certified from the projection columns.
+The clause conditions also force nonempty probe values; no separate assumed
+term witness or generated-subpower table is part of the certificate.
+
+The completeness proof may choose all valid clauses as auxiliaries. It proves
+a complete syntactic criterion, without providing a concise auxiliary-free
+list of guard laws, a fixed bound on relational arity, or a parametric hierarchy
+of interpolation obstructions. The six-row five-point law is one concrete
+kernel-checked certificate in `Core/SixValuation`.
 
 ## Reproducing the finite research checks
 

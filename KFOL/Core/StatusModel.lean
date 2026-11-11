@@ -2,6 +2,8 @@ module
 
 public import KFOL.Algebra.Basic
 public import Mathlib.Data.Finset.Basic
+public import Mathlib.Data.Fin.Basic
+public import Mathlib.Tactic.FinCases
 
 /-! # Finite status models for named owned choices
 
@@ -134,5 +136,88 @@ omit [DecidableEq α] in
   · simp only [choice, WinnerSet.choice, ha, hb, hab, ite_false, toWinner_union]
 
 end Value
+
+variable {Var : Type*}
+
+def formalInput (s : Fin 4) (j : Var) : Value (Fin 3 ⊕ Var) :=
+  if h : s.val < 3 then Value.singleton (.inl ⟨s.val, h⟩) else Value.singleton (.inr j)
+
+noncomputable def seed {Role : Type*} (three : Fin 3 ↪ Role)
+    (v : Var → WinnerSet Role) (x : Fin 3 ⊕ Var) : WinnerSet Role := by
+  classical
+  exact match x with
+    | .inl r => singleton (three r)
+    | .inr j => if ∃ r : Fin 3, v j = singleton (three r) then
+        (singleton (three 0)).union (singleton (three 1)) else v j
+
+noncomputable def code {Role : Type*} (three : Fin 3 ↪ Role)
+    (A : WinnerSet Role) : Fin 4 := by
+  classical
+  exact if A = singleton (three 0) then 0 else
+    if A = singleton (three 1) then 1 else
+    if A = singleton (three 2) then 2 else 3
+
+theorem seed_eq_singleton_iff {Role : Type*} (three : Fin 3 ↪ Role)
+    (v : Var → WinnerSet Role) (r : Fin 3) (x : Fin 3 ⊕ Var) :
+    seed three v x = singleton (three r) ↔ x = .inl r := by
+  classical
+  cases x with
+  | inl s => simp [seed, singleton_inj, three.injective.eq_iff]
+  | inr j =>
+    simp only [seed, Sum.inr_ne_inl, iff_false]
+    split_ifs with h
+    · intro he
+      have hh := (union_eq_singleton_iff _ _ _).mp he
+      have h₀ := singleton_inj.mp hh.1
+      have h₁ := singleton_inj.mp hh.2
+      have h01 : three 0 ≠ three 1 := three.injective.ne (by decide)
+      exact h01 (h₀.trans h₁.symm)
+    · intro he
+      exact h ⟨r, he⟩
+
+theorem expand_formalInput {Role : Type*} (three : Fin 3 ↪ Role)
+    (v : Var → WinnerSet Role) (j : Var) :
+    expand (seed three v) (Value.toWinner (formalInput (code three (v j)) j)) = v j := by
+  classical
+  by_cases h₀ : v j = singleton (three 0)
+  · simp [code, h₀, formalInput, seed]
+  by_cases h₁ : v j = singleton (three 1)
+  · simp [code, h₁, formalInput, seed]
+  by_cases h₂ : v j = singleton (three 2)
+  · simp [code, h₂, formalInput, seed]
+  have h : ¬∃ r : Fin 3, v j = singleton (three r) := by
+    rintro ⟨r, hr⟩
+    have hcases : r = 0 ∨ r = 1 ∨ r = 2 := by omega
+    rcases hcases with rfl | rfl | rfl <;> contradiction
+  simp [code, h₀, h₁, h₂, formalInput, seed, h]
+
+
+noncomputable def image {Role : Type*} (three : Fin 3 ↪ Role)
+    (v : Var → WinnerSet Role) (A : Value (Fin 3 ⊕ Var)) : WinnerSet Role :=
+  expand (seed three v) (Value.toWinner A)
+
+theorem image_union {Role : Type*} [DecidableEq Var] (three : Fin 3 ↪ Role)
+    (v : Var → WinnerSet Role) (A B : Value (Fin 3 ⊕ Var)) :
+    image three v (Value.union A B) = (image three v A).union (image three v B) := by
+  simp only [image, Value.toWinner_union, expand_union]
+
+theorem image_choice {Role : Type*} [DecidableEq Var] (three : Fin 3 ↪ Role)
+    (v : Var → WinnerSet Role) (r : Fin 3) (A B : Value (Fin 3 ⊕ Var)) :
+    image three v (Value.choice (.inl r) A B) =
+      choice (three r) (image three v A) (image three v B) := by
+  simp only [image, Value.toWinner_choice]
+  exact expand_choice (seed three v) (.inl r) (three r)
+    (seed_eq_singleton_iff three v r) _ _
+
+theorem image_input {Role : Type*} (three : Fin 3 ↪ Role)
+    (v : Var → WinnerSet Role) (j : Var) :
+    image three v (formalInput (code three (v j)) j) = v j :=
+  expand_formalInput three v j
+
+theorem image_mono {Role : Type*} (three : Fin 3 ↪ Role)
+    (v : Var → WinnerSet Role) {A B : Value (Fin 3 ⊕ Var)} (h : A.val ⊆ B.val) :
+    (image three v A).val ⊆ (image three v B).val := by
+  rintro k ⟨x, hx, hk⟩
+  exact ⟨x, h hx, hk⟩
 
 end KFOL.WinnerSet.StatusModel

@@ -1,5 +1,6 @@
 import KFOL.Core.MinorantPatches
 import KFOL.Core.MinorantFivePatches
+import KFOL.Core.FivePointInterpolation
 
 open KFOL Core
 
@@ -27,3 +28,11 @@ example : ∃ f : (Fin 5 → WinnerSet ℕ) → WinnerSet ℕ,
     LocallyInterpolable 4 f ∧ PreservesInvariants 4 f ∧
       ¬∃ t : Term ℕ (Fin 5), t.IsCore ∧ ∀ v, (t.eval v).val ⊆ (f v).val :=
   exists_four_local_without_core_minorant ⟨Fin.val, Fin.val_injective⟩
+
+-- The five-point obstruction also works with infinitely many owners; its
+-- actual core minorant distinguishes it from the earlier cover obstructions.
+example : ∃ f : (Fin 5 → WinnerSet ℕ) → WinnerSet ℕ,
+    LocallyInterpolable 5 f ∧ PreservesInvariants 5 f ∧
+      (∃ t : Term ℕ (Fin 5), t.IsCore ∧ ∀ v, (t.eval v).val ⊆ (f v).val) ∧
+      ¬∃ t : Term ℕ (Fin 5), t.IsCore ∧ ∀ v, t.eval v = f v :=
+  exists_five_local_noncore ⟨Fin.val, Fin.val_injective⟩

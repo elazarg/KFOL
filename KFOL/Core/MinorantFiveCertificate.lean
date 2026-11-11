@@ -18,9 +18,6 @@ namespace KFOL.Core.FivePatch
 
 open WinnerSet WinnerSet.StatusModel
 
-def formalInput (s : Fin 4) (j : Fin 5) : Value (Fin 3 ⊕ Fin 5) :=
-  if h : s.val < 3 then Value.singleton (.inl ⟨s.val, h⟩) else Value.singleton (.inr j)
-
 def formalCandidates (s : Fin 5 → Fin 4) : Fin 5 → Value (Fin 3 ⊕ Fin 5) :=
   let X := formalInput (s 0) 0
   let Y := formalInput (s 1) 1

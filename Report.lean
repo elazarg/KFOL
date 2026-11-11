@@ -10,6 +10,8 @@ public import KFOL.Query.ZeroExtension
 public import KFOL.Core.TernaryInterpolation
 public import KFOL.Core.MinorantPatches
 public import KFOL.Core.MinorantFivePatches
+public import KFOL.Core.FivePointInterpolation
+public import KFOL.Core.SourceCertificates
 public import KFOL.Core.LocalNormalForm
 public import KFOL.Core.ProfileEnvelope
 public import KFOL.Audit.Namespace
@@ -214,6 +216,45 @@ theorem core_four_local_without_minorant {Role : Type u} (three : Fin 3 ↪ Role
       Core.LocallyInterpolable 4 f ∧ Core.PreservesInvariants 4 f ∧
         ¬∃ t : Term Role (Fin 5), t.IsCore ∧ ∀ v, (t.eval v).val ⊆ (f v).val :=
   Core.exists_four_local_without_core_minorant three
+
+theorem core_five_local_profile_obstruction {Role : Type u} [Fintype Role]
+    (three : Fin 3 ↪ Role) :
+    ∃ s t : Term Role (Fin 5), ∃ f : (Fin 5 → WinnerSet Role) → WinnerSet Role,
+      s.IsCore ∧ t.IsCore ∧ Core.LocallyInterpolable 5 f ∧ Core.PreservesInvariants 5 f ∧
+      (∀ v r, s.eval v = singleton r ↔ t.eval v = singleton r) ∧
+      (∀ v r, f v = singleton r ↔ s.eval v = singleton r) ∧
+      (∀ v, (s.eval v).val ⊆ (f v).val ∧ (f v).val ⊆ (t.eval v).val) ∧
+      ¬∃ u : Term Role (Fin 5), u.IsCore ∧ ∀ v, u.eval v = f v :=
+  Core.exists_five_local_profile_fiber_nonconvex three
+
+open Core.OwnerElimination in
+theorem core_membership_certificates {Role : Type u} {Row : Type v} {Var : Type w}
+    [DecidableEq Role] [Fintype Role] [DecidableEq Row] [Fintype Row]
+    (three : Fin 3 ↪ Role) (R : (Row → WinnerSet Role) → Prop)
+    (values : Row → Var → WinnerSet Role) (target : Row → Set Role) :
+    (ChoiceClosed R ↔
+      ∃ (F : Finset (Clause Row Role))
+        (orders : Clause Row Role → Role → List (Atom Row Role)),
+        checkFamily F orders = true ∧
+          (∀ x : Row → Set Role,
+            (∃ y : Row → WinnerSet Role, R y ∧ ∀ i, (y i).val = x i) ↔ SatisfiesSets F x)) ∧
+    ((∃ t : Term Role Var, t.IsCore ∧ ∀ i, (t.eval (values i)).val = target i) ↔
+      ∀ (F : Finset (Clause Row Role))
+        (orders : Clause Row Role → Role → List (Atom Row Role)),
+        checkFamily F orders = true →
+        (∀ j, Satisfies F (fun i => values i j)) → SatisfiesSets F target) :=
+  Core.OwnerElimination.complete_certificates three R values target
+
+theorem core_guard_certificates {Role : Type u} {Var : Type v}
+    [Fintype Role] [DecidableEq Role] [Fintype Var] [DecidableEq Var]
+    (three : Fin 3 ↪ Role)
+    (G : ∀ (k : Role) (j : Var), Finset (Core.Sources.Guard k j)) :
+    (∃ t : Term Role Var, t.IsCore ∧ Core.Sources.normalForm three (fun v => t.eval v) = G) ↔
+      Core.Sources.Canonical G ∧
+      ∀ C : Core.OwnerElimination.Clause (Core.Sources.ProbeIndex Role Var) Role,
+        Core.OwnerElimination.Certifies (fun j q => Core.Sources.probeAt three q j) C →
+          C.HoldsSets (fun q => Core.Sources.meaning G (Core.Sources.probeAt three q)) :=
+  Core.Sources.guard_table_iff_certified_clauses three G
 
 theorem core_singleton_profiles {Role : Type u} [DecidableEq Role] [Fintype Role]
     {Var : Type v} [Fintype Var] (three : Fin 3 ↪ Role)

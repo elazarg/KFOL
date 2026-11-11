@@ -209,6 +209,12 @@ import all KFOL.Core.MinorantFive
 import all KFOL.Core.MinorantFiveCertificate
 import all KFOL.Core.MinorantFivePatches
 import all KFOL.Core.StatusModel
+import all KFOL.Core.RoleRestriction
+import all KFOL.Core.OwnerElimination
+import all KFOL.Core.OwnerEliminationComplete
+import all KFOL.Core.SixPatchCertificate
+import all KFOL.Core.FivePointInterpolation
+import all KFOL.Core.SixValuation
 import all KFOL.Core.AtomicNative
 import all KFOL.Core.ChoiceUnion
 import all KFOL.Core.ChoiceUnion.Basis
@@ -250,6 +256,7 @@ import all KFOL.Core.PairLabel
 import all KFOL.Core.PairModel
 import all KFOL.Definitions.CoreNormalForm
 import all KFOL.Core.SourceProbes
+import all KFOL.Core.SourceCertificates
 import all KFOL.Core.SourceNormalForm
 import all KFOL.Core.SourceCompatibility
 import all KFOL.Core.Profiles
@@ -269,6 +276,7 @@ import all KFOL.Definitions.Complexity
 import all KFOL.Definitions.Congruences
 import all KFOL.Definitions.Core
 import all KFOL.Definitions.CoreBasis
+import all KFOL.Definitions.CoreCertificates
 import all KFOL.Definitions.CoreFunctions
 import all KFOL.Definitions.FiniteHorn
 import all KFOL.Definitions.Dissemilattice

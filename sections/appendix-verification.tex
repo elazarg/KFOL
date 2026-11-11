@@ -1,6 +1,6 @@
 \section{Verification details}\label{app:verification}
 
-The paper's results are kernel-checked in Lean~4.35.0 with mathlib. \texttt{Paper.lean} restates, in the namespace \texttt{KFOL.Paper}, every theorem of the main text and the clauses of the report results that it cites: $79$ statements, listed by result in \cref{tab:status}. \texttt{Report.lean} restates $75$ further report results in the namespace \texttt{KFOL.Report} (\cref{tab:report}). Each proof is a single library theorem, and each file ends with a check that no declaration in its namespace uses an axiom beyond \texttt{propext}, \texttt{Classical.choice}, and \texttt{Quot.sound}; a separate audit covers the whole library. Nothing is admitted, and no theorem from the literature enters as a hypothesis. Where a written proof cites one, as for the reset basis and the minimum one-owner generator \cite{FreeseEtAl2002}, owned choice with union \cite{HardingRomanowska2017}, the atomic clone \cite{Szendrei2012}, and colored-graph decomposition \cite{Gurvich2009}, the Lean proof is direct.
+The paper's results are kernel-checked in Lean~4.35.0 with mathlib. \texttt{Paper.lean} restates, in the namespace \texttt{KFOL.Paper}, every theorem of the main text and the clauses of the report results that it cites: $79$ statements, listed by result in \cref{tab:status}. \texttt{Report.lean} restates $78$ further report results in the namespace \texttt{KFOL.Report} (\cref{tab:report}). Each proof is a single library theorem, and each file ends with a check that no declaration in its namespace uses an axiom beyond \texttt{propext}, \texttt{Classical.choice}, and \texttt{Quot.sound}; a separate audit covers the whole library. Nothing is admitted, and no theorem from the literature enters as a hypothesis. Where a written proof cites one, as for the reset basis and the minimum one-owner generator \cite{FreeseEtAl2002}, owned choice with union \cite{HardingRomanowska2017}, the atomic clone \cite{Szendrei2012}, and colored-graph decomposition \cite{Gurvich2009}, the Lean proof is direct.
 
 The vocabulary of the statements is in \path{KFOL/Definitions/PaperAlgebra.lean}, \path{PaperGames.lean}, and \path{Complexity.lean}, which build on the other files of \path{KFOL/Definitions}. \path{notes/audit-guide.md} gives a reading order, and \path{notes/paper-definition-surface.md} and \path{notes/report-definition-surface.md} list every definition that each statement depends on.
 
@@ -89,7 +89,7 @@ Two players (\cref{app:two-players})
 
 {\small
 \begin{longtable}{>{\raggedright\arraybackslash}p{0.34\linewidth}>{\raggedright\arraybackslash}p{0.60\linewidth}}
-\caption{The $75$ audited statements in \texttt{Report.lean}, followed by remaining report evidence.}\label{tab:report}\\
+\caption{The $78$ audited statements in \texttt{Report.lean}, followed by remaining report evidence.}\label{tab:report}\\
 \toprule
 Result & Audited statements or other evidence\\
 \midrule
@@ -126,6 +126,12 @@ Local interpolation without a core minorant (\cref{core:thm:no-local-minorant})
  & \path{core_three_local_without_minorant}\\
 Four-point interpolation without a core minorant (\cref{core:thm:four-local-minorant})
  & \path{core_four_local_without_minorant}\\
+Five-point interpolation in one profile class (\cref{core:thm:five-local-profile})
+ & \path{core_five_local_profile_obstruction}\\
+Complete membership-clause certificates (\cref{core:thm:clause-completeness})
+ & \path{core_membership_certificates}\\
+Checked source-guard characterization (\cref{core:thm:guard-certificates})
+ & \path{core_guard_certificates}\\
 Joint source compatibility (\cref{core:thm:source-compatibility})
  & \path{core_guard_compatibility}, \path{core_source_interior}, \path{core_source_interior_realization}\\
 One-owner four-variable obstruction (\cref{owner:thm:no-four-variable-basis})
@@ -545,12 +551,38 @@ named singleton atoms and preserves their owned choices, connecting the finite
 certificate to arbitrary passive winner sets.
 \path{KFOL/Core/MinorantFivePatches.lean} proves the correspondence with the
 actual core expressions and the complete four-point obstruction.
-\path{tests/CoreMinorantInterpolation.lean} also instantiates both minorant
-obstructions with infinitely many roles.
+\path{tests/CoreMinorantInterpolation.lean} also instantiates both no-minorant
+obstructions and the five-point obstruction with infinitely many roles.
 \path{tests/CorePairwiseInterpolation.lean} also checks the four-role instance
 and the empty-relation and zero-arity boundaries.
 \path{tests/CoreSourceCompatibility.lean} checks the zero-array and nullary
 boundaries and a positive monotone array rejected by joint consistency.
+
+For \cref{core:thm:five-local-profile},
+\path{KFOL/Core/SixPatchCertificate.lean} checks five-of-six agreement
+and a core minorant on all $4^5$ formal input statuses with kernel
+\texttt{decide}. \path{KFOL/Core/FivePointInterpolation.lean} connects
+the certificate to actual core terms and arbitrary passive winner sets.
+Resetting against the minorant preserves five-point interpolation by
+\path{KFOL/Core/RelationalInterpolation.lean} and fixes all singleton
+outputs; \path{KFOL/Core/ProfileEnvelope.lean} supplies the core upper bound.
+\path{KFOL/Core/SixValuation.lean} checks a $32$-clause owner-elimination
+certificate and excludes a core realizer. Its transport to arbitrary role
+types uses \path{KFOL/Core/RoleRestriction.lean}, which replaces outside
+owners by derived union without a finiteness assumption on the role type.
+
+The clause vocabulary, raw set interpretation, and finite owner-order checks
+are grouped in \path{KFOL/Definitions/CoreCertificates.lean}; canonical
+source probes remain in \path{KFOL/Definitions/CoreNormalForm.lean}.
+\path{KFOL/Core/OwnerElimination.lean} proves simultaneous certificate
+soundness. \path{KFOL/Core/OwnerEliminationComplete.lean} proves completeness
+by owner folds and dual-Horn separation (\cref{core:thm:clause-completeness}).
+Its checked families define the entire relation even among raw set tuples;
+finite-sample targets need no separate nonemptiness assumption. \path{KFOL/Core/SourceCertificates.lean}
+then proves \cref{core:thm:guard-certificates} on canonical source probes.
+\path{tests/CoreOwnerCertificates.lean} rejects empty raw targets and empty
+guard families, including arity zero, and uses a semantic choice
+counterexample to reject every proposed order for an invalid clause family.
 
 The graph vocabulary is grouped in \path{KFOL/Definitions/CoreGraph.lean}.
 \path{KFOL/Core/ColoredGraphDecomposition.lean} proves Gurvich's finite

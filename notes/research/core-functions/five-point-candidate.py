@@ -1,87 +1,96 @@
 #!/usr/bin/env python3
-"""Reproduce a five-point interpolable non-core function with a core minorant.
+"""Independently check the formalized uniform five-point obstruction.
 
-This is finite research evidence, not a Lean theorem. The assertions concern
-exactly the seven nonempty subsets of {a,b,c}; the supplied expressions do not
-yet give a uniform extra-role result. All six actual terms are evaluated on
-all 16,807 inputs, then a direct, unpruned six-row subpower excludes every core
-term representing their common operation. Only the standard library is used.
-
---maximal additionally recomputes the six greatest full functions obeying the
-negative constraints (omitting none or one). The actual first patch need only
-lie below its maximum; its ten missing source bits do not affect coherence.
+The exact six Lean expressions agree five at a time on all 1,024 formal
+named-atom/passive-marker cells and all 16,807 three-role inputs. Patch0 lies
+below their common operation. A direct six-row subpower excludes every core
+term representing that operation. Only the standard library is used.
 """
 from collections import Counter
 from itertools import product
-import argparse
 import json
 from pathlib import Path
 import time
 
 from candidate_support import (
     NV, OWNERS, VALUES, OBS, choice, patch_value, coefficient_queries,
-    coefficients, packed, subpower_closure, FullFiberClosure,
+    coefficients, subpower_closure,
 )
 
 
-def main():
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--maximal', action='store_true',
-                        help='also recompute full maximal functions')
-    args = parser.parse_args()
-    start = time.monotonic()
-    data = json.loads(Path(__file__).with_suffix('.json').read_text())
-    positive, negative, patches = data['positive'], data['negatives'], data['patches']
-    assert len(negative) == 5 and len(patches) == 6 and all(patches)
-    critical = [OBS[q][2] for q in [positive] + negative]
-    for a, b in product(VALUES, repeat=2):
-        assert choice(2, choice(0, a, b), choice(1, a, b)) == a | b
-    rows = list(product(VALUES, repeat=NV))
-    row_index = {row: i for i, row in enumerate(rows)}
+def common_value(outputs):
+    value, count = Counter(outputs).most_common(1)[0]
+    assert count >= 5
+    assert outputs[0] & ~value == 0
+    return value
+
+
+def term_cost(term):
+    return 0 if isinstance(term, int) else 1 + term_cost(term[1]) + term_cost(term[2])
+
+
+def evaluate_family(patches, rows, row_index):
+    assert len(patches) == 6 and all(patches)
     tables = [[patch_value(patch, row) for row in rows] for patch in patches]
     coeffs = [coefficients(table, row_index) for table in tables]
     common = []
     for i, row in enumerate(rows):
         queries = coefficient_queries(row)
-        values = [table[i] for table in tables]
-        for bits, value in zip(coeffs, values):
+        outputs = [table[i] for table in tables]
+        for bits, value in zip(coeffs, outputs):
             assert sum(1 << k for k in OWNERS if bits & queries[k]) == value
-        value, count = Counter(values).most_common(1)[0]
-        assert count >= 5 and value in VALUES
-        common.append(value)
-        contributions = list(row)
-        x, y, z, w, v = row
-        contexts = (x == y == 2 and v == 4,
-                    y == 1 and z == w == v == 4,
-                    x == w == 4 and z == v == 2,
-                    x == 4 and w == 2,
-                    x == 1 and y == w == 4)
-        assert sum(contexts) <= 1
-        for enabled, source, forbidden in zip(contexts, (3, 0, 1, 4, 2), (1, 2, 1, 1, 2)):
-            if enabled:
-                contributions[source] &= ~forbidden
-        described = 0
-        for contribution in contributions:
-            described |= contribution
-        assert described == value
-        assert tables[0][i] & ~value == 0
-    assert common[row_index[critical[0]]] & (1 << OBS[positive][0])
-    for row, q in zip(critical[1:], negative):
-        assert not common[row_index[row]] & (1 << OBS[q][0])
-    # This boundary is intentional: current native expressions are K=3 witnesses.
-    formal_bad = 0
+        common.append(common_value(outputs))
+    return tables, coeffs, common
+
+
+def reset(left, right):
+    result = right if right.bit_count() == 1 else left | right
+    # Independently check the finite-owner core compilation of reset.
+    compiled = left | right
+    for owner in OWNERS:
+        compiled = choice(owner, compiled, right)
+    assert compiled == result
+    return result
+
+
+def main():
+    start = time.monotonic()
+    data = json.loads(Path(__file__).with_suffix('.json').read_text())
+    positive, negative = data['positive'], data['negatives']
+    patches = data['lean_family']
+    assert len(negative) == 5
+    critical = [OBS[q][2] for q in [positive] + negative]
+    expected = [7, 6, 5, 6, 6, 5]
+    for a, b in product(VALUES, repeat=2):
+        assert choice(2, choice(0, a, b), choice(1, a, b)) == a | b
+    rows = list(product(VALUES, repeat=NV))
+    row_index = {row: i for i, row in enumerate(rows)}
+    tables, _, common = evaluate_family(patches, rows, row_index)
+    assert [common[row_index[row]] for row in critical] == expected
+    formal_cells = 0
     for statuses in product(range(4), repeat=NV):
         values = tuple(1 << (s if s < 3 else 3 + j)
                        for j, s in enumerate(statuses))
-        outputs = [patch_value(patch, values) for patch in patches]
-        formal_bad += Counter(outputs).most_common(1)[0][1] < 5
-    print('Actual core terms: components', [len(patch) for patch in patches], flush=True)
-    print('Five-of-six agreement checked on', len(rows), 'inputs.', flush=True)
-    print('First actual term is a core minorant at every input.', flush=True)
-    print('Common values at critical rows:',
-          [common[row_index[row]] for row in critical], flush=True)
-    print('Extra-role formal status failures:', formal_bad,
-          '; no uniform extra-role claim.', flush=True)
+        common_value([patch_value(patch, values) for patch in patches])
+        formal_cells += 1
+    clipped = [[reset(value, tables[0][i]) for i, value in enumerate(table)]
+               for table in tables]
+    clipped_common = []
+    for i in range(len(rows)):
+        outputs = [table[i] for table in clipped]
+        clipped_common.append(common_value(outputs))
+        for value in outputs:
+            for role in OWNERS:
+                assert (value == 1 << role) == (tables[0][i] == 1 << role)
+    assert [clipped_common[row_index[row]] for row in critical] == expected
+    print('Exact Lean family: logical operations',
+          sum(sum(term_cost(t) + 1 for t in patch) - 1 for patch in patches),
+          '; components', [len(patch) for patch in patches], flush=True)
+    print('Five-of-six agreement and patch0 inclusion checked on', formal_cells,
+          'formal-marker cells and', len(rows), 'three-role inputs.', flush=True)
+    print('Common values at critical rows:', expected, flush=True)
+    print('Three-role clipped family: coherence, patch0 singleton profiles,',
+          'and critical separation checked.', flush=True)
     print('Computing the complete six-row subpower...', flush=True)
     states = subpower_closure(critical)
     bad = sum(1 << (3 * (i + 1) + OBS[q][0]) for i, q in enumerate(negative))
@@ -93,18 +102,8 @@ def main():
         assert any(state & good and not state & remaining for state in states)
     print('Complete six-row closure:', len(states),
           'tuples; positive observation incompatible with all five negatives.', flush=True)
-    if args.maximal:
-        closure = FullFiberClosure()
-        for i, expected in enumerate(coeffs):
-            omitted = None if i == 0 else i - 1
-            result, size, updates = closure.maximum(omitted, critical[1:], negative)
-            assert expected & ~result == 0
-            if i:
-                assert result == expected
-            print('Maximal patch', i, ':', size, 'fibers,', updates,
-                  'updates; extra bits over actual term:',
-                  (result & ~expected).bit_count(), flush=True)
-    print('Verified finite K=3 research result; no Lean theorem claimed.', flush=True)
+    print('Independent regression passed for Core.exists_five_local_noncore',
+          '(FivePointInterpolation; arbitrary role types with three distinct roles).', flush=True)
     print('Elapsed seconds:', round(time.monotonic() - start, 3), flush=True)
 
 

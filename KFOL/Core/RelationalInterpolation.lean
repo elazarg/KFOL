@@ -1,6 +1,7 @@
 module
 
 public import KFOL.Definitions.CoreFunctions
+public import KFOL.Reset.Public
 public import Mathlib.Data.Fintype.Card
 
 /-! # Relational tests and coherent patches
@@ -54,5 +55,18 @@ theorem locallyInterpolable_of_patches {Role Var : Type*} (n : ℕ)
   obtain ⟨i, hi⟩ : ∃ i, ∀ j, bad j ≠ i := by
     simpa only [Function.Surjective, not_forall, not_exists] using hn
   exact ⟨terms i, hcore i, fun j => hb j i (Ne.symm (hi j))⟩
+
+/-- Local interpolation is preserved by resetting against a fixed core term. -/
+theorem locallyInterpolable_reset_right {Role Var : Type*} [Fintype Role]
+    (three : Fin 3 ↪ Role) (n : ℕ) (f : (Var → WinnerSet Role) → WinnerSet Role)
+    (hf : LocallyInterpolable n f) (s : Term Role Var) (hs : s.IsCore) :
+    LocallyInterpolable n (fun v => (f v).reset (s.eval v)) := by
+  classical
+  intro v
+  obtain ⟨t, ht, he⟩ := hf v
+  refine ⟨Reset.Term.resetTerm three Finset.univ.toList t s,
+    Reset.Term.isCore_resetTerm three _ _ _ ht hs, ?_⟩
+  intro i
+  rw [Reset.Term.eval_resetTerm three _ (by simp), he]
 
 end KFOL.Core

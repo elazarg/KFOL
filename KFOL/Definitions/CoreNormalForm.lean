@@ -81,6 +81,11 @@ noncomputable def probe {Role : Type u} (three : Fin 3 ↪ Role) (k : Role)
   exact fun i => if h : i = j then WinnerSet.singleton k
     else representative three k (p ⟨i, h⟩)
 
+/-- The canonical valuation belonging to one isolated-source observation. -/
+noncomputable def probeAt {Role : Type u} {Var : Type v}
+    (three : Fin 3 ↪ Role) (q : ProbeIndex Role Var) : Var → WinnerSet Role :=
+  probe three q.1 q.2.1 q.2.2
+
 /-- A literal forbids a specified non-source input from being another atom. -/
 abbrev Literal {Role : Type u} (k : Role) {Var : Type v} (j : Var) :=
   {i : Var // i ≠ j} × {r : Role // r ≠ k}

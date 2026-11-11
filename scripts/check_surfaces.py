@@ -156,6 +156,9 @@ def library_declarations() -> dict[str, Theorem]:
                ROOT / "KFOL/Core/TernaryInterpolation.lean",
                ROOT / "KFOL/Core/MinorantPatches.lean",
                ROOT / "KFOL/Core/MinorantFivePatches.lean",
+               ROOT / "KFOL/Core/FivePointInterpolation.lean",
+               ROOT / "KFOL/Core/SourceCertificates.lean",
+               ROOT / "KFOL/Core/OwnerEliminationComplete.lean",
                ROOT / "KFOL/Core/ColoredGraphRealization.lean",
                ROOT / "KFOL/Core/ColoredGraphGuards.lean",
                *sorted((ROOT / "KFOL/Query").rglob("*.lean"))]

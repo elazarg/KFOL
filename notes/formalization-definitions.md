@@ -1,8 +1,8 @@
 # Definitions and representation boundaries
 
-Read [Paper.lean](../Paper.lean) with the vocabulary below. It contains 77
+Read [Paper.lean](../Paper.lean) with the vocabulary below. It contains 79
 mathematical statements and no definitions. [Report.lean](../Report.lean)
-contains 66 further mathematical statements. Their proofs name library theorems;
+contains 78 further mathematical statements. Their proofs name library theorems;
 definitions must still be reviewed independently against the manuscripts.
 
 The [audit guide](audit-guide.md) gives the reading order. The generated
@@ -13,8 +13,8 @@ theorem types. They erase proof-valued subterms and never follow theorem proofs.
 
 | Entry point | Theorem types | Semantic declarations | Source files | Central definition files | Written review units |
 | --- | ---: | ---: | ---: | ---: | ---: |
-| Paper | 77 | 648 | 36 | 24 | 342 |
-| Report | 66 | 624 | 33 | 22 | 283 |
+| Paper | 79 | 654 | 38 | 26 | 345 |
+| Report | 78 | 675 | 36 | 25 | 313 |
 
 These counts are separate slices and overlap. The vocabulary files organize
 the presentation; they do not replace their underlying mathematical definitions.
@@ -44,6 +44,8 @@ The underlying definitions are grouped by subject:
 | `Views` | Player-view states, observations and induced owned operations |
 | `TestDomains` | Completeness of a test domain over every finite arity |
 | `Atomic` | Atomic preservation/realization and the repeat-triple relation |
+| `CoreNormalForm` | Passive statuses, canonical isolated-source probes, exclusion guards, prime families, canonicality and raw set meaning |
+| `CoreCertificates` | Membership clauses with optional premises, raw truth, syntactic weakening, owner-elimination checks and finite certificates from input columns |
 | `CoreGraph` | Finite occurrence graphs with symmetric owner colors, forbidden rainbow triangles and complementary two-colored paths, maximal monochromatic cliques, blocking, source survival and graph representation |
 | `Reset` | Reset syntax, rightmost root, selection, minimal guard tables, rooted antimatroids and table realizability |
 | `Owner` | Guarded-owner syntax, root/status, guards, coverage, the independent four-state algebra, literal 36-equation action presentation, its five-variable exchange replacement and six-element obstruction to four-variable axiomatization |
@@ -66,6 +68,13 @@ inclusion or install competing global instances.
 Guard tables are defined from actual selection and minimality. The semantic
 marker theorem connects them to winner observations. Coverage, canonicality
 and realizability are specified independently of the algorithms deciding them.
+Core certificate clauses are interpreted independently as membership implications.
+Their checks inspect only finite clause families and owner orders; `Certifies`
+requires the family to hold on the supplied input columns. Raw clause truth
+allows empty coordinates. Nonemptiness of an accepted target is proved from
+row-cover clauses, rather than assumed by its representation. Completeness and
+the connection to canonical source guards are separate library theorems.
+
 The four-state owner algebra and finite countermodels have their own operations;
 they are not defined by satisfaction of the theorem they certify.
 
