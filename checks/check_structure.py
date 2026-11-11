@@ -542,6 +542,122 @@ def collective_checks():
     print(f"Collective SPE: {games} games with arbitrary overlapping controller goals checked against full-profile deviations.")
 
 
+def winner_counting_checks():
+    from symmetric import Rename, evaluate as evaluate_full, move
+
+    def accounting(term, inputs):
+        if isinstance(term, (Win, Var)):
+            value = 1 << term.role if isinstance(term, Win) else inputs[term.index]
+            return value, value.bit_count(), 0, 0, 0, True, 0
+        if isinstance(term, Rename):
+            value, mass, nodes, overlaps, erased, lossless, absorptions = accounting(term.child, inputs)
+            return move(term.permutation, value), mass, nodes, overlaps, erased, lossless, absorptions
+        a, a_mass, a_nodes, a_overlap, a_erased, a_lossless, a_absorptions = accounting(term.left, inputs)
+        b, b_mass, b_nodes, b_overlap, b_erased, b_lossless, b_absorptions = accounting(term.right, inputs)
+        absorbing = a == 1 << term.role or b == 1 << term.role
+        return (own(term.role, a, b), a_mass + b_mass, a_nodes + b_nodes + 1,
+                a_overlap + b_overlap + (a & b).bit_count(),
+                a_erased + b_erased + ((a | b).bit_count() - 1 if absorbing else 0),
+                a_lossless and b_lossless and not absorbing and not a & b,
+                a_absorptions + b_absorptions + int(absorbing))
+
+    def check(term, inputs):
+        value, mass, nodes, overlaps, erased, lossless, absorptions = accounting(term, inputs)
+        assert value == evaluate_full(term, inputs)
+        assert value.bit_count() == mass - overlaps - erased
+        assert (value.bit_count() == mass) == lossless
+        assert value.bit_count() <= mass and mass >= nodes + 1
+        assert value.bit_count() <= mass - absorptions
+        if all(v.bit_count() == 1 for v in inputs):
+            assert value.bit_count() <= nodes + 1
+        return value, nodes
+
+    @lru_cache(None)
+    def ground_terms(nodes):
+        if nodes == 0:
+            return tuple(Win(i) for i in range(3))
+        return tuple(Choice(r, left, right) for r in range(3)
+                     for left_size in range(nodes)
+                     for left in ground_terms(left_size)
+                     for right in ground_terms(nodes - 1 - left_size))
+
+    minima = {}
+    maxima_by_absorptions = {}
+    ground_cases = 0
+    for nodes in range(4):
+        maximum = 0
+        for term in ground_terms(nodes):
+            value, measured_nodes = check(term, ())
+            assert measured_nodes == nodes
+            minima.setdefault(value, nodes)
+            absorptions = accounting(term, ())[-1]
+            key = nodes, absorptions
+            maxima_by_absorptions[key] = max(maxima_by_absorptions.get(key, 0), value.bit_count())
+            maximum = max(maximum, value.bit_count())
+            ground_cases += 1
+        assert maximum == min(3, nodes + 1)
+    assert minima == {value: value.bit_count() - 1 for value in range(1, 8)}
+    assert maxima_by_absorptions == {(n, a): min(3, n + 1 - a)
+                                    for n in range(4) for a in range(n + 1)}
+
+    rng = Random(20261111)
+
+    def random_full(count, depth):
+        if depth == 0 or rng.randrange(4) == 0:
+            return Var(rng.randrange(2)) if rng.randrange(2) else Win(rng.randrange(count))
+        if rng.randrange(3) == 0:
+            permutation = list(range(count))
+            rng.shuffle(permutation)
+            return Rename(tuple(permutation), random_full(count, depth - 1))
+        return Choice(rng.randrange(count), random_full(count, depth - 1), random_full(count, depth - 1))
+
+    full_cases = 0
+    for count, samples in ((3, 45), (4, 35), (5, 20)):
+        terms = [Var(0), Choice(0, Var(0), Var(0)), Choice(0, Win(0), Var(0))]
+        terms += [random_full(count, 5) for _ in range(samples)]
+        for term in terms:
+            for inputs in product(range(1, 1 << count), repeat=2):
+                check(term, inputs)
+                full_cases += 1
+    print(f"Winner accounting: {ground_cases} exhaustive ground terms and {full_cases} full-signature term/valuation pairs passed, including internal permutations and repeated variables.")
+
+    def realize(count, target):
+        roles = [i for i in range(count) if target & (1 << i)]
+        if len(roles) == 1:
+            return Win(roles[0])
+        a, b = roles[:2]
+        c = next(i for i in range(count) if i not in (a, b))
+        term = Choice(c, Win(a), Win(b))
+        for d in roles[2:]:
+            term = Choice(a, term, Win(d))
+        return term
+
+    def pad(term, absorbing=True):
+        if isinstance(term, Win):
+            owner = term.role if absorbing else (1 if term.role == 0 else 0)
+            return Choice(owner, term, term)
+        return Choice(term.role, pad(term.left, absorbing), term.right)
+
+    realizations = 0
+    for count in range(3, 9):
+        for target in range(1, 1 << count):
+            value, nodes = check(realize(count, target), ())
+            assert value == target and nodes == target.bit_count() - 1
+            realizations += 1
+        for nodes in range(count + 4):
+            for absorptions in range(nodes + 1):
+                target = (1 << min(count, nodes + 1 - absorptions)) - 1
+                term = realize(count, target)
+                for _ in range(absorptions):
+                    term = pad(term)
+                for _ in range(nodes - target.bit_count() + 1 - absorptions):
+                    term = pad(term, absorbing=False)
+                value, measured_nodes = check(term, ())
+                assert measured_nodes == nodes and value.bit_count() == min(count, nodes + 1 - absorptions)
+                assert accounting(term, ())[-1] == absorptions
+    print(f"Optimal ground size: every one of {realizations} nonempty targets at K=3..8 realized with exactly |S|-1 choices; maxima at every absorption count passed with padding.")
+
+
 if __name__ == "__main__":
     quotient_checks()
     multivariable_checks()
@@ -553,3 +669,4 @@ if __name__ == "__main__":
     unrepeated_ownership_checks()
     winning_family_checks()
     collective_checks()
+    winner_counting_checks()

@@ -98,9 +98,104 @@ operations and the leaf constants. External renaming of the roles permutes the o
 If neither inner operation collapses, both return $x\cup y$. If just one
 collapses, its owner singleton belongs to the other result, and the outer
 owner is different. If both collapse, the inputs must be the two distinct
-owner singletons; the outer operation returns their union. Folding $J$
-over the leaf singletons realizes every nonempty subset.
+owner singletons; the outer operation returns their union.
+\Cref{game:cor:ground-size} below gives an optimal ground realization
+of every nonempty subset.
 \end{proof}
+
+\paragraph{Counting possible winners.}
+The binary-tree equality between the number of leaves and choices has
+a semantic refinement. Fix a valuation $\nu$ of a term $t$ in the
+full signature, and let $V_\ell$ be the value supplied at leaf
+occurrence $\ell$: a singleton for a winner constant, or $\nu(x)$
+for an occurrence of $x$. At a choice node $v$ write $S_v,T_v$ for
+the evaluated child values, and call the node \emph{absorbing} when
+one child is its owner's singleton. Counts below are counts of
+occurrences in the syntax tree, including independently solved copies
+of a repeated variable.
+
+\begin{proposition}[Winner counting]\label{game:prop:winner-count}
+For every full-signature term and valuation,
+\begin{equation}\label{game:eq:winner-count}
+ |t(\nu)|=
+ \sum_{\ell}|V_\ell|
+ -\sum_{v}|S_v\cap T_v|
+ -\sum_{\substack{v\text{ absorbing}}}(|S_v\cup T_v|-1),
+\end{equation}
+where the node sums run over owned choices. In particular, if $t$ has
+$n$ choices, $c$ winner leaves, and $m_j$ occurrences of variable $x_j$,
+then
+\begin{equation}\label{game:eq:winner-bound}
+ |t(\nu)|\leq
+ \min\left(K,\ c+\sum_jm_j|\nu(x_j)|\right)
+ =\min\left(K,\ n+1+\sum_jm_j(|\nu(x_j)|-1)\right).
+\end{equation}
+Equality with the leaf sum holds exactly when every choice is
+nonabsorbing and has disjoint child values. Thus on atomic valuations,
+and in particular for ground terms, $|t(\nu)|\leq\min(K,n+1)$.
+If $h$ choices are absorbing, the sharper bound is
+$|t(\nu)|\leq\sum_\ell|V_\ell|-h$.
+\end{proposition}
+\begin{proof}
+At a nonabsorbing node the output is union, so
+$|S_v|+|T_v|-|S_v\star_r T_v|=|S_v\cap T_v|$.
+At an absorbing node its size is one, so the difference is
+\[
+ |S_v|+|T_v|-1
+ =|S_v\cap T_v|+(|S_v\cup T_v|-1).
+\]
+Summing these local differences cancels the cardinality of every
+internal child value. Permutation nodes preserve cardinality and
+contribute zero. The remaining terms are the leaf sum and the root
+value, proving~\eqref{game:eq:winner-count}.
+
+All losses are nonnegative. At an absorbing node their total is
+$|S_v|+|T_v|-1\geq1$; at any other node it is zero exactly when
+the inputs are disjoint. This proves the equality criterion and the
+bound by the leaf sum. There are $n+1=c+\sum_jm_j$ leaves, because
+permutations are unary, and every value has at most $K$ members.
+\end{proof}
+
+For a finite decision of arity $d$, replace the intersection term by
+$\sum_i|S_i|-|\bigcup_iS_i|$, and subtract
+$|\bigcup_iS_i|-1$ when some child is the owner singleton. The same
+cancellation applies. The corresponding leaf count is
+$1+\sum_v(d_v-1)$. Thus each decision contributes its branching
+excess, each ambiguous input contributes its size minus one, and
+overlap and absorption account for the losses.
+
+\begin{corollary}[Optimal ground size]\label{game:cor:ground-size}
+For $K\geq3$, a nonempty set $S\subseteq I$ needs exactly $|S|-1$
+binary choices to be the value of a ground term in the original
+signature with singleton winner constants. Consequently the
+largest denotation obtainable with exactly $n$ choices is
+$\min(K,n+1)$. With exactly $h$ absorbing choices, the sharp maximum
+is $\min(K,n+1-h)$, for every $0\leq h\leq n$.
+\end{corollary}
+\begin{proof}
+The counting bound gives the lower bound. A singleton needs no
+choice. For $|S|\geq2$, choose distinct $a,b\in S$ and
+$c\notin\{a,b\}$. Begin with $\at a\ch c\at b$, of value
+$\{a,b\}$. Append each remaining leaf $\at d$, $d\in S\setminus\{a,b\}$,
+by a choice owned by $a$. The existing value is ambiguous and
+$d\ne a$, so each step takes union and adds $d$. This uses $|S|-1$
+choices, none absorbing. For the sharper maximum, realize a set of
+size $\min(K,n+1-h)$ this way. Replace a leaf $\at i$ by
+$\at i\ch i\at i$ exactly $h$ times, and then pad to $n$ choices
+using $\at i\ch r\at i$ with $r\ne i$. Each replacement preserves
+the leaf's value; the first kind adds one absorbing choice and the
+second adds one nonabsorbing choice. Values at all other nodes remain
+unchanged. The required number of padding steps is nonnegative, and
+the counting bound proves optimality.
+\end{proof}
+
+The ground bound concerns one prescribed winner set. A term operation
+that must compute union for every pair of input values has a different
+occurrence requirement, proved next. There is no lower bound on
+denotation size growing with the number of choices:
+$\at r\ch r G$ has value $\{r\}$ however large $G$ is. For open
+terms the input sizes are essential as well: a variable alone can
+already denote all $K$ roles.
 
 The denotation of $J$ is independent of the distinct
 triple of owners chosen, and $J$ cannot use fewer occurrences.
