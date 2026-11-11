@@ -13,7 +13,7 @@ Choices that play never reaches can decide who wins. Consider
 \]
 On the right $b$ takes its own win, and on the left it loses whichever branch it picks. If it picks $c$ on the left, the root owner $a$ loses on both sides and may go right, so $b$ wins by a choice in a subtree that play never enters. Other SPEs are won by $a$ and by $c$, so $\den D=\{a,b,c\}$.
 
-Backward induction finds values without examining whole profiles: the value of a choice depends only on the values of its branches, through an operation on the set $\Pow$ of nonempty subsets of $I$. For each role $r$, \emph{owned choice} by $r$ is the operation on $\Pow$ given by
+Backward induction finds values without examining whole profiles: the value of a choice depends only on the values of its branches, combined by \emph{owned choice}: for each role $r$ and all $S,T\subseteq I$,
 \begin{equation}\label{game:eq:own}
  S\ow r T=\begin{cases}
  \{r\},&S=\{r\}\text{ or }T=\{r\},\\
@@ -22,15 +22,15 @@ Backward induction finds values without examining whole profiles: the value of a
 \end{equation}
 
 \begin{proposition}[Backward induction]\label{game:thm:adequacy}
-Every game has an SPE, and
-$\den{\at i}=\{i\}$, $\den{G\ch r H}=\den G\ow r\den H$.
+Every game has an SPE, so values are nonempty. Moreover,
+$\den{\at i}=\{i\}$ and $\den{G\ch r H}=\den G\ow r\den H$.
 \end{proposition}
 
 \begin{idea}
 If $r$ is the only equilibrium winner of a branch, every parent equilibrium is won by $r$, since $r$ can always enter that branch. Otherwise each branch has an equilibrium in which $r$ loses. Playing it in one branch lets $r$ rationally go to the other, whichever equilibrium is played there, so every equilibrium winner of either branch wins some SPE of the choice. In $D$ the branches have values $\{a,c\}$ and $\{b\}$, and $\den D=\{a,c\}\ow a\{b\}=\{a,b,c\}$.
 \end{idea}
 
-Call a singleton an \emph{atom} and a larger set \emph{ambiguous}. Induction on $G$ shows that $\den G=\{r\}$ exactly when $r$ can force a win in $G$, that is, has choices at its own nodes that win whatever the others choose. So an atom records a forced win, and an ambiguous value records that nobody can force one. Owned choice is thus choice by guarantee: the owner takes a branch where it can force a win if there is one, and otherwise neither branch guarantees it anything and all their equilibrium winners remain possible.
+Call a singleton value an \emph{atom} and a larger one \emph{ambiguous}. Induction on $G$ shows that $\den G=\{r\}$ exactly when $r$ can force a win in $G$, that is, has choices at its own nodes that win whatever the others choose. So an atom records a forced win, and an ambiguous value records that nobody can force one. Owned choice is thus choice by guarantee: the owner takes a branch where it can force a win if there is one, and otherwise neither branch guarantees it anything and all their equilibrium winners remain possible.
 
 Terms extend games with variables and renamings:
 \[
@@ -46,7 +46,7 @@ For pairwise distinct $r,s,t$,
 \begin{equation}\label{game:eq:union}
  J(x,y)=(x\ow r y)\ow t(x\ow s y)=x\cup y.
 \end{equation}
-Consequently every member of $\Pow$ is the value of a game.
+Consequently the values of games are exactly the nonempty sets of roles.
 \end{proposition}
 
 If just one inner choice collapses, its owner's atom belongs to the other result, and the outer owner is different; if both collapse, the outer choice unites them. We simply write $\cup$ from now on.
