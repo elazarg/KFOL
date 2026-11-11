@@ -1,13 +1,13 @@
 # Active formalization status
 
 The entire main-paper scope is proved: **22/22 main result rows**,
-**67/67 required catalog rows**, and **17/17 required prose obligations**.
+**71/71 required catalog rows**, and **17/17 required prose obligations**.
 The [inventory](formalization-claims.json) is authoritative for scope.
 Other report results remain optional and have their own evidence status.
 
 | Audit entrypoint | Mathematical statements | Presentation |
 | --- | ---: | --- |
-| [Paper.lean](../Paper.lean) | 79 | Main text and the report claims it cites; 631 lines |
+| [Paper.lean](../Paper.lean) | 80 | Main text and the report claims it cites |
 | [Report.lean](../Report.lean) | 78 | Further report results and proof ingredients |
 | [Results/Certificates](../KFOL/Results/Certificates.lean) | 140 preserved contracts | Original full statements, including native machines, codecs and intermediate invariants |
 
@@ -25,8 +25,8 @@ regular representation are in `Definitions/Relational`.
 
 | Definition surface | Theorem types | Semantic declarations | Source files | Written review units |
 | --- | ---: | ---: | ---: | ---: |
-| Paper | 79 | 654 | 38 | 345 |
-| Report | 78 | 675 | 36 | 313 |
+| Paper | 80 | 675 | 39 | 359 |
+| Report | 78 | 679 | 37 | 318 |
 
 The slices overlap and exclude theorem proof bodies. These meaning indexes do
 not replace the human comparison with the manuscript or the proof/axiom audits.
@@ -37,7 +37,7 @@ The production integration checks are:
 
 - `make check-lean`: literal façade and preservation checks, inventory,
   independent algebra build/import audit, Paper/Report and whole-source axiom
-  audits, both definition indexes, actual negative audit fixtures and 101 strict
+  audits, both definition indexes, actual negative audit fixtures and 102 strict
   Lean regressions.
 - `make check-python`: the explicit 34 independent Python checks, mapped to the
   current paper in `checks/README.md` and the verification appendix.
@@ -121,10 +121,9 @@ probes, sufficient prime guards and their meaning; `Core/SourceProbes` and
 The five complete statements retain the antichain clause. The main
 discussion now explicitly asserts the normal forms, so their reconstruction
 and equality statements reside in `Paper.lean`; the source decomposition,
-probe count and local synthesis remain in `Report.lean`. Both excluded
-ternary functions also have sourcewise reconstructions, so the remaining
-main-text question concerns a concise intrinsic characterization of jointly
-realizable functions, beyond the exact finite recognition procedure.
+probe count and local synthesis remain in `Report.lean`. The direct hereditary characterization of jointly realizable guard families
+is also stated in `Paper.lean`, with no auxiliary realization graph or clause
+family in its condition.
 
 The one-owner basis now has optimal variable bound five: thirty-six native
 laws, with five-variable exchange replacing the six-variable action-band
@@ -137,10 +136,9 @@ operator specified by finite Horn rules. Every nonzero result has one common
 term witness and is the greatest realizable coefficient array below its input.
 Canonical guard families are realizable exactly when their array is nonzero
 and fixed by this operator. Three complete statements are in `Report.lean`.
-This refines the algorithmic criterion. A complete owner-elimination certificate criterion is now also proved on
-these canonical probes, as described below. Concise conditions comparable
-to singleton-profile admissibility, without auxiliary certificates, remain
-a separate simplification question.
+The hereditary test below replaces fixed-point iteration for direct
+recognition; the interior theorem still supplies a greatest realizable
+minorant of arbitrary Boolean data.
 
 Pairwise compatibility is now proved insufficient uniformly for every K ≥ 3.
 `Core/PairwiseInterpolation` defines a repeated-value patch of three short core
@@ -181,9 +179,9 @@ and variable types, assuming a nonempty role type.
 
 The ternary obstruction has short separate realizations of each named
 owner's full view. Thus, for three roles, even realizability on every individual
-view does not ensure one common realization. The graph witness is not unique. The newer owner-elimination criterion
-characterizes canonical guard tables by finite checked clause proofs; it does
-not eliminate all auxiliary clauses or give a short fixed list of guard laws.
+view does not ensure one common realization. The graph witness need not be
+unique. The direct hereditary criterion recognizes the same guard families
+without an auxiliary graph or clause family.
 
 `Core/MinorantObstruction` proves a four-row cover law and its atomic bridge
 uniformly in all additional roles and arbitrary groups of variables.
@@ -220,17 +218,33 @@ the same singleton-output predicates. The base result is
 independent five-point checker uses the exact 133-operation Lean expressions;
 the superseded discovery family has been removed.
 
-`Core/OwnerElimination` proves soundness of finite checked clause families by
-simultaneous induction on core terms. `Core/OwnerEliminationComplete` proves
-the converse: when three distinct owners are available, every finite
-choice-closed relation has a checked clause presentation. These presentations
-characterize simultaneous sampled-row interpolation and whole operation
-tables. `Core/SourceCertificates` reduces the tests to source probes.
-A canonical guard family is a core normal form exactly when its raw probe
-values satisfy every clause certified from the projection columns; the tests
-also force nonempty probe values. `Report.core_guard_certificates` states
-the canonical guard criterion; `Report.core_membership_certificates` states the general raw presentation
-and sampled-row criteria.
-The proof permits unrestricted finite auxiliary clause families. It does
-not establish a concise auxiliary-free guard characterization, a fixed
-relational arity bound, or an unbounded interpolation hierarchy.
+`Definitions/CoreInterpolation` gives the direct hereditary test. A query
+contains upper bounds at a finite set of rows, singleton demands, and an
+optional positive membership. Its three conditions use rainbow intersections
+(one demand per owner), a positive column, and escape from forced competing
+singletons. Each recursive call makes one allowed singleton demand and erases
+that row from the bound set. Empty rows, variables, bounds and conflicting
+demands use the same definitions.
+
+`Core/BoundedGeneration` proves that bounded core tuples are generated by
+bounded input columns and tuples atomic at a bounded row. `Core/AtomicInterpolation`
+proves the exact singleton/positive condition using least demanded profiles and
+their maximum completion. `Core/Peeling.peels_iff` combines these results by
+strict induction on the number of bounds, and `recognizes_iff` joins positive
+witnesses to recognize full raw tables. `Core/SourcePeeling` needs only negative
+source-probe bounds and the positive observer bits. The complete guard-table
+criterion is `Paper.core_guard_peeling`; the general interpolation theorem is
+`Report.core_peeling_interpolation`. The main discussion no longer lists the
+intrinsic characterization as open.
+
+`tests/CorePeeling` checks the nullary and empty-bound boundaries, conflicting
+queries, and same-owner demands where no input column suffices but an actual
+owned-choice term does. The independent stdlib `peeling.py` compares the test
+with unpruned subpower generation at three and four roles, including the exact
+six-row obstruction. It does not use generated subpowers inside the recognizer.
+
+The general owner-elimination calculus remains useful for invariant relations
+and the six-row persistence proof. `Core/OwnerEliminationComplete` gives its
+complete raw presentations and sampled-row tests, stated as
+`Report.core_membership_certificates`. It does not establish a fixed relational
+arity bound or an unbounded interpolation hierarchy.

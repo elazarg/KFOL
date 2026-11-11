@@ -245,16 +245,14 @@ theorem core_membership_certificates {Role : Type u} {Row : Type v} {Var : Type 
         (∀ j, Satisfies F (fun i => values i j)) → SatisfiesSets F target) :=
   Core.OwnerElimination.complete_certificates three R values target
 
-theorem core_guard_certificates {Role : Type u} {Var : Type v}
-    [Fintype Role] [DecidableEq Role] [Fintype Var] [DecidableEq Var]
-    (three : Fin 3 ↪ Role)
-    (G : ∀ (k : Role) (j : Var), Finset (Core.Sources.Guard k j)) :
-    (∃ t : Term Role Var, t.IsCore ∧ Core.Sources.normalForm three (fun v => t.eval v) = G) ↔
-      Core.Sources.Canonical G ∧
-      ∀ C : Core.OwnerElimination.Clause (Core.Sources.ProbeIndex Role Var) Role,
-        Core.OwnerElimination.Certifies (fun j q => Core.Sources.probeAt three q j) C →
-          C.HoldsSets (fun q => Core.Sources.meaning G (Core.Sources.probeAt three q)) :=
-  Core.Sources.guard_table_iff_certified_clauses three G
+theorem core_peeling_interpolation {Role : Type u} {Row : Type v} {Var : Type w}
+    [Fintype Role] [Fintype Row] [DecidableEq Role] [DecidableEq Row]
+    (three : Fin 3 ↪ Role) (values : Row → Var → WinnerSet Role) (U : Row → Set Role)
+    (N : Finset Row) (D : Finset (Row × Role)) (p : Option (Row × Role)) :
+    Core.Interpolation.Peels values U N D p ↔
+      ∃ t : Term Role Var, t.IsCore ∧
+        Core.Interpolation.Fits N U D p (fun i => t.eval (values i)) :=
+  Core.Interpolation.peels_iff three values U N D p
 
 theorem core_singleton_profiles {Role : Type u} [DecidableEq Role] [Fintype Role]
     {Var : Type v} [Fintype Var] (three : Fin 3 ↪ Role)

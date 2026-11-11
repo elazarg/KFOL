@@ -127,6 +127,16 @@ def Canonical {Role : Type u} {Var : Type v}
     (G : ∀ (k : Role) (j : Var), Finset (Guard k j)) : Prop :=
   ∀ k j g, g ∈ G k j ↔ Prime (coefficients G k j) g
 
+/-- The canonical probe observations whose observer must be absent. -/
+noncomputable def negativeProbes {Role : Type u} [Fintype Role] {Var : Type v} [Fintype Var]
+    (G : ∀ (k : Role) (j : Var), Finset (Guard k j)) : Finset (ProbeIndex Role Var) := by
+  classical
+  exact Finset.univ.filter (fun q => ¬coefficients G q.1 q.2.1 q.2.2)
+
+/-- At a negative probe, forbid only the observer named by that probe. -/
+def exclusionBounds {Role : Type u} {Var : Type v} (q : ProbeIndex Role Var) : Set Role :=
+  {r | r ≠ q.1}
+
 /-- A true observation imposes no restriction. A false observation forbids
 only its observer, without prescribing any other winner. -/
 noncomputable def allowance {Role : Type u} {Var : Type v}

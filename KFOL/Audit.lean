@@ -257,6 +257,11 @@ import all KFOL.Core.PairModel
 import all KFOL.Definitions.CoreNormalForm
 import all KFOL.Core.SourceProbes
 import all KFOL.Core.SourceCertificates
+import all KFOL.Core.SourcePeeling
+import all KFOL.Core.Peeling
+import all KFOL.Core.AtomicInterpolation
+import all KFOL.Core.BoundedGeneration
+import all KFOL.Core.FiniteInterpolation
 import all KFOL.Core.SourceNormalForm
 import all KFOL.Core.SourceCompatibility
 import all KFOL.Core.Profiles
@@ -277,6 +282,7 @@ import all KFOL.Definitions.Congruences
 import all KFOL.Definitions.Core
 import all KFOL.Definitions.CoreBasis
 import all KFOL.Definitions.CoreCertificates
+import all KFOL.Definitions.CoreInterpolation
 import all KFOL.Definitions.CoreFunctions
 import all KFOL.Definitions.FiniteHorn
 import all KFOL.Definitions.Dissemilattice

@@ -19,6 +19,27 @@ namespace KFOL.Core.Sources
 universe u v
 variable {Role : Type u} {Var : Type v}
 
+theorem pattern_probe (three : Fin 3 ↪ Role) (k : Role) (j : Var) (p : Pattern k j) :
+    pattern k j (probe three k j p) = p := by
+  funext i
+  change passive k (probe three k j p i.val) = p i
+  rw [probe_other three k j p i.val i.property]
+  exact passive_representative three k (p i)
+
+theorem mem_meaning_probe_iff (three : Fin 3 ↪ Role)
+    (G : ∀ (k : Role) (j : Var), Finset (Guard k j))
+    (k : Role) (j : Var) (p : Pattern k j) :
+    k ∈ meaning G (probe three k j p) ↔ coefficients G k j p := by
+  constructor
+  · rintro ⟨i, hi, g, hg, hp⟩
+    have he := (mem_probe_iff three k j p i).mp hi
+    subst i
+    exact ⟨g, hg, by simpa only [pattern_probe] using hp⟩
+  · rintro ⟨g, hg, hp⟩
+    exact ⟨j, (mem_probe_iff three k j p j).mpr rfl,
+      g, hg, by simpa only [pattern_probe] using hp⟩
+
+
 private theorem representative_mono (three : Fin 3 ↪ Role) (k : Role)
     {p q : Passive k} (h : p ≤ q) :
     (representative three k p).val ⊆ (representative three k q).val := by

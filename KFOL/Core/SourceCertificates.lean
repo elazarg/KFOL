@@ -66,26 +66,6 @@ namespace KFOL.Core.Sources
 open WinnerSet OwnerElimination
 variable {Role Var : Type*}
 
-theorem pattern_probe (three : Fin 3 ↪ Role) (k : Role) (j : Var) (p : Pattern k j) :
-    pattern k j (probe three k j p) = p := by
-  funext i
-  change passive k (probe three k j p i.val) = p i
-  rw [probe_other three k j p i.val i.property]
-  exact passive_representative three k (p i)
-
-theorem mem_meaning_probe_iff (three : Fin 3 ↪ Role)
-    (G : ∀ (k : Role) (j : Var), Finset (Guard k j))
-    (k : Role) (j : Var) (p : Pattern k j) :
-    k ∈ meaning G (probe three k j p) ↔ coefficients G k j p := by
-  constructor
-  · rintro ⟨i, hi, g, hg, hp⟩
-    have he := (mem_probe_iff three k j p i).mp hi
-    subst i
-    exact ⟨g, hg, by simpa only [pattern_probe] using hp⟩
-  · rintro ⟨g, hg, hp⟩
-    exact ⟨j, (mem_probe_iff three k j p j).mpr rfl,
-      g, hg, by simpa only [pattern_probe] using hp⟩
-
 theorem guard_table_iff_checked_clauses [Fintype Role] [DecidableEq Role]
     [Fintype Var] [DecidableEq Var] (three : Fin 3 ↪ Role)
     (G : ∀ (k : Role) (j : Var), Finset (Guard k j)) :

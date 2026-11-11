@@ -3,6 +3,7 @@ module
 public import KFOL.Results.Algebra
 public import KFOL.Results.Complexity
 public import KFOL.Results.Games
+public import KFOL.Core.SourcePeeling
 public import KFOL.Audit.Namespace
 
 /-! # Claims of the main paper and the report results it cites
@@ -419,6 +420,20 @@ theorem core_prime_guard_equality {Role : Type u} [Fintype Role]
     Core.Sources.normalForm three (fun v => s.eval v) =
       Core.Sources.normalForm three (fun v => t.eval v) ↔ ∀ v, s.eval v = t.eval v :=
   Results.Algebra.core_prime_guard_equality three s t hs ht
+
+/-- Intrinsic realizability, asserted in the discussion. -/
+theorem core_guard_peeling {Role : Type u} {Var : Type v}
+    [Fintype Role] [DecidableEq Role] [Fintype Var] [DecidableEq Var]
+    (three : Fin 3 ↪ Role)
+    (G : ∀ (k : Role) (j : Var), Finset (Core.Sources.Guard k j)) :
+    (∃ t : Term Role Var, t.IsCore ∧ Core.Sources.normalForm three (fun v => t.eval v) = G) ↔
+      Core.Sources.Canonical G ∧
+      Core.Interpolation.Peels (fun q => Core.Sources.probeAt three q) Core.Sources.exclusionBounds
+        (Core.Sources.negativeProbes G) ∅ none ∧
+      ∀ q : Core.Sources.ProbeIndex Role Var, Core.Sources.coefficients G q.1 q.2.1 q.2.2 →
+        Core.Interpolation.Peels (fun q => Core.Sources.probeAt three q) Core.Sources.exclusionBounds
+          (Core.Sources.negativeProbes G) ∅ (some (q,q.1)) :=
+  Core.Sources.guard_table_iff_negative_peels three G
 
 /-- `core:thm:no-basis`. -/
 theorem core_nonfinite_basis [DecidableEq Role] [Finite Role] (three : Fin 3 ↪ Role) :

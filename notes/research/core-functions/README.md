@@ -1,13 +1,13 @@
 # All-arity core functions
 
-Exact recognition, synthesis and canonical prime source-guard normal forms
-are proved. Jointly realizable families have both a structural graph
-representation and a complete syntactic owner-elimination certificate criterion.
-For finite role and variable types, a canonical guard table is realizable
-exactly when its probe values satisfy every clause with a checked proof from
-the projection columns. Certificates may use arbitrary finite families of
-auxiliary clauses. Concise conditions on the guards without such auxiliaries
-remain a separate question.
+The intrinsic characterization is proved at every finite arity for finite
+role sets with at least three owners. A canonical prime source-guard family
+is jointly realizable exactly when it passes the finite
+atomic-challenge and row-deletion conditions in `Definitions/CoreInterpolation`.
+The test reads only the guard table and its fixed source probes. Its soundness
+and completeness are proved in `Core/Peeling` and `Core/SourcePeeling`.
+[peeling.md](peeling.md) gives the three equations and their proof; the
+independent stdlib checker is `peeling.py`.
 
 Local tests do not suffice even within a fixed singleton-profile fiber.
 Pairwise, three-point and four-point interpolation obstructions are proved
@@ -24,8 +24,33 @@ operation preserves every invariant relation of arity at most five.
 The independent `four-point-candidate.py` reproduces the four-point witnesses
 and their seven-value discovery maxima. `five-point-candidate.py` checks the
 exact factored expressions used by the uniform five-point Lean theorem,
-including all formal passive-marker cells. `transport-orders.md` describes the
-complete checked certificate calculus and its connection to canonical guards.
+including all formal passive-marker cells. `transport-orders.md` records the
+complete clause calculus used to prove its six-row persistence law.
+
+## Intrinsic recognition on the canonical probes
+
+`Core.Interpolation.peels_iff` characterizes fitting upper bounds, exact atomic
+demands and one optional positive membership. The recursion first checks
+bounded projection columns or deletes one bounded row and demands an allowed
+atom there. Rainbow selections of atomic demands enforce the common-source
+profile condition. Additional one-demand positive tests keep every wrong
+singleton profile from being forced at the queried row. The recursion's
+rank is the number of bounded rows.
+
+`Core/BoundedGeneration` proves the bounded generator decomposition;
+`Core/AtomicInterpolation` reduces atomic and one-positive interpolation to
+profiles; `Core/Peeling` combines them. `recognizes_iff` handles complete raw
+target tables, including empty coordinates and empty rows, while
+`operation_iff` characterizes entire operations at every finite arity.
+
+`Sources.guard_table_iff_negative_peels` gives the canonical guard criterion.
+Bound precisely the negative source probes by the complement of their
+observer. Require base feasibility and the positive test for every true
+source bit. Completeness supplies bounded terms for these tests; their finite
+union realizes the coefficient array, and canonicity identifies the prime guards. `guard_table_iff_peels` gives the
+same criterion using the full raw probe meaning. No auxiliary clause family
+or occurrence graph is an input to either test. Empty variables are rejected
+by the empty rainbow challenge.
 
 ## Structural graph representation
 
@@ -229,19 +254,11 @@ and `truth_table_iff_checked_clauses` applies it to whole operations. Roles and
 sample rows are finite; the finite-sample theorem permits arbitrary variable
 types, including the empty type.
 
-`Core/SourceCertificates.source_probes_iff_checked_clauses` reduces operation
-realizability to source reconstruction and these checks on the n K^n probes.
-`Sources.guard_table_iff_certified_clauses` states the canonical guard criterion:
-a guard family is a core normal form exactly when it is canonical and its raw
-probe meaning satisfies every clause certified from the projection columns.
-The clause conditions also force nonempty probe values; no separate assumed
-term witness or generated-subpower table is part of the certificate.
-
-The completeness proof may choose all valid clauses as auxiliaries. It proves
-a complete syntactic criterion, without providing a concise auxiliary-free
-list of guard laws, a fixed bound on relational arity, or a parametric hierarchy
-of interpolation obstructions. The six-row five-point law is one concrete
-kernel-checked certificate in `Core/SixValuation`.
+`Core/SourceCertificates` also retains the clause presentation on source
+probes. The primary intrinsic guard test is now row peeling above. The
+certificate calculus remains useful for short proofs of particular
+persistence laws: `Core/SixValuation` checks the six-row five-point law by one
+finite family of clauses and owner orders, without a subpower enumeration.
 
 ## Reproducing the finite research checks
 

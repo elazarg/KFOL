@@ -1,6 +1,6 @@
 # Definitions and representation boundaries
 
-Read [Paper.lean](../Paper.lean) with the vocabulary below. It contains 79
+Read [Paper.lean](../Paper.lean) with the vocabulary below. It contains 80
 mathematical statements and no definitions. [Report.lean](../Report.lean)
 contains 78 further mathematical statements. Their proofs name library theorems;
 definitions must still be reviewed independently against the manuscripts.
@@ -13,8 +13,8 @@ theorem types. They erase proof-valued subterms and never follow theorem proofs.
 
 | Entry point | Theorem types | Semantic declarations | Source files | Central definition files | Written review units |
 | --- | ---: | ---: | ---: | ---: | ---: |
-| Paper | 79 | 654 | 38 | 26 | 345 |
-| Report | 78 | 675 | 36 | 25 | 313 |
+| Paper | 80 | 675 | 39 | 27 | 359 |
+| Report | 78 | 679 | 37 | 26 | 318 |
 
 These counts are separate slices and overlap. The vocabulary files organize
 the presentation; they do not replace their underlying mathematical definitions.
@@ -45,6 +45,7 @@ The underlying definitions are grouped by subject:
 | `TestDomains` | Completeness of a test domain over every finite arity |
 | `Atomic` | Atomic preservation/realization and the repeat-triple relation |
 | `CoreNormalForm` | Passive statuses, canonical isolated-source probes, exclusion guards, prime families, canonicality and raw set meaning |
+| `CoreInterpolation` | Upper bounds, atomic demands, optional positive observations, rainbow common-source conditions, and strict row-deletion recognition |
 | `CoreCertificates` | Membership clauses with optional premises, raw truth, syntactic weakening, owner-elimination checks and finite certificates from input columns |
 | `CoreGraph` | Finite occurrence graphs with symmetric owner colors, forbidden rainbow triangles and complementary two-colored paths, maximal monochromatic cliques, blocking, source survival and graph representation |
 | `Reset` | Reset syntax, rightmost root, selection, minimal guard tables, rooted antimatroids and table realizability |
@@ -68,6 +69,15 @@ inclusion or install competing global instances.
 Guard tables are defined from actual selection and minimality. The semantic
 marker theorem connects them to winner observations. Coverage, canonicality
 and realizability are specified independently of the algorithms deciding them.
+The direct guard criterion is in [CoreInterpolation.lean](../KFOL/Definitions/CoreInterpolation.lean).
+`Peels` uses only the supplied input columns, allowed winner sets, atomic
+demands and one optional positive observation. `ProfileCondition` makes
+rainbow intersection and competing-singleton tests. Every recursive call
+erases a bounded row and turns it into an allowed singleton demand; there
+is no quantifier over terms, auxiliary clauses or occurrence graphs in these
+definitions. `negativeProbes` and `exclusionBounds` in `CoreNormalForm` read
+only the guard coefficients. The realization theorem is proved separately.
+
 Core certificate clauses are interpreted independently as membership implications.
 Their checks inspect only finite clause families and owner orders; `Certifies`
 requires the family to hold on the supplied input columns. Raw clause truth

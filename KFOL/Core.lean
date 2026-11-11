@@ -10,6 +10,7 @@ public import KFOL.Core.MinorantPatches
 public import KFOL.Core.MinorantFivePatches
 public import KFOL.Core.FivePointInterpolation
 public import KFOL.Core.SourceCertificates
+public import KFOL.Core.SourcePeeling
 public import KFOL.Core.Cuts
 public import KFOL.Core.SourceNormalForm
 public import KFOL.Core.LocalNormalForm

@@ -1,11 +1,12 @@
 # Ordered transport certificates
 
 This note records the complete finite owner-elimination certificate calculus
-and its application to canonical source guards. Soundness is proved in
-`Core/OwnerElimination`; completeness and finite-sample separation are proved
-in `Core/OwnerEliminationComplete`. `Core/SourceCertificates` gives the exact
-canonical-guard criterion. The calculus permits finite families of auxiliary
-clauses; it does not supply a concise auxiliary-free list of guard laws.
+for persistence proofs. Soundness is proved in `Core/OwnerElimination`;
+completeness and finite-sample separation are proved in
+`Core/OwnerEliminationComplete`. The intrinsic characterization of canonical
+guards is now the row-peeling criterion in [peeling.md](peeling.md), proved in
+`Core/Peeling` and `Core/SourcePeeling`. It does not require auxiliary clause
+families. The calculus here gives compact certificates for particular laws.
 
 The six-row five-point counterexample has a kernel-checked 32-clause
 certificate in `Core/SixValuation`. Its six-patch witnesses work uniformly for
@@ -122,9 +123,9 @@ family and fails at X.
 
 Thus one positive membership premise, or a pure positive cover, suffices for
 *extensional separation*. Atomic tests in transport proofs are auxiliary
-abbreviations that make the induction easier. This observation supplies no
-arity bound and no direct intrinsic criterion: requiring preservation of all
-compatible dual-Horn relations would still be a Pol–Inv reformulation.
+abbreviations that make the induction easier. The owner orders below give
+syntactic proofs of the required clauses. Row peeling supplies the intrinsic
+guard criterion independently of this clause presentation.
 
 ## A complete finite certificate calculus
 
@@ -242,16 +243,11 @@ Roles and rows are finite; variables need not be finite for the sampled-row
 criterion. No bound on the number of auxiliaries or a fixed relational arity
 bound is asserted.
 
-`SourceCertificates.source_probes_iff_checked_clauses` specializes the tests to
-canonical source probes. For finite role and variable types,
-`Sources.guard_table_iff_certified_clauses` states that a guard family is a
-core normal form if and only if it is canonical and its raw probe values
-satisfy every clause with a checked certificate from the projection columns.
-The tests force nonempty probe values as well. This is an exact syntactic
-criterion on canonical guards; certificates may contain arbitrary finite
-auxiliary families. The completeness construction uses the evaluation
-relation to prove existence, while a supplied certificate is checked using
-only its finite clauses, owner orders and input columns.
+`Core/SourceCertificates` retains the corresponding complete clause
+presentation on canonical source probes. Recognition now uses the direct
+row-deletion equations described in [peeling.md](peeling.md). The clause
+presentation is used here to certify the separating six-row law: its supplied
+finite data are checked using only the clauses, owner orders and input columns.
 
 ## Reproducing the six-row certificate
 
@@ -364,11 +360,9 @@ membership consequent by a singleton consequent. The full value semantics,
 not merely the admissible singleton-profile classification, is needed for
 the proposed transport proof.
 
-## Remaining simplification questions
+## The local-interpolation hierarchy
 
-The complete certificate criterion settles exact recognition by checked
-owner-elimination proofs, including its canonical source-guard specialization.
-A concise fixed family of auxiliary-free guard laws is not obtained. A
-parameterized family of matrices with these certificates could also establish
-an unbounded local-interpolation hierarchy, but the existing four- and
-five-point obstructions do not by themselves establish such a family.
+Row peeling gives the intrinsic guard characterization. A parameterized
+family of matrices with transport certificates could additionally establish
+an unbounded local-interpolation hierarchy. The existing four- and five-point
+obstructions do not by themselves establish such a family.

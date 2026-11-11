@@ -16,17 +16,19 @@ smaller fragments. Owned choice with union has a seven-equation basis
 forms (\cref{app:core-binary}). At every arity, singleton profiles and
 their greatest completions are characterized (\cref{app:core-profiles}).
 Prime source-guard normal forms describe full values
-(\cref{app:core-source-guards}); their joint realizability has both a
-colored-graph representation (\cref{app:core-colored-graphs}) and a
-complete membership-clause certificate criterion
-(\cref{app:core-certificates}). Four-point tests need not leave a
+(\cref{app:core-source-guards}). Their joint realizability is characterized
+intrinsically by finite atomic challenges and strict row deletion
+(\cref{core:cor:guard-peeling}); it also has a colored-graph representation
+(\cref{app:core-colored-graphs}). Four-point tests need not leave a
 pointwise core minorant (\cref{app:core-pairwise}), and five-point tests
 need not give realizability even between core bounds with the same
 singleton outputs (\cref{core:thm:five-local-profile}).
 
-Joint compatibility is also tested on source probes
-(\cref{app:core-compatibility}), and a finite saturation recognizes and
-synthesizes term operations (\cref{app:core-cuts}). Unary polynomials
+A complete membership-clause calculus proves the persistence laws used
+in these obstructions (\cref{app:core-certificates}). Joint compatibility
+is also tested on source probes (\cref{app:core-compatibility}), and a
+finite saturation recognizes and synthesizes term operations
+(\cref{app:core-cuts}). Unary polynomials
 are classified (\cref{core:prop:unary-polynomials}); conservative models
 have a three-variable presentation (\cref{app:core-conservative}); and
 identifying all ambiguous winner sets gives a finitely based subvariety
@@ -958,8 +960,8 @@ The $+$-sum of the spines for the guards in $\mathcal G$ realizes the family.
 families at different sources and observers need not come from a single
 term. Even all pairwise compatibility tests together are insufficient
 (\cref{app:core-pairwise}). The following colored-graph representation
-describes a joint witness; \cref{app:core-certificates} gives a complete
-clause criterion on the canonical probes. The atomic-cut test of
+describes a joint witness; \cref{core:cor:guard-peeling} gives an intrinsic
+condition on the canonical probes. The atomic-cut test of
 \cref{app:core-cuts} also gives simultaneous synthesis on the source
 data (\cref{app:core-compatibility}).
 
@@ -1031,7 +1033,8 @@ therefore follows in both directions from \cref{core:thm:colored-graphs}.
 
 The witness graph need not be unique; the prime source-guard family
 remains the canonical description of the operation. This is a structural
-representation, rather than a condition on the canonical guards alone.
+representation; \cref{core:cor:guard-peeling} gives the corresponding
+intrinsic condition on the canonical guards.
 
 \subsection{Relational compatibility}\label{app:core-pairwise}
 
@@ -1466,6 +1469,135 @@ The displayed values of $R$ exclude all five memberships, as does every
 pointwise minorant of $R$.
 \end{proof}
 
+\subsection{An intrinsic recognition test by row deletion}
+\label{app:core-peeling}
+
+Joint realizability of the canonical guards is determined by atomic
+challenges on the fixed source probes. The test below is a finite recursion
+that strictly deletes bounded rows.
+Fix finite sets $Q$ of rows and $V$ of variables, input columns
+$c_j\in\Pow^Q$ for $j\in V$, and upper bounds $A_i\subseteq I$.
+The valuation at row $i$ is $v^i_j=c_j(i)$.
+Let $N\subseteq Q$ index the bounds currently imposed.
+A demand set $D\subseteq Q\times I$
+requires the exact atom $\{r\}$ at row $i$ for each $(i,r)\in D$.
+An optional positive query $p$ is either $\bot$ or a pair $(q,k)$
+requiring $k$ at row $q$. Demands and queries may refer to rows outside $N$.
+For a column $c$, put $\chi_\bot(c)=\top$ and
+$\chi_{q,k}(c)=(k\in c(q))$. The column test is
+\[
+ \begin{aligned}
+ \operatorname{Col}_N(D;p)\ \Longleftrightarrow\ \exists j\in V:\quad
+ &\bigl(\forall i\in N,\ c_j(i)\subseteq A_i\bigr)\ \land\\
+ &\bigl(\forall(i,r)\in D,\ c_j(i)=\{r\}\bigr)\land\chi_p(c_j).
+ \end{aligned}
+\]
+Call $S\subseteq D$ \emph{rainbow} if its owners are pairwise
+distinct; include $S=\varnothing$.
+
+Define the following finite predicates:
+\begin{align}
+ G_N(D;p)&=\operatorname{Col}_N(D;p)
+   \ \lor\ \bigvee_{i\in N}\ \bigvee_{r\in A_i}
+        F_{N\setminus\{i\}}(D\cup\{(i,r)\};p),
+        \label{core:eq:peel-generators}\\
+ B_N(D)&=\bigwedge_{\substack{S\subseteq D\\S\text{ rainbow}}}
+                  G_N(S;\bot),
+        \label{core:eq:peel-rainbow}\\
+ F_N(D;\bot)&=B_N(D),\notag\\
+ F_N(D;q,k)&=B_N(D)\land G_N(\varnothing;q,k)\notag\\
+ &\quad\land\bigwedge_{\substack{(i,r)\in D\\r\ne k}}
+                  \bigvee_{s\ne r}G_N(\{(i,r)\};q,s).
+        \label{core:eq:peel-feasible}
+\end{align}
+At rank $|N|$, first define $G_N$ using the already defined $F$ at
+smaller ranks, then define $B_N$ and $F_N$. Thus the deletion rank is
+at most $|N|$. Every test uses only the input columns, the bounds,
+and finite sets of row--owner pairs.
+
+\begin{theorem}[Row-deletion recognition]\label{core:thm:peeling}
+For $K\geq3$, $F_N(D;p)$ holds if and only if one core term fits every
+upper bound indexed by $N$, every atomic demand in $D$, and the
+optional positive query $p$.
+\end{theorem}
+\begin{proof}
+Let $H_N$ consist of the bounded projection tuples and every bounded
+core tuple atomic at some row in $N$. These tuples generate all bounded
+core tuples. Indeed, induct on a term. A parent atomic at a bounded
+row already belongs to $H_N$. Otherwise no bounded-row output is atomic,
+so no root-owned absorption occurs there: both children fit the bounds.
+The converse follows from $x\star_r y\subseteq x+y$, which keeps bounds
+under core operations. The second disjunct of
+\eqref{core:eq:peel-generators} describes exactly the atomic generators,
+using one fewer bound and demanding its allowed atom. Induction on $|N|$
+therefore gives the intended meaning of $G_N$.
+
+Put $E_{i,r}=\{h\in H_N:h_i=\{r\}\}$.
+The least required profile of owner $r$ is the upward family generated
+by the $E_{i,r}$ with $(i,r)\in D$ and by $H_N$ itself, which enforces
+unanimity. By \cref{core:thm:profiles}, these profiles are realizable
+exactly when every rainbow selection of demand coalitions has nonempty
+intersection: owners not selected use $H_N$. This is
+\eqref{core:eq:peel-rainbow}, including the empty selection.
+
+For a query $(q,k)$, the base positive test supplies $k$ in the union
+of all generators.
+For $r\ne k$, it also ensures $H_N\not\subseteq E_{q,r}$.
+The final tests in \eqref{core:eq:peel-feasible} say
+$E_{i,r}\not\subseteq E_{q,r}$ for each demand $(i,r)$:
+such a generator has some winner $s\ne r$ at $q$.
+Thus the least required profiles do not force a wrong singleton at $q$.
+Synthesize those profiles and take their greatest profile completion
+(\cref{core:prop:profile-maximum}). At $q$, this completion is $\{k\}$
+if the synthesized term is atomic, and otherwise equals
+$\bigcup_{h\in H_N}h_q$. Both values contain $k$. This proves sufficiency. Conversely, profile monotonicity and
+provenance force these intersection and positive tests for any realizing
+term. This proves \eqref{core:eq:peel-feasible} and closes the induction.
+\end{proof}
+
+For a proposed guard family $\Gamma=(\Gamma_{k,j})$, write
+$F^\Gamma_{k,j}(p)=1$ when some guard in $\Gamma_{k,j}$ is enabled at
+$p$. Call $\Gamma$ \emph{canonical} when each $\Gamma_{k,j}$ consists
+of all prime sufficient guards for $F^\Gamma_{k,j}$. Its raw meaning is
+\[
+ [\Gamma](S)=\{k:\exists j\in V\ (k\in S_j\text{ and }
+ \exists G\in\Gamma_{k,j}\ \forall(i,r)\in G,\ S_i\ne\{r\})\}.
+\]
+Only $j$ supplies $k$ on $v^{k,j,p}$, and its other passive statuses
+are precisely $p$. Hence
+\[
+ k\in[\Gamma](v^{k,j,p})\quad\Longleftrightarrow\quad
+ F^\Gamma_{k,j}(p)=1.                                      \tag{$*$}
+\]
+
+\begin{corollary}[Intrinsic canonical guard recognition]
+\label{core:cor:guard-peeling}
+Fix $K\geq3$ and a finite variable set. For a guard family $\Gamma$,
+write $C(k,j,p)=F^\Gamma_{k,j}(p)$, and use the fixed
+$nK^n$ source probes as rows and their input projections as columns.
+Put
+\[
+ N=\{q=(k,j,p):C(q)=0\},\qquad A_q=I\setminus\{k\}\quad(q\in N).
+\]
+Then $\Gamma$ is a core prime source-guard normal form if and only if
+it is canonical and
+\[
+ F_N(\varnothing;\bot)\quad\text{and}\quad
+ \forall q=(k,j,p)\text{ with }C(q)=1,\quad
+ F_N(\varnothing;q,k).
+\]
+\end{corollary}
+\begin{proof}
+A realizing term supplies every witness. Conversely, the tests give a
+bounded witness for each positive coefficient; their finite derived union
+realizes them simultaneously, while the negative bounds forbid every
+false coefficient. The first test supplies one witness even if there
+are no positive coefficients. Canonicity then identifies the prime guard
+families by $(*)$. For empty variables, the empty rainbow challenge fails,
+matching
+the absence of nullary core terms.
+\end{proof}
+
 \subsection{Complete membership-clause certificates}\label{app:core-certificates}
 
 The joint constraints on a guard table can also be expressed by finite
@@ -1575,53 +1707,6 @@ choice and contains every projection column. The clause condition
 puts the target in that relation. The converse follows from soundness.
 The argument permits empty $Q$, empty $V$, and empty relations.
 \end{proof}
-
-For a proposed guard family $\Gamma=(\Gamma_{k,j})$, write
-$F^\Gamma_{k,j}(p)=1$ when some guard in $\Gamma_{k,j}$ is enabled at
-$p$. Call $\Gamma$ \emph{canonical} when each $\Gamma_{k,j}$ consists
-of all prime sufficient guards for $F^\Gamma_{k,j}$. Its raw meaning is
-\[
- [\Gamma](S)=\{k:\exists j\in V\ (k\in S_j\text{ and }
- \exists G\in\Gamma_{k,j}\ \forall(i,r)\in G,\ S_i\ne\{r\})\}.
-\]
-Only $j$ supplies $k$ on $v^{k,j,p}$, and its other passive statuses
-are precisely $p$. Hence
-\[
- k\in[\Gamma](v^{k,j,p})\quad\Longleftrightarrow\quad
- F^\Gamma_{k,j}(p)=1.                                      \tag{$*$}
-\]
-
-\begin{theorem}[Canonical guard-table certificates]\label{core:thm:guard-certificates}
-Fix $K\geq3$ and a finite variable set $V$. A guard family $\Gamma$
-is the prime source-guard normal form of a core term if and only if
-it is canonical and the following finite-data condition holds.
-On the fixed row set
-\[
- Q=\{(k,j,p):k\in I,\ j\in V,\ p\text{ a passive pattern at }(k,j)\},
-\]
-every checked clause family satisfied by all projection columns
-$(v^{k,j,p}_i)_{(k,j,p)\in Q}$ is satisfied by the raw target tuple
-$([\Gamma](v^{k,j,p}))_{(k,j,p)\in Q}$.
-\end{theorem}
-\begin{proof}
-For a realizing term, the source-guard normal form reconstructs its
-values, and clause soundness gives the condition. Conversely,
-\cref{core:thm:clause-completeness} supplies one core term matching
-the raw targets on all probes. In particular, those targets are
-nonempty; no nonemptiness assumption is needed. By $(*)$, its
-isolated-source coefficients are exactly $F^\Gamma$. Canonicality
-then identifies its prime guard families with $\Gamma$. The
-source-guard formula reconstructs its values at every input.
-
-For $V=\varnothing$ the row set is empty, but the condition rejects
-the family: the single pure clause with empty head is checked,
-is vacuously satisfied by all projection columns, and fails at the
-unique empty tuple. This agrees with the absence of nullary core terms.
-\end{proof}
-
-This criterion uses the fixed $nK^n$ canonical probes and only finite
-membership data. It permits auxiliary clauses and owner-elimination
-orders; it does not give a short condition on the guards alone.
 
 \begin{theorem}[Five-point interpolation inside a profile interval]
 \label{core:thm:five-local-profile}
@@ -1839,7 +1924,7 @@ In particular, it requires neither nonempty values for the expression
 represented by $F$ nor agreement between its different sources.
 
 Use $F^\Gamma$ and canonical guard families as defined in
-\cref{app:core-certificates}.
+\cref{app:core-peeling}.
 
 \begin{theorem}[Joint source compatibility]\label{core:thm:source-compatibility}
 For $K\geq3$ and any finite variable set $V$, the operator $\mathcal I$

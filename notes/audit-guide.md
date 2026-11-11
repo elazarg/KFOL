@@ -1,6 +1,6 @@
 # Reading the formalization
 
-Start with [Paper.lean](../Paper.lean): its 79 theorem statements cover the main
+Start with [Paper.lean](../Paper.lean): its 80 theorem statements cover the main
 paper, its mathematical prose claims and the report clauses it uses.
 [Report.lean](../Report.lean) gives 78 further audited report statements and
 proof ingredients. Both files write out the propositions; each proof names one
@@ -23,6 +23,7 @@ claim, then open the relevant vocabulary file:
 | Nonfinite-basis envelope | [Envelope.lean](../KFOL/Definitions/Envelope.lean), [Equational.lean](../KFOL/Definitions/Equational.lean) | Explicit copy-labelled operations; the three actual signatures and independent basis/variety predicates |
 | Powerset representation | [Relational.lean](../KFOL/Definitions/Relational.lean) | Annihilating zero extension and a right regular relation with a fresh point |
 | Report navigation queries | [Queries.lean](../KFOL/Definitions/Queries.lean) | Independent path/test semantics, valuation documents, compiler and regular relations |
+| Intrinsic core interpolation | [CoreInterpolation.lean](../KFOL/Definitions/CoreInterpolation.lean) | Atomic demands, raw upper bounds, rainbow intersections and the positive escape condition; recursive calls strictly erase a bounded row, with no generated relation or auxiliary certificate |
 | Core clause certificates | [CoreCertificates.lean](../KFOL/Definitions/CoreCertificates.lean) | Optional membership premises, finite heads, raw truth, syntactic weakening and owner-elimination orders; certificates are checked from input-column memberships without a term or validity oracle |
 | Core graph representations | [CoreGraph.lean](../KFOL/Definitions/CoreGraph.lean) | Symmetric owner colors, the two forbidden induced patterns, maximal cliques, singleton blocking and source survival; repeated vertex labels are independent occurrences |
 
