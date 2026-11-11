@@ -1,5 +1,5 @@
 \section{Unary contexts and the meaning of repetition}\label{app:contexts}
-This appendix classifies the one-variable contexts of the reduct, explains which observations retain ambiguity, and examines bottom and collective choice. It then separates three readings of a repeated component: independent copies, uniform equilibrium selection, and a shared hidden decision.
+This appendix classifies the one-variable contexts of the reduct, explains which observations retain ambiguity, separates bottom from omitted contributions, and relates collective decision rules through their outcome interpretations. It then separates three readings of a repeated component: independent copies, uniform equilibrium selection, and a shared hidden decision.
 
 \subsection{Unary contexts without internal switches}
 
@@ -325,15 +325,87 @@ $I\setminus\{r\}$, and its annihilator is $\{r\}$. These are useful
 observer operations, but their laws concern guarantees rather than
 possible SPE winners.
 
-\subsection{Collective choice and merging roles}\label{app:contexts-collective}
+\subsection{Decision rules, collective choice, and merging roles}\label{app:contexts-collective}
 
-A set of owners needs a rule for their agreement. One possibility gives
-the collective a shared objective: an outcome is good when its winner
-belongs to $A\subseteq I$. Regard each allowed $A$ as a decision-maker
-with payoff $[i\in A]$ at terminal winner $i$, controlling the nodes
-labelled by $A$. The continuation games retain their own controllers.
-The possible terminal labels still form a nonempty subset of $I$;
-several controllers may value the same label at one.
+Separate the finite tree, its controllers, and its payoff interpretation.
+Let $C$ label the controllers of internal nodes and let $\Omega$ label
+terminal outcomes. Payoffs are functions $u_c:\Omega\to\mathbb R$.
+The original game is the special case $C=\Omega=I$ with
+$u_r(i)=[i=r]$. More generally, a map $w:C\to\Omega$ assigns each
+controller a preferred outcome, with $u_c(i)=[i=w(c)]$. Several
+controllers may prefer the same outcome; some outcomes may have no
+controller preferring them. The tree and the interpretation can
+therefore vary separately. This is the distinction between outcome
+functions and player selection functions used by Hedges et al.\
+\cite[Definitions~1, 3 and 7]{HedgesEtAl2017Selection}.
+Distinct controller tags can carry the same payoff function or local
+rule; an aggregation can still count their votes separately.
+
+For binary nodes, the local decision rule can be given by a nonempty
+set $m_c(x,y)\subseteq\{x,y\}$ of admissible outcomes for each fixed
+pair $x,y\in\Omega$. For a maximizing controller, this set consists
+of the outcomes attaining $\max(u_c(x),u_c(y))$. Define its lift by
+\begin{equation}\label{context:eq:rule-lift}
+ S\mathbin{\odot_c}T=\bigcup_{x\in S,\,y\in T}m_c(x,y).
+\end{equation}
+For utility maximization this is exactly the possible SPE outcome
+recurrence: prescribe one child SPE with outcome $x$ and one with
+outcome $y$, and select an optimal branch. Other rules specify local
+admissibility, with no claim that they are utility-maximizing SPE.
+
+\begin{proposition}[Atomic rules and their transport]\label{context:prop:rule-lift}
+Every lift~\eqref{context:eq:rule-lift} is idempotent and distributes
+over union in each argument. It is commutative exactly when $m_c$ is
+symmetric, and associative exactly when, for every $x,y,z$,
+\begin{equation}\label{context:eq:atomic-assoc}
+ \bigcup_{v\in m_c(x,y)}m_c(v,z)
+ =\bigcup_{v\in m_c(y,z)}m_c(x,v).
+\end{equation}
+Conversely, every binary operation on nonempty subsets of finite
+$\Omega$ that distributes over union and never introduces an outcome
+has this form, uniquely.
+
+Let $f:\Omega\to\Omega'$ and $\gamma:C\to C'$. The direct-image
+map $S\mapsto f[S]$ transports every operation $\odot_c$ to
+$\odot'_{\gamma(c)}$ exactly when
+\begin{equation}\label{context:eq:atomic-transport}
+ f[m_c(x,y)]=m'_{\gamma(c)}(f(x),f(y))
+ \qquad(c\in C,\ x,y\in\Omega).
+\end{equation}
+\end{proposition}
+\begin{proof}
+Every outcome in a diagonal product comes from its input, and the
+pair $(x,x)$ retains each input outcome. This gives idempotency.
+Distribution and the sufficiency of the symmetry and associativity
+conditions follow by expanding unions. Necessity follows on singleton
+inputs. Conversely, finite distribution expands any proposed operation
+as the union of its values on singleton pairs, which uniquely recover
+$m_c$. Finally, direct image commutes with unions, so
+\eqref{context:eq:atomic-transport} is sufficient for transport of the
+lifts, and singleton inputs show it is necessary.
+\end{proof}
+
+Maximizing a scalar utility satisfies~\eqref{context:eq:atomic-assoc}:
+both sides retain precisely the utility-maximal outcomes among
+$x,y,z$. The corresponding lifts are therefore semilattices.
+If $u_c=u'_{\gamma(c)}\circ f$, their maximizing rules satisfy
+\eqref{context:eq:atomic-transport}. For bijections of controllers and
+outcomes this is ordinary relabelling. The original role permutation
+uses the same bijection on both sets, preserving the diagonal payoff
+table $[i=r]$. Thus role switching transports both the controller and
+the outcome interpretation. A coalition can instead aggregate payoff
+rows: a scalar rule $h_B$ for $B\subseteq C$ gives the collective utility
+\[
+ u_B(o)=h_B\bigl((u_c(o))_{c\in B}\bigr).
+\]
+More general aggregation can directly specify $m_B(x,y)$. Neither
+construction requires an invertible relabelling.
+
+\paragraph{A shared binary objective.}
+Take $\Omega=I$ and give each allowed coalition $A\subseteq I$ one
+controller with payoff $u_A(i)=[i\in A]$. Its nodes have a shared
+objective: some member wins. Continuation games retain their own
+controllers, and several controllers may value the same label at one.
 
 \begin{proposition}[Choice with a shared objective]\label{context:prop:collective}
 For finite public games with these controllers, possible SPE winners
@@ -353,28 +425,13 @@ definable by a term of the original full signature
 $\mathbf A_K^{\rm sym}$.
 \end{proposition}
 \begin{proof}
-If a child always produces a winner in $A$, every parent SPE produces
-one too, and every such child outcome is realized. Otherwise each
-child has an SPE won outside $A$; prescribing one off the path
-realizes every outcome of the other child. The full-profile argument
-of \cref{game:thm:adequacy} gives the recurrence.
-
-For a useful equivalent description, let
-\[
- M_A(i,j)=
- \begin{cases}
- \{i,j\}\cap A,&\{i,j\}\cap A\ne\varnothing,\\
- \{i,j\},&\text{otherwise}.
- \end{cases}
- \qquad
- S\star_A T=\bigcup_{i\in S,\,j\in T}M_A(i,j).
-\]
-This gives distribution over union. Commutativity and idempotency
-follow from~\eqref{context:eq:collective}. A product of three inputs
-is their union if none lies inside $A$, and otherwise is that union
-intersected with $A$, independently of its bracketing: a product lies
-inside $A$ exactly when one of its inputs does. This proves
-associativity. The singleton and endpoint formulas are immediate.
+If $S\subseteq A$ or $T\subseteq A$, every pair of child outcomes
+offers an $A$-winner, so the maximizing rule keeps precisely the
+$A$-winners. Otherwise an outcome outside $A$ in either child makes
+every outcome of the other child admissible. This gives the formula
+from~\eqref{context:eq:rule-lift}. Its laws follow from
+\cref{context:prop:rule-lift} and scalar maximization; the singleton
+and endpoint formulas are immediate.
 
 For nondefinability, choose $a\in A$ and $c\notin A$. The operation
 is commutative and depends on both inputs. If it had a term in the
@@ -392,6 +449,105 @@ members are incomparable. Requiring every member to improve strictly
 would instead make every alternative admissible when $|A|\geq2$,
 since a single terminal label cannot win for two members. The shared
 objective therefore specifies a substantive agreement rule.
+
+\paragraph{Majority depends on what is aggregated.}
+For a nonempty group $B$ with binary payoffs, a quota rule gives
+\[
+ u_{B,q}(o)=\left[\sum_{c\in B}u_c(o)\geq q\right].
+\]
+Quota one is the shared objective, quota $|B|$ is conjunction, and
+$q=\lfloor|B|/2\rfloor+1$ is strict majority approval of an outcome.
+With the original diagonal payoffs, every quota $q\geq2$ is constantly
+zero and its maximizing lift is union. Under a preferred-outcome map
+$w$, the sum instead counts $|B\cap w^{-1}(o)|$. For example, two
+controllers preferring $a$ and one preferring $b$ give $a$ majority
+approval. A general binary payoff table permits several outcomes to
+have majority approval.
+
+Comparing alternatives by majority of strict preferences, with
+indifferent voters abstaining, uses a different aggregation.
+One can also vote on the admissible sets proposed by the tagged
+rules. For $1\leq q\leq|B|$, put
+\[
+ Q_q((X_c)_{c\in B})=\{o:\#\{c\in B:o\in X_c\}\geq q\}.
+\]
+Quotas above one may leave no admissible outcome.
+
+\begin{lemma}[Aggregation before and after lifting]\label{context:lem:aggregation-lift}
+For any finite family of atomic rules and any quota $q$,
+\[
+ \bigcup_{x\in S,\,y\in T}Q_q((m_c(x,y))_{c\in B})
+ \ \subseteq\ Q_q((S\odot_c T)_{c\in B}).
+\]
+At quota one this is equality; at larger quotas it can be strict.
+\end{lemma}
+\begin{proof}
+A fixed pair witnessing $q$ approvals also witnesses each approval
+after lifting. At quota one, the unions over pairs and controllers
+commute. For strictness at quota two, take the original rules of
+$a,b$, with $S=\{a,b\}$ and $T=\{c\}$. On the left, the pair
+$(a,c)$ retains only $a$ in common and $(b,c)$ retains only $b$,
+giving $\{a,b\}$. On the right, each delegate admits
+$\{a,b,c\}$ using a different witness pair.
+\end{proof}
+
+\begin{proposition}[Majority interpretations]\label{context:prop:majority}
+For binary payoffs, pairwise majority of strict preferences is exactly
+maximization of the approval score $v_B(o)=\sum_{c\in B}u_c(o)$.
+Its lifted rule is a semilattice, and under the original diagonal
+payoffs it equals $\star_B$. With general ranked payoffs, pairwise
+majority can fail~\eqref{context:eq:atomic-assoc}.
+
+For a set $B$ of $n\geq3$ distinct original owners, majority of the
+proposals $(S\star_r T)_{r\in B}$ is always $S\cup T$. In fact
+every quota $q<n$ gives union. Distinct tags with repeated objectives
+need not have this collapse.
+
+In a simultaneous ballot game with an odd number $n\geq3$ of distinct voters,
+each voting for one of two fixed continuations, both unanimous ballot
+profiles are pure Nash equilibria, whatever the voters' preferences.
+Keeping all possible pure equilibrium outcomes of this ballot stage
+therefore gives union of the continuation outcome sets.
+\end{proposition}
+\begin{proof}
+For binary payoffs the signed majority margin between $x$ and $y$ is
+\begin{align*}
+ &\#\{c\in B:u_c(x)>u_c(y)\}-\#\{c\in B:u_c(y)>u_c(x)\}\\
+ &\qquad=\sum_{c\in B}(u_c(x)-u_c(y))=v_B(x)-v_B(y).
+\end{align*}
+Thus the rule maximizes a scalar utility. For diagonal payoffs the
+score is $[o\in B]$, recovering the shared objective.
+For general rankings, let three voters have preferences
+$a>b>c$, $b>c>a$, and $c>a>b$. Majority prefers $a$ to $b$, $b$ to
+$c$, and $c$ to $a$. Consequently
+$(\{a\}\odot\{b\})\odot\{c\}=\{c\}$, whereas
+$\{a\}\odot(\{b\}\odot\{c\})=\{a\}$.
+
+Each outcome of $S\cup T$ can be excluded by at most one original
+owner's proposal. An owner excluding it must be the singleton value
+of an operand. If the two operands are distinct atoms, either outcome
+is still retained by its own owner; otherwise at most one owner can
+absorb. Thus each outcome has at least $n-1$ approvals. In contrast,
+two controller tags carrying $\star_a$ and one carrying $\star_b$
+give proposal majority exactly $\star_a$.
+
+In a unanimous ballot profile, one changed vote leaves a strict
+majority unchanged, so no voter can improve. For any prescribed SPE
+outcome of either continuation, prescribe it after every ballot tuple
+selecting that continuation; select arbitrary SPEs after tuples
+selecting the other one. Unanimous ballots for the desired branch
+then give a stage Nash equilibrium. Conversely every stage outcome
+comes from one continuation. This proves union for the pure outcome
+observation, including when all voters strictly prefer one branch.
+\end{proof}
+
+The ballot mechanism changes the playground by inserting a simultaneous
+stage, whereas the preference rule changes the node's interpretation.
+The former fits the round interface of \cref{app:sealed}; its mixed
+distribution semantics is richer than the pure outcome observation
+just computed. For majority rules with cycles, the atomic test locates
+the failure of associativity while the binary tree still specifies a
+well-defined order of comparisons.
 
 \paragraph{Disjoint teams preserve the equational theory.}
 For a partition $\mathcal T=\{A_1,\ldots,A_m\}$ of $I$ into nonempty

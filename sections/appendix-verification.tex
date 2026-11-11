@@ -163,6 +163,8 @@ Bottom and subtree abstraction (\cref{context:prop:common-unit,context:prop:rest
  & Written; finite checks of restricted quotients, empty-set extensions, and full-profile SPE families.\\
 Collective choice (\cref{context:prop:collective,context:prop:team-refinement})
  & Written; finite checks of the shared-objective laws, team homomorphisms, and full-profile SPE recurrence.\\
+Decision rules and majority (\cref{context:prop:rule-lift,context:lem:aggregation-lift,context:prop:majority})
+ & Written; exhaustive atomic-rule, transport, payoff, and ballot-game checks.\\
 Remaining congruence results (\cref{app:congruences})
  & Written; finite checks.\\
 Minimal clone (\cref{reset:thm:minimal})
@@ -191,7 +193,7 @@ Dependent layer (\cref{app:dependent})
 
 \subsection{Finite checks}\label{app:finite-checks}
 
-\texttt{make check} runs the $33$ programs of \cref{tab:python-checks};
+\texttt{make check} runs the $34$ programs of \cref{tab:python-checks};
 \path{checks/README.md} lists the models and data they share.
 
 {\small
@@ -209,6 +211,8 @@ Programs & Subject\\
 \endlastfoot
 \path{check_choice.py}, \path{check_core.py}, \path{check_common_source.py}, \path{check_structure.py}, \path{check_symmetric.py}
  & Owned choice, contexts, bottom and collective choice, tests, core extraction and common source.\\
+\path{check_decision_rules.py}
+ & Atomic rules, transport, scalar utilities, and majority.\\
 \path{check_fibers.py}, \path{check_general.py}
  & Unary contexts, ambiguity and fibers.\\
 \path{check_reset.py}, \path{check_forest.py}
@@ -255,6 +259,24 @@ objectives. Whole-controller deviations in every subgame independently
 reproduce the predicted SPE winners. The delegation collapse,
 common-admissibility failure, nondefinability witnesses, and the
 two-team distributivity counterexample are checked as well.
+
+\path{check_decision_rules.py} enumerates all $729$ nonempty rules on
+ordered pairs of three outcomes that select only offered outcomes.
+It compares the atomic and lifted commutativity and associativity
+conditions, checks idempotency and union distribution, and tests the
+transport criterion on $5832$ rule/map pairs, including incompatible
+ones. For scalar utilities with values in $\{0,1,2\}$, it checks
+pullback along every map between three-element outcome sets and
+compares the lifted recurrence with independent full-controller SPE
+deviations on all $39612$ games with at most two decision nodes.
+It also checks all $512$ three-voter binary-payoff profiles on three
+outcomes and the aggregation/lifting comparison at every quota, the
+ranked-majority cycle, noninjective preferred-outcome maps and repeated
+rule tags, and all $270$ strict-or-indifferent preference profiles for
+three- and five-voter majority ballot games. The original-owner
+proposal collapse is checked on every owner set of size at least three,
+every pair of nonempty inputs, and every quota below unanimity through
+$K=6$.
 
 The navigation definitions are in \path{KFOL/Definitions/Queries.lean}, with proofs in \path{KFOL/Query/}. The optional command \texttt{python3 checks/check\_xpath.py} runs the translated queries in libxml2 through \texttt{lxml}: 60,208 term/valuation comparisons over all nonempty valuations at $K=3$ with three inputs and $K=4$ with two inputs. It also checks the empty-input counterexample. \path{tests/NavigationQueries.lean} checks that schema boundary and distinguishes the correct parent guard from a guard evaluated below an output role.
 

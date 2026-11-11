@@ -9,6 +9,7 @@ PYTHON_CHECKS := \
     checks/check_chain_guards.py \
     checks/check_choice.py \
     checks/check_common_source.py \
+    checks/check_decision_rules.py \
     checks/check_connections.py \
     checks/check_core.py \
     checks/check_core_atomic.py \
