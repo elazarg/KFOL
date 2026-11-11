@@ -161,6 +161,8 @@ Unary classifications (\cref{app:contexts,app:ambiguity})
  & Written; finite checks.\\
 Bottom and subtree abstraction (\cref{context:prop:common-unit,context:prop:restricted-view,context:prop:outcome-families})
  & Written; finite checks of restricted quotients, empty-set extensions, and full-profile SPE families.\\
+Collective choice (\cref{context:prop:collective,context:prop:team-refinement})
+ & Written; finite checks of the shared-objective laws, team homomorphisms, and full-profile SPE recurrence.\\
 Remaining congruence results (\cref{app:congruences})
  & Written; finite checks.\\
 Minimal clone (\cref{reset:thm:minimal})
@@ -206,7 +208,7 @@ Programs & Subject\\
 \bottomrule
 \endlastfoot
 \path{check_choice.py}, \path{check_core.py}, \path{check_common_source.py}, \path{check_structure.py}, \path{check_symmetric.py}
- & Owned choice, contexts, bottom extensions, tests, core extraction and common source.\\
+ & Owned choice, contexts, bottom and collective choice, tests, core extraction and common source.\\
 \path{check_fibers.py}, \path{check_general.py}
  & Unary contexts, ambiguity and fibers.\\
 \path{check_reset.py}, \path{check_forest.py}
@@ -240,6 +242,19 @@ and compares the family recurrence with full profiles checked against
 whole-player deviations in every subgame. These include the
 everyone-loses counterexample; no equilibrium recurrence is used by
 the full-profile checker.
+
+For \cref{app:contexts-collective}, the same script checks the
+shared-objective semilattice and union laws for every coalition through
+$K=5$, comparing its formula with pointwise optimal choices. For all
+$44$ partitions into at least three teams at $K=3,4,5$, it checks the
+split quotient and embedding and every outcome-observer homomorphism
+on all input pairs. It also enumerates all $3531$ games with three
+terminal labels, at most two binary decisions, and arbitrary subsets
+as controller objectives, including overlapping and repeated
+objectives. Whole-controller deviations in every subgame independently
+reproduce the predicted SPE winners. The delegation collapse,
+common-admissibility failure, nondefinability witnesses, and the
+two-team distributivity counterexample are checked as well.
 
 The navigation definitions are in \path{KFOL/Definitions/Queries.lean}, with proofs in \path{KFOL/Query/}. The optional command \texttt{python3 checks/check\_xpath.py} runs the translated queries in libxml2 through \texttt{lxml}: 60,208 term/valuation comparisons over all nonempty valuations at $K=3$ with three inputs and $K=4$ with two inputs. It also checks the empty-input counterexample. \path{tests/NavigationQueries.lean} checks that schema boundary and distinguishes the correct parent guard from a guard evaluated below an output role.
 

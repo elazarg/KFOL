@@ -271,6 +271,52 @@ def bottom_extension_checks():
     print("Bottom extensions: unit and annihilator laws, derived unions and the distributivity obstruction passed (K=3..5).")
 
 
+def full_profile_outcomes(tree, payoff):
+    nodes = []
+
+    def index(t):
+        if isinstance(t, int):
+            return t
+        owner, left, right = t
+        position = len(nodes)
+        nodes.append(None)
+        node = (owner, position, index(left), index(right))
+        nodes[position] = node
+        return node
+
+    root = index(tree)
+    profiles = tuple(product((0, 1), repeat=len(nodes)))
+    controllers = {node[0] for node in nodes}
+
+    def outcome(t, profile):
+        while not isinstance(t, int):
+            _, position, left, right = t
+            t = right if profile[position] else left
+        return t
+
+    result = set()
+    for profile in profiles:
+        # Enumerate whole-controller deviations in every subgame. This uses
+        # neither backward induction nor an algebraic equilibrium recurrence.
+        perfect = True
+        for subgame in nodes:
+            actual = outcome(subgame, profile)
+            for controller in controllers:
+                for deviation in profiles:
+                    if all(deviation[j] == profile[j] or node[0] == controller
+                           for j, node in enumerate(nodes)):
+                        if payoff(controller, outcome(subgame, deviation)) > payoff(controller, actual):
+                            perfect = False
+                            break
+                if not perfect:
+                    break
+            if not perfect:
+                break
+        if perfect:
+            result.add(outcome(root, profile))
+    return frozenset(result)
+
+
 def winning_family_checks():
     def family(tree):
         if isinstance(tree, int):
@@ -283,50 +329,7 @@ def winning_family_checks():
         return first | second
 
     def full_profile_family(tree):
-        nodes = []
-
-        def index(t):
-            if isinstance(t, int):
-                return t
-            owner, left, right = t
-            position = len(nodes)
-            nodes.append(None)
-            node = (owner, position, index(left), index(right))
-            nodes[position] = node
-            return node
-
-        root = index(tree)
-        profiles = tuple(product((0, 1), repeat=len(nodes)))
-
-        def outcome(t, profile):
-            while not isinstance(t, int):
-                _, position, left, right = t
-                t = right if profile[position] else left
-            return t
-
-        result = set()
-        for profile in profiles:
-            # Check whole-player deviations in every subgame, without using
-            # either backward induction or the proposed family recurrence.
-            perfect = True
-            for subgame in nodes:
-                actual = outcome(subgame, profile)
-                for player in range(3):
-                    if actual & (1 << player):
-                        continue
-                    for deviation in profiles:
-                        if all(deviation[j] == profile[j] or node[0] == player
-                               for j, node in enumerate(nodes)):
-                            if outcome(subgame, deviation) & (1 << player):
-                                perfect = False
-                                break
-                    if not perfect:
-                        break
-                if not perfect:
-                    break
-            if perfect:
-                result.add(outcome(root, profile))
-        return frozenset(result)
+        return full_profile_outcomes(tree, lambda player, winners: (winners >> player) & 1)
 
     cases = 0
     for leaf in range(8):
@@ -348,6 +351,127 @@ def winning_family_checks():
     print(f"Winning-set families: {cases} games with arbitrary terminal coalitions checked against full-profile SPE deviations; draw obstruction passed.")
 
 
+def collective_choice(goal, left, right):
+    union = left | right
+    return union & goal if not left & ~goal or not right & ~goal else union
+
+
+def collective_checks():
+    for count in range(3, 6):
+        values = range(1, 1 << count)
+        for goal in range(1 << count):
+            for a in values:
+                assert collective_choice(goal, a, a) == a
+            for a, b in product(values, repeat=2):
+                result = collective_choice(goal, a, b)
+                assert result == collective_choice(goal, b, a) and result
+                # Independent pointwise optimality of the two fixed outcomes.
+                expected = 0
+                for i in range(count):
+                    if not a & (1 << i):
+                        continue
+                    for j in range(count):
+                        if b & (1 << j):
+                            first, second = (goal >> i) & 1, (goal >> j) & 1
+                            if first >= second:
+                                expected |= 1 << i
+                            if second >= first:
+                                expected |= 1 << j
+                assert result == expected
+                delegates = reduce(int.__or__, (own(r, a, b) for r in range(count)
+                                                if goal & (1 << r)), 0)
+                if goal.bit_count() >= 2:
+                    assert delegates == a | b
+                if goal.bit_count() == 1:
+                    assert result == delegates
+                if goal in (0, (1 << count) - 1):
+                    assert result == a | b
+            for a, b, c in product(values, repeat=3):
+                assert collective_choice(goal, collective_choice(goal, a, b), c) == collective_choice(goal, a, collective_choice(goal, b, c))
+                assert collective_choice(goal, a, b | c) == collective_choice(goal, a, b) | collective_choice(goal, a, c)
+            if 2 <= goal.bit_count() < count:
+                member = goal & -goal
+                outsider = next(1 << i for i in range(count) if not goal & (1 << i))
+                other = member | outsider
+                assert goal.bit_count() >= 2 and other.bit_count() == 2
+                assert collective_choice(goal, goal, other) == goal != goal | other
+
+    assert own(0, 1, 2) & own(1, 1, 2) == 0
+    assert collective_choice(3, 3, 4) == 3 < (own(0, 3, 4) & own(1, 3, 4))
+    assert collective_choice(3, 1, collective_choice(4, 2, 4)) == 1
+    assert collective_choice(4, collective_choice(3, 1, 2), collective_choice(3, 1, 4)) == 3
+    print("Collective choice: pointwise optimality, semilattice and union laws, delegation and nondefinability witnesses passed (K=3..5).")
+
+    cases = 0
+    for count in range(3, 6):
+        values = range(1, 1 << count)
+        for partition in partitions(count):
+            teams = max(partition) + 1
+            if teams < 3:
+                continue
+            blocks = tuple(sum(1 << i for i in range(count) if partition[i] == j)
+                           for j in range(teams))
+
+            def quotient(value):
+                return sum(1 << j for j, block in enumerate(blocks) if value & block)
+
+            def embed(value):
+                return reduce(int.__or__, (block for j, block in enumerate(blocks)
+                                          if value & (1 << j)), 0)
+
+            def observer(player, value):
+                own_team = partition[player]
+                if value & (1 << player):
+                    return own_team
+                for j, block in enumerate(blocks):
+                    if j != own_team and not value & ~block:
+                        return j
+                return teams
+
+            coarse_values = range(1, 1 << teams)
+            assert all(quotient(embed(v)) == v for v in coarse_values)
+            assert all(len({observer(i, v) for v in values}) == teams + 1
+                       for i in range(count))
+            for r, goal in enumerate(blocks):
+                assert all(embed(own(r, a, b)) == collective_choice(goal, embed(a), embed(b))
+                           for a, b in product(coarse_values, repeat=2))
+                for a, b in product(values, repeat=2):
+                    result = collective_choice(goal, a, b)
+                    assert quotient(result) == own(r, quotient(a), quotient(b))
+                    for i in range(count):
+                        assert observer(i, result) == view_own(partition[i], r,
+                            observer(i, a), observer(i, b), teams)
+                    joined = collective_choice(blocks[2], collective_choice(blocks[0], a, b), collective_choice(blocks[1], a, b))
+                    assert joined == a | b
+            cases += 1
+    print(f"Team refinement: split maps and every observer homomorphism checked on {cases} partitions with at least three teams (K=3..5).")
+
+    def evaluate_collective(tree):
+        if isinstance(tree, int):
+            return 1 << tree
+        goal, left, right = tree
+        return collective_choice(goal, evaluate_collective(left), evaluate_collective(right))
+
+    def check_game(tree):
+        value = evaluate_collective(tree)
+        predicted = frozenset(i for i in range(3) if value & (1 << i))
+        actual = full_profile_outcomes(tree, lambda goal, winner: (goal >> winner) & 1)
+        assert actual == predicted
+
+    games = 0
+    for leaf in range(3):
+        check_game(leaf)
+        games += 1
+    for goal, a, b in product(range(8), range(3), range(3)):
+        check_game((goal, a, b))
+        games += 1
+    for first, second, a, b, c in product(range(8), range(8), range(3), range(3), range(3)):
+        for tree in ((first, (second, a, b), c), (first, a, (second, b, c))):
+            check_game(tree)
+            games += 1
+    print(f"Collective SPE: {games} games with arbitrary overlapping controller goals checked against full-profile deviations.")
+
+
 if __name__ == "__main__":
     quotient_checks()
     multivariable_checks()
@@ -357,3 +481,4 @@ if __name__ == "__main__":
     restricted_view_checks()
     bottom_extension_checks()
     winning_family_checks()
+    collective_checks()

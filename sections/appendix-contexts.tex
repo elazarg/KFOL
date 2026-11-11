@@ -1,5 +1,5 @@
 \section{Unary contexts and the meaning of repetition}\label{app:contexts}
-This appendix classifies the one-variable contexts of the reduct, explains which observations retain ambiguity, and determines when a bottom can stand for an omitted contribution. It then separates three readings of a repeated component: independent copies, uniform equilibrium selection, and a shared hidden decision.
+This appendix classifies the one-variable contexts of the reduct, explains which observations retain ambiguity, and examines bottom and collective choice. It then separates three readings of a repeated component: independent copies, uniform equilibrium selection, and a shared hidden decision.
 
 \subsection{Unary contexts without internal switches}
 
@@ -324,6 +324,163 @@ so bottom isolates one player's guarantee. The unit for $\vee_r$ is
 $I\setminus\{r\}$, and its annihilator is $\{r\}$. These are useful
 observer operations, but their laws concern guarantees rather than
 possible SPE winners.
+
+\subsection{Collective choice and merging roles}\label{app:contexts-collective}
+
+A set of owners needs a rule for their agreement. One possibility gives
+the collective a shared objective: an outcome is good when its winner
+belongs to $A\subseteq I$. Regard each allowed $A$ as a decision-maker
+with payoff $[i\in A]$ at terminal winner $i$, controlling the nodes
+labelled by $A$. The continuation games retain their own controllers.
+The possible terminal labels still form a nonempty subset of $I$;
+several controllers may value the same label at one.
+
+\begin{proposition}[Choice with a shared objective]\label{context:prop:collective}
+For finite public games with these controllers, possible SPE winners
+compose by
+\begin{equation}\label{context:eq:collective}
+ S\star_A T=
+ \begin{cases}
+ (S\cup T)\cap A,&S\subseteq A\text{ or }T\subseteq A,\\
+ S\cup T,&\text{otherwise}.
+ \end{cases}
+\end{equation}
+Every $\star_A$ is associative, commutative and idempotent, and
+distributes over union. Moreover,
+$\star_{\{r\}}=\star_r$, while $\star_\varnothing$ and
+$\star_I$ are both union. If $2\leq|A|<K$, this operation is not
+definable by a term of the original full signature
+$\mathbf A_K^{\rm sym}$.
+\end{proposition}
+\begin{proof}
+If a child always produces a winner in $A$, every parent SPE produces
+one too, and every such child outcome is realized. Otherwise each
+child has an SPE won outside $A$; prescribing one off the path
+realizes every outcome of the other child. The full-profile argument
+of \cref{game:thm:adequacy} gives the recurrence.
+
+For a useful equivalent description, let
+\[
+ M_A(i,j)=
+ \begin{cases}
+ \{i,j\}\cap A,&\{i,j\}\cap A\ne\varnothing,\\
+ \{i,j\},&\text{otherwise}.
+ \end{cases}
+ \qquad
+ S\star_A T=\bigcup_{i\in S,\,j\in T}M_A(i,j).
+\]
+This gives distribution over union. Commutativity and idempotency
+follow from~\eqref{context:eq:collective}. A product of three inputs
+is their union if none lies inside $A$, and otherwise is that union
+intersected with $A$, independently of its bracketing: a product lies
+inside $A$ exactly when one of its inputs does. This proves
+associativity. The singleton and endpoint formulas are immediate.
+
+For nondefinability, choose $a\in A$ and $c\notin A$. The operation
+is commutative and depends on both inputs. If it had a term in the
+original full signature, idempotent elimination
+(\cref{gen:thm:core}) would give a core term using both variables.
+On ambiguous inputs that term must be their union by
+\cref{gen:cor:trace}. But the ambiguous inputs $S=A$ and
+$T=\{a,c\}$ give $S\star_A T=A\ne A\cup\{c\}$.
+\end{proof}
+
+At a fixed pair of terminal labels, the same rule selects the
+Pareto-undominated alternatives for the members' individual payoffs:
+a member's win dominates an outsider's win, while wins by different
+members are incomparable. Requiring every member to improve strictly
+would instead make every alternative admissible when $|A|\geq2$,
+since a single terminal label cannot win for two members. The shared
+objective therefore specifies a substantive agreement rule.
+
+\paragraph{Disjoint teams preserve the equational theory.}
+For a partition $\mathcal T=\{A_1,\ldots,A_m\}$ of $I$ into nonempty
+teams, define
+\[
+ q(S)=\{j:S\cap A_j\ne\varnothing\},\qquad
+ e(U)=\bigcup_{j\in U}A_j.
+\]
+The map $q$ forgets which member wins, and $e$ allows every member of
+each listed team to win.
+
+\begin{proposition}[Team refinement]\label{context:prop:team-refinement}
+The maps $q$ and $e$ are homomorphisms between the winner-set algebra
+with choices $\star_{A_j}$ and the ordinary $m$-role core, with
+$q\circ e$ the identity. If $m\geq3$, these
+algebras have exactly the same identities. This also holds when a
+constant for $A_j$ is matched with the ordinary winner constant $j$.
+\end{proposition}
+\begin{proof}
+An input lies inside $A_j$ exactly when its image under $q$ equals
+$\{j\}$. If either input does, the refined output is nonempty and
+lies inside $A_j$; otherwise its image is union. This proves
+\[
+ q(S\star_{A_j}T)=q(S)\star_j q(T).
+\]
+Conversely, applying~\eqref{context:eq:collective} to unions of whole
+teams proves $e(U\star_j V)=e(U)\star_{A_j}e(V)$.
+The constant claims and $q\circ e=\mathrm{id}$ follow from the partition.
+
+For the other direction on identities, fix an outcome $i\in A_j$.
+Map a refined value $S$ to
+\[
+ \pv\quad(i\in S),\qquad
+ a_\ell\quad(S\subseteq A_\ell,\ \ell\ne j),\qquad
+ \nv\quad\text{otherwise}.
+\]
+Under $\star_{A_j}$, membership of $i$ is disjunction. Under
+$\star_{A_\ell}$ for $\ell\ne j$, it is disjunction unless an
+operand lies inside $A_\ell$, which suppresses it. An output lies
+inside an opponent team $A_\ell$ precisely when that team's choice
+has an operand inside it, or both operands already lie inside it.
+These are exactly the tables of the ordinary player view $C_j$
+from \cref{view:thm:view}. All its states occur when $m\geq3$:
+for $\nv$, use outcomes in two teams other than $A_j$.
+Whole-team constants also have their usual quotient values.
+
+Taking this homomorphism for every $i\in I$ gives an injective map
+into a product of ordinary player views, since their $\pv$ coordinates
+recover membership of each $i$. Thus every ordinary identity holds
+in the refinement. Conversely, every identity of the refinement
+holds in its quotient under $q$, the ordinary core.
+\end{proof}
+
+In particular, the nonfinite-basis theorem transfers to disjoint teams
+with $m\geq3$. The three-team assumption matters. With teams
+$A=\{a,b\}$ and $B=\{c\}$,
+\[
+ \{a\}\star_A(\{b\}\star_B\{c\})=\{a\},\qquad
+ (\{a\}\star_A\{b\})\star_B(\{a\}\star_A\{c\})=\{a,b\}.
+\]
+So the mutual distributivity of ordinary two-player choice need not
+survive refinement. Adding overlapping coalitions alongside the
+individual owners is also a different extension: the proper
+multi-member operations of \cref{context:prop:collective} are then
+genuinely new.
+
+\paragraph{Delegation and common admissibility.}
+Another reading permits any one member of a nonempty $A$ to decide
+according to its individual objective. Keeping all outcomes of all
+such delegations gives
+\[
+ D_A(S,T)=\bigcup_{r\in A}(S\star_r T).
+\]
+For $A=\{r\}$ this is owned choice, but for $|A|\geq2$ it is always
+$S\cup T$. Indeed, for two distinct delegates the union of their
+answers is $S\cup T$: if neither choice absorbs this is immediate;
+if just one absorbs, the other keeps union; if both absorb, the
+inputs are their two atoms and both atoms are kept.
+
+Taking common admissible outcomes instead gives
+$\bigcap_{r\in A}(S\star_r T)$, which may be empty: with
+$A=\{r,s\}$, $S=\{r\}$ and $T=\{s\}$, the two delegates insist
+on different winners. This is not an ordering of the shared-objective
+rule. For $A=\{a,b\}$, the inputs $\{a,b\},\{c\}$ give
+common admissibility $\{a,b,c\}$ but shared-objective value
+$\{a,b\}$; the inputs $\{a\},\{b\}$ give common admissibility
+$\varnothing$ but the same shared-objective value $\{a,b\}$.
+Thus delegation, common admissibility, and a shared objective agree
+on singleton coalitions but express different collective decisions.
 
 \subsection{Repeated descriptions with uniform component strategies}
 
