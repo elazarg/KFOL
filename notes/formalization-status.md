@@ -1,14 +1,14 @@
 # Active formalization status
 
 The entire main-paper scope is proved: **21/21 main result rows**,
-**63/63 required catalog rows**, and **17/17 required prose obligations**.
+**64/64 required catalog rows**, and **17/17 required prose obligations**.
 The [inventory](formalization-claims.json) is authoritative for scope.
 Other report results remain optional and have their own evidence status.
 
 | Audit entrypoint | Mathematical statements | Presentation |
 | --- | ---: | --- |
-| [Paper.lean](../Paper.lean) | 75 | Main text and the report claims it cites; 603 lines |
-| [Report.lean](../Report.lean) | 55 | Further report results and proof ingredients |
+| [Paper.lean](../Paper.lean) | 77 | Main text and the report claims it cites; 620 lines |
+| [Report.lean](../Report.lean) | 56 | Further report results and proof ingredients |
 | [Results/Certificates](../KFOL/Results/Certificates.lean) | 140 preserved contracts | Original full statements, including native machines, codecs and intermediate invariants |
 
 Every root proof names one library theorem. Both root files have no semantic
@@ -25,8 +25,8 @@ regular representation are in `Definitions/Relational`.
 
 | Definition surface | Theorem types | Semantic declarations | Source files | Written review units |
 | --- | ---: | ---: | ---: | ---: |
-| Paper | 75 | 629 | 35 | 329 |
-| Report | 55 | 600 | 32 | 261 |
+| Paper | 77 | 648 | 36 | 342 |
+| Report | 56 | 604 | 32 | 265 |
 
 The slices overlap and exclude theorem proof bodies. These meaning indexes do
 not replace the human comparison with the manuscript or the proof/axiom audits.
@@ -37,7 +37,7 @@ The production integration checks are:
 
 - `make check-lean`: literal façade and preservation checks, inventory,
   independent algebra build/import audit, Paper/Report and whole-source axiom
-  audits, both definition indexes, actual negative audit fixtures and 95 strict
+  audits, both definition indexes, actual negative audit fixtures and 96 strict
   Lean regressions.
 - `make check-python`: the explicit 33 independent Python checks, mapped to the
   current paper in `checks/README.md` and the verification appendix.
@@ -118,7 +118,10 @@ inputs' nonobserver singleton statuses. There are exactly n K^n indexed
 Boolean observations. `Definitions/CoreNormalForm` groups the passive statuses,
 probes, sufficient prime guards and their meaning; `Core/SourceProbes` and
 `Core/SourceNormalForm` prove reconstruction, canonicity and local synthesis.
-The five complete report statements retain the antichain clause. Both excluded
+The five complete statements retain the antichain clause. The main
+discussion now explicitly asserts the normal forms, so their reconstruction
+and equality statements reside in `Paper.lean`; the source decomposition,
+probe count and local synthesis remain in `Report.lean`. Both excluded
 ternary functions also have sourcewise reconstructions, so the remaining
 main-text question concerns a concise intrinsic characterization of jointly
 realizable functions, beyond the exact finite recognition procedure.
@@ -127,3 +130,13 @@ The one-owner basis now has optimal variable bound five: thirty-six native
 laws, with five-variable exchange replacing the six-variable action-band
 axiom. The six-element countermodel rules out every four-variable basis;
 the relative conservative bound stays four.
+
+Direct joint compatibility is now checked on the n K^n source observations.
+`Core/SourceCompatibility` proves a monotone, contractive, idempotent interior
+operator specified by finite Horn rules. Every nonzero result has one common
+term witness and is the greatest realizable coefficient array below its input.
+Canonical guard families are realizable exactly when their array is nonzero
+and fixed by this operator. Three complete statements are in `Report.lean`.
+This refines the algorithmic criterion. The main-text question asks for an
+intrinsic characterization comparable to singleton-profile admissibility;
+that stronger question is not declared solved.

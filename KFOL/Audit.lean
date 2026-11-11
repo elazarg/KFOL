@@ -236,6 +236,7 @@ import all KFOL.Core.PairModel
 import all KFOL.Definitions.CoreNormalForm
 import all KFOL.Core.SourceProbes
 import all KFOL.Core.SourceNormalForm
+import all KFOL.Core.SourceCompatibility
 import all KFOL.Core.Profiles
 import all KFOL.Core.Interpolation
 import all KFOL.Core.Cuts

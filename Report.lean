@@ -28,22 +28,6 @@ theorem core_source_reconstruction {Role : Type u} {Var : Type v}
       k ∈ (t.eval (Core.Sources.probe three k j (Core.Sources.pattern k j v))).val :=
   Results.Algebra.core_source_reconstruction three t ht v k
 
-theorem core_prime_guard_normal_form {Role : Type u} [Fintype Role]
-    {Var : Type v} [Fintype Var] (three : Fin 3 ↪ Role)
-    (t : Term Role Var) (ht : t.IsCore) (v : Var → WinnerSet Role) :
-    (Core.Sources.meaning (Core.Sources.normalForm three (fun w => t.eval w)) v =
-      (t.eval v).val) ∧ ∀ k j, IsAntichain (· ≤ ·)
-        (Core.Sources.normalForm three (fun w => t.eval w) k j :
-          Set (Core.Sources.Guard k j)) :=
-  Results.Algebra.core_prime_guard_normal_form three t ht v
-
-theorem core_prime_guard_equality {Role : Type u} [Fintype Role]
-    {Var : Type v} [Fintype Var] (three : Fin 3 ↪ Role)
-    (s t : Term Role Var) (hs : s.IsCore) (ht : t.IsCore) :
-    Core.Sources.normalForm three (fun v => s.eval v) =
-      Core.Sources.normalForm three (fun v => t.eval v) ↔ ∀ v, s.eval v = t.eval v :=
-  Results.Algebra.core_prime_guard_equality three s t hs ht
-
 theorem core_source_probe_count {Role : Type u} [Fintype Role]
     {Var : Type v} [Fintype Var] [DecidableEq Var] :
     Fintype.card (Core.Sources.ProbeIndex Role Var) =
@@ -57,6 +41,35 @@ theorem core_guard_synthesis {Role : Type u} {Var : Type v}
       (k ∈ (t.eval (Core.Sources.probe three k j p)).val ↔
         ∃ g ∈ G, Core.Sources.Enabled g p) :=
   Results.Algebra.core_guard_synthesis three G hG
+
+theorem core_guard_compatibility {Role : Type u} [Fintype Role]
+    {Var : Type v} [Fintype Var] (three : Fin 3 ↪ Role)
+    (G : ∀ (k : Role) (j : Var), Finset (Core.Sources.Guard k j)) :
+    (Core.Sources.Canonical G ∧ (∃ k j p, Core.Sources.coefficients G k j p) ∧
+      Core.Sources.interior three (Core.Sources.coefficients G) = Core.Sources.coefficients G) ↔
+      ∃ t : Term Role Var, t.IsCore ∧ Core.Sources.normalForm three (fun v => t.eval v) = G :=
+  Results.Algebra.core_guard_compatibility three G
+
+theorem core_source_interior {Role : Type u} [Fintype Role]
+    {Var : Type v} [Fintype Var] (three : Fin 3 ↪ Role) :
+    Monotone (Core.Sources.interior (Var := Var) three) ∧
+      (∀ F, Core.Sources.interior (Var := Var) three F ≤ F) ∧
+      ∀ F, Core.Sources.interior (Var := Var) three (Core.Sources.interior three F) =
+        Core.Sources.interior three F :=
+  Results.Algebra.core_source_interior three
+
+theorem core_source_interior_realization {Role : Type u} [Fintype Role]
+    {Var : Type v} [Fintype Var] (three : Fin 3 ↪ Role)
+    (F : ∀ (k : Role) (j : Var), Core.Sources.Pattern k j → Prop)
+    (h : ∃ k j p, Core.Sources.interior three F k j p) :
+    (∃ t : Term Role Var, t.IsCore ∧ ∀ k j p,
+      (k ∈ (t.eval (Core.Sources.probe three k j p)).val ↔
+        Core.Sources.interior three F k j p)) ∧
+      ∀ (s : Term Role Var), s.IsCore →
+        (∀ k j p, k ∈ (s.eval (Core.Sources.probe three k j p)).val → F k j p) →
+        ∀ k j p, k ∈ (s.eval (Core.Sources.probe three k j p)).val →
+          Core.Sources.interior three F k j p :=
+  Results.Algebra.core_source_interior_realization three F h
 
 theorem core_singleton_profiles {Role : Type u} [DecidableEq Role] [Fintype Role]
     {Var : Type v} [Fintype Var] (three : Fin 3 ↪ Role)

@@ -392,6 +392,23 @@ theorem choice_union_basis (three : Fin 3 ↪ Role) (owner : Role) :
         Nonempty M ∧ Dissemilattice.Laws (Dissemilattice.add (M := M)) Dissemilattice.mul :=
   Results.Algebra.choice_union_basis three owner
 
+/-- Canonical normal forms asserted in the discussion. -/
+theorem core_prime_guard_normal_form {Role : Type u} [Fintype Role]
+    {Var : Type v} [Fintype Var] (three : Fin 3 ↪ Role)
+    (t : Term Role Var) (ht : t.IsCore) (v : Var → WinnerSet Role) :
+    (Core.Sources.meaning (Core.Sources.normalForm three (fun w => t.eval w)) v =
+      (t.eval v).val) ∧ ∀ k j, IsAntichain (· ≤ ·)
+        (Core.Sources.normalForm three (fun w => t.eval w) k j :
+          Set (Core.Sources.Guard k j)) :=
+  Results.Algebra.core_prime_guard_normal_form three t ht v
+
+theorem core_prime_guard_equality {Role : Type u} [Fintype Role]
+    {Var : Type v} [Fintype Var] (three : Fin 3 ↪ Role)
+    (s t : Term Role Var) (hs : s.IsCore) (ht : t.IsCore) :
+    Core.Sources.normalForm three (fun v => s.eval v) =
+      Core.Sources.normalForm three (fun v => t.eval v) ↔ ∀ v, s.eval v = t.eval v :=
+  Results.Algebra.core_prime_guard_equality three s t hs ht
+
 /-- `core:thm:no-basis`. -/
 theorem core_nonfinite_basis [DecidableEq Role] [Finite Role] (three : Fin 3 ↪ Role) :
     letI := Equational.coreStructure Role

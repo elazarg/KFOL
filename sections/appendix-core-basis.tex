@@ -15,7 +15,8 @@ owned choice with union has a seven-equation basis
 (\cref{app:core-dissemilattice}); the binary terms have explicit normal
 forms (\cref{app:core-binary}); at every arity, the singleton outputs of
 terms are characterized (\cref{app:core-profiles}), prime source-guard
-normal forms describe their full values (\cref{app:core-source-guards}), and a finite
+normal forms describe their full values (\cref{app:core-source-guards}), their
+joint compatibility is tested on source probes (\cref{app:core-compatibility}), and a finite
 saturation decides which operations are terms (\cref{app:core-cuts});
 unary polynomials are classified (\cref{core:prop:unary-polynomials});
 conservative models have a three-variable presentation
@@ -925,7 +926,8 @@ The $+$-sum of the spines for the guards in $\mathcal G$ realizes the family.
 \Cref{core:prop:guard-synthesis} prescribes one coefficient at a time:
 families at different sources and observers need not come from a single
 term. The next subsection gives a finite test for whether an operation is
-a term operation.
+a term operation, and \cref{app:core-compatibility} applies it directly to
+the joint source data.
 
 \subsection{Recognition by atomic cuts}\label{app:core-cuts}
 
@@ -1024,9 +1026,80 @@ With no variables there are no seeds, so no membership is derived.
 
 For an $n$-ary operation the table has $(2^K-1)^n$ rows, so the test
 ranges over $(K+2)^{(2^K-1)^n}$ bound vectors. It decides which
-operations are terms and produces a term for each, but it does not
-characterize them intrinsically, as \cref{core:thm:profiles} does for
-singleton outputs.
+operations are terms and produces a term for each. The source probes
+give a smaller test when the input is already a proposed normal form.
+
+\subsection{Joint compatibility on source probes}\label{app:core-compatibility}
+
+The cut test also applies directly to proposed source coefficients. Let
+$F_{k,j}(p)$ be any Boolean array on the $M=nK^n$ indexed probes; no
+operation table is assumed. At the row $q=(k,j,p)$ use valuation $v^q$
+and upper bound
+\[
+ U_q=\begin{cases}I,&F_{k,j}(p)=1,\\
+ I\setminus\{k\},&F_{k,j}(p)=0.
+ \end{cases}
+\]
+Thus a negative bit forbids just its observer, and a positive bit leaves
+all winners allowed. Both upper bounds are nonempty. Run the atomic-cut
+rules with these rows and bounds, and write
+\[
+ (\mathcal IF)_{k,j}(p)=1
+ \quad\Longleftrightarrow\quad
+ [B_0,(k,j,p),k]\text{ is present after saturation}.
+\]
+This specifies $\mathcal I$ by finite rules on the coefficient array.
+In particular, it requires neither nonempty values for the expression
+represented by $F$ nor agreement between its different sources.
+
+For a guard family $\Gamma=(\Gamma_{k,j})$, let $F^\Gamma_{k,j}(p)=1$
+when some guard in $\Gamma_{k,j}$ is enabled at $p$. Call $\Gamma$
+\emph{canonical} when each $\Gamma_{k,j}$ consists of all prime sufficient
+guards for $F^\Gamma_{k,j}$.
+
+\begin{theorem}[Joint source compatibility]\label{core:thm:source-compatibility}
+For $K\geq3$ and any finite variable set $V$, the operator $\mathcal I$
+is monotone, contractive and idempotent. If $\mathcal IF\ne0$, there is
+one core term $t$ with $c^t=\mathcal IF$. Moreover, a guard family
+$\Gamma$ is the prime source-guard normal form of one core term if and
+only if
+\begin{enumerate}
+\item $\Gamma$ is canonical;
+\item $F^\Gamma\ne0$;
+\item $\mathcal I F^\Gamma=F^\Gamma$.
+\end{enumerate}
+\end{theorem}
+\begin{proof}
+By soundness and completeness of the cut rules,
+$(\mathcal IF)_q=1$ exactly when there is a core term $s$ such that
+$c^s\leq F$ and $c^s_q=1$. Indeed, being bounded by $U$ means exactly
+that $s$ obeys every negative observation. It follows that
+$\mathcal IF\leq F$ and that $\mathcal I$ is monotone. Each witness
+$s$ also satisfies $c^s\leq\mathcal IF$, since all its bits have the
+same bounded witness. Applying the characterization again proves
+$\mathcal IF\leq\mathcal I(\mathcal IF)$; contractivity gives equality.
+
+When $\mathcal IF\ne0$, take the $+$-sum of one bounded witness for
+every positive bit of $\mathcal IF$. The family is finite and nonempty,
+and the sum still obeys every negative constraint. It has coefficient
+array exactly $\mathcal IF$, by completeness. Equivalently, this is the
+maximum bounded witness from \cref{core:thm:cuts}.
+
+Every core term has a nonzero array: assign every input $\{k\}$, use
+idempotence, and apply the source decomposition. Thus an array is
+realized by one core term exactly when it is a nonzero fixed point.
+For a canonical $\Gamma$, equality $c^t=F^\Gamma$ is equivalent to
+equality of their prime guard families. This proves all three conditions.
+It also handles $V=\varnothing$, where every array is zero and no
+constant-free core term exists.
+\end{proof}
+
+In particular, $\mathcal IF$ is the greatest realizable coefficient array
+below $F$ whenever it is nonzero; when it is zero, no core array lies below
+$F$. The test uses $(K+2)^M$ bound vectors and reaches saturation within
+$KM(K+2)^M$ rounds. It gives a direct compatibility test and simultaneous
+synthesis on the source data. Its finite saturation is still the mechanism
+that checks the joint constraints.
 
 \subsection{Unary polynomials}
 

@@ -5,6 +5,7 @@ public import KFOL.Core.ProfileSynthesis
 public import KFOL.Core.Interpolation
 public import KFOL.Core.Cuts
 public import KFOL.Core.SourceNormalForm
+public import KFOL.Core.SourceCompatibility
 
 /-! # Core basis obstructions, typed covers and uniform finite countermodels
 

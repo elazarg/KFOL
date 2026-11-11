@@ -119,4 +119,28 @@ Thus this semantic normal form does not by itself solve joint realizability;
 the atomic-cut test still supplies exact global recognition.
 
 The report places these results between singleton profiles and atomic cuts;
-five complete audited statements are in `Report.lean`.
+the reconstruction and equality statements are in `Paper.lean`, with the
+other three statements in `Report.lean`.
+
+## Direct compatibility and the greatest realizable minorant
+
+`Core.Sources.interior` uses one Boolean constraint per isolated-source probe.
+A negative bit forbids its observer; a positive bit leaves the whole winner
+set allowed. This is a partial interpolation problem, with no completed value
+table or nonemptiness assumption on a proposed semantic expression.
+
+`interior_iff_witness` characterizes each retained bit by a term obeying all
+negative constraints. `interior_mono`, `interior_le` and `interior_idem` prove
+that the resulting operator is an interior on the finite lattice of bit arrays.
+`interior_realizes` joins the bounded witnesses into one common term when the
+result is nonzero; `interior_greatest` makes this the largest realizable array
+below the specification. Zero means that no term obeys all negative constraints.
+
+`guard_fixed_iff` gives exact direct compatibility of a family: canonicality,
+a nonzero coefficient array, and equality with its interior. Nullary arrays
+are rejected. The tests also reject a positive monotone one-variable array
+that permits only one observer: idempotence forces every observer at that arity.
+
+These are source-level saturation and synthesis results. They do not provide
+a short intrinsic law list comparable to `AdmissibleProfiles`. The stronger
+main-text classification question remains open.

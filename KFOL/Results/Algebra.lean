@@ -7,6 +7,7 @@ public import KFOL.Owner.FourVariableObstruction
 public import KFOL.Owner.Basis.Exchange
 public import KFOL.Core.Cuts
 public import KFOL.Core.SourceNormalForm
+public import KFOL.Core.SourceCompatibility
 
 @[expose] public section
 namespace KFOL.Results.Algebra
@@ -50,6 +51,39 @@ theorem core_guard_synthesis {Role : Type u} {Var : Type v}
       (k ∈ (t.eval (Core.Sources.probe three k j p)).val ↔
         ∃ g ∈ G, Core.Sources.Enabled g p) :=
   Core.Sources.exists_guard_family_term three G hG
+
+/-- Direct compatibility of guard families, expressed on isolated-source bits. -/
+theorem core_guard_compatibility {Role : Type u} [Fintype Role]
+    {Var : Type v} [Fintype Var] (three : Fin 3 ↪ Role)
+    (G : ∀ (k : Role) (j : Var), Finset (Core.Sources.Guard k j)) :
+    (Core.Sources.Canonical G ∧ (∃ k j p, Core.Sources.coefficients G k j p) ∧
+      Core.Sources.interior three (Core.Sources.coefficients G) = Core.Sources.coefficients G) ↔
+      ∃ t : Term Role Var, t.IsCore ∧ Core.Sources.normalForm three (fun v => t.eval v) = G :=
+  Core.Sources.guard_fixed_iff three G
+
+/-- All joint restrictions form a monotone, contractive, idempotent operator. -/
+theorem core_source_interior {Role : Type u} [Fintype Role]
+    {Var : Type v} [Fintype Var] (three : Fin 3 ↪ Role) :
+    Monotone (Core.Sources.interior (Var := Var) three) ∧
+      (∀ F, Core.Sources.interior (Var := Var) three F ≤ F) ∧
+      ∀ F, Core.Sources.interior (Var := Var) three (Core.Sources.interior three F) =
+        Core.Sources.interior three F :=
+  ⟨Core.Sources.interior_mono three, Core.Sources.interior_le three,
+    Core.Sources.interior_idem three⟩
+
+/-- Every nonzero interior has one common realizing term. -/
+theorem core_source_interior_realization {Role : Type u} [Fintype Role]
+    {Var : Type v} [Fintype Var] (three : Fin 3 ↪ Role)
+    (F : ∀ (k : Role) (j : Var), Core.Sources.Pattern k j → Prop)
+    (h : ∃ k j p, Core.Sources.interior three F k j p) :
+    (∃ t : Term Role Var, t.IsCore ∧ ∀ k j p,
+      (k ∈ (t.eval (Core.Sources.probe three k j p)).val ↔
+        Core.Sources.interior three F k j p)) ∧
+      ∀ (s : Term Role Var), s.IsCore →
+        (∀ k j p, k ∈ (s.eval (Core.Sources.probe three k j p)).val → F k j p) →
+        ∀ k j p, k ∈ (s.eval (Core.Sources.probe three k j p)).val →
+          Core.Sources.interior three F k j p :=
+  ⟨Core.Sources.interior_realizes three F h, Core.Sources.interior_greatest three F⟩
 
 /-- All-arity synthesis of the core's singleton-output predicates. -/
 theorem core_singleton_profiles [DecidableEq Role] [Fintype Role] [Fintype Var]

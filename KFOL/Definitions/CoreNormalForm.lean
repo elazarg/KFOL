@@ -1,6 +1,7 @@
 module
 
 public import KFOL.Definitions.Views
+public import KFOL.Definitions.CoreFunctions
 public import Mathlib.Data.Fintype.Pi
 public import Mathlib.Data.Fintype.Powerset
 public import Mathlib.Data.Fintype.Option
@@ -110,5 +111,52 @@ produce nonempty values or be jointly realizable by a core term. -/
 def meaning {Role : Type u} {Var : Type v}
     (G : ∀ (k : Role) (j : Var), Finset (Guard k j)) (v : Var → WinnerSet Role) : Set Role :=
   {k | ∃ j, k ∈ (v j).val ∧ ∃ g ∈ G k j, Enabled g (pattern k j v)}
+
+/-- The monotone predicate described by a guard family at each source. -/
+def coefficients {Role : Type u} {Var : Type v}
+    (G : ∀ (k : Role) (j : Var), Finset (Guard k j))
+    (k : Role) (j : Var) (p : Pattern k j) : Prop := ∃ g ∈ G k j, Enabled g p
+
+/-- A presentation contains all and only its own prime sufficient guards. -/
+def Canonical {Role : Type u} {Var : Type v}
+    (G : ∀ (k : Role) (j : Var), Finset (Guard k j)) : Prop :=
+  ∀ k j g, g ∈ G k j ↔ Prime (coefficients G k j) g
+
+/-- A true observation imposes no restriction. A false observation forbids
+only its observer, without prescribing any other winner. -/
+noncomputable def allowance {Role : Type u} {Var : Type v}
+    (three : Fin 3 ↪ Role) (F : ∀ (k : Role) (j : Var), Pattern k j → Prop)
+    (q : ProbeIndex Role Var) : WinnerSet Role := by
+  classical
+  exact if F q.1 q.2.1 q.2.2 then ⟨Set.univ, ⟨three 0, Set.mem_univ _⟩⟩
+    else representative three q.1 .neutral
+
+/-- Atomic cuts on the source probes, with upper bounds determined only by
+negative observations. No completed operation table is supplied. -/
+noncomputable def compatibilitySystem {Role : Type u} {Var : Type v}
+    (three : Fin 3 ↪ Role) (F : ∀ (k : Role) (j : Var), Pattern k j → Prop) :
+    FiniteHorn.System (Cuts.Fact Role (ProbeIndex Role Var)) :=
+  Cuts.system (fun q => probe three q.1 q.2.1 q.2.2) (allowance three F)
+
+/-- Delete precisely the source observations that have no joint bounded witness.
+This definition uses finite Horn rules and contains no quantifier over terms. -/
+noncomputable def interior {Role : Type u} [Fintype Role] {Var : Type v} [Fintype Var]
+    (three : Fin 3 ↪ Role) (F : ∀ (k : Role) (j : Var), Pattern k j → Prop)
+    (k : Role) (j : Var) (p : Pattern k j) : Prop := by
+  classical
+  exact (⟨fun _ => .target, ⟨k, j, p⟩, k⟩ : Cuts.Fact Role (ProbeIndex Role Var)) ∈
+    FiniteHorn.saturate (compatibilitySystem three F)
+
+/-- There is a positive observation, and each positive observation has a
+bounded witness in the one shared finite Horn system. -/
+noncomputable def Compatible {Role : Type u} [Fintype Role] {Var : Type v} [Fintype Var]
+    (three : Fin 3 ↪ Role) (F : ∀ (k : Role) (j : Var), Pattern k j → Prop) : Prop := by
+  classical
+  exact (∃ k j p, F k j p) ∧ ∀ k j p, F k j p → interior three F k j p
+
+/-- The intrinsic joint-realizability criterion for canonical source families. -/
+noncomputable def Admissible {Role : Type u} [Fintype Role] {Var : Type v} [Fintype Var]
+    (three : Fin 3 ↪ Role) (G : ∀ (k : Role) (j : Var), Finset (Guard k j)) : Prop :=
+  Canonical G ∧ Compatible three (coefficients G)
 
 end KFOL.Core.Sources
