@@ -48,53 +48,19 @@ other variables are eligible sources. Define
 
 The same law holds after any permutation of X,Y,Z.
 
-## Proof of the two-query law
+## The two-query law as a graph obstruction
 
-First note a consequence of the same-owner separator lemma from
-[one-pattern interpolation](free-pattern-interpolation.md). For either
-r=a or r=b, a word with q_XY=0 must satisfy
+Apply the [quota poison-graph theorem](quota-poison-graphs.md) with the two
+active owners a,b and observer k outside that active set. Its exact zero
+records have no directed two-edge path on distinct vertices. The two
+zeros q_XY=q_YZ=0 would give X->Y->Z and are therefore impossible.
 
-    Phi_r({X,Z}) implies Phi_r({Y,Z}).                     (2)
-
-Indeed, take A={X,Z}, B={Y,Z}, and J={X} in that lemma. The difference
-A\B is {X}; E_r={Y} lies in B; and every foreign nonobserver flag set
-misses A. Every alternative in PairSafe_J is therefore false. A positive
-A-bit and negative B-bit would force q_XY=1. The second zero query gives
-
-    q_YZ=0 implies Phi_r({X,Y}) -> Phi_r({X,Z}).            (3)
-
-Consequently, if both queries vanish, each owner r in {a,b} has the chain
-
-    Phi_r({X,Y}) <= Phi_r({X,Z}) <= Phi_r({Y,Z}).
-
-This conclusion applies to any word with the two zero bits, without
-assuming its complete profiles Phi.
-
-Suppose a word with profiles Phi and both zero queries exists, and
-choose one with the fewest primitive gates. It cannot be a leaf.
-
-At its root both zero queries pass to both children. At an a-root,
-the parent's a-profile is zero on every singleton. The own-owner OR
-recurrence makes both children's a-profile zero on every singleton, so
-the a-filter at each query is open in both directions.
-The queried source coefficient is therefore the OR of its child
-coefficients. The b-root argument is identical. At any other owner's root
-the relevant flag set is empty, so both singleton profiles at that flag
-set are zero and the filters are open. An observer-owned root directly
-takes OR. Thus both children have both zero queries.
-
-If the root owner is a, some child owns the positive a-profile at {X,Y}.
-By (2)--(3), that child owns all three positive a-pair bits. The b-profile
-takes AND at this root, so both children already own all three b-pair
-bits. The selected child's profile tuple therefore dominates Phi: the
-remaining owners' unanimity positives are top bits and hold in every word.
-Maximal admissibility forces that child's complete tuple to be exactly
-Phi. This gives a smaller word with the same profiles and both zero
-queries, contradicting minimality.
-
-The b-root case is symmetric. At a root outside {a,b}, both majority
-profiles take AND, so both children's tuples dominate Phi and hence equal
-Phi. Either child again contradicts minimality. This proves (1).
+The general theorem proves this prohibition by positive-premise descent:
+zero queries propagate coatom-profile implications, their singleton
+filters pass both zeros to the children, and a smaller word retains the
+required positive premises. That argument applies to fresh and inactive
+old observers, exactly the scope needed here. The same theorem also gives
+the full zero-record classification below at arbitrary active-set size.
 
 ## Every individual whole pattern is feasible
 

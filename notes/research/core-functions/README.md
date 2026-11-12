@@ -81,10 +81,24 @@ clauses. [Matroid source guards](matroid-core-operations.md) are bases and
 cocircuits; a realizing word can be linear in any chosen source. Both
 prime Boolean normal forms are minimal exactly for uniform thresholds.
 
+The [asymmetric closure example](closure-core-operations.md#source-separation-does-not-give-a-linear-full-realizer)
+has an attained greatest full type at each source, yet cannot be realized
+with X occurring once. Full source separation does not remove input reuse.
+In the other direction, the four-leaf
+[mixed-color minimum](mixed-cnf-minimum.md) has nonmaximal admissible
+profiles and must repeat its shared input. It is least in its exact
+profile fibre, although its positive-profile envelope is empty at one
+row. Its individual owner closures are not matroids.
+
 The [separable hull can fail](separable-hull-failure.md): even closures
 extracted from an actual core operation can have a noncore product
 completion, already with five variables and four owners. It retains the
 original profiles and pure sections but violates omission independence.
+For genuine source-separable operations,
+[mixed closure outcast](mixed-closure-outcast.md) supplies closed necessary
+tests on partial colorings whenever the initial atomic constant part is
+not the entire role set. The initially saturated case and sufficiency
+remain unresolved.
 
 The [prime-obstruction theorem](prime-obstructions.md) shows that the hard
 part persists at unbounded arity: the Gray crowns have core proper
@@ -421,6 +435,15 @@ is strictly stronger, even with antitonicity and simultaneous one-pattern
 feasibility at every observer. For the ternary quota over exactly three
 old owners, the entire old-observer free-extension fibre has exactly
 thirteen members, with a closed graph criterion and explicit realizers.
+For [arbitrarily many active unit-quota owners](quota-poison-graphs.md),
+the entire poison projection has an exact graph criterion: no two incoming
+zero edges and no directed two-edge path on distinct vertices. This holds
+for fresh or inactive observers; active old observers have no zero edges.
+
+The [exact-profile lower envelope](exact-profile-envelope.md) has a closed
+formula using positive rainbows and true/false same-owner separators.
+It computes pointwise forcing, including the mixed minimum above, and
+does not assert compatibility across all rows.
 
 [Profile maxima](profile-maximum-types.md) have a complete actual-type
 classification: every globally sound full type occurs, and the greatest

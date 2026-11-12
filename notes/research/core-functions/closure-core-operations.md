@@ -167,6 +167,56 @@ have loops. Prime Boolean clauses alone therefore need not determine
 the original full operation. Matroid closures are coatomistic, so this
 replacement leaves them unchanged.
 
+## Canonical maximal full types occur in every closure class
+
+**Theorem.** At every source j, the canonical full factor vector (3)
+is the greatest actual full type of F_c and is attained at a marked
+occurrence in some realizer. This does not assert a realizer in which
+j occurs only once altogether.
+
+For a CNF word, separate its clauses into those containing j and those
+not containing j. Let A be the outer choice_0 fold of the latter, if
+there are any. If no clause is the singleton {j}, remove j from every
+j-containing clause, fold choice_1 over each remaining clause, and fold
+choice_0 over these remainders to obtain B. Form
+
+    S_j=A choice_0 (x_j choice_1 B),
+
+omitting the A node when there are no j-free clauses. If a singleton
+j-clause occurs, instead take S_j=A choice_0 x_j, or just x_j when A
+is absent. In either case j occurs exactly once in S_j.
+
+The universal inequality
+
+    x choice_1 (y choice_0 z)
+       subseteq (x choice_1 y) choice_0 (x choice_1 z)      (8)
+
+and its iterated version give S_j subseteq F_c. One proof of (8)
+is the [read-once lower-bound theorem](read-once-profile-minimum.md):
+both sides have the same profiles by Boolean distributivity, and the
+left word is primitive read-once. Iteration uses monotonicity of owned
+choice for inclusion. In the singleton-j-clause case, if either A or
+j is the 0 singleton both expressions are 0. Otherwise adding any
+other j-containing clause to the outer 0-fold cannot remove a winner
+already supplied by A and j; such a clause cannot itself be 0.
+
+The marked j occurrence in S_j has exactly (3). Its 0-filter excludes
+0-singleton j-free clauses; a j-containing clause cannot be all 0 when
+j is excluded from the 0 flags, so this is the common spanning filter.
+Its 1-filter is NOT Phi_1(B), equivalently the disjunction of avoidance
+of the j-containing clause remainders. This is j outside c(E_1).
+A singleton j-clause makes this factor true, as required. Other
+owner factors are true because no other owner occurs on the j spine.
+
+Now union S_j with F_c. The result is F_c, and the
+[marked-union lemma](source-type-pruning.md) preserves the marked full
+vector: it is globally sound by (4). Thus the maximal vector is actual
+in an F_c realizer. Pure-owner probes bound every actual factor by
+(3), proving greatestness.
+
+The factored subword S_j can be strictly smaller than F_c. Restoring
+F_c by union can repeat j; this distinction is essential below.
+
 ## An asymmetric closure between two familiar completions
 
 Let V={X,Y,Z}. Close a set to V when it contains X and at least one
@@ -177,7 +227,7 @@ of Y,Z, and also impose Y implies Z. Its closed sets are
 Its meet-irreducible proper closed sets are {X},{Z},{Y,Z}. Hence the
 canonical five-leaf CNF is
 
-    (X choice_0 (X choice_1 Y)) choice_0 (Y choice_1 Z).   (8)
+    (X choice_0 (X choice_1 Y)) choice_0 (Y choice_1 Z).   (9)
 
 The spanning predicate is X AND (Y OR Z). The coatom closure additionally
 imposes Z implies Y; it is the matroid closure with parallel class
@@ -193,10 +243,53 @@ otherwise it returns the entire input union.
 In general, for two loopless closures c<=c' with the same spanning
 sets, (3) gives F_(c')<=F_c. The map is injective, so strictness of
 closures gives strictness of the corresponding operations. In the
-example the read-once operation is strictly below (8), which is strictly
+example the read-once operation is strictly below (9), which is strictly
 below its profile maximum. All three have the same complete profiles.
 Thus arbitrary closure existence does not imply the matroid family's
 global minimality theorem.
+
+## Source separation does not give a linear full realizer
+
+**Theorem.** The asymmetric operation (9) has no primitive realization
+in which X occurs exactly once.
+
+Its canonical X factors are
+
+    D_(X,0)=NOT(Y_0 AND Z_0);
+    D_(X,r)=true for every r!=0.                          (10)
+
+If X occurred once, its one marked vector would equal these pure-owner
+factors. A foreign-owner node h!=0 on its path would have a nonempty
+sibling word on Y,Z. That sibling's h-profile is true at the full
+coalition {Y,Z}, so its exclusion factor could not be identically true.
+Thus every node on the X path must be owned by 0.
+
+Flatten that path, writing its nonempty sibling words as G_i(Y,Z).
+Their 0-profiles have OR equal to Y AND Z, by (10). Each is normalized
+and hence must itself equal Y AND Z. The target 1-profile is
+X AND (Y OR Z), so their 1-profiles have AND equal to Y OR Z. Each
+must therefore be the maximal nonconstant monotone function Y OR Z.
+
+At another owner h, a positive singleton coalition {Y} would conflict
+with the sibling's owner-1 winning coalition {Z}, and vice versa.
+Admissibility therefore forces every other profile to be Y AND Z.
+The binary quota uniqueness theorem in
+[near-unanimity-size.md](near-unanimity-size.md) now identifies each
+G_i with Y choice_1 Z. Associativity and idempotence collapse the
+whole 0-spine to X choice_0 (Y choice_1 Z).
+
+This is strictly smaller than (9). At
+
+    X={0,1},   Y={2},   Z={1},
+
+the read-once word returns {0,1}, whereas (7) for the asymmetric closure
+returns {0,1,2}. This contradiction proves the theorem for K>=3.
+
+Thus even a source-separable operation with an attained greatest full
+type at every source need not have a chosen-source-linear realization.
+In this example an additional X occurrence is unnecessary for X's own
+membership contribution, but necessary for the operation's coupled
+behavior at other sources.
 
 ## Free completion and the boundary of the result
 

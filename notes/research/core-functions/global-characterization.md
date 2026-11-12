@@ -244,6 +244,34 @@ For a five-variable word at four owners this upper bound violates omission
 independence and is not core. Even jointly extracted closure data do not
 justify independent owner completion.
 
+All two-owner CNF operations do have an attained greatest full type at
+each source: factor the chosen source into a subordinate linear word,
+then union with the original target. But the
+[asymmetric closure operation](closure-core-operations.md) has no full
+realizer linear in X. Every possible X-path is forced to use owner 0
+only, with each sibling equal to Y choice_1 Z; that collapses to a
+strictly smaller read-once operation. Maximal-type attainment and source
+separation therefore do not imply chosen-input linearization.
+
+## Essential overlap among global minima
+
+The [mixed three-owner example](mixed-cnf-minimum.md)
+
+    F=(X choice_1 Y) choice_0 (Y choice_2 Z)
+
+is globally minimal and least in its exact profile fibre, but its profile
+tuple is not maximal admissible. Its positive-only profile envelope is
+empty at (1,0,2), while F returns {1,2}. The proof uses a complete
+same-owner separator table, rather than term enumeration. Every realizer
+must repeat Y, and each of its canonical owner closures violates matroid
+exchange. It therefore excludes maximal-profile and disjoint-matroid
+routes as universal descriptions of minima.
+
+The displayed word also attains its greatest arbitrary antitone free
+completion. At the shared source the maximal actual type family has two
+incomparable members; no greatest full vector exists. Thus a greatest
+free extension can require an OR of genuinely different source types.
+
 ## Exact free-bit forcing from positive profiles
 
 [Free profile persistence](free-profile-persistence.md) works even when
@@ -283,6 +311,40 @@ old-observer free-extension fibre. Its six uncertain poison bits form a
 zero graph with no globally reachable vertex; the extension order is the
 opposite face order of a hexagon boundary. This complete small fibre
 classification does not supply the remaining all-arity guard criterion.
+
+The [poison-graph theorem](quota-poison-graphs.md) extends the exact
+projection classification to arbitrarily many active unit-quota owners.
+At a fresh or inactive observer, exact zero records are disjoint unions
+of outgoing stars, opposite pairs and isolates. Forbidden incoming pairs
+and directed two-edge paths give necessity; explicit rainbow witnesses,
+minimal-premise repair and reset padding give sufficiency. Active old
+observers instead have all these coefficients forced to one. This is
+an unbounded closed mixed-pattern criterion, still restricted to the
+specified poison projection rather than arbitrary guard tables.
+
+## Exact-profile forcing and mixed closure outcast
+
+[The exact-profile envelope](exact-profile-envelope.md) computes the
+pointwise intersection of all exact-profile realizers. Besides positive
+rainbows, its certificates use a true and false coalition at one owner.
+These negative bits recover the mixed minimum even where its positive
+envelope is empty. Joint attainment across all rows is a separate question;
+existing profile-fibre nonconvexity excludes interval bounds as a complete
+recognizer.
+
+For source-separable candidates satisfying actual-source attribution,
+[partial-coloring tests](mixed-closure-outcast.md) express nonemptiness
+and full singleton-profile factorization using the constant part A and
+unblocked positions Q. For genuine core operations with A!=I, outcast
+has the closed form
+
+    c_r(E_r union (J\Q)) intersects Q = empty for every r.
+
+Restoring blocked ambiguous positions cannot capture a free one, even
+if the resulting constant part is saturated. The proof does not cover
+initial A=I: old semantics can mask unowned selections there. Neither
+that saturated case nor sufficiency of these closure constraints is
+settled by the reduction.
 
 ## Full types at greatest profile completions
 

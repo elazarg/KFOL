@@ -105,6 +105,15 @@ free-extension classification. These results locate concrete parts of the
 compatibility problem; neither the closure reduction nor that fixed fibre
 is the requested all-arity characterization of ordinary prime guards.
 
+The [unit-quota poison theorem](quota-poison-graphs.md) now gives a closed
+mixed-pattern criterion at unbounded active-owner count, but only for
+its specified query projection. [Mixed closure outcast](mixed-closure-outcast.md)
+gives additional necessary conditions for source-separable core functions.
+The [mixed-color global minimum](mixed-cnf-minimum.md) shows why maximal
+admissible profiles and disjoint matroid decompositions cannot describe
+all minima. The complete compatibility of arbitrary source guards remains
+the objective.
+
 ## Exact exponential locality threshold
 
 `Report.core_exponential_locality` strengthens the quantitative obstruction.
