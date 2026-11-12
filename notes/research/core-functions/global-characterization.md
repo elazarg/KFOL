@@ -210,7 +210,10 @@ guards and exact construction-size bounds are explicit.
 [Owner-shadow is exactly closure idempotence](separable-closures.md).
 The pure-owner sections of every core operation therefore give canonical
 loopless closures, with spanning predicates equal to its singleton
-profiles. When the source coefficients separate, their products reconstruct
+profiles. The [functional-dependence theorem](cofactor-dependence-closures.md)
+identifies c_r(E) with the inputs made inessential by fixing E to {r};
+the closure laws follow directly from restrictions of arbitrary functions.
+When the source coefficients separate, their products reconstruct
 the operation directly from these colored closures. Synthetic closure
 families still need full atomic-profile compatibility; pure-probe
 admissibility alone is insufficient.
@@ -226,6 +229,11 @@ union realizes the candidate; marked completion attains the greatest
 free extension. The test also applies directly to monomial guard data
 without assuming closure operators in advance. It is a subclass theorem;
 joint-premise closure dependencies are not represented by this graph.
+Cofactor-dependence composition proves the first arrow law for any
+genuine core operation, without separation. Two-point neutral profiles
+prove the second. Consequently the same laws classify all jointly
+realizable additive pure-owner families, and their separable upper hull
+is always core and greatest in its exact pure-closure fiber.
 
 [Every finite loopless closure](closure-core-operations.md) is realized
 by a two-owner CNF: fold owner 1 within complements of proper closed sets
@@ -252,9 +260,12 @@ The [canonical separable hull](separable-hull-failure.md) shows why these
 closures do not yet solve the general target. For a core F, multiplying
 its pure factors gives a nonempty monotone idempotent upper bound with
 the same singleton profiles, pure sections and whole-input provenance.
-For a five-variable word at four owners this upper bound violates omission
-independence and is not core. Even jointly extracted closure data do not
-justify independent owner completion.
+A four-variable word gives a noncore hull for every K>=3, including
+three owners. Its hull nevertheless satisfies hereditary omission and
+has core proper input minors. The explicit word is the greatest core
+minorant of that hull. Thus even jointly extracted closure data with
+these stronger compatibility properties do not justify independent
+owner completion.
 
 All two-owner CNF operations do have an attained greatest full type at
 each source: factor the chosen source into a subordinate linear word,
@@ -353,9 +364,9 @@ outcast has the closed form at every partial coloring
     c_r(E_r union (J\Q)) intersects Q = empty for every r.
 
 Restoring blocked ambiguous positions cannot capture a free one, including
-at an initially saturated fiber. The two-erasure lemma proves that
-missing-color outcast implies full outcast for any family of monotone
-extensive maps with at least three colors. The corresponding canonical
+at an initially saturated fiber. Pair-cut (P) is equivalent to this
+full outcast law. Its direct cofactor proof uses a third observing owner
+to detect a source outside the two old closures. The corresponding canonical
 selection maps Q_a are interiors. Equivalently, every full coloring a
 makes T -> UNION_r c_r(T intersect a^-1(r)) a closure operator.
 For loopless candidate maps this condition implies source attribution.
@@ -367,12 +378,39 @@ to full Q-outcast and preservation of the spanning owners under blocked
 restorations. Term attainment of the canonical extension for a genuine
 core target remains unresolved. Sufficiency for arbitrary closure data
 is refuted by the
-[four-variable counterexample](separable-closure-counterexample.md), even
-with hereditary spanning-profile admissibility, nonempty neutral faces,
-global omission and core identification minors. Its neutral facet fails
-omission. The colorful-cover lemma separately shows that admissible
+[prime four-variable counterexample](separable-closure-counterexample.md),
+uniformly for every K>=3, even with hereditary profile/omission tests
+and core proper neutral faces and identification minors. All pure-owner
+closures are its actual functional-dependence closures, and full old-value
+outcast holds. A universal three-row guard law nevertheless excludes it.
+The colorful-cover lemma separately shows that admissible
 spanning profiles imply nonemptiness; omission then supplies exact atomic
 profiles, and colored outcast plus omission supplies full span-outcast.
+
+The same note gives a positive
+[two-rule common-context classification](separable-closure-counterexample.md).
+If one owner captures y from L union {x} and another captures x from
+M union {y}, with no other nontrivial rules, realizability is equivalent
+to L intersect M being nonempty. A shared context protects auxiliary
+sources in two explicit source-linear minorants; union with the context
+projections realizes the operation and yields greatest free-completion
+attainment. Disjoint contexts give the uniform three-row persistence
+law used by the prime instance. When both contexts are nonempty there
+is also an explicit greatest core minorant, obtained by replacing the
+conflicting context's value by its context-input union. It keeps every
+pure port, so the noncore candidate is its separable upper hull.
+
+Hereditary span-outcast has the exact pairwise mixed-loop formulation
+(L) in [the closure-cut note](mixed-closure-outcast.md). Thus the additive arrow laws have direct
+coalition analogues, but those analogues and hereditary common-source
+admissibility still miss the prime obstruction. The stronger reciprocal
+cut (C2), derived from the three-row law for arbitrary source-separable
+core targets, detects it: disjoint-context reciprocal captures cannot
+create two new free heads. Its sufficiency with the other general laws
+is unproved. A
+[naive lift to independent coalition nodes](coalition-lift-obstruction.md)
+does not repair this: a genuine core CNF already yields a mixed SCC
+with disjoint labels, and the coherence map fails to commute with gates.
 
 ## Full types at greatest profile completions
 

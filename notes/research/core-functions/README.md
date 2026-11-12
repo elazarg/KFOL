@@ -73,7 +73,10 @@ construction has explicit word and shared-circuit size bounds.
 
 [Canonical owner closures](separable-closures.md) give a common structural
 layer for all core operations: owner-shadow is precisely closure
-idempotence. [Two-owner CNF operations](closure-core-operations.md) are in
+idempotence. They are also exactly the
+[cofactor-dependence closures](cofactor-dependence-closures.md): fixing E
+to owner r makes precisely the variables in c_r(E) inessential.
+[Two-owner CNF operations](closure-core-operations.md) are in
 bijection with finite loopless closures, with canonical irredundant normal
 forms. Their [globally minimal members](minimal-cnf-matroids.md) are exactly
 the matroid cocircuit operations, with an exact condition on redundant
@@ -93,6 +96,9 @@ free completion. Captures needing joint premises remain outside this
 classification. For raw monomial source tables, agreement of the pure
 owner factors across observers is the additional necessary and sufficient
 coherence check.
+The same two arrow laws characterize which additive pure-owner data come
+from any core operation; their product hull is always core, even when
+the original operation is nonseparable.
 
 The [asymmetric closure example](closure-core-operations.md#source-separation-does-not-give-a-linear-full-realizer)
 has an attained greatest full type at each source, yet cannot be realized
@@ -105,24 +111,41 @@ row. Its individual owner closures are not matroids.
 
 The [separable hull can fail](separable-hull-failure.md): even closures
 extracted from an actual core operation can have a noncore product
-completion, already with five variables and four owners. It retains the
-original profiles and pure sections but violates omission independence.
+completion on four variables for every K>=3. An explicit core word is
+the hull's greatest core minorant and has exactly its pure sections and
+singleton profiles. Even hereditary omission and core proper faces do
+not make that hull realizable.
 For genuine source-separable operations,
 [mixed closure outcast](mixed-closure-outcast.md) supplies closed necessary
-tests on every partial coloring, including saturated fibers. A two-erasure
-lemma closes the formerly missing case. Equivalently, for every full
-coloring a the map T -> UNION_r c_r(T intersect a^-1(r)) is a closure.
+tests on every partial coloring, including saturated fibers. A pairwise
+closure-cut law has a direct cofactor-dependence proof. Equivalently, for
+every full coloring a the map T -> UNION_r c_r(T intersect a^-1(r)) is
+a closure.
 This law also implies source attribution for loopless candidate maps.
 The [canonical common-carrier extension](canonical-separable-extension.md)
 is monotone, matches all old observer faces, preserves the ternary outcast
 invariant, and bounds every term-induced extension. Its term attainment
-for a genuine core target remains unresolved. The
-[four-variable closure counterexample](separable-closure-counterexample.md)
-rules out sufficiency of these laws for an arbitrary candidate, even
-with hereditary profile admissibility, nonempty neutral faces, global
-omission independence and core identification minors. All canonical
-full types pass the individual side-effect tests, yet a neutral facet
-is noncore.
+for a genuine core target remains unresolved. For
+[two reciprocal capture rules](separable-closure-counterexample.md),
+realizability holds exactly when their context sets share a witness;
+two source-linear spines give the positive construction and greatest
+free completion. Disjoint contexts give a three-row persistence
+obstruction. Its four-variable instance, for every K>=3, passes the
+hereditary profile/omission tests and has core proper neutral faces and
+identification minors, yet is noncore and prime under disjoint
+decomposition. All canonical full types pass the individual side-effect
+tests too.
+
+The same persistence argument supplies a reciprocal-cut law for arbitrary
+source-separable core targets: two differently owned captures cannot
+bootstrap two free heads through disjoint contexts. This is stronger
+than the earlier hereditary closure tests; sufficiency in the general
+case remains open.
+
+The [naive coalition lift](coalition-lift-obstruction.md) also fails:
+even a genuine core example gives a mixed virtual SCC containing disjoint
+labels, and coherent coalition vectors are not gate-closed. Independent
+virtual coalition nodes cannot inherit the additive theorem.
 
 The [prime-obstruction theorem](prime-obstructions.md) shows that the hard
 part persists at unbounded arity: the Gray crowns have core proper

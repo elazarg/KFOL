@@ -1,332 +1,287 @@
-# Closed partial-coloring tests and mixed closure outcast
+# Pairwise closure cuts and full colored outcast
 
-Mathematical research, without Lean claims. These are necessary mixed
-closure laws for source-separable core operations. Canonical outcast
-holds at every partial coloring, including saturated fibers. The key
-step is an abstract two-erasure lemma: with at least three colors,
-outcast on colorings missing one color already implies full outcast.
-These laws do not supply a complete realizability criterion.
+Mathematical research, without Lean claims. Canonical colored outcast
+holds for source-separable core operations, including saturated fibers.
+It is equivalent to a pairwise cut law on the owner closures. A direct
+proof uses their functional-dependence interpretation and a third
+observing owner; no fresh-source selection or saturation case is needed.
+Hereditary span-outcast likewise has a closed mixed-loop formulation.
+These necessary laws do not give a complete realizability criterion.
 
-Use the setting of [separable-closures.md](separable-closures.md): finite
-owners I with K>=3, finite nonempty variables V, and canonical loopless
-closures c_r. At a valuation w put E_r={i:w_i={r}}. Source separation
-and reconstruction give
+Fix finite owners I with K>=3, a finite nonempty variable set V, and
+loopless owner closures c_r. Use the source reconstruction
 
-    k in F(w) iff some j with k in w_j lies outside
-                         UNION_(r!=k) c_r(E_r).          (1)
+    k in F(w) iff some j with k in w_j is outside
+                         UNION_(r!=k) c_r(E_r(w)),
+    E_r(w)={i:w_i={r}}.                                  (1)
 
-Fix disjoint atomic sets E_r and let J=V\UNION_r E_r be the ambiguous
-positions. Write
+For disjoint atomic sets E_r put
 
-    C_r=c_r(E_r);
-    T_j={r:j in C_r};
-    A={r:E_r\UNION_(s!=r) C_s is nonempty};
-    Q=V\UNION_r C_r.
+    J=V\UNION_r E_r;
+    T_j={r:j in c_r(E_r)};
+    A={r:E_r\UNION_(s!=r) c_s(E_s) is nonempty};
+    Q=V\UNION_r c_r(E_r).
 
 Extensivity gives Q subseteq J. At this status pattern, (1) says
 
     F(w)=A union UNION_(j in Q) w_j
           union {r:some j in J has T_j={r} and r in w_j}. (2)
 
-## The source-attribution hypothesis
-
-Assume the strong source-attribution condition
+The strong source-attribution condition is
 
     j in J and T_j={r} implies r in A.                   (3)
 
-It is necessary for genuine source-separable core operations, as proved
-in [separable-closures.md](separable-closures.md). It is stronger than
-merely admitting a whole-menu selector on one fiber: a constant part
-containing all but one owner can mask a partial menu contribution.
+For genuine source-separable core operations it holds by
+[canonical source attribution](separable-closures.md). Below it is also
+derived directly from colored outcast for arbitrary loopless candidate
+maps. Under (3), the last contributions in (2) are already contained in A:
 
-Under (3), all the last contributions in (2) already belong to A, so
+    F(w)=A union UNION_(j in Q) w_j.                     (4)
 
-    F(w)=A union UNION_(j in Q) w_j                       (4)
+Thus A is the constant atomic part and Q is the canonical whole-menu
+selection set. Neither is defined using a realizing term.
 
-throughout the status fiber. The remaining tests have especially simple
-closed forms in these coordinates.
+## The pair-cut law
 
-## Nonemptiness and full atomic profiles
+Consider the following closed condition for distinct owners r,s,
+disjoint premise sets B,D, and i outside B union D:
 
-**Proposition.** Under (3), F is nonempty at every menu assignment of
-this status exactly when A is nonempty or Q is nonempty.
+    i in c_r(B) implies
+        c_s(D union {i}) subseteq c_r(B) union c_s(D).    (P)
 
-If A is nonempty it is contained in every output. If Q is nonempty it
-contributes a nonempty menu. If both are empty, (4) is empty.
+The different letters B,D denote premise sets, not the constant part A.
+The condition says that transferring a consequence of one closure to
+another owner cannot capture a point outside their existing closure
+union. It permits joint premises of arbitrary size.
 
-Suppose this nonemptiness condition holds at every status pattern.
-Then the full atomic-profile factorization
+**Equivalence theorem.** For loopless closures, (P) holds if and only if
+full Q-outcast holds: restoring any subset of J\Q to arbitrary owner
+atoms preserves Q at every partial coloring.
 
-    F(w)={r} iff c_r(E_r)=V                              (5)
+For necessity take a pattern with B atomic at r, D atomic at s, and
+everything else ambiguous. The point i is blocked by r. Restoring it
+to s must leave the union c_r(B) union c_s(D) unchanged. This gives (P).
 
-holds at all valuations exactly when the partial-coloring data obey
+For sufficiency restore one blocked ambiguous i to s. Choose an old
+capturing owner r. If r=s, closure idempotence gives
+c_s(E_s union {i})=c_s(E_s). If r!=s, apply (P) to B=E_r,D=E_s.
+The enlarged s-closure stays within the old closure union, which therefore
+stays unchanged. For several restorations apply this argument one at
+a time. Every remaining originally blocked point stays blocked because
+all atomic sets and their closures only grow. This proves full outcast.
 
-    Q=empty and A={r} implies c_r(E_r)=V                  (6)
+## A direct proof of pair-cut for core operations
 
-for every status pattern and owner.
+**Theorem.** The canonical owner closures of every genuine source-separable
+core operation satisfy (P), hence full Q-outcast, for K>=3.
 
-Indeed c_r(E_r)=V kills every non-r source in (1); nonemptiness forces
-the output {r}. Conversely, if Q is nonempty, its whole ambiguous menu
-makes (4) ambiguous. If Q is empty, the output is the fixed nonempty
-set A, which is {r} exactly when A={r}. Thus (6) is precisely the missing
-reverse implication. Pure-r probes alone do not provide this reverse
-implication on mixed atomic patterns.
+Use the [cofactor-dependence theorem](cofactor-dependence-closures.md):
+fixing B to {r} makes every input in c_r(B)\B inessential in the whole
+winner-valued function. Suppose (P) fails, so there is
 
-These tests quantify over partial atomic colorings, not the contents
-of arbitrary ambiguous menus.
+    j in c_s(D union {i}) but j outside c_r(B) union c_s(D).
 
-## Actual fresh selections and their canonical upper bound
+In particular j is distinct from i and lies outside B union D. Choose
+an observing owner k different from r,s, and let N_k=I\{k}.
+Give B the r atom, D the s atom, and every other input N_k, except
+that j may have either I or N_k. Both menus are ambiguous. At these
+statuses j lies outside every rival closure. It is the only potential
+source of k, so (1) makes the two outputs differ on k.
 
-Let a primitive old-owner word realize F, and interpret it on the common
-carrier B_I with old atoms and N,P. At the fixed status pattern, let C
-be the ambiguous positions whose change from N to P gives output P.
-This is the word's actual unowned-source selection set.
+But i in c_r(B)\B means that replacing i by {s} preserves both outputs.
+After this replacement D union {i} is fixed to {s}. Since
+j in c_s(D union {i}), functional dependence now makes the output
+independent of j. The two outputs must agree, a contradiction.
 
-Always
+This proof establishes (P) directly on two-color patterns. The abstract
+equivalence then proves full outcast even when all old owner atoms are
+present and the constant part A is the entire I.
 
-    C subseteq Q.                                       (7)
+## Equivalent full-pattern tests and canonical interiors
 
-For a marked j occurrence, its full factors B_(occ,r) are bounded by
-the pure-owner coefficients D_(j,r)=[j notin c_r(E_r)]. A fresh winner
-uses every old-owner factor. Hence
+Put B=J\Q. Full Q-outcast is equivalently the K tests
 
-    (some occurrence avoids every owner)
-        implies (for every owner, some occurrence avoids it).
+    c_r(E_r union B) intersects Q = empty for every r.    (5)
 
-The right side is exactly j in Q. Equivalently the OR of occurrence
-products is bounded by the product of the pure-owner ORs. This proves
-(7) without assuming that the greatest free completion is term-induced.
+Necessity restores all B to r. Conversely every restoration adds only
+a subset of B to each atomic set. Monotonicity bounds its enlarged
+closure by c_r(E_r union B), so it cannot capture a point of Q.
+Closure monotonicity also prevents any previously blocked point from
+becoming free. This gives precisely the same Q.
 
-If A!=I, condition (4) makes the actual set equal to Q:
+For a full coloring alpha:V->I define
 
-    C=Q.                                                (8)
+    Q_alpha(J)=V\UNION_r c_r({i outside J:alpha(i)=r});
+    d_alpha(T)=UNION_r c_r(T intersect alpha^(-1)(r)).     (6)
 
-The same word's fixed-status evaluation on old winner menus gives a
-whole-menu selector A_word union UNION_(j in C) w_j. Its constant part
-is forced to be A: test each k by assigning every ambiguous input
-I\{k}. For any k outside A, set one ambiguous j to I and the others
-to I\{k}. Its k-bit detects j in C, while (4) detects j in Q.
-Thus the selectors agree. This argument is exactly where A!=I is used.
+Full Q-outcast implies that Q_alpha is an interior. Contraction follows
+from closure extensivity, and monotonicity from shrinking the atomic
+sets when J increases. If Q_alpha(J) subseteq J' subseteq J, restore
+J\J' to their alpha-colors; outcast gives Q_alpha(J')=Q_alpha(J).
+Taking J'=Q_alpha(J) proves idempotence.
 
-## Outcast for an unsaturated initial fiber
+Equivalently every d_alpha is a closure. Conversely, if every d_alpha
+is idempotent, take any restoration B subseteq J\Q and extend the
+original and restored colors to a full alpha. For T=UNION_r E_r,
 
-**Theorem.** Suppose F is genuinely core and source-separable, and its
-initial status pattern has A!=I. Restore any subset of J\Q to
-arbitrary old-owner atoms, leaving Q ambiguous and keeping every initial
-atomic position fixed. If E'_r is the new atomic pattern, then
+    T subseteq T union B subseteq d_alpha(T).
 
-    V\UNION_r c_r(E'_r)=Q.                               (9)
-
-In particular the statement allows the new constant part A' to equal I.
-
-By (8) the chosen word's actual initial selection set is C=Q. Its
-whole-word strong outcast theorem, proved by the ternary invariant in
-[colored-interiors.md](colored-interiors.md), preserves all these
-selections after restoring unselected positions to arbitrary atoms.
-Thus its actual new set C' is still Q. Apply the canonical upper bound
-(7) at the new pattern to get
-
-    Q=C' subseteq Q'=V\UNION_r c_r(E'_r).
-
-On the other hand every E_r is contained in E'_r. Closure monotonicity
-gives Q' subseteq Q. Hence Q'=Q, proving (9). No identification of the
-actual and canonical selections at a saturated final fiber is needed.
-
-This is a necessary condition for core operations. It is not inferred
-from (3) or the closure laws alone.
-
-## Two erasures remove the saturation hypothesis
-
-The following argument is about the owner maps themselves. In particular,
-it does not assume that the canonical Q is an actual word's fresh selection
-set at a saturated pattern.
-
-**Erasure lemma.** Let |I|>=3 and let c_r be monotone extensive maps on
-subsets of V. For every partial coloring by disjoint sets E_r, define
-
-    J=V\UNION_r E_r,    Q=V\UNION_r c_r(E_r).
-
-Assume outcast holds whenever some color is absent: if E_h=empty for
-some h, restoring any blocked ambiguous positions J\Q to old atoms
-preserves Q. Then outcast holds at every partial coloring.
-
-It is enough to rule out a single-owner restoration capturing one free
-point. Indeed, if a mixed restoration captures j in a final c_r, the
-positions newly colored r alone already cause this capture; the other
-owner maps do not enter that particular test.
-
-Suppose, towards a contradiction, that restoring B subseteq J\Q to r
-captures j in Q:
-
-    j in c_r(E_r union B).
-
-For each b in B put T_b={s:b in c_s(E_s)}, which is nonempty. For a color
-k!=r let
-
-    B_k={b in B:T_b={k}}.
-
-We first prove
-
-    j in c_r(E_r union B_k) for every k!=r.               (10)
-
-Otherwise first restore B_k to r. The point j is still free: only the
-r-map increased, and by assumption it has not captured j. Now erase all
-k-atoms, making them ambiguous. Monotonicity keeps j free. Every remaining
-b in B\B_k is still blocked: its original nonempty T_b had some color
-other than k; that owner's atomic set is unchanged or, for r, enlarged.
-The resulting partial coloring has no k-atoms. Missing-color outcast
-therefore allows us to restore the remaining B\B_k to r without
-capturing j. The final r-set is E_r union B, contrary to the supposed
-capture. This proves (10).
-
-Choose distinct k,h different from r; this is where three colors are
-needed. Return to the original pattern and erase only its h-atoms.
-Again j stays free. Every point of B_k remains blocked by k, whose
-atomic set was unchanged. This pattern is missing color h, so its
-outcast law forbids restoring B_k to r from capturing j. But its r-set
-after restoration is E_r union B_k, contradicting (10). QED.
-
-Only monotonicity, extensivity and missing-color outcast were used.
-Idempotence, profile laws and an underlying term are unnecessary for
-this abstract implication.
-
-**Full canonical outcast theorem.** If F is a source-separable core
-operation with |I|>=3, restoring any subset of J\Q to arbitrary owner
-atoms preserves the canonical free set Q, including when A=I initially.
-
-Indeed a pattern missing color h has h outside A, so the previously
-proved unsaturated theorem gives precisely the premise of the erasure
-lemma. Apply the lemma to the canonical owner closures.
-
-## An equivalent finite family of mixed closure tests
-
-Let B=J\Q. At every initial pattern, full outcast is equivalent to the
-K conditions
-
-    c_r(E_r union B) intersects Q = empty
-        for every owner r.                              (11)
-
-Necessity follows by restoring all positions of B to the same atom r.
-For sufficiency, any restoration adds to E_r only a subset of B.
-Monotonicity bounds its new closure by c_r(E_r union B), which misses
-Q by (11). No point of Q can become blocked. No new point outside Q
-can become unblocked because all the old atomic sets remain present.
-This is exactly (9).
-
-Thus outcast is a closed mixed-elimination axiom on
-the canonical owner closures: positions already blocked by some owner
-may all be assigned to any one owner without closing an initially free
-position. It needs K closure tests for each initial partial coloring,
-without an auxiliary realization graph or a recursive recognition rule.
-
-## Canonical colored interiors
-
-Fix any full old-atom coloring a:V->I. For J subseteq V put
-
-    Q_a(J)=V\UNION_r c_r({i outside J:a_i=r}).             (12)
-
-**Corollary.** Q_a is a contractive, monotone, idempotent map, and
-
-    Q_a(J) subseteq J' subseteq J implies Q_a(J')=Q_a(J).
-
-Extensivity of each c_r gives contraction. Increasing J shrinks every
-atomic set; closure monotonicity therefore increases Q_a(J).
-For the displayed outcast identity, restore J\J' to their a-colors.
-These are blocked positions because J' contains Q_a(J). Full canonical
-outcast gives the identity. Taking J'=Q_a(J) proves idempotence.
-
-These interiors are determined directly by the old operation's canonical
-pure-owner ports. A chosen realizing word can have fewer actual fresh
-selections at saturated fibers; no equality with that chosen word's
-interiors is asserted there.
-
-Equivalently, every full coloring a defines a closure
-
-    d_a(T)=UNION_r c_r(T intersect {i:a_i=r}).             (13)
-
-It is the complement-dual of Q_a, so it is extensive, monotone and
-idempotent. Thus all these differently colored closure computations can
-be united in one step without creating a new consequence on a second
-step. This is a closed condition on the original owner maps.
-
-Conversely, idempotence of every d_a is equivalent to full canonical
-outcast for any family of extensive monotone owner maps. For an initial
-partial coloring put T=UNION_r E_r. Given a proposed restoration of
-B subseteq J\Q, extend both the initial colors and the restored colors
-to a full coloring a. Then
-
-    T subseteq T union B subseteq d_a(T),
-
-so monotonicity and idempotence give d_a(T union B)=d_a(T). These are
-exactly the old and restored unions of owner closures. Their complements
-are the same Q. This proves the converse without a realizing word.
+Monotonicity and idempotence give d_alpha(T union B)=d_alpha(T),
+which is exactly Q-outcast. Thus (P), (5), and idempotence of all
+colored maps in (6) are equivalent closed formulations.
 
 ## Colored outcast implies source attribution
 
-**Corollary.** For loopless owner maps, full colored outcast already
-implies (3). Thus a candidate satisfying the closed colored-closure
-condition need not impose source attribution as a separate axiom.
+For loopless owner maps, full Q-outcast implies (3); this is not an
+additional condition on a candidate already satisfying (P).
 
-Suppose an ambiguous j has T_j={r}, but r is absent from A. Erase the
-atomic set E_r. Looplessness gives c_r(empty)=empty, so j is now free;
-all other owner maps remain unchanged and did not capture it. Every
-erased position is still blocked by another owner, since
+Suppose ambiguous j has T_j={r} but r is absent from A. Erase E_r.
+Looplessness removes its only capture of j, making j free. Every
+erased r-position remains captured by another owner, because
 
     r notin A implies E_r subseteq UNION_(s!=r) c_s(E_s).
 
-Restoring precisely these blocked positions to r is an outcast
-restoration. It would recapture j in c_r(E_r), a contradiction.
+All these erased positions are therefore blocked and may be restored
+to r under outcast. This would recapture the free j, a contradiction.
 
-This argument uses neither nonemptiness nor the atomic-profile law.
-In deriving colored outcast for actual core operations above, source
-attribution was already supplied by its independent occurrence proof;
-there is no circularity in subsequently deriving it from the closed
-condition for arbitrary candidate maps.
+## Full old-value outcast and atomic survivors
 
-## Why actual and canonical selections must still be distinguished
+There is a stronger semantic statement for every core operation,
+without requiring source separation. Fix any partial atomic coloring.
+Every input of J\Q belongs to some c_r(E_r)\E_r, hence is inessential
+once E_r is fixed to {r}. Further fixing all the other atomic sets
+preserves that independence. Finite coordinate-by-coordinate changes
+therefore permit arbitrary simultaneous menu replacements at J\Q
+without changing the entire old winner set. The original atomic
+positions are kept fixed throughout.
 
-When A=I, old winner semantics cannot detect whether an additional
-ambiguous input is selected: the fixed atomic contribution is already
-the entire old role set. Equality (8) need not hold for a chosen word.
+For source-separable core operations, atomic restorations also preserve
+A, not only Q. To test any old winner k, first give all ambiguous inputs
+the menu I\{k}. Formula (4) says k belongs to the output exactly when
+k belongs to A. Restore the chosen blocked positions to their specified
+atoms. Full old-value outcast preserves that output; formula (4) at
+the new pattern, whose remaining ambiguous menus still omit k, detects
+exactly the new A. This proves A'=A for every k.
 
-For example take variables x,y_r for r in I and the old input-union
-operation. On the old winner carrier both words
+The common-carrier selection of a chosen word may still be strictly
+smaller than canonical Q at a saturated pattern. Input union already
+exhibits that distinction. None of these proofs identifies the chosen
+word's actual fresh selections with Q.
 
-    x union UNION_r y_r,
-    (UNION_r y_r) union UNION_r (x choice_r y_r)
+## A pairwise test for hereditary spanning stability
 
-realize it. At y_r=atom r, x ambiguous, their canonical closure data
-are identities, A=I and Q={x}. In B_I with x=P, the first word returns
-P. In the second every marked owned summand is absorbed to its old
-atom r; their union is N and the actual selection set is empty.
-This is the sharp identity-stability example from
-[unowned-observer.md](unowned-observer.md).
+For every nonempty U subseteq V restrict c_r to U by intersection.
+Span-outcast on every such restriction is equivalent to the following
+closed mixed-loop law, for distinct r,s and disjoint B,D, with
+i outside B union D:
 
-It shows why the proof cannot simply identify actual and canonical
-fresh selections at an initially saturated fiber. The two-erasure
-argument proves canonical outcast without making that identification.
+    i in c_r(B) and B subseteq c_s(D union {i})
+        imply i in c_s(D).                              (L)
 
-## Three colors are necessary for the abstract implication
+For necessity, if the conclusion fails take U=B union D union {i}.
+In that restriction i is blocked by r and may be restored to s. The
+new s-set D union {i} spans U, but D did not span U since it misses i
+in its closure. This violates hereditary span-outcast.
 
-The erasure lemma's color hypothesis is sharp even for loopless
-closures. With two colors and V={a_0,a_1,b,j}, put
+Conversely consider a single blocked restoration to s in a restriction
+U which creates an s-span. Write D=E_s and choose a capturing owner r.
+If i already belongs to c_s(D), idempotence forbids any change, so take
+r!=s and put B=E_r. The new s-closure contains U and hence contains B.
+Law (L) gives i in c_s(D), again a contradiction. Restorations one at
+a time prove the assertion for arbitrary simultaneous restorations.
+No colored-outcast or profile-admissibility assumption is needed for
+this equivalence beyond the stated closure hypotheses.
 
-    c_0(E)=E union ({j} if {a_0,b} subseteq E else empty),
-    c_1(E)=E union ({b} if a_1 in E else empty).
+## A stronger reciprocal capture cut
 
-These maps are monotone, extensive, idempotent and empty-preserving.
-They obey outcast whenever a color is missing. If E_0 is empty, the
-only possibly blocked ambiguous position is b, and restoring b cannot
-activate the 0-rule without the free anchor a_0. Restoring it to 1
-does not change c_1. If E_1 is empty, the only possibly blocked
-ambiguous position is j, whose restoration cannot activate the 1-rule
-without a_1 or change the premises of the 0-rule.
+The reciprocal-rule persistence lemma is first a direct law for arbitrary
+core guard tables, without source separation:
 
-But at E_0={a_0}, E_1={a_1}, both b,j ambiguous, Q={j}. Restoring the
-blocked b to 0 captures j. Thus missing-color outcast does not imply
-full outcast for two abstract owner closures. No two-owner core
-realizability claim is made for this example.
+    C_(x,k)(q) implies C_(x,k)(u) or C_(y,k)(v).         (G2)
 
-The conditions in this note are necessary reductions, not a complete
-mixed-closure characterization. The general joint source-guard target
-is unchanged.
+Here u,v,q are its disjoint-context template probes, with all deleted
+inputs neutral at N_k. The law couples two different source positions.
+A violation excludes a common core interpolant on these three rows.
+Neutral elimination justifies the same law after lifting from a retained
+variable set: the residual of any putative interpolant is core or zero,
+and in either case obeys persistence.
+
+There is a further necessary law for arbitrary source-separable core
+operations. For distinct r,s, disjoint contexts L,M, and distinct
+x,y outside L union M, it says
+
+    y in c_r(L union {x}) and x in c_s(M union {y})
+        imply {x,y} subseteq c_r(L) union c_s(M).        (C2)
+
+Thus two differently owned captures cannot bootstrap two previously
+free heads through disjoint contexts. The conclusion allows a reciprocal
+capture only when those heads were already blocked by the contexts.
+
+First take the neutral restriction to U=L union M union {x,y}.
+For a genuine core F this restriction is core and source-separable,
+with the restricted pure-owner closures. Membership of the two retained
+heads in c_r(L),c_s(M) is unchanged by that restriction.
+
+Use the universal three-row persistence lemma in
+[the reciprocal-rule characterization](separable-closure-counterexample.md).
+Choose an observing owner k distinct from r,s and put N_k=I\{k}.
+At its u-row, x is the sole k-source and is captured by s from
+M union {y}. At its v-row, y is the sole k-source and is captured by
+r from L union {x}. Both k-bits are therefore zero, even if the
+closure family has further rules. Persistence forces the q-bit zero.
+But at q the atomic r-set is L, the atomic s-set is M, and x is
+the sole k-source. The separable formula makes that bit zero exactly
+when x belongs to c_r(L) union c_s(M). Exchange the two heads and
+owners to obtain the same conclusion for y. This proves (C2).
+Equivalently the three observer-k probe rows may be lifted to the
+original variables by giving every deleted input N_k; the queried
+k-bits are precisely those of the neutral restriction.
+
+Law (C2) implies the hereditary mixed-loop law (L). Suppose the premises
+of (L) hold but i is outside c_s(D). Choose an inclusion-minimal
+T subseteq B with i in c_r(T). Looplessness makes T nonempty. Pick
+x in T. The (C2) contexts T\{x},D and heads x,i satisfy its premises:
+c_r(T) contains i, while c_s(D union {i}) contains every point of B
+and hence x. Its conclusion puts i in c_r(T\{x}) or c_s(D), contrary
+to minimality and the supposition. Thus (L) need not be checked
+separately when (C2) is imposed.
+
+There is a structural version in terms of the given minimal captures.
+Write S =>_r y when y is outside S, y belongs to c_r(S), and no
+proper subset of S captures y. For r!=s impose
+
+    S =>_r y, T =>_s x, x in S, y in T
+        imply (S\{x}) intersect (T\{y}) is nonempty.    (CI)
+
+Thus reciprocal minimal captures of different colors must share an
+additional witness. For the two-rule family this is exactly the
+common-context condition; for additive closures it excludes opposite
+arrows, whose additional premise sets are empty.
+
+Law (C2) implies (CI). If the displayed intersection were empty, apply
+(C2) to contexts S\{x},T\{y}. Minimality gives y outside
+c_r(S\{x}). Also y is outside c_s(T\{y}): otherwise closure
+idempotence would make x already captured by T\{y}, contradicting
+minimality of T. This contradicts the conclusion of (C2).
+
+Conversely, assume (P) and (CI). In a proposed instance of (C2), if
+either head already belongs to c_r(L) union c_s(M), then both do.
+For example x in c_r(L) gives y in c_r(L) by idempotence, while
+x in c_s(M) gives y in that old union by (P); interchange heads for
+the other cases. If neither is already captured, choose minimal
+S subseteq L union {x} capturing y and minimal T subseteq M union {y}
+capturing x. They necessarily contain x and y respectively. Their
+additional premise sets lie in the disjoint L,M, violating (CI).
+Hence (P),(CI) are equivalent to (P),(C2), without an auxiliary
+presentation or a term quantifier.
+
+In the additive setting, the empty-context instance of (C2) forbids
+opposite differently colored arrows. Joint-premise dependencies need
+its nonempty contexts as well: the
+[prime four-variable counterexample](separable-closure-counterexample.md)
+satisfies (P), (L), hereditary profile admissibility and hereditary
+omission independence, and every proper neutral face and identification
+minor is core, but
+it violates (C2) on the heads B,C with contexts {A},{W}.
+Thus (C2) is stronger than those earlier tests. No sufficiency result
+for the combined general closure laws is asserted.

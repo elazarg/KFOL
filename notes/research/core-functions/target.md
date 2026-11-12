@@ -100,10 +100,14 @@ completion attained by polynomial-size primitive words. For raw monomial
 guards, first check agreement of
 the pure-owner factors across observers, then the two colored arrow laws.
 This settles that case, not nonadditive closures or guard disjunctions.
+It also classifies joint realizability of additive pure-owner data from
+arbitrary core operations: their separable upper hull is always core.
 [Loopless closures classify two-owner CNFs](closure-core-operations.md),
 and their [globally minimal operations are precisely matroid CNFs](minimal-cnf-matroids.md).
 [Canonical colored closures](separable-closures.md) also exist for every
-core operation, but their [separable product hull need not be core](separable-hull-failure.md),
+core operation. They are intrinsically the
+[dependence closures of monochromatic cofactors](cofactor-dependence-closures.md),
+but their [separable product hull need not be core](separable-hull-failure.md),
 even when those closures came from one actual core word.
 
 For free independent-status data, [one pattern has a complete clause theory](free-pattern-interpolation.md),
@@ -118,20 +122,32 @@ mixed-pattern criterion at unbounded active-owner count, but only for
 its specified query projection. [Mixed closure outcast](mixed-closure-outcast.md)
 now holds at every partial coloring for source-separable core functions:
 for each full coloring, the union of the color-restricted owner closures
-is itself idempotent. A two-erasure lemma handles saturated fibers without
-identifying a chosen word's fresh selections with the canonical free set.
+is itself idempotent. A pair-cut law on two closures has a direct
+functional-dependence proof and implies full outcast without a saturation
+case. Hereditary spanning stability has a separate mixed-loop law.
 The resulting [canonical common-carrier extension](canonical-separable-extension.md)
 matches every old observer face, preserves the ternary outcast invariant,
 and bounds all term extensions, without a proof of its own term attainment.
-The [four-variable counterexample](separable-closure-counterexample.md)
-shows these laws are insufficient for synthetic closure data, even with
-hereditary profile admissibility, nonempty neutral residuals, global
-omission and core identification minors. Its canonical full types all
-pass the known individual tests; a neutral facet is still noncore.
-This requires any further criterion to respect neutral restrictions;
-global tests cannot substitute for their hereditary versions. The wrapper
-also has a known disjoint factorization, so it supplies no obstruction
-to a criterion explicitly reduced to prime factors and all their faces.
+The [two-rule common-context theorem](separable-closure-counterexample.md)
+classifies one reciprocal capture rule at each of two distinct owners:
+the reconstruction is core exactly when their context sets intersect.
+A shared witness protects two source-linear spines and gives greatest
+free-completion attainment. Disjoint contexts force a three-row guard
+violation. For disjoint nonempty contexts an explicit greatest core minorant
+keeps all pure ports, giving a noncore separable hull of a genuine word
+already with four variables and three owners. The prime four-variable
+instance has hereditary profile and
+omission compatibility, exact functional-dependence closures, and core
+proper neutral faces and identification minors, yet is noncore.
+The same construction
+works for every fixed K>=3. Its canonical full types pass all the known
+individual tests, yet three canonical source probes violate a universal
+persistence law. Prime-factor reduction and compatibility of all proper
+input reductions do not remove this obstruction, even in the separable
+class. The naive
+[coalition-node lift](coalition-lift-obstruction.md) cannot extend the
+additive theorem because the required overlap constraints are not
+preserved by the gates.
 The [mixed-color global minimum](mixed-cnf-minimum.md) shows why maximal
 admissible profiles and disjoint matroid decompositions cannot describe
 all minima. The complete compatibility of arbitrary source guards remains

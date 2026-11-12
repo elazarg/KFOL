@@ -237,7 +237,7 @@ the span, contradicting the preceding conclusion. This proves full
 span-outcast. Mixed restorations reduce to a single owner because any
 new spanning owner depends only on its own enlarged atomic set.
 
-As in the Q-outcast erasure lemma, the bootstrap itself uses only
+This missing-color bootstrap itself uses only
 monotonicity and extensivity. The two other colors are the reason for
 the K>=3 hypothesis.
 
@@ -253,13 +253,18 @@ For arbitrary synthetic closure data, sufficiency of these laws is
 actually false: the
 [four-variable counterexample](separable-closure-counterexample.md)
 satisfies both outcast laws, hereditary profile admissibility and
-global omission, but its prescribed old operation and G_Q are noncore.
+hereditary omission, and has core proper neutral faces and identification
+minors, but its prescribed old operation and G_Q are noncore. This holds
+for every fixed K>=3.
 It does not settle attainment for an already genuine core target.
 
 Attainment is now proved for
 [additive owner closures](additive-closure-characterization.md): a
 component-spine construction gives every maximal full vector and a
 single realizer attaining their greatest independent-flag completion.
+It is also proved for the shared-context
+[two-reciprocal-rule class](separable-closure-counterexample.md), whose
+head spines and context projections attain the canonical vectors.
 The general nonadditive attainment problem remains open.
 
 The B_I input statuses used here have disjoint old atomic sets E_r.

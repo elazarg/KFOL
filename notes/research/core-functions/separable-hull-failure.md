@@ -1,10 +1,12 @@
-# The separable upper hull of a core operation need not be core
+# A four-variable separable-hull obstruction for every K>=3
 
 Mathematical research, without Lean claims. Canonical pure-owner sections
 give closure operators even when the original source coefficients do not
 separate by owner. Taking the product of those sections gives a canonical
 upper bound preserving the original singleton profiles and pure sections.
-It need not be term-induced. Five variables and four owners suffice.
+It need not be term-induced. Four variables suffice for every K>=3,
+including three owners. The example below even has a greatest core
+minorant, explicit hereditary compatibility, and core proper input minors.
 
 Fix a finite owner set I with at least three owners. Let F be a genuine
 core operation on a finite full variable support V. At source j and an
@@ -65,66 +67,127 @@ can thus be covered by a whole input menu contained in H(w).
 
 None of these properties proves joint source realizability.
 
-## A five-variable counterexample
+## Core lower bounds are determined by pure-port bounds
 
-Now assume I contains four distinct owners 0,1,2,3. Take variables
-X,Y,Z,Q,S and the primitive word
+There is a general order fact behind the example. Let G be a normalized
+source-separable reconstruction with pure ports D_(j,r), initially
+allowing empty outputs. For any core operation S,
 
-    F=((X choice_0 Y) choice_1 Q)
-          choice_0 ((X choice_0 Z) choice_2 S).           (2)
+    S<=G iff D^S_(j,r)<=D_(j,r) for every j,r.           (B)
 
-Fix the atomic statuses
+Necessity evaluates the inequality at pure-owner probes. Conversely
+every occurrence factor of S is below its own pure-owner port, hence
+below D_(j,r). Its full contribution is therefore below the product
+defining G. Taking the union of occurrence contributions proves S<=G.
+Thus bounding a core operation by a separable candidate is exactly
+bounding all its pure ports.
 
-    Y=Z={0},     Q={1},     S={2},     X ambiguous.       (3)
+If the target ports are jointly realized by some core S_0, then a
+greatest core lower bound R of G exists. There are finitely many
+operations on the fixed finite carrier and variable set, and the core
+lower bounds are closed under nonempty pointwise union. Their finite
+union is core and greatest. It lies above S_0 and below G, so its pure
+ports equal the target ports exactly. Equivalently R is the greatest
+core operation in that exact pure-closure fiber. None of this proves
+that R is itself source-separable or supplies a closed construction
+for arbitrary port data.
 
-At these statuses each inner 0-owned choice absorbs X. The left branch
-then absorbs to 1, the right to 2, and the root returns {1,2}. Thus F
-is constantly {1,2} throughout this status fibre.
+For additive owner closures the situation is positive: the
+[colored-preorder theorem](additive-closure-characterization.md) realizes
+their separable hull whenever the pure data come from any core operation.
+The counterexample below needs genuinely joint closure premises.
 
-For the hull the supplying factors at (3) are as follows. Only factors
-relevant to the source's available winner are needed.
+## The uniform four-variable counterexample
 
-* At source X the 0-factor is false: both occurrences have a 0-owned
-  sibling equal to {0}. Its 1-factor is true because the right occurrence
-  has no 1-owned ancestor, and its 2-factor is true because the left
-  occurrence has no 2-owned ancestor. Every other owner's factor is true.
-* Source Y cannot supply 0: its unique occurrence has the 1-owned sibling
-  Q={1}, so its 1-factor is false.
-* Source Z cannot supply 0: its unique occurrence has the 2-owned sibling
-  S={2}, so its 2-factor is false.
-* Source Q supplies 1. Its only possible rival filter is the root's
-  0-filter. On a pure-0 probe, the other branch has 0-profile
-  `(X_0 OR Z_0) AND S_0`, which is false because S is not 0. Thus the
-  0-factor is true; there are no other rival-owned gates on Q's path.
-* Source S supplies 2 by the symmetric argument, using the other branch's
-  0-profile `(X_0 OR Y_0) AND Q_0`.
+Choose distinct owners 0,1,2 and variables A,B,C,W. The following is an
+actual constant-free core word, with union implemented by the standard
+three-owner abbreviation:
 
-Consequently (1) has the exact value
+    R=A union W
+       union (B choice_1 W) union (C choice_0 A)
+       union ((B choice_1 C) choice_0 A)
+       union ((C choice_0 B) choice_1 W).                (2)
 
-    H(w)={1,2} union ({0} if 0 in w_X else empty)          (4)
+Its complete source coefficients are computed in
+[the reciprocal-rule theorem](separable-closure-counterexample.md).
+Write A_0 for [A={0}], and similarly for the other atomic flags.
+At an observer k outside {0,1}, its only nontrivial source coefficients
+are
 
-throughout (3). In particular,
+    C_(B,k)=NOT W_1 OR (NOT C_1 AND NOT A_0);
+    C_(C,k)=NOT A_0 OR (NOT B_0 AND NOT W_1).             (3)
 
-    w_X={0,3} gives H={0,1,2};
-    w_X={1,3} gives H={1,2}.                              (5)
+Sources A,W are unconditional. At observer 0 the B coefficient is
+NOT(C_1 AND W_1) and C is unconditional; at observer 1 B is
+unconditional and C has coefficient NOT(A_0 AND B_0).
 
-Both outputs omit 3 while X contains 3 in both valuations. Omission
-independence for every core operation says that changing such an input
-arbitrarily cannot change the output. The differing values in (5)
-contradict that law. Hence H is not a core operation.
+Consequently its canonical owner closures are exactly
 
-Equivalently, the status-selector theorem already excludes (4). With
-all other inputs fixed atomically and X ambiguous, a core operation is
-a fixed atomic set, optionally unioned with the whole input X. It cannot
-respond to 0 in X while ignoring 3 in that same menu.
+    c_0(E)=E union ({C} if {A,B} subseteq E else empty);
+    c_1(E)=E union ({B} if {C,W} subseteq E else empty);
+    c_r(E)=E for r outside {0,1}.                        (4)
 
-The fourth owner is essential to this witness. The two fixed output
-owners 1,2 mask every nonzero input bit when I={0,1,2}; (5) does not
-give a three-owner counterexample. No three-owner hull theorem or
-counterexample is asserted here.
+For example the pure-1 B port sets A_0=false in (3), giving
+NOT(C_1 AND W_1). The pure-0 B port sets W_1=false and is true.
+The C calculations are symmetric. Thus taking the separable product
+of (4) gives the exact hull
 
-Thus canonical closures, admissible singleton profiles, monotonicity,
-idempotence and whole-input provenance do not make even this natural
-upper completion integrable. Additional mixed-owner constraints remain
-necessary, even when the closure data were extracted from an actual
-core operation rather than supplied independently.
+    G=A union W
+       union (B if NOT(C=W={1}) else empty)
+       union (C if NOT(A=B={0}) else empty).             (5)
+
+The genuine core word R has value
+
+    R=A union W if A={0} and W={1};
+      G otherwise.                                    (6)
+
+This follows by distributing the two Boolean expressions (3). Own-owner
+bits are unchanged, and in the exceptional case their winners 0,1 are
+already supplied by A,W. In fact (2) is the greatest core operation
+below G, by the greatest-minorant theorem in the linked note.
+
+## The hull violates a universal three-row law
+
+For any observer k outside {0,1}, let N_k=I\{k}. In variable order
+A,B,C,W, take
+
+    u=(N_k,{k},{1},{1});
+    v=({0},{0},{k},N_k);
+    q=({0},{k},N_k,{1}).                               (7)
+
+Every core term has the persistence property
+
+    k in output(q) implies k in output(u) or output(v).
+
+The linked note proves it for arbitrary terms, without a term-table
+search. In the observer-k view, extra-owner gates act as union on these
+rows; expansion into pure 0/1 terms and their monotone Boolean cube
+endpoints give the implication.
+
+But (5) gives G(u)=G(v)=N_k and G(q)=I. Hence G is not core for
+every fixed K>=3. Equation (6) removes precisely the unsupported
+head contributions at the conflicting anchor assignment.
+
+This witness also explains what the hull forgets. In (3), B can supply
+an outside winner when W is not the 1 atom, or when C is not 1 AND A
+is not 0. The two branches are coupled. Each pure-owner probe sees a
+surviving branch, but their product inserts the forbidden mixed case
+A=0,W=1. The same phenomenon occurs symmetrically at C.
+
+## Strong compatibility still does not repair the product hull
+
+The hull's closure family (4) is extracted from the explicit core word
+R, not proposed independently. It has all colored-idempotence laws and
+admissible spanning profiles on every restriction. The hull itself has
+those very closures as its functional-dependence closures, satisfies
+hereditary omission and span-outcast, and has core proper neutral faces
+and identification minors. It is prime under disjoint idempotent
+factorization. All these statements are proved in
+[separable-closure-counterexample.md](separable-closure-counterexample.md).
+
+Thus even a jointly realized family of pure-owner closures, together
+with these closed hereditary laws, does not make its separable upper
+hull core. The missing data are the mixed source dependencies. The
+separate question whether a genuine source-separable core operation
+attains its own maximal full factor vectors is not refuted here: R
+itself is nonseparable at its two head sources.

@@ -7,6 +7,12 @@ For a source-separable operation they give a direct colored-closure
 formula. The compatibility conditions making an arbitrary such system
 core remain unresolved.
 
+They also have a semantic definition: c_r(E) consists exactly of E
+and the variables made inessential by fixing E to {r}. The
+[cofactor-dependence theorem](cofactor-dependence-closures.md) proves
+this for every core operation, without source separation, and obtains
+the closure laws from a general fact about restrictions of functions.
+
 For additive closures, the
 [colored-preorder characterization](additive-closure-characterization.md)
 settles this compatibility problem by two closed arrow laws and an
@@ -176,18 +182,16 @@ core operation:
 
     T_j={r}, j in J implies r in A.                       (9)
 
-For if r were absent from A, choose the j menu to contain r and every
-other ambiguous menu to omit r. Equation (8) makes j the only ambiguous
-source of the new r. In an actual term's whole-menu status selector, j
-must therefore be selected. Some occurrence of it survives every atomic
-absorption on that fiber. Each of its owner factors is true at the
-corresponding E_s, so all the canonical pure-owner ports D_(j,s)(E_s)
-are true. This means T_j is empty, a contradiction.
+If r were absent from A, give every other ambiguous position I\{r}
+and compare j=I with j=I\{r}. All statuses stay fixed. Equation (8)
+makes r present only at the first valuation, since j is its sole
+ambiguous source. But j in c_r(E_r) means that fixing E_r to {r}
+makes j inessential in the entire function, by the cofactor-dependence
+theorem. The two outputs must agree, a contradiction.
 
-This argument uses the common source attribution of an actual word,
-not just a functional representation on one fiber. When A misses one
-winner, that distinction matters: the functional selector law alone
-allows the masked partial contribution described above.
+This uses full functional independence in a monochromatic cofactor,
+not just a whole-menu representation on one status fiber. The latter
+alone allows the masked partial contribution described above.
 
 Under (9) all the last contributions in (8) are already contained in
 A, giving the simpler actual-core form A union UNION_(j in Q) w_j.
@@ -269,10 +273,11 @@ of its witnessing coalitions; all those coalitions still span that
 union. Thus (H) is exactly hereditary spanning-profile admissibility.
 
 By the colorful-cover lemma it ensures that every nonempty neutral
-restriction of the source formula is nonempty. It does not by itself
-imply the colored-outcast or span-outcast laws; the independent
-counterexamples are in
-[separable-closure-counterexample.md](separable-closure-counterexample.md).
+restriction of the source formula is nonempty. Even when strengthened
+by colored outcast, hereditary span-outcast and hereditary omission,
+it does not ensure joint realizability. The prime obstruction in
+[separable-closure-counterexample.md](separable-closure-counterexample.md)
+satisfies all these conditions.
 
 ## All-source side effects
 

@@ -46,3 +46,23 @@ otherwise; its finite-owner core compilation is checked directly. The clipped
 expressions still agree five at a time, have exactly the same singleton
 profiles as P_0, and retain all six critical common values. This finite
 regression is separate from the general finite-role clipping result.
+
+## This witness is not source-separable
+
+At three owners, the same exact family evaluations give, at observer a
+and marked source W,
+
+| Inputs X,Y,Z,W,V | Common output |
+|---|---|
+| b,b,bc,a,c | bc |
+| b,b,bc,a,bc | abc |
+| bc,bc,bc,a,c | abc |
+
+The latter two rows retain respectively just the first row's pure-b and
+pure-c atomic flags; the other passive inputs are neutral bc. Both pure
+ports are true, but the mixed source-a coefficient is false. The clipped
+family has the same three values. Thus neither three-owner five-point
+candidate is source-separable. Its locality theorem alone does not settle
+whether a bounded interpolation test could suffice within the separable
+subclass. This table is a direct finite evaluation of the pinned
+expressions, not an additional Lean theorem.

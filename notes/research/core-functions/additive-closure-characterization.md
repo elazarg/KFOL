@@ -100,9 +100,14 @@ Otherwise some i in T, i!=j, has j in c_(alpha(i))({i}). Condition (D)
 puts c_(alpha(j))({j}) inside that same seed closure. Additivity therefore
 gives d_alpha(d_alpha(T)) subseteq d_alpha(T); extensivity gives equality.
 
-Canonical closures of genuine source-separable core operations satisfy
-(2), by [full colored outcast](mixed-closure-outcast.md). Thus (D) is
-necessary.
+There is a stronger necessity proof using
+[cofactor dependence](cofactor-dependence-closures.md). It applies to the
+canonical closures of every core operation, not just a separable one.
+If i!=j and i ->_r j, fixing i to {r} makes j inessential. We may
+therefore fix j to {s} without changing that cofactor. Every point of
+c_s({j}) outside {j} is then inessential as well; further fixing i
+does not destroy this independence. Points i,j are already in c_r({i}).
+Thus c_s({j}) subseteq c_r({i}), proving (D).
 
 Condition (R) is exactly admissibility of the restricted spanning profiles
 on every two-point set. Opposite arcs of different colors would make
@@ -115,6 +120,19 @@ For a genuine core operation, each nonempty neutral restriction is core
 on its remaining full support. Its pure-owner ports are the restrictions
 of the original ports, so its spanning profiles are exactly those of the
 restricted closures. They are admissible. This proves necessity of (R).
+
+**Pure-data corollary.** For loopless additive closure families, (D),(R)
+also characterize joint realizability as the canonical pure-owner
+closures of some core operation, without presupposing separation of that
+operation. Necessity was just proved in that generality; sufficiency
+is supplied by the separable reconstruction constructed below.
+
+Consequently the separable upper hull of any genuine core operation
+with additive owner closures is itself core. It is the greatest core
+operation with those exact pure ports, by the
+[pure-port order theorem](separable-hull-failure.md). The greatest
+free-completion statements below concern this reconstructed separable
+operation, not every smaller nonseparable operation in that fiber.
 
 ## Monochromatic components and their ancestor order
 
