@@ -33,6 +33,19 @@ amalgamation; a [four-row Horn invariant](face-gluing/noncore.md) gives the
 short proof and replaces the older seven-row certificate. These results are
 proved mathematically in the notes and are not yet Lean claims.
 
+The anchored forms are [not globally complete](anchor-amalgamation.md), even
+for an eight-variable function with a seven-gate exact realizer. A separate
+[block-factorization theorem](block-decomposition.md) reduces any idempotent
+disjoint composition to canonical smaller operations: the diagonal outer
+minor and the neutral inner sections. It applies to the full core, while
+leaving overlapping-input and prime-operation compatibility unresolved.
+
+For [read-once primitive core trees](read-once-profile-minimum.md), a closed
+rainbow formula in the singleton profiles gives the entire winner operation.
+Such a tree is the least core operation in its profile fibre. A direct
+coalition induction identifies where this argument fails for repeated
+variables: different occurrences can create a spurious common source.
+
 Local tests do not suffice even within a fixed singleton-profile fiber.
 Pairwise, three-point and four-point interpolation obstructions are proved
 uniformly for every role type containing three distinct owners. The four-point

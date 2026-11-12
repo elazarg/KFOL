@@ -70,34 +70,50 @@ increasing block. That block is P-marked and essential in the corresponding
 cofactor. Hence every psi-positive interval is D_f-positive. The atomic
 criterion therefore accepts every such polarization.
 
-Nevertheless f(a,b,c,d)=ab OR ac OR bd gives a nonterm D_f. For a pure
-meet/join formula with Boolean function g, endpoints are determined by the
-lower/upper Boolean corners. Every essential marked coordinate forces P,
-by its Boolean edge on {b,P,c} and passive monotonicity. Suppose a smallest
-formula for D_f has a join root with children g,h<=f. A child owning any
-minimal true assignment must own all three, by these implications:
+Nevertheless f(a,b,c,d)=ab OR ac OR bd gives a nonterm D_f. The
+[four-row invariant](face-gluing/noncore.md) gives a short analytic proof:
+outputs 1 at (1,1,0,0) and 0 at (0,0,1,1) force P at (N,P,1,0) or
+(P,N,0,1) for every full bichain term. D_f instead returns N on both
+marked rows. Thus even all union-polarized atomic tests miss a nonterm.
 
-| Ownership implication | Partial input (a,b,c,d) | Essential marked coordinate if it fails |
-| --- | --- | --- |
-| ac -> ab | (N,c,P,b) | c |
-| bd -> ab | (c,N,b,P) | d |
-| ab -> ac | (N,P,c,b) | b |
-| ab -> bd | (P,N,b,c) | a |
+The [coherent-cube theorem](coherent-cube-safety.md) proves the exact positive
+boundary: pairwise-intersecting marked cubes impose no additional constraint
+beyond the marked variables' Boolean inessentiality. Its anchored construction
+is not globally complete, even when an exact term exists: the
+[eight-variable counterexample](anchor-amalgamation.md) is realized by a
+seven-gate read-once formula but by none of its anchored forms.
 
-In each row f depends only on the N-marked coordinate, so D_f=N. An
-ownership failure gives P in that child; its sibling cannot give c because
-the lower Boolean corner has f=0. Thus the join would give P, a contradiction.
-A child owns some minterm, hence all three, so its Boolean function is f.
-It must itself equal D_f: essential marked coordinates force every desired P,
-and unwanted P would propagate through the root. This contradicts minimality.
-For a meet root use Boolean duality: swap b,c and meet,join, fixing N,P;
-the dual is ab OR ad OR bc, the same function with c,d exchanged.
+## Disjoint factors of full operations are canonical
 
-A full term expands into a nonempty observer union of pure formulas. Stable
-Boolean outputs force each summand's Boolean function to be f. P is absorbing
-under union, so each summand has no additional P, while essentiality forces all
-required P. Each would realize D_f, contradicting the pure case. Thus even all
-union-polarized atomic tests miss a nonterm.
+[Block decomposition](block-decomposition.md) applies to all observers at
+once. For an idempotent disjoint-block factorization with essential outer
+inputs, the composite is core exactly when the outer and all inner factors
+are core. The outer factor is its block-diagonal minor; each inner factor is
+its neutral residual outside that block. This proves uniqueness and gives
+an intrinsic factorization test, without searching for unspecified factors.
+Equivalently, a block can be summarized by one winner set when there are
+exactly as many distinct context functions as the carrier has states.
+Overlapping input reuse remains outside this reduction. The four-variable
+gluing obstruction is already prime: all proper identification minors and
+all proper neutral sections are core, so it has no proper disjoint idempotent
+decomposition.
+
+## A closed profile envelope is exact for read-once trees
+
+[Read-once profile minimality](read-once-profile-minimum.md) gives a sound
+closed lower envelope in every profile fibre, and exactly the intersection
+of positive-profile extensions when the top bits are true. A winner k is certified by
+one winning coalition per owner whose nonempty intersection consists only
+of inputs containing k, with no rival-singleton input in the intersection
+of the other owners' coalitions. The one-bound theorem proves that any
+core operation retaining those positive profile bits must retain k.
+
+For a primitive read-once tree this envelope is exactly its full value,
+not merely its singleton outputs. A direct induction constructs certificates
+with a singleton common source. Hence a read-once tree is the least core
+operation in its complete profile fibre. Distinct occurrences of one input
+can invalidate the singleton-intersection step, so this is a positive
+structural regime rather than the remaining all-term characterization.
 
 ## Other routes that do not suffice
 

@@ -159,6 +159,11 @@ bichain term constructor. The four-row obstruction shows why taking it need
 not preserve term realizability. The conclusion is a finite lower-envelope
 representation, not a global realization of D_f.
 
+[Anchor selection is not complete](anchor-amalgamation.md): the eight-variable
+function (AB OR CD) AND (EF OR GH) has a seven-gate exact core realization,
+but none of its canonical anchored forms is globally exact. The proof also
+shows that neutralizing an independent factor commutes with the construction.
+
 ## Pairwise cube intersection is sufficient
 
 Boolean cubes have the Helly property with Helly number two. If a family

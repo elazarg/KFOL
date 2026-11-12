@@ -163,6 +163,7 @@ def main():
     assert json.loads(path.read_text()) == certificate()
     assert all(F(v) == term(H, v) for v in product((B, C, A), repeat=4))
     assert sum(F(v) != term(H, v) for v in V4) == 8
+    assert all(F(v) == term(H, v) for v in V4 if len(set(v)) < 4)
     assert all(view(F(v)) == extension(tuple(map(view, v))) for v in V4)
     # Four-row Horn invariant, with no term-clone enumeration.
     rows = [(1, 1, 0, 0), (0, 0, 1, 1),
@@ -195,7 +196,7 @@ def main():
             assert view(term(witness, tuple(reps[x] for x in bits))) == phi(bits)
     assert [view(term(t_r, tuple(reps[x] for x in row))) for row in rows[2:]] == [3, 2]
     assert [view(term(t_s, tuple(reps[x] for x in row))) for row in rows[2:]] == [2, 3]
-    print("81 joint atomic rows, eight modified inputs, and full P4 scalar quotient: PASS")
+    print("81 joint atomic rows, all proper identification minors, eight modified inputs, full P4 quotient: PASS")
 
     for j, witness in enumerate(G):
         assert all(residual((j,), v) == term(witness, v) for v in V3)

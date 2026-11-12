@@ -27,6 +27,13 @@ region contains an atomic valuation, so **the single displayed term H realizes
 F on every atomic input**, including rows with several occurrences of one
 owner.
 
+In fact every modified valuation has four distinct input menus. Therefore
+F=H whenever any two inputs are equal, and **every proper identification
+minor of F is core**. Together with the proper neutral residuals below,
+this makes F minimal under both of these reductions. F is idempotent and
+all four inputs are essential: on the diagonal it agrees with H, and on
+all-ambiguous inputs it is the union of all four menus.
+
 The complete singleton profiles are those of `H`. For
 `φ(x)=x_A x_B ∨ x_A x_C ∨ x_B x_D`, they are
 
@@ -97,3 +104,10 @@ or enumeration. Each negative row separately has a pure Boolean-P4 witness,
 but the two requirements cannot be satisfied together. The
 [coherent-cube theorem](../coherent-cube-safety.md) shows why a single cube,
 or any family with a common Boolean resolution, cannot cause this failure.
+
+The [block-factorization theorem](../block-decomposition.md) implies that F
+has no proper disjoint idempotent decomposition. Any such outer factor
+would be a proper identification minor and hence core; every inner factor
+would be a proper neutral section and hence core. Their composite would
+then be core, contrary to the four-row law. Thus this is also a concrete
+prime obstruction for the block-decomposition reduction.
