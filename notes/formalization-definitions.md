@@ -2,7 +2,7 @@
 
 Read [Paper.lean](../Paper.lean) with the vocabulary below. It contains 82
 mathematical statements and no definitions. [Report.lean](../Report.lean)
-contains 96 further mathematical statements. Their proofs name library theorems;
+contains 105 further mathematical statements. Their proofs name library theorems;
 definitions must still be reviewed independently against the manuscripts.
 
 The [audit guide](audit-guide.md) gives the reading order. The generated
@@ -14,7 +14,7 @@ theorem types. They erase proof-valued subterms and never follow theorem proofs.
 | Entry point | Theorem types | Semantic declarations | Source files | Central definition files | Written review units |
 | --- | ---: | ---: | ---: | ---: | ---: |
 | Paper | 82 | 678 | 40 | 28 | 362 |
-| Report | 96 | 725 | 43 | 32 | 340 |
+| Report | 105 | 730 | 43 | 32 | 344 |
 
 These counts are separate slices and overlap. The vocabulary files organize
 the presentation; they do not replace their underlying mathematical definitions.

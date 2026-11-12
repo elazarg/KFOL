@@ -22,7 +22,7 @@ target. See [the research target](research/core-functions/target.md).
 | Audit entrypoint | Mathematical statements | Presentation |
 | --- | ---: | --- |
 | [Paper.lean](../Paper.lean) | 82 | Main text and the report claims it cites |
-| [Report.lean](../Report.lean) | 96 | Further report results and proof ingredients |
+| [Report.lean](../Report.lean) | 105 | Further report results and proof ingredients |
 | [Results/Certificates](../KFOL/Results/Certificates.lean) | 140 preserved contracts | Original full statements, including native machines, codecs and intermediate invariants |
 
 Every root proof names one library theorem. Both root files have no semantic
@@ -40,7 +40,7 @@ regular representation are in `Definitions/Relational`.
 | Definition surface | Theorem types | Semantic declarations | Source files | Written review units |
 | --- | ---: | ---: | ---: | ---: |
 | Paper | 82 | 678 | 40 | 362 |
-| Report | 96 | 725 | 43 | 340 |
+| Report | 105 | 730 | 43 | 344 |
 
 The slices overlap and exclude theorem proof bodies. These meaning indexes do
 not replace the human comparison with the manuscript or the proof/axiom audits.
@@ -51,7 +51,7 @@ The production integration checks are:
 
 - `make check-lean`: literal façade and preservation checks, inventory,
   independent algebra build/import audit, Paper/Report and whole-source axiom
-  audits, both definition indexes, actual negative audit fixtures and 106 strict
+  audits, both definition indexes, actual negative audit fixtures and 108 strict
   Lean regressions.
 - `make check-python`: the explicit 34 independent Python checks, mapped to the
   current paper in `checks/README.md` and the verification appendix.

@@ -27,7 +27,9 @@ Adding a requested winner has a direct source-and-separation test
 (\cref{core:thm:bounded-query}); prescribed full profiles and one exact
 output value likewise have a closed criterion
 (\cref{core:thm:one-point-completion}). These pointwise conditions need
-not have a common realization across inputs.
+not have a common realization across inputs. Even the projection-profile
+fiber contains a copy of the whole lower-arity core, via neutral-source
+elimination and reset (\cref{core:thm:neutral-elimination,core:thm:projection-fiber}).
 Prime source-guard normal forms describe full values
 (\cref{app:core-source-guards}), with simultaneous independence of inputs
 containing an omitted winner (\cref{core:prop:omission}). Their joint realizability has a recursive
@@ -1053,11 +1055,73 @@ These pointwise conditions do not amalgamate: the example in
 and satisfies them at every input, even with five-point core interpolation,
 but has no global core realization.
 
-Profiles do not determine a term function even together with its
-variables: $x\del(y\del z)$ and $(x\del y)\del z$ both return $\{i\}$
-exactly when $z=\{i\}$, but at $x=\{c\}$, $y=\{a\}$, $z=\{a,b\}$ they
-return $\{a,b,c\}$ and $\{a,b\}$. Singleton and ambiguous outputs also
-constrain one another across valuations. Partition the variables into
+Even projection profiles retain the entire core at one lower arity.
+The key is an elimination operation. For a core term $t(X,v)$, define
+the possibly empty residual
+\[
+ (\partial_Xt)(v)=\{k\in I:k\in t(I\setminus\{k\},v)\}.
+\]
+Different winners use different sections, so closure under substitution
+alone does not show that this set-valued operation is a core operation.
+
+\begin{theorem}[Neutral-source elimination]\label{core:thm:neutral-elimination}
+For $K\geq3$, the residual $\partial_Xt$ of a core term is either
+identically empty or is a core term operation on the remaining variables.
+If any remaining variable occurs in $t$, the second alternative holds.
+\end{theorem}
+\begin{proof}
+Temporarily add a fresh winner $*$, owned by none of the choices, and
+evaluate $X=\{*\}$ while retaining the ordinary inputs $v$.
+Write the output as an ordinary residue $G$, together with a mark recording
+whether $*$ occurs. For any ordinary nonempty replacement $A$ of $X$,
+induction gives:
+an unmarked output stays exactly $G$; a marked output contains $A$ and
+is contained in $A\cup G$, and equals $A\cup G$ if $A$ is ambiguous.
+Singleton tests are unchanged when $\{*\}$ is replaced by an ordinary
+ambiguous set. In particular the ordinary residue is $\partial_Xt$.
+
+Construct a realizing term recursively. A subtree using only $X$ has
+empty residue and may be deleted at its parent. Otherwise suppose the
+two children $s,u$ have nonempty residues realized by $g,h$. At a choice
+by $r$, use
+\[
+ \bigl(g+s[h/X]\bigr)\star_r\bigl(h+u[g/X]\bigr).
+\]
+Put $G=g(v)\cup h(v)$. Its left operand is $g(v)$ when the ghost
+output of $s$ is unmarked, and $G$ when it is marked; likewise on the
+right. The four marking cases therefore reproduce exactly the ordinary
+residue of the original choice. An ordinary leaf gives its input, and
+every subtree containing such a leaf has nonempty residue. Derived union
+and substitution keep the construction in the core.
+\end{proof}
+
+\begin{theorem}[The full projection-profile fiber]\label{core:thm:projection-fiber}
+For $K\geq3$, a core operation $F(X,v)$ satisfies
+\[
+ F(X,v)=\{r\}\quad\Longleftrightarrow\quad X=\{r\}
+ \qquad\text{for every }X,v,r
+\]
+if and only if it is the projection $X$ or has the form
+$g(v)\del X$ for a core operation $g$ on the remaining inputs.
+The alternatives are disjoint and $g$ is unique as a term operation.
+Each owned choice restricts to pointwise union on this fiber.
+\end{theorem}
+\begin{proof}
+The ghost output cannot be unmarked: then replacement by each atom
+would give the same constant output, contrary to the displayed condition.
+If its residue is empty, the comparison in the preceding proof gives $X$.
+Otherwise neutral-source elimination gives $g$; ambiguous $X$ gives
+$X\cup g(v)$, and atomic $X$ is fixed. This is $g(v)\del X$.
+Conversely reset has exactly these singleton outputs.
+For uniqueness, each winner $k$ of $g(v)$ is detected by setting
+$X=I\setminus\{k\}$, which is ambiguous. The same test distinguishes
+every nonempty $g$ from the projection.
+Finally, at ambiguous $X$ neither operand in the fiber is atomic, so
+owned choice is union; at atomic $X$ both operands equal $X$.
+\end{proof}
+
+Singleton and ambiguous outputs also constrain one another across
+valuations. Partition the variables into
 three groups, and write $t(X,Y,Z)$ for the valuation assigning $X,Y,Z$
 to the respective groups.
 
@@ -2008,6 +2072,24 @@ value is exactly $\{c\}$. Put
 \]
 Both $b$ and $c$ occur on every $C_i$, since $n\geq3$.
 For each $h$, let $F_h$ use the same definition with $C_h$ omitted.
+
+\begin{corollary}[Trivial proper neutral sections]\label{core:cor:crown-residuals}
+Every one-input residual of $F$, or of any $F_h$, is the union of the
+remaining inputs. More strongly, if a nonempty family of inputs are
+ambiguous and all omit $k$, the output contains $k$ if and only if some
+input outside that family contains $k$.
+\end{corollary}
+\begin{proof}
+Outside the exceptional regions the operation is input union. Inside
+$C_i$, every input except $S_{i+1}$ is a singleton. Thus the family can
+only consist of that successor input. Among the other inputs both $b$
+and $c$ occur, and no other owner occurs. Their union is exactly the
+exceptional output $\{b,c\}$. Set each deleted input to
+$I\setminus\{k\}$ to obtain the residual formula.
+\end{proof}
+
+Consequently all proper residuals can be core operations even when the
+original operation fails global compatibility.
 
 \paragraph{The cyclic constraint.}
 Write $N_i$ for the valuation with $\{c\}$ at $i$, $\{a\}$ at

@@ -172,6 +172,8 @@ def library_declarations() -> dict[str, Theorem]:
                ROOT / "KFOL/Core/ProfileQueries.lean",
                ROOT / "KFOL/Core/ProfileCompletion.lean",
                ROOT / "KFOL/Core/ProfilePointObstruction.lean",
+               ROOT / "KFOL/Core/GhostElimination.lean",
+               ROOT / "KFOL/Core/CrownResiduals.lean",
                ROOT / "KFOL/Core/Staircase.lean",
                ROOT / "KFOL/Core/RainbowPersistence.lean",
                ROOT / "KFOL/Core/ProfilePersistence.lean",

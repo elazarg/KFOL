@@ -270,6 +270,8 @@ import all KFOL.Core.WholeInputs
 import all KFOL.Core.ProfileQueries
 import all KFOL.Core.ProfileCompletion
 import all KFOL.Core.ProfilePointObstruction
+import all KFOL.Core.GhostElimination
+import all KFOL.Core.CrownResiduals
 import all KFOL.Definitions.ProfileBounds
 import all KFOL.Core.Staircase
 import all KFOL.Definitions.CoreStaircase

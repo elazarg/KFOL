@@ -20,6 +20,8 @@ public import KFOL.Core.WholeInputs
 public import KFOL.Core.ProfileQueries
 public import KFOL.Core.ProfileCompletion
 public import KFOL.Core.ProfilePointObstruction
+public import KFOL.Core.GhostElimination
+public import KFOL.Core.CrownResiduals
 public import KFOL.Core.Staircase
 public import KFOL.Core.RainbowPersistence
 public import KFOL.Core.ProfilePersistence
@@ -288,6 +290,25 @@ theorem full_no_finite_relation_basis {Role : Type u} [Fintype Role]
         ¬∃ t : Term Role (Fin n), ∀ v, t.eval v = f v :=
   Core.Crown.exists_full_finite_family_obstruction three arity relations hrelations
 
+/-- `core:cor:crown-residuals`: every proper neutral section of a crown is input union. -/
+theorem core_crown_neutral_sections {Role : Type u} {Var : Type v} [Nonempty Var] [DecidableEq Var] (vertices : Fin 3 ↪ Var)
+    (three : Fin 3 ↪ Role) (b c : Role) (next : Equiv.Perm Var)
+    (selected : Set Var) (values : Var → WinnerSet Role) (j : Var) :
+    {k | k ∈ (Core.Crown.operation b c next selected
+      (Function.update values j (PlayerView.representative three k .impossible))).val} =
+      ⋃ i, ⋃ (_ : i ≠ j), (values i).val :=
+  Core.Crown.ghost_residual_eq_union vertices three b c next selected values j
+
+/-- Simultaneous ambiguous inputs omitting an owner contribute none of that owner. -/
+theorem core_crown_ambiguous_family {Role : Type u} {Var : Type v} [Nonempty Var] (vertices : Fin 3 ↪ Var)
+    (b c : Role) (next : Equiv.Perm Var) (selected : Set Var)
+    (values : Var → WinnerSet Role) (S : Set Var) (hne : S.Nonempty) (k : Role)
+    (hamb : ∀ j ∈ S, (values j).Ambiguous)
+    (hnot : ∀ j ∈ S, k ∉ (values j).val) :
+    k ∈ (Core.Crown.operation b c next selected values).val ↔
+      ∃ i, i ∉ S ∧ k ∈ (values i).val :=
+  Core.Crown.membership_of_ambiguous_omitted_family vertices b c next selected values S hne k hamb hnot
+
 /-- `core:thm:exponential-locality`: an exact exponential interpolation threshold. -/
 theorem core_exponential_locality {Role : Type u} [Fintype Role]
     (three : Fin 3 ↪ Role) (d : ℕ) (hd : 2 ≤ d) :
@@ -454,6 +475,72 @@ theorem core_pointwise_profile_obstruction {Role : Type u}
       (∀ values, Core.ProfileBounds.OnePointCondition Φ values (f values)) ∧
       ¬∃ t : Term Role (Fin 5), t.IsCore ∧ ∀ values, t.eval values = f values :=
   Core.exists_pointwise_profile_obstruction three
+
+/-- `core:thm:neutral-elimination`: deleting a neutral input leaves zero or a lower-arity core operation. -/
+theorem core_neutral_elimination {Role : Type u} {Var : Type v} (three : Fin 3 ↪ Role)
+    (t : Term Role (Option Var)) (ht : t.IsCore) :
+    (∀ (v : Var → WinnerSet Role) (k : Role),
+      k ∉ (t.eval (fun j =>
+        j.elim (PlayerView.representative three k .impossible) v)).val) ∨
+    ∃ g : Term Role Var, g.IsCore ∧ ∀ (v : Var → WinnerSet Role) (k : Role),
+      k ∈ (g.eval v).val ↔ k ∈ (t.eval (fun j =>
+        j.elim (PlayerView.representative three k .impossible) v)).val :=
+  Core.core_residual_alternative three t ht
+
+/-- An occurring remaining variable excludes the zero residual. -/
+theorem core_nonempty_neutral_elimination {Role : Type u} {Var : Type v} [DecidableEq Var] (three : Fin 3 ↪ Role)
+    (t : Term Role (Option Var)) (ht : t.IsCore)
+    (hused : ∃ j, some j ∈ t.vars) :
+    ∃ g : Term Role Var, g.IsCore ∧ ∀ (v : Var → WinnerSet Role) (k : Role),
+      k ∈ (g.eval v).val ↔ k ∈ (t.eval (fun j =>
+        j.elim (PlayerView.representative three k .impossible) v)).val :=
+  Core.exists_core_residual three t ht hused
+
+/-- `core:thm:projection-fiber`: the full projection-profile fiber is reset of the lower-arity core plus projection. -/
+theorem core_projection_profile_fiber {Role : Type u} {Var : Type v} (three : Fin 3 ↪ Role)
+    (t : Term Role (Option Var)) (ht : t.IsCore) :
+    (∀ (v : Var → WinnerSet Role) (A : WinnerSet Role) (r : Role),
+      t.eval (fun j => j.elim A v) = WinnerSet.singleton r ↔
+        A = WinnerSet.singleton r) ↔
+    ((∀ (v : Var → WinnerSet Role) (A : WinnerSet Role),
+        t.eval (fun j => j.elim A v) = A) ∨
+      ∃ g : Term Role Var, g.IsCore ∧
+        ∀ (v : Var → WinnerSet Role) (A : WinnerSet Role),
+          t.eval (fun j => j.elim A v) = (g.eval v).reset A) :=
+  Core.projection_fiber_iff three t ht
+
+/-- The lower-arity operation in the nonzero projection-profile fiber is unique. -/
+theorem core_projection_profile_fiber_unique {Role : Type u} {Var : Type v} (three : Fin 3 ↪ Role)
+    (g h : (Var → WinnerSet Role) → WinnerSet Role)
+    (he : ∀ (v : Var → WinnerSet Role) (A : WinnerSet Role),
+      (g v).reset A = (h v).reset A) : g = h :=
+  Core.reset_lift_injective three g h he
+
+/-- The nonzero reset fiber is disjoint from the distinguished projection. -/
+theorem core_projection_profile_nontrivial {Role : Type u} {Var : Type v} (three : Fin 3 ↪ Role)
+    (g : (Var → WinnerSet Role) → WinnerSet Role) :
+    ¬∀ (v : Var → WinnerSet Role) (A : WinnerSet Role), (g v).reset A = A :=
+  Core.reset_lift_ne_projection three g
+
+/-- Every lower-arity core operation has a core reset lift at finite role sets. -/
+theorem core_projection_profile_lift {Role : Type u} {Var : Type v} [Fintype Role] (three : Fin 3 ↪ Role)
+    (g : Term Role Var) (hg : g.IsCore) :
+    ∃ t : Term Role (Option Var), t.IsCore ∧
+      ∀ (v : Var → WinnerSet Role) (A : WinnerSet Role),
+        t.eval (fun j => j.elim A v) = (g.eval v).reset A :=
+  Core.exists_core_reset_lift three g hg
+
+/-- Every owned choice is pointwise union within this fiber. -/
+theorem core_projection_profile_fiber_union {Role : Type u} {Var : Type v}
+    (s t : Term Role (Option Var))
+    (hs : ∀ (v : Var → WinnerSet Role) (A : WinnerSet Role) (r : Role),
+      s.eval (fun j => j.elim A v) = WinnerSet.singleton r ↔ A = WinnerSet.singleton r)
+    (ht : ∀ (v : Var → WinnerSet Role) (A : WinnerSet Role) (r : Role),
+      t.eval (fun j => j.elim A v) = WinnerSet.singleton r ↔ A = WinnerSet.singleton r)
+    (v : Var → WinnerSet Role) (A : WinnerSet Role) (r : Role) :
+    WinnerSet.choice r (s.eval (fun j => j.elim A v)) (t.eval (fun j => j.elim A v)) =
+      (s.eval (fun j => j.elim A v)).union (t.eval (fun j => j.elim A v)) :=
+  Core.projection_fiber_choice_union s t hs ht v A r
 
 /-- `core:prop:whole-inputs`: every winner has a whole input contained in the output. -/
 theorem core_whole_input_provenance {Role : Type u} {Var : Type v}

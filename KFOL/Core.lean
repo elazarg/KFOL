@@ -8,6 +8,8 @@ public import KFOL.Core.WholeInputs
 public import KFOL.Core.ProfileQueries
 public import KFOL.Core.ProfileCompletion
 public import KFOL.Core.ProfilePointObstruction
+public import KFOL.Core.GhostElimination
+public import KFOL.Core.CrownResiduals
 public import KFOL.Core.Staircase
 public import KFOL.Core.RainbowPersistence
 public import KFOL.Core.ProfilePersistence

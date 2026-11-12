@@ -1,6 +1,6 @@
 \section{Verification details}\label{app:verification}
 
-The paper's results are kernel-checked in Lean~4.35.0 with mathlib. \texttt{Paper.lean} restates, in the namespace \texttt{KFOL.Paper}, every theorem of the main text and the clauses of the report results that it cites: $82$ statements, listed by result in \cref{tab:status}. \texttt{Report.lean} restates $96$ further report results in the namespace \texttt{KFOL.Report} (\cref{tab:report}). Each proof is a single library theorem, and each file ends with a check that no declaration in its namespace uses an axiom beyond \texttt{propext}, \texttt{Classical.choice}, and \texttt{Quot.sound}; a separate audit covers the whole library. Nothing is admitted, and no theorem from the literature enters as a hypothesis. Where a written proof cites one, as for the reset basis and the minimum one-owner generator \cite{FreeseEtAl2002}, owned choice with union \cite{HardingRomanowska2017}, the atomic clone \cite{Szendrei2012}, and colored-graph decomposition \cite{Gurvich2009}, the Lean proof is direct.
+The paper's results are kernel-checked in Lean~4.35.0 with mathlib. \texttt{Paper.lean} restates, in the namespace \texttt{KFOL.Paper}, every theorem of the main text and the clauses of the report results that it cites: $82$ statements, listed by result in \cref{tab:status}. \texttt{Report.lean} restates $105$ further report results in the namespace \texttt{KFOL.Report} (\cref{tab:report}). Each proof is a single library theorem, and each file ends with a check that no declaration in its namespace uses an axiom beyond \texttt{propext}, \texttt{Classical.choice}, and \texttt{Quot.sound}; a separate audit covers the whole library. Nothing is admitted, and no theorem from the literature enters as a hypothesis. Where a written proof cites one, as for the reset basis and the minimum one-owner generator \cite{FreeseEtAl2002}, owned choice with union \cite{HardingRomanowska2017}, the atomic clone \cite{Szendrei2012}, and colored-graph decomposition \cite{Gurvich2009}, the Lean proof is direct.
 
 The vocabulary of the statements is in \path{KFOL/Definitions/PaperAlgebra.lean}, \path{PaperGames.lean}, and \path{Complexity.lean}, which build on the other files of \path{KFOL/Definitions}. \path{notes/audit-guide.md} gives a reading order, and \path{notes/paper-definition-surface.md} and \path{notes/report-definition-surface.md} list every definition that each statement depends on.
 
@@ -93,7 +93,7 @@ Two players (\cref{app:two-players})
 
 {\small
 \begin{longtable}{>{\raggedright\arraybackslash}p{0.34\linewidth}>{\raggedright\arraybackslash}p{0.60\linewidth}}
-\caption{The $96$ audited statements in \texttt{Report.lean}, followed by remaining report evidence.}\label{tab:report}\\
+\caption{The $105$ audited statements in \texttt{Report.lean}, followed by remaining report evidence.}\label{tab:report}\\
 \toprule
 Result & Audited statements or other evidence\\
 \midrule
@@ -140,6 +140,10 @@ Complete profiles under one bound (\cref{core:thm:bounded-profiles})
  & \path{core_bounded_profile_pair}, \path{core_bounded_profiles}, \path{core_unbounded_profile_condition}\\
 Bounded winner queries and exact profile completion (\cref{core:thm:bounded-query,core:thm:one-point-completion})
  & \path{core_bounded_rainbow_query}, \path{core_exact_profile_point}\\
+Neutral-source elimination (\cref{core:thm:neutral-elimination})
+ & \path{core_neutral_elimination}, \path{core_nonempty_neutral_elimination}\\
+Full projection-profile fiber (\cref{core:thm:projection-fiber})
+ & \path{core_projection_profile_fiber}, \path{core_projection_profile_fiber_unique}, \path{core_projection_profile_nontrivial}, \path{core_projection_profile_lift}, \path{core_projection_profile_fiber_union}\\
 Whole-input provenance (\cref{core:prop:whole-inputs})
  & \path{core_whole_input_provenance}, \path{core_output_is_input_union}\\
 Omission independence and unbounded row tests (\cref{core:prop:omission,core:thm:negative-budgets})
@@ -150,6 +154,8 @@ Separate observer realizations without amalgamation (\cref{core:prop:observer-am
  & \path{core_observer_amalgamation}\\
 Cyclic winner persistence (\cref{core:lem:cyclic-persistence})
  & \path{core_cyclic_persistence}\\
+Trivial proper neutral sections (\cref{core:cor:crown-residuals})
+ & \path{core_crown_neutral_sections}, \path{core_crown_ambiguous_family}\\
 Exponential locality (\cref{core:thm:exponential-locality})
  & \path{core_exponential_locality}\\
 Constant and role-switch expansions (\cref{core:cor:full-not-finitely-related})
@@ -713,6 +719,21 @@ for whole-input coverage, and atomic compatibility.
 \path{KFOL/Core/ProfilePointObstruction.lean} proves that the existing
 five-point profile example passes these exact tests at every input
 without a common core realization.
+
+\path{KFOL/Core/GhostElimination.lean} constructs a core term for the
+ordinary residue of a temporary neutral source. Its comparison induction
+proves the exact ambiguous-input formula, and its compiler uses substitution
+and derived union rather than an empty winner constant. This gives the
+full projection-profile fiber, uniqueness and separation of its reset
+parameters, and finite-role core realizations of every lift.
+\path{tests/CoreGhostElimination.lean} covers empty and unused variable
+types, unique residual recovery, and the failure of naive erasure.
+\path{KFOL/Core/CrownResiduals.lean} proves that arbitrary nonempty
+families of ambiguous inputs omitting the queried owner leave only the
+union of the other inputs visible to that owner. This specializes to all
+proper neutral sections of the crown obstruction.
+\path{tests/CoreCrownResiduals.lean} shows why the three-input assumption
+is necessary.
 
 The recursive row-deletion test is specified in
 \path{KFOL/Definitions/CoreInterpolation.lean}, with negative source probes
