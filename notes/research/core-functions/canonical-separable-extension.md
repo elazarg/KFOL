@@ -256,6 +256,12 @@ satisfies both outcast laws, hereditary profile admissibility and
 global omission, but its prescribed old operation and G_Q are noncore.
 It does not settle attainment for an already genuine core target.
 
+Attainment is now proved for
+[additive owner closures](additive-closure-characterization.md): a
+component-spine construction gives every maximal full vector and a
+single realizer attaining their greatest independent-flag completion.
+The general nonadditive attainment problem remains open.
+
 The B_I input statuses used here have disjoint old atomic sets E_r.
 Free independent-status polarization permits the same variable in
 several owner sets simultaneously. No attainability result on that

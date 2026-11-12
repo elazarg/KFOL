@@ -7,6 +7,12 @@ For a source-separable operation they give a direct colored-closure
 formula. The compatibility conditions making an arbitrary such system
 core remain unresolved.
 
+For additive closures, the
+[colored-preorder characterization](additive-closure-characterization.md)
+settles this compatibility problem by two closed arrow laws and an
+explicit source-linear-minorant construction. The results below apply
+also to nonadditive closures, where that criterion is unavailable.
+
 Fix finite owners I with K>=3 and a finite nonempty variable set V.
 For core operations restrict to their essential support, so every
 variable is active. A pure-r source coefficient D_(j,r)(E) uses source

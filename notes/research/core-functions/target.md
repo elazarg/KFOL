@@ -92,6 +92,14 @@ should not be described as having met that stronger simplicity target.
 polarization and simple coherence schemas do not remove this remaining gap.
 
 There are now closed positive classifications beyond read-once trees.
+[Additive owner closures](additive-closure-characterization.md), where a
+capture always has a single predecessor, have an exact two-law colored
+preorder criterion. Component spines construct every realizable guard
+family in this class, with source-linear minorants and greatest free
+completion attained by polynomial-size primitive words. For raw monomial
+guards, first check agreement of
+the pure-owner factors across observers, then the two colored arrow laws.
+This settles that case, not nonadditive closures or guard disjunctions.
 [Loopless closures classify two-owner CNFs](closure-core-operations.md),
 and their [globally minimal operations are precisely matroid CNFs](minimal-cnf-matroids.md).
 [Canonical colored closures](separable-closures.md) also exist for every

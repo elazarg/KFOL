@@ -81,6 +81,19 @@ clauses. [Matroid source guards](matroid-core-operations.md) are bases and
 cocircuits; a realizing word can be linear in any chosen source. Both
 prime Boolean normal forms are minimal exactly for uniform thresholds.
 
+There is now a [complete additive-closure criterion](additive-closure-characterization.md).
+When every capture has a single atomic predecessor, the canonical owner
+closures are preorders. The associated separable guards are realizable
+exactly when an arrow carries along all successors of its target and
+opposite arrows cannot have different colors. Monochromatic components
+give at most n spines, each with at most Kn leaves before union expansion.
+The construction supplies source-linear minorants; primitive words have
+at most 2Kn^3 leaves for the ordinary operation and 6Kn^4 for the greatest
+free completion. Captures needing joint premises remain outside this
+classification. For raw monomial source tables, agreement of the pure
+owner factors across observers is the additional necessary and sufficient
+coherence check.
+
 The [asymmetric closure example](closure-core-operations.md#source-separation-does-not-give-a-linear-full-realizer)
 has an attained greatest full type at each source, yet cannot be realized
 with X occurring once. Full source separation does not remove input reuse.

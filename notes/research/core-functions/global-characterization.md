@@ -215,6 +215,18 @@ the operation directly from these colored closures. Synthetic closure
 families still need full atomic-profile compatibility; pure-probe
 admissibility alone is insufficient.
 
+The [additive case](additive-closure-characterization.md) has a complete
+closed criterion on the original variables. Write i ->_r j when the
+single source i captures j. For i!=j, an r-arrow to j must contain every
+s-successor of j among its own r-successors. Opposite nontrivial arrows
+must have the same color. These two conditions suffice: the union
+preorder has monochromatic components, whose ancestor spines provide
+source-linear minorants with every canonical factor attained. Their
+union realizes the candidate; marked completion attains the greatest
+free extension. The test also applies directly to monomial guard data
+without assuming closure operators in advance. It is a subclass theorem;
+joint-premise closure dependencies are not represented by this graph.
+
 [Every finite loopless closure](closure-core-operations.md) is realized
 by a two-owner CNF: fold owner 1 within complements of proper closed sets
 and owner 0 between clauses. This is an exact bijection, and complements
