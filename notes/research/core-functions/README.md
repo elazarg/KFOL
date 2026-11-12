@@ -124,8 +124,9 @@ a closure.
 This law also implies source attribution for loopless candidate maps.
 The [canonical common-carrier extension](canonical-separable-extension.md)
 is monotone, matches all old observer faces, preserves the ternary outcast
-invariant, and bounds every term-induced extension. Its term attainment
-for a genuine core target remains unresolved. For
+invariant, and bounds every term-induced extension. It need not be
+term-induced, even for a genuine core target; the complete-head family
+below gives a strict attained maximum beneath it. For
 [two reciprocal capture rules](separable-closure-counterexample.md),
 realizability holds exactly when their context sets share a witness;
 two source-linear spines give the positive construction and greatest
@@ -139,8 +140,28 @@ tests too.
 The same persistence argument supplies a reciprocal-cut law for arbitrary
 source-separable core targets: two differently owned captures cannot
 bootstrap two free heads through disjoint contexts. This is stronger
-than the earlier hereditary closure tests; sufficiency in the general
-case remains open.
+than the earlier hereditary closure tests. It still does not suffice:
+the [three-owner obstruction](three-owner-exchange.md) passes that law,
+pair-cut, hereditary common-source and exact functional dependence,
+yet violates a closed feedback-elimination law on core closures.
+Two profile bridges prove its obstruction without enumeration.
+
+[Complete-head circuits](complete-head-circuits.md) have an exact
+all-arity classification. Each head has its own owner and is suppressed
+when all other heads and its nonempty anchor context are that owner's
+atoms. This is core exactly when every owner has a head or some two
+contexts overlap. A union of at-most-four-leaf spines gives the greatest
+core minorant in every case. Disjoint contexts with every owner
+represented give genuine separable operations whose canonical head
+full types are all nonactual. Two explicit actual types join to each
+nonactual canonical vector, so no greatest actual type exists. Any
+context overlap restores those maximal types. Old-observer product
+coefficients nevertheless remain jointly attainable; their canonical
+common-carrier product does not, and its smaller greatest term-induced
+extension has a closed formula. Even when an overlap restores the
+maximal type, [an isolated source may have to repeat](isolated-head-source-linearity.md):
+a five-variable instance has no source-linear minorant for that vector,
+and every realizer repeats the isolated head.
 
 The [naive coalition lift](coalition-lift-obstruction.md) also fails:
 even a genuine core example gives a mixed virtual SCC containing disjoint

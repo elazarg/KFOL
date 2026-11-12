@@ -209,14 +209,68 @@ g({Z}) is false and g(c_r({Z})) is true. The corollary concerns the
 maximal semantic predicate (6), not every selected sufficient condition.
 No profile-interval or minorant-realization assertion follows from it.
 
-## Mixed cofactors can have additional inessential inputs
+## Mixed source guards are cofactor-support data
+
+The cut proof extends to every partial atomic coloring p whose colors
+omit at least one owner k. Let dom(p) be its fixed inputs, and j an
+unfixed source. Probe with j={k}, the prescribed atoms at dom(p),
+and N_k elsewhere. Then, for every core operation F,
+
+    C_(j,k)(p)=false iff j is inessential in F restricted by p. (7)
+
+For the forward implication every occurrence of j is blocked by an
+ancestor of some owner r!=k whose sibling has an r-singleton profile
+already true on p's r-atomic positions. That profile stays true under
+arbitrary menus at all unfixed positions. Maximal such absorbing
+subtrees cover all j occurrences, so replacing them by their fixed
+atoms removes j from the cofactor. For the reverse implication,
+C_(j,k)(p)=true distinguishes j={k} from j=N_k: in the latter probe
+all inputs omit k, and conservativity makes the output omit k too.
+
+Consequently the bit is independent of which missing owner k is used.
+The entire dependence set of the cofactor is
+
+    dep(p)=dom(p) union {j:C_(j,k)(p)=false}.             (8)
+
+It grows under extension of p. Further assignments to any finite set
+of its unfixed inessential positions, with arbitrary menus, leave
+the same cofactor function and the same dependence set on its
+remaining inputs. These are statements about the full winner-valued
+function, not merely its observed bit.
+
+The whole operation can be recovered from this signature. At w, fix
+every rival atomic position E_r(w), r!=k, and call the resulting
+proper-color context p_k(w). Source reconstruction and (7) give
+
+    k in F(w) iff some j with k in w_j is essential
+                         in F restricted by p_k(w).    (9)
+
+Thus general canonical guards have an intrinsic semantic meaning:
+they are precisely the essential-variable data of proper-color
+atomic cofactors. Source separation means, equivalently,
+
+    dep(p)=UNION_r c_r(E_r(p))                         (10)
+
+for every proper-color atomic context. Differently colored
+restrictions then create no additional inessential variables beyond
+those created by their individual monochromatic restrictions.
+
+These descriptions apply to an already given core operation; they
+are not a criterion for which arbitrary cofactor-support signatures
+come from core syntax. The separable counterexamples below pass
+the same proper-color dependence test: a zero mixed bit has a
+zero monochromatic factor, whose functional independence persists
+under the other fixed colors. A true bit still supplies its probe
+witness of essentiality.
+
+## Full-color cofactors can have additional inessential inputs
 
 For a partial atomic coloring with disjoint sets E_r, let dep(E_*) be
 the fixed coordinates together with the inessential variables of the
 mixed cofactor x_i={r} for i in E_r. Further restriction preserves
 inessentiality, so
 
-    UNION_r c_r(E_r) subseteq dep(E_*).                    (7)
+    UNION_r c_r(E_r) subseteq dep(E_*).                    (11)
 
 The inclusion can be strict even for input union. Take the union on
 variables j and z_r for all r in I, and fix each z_r to
@@ -236,7 +290,7 @@ is constant. The distinction is also relevant to
 
 ## Functional dependence does not settle realizability
 
-The [prime four-variable obstruction](separable-closure-counterexample.md)
+The [two-owner prime obstruction](separable-closure-counterexample.md)
 has exactly these monochromatic dependence closures for every K>=3.
 It also has admissible profiles and omission independence on every
 neutral restriction, and core proper neutral faces and identification
@@ -244,3 +298,7 @@ minors. Its three canonical source rows still violate a law of every
 core term. Thus the semantic definition above improves the closure
 theory and its proofs; it does not turn that necessary theory into a
 sufficient criterion for joint guard realizability.
+The [three-owner obstruction](three-owner-exchange.md) also has exact
+functional-dependence closures and passes the reciprocal shared-witness
+law, but its closures violate the stronger feedback elimination law
+obeyed by all genuine cores.

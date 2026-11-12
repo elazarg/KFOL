@@ -1,0 +1,263 @@
+\subsection{Complete-head circuits and maximal source types}
+\label{app:core-head-circuits}
+
+The following family with one owner factor per source admits a closed classification.
+It also separates three possible strengthenings of the source-guard
+description: maximal coefficients at the original observers, maximal
+occurrence types, and maximal extensions to the common carrier $D_I$.
+
+Fix distinct owners $r_1,\ldots,r_n\in I$, where $2\leq n\leq K$,
+head variables $H=\{h_1,\ldots,h_n\}$, and a disjoint finite set $A$
+of anchor variables. Choose nonempty contexts $L_i\subseteq A$, and put
+$V=H\sqcup A$ and $P_i=(H\setminus\{h_i\})\cup L_i$.
+For a valuation $w$, write $E_r(w)=\{v:w_v=\{r\}\}$ and
+$Z(w)=\bigcup_{a\in A}w_a$. Define
+\begin{equation}\label{core:eq:head-function}
+ F(w)=Z(w)\cup
+       \bigcup_{i:\,P_i\nsubseteq E_{r_i}(w)}w_{h_i}.
+\end{equation}
+Thus rule $i$ suppresses its head precisely when all its other heads
+and its context are $r_i$ singletons. Its own winner is then already
+supplied by $L_i$. The canonical coefficient at $h_i$, for observer
+$k\ne r_i$, is $[P_i\nsubseteq E_{r_i}]$; for $k=r_i$ it is $1$.
+Every anchor coefficient is $1$. In particular these coefficients
+factor by owner: $F$ is \emph{source-separable}. A \emph{pure-owner}
+coefficient is its restriction to probes whose nonneutral passive
+statuses all have one owner.
+
+\begin{theorem}[Complete-head classification]\label{core:thm:head-circuits}
+Put
+\[
+ \operatorname{bad}(w)\ \Longleftrightarrow\
+ w_a=\{r_i\}\quad\text{for every }i\text{ and }a\in L_i.
+\]
+The greatest core operation below $F$ is
+\begin{equation}\label{core:eq:head-minorant}
+ R(w)=\begin{cases}Z(w),&\operatorname{bad}(w),\\
+                    F(w),&\text{otherwise}.
+       \end{cases}
+\end{equation}
+It has the same pure-owner source coefficients and singleton profiles as
+$F$. Moreover
+\begin{equation}\label{core:eq:head-classification}
+ F\text{ is core}\quad\Longleftrightarrow\quad
+ \{r_1,\ldots,r_n\}=I\ \text{ or }\
+ L_i\cap L_j\ne\varnothing\text{ for some }i\ne j.
+\end{equation}
+\end{theorem}
+\begin{proof}
+For $p$, $a\in L_p$, and an ordered list $J$ of at most two distinct
+indices different from $p$, start at $h_p$, attach each $h_j$ in order
+using $\star_{r_j}$, and finally attach $a$ using $\star_{r_p}$.
+Take the derived union of these words and all anchor projections,
+and call it $R_0$. Each word has at most four leaves and lies below $F$.
+If rule $p$ fires, its final anchor absorbs. If a listed head's rule
+$j$ fires, every preceding head is $\{r_j\}$, so its prefix is already
+$\{r_j\}$ and absorbs that head at its attachment. Subsequent heads
+are also $\{r_j\}$; the final anchor is an unconditional source.
+A suppressed head not in the word contributes nothing.
+
+At a bad valuation every word ends in its absorbing anchor, so $R_0=Z$.
+Otherwise choose $p$ and $a\in L_p$ with $w_a\ne\{r_p\}$. Take a winner
+$k\in F(w)\setminus Z(w)$ supplied by an unsuppressed $h_i$.
+If some $b\in L_i$ is not $\{r_i\}$, the word $h_i\star_{r_i}b$
+retains $k$. Otherwise every $L_i$ input is $\{r_i\}$, and some
+other head is not $\{r_i\}$. Here $p\ne i$. If $w_{h_p}\ne\{r_i\}$,
+use $(h_p\star_{r_i}h_i)\star_{r_p}a$. If $w_{h_p}=\{r_i\}$, choose
+$j\notin\{i,p\}$ with $w_{h_j}\ne\{r_i\}$ and use
+\[
+ ((h_p\star_{r_j}h_j)\star_{r_i}h_i)\star_{r_p}a.
+\]
+Its first prefix is not $\{r_i\}$, and its final anchor is not
+$\{r_p\}$, so it retains $k$. Thus $R_0=R$.
+Overlapping contexts make bad valuations impossible. If the head owners
+exhaust $I$, a bad valuation has $Z=I$. These give the forward
+constructions in \eqref{core:eq:head-classification}.
+
+The converse and greatestness use a uniform observer invariant.
+Suppose the contexts are pairwise disjoint and $\omega$ is outside the
+head owners; it may be an old owner or a newly added observer.
+In the ambient winner set $J$ put $N=J\setminus\{\omega\}$.
+At row $u_i$ give $h_i$ the menu $J$, every other head and every
+anchor in $L_i$ the menu $\{r_i\}$, and all other anchors $N$.
+At row $q$ give all heads $J$, each $L_i$ its atom $\{r_i\}$, and
+unused anchors $N$. For any word put $U_i=t(u_i)$ and $Q=t(q)$.
+Then $U_i\in\{\{r_i\},N,J\}$, and the following hold simultaneously:
+\begin{align}
+ U_i=\{r_i\},\ U_j=\{r_j\},\ i\ne j
+ &\ \Longrightarrow\ \omega\in U_\ell
+       \text{ for some }\ell\notin\{i,j\};\tag{A}\label{core:eq:head-invariant-a}\\
+ (\forall\ell\ \omega\notin U_\ell),\ U_i=\{r_i\}
+ &\ \Longrightarrow\ Q=\{r_i\};\tag{B}\label{core:eq:head-invariant-b}\\
+ \omega\in Q&\ \Longrightarrow\ \omega\in U_i
+       \text{ for some }i.\tag{C}\label{core:eq:head-invariant-c}
+\end{align}
+Head, context-anchor, and unused-anchor projections satisfy these
+implications directly. For the induction, only a root $r_p$ can erase
+$\omega$ at $u_p$; it acts as union at every other $u_i$.
+For (A), a root $r_i$ or $r_j$ follows the child providing its own
+singleton. At any other root both premises pass to both children.
+A witness outside $p$ persists; if both children have only witness $p$,
+neither can absorb there. For (B), a root $r_i$ follows its singleton
+child, whose query singleton absorbs. At a different root $r_p$,
+erasing a child's $p$-witness requires a sibling with $U_p=\{r_p\}$
+and $U_i=\{r_i\}$. By (A) that sibling has a witness outside $i,p$,
+contrary to a negative row that already passed to both children.
+Hence all negative rows pass and (B) applies to both children.
+Finally, for (C), follow a child with $\omega$ at the query. If all
+parent rows omit $\omega$, that child's only possible witness is $p$.
+Its erasing sibling satisfies all negative rows and $U_p=\{r_p\}$;
+(B) makes the sibling's query $\{r_p\}$, erasing the query as well.
+Owners outside the head list act as union throughout.
+
+The function $F$ omits $\omega$ at every $u_i$ but contains it at $q$,
+violating (C). This proves the converse in
+\eqref{core:eq:head-classification}. If $t\leq F$ and $w$ is bad,
+take $k\notin Z(w)$. Every head owner belongs to $Z(w)$, so $k$ is an
+outside observer. Enlarge all heads to $I$ and unused anchors to
+$I\setminus\{k\}$, keeping each context at its atom. The negative
+rows omit $k$ by the bound on $t$, so (C) makes the enlarged query
+omit $k$. Monotonicity gives $k\notin t(w)$. Thus $t\leq R$.
+
+Finally, a head-source monochromatic probe cannot be bad: the nonempty
+contexts require at least two different atoms. Anchor probes retain
+their source in both functions, even when bad. Their pure-owner
+coefficients therefore agree. At bad both functions contain at least
+two anchor owners, so their singleton profiles also agree.
+\end{proof}
+
+For the remaining results suppose $n=K\geq3$ and the contexts are
+pairwise disjoint. Then $F$ is core. Its profiles are
+\begin{equation}\label{core:eq:head-profiles}
+ \Phi_{r_i}(F)(E)=[V\setminus\{h_i\}\subseteq E].
+\end{equation}
+We distinguish an occurrence's full owner factors from its contribution
+to one observer. At a marked occurrence $o$ of variable $v$ define
+\[
+ B_{o,r}(E)=\bigwedge_{
+   \substack{\text{$r$-owned ancestors of }o\\\text{with sibling }s}}
+          \neg\Phi_r(s)(E),\qquad E\subseteq V\setminus\{v\}.
+\]
+The empty conjunction is $1$. These antitone Boolean functions form
+the occurrence's \emph{full type}, ordered pointwise owner by owner;
+a type is \emph{actual} for $F$
+if it occurs in a word realizing $F$. For observer $k$, the source
+coefficient is
+\begin{equation}\label{core:eq:head-free-coefficient}
+ C_{v,k}((E_r))=
+ \bigvee_{o:\,\lambda(o)=v}\ \bigwedge_{r\ne k} B_{o,r}(E_r).
+\end{equation}
+For disjoint status sets this is the ordinary coefficient. Allowing
+the $E_r\subseteq V\setminus\{v\}$ to overlap defines its
+\emph{independent-status extension}, which can depend on the realizing
+word. Pure-owner probes bound every head type by the vector
+\begin{equation}\label{core:eq:head-max-type}
+ M_{i,r_i}(E)=[P_i\nsubseteq E],\qquad
+ M_{i,s}(E)=1\quad(s\ne r_i).
+\end{equation}
+
+\begin{theorem}[Maximal coefficients without maximal types]
+\label{core:thm:head-types}
+For this core operation $F$, no head has a greatest actual full type.
+Nevertheless one realizing word simultaneously attains the greatest
+independent-status coefficient at every source and old observer:
+anchors and own observers have coefficient $1$, and the coefficient
+at $(h_i,k)$ for $k\ne r_i$ is $[P_i\nsubseteq E_{r_i}]$.
+\end{theorem}
+\begin{proof}
+Interpret any realizing word with a fresh owner $\omega$. Singleton
+profiles depend only on atomic statuses, so pure-owner coefficients
+are unchanged. Its output consequently omits $\omega$ at each $u_i$
+in the preceding proof. At $q$ all factors in
+\eqref{core:eq:head-max-type} hold, since other heads are ambiguous.
+An occurrence of that type would supply $\omega$, contradicting (C).
+Thus $M_i$ is not actual.
+
+We exhibit two actual types joining to $M_i$. Fix $j\ne i$ and
+$a_j\in L_j$. Let $b_i$ be a fold of $P_i$ at an owner other than
+$r_i$, so $\Phi_{r_i}(b_i)(E)=[P_i\subseteq E]$.
+Start with marked $h_i\star_{r_i}b_i$. For each
+$\ell\notin\{i,j\}$ append at owner $r_\ell$ the sibling
+$h_i\star_{r_i}h_j$, and finally append at owner $r_j$ the sibling
+\[
+ (h_i\star_{r_i}h_j)\star_{r_j}a_j.
+\]
+Call the result $s_i^j$. It lies below $F$: under rule $i$ the initial
+part is $\{r_i\}$ and later stages add only that owner and anchors;
+under another rule $\ell$ its attachment absorbs, and later stages
+again add only that owner and anchors. Rule $j$ is protected by the
+final anchor. If no rule fires, $F$ is the entire input union.
+The marked type is $M_i$ except for the extra factor
+$B_{r_j}(E)=[a_j\notin E]$. Indeed each earlier foreign sibling's
+profile requires $h_i$, absent from a marked-source status set, and
+the final sibling's $r_j$ profile reduces to $[a_j\in E]$.
+
+We use two elementary preservation facts. If $s\leq F$, a marked
+type of $s$ survives unchanged in the derived union of $s$ with an
+$F$ realizer. Whenever its $r$ factor holds, a pure-$r$ probe shows
+that neither operand is an $r$ singleton. No subtree of the union
+implementation is then an $r$ singleton, so no new $r$ filter is added.
+Also, joining two $F$ realizers by any primitive owned choice preserves
+their marked types: at a probe where a marked factor holds, the sibling
+$F$ cannot be that owner's singleton. Thus finitely many types can
+be placed in one $F$ realizer.
+
+Restoration makes the displayed types actual. Two choices of distinct
+$j\ne i$ have coordinatewise join $M_i$. Since every actual type is
+bounded by $M_i$ and $M_i$ is not actual, there is no greatest one.
+For observer $k=r_j\ne r_i$, however, its extra $r_j$ factor is
+ignored in \eqref{core:eq:head-free-coefficient}, giving the full
+canonical coefficient. At observer $r_i$ the safe direct word
+$h_i\star_{r_i}a_i$, $a_i\in L_i$, has no foreign factor. Anchor
+projections supply their unconditional coefficients. Restoration and
+the second preservation fact put these finitely many types in one
+word. The pure-owner upper bounds show that its coefficients are greatest.
+\end{proof}
+
+There is also a closed greatest extension on the common carrier $D_I$.
+For $v\in D_I^V$ put $E_r(v)=\{x:v_x=a_r\}$, and define $G(v)$ as
+follows. If \eqref{core:eq:head-profiles} forces an atom, return that
+atom. Otherwise return $p$ precisely when an anchor is $p$, or some
+head $h_i$ is $p$ and $P_i\nsubseteq E_{r_i}(v)$; return $n$ in the
+remaining cases. This is the product completion prescribed by the
+pure-owner coefficients. Every extension of an $F$ realizer is bounded
+by $G$, by its occurrence factors.
+
+\begin{corollary}[Greatest common-carrier extension]
+\label{core:thm:head-completions}
+Among the operations on $D_I$ induced by words realizing $F$, the
+greatest is
+\[
+ H_F(v)=\begin{cases}
+          \displaystyle\bigvee_{a\in A}v_a,
+             &v_a=a_{r_i}\text{ for all }i,\ a\in L_i,\\
+          G(v),&\text{otherwise}.
+        \end{cases}
+\]
+The short-spine word in \cref{core:thm:head-circuits} attains $H_F$,
+whereas $G$ is not induced by an $F$ realizer.
+\end{corollary}
+\begin{proof}
+The off-bad short-spine coverage proof works for $p$ just as for an
+ordinary winner. Atomic outputs are fixed by the profiles. At bad, all
+spines absorb at their final anchor, giving the displayed join.
+If that join contains $p$, it already is greatest. Otherwise unused
+anchors are at most $n$, and distinct context atoms make the anchor
+join $n$. Enlarge all heads to $p$ and unused anchors to $n$.
+Use the observer quotient from winner sets over $I\cup\{\omega\}$
+to $D_I$: old singletons map to their atoms, other menus omitting
+$\omega$ map to $n$, and menus containing $\omega$ map to $p$.
+It preserves union and every old-owned choice. Lift the inputs
+$a_r,n,p$ to $\{r\},I,I\cup\{\omega\}$, respectively, and project
+the resulting word values through this quotient.
+At the negative rows pure-owner coefficients forbid $\omega$.
+Invariant (C) therefore forbids $p$ at the enlarged query for every
+$F$ realizer. Monotonicity gives the same bound before enlargement.
+At the query itself $G=p$, proving its nonattainment.
+\end{proof}
+
+Already three heads with disjoint singleton contexts give a core
+source-separable operation with all these distinctions. Maximal
+old-observer coefficients therefore do not imply either a greatest
+full occurrence type or attainment of the canonical common-carrier
+completion.

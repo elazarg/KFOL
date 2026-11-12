@@ -156,12 +156,19 @@ Every pure-owner Y coefficient is true: a branch with a different owner
 still supplies the source. But the displayed mixed coefficient is
 false when all Z_q={q}. Thus the target is not source-separable at Y.
 The example shows that separation at the marked source alone cannot
-justify actual-type amalgamation; the fully separable case remains open.
+justify actual-type amalgamation. The
+[complete-head circuit family](complete-head-circuits.md) also refutes
+it for a fully source-separable target: two explicit actual head types
+join to its nonactual canonical full vector. That target has no
+greatest actual type at any head, although its greatest coefficients
+at the old observers are jointly attainable.
 
 Moreover the unconditional source-X type is actual, from the explicit
 X branch of (3). The missing joined type is a weaker type, not the
 canonical greatest type. Hence this join counterexample does not
-answer the maximal-type or greatest free-completion attainment questions.
+answer those questions. The complete-head family settles maximal full
+types negatively while preserving old-observer free-product attainment;
+that latter general problem remains separate.
 
 ## Scope
 

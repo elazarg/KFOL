@@ -4,8 +4,10 @@ Mathematical research, without Lean claims. A source-separable core
 operation has a canonical candidate extension to B_I. It is flat-order
 monotone, extends every old observer face, preserves the full ternary
 outcast invariant, and bounds every term-induced B_I extension from
-above. Its being induced by a term is not established here. The claim
-does not concern independent overlapping owner flags.
+above. It need not be induced by a term, even for a genuine separable
+target; the complete-head classification below identifies both this
+failure and the strictly smaller attained maximum in that family.
+The claim does not concern independent overlapping owner flags.
 
 Fix finite owners I with K>=3, finite nonempty variables V, and a
 source-separable core operation F on its full support. Write c_r for
@@ -241,7 +243,7 @@ This missing-color bootstrap itself uses only
 monotonicity and extensivity. The two other colors are the reason for
 the K>=3 hypothesis.
 
-## What has not been proved
+## Attainment and its limits
 
 The canonical candidate is an upper bound on all term-induced B_I
 extensions and has the structural laws above. Neither these laws nor
@@ -256,7 +258,17 @@ satisfies both outcast laws, hereditary profile admissibility and
 hereditary omission, and has core proper neutral faces and identification
 minors, but its prescribed old operation and G_Q are noncore. This holds
 for every fixed K>=3.
-It does not settle attainment for an already genuine core target.
+
+For an already genuine core target, G_Q attainment is also false in
+general. The [complete-head circuit classification](complete-head-circuits.md)
+gives source-separable core operations with one head and one private
+anchor at each old owner. No realizer attains G_Q: a uniform
+observer invariant forbids its fresh output when all heads are P and
+each anchor has its own old atom. No head's canonical maximal full
+type is actual either. The same classification computes the greatest
+term-induced common-carrier extension: G_Q off that bad anchor
+coloring, and anchor union on it. Short safe spines attain this
+strictly smaller maximum.
 
 Attainment is now proved for
 [additive owner closures](additive-closure-characterization.md): a
@@ -265,11 +277,14 @@ single realizer attaining their greatest independent-flag completion.
 It is also proved for the shared-context
 [two-reciprocal-rule class](separable-closure-counterexample.md), whose
 head spines and context projections attain the canonical vectors.
-The general nonadditive attainment problem remains open.
+For complete-head circuits any context overlap restores these
+maximal vectors, including at an isolated head context.
 
 The B_I input statuses used here have disjoint old atomic sets E_r.
 Free independent-status polarization permits the same variable in
-several owner sets simultaneously. No attainability result on that
-larger domain follows from this construction. The general intrinsic
-guard characterization, and the corresponding term-attainment
-questions, remain open.
+several owner sets simultaneously. Old-observer product attainment
+is a separate question from G_Q or full-vector attainment. The
+disjoint-context counterexample actually attains its greatest product
+at all old observers, even with independent flags; its failure occurs
+at a new observer. The general intrinsic guard characterization and
+old-observer product-attainment problem remain open.

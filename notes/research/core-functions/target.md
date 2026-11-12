@@ -127,7 +127,8 @@ functional-dependence proof and implies full outcast without a saturation
 case. Hereditary spanning stability has a separate mixed-loop law.
 The resulting [canonical common-carrier extension](canonical-separable-extension.md)
 matches every old observer face, preserves the ternary outcast invariant,
-and bounds all term extensions, without a proof of its own term attainment.
+and bounds all term extensions. It need not itself be term-induced,
+even for genuine separable targets, as the complete-head family below shows.
 The [two-rule common-context theorem](separable-closure-counterexample.md)
 classifies one reciprocal capture rule at each of two distinct owners:
 the reconstruction is core exactly when their context sets intersect.
@@ -152,6 +153,29 @@ The [mixed-color global minimum](mixed-cnf-minimum.md) shows why maximal
 admissible profiles and disjoint matroid decompositions cannot describe
 all minima. The complete compatibility of arbitrary source guards remains
 the objective.
+
+The stronger [three-owner feedback law](three-owner-exchange.md) is
+necessary for arbitrary core closures, without source separation. A
+four-variable example passes pair-cut, reciprocal intersection,
+hereditary profiles and exact cofactor dependence but violates this law.
+All its proper input reductions remain core.
+
+The [complete-head circuit classification](complete-head-circuits.md)
+settles an unbounded family: with distinct head owners and nonempty
+anchor contexts, realizability holds exactly when the heads represent
+every owner or some two contexts intersect. Short safe spines give the
+greatest core minorant. Disjoint contexts with every owner represented
+are genuine separable operations with no greatest actual full head type;
+two actual types have the nonactual canonical vector as their join.
+Their canonical common-carrier product is not attained, but the
+greatest term-induced extension has a closed formula. Their greatest
+old-observer independent-flag product is attained, so this does not
+refute that separate general conjecture. A related
+[five-variable isolated-head example](isolated-head-source-linearity.md)
+has actual maximal types but no source-linear minorant attaining the
+isolated head's vector. Every realizer repeats that head. Thus
+source-linear insertion is also insufficient as a general route,
+even when maximal types exist in a genuine separable target.
 
 The [canonical column-sound clutter](canonical-sound-barrier.md) fails the
 no-trap law at every arity at least two, already on one isolated-source

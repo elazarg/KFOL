@@ -1,7 +1,8 @@
 # Two reciprocal capture rules and a prime separable obstruction
 
 Mathematical research, without Lean claims or term enumeration. Two
-reciprocal capture rules have an exact common-context criterion below.
+reciprocal capture rules have an exact common-context criterion below;
+families of such rules have an exact cross-intersection criterion.
 For every finite owner set with at least three owners, four variables
 give the same source-separable noncore operation with loopless owner
 closures, every colored-closure idempotence, admissible
@@ -137,6 +138,67 @@ so 2 survives from it. All other inputs omit 2. This proves noncoreness
 for disjoint contexts, including empty-context cases. When L=M=empty
 and U is empty, G can even have an empty value; no nonemptiness assertion
 is made in this negative case. The two-rule characterization is proved.
+
+## Families of reciprocal rules
+
+The same classification extends to arbitrarily many rules at each of
+the two owners. Let nonempty families of contexts Lcal,Mcal consist
+of subsets of U=V\{x,y}, and define
+
+    l(E)=[some L in Lcal satisfies L subseteq E];
+    m(E)=[some M in Mcal satisfies M subseteq E];
+    d_0(E)=E union ({y} if x in E and l(E) else empty);
+    d_1(E)=E union ({x} if y in E and m(E) else empty).
+
+Other closures are identities. Let G be their raw separable reconstruction.
+Then
+
+    G is core iff L intersect M is nonempty
+                   for EVERY L in Lcal, M in Mcal.     (F)
+
+For necessity, a disjoint L,M violates the reciprocal-cut law (C2):
+the two full premises capture their opposite heads, while contexts
+alone capture neither. The three-row proof above gives the same
+contradiction directly. Additional rules cannot restore a suppressed
+source at the two negative rows, and at the positive row both head
+prerequisites are non-atomic, so neither family captures a head.
+
+For sufficiency prescribe a sibling B_y on V\{y} with profiles
+
+    Phi_0(E)=[x in E and l(E)];
+    Phi_1(E)=m(E);
+    Phi_r(E)=[E=V\{y}] for all other owners r.
+
+These are normalized monotone profiles. Their rainbow common-source
+condition is precisely (F): a minimal 0-coalition is {x} union L,
+a minimal 1-coalition is M, and their intersection is L intersect M.
+The singleton-profile theorem therefore constructs B_y. Put
+
+    S_y=y choice_0 B_y.
+
+Its marked y has the exact canonical full vector: its only filter
+is NOT(x in E_0 and l(E_0)). Context sources from B_y are always
+safe. Its only other head x is safe too: if x is captured in G,
+then y={1} and m(E_1) holds, making B_y={1}; hence S_y={1} and
+no incorrect x-contribution escapes. This proves S_y<=G.
+
+Symmetrically synthesize B_x on V\{x} with owner-1 profile
+[y in E and m(E)], owner-0 profile l(E), and unanimity at other
+owners. Then S_x=x choice_1 B_x is a minorant with x's canonical
+vector. Consequently
+
+    G=UNION_(i in U) x_i union S_x union S_y.
+
+Every context is nonempty under (F), so the context union is present.
+Marked-union restoration and coextension give simultaneous greatest
+full types, the greatest independent-flag product completion, and
+the common-carrier maximum exactly as in the single-rule case.
+
+Thus pairwise cross-intersection completely solves this two-head
+family, even with unbounded numbers of minimal captures. It does not
+extend to arbitrary sets of heads: the
+[three-owner obstruction](three-owner-exchange.md) passes all reciprocal
+pair tests and fails a higher feedback-elimination law.
 
 ## The greatest core minorant for nonempty contexts
 

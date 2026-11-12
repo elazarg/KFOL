@@ -283,5 +283,8 @@ satisfies (P), (L), hereditary profile admissibility and hereditary
 omission independence, and every proper neutral face and identification
 minor is core, but
 it violates (C2) on the heads B,C with contexts {A},{W}.
-Thus (C2) is stronger than those earlier tests. No sufficiency result
-for the combined general closure laws is asserted.
+Thus (C2) is stronger than those earlier tests. It remains insufficient
+with the other laws: the [three-owner example](three-owner-exchange.md)
+passes all of them, including functional dependence and core proper
+input reductions. A stronger feedback-elimination law on canonical
+core closures detects it without assuming source separation.

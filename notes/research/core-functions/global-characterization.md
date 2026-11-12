@@ -375,8 +375,8 @@ is monotone, has all prescribed observer faces, and bounds every
 term-induced extension. It preserves the full ternary outcast invariant;
 for arbitrary admissible colored closures, that preservation is equivalent
 to full Q-outcast and preservation of the spanning owners under blocked
-restorations. Term attainment of the canonical extension for a genuine
-core target remains unresolved. Sufficiency for arbitrary closure data
+restorations. Canonical attainment can fail even for a genuine
+core target, as the complete-head family below shows. Sufficiency for arbitrary closure data
 is refuted by the
 [prime four-variable counterexample](separable-closure-counterexample.md),
 uniformly for every K>=3, even with hereditary profile/omission tests
@@ -406,11 +406,31 @@ coalition analogues, but those analogues and hereditary common-source
 admissibility still miss the prime obstruction. The stronger reciprocal
 cut (C2), derived from the three-row law for arbitrary source-separable
 core targets, detects it: disjoint-context reciprocal captures cannot
-create two new free heads. Its sufficiency with the other general laws
-is unproved. A
+create two new free heads. It is still insufficient: the
+[three-owner feedback obstruction](three-owner-exchange.md) passes
+(P),(C2), hereditary common-source and functional dependence, including
+all proper input reductions, yet violates a stronger closure-elimination
+law. That law uses a direct cover condition on colored captured blocks
+and two elementary singleton-profile bridges. A
 [naive lift to independent coalition nodes](coalition-lift-obstruction.md)
 does not repair this: a genuine core CNF already yields a mixed SCC
 with disjoint labels, and the coherence map fails to commute with gates.
+
+The [complete-head circuit classification](complete-head-circuits.md)
+gives an exact unbounded family. Each head has a distinct owner and
+is captured by that owner when every other head and its nonempty
+context are that owner's atoms. Realizability holds exactly when
+the heads exhaust the owners or some two contexts overlap. Short
+spines give a closed greatest core minorant and the sharp behavior
+under owner extension. When every owner has a head and contexts are
+disjoint, the ordinary operation is genuine and source-separable,
+but no canonical maximal head full type is actual. Two actual
+types have that nonactual vector as their join. This refutes maximal
+full-type attainment inside the genuine separable class. A context
+overlap restores all maximal head vectors. In the disjoint case
+the greatest old-observer independent-flag product is still attained;
+the canonical common-carrier product is not, although its smaller
+greatest term-induced extension is attained and has a closed formula.
 
 ## Full types at greatest profile completions
 

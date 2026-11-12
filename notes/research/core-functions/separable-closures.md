@@ -355,3 +355,11 @@ The constructive two-owner class
 one loopless closure coupled to its associated spanning test. The
 remaining question is a closed compatibility law for general colored
 closures, and beyond them for nonseparable mixed guards.
+
+The [three-owner feedback law](three-owner-exchange.md) adds a stronger
+necessary interaction between closures. Even reciprocal shared-witness
+tests do not suffice. The [complete-head family](complete-head-circuits.md)
+has an exact realizability criterion and greatest core minorant. It
+also gives genuine separable operations whose maximal head full types
+are nonactual, while their greatest old-observer free coefficients
+are attained. These results leave general mixed-guard compatibility open.
