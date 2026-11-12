@@ -24,6 +24,15 @@ records the remaining direct-guard target and the research branches, including
 [canonical essential extensions](essential-extensions.md) and
 [pointed obstruction normalization](pointed-obstructions.md).
 
+The [coherent-cube theorem](coherent-cube-safety.md) gives a closed positive
+regime: pairwise-intersecting marked cubes admit a common safe formula exactly
+when every marked coordinate is Boolean-inessential. An explicit cofactor
+normal form realizes the canonical essential extension on all cubes through
+any chosen Boolean anchor. Two disjoint marked cubes already obstruct this
+amalgamation; a [four-row Horn invariant](face-gluing/noncore.md) gives the
+short proof and replaces the older seven-row certificate. These results are
+proved mathematically in the notes and are not yet Lean claims.
+
 Local tests do not suffice even within a fixed singleton-profile fiber.
 Pairwise, three-point and four-point interpolation obstructions are proved
 uniformly for every role type containing three distinct owners. The four-point

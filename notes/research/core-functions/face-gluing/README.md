@@ -61,7 +61,7 @@ checking all proper iterated residuals does not repair the criterion.
 Observe owner `a`: menus containing `a` map to `P`, the atoms `{b},{c}` map
 to `b,c`, and `N` maps to `N`. The resulting operation is the canonical
 essential-source extension `D_φ`. The checker verifies this identity on all
-full inputs. The seven-row argument below proves that **F is not core**.
+full inputs. The four-row argument below proves that **F is not core**.
 
 Run the independent standard-library checker:
 
@@ -83,17 +83,17 @@ monotonicity edges pass. Thus the failure is compatibility between the jointly
 realizable atomic boundary and jointly realizable neutral faces, rather than
 missing source additivity or separate-owner amalgamation on the atomic rows.
 
-The obstruction uses only **seven rows**: E=(c,c,b,b), followed by
+The obstruction uses only **four rows**:
 
 ```
-(N,c,P,b), (c,N,b,P), (N,P,c,b),
-(P,N,b,c), (N,b,c,P), (b,N,P,c).
+E1=(c,c,b,b), E0=(b,b,c,c), R=(N,P,c,b), S=(P,N,b,c).
 ```
 
-For any full bichain term, absence of P at the last six rows forces all seven
-outputs to be equal in {b,c,N}. F gives c at E and N at the other six.
-The analytic proof and row matrix are in [noncore.md](noncore.md).
-[seven-relation.json](seven-relation.json) independently certifies the pure
-part using 231 states: the checker verifies the variable columns, both
-lattice-operation closures, and that only the two constant endpoint tuples
-omit P on the last six rows. Observer-union expansion gives the full law.
+Every full bichain term with outputs c at E1 and b at E0 has output P at
+R or S. F instead has outputs (c,b,N,N). The [analytic proof](noncore.md)
+uses a four-ary relation defined by three simple implication clauses,
+closed under all three operations. It requires no generated-state certificate
+or enumeration. Each negative row separately has a pure Boolean-P4 witness,
+but the two requirements cannot be satisfied together. The
+[coherent-cube theorem](../coherent-cube-safety.md) shows why a single cube,
+or any family with a common Boolean resolution, cannot cause this failure.

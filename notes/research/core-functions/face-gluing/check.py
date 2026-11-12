@@ -164,48 +164,37 @@ def main():
     assert all(F(v) == term(H, v) for v in product((B, C, A), repeat=4))
     assert sum(F(v) != term(H, v) for v in V4) == 8
     assert all(view(F(v)) == extension(tuple(map(view, v))) for v in V4)
-    # Finite Boolean facts used by the analytic ownership proof, not a clone search.
-    ownership = [
-        (0b0101, 0b0011, 2, (3, 1, 2, 0)),
-        (0b1010, 0b0011, 3, (1, 3, 0, 2)),
-        (0b0011, 0b0101, 1, (3, 2, 1, 0)),
-        (0b0011, 0b1010, 0, (2, 3, 0, 1)),
-    ]
-    for first, second, marked, cube in ownership:
-        assert not (second >> marked & 1)
-        assert not (first & ~(second | (1 << marked)))
-        for endpoint in (second, second | (1 << marked)):
-            assert all(x >= 2 or bool(endpoint >> j & 1) == bool(x)
-                       for j, x in enumerate(cube))
-        assert extension(cube) == 3
-    for bits in product((False, True), repeat=4):
-        assert (not phi([not x for x in bits])) == phi((bits[0], bits[1], bits[3], bits[2]))
-    seven = json.loads(Path(__file__).with_name("seven-relation.json").read_text())
-    rows = seven["rows"]
-    assert rows == [[1, 1, 0, 0], [3, 1, 2, 0], [1, 3, 0, 2],
-                    [3, 2, 1, 0], [2, 3, 0, 1], [3, 0, 1, 2], [0, 3, 2, 1]]
-    reps = (B, C, ALL, N)
-    assert [view(F(tuple(reps[x] for x in row))) for row in rows] == [1] + [3] * 6
-    # These are all 168 monotone Boolean functions, not an enumeration of
-    # term functions. Inessential marked sources give the five-function list.
-    monotone = [truth for truth in range(1 << 16) if all(
-        not (truth >> x & 1) or (truth >> (x | (1 << j)) & 1)
-        for x in range(16) for j in range(4))]
-    assert len(monotone) == 168
-    def essential(truth, row, marked):
-        lo = sum((x == 1) << j for j, x in enumerate(row))
-        hi = sum((x != 0) << j for j, x in enumerate(row))
-        return any(not (x >> marked & 1)
-                   and ((truth >> x & 1) != (truth >> (x | (1 << marked)) & 1))
-                   for x in range(16) if x & lo == lo and not (x & ~hi))
-    matching = [truth for truth in monotone if all(
-        not essential(truth, row, row.index(2)) for row in rows[1:])]
-    p4_truth = sum(phi([(x >> j) & 1 for j in range(4)]) << x for x in range(16))
-    assert set(matching) == {0, (1 << 16) - 1, 1 << 15, (1 << 16) - 2, p4_truth}
-    lower, upper = (1, 2, 4, 8, 9, 12, 6), (3, 5, 10, 7, 13, 11, 14)
-    for truth in matching:
-        assert len({truth >> x & 1 for x in lower}) == 1
-        assert len({truth >> x & 1 for x in upper}) == 1
+    # Four-row Horn invariant, with no term-clone enumeration.
+    rows = [(1, 1, 0, 0), (0, 0, 1, 1),
+            (3, 2, 1, 0), (2, 3, 0, 1)]
+    reps = (B, C, A, N)
+    assert [view(F(tuple(reps[x] for x in row))) for row in rows] == [1, 0, 3, 3]
+
+    def invariant(t):
+        x, y, z, w = t
+        return ((x != 1 or (z != 0 and w != 0))
+                and (y != 0 or (z != 1 and w != 1))
+                and (x != 1 or y != 0 or z == 2 or w == 2))
+
+    states = [t for t in product(range(4), repeat=4) if invariant(t)]
+    assert all(invariant(tuple(row[j] for row in rows)) for j in range(4))
+    assert not invariant((1, 0, 3, 3))
+    irank, srank = (0, 3, 1, 2), (0, 3, 2, 1)
+    meet = [[x if irank[x] <= irank[y] else y for y in range(4)] for x in range(4)]
+    join = [[x if srank[x] >= srank[y] else y for y in range(4)] for x in range(4)]
+    union = [[view(reps[x] | reps[y]) for y in range(4)] for x in range(4)]
+    for gate in (meet, join, union):
+        for x in states:
+            for y in states:
+                assert invariant(tuple(gate[a][b] for a, b in zip(x, y)))
+    # Each negative row separately has a pure formula with the same Boolean function.
+    t_r = s(1, s(0, 0, s(1, 1, 2)), s(0, 1, 3))
+    t_s = s(1, s(0, s(1, 0, 3), 1), s(0, 0, 2))
+    for witness in (t_r, t_s):
+        for bits in product((0, 1), repeat=4):
+            assert view(term(witness, tuple(reps[x] for x in bits))) == phi(bits)
+    assert [view(term(t_r, tuple(reps[x] for x in row))) for row in rows[2:]] == [3, 2]
+    assert [view(term(t_s, tuple(reps[x] for x in row))) for row in rows[2:]] == [2, 3]
     print("81 joint atomic rows, eight modified inputs, and full P4 scalar quotient: PASS")
 
     for j, witness in enumerate(G):
@@ -267,20 +256,7 @@ def main():
                     assert F(w) == out
                     changes += 1
     print(f"Full omission independence ({changes} elementary replacements): PASS")
-    states = {tuple(x) for x in seven["states"]}
-    target = (1,) + (3,) * 6
-    assert len(rows) == 7 and len(states) == 231
-    assert all(tuple(row[j] for row in rows) in states for j in range(4))
-    assert {x for x in states if all(y != 2 for y in x[1:])} == {(0,) * 7, (1,) * 7}
-    assert target not in states
-    irank, srank = (0, 3, 1, 2), (0, 3, 2, 1)
-    meet = [[x if irank[x] <= irank[y] else y for y in range(4)] for x in range(4)]
-    join = [[x if srank[x] >= srank[y] else y for y in range(4)] for x in range(4)]
-    for gate in (meet, join):
-        for x in states:
-            for y in states:
-                assert tuple(gate[a][b] for a, b in zip(x, y)) in states
-    print("168-function Boolean classification and 231-state seven-row pure certificate: PASS")
+    print("Four-row Horn invariant closed under all three operations; separate witnesses: PASS")
     print("All finite checks passed. Global noncore proof: noncore.md.")
 
 

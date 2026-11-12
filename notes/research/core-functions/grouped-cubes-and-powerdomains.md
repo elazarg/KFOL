@@ -70,7 +70,7 @@ pure formula for g. Each marked edge is a constant cube for g, so stable
 endpoint semantics forces b or c there, independently of the formula.
 Consequently L_E(Z) is the entire initial upper-set lattice.
 
-For the six grouped rows in [the gluing obstruction](face-gluing/noncore.md),
+For the two disjoint marked cubes in [the gluing obstruction](face-gluing/noncore.md),
 g=AB OR AC OR BD obeys every initial inessentiality equation but has no safe
 pure realization. Thus L_Z is strictly smaller than L_E(Z).
 
