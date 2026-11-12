@@ -312,3 +312,10 @@ neutral face of the crown obstruction is nevertheless just input union.
 The [four-variable gluing counterexample](face-gluing/README.md) shows that
 jointly realizable atomic data and all core neutral faces can still fail to
 have one realization; it has a written proof and standalone finite checks.
+
+[Grouped cubes and powerdomains](grouped-cubes-and-powerdomains.md) gives an
+exact scalar implication-preorder recurrence and proves why its initial edge
+data, even on all cofactors, cannot suffice. It also identifies the observer
+algebra as a Smyth powerdomain and proves that two natural logical-relation
+transfers still miss the noncore P4 operation. These are mathematical research
+arguments, not new Lean claims or a solution of the full characterization.

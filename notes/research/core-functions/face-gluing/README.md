@@ -58,12 +58,10 @@ witnesses for all six two-coordinate residuals. Every three-coordinate
 residual is the remaining projection; deleting all four gives zero. Hence
 checking all proper iterated residuals does not repair the criterion.
 
-Yet **F is not a core operation**. Observe owner `a`: menus containing `a` map
-to `P`, the atoms `{b},{c}` map to `b,c`, and `N` maps to `N`. The resulting
-operation is exactly the canonical essential-source extension `D_φ`. Its
-nonrealizability follows from the four-row ownership argument in
-[noncore.md](noncore.md), including observer union. This implication uses no
-clone enumeration or search bound.
+Observe owner `a`: menus containing `a` map to `P`, the atoms `{b},{c}` map
+to `b,c`, and `N` maps to `N`. The resulting operation is the canonical
+essential-source extension `D_φ`. The checker verifies this identity on all
+full inputs. The seven-row argument below proves that **F is not core**.
 
 Run the independent standard-library checker:
 
@@ -85,15 +83,17 @@ monotonicity edges pass. Thus the failure is compatibility between the jointly
 realizable atomic boundary and jointly realizable neutral faces, rather than
 missing source additivity or separate-owner amalgamation on the atomic rows.
 
-The analytic proof can be restricted to **12 probes**: six Boolean
-endpoint bounds and six forbidden-P rows in
-[trace-obstruction.json](trace-obstruction.json). The join and meet ownership
-arguments preserve safety on this finite set while descending to a smaller
-formula. This is a possible starting point for a future kernel proof; no
-claim that the present research certificate is Lean-checked is intended.
+The obstruction uses only **seven rows**: E=(c,c,b,b), followed by
 
-[pure-relation.json](pure-relation.json) is an additional 603-state certificate
-for the twelve probes. The checker verifies that it contains all variable
-columns, is closed under both bichain lattice operations, and excludes the
-target. Its use for full terms is explained in [noncore.md](noncore.md); it
-does not rely on clone exhaustiveness.
+```
+(N,c,P,b), (c,N,b,P), (N,P,c,b),
+(P,N,b,c), (N,b,c,P), (b,N,P,c).
+```
+
+For any full bichain term, absence of P at the last six rows forces all seven
+outputs to be equal in {b,c,N}. F gives c at E and N at the other six.
+The analytic proof and row matrix are in [noncore.md](noncore.md).
+[seven-relation.json](seven-relation.json) independently certifies the pure
+part using 231 states: the checker verifies the variable columns, both
+lattice-operation closures, and that only the two constant endpoint tuples
+omit P on the last six rows. Observer-union expansion gives the full law.

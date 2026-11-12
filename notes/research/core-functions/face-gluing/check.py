@@ -180,29 +180,32 @@ def main():
         assert extension(cube) == 3
     for bits in product((False, True), repeat=4):
         assert (not phi([not x for x in bits])) == phi((bits[0], bits[1], bits[3], bits[2]))
-    trace = json.loads(Path(__file__).with_name("trace-obstruction.json").read_text())
+    seven = json.loads(Path(__file__).with_name("seven-relation.json").read_text())
+    rows = seven["rows"]
+    assert rows == [[1, 1, 0, 0], [3, 1, 2, 0], [1, 3, 0, 2],
+                    [3, 2, 1, 0], [2, 3, 0, 1], [3, 0, 1, 2], [0, 3, 2, 1]]
     reps = (B, C, ALL, N)
-    assert len(trace["endpoint_bounds"]) == 6
-    assert len(trace["forbidden_P_rows"]) == 6
-    for row in trace["endpoint_bounds"]:
-        assert phi(row["input"]) == bool(row["output"])
-        assert F(tuple(reps[x] for x in row["input"])) == reps[row["output"]]
-    # All 168 monotone four-variable Boolean functions are accounted for.
-    # The six endpoint bounds uniquely force the P4 Boolean function.
-    monotone = []
-    for truth in range(1 << 16):
-        if all(not (truth >> x & 1) or (truth >> (x | (1 << j)) & 1)
-               for x in range(16) for j in range(4)):
-            monotone.append(truth)
+    assert [view(F(tuple(reps[x] for x in row))) for row in rows] == [1] + [3] * 6
+    # These are all 168 monotone Boolean functions, not an enumeration of
+    # term functions. Inessential marked sources give the five-function list.
+    monotone = [truth for truth in range(1 << 16) if all(
+        not (truth >> x & 1) or (truth >> (x | (1 << j)) & 1)
+        for x in range(16) for j in range(4))]
     assert len(monotone) == 168
+    def essential(truth, row, marked):
+        lo = sum((x == 1) << j for j, x in enumerate(row))
+        hi = sum((x != 0) << j for j, x in enumerate(row))
+        return any(not (x >> marked & 1)
+                   and ((truth >> x & 1) != (truth >> (x | (1 << marked)) & 1))
+                   for x in range(16) if x & lo == lo and not (x & ~hi))
     matching = [truth for truth in monotone if all(
-        bool(truth >> sum(x << j for j, x in enumerate(row["input"])) & 1)
-        == bool(row["output"]) for row in trace["endpoint_bounds"])]
+        not essential(truth, row, row.index(2)) for row in rows[1:])]
     p4_truth = sum(phi([(x >> j) & 1 for j in range(4)]) << x for x in range(16))
-    assert matching == [p4_truth]
-    for row in trace["forbidden_P_rows"]:
-        assert extension(tuple(row)) == 3
-        assert F(tuple(reps[x] for x in row)) == N
+    assert set(matching) == {0, (1 << 16) - 1, 1 << 15, (1 << 16) - 2, p4_truth}
+    lower, upper = (1, 2, 4, 8, 9, 12, 6), (3, 5, 10, 7, 13, 11, 14)
+    for truth in matching:
+        assert len({truth >> x & 1 for x in lower}) == 1
+        assert len({truth >> x & 1 for x in upper}) == 1
     print("81 joint atomic rows, eight modified inputs, and full P4 scalar quotient: PASS")
 
     for j, witness in enumerate(G):
@@ -264,14 +267,12 @@ def main():
                     assert F(w) == out
                     changes += 1
     print(f"Full omission independence ({changes} elementary replacements): PASS")
-    relation = json.loads(Path(__file__).with_name("pure-relation.json").read_text())
-    rows = relation["rows"]
-    states = {tuple(x) for x in relation["states"]}
-    target = tuple(relation["target"])
-    assert len(rows) == 12 and len(states) == 603 and target not in states
+    states = {tuple(x) for x in seven["states"]}
+    target = (1,) + (3,) * 6
+    assert len(rows) == 7 and len(states) == 231
     assert all(tuple(row[j] for row in rows) in states for j in range(4))
-    assert all(view(F(tuple((B, C, ALL, N)[x] for x in row))) == y
-               for row, y in zip(rows, target))
+    assert {x for x in states if all(y != 2 for y in x[1:])} == {(0,) * 7, (1,) * 7}
+    assert target not in states
     irank, srank = (0, 3, 1, 2), (0, 3, 2, 1)
     meet = [[x if irank[x] <= irank[y] else y for y in range(4)] for x in range(4)]
     join = [[x if srank[x] >= srank[y] else y for y in range(4)] for x in range(4)]
@@ -279,7 +280,7 @@ def main():
         for x in states:
             for y in states:
                 assert tuple(gate[a][b] for a, b in zip(x, y)) in states
-    print("603-state pure relation: columns, both closures, excluded twelve-probe target: PASS")
+    print("168-function Boolean classification and 231-state seven-row pure certificate: PASS")
     print("All finite checks passed. Global noncore proof: noncore.md.")
 
 
