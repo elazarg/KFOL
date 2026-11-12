@@ -26,6 +26,13 @@ library results from research arguments that have not been formalized.
   `Core/ProfilePersistence` shows why constraints on separate owner families
   do not suffice, even for one output bound. See [profile-bounds.md](profile-bounds.md).
 
+- `Core/ProfileBounds`: a complete direct criterion for prescribed full
+  profile tables under one upper winner bound; it specializes to ordinary
+  admissibility when the bound is unrestricted.
+- `Core/Staircase`: omission independence and arbitrarily large atomic
+  upper-bound obstructions whose every proper subfamily has a projection
+  witness. This supersedes finite row-Helly experiments.
+
 The bichain is the algebra in Harding, Walker and Walker, *Type-2 Fuzzy Sets
 and Bichains* (2013), Definition 5 and Figure 1. Its older normal-form results
 for identities do not specify which formal normal forms arise from terms;

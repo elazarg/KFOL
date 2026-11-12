@@ -194,8 +194,12 @@ invariant relations and give a universal obstruction criterion for guard tables.
 This complete infinite relation basis still quantifies over auxiliary clutters.
 Closed profile relations now have a restricted Horn presentation. One output
 bound with rainbow positive profile requirements has an exact closed criterion
-and projection/two-leaf witnesses, but even one bound can couple owner profiles
-that are separately realizable. These results are in `Core/ProfileRelations`,
-`Core/RainbowPersistence` and `Core/ProfilePersistence`.
+and projection/two-leaf witnesses. `Core/ProfileBounds` now characterizes
+complete prescribed profile tables under one bound by explicit coalition
+preorders and rainbow tests, recovering the original admissibility conditions
+when the bound is unrestricted. Even one bound can couple owner profiles
+that are separately realizable. Omission independence and the uniform atomic
+staircase in `Core/Staircase` show that upper bounds alone have no fixed row
+Helly number. These results leave compatibility across many bounds unresolved.
 A short condition directly on the guards remains the research target. See
 [the precise target and results](research/core-functions/target.md).

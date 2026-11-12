@@ -265,6 +265,10 @@ import all KFOL.Core.Native
 import all KFOL.Core.NativeTheory
 import all KFOL.Core.NonfiniteBasis
 import all KFOL.Core.ProfileRelations
+import all KFOL.Core.ProfileBounds
+import all KFOL.Definitions.ProfileBounds
+import all KFOL.Core.Staircase
+import all KFOL.Definitions.CoreStaircase
 import all KFOL.Core.RainbowPersistence
 import all KFOL.Core.ProfilePersistence
 import all KFOL.Definitions.ProfileRelations

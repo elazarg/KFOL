@@ -296,3 +296,12 @@ These are research certificates and arguments, rather than public Lean claims.
 [Profile relations and one bound](profile-bounds.md) gives a restricted Horn
 classification, a closed criterion with projection/two-leaf witnesses, and a
 four-variable counterexample to ownerwise factorization under one bound.
+
+[Negative budgets](negative-budgets.md) proves omission independence and an
+atomic staircase giving arbitrarily large minimal infeasible families of
+upper bounds. The closed full-profile one-bound theorem is now in
+`Core/ProfileBounds`.
+
+[Free-polarization obstructions](free-polarization/free-polarization-extrema.md)
+record why canonical prime occurrence boxes and canonical extremal free
+completions do not directly eliminate the colored occurrence graph.

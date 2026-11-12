@@ -18,11 +18,14 @@ their greatest completions are characterized (\cref{app:core-profiles});
 relations of profile bits have presentations by same-owner implications
 and rainbow conflicts (\cref{core:thm:profile-relations}).
 One output bound and rainbow positive profile demands have projection or
-two-leaf witnesses (\cref{core:thm:one-bound-profiles}), although such a
+two-leaf witnesses (\cref{core:thm:one-bound-profiles}). Complete profile
+tables under one bound have a closed criterion
+(\cref{core:thm:bounded-profiles}), although such a
 bound can couple separately realizable owner profiles
 (\cref{core:cor:profile-bound}).
 Prime source-guard normal forms describe full values
-(\cref{app:core-source-guards}). Their joint realizability has a recursive
+(\cref{app:core-source-guards}), with simultaneous independence of inputs
+containing an omitted winner (\cref{core:prop:omission}). Their joint realizability has a recursive
 recognition criterion using atomic challenges and strict row deletion
 (\cref{core:cor:guard-peeling}), and a colored-graph representation
 (\cref{app:core-colored-graphs}). A closed reachability test recognizes
@@ -33,7 +36,9 @@ colored-hypergraph cut conditions specify a complete infinite relational
 basis (\cref{core:thm:hypergraph-basis}); at every fixed $K\geq3$, no
 finite family of invariant relations determines the core clone
 (\cref{core:thm:not-finitely-related}). The locality threshold can be
-exponential in arity (\cref{core:thm:exponential-locality}). Some local tests do not even
+exponential in arity (\cref{core:thm:exponential-locality}); even upper-bound
+feasibility has arbitrarily large irredundant row obstructions
+(\cref{core:thm:negative-budgets}). Some local tests do not even
 leave a pointwise core minorant (\cref{app:core-pairwise}), and failure
 can also occur between core bounds with the same singleton outputs
 (\cref{core:thm:five-local-profile}). Unary polynomials are classified
@@ -869,6 +874,68 @@ $x_j\star_s x_\ell$ satisfies every requested profile and has value
 $\{s\}\subseteq U$ at $w$.
 \end{proof}
 
+There is a corresponding closed test for an entire prescribed profile
+family under one bound. Fix $w$ and $U$, and put
+$P_U(w)=\{j:w_j\subseteq U\}$. For coalitions $A,B\subseteq V$, define
+\begin{equation}\label{core:eq:profile-pair-safe}
+\begin{aligned}
+ \operatorname{PairSafe}_r(A,B)\quad\Longleftrightarrow\quad
+ & (A\setminus B)\cap P_U(w)\ne\varnothing\\
+ {}\lor{}&\bigl(r\in U,\ A\setminus B\ne\varnothing,
+                 \ E_r(w)\setminus B\ne\varnothing\bigr)\\
+ {}\lor{}&\bigl(A\setminus B\ne\varnothing,\
+       \exists s\in U\setminus\{r\}: A\cap E_s(w)\ne\varnothing\bigr).
+\end{aligned}
+\end{equation}
+Write $A\preceq_r^{w,U}B$ when this test fails. This is the implication
+preorder of owner-$r$ profiles among terms respecting the bound: a positive
+profile on $A$ forces a positive profile on $B$ exactly when no bounded
+term separates them.
+
+\begin{theorem}[Complete profiles under one bound]\label{core:thm:bounded-profiles}
+For finite $V$ and $K\geq3$, prescribe arbitrary functions
+$\phi_r:2^V\to\{0,1\}$. There is a core term with these exact profiles
+and value contained in $U$ at $w$ if and only if:
+\begin{enumerate}
+\item $\phi_r(V)=1$ for every owner $r$;
+\item whenever $\phi_r(A)=1$ and $\phi_r(B)=0$,
+  $\operatorname{PairSafe}_r(A,B)$ holds;
+\item for every family of winning coalitions $A_r$ for all owners, put
+  $C=\bigcap_r A_r$. Then $C\ne\varnothing$ and either
+  $w_j\subseteq U$ for some $j\in C$, or
+  $E_s(w)\cap\bigcap_{r\ne s}A_r\ne\varnothing$ for some $s\in U$.
+\end{enumerate}
+\end{theorem}
+\begin{proof}
+First, \eqref{core:eq:profile-pair-safe} is exactly the feasibility of
+$\Phi_r(A)=1$, $\Phi_r(B)=0$ under the bound. A projection gives its first
+alternative. Otherwise, at a nonabsorbing root both children respect the
+bound, and one child retains the positive and negative bits: the owner's
+gate is OR and every other gate is AND. At an absorbing root $s$, profile
+monotonicity gives $A\setminus B\ne\varnothing$. If $s=r$, the absorbing
+child's negative bit forces $E_r(w)\setminus B\ne\varnothing$. If
+$s\ne r$, its positive bit and its $s$-singleton value give
+$A\cap E_s(w)\ne\varnothing$ by the common-source property. Conversely,
+the last two alternatives have witnesses $x_j\star_s x_\ell$, choosing
+$\ell\in A\setminus B$ and the indicated absorbing input $j$.
+
+Now take the relation of complete profile tables of all terms respecting
+the bound. It is closed under the mixed owner gates. By
+\cref{core:thm:profile-relations}, its valid forced bits, same-owner
+implications and rainbow conflicts determine it. Clause~(2) respects every
+valid same-owner implication by the pair feasibility test. Clause~(1)
+also makes it respect every forced bit, by pairing that bit with its
+owner's top coalition. Clause~(3) respects every rainbow conflict by
+\cref{core:thm:one-bound-profiles}; a partial owner selection extends to
+all owners by adding their top coalitions. These conditions therefore
+place the prescribed table in the relation. Necessity follows from a
+realizing term.
+\end{proof}
+
+For $U=I$, the pair test reduces to $A\nsubseteq B$, and the rainbow test
+reduces to $C\ne\varnothing$. Thus this theorem specializes exactly to
+the singleton-profile classification in \cref{core:thm:profiles}.
+
 This criterion couples owners even when their coalitions have a common
 variable. The following example rules out obtaining bounded profile
 families merely by imposing separate restrictions on each owner's
@@ -980,6 +1047,22 @@ The parent $C$-value is consequently the union and retains $b$.
 \end{proof}
 
 \subsection{Prime source-guard normal forms}\label{app:core-source-guards}
+
+An omitted winner makes all inputs containing it irrelevant, even to the
+other possible winners.
+
+\begin{proposition}[Omission independence]\label{core:prop:omission}
+Let $t$ be a core term and $a\notin t(v)$. If $w_j=v_j$ whenever
+$a\notin v_j$, then $t(w)=t(v)$. Thus every input containing an omitted
+winner may be replaced arbitrarily and simultaneously.
+\end{proposition}
+\begin{proof}
+Induct on $t$. A variable is unchanged by hypothesis. At a root owned by
+$r$, suppose a child has value $\{r\}$ at $v$. The parent has the same
+value, so that child omits $a$. By induction it still has value $\{r\}$
+at $w$, and the parent remains $\{r\}$. Otherwise the parent is the
+union of its children. Both omit $a$, so both are unchanged by induction.
+\end{proof}
 
 Fix a potential winner $k$. Whether $k\in t(S)$ depends only on $k$'s
 views of the inputs (\cref{view:thm:view}): which inputs contain $k$,
@@ -2035,6 +2118,34 @@ and \cref{gen:thm:core} excludes full-language realizations as well.
 
 \subsection{Recognition by repeated singleton tests}
 \label{app:core-peeling}
+
+Even upper bounds without positive requests can require arbitrarily many
+rows to detect infeasibility.
+
+\begin{theorem}[No bounded row test for upper bounds]\label{core:thm:negative-budgets}
+For every $K\geq3$ and $n\geq1$, there are $n$ upper bounds at atomic
+valuations of $n$ variables such that every proper subfamily has a
+projection witness, but no core term satisfies the whole family.
+All bounds exclude the same single owner.
+\end{theorem}
+\begin{proof}
+Choose distinct owners $a,b,c$ and index rows and variables by
+$0,\ldots,n-1$. Use the staircase rows
+\[
+ v^i_j=\begin{cases}
+ \{c\},&j<i,\\
+ \{a\},&j=i,\\
+ \{b\},&j>i,
+ \end{cases}
+ \qquad t(v^i)\subseteq I\setminus\{a\}.
+\]
+If a term omitted $a$ on every row, \cref{core:prop:omission} would
+identify its values at both endpoints of each staircase step: replace
+the sole $a$ input first by $b$ and then by $c$. These equalities identify
+the constant-$b$ and constant-$c$ evaluations, contradicting idempotence.
+Deleting row $i$ admits the projection $x_i$, which contains $a$ at that
+row alone.
+\end{proof}
 
 Joint realizability of the canonical guards is determined by atomic
 challenges on the fixed source probes. The test below is a finite recursion

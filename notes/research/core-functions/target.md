@@ -118,3 +118,23 @@ four-variable example shows that even one bound creates new conflicts between
 owners: an admissible full profile tuple can have a safe witness for each
 owner separately and no common safe witness. See [profile-bounds.md](profile-bounds.md).
 These results do not settle the remaining direct guard characterization.
+
+## Complete bounded profiles and arbitrary row obstructions
+
+`Report.core_bounded_profiles` gives a short closed criterion for all exact
+singleton-profile tables together with one upper winner bound. The right
+side has only top bits, a direct same-owner separation test and a direct
+full-owner rainbow test. For an unrestricted bound it is exactly the old
+admissibility criterion. This does not characterize simultaneous full-value
+source guards; see [profile-bounds.md](profile-bounds.md).
+
+`Report.core_omission_independence` shows that all inputs containing an
+omitted winner may be changed arbitrarily without changing any output.
+`Report.core_negative_budget_obstructions` uses this to construct atomic
+staircases with n constraints, no joint core witness, and a projection witness
+for every proper subfamily. Thus even upper bounds alone have no fixed row
+Helly number. See [negative-budgets.md](negative-budgets.md).
+
+The canonical-prime and extremal-polarization shortcuts are also refuted:
+[free-polarization](free-polarization/free-polarization-extrema.md) preserves
+small standalone certificates. The full direct characterization remains active.

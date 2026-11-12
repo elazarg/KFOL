@@ -40,6 +40,32 @@ necessity, a singleton root gives a common-source witness with E_s; an
 ambiguous root acts as union, and one child retains every rainbow demand.
 This proof uses no bound on the number of owners or variables.
 
+## Complete prescribed profiles under one bound
+
+The complete profile table has a closed criterion, now proved in
+`Core/ProfileBounds`. Put P_U={j:w_j is contained in U} and E_s={j:w_j={s}}.
+For one owner r and coalitions A,B, define PairSafe_r(A,B) by:
+
+1. (A\B) intersects P_U; or
+2. r belongs to U, A\B is nonempty, and E_r\B is nonempty; or
+3. A\B is nonempty and A intersects E_s for some allowed s different from r.
+
+This is exactly existence of a bounded term with Phi_r(A)=1 and Phi_r(B)=0.
+Its negation is the explicit implication preorder on that owner's coalitions.
+
+A prescribed tuple Phi has an exact bounded realizer iff its top bits are
+true, every true/false same-owner bit pair satisfies PairSafe, and every
+full-owner selection of winning coalitions satisfies the preceding rainbow
+budget criterion. The proof applies the restricted Horn classification to
+the actual relation of bounded-term profiles. Forced bits are handled by
+pairing them with their owner's top bit. Partial rainbow conflicts extend
+with top coalitions for unselected owners.
+
+There is no auxiliary presentation or recursive process on the criterion's
+right side. When U is unrestricted, PairSafe is just A not contained in B,
+and the rainbow budget condition is just common-source intersection; Lean
+proves exact recovery of `AdmissibleProfiles`, even at infinite arity.
+
 ## Separate owner families do not suffice
 
 At three owners and four variables a,b,c,d, use
@@ -66,8 +92,41 @@ was misleading: a fourth variable suffices to refute it.
 
 ## Remaining target
 
-One bound and rainbow demands are a restricted interpolation problem. Full
-source guards require many bounds simultaneously, and profile descriptions
-also involve more than one coalition per owner. Neither the Horn
-presentation nor the two-leaf theorem removes those interactions. The short
-direct structural characterization of jointly realizable guards remains open.
+Full source guards require many output bounds simultaneously. Intersecting
+the complete theories of individual bounds is insufficient: on three
+variables, the profile tuple (XYZ,XYZ,X) separately fits the bounds
+
+    w=({0,2},{2},{1}), omit 1;
+    v=({1},{2},{0}), omit 2,
+
+but no common term realizes that tuple under both bounds. Here is a direct
+argument, not yet a public Lean claim. At the first row every joint-safe
+term must be ambiguous: it cannot be atom0 because no input is atom0;
+atom1 is forbidden; atom2 would also occur at the second row, which has the
+same set {Y} of atom2 inputs. At the second row it cannot be atom0 either:
+the first-row bound and omission independence permit replacing Z=1 by Z=0,
+whereupon its atom0 tests match the second row. This would make its first-row
+value atom0, already excluded.
+
+Induct on a joint-safe term. There is no absorber at the first row. If there
+is an absorber at the second, its value must be atom1, giving Phi1({X})=1.
+Otherwise both children satisfy both bounds, so induction forces that same
+positive profile bit in both children and hence at the root. The only
+joint-safe projection is X. Thus every joint-safe term has Phi1({X})=1,
+contradicting the target's unanimity profile for owner1.
+
+Separate exact-profile witnesses can be written without enumeration. Put
+A=X star_2 (Y star_2 Z). The first row is handled by
+
+    (X star_0 A) union (X star_1 A),
+
+and the second by
+
+    (X star_1 A) union (X star_2 (Z star_0 Y)).
+
+Their profiles are both (XYZ,XYZ,X); their designated outputs are {0,2}
+and {0,1}, respectively. This is a written research proof, not a report claim.
+
+The complete one-bound theorem therefore leaves a genuine compatibility
+problem across rows. The short direct structural characterization of jointly
+realizable guards remains open.

@@ -3,6 +3,8 @@ module
 public import KFOL.Core.NonfiniteBasis
 public import KFOL.Core.ProfileSynthesis
 public import KFOL.Core.ProfileRelations
+public import KFOL.Core.ProfileBounds
+public import KFOL.Core.Staircase
 public import KFOL.Core.RainbowPersistence
 public import KFOL.Core.ProfilePersistence
 public import KFOL.Core.ProfileEnvelope

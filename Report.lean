@@ -15,6 +15,8 @@ public import KFOL.Core.SourceCertificates
 public import KFOL.Core.LocalNormalForm
 public import KFOL.Core.ProfileEnvelope
 public import KFOL.Core.ProfileRelations
+public import KFOL.Core.ProfileBounds
+public import KFOL.Core.Staircase
 public import KFOL.Core.RainbowPersistence
 public import KFOL.Core.ProfilePersistence
 public import KFOL.Core.CyclicPersistence
@@ -379,6 +381,32 @@ theorem core_single_bound_small_witness {Role : Type u} {Var : Type v} [Decidabl
           ((Core.choiceTerm s (.var j) (.var l)).realize values).val ⊆ U :=
   Core.rainbow_budget_small_witness J A values U
 
+/-- The ownerwise positive/negative separation test used in `core:thm:bounded-profiles`. -/
+theorem core_bounded_profile_pair {Role : Type u} {Var : Type v} [DecidableEq Role]
+    (r : Role) (A B : Var → Bool) (values : Var → WinnerSet Role) (U : Set Role) :
+    letI := Equational.coreStructure Role
+    Core.ProfileBounds.PairSafe r A B values U ↔
+      ∃ t : Equational.Term (Equational.CoreSymbol Role) Var,
+        Core.profile r A t = true ∧ Core.profile r B t = false ∧
+          (t.realize values).val ⊆ U :=
+  Core.ProfileBounds.pairSafe_iff r A B values U
+
+/-- `core:thm:bounded-profiles`: a closed criterion for all profiles and one output bound. -/
+theorem core_bounded_profiles {Role : Type u} {Var : Type v}
+    [DecidableEq Role] [Fintype Role] [Fintype Var] (three : Fin 3 ↪ Role)
+    (Φ : Role → (Var → Bool) → Bool) (values : Var → WinnerSet Role) (U : Set Role) :
+    letI := Equational.coreStructure Role
+    Core.ProfileBounds.ProfileCondition Φ values U ↔
+      ∃ t : Equational.Term (Equational.CoreSymbol Role) Var,
+        (∀ r A, Core.profile r A t = Φ r A) ∧ (t.realize values).val ⊆ U :=
+  Core.ProfileBounds.profileCondition_iff three Φ values U
+
+/-- Removing the bound recovers exactly the original singleton-profile conditions. -/
+theorem core_unbounded_profile_condition {Role : Type u} {Var : Type v} [Fintype Role]
+    (Φ : Role → (Var → Bool) → Bool) (values : Var → WinnerSet Role) :
+    Core.ProfileBounds.ProfileCondition Φ values Set.univ ↔ Core.AdmissibleProfiles Φ :=
+  Core.ProfileBounds.profileCondition_univ_iff_admissibleProfiles Φ values
+
 /-- `core:cor:profile-bound`: an output bound can couple individually realizable profiles. -/
 theorem core_profile_bound_coupling :
     letI := Equational.coreStructure (Fin 3)
@@ -390,6 +418,24 @@ theorem core_profile_bound_coupling :
       ¬∃ t : Equational.Term (Equational.CoreSymbol (Fin 3)) (Fin 4),
         (∀ r E, Core.profile r E t = P r E) ∧ 1 ∉ (t.realize values).val :=
   Core.safe_profiles_not_ownerwise
+
+/-- `core:prop:omission`: all inputs containing an omitted owner are irrelevant. -/
+theorem core_omission_independence {Role : Type u} {Var : Type v}
+    (a : Role) (t : Term Role Var) (ht : t.IsCore)
+    (values changed : Var → WinnerSet Role)
+    (agree : ∀ j, a ∉ (values j).val → changed j = values j)
+    (habsent : a ∉ (t.eval values).val) : t.eval changed = t.eval values :=
+  Core.omission_independence a t ht values changed agree habsent
+
+/-- `core:thm:negative-budgets`: upper-bound feasibility has no bounded row test. -/
+theorem core_negative_budget_obstructions {Role : Type u} (three : Fin 3 ↪ Role) (n : ℕ) :
+    ∃ values : Fin n → Fin n → WinnerSet Role,
+      (∀ i j, ∃ r : Fin 3, values i j = singleton (three r)) ∧
+      (∀ S : Finset (Fin n), S ≠ Finset.univ →
+        ∃ j : Fin n, ∀ i ∈ S, three 0 ∉ (values i j).val) ∧
+      ¬∃ t : Term Role (Fin n), t.IsCore ∧
+        ∀ i, three 0 ∉ (t.eval (values i)).val :=
+  Core.Staircase.exists_atomic_irredundant_negative_budgets three n
 
 theorem core_colored_graph_representation {Role : Type u} {Var : Type v} [Nonempty Role]
     (f : (Var → WinnerSet Role) → WinnerSet Role) :
