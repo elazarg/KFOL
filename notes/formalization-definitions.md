@@ -2,7 +2,7 @@
 
 Read [Paper.lean](../Paper.lean) with the vocabulary below. It contains 82
 mathematical statements and no definitions. [Report.lean](../Report.lean)
-contains 82 further mathematical statements. Their proofs name library theorems;
+contains 96 further mathematical statements. Their proofs name library theorems;
 definitions must still be reviewed independently against the manuscripts.
 
 The [audit guide](audit-guide.md) gives the reading order. The generated
@@ -14,7 +14,7 @@ theorem types. They erase proof-valued subterms and never follow theorem proofs.
 | Entry point | Theorem types | Semantic declarations | Source files | Central definition files | Written review units |
 | --- | ---: | ---: | ---: | ---: | ---: |
 | Paper | 82 | 678 | 40 | 28 | 362 |
-| Report | 82 | 709 | 41 | 30 | 328 |
+| Report | 96 | 725 | 43 | 32 | 340 |
 
 These counts are separate slices and overlap. The vocabulary files organize
 the presentation; they do not replace their underlying mathematical definitions.
@@ -51,6 +51,7 @@ The underlying definitions are grouped by subject:
 | `Bichain` | Four values, the two chain semilattice operations, observer union, median, pure terms and neutral/projection lifts |
 | `CoreAmalgamation` | Explicit observer polynomials, raw joint output and three singleton-input rows |
 | `CoreHypergraphs` | Indexed antichains of clause heads, their raw model sets, boundary incidences and the no-trap cut axiom |
+| `ProfileBounds` | Direct coalition separation and rainbow feasibility under one output bound, requested-winner safety, full-profile feasibility and exact one-point completion |
 | `CoreFunctions` | Singleton profiles and admissibility, invariant relations, individual relation preservation and m-point core interpolation |
 | `CoreGraph` | Finite occurrence graphs with symmetric owner colors, forbidden rainbow triangles and complementary two-colored paths, maximal monochromatic cliques, blocking, source survival and graph representation |
 | `Reset` | Reset syntax, rightmost root, selection, minimal guard tables, rooted antimatroids and table realizability |

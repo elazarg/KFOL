@@ -6,7 +6,8 @@ public import Mathlib.Data.Fintype.Basic
 /-! # Direct input conditions for one-budget profile realization
 
 The predicates inspect only the prescribed Boolean profiles, winner inputs,
-and one upper bound. They quantify neither terms nor auxiliary relations.
+and one upper or exact output bound, optionally with a required winner.
+They quantify neither terms nor auxiliary relations.
 -/
 
 @[expose] public section
@@ -35,6 +36,19 @@ def RainbowSafe (J : Finset Role) (A : Role → Var → Bool)
     ∃ s ∈ J, s ∈ U ∧ ∃ j, values j = WinnerSet.singleton s ∧
       ∀ r ∈ J, r ≠ s → A r j = true)
 
+/-- The positions at which an input is exactly the given owner atom. -/
+noncomputable def atomicBits (r : Role) (values : Var → WinnerSet Role) : Var → Bool := by
+  classical
+  exact fun j => decide (values j = WinnerSet.singleton r)
+
+/-- Rainbow feasibility, a whole input carrying the queried winner, and
+foreign-owner separation from the corresponding atomic inputs. -/
+def QuerySafe (J : Finset Role) (A : Role → Var → Bool)
+    (values : Var → WinnerSet Role) (U : Set Role) (k : Role) : Prop :=
+  RainbowSafe J A values U ∧
+  (∃ j, k ∈ (values j).val ∧ (values j).val ⊆ U) ∧
+  ∀ r ∈ J, r ≠ k → PairSafe r (A r) (atomicBits r values) values U
+
 /-- Top bits, ownerwise coalition separation, and full-owner rainbow feasibility. -/
 def ProfileCondition [Fintype Role] (Φ : Role → (Var → Bool) → Bool)
     (values : Var → WinnerSet Role) (U : Set Role) : Prop :=
@@ -42,5 +56,13 @@ def ProfileCondition [Fintype Role] (Φ : Role → (Var → Bool) → Bool)
   (∀ r A B, Φ r A = true → Φ r B = false → PairSafe r A B values U) ∧
   ∀ A : Role → Var → Bool, (∀ r, Φ r (A r) = true) →
     RainbowSafe Finset.univ A values U
+
+/-- A full profile tuple and one exact winner value: bounded feasibility,
+atomic compatibility, and a whole-input source for every requested winner. -/
+def OnePointCondition [Fintype Role] (Φ : Role → (Var → Bool) → Bool)
+    (values : Var → WinnerSet Role) (target : WinnerSet Role) : Prop :=
+  ProfileCondition Φ values target.val ∧
+  (∀ r, Φ r (atomicBits r values) = true ↔ target = WinnerSet.singleton r) ∧
+  ∀ k ∈ target.val, ∃ j, k ∈ (values j).val ∧ (values j).val ⊆ target.val
 
 end KFOL.Core.ProfileBounds

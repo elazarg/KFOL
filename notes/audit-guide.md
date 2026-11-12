@@ -2,7 +2,7 @@
 
 Start with [Paper.lean](../Paper.lean): its 82 theorem statements cover the main
 paper, its mathematical prose claims and the report clauses it uses.
-[Report.lean](../Report.lean) gives 82 further audited report statements and
+[Report.lean](../Report.lean) gives 96 further audited report statements and
 proof ingredients. Both files write out the propositions; each proof names one
 library theorem. Detailed codecs, descriptors, intermediate certificates and
 machine contracts are in the library, including
@@ -24,6 +24,7 @@ claim, then open the relevant vocabulary file:
 | Powerset representation | [Relational.lean](../KFOL/Definitions/Relational.lean) | Annihilating zero extension and a right regular relation with a fresh point |
 | Report navigation queries | [Queries.lean](../KFOL/Definitions/Queries.lean) | Independent path/test semantics, valuation documents, compiler and regular relations |
 | Recursive core interpolation | [CoreInterpolation.lean](../KFOL/Definitions/CoreInterpolation.lean) | Atomic demands, raw upper bounds, rainbow intersections and the positive escape condition; recursive calls strictly erase a bounded row, with no generated relation or auxiliary certificate |
+| Profiles under one bound | [ProfileBounds.lean](../KFOL/Definitions/ProfileBounds.lean) | Direct coalition and rainbow tests, whole-input sources, foreign-owner separation and exact one-point profile compatibility |
 | Cyclic clone obstruction | [CoreCrown.lean](../KFOL/Definitions/CoreCrown.lean), [CoreFunctions.lean](../KFOL/Definitions/CoreFunctions.lean) | Explicit matching/cross rows, exceptional input cylinders, full-union operation, independent local interpolation and relation preservation predicates |
 | Core graph representations | [CoreGraph.lean](../KFOL/Definitions/CoreGraph.lean) | Symmetric owner colors, the two forbidden induced patterns, maximal cliques, singleton blocking and source survival; repeated vertex labels are independent occurrences |
 | Closed atomic observer | [AtomicObserver.lean](../KFOL/Definitions/AtomicObserver.lean) | Atomic valuations, zero-interval reverse edges, reflexive reachability and the two admissibility conditions |

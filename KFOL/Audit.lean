@@ -266,6 +266,10 @@ import all KFOL.Core.NativeTheory
 import all KFOL.Core.NonfiniteBasis
 import all KFOL.Core.ProfileRelations
 import all KFOL.Core.ProfileBounds
+import all KFOL.Core.WholeInputs
+import all KFOL.Core.ProfileQueries
+import all KFOL.Core.ProfileCompletion
+import all KFOL.Core.ProfilePointObstruction
 import all KFOL.Definitions.ProfileBounds
 import all KFOL.Core.Staircase
 import all KFOL.Definitions.CoreStaircase

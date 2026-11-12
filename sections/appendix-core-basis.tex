@@ -23,6 +23,11 @@ tables under one bound have a closed criterion
 (\cref{core:thm:bounded-profiles}), although such a
 bound can couple separately realizable owner profiles
 (\cref{core:cor:profile-bound}).
+Adding a requested winner has a direct source-and-separation test
+(\cref{core:thm:bounded-query}); prescribed full profiles and one exact
+output value likewise have a closed criterion
+(\cref{core:thm:one-point-completion}). These pointwise conditions need
+not have a common realization across inputs.
 Prime source-guard normal forms describe full values
 (\cref{app:core-source-guards}), with simultaneous independence of inputs
 containing an omitted winner (\cref{core:prop:omission}). Their joint realizability has a recursive
@@ -780,6 +785,28 @@ of the earlier history, so the argument holds in the fixed owner order.
 The constructed term has exactly the prescribed profiles.
 \end{proof}
 
+Although profiles do not determine a term function, they determine a
+greatest completion.
+
+\begin{proposition}[Greatest profile completion]\label{core:prop:profile-maximum}
+For every core term $t$ over a finite variable set $V$, there is a core
+term $t^{\max}$ with the same singleton outputs, at every valuation, such
+that whenever $t(S)$ is ambiguous,
+\[
+ t^{\max}(S)=\bigcup_{j\in V}S_j.
+\]
+Among all operations $f$ with $f(S)\subseteq\bigcup_jS_j$ and the same
+singleton outputs as $t$, this is the greatest under pointwise inclusion.
+\end{proposition}
+\begin{proof}
+A core term has a variable, so $V$ is nonempty. Let $U$ be the union of
+all variables and put $t^{\max}=U\del t$. Reset is a core operation:
+when $t(S)$ is atomic it returns that atom, and otherwise it returns
+$U(S)\cup t(S)=U(S)$ by provenance. Thus it preserves exactly the
+singleton outputs. Any operation with those outputs agrees with
+$t^{\max}$ on its atomic outputs and is bounded by $U$ on the others.
+\end{proof}
+
 The profile recursion also classifies every closed relation of profile bits,
 even when the bits need not come from coalitions of one variable set.
 Let $J$ be a finite set of bits, with an owner map $c:J\to I$. Define
@@ -892,6 +919,40 @@ preorder of owner-$r$ profiles among terms respecting the bound: a positive
 profile on $A$ forces a positive profile on $B$ exactly when no bounded
 term separates them.
 
+The same tests handle one positive winner request at the bounded input.
+Write $\operatorname{RainbowSafe}(J,A)$ for the closed condition in
+\cref{core:thm:one-bound-profiles}.
+
+\begin{theorem}[A bounded rainbow with a requested winner]\label{core:thm:bounded-query}
+There is a core term $t$ with $\Phi_r(t)(A_r)=1$ for all $r\in J$,
+$t(w)\subseteq U$, and $k\in t(w)$ if and only if:
+\begin{enumerate}
+\item $\operatorname{RainbowSafe}(J,A)$ holds;
+\item some input satisfies $k\in w_j\subseteq U$;
+\item $\operatorname{PairSafe}_r(A_r,E_r(w))$ holds for every
+  $r\in J\setminus\{k\}$.
+\end{enumerate}
+\end{theorem}
+\begin{proof}
+Necessity of the first condition is \cref{core:thm:one-bound-profiles}.
+Whole-input provenance (\cref{core:prop:whole-inputs}) gives the second.
+For the third, a value containing $k$ cannot be the $r$ singleton when
+$r\ne k$, so the realizing term separates $A_r$ from $E_r(w)$.
+
+Conversely, choose a bounded term $u$ meeting all rainbow demands. For
+each $r\in J\setminus\{k\}$, the pair test gives a bounded $v_r$ with positive
+$A_r$ profile and negative $E_r(w)$ profile. For each $q\in J\setminus\{r\}$,
+replace $v_r$ by $v_r\star_q u$. This installs the positive $A_q$ bit
+while preserving the already installed bits and the negative owner-$r$
+bit. The resulting $h_r$ meets all demands and is not $\{r\}$ at $w$.
+
+Start from the eligible input $x_j$. Attach $h_r$ by $\star_r$ for each
+$r\in J\setminus\{k\}$, and attach $u$ by $\star_k$ if $k\in J$. Each attachment
+installs its owner's positive bit and preserves all installed bits.
+The upper bound is preserved. Foreign attachments cannot absorb away $k$,
+and choice by $k$ retains $k$ directly.
+\end{proof}
+
 \begin{theorem}[Complete profiles under one bound]\label{core:thm:bounded-profiles}
 For finite $V$ and $K\geq3$, prescribe arbitrary functions
 $\phi_r:2^V\to\{0,1\}$. There is a core term with these exact profiles
@@ -964,27 +1025,33 @@ $J\cap U$ is $2$, and $E_2(w)=\{b\}$ is disjoint from $A_1$.
 Neither alternative holds.
 \end{proof}
 
-Although profiles do not determine a term function, they determine a
-greatest completion.
+Reset also gives a closed exact-value criterion. Here the prescribed value
+is a nonempty winner set $T$, and all tests refer to the same input $w$.
 
-\begin{proposition}[Greatest profile completion]\label{core:prop:profile-maximum}
-For every core term $t$ over a finite variable set $V$, there is a core
-term $t^{\max}$ with the same singleton outputs, at every valuation, such
-that whenever $t(S)$ is ambiguous,
-\[
- t^{\max}(S)=\bigcup_{j\in V}S_j.
-\]
-Among all operations $f$ with $f(S)\subseteq\bigcup_jS_j$ and the same
-singleton outputs as $t$, this is the greatest under pointwise inclusion.
-\end{proposition}
+\begin{theorem}[Exact one-point profile completion]\label{core:thm:one-point-completion}
+For finite $V$ and $K\geq3$, there is a core term with prescribed full
+profile table $(\phi_r)_r$ and value exactly $T$ at $w$ if and only if:
+\begin{enumerate}
+\item the three conditions of \cref{core:thm:bounded-profiles} hold
+  with upper bound $T$;
+\item for every $r$, $\phi_r(E_r(w))=1$ if and only if $T=\{r\}$;
+\item every $k\in T$ belongs to some whole input $w_j\subseteq T$.
+\end{enumerate}
+\end{theorem}
 \begin{proof}
-A core term has a variable, so $V$ is nonempty. Let $U$ be the union of
-all variables and put $t^{\max}=U\del t$. Reset is a core operation:
-when $t(S)$ is atomic it returns that atom, and otherwise it returns
-$U(S)\cup t(S)=U(S)$ by provenance. Thus it preserves exactly the
-singleton outputs. Any operation with those outputs agrees with
-$t^{\max}$ on its atomic outputs and is bounded by $U$ on the others.
+Necessity follows from bounded-profile feasibility, singleton semantics,
+and whole-input provenance. Conversely, take a bounded profile realizer
+$t$. For each $k\in T$, choose an eligible source $j$ and replace $t$ by
+$x_j\del t$. Reset preserves all singleton profiles and every previous
+winner. At an ambiguous output it adds $w_j$, staying inside $T$; at an
+atomic output, the compatibility condition makes $T$ that same atom, so
+$k$ is already present. Finitely many steps give the exact value $T$.
 \end{proof}
+
+These pointwise conditions do not amalgamate: the example in
+\cref{core:thm:five-local-profile} has one fixed admissible profile family
+and satisfies them at every input, even with five-point core interpolation,
+but has no global core realization.
 
 Profiles do not determine a term function even together with its
 variables: $x\del(y\del z)$ and $(x\del y)\del z$ both return $\{i\}$
@@ -1047,6 +1114,23 @@ The parent $C$-value is consequently the union and retains $b$.
 \end{proof}
 
 \subsection{Prime source-guard normal forms}\label{app:core-source-guards}
+
+Every core output is a union of whole input values.
+
+\begin{proposition}[Whole-input provenance]\label{core:prop:whole-inputs}
+For every $k\in t(v)$ there is an input $v_j$ with
+$k\in v_j\subseteq t(v)$. Consequently
+\[
+ t(v)=\bigcup\{v_j:v_j\subseteq t(v)\}.
+\]
+\end{proposition}
+\begin{proof}
+Induct on the core term. A variable is its own source. At an absorbing
+root, follow an absorbing child; its value is the parent's singleton.
+Otherwise the root is the union of its children, so follow a child
+containing $k$. The inductive whole-input source remains inside the
+parent's value.
+\end{proof}
 
 An omitted winner makes all inputs containing it irrelevant, even to the
 other possible winners.

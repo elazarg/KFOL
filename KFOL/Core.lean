@@ -4,6 +4,10 @@ public import KFOL.Core.NonfiniteBasis
 public import KFOL.Core.ProfileSynthesis
 public import KFOL.Core.ProfileRelations
 public import KFOL.Core.ProfileBounds
+public import KFOL.Core.WholeInputs
+public import KFOL.Core.ProfileQueries
+public import KFOL.Core.ProfileCompletion
+public import KFOL.Core.ProfilePointObstruction
 public import KFOL.Core.Staircase
 public import KFOL.Core.RainbowPersistence
 public import KFOL.Core.ProfilePersistence

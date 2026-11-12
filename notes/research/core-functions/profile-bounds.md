@@ -90,6 +90,32 @@ be replaced by the original common-source conflicts plus separate owner
 restrictions. Ternary computational evidence suggesting such a factorization
 was misleading: a fourth variable suffices to refute it.
 
+## Requested winners and exact one-point completion
+
+For rainbow positive demands, adding a winner k at the bounded input has
+three direct tests: the existing rainbow condition, an input containing k
+wholly inside U, and PairSafe_r(A_r,E_r(w)) for each demanded owner r≠k.
+There is no order search. Repair a bounded positive/negative separator by
+attaching a common rainbow witness at every other demanded owner. Attach
+these repaired branches to the eligible k-source. Foreign branches cannot
+absorb away k; its own choice retains it.
+
+For full prescribed profiles Φ and one exact nonempty output T, the exact
+condition is bounded-profile feasibility under T, atomic compatibility
+Φ_r(E_r(w)) iff T={r}, and whole-input coverage of T. Start with a bounded
+profile witness and reset eligible source inputs against it. This preserves
+all profiles; ambiguous outputs grow to T, while atomic compatibility
+already fixes any atomic output.
+
+These criteria are kernel-checked in `Core/ProfileQueries` and
+`Core/ProfileCompletion`. Whole-input provenance is proved uniformly over
+arbitrary role and variable types in `Core/WholeInputs`.
+
+The existing five-point obstruction passes the exact one-point criterion
+at every input for one fixed admissible profile tuple, but has no global
+core realization (`Core/ProfilePointObstruction`). Thus even these complete
+pointwise tests do not give the sought global guard characterization.
+
 ## Remaining target
 
 Full source guards require many output bounds simultaneously. Intersecting

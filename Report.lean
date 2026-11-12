@@ -16,6 +16,10 @@ public import KFOL.Core.LocalNormalForm
 public import KFOL.Core.ProfileEnvelope
 public import KFOL.Core.ProfileRelations
 public import KFOL.Core.ProfileBounds
+public import KFOL.Core.WholeInputs
+public import KFOL.Core.ProfileQueries
+public import KFOL.Core.ProfileCompletion
+public import KFOL.Core.ProfilePointObstruction
 public import KFOL.Core.Staircase
 public import KFOL.Core.RainbowPersistence
 public import KFOL.Core.ProfilePersistence
@@ -391,6 +395,17 @@ theorem core_bounded_profile_pair {Role : Type u} {Var : Type v} [DecidableEq Ro
           (t.realize values).val ⊆ U :=
   Core.ProfileBounds.pairSafe_iff r A B values U
 
+/-- `core:thm:bounded-query`: a requested winner adds two direct input tests. -/
+theorem core_bounded_rainbow_query {Role : Type u} {Var : Type v} [DecidableEq Role]
+    (J : Finset Role) (A : Role → Var → Bool) (values : Var → WinnerSet Role)
+    (U : Set Role) (k : Role) :
+    letI := Equational.coreStructure Role
+    Core.ProfileBounds.QuerySafe J A values U k ↔
+      ∃ t : Equational.Term (Equational.CoreSymbol Role) Var,
+        (∀ r ∈ J, Core.profile r (A r) t = true) ∧
+        (t.realize values).val ⊆ U ∧ k ∈ (t.realize values).val :=
+  Core.ProfileBounds.querySafe_iff J A values U k
+
 /-- `core:thm:bounded-profiles`: a closed criterion for all profiles and one output bound. -/
 theorem core_bounded_profiles {Role : Type u} {Var : Type v}
     [DecidableEq Role] [Fintype Role] [Fintype Var] (three : Fin 3 ↪ Role)
@@ -418,6 +433,40 @@ theorem core_profile_bound_coupling :
       ¬∃ t : Equational.Term (Equational.CoreSymbol (Fin 3)) (Fin 4),
         (∀ r E, Core.profile r E t = P r E) ∧ 1 ∉ (t.realize values).val :=
   Core.safe_profiles_not_ownerwise
+
+/-- `core:thm:one-point-completion`: all profiles and one exact value have a closed test. -/
+theorem core_exact_profile_point {Role : Type u} {Var : Type v}
+    [DecidableEq Role] [Fintype Role] [Fintype Var] (three : Fin 3 ↪ Role)
+    (Φ : Role → (Var → Bool) → Bool) (values : Var → WinnerSet Role)
+    (target : WinnerSet Role) :
+    letI := Equational.coreStructure Role
+    Core.ProfileBounds.OnePointCondition Φ values target ↔
+      ∃ t : Equational.Term (Equational.CoreSymbol Role) Var,
+        (∀ r A, Core.profile r A t = Φ r A) ∧ t.realize values = target :=
+  Core.ProfileBounds.onePointCondition_iff three Φ values target
+
+/-- The `core:thm:five-local-profile` example passes every exact one-point profile test. -/
+theorem core_pointwise_profile_obstruction {Role : Type u}
+    [Fintype Role] [DecidableEq Role] (three : Fin 3 ↪ Role) :
+    ∃ (Φ : Role → (Fin 5 → Bool) → Bool)
+      (f : (Fin 5 → WinnerSet Role) → WinnerSet Role),
+      Core.AdmissibleProfiles Φ ∧ Core.LocallyInterpolable 5 f ∧
+      (∀ values, Core.ProfileBounds.OnePointCondition Φ values (f values)) ∧
+      ¬∃ t : Term Role (Fin 5), t.IsCore ∧ ∀ values, t.eval values = f values :=
+  Core.exists_pointwise_profile_obstruction three
+
+/-- `core:prop:whole-inputs`: every winner has a whole input contained in the output. -/
+theorem core_whole_input_provenance {Role : Type u} {Var : Type v}
+    (t : Term Role Var) (ht : t.IsCore) (values : Var → WinnerSet Role)
+    (k : Role) (hk : k ∈ (t.eval values).val) :
+    ∃ j, k ∈ (values j).val ∧ (values j).val ⊆ (t.eval values).val :=
+  Core.whole_input_provenance_of_isCore t ht values k hk
+
+theorem core_output_is_input_union {Role : Type u} {Var : Type v}
+    (t : Term Role Var) (ht : t.IsCore) (values : Var → WinnerSet Role) :
+    (t.eval values).val =
+      ⋃ j, ⋃ (_ : (values j).val ⊆ (t.eval values).val), (values j).val :=
+  Core.eval_eq_iUnion_whole_inputs t ht values
 
 /-- `core:prop:omission`: all inputs containing an omitted owner are irrelevant. -/
 theorem core_omission_independence {Role : Type u} {Var : Type v}

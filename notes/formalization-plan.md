@@ -4,13 +4,13 @@ The completion target is the entire main paper, its substantive mathematical
 prose, and the report material those claims require. The entire technical report
 is not a completion target. The [inventory](formalization-claims.json) records
 22 main result rows, 74 required catalog rows and 17 required prose obligations,
-all proved. Its source catalog contains 192 statements.
+all proved. Its source catalog contains 201 statement snapshots.
 
 ## Public audit surface
 
 - [Paper.lean](../Paper.lean) contains 82 main-facing mathematical statements in
   about 600 lines, ordered by subject and labelled for the main results.
-- [Report.lean](../Report.lean) contains 82 further mathematical report statements
+- [Report.lean](../Report.lean) contains 96 further mathematical report statements
   and proof ingredients.
 - Every public theorem writes its proposition in mathematical vocabulary.
   Its proof is one application of a named library theorem. Neither root file
