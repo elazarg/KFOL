@@ -205,6 +205,45 @@ greatest free extension at every source simultaneously; it coincides
 with the greatest arbitrary antitone completion in this family. Prime
 guards and exact construction-size bounds are explicit.
 
+## Canonical closures and minimal CNF operations
+
+[Owner-shadow is exactly closure idempotence](separable-closures.md).
+The pure-owner sections of every core operation therefore give canonical
+loopless closures, with spanning predicates equal to its singleton
+profiles. When the source coefficients separate, their products reconstruct
+the operation directly from these colored closures. Synthetic closure
+families still need full atomic-profile compatibility; pure-probe
+admissibility alone is insufficient.
+
+[Every finite loopless closure](closure-core-operations.md) is realized
+by a two-owner CNF: fold owner 1 within complements of proper closed sets
+and owner 0 between clauses. This is an exact bijection, and complements
+of meet-irreducible closed sets give the canonical irredundant CNF.
+
+The [global minimality classification](minimal-cnf-matroids.md) has a
+matroid answer. A prime clause clutter is minimal exactly when it satisfies
+cocircuit elimination; failure gives an explicit strictly smaller factored
+word. Redundant clauses are harmless precisely when they are unions of
+the contained prime clauses. Thus all minimal full-support CNFs are
+matroid cocircuit operations with optional flat-complement clauses.
+
+The [matroid operations](matroid-core-operations.md) equal their closed
+profile lower envelope, are rigid under unowned-role extensions, and have
+prime source guards described by bases and cocircuits. Factoring against
+minimality gives a chosen-source-linear word attaining the entire maximal
+full factor vector at that source. Simultaneous read-once realization
+holds exactly for rank-one direct sums. Both canonical Boolean normal
+forms are globally minimal exactly for uniform thresholds; every other
+loopless matroid has an explicit strict DNF-above-CNF witness.
+
+The [canonical separable hull](separable-hull-failure.md) shows why these
+closures do not yet solve the general target. For a core F, multiplying
+its pure factors gives a nonempty monotone idempotent upper bound with
+the same singleton profiles, pure sections and whole-input provenance.
+For a five-variable word at four owners this upper bound violates omission
+independence and is not core. Even jointly extracted closure data do not
+justify independent owner completion.
+
 ## Exact free-bit forcing from positive profiles
 
 [Free profile persistence](free-profile-persistence.md) works even when
@@ -229,6 +268,21 @@ law forces one of two source bits, although each can individually be zero.
 Its full operation and ordinary ambient extension are unique. Thus free
 joint attainment is a separate issue even after both those questions are
 settled.
+
+The [one-pattern theorem](free-pattern-interpolation.md) now supplies an
+exact joint profile/source clause presentation, using absorber exclusions,
+rainbow clauses and same-owner separator clauses. Reset padding supplies
+all requested positive bits after the zero-budget conditions hold.
+
+[Two patterns need not amalgamate](free-pattern-amalgamation.md), even
+when an antitone completion has correct ordinary guards and every entire
+one-pattern source vector is jointly realizable at all observers. A
+two-query path law gives the obstruction. For the ternary quota over
+exactly three old owners, the same analysis gives a complete thirteen-element
+old-observer free-extension fibre. Its six uncertain poison bits form a
+zero graph with no globally reachable vertex; the extension order is the
+opposite face order of a hexagon boundary. This complete small fibre
+classification does not supply the remaining all-arity guard criterion.
 
 ## Full types at greatest profile completions
 

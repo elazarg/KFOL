@@ -91,6 +91,20 @@ should not be described as having met that stronger simplicity target.
 [Further failed approaches](global-characterization.md) record why atomic
 polarization and simple coherence schemas do not remove this remaining gap.
 
+There are now closed positive classifications beyond read-once trees.
+[Loopless closures classify two-owner CNFs](closure-core-operations.md),
+and their [globally minimal operations are precisely matroid CNFs](minimal-cnf-matroids.md).
+[Canonical colored closures](separable-closures.md) also exist for every
+core operation, but their [separable product hull need not be core](separable-hull-failure.md),
+even when those closures came from one actual core word.
+
+For free independent-status data, [one pattern has a complete clause theory](free-pattern-interpolation.md),
+while [two patterns already require further compatibility](free-pattern-amalgamation.md).
+The ternary quota over three old owners has a complete thirteen-element
+free-extension classification. These results locate concrete parts of the
+compatibility problem; neither the closure reduction nor that fixed fibre
+is the requested all-arity characterization of ordinary prime guards.
+
 ## Exact exponential locality threshold
 
 `Report.core_exponential_locality` strengthens the quantitative obstruction.

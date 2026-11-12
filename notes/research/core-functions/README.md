@@ -71,6 +71,21 @@ any chosen source occurring once, exact prime guards, and a canonical
 greatest free extension attained simultaneously at every source. The
 construction has explicit word and shared-circuit size bounds.
 
+[Canonical owner closures](separable-closures.md) give a common structural
+layer for all core operations: owner-shadow is precisely closure
+idempotence. [Two-owner CNF operations](closure-core-operations.md) are in
+bijection with finite loopless closures, with canonical irredundant normal
+forms. Their [globally minimal members](minimal-cnf-matroids.md) are exactly
+the matroid cocircuit operations, with an exact condition on redundant
+clauses. [Matroid source guards](matroid-core-operations.md) are bases and
+cocircuits; a realizing word can be linear in any chosen source. Both
+prime Boolean normal forms are minimal exactly for uniform thresholds.
+
+The [separable hull can fail](separable-hull-failure.md): even closures
+extracted from an actual core operation can have a noncore product
+completion, already with five variables and four owners. It retains the
+original profiles and pure sections but violates omission independence.
+
 The [prime-obstruction theorem](prime-obstructions.md) shows that the hard
 part persists at unbounded arity: the Gray crowns have core proper
 identification minors and input-union proper neutral residuals, yet fail
@@ -398,6 +413,14 @@ independent-status source bit, even with overlapping owner flags. Its
 pointwise minima need not have a common realizing word.
 This [nonattainment already occurs for maximal profiles](free-profile-nonattainment.md)
 of one fixed ternary quota operation, despite its unique ordinary extension.
+
+[One-pattern interpolation](free-pattern-interpolation.md) gives a complete
+closed clause theory for profiles and all eligible source bits at a fixed
+independent-status pattern. [Two-pattern compatibility](free-pattern-amalgamation.md)
+is strictly stronger, even with antitonicity and simultaneous one-pattern
+feasibility at every observer. For the ternary quota over exactly three
+old owners, the entire old-observer free-extension fibre has exactly
+thirteen members, with a closed graph criterion and explicit realizers.
 
 [Profile maxima](profile-maximum-types.md) have a complete actual-type
 classification: every globally sound full type occurs, and the greatest
