@@ -305,3 +305,10 @@ upper bounds. The closed full-profile one-bound theorem is now in
 [Free-polarization obstructions](free-polarization/free-polarization-extrema.md)
 record why canonical prime occurrence boxes and canonical extremal free
 completions do not directly eliminate the colored occurrence graph.
+
+[Neutral-source elimination](ghost-elimination.md) proves closure of all
+neutral faces, the exact full projection-profile fiber, and why every proper
+neutral face of the crown obstruction is nevertheless just input union.
+The [four-variable gluing counterexample](face-gluing/README.md) shows that
+jointly realizable atomic data and all core neutral faces can still fail to
+have one realization; it has a written proof and standalone finite checks.

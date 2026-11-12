@@ -32,6 +32,11 @@ library results from research arguments that have not been formalized.
 - `Core/Staircase`: omission independence and arbitrarily large atomic
   upper-bound obstructions whose every proper subfamily has a projection
   witness. This supersedes finite row-Helly experiments.
+- `Core/GhostElimination`: every neutral face is zero or a lower-arity core
+  operation; the full projection-profile fiber is precisely reset of the
+  lower-arity core, plus projection. `Core/CrownResiduals` shows that all
+  proper neutral faces of the cyclic noncore operation are input unions.
+  See [neutral-source elimination](ghost-elimination.md).
 
 The bichain is the algebra in Harding, Walker and Walker, *Type-2 Fuzzy Sets
 and Bichains* (2013), Definition 5 and Figure 1. Its older normal-form results
@@ -117,6 +122,18 @@ roles, including a dominated type. Taking all sound types fails even when
 every variable is active, as the three-variable example below shows. Choosing
 witnesses can create new maximal cliques and new guards, so this has not
 eliminated the compatibility problem.
+
+[Canonical blocker soundness](canonical-blocker-shortcut.md) also fails:
+one target can pass every owner cut against input-column-sound heads while
+an explicit two-choice term violates it. Invariant auxiliary support cannot
+be replaced by this one-pass condition.
+
+[Atomic/neutral-face gluing](face-gluing/README.md) fails at four variables:
+the operation differs from one short atomic realizer on only eight full
+inputs and has explicit core realizers for every proper neutral residual.
+Its scalar essential-source trace excludes a global term. The example also
+satisfies the profile, provenance and omission laws. This is a written
+research result with independent checks, pending Lean formalization.
 
 ## Further structural work
 

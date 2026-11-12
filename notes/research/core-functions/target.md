@@ -138,3 +138,23 @@ Helly number. See [negative-budgets.md](negative-budgets.md).
 The canonical-prime and extremal-polarization shortcuts are also refuted:
 [free-polarization](free-polarization/free-polarization-extrema.md) preserves
 small standalone certificates. The full direct characterization remains active.
+
+## Neutral faces and their joint compatibility
+
+`Report.core_neutral_elimination` proves that deleting an input through
+winnerwise neutral sections leaves zero or a genuine lower-arity core
+operation. The full projection-profile fiber is exactly the lower-arity core
+lifted by reset, plus projection, with a unique nonzero parameter.
+`Report.core_crown_neutral_sections` shows that every proper neutral face of
+the crown obstruction is nevertheless just input union. Thus even checking
+all proper faces does not characterize the clone.
+
+The stronger atomic/neutral-face gluing rule is also refuted in research:
+one four-variable operation has a common core atomic realizer and compatible
+core neutral faces, yet its observer trace is the nonterm essential extension
+of AB OR AC OR BD. The example also satisfies the profile, provenance and
+omission laws. Its written proof and finite checks are separate from the
+kernel-checked elimination theorem. Details and the constructive compiler
+are in [ghost-elimination.md](ghost-elimination.md); the
+[standalone counterexample](face-gluing/README.md) supplies explicit witnesses
+and a checker without a clone-enumeration assumption.
