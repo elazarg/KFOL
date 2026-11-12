@@ -51,10 +51,11 @@ the same possible SPE winners.
 
 \begin{proposition}[Sharp finite support for nested quantifiers]\label{game:prop:choice-support}
 Let $K\geq2$, and let $G$ be a public game, with arbitrary nonempty
-action sets, in which every play has at most $n$ decisions. One can keep
-at most $K-1$ actions at each decision so that the resulting finite game
-$G'$ has depth at most $n$ and every retained subgame of $G'$ has the
-same possible SPE winners as the corresponding subgame of $G$. Replacing
+action sets, in which every play is finite. One can keep
+at most $K-1$ actions at each decision so that the resulting game
+$G'$ is finite and every retained subgame of $G'$ has the
+same possible SPE winners as the corresponding subgame of $G$. If every
+play of $G$ has at most $n$ decisions, $G'$ has depth at most $n$. Replacing
 each decision of $G'$ by a binary fold of its owner's $\star_r$ gives a binary game
 with the same possible SPE winners. The bound $K-1$ is attained already
 at one decision.
@@ -67,7 +68,8 @@ value $\{r\}$ forces value $\{r\}$ at an $r$-decision; otherwise the
 value is the union of all continuation values. Choosing a profile in
 each continuation supplies all off-path plans.
 
-Induct on the depth bound. A leaf needs no pruning. At a decision,
+Induct on subgames, which is well founded because every play is finite.
+A leaf needs no pruning. At a decision,
 first choose a finite support of the original continuation values.
 If some continuation has value $\{r\}$, choose it alone. Otherwise
 every continuation value contains a nonowner role. Choose one continuation
@@ -80,8 +82,9 @@ The selected family has the same union and no value $\{r\}$.
 Apply the induction hypothesis to each selected continuation. Each keeps
 its original value, so the root recurrence preserves the original value
 too. This gives the asserted preservation at every retained subgame.
-The pruning is finite, since its depth is bounded and each node has
-finite branching. Replace each retained decision by a binary fold of
+The pruning has finite branching and no infinite play, so it is finite
+by K\H{o}nig's lemma; it never lengthens a play, so it keeps any depth
+bound. Replace each retained decision by a binary fold of
 $\star_r$; the finite-action result above preserves its value.
 For sharpness, one terminal action for each nonowner role requires all
 $K-1$ actions to retain all their winners.
@@ -89,8 +92,7 @@ $K-1$ actions to retain all their winners.
 
 The retained actions may depend on the history, so a formula with nested
 binders over any nonempty domains is covered without a common finite set of
-witnesses. The same induction applies to every public game whose plays are
-all finite, without a uniform bound on their length.
+witnesses.
 
 For associativity of $\star_r$, a three-input product is $\{r\}$ if any input is $\{r\}$, and is their union otherwise; nonemptiness ensures that a union of inputs different from $\{r\}$ cannot become $\{r\}$. Role permutations transport the
 operations and the leaf constants. External renaming of the roles permutes the operations of every signature. Each $\star_r$ is associative, commutative, and idempotent. 
