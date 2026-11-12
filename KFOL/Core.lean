@@ -22,6 +22,7 @@ public import KFOL.Core.AtomicObserver
 public import KFOL.Core.AtomicAmalgamation
 public import KFOL.Core.BichainFiber
 public import KFOL.Core.Hypergraphs
+public import KFOL.Core.ExponentialCrown
 
 /-! # Core operations, representations and basis obstructions
 

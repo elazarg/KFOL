@@ -1,6 +1,6 @@
 \section{Verification details}\label{app:verification}
 
-The paper's results are kernel-checked in Lean~4.35.0 with mathlib. \texttt{Paper.lean} restates, in the namespace \texttt{KFOL.Paper}, every theorem of the main text and the clauses of the report results that it cites: $82$ statements, listed by result in \cref{tab:status}. \texttt{Report.lean} restates $81$ further report results in the namespace \texttt{KFOL.Report} (\cref{tab:report}). Each proof is a single library theorem, and each file ends with a check that no declaration in its namespace uses an axiom beyond \texttt{propext}, \texttt{Classical.choice}, and \texttt{Quot.sound}; a separate audit covers the whole library. Nothing is admitted, and no theorem from the literature enters as a hypothesis. Where a written proof cites one, as for the reset basis and the minimum one-owner generator \cite{FreeseEtAl2002}, owned choice with union \cite{HardingRomanowska2017}, the atomic clone \cite{Szendrei2012}, and colored-graph decomposition \cite{Gurvich2009}, the Lean proof is direct.
+The paper's results are kernel-checked in Lean~4.35.0 with mathlib. \texttt{Paper.lean} restates, in the namespace \texttt{KFOL.Paper}, every theorem of the main text and the clauses of the report results that it cites: $82$ statements, listed by result in \cref{tab:status}. \texttt{Report.lean} restates $82$ further report results in the namespace \texttt{KFOL.Report} (\cref{tab:report}). Each proof is a single library theorem, and each file ends with a check that no declaration in its namespace uses an axiom beyond \texttt{propext}, \texttt{Classical.choice}, and \texttt{Quot.sound}; a separate audit covers the whole library. Nothing is admitted, and no theorem from the literature enters as a hypothesis. Where a written proof cites one, as for the reset basis and the minimum one-owner generator \cite{FreeseEtAl2002}, owned choice with union \cite{HardingRomanowska2017}, the atomic clone \cite{Szendrei2012}, and colored-graph decomposition \cite{Gurvich2009}, the Lean proof is direct.
 
 The vocabulary of the statements is in \path{KFOL/Definitions/PaperAlgebra.lean}, \path{PaperGames.lean}, and \path{Complexity.lean}, which build on the other files of \path{KFOL/Definitions}. \path{notes/audit-guide.md} gives a reading order, and \path{notes/paper-definition-surface.md} and \path{notes/report-definition-surface.md} list every definition that each statement depends on.
 
@@ -93,7 +93,7 @@ Two players (\cref{app:two-players})
 
 {\small
 \begin{longtable}{>{\raggedright\arraybackslash}p{0.34\linewidth}>{\raggedright\arraybackslash}p{0.60\linewidth}}
-\caption{The $81$ audited statements in \texttt{Report.lean}, followed by remaining report evidence.}\label{tab:report}\\
+\caption{The $82$ audited statements in \texttt{Report.lean}, followed by remaining report evidence.}\label{tab:report}\\
 \toprule
 Result & Audited statements or other evidence\\
 \midrule
@@ -138,6 +138,8 @@ Separate observer realizations without amalgamation (\cref{core:prop:observer-am
  & \path{core_observer_amalgamation}\\
 Cyclic winner persistence (\cref{core:lem:cyclic-persistence})
  & \path{core_cyclic_persistence}\\
+Exponential locality (\cref{core:thm:exponential-locality})
+ & \path{core_exponential_locality}\\
 Constant and role-switch expansions (\cref{core:cor:full-not-finitely-related})
  & \path{full_not_finitely_related}, \path{full_no_finite_relation_basis}\\
 Recursive constrained interpolation (\cref{core:thm:peeling})
@@ -623,6 +625,26 @@ local obstructions for each fixed finite role set, and
 family of invariant relations. \path{KFOL/Core/CrownFullSyntax.lean}
 uses idempotent extraction to exclude realizations with winner constants
 and internal role permutations as well.
+
+The exponential locality bound of \cref{core:thm:exponential-locality}
+uses the interval operations in \path{KFOL/Definitions/CoreIntervals.lean},
+the cover-crown interface in \path{KFOL/Definitions/CrownFrame.lean}, and
+the paired transversals in \path{KFOL/Definitions/GrayCrown.lean}.
+\path{KFOL/Core/GrayCrown.lean} constructs cyclic reflected Gray codes in
+every positive dimension and proves their transversal incidence and cover
+properties. \path{KFOL/Core/CrownFrame.lean} gives explicit normalized
+Boolean separators after deleting a crown edge.
+\path{KFOL/Core/IntervalCompletion.lean} and
+\path{KFOL/Core/IntervalCrownCompletion.lean} realize these separators by
+core terms and prove the deletion patches on every winner-set valuation.
+A common collapsed cover supplies one additional core patch.
+\path{KFOL/Core/IntervalCrownLocality.lean} supplies local interpolants;
+\path{KFOL/Core/IntervalCrownObstruction.lean} excludes a global core
+realization and interpolation on all matching rows plus one opposite row
+by cyclic propagation of atomic Boolean derivatives.
+\path{KFOL/Core/ExponentialCrown.lean} combines these symbolic proofs into
+$2^d$-point interpolation and failure at $2^d+1$ points on $2d$ inputs. The construction treats ambiguous values
+and additional owners uniformly and uses no finite clone enumeration.
 
 The finite owner-elimination certificate used by the six-row obstruction
 has its clauses and order checks in

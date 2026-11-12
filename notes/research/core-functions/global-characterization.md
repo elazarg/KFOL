@@ -100,7 +100,31 @@ colored incidences retained by the proved clutter presentation.
 
 A canonical occurrence graph cannot simply retain maximal source types.
 For X star_r (X star_s Y), r!=s, the two X occurrences have distinct filter
-roles, including a dominated type. Conversely, taking all safe types introduces
-unrealizable unused occurrences even for a projection. Choosing witnesses can
-create new maximal cliques and new guards, so this has not eliminated the
-compatibility problem.
+roles, including a dominated type. Taking all sound types fails even when
+every variable is active, as the three-variable example below shows. Choosing
+witnesses can create new maximal cliques and new guards, so this has not
+eliminated the compatibility problem.
+
+## Further structural work
+
+[Source-type pruning](source-type-pruning.md) supplies causal-drift and
+owner-shadow necessary laws and a three-active-variable counterexample to
+inserting all sound source types. Both laws still accept the known ternary
+nonterms. [Canonical essential extensions](essential-extensions.md) gives a
+cograph classification for quadratic Boolean functions and a five-variable
+weighted-majority nonterm beyond that family. These research proofs do not
+replace the full guard characterization.
+
+[Exponential crowns](exponential-crowns.md) strengthen the locality obstruction:
+paired-variable Gray cycles and one common cover give 2^d+1 core patches
+using only 2d inputs. The full-winner construction, including additional
+owners, is proved in the generic interval/frame modules. The operation is
+2^d-point interpolable and fails at 2^d+1 points. This rules out replacing
+the recognition theorem by a polynomial-in-arity locality bound.
+
+[Pointed obstruction schemas](pointed-obstructions.md) give a further written
+normalization proof: one query needs only K+1 nontrivial stem families;
+negative-row head fibers can be empty, the original forbidden owner, or an
+off-owner block. Forced extra pure heads show why ordinary pairwise cycles
+and heads bounded by the target width are insufficient. This normalization
+is not yet formalized and does not remove the diagram quantifier.

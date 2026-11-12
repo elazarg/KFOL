@@ -90,3 +90,20 @@ should not be described as having met that stronger simplicity target.
 
 [Further failed approaches](global-characterization.md) record why atomic
 polarization and simple coherence schemas do not remove this remaining gap.
+
+## Exact exponential locality threshold
+
+`Report.core_exponential_locality` strengthens the quantitative obstruction.
+For every finite role set K>=3 and d>=2, a function on 2d paired inputs is
+2^d-point core-interpolable, is not (2^d+1)-point interpolable, is idempotent,
+and has no realization even with winner constants and internal role switches.
+The generic interval and crown-frame proofs hold on full winner-valued inputs,
+including additional roles. The Gray enumeration is constructed and proved in
+Lean; no Hamiltonicity theorem is assumed.
+
+The matching patches alone give 2^d-1 locality. The sharp statement adds a
+common collapsed cover to obtain 2^d+1 core patches, with at most one possible
+mismatch at each valuation. A concrete set of matching atomic rows and one
+opposite row proves the upper failure. See [exponential-crowns.md](exponential-crowns.md).
+This excludes polynomial-in-arity locality bounds; it does not provide the
+remaining direct structural criterion on jointly realizable guards.

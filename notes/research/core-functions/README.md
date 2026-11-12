@@ -11,7 +11,18 @@ stdlib checker is `peeling.py`.
 Finite relatedness is now disproved for every fixed finite K≥3: for each m,
 `Core.Crown.exists_local_obstruction` gives an (m+3)-ary nonterm operation
 with a common core interpolant on every m valuations. The cycle construction
-and its limits are summarized in [target.md](target.md).
+and its limits are summarized in [target.md](target.md). The sharper
+`Report.core_exponential_locality` gives an exact threshold: 2d inputs can
+pass all 2^d-point tests and fail at 2^d+1 points. Its Gray-cycle construction
+and full-winner patches are proved symbolically in Lean; see
+[exponential-crowns.md](exponential-crowns.md).
+
+Closed boundary/no-trap conditions now present every invariant relation in
+`Core/Hypergraphs`. This gives a complete infinite obstruction basis, still
+with auxiliary clutters. [global-characterization.md](global-characterization.md)
+records the remaining direct-guard target and the research branches, including
+[canonical essential extensions](essential-extensions.md) and
+[pointed obstruction normalization](pointed-obstructions.md).
 
 Local tests do not suffice even within a fixed singleton-profile fiber.
 Pairwise, three-point and four-point interpolation obstructions are proved

@@ -26,7 +26,8 @@ separately realizable complete views need not have a common core term
 colored-hypergraph cut conditions specify a complete infinite relational
 basis (\cref{core:thm:hypergraph-basis}); at every fixed $K\geq3$, no
 finite family of invariant relations determines the core clone
-(\cref{core:thm:not-finitely-related}). Some local tests do not even
+(\cref{core:thm:not-finitely-related}). The locality threshold can be
+exponential in arity (\cref{core:thm:exponential-locality}). Some local tests do not even
 leave a pointwise core minorant (\cref{app:core-pairwise}), and failure
 can also occur between core bounds with the same singleton outputs
 (\cref{core:thm:five-local-profile}). Unary polynomials are classified
@@ -1757,22 +1758,32 @@ $U$ if and only if
  (L,U)\ne(L_i,U_i)\text{ for every }i\ne h.
 \end{equation}
 Here separation means $\varphi(L)=0$, $\varphi(U)=1$.
-The reverse implication follows from the following members of
-$\mathcal B_h$:
-\begin{itemize}
-\item $[X\cap S\ne\varnothing]$, where $S$ is any nonempty prefix
-  of the cut order $h+1,h+2,\ldots,h$;
-\item $[P\subseteq X]$, where $|P|=2$ and $P\ne U_i$ for $i\ne h$;
-\item $[|X|\geq d]$, for $3\leq d\leq n$.
-\end{itemize}
-They are constant on the required matching edges. To separate a strict
-interval, use the full prefix when $L=\varnothing$, and a threshold
-with $d=\max(3,|L|+1)$ when $|U|\geq3$. The remaining case has
-$|U|=2$ and $|L|=1$. If $U$ is an allowed pair, its pair test
-separates. Otherwise $U=U_i$ for $i\ne h$; unless $L=L_i$, it is
-$\{i+1\}$, and the prefix ending at $i$ separates. The forward
-implication of \eqref{core:eq:crown-separation} follows immediately
-from the definition of $\mathcal B_h$.
+A single formula proves the reverse implication and will also apply to
+larger crowns. More generally suppose $L_i\subsetneq U_i$ are covers of
+a Boolean lattice, $L_i\ne\varnothing$, $U_i\ne V$, and
+\begin{equation}\label{core:eq:crown-incidence}
+ L_j\subseteq U_i\quad\Longleftrightarrow\quad j=i\text{ or }j=i+1
+\end{equation}
+with cyclic indices. Relabel the omitted index as $h=n-1$. For nonempty
+$A\subseteq V$, put
+\[
+ \begin{aligned}
+ \psi_A(X)=1\quad\Longleftrightarrow\quad& A\subseteq X\quad\text{or}\\
+ &\exists\,0\leq j\leq i<n-1\quad A\subseteq U_i,\quad L_j\subseteq X.
+ \end{aligned}
+\]
+This is monotone and normalized. It is constant on each retained
+$L_p\subsetneq U_p$: if the second disjunct holds at $U_p$,
+\eqref{core:eq:crown-incidence} gives $j=p$ or $p+1$, so $p\leq i$
+and the same disjunct holds at $L_p$; the first disjunct is handled by
+$i=j=p$.
+
+If $C\subsetneq A$ and $\psi_A(C)=1$, the first disjunct is impossible.
+The second gives $L_j\subseteq C\subsetneq A\subseteq U_i$.
+Incidence and $j\leq i<n-1$ force $j=i$. Since $L_i\subsetneq U_i$
+is a cover, $C=L_i$ and $A=U_i$. Thus $\psi_A$ separates every
+strict interval except a retained matching edge. Equality at those edges
+proves the forward implication of \eqref{core:eq:crown-separation}.
 
 \begin{lemma}[One-region deletion patches]\label{core:lem:crown-patch}
 For every $h$, the operation $F_h$ is a core term operation.
@@ -1800,11 +1811,11 @@ value already equals that union.
 Take the finite derived union of $E_\varphi$ over
 $\varphi\in\mathcal B_h$. If the interval is separated, one summand
 is the full union and every other summand is contained in it by
-provenance. If $L=U$, all inputs are $b/c$ atoms; the full-prefix
-and all-variable conjunction profiles ensure that the resulting union
+provenance. If $L=U$, all inputs are $b/c$ atoms; the all-variable disjunction
+and conjunction profiles ensure that the resulting union
 contains every input winner. In the remaining case,
 $(L,U)=(L_i,U_i)$ for some $i\ne h$, exactly describing $C_i$.
-Every summand is then $\{b\}$ or $\{c\}$; the full prefix gives
+Every summand is then $\{b\}$ or $\{c\}$; the all-variable disjunction gives
 $c$ and the all-variable conjunction gives $b$. Thus the union is
 $\{b,c\}$. These are precisely the values of $F_h$.
 \end{proof}
@@ -1839,6 +1850,59 @@ realizations. A finite family of invariant relations of either expansion
 is a finite family of core-invariant relations. Choosing $m$ bounding all its
 arities gives the same counterexample to its defining the expanded
 term clone.
+\end{proof}
+
+The number of observations needed can be exponential in the input arity.
+
+\begin{theorem}[An exact exponential locality threshold]
+\label{core:thm:exponential-locality}
+Fix $K\geq3$ and $d\geq2$. There is an idempotent operation on $2d$ inputs
+that is $2^d$-point interpolable but is not $(2^d+1)$-point interpolable.
+It has no term realization even with winner constants and internal role
+permutations.
+\end{theorem}
+\begin{proof}
+Take $V=\{1,\ldots,d\}\times\{0,1\}$. List all $2^d$ binary words in
+cyclic reflected Gray order, so successive words differ in one coordinate.
+For a word $x$ and its successor $x^+$ put
+\[
+ L_x=\{(j,x_j):1\leq j\leq d\},\qquad U_x=L_x\cup L_{x^+}.
+\]
+Every $L_x$ has size $d$ and every $U_x$ size $d+1$, hence the intervals
+are covers with nonempty lower and proper upper endpoints. A transversal
+$L_y$ lies in $U_x$ exactly when $y=x$ or $y=x^+$: the one changed block
+allows two choices, and every other block allows only one. These are
+precisely the incidences in \eqref{core:eq:crown-incidence}.
+
+For a winner input $S$, write $L(S)=\{j:S_j=\{c\}\}$ and
+$U(S)=\{j:S_j\ne\{b\}\}$. Define $F(S)=\{b,c\}$ when
+$(L(S),U(S))=(L_x,U_x)$ for some $x$, and return the full input union
+otherwise. The exceptional regions are disjoint because $L(S)$ identifies
+$x$. The separation formula above and the completion proof of
+\cref{core:lem:crown-patch} apply without change, so deleting any one of
+these $2^d$ regions gives a core operation.
+
+There is one further core patch: take the union of the two greatest
+completions for the all-variable disjunction and conjunction. It equals
+$\{b,c\}$ on every exceptional region, since $L_x\ne\varnothing$ and
+$U_x\ne V$. At an exceptional input only its own deletion patch may
+differ from $F$; elsewhere only this extra patch may differ. Thus every
+valuation excludes at most one of $2^d+1$ core patches, and any $2^d$
+valuations have a common interpolant.
+
+For the converse, take the $2^d$ atomic matching rows for intervals
+$(L_x,U_x)$, together with one opposite row $(L_{x^+},U_x)$.
+$F$ omits $a$ at every matching row and includes it at the opposite row.
+For any core term, absence on the matching rows forces each Boolean
+component to satisfy
+\[
+ \varphi(L_{x^+})\leq\varphi(U_x)=\varphi(L_x).
+\]
+The finite cycle forces equality, contradicting the positive opposite row.
+Thus these $2^d+1$ rows have no common interpolant.
+Finally a constant input lies in no exceptional region, since those regions
+have both a $b$-singleton and a $c$-singleton. Hence $F$ is idempotent,
+and \cref{gen:thm:core} excludes full-language realizations as well.
 \end{proof}
 
 \subsection{Recognition by repeated singleton tests}

@@ -165,6 +165,7 @@ def library_declarations() -> dict[str, Theorem]:
                ROOT / "KFOL/Core/Bichain.lean",
                ROOT / "KFOL/Core/BichainFiber.lean",
                ROOT / "KFOL/Core/Hypergraphs.lean",
+               ROOT / "KFOL/Core/ExponentialCrown.lean",
                ROOT / "KFOL/Core/FiniteRelationObstruction.lean",
                ROOT / "KFOL/Core/CrownFullSyntax.lean",
                ROOT / "KFOL/Core/SourceCertificates.lean",

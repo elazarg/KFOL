@@ -18,6 +18,7 @@ public import KFOL.Core.CyclicPersistence
 public import KFOL.Core.CrownFullSyntax
 public import KFOL.Core.AtomicObserver
 public import KFOL.Core.Hypergraphs
+public import KFOL.Core.ExponentialCrown
 public import KFOL.Core.BichainFiber
 public import KFOL.Core.AtomicAmalgamation
 public import KFOL.Audit.Namespace
@@ -277,6 +278,16 @@ theorem full_no_finite_relation_basis {Role : Type u} [Fintype Role]
       (∀ i, Core.PreservesRelation (relations i) f) ∧
         ¬∃ t : Term Role (Fin n), ∀ v, t.eval v = f v :=
   Core.Crown.exists_full_finite_family_obstruction three arity relations hrelations
+
+/-- `core:thm:exponential-locality`: an exact exponential interpolation threshold. -/
+theorem core_exponential_locality {Role : Type u} [Fintype Role]
+    (three : Fin 3 ↪ Role) (d : ℕ) (hd : 2 ≤ d) :
+    ∃ f : ((Fin d × Bool) → WinnerSet Role) → WinnerSet Role,
+      Core.LocallyInterpolable (2 ^ d) f ∧
+      ¬Core.LocallyInterpolable (2 ^ d + 1) f ∧
+      (∀ A : WinnerSet Role, f (fun _ => A) = A) ∧
+      ¬∃ t : Term Role (Fin d × Bool), ∀ values, t.eval values = f values :=
+  Core.GrayCrown.exists_exponential_obstruction three d hd
 
 theorem core_peeling_interpolation {Role : Type u} {Row : Type v} {Var : Type w}
     [Fintype Role] [Fintype Row] [DecidableEq Role] [DecidableEq Row]

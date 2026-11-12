@@ -529,6 +529,16 @@ import all KFOL.Core.AtomicAmalgamation
 import all KFOL.Core.Bichain
 import all KFOL.Core.BichainFiber
 import all KFOL.Core.Hypergraphs
+import all KFOL.Definitions.CoreIntervals
+import all KFOL.Definitions.CrownFrame
+import all KFOL.Definitions.GrayCrown
+import all KFOL.Core.IntervalCompletion
+import all KFOL.Core.CrownFrame
+import all KFOL.Core.GrayCrown
+import all KFOL.Core.IntervalCrownCompletion
+import all KFOL.Core.IntervalCrownLocality
+import all KFOL.Core.IntervalCrownObstruction
+import all KFOL.Core.ExponentialCrown
 import all Paper
 import all Report
 meta import Lean.Elab.Command
