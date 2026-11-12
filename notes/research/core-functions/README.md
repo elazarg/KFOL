@@ -52,6 +52,25 @@ monochromatic four-vertex path, and the operation equals its profile envelope.
 These conditions reconstruct a unique reduced cotree without a supplied
 occurrence graph. This recognizes the read-once regime, not arbitrary reuse.
 
+[Read-once rigidity](read-once-rigidity.md) supplies the complementary
+upper bound: pure-owner probes bound every occurrence factor in any
+subordinate term. Read-once operations are globally minimal, have unique
+extensions even at independent owner flags, and attain both free bounds
+in their exact operation fibre. The greatest monotone completion of their
+observer faces agrees below arity 2K but can fail at 2K.
+
+[Tight owner quotas](near-unanimity-size.md) give a non-read-once positive
+family. Quotas summing to n-1 force a unique full core operation: an owner's
+atomic quorum, or the whole input union otherwise. These operations are
+globally minimal and extension-rigid. They are read-once exactly when at
+most one quota is positive. Near-unanimity on the profile quotient requires
+at least 2^K leaf occurrences; its least read-once arity is 2^K, compared
+with K+1 when variable reuse is allowed.
+Their [recursive pivot normal form](quota-normal-form.md) gives a word with
+any chosen source occurring once, exact prime guards, and a canonical
+greatest free extension attained simultaneously at every source. The
+construction has explicit word and shared-circuit size bounds.
+
 The [prime-obstruction theorem](prime-obstructions.md) shows that the hard
 part persists at unbounded arity: the Gray crowns have core proper
 identification minors and input-union proper neutral residuals, yet fail
@@ -373,6 +392,25 @@ upper bounds. The closed full-profile one-bound theorem is now in
 [Free-polarization obstructions](free-polarization/free-polarization-extrema.md)
 record why canonical prime occurrence boxes and canonical extremal free
 completions do not directly eliminate the colored occurrence graph.
+[Free profile persistence](free-profile-persistence.md) gives an exact
+closed criterion for when arbitrary positive profile demands force one
+independent-status source bit, even with overlapping owner flags. Its
+pointwise minima need not have a common realizing word.
+This [nonattainment already occurs for maximal profiles](free-profile-nonattainment.md)
+of one fixed ternary quota operation, despite its unique ordinary extension.
+
+[Profile maxima](profile-maximum-types.md) have a complete actual-type
+classification: every globally sound full type occurs, and the greatest
+arbitrary antitone source completion is term-induced. This generalizes the
+quota maximum construction to every admissible profile tuple. Targets
+with ambiguous proper subsets of the input union lie outside this regime.
+
+[Actual-type side effects](actual-type-side-effects.md) strengthen the
+old drift and owner-shadow tests and refute their sufficiency even for
+a known core target. [Binary type saturation](binary-occurrence-types.md)
+constructs a realizer with exactly one occurrence of each actual full
+type for one owned choice, but its type-saturated colored graph is not
+unique. Neither result removes general mixed-type compatibility.
 
 [Neutral-source elimination](ghost-elimination.md) proves closure of all
 neutral faces, the exact full projection-profile fiber, and why every proper

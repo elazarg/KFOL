@@ -57,6 +57,15 @@ For both the complete-view AtomicAmalgamation operation and the three-variable c
 
 A clique-member coverage condition using only the r factor does not add information here: for each r and each source, the 80-type family includes sound types with unconditional r factor, so another clique member can always be assigned an r-enabled type. Mixed-owner factors must be coupled across the same occurrence selections, including missing/maximal cliques and the forbidden Gallai/P4 patterns. No sound closed formulation of that stronger coupling has been obtained.
 
+Even conditional on the target being an actual core operation, soundness,
+drift and shadow do not characterize its actual types. The
+[all-owner side-effect law](actual-type-side-effects.md) gives a stronger
+necessary condition: at an ambiguous marked source, the target must contain
+one of the owners whose path factor fails. An explicit K+1-variable core
+target has a proposed type passing the old tests and violating this law.
+The example concerns exact types, rather than an overestimate of their
+combined free coefficients.
+
 ## Uniform realization of the ternary sample's remaining types
 
 The exact counts for F=H union Z, H=X star_r Y, also have constructive proofs independent of exhaustive term search.

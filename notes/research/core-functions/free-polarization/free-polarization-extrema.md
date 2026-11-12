@@ -119,3 +119,18 @@ Files:
 ## Scope
 
 The natural least completion fails; the natural unrestricted greatest completion fails; a greatest term-induced completion exists. A short intrinsic description of that greatest coherent completion, or a general free-cube occurrence-saturation theorem, is not established here.
+
+There are now exact positive regimes. The
+[read-once upper-bound theorem](../read-once-rigidity.md), together with
+free profile persistence, determines the unique term-induced extension
+for a primitive read-once operation. For
+[every greatest profile completion](../profile-maximum-types.md), every
+sound full type is actual and the greatest arbitrary antitone extension
+is term-induced. [Tight owner quotas](../quota-normal-form.md) additionally
+give explicit pivot words, prime guards and construction-size bounds.
+[Free profile persistence](../free-profile-persistence.md) separately
+computes the least bit forced by arbitrary positive profile requirements;
+it does not assert joint attainment of all those bitwise minima.
+The [ternary quota obstruction](../free-profile-nonattainment.md) proves
+nonattainment even for a maximal profile tuple determining one exact
+operation with a unique ordinary ambient extension.

@@ -171,6 +171,81 @@ closed profile envelope then recognizes the full read-once winner operation.
 The criterion needs no supplied occurrence graph, but does not cover general
 overlapping reuse.
 
+[Pure-owner upper bounds](read-once-rigidity.md) make read-once operations
+globally minimal and rigid under every unowned-role extension. They also
+determine the unique free independent-status extension from the canonical
+cotree. This rigidity exposes a sharp failure of the greatest monotone
+observer-face completion: it agrees below arity 2K, but at 2K inputs it
+can exceed the only term-induced extension, despite correct faces and
+singleton profiles.
+
+## A rigid non-read-once family
+
+[Tight owner quotas](near-unanimity-size.md) provide full-value positive
+examples requiring reuse. Choose nonnegative d_r with sum n-1. The quota
+profiles Phi_r(E)=[|E|>=n-d_r] force a unique core operation: output the
+corresponding atomic quorum when it exists, and otherwise the union of
+all inputs. An elementary partition repair supplies every required
+positive-profile certificate. The operation is globally minimal and
+extension-rigid, and is primitive read-once exactly when at most one
+quota is positive. Its colored interiors have an explicit quorum cutoff.
+
+The profile quotient admits near-unanimity at arity K+1, while a primitive
+word needs at least 2^K leaf occurrences; equality requires all variables
+distinct. Thus its least read-once near-unanimity arity is 2^K. Quotas also
+give explicit minimal core operations with no read-once core minorant,
+already at three variables, rather than merely existential minimal
+operations selected from a finite poset.
+
+The [quota pivot normal form](quota-normal-form.md) constructs these
+operations directly: a chosen source occurs once, with one smaller-quota
+sibling at each active owner's spine node. It attains that source's
+canonical maximal factor vector. Combining pivot words attains the
+greatest free extension at every source simultaneously; it coincides
+with the greatest arbitrary antitone completion in this family. Prime
+guards and exact construction-size bounds are explicit.
+
+## Exact free-bit forcing from positive profiles
+
+[Free profile persistence](free-profile-persistence.md) works even when
+the passive atomic-owner flags overlap. A positive rainbow selection
+forces a marked free coefficient precisely when its common intersection
+is the source and its rival deviations avoid the required intersections.
+For arbitrary positive demands, an inclusion-minimal infeasible zero-bit
+premise has at most one demand per owner: an owned gate would otherwise
+combine two deletion witnesses. This proves the same closed criterion
+for all jointly feasible positive profile families.
+
+This computes the pointwise least free coefficient across positive-profile
+extensions. For maximal admissible profiles these are the exact profile
+realizers. A single word attaining all pointwise minima is a separate
+condition; the general exact-profile problem is not solved by this forcing
+criterion.
+
+The failure is sharp even for maximal profiles: the
+[ternary quota obstruction](free-profile-nonattainment.md) has two exact
+realizers with no common lower free extension. A common-source persistence
+law forces one of two source bits, although each can individually be zero.
+Its full operation and ordinary ambient extension are unique. Thus free
+joint attainment is a separate issue even after both those questions are
+settled.
+
+## Full types at greatest profile completions
+
+For [every greatest profile completion](profile-maximum-types.md), soundness
+of a full occurrence vector separates owner by owner, and every sound
+vector is actual. A spine realizes the proposed vector; attaching the
+target once at each owner restores the whole target without changing that
+vector. The restoration uses exactly the fact that an ambiguous target
+value is the whole input union.
+
+Consequently the unique greatest actual type at source j is
+NOT Phi_r on coalitions excluding j, for each owner r. A finite fold of
+these realizers attains the greatest arbitrary antitone free completion.
+This is a general positive type theorem, containing the quota family and
+input union. It does not apply when a target's ambiguous value omits some
+input winner, which is where the remaining mixed-guard problem persists.
+
 ## Other routes that do not suffice
 
 Independent observer criteria fail by the formal amalgamation example.
@@ -226,6 +301,15 @@ nonterms. [Canonical essential extensions](essential-extensions.md) gives a
 cograph classification for quadratic Boolean functions and a five-variable
 weighted-majority nonterm beyond that family. These research proofs do not
 replace the full guard characterization.
+
+The [all-owner side-effect law](actual-type-side-effects.md) rules out
+additional exact types even when the target is an explicit core operation.
+The previous drift and shadow tests therefore do not characterize actual
+types conditional on core realizability either. In the positive binary
+case, [one occurrence per actual full type](binary-occurrence-types.md)
+suffices for a universal realizer, but different owner orders give
+nonisomorphic type-saturated graphs. Knowing the canonical full-type
+family does not force its individual edge colors.
 
 [Exponential crowns](exponential-crowns.md) strengthen the locality obstruction:
 paired-variable Gray cycles and one common cover give 2^d+1 core patches
