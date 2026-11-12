@@ -98,6 +98,16 @@ gluing obstruction is already prime: all proper identification minors and
 all proper neutral sections are core, so it has no proper disjoint idempotent
 decomposition.
 
+This is not only a four-variable issue. The
+[unbounded-prime theorem](prime-obstructions.md) proves that the Gray-crown
+operation on 2d inputs has every proper identification minor core and every
+proper neutral residual equal to input union, while remaining noncore and
+2^d-point interpolable. A deleted-region patch realizes each identification
+minor because the lower transversals separate every input pair. Thus proper
+disjoint decomposition cannot reduce all obstructions to bounded prime arity.
+Even semantic agreement on all intersections of the proper diagonal faces
+does not provide a common realizing term.
+
 ## A closed profile envelope is exact for read-once trees
 
 [Read-once profile minimality](read-once-profile-minimum.md) gives a sound
@@ -122,6 +132,16 @@ Completing singleton profiles and taking unions of their greatest envelopes
 also loses term functions below those envelopes. Tracking surviving Boolean
 DNF monomials and CNF clauses independently loses the requirement that the
 same repeated occurrence survive both.
+
+The [spine obstruction](envelope-spines/README.md) is stronger than a failure
+of choosing greatest siblings. Every binary core operation is a greatest
+completion on its support. Thus a ternary term with any variable occurring
+at most once is itself in the excluded spine language. The explicit core
+counterexample needs every variable at least twice in every realizer, and
+requires a node with two nongreatest full-support children. A four-row
+analytic argument rules out a source-linear witness for its distinguished
+positive guard bit. Branching dependence cannot be removed by allowing
+arbitrary smaller-arity siblings along one source path.
 
 A simple coherence schema records only the set of states occurring in a tuple:
 R_Gamma consists of tuples whose nonempty value-set belongs to Gamma. Requiring

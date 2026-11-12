@@ -108,6 +108,15 @@ opposite row proves the upper failure. See [exponential-crowns.md](exponential-c
 This excludes polynomial-in-arity locality bounds; it does not provide the
 remaining direct structural criterion on jointly realizable guards.
 
+The same explicit family has a further mathematical strengthening:
+[every proper identification minor is core, every proper neutral residual
+is input union, and the operation is prime under disjoint idempotent
+composition](prime-obstructions.md). Thus canonical block decomposition
+cannot leave only bounded-arity exceptional cases. Its smaller core
+operations already agree on every overlap, yet admit no common global
+core realization. This strengthening is a written research proof; it does
+not add a Lean claim to the existing locality theorem.
+
 ## Profile relations and one bound
 
 The owner-colored Boolean profile algebra has a complete restricted Horn

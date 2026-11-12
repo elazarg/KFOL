@@ -46,6 +46,20 @@ Such a tree is the least core operation in its profile fibre. A direct
 coalition induction identifies where this argument fails for repeated
 variables: different occurrences can create a spurious common source.
 
+The [prime-obstruction theorem](prime-obstructions.md) shows that the hard
+part persists at unbounded arity: the Gray crowns have core proper
+identification minors and input-union proper neutral residuals, yet fail
+globally after passing all 2^d-point tests on 2d inputs. They admit no
+proper disjoint idempotent decomposition. Hence bounded-prime recognition
+and gluing compatible lower-arity operations do not finish the problem.
+
+[Full-support branching](envelope-spines/README.md) is necessary already at
+three inputs: an explicit core operation has no realizer using any input
+at most once, nor any finite union of such terms. Every binary core
+operation is its greatest profile completion, so the existing spine
+certificate proves this stronger claim. A four-row analytic proof separately
+rules out source-linear witnesses for one positive canonical observation.
+
 Local tests do not suffice even within a fixed singleton-profile fiber.
 Pairwise, three-point and four-point interpolation obstructions are proved
 uniformly for every role type containing three distinct owners. The four-point
