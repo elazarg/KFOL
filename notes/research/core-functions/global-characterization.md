@@ -335,16 +335,25 @@ recognizer.
 For source-separable candidates satisfying actual-source attribution,
 [partial-coloring tests](mixed-closure-outcast.md) express nonemptiness
 and full singleton-profile factorization using the constant part A and
-unblocked positions Q. For genuine core operations with A!=I, outcast
-has the closed form
+unblocked positions Q. For genuine source-separable core operations,
+outcast has the closed form at every partial coloring
 
     c_r(E_r union (J\Q)) intersects Q = empty for every r.
 
-Restoring blocked ambiguous positions cannot capture a free one, even
-if the resulting constant part is saturated. The proof does not cover
-initial A=I: old semantics can mask unowned selections there. Neither
-that saturated case nor sufficiency of these closure constraints is
-settled by the reduction.
+Restoring blocked ambiguous positions cannot capture a free one, including
+at an initially saturated fiber. The two-erasure lemma proves that
+missing-color outcast implies full outcast for any family of monotone
+extensive maps with at least three colors. The corresponding canonical
+selection maps Q_a are interiors. Equivalently, every full coloring a
+makes T -> UNION_r c_r(T intersect a^-1(r)) a closure operator.
+For loopless candidate maps this condition implies source attribution.
+The [canonical common-carrier extension](canonical-separable-extension.md)
+is monotone, has all prescribed observer faces, and bounds every
+term-induced extension. It preserves the full ternary outcast invariant;
+for arbitrary admissible colored closures, that preservation is equivalent
+to full Q-outcast and preservation of the spanning owners under blocked
+restorations. Term attainment of the canonical extension and sufficiency
+of these constraints for source-separable realizability remain unresolved.
 
 ## Full types at greatest profile completions
 
@@ -400,6 +409,13 @@ eliminated the compatibility problem.
 one target can pass every owner cut against input-column-sound heads while
 an explicit two-choice term violates it. Invariant auxiliary support cannot
 be replaced by this one-pass condition.
+
+The [uniform column-sound barrier](canonical-sound-barrier.md) is stronger
+for the proposed maximal-support construction: taking all sound heads
+fails NoTrap at every arity at least two, using only one canonical probe
+per input. Admissible sound support families do have a greatest union;
+it is precisely the all-term-valid family. This fact alone supplies no
+new direct criterion for that family.
 
 [Atomic/neutral-face gluing](face-gluing/README.md) fails at four variables:
 the operation differs from one short atomic realizer on only eight full

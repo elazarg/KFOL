@@ -108,11 +108,22 @@ is the requested all-arity characterization of ordinary prime guards.
 The [unit-quota poison theorem](quota-poison-graphs.md) now gives a closed
 mixed-pattern criterion at unbounded active-owner count, but only for
 its specified query projection. [Mixed closure outcast](mixed-closure-outcast.md)
-gives additional necessary conditions for source-separable core functions.
+now holds at every partial coloring for source-separable core functions:
+for each full coloring, the union of the color-restricted owner closures
+is itself idempotent. A two-erasure lemma handles saturated fibers without
+identifying a chosen word's fresh selections with the canonical free set.
+The resulting [canonical common-carrier extension](canonical-separable-extension.md)
+matches every old observer face, preserves the ternary outcast invariant,
+and bounds all term extensions, without a proof of its own term attainment.
 The [mixed-color global minimum](mixed-cnf-minimum.md) shows why maximal
 admissible profiles and disjoint matroid decompositions cannot describe
 all minima. The complete compatibility of arbitrary source guards remains
 the objective.
+
+The [canonical column-sound clutter](canonical-sound-barrier.md) fails the
+no-trap law at every arity at least two, already on one isolated-source
+probe per input. Its greatest admissible subfamily exists, but identifying
+that subfamily with a safety kernel would only repackage recognition.
 
 ## Exact exponential locality threshold
 

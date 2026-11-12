@@ -96,9 +96,14 @@ completion, already with five variables and four owners. It retains the
 original profiles and pure sections but violates omission independence.
 For genuine source-separable operations,
 [mixed closure outcast](mixed-closure-outcast.md) supplies closed necessary
-tests on partial colorings whenever the initial atomic constant part is
-not the entire role set. The initially saturated case and sufficiency
-remain unresolved.
+tests on every partial coloring, including saturated fibers. A two-erasure
+lemma closes the formerly missing case. Equivalently, for every full
+coloring a the map T -> UNION_r c_r(T intersect a^-1(r)) is a closure.
+This law also implies source attribution for loopless candidate maps.
+The [canonical common-carrier extension](canonical-separable-extension.md)
+is monotone, matches all old observer faces, preserves the ternary outcast
+invariant, and bounds every term-induced extension. Its term attainment
+and sufficiency of the coupled closure laws remain unresolved.
 
 The [prime-obstruction theorem](prime-obstructions.md) shows that the hard
 part persists at unbounded arity: the Gray crowns have core proper
