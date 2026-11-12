@@ -186,23 +186,130 @@ allows the masked partial contribution described above.
 Under (9) all the last contributions in (8) are already contained in
 A, giving the simpler actual-core form A union UNION_(j in Q) w_j.
 
-## Side-effect constraints and an insufficient weak criterion
+## Admissible spanning profiles already guarantee nonemptiness
+
+**Colorful-cover lemma.** Let the maps c_r be monotone and extensive.
+Assume their spanning predicates Phi_r(E)=[c_r(E)=V] satisfy the
+rainbow common-source condition. At every partial coloring, A or Q
+is nonempty. In particular their source formula (7) is nonempty-valued.
+
+Suppose A=Q=empty. For every position j choose a capturing owner r(j)
+with j in c_(r(j))(E_(r(j))) and j outside E_(r(j)). Such an owner
+exists: an atomic position has a different capturing owner because
+its own color is absent from A, while an ambiguous position has some
+capturing owner because Q is empty. Put
+
+    B_r={j:r(j)=r},    A_r=V\B_r.
+
+The B_r partition V and are disjoint from their respective E_r.
+Thus E_r subseteq A_r. Monotonicity and extensivity give
+
+    c_r(A_r) contains A_r union c_r(E_r)
+                    contains A_r union B_r=V.
+
+Every A_r spans, but their intersection is empty. This contradicts
+rainbow common-source admissibility. Therefore A or Q is nonempty.
+An atomic survivor in A or a whole menu at a position in Q supplies
+a nonempty subset of (7). Neither source attribution nor a realizing
+word is needed for this lemma.
+
+## Omission independence recovers the full atomic-profile law
+
+**Lemma.** For loopless closures, if the source formula (7) is nonempty
+and satisfies omission independence, its singleton predicates are
+exactly Phi_r(E_r)=[c_r(E_r)=V].
+
+If c_r(E_r)=V, every potential non-r source is captured by r, so
+nonemptiness forces F(w)={r}. Conversely suppose F(w)={r}. Successively
+for each k!=r replace every k-containing input by I. Omission independence
+keeps the output {r} at every step. The atomic r-set stays E_r;
+every position outside E_r becomes I, and every other atomic set
+becomes empty. If some j were outside c_r(E_r), it would be outside
+E_r and hence have menu I at the end. Looplessness removes every
+other owner closure there. This free j would supply all of I in (7),
+contradicting the unchanged singleton output.
+
+Consequently exact atomic profiles need not be imposed separately on a
+candidate already satisfying admissible spanning profiles and omission
+independence: the colorful-cover lemma supplies nonemptiness, and this
+lemma supplies the exact profile law.
+
+## Hereditary common-source admissibility
+
+The owner closures of every genuine core operation satisfy a stronger
+condition, whether or not its mixed source coefficients separate.
+For each nonempty U subseteq V the restricted closures are
+
+    c_r^U(E)=c_r(E) intersect U, for E subseteq U.
+
+Their spanning predicates are admissible singleton profiles. To see
+this, take the winnerwise neutral residual on U. Neutral elimination
+makes it zero or a core word on U. It is nonzero and has full support:
+on all ambiguous inputs each primitive gate takes union, and an
+isolated marked source at any position in U still supplies its winner.
+Its pure-owner ports are exactly the original ports with the deleted
+variables neutral, hence its closures are the displayed restrictions.
+The singleton-profile classification now gives their admissibility.
+
+Equivalently, there is a direct hereditary common-source law with no
+separate U parameter:
+
+    U=UNION_r A_r is nonempty and U subseteq c_r(A_r)
+    for every r imply INTERSECTION_r A_r is nonempty.    (H)
+
+For necessity apply the restricted rainbow law on U. Conversely,
+any failure on a larger U can be restricted to the nonempty union
+of its witnessing coalitions; all those coalitions still span that
+union. Thus (H) is exactly hereditary spanning-profile admissibility.
+
+By the colorful-cover lemma it ensures that every nonempty neutral
+restriction of the source formula is nonempty. It does not by itself
+imply the colored-outcast or span-outcast laws; the independent
+counterexamples are in
+[separable-closure-counterexample.md](separable-closure-counterexample.md).
+
+## All-source side effects
 
 For an ambiguous source j in J, the canonical factor vector's failed
-owner factors at this status pattern are exactly T_j. A possible stronger
-all-source colored-closure condition is
+owner factors at this status pattern are exactly T_j. For an atomic
+source, use the same definition T_j={r:j in c_r(E_r)}, including its
+own color. There is a necessary all-source colored-closure law:
 
     F(w) intersects T_j != empty whenever T_j!=empty.     (10)
 
-It includes atomic sources: if j is the r singleton, extensivity puts
-its own color r in T_j as well. That case is additional to the
-ambiguous-source failed-factor interpretation and cannot simply be
-dropped. Equation (8) makes this condition explicit in closure data.
-The canonical vector need not already have been realized at one
-occurrence, so the actual-type side-effect theorem cannot simply be
-applied to it. Necessity of (10) for arbitrary source-separable core
-operations is not proved here; neither is sufficiency of (10), full
-atomic-profile factorization, profile admissibility and (9).
+**Theorem.** Every source-separable core operation satisfies (10),
+including at atomic source positions. No assumption that the canonical
+full factor vector is an actual occurrence type is required.
+
+Suppose the nonempty T_j is disjoint from F(w). If j is ambiguous and
+T_j={r}, the source-attribution law (9) already gives r in A subseteq
+F(w), a contradiction. If j is ambiguous and |T_j|>=2, its contribution
+to (7) is empty for every ambiguous menu: omitting at most the observer's
+own factor still leaves a failed one. We can therefore replace w_j by
+the full menu I without changing the output or any atomic status.
+
+Now apply omission independence successively to each r in T_j. At
+each step replace every input containing r by I. Since the unchanged
+output omits r, omission independence preserves the entire output.
+Every atomic r-set for r in T_j is emptied, while all outside-T_j
+atomic sets stay unchanged. If j was atomic initially, its own color
+belongs to T_j by extensivity, so this process also replaces w_j by I.
+In all cases not already excluded, the final j-menu is I.
+
+At the end j lies in no owner closure. For r in T_j use looplessness
+c_r(empty)=empty; for r outside T_j use the unchanged atomic sets and
+the definition of T_j. Formula (7) now makes j supply every winner.
+This contradicts the unchanged output omitting the nonempty T_j.
+The proof is complete.
+
+Thus the all-owner side-effect test holds for the canonical factor
+vector even though its occurrence realization remains unproved.
+The atomic-source part is additional to the occurrence theorem, whose
+marked menu must be ambiguous. Source attribution, omission independence
+and loopless separation suffice for the argument; sufficiency of these
+laws for core realizability is not asserted.
+
+## An insufficient weak criterion
 
 Closure laws, admissible profiles and everywhere-nonempty output alone
 are insufficient. Take owners 0,1,2 and variables X,Y,Z,W. Let c_0

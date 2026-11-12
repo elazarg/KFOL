@@ -112,6 +112,57 @@ For K=3 take c=2. The example is simply
 with witness valuation (X,Y,Z_0,Z_1)=({0,1},{2},{0},{1}).
 Its output is {0,1}, while the proposed type would force 2.
 
+## A sound coordinatewise join of actual types need not be actual
+
+The same target (3) refutes a possible amalgamation rule. Write
+H_r=Y choice_r Z_r and, for r!=c, put
+
+    T_r=(X choice_c Y) choice_r H_r.
+
+This operation is contained in X union H_r. If H_r={r}, its outer
+r-gate absorbs to {r}. Otherwise H_r contains Y, while the inner
+word is contained in X union Y; conservativity at the outer gate
+gives the claimed inclusion. Hence T_r<=F.
+
+Its single X occurrence has full type
+
+    B^(r)_c=NOT Y_c;
+    B^(r)_r=NOT Y_r AND NOT (Z_r)_r;
+    B^(r)_s=true for every s notin {c,r}.                  (6)
+
+Union T_r with F. The result is F, and the marked-union lemma from
+[source-type-pruning.md](source-type-pruning.md) preserves (6), since
+it is globally sound by T_r<=F. Thus each B^(r) is an actual F type.
+
+Choose distinct r,s different from c, possible because K>=3. Their
+coordinatewise OR is exactly
+
+    (B^(r) OR B^(s))_c=NOT Y_c;
+    (B^(r) OR B^(s))_q=true for every q!=c.               (7)
+
+This is the globally sound but nonactual type (4). It also passes
+causal drift and owner-shadow, by the preceding proof. Therefore the
+actual full types are not closed under coordinatewise joins even when
+the joined vector is globally sound. No assertion about existence of
+different least upper bounds within the actual-type poset is needed.
+
+This does not refute a version restricted to globally source-separable
+targets. Although the source-X coefficients of F are unconditional,
+the source-Y, observer-c coefficient is
+
+    OR_(q!=c) [Z_q!={q}].
+
+Every pure-owner Y coefficient is true: a branch with a different owner
+still supplies the source. But the displayed mixed coefficient is
+false when all Z_q={q}. Thus the target is not source-separable at Y.
+The example shows that separation at the marked source alone cannot
+justify actual-type amalgamation; the fully separable case remains open.
+
+Moreover the unconditional source-X type is actual, from the explicit
+X branch of (3). The missing joined type is a weaker type, not the
+canonical greatest type. Hence this join counterexample does not
+answer the maximal-type or greatest free-completion attainment questions.
+
 ## Scope
 
 This refutes the conditional classification of actual full occurrence types

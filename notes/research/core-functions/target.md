@@ -115,6 +115,15 @@ identifying a chosen word's fresh selections with the canonical free set.
 The resulting [canonical common-carrier extension](canonical-separable-extension.md)
 matches every old observer face, preserves the ternary outcast invariant,
 and bounds all term extensions, without a proof of its own term attainment.
+The [four-variable counterexample](separable-closure-counterexample.md)
+shows these laws are insufficient for synthetic closure data, even with
+hereditary profile admissibility, nonempty neutral residuals, global
+omission and core identification minors. Its canonical full types all
+pass the known individual tests; a neutral facet is still noncore.
+This requires any further criterion to respect neutral restrictions;
+global tests cannot substitute for their hereditary versions. The wrapper
+also has a known disjoint factorization, so it supplies no obstruction
+to a criterion explicitly reduced to prime factors and all their faces.
 The [mixed-color global minimum](mixed-cnf-minimum.md) shows why maximal
 admissible profiles and disjoint matroid decompositions cannot describe
 all minima. The complete compatibility of arbitrary source guards remains

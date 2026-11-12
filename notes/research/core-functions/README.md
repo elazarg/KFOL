@@ -103,7 +103,13 @@ This law also implies source attribution for loopless candidate maps.
 The [canonical common-carrier extension](canonical-separable-extension.md)
 is monotone, matches all old observer faces, preserves the ternary outcast
 invariant, and bounds every term-induced extension. Its term attainment
-and sufficiency of the coupled closure laws remain unresolved.
+for a genuine core target remains unresolved. The
+[four-variable closure counterexample](separable-closure-counterexample.md)
+rules out sufficiency of these laws for an arbitrary candidate, even
+with hereditary profile admissibility, nonempty neutral faces, global
+omission independence and core identification minors. All canonical
+full types pass the individual side-effect tests, yet a neutral facet
+is noncore.
 
 The [prime-obstruction theorem](prime-obstructions.md) shows that the hard
 part persists at unbounded arity: the Gray crowns have core proper

@@ -352,8 +352,15 @@ is monotone, has all prescribed observer faces, and bounds every
 term-induced extension. It preserves the full ternary outcast invariant;
 for arbitrary admissible colored closures, that preservation is equivalent
 to full Q-outcast and preservation of the spanning owners under blocked
-restorations. Term attainment of the canonical extension and sufficiency
-of these constraints for source-separable realizability remain unresolved.
+restorations. Term attainment of the canonical extension for a genuine
+core target remains unresolved. Sufficiency for arbitrary closure data
+is refuted by the
+[four-variable counterexample](separable-closure-counterexample.md), even
+with hereditary spanning-profile admissibility, nonempty neutral faces,
+global omission and core identification minors. Its neutral facet fails
+omission. The colorful-cover lemma separately shows that admissible
+spanning profiles imply nonemptiness; omission then supplies exact atomic
+profiles, and colored outcast plus omission supplies full span-outcast.
 
 ## Full types at greatest profile completions
 
@@ -442,6 +449,15 @@ case, [one occurrence per actual full type](binary-occurrence-types.md)
 suffices for a universal realizer, but different owner orders give
 nonisomorphic type-saturated graphs. Knowing the canonical full-type
 family does not force its individual edge colors.
+
+Actual full types are also not closed under a globally sound coordinatewise
+join: two explicit actual types of the same core target have a sound join
+excluded by the all-owner side-effect law. That target is globally
+nonseparable, so the example does not settle the separable maximum-type
+attainment question. Conversely, the four-variable synthetic counterexample
+has one globally sound canonical type per source, all passing shadow, drift
+and all-owner side effects, but no common term realizes its guards. Individual
+type tests alone therefore do not characterize global guard realizability.
 
 [Exponential crowns](exponential-crowns.md) strengthen the locality obstruction:
 paired-variable Gray cycles and one common cover give 2^d+1 core patches

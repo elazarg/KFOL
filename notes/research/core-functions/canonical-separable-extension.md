@@ -199,6 +199,48 @@ Monotonicity and idempotence give d_a(T union D)=d_a(T), which says
 that the restored union of owner closures has the same complement Q.
 Thus (8) is a closed mixed-closure axiom, not a term-search condition.
 
+## Omission independence makes span-outcast redundant
+
+For candidate loopless closures, assume their spanning profiles are
+admissible, full Q-outcast holds, and the old source formula satisfies
+omission independence. Then span-outcast follows. In particular it need
+not be an additional axiom when those conditions are already present.
+
+The [colorful-cover and omission lemmas](separable-closures.md) give
+nonemptiness and the exact atomic-profile law. Q-outcast supplies strong
+source attribution, so at any fixed status pattern the old output is
+
+    A union UNION_(j in Q) w_j.
+
+First suppose A!=I, and choose k outside A. Give every blocked ambiguous
+position J\Q menu I, and every Q-position menu I\{k}. These menus are
+ambiguous because K>=3. The output omits k. Omission independence
+therefore permits arbitrary atom replacements at any of the blocked
+positions without changing the output. The exact atomic-profile law
+implies that the spanning owners are unchanged. This proves span-outcast
+on every unsaturated pattern, in particular whenever a color is absent.
+
+Here is the abstract bootstrap from missing-color patterns to all
+patterns. Suppose restoring B subseteq J\Q to r creates a new r-span.
+For k!=r put B_k={b in B:{s:b in c_s(E_s)}={k}}.
+If B_k alone does not create the span, first restore it to r and then
+erase k-atoms. Every remaining b in B\B_k keeps an original non-k
+shadow and is blocked. The r-set has not changed in the erasure and
+still does not span. Missing-color span-outcast would forbid the
+remaining restoration from creating the r-span, a contradiction.
+Thus B_k alone creates the r-span for every k!=r.
+
+Choose h different from r,k. In the original pattern erase h-atoms.
+All B_k remain k-blocked, while the unchanged r-set does not span.
+Missing-color span-outcast now forbids restoring B_k to r from creating
+the span, contradicting the preceding conclusion. This proves full
+span-outcast. Mixed restorations reduce to a single owner because any
+new spanning owner depends only on its own enlarged atomic set.
+
+As in the Q-outcast erasure lemma, the bootstrap itself uses only
+monotonicity and extensivity. The two other colors are the reason for
+the K>=3 hypothesis.
+
 ## What has not been proved
 
 The canonical candidate is an upper bound on all term-induced B_I
@@ -206,6 +248,13 @@ extensions and has the structural laws above. Neither these laws nor
 (6) prove that it is a word operation. Nor is it asserted to be the
 greatest arbitrary flat-monotone extension of the old faces: such
 extensions can exceed the pure-port product bound.
+
+For arbitrary synthetic closure data, sufficiency of these laws is
+actually false: the
+[four-variable counterexample](separable-closure-counterexample.md)
+satisfies both outcast laws, hereditary profile admissibility and
+global omission, but its prescribed old operation and G_Q are noncore.
+It does not settle attainment for an already genuine core target.
 
 The B_I input statuses used here have disjoint old atomic sets E_r.
 Free independent-status polarization permits the same variable in
