@@ -55,6 +55,14 @@ so this identifies the whole face restriction.
 Here a P input can come from an old k singleton as well as from a
 k-containing ambiguous menu; no atomic-k input is required in the face.
 
+The [owner-extension theorem](owner-extension-stability.md) gives a
+semantic reformulation of canonical attainment. Extend the old owner
+closures to one new owner with an identity closure. Its separable
+reconstruction is core exactly when G_Q is induced by an old F
+realizer. In that event a single old-owner word works for every
+larger owner set. New-owner gates can be eliminated using derived
+union, so allowing them does not weaken the test.
+
 ## Flat-order monotonicity
 
 **Theorem.** G_Q is monotone for the coordinatewise flat-union order.

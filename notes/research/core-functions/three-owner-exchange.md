@@ -1,172 +1,146 @@
-# Colored feedback elimination and a three-owner obstruction
+# Rainbow budgets and feedback elimination for owner closures
 
-Mathematical research, without Lean claims. Pair-cut, reciprocal
-shared-witness compatibility, hereditary common-source admissibility and
-functional cofactor dependence do not suffice, even together. A four-variable
-counterexample works for every finite owner set with at least three elements.
-Its proper neutral faces and identification minors are core operations.
-Unlike the earlier [two-rule obstruction](separable-closure-counterexample.md),
-its pure-owner closures cannot come from **any** core operation, including a
-nonseparable one.
+Mathematical research, without Lean claims. A closed colored-cover law
+constrains the canonical owner closures of every core operation. It
+subsumes hereditary singleton-profile admissibility and cross-value
+dependence composition. Its exact budget lemmas use projections for
+rainbow queries and a closure-complement fold for same-owner queries.
 
-The proof gives an additional structural law on arbitrary core closures.
-Three differently colored captures cannot form a conditional triangle unless
-the remaining context already captures the whole triangle. This follows from
-two elementary profile bridges and an induction; no enumeration is needed.
+A four-variable obstruction passes pair-cut, reciprocal shared-witness
+compatibility, hereditary profiles and exact functional dependence,
+but violates this law. Its proper neutral faces and identification
+minors are core. Unlike the earlier
+[two-rule obstruction](separable-closure-counterexample.md), its pure
+ports cannot come from any core operation, including a nonseparable one.
 
-## A uniform four-row invariant
+Fix finite owners I with |I|>=3 and finite nonempty variables V.
+Canonical closures are the [cofactor dependence closures](cofactor-dependence-closures.md);
+unused inputs can be removed so they are loopless. Write Phi_r^T
+for a word's owner-r singleton profile.
 
-Write r,s,t for three distinct owners, I for the whole owner set, and
-N=I\{r}. Use variables x,y,z,W and the following four valuations:
+## Exact budget tests and the general elimination law
 
-| row | x | y | z | W |
-|---|---|---|---|---|
-| a | {r} | I | {r} | {r} |
-| b | I | {s} | {s} | N |
-| c | {t} | {t} | I | N |
-| d | {s} | {r} | {r} | {r} |
+The proof uses an exact feasibility lemma for profiles and differently
+colored omission budgets.
 
-Every subword H has values in the following small domains:
+**Rainbow-budget projection lemma.** Fix an observing owner k and a
+finite nonempty variable set V. Let R be a set of positive-profile
+owners, with one coalition A_p for each p in R. Let S be a set of
+query owners disjoint from R and not containing k. For each s in S
+choose disjoint sets X_s,P_s. Define q_s by putting I on X_s, the
+s singleton on P_s, and N_k=I\{k} everywhere else. Put
 
-    H(a) in {{r},I};
-    H(b) in {{s},N,I};
-    H(c) in {{t},N,I};
-    H(d) in {{r},{s},{r,s}}.                         (1)
+    C=INTERSECTION_(p in R) A_p,
 
-There is no atomic input of any fourth owner at these rows. Such an owner's
-singleton profile is therefore false throughout every subword, so its gates
-act as union. The same observation determines which gates act as union at
-each of the four rows for r,s,t.
+with C=V when R is empty. There is a core word T satisfying
 
-The following two implications hold for every core word:
+    Phi_p^T(A_p)=true for every p in R,
+    k notin T(q_s) for every s in S                  (RB)
 
-    H(a)={r}, H(b)={s} imply H(c)=I;                 (B1)
-    H(a)={r}, H(c)={t} imply H(b)=I.                 (B2)
+if and only if
 
-For (B1), induct on H. An r-root has a child with a-value {r}, and both
-children have b-value {s}; choose that child. Its c-value I persists because
-the r-gate acts as union at c. At an s-root choose a child with b-value {s};
-both children have a-value {r}, and again the child's I persists at c.
-At a t-root both children satisfy the two premises and therefore both have
-c-value I; the t-gate cannot absorb either of them. Other owners act as
-union. The projection cases are immediate: only z satisfies both premises,
-and its c-value is I. Interchanging b,c and s,t proves (B2).
+    C\UNION_(s in S) X_s != empty.                  (1)
 
-Now induct again to prove
+Moreover, whenever (RB) is feasible, a projection already witnesses it.
+If x belongs to (1), projection x has all the required profiles and
+omits k at every query, since x is outside every X_s.
 
-    H(a)={r}, s in H(d) imply H(b)=I or H(c)=I.      (B3)
+For necessity, each budget forces a positive singleton profile:
 
-At an r-root, neither child may have d-value {r}, since that would absorb s.
-Both children therefore contain s at d. Choose a child with a-value {r};
-its witness from (B3) persists at b or c, where an r-gate is union.
+    k notin T(q_s) implies Phi_s^T(V\X_s)=true.     (RB-profile)
 
-At an s-root, both children have a-value {r}. Choose a child carrying s at d.
-If its witness is I at c, it persists. If its witness is I at b, the only
-way to erase it is a sibling with b-value {s}. That sibling satisfies (B1)
-and has c-value I, which persists. At a t-root the argument is symmetric:
-an I-witness at b persists, and erasing one at c forces a sibling with
-c-value {t}, hence b-value I by (B2). Other owners act as union.
-Among projections only x satisfies the premises of (B3), and its b-value
-is I.
+Indeed decrease every input outside X_s to {s}, keeping X_s at I.
+This decreases the original input menus: outside P_s union X_s
+was N_k, which contains s since s!=k. Input inclusion monotonicity
+keeps k absent from the output. The new inputs are only {s} and I,
+and every core operation preserves this two-element set. Its output
+must therefore be {s}, since I contains k. This is exactly the
+profile in (RB-profile).
 
-In particular every core word satisfies
+Now use the given positive profiles at A_p, these forced profiles at
+V\X_s, and the top coalition V for every remaining owner. Their
+rainbow common-source condition gives
 
-    H(a)={r}, r notin H(b), r notin H(c)
-        imply s notin H(d).                         (2)
+    INTERSECTION_p A_p intersect INTERSECTION_s (V\X_s)
+        = C\UNION_s X_s != empty.
 
-The auxiliary implications explain exactly why a foreign-owned gate cannot
-hide both negative rows while preserving the positive row.
+This proves necessity, including empty R or S, directly from
+monotonicity and the singleton-profile theorem.
 
-## The stronger context consequence
+There is a complementary closed test when arbitrarily many budgets all
+have the **same** owner s!=k, with X_i intersect P_i empty. Keep the
+positive-profile owners R disjoint from s, and set C=INTERSECTION_(p in R) A_p as above. Let d be the
+closure generated by the displayed implications P_i => X_i, meaning
 
-Replace W by a finite context block L: every member of L has the displayed
-W-column. Let Phi_r^H be H's owner-r singleton profile, and put
+    P_i subseteq D implies X_i subseteq D
 
-    A=L union {x,z}.
+for every d-closed set D. Then the profiles and all these budgets are
+jointly feasible exactly when
 
-There is a stronger three-row statement:
+    B=V\d(V\C) is nonempty.                         (one-color)
 
-    Phi_r^H(A), r notin H(b), r notin H(c)
-        imply Phi_r^H(L).                           (3)
+The s-fold of all variables in B is a witness. To see necessity, prune
+every non-s-owned gate of a purported word to a child retaining all
+positive profiles. At a root owned by p in R choose its p-positive
+child; all other positive profiles pass to both. At other non-s roots
+either child works. Such gates act as union at every budget row, so
+pruning only decreases their outputs. Retain s-roots, whose monotonicity
+preserves this output inequality and whose positive foreign profiles
+require both children. The resulting word is an s-fold on a nonempty
+support B' subseteq C and still satisfies all budgets.
 
-The same two bridges give a direct induction. At an r-root the two negative
-budgets pass to both children because r acts as union on b,c. Choose an
-A-positive child and apply induction. At an s-root both children are
-A-positive. The c-budget passes to both because c has no atomic s input.
-Bridge (B1) then excludes b-value {s} for either child, so the s-root acts
-as union at b and both b-budgets pass too. Both children satisfy the
-induction hypothesis, giving their r-profiles at L and therefore the
-parent's. At a t-root use (B2) in the same way. Other foreign roots pass
-both budgets and require both child profiles. A projection satisfying the
-three premises lies in L: x violates the b-budget, z violates the c-budget,
-and y is not in A.
+An s-fold on B' omits the observing winner at query i exactly when
 
-Consequently, let c_u be the canonical pure-owner closures of any core
-operation, on its essential support. For distinct x,y,z and a disjoint
-context L, the following implication holds for distinct owners r,s,t:
+    B' intersects X_i implies B' intersects P_i.
 
-    y in c_r(L union {x,z}),
-    x in c_s({y,z}), z in c_t({x,y})
-        imply {x,y,z} subseteq c_r(L).               (C3)
+Thus V\B' is d-closed and contains V\C. It contains d(V\C), so
+B' subseteq B and B is nonempty. Conversely this largest B has the
+same implication property by closure of its complement, proving the
+claimed witness. If the required budgets are all captures of one
+given owner closure c_s, simply take d=c_s. A proper subfamily instead
+uses its generated Horn closure, not the entire supplied c_s.
 
-To prove this, take the neutral residual on U=L union {x,y,z}. Neutral
-elimination leaves a genuine full-support core word, whose closures are
-c_u(E) intersect U. The first premise makes its r-profile true at A.
-The second makes x inessential when y=z={s}; since x is the only possible
-r-source at b, this gives the b-budget. The third gives the c-budget.
-Statement (3) says c_r(L) contains U. Closure monotonicity translates this
-back to the original operation. If L is empty, looplessness makes the
-antecedent impossible.
+More generally, the same pruning keeps only gates whose owners occur
+among the queries and leaves in C. With several repeated query colors,
+the remaining word can still have arbitrary alternation; neither of
+the two closed end cases above settles that mixed case.
 
-Thus (C3) is a law on the given closures, without a realizing-word witness
-or a source-separation assumption. It implies both weaker exchanges that
-replace x or z in the initial coalition by y, but asserts more: all three
-heads were already consequences of the context alone.
-
-## A general feedback elimination law
-
-The same argument works with blocks and any finite family of queries,
-including several queries with the same owner. Fix an observing owner r
-and a finite index set J. Give each index i an owner s_i!=r and sets
-X_i,P_i of variables. Require
+Now fix an observing owner r and a finite query index set J. Give
+each i an owner s_i!=r and variable sets X_i,P_i. Require
 
     X_i intersect P_i = empty;
-    X_i subseteq c_(s_i)(P_i);
-    A intersect P_i = empty, or some j has
-        s_j!=s_i and A intersect P_i subseteq X_j.   (7)
+    X_i subseteq c_(s_i)(P_i).                       (2)
+
+For each i require that A intersect P_i can be covered by a selection
+of displayed blocks X_j whose owners s_j are pairwise distinct and
+all different from s_i. The selection may be empty. Equivalently,
+there is J_i subseteq J such that
+
+    s_j!=s_i for j in J_i;
+    j -> s_j is injective on J_i;
+    A intersect P_i subseteq UNION_(j in J_i) X_j.  (3)
 
 Assume also
 
-    UNION_i (P_i union X_i) subseteq c_r(A).          (8)
+    UNION_i (P_i union X_i) subseteq c_r(A).         (4)
 
 Then the canonical closures of every core operation satisfy
 
     c_r(A)=c_r(A\UNION_i X_i).                       (FE)
 
-Everything in this implication is given closure data. Condition (7) is
-a direct cover test among the displayed coalitions; it supplies no
-elimination order, occurrence graph, or unknown realizing object. An
-empty intersection needs no second query.
-
-Here is the profile bridge needed for the proof. If a word has both
-Phi_r(A) and Phi_s(P), and a valuation v has no atomic r or s input
-and gives every member of A intersect P a menu containing r, then
-r belongs to its output. Induct on the word. At an r-root choose an
-A-positive child; both children are P-positive, and the r-gate acts
-as union on v. At an s-root do the reverse. At any other root both
-children retain both positive profiles, hence contain r by induction;
-neither can be the absorbing singleton of that other owner. A leaf
-lies in A intersect P, so contains r. When the intersection is empty,
-ordinary rainbow common-source persistence already excludes the two
-positive profiles.
+Everything in this implication is given closure data. Condition (3)
+is a direct colored cover test among the displayed coalitions; it
+supplies no elimination order, occurrence graph, or unknown realizing
+object. Several queries may have the same owner. Each individual
+cover uses at most one query of each other owner.
 
 Take the neutral residual on
 
     U=A union UNION_i (P_i union X_i).
 
-Assumption (8) makes its r-profile positive at A. At row q_i, put I
+Assumption (4) makes its r-profile positive at A. At row q_i, put I
 on X_i, the s_i atom on P_i, and N_r elsewhere. The capture condition
-in (7) and simultaneous cofactor independence imply that q_i omits r.
+in (2) and simultaneous cofactor independence imply that q_i omits r.
 Replacing X_i by N_r leaves the same output, and then all inputs omit r.
 
 Induct on a word satisfying that positive profile and all the row budgets.
@@ -174,34 +148,95 @@ At an r-root every budget passes to both children, and one child is
 A-positive. At a foreign root u both children are A-positive. Every
 budget q_j with s_j!=u passes directly, because that query has no atomic
 u input. For an index i with s_i=u, neither child can have its u-profile
-positive at P_i. If A intersect P_i is empty, the two positive profiles
-would contradict rainbow common-source persistence. Otherwise (7) gives
-an index j of a different color whose budget has already passed to both
-children. The bridge would put r in that child's q_j output, again
-contradicting its budget. Thus no u-profile blocker exists at any
-u-colored query, and all those budgets pass too. This also covers owners
-absent from the index family. Induction makes the r-profile positive at
-A\UNION_i X_i: at an r-root one positive child suffices, and at every
-foreign root both are positive. A leaf satisfying all budgets must lie
-in that set.
+positive at P_i. Otherwise use its two positive profiles r:A and u:P_i,
+together with the already-passed budgets indexed by J_i. Those query
+owners are distinct and different from r,u. Condition (3) covers the
+intersection of the two positive coalitions, contradicting the
+rainbow-budget projection lemma. Thus no u-profile blocker exists at
+any u-colored query, and all those budgets pass too. This also covers
+owners absent from the index family. Induction makes the r-profile
+positive at A\UNION_i X_i: at an r-root one positive child suffices,
+and at every foreign root both are positive. A leaf satisfying all
+budgets must lie in that set.
 
 Consequently U subseteq c_r(A\UNION_i X_i). In particular A is
 contained there, so closure idempotence and monotonicity give (FE).
 If U or J is empty the identity is immediate.
 
-The one-query-per-owner version can instead use S subseteq I\{r} and
-a map f:S->S with f(s)!=s and A intersect P_s subseteq X_(f(s)). This
-implies (7). The two-owner block case swaps s,t. Choosing
+With one query per owner, condition (3) simplifies to
 
-    A=L union {x,z};
-    X_s={x}, P_s={y,z}; X_t={z}, P_t={x,y}
+    A intersect P_s subseteq UNION_(t!=s) X_t
+        for every query owner s.                   (5)
 
-recovers (C3). If A\UNION_i X_i is empty while A is nonempty,
-looplessness makes (7)-(8) impossible for a genuine core system.
+If A\UNION_i X_i is empty while A is nonempty, looplessness makes
+(2)-(4) impossible for a genuine core system.
+
+The two-owner block case requires each intersection to be covered by
+the other block. It gives the following three-owner absorption law.
+For distinct owners r,s,t, distinct heads x,y,z, and a context L
+excluding those heads,
+
+    y in c_r(L union {x,z}),
+    x in c_s({y,z}), z in c_t({x,y})
+        imply {x,y,z} subseteq c_r(L).               (C3)
+
+Choose A=L union {x,z}, X_s={x}, P_s={y,z}, X_t={z}, P_t={x,y}.
+The premise puts both queries' sets inside c_r(A), while their cover
+conditions are A intersect P_s={z} and A intersect P_t={x}.
+Thus (FE) gives c_r(A)=c_r(L), and c_r(A) already contains all
+three heads. This proves (C3).
 
 This is a closed necessary elimination law, with arbitrary block sizes
 and arbitrarily many queries at a fixed owner count. Its sufficiency,
 with the earlier laws, has not been established.
+
+### Hereditary profiles and elementary composition follow
+
+For loopless owner closures, (FE) already implies hereditary
+common-source admissibility. Let U be nonempty and suppose coalitions
+E_s subseteq U span U at their respective owners. If their common
+intersection were empty, fix an observing owner r and use
+
+    A=E_r;
+    P_s=E_s, X_s=U\E_s for every s!=r.
+
+Each X_s is captured from P_s. Their premises and captured blocks
+lie in U subseteq c_r(E_r). Moreover
+
+    A intersect P_s subseteq UNION_(t!=r,s) X_t,
+
+because a point violating this cover would lie in every E_t. Thus
+(FE) gives c_r(E_r)=c_r(empty)=empty, contradicting that it contains
+U. The spanning profiles on U are monotone and normalized by the
+closure laws and looplessness. Their common-source condition therefore
+makes them an admissible singleton-profile tuple. This holds for every
+nonempty U, without separately imposing hereditary versions of (FE).
+
+The elementary cross-value composition law follows as well. In fact
+the stronger simultaneous form holds:
+
+    P subseteq c_r(E)\E implies c_s(P) subseteq c_r(E)
+        for every owner s.                         (6)
+
+For s=r this is closure idempotence. For s!=r take any
+j in c_s(P) outside E union P, put A=E union {j}, and use the single
+query X={j}, premise P, owner s. Its required cover is empty, since
+A intersect P=empty. Also P union {j} subseteq c_r(A). Thus (FE)
+gives c_r(E union {j})=c_r(E), proving j in c_r(E). Points already
+in E union P satisfy the conclusion directly. Taking P={i} recovers
+the elementary composition law from cofactor dependence.
+
+Consequently loopless closures plus strong (FE) are a candidate for
+joint **pure-port** realizability without separate hereditary-profile
+or elementary-composition axioms. They are not a criterion for the
+separable reconstruction to be core. The
+[complete-head circuit family](complete-head-circuits.md) with three
+private nonempty contexts and an additional observing owner has
+noncore separable reconstruction but exactly the pure closures of its
+explicit core minorant. It therefore satisfies every necessary law
+on joint pure ports, including (FE), as well as pair-cut and reciprocal
+intersection. Full guard compatibility retains information beyond
+this pure-port subproblem.
 
 ## A counterexample to the previous closure laws
 
@@ -210,14 +245,14 @@ Specialize to owners r=0,s=1,t=2 and variables V={x,y,z,W}. Define
     c_0(E)=E union ({y} if {x,z,W} subseteq E else empty);
     c_1(E)=E union ({x} if {y,z} subseteq E else empty);
     c_2(E)=E union ({z} if {x,y} subseteq E else empty);
-    c_u(E)=E for every other owner u.                (4)
+    c_u(E)=E for every other owner u.                (7)
 
 These are loopless closures. Their source-separable reconstruction is
 
     F(w)=W
          union (x unless y=z={1})
          union (y unless x=z=W={0})
-         union (z unless x=y={2}).                   (5)
+         union (z unless x=y={2}).                   (8)
 
 Here a variable on the right denotes its whole input menu. An omitted
 term contributes the empty set. The unconditional W makes F nonempty.
@@ -243,7 +278,7 @@ The earlier tests all hold:
   {0}, independently of y. Fixing y=z={1} makes F={1} union W,
   independently of x. Fixing x=y={2} makes F={2} union W,
   independently of z. All remaining one-color essentials have their
-  pure-source probes as witnesses. Thus (4) are the actual cofactor
+  pure-source probes as witnesses. Thus (7) are the actual cofactor
   dependence closures of F. This also supplies omission independence,
   full old-value outcast and their neutral restrictions by the arguments
   in [cofactor dependence](cofactor-dependence-closures.md).
@@ -253,13 +288,9 @@ owner 2, and unanimity at every other owner. In particular they are
 admissible, with common source W. On all-ambiguous inputs F is the input
 union, so every variable is essential.
 
-Nevertheless the four rows above give
-
-    F(a)={0}, F(b)=N_0, F(c)=N_0, F(d)={0,1},
-
-contradicting (2). Equivalently, (4) violates (C3): its premises hold
-with L={W}, while c_0({W})={W}. This second argument rules out even
-joint pure-port realization by a nonseparable core term.
+These closures violate (C3): its premises hold with L={W}, while
+c_0({W})={W}. Thus they cannot be jointly realized even as pure ports
+of a nonseparable core term; in particular F is noncore.
 
 ## All proper input reductions are core
 
@@ -267,7 +298,7 @@ Deleting x,y or z neutrally leaves input union. Deleting W leaves
 the shared-context two-rule operation
 
     y union (x star_1 (y star_2 z))
-      union (z star_2 (y star_1 x)).                  (6)
+      union (z star_2 (y star_1 x)).                  (9)
 
 All smaller nonempty neutral faces are therefore core as well. The empty
 face is zero.

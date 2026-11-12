@@ -410,8 +410,12 @@ create two new free heads. It is still insufficient: the
 [three-owner feedback obstruction](three-owner-exchange.md) passes
 (P),(C2), hereditary common-source and functional dependence, including
 all proper input reductions, yet violates a stronger closure-elimination
-law. That law uses a direct cover condition on colored captured blocks
-and two elementary singleton-profile bridges. A
+law. That law uses a direct rainbow cover condition on colored captured
+blocks. Its projection lemma follows from monotonicity and ordinary
+singleton-profile admissibility. The strengthened law itself implies
+hereditary admissibility and simultaneous cross-value dependence
+composition. Pure-port sufficiency remains unproved; it would still
+not settle separable hulls. A
 [naive lift to independent coalition nodes](coalition-lift-obstruction.md)
 does not repair this: a genuine core CNF already yields a mixed SCC
 with disjoint labels, and the coherence map fails to commute with gates.
@@ -433,6 +437,21 @@ the canonical common-carrier product is not, although its smaller
 greatest term-induced extension is attained and has a closed formula.
 
 ## Full types at greatest profile completions
+
+The [pure-trace quotient](pure-trace-quotient.md) identifies joint
+pure-owner data with term operations on a colored product of
+three-state algebras. A single coordinate has a five-relation basis
+of arity at most three. The product has genuinely stronger
+compatibility conditions; its finite relatedness is not proved.
+An explicit five-leaf identity separates its equational theory from
+the full core, so this is a proper reduction of the pure-port problem.
+
+For genuine separable targets, [owner-extension stability](owner-extension-stability.md)
+is equivalent to canonical common-carrier attainment. One new owner
+tests every extension: fresh-owned gates can be replaced by derived
+union, and a single old-owner word then works for arbitrary larger
+owner sets. This equivalence does not assert an intrinsic condition
+for that test to succeed.
 
 For [every greatest profile completion](profile-maximum-types.md), soundness
 of a full occurrence vector separates owner by owner, and every sound

@@ -154,11 +154,30 @@ admissible profiles and disjoint matroid decompositions cannot describe
 all minima. The complete compatibility of arbitrary source guards remains
 the objective.
 
+The [joint pure-trace quotient](pure-trace-quotient.md) separates the
+pure-closure problem from mixed guards. It is the colored product of
+three-state one-owner algebras; each coordinate has a five-relation
+ternary basis. Their colored compatibility is not supplied by the
+individual bases. An explicit five-leaf identity shows this quotient
+forgets actual mixed differences between core terms.
+
+The [owner-extension theorem](owner-extension-stability.md) identifies
+canonical common-carrier attainment with realizability after adding
+one owner. If this succeeds, new-owner gates can be eliminated and a
+single old-owner word realizes every larger extension. This is an
+equivalence of semantic tests, not a closed compatibility criterion.
+
 The stronger [three-owner feedback law](three-owner-exchange.md) is
 necessary for arbitrary core closures, without source separation. A
 four-variable example passes pair-cut, reciprocal intersection,
 hereditary profiles and exact cofactor dependence but violates this law.
 All its proper input reductions remain core.
+Its strengthened rainbow-cover form subsumes hereditary profile
+admissibility and elementary dependence composition. Whether loopless
+closures with that one elimination law are jointly realizable as pure
+ports is open. This is a smaller problem than ordinary guard
+realizability: the complete-head example with a spare observer passes
+every pure-port necessity and still has noncore separable reconstruction.
 
 The [complete-head circuit classification](complete-head-circuits.md)
 settles an unbounded family: with distinct head owners and nonempty

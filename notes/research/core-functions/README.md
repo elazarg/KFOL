@@ -96,6 +96,12 @@ free completion. Captures needing joint premises remain outside this
 classification. For raw monomial source tables, agreement of the pure
 owner factors across observers is the additional necessary and sufficient
 coherence check.
+The [joint pure-trace quotient](pure-trace-quotient.md) isolates the
+pure-owner compatibility problem as a colored product of three-state
+algebras. One coordinate has a five-relation basis of arity at most
+three, but joint realizability requires additional compatibility.
+This quotient is strictly coarser than full core semantics: an explicit
+five-leaf equation holds in every pure trace and fails in the core.
 The same two arrow laws characterize which additive pure-owner data come
 from any core operation; their product hull is always core, even when
 the original operation is nonseparable.
@@ -125,7 +131,10 @@ This law also implies source attribution for loopless candidate maps.
 The [canonical common-carrier extension](canonical-separable-extension.md)
 is monotone, matches all old observer faces, preserves the ternary outcast
 invariant, and bounds every term-induced extension. It need not be
-term-induced, even for a genuine core target; the complete-head family
+term-induced, even for a genuine core target. The
+[owner-extension theorem](owner-extension-stability.md) shows that
+testing one new owner is equivalent to testing all larger owner sets,
+with a uniform old-owner word whenever the test succeeds. The complete-head family
 below gives a strict attained maximum beneath it. For
 [two reciprocal capture rules](separable-closure-counterexample.md),
 realizability holds exactly when their context sets share a witness;
@@ -144,7 +153,13 @@ than the earlier hereditary closure tests. It still does not suffice:
 the [three-owner obstruction](three-owner-exchange.md) passes that law,
 pair-cut, hereditary common-source and exact functional dependence,
 yet violates a closed feedback-elimination law on core closures.
-Two profile bridges prove its obstruction without enumeration.
+The rainbow-budget test proves its obstruction without enumeration.
+The stronger law uses rainbow covers by several differently owned
+capture blocks. It already implies hereditary profile admissibility
+and cross-value dependence composition, so these need not be separate
+axioms in the remaining pure-port problem. Its budget lemma has exact
+projection witnesses; same-owner budgets instead have an exact
+closure-complement test. Repeated mixed owners remain the difficult case.
 
 [Complete-head circuits](complete-head-circuits.md) have an exact
 all-arity classification. Each head has its own owner and is suppressed
