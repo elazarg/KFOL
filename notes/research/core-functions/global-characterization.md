@@ -43,6 +43,42 @@ and Bichains* (2013), Definition 5 and Figure 1. Its older normal-form results
 for identities do not specify which formal normal forms arise from terms;
 they do not supply the missing guard characterization.
 
+## Shared coordinates and one common observer carrier
+
+The [status-selector representation](status-selectors.md) replaces separate
+per-owner selections on one atomic-status fibre by a canonical pair: fixed
+atomic winners and whole ambiguous inputs. Four-point interpolation already
+forces this law. The prime examples satisfy it, so the remaining issue is
+compatibility across status patterns.
+
+The [unowned-observer construction](unowned-observer.md) places the original
+observer algebras in one (K+2)-element carrier B_I as omitted-atom faces.
+The original operation is core exactly when those faces have a common
+term extension. Its profile quotient D_I has exact local interpolation
+threshold K and least near-unanimity arity K+1. The additional N/P distinction
+restores nonfinite relatedness, with Gray-crown patches constructible using
+only the old owners. All proper quotients of B_I factor through D_I.
+
+This viewpoint gives sharp stability of identities through K variables when
+unowned roles are added, and all-arity stability for identities with a common
+unused owner. It does not justify filling the missing face data arbitrarily.
+The canonical completion based on all old cofactor essentialities is
+monotone, has the correct faces and singleton profiles, and lies below every
+term extension, yet it need not be term-induced. The sharp example needs
+only K+1 variables, with one
+shared input: three positive profile coalitions force a fresh winner which
+all old cofactor-essentiality data miss.
+
+[Colored interiors](colored-interiors.md) couple the selections across
+ambiguity patterns. They satisfy strong outcast, idempotence and a ternary
+invariant. A closed profile lower bound is exact for primitive read-once
+words and rejects the dependence-completion counterexample. These laws do
+not suffice in general. Every (K+1)-point interpolable operation passes
+all [positive-profile bounds after polynomial polarizations](polarized-profile-bounds.md),
+including arbitrary circuits nesting the candidate, identifications and
+constant cofactors. Consequently large Gray crowns pass this entire testing
+scheme despite being noncore.
+
 ## Union polarization does not complete the scalar criterion
 
 The following uniform mathematical counterexample has a written proof below,
@@ -124,6 +160,16 @@ with a singleton common source. Hence a read-once tree is the least core
 operation in its complete profile fibre. Distinct occurrences of one input
 can invalidate the singleton-intersection step, so this is a positive
 structural regime rather than the remaining all-term characterization.
+
+The [intrinsic recognition theorem](read-once-recognition.md) gives closed
+conditions for this regime using canonical graphs on the original variable
+support. Minimal winning coalitions must be precisely maximal cliques;
+their complement graphs must color every variable pair once, with no
+rainbow triangle and no induced monochromatic four-vertex path. These
+conditions reconstruct a unique reduced owner cotree. Equality with the
+closed profile envelope then recognizes the full read-once winner operation.
+The criterion needs no supplied occurrence graph, but does not cover general
+overlapping reuse.
 
 ## Other routes that do not suffice
 

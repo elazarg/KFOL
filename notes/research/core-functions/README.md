@@ -45,6 +45,12 @@ rainbow formula in the singleton profiles gives the entire winner operation.
 Such a tree is the least core operation in its profile fibre. A direct
 coalition induction identifies where this argument fails for repeated
 variables: different occurrences can create a spurious common source.
+The [intrinsic read-once recognition theorem](read-once-recognition.md)
+uses canonical graphs on the original variables: minimal winning coalitions
+are maximal cliques, pair colors have no rainbow triangle or induced
+monochromatic four-vertex path, and the operation equals its profile envelope.
+These conditions reconstruct a unique reduced cotree without a supplied
+occurrence graph. This recognizes the read-once regime, not arbitrary reuse.
 
 The [prime-obstruction theorem](prime-obstructions.md) shows that the hard
 part persists at unbounded arity: the Gray crowns have core proper
@@ -59,6 +65,32 @@ at most once, nor any finite union of such terms. Every binary core
 operation is its greatest profile completion, so the existing spine
 certificate proves this stronger claim. A four-row analytic proof separately
 rules out source-linear witnesses for one positive canonical observation.
+
+[Atomic-status selectors](status-selectors.md) give shared coordinates for
+all observers: on a fixed singleton/ambiguity pattern a core operation is a
+fixed union of atomic winners and whole ambiguous inputs. Four-point
+interpolation already forces this representation. The selector law alone
+still accepts the prime counterexamples.
+
+The [common observer carrier](unowned-observer.md) has only K+2 states.
+Its profile quotient has exact interpolation threshold K and least
+near-unanimity arity K+1, while the full carrier remains nonfinitely related.
+Identities are stable under unowned-role extension through K variables,
+sharply, and at every arity if the two sides have a common unused owner.
+A canonical completion from semantic dependence is monotone and agrees
+with all old faces, but a K+1-variable example rules out its
+term-inducedness, at the first arity where face data can be missing.
+This is a reformulation and a sharper obstruction to
+gluing, not the missing complete intrinsic criterion.
+
+[Colored interiors](colored-interiors.md) give closed selection laws across
+ambiguity patterns, including strong outcast and a ternary invariant. A
+profile lower bound determines these interiors exactly for primitive
+read-once words and strictly strengthens those necessary laws in general.
+However, [polynomially polarized profile bounds](polarized-profile-bounds.md)
+still cannot characterize the clone: every (K+1)-point interpolable operation
+passes them, even in arbitrary finite circuits nesting the candidate.
+Large Gray crowns therefore pass all of these tests and remain noncore.
 
 Local tests do not suffice even within a fixed singleton-profile fiber.
 Pairwise, three-point and four-point interpolation obstructions are proved
