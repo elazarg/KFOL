@@ -19,8 +19,13 @@ Prime source-guard normal forms describe full values
 (\cref{app:core-source-guards}). Their joint realizability has a recursive
 recognition criterion using atomic challenges and strict row deletion
 (\cref{core:cor:guard-peeling}), and a colored-graph representation
-(\cref{app:core-colored-graphs}). At every fixed $K\geq3$, no finite
-family of invariant relations determines the core clone
+(\cref{app:core-colored-graphs}). A closed reachability test recognizes
+one observer on atomic inputs (\cref{core:thm:atomic-observer}), while
+separately realizable complete views need not have a common core term
+(\cref{core:prop:observer-amalgamation}). Closed
+colored-hypergraph cut conditions specify a complete infinite relational
+basis (\cref{core:thm:hypergraph-basis}); at every fixed $K\geq3$, no
+finite family of invariant relations determines the core clone
 (\cref{core:thm:not-finitely-related}). Some local tests do not even
 leave a pointwise core minorant (\cref{app:core-pairwise}), and failure
 can also occur between core bounds with the same singleton outputs
@@ -1488,6 +1493,193 @@ realization of $R$. The core upper bound
 $h=(X+Y+Z+W+V)\del g$ has these profiles and contains $R$ by provenance.
 \end{proof}
 
+\subsection{The four-state quotient and a projection fiber}
+\label{app:core-bichain}
+
+For three roles $a,b,c$, the $a$-view has four states: the atoms $b,c$,
+$\mathsf p$ when $a$ is possible, and $\mathsf n$ otherwise. Choice by $b$
+is meet in the chain $b<\mathsf p<\mathsf n<c$, and choice by $c$ is
+join in the chain $b<\mathsf n<\mathsf p<c$. This is the four-element
+bichain $\mathbf B$ of Harding, Walker, and Walker
+\cite[Figure~1]{HardingWalkerWalker2013}. The remaining choice, by $a$,
+is the observer union $\sqcup$: $\mathsf p$ absorbs every value,
+$b\sqcup c=\mathsf n$, and $\mathsf n$ absorbs the endpoints.
+Write $\wedge,\vee$ for the two bichain operations.
+
+\begin{proposition}[The observer union expansion]\label{core:prop:bichain}
+The displayed identification preserves all three owned choices. Moreover,
+with $m(x,y,z)=(x\wedge y)\vee(x\wedge z)\vee(y\wedge z)$,
+\[
+ x\sqcup y=m(x,y,\mathsf n).
+\]
+\end{proposition}
+\begin{proof}
+The choice rule gives the two chains and the union table. Their four-state
+tables also give the displayed median identity.
+\end{proof}
+
+This identification isolates the role of repeated occurrences. For example,
+$x\wedge(x\vee y)$ agrees with $x$ on the endpoints $b,c$, but at
+$x=\mathsf n,y=\mathsf p$ it returns $\mathsf p$. A complete reduction
+makes this distinction precise. Call a $\wedge,\vee$ term in a distinguished
+input $z$ and other inputs $x_j$ a \emph{Boolean projection} when it equals
+$z$ whenever all inputs belong to $\{b,c\}$.
+
+For a term $s(x)$ using $\wedge,\vee,\sqcup$, replace each union by
+$m(-,-,z)$ to obtain a pure bichain term $s^{[z]}$. Put
+\[
+ E(z,u)=z\wedge(z\vee u),\qquad L(s)=E(z,s^{[z]}).
+\]
+
+\begin{theorem}[Exact projection-fiber reduction]\label{core:thm:bichain-fiber}
+Every pure Boolean-projection term is either the distinguished projection
+$z$ or the operation $L(s)$ for a full union-expanded bichain term $s$.
+The two alternatives are disjoint, and $L(s)=L(t)$ exactly when $s=t$
+as full term operations. Thus the projection fiber is a copy of the full
+union-expanded clone at one lower arity, with one additional element.
+\end{theorem}
+\begin{proof}
+The envelope $E$ fixes $z=b,c,\mathsf p$, and at $z=\mathsf n$ it
+returns $\mathsf p$ exactly when its second input is $\mathsf p$.
+The median identity therefore proves that $L(s)$ is pure, is a Boolean
+projection, and has the stated neutral section.
+
+Conversely, a pure Boolean-projection term fixes the distinguished input
+whenever it is $b,c$, or $\mathsf p$; at $\mathsf n$ its value is one
+of the two middle states. Substitute
+$\mathsf n=b\sqcup c$ in this section and distribute both bichain
+operations over $\sqcup$. Endpoint constants simplify in each summand,
+leaving endpoint constants and constant-free terms. The constants contribute
+no $\mathsf p$ observation. The remaining summands give a full term $s$,
+or there are none and the original operation is $z$.
+
+Finally the maps $u\mapsto u\wedge\mathsf p$ and
+$u\mapsto u\vee\mathsf p$ are endomorphisms of the three-operation
+algebra. The first fixes $b$ and sends every other state to $\mathsf p$;
+the second does the same for $c$. Hence a full term operation is determined
+by its $\mathsf p$ observations. Its neutral lift determines those
+observations, proving uniqueness. A full term takes the value $\mathsf p$
+when all its inputs do, separating its lift from the distinguished projection.
+\end{proof}
+
+\subsection{A closed atomic-observer test}
+\label{app:core-atomic-observer}
+
+One observer on atomic inputs admits a closed graph criterion. Fix distinct
+owners $a,b,c$ and a finite variable set $V$. For $L\subseteq U\subseteq V$,
+let $v^{L,U}$ assign $\{c\}$ on $L$, $\{a\}$ on $U\setminus L$, and
+$\{b\}$ elsewhere. An \emph{atomic observer table} specifies a bit
+$h(L,U)$ for every such interval. On the vertices $2^V$, draw all inclusion
+edges $S\to T$ with $S\subseteq T$, and draw $U\to L$ whenever
+$h(L,U)=0$. Write $S\preceq_h T$ for directed reachability, including the
+empty path.
+
+\begin{theorem}[Closed atomic-observer recognition]
+\label{core:thm:atomic-observer}
+The table $h$ satisfies
+$h(L,U)=1\iff a\in t(v^{L,U})$ for some core term $t$ if and only if
+\begin{equation}\label{core:eq:atomic-observer-criterion}
+ h(\varnothing,V)=1,\qquad
+ h(L,U)=1\ \Longrightarrow\ U\not\preceq_h L.
+\end{equation}
+The same criterion holds in any ambient role set containing $a,b,c$.
+\end{theorem}
+\begin{proof}
+On these atomic inputs, the $a$-view of a core term expands as a nonempty
+finite union of lattice polynomials on $b<\mathsf p<c$, where
+$\mathsf p$ records that $a$ is possible. Choice by $a$, or by an owner
+outside $\{a,b,c\}$, is union; choices by $b,c$ distribute over union
+and give meet and join in each component. Each component has a normalized
+monotone Boolean restriction $\varphi:2^V\to\{0,1\}$, with
+$\varphi(\varnothing)=0$ and $\varphi(V)=1$. Its value is
+$\mathsf p$ precisely when $\varphi(L)=0$ and $\varphi(U)=1$.
+Consequently every atomic observer trace has the form
+\begin{equation}\label{core:eq:atomic-observer-expansion}
+ h(L,U)=1\quad\Longleftrightarrow\quad
+ \exists\varphi\in\mathcal B\quad
+ \varphi(L)=0,\quad\varphi(U)=1,
+\end{equation}
+for a nonempty finite family $\mathcal B$ of these Boolean functions.
+Every zero interval makes each $\varphi$ equal at its endpoints, so
+$\varphi$ is monotone along every edge of $\preceq_h$. A positive
+interval therefore cannot have $U\preceq_h L$, and normalization gives
+$h(\varnothing,V)=1$.
+
+Conversely, for each positive interval $(L,U)$ put
+$\varphi_{L,U}(S)=1$ exactly when $U\preceq_h S$.
+This function is monotone, is zero at $L$ and $\varnothing$, and is one
+at $U$ and $V$. It is constant on every zero interval, whose endpoints
+are mutually reachable. Singleton-profile synthesis and greatest profile
+completion (\cref{core:thm:profiles,core:prop:profile-maximum}) realize its
+derivative by a core term: prescribe the $c$-singleton test
+$\varphi(E_c)=1$ and the $b$-singleton test
+$\varphi(V\setminus E_b)=0$, where $E_r=\{j:S_j=\{r\}\}$, with
+all other singleton profiles the all-variable conjunction. The greatest
+completion contains $a$ at
+$v^{L',U'}$ exactly when
+$\varphi(L')=0$ and $\varphi(U')=1$.
+The finite union of these terms over all positive intervals realizes $h$;
+the first condition in \eqref{core:eq:atomic-observer-criterion} makes the
+family nonempty. Extra owners introduce no additional traces because their
+choices act as union on these inputs.
+\end{proof}
+
+The complete observer views do not, however, glue automatically. Even
+when each view has a core realization on all winner inputs and all singleton
+profiles are unanimity, three atomic rows can obstruct a common realization.
+
+\begin{proposition}[Failure of observer amalgamation]
+\label{core:prop:observer-amalgamation}
+For roles $0,1,2$, put
+\begin{align*}
+ T_0&=Y+Z+(X\star_1Y)+(X\star_2Z),\\
+ T_1&=X+Y+(Z\star_0X)+(Z\star_2Y),\\
+ T_2&=X+Z+(Y\star_1X)+(Y\star_0Z),
+\end{align*}
+and define $F(X,Y,Z)=\{r:r\in T_r(X,Y,Z)\}$. This set is always
+nonempty, and
+\[
+ F(X,Y,Z)=\{r\}\quad\Longleftrightarrow\quad X=Y=Z=\{r\}.
+\]
+For every $r$, the complete $r$-view of $F$ equals the $r$-view of $T_r$
+on every winner valuation. Nevertheless no core term agrees with $F$ on
+all three singleton-input rows
+\[
+ (0,1,2),\quad(0,2,1),\quad(1,2,0),
+\]
+where a role in a row denotes its singleton winner set. The corresponding
+outputs are $\{1,2\}$, $\{0,2\}$, and $\{0,1\}$.
+\end{proposition}
+\begin{proof}
+Substitution in the seven nonempty winner values shows that $F$ is
+nonempty and that each $T_r$, as well as $F$, is a singleton exactly at a
+unanimous singleton input. Membership of $r$ agrees by definition, so their
+complete $r$-views agree.
+
+For the joint obstruction, encode a winner set $A$ by
+$q(A)=\sum_{r\in A}2^r\in\{1,\ldots,7\}$. Let $R$ contain the triples
+$(A,B,C)$ for which bit $q(C)-1$ of entry $(q(A),q(B))$ in the following
+matrix is one, with rows and columns numbered from one and bits from zero:
+\[
+ \begin{pmatrix}
+ 103&0&0&0&0&0&0\\
+ 0&82&0&8&114&112&114\\
+ 0&0&118&8&118&112&118\\
+ 0&85&85&8&0&85&85\\
+ 0&87&119&0&118&117&119\\
+ 0&85&85&8&112&117&117\\
+ 0&87&119&8&118&117&119
+ \end{pmatrix}.
+\]
+This finite relation contains the three input columns, whose codes are
+$(1,1,2),(2,4,4),(4,2,1)$, and is closed under each coordinatewise
+$\star_r$. These checks use only the rule that choice returns $2^r$ if
+either code equals $2^r$, and otherwise returns their bitwise union.
+Induction therefore puts every core term's output triple in $R$.
+The required triple has codes $(6,5,3)$; entry $(6,5)$ is $112$, whose
+bit $2$ is zero. Thus it is not in $R$.
+\end{proof}
+
 \subsection{No finite relational characterization}
 \label{app:core-crown}
 
@@ -1534,21 +1726,9 @@ Every core term $t$ satisfies
 \]
 \end{lemma}
 \begin{proof}
-Work in the $a$-view. Choice by $a$ is union, as is choice by any
-owner outside $\{a,b,c\}$ on these inputs. Choices by $b,c$
-distribute over union. Thus $t$ expands in this view into a nonempty
-union of $b/c$ lattice expressions. Each component evaluates on the
-three-element chain $b<\mathsf p<c$, where $\mathsf p$ records that
-$a$ is possible; choices by $b,c$ are meet and join on this chain.
-Let $\varphi$ be the component's monotone Boolean restriction, with
-$b$ false and $c$ true. On a valuation with one $a$ input, it returns
-$\mathsf p$ precisely when
-\[
- \varphi(L)=0,\qquad\varphi(U)=1,
-\]
-where $L$ lists the $c$ positions and $U$ lists the positions not
-assigned $b$. This follows by induction on meet and join.
-
+By \eqref{core:eq:atomic-observer-expansion}, the atomic $a$-trace is a
+nonempty union of derivatives of normalized monotone Boolean functions
+$\varphi$ on $2^V$.
 Suppose $a$ is absent from every $t(N_j)$. Each component then satisfies
 $\varphi(L_j)=\varphi(U_j)$. Monotonicity gives
 \[
@@ -1789,9 +1969,152 @@ families by $(*)$. For empty variables, the empty rainbow challenge fails,
 matching the absence of nullary core terms.
 \end{proof}
 
-These repeated singleton tests give recursive recognition, while
-\cref{core:thm:not-finitely-related} shows that no fixed bound on
-invariant-relation arity suffices for recognizing core operations.
+\subsection{Closed hypergraph obstructions}
+\label{app:core-hypergraphs}
+
+The recursive test has a complementary description by an explicit infinite
+family of invariant relations. Their indexing structures satisfy two closed
+set conditions. Fix a finite row set $Q$, put $P=Q\times I$, and color a
+vertex $(i,r)$ by its owner $r$. A \emph{clutter} is an inclusion antichain
+of subsets of $P$. Choose a clutter $\mathcal H_p$ for every
+$p\in P\cup\{\bot\}$, where $\bot$ denotes an absent premise, and put
+\[
+ \mathcal U_p=\{S\subseteq P:\exists H\in\mathcal H_p\ (H\subseteq S)\},
+ \qquad E_i=\{i\}\times I.
+\]
+Thus $\mathcal U_p$ records which heads contain an edge of their clutter.
+The \emph{boundary conditions} are
+\begin{equation}\label{core:eq:hypergraph-boundary}
+ \tag{B}
+ E_i\in\mathcal U_\bot,\qquad
+ \mathcal U_\bot\subseteq\mathcal U_p,\qquad
+ p\in S\ \Longrightarrow\ S\in\mathcal U_p
+ \quad(i\in Q,\ p\in P).
+\end{equation}
+For $H,S\subseteq P$, write
+\[
+ H_r=H\cap(Q\times\{r\}),\qquad
+ B_r(i,S)=S\cup\bigl(\{i\}\times(I\setminus\{r\})\bigr).
+\]
+The \emph{no-trap condition} requires that, for every $p$, every
+$H\in\mathcal H_p$, every owner $r$, and every
+$H_r\subseteq S\subsetneq H$, there be a vertex $(i,k)\in H\setminus S$
+such that
+\begin{equation}\label{core:eq:hypergraph-no-trap}
+ \tag{T}
+ \begin{cases}
+ B_r(i,S)\in\mathcal U_\bot,
+   &p=\bot\text{ or }p=(q,r),\\
+ B_r(i,S)\in\displaystyle\bigcap_{s\ne r}\mathcal U_{(q,s)},
+   &p=(q,a),\ a\ne r.
+ \end{cases}
+\end{equation}
+Call the indexed clutters \emph{admissible} when (B) and (T) hold.
+These are finite incidence and subset conditions; they contain no
+recursively defined predicate or supplied elimination order.
+
+Identify a raw tuple of sets $X=(X_i)_{i\in Q}$ with
+$\{(i,k):k\in X_i\}\subseteq P$. Say that $X$ \emph{models} the clutters,
+written $X\models\mathcal H$, if
+\begin{equation}\label{core:eq:hypergraph-models}
+ \begin{aligned}
+ &X\cap H\ne\varnothing&& (H\in\mathcal H_\bot),\\
+ &p\in X\ \Longrightarrow\ X\cap H\ne\varnothing
+   &&(p\in P,\ H\in\mathcal H_p).
+ \end{aligned}
+\end{equation}
+These clauses have at most one positive membership premise. Condition (B)
+forces every model to meet each row $E_i$, so its coordinates are nonempty.
+
+\begin{theorem}[Complete closed hypergraph basis]
+\label{core:thm:hypergraph-basis}
+For $K\geq3$, a finite relation $R\subseteq\Pow^Q$ is invariant under owned
+choice if and only if it is the raw model set of an admissible indexed
+clutter. This includes empty row sets and empty relations. Consequently an
+operation is core if and only if it preserves every relation of
+\eqref{core:eq:hypergraph-models} whose clutters satisfy (B) and (T).
+\end{theorem}
+\begin{proof}
+First prove invariance of an admissible model set. Suppose an $r$-choice
+of models $X,Y$ violates the clause with head $H$ and premise $p$.
+The absent head vertices in $H_r$ are absent in both children, since an
+owner's choice preserves that owner's membership. Let
+$H_r\subseteq S\subsetneq H$ be head vertices already known absent in
+both. Condition (T) supplies $(i,k)\in H\setminus S$.
+If $p=\bot$ or its owner is $r$, the supported pure clause with head
+$B_r(i,S)$ excludes $X_i=\{r\}$ and $Y_i=\{r\}$.
+Otherwise $p=(q,a)$ with $a\ne r$ holds at the parent, so neither child's
+$q$-value is $\{r\}$. Each has a member $s\ne r$, and its supported
+clause with premise $(q,s)$ again excludes the $r$-singleton at $i$.
+Thus the choice at $i$ is union and the absence of $(i,k)$ passes to both
+children. Enlarge $S$ by this vertex. Finiteness passes the whole head to
+both children. For a pure cover either child now violates the clause;
+for a membership premise some child retains it and violates the clause.
+Both contradict that $X,Y$ are models.
+
+Conversely let $R$ be invariant. Derived union makes it union-closed.
+Take $\mathcal U_p$ to consist of all heads whose clause with premise $p$
+is valid throughout $R$, and let $\mathcal H_p$ be its minimal heads.
+These clutters satisfy (B) and present $R$ exactly. Indeed, for a raw
+$X\notin R$, if no member of $R$ is contained in $X$, the pure cover
+$P\setminus X$ separates it. Otherwise the union $Y$ of those members
+belongs to $R$ and is strictly contained in $X$; any $p\in X\setminus Y$
+gives the separating clause $p\Rightarrow P\setminus X$.
+
+To prove (T), fix a minimal valid head $H$ and
+$H_r\subseteq S\subsetneq H$. Minimality gives a tuple $x\in R$
+violating the restricted clause with head $S$. If no remaining head vertex
+had the required supported blockers, for each $(i,k)\in H\setminus S$
+choose an invalid-blocker witness $y^i\in R$. It omits every $S$-vertex
+and has $y^i_i=\{r\}$; in the case $p=(q,a)$ with $a\ne r$, it also has
+$y^i_q\ne\{r\}$. Fold these tuples into $x$ using $\star_r$.
+Every $S$-negative survives because choice is contained in union, and each
+remaining head row becomes $\{r\}$, omitting its forbidden owner $k\ne r$.
+The premise persists: its $r$-membership survives $r$-choice, while a
+premise of another owner survives unions at its row. The fold contradicts
+the valid $H$-clause, proving (T). Finally,
+\cref{core:lem:finite-interpolation} turns this presentation of all invariant
+relations into the characterization of term operations.
+\end{proof}
+
+The basis gives a closed condition directly on the positive and negative
+bits of a proposed canonical guard family. Use all source probes as rows,
+write $C(q)=F^\Gamma_{k,j}(p)$ for $q=(k,j,p)$, and put
+\[
+ N=\{q:C(q)=0\},\qquad
+ A_N=\{(q,k):q=(k,j,p)\in N\}\subseteq Q\times I.
+\]
+The input column at $j$ is $c_j(q)=v^q_j$.
+
+\begin{corollary}[Closed guard persistence]
+\label{core:cor:hypergraph-guards}
+A canonical guard family $\Gamma$ is jointly realizable if and only if it
+has a positive probe and, for every positive $q=(k,j,p)$ and every
+admissible indexed clutter on $Q\times I$,
+\begin{equation}\label{core:eq:hypergraph-guards}
+ \bigl(\forall j\in V,\ c_j\models\mathcal H\bigr)
+ \quad\Longrightarrow\quad A_N\notin\mathcal U_{(q,k)}.
+\end{equation}
+\end{corollary}
+\begin{proof}
+A core term has a positive source observation: evaluate at a diagonal
+singleton and apply the source decomposition. If it realizes $\Gamma$,
+its tuple on the probes models every admissible clutter containing the input
+columns. It contains $(q,k)$ and omits $A_N$, so the clause with that
+premise and head $A_N$ cannot be supported.
+
+Conversely fix a positive $q$. If no core term contains $k$ there while
+omitting every negative observation, the implication
+$(q,k)\Rightarrow A_N$ holds in the relation generated by the input
+columns. The canonical clutters in \cref{core:thm:hypergraph-basis} then
+support $A_N$ at $(q,k)$, contradicting
+\eqref{core:eq:hypergraph-guards}. Thus each positive probe has a core
+witness respecting all negatives. Their nonempty finite union realizes
+every coefficient, and canonicity recovers $\Gamma$.
+\end{proof}
+
+The criterion quantifies over finite colored clutters of unrestricted
+size, in agreement with \cref{core:thm:not-finitely-related}.
 
 \subsection{Unary polynomials}
 

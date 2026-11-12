@@ -1,6 +1,7 @@
 module
 
 public import KFOL.Definitions.CoreCrown
+public import KFOL.Definitions.AtomicObserver
 public import KFOL.Core.RoleRestriction
 public import KFOL.Core.StatusModel
 public import KFOL.Algebra.Views
@@ -236,6 +237,72 @@ private theorem mem_familyValue {Var : Type*} (H : Finset (LatticeExpr Var))
       ∃ e ∈ H, e.eval v = 1 := by
   have hd (x : Fin 3) : decode x = 0 ↔ x = 1 := by fin_cases x <;> decide
   simp only [familyValue, Value.toWinner, Finset.mem_coe, Finset.mem_image, hd]
+
+private theorem predicate_bot {Var : Type*} (e : LatticeExpr Var) :
+    ¬e.predicate ∅ := by
+  induction e with
+  | var j => simp [LatticeExpr.predicate]
+  | inf s t ihs iht => exact fun h => ihs h.1
+  | sup s t ihs iht => exact fun h => h.elim ihs iht
+
+private theorem predicate_top {Var : Type*} (e : LatticeExpr Var) :
+    e.predicate Set.univ := by
+  induction e with
+  | var j => trivial
+  | inf s t ihs iht => exact ⟨ihs, iht⟩
+  | sup s t ihs iht => exact Or.inl ihs
+
+/-- On atomic three-role inputs, an observer trace is a nonempty finite union
+of derivatives of monotone nonconstant Boolean functions. -/
+theorem atomic_trace_expansion {Var : Type*} [Fintype Var]
+    (t : Term (Fin 3) Var) (ht : t.IsCore) :
+    ∃ H : Finset (Finset Var → Bool), H.Nonempty ∧
+      (∀ φ ∈ H, Monotone φ ∧ φ ∅ = false ∧ φ Finset.univ = true) ∧
+      ∀ L U, L ⊆ U →
+        ((0 : Fin 3) ∈ (t.eval (AtomicObserver.values
+          (Function.Embedding.refl (Fin 3)) L U)).val ↔
+          ∃ φ ∈ H, φ L = false ∧ φ U = true) := by
+  classical
+  obtain ⟨J, hJ, he⟩ := lattice_expansion t ht
+  let f (e : LatticeExpr Var) (S : Finset Var) : Bool := decide (e.predicate S)
+  refine ⟨J.image f, hJ.image _, ?_, ?_⟩
+  · intro φ hφ
+    obtain ⟨e, _, rfl⟩ := Finset.mem_image.mp hφ
+    refine ⟨?_, ?_, ?_⟩
+    · intro S T hST
+      apply Bool.le_iff_imp.mpr
+      intro hS
+      have hh : e.predicate (S : Set Var) := by simpa [f] using hS
+      simpa [f] using predicate_mono e (by simpa using hST) hh
+    · simpa [f] using predicate_bot e
+    · simpa [f] using predicate_top e
+  · intro L U hLU
+    let v : Var → Fin 3 := fun j => if j ∈ L then 2 else if j ∈ U then 1 else 0
+    have hv : AtomicObserver.values (Function.Embedding.refl (Fin 3)) L U =
+        fun j => WinnerSet.singleton (decode (v j)) := by
+      funext j
+      by_cases hL : j ∈ L <;> by_cases hU : j ∈ U <;>
+        simp [AtomicObserver.values, v, hL, hU, decode]
+    have h1 : {j | (1 : Fin 3) ≤ v j} = (U : Set Var) := by
+      ext j
+      have hj : j ∈ L → j ∈ U := fun h => hLU h
+      by_cases hL : j ∈ L <;> by_cases hU : j ∈ U <;>
+        simp_all [v]
+    have h2 : {j | (2 : Fin 3) ≤ v j} = (L : Set Var) := by
+      ext j
+      by_cases hL : j ∈ L <;> by_cases hU : j ∈ U <;>
+        simp [v, hL, hU]
+    rw [hv, (he v).1, mem_familyValue]
+    simp only [Finset.mem_image, exists_exists_and_eq_and]
+    constructor
+    · rintro ⟨e, heJ, heval⟩
+      have hh := (eval_eq_middle e v).mp heval
+      rw [h1, h2] at hh
+      exact ⟨e, heJ, by simpa [f] using hh.2, by simpa [f] using hh.1⟩
+    · rintro ⟨e, heJ, hL, hU⟩
+      refine ⟨e, heJ, (eval_eq_middle e v).mpr ?_⟩
+      rw [h1, h2]
+      exact ⟨by simpa [f] using hU, by simpa [f] using hL⟩
 
 private theorem negative_eq_chain {Var : Type*} [DecidableEq Var]
     (next : Equiv.Perm Var) (i : Var) :

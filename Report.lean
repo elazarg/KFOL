@@ -16,6 +16,10 @@ public import KFOL.Core.LocalNormalForm
 public import KFOL.Core.ProfileEnvelope
 public import KFOL.Core.CyclicPersistence
 public import KFOL.Core.CrownFullSyntax
+public import KFOL.Core.AtomicObserver
+public import KFOL.Core.Hypergraphs
+public import KFOL.Core.BichainFiber
+public import KFOL.Core.AtomicAmalgamation
 public import KFOL.Audit.Namespace
 
 /-! # Audited report statements and mathematical proof ingredients
@@ -200,6 +204,55 @@ theorem core_five_local_profile_obstruction {Role : Type u} [Fintype Role]
       ¬∃ u : Term Role (Fin 5), u.IsCore ∧ ∀ v, u.eval v = f v :=
   Core.exists_five_local_profile_fiber_nonconvex three
 
+/-- `core:prop:bichain`: the three-owner quotient is the union-expanded bichain. -/
+theorem observer_bichain :
+    (∀ x y : Bichain.Value,
+      Bichain.Value.viewEquiv (Bichain.Value.inf x y) = PlayerView.choice 1
+        (Bichain.Value.viewEquiv x) (Bichain.Value.viewEquiv y)) ∧
+    (∀ x y : Bichain.Value,
+      Bichain.Value.viewEquiv (Bichain.Value.sup x y) = PlayerView.choice 2
+        (Bichain.Value.viewEquiv x) (Bichain.Value.viewEquiv y)) ∧
+    (∀ x y : Bichain.Value,
+      Bichain.Value.viewEquiv (Bichain.Value.union x y) = PlayerView.choice 0
+        (Bichain.Value.viewEquiv x) (Bichain.Value.viewEquiv y)) ∧
+    ∀ x y : Bichain.Value,
+      Bichain.Value.median x y .neutral = Bichain.Value.union x y :=
+  Bichain.Value.observer_model
+
+/-- `core:thm:bichain-fiber`: existence in the Boolean projection fiber. -/
+theorem bichain_projection_fiber {Var : Type v} (t : Bichain.Term (Option Var))
+    (ht : t.IsPure) :
+    t.IsBooleanProjection ↔ ∃ g : Option (Bichain.Term Var), ∀ v,
+      t.eval v = (Bichain.Term.optionalLift g).eval v :=
+  Bichain.Term.isBooleanProjection_iff_recovery t ht
+
+/-- Uniqueness in `core:thm:bichain-fiber`, including the additional zero trace. -/
+theorem bichain_projection_fiber_unique {Var : Type v}
+    (g h : Option (Bichain.Term Var)) :
+    (∀ v, (Bichain.Term.optionalLift g).eval v = (Bichain.Term.optionalLift h).eval v) ↔
+      g.map (fun t => t.eval) = h.map (fun t => t.eval) :=
+  Bichain.Term.optionalLift_eq_iff g h
+
+/-- `core:thm:atomic-observer`: a closed test on one atomic observer table. -/
+theorem core_atomic_observer {Role : Type u} {Var : Type v} [Fintype Var]
+    (three : Fin 3 ↪ Role) (h : Finset Var → Finset Var → Prop) :
+    Core.AtomicObserver.Admissible h ↔ ∃ t : Term Role Var, t.IsCore ∧
+      ∀ L U, L ⊆ U → (h L U ↔
+        three 0 ∈ (t.eval (Core.AtomicObserver.values three L U)).val) :=
+  Core.AtomicObserver.admissible_iff_embedding three h
+
+/-- `core:prop:observer-amalgamation`: separate complete views need not glue. -/
+theorem core_observer_amalgamation :
+    ∃ F : (Fin 3 → WinnerSet (Fin 3)) → WinnerSet (Fin 3),
+      (∀ v, (F v).val = Core.AtomicAmalgamation.raw v) ∧
+      (∀ v r, F v = singleton r ↔ ∀ j, v j = singleton r) ∧
+      (∀ r : Fin 3, ∃ t : Term (Fin 3) (Fin 3), t.IsCore ∧ ∀ v,
+        WinnerSet.view r (F v) = WinnerSet.view r (t.eval v)) ∧
+      ¬∃ t : Term (Fin 3) (Fin 3), t.IsCore ∧
+        ∀ i, t.eval (Core.AtomicAmalgamation.atomicInput i) =
+          F (Core.AtomicAmalgamation.atomicInput i) :=
+  Core.AtomicAmalgamation.exists_amalgamation_failure
+
 /-- `core:lem:cyclic-persistence`: cyclic derivatives cannot point in only one direction. -/
 theorem core_cyclic_persistence {Role : Type u} {Var : Type v} [Finite Var]
     (three : Fin 3 ↪ Role) (next : Equiv.Perm Var) (i : Var) (hi : next i ≠ i)
@@ -233,6 +286,42 @@ theorem core_peeling_interpolation {Role : Type u} {Row : Type v} {Var : Type w}
       ∃ t : Term Role Var, t.IsCore ∧
         Core.Interpolation.Fits N U D p (fun i => t.eval (values i)) :=
   Core.Interpolation.peels_iff three values U N D p
+
+/-- `core:thm:hypergraph-basis`: a complete relation schema with closed cut axioms. -/
+theorem core_closed_hypergraph_basis {Role : Type u} {Row : Type v}
+    [Fintype Role] [DecidableEq Role] [Fintype Row] [DecidableEq Row]
+    (three : Fin 3 ↪ Role) (R : (Row → WinnerSet Role) → Prop) :
+    (∀ r x y, R x → R y → R (fun i => WinnerSet.choice r (x i) (y i))) ↔
+      ∃ D : Core.Hypergraphs.Diagram Row Role, D.Admissible ∧
+        ∀ x : Row → Set Role,
+          (∃ y : Row → WinnerSet Role, R y ∧ ∀ i, (y i).val = x i) ↔ D.Models x :=
+  Core.Hypergraphs.choiceClosed_iff_hypergraphs three R
+
+/-- The complete operation criterion in `core:thm:hypergraph-basis`. -/
+theorem core_hypergraph_operations {Role : Type u} {Var : Type v}
+    [Fintype Role] [DecidableEq Role] [Fintype Var]
+    (three : Fin 3 ↪ Role) (f : (Var → WinnerSet Role) → WinnerSet Role) :
+    (∃ t : Term Role Var, t.IsCore ∧ ∀ v, t.eval v = f v) ↔
+      ∀ m (D : Core.Hypergraphs.Diagram (Fin m) Role), D.Admissible →
+        ∀ values : Fin m → Var → WinnerSet Role,
+          (∀ j, D.Models (fun i => (values i j).val)) →
+            D.Models (fun i => (f (values i)).val) :=
+  Core.Hypergraphs.operation_iff_hypergraphs three f
+
+/-- `core:cor:hypergraph-guards`: complete global obstruction conditions. -/
+theorem core_hypergraph_guards {Role : Type u} {Var : Type v}
+    [Fintype Role] [DecidableEq Role] [Fintype Var] [DecidableEq Var]
+    (three : Fin 3 ↪ Role)
+    (G : ∀ (k : Role) (j : Var), Finset (Core.Sources.Guard k j)) :
+    (∃ t : Term Role Var, t.IsCore ∧ Core.Sources.normalForm three (fun v => t.eval v) = G) ↔
+      Core.Sources.Canonical G ∧
+      (∃ q : Core.Sources.ProbeIndex Role Var, Core.Sources.coefficients G q.1 q.2.1 q.2.2) ∧
+      ∀ q : Core.Sources.ProbeIndex Role Var, Core.Sources.coefficients G q.1 q.2.1 q.2.2 →
+        ∀ D : Core.Hypergraphs.Diagram (Core.Sources.ProbeIndex Role Var) Role,
+          D.Admissible → (∀ j, D.Models (fun z => (Core.Sources.probeAt three z j).val)) →
+            ¬D.Supports (some (q,q.1))
+              ((Core.Sources.negativeProbes G).image (fun z => (z,z.1))) :=
+  Core.Sources.guard_table_iff_hypergraph_persistence three G
 
 theorem core_singleton_profiles {Role : Type u} [DecidableEq Role] [Fintype Role]
     {Var : Type v} [Fintype Var] (three : Fin 3 ↪ Role)

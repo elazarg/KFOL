@@ -1,6 +1,6 @@
 \section{Verification details}\label{app:verification}
 
-The paper's results are kernel-checked in Lean~4.35.0 with mathlib. \texttt{Paper.lean} restates, in the namespace \texttt{KFOL.Paper}, every theorem of the main text and the clauses of the report results that it cites: $82$ statements, listed by result in \cref{tab:status}. \texttt{Report.lean} restates $73$ further report results in the namespace \texttt{KFOL.Report} (\cref{tab:report}). Each proof is a single library theorem, and each file ends with a check that no declaration in its namespace uses an axiom beyond \texttt{propext}, \texttt{Classical.choice}, and \texttt{Quot.sound}; a separate audit covers the whole library. Nothing is admitted, and no theorem from the literature enters as a hypothesis. Where a written proof cites one, as for the reset basis and the minimum one-owner generator \cite{FreeseEtAl2002}, owned choice with union \cite{HardingRomanowska2017}, the atomic clone \cite{Szendrei2012}, and colored-graph decomposition \cite{Gurvich2009}, the Lean proof is direct.
+The paper's results are kernel-checked in Lean~4.35.0 with mathlib. \texttt{Paper.lean} restates, in the namespace \texttt{KFOL.Paper}, every theorem of the main text and the clauses of the report results that it cites: $82$ statements, listed by result in \cref{tab:status}. \texttt{Report.lean} restates $81$ further report results in the namespace \texttt{KFOL.Report} (\cref{tab:report}). Each proof is a single library theorem, and each file ends with a check that no declaration in its namespace uses an axiom beyond \texttt{propext}, \texttt{Classical.choice}, and \texttt{Quot.sound}; a separate audit covers the whole library. Nothing is admitted, and no theorem from the literature enters as a hypothesis. Where a written proof cites one, as for the reset basis and the minimum one-owner generator \cite{FreeseEtAl2002}, owned choice with union \cite{HardingRomanowska2017}, the atomic clone \cite{Szendrei2012}, and colored-graph decomposition \cite{Gurvich2009}, the Lean proof is direct.
 
 The vocabulary of the statements is in \path{KFOL/Definitions/PaperAlgebra.lean}, \path{PaperGames.lean}, and \path{Complexity.lean}, which build on the other files of \path{KFOL/Definitions}. \path{notes/audit-guide.md} gives a reading order, and \path{notes/paper-definition-surface.md} and \path{notes/report-definition-surface.md} list every definition that each statement depends on.
 
@@ -93,7 +93,7 @@ Two players (\cref{app:two-players})
 
 {\small
 \begin{longtable}{>{\raggedright\arraybackslash}p{0.34\linewidth}>{\raggedright\arraybackslash}p{0.60\linewidth}}
-\caption{The $73$ audited statements in \texttt{Report.lean}, followed by remaining report evidence.}\label{tab:report}\\
+\caption{The $81$ audited statements in \texttt{Report.lean}, followed by remaining report evidence.}\label{tab:report}\\
 \toprule
 Result & Audited statements or other evidence\\
 \midrule
@@ -130,12 +130,20 @@ Four-point interpolation without a core minorant (\cref{core:thm:four-local-mino
  & \path{core_four_local_without_minorant}\\
 Five-point interpolation in one profile class (\cref{core:thm:five-local-profile})
  & \path{core_five_local_profile_obstruction}\\
+Observer bichain and projection fiber (\cref{core:prop:bichain,core:thm:bichain-fiber})
+ & \path{observer_bichain}, \path{bichain_projection_fiber}, \path{bichain_projection_fiber_unique}\\
+Closed atomic-observer test (\cref{core:thm:atomic-observer})
+ & \path{core_atomic_observer}\\
+Separate observer realizations without amalgamation (\cref{core:prop:observer-amalgamation})
+ & \path{core_observer_amalgamation}\\
 Cyclic winner persistence (\cref{core:lem:cyclic-persistence})
  & \path{core_cyclic_persistence}\\
 Constant and role-switch expansions (\cref{core:cor:full-not-finitely-related})
  & \path{full_not_finitely_related}, \path{full_no_finite_relation_basis}\\
 Recursive constrained interpolation (\cref{core:thm:peeling})
  & \path{core_peeling_interpolation}\\
+Closed hypergraph basis and guard persistence (\cref{core:thm:hypergraph-basis,core:cor:hypergraph-guards})
+ & \path{core_closed_hypergraph_basis}, \path{core_hypergraph_operations}, \path{core_hypergraph_guards}\\
 One-owner four-variable obstruction (\cref{owner:thm:no-four-variable-basis})
  & \path{owner_four_variable_obstruction}\\
 Permutation envelope (\cref{full:lem:envelope})
@@ -569,6 +577,30 @@ certificate and excludes a core realizer. Its transport to arbitrary role
 types uses \path{KFOL/Core/RoleRestriction.lean}, which replaces outside
 owners by derived union without a finiteness assumption on the role type.
 
+The four-state observer algebra and its constant-free two-operation and
+union-expanded terms are defined in \path{KFOL/Definitions/Bichain.lean}.
+\path{KFOL/Core/Bichain.lean} proves the identification with the
+three-owner observer quotient, the median formula for union at the neutral
+state, and recovery of full term operations from possible-value observations.
+\path{KFOL/Core/BichainFiber.lean} proves the exact Boolean-projection
+fiber reduction and uniqueness, including the additional distinguished
+projection (\cref{core:prop:bichain,core:thm:bichain-fiber}).
+
+The atomic interval inputs and zero-interval graph are defined in
+\path{KFOL/Definitions/AtomicObserver.lean}.
+\path{KFOL/Core/AtomicObserver.lean} proves the closed reachability
+criterion of \cref{core:thm:atomic-observer}, constructs normalized Boolean
+separators and their core realizations, transports them to larger role sets,
+and rejects the empty-variable boundary.
+\path{KFOL/Definitions/CoreAmalgamation.lean} specifies the three observer
+polynomials and atomic distinguishing rows of
+\cref{core:prop:observer-amalgamation}.
+\path{KFOL/Core/AtomicAmalgamation.lean} proves nonempty joint outputs,
+unanimity singleton profiles, and complete realization of each observer view
+by a separate core term. Kernel-checked finite tables certify these properties
+and a choice-closed relation excluding a common realization on the three
+atomic rows; the argument does not enumerate term operations.
+
 The cyclic obstruction is specified directly in
 \path{KFOL/Definitions/CoreCrown.lean}.
 \path{KFOL/Core/CrownBoolean.lean} proves Boolean interval separation by
@@ -581,7 +613,9 @@ owners. \path{KFOL/Core/CrownRotation.lean} and
 \path{KFOL/Core/CyclicPersistence.lean} proves the cyclic winner law by
 expansion into lattice polynomials in an observer's quotient. Its finite
 three-role tables use \texttt{decide +kernel}; the expansion and cyclic
-propagation are symbolic proofs. \path{KFOL/Core/PatchInterpolation.lean}
+propagation are symbolic proofs. The public
+\path{Crown.atomic_trace_expansion} supplies the derivative expansion used
+by both the cyclic proof and the separate atomic-observer criterion. \path{KFOL/Core/PatchInterpolation.lean}
 turns the patches into local interpolants and proves antitonicity in the
 sample size. \path{KFOL/Core/CrownObstruction.lean} gives the unbounded
 local obstructions for each fixed finite role set, and
@@ -622,6 +656,17 @@ The independent standard-library program
 \path{notes/research/core-functions/peeling.py} compares the row-deletion
 recursion with unpruned finite core closures, including the six-row
 obstruction; its recognizer never calls the closure oracle.
+
+The closed hypergraph vocabulary is defined in
+\path{KFOL/Definitions/CoreHypergraphs.lean}: indexed clutters, support,
+boundary incidences and the no-trap cut condition contain no term or
+elimination-order quantifier. \path{KFOL/Core/Hypergraphs.lean} proves
+invariance and completeness of the relation schema, including raw empty
+coordinates and empty row sets, and the resulting operation and canonical
+guard criteria (\cref{core:thm:hypergraph-basis,core:cor:hypergraph-guards}).
+The proof uses owner-elimination completeness internally to construct the
+canonical minimal heads. The public guard criterion quantifies over the
+closed finite clutters and the guard table's own source probes.
 
 The graph vocabulary is grouped in \path{KFOL/Definitions/CoreGraph.lean}.
 \path{KFOL/Core/ColoredGraphDecomposition.lean} proves Gurvich's finite

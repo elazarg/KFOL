@@ -520,6 +520,15 @@ import all KFOL.Core.ColoredGraphSemantics
 import all KFOL.Core.ColoredGraphReconstruction
 import all KFOL.Core.ColoredGraphRealization
 import all KFOL.Core.ColoredGraphGuards
+import all KFOL.Definitions.AtomicObserver
+import all KFOL.Definitions.Bichain
+import all KFOL.Definitions.CoreAmalgamation
+import all KFOL.Definitions.CoreHypergraphs
+import all KFOL.Core.AtomicObserver
+import all KFOL.Core.AtomicAmalgamation
+import all KFOL.Core.Bichain
+import all KFOL.Core.BichainFiber
+import all KFOL.Core.Hypergraphs
 import all Paper
 import all Report
 meta import Lean.Elab.Command

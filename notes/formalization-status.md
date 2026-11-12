@@ -10,12 +10,16 @@ For every m, `Paper.core_not_finitely_related` gives an (m+3)-ary nonterm
 operation with core interpolants on every m valuations;
 `Paper.core_no_finite_relation_basis` rules out every finite defining family
 of invariant relations. This does not rule out short structural laws with
-unbounded quantification. See [the research target](research/core-functions/target.md).
+unbounded quantification. The report now supplies a complete infinite relation
+basis with closed colored-clutter axioms, a closed criterion for one atomic
+observer, and an explicit obstruction to gluing separate complete views.
+A short structural condition directly on canonical guards remains the research
+target. See [the research target](research/core-functions/target.md).
 
 | Audit entrypoint | Mathematical statements | Presentation |
 | --- | ---: | --- |
 | [Paper.lean](../Paper.lean) | 82 | Main text and the report claims it cites |
-| [Report.lean](../Report.lean) | 73 | Further report results and proof ingredients |
+| [Report.lean](../Report.lean) | 81 | Further report results and proof ingredients |
 | [Results/Certificates](../KFOL/Results/Certificates.lean) | 140 preserved contracts | Original full statements, including native machines, codecs and intermediate invariants |
 
 Every root proof names one library theorem. Both root files have no semantic
@@ -33,7 +37,7 @@ regular representation are in `Definitions/Relational`.
 | Definition surface | Theorem types | Semantic declarations | Source files | Written review units |
 | --- | ---: | ---: | ---: | ---: |
 | Paper | 82 | 678 | 40 | 362 |
-| Report | 73 | 621 | 36 | 286 |
+| Report | 81 | 709 | 41 | 328 |
 
 The slices overlap and exclude theorem proof bodies. These meaning indexes do
 not replace the human comparison with the manuscript or the proof/axiom audits.

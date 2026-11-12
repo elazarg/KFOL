@@ -3,14 +3,14 @@
 The completion target is the entire main paper, its substantive mathematical
 prose, and the report material those claims require. The entire technical report
 is not a completion target. The [inventory](formalization-claims.json) records
-22 main result rows, 72 required catalog rows and 17 required prose obligations,
-all proved. Its source catalog contains 182 statements.
+22 main result rows, 74 required catalog rows and 17 required prose obligations,
+all proved. Its source catalog contains 191 statements.
 
 ## Public audit surface
 
-- [Paper.lean](../Paper.lean) contains 81 main-facing mathematical statements in
+- [Paper.lean](../Paper.lean) contains 82 main-facing mathematical statements in
   about 600 lines, ordered by subject and labelled for the main results.
-- [Report.lean](../Report.lean) contains 71 further mathematical report statements
+- [Report.lean](../Report.lean) contains 81 further mathematical report statements
   and proof ingredients.
 - Every public theorem writes its proposition in mathematical vocabulary.
   Its proof is one application of a named library theorem. Neither root file
@@ -183,5 +183,10 @@ negatively: for every locality bound m, a cyclic construction gives an
 family consequence is stated explicitly in Paper.lean, and the report gives
 the cycle law, the one-edge deletion patches and their uniform proof.
 This rules out every fixed finite family of invariant relations, while leaving
-open structural descriptions with unbounded quantification. See
-[the precise target and result](research/core-functions/target.md).
+open structural descriptions with unbounded quantification. The report also proves a closed atomic-observer criterion, a projection-fiber
+reduction to the classical four-element bichain, and failure to amalgamate
+separately realizable complete views. Closed colored-clutter axioms specify all
+invariant relations and give a universal obstruction criterion for guard tables.
+This is a complete infinite relation basis; a short condition directly on the
+guards remains the research target. See
+[the precise target and results](research/core-functions/target.md).

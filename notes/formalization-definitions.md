@@ -2,7 +2,7 @@
 
 Read [Paper.lean](../Paper.lean) with the vocabulary below. It contains 82
 mathematical statements and no definitions. [Report.lean](../Report.lean)
-contains 73 further mathematical statements. Their proofs name library theorems;
+contains 81 further mathematical statements. Their proofs name library theorems;
 definitions must still be reviewed independently against the manuscripts.
 
 The [audit guide](audit-guide.md) gives the reading order. The generated
@@ -14,7 +14,7 @@ theorem types. They erase proof-valued subterms and never follow theorem proofs.
 | Entry point | Theorem types | Semantic declarations | Source files | Central definition files | Written review units |
 | --- | ---: | ---: | ---: | ---: | ---: |
 | Paper | 82 | 678 | 40 | 28 | 362 |
-| Report | 73 | 621 | 36 | 25 | 286 |
+| Report | 81 | 709 | 41 | 30 | 328 |
 
 These counts are separate slices and overlap. The vocabulary files organize
 the presentation; they do not replace their underlying mathematical definitions.
@@ -47,6 +47,10 @@ The underlying definitions are grouped by subject:
 | `CoreNormalForm` | Passive statuses, canonical isolated-source probes, exclusion guards, prime families, canonicality and raw set meaning |
 | `CoreInterpolation` | Upper bounds, atomic demands, optional positive observations, rainbow common-source conditions, and strict row-deletion recognition |
 | `CoreCrown` | Explicit cyclic matching/cross rows, exceptional cylinders, input union and the selected-cylinder operation; no reference to core realizability |
+| `AtomicObserver` | Atomic interval valuations, inclusion and zero-interval edges, reflexive reachability and independent admissibility |
+| `Bichain` | Four values, the two chain semilattice operations, observer union, median, pure terms and neutral/projection lifts |
+| `CoreAmalgamation` | Explicit observer polynomials, raw joint output and three singleton-input rows |
+| `CoreHypergraphs` | Indexed antichains of clause heads, their raw model sets, boundary incidences and the no-trap cut axiom |
 | `CoreFunctions` | Singleton profiles and admissibility, invariant relations, individual relation preservation and m-point core interpolation |
 | `CoreGraph` | Finite occurrence graphs with symmetric owner colors, forbidden rainbow triangles and complementary two-colored paths, maximal monochromatic cliques, blocking, source survival and graph representation |
 | `Reset` | Reset syntax, rightmost root, selection, minimal guard tables, rooted antimatroids and table realizability |
@@ -85,6 +89,24 @@ requires the family to hold on the supplied input columns. Raw clause truth
 allows empty coordinates. Nonemptiness of an accepted target is proved from
 row-cover clauses, rather than assumed by its representation. Completeness and
 the connection to canonical source guards are separate library theorems.
+
+The closed relation schema in `CoreHypergraphs` uses only finite row/owner
+incidences. A diagram assigns an antichain of heads to each optional premise.
+`Models` interprets the resulting membership implications even on empty row
+sets. `Boundary` enforces row nonemptiness, tautologies and pure-clause
+weakening. `NoTrap` says that every proper owner-initial cut of a head exposes
+a vertex with supported singleton blockers. It contains no generated relation,
+term quantifier or elimination order. The library proves that these diagrams
+present exactly the invariant relations, including the empty relation and
+relations with no coordinates. The complete guard criterion universally
+quantifies over these diagrams; it is not a short condition solely on guards.
+
+`AtomicObserver` gives a separate scalar criterion on interval tables. Its
+reachability uses inclusion edges and reversals of zero intervals; its
+admissibility requires a positive full interval and no reverse path across a
+positive interval. `CoreAmalgamation.raw` is defined directly by the three
+observer polynomials. Nonemptiness, singleton profiles and separate complete
+view realizations are proved, as is the absence of a joint core term.
 
 The four-state owner algebra and finite countermodels have their own operations;
 they are not defined by satisfaction of the theorem they certify.

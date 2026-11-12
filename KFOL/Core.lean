@@ -18,6 +18,10 @@ public import KFOL.Core.SourceNormalForm
 public import KFOL.Core.LocalNormalForm
 public import KFOL.Core.SourceCompatibility
 public import KFOL.Core.ColoredGraphGuards
+public import KFOL.Core.AtomicObserver
+public import KFOL.Core.AtomicAmalgamation
+public import KFOL.Core.BichainFiber
+public import KFOL.Core.Hypergraphs
 
 /-! # Core operations, representations and basis obstructions
 

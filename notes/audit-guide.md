@@ -2,7 +2,7 @@
 
 Start with [Paper.lean](../Paper.lean): its 82 theorem statements cover the main
 paper, its mathematical prose claims and the report clauses it uses.
-[Report.lean](../Report.lean) gives 73 further audited report statements and
+[Report.lean](../Report.lean) gives 81 further audited report statements and
 proof ingredients. Both files write out the propositions; each proof names one
 library theorem. Detailed codecs, descriptors, intermediate certificates and
 machine contracts are in the library, including
@@ -26,6 +26,10 @@ claim, then open the relevant vocabulary file:
 | Recursive core interpolation | [CoreInterpolation.lean](../KFOL/Definitions/CoreInterpolation.lean) | Atomic demands, raw upper bounds, rainbow intersections and the positive escape condition; recursive calls strictly erase a bounded row, with no generated relation or auxiliary certificate |
 | Cyclic clone obstruction | [CoreCrown.lean](../KFOL/Definitions/CoreCrown.lean), [CoreFunctions.lean](../KFOL/Definitions/CoreFunctions.lean) | Explicit matching/cross rows, exceptional input cylinders, full-union operation, independent local interpolation and relation preservation predicates |
 | Core graph representations | [CoreGraph.lean](../KFOL/Definitions/CoreGraph.lean) | Symmetric owner colors, the two forbidden induced patterns, maximal cliques, singleton blocking and source survival; repeated vertex labels are independent occurrences |
+| Closed atomic observer | [AtomicObserver.lean](../KFOL/Definitions/AtomicObserver.lean) | Atomic valuations, zero-interval reverse edges, reflexive reachability and the two admissibility conditions |
+| Observer bichain | [Bichain.lean](../KFOL/Definitions/Bichain.lean) | The two explicit four-state chains, observer union, pure syntax, Boolean projection and neutral lift |
+| Observer amalgamation | [CoreAmalgamation.lean](../KFOL/Definitions/CoreAmalgamation.lean) | Three explicit polynomials, their joint raw membership output and three atomic rows |
+| Complete relation schema | [CoreHypergraphs.lean](../KFOL/Definitions/CoreHypergraphs.lean) | Indexed clutters, membership clauses, boundary incidences and the closed no-trap cut condition |
 
 These files are front doors, not the entire semantic surface. The
 [Paper definition index](paper-definition-surface.md) and
