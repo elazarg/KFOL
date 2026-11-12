@@ -14,6 +14,9 @@ public import KFOL.Core.FivePointInterpolation
 public import KFOL.Core.SourceCertificates
 public import KFOL.Core.LocalNormalForm
 public import KFOL.Core.ProfileEnvelope
+public import KFOL.Core.ProfileRelations
+public import KFOL.Core.RainbowPersistence
+public import KFOL.Core.ProfilePersistence
 public import KFOL.Core.CyclicPersistence
 public import KFOL.Core.CrownFullSyntax
 public import KFOL.Core.AtomicObserver
@@ -334,12 +337,59 @@ theorem core_hypergraph_guards {Role : Type u} {Var : Type v}
               ((Core.Sources.negativeProbes G).image (fun z => (z,z.1))) :=
   Core.Sources.guard_table_iff_hypergraph_persistence three G
 
+/-- `core:thm:profile-relations`: closed profile relations have restricted Horn theories. -/
+theorem core_profile_relations {Index : Type u} {Role : Type v}
+    [Fintype Index] [DecidableEq Index] [DecidableEq Role]
+    (owner : Index → Role) (three : Fin 3 ↪ Role) (R : Set (Index → Bool)) :
+    Core.ProfileRelations.ChoiceClosed owner R ↔
+      ∃ T : Core.ProfileRelations.Theory owner,
+        ∀ x, x ∈ R ↔ T.Models x :=
+  Core.ProfileRelations.choiceClosed_iff_theory owner three R
+
 theorem core_singleton_profiles {Role : Type u} [DecidableEq Role] [Fintype Role]
     {Var : Type v} [Fintype Var] (three : Fin 3 ↪ Role)
     (F : Role → (Var → Bool) → Bool) :
     (∃ t : Equational.Term (Equational.CoreSymbol Role) Var,
       ∀ i v, Core.profile i v t = F i v) ↔ Core.AdmissibleProfiles F :=
   Results.Algebra.core_singleton_profiles three F
+
+/-- `core:thm:one-bound-profiles`: closed input conditions for one bound and rainbow demands. -/
+theorem core_single_bound_profiles {Role : Type u} {Var : Type v} [DecidableEq Role]
+    (J : Finset Role) (A : Role → Var → Bool) (values : Var → WinnerSet Role)
+    (U : Set Role) :
+    letI := Equational.coreStructure Role
+    (∃ t : Equational.Term (Equational.CoreSymbol Role) Var,
+      (∀ r ∈ J, Core.profile r (A r) t = true) ∧ (t.realize values).val ⊆ U) ↔
+      (∃ j, ∀ r ∈ J, A r j = true) ∧
+      ((∃ j, (∀ r ∈ J, A r j = true) ∧ (values j).val ⊆ U) ∨
+        ∃ s ∈ J, s ∈ U ∧ ∃ j, values j = singleton s ∧
+          ∀ r ∈ J, r ≠ s → A r j = true) :=
+  Core.rainbow_budget_iff J A values U
+
+/-- The projection or single-choice witness clause of `core:thm:one-bound-profiles`. -/
+theorem core_single_bound_small_witness {Role : Type u} {Var : Type v} [DecidableEq Role]
+    (J : Finset Role) (A : Role → Var → Bool) (values : Var → WinnerSet Role)
+    (U : Set Role) :
+    letI := Equational.coreStructure Role
+    (∃ t : Equational.Term (Equational.CoreSymbol Role) Var,
+      (∀ r ∈ J, Core.profile r (A r) t = true) ∧ (t.realize values).val ⊆ U) →
+      (∃ j, (∀ r ∈ J, A r j = true) ∧ (values j).val ⊆ U) ∨
+        ∃ s j l, (∀ r ∈ J,
+          Core.profile r (A r) (Core.choiceTerm s (.var j) (.var l)) = true) ∧
+          ((Core.choiceTerm s (.var j) (.var l)).realize values).val ⊆ U :=
+  Core.rainbow_budget_small_witness J A values U
+
+/-- `core:cor:profile-bound`: an output bound can couple individually realizable profiles. -/
+theorem core_profile_bound_coupling :
+    letI := Equational.coreStructure (Fin 3)
+    ∃ (values : Fin 4 → WinnerSet (Fin 3))
+      (P : Fin 3 → (Fin 4 → Bool) → Bool),
+      Core.AdmissibleProfiles P ∧
+      (∀ r, ∃ t : Equational.Term (Equational.CoreSymbol (Fin 3)) (Fin 4),
+        (∀ E, Core.profile r E t = P r E) ∧ 1 ∉ (t.realize values).val) ∧
+      ¬∃ t : Equational.Term (Equational.CoreSymbol (Fin 3)) (Fin 4),
+        (∀ r E, Core.profile r E t = P r E) ∧ 1 ∉ (t.realize values).val :=
+  Core.safe_profiles_not_ownerwise
 
 theorem core_colored_graph_representation {Role : Type u} {Var : Type v} [Nonempty Role]
     (f : (Var → WinnerSet Role) → WinnerSet Role) :

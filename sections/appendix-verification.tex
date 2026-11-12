@@ -1,6 +1,6 @@
 \section{Verification details}\label{app:verification}
 
-The paper's results are kernel-checked in Lean~4.35.0 with mathlib. \texttt{Paper.lean} restates, in the namespace \texttt{KFOL.Paper}, every theorem of the main text and the clauses of the report results that it cites: $82$ statements, listed by result in \cref{tab:status}. \texttt{Report.lean} restates $82$ further report results in the namespace \texttt{KFOL.Report} (\cref{tab:report}). Each proof is a single library theorem, and each file ends with a check that no declaration in its namespace uses an axiom beyond \texttt{propext}, \texttt{Classical.choice}, and \texttt{Quot.sound}; a separate audit covers the whole library. Nothing is admitted, and no theorem from the literature enters as a hypothesis. Where a written proof cites one, as for the reset basis and the minimum one-owner generator \cite{FreeseEtAl2002}, owned choice with union \cite{HardingRomanowska2017}, the atomic clone \cite{Szendrei2012}, and colored-graph decomposition \cite{Gurvich2009}, the Lean proof is direct.
+The paper's results are kernel-checked in Lean~4.35.0 with mathlib. \texttt{Paper.lean} restates, in the namespace \texttt{KFOL.Paper}, every theorem of the main text and the clauses of the report results that it cites: $82$ statements, listed by result in \cref{tab:status}. \texttt{Report.lean} restates $86$ further report results in the namespace \texttt{KFOL.Report} (\cref{tab:report}). Each proof is a single library theorem, and each file ends with a check that no declaration in its namespace uses an axiom beyond \texttt{propext}, \texttt{Classical.choice}, and \texttt{Quot.sound}; a separate audit covers the whole library. Nothing is admitted, and no theorem from the literature enters as a hypothesis. Where a written proof cites one, as for the reset basis and the minimum one-owner generator \cite{FreeseEtAl2002}, owned choice with union \cite{HardingRomanowska2017}, the atomic clone \cite{Szendrei2012}, and colored-graph decomposition \cite{Gurvich2009}, the Lean proof is direct.
 
 The vocabulary of the statements is in \path{KFOL/Definitions/PaperAlgebra.lean}, \path{PaperGames.lean}, and \path{Complexity.lean}, which build on the other files of \path{KFOL/Definitions}. \path{notes/audit-guide.md} gives a reading order, and \path{notes/paper-definition-surface.md} and \path{notes/report-definition-surface.md} list every definition that each statement depends on.
 
@@ -93,7 +93,7 @@ Two players (\cref{app:two-players})
 
 {\small
 \begin{longtable}{>{\raggedright\arraybackslash}p{0.34\linewidth}>{\raggedright\arraybackslash}p{0.60\linewidth}}
-\caption{The $82$ audited statements in \texttt{Report.lean}, followed by remaining report evidence.}\label{tab:report}\\
+\caption{The $86$ audited statements in \texttt{Report.lean}, followed by remaining report evidence.}\label{tab:report}\\
 \toprule
 Result & Audited statements or other evidence\\
 \midrule
@@ -132,6 +132,10 @@ Five-point interpolation in one profile class (\cref{core:thm:five-local-profile
  & \path{core_five_local_profile_obstruction}\\
 Observer bichain and projection fiber (\cref{core:prop:bichain,core:thm:bichain-fiber})
  & \path{observer_bichain}, \path{bichain_projection_fiber}, \path{bichain_projection_fiber_unique}\\
+Closed profile relations (\cref{core:thm:profile-relations})
+ & \path{core_profile_relations}\\
+One bound and profile coupling (\cref{core:thm:one-bound-profiles,core:cor:profile-bound})
+ & \path{core_single_bound_profiles}, \path{core_single_bound_small_witness}, \path{core_profile_bound_coupling}\\
 Closed atomic-observer test (\cref{core:thm:atomic-observer})
  & \path{core_atomic_observer}\\
 Separate observer realizations without amalgamation (\cref{core:prop:observer-amalgamation})
@@ -652,6 +656,25 @@ has its clauses and order checks in
 \path{KFOL/Core/OwnerElimination.lean} proves simultaneous certificate
 soundness. \path{tests/CoreOwnerCertificates.lean} checks the raw set
 interpretation and rejects an invalid certificate family.
+
+Relations of owner-colored Boolean profile bits are defined independently in
+\path{KFOL/Definitions/ProfileRelations.lean}, using forced bits, same-owner
+implications and rainbow conflicts. \path{KFOL/Core/ProfileRelations.lean}
+proves the complete classification (\cref{core:thm:profile-relations}),
+including empty relations and empty coordinate sets. Its proof reduces
+minimal Horn clauses using the owner gates; no operation-table enumeration
+is used.
+\path{KFOL/Core/RainbowPersistence.lean} proves the one-bound criterion
+(\cref{core:thm:one-bound-profiles}) for arbitrary, possibly infinite, role
+and variable types, with explicit projection and two-leaf witnesses. It also
+classifies universal implications from rainbow positive profiles to winner
+membership. \path{KFOL/Core/ProfilePersistence.lean} derives the two-profile
+persistence law and the four-variable coupling counterexample
+(\cref{core:cor:profile-bound}). \path{tests/CoreProfileRelations.lean}
+checks empty coordinates, empty relations, the two-owner boundary, and the
+necessity of the restrictions on implications and conflicts.
+\path{tests/CoreRainbowPersistence.lean} checks infinite role and variable
+types and infeasibility with no variables.
 
 The recursive row-deletion test is specified in
 \path{KFOL/Definitions/CoreInterpolation.lean}, with negative source probes

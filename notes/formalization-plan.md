@@ -191,6 +191,11 @@ descriptions with unbounded quantification remain possible. The report also prov
 reduction to the classical four-element bichain, and failure to amalgamate
 separately realizable complete views. Closed colored-clutter axioms specify all
 invariant relations and give a universal obstruction criterion for guard tables.
-This is a complete infinite relation basis; a short condition directly on the
-guards remains the research target. See
+This complete infinite relation basis still quantifies over auxiliary clutters.
+Closed profile relations now have a restricted Horn presentation. One output
+bound with rainbow positive profile requirements has an exact closed criterion
+and projection/two-leaf witnesses, but even one bound can couple owner profiles
+that are separately realizable. These results are in `Core/ProfileRelations`,
+`Core/RainbowPersistence` and `Core/ProfilePersistence`.
+A short condition directly on the guards remains the research target. See
 [the precise target and results](research/core-functions/target.md).

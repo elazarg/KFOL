@@ -107,3 +107,14 @@ mismatch at each valuation. A concrete set of matching atomic rows and one
 opposite row proves the upper failure. See [exponential-crowns.md](exponential-crowns.md).
 This excludes polynomial-in-arity locality bounds; it does not provide the
 remaining direct structural criterion on jointly realizable guards.
+
+## Profile relations and one bound
+
+The owner-colored Boolean profile algebra has a complete restricted Horn
+presentation: forced bits, same-owner implications and rainbow conflicts.
+One output bound together with rainbow positive profile requirements admits
+a closed input criterion and projection/two-leaf witnesses. However, a
+four-variable example shows that even one bound creates new conflicts between
+owners: an admissible full profile tuple can have a safe witness for each
+owner separately and no common safe witness. See [profile-bounds.md](profile-bounds.md).
+These results do not settle the remaining direct guard characterization.

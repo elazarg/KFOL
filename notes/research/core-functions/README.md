@@ -283,3 +283,16 @@ It independently enumerates the 751 unary normal forms and compares them with
 the generated unary clone. Both operations then pass all 423,564,751 unary
 substitution triples. These numerical results are separate from the uniform
 Lean proof and do not claim Lean-verified enumeration.
+
+## Further structural restrictions
+
+[Envelope-spine counterexample](envelope-spines/README.md) rules out replacing
+every sibling subtree by its greatest profile completion, even with arbitrarily
+repeated owners and unions. Its small closed-relation checker is independent
+of a complete term enumeration. [Marked-type coextension](marked-type-coextension.md)
+explains why coexistence of occurrence types yields no pairwise color restriction.
+These are research certificates and arguments, rather than public Lean claims.
+
+[Profile relations and one bound](profile-bounds.md) gives a restricted Horn
+classification, a closed criterion with projection/two-leaf witnesses, and a
+four-variable counterexample to ownerwise factorization under one bound.

@@ -19,6 +19,12 @@ library results from research arguments that have not been formalized.
   relation, even empty relations and empty coordinate sets. Universal
   preservation and positive/negative guard persistence give exact global
   obstruction criteria. Auxiliary clutters are still quantified over.
+- `Core/ProfileRelations`: all mixed-gate-closed finite Boolean profile
+  relations have forced bits, same-owner implications and rainbow conflicts.
+  `Core/RainbowPersistence` gives a closed one-bound criterion with projection
+  or two-leaf witnesses, without finite-type assumptions.
+  `Core/ProfilePersistence` shows why constraints on separate owner families
+  do not suffice, even for one output bound. See [profile-bounds.md](profile-bounds.md).
 
 The bichain is the algebra in Harding, Walker and Walker, *Type-2 Fuzzy Sets
 and Bichains* (2013), Definition 5 and Figure 1. Its older normal-form results

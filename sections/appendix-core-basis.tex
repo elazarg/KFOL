@@ -14,7 +14,13 @@ constants and internal role permutations by a permutation envelope. The remainin
 smaller fragments. Owned choice with union has a seven-equation basis
 (\cref{app:core-dissemilattice}), and binary terms have explicit normal
 forms (\cref{app:core-binary}). At every arity, singleton profiles and
-their greatest completions are characterized (\cref{app:core-profiles}).
+their greatest completions are characterized (\cref{app:core-profiles});
+relations of profile bits have presentations by same-owner implications
+and rainbow conflicts (\cref{core:thm:profile-relations}).
+One output bound and rainbow positive profile demands have projection or
+two-leaf witnesses (\cref{core:thm:one-bound-profiles}), although such a
+bound can couple separately realizable owner profiles
+(\cref{core:cor:profile-bound}).
 Prime source-guard normal forms describe full values
 (\cref{app:core-source-guards}). Their joint realizability has a recursive
 recognition criterion using atomic challenges and strict row deletion
@@ -767,6 +773,128 @@ no winning $A_r$ is contained in $B$, by monotonicity. Thus the
 profile is false for every choice by $r$. These choices are independent
 of the earlier history, so the argument holds in the fixed owner order.
 The constructed term has exactly the prescribed profiles.
+\end{proof}
+
+The profile recursion also classifies every closed relation of profile bits,
+even when the bits need not come from coalitions of one variable set.
+Let $J$ be a finite set of bits, with an owner map $c:J\to I$. Define
+\[
+ (x\star_r y)_j=
+ \begin{cases}x_j\lor y_j,&c(j)=r,\\
+ x_j\land y_j,&c(j)\ne r.
+ \end{cases}
+\]
+A set of bits is \emph{rainbow} if it contains at most one bit of each
+owner.
+
+\begin{theorem}[Closed profile relations]\label{core:thm:profile-relations}
+For $K\geq3$, a relation $R\subseteq\{0,1\}^J$ is closed under every
+$\star_r$ if and only if it is the set of models of a collection of
+constraints of these three forms:
+\begin{enumerate}
+\item a forced bit $x_j=1$;
+\item an implication $x_j=1\Rightarrow x_k=1$, with $c(j)=c(k)$;
+\item a forbidden conjunction $\neg\bigwedge_{j\in S}(x_j=1)$,
+  with $S$ rainbow.
+\end{enumerate}
+The empty conjunction is allowed, so the statement includes the empty
+relation. Every forbidden conjunction has at most $K$ bits.
+\end{theorem}
+\begin{proof}
+Each listed constraint is preserved by every gate. For a rainbow
+conjunction, all bits outside the gate's owner must be true in both
+operands, and at most one bit belongs to that owner. Thus a true
+conjunction in the result is already true in one operand.
+
+Conversely, three distinct owner gates express coordinatewise conjunction:
+$(x\star_a y)\star_c(x\star_b y)=x\land y$. Hence $R$ is
+conjunction-closed. A minimal infeasible set $S$ of positive bits must be
+rainbow. Otherwise, deletion witnesses for two bits of the same owner,
+combined by that owner's gate, satisfy all of $S$.
+
+Next consider a valid implication $\bigwedge S\Rightarrow x_k=1$ with
+feasible premise, minimal under deletion of premises. If $j\in S$ has a
+different owner from $k$, combine a model of $S$ with a deletion witness
+for $j$, using $\star_{c(j)}$. The result satisfies $S$ and falsifies
+$x_k$, a contradiction. All premises therefore belong to $c(k)$.
+If there are two or more, combine two deletion witnesses with that
+owner's gate; both falsify $x_k$, but their combination satisfies $S$.
+Thus the implication is either a forced bit or a same-owner unary
+implication.
+
+These constraints separate every $x\notin R$. Let $S$ be its set of
+true bits. If $S$ is infeasible, it contains a minimal rainbow conflict.
+Otherwise, the conjunction of all models of $S$ in $R$ is a least such
+model. It differs from $x$ at some bit $k$ true in every model of $S$;
+a minimal implication to $k$ supplies a violated forced bit or unary
+implication. This proves completeness, including when $J$ is empty.
+\end{proof}
+
+For one output bound, positive profile requirements admit a particularly
+small witness. Write $E_s(w)=\{j:w_j=\{s\}\}$ for the inputs that are
+atomic at owner $s$.
+
+\begin{theorem}[One bound and rainbow profiles]\label{core:thm:one-bound-profiles}
+Choose owners $J\subseteq I$, one coalition $A_r\subseteq V$ for each
+$r\in J$, an input $w\in\Pow^V$, and an allowed set $U\subseteq I$.
+Put $C=\bigcap_{r\in J}A_r$, with the empty intersection interpreted as
+$V$. There is a core term $t$ with $\Phi_r(t)(A_r)=1$ for every $r\in J$
+and $t(w)\subseteq U$ if and only if $C\ne\varnothing$ and
+\[
+ \bigl(\exists\ell\in C:\ w_\ell\subseteq U\bigr)
+ \quad\text{or}\quad
+ \biggl(\exists s\in J\cap U:\
+ E_s(w)\cap\bigcap_{r\in J\setminus\{s\}}A_r\ne\varnothing\biggr).
+\]
+In either case, a projection or a single owned choice suffices.
+\end{theorem}
+\begin{proof}
+Necessity of $C\ne\varnothing$ is the common-source property. Induct on
+a realizing term. A projection gives the first alternative. If the root
+has ambiguous value, it is the union of its children, so both children
+respect the bound. All requested profiles pass to both children except
+possibly the root owner's profile, which passes to at least one. Apply
+induction to that child.
+
+If the root has value $\{s\}$, then $s\in U$. Its profile at $E_s(w)$
+is true. Together with all the requested profiles at owners different
+from $s$, the common-source property supplies
+$j\in E_s(w)\cap\bigcap_{r\in J\setminus\{s\}}A_r$.
+If $s\in J$, this is the second alternative; otherwise $j\in C$ and
+$w_j=\{s\}\subseteq U$ gives the first.
+
+Conversely, the first alternative gives $x_\ell$. For the second, choose
+$\ell\in C$ and a witness $j$ in the displayed intersection. Then
+$x_j\star_s x_\ell$ satisfies every requested profile and has value
+$\{s\}\subseteq U$ at $w$.
+\end{proof}
+
+This criterion couples owners even when their coalitions have a common
+variable. The following example rules out obtaining bounded profile
+families merely by imposing separate restrictions on each owner's
+unconstrained profile family.
+
+\begin{corollary}[An output bound couples profiles]\label{core:cor:profile-bound}
+At $K=3$, there is an admissible family of four-variable singleton profiles
+whose every individual owner profile is realized by a core term omitting
+owner $1$ at one fixed input, but whose joint family has no such realization.
+\end{corollary}
+\begin{proof}
+Use variables $a,b,c,d$ and the input
+$w=(\{0,1,2\},\{2\},\{0\},\{0\})$. The target profiles are
+\[
+ \phi_0=ab,\qquad \phi_1=ad,\qquad \phi_2=ac.
+\]
+Products denote conjunctions of the indicated coalition bits. These
+profiles are admissible: every winning coalition contains $a$. Their
+individual safe witnesses are $a\star_2 b$, $a\star_0 d$, and
+$a\star_0 c$, respectively.
+
+For a joint safe witness, apply \cref{core:thm:one-bound-profiles} with
+$J=\{1,2\}$, $A_1=\{a,d\}$, $A_2=\{a,c\}$ and $U=\{0,2\}$.
+Their intersection is $\{a\}$, but $w_a\nsubseteq U$. The only owner in
+$J\cap U$ is $2$, and $E_2(w)=\{b\}$ is disjoint from $A_1$.
+Neither alternative holds.
 \end{proof}
 
 Although profiles do not determine a term function, they determine a

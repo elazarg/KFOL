@@ -264,6 +264,10 @@ import all KFOL.Core.ModelLaws
 import all KFOL.Core.Native
 import all KFOL.Core.NativeTheory
 import all KFOL.Core.NonfiniteBasis
+import all KFOL.Core.ProfileRelations
+import all KFOL.Core.RainbowPersistence
+import all KFOL.Core.ProfilePersistence
+import all KFOL.Definitions.ProfileRelations
 import all KFOL.Core.PairLabel
 import all KFOL.Core.PairModel
 import all KFOL.Definitions.CoreNormalForm
