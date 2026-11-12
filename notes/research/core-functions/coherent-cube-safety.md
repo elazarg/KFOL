@@ -126,6 +126,39 @@ The endpoint constants introduced by recursive cofactors can be simplified
 using the four displayed laws. If f itself is nonconstant, the final result
 cannot be an endpoint constant, leaving a constant-free pure term.
 
+## A finite cofactor diagram and the lower envelope
+
+The construction has a compact circuit presentation. Fix the original anchor
+v. Every recursive call fixes a subset S of the original coordinates to their
+values opposite v and leaves all others free. Thus a state is determined by S;
+there are at most 2^n states. Each transition chooses a nonempty set U disjoint
+from S. Across all states there are at most 3^n-2^n such pairs (S,U), since each
+coordinate is in S, in U, or in neither, and U cannot be empty. Minimality and
+the required polarity only remove pairs.
+
+Cache the cofactor output at each state. Also share each monomial MEET_U x_i
+and clause JOIN_U x_i; all these can be built with O(2^n) gates by removing one
+coordinate at a time. Each transition contributes one gate combining its
+monomial or clause with the child output. Aggregating the transitions at each
+state uses no more than one further gate per transition. Consequently the
+anchored normal form has an O(3^n)-gate circuit. Unfolding sharing gives the
+pure formula proved above. This is a construction bound, independent of the
+number of terms in the unrestricted operation clone.
+
+The family of all anchored realizations has a second exact description.
+For fixed f, every pure realization has the same stable endpoint outputs;
+on a nonconstant cube it returns N or P, and it must return P whenever D_f
+does. At a given input choose any vertex v of its cube. The anchored term
+T(f,v) agrees with D_f there. It follows that
+
+    D_f = pointwise minimum_(v in {0,1}^n) T(f,v),
+
+where N<P on the nonconstant cubes; all terms already agree on the constant
+cubes. This minimum is an ambient operation on functions, not an extra
+bichain term constructor. The four-row obstruction shows why taking it need
+not preserve term realizability. The conclusion is a finite lower-envelope
+representation, not a global realization of D_f.
+
 ## Pairwise cube intersection is sufficient
 
 Boolean cubes have the Helly property with Helly number two. If a family
