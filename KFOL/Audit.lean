@@ -555,6 +555,20 @@ import all KFOL.Core.IntervalCrownObstruction
 import all KFOL.Core.ExponentialCrown
 import all Paper
 import all Report
+import all KFOL.Definitions.AtomicBasis
+import all KFOL.Core.AtomicBasis.Cardinality
+import all KFOL.Core.AtomicBasis.Basis
+import all KFOL.Core.AtomicBasis.Complementary
+import all KFOL.Core.AtomicBasis.Completeness
+import all KFOL.Core.AtomicBasis.Lattice
+import all KFOL.Core.AtomicBasis.Lifting
+import all KFOL.Core.AtomicBasis.NearUnanimity
+import all KFOL.Core.AtomicBasis.Presentation
+import all KFOL.Core.AtomicBasis.Reset
+import all KFOL.Core.AtomicBasis.Quotient
+import all KFOL.Core.AtomicBasis.Separation
+import all KFOL.Core.AtomicBasis.Soundness
+import all KFOL.Core.AtomicBasis.Variety
 meta import Lean.Elab.Command
 meta import Lean.Util.CollectAxioms
 

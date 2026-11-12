@@ -1,6 +1,7 @@
 module
 
 import all KFOL.Algebra
+import all KFOL.Core.AtomicBasis.Basis
 import all KFOL.Definitions.Reductions
 import all KFOL.Reductions.RawPairs
 import all KFOL.Reductions.Colouring

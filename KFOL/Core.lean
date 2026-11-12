@@ -35,6 +35,8 @@ public import KFOL.Core.BichainFiber
 public import KFOL.Core.Hypergraphs
 public import KFOL.Core.ExponentialCrown
 
+public import KFOL.Core.AtomicBasis.Basis
+
 /-! # Core operations, representations and basis obstructions
 
 The explicit native quotients prove the K-variable obstruction. Actual

@@ -45,7 +45,7 @@ private theorem profile_union (three : Fin 3 ↪ Role) (i : Role) (v : Var → B
   simp only [unionTerm, profile_choice]
   split_ifs <;> simp_all
 
-private noncomputable def unionFamily (three : Fin 3 ↪ Role) {A : Type w}
+noncomputable def unionFamily (three : Fin 3 ↪ Role) {A : Type w}
     [Fintype A] (a : A) (f : A → Equational.Term (Equational.CoreSymbol Role) Var) :
     Equational.Term (Equational.CoreSymbol Role) Var :=
   (Finset.univ.toList.map f).foldr (unionTerm three) (f a)
@@ -65,7 +65,7 @@ private theorem profile_unionFamily (three : Fin 3 ↪ Role) {A : Type w}
     forall_const]
   exact ⟨And.right, fun h => ⟨h a, h⟩⟩
 
-private noncomputable def choiceFamily (r : Role) {A : Type w} [Fintype A]
+noncomputable def choiceFamily (r : Role) {A : Type w} [Fintype A]
     (a : A) (f : A → Equational.Term (Equational.CoreSymbol Role) Var) :
     Equational.Term (Equational.CoreSymbol Role) Var :=
   foldTerm r (Finset.univ.toList.map f) (f a)
@@ -95,15 +95,15 @@ namespace ProfileSynthesis
 variable [Fintype Role] [Fintype Var] {F : Role → (Var → Bool) → Bool}
     (hF : AdmissibleProfiles F)
 
-private abbrev Winning (r : Role) := {v : Var → Bool // F r v = true}
+abbrev Winning (r : Role) := {v : Var → Bool // F r v = true}
 
-private def full (r : Role) : Winning (F := F) r := ⟨fun _ => true, hF.top r⟩
+def full (r : Role) : Winning (F := F) r := ⟨fun _ => true, hF.top r⟩
 
-private abbrev Assignment := ∀ r : Role, Winning (F := F) r
+abbrev Assignment := ∀ r : Role, Winning (F := F) r
 
-private abbrev Intersection (a : Assignment (F := F)) := {x : Var // ∀ r, (a r).val x = true}
+abbrev Intersection (a : Assignment (F := F)) := {x : Var // ∀ r, (a r).val x = true}
 
-private noncomputable def leaf (three : Fin 3 ↪ Role) (a : Assignment (F := F)) :
+noncomputable def leaf (three : Fin 3 ↪ Role) (a : Assignment (F := F)) :
     Equational.Term (Equational.CoreSymbol Role) Var :=
   unionFamily three
     (⟨(hF.common_source (fun r => (a r).val) (fun r => (a r).property)).choose,
@@ -117,7 +117,7 @@ private theorem profile_leaf (three : Fin 3 ↪ Role) (a : Assignment (F := F))
   rw [leaf, profile_unionFamily]
   exact ⟨fun h x hx => h ⟨x, hx⟩, fun h x => h x.val x.property⟩
 
-private noncomputable def build (three : Fin 3 ↪ Role) :
+noncomputable def build (three : Fin 3 ↪ Role) :
     List Role → Assignment (F := F) → Equational.Term (Equational.CoreSymbol Role) Var
   | [], a => leaf hF three a
   | r :: rs, a => by
@@ -190,6 +190,25 @@ private theorem negative (three : Fin 3 ↪ Role) (rs : List Role)
 
 end ProfileSynthesis
 
+/-- The finite coalition construction realizing a prescribed admissible family. -/
+noncomputable def synthesizeProfiles [Fintype Role] [Fintype Var]
+    (three : Fin 3 ↪ Role) (F : Role → (Var → Bool) → Bool)
+    (hF : AdmissibleProfiles F) : Equational.Term (Equational.CoreSymbol Role) Var :=
+  ProfileSynthesis.build hF three Finset.univ.toList (ProfileSynthesis.full hF)
+
+theorem profile_synthesizeProfiles [Fintype Role] [Fintype Var]
+    (three : Fin 3 ↪ Role) (F : Role → (Var → Bool) → Bool)
+    (hF : AdmissibleProfiles F) (i : Role) (v : Var → Bool) :
+    profile i v (synthesizeProfiles three F hF) = F i v := by
+  classical
+  apply Bool.eq_iff_iff.mpr
+  constructor
+  · intro hp
+    by_contra hv
+    exact ProfileSynthesis.negative hF three _ _ i v hv (by simp) hp
+  · intro hv
+    exact ProfileSynthesis.positive hF three _ (Finset.nodup_toList _) _ i v (by simp) hv
+
 /-- A family is realizable by a single core term exactly when its winning
 coalitions satisfy monotonicity, unanimity, and the common-source condition.
 The variable type can be any finite type; no arity bound is imposed. -/
@@ -203,15 +222,7 @@ theorem exists_term_iff_admissibleProfiles [Fintype Role] [Fintype Var]
     have he : (fun i v => profile i v t) = F := funext (fun i => funext (ht i))
     exact he ▸ admissibleProfiles_profile t
   · intro hF
-    refine ⟨ProfileSynthesis.build hF three Finset.univ.toList (ProfileSynthesis.full hF), ?_⟩
-    intro i v
-    apply Bool.eq_iff_iff.mpr
-    constructor
-    · intro hp
-      by_contra hv
-      exact ProfileSynthesis.negative hF three _ _ i v hv (by simp) hp
-    · intro hv
-      exact ProfileSynthesis.positive hF three _ (Finset.nodup_toList _) _ i v (by simp) hv
+    exact ⟨synthesizeProfiles three F hF, profile_synthesizeProfiles three F hF⟩
 
 /-- The Boolean profiles describe actual singleton outputs, including on
 mixed atomic and ambiguous valuations. -/

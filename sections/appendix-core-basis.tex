@@ -27,7 +27,9 @@ Adding a requested winner has a direct source-and-separation test
 (\cref{core:thm:bounded-query}); prescribed full profiles and one exact
 output value likewise have a closed criterion
 (\cref{core:thm:one-point-completion}). These pointwise conditions need
-not have a common realization across inputs. Even the projection-profile
+not have a common realization across inputs. For primitive read-once trees,
+however, a closed rainbow formula recovers every winner and gives the least
+operation in the profile fiber (\cref{core:thm:read-once-minimum}). Even the projection-profile
 fiber contains a copy of the whole lower-arity core, via neutral-source
 elimination and reset (\cref{core:thm:neutral-elimination,core:thm:projection-fiber}).
 Prime source-guard normal forms describe full values
@@ -38,12 +40,16 @@ recognition criterion using atomic challenges and strict row deletion
 (\cref{app:core-colored-graphs}). A closed reachability test recognizes
 one observer on atomic inputs (\cref{core:thm:atomic-observer}), while
 separately realizable complete views need not have a common core term
-(\cref{core:prop:observer-amalgamation}). Closed
+(\cref{core:prop:observer-amalgamation}). Within the four-state quotient,
+canonical quadratic essential-source extensions are realizable exactly
+for cographs (\cref{core:thm:cograph-extension}). Closed
 colored-hypergraph cut conditions specify a complete infinite relational
 basis (\cref{core:thm:hypergraph-basis}); at every fixed $K\geq3$, no
 finite family of invariant relations determines the core clone
 (\cref{core:thm:not-finitely-related}). The locality threshold can be
-exponential in arity (\cref{core:thm:exponential-locality}); even upper-bound
+exponential in arity (\cref{core:thm:exponential-locality}), even for prime
+operations with core proper identification minors and input-union proper
+neutral residuals (\cref{core:cor:prime-obstructions}); even upper-bound
 feasibility has arbitrarily large irredundant row obstructions
 (\cref{core:thm:negative-budgets}). Some local tests do not even
 leave a pointwise core minorant (\cref{app:core-pairwise}), and failure
@@ -921,8 +927,8 @@ preorder of owner-$r$ profiles among terms respecting the bound: a positive
 profile on $A$ forces a positive profile on $B$ exactly when no bounded
 term separates them.
 
-The same tests handle one positive winner request at the bounded input.
-Write $\operatorname{RainbowSafe}(J,A)$ for the closed condition in
+For the test with a requested winner, write
+$\operatorname{RainbowSafe}(J,A)$ for the condition of
 \cref{core:thm:one-bound-profiles}.
 
 \begin{theorem}[A bounded rainbow with a requested winner]\label{core:thm:bounded-query}
@@ -1054,6 +1060,70 @@ These pointwise conditions do not amalgamate: the example in
 \cref{core:thm:five-local-profile} has one fixed admissible profile family
 and satisfies them at every input, even with five-point core interpolation,
 but has no global core realization.
+
+There is a positive case in which the profiles determine a least full
+operation. Call a core tree \emph{read-once} when different leaves carry
+different variables. This refers to primitive owned choices; the derived
+union term repeats its arguments. For a valuation $w$, put
+$W_k(w)=\{j:k\in w_j\}$ and $E_r(w)=\{j:w_j=\{r\}\}$.
+For a profile family $\phi$, define $\mathcal R_\phi(w)$ by declaring
+$k\in\mathcal R_\phi(w)$ exactly when there are coalitions $A_r$, one per
+owner, with
+\[
+ \phi_r(A_r)=1\quad(r\in I),\qquad
+ \varnothing\ne C=\bigcap_r A_r\subseteq W_k(w),\qquad
+ E_r(w)\cap\bigcap_{s\ne r}A_s=\varnothing\quad(r\ne k).
+\]
+This is a closed condition on profiles and input menus.
+
+\begin{theorem}[Read-once profile minimum]\label{core:thm:read-once-minimum}
+For every primitive read-once core tree $T$ and every valuation $w$,
+\[
+ T(w)=\mathcal R_{\phi^T}(w).
+\]
+Consequently $T$ is the pointwise least core operation with its complete
+singleton profiles. More strongly, any core operation retaining every
+positive profile bit of $T$ contains every winner of $T$.
+\end{theorem}
+\begin{proof}
+First, $\mathcal R_\phi(w)$ is contained in the value of any core operation
+retaining the positive bits of $\phi$. Otherwise apply
+\cref{core:thm:one-bound-profiles} with allowed output
+$U=I\setminus\{k\}$. Its projection alternative fails because every
+input in $C$ contains $k$. Its absorption alternative fails because no
+allowed owner $r\ne k$ has an $r$-singleton input in the intersection of
+the other coalitions. Thus no such operation can omit $k$.
+
+For the reverse inclusion, induct on the tree and prove a stronger
+certificate: for each $k\in T(w)$ there are winning coalitions supported
+in $T$ whose common intersection is $\{j\}$, with $k\in w_j$, and with
+the displayed rival-singleton exclusions. At a leaf $j$ take
+$A_r=\{j\}$ for every owner.
+
+At a root owned by $h$, choose a child $L$ containing $k$ and write $R$
+for the other child. If $h\ne k$, neither child value is $\{h\}$, so
+choose $p\in R(w)\setminus\{h\}$; if $h=k$, choose any $p\in R(w)$.
+Take inductive certificates $A_r^L,A_r^R$ for $(L,k),(R,p)$ and set
+\[
+ A_h=A_h^L,\qquad A_r=A_r^L\cup A_r^R\quad(r\ne h).
+\]
+The root profile is OR for $h$ and AND for every other owner, so these
+coalitions are winning. Their common intersection is the left certificate's
+singleton, because the child supports are disjoint and $A_h$ lies in $L$.
+For $r\ne h,k$, that same factor restricts the intersection excluding $r$
+to $L$, where induction gives the exclusion. For $r=h\ne k$, disjointness
+splits the intersection of the other coalitions into its left and right
+parts. Neither contains an $h$-singleton input, since $k,p\ne h$.
+This proves the certificate and hence equality.
+\end{proof}
+
+Read-once profiles are also maximal among admissible profile families.
+Indeed realize a positive extension by a core operation $S$. The theorem
+gives $T(w)\subseteq S(w)$ everywhere. At a profile probe where $S$ is
+the singleton $\{r\}$, nonemptiness forces $T$ to be that same singleton,
+so no new positive bit was added. Repeated variables obstruct the proof:
+intersections of their label sets can share a variable through different
+occurrences, without sharing an actual leaf.
 
 Even projection profiles retain the entire core at one lower arity.
 The key is an elimination operation. For a core term $t(X,v)$, define
@@ -1922,6 +1992,91 @@ observations, proving uniqueness. A full term takes the value $\mathsf p$
 when all its inputs do, separating its lift from the distinguished projection.
 \end{proof}
 
+\subsection{Quadratic Boolean functions and cographs}
+\label{app:core-cographs}
+
+The four-state algebra also gives a graph-theoretic classification of one
+canonical family of operations. For a monotone nonconstant Boolean function
+$f$, a bichain input $v$ determines a Boolean cube $Q(v)$: inputs $b,c$ fix
+their coordinates to $0,1$, while $\mathsf n,\mathsf p$ leave them free.
+Define $D_f(v)$ to be $b$ or $c$ when $f$ is constant on this cube;
+otherwise it is $\mathsf p$ if some coordinate marked $\mathsf p$ is
+essential for the restricted function, and $\mathsf n$ if none is.
+Thus $D_f$ records exactly the essential marked sources.
+
+\begin{theorem}[Cograph criterion]\label{core:thm:cograph-extension}
+Let $G$ be a finite simple graph with at least one edge, and put
+\[
+ f_G(x)=\bigvee_{ij\in E(G)}(x_i\land x_j).
+\]
+The operation $D_{f_G}$ is a pure bichain term operation if and only if
+it is a term operation using $\wedge,\vee,\sqcup$, if and only if $G$
+has no induced four-vertex path. Equivalently, $G$ is a cograph, built
+from one-vertex graphs by disjoint union and complete join. Isolated
+vertices are allowed and ignored by $f_G$.
+\end{theorem}
+\begin{proof}
+For a pure term with Boolean endpoint function $f$, its stable outputs
+are determined by the Boolean cube corners. An essential marked coordinate
+forces $\mathsf p$: first fix the other free coordinates at a witnessing
+Boolean edge and evaluate on $\{b,\mathsf p,c\}$; then enlarge them to
+their original middle values in observer-union order. Both bichain
+operations are monotone in that order and $\mathsf p$ is its top.
+
+For a cograph, construct a term along a disjoint-union/complete-join
+decomposition, supplied also by the two-color case of the decomposition
+used in \cref{core:thm:colored-graphs}. Write $U_W=\bigvee_{i\in W}x_i$.
+At a disjoint-union node take the join of its nonempty-edge child terms.
+At a complete-join node with blocks $V_i$, take the join of the internal
+child terms and all $U_{V_i}\wedge U_{V_j}$ for $i<j$. Omit edgeless
+internal children. This is constant-free and has Boolean function $f_G$.
+
+It remains to exclude an inessential marked source. Let $L$ be the
+coordinates fixed to $1$ and $U$ those not fixed to $0$. On a nonconstant
+cube $L$ is independent. An internal marked source $p\in V_i$ is essential
+by induction. If $L$ has no vertex outside $V_i$, set the other blocks to
+zero and retain its witness. Otherwise independence puts all fixed true
+vertices in another block and none in $V_i$; adding $p$ to $L$ creates a
+cross edge, so $p$ is essential globally. A cross summand producing
+$\mathsf p$ has a marked source $p$ in a block with no fixed true vertex,
+and an available vertex in the other block. If $L$ is nonempty, adding
+$p$ to $L$ creates an edge; if $L$ is empty, add $p$ to a single available
+vertex of the other block. Again this witnesses essentiality. The
+disjoint-union case follows by choosing zero-valued completions in the other blocks;
+a constantly true block masks every other source. Hence the constructed
+term is $D_{f_G}$.
+
+For necessity, a four-row invariant excludes the path function
+$f=AB\lor AC\lor BD$. On $\mathbf B^4$ let $R$ consist of the tuples
+$(x,y,z,w)$ satisfying
+\[
+ x=c\Rightarrow z,w\ne b,\qquad
+ y=b\Rightarrow z,w\ne c,\qquad
+ (x=c\land y=b)\Rightarrow(z=\mathsf p\lor w=\mathsf p).
+\]
+This relation is closed under all three operations. For meet, the first
+endpoint premise holds in both operands, while the second holds in at
+least one. Select an operand satisfying both: its marked $\mathsf p$
+cannot be masked by $b$ in the other operand. Join is dual. For observer
+union, an endpoint output requires that endpoint in both operands and
+$\mathsf p$ absorbs union. These observations also preserve the first
+two clauses. The four columns of
+\[
+ \begin{pmatrix}
+ c&c&b&b\\ b&b&c&c\\
+ \mathsf n&\mathsf p&c&b\\
+ \mathsf p&\mathsf n&b&c
+ \end{pmatrix}
+\]
+belong to $R$, as do the constant-$b$ and constant-$c$ tuples. But $D_f$
+has outputs $(c,b,\mathsf n,\mathsf n)$, outside $R$: on the last two
+cubes $f$ restricts to $A$ and $B$, respectively, and the marked
+coordinates are inessential. Thus no full term, even with endpoint
+constants, realizes $D_f$. Fixing every vertex outside an induced path
+to $b$ would restrict $D_{f_G}$ to this forbidden operation. Therefore
+$G$ has no induced path.
+\end{proof}
+
 \subsection{A closed atomic-observer test}
 \label{app:core-atomic-observer}
 
@@ -2281,6 +2436,70 @@ Finally a constant input lies in no exceptional region, since those regions
 have both a $b$-singleton and a $c$-singleton. Hence $F$ is idempotent,
 and \cref{gen:thm:core} excludes full-language realizations as well.
 \end{proof}
+
+The same construction is irreducible under natural reductions of its inputs.
+For a set $S$ of deleted inputs, write
+\[
+ \partial_SF(w)=\{k\in I:k\in
+ F(w\text{ with every input in }S\text{ set to }I\setminus\{k\})\}.
+\]
+
+\begin{corollary}[Prime obstructions at unbounded arity]
+\label{core:cor:prime-obstructions}
+The operation $F$ constructed in \cref{core:thm:exponential-locality}
+has every proper identification minor core, and every residual
+$\partial_SF$ for nonempty proper $S$ is exactly the union of its
+remaining inputs. Its singleton profiles are unanimity and every input
+is essential. It admits no disjoint factorization
+\[
+ F(w)=H\bigl(G_1(w|_{V_1}),\ldots,G_m(w|_{V_m})\bigr)
+\]
+through idempotent operations $G_i$, where the $V_i$ partition the inputs
+into nonempty blocks and $2\leq m<2d$.
+\end{corollary}
+\begin{proof}
+The lower transversals separate every pair of distinct positions $p,q$.
+In one coordinate pair choose its bit to include $p$; in different pairs
+choose the bits to include $p$ and exclude $q$. Some $L_h$ therefore
+contains $p$ but not $q$. On its exceptional region the input at $p$ is
+$\{c\}$, while the input at $q$ is either $\{b\}$ or the free menu,
+which differs from both atoms. Thus this region misses the diagonal
+$w_p=w_q$. On that diagonal $F$ equals its core deletion patch omitting
+region $h$. Every proper identification minor lies on such a diagonal,
+so it is a minor of a core operation and is core.
+
+Fix a queried winner $k$. The menu $I\setminus\{k\}$ is ambiguous. With
+two or more deleted inputs, no exceptional region can occur, since each
+region has only one non-singleton position. With one deleted input, a
+region is possible only when that input is its free position. All remaining
+inputs then are $b/c$ atoms, with both present because $L_h$ is nonempty
+and $U_h$ is proper. Their union is $\{b,c\}$, equal to the exceptional
+output. In either case the deleted inputs contribute none of $k$, proving
+the residual assertion. Residuals retaining one input are projections,
+so every input is essential. Singleton outputs are unchanged from input
+union, since every altered output is ambiguous; hence the profiles are
+unanimity.
+
+Suppose a displayed factorization existed. Idempotence of the $G_i$
+makes $H$ the proper block-diagonal minor of $F$, so $H$ is core and
+uses every block essentially. For any essential input of a core operation,
+putting $I\setminus\{k\}$ in every other input preserves membership of
+$k$ in that input. Indeed an input containing $k$ is either ambiguous,
+so all choices are unions, or the atom $\{k\}$; in the latter case no
+foreign singleton can absorb and $k$ survives every ancestor. An input
+omitting $k$ cannot introduce it. Idempotence of all other $G_j$ therefore
+recovers $G_i$ as the residual deleting the inputs outside $V_i$.
+Each $G_i$ is input union by the preceding paragraph. Composition would
+make $F$ core, a contradiction.
+\end{proof}
+
+These proper minors agree on all their overlaps. When $2d>2^K-1$, every
+valuation repeats an input menu, so their diagonal domains cover the
+entire operation table. They determine a function uniquely and are all
+core, yet have no common core realization. Thus neither compatible
+lower-arity realizations nor disjoint decomposition reduces the problem
+to a bounded list of prime arities. The exact exponential locality gap
+persists in these prime examples.
 
 \subsection{Recognition by repeated singleton tests}
 \label{app:core-peeling}
@@ -2783,7 +3002,7 @@ the pairwise Birkhoff laws
 $x\star_i(x\star_j y)=x\star_j(x\star_i y)$, and $x\del y=y$.
 It has $K^2+3K+4$ equations, each using at most three variables.
 Here $+$ and $\del$ are their fixed core term definitions.
-An explicit sequential-veto term is near-unanimity of arity $K+1$,
+An explicit core term is near-unanimity of arity $K+1$,
 and no near-unanimity term has smaller arity.
 \end{theorem}
 \begin{proof}
@@ -2828,23 +3047,21 @@ proving completeness. The quotient proof uses the two-element
 generation just established, independently of this completeness claim.
 Counting the equations gives $3+3K+K+2\binom K2+1$.
 
-To construct the near-unanimity term, start with $K+1$ input positions.
-Each owner, in a fixed order, removes one remaining position. After
-all $K$ stages, return the input at the one position left.
-At an owner-$i$ stage, combine the terms for all possible removals
-using $\star_i$. This is an ordinary finite core term: the multibranch
-choice is any binary fold, and all leaves are input variables.
+For an explicit near-unanimity term, use the coalition construction of
+\cref{core:thm:profiles} on $K+1$ input positions. Give every owner the
+same threshold profile: a coalition wins exactly when it omits at most
+one input. These profiles are monotone and unanimous. Any $K$ winning
+coalitions have a common position, since together they omit at most
+$K$ of the $K+1$ positions. They therefore satisfy the common-source
+condition, and the construction gives a single core term $N$ realizing
+all these profiles.
 
-Use the same separating maps $b_i$ as above. If all but one input
-equal $a_i$, owner $i$ can
-remove the exceptional position at its stage, unless that position
-has already gone. At least two positions remain at that stage, so
-this ensures that the final input is $a_i$, whatever the other
-removals. Hence the term's $b_i$ value is $1$. For each other $b_j$
-there is at most one input equal to $1$; any owner other than $j$
-can remove that position, ensuring a $0$ result. The same argument
-for every $b_j$ handles a repeated input $n$. The resulting term $N$
-therefore satisfies all near-unanimity identities
+Under each separating map $b_i$, a tuple with all but one input equal
+to $a_i$ has at most one false entry, so $N$ returns $1$. For every
+other $b_j$ the tuple has at most one true entry, so it returns $0$;
+there are at least four input positions. If the repeated input is $n$,
+every $b_i$ has at most one true entry and returns $0$. Joint separation
+therefore gives all the near-unanimity identities
 \[
  N(y,x,\ldots,x)=N(x,y,x,\ldots,x)=\cdots
    =N(x,\ldots,x,y)=x.
@@ -2872,7 +3089,7 @@ $\operatorname V(\mathbf A_K^{\rm at})$ a finite basis. What
 variables, the description as a subvariety of the core variety, and the
 least near-unanimity arity.
 
-The veto term is not near-unanimity in the core itself: on ambiguous
+This term is not near-unanimity in the core itself: on ambiguous
 inputs it takes their union.
 
 The completeness step above uses a uniform lift below a common upper bound. Put

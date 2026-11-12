@@ -182,6 +182,7 @@ def library_declarations() -> dict[str, Theorem]:
                ROOT / "KFOL/Core/SourceCertificates.lean",
                ROOT / "KFOL/Core/Peeling.lean",
                ROOT / "KFOL/Core/SourcePeeling.lean",
+               ROOT / "KFOL/Core/AtomicBasis/Basis.lean",
                ROOT / "KFOL/Core/OwnerEliminationComplete.lean",
                ROOT / "KFOL/Core/ColoredGraphRealization.lean",
                ROOT / "KFOL/Core/ColoredGraphGuards.lean",

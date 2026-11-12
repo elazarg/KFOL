@@ -3,6 +3,7 @@ module
 public import KFOL.Results.Algebra
 public import KFOL.Results.Complexity
 public import KFOL.Results.Games
+public import KFOL.Core.AtomicBasis.Basis
 public import KFOL.Core.SourcePeeling
 public import KFOL.Core.FiniteRelationObstruction
 public import KFOL.Audit.Namespace
@@ -464,6 +465,33 @@ theorem core_nonfinite_basis [DecidableEq Role] [Finite Role] (three : Fin 3 ↪
         e.variableCount ≤ n → e.Holds (WinnerSet Role) → e.Holds B) ∧
       ∃ e : Equational.Identity (Equational.CoreSymbol Role), e.Holds (WinnerSet Role) ∧ ¬e.Holds B :=
   Results.Algebra.core_nonfinite_basis three
+
+/-- `core:thm:atomic-basis`: the displayed family is complete over arbitrary algebras. -/
+theorem atomic_quotient_basis [Fintype Role] [DecidableEq Role] (three : Fin 3 ↪ Role) :
+    letI := Core.AtomicBasis.structureOf Role
+    (Core.AtomicBasis.theory three Finset.univ.toList).Finite ∧
+    Equational.IsBasis (Core.AtomicBasis.Carrier Role)
+      (Core.AtomicBasis.theory three Finset.univ.toList) ∧
+    (Core.AtomicBasis.theory three Finset.univ.toList).ncard =
+      (Fintype.card Role)^2 + 3 * Fintype.card Role + 4 ∧
+    Equational.HasVariableBound (Core.AtomicBasis.theory three Finset.univ.toList) 3 :=
+  Core.AtomicBasis.explicit_basis three
+
+theorem atomic_quotient_subvariety [Fintype Role] [DecidableEq Role] (three : Fin 3 ↪ Role)
+    (M : Type v) [Nonempty M] [(Equational.language (Equational.CoreSymbol Role)).Structure M] :
+    (letI := Core.AtomicBasis.structureOf Role;
+      Equational.InVariety (Equational.CoreSymbol Role) (Core.AtomicBasis.Carrier Role) M) ↔
+    (letI := Equational.coreStructure Role;
+      Equational.InVariety (Equational.CoreSymbol Role) (WinnerSet Role) M) ∧
+      ∀ x y : M, Core.AtomicBasis.reset three Finset.univ.toList x y = y :=
+  Core.AtomicBasis.subvariety three M
+
+theorem atomic_quotient_near_unanimity [Fintype Role] [DecidableEq Role] (three : Fin 3 ↪ Role) :
+    (∃ t : Equational.Term (Equational.CoreSymbol Role) (Fin (Fintype.card Role + 1)),
+      Core.AtomicBasis.NearUnanimity t) ∧
+    ∀ (n : ℕ), n ≤ Fintype.card Role →
+      ∀ t : Equational.Term (Equational.CoreSymbol Role) (Fin n), ¬Core.AtomicBasis.NearUnanimity t :=
+  Core.AtomicBasis.nearUnanimity_arity three
 
 /-- `core:thm:no-basis`, `full:thm:nonfinite-basis`. -/
 theorem expanded_nonfinite_basis [DecidableEq Role] [Finite Role] (three : Fin 3 ↪ Role) :

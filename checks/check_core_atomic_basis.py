@@ -1,6 +1,6 @@
 """Native soundness and boundary checks for the atomic basis and its lifts.
 
-Completeness follows from the written closure and meet arguments. Here we
+Completeness is proved in KFOL/Core/AtomicBasis/Basis.lean. Here we
 check two-element lattice expansions and their common-absorber extensions,
 all displayed equations, the core abbreviations, and the D_K obstruction.
 """
@@ -203,7 +203,7 @@ def check():
           f'{templates} lattice/absorber templates leave exactly {survivors} owner quotients '
           'at K=3..6. K=3 core expansions sound; D_K satisfies the lifts '
           'but fails exhaustion; the six-state mixed countermodel passes '
-          'lifts and exhaustion. Arbitrary-algebra completeness written.')
+          'lifts and exhaustion. Arbitrary-algebra completeness is proved in Lean.')
     print(f'Canonical atomic quotients: every principal ideal of {models} models; '
           f'{reflection_pairs} input pairs, all closure homomorphisms, greatest '
           'lower bounds, kernel equality, and normalized operations checked.')

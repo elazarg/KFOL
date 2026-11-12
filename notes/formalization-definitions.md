@@ -1,6 +1,6 @@
 # Definitions and representation boundaries
 
-Read [Paper.lean](../Paper.lean) with the vocabulary below. It contains 82
+Read [Paper.lean](../Paper.lean) with the vocabulary below. It contains 85
 mathematical statements and no definitions. [Report.lean](../Report.lean)
 contains 105 further mathematical statements. Their proofs name library theorems;
 definitions must still be reviewed independently against the manuscripts.
@@ -13,7 +13,7 @@ theorem types. They erase proof-valued subterms and never follow theorem proofs.
 
 | Entry point | Theorem types | Semantic declarations | Source files | Central definition files | Written review units |
 | --- | ---: | ---: | ---: | ---: | ---: |
-| Paper | 82 | 678 | 40 | 28 | 362 |
+| Paper | 85 | 699 | 42 | 30 | 378 |
 | Report | 105 | 730 | 43 | 32 | 344 |
 
 These counts are separate slices and overlap. The vocabulary files organize
@@ -59,6 +59,7 @@ The underlying definitions are grouped by subject:
 | `Policies` | Indexed policies, passing patterns, selective reset, native syntax and the chain/intersection/repetition criterion |
 | `Congruences` | Operation-compatible equivalence relations, admissible closure families and ambiguity thresholds |
 | `Equational` | Identities, satisfaction, derivation, bases, variable bounds and generated varieties |
+| `AtomicBasis` | The ambiguity quotient on `Option Role`, its owned-choice tables, explicit original-signature basis equations, and independent near-unanimity predicate |
 | `CoreBasis` | The finite padded-grid algebras and native core interpretation used for nonfinite basability |
 | `Dissemilattice` | The seven explicit choice/union laws and their independent algebra structure |
 | `TwoPlayers`, `Kleene` | The three-element two-role carrier, switch, Kleene signature and literal finite basis |
@@ -111,6 +112,20 @@ view realizations are proved, as is the absence of a joint core term.
 
 The four-state owner algebra and finite countermodels have their own operations;
 they are not defined by satisfaction of the theorem they certify.
+
+The atomic ambiguity quotient keeps `some r` for each owner atom and uses
+`none` for every nonsingleton. Its definition does not refer to a basis or
+near-unanimity witness. `AtomicBasis.theory` lists the displayed equations in
+the original owned-choice signature; neutral join and reset are expanded core
+terms. `BasisIndex` counts this displayed family with one unordered owner pair
+per coverage and Birkhoff law. The library proves that different indices give
+different equations, establishing the basis set cardinality exactly. It also
+proves that the collapse map is an
+onto homomorphism, that the reset fold agrees with semantic winner reset, and
+that the listed equations are sound and complete over arbitrary nonempty
+algebras. `NearUnanimity` directly quantifies over every repeated input,
+exceptional value, and exceptional position. Its least arity is proved
+independently of the explicit threshold-profile construction.
 
 Equational satisfaction universally quantifies over valuations. Derivability
 has independent inference rules. `Equational.IsBasis` asserts that the two
