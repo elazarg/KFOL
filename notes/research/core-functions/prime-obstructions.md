@@ -22,6 +22,10 @@ V=(Fin d) times Bool with all the following properties:
 6. It has no proper disjoint idempotent decomposition with essential outer
    inputs. Here proper means that both inner and outer arities are smaller
    than |V|.
+7. Every proper collection of complete canonical source bundles has one
+   common core realizer with these same unanimity profiles, while the
+   full bundle family has none. A bundle includes every observer and every
+   genuine passive pattern at its source.
 
 The original [Gray-crown proof](exponential-crowns.md) establishes property 1
 and supplies the actual core deletion patches used below. The remaining
@@ -137,3 +141,28 @@ core, yet it is not core. It simultaneously passes all 2^d-point tests.
 This rules out a bounded-prime route to the full characterization. It does
 not rule out a short intrinsic condition with an unbounded family of
 configurations; finding that condition remains the target.
+
+## Every proper collection of complete source bundles is realizable
+
+Let q_h be the free input in C_h. Every input j occurs as q_h: a cyclic
+Hamilton Gray enumeration visits both values in each coordinate, and hence
+flips that coordinate in both directions. Put H_j={h:q_h=j} and take the
+nonempty derived union Q_j of the deletion patches P_h with h in H_j.
+It restores input union on the regions C_h with h in H_j and agrees with
+F_d elsewhere.
+
+On a changed region, every input except j is a b/c singleton, with both
+present. Membership of b,c is therefore unchanged. Any other owner k can
+only occur at input j. A canonical probe for a source ell!=j fixes that
+input to {k}, so it cannot lie in a changed region. Consequently all of
+ell's canonical coefficients agree, for every observer and every genuine
+passive pattern. Each patch has unanimity profiles; their union does too.
+
+For any proper source set choose j outside it. Then Q_j realizes all its
+complete source bundles at once, with the exact prescribed singleton
+profiles. Conversely, three-point interpolation gives canonical source
+reconstruction, so a core realization of every bundle would be F_d itself,
+contradicting nonrealizability. This rules out bounded-source compatibility
+tests even when each tested source includes its entire guard table. It does
+not concern arbitrary off-domain independent-flag extensions, which are not
+canonically determined by the winner operation.

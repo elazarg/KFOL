@@ -56,6 +56,11 @@ families and nullary relations. All proof closures use only propext,
 Classical.choice and Quot.sound. The sole finite observer-table check uses
 kernel `decide`, with a general induction supplying the all-term theorem.
 
+The [prime Gray obstructions](prime-obstructions.md) also pass every proper
+collection of complete canonical source bundles, with their exact singleton
+profiles. Thus bounded-source compatibility tests fail even when each source
+bundle contains every observer and genuine passive pattern.
+
 Nonfinite relatedness excludes characterization by a fixed finite family of
 invariant relations. It does not exclude every possible short structural law
 with unbounded quantification.
