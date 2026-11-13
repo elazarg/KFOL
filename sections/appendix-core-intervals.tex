@@ -62,88 +62,148 @@ Equivalently, the interval is the downset lattice of the preorder
  p\preceq_C q\quad\Longleftrightarrow\quad
  \forall F\in\mathcal I(C),\quad P_F(q)=1\ \Longrightarrow\ P_F(p)=1.
 \]
-The theorem reduces relative compatibility to implications between two
-source probes, but this definition of the preorder still quantifies over
-realizers. Antitonicity and passive cofactor independence give explicit
-edges. They do not give every edge, even for a binary base.
-
-\begin{lemma}[Three-row separation]\label{core:lem:interval-three-rows}
-Fix distinct owners $a,b,c$. In variable order $X,x,y$, put
+For arbitrary $C$ this preorder is implicit. It has a closed description
+when $C$ is the greatest completion of its singleton profiles: namely,
+$C(v)$ is its profile's singleton when one is forced, and is
+$U(v)=\bigcup_{i\in W}v_i$ otherwise. The additional implications use
+the dual of each owner's profile. Put
 \[
- u=(\{b\},\{a\},\{c\}),\qquad
- v=(\{c\},\{b\},\{a\}),\qquad
- w=(\{a\},\{b\},\{c\}).
+ f_r(A)=\Phi_r(C)(A),\qquad
+ \theta_r(E)=\bigwedge_{s\ne r} f_r(W\setminus E_s).
 \]
+Each $\theta_r$ is one normalized owner box. It equals one on $T_r$
+and zero on $T_s$ for $s\ne r$, by the common-source property.
+
+\begin{lemma}[Derangement separation]\label{core:lem:interval-rows}
+Fix $r$, a proper coloring $E$, and a missing owner $k$.
+Choose a fixed-point-free permutation $\sigma$ of $I\setminus\{r\}$.
+For each $s\ne r$, form a row $u_s$ by setting $X=\{\sigma(s)\}$,
+the inputs of $E_s$ to $\{s\}$, and every other passive input to
+$\{r\}$. Let $w$ be the canonical $k$-probe for $E$, with $X=\{k\}$.
 If a core term $t$ satisfies
-$t(u)\subseteq\{a,b\}$, $t(v)\subseteq\{a,c\}$, and
-$t(w)\subseteq\{b,c\}$, then
-$t(u)=t(v)=\{a\}$ and $t(w)=\{b,c\}$.
+\[
+ t(u_s)\subseteq\{r,\sigma(s)\}\quad(s\ne r),\qquad
+ t(w)\subseteq I\setminus\{k\},
+\]
+then $t(u_s)=\{r\}$ for every $s\ne r$.
 \end{lemma}
 \begin{proof}
-Suppose $b\in t(u)$. The profile pair test
-\eqref{core:eq:profile-pair-safe}, applied to the bounds at $u,w$,
-respectively, gives
-\[
- \Phi_a(t)(\{y\})\Rightarrow\Phi_a(t)(\{x\}),\qquad
- \Phi_c(t)(\{X\})\Rightarrow\Phi_c(t)(\{y\}).
-\]
-The first excludes $t(v)=\{a\}$: it would force $t(u)=\{a\}$.
-The second excludes $t(v)=\{c\}$: it would force $t(u)=\{c\}$.
-Thus $t(v)=\{a,c\}$. Also $t(w)$ cannot be the $b$ singleton,
-whose atomic coalition $\{x\}$ is the same at $v$; nor can it be the
-$c$ singleton, whose coalition $\{y\}$ is the same at $u$.
-Hence $t(w)=\{b,c\}$.
+Such a permutation exists because $K-1\geq2$.
+Suppose $\sigma(s_0)\in t(u_{s_0})$.
+The value $t(w)$ cannot be a singleton $j\ne r,k$: its $j$-atomic
+coalition $E_j$ is the same at $u_j$, whose bound excludes $j$.
+The $k$ singleton violates the bound at $w$. If $k\ne r$, an $r$
+singleton at $w$ would have positive profile on $E_r$, which is
+contained in the $r$-coalition $W\setminus E_{s_0}$ at $u_{s_0}$.
+It would force $t(u_{s_0})=\{r\}$. If $k=r$, that singleton is
+already excluded by the bound. Thus $t(w)$ is ambiguous, and the
+root acts as union there.
 
-At the root, both $v$ and $w$ consequently act as union, so both
-children respect their two bounds. At $u$, follow a child containing
-$b$; if the root absorbs, it is owned by $b$ and one may follow a
-$b$-singleton child. In either case the chosen child also respects
-the bound at $u$. Repeat with this strictly smaller term. No variable
-satisfies the three bounds and contains $b$ at $u$, a contradiction.
-Thus $t(u)=\{a\}$. Swapping $x,y$ and $b,c$ gives $t(v)=\{a\}$.
-The same singleton-coalition comparisons now force $t(w)=\{b,c\}$.
+Suppose the root is owned by $r$. It also acts as union at $u_{s_0}$,
+since that value contains $\sigma(s_0)$. Each child therefore respects
+that row's bound. The pair test \eqref{core:eq:profile-pair-safe}
+under this bound gives, for every $s\ne r$,
+\[
+ \Phi_r(W\setminus E_s)\ \Longrightarrow\
+ \Phi_r(W\setminus E_{s_0}).
+\]
+Indeed the difference of the two coalitions lies in $E_{s_0}$,
+whose menu $\{s_0\}$ is outside the bound; the row's $r$-coalition
+is the conclusion coalition; and its only $\sigma(s_0)$-atom is $X$.
+An $r$-absorbing child at any $u_s$ would consequently absorb at
+$u_{s_0}$ too. Hence the root acts as union at every $u_s$.
+
+Suppose instead the root is owned by $j\ne r$. Every row except
+$u_{\sigma^{-1}(j)}$ excludes $j$, so acts as union.
+A $j$-absorbing child at the exceptional row has
+$\Phi_j(\{X\})=1$. Each child respects the bound at $w$.
+If $j=k$, the same coalition $\{X\}$ makes that child the forbidden
+$k$ singleton at $w$. If $j\ne k$, the pair test under the bound
+at $w$ gives
+$\Phi_j(\{X\})\Rightarrow\Phi_j(E_j)$:
+$X$ lies outside the bound, and neither an allowed atomic coalition
+nor the difference $E_j\setminus E_j$ can provide a pair-test witness.
+This would make the child, and hence the root, equal $j$ at $u_j$,
+again forbidden. Thus the root acts as union at every row.
+
+Follow a child supplying $\sigma(s_0)$ at $u_{s_0}$. It respects
+all bounds, including the bound at $w$. Repetition reaches a variable.
+No passive variable has value $\sigma(s_0)$ at $u_{s_0}$, whereas
+$X$ violates the bound at $w$. This is a contradiction.
 \end{proof}
 
-\begin{theorem}[Closed compatibility above a binary choice]
-\label{core:thm:binary-source-interval}
-Let $C(x,y)=x\star_a y$ and let
-$P:\mathcal D_{\{x,y\}}\to\{0,1\}$ be antitone. It is the
-distinguished source predicate of an operation in $\mathcal I(C)$
-if and only if:
+For any core $C$, the lemma shows that $\lambda_r=1$ forces
+$\theta_r\leq P$. Otherwise choose $E$ with $\theta_r(E)=1$ and
+$P(E)=0$. Each row $u_s$ has $C(u_s)=\{r\}$, since its
+$r$-coalition is $W\setminus E_s$. The interval operation would
+have value $\{r,\sigma(s)\}$ there, but omit $k$ at $w$.
+
+\begin{theorem}[Closed compatibility above a greatest profile completion]
+\label{core:thm:profile-source-interval}
+Let $C$ be the greatest completion of its singleton profile family.
+A predicate $P:\mathcal D_W\to\{0,1\}$ is the distinguished source
+family of an operation in $\mathcal I(C)$ if and only if:
 \begin{enumerate}
-\item $P$ has one value $\lambda$ on all colorings with $x=a$ or $y=a$;
-\item if $\lambda=1$, then $P(x=b,y=c)=1$ for every pair of distinct
-      owners $b,c\ne a$.
+\item $P$ is antitone;
+\item $P$ has one value $\lambda_r$ on each $T_r$;
+\item $\lambda_r=1$ implies $\theta_r\leq P$, for every owner $r$.
 \end{enumerate}
+With union named, the least number of distinguished-source occurrences
+in an interval realizer lies between $b(P)$ and $b(P)+K$.
 \end{theorem}
 \begin{proof}
-The first condition follows from \cref{core:thm:source-interval}.
-If the second fails, the three rows of
-\cref{core:lem:interval-three-rows} would have respective outputs
-$\{a,b\},\{a,c\},\{b,c\}$, which that lemma excludes.
+Necessity follows from source compatibility,
+\cref{core:thm:source-interval}, and the derangement lemma.
+For sufficiency let $P_0$ equal $P$ off $\bigcup_rT_r$, and zero
+on that union. The unowned region is a downset, so $P_0$ is antitone.
+Take its greatest single-source completion retaining $U$, and attach
+$C$ by $\star_r$ once for every owner $r$. At a singleton value of
+$C$ its own stage absorbs; at an ambiguous value, $C=U$ contains
+every passive contribution, and all stages act as union. The result
+is in $\mathcal I(C)$ and has source predicate $P_0$.
 
-For sufficiency with $\lambda=0$, let $Q_P$ be the greatest
-single-source completion retaining $x\cup y$, given by
-\cref{core:thm:source-completion}. Use $Q_P\star_a C$.
-When $C=\{a\}$ the result is $C$ and the required source coefficient
-is zero. Otherwise $C=x\cup y$, so $Q_P\supseteq C$ and the gate
-acts as union, returning $Q_P$. This proves both interval bounds and
-the required source family on every input menu.
+For each owner $r$ we next realize $\theta_r$ with one source occurrence.
+For $s\ne r$, synthesize a passive core helper $H_s$ with profiles
+\[
+ \Phi_r(H_s)(A)=f_r(A),\qquad
+ \Phi_s(H_s)(A)=1-f_r(W\setminus A),
+\]
+and unanimity profiles at the other owners. These profiles are
+admissible: a positive $s$-coalition meets every positive $r$-coalition,
+and the other coalitions are $W$. Start a spine at $X$ and attach
+$H_s$ by $\star_s$ for every $s\ne r$. Its full source factor is
+exactly $\theta_r$. Union it with $C$ and attach $C$ at every
+owner different from $r$.
 
-Suppose $\lambda=1$. Every coloring with an uncolored position
-extends to one with an $a$-atom, so has value one by antitonicity.
-The second condition handles every remaining coloring with two
-distinct foreign atoms. Thus only the values
-$P(x=r,y=r)$ for $r\ne a$ can be zero.
-Start from $C\cup X$ and attach $C$ by $\star_r$ once for each such
-zero. This suppresses $X$ exactly when $C=\{r\}$ for a selected
-foreign owner, giving precisely $P$ and preserving both bounds.
+If $C=\{r\}$, all helpers equal $\{r\}$, and the spine retains $X$
+and lies inside $X\cup\{r\}$. Union with $C$ gives $X\cup\{r\}$.
+Every other singleton value of $C$ is restored by its own stage.
+If $C$ is ambiguous, it is $U$ and contains every helper's output,
+so both bounds hold. The restoring stages leave the source predicate
+unchanged, since $\theta_r$ already vanishes on every foreign $T_s$.
+Thus this realizes $\theta_r$ in the interval.
+Union the $P_0$ realizer with these realizers for the owners having
+$\lambda_r=1$. Condition~(3) makes their source predicate exactly $P$.
+
+For the occurrence bound, the indicator of the unowned region is the
+single normalized box $\bigwedge_r\neg f_r(E_r)$. Intersect a minimum
+box cover of $P$ with this box. Each resulting box has a greatest
+$U$-retaining completion using one source occurrence by
+\cref{core:cor:source-box-rank}; the restoring stages above add none.
+This realizes $P_0$ using at most $b(P)$ occurrences. At most $K$ more
+are used by the $\theta_r$ spines. The lower bound is the general
+occurrence-box bound.
 \end{proof}
 
-For example, set $P=0$ exactly when both passive inputs are colored
-by owners different from $a$. This is antitone and respects every
-passive cofactor independence of $C$: fixing either input to $a$
-leaves $P$ constantly one. Its singleton-$a$ value is one, but its
-value at $(x=b,y=c)$ is zero. It therefore has no interval realizer.
-Binary identification minors of a larger base inherit the same
-additional implications.
+The explicit preorder has the unowned colorings ordered by componentwise
+inclusion, together with one point for each owner $r$. An unowned
+coloring $E$ lies below the owner point $r$ exactly when
+$\theta_r(E)=1$. Collapse $T_r$ to that owner point; the theorem says
+that realizable source predicates are exactly the downsets of this order.
+
+For $C=x\star_a y$, the criterion reduces to constancy on the colorings
+with $x=a$ or $y=a$, and the rule that value one there forces value one
+at every $(x=b,y=c)$ with distinct $b,c\ne a$.
+Setting $P=0$ exactly when both inputs are foreign-$a$ atoms violates
+this rule, although it respects antitonicity and all passive cofactor
+independences of $C$.

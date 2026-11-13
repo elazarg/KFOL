@@ -80,10 +80,12 @@ classified families, not recognition of each family in isolation.
 structure. Holding a core C fixed and requiring C <= F <= C+X makes the
 activation predicates a bounded distributive lattice. Its constraints are
 all unary implications between source probes, and the singleton-r fibers
-of C each have one activation bit. Above a binary owned choice the
-implications have a closed characterization with explicit synthesis.
-For arbitrary C the implication preorder is still implicit, and these
-interval bounds do not cover arbitrary core operations.
+of C each have one activation bit. Above every greatest profile completion,
+the implications have a closed characterization through the boxes
+theta_r(E)=AND_(s!=r) Phi_r(C)(W\E_s), with synthesis within K of the
+owner-box lower bound on source occurrences. For arbitrary C the implication
+preorder is still implicit, and the interval bounds do not cover arbitrary
+core operations.
 
 ## Closed obstructions and the remaining target
 
