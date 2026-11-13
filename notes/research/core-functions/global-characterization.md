@@ -509,6 +509,15 @@ requires a node with two nongreatest full-support children. A four-row
 analytic argument rules out a source-linear witness for its distinguished
 positive guard bit. Branching dependence cannot be removed by allowing
 arbitrary smaller-arity siblings along one source path.
+The counterexample now has a seven-leaf primitive realizer, and a profile
+argument proves seven optimal without the finite envelope certificate.
+The general lemma behind the proof says that a source used once, mandatory
+for an owner's profile, cannot introduce a third winner when the rest of
+a winning coalition is fixed to that owner's atom.
+The [five-variable separable example](pure-trace-quotient.md#repetition-persists-in-a-source-separable-core)
+also excludes extracting a source-linear minorant for every positive
+probe of a genuine separable target. A uniform bound larger than one
+on the number of marked-source occurrences has not been proved.
 
 A simple coherence schema records only the set of states occurring in a tuple:
 R_Gamma consists of tuples whose nonempty value-set belongs to Gamma. Requiring

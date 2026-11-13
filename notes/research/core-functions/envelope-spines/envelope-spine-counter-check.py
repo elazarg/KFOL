@@ -49,32 +49,17 @@ assert all(tuple(a|b for a,b in zip(x,y))in R for x in R for y in R)
 assert all(action(x,E,r)in R for x in R for E in B for r in range(3))
 assert all(not(x[-1]>>positive&1)or any(x[i]>>r&1 for i,r in enumerate(forbidden))for x in R)
 
-def e17(v):x,y,z=v;return op(x,op(z,y,2),2)
-def e410(v):
- x,y,z=v;h=op(z,y,1)
- return op(op(x,h,0),h|y,1)
-def left(v):x,y,z=v;return op(y,e17(v),0)
-def right(v):x,y,z=v;return op(x,e410(v),0)
-def counter(v):return op(left(v),right(v),1)
-allvals=list(product(range(1,8),repeat=3))
-assert all(e17(v)==envelope((128,128,254),7,v)for v in allvals)
-assert all(e410(v)==envelope((192,236,128),7,v)for v in allvals)
+def counter(v):
+ x,y,z=v
+ return op(op(op(z,op(y,x,2),2),x,1),op(op(z,x,0),y,1),0)
 F=tuple(map(counter,rows));assert F==(2,6,1,5,7)
 assert all(not(F[i]>>r&1)for i,r in enumerate(forbidden))and F[-1]>>positive&1
 assert F not in R
-# Both candidate profile-max extension directions leak at the same atomic row.
-v=(4,2,1)
-assert counter(v)==6
-assert op(envelope((204,128,204),7,v),right(v),1)==7
-# left profiles are Y,XYZ,Y; right profiles computed from their Boolean recursions.
-leftp=(204,128,204);rightp=(234,168,128)
-# Check recorded profiles by the canonical pure-owner probes.
-for fun,fs in [(left,leftp),(right,rightp)]:
- for r in range(3):
-  for S in range(8):
-   v=tuple((1<<r)if S>>j&1 else 7^(1<<r)for j in range(3))
-   assert (fun(v)==1<<r)==bool(fs[r]>>S&1),(r,S,fun(v),fs)
-assert op(left(v:=(4,2,1)),envelope(rightp,7,v),1)==7
+# The fourth owner also checks the unanimous profile for an unused owner.
+for r,profile in enumerate((200,168,128,128)):
+ for S in range(8):
+  v=tuple((1<<r)if S>>j&1 else 15^(1<<r)for j in range(3))
+  assert (counter(v)==1<<r)==bool(profile>>S&1),(r,S,counter(v),profile)
 safe=sorted(x for x in R if all(not(x[i]>>r&1)for i,r in enumerate(forbidden)))
 print('PASS: 18 monotone profiles; 625 support/profile envelopes; 100 five-row actions; 414 spine tuples; 416 closed union/envelope-action tuples.')
 print('Negative-safe tuples:',safe,'; counter:',F)

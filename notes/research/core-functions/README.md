@@ -532,7 +532,8 @@ Lean proof and do not claim Lean-verified enumeration.
 [Envelope-spine counterexample](envelope-spines/README.md) rules out replacing
 every sibling subtree by its greatest profile completion, even with arbitrarily
 repeated owners and unions. Its small closed-relation checker is independent
-of a complete term enumeration. [Marked-type coextension](marked-type-coextension.md)
+of a complete term enumeration. A seven-leaf primitive realizer is optimal
+by an analytic profile argument. [Marked-type coextension](marked-type-coextension.md)
 explains why coexistence of occurrence types yields no pairwise color restriction.
 These are research certificates and arguments, rather than public Lean claims.
 

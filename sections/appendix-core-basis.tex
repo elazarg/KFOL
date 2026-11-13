@@ -29,7 +29,10 @@ output value likewise have a closed criterion
 (\cref{core:thm:one-point-completion}). These pointwise conditions need
 not have a common realization across inputs. For primitive read-once trees,
 however, a closed rainbow formula recovers every winner and gives the least
-operation in the profile fiber (\cref{core:thm:read-once-minimum}). Even the projection-profile
+operation in the profile fiber (\cref{core:thm:read-once-minimum}). Already
+at three inputs, a seven-leaf operation requires every variable to occur
+repeatedly, and seven leaves are optimal (\cref{core:prop:seven-leaf-branching}).
+Even the projection-profile
 fiber contains a copy of the whole lower-arity core, via neutral-source
 elimination and reset (\cref{core:thm:neutral-elimination,core:thm:projection-fiber}).
 Prime source-guard normal forms describe full values
@@ -1143,6 +1146,110 @@ the singleton $\{r\}$, nonemptiness forces $T$ to be that same singleton,
 so no new positive bit was added. Repeated variables obstruct the proof:
 intersections of their label sets can share a variable through different
 occurrences, without sharing an actual leaf.
+
+\begin{lemma}[A mandatory linear source]\label{core:lem:mandatory-linear-source}
+Suppose a choice/union word $T$ uses $j$ at most once, and for some
+$A\subseteq V\setminus\{j\}$ and owner $r$,
+\[
+ \Phi_r^T(V\setminus\{j\})=0,\qquad \Phi_r^T(A\cup\{j\})=1.
+\]
+If $w_i=\{r\}$ for every $i\in A$, then
+$w_j\subseteq T(w)\subseteq w_j\cup\{r\}$.
+\end{lemma}
+\begin{proof}
+The missing profile forces $j$ to occur. No $r$-gate lies on its path:
+at the $V\setminus\{j\}$ probe its sibling would be $\{r\}$, and
+every ancestor sibling is also $\{r\}$, making the final profile positive.
+All path gates therefore use conjunction in the $r$-profile.
+The positive profile forces every sibling to have positive $r$-profile
+on $A$, since it omits $j$. At the specified input each sibling is
+$\{r\}$. Combining $w_j$ repeatedly with this singleton, by choices
+other than $r$ and by union, preserves both displayed inclusions.
+\end{proof}
+
+\begin{proposition}[Sharp branching at three inputs]
+\label{core:prop:seven-leaf-branching}
+Label three distinct owners $0,1,2$. The operation
+\[
+ F=\bigl((z\star_2(y\star_2x))\star_1x\bigr)
+       \star_0\bigl((z\star_0x)\star_1y\bigr)
+\]
+has no realization in which any input occurs at most once.
+Its minimum number of leaves in a primitive core realization is seven,
+for every ambient $K\geq3$.
+\end{proposition}
+\begin{proof}
+Its profiles, writing products for conjunction, are
+\[
+ \phi_0=y(x\vee z),\qquad \phi_1=x(y\vee z),\qquad
+ \phi_r=xyz\quad(r\ne0,1).
+\]
+At $Q=(\{0\},\{1\},\{2\})$ it returns $\{0,1,2\}$.
+If $x$ occurred once, \cref{core:lem:mandatory-linear-source} with
+$r=1,A=\{y\}$ would bound the output at $Q$ by $\{0,1\}$.
+The same lemma with $j=y,r=0,A=\{x\}$ excludes a single $y$.
+
+For $z$, use the three further rows, displaying singleton inputs by
+their owners:
+\[
+\begin{array}{c|ccc|c}
+ &x&y&z&F\\\hline
+ v_0&1&0&1&\{1\}\\
+ v_1&2&1&0&\{1,2\}\\
+ v_2&1&0&0&\{0\}
+\end{array}
+\]
+Suppose $z$ occurred once. Each path sibling has the same value at
+$v_0,v_2$. Working backwards from the final pair $(\{1\},\{0\})$
+forces every path gate to be owned by $0$ or $1$, to preserve this
+pair, and to have the opposite singleton as its common sibling value.
+At $v_1$, removing the initial $0$ requires a $1$-gate with sibling
+value $\{1\}$. Its $1$-atomic input set is the same at $v_1$ and
+$Q$, namely $\{y\}$, so that sibling also equals $\{1\}$ at $Q$.
+It erases the only possible source of $2$ there, a contradiction.
+Thus every input occurs at least twice.
+
+It remains to exclude six leaves, hence exactly two occurrences per
+input. A root with a leaf child would make some singleton coalition
+winning for its owner, contrary to the displayed profiles. A repeated
+variable in a two-leaf child reduces to the same case by idempotence.
+
+For a $2+4$ split, the root is $0$ or $1$: any other owner requires
+the full coalition $xyz$, whereas the two-leaf child has smaller support.
+By symmetry take root $0$. Its two-leaf child must be $y\star_1x$
+or $y\star_1z$: the $0$-profile is bounded above by $y(x\vee z)$,
+and its $1$-profile must contain $x(y\vee z)$.
+In the first case the other child uses $x$ once and has $1$-profile
+exactly $x(y\vee z)$; the mandatory-source lemma bounds its $Q$-value
+by $\{0,1\}$. In the second it uses $y$ once, has $y$ mandatory in
+its $0$-profile, and wins on $xy$; the same lemma gives that bound.
+The two-leaf child's $Q$-value is $\{1\}$ in both cases.
+
+For a $3+3$ split, if a child has binary support, the occurrence counts
+force both to have binary support. The root is again $0$ or $1$.
+At root $0$ their supports must be $xy,yz$, respectively. The $yz$
+child's $1$-profile wins on both $y,z$, so it is $y\star_1z$ by the
+binary classification. Neither child can then supply $2$ at $Q$.
+Root $1$ is symmetric.
+
+Finally suppose both three-leaf children use all three inputs.
+For a read-once child $(i\star_sj)\star_tk$ with $s\ne t$, its
+nonunanimous profiles are $k(i\vee j)$ at $s$ and $k\vee ij$ at $t$.
+If $s=t$, only that owner's profile is nonunanimous, namely $i\vee j\vee k$.
+Applying the root's OR/AND profile rules gives the following possibilities,
+up to exchanging children. Put
+$L_0=(x\star_0z)\star_1y$ and $L_1=(y\star_1z)\star_0x$:
+\[
+\begin{array}{c|c|c}
+ \text{root}&\text{first child}&\text{second child}\\\hline
+ 0&L_0&(y\star_1z)\star_rx\quad(r\ne0,1)\\
+ 1&L_1&(x\star_0z)\star_ry\quad(r\ne0,1)\\
+ q\ne0,1&L_0&L_1
+\end{array}
+\]
+All these roots return $\{0,1\}$ at $Q$. Thus six leaves are impossible,
+while the displayed word has seven.
+\end{proof}
 
 Even projection profiles retain the entire core at one lower arity.
 The key is an elimination operation. For a core term $t(X,v)$, define

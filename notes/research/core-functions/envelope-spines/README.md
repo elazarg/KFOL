@@ -6,6 +6,8 @@ refutes the envelope-spine normal form with unbounded owner repetitions.
 Since every binary core operation is its greatest profile completion, it also
 refutes arbitrary finite unions of ternary terms each having an input used
 at most once. The obstruction holds for every ambient role set K>=3.
+The explicit word has seven leaves, which is optimal even without
+restricting its realization to the envelope-spine language.
 
 Let E(phi,S) be the greatest core completion on a nonempty variable support S of an admissible full singleton-profile tuple phi. On a valuation it returns the unique prescribed singleton, if there is one, and otherwise the union of the inputs in S. A proposed envelope spine starts at a variable or at one such completion and repeatedly combines its current result with another greatest completion by an arbitrary owned choice. Owners may repeat. Also allow arbitrary finite unions, including unions between these actions.
 
@@ -13,21 +15,21 @@ Let E(phi,S) be the greatest core completion on a nonempty variable support S of
 
 Use owners 0,1,2 and variables X,Y,Z. Set
 
-    A = X star_2 (Z star_2 Y),
-    H = Z star_1 Y,
-    B = (X star_0 H) star_1 (H union Y),
-    x = Y star_0 A,
-    y = X star_0 B,
-    F = x star_1 y.
+    F = ((Z star_2 (Y star_2 X)) star_1 X)
+          star_0 ((Z star_0 X) star_1 Y).
 
-Both A and B are themselves greatest profile completions with full support:
+This is a primitive seven-leaf word, using X three times and Y,Z twice.
+Its singleton profiles are Y(X OR Z) at owner 0, X(Y OR Z) at owner 1,
+and XYZ at every other owner.
 
-| Completion | owner 0 profile | owner 1 profile | owner 2 profile |
-|---|---|---|---|
-| A | XYZ | XYZ | X OR Y OR Z |
-| B | YZ | Y OR XZ | XYZ |
-
-The standalone checker verifies their complete 343-entry winner tables against these greatest-completion formulas. Thus the counterexample is a literal core word, with derived core union, rather than a function supplied by a search oracle.
+The report's `core:prop:seven-leaf-branching` proves that seven leaves
+are necessary without using a finite certificate. A general
+mandatory-source lemma excludes single X and Y occurrences; the
+four-row argument below excludes a single Z. Six leaves would then
+use each input exactly twice. The root splits 1+5, 2+4 and 3+3 are
+excluded by their profile constraints and the positive row Q. Thus
+the supplying source Z requires exactly two occurrences in this
+operation, while no realization uses all three inputs at most twice.
 
 The following five singleton-input rows suffice:
 
