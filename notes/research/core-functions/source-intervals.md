@@ -134,6 +134,45 @@ requires a core baseline and freezes every passive source bundle. For a
 baseline which is not its greatest profile completion, the universal
 theta bounds still hold but the synthesis proof does not apply.
 
+Adding all passive cofactor equivalences to the three laws does not fix
+this. Take distinct a,b,c and
+
+    C(x,y,z)=x choice_a (y choice_b z),
+    Q(y,z)=0 iff y,z are both singleton owners different from b,
+    P(E)=[x is uncolored] AND Q(E_y,E_z).
+
+P is antitone and vanishes on every owned tag of C. The a-tag has x=a
+or y=z=a, while every other tag requires x to be colored. Thus all global
+theta implications are vacuous. The passive capture contexts are exactly:
+
+- x is captured when y=z=a, where Q=0;
+- y is captured when x=a or z=b, where P is respectively zero or
+  independent of y;
+- z is captured when x=a or y=b, symmetrically.
+
+Consequently P obeys every passive colored-cofactor equivalence. The
+sourcewise reconstructed operation has the particularly simple semantics
+
+    F(X,x,y,z)=C union X if x is ambiguous and Q(y,z)=1;
+               C otherwise.
+
+It has exactly C's singleton profiles: when the switch is on, C is already
+ambiguous. It satisfies the full colored-cofactor independence law for
+the new source too: a negative P context fixes either atomic x or two
+foreign-b atoms y,z, both of which keep F independent of X. Nevertheless
+it is noncore. Neutral deletion of x gives the interval above
+L=y choice_b z with source predicate Q. Q has lambda_b=1 but is zero
+at y=a,z=c, violating the closed profile-maximum interval theorem.
+
+This identifies a further necessary compatibility law. For every neutral
+deletion B with nonzero C_B=partial_B C, the restriction
+P_B(E)=P(E with B uncolored) must belong to L(C_B). Neutral elimination
+is inclusion-monotone, commutes with union, and restricts these source
+coordinates, so an interval realizer would supply all such residual
+realizers. In the example B={x} already fails. No sufficiency claim for
+this enlarged family of laws has been proved. The other one-input residual
+partial_y C is the partial reset (x+z) choice_a x.
+
 An unrestricted union-base rule is false. Take C=x choice_a y and
 D=x choice_b y, a!=b. Every predicate realizable above either base has
 equal values at e=(x=a,y=b), f=(x=b,y=a), by singleton-fiber rigidity.
