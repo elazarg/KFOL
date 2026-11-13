@@ -178,11 +178,17 @@ four-variable example passes pair-cut, reciprocal intersection,
 hereditary profiles and exact cofactor dependence but violates this law.
 All its proper input reductions remain core.
 Its strengthened rainbow-cover form subsumes hereditary profile
-admissibility and elementary dependence composition. Whether loopless
-closures with that one elimination law are jointly realizable as pure
-ports is open. This is a smaller problem than ordinary guard
-realizability: the complete-head example with a spare observer passes
-every pure-port necessity and still has noncore separable reconstruction.
+admissibility and elementary dependence composition. Two foreign colors
+compress exactly to a conditional mutual-capture test. However, an
+[eight-variable triple](feedback-three-colors.md) satisfies full strong
+feedback elimination at all three supplied owners and still has no
+joint pure-port realizer. Extending any putative word by a fresh identity
+owner would violate the six-query feedback law. A complete criterion
+must therefore include this unused-owner coordinate. Sufficiency of
+feedback after adding that coordinate is unproved. Even the pure-port
+problem is smaller than ordinary guard realizability: the complete-head
+example with a spare observer has actual pure ports and a noncore
+separable reconstruction.
 
 [Capture-trigger normal forms](capture-trigger-normal-form.md) supply
 another closed positive class. Every source-separable operation above

@@ -1,0 +1,249 @@
+\subsection{Feedback tests for owner closures}
+\label{app:core-feedback}
+
+Pure-owner closures satisfy a closed feedback-elimination law.
+With two foreign owners its repeated queries compress to a single
+mutual-capture test. With three foreign owners this compression fails;
+the resulting example also shows that the feedback law alone does not
+characterize joint pure-port realizability.
+
+For a core operation on essential support $V$, its pure-owner closure
+$c_r$ can be recovered from a one-owner trace. Replace foreign gates
+by union and distribute to obtain a sum of $r$-folds on nonempty sets
+$\mathcal H_r$. This preserves the pure-$r$ source coefficients and
+the $r$-profile, and
+\[
+ c_r(E)=V\setminus\bigcup\{H\in\mathcal H_r:H\cap E=\varnothing\}.
+\]
+The union on the right is an interior on complements, so $c_r$ is a
+loopless closure. Its spanning predicate is the singleton profile:
+$\Phi_r(E)=[c_r(E)=V]$.
+
+Here is the feedback law for arbitrary loopless closure data. Fix an
+observing owner $r$, a coalition $A$, and finitely many queries
+$(s_i,X_i,P_i)$ with $s_i\ne r$, such that
+\begin{align*}
+ &X_i\cap P_i=\varnothing,\qquad X_i\subseteq c_{s_i}(P_i),\\
+ &\bigcup_i(X_i\cup P_i)\subseteq c_r(A).
+\end{align*}
+For each $i$, require $A\cap P_i$ to be covered by some of the $X_j$
+having pairwise distinct owners, all different from $s_i$. Then impose
+\begin{equation}\label{core:eq:feedback-elimination}
+ c_r(A)=c_r\left(A\setminus\bigcup_iX_i\right).\tag{FE}
+\end{equation}
+All quantifiers in this law range over the supplied finite closure data.
+
+Call $B$ \emph{$r$-independent} if
+$b\notin c_r(B\setminus\{b\})$ for every $b\in B$. Put
+$U=c_r(B)$, $Z=U\setminus B$, and define the conditional foreign closures
+\begin{equation}\label{core:eq:conditional-foreign-closure}
+ d_s(E)=c_s(Z\cup E)\cap B\qquad(s\ne r,\ E\subseteq B).
+\end{equation}
+These are closures even when $U$ is not foreign-closed: if
+$G=c_s(Z\cup E)$, then $Z\cup d_s(E)\subseteq G$, so
+$d_s(d_s(E))\subseteq G\cap B=d_s(E)$; extensivity gives equality.
+
+An equivalent independent-base form of (FE) forbids the following
+\emph{feedback family}: sets $X_i,Q_i\subseteq B$ with
+\begin{equation}\label{core:eq:base-feedback}
+ X_i\cap Q_i=\varnothing,\qquad X_i\subseteq d_{s_i}(Q_i),
+ \qquad \bigcup_iX_i\ne\varnothing,
+\end{equation}
+where each $Q_i$ is covered by head blocks $X_j$ of pairwise distinct
+owners different from $s_i$. Indeed a forbidden family lifts to (FE)
+using $A=B$ and $P_i=Z\cup Q_i$, contradicting independence.
+Conversely, for a failing (FE) instance choose a minimal
+$B\subseteq A$ with $c_r(B)=c_r(A)$. It is $r$-independent.
+Replace $X_i,P_i$ by $X_i\cap B,P_i\cap B$ and use
+$Z=c_r(B)\setminus B$. Capture and the covers restrict to $B$;
+some restricted head is nonempty, since otherwise
+$B\subseteq A\setminus\bigcup_iX_i$ would prove (FE).
+
+\begin{proposition}[Necessary feedback elimination]
+\label{core:prop:feedback-elimination}
+The pure-owner closures of every core operation satisfy (FE).
+\end{proposition}
+\begin{proof}
+Use its independent-base form. The neutral residual on $U=c_r(B)$
+is core by \cref{core:thm:neutral-elimination}, its closures are
+$c_s(E)\cap U$, and its $r$-profile is positive at $B$.
+At query $i$, give $X_i$ the menu $I$, give $Z\cup Q_i$ the $s_i$
+atom, and every other input $I\setminus\{r\}$. Its only possible
+$r$-sources lie in $X_i$, whose pure-$s_i$ ports vanish; hence the
+residual omits $r$ there.
+
+An omission budget with head $X$ and owner $s\ne r$ forces the
+positive profile $\Phi_s(U\setminus X)$: decrease every input outside
+$X$ to $\{s\}$. Monotonicity preserves omission of $r$, and the new
+output lies in $\{\{s\},I\}$, so must be $\{s\}$.
+
+Now pass the $B$-positive $r$-profile and all budgets down the word.
+At an $r$-root choose a positive child; all budgets pass to both.
+At a foreign root $s$, both children are $B$-positive, and budgets
+of other owners pass directly. A child's $s$-profile cannot be
+positive on $Z\cup Q_i$ for an $s$-colored query: together with
+its $r$-profile at $B$ and the forced profiles of the rainbow budgets
+covering $Q_i$, the common-source condition would have empty
+intersection. Thus neither child absorbs at that query, and its
+budget passes too. Induction gives an $r$-positive profile on
+$B\setminus\bigcup_iX_i$: a positive leaf lies in $B$, and its budgets
+exclude every head block. Consequently this set spans $U$, contrary
+to independence and the nonempty head union.
+\end{proof}
+
+For closures $d_s$ on a finite set $B$, the \emph{hereditary profile
+test} requires that, for every nonempty $L\subseteq B$, spanning
+coalitions $A_s\subseteq L$ with $L\subseteq d_s(A_s)$ have nonempty
+common intersection. In the conditional setting, (FE) implies this
+test: use one query per owner with $X_s=L\setminus A_s$, $Q_s=A_s$.
+If the intersection were empty, each premise would have a rainbow
+cover by the other heads.
+
+\begin{theorem}[Two-color feedback compression]
+\label{core:thm:two-color-feedback}
+For two closures $d_1,d_2$ on a finite set, the hereditary profile
+test is equivalent to absence of every finite feedback family. It is
+also equivalent to
+\begin{equation}\label{core:eq:conditional-mutual-capture}
+ C\cap D=\varnothing,\quad C\subseteq d_1(D),\quad
+ D\subseteq d_2(C)\quad\Longrightarrow\quad C=D=\varnothing.
+\end{equation}
+In particular, for $K=3$, (FE) is equivalent to the hereditary profile
+test at every observer-independent base.
+\end{theorem}
+\begin{proof}
+Both the profile test and the mutual-capture condition exclude loops,
+using a singleton retained set and allowing one side to be empty.
+For loopless closures the latter is exactly the hereditary profile
+test: a disjoint spanning pair gives mutual capture, and a nonempty
+mutual pair spans its own union. Such a pair is itself a two-query
+feedback family.
+
+Suppose the profile test holds but a feedback family exists.
+A nonempty head has a nonempty premise, covered by one opposite-color
+head. Following covers gives an alternating directed cycle. Replace
+each cycle head by the preceding query's premise to obtain nonempty
+sets, indexed cyclically modulo $m$, with
+\[
+ A_i\subseteq d_1(B_i),\quad B_i\subseteq d_2(A_{i+1}),\quad
+ A_i\cap B_i=B_i\cap A_{i+1}=\varnothing.
+\]
+Put
+\[
+ C=\bigcup_{i=0}^{m-1}\left(B_i\setminus\bigcup_{h<i}A_h\right),
+ \qquad
+ D=\bigcup_{i=0}^{m-1}\left(A_{i+1}\setminus\bigcup_{h<i}B_h\right).
+\]
+Starting with $C$, closure $d_1$ successively generates $B_0,A_0$,
+then $B_1,A_1$, and so on; deleted elements are already generated.
+Starting with $D$, closure $d_2$ similarly generates $A_1,B_0$,
+then $A_2,B_1$, and so on. Thus both closures contain the full cycle
+union, giving $D\subseteq d_1(C)$ and $C\subseteq d_2(D)$.
+Both sets are nonempty.
+If an element belonged to their $i$- and $j$-summands respectively,
+the exclusions would force $i\geq j$ and $(j+1\bmod m)\geq i$.
+Without wraparound this gives $i=j$ or $i=j+1$, both excluded by
+adjacent disjointness; wraparound is impossible except $m=1$, also
+excluded by disjointness. Hence $(D,C)$ is a forbidden mutual pair.
+The last assertion follows from the independent-base form of (FE).
+\end{proof}
+
+\begin{theorem}[A three-color feedback obstruction]
+\label{core:thm:three-color-feedback}
+There is an eight-variable loopless closure triple satisfying (FE)
+but not jointly realizable as the pure-owner closures of a three-owner
+core operation. After adjoining an identity owner, every conditional
+hereditary profile test still holds, while (FE) fails on six queries.
+Under any extension by identity owners the tuple also satisfies the
+simultaneous cross-value composition law
+\begin{equation}\label{core:eq:feedback-cross-composition}
+ P\subseteq c_r(E)\setminus E\quad\Longrightarrow\quad
+ c_s(P)\subseteq c_r(E).
+\end{equation}
+\end{theorem}
+\begin{proof}
+Use owners $a,b,c$ and variables
+$u_a,u_b,u_c,p,q,e,t_+,t_-$. Each closure is generated by its two rules:
+\[
+\begin{array}{c|c|c}
+\text{query}&\text{premise }Q_i&\text{head }X_i\\\hline
+ a_0&u_b,u_c,q,t_-&u_a,p,t_+\\
+ a_1&u_b,u_c,p,t_+&u_a,q,t_-\\
+ b_0&u_a,u_c,e,t_+&u_b,p,t_-\\
+ b_1&u_a,u_c,p,t_-&u_b,e,t_+\\
+ c_0&u_a,u_b,e,t_-&u_c,q,t_+\\
+ c_1&u_a,u_b,q,t_+&u_c,e,t_-
+\end{array}
+\]
+The two queries of each color share the same set $Q_i\cup X_i$.
+Once either rule fires, both do; writing $H_s=X_{s_0}\cup X_{s_1}$,
+the closure is $E$ if inactive and $E\cup H_s$ otherwise.
+A first firing adds at most its three head variables.
+
+First verify the hereditary profile test for this triple. If some
+colors are active at their spanning coalitions and some are not,
+$u_t$ for an inactive color $t$ lies in every active premise;
+inactive coalitions equal the retained set. This gives a common
+variable. The all-inactive case is immediate.
+For the all-active case, regard
+$a_0=b\to a,a_1=c\to a,b_0=a\to b,b_1=c\to b,c_0=a\to c,c_1=b\to c$.
+The variables $u_s$ are incoming stars; $p,q,e$ are directed two-cycles
+and $t_+,t_-$ are the directed triangles. A head contains exactly the
+configurations using its arc; $Q_i$ is the union of its owner's two
+outgoing-arc heads with $X_i$ removed. Delete one first-fired incoming arc per
+owner. The remaining graph has one incoming arc per vertex and hence
+a directed cycle. Its configuration belongs to the premise of every
+color on that cycle, and is outside $H_s$ for a color off it, so spanning
+forces it into that coalition too. It is a common variable.
+
+Now verify every observer-independent-base test, including after
+adding identity owners. An identity observer, or an inactive independent
+base, has $Z=\varnothing$; the preceding test applies, taking the
+omitted color's coalition to be the entire retained set.
+An active independent base is $Q_i$ or $Q_i$ plus the opposite
+two-cycle variable: any other extra variable is already captured from
+$Q_i$ and would be redundant. Color symmetry reduces to $i=a_0$.
+Writing $b'=u_b,c'=u_c,v=t_-$, the bases are
+$B_- =\{b',c',q,v\}$ and $B_+=B_-\cup\{e\}$, with
+$Z=\{u_a,p,t_+\}$. Their two nonidentity conditional closures have the
+following rules, with juxtaposition denoting a set:
+\[
+\begin{array}{c|l|l}
+ &d_b&d_c\\\hline
+ B_-&c'v\Rightarrow b'&b'q\Rightarrow c'v\\
+ B_+&\begin{gathered}c'e\Rightarrow b'v\\c'v\Rightarrow b'e\end{gathered}
+     &\begin{gathered}b'ev\Rightarrow c'q\\b'q\Rightarrow c'ev\end{gathered}
+\end{array}
+\]
+For $B_-$, $q$ is uncaptured by both; if it is absent from a retained
+set, $d_c$ is identity there. For $B_+$, two disjoint spanning
+coalitions would both activate. The $d_c$ coalition cannot start with
+$b'q$, since $q$ is uncaptured by $d_b$; hence it contains $e,v$.
+But $d_b$ needs one of $e,v$ to activate, a contradiction. All these
+closures are loopless, and extra identity coordinates have no effect.
+This proves the asserted conditional tests. For three owners,
+\cref{core:thm:two-color-feedback} therefore gives (FE).
+
+Add an identity observer $\rho$. At its independent base $V$, use all
+six displayed queries. Each premise is covered by the two heads of
+arcs leaving its owner, whose colors are distinct and foreign; their
+head union is $V$. Thus \eqref{core:eq:base-feedback} violates (FE).
+If a three-owner word realized the original triple, interpreting the
+same word with fresh owner $\rho$ would preserve all old one-owner
+traces. Its $\rho$-trace is the union of every variable, since its
+support is $V$ and no gate is owned by $\rho$, giving identity closure.
+This would realize the forbidden extension, contradicting
+\cref{core:prop:feedback-elimination}. The triple is not realizable.
+Finally a set $P$ in \eqref{core:eq:feedback-cross-composition} has
+at most three elements. It contains no four-element rule premise,
+so every $c_s$ fixes it, proving that law.
+\end{proof}
+
+Thus repeated-query aggregation is determined by conditional profiles
+for two foreign colors and requires additional information for three.
+Pure-port compatibility must also survive adjoining an identity owner.
+One fresh identity owner already tests every extension by unused owners:
+an identity-colored query has $X_i\subseteq P_i$ and hence empty head,
+and all identity observers impose the same remaining conditions.
+These statements concern the displayed closure tests; full source-guard
+compatibility retains the mixed-owner information absent from pure ports.

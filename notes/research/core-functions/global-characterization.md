@@ -414,8 +414,14 @@ law. That law uses a direct rainbow cover condition on colored captured
 blocks. Its projection lemma follows from monotonicity and ordinary
 singleton-profile admissibility. The strengthened law itself implies
 hereditary admissibility and simultaneous cross-value dependence
-composition. Pure-port sufficiency remains unproved; it would still
-not settle separable hulls. A
+composition. Its sufficiency for pure ports is false: the
+[eight-variable triple](feedback-three-colors.md) satisfies the full law
+at every supplied owner, while a fresh identity coordinate rules out
+every common word. Two foreign colors admit complete compression to
+conditional mutual captures; three foreign colors require repeated
+queries, even after all independent-base profile tests are imposed.
+Compatibility after adding an unused owner is necessary; its sufficiency
+remains unproved and would still not settle separable hulls. A
 [naive lift to independent coalition nodes](coalition-lift-obstruction.md)
 does not repair this: a genuine core CNF already yields a mixed SCC
 with disjoint labels, and the coherence map fails to commute with gates.

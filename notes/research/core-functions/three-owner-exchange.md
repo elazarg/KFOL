@@ -187,8 +187,9 @@ Thus (FE) gives c_r(A)=c_r(L), and c_r(A) already contains all
 three heads. This proves (C3).
 
 This is a closed necessary elimination law, with arbitrary block sizes
-and arbitrarily many queries at a fixed owner count. Its sufficiency,
-with the earlier laws, has not been established.
+and arbitrarily many queries at a fixed owner count. It is not complete
+for joint pure-port realization, as the eight-variable example below
+shows even at three owners.
 
 ### Hereditary profiles and elementary composition follow
 
@@ -226,10 +227,14 @@ gives c_r(E union {j})=c_r(E), proving j in c_r(E). Points already
 in E union P satisfy the conclusion directly. Taking P={i} recovers
 the elementary composition law from cofactor dependence.
 
-Consequently loopless closures plus strong (FE) are a candidate for
-joint **pure-port** realizability without separate hereditary-profile
-or elementary-composition axioms. They are not a criterion for the
-separable reconstruction to be core. The
+These deductions make hereditary profiles and elementary composition
+redundant among the necessary pure-port laws. Nevertheless loopless
+closures plus strong (FE) do not characterize joint **pure-port**
+realizability: the eight-variable example below satisfies them and
+has no common realizing word.
+
+Separately, even pure-port realizability does not make the separable
+reconstruction core. The
 [complete-head circuit family](complete-head-circuits.md) with three
 private nonempty contexts and an additional observing owner has
 noncore separable reconstruction but exactly the pure closures of its
@@ -299,45 +304,141 @@ with at most one query per owner. Put L=UNION_s X_s and A_s=L\X_s,
 using A_s=L for absent query owners. Since Q_s subseteq L\X_s and
 X_s subseteq d_s(Q_s), every A_s spans L, while their intersection is
 empty. Whether the condition also excludes all configurations with
-repeated query owners is unproved here; this is the remaining
-closure-aggregation question, not a consequence of the normalization.
+repeated query owners is settled below for two foreign owners. The
+implication fails with three foreign owners, by the
+[eight-variable construction](feedback-three-colors.md). Thus its
+two-color scope is essential.
 
-### Two foreign owners: short alternating cycles are excluded
+### Two-color compression
 
-Suppose there are two conditional closures d_1,d_2 and the preceding
-hereditary common-source condition holds. They are loopless, so every
-query with a nonempty head has a nonempty premise. A rainbow cover of
-that premise uses one opposite-owner head. Following selected covers
-therefore gives an alternating directed cycle of queries. Replace each
-cycle head by the preceding query's premise, a nonempty subset of that
-head. Captures and disjointness persist, giving sets, indexed cyclically,
+Let d_1,d_2 be arbitrary closures on a finite set B, allowing loops.
+The following conditions are equivalent:
+
+1. For every nonempty L subseteq B and coalitions A_1,A_2 subseteq L,
+   if L subseteq d_1(A_1) and L subseteq d_2(A_2), then
+   A_1 intersect A_2 is nonempty.
+2. Disjoint C,E subseteq B with C subseteq d_1(E) and
+   E subseteq d_2(C) must both be empty.
+3. There is no nonempty-head feedback configuration for these two
+   closures: queries have X_i subseteq d_(s_i)(Q_i),
+   X_i intersect Q_i=empty, and each Q_i is covered by at most one
+   opposite-owner head, with UNION_i X_i nonempty.
+
+An empty premise may use the empty cover. In particular a loop
+x in d_s(empty) gives a forbidden configuration with the single query
+X={x}, Q=empty. It also contradicts condition 1 on L={x}, using an
+empty coalition for s and L for the other owner. Thus each of the
+three conditions excludes loops. For condition 2 this follows by
+taking one of C,E empty. Once loops are excluded, conditions 1 and 2
+are equivalent by taking L=C union E, or the union of two disjoint
+spanning coalitions.
+
+A failure of condition 1 also gives a two-query feedback configuration
+directly. From disjoint spanning coalitions A_1,A_2 on L take
+
+    X_s=L\A_s, Q_s=A_s, s in {1,2}.
+
+Their captured blocks cover each other's premises and their union is L.
+This includes empty coalitions and proves that condition 3 implies
+condition 1.
+
+For the remaining direction assume condition 1 and suppose a feedback
+configuration exists. Looplessness makes the premise of every nonempty
+head nonempty. Choose an opposite-owner head covering that premise.
+It is nonempty too, so following these choices in the finite query
+set eventually gives an alternating directed cycle. Replace each
+cycle head by the preceding premise, a nonempty subset of that head.
+Its own capture and head-premise disjointness remain true, and its
+premise is now exactly the next head. Reindex this cycle by
+i=0,...,m-1, cyclically, so that
 
     A_i subseteq d_1(B_i), B_i subseteq d_2(A_(i+1));
     A_i intersect B_i = B_i intersect A_(i+1) = empty.  (AC)
 
-Thus every counterexample contains an exact alternating set cycle.
-Cycles of length two or four contradict hereditary common-source:
-the unions of the A sets and B sets are disjoint, and each generates
-their whole union under the opposite closure.
+All these sets are nonempty. Define two ordered activation seeds:
 
-Length six is excluded too. Here i is taken modulo three. The only
-possible cross-color overlaps are
+    P_1=UNION_(i=0,...,m-1)
+          (B_i \ UNION_(h<i) A_h);
+    P_2=UNION_(j=0,...,m-1)
+          (A_((j+1) mod m) \ UNION_(h<j) B_h).       (AS)
 
-    C_i=A_i intersect B_(i+1).
+The d_1 rules activate in order 0,...,m-1 from P_1: each B_i is
+contained in the seed together with the previously generated A_h.
+Likewise the d_2 rules activate in that order from P_2. Hence
 
-These three sets are pairwise disjoint. Put L=UNION_i(A_i union B_i),
-A*=UNION_i A_i \ UNION_i B_i, and B*=UNION_i B_i \ UNION_i A_i.
-Then A_i subseteq A* union C_i and B_i subseteq B* union C_(i-1).
-Starting with B* union C_i, closure d_1 successively generates
-A_(i+1), C_(i+1), A_(i+2), C_(i+2), and A_i. Hence it contains L.
-The reverse cyclic argument shows d_2(A* union C_j) contains L for
-every j. Choose i!=j. The two generating coalitions B* union C_i
-and A* union C_j are disjoint, contradicting the condition on L.
-This reasoning also covers empty overlap sets C_i.
+    UNION_i A_i subseteq d_1(P_1),
+    UNION_i B_i subseteq d_2(P_2).
 
-Consequently any two-owner counterexample to closure aggregation must
-contain an alternating set cycle of length at least eight; the argument
-does not yet exclude those longer cycles.
+Since P_1 is contained in the B union and P_2 in the A union, this gives
+
+    P_2 subseteq d_1(P_1), P_1 subseteq d_2(P_2).    (MC)
+
+The seeds are disjoint. If x belonged to both, choose i,j witnessing
+its membership in B_i and A_((j+1) mod m), with the prefix exclusions
+in (AS). The second prefix exclusion implies i>=j. If j<m-1, the
+first implies i<=j+1. Then i=j contradicts B_j intersect A_(j+1)=empty,
+while i=j+1 contradicts B_(j+1) intersect A_(j+1)=empty. If j=m-1,
+the first exclusion forces i=0, contrary to i>=m-1 when m>=2.
+For m=1 the disjointness is just A_0 intersect B_0=empty.
+
+Both seeds are nonempty: P_1 contains B_0 and P_2 contains
+A_(1 mod m). Thus (MC) supplies disjoint spanning coalitions on
+the nonempty set P_1 union P_2, contradicting condition 1. This
+completes the two-color compression theorem at every cycle length.
+
+### An exact three-owner conditional test for strong feedback
+
+Suppose the original owner set has exactly three elements. A loopless
+tuple c satisfies full strong (FE) if and only if the following
+condition holds. For each observing owner r and every r-independent B,
+put D=c_r(B)\B and call the other owners s,t. Then
+
+    C,E subseteq B, C intersect E=empty,
+    C subseteq c_s(E union D),
+    E subseteq c_t(C union D)
+        imply C=E=empty.                            (K3)
+
+Indeed the independent-base form characterizes (FE) by absence of
+feedback for the conditional closures d_s,d_t on B. Two-color
+compression makes this equivalent to condition 2 above, and (IB)
+translates it exactly to (K3). One of C,E is allowed to be empty;
+these cases exclude conditional foreign loops and cannot be dropped.
+
+Equivalently, at exactly three owners, strong (FE) says that the
+tuple of conditional foreign spanning profiles is common-source
+admissible on every nonempty retained subset of every independent
+base. No repeated-query condition remains beyond that hereditary test.
+
+### Strong feedback is insufficient for joint pure ports
+
+Take just the three owners A,B,C and their eight-variable closures
+d_A,d_B,d_C from [the three-color feedback example](feedback-three-colors.md).
+They are loopless. The conditional independent-base analysis there
+shows hereditary common-source compatibility for the two foreign
+closures at every observer and independent base. The exact three-owner
+test above therefore proves that this tuple satisfies full strong (FE).
+
+It nevertheless has no common core word. If a word T realized these
+pure ports, interpret the same syntax after adjoining a fresh owner rho.
+Every old-owner trace is unchanged: its Q_r coordinate uses exactly
+the same owned multiplication and foreign joins. Looplessness implies
+that T uses all eight variables. Since T has no rho-owned node, its
+rho trace is the join of all eight inputs, whose pure closure is the
+identity. Thus T would realize the extended tuple
+
+    c_A=d_A, c_B=d_B, c_C=d_C, c_rho=id.
+
+But the six queries in the cited construction have head union V and
+rainbow covers using A,B,C. With observing owner rho and base V,
+strong (FE) would give c_rho(V)=c_rho(empty), or V=empty.
+This contradiction rules out T. The argument uses stability of pure
+traces under an unused-owner extension, not stability of the original
+winner-valued operation or of its separable reconstruction.
+
+Consequently a complete pure-port criterion must impose compatibility
+with this fresh identity coordinate as well as the feedback laws at
+the supplied owners. Strong (FE) at the original owner set alone is
+insufficient, including when that set has exactly three elements.
 
 ## A counterexample to the previous closure laws
 

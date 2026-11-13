@@ -165,7 +165,13 @@ capture blocks. It already implies hereditary profile admissibility
 and cross-value dependence composition, so these need not be separate
 axioms in the remaining pure-port problem. Its budget lemma has exact
 projection witnesses; same-owner budgets instead have an exact
-closure-complement test. Repeated mixed owners remain the difficult case.
+closure-complement test. Two foreign colors compress completely to
+disjoint mutual captures. With three foreign colors, an
+[eight-variable example](feedback-three-colors.md) passes every conditional
+profile test and still has repeated-query feedback. Restricted to its
+three nonidentity owners, it even satisfies full strong feedback
+elimination, yet has no common word: a fresh identity observer detects
+the obstruction. Thus that law alone does not characterize pure ports.
 
 [Capture-trigger normal forms](capture-trigger-normal-form.md) give a
 closed positive class: every source-separable reconstruction above a
