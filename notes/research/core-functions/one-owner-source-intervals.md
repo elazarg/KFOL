@@ -39,3 +39,51 @@ maximum with box rank one and minimum named-union X count two. Its
 canonical maximal full type is not actual, so there is no greatest
 actual full type. The obstruction is the empty rainbow intersection of
 the forced helper coalitions {x,z}, {y,z}, and {x,y}.
+
+## General terminal functional interface
+
+For an arbitrary genuine source-separable core baseline C with closures
+c_t, the same proof gives a precise FD equivalence (not yet a core
+realizability criterion):
+
+    psi_t(c_t(E)) = psi_t(E);
+    psi_s(A \ c_t(E)) = psi_s(A)
+        if s!=t, E disjoint A, and psi_t(E)=0.
+
+The full proof is `core:lem:terminal-closure-laws` in the same report
+file. If exactly one mask t is positive at a valuation but C omits t,
+every t-atomic source is captured by some foreign owner with zero mask.
+The second law removes all these sources while preserving psi_t=1,
+contradicting normalization. Thus the synthetic operation has the simpler
+whole-menu formula: F=C union X when every mask is zero, and F=C
+otherwise. For an old captured input j, choose a capturing owner t.
+If its mask is positive, F=C for every menu of j. Otherwise the two
+laws make all masks invariant under j, proving full functional
+independence. The new-source case follows immediately from the formula.
+
+The current synthesis question is whether these two laws suffice to
+adjoin a terminal separable source above any genuine separable core
+baseline. This adds no dependency cycle, but the one-owner construction
+does not extend directly: the four-variable example already disproves
+attainment by a single spine with the canonical maximal full type.
+
+## No owner-only bound on exact spine order
+
+`core:prop:ordered-reset-witnesses` in the box-repetition report file
+gives a second limitation. Let T_m be a serial spine starting at X,
+with helpers v_i and alternating owners a,b, and put
+F_m=T_m union partial_X T_m. This is a separable interval, with
+one-box X predicate and a one-X named-union realizer. Every primitive
+one-X minorant attaining that full type needs at least m gates.
+
+For each i, let L_i be the last r_i gate whose helper has positive
+r_i-profile on {v_i}. A two-reset valuation vi=r_i, vj=r_j,
+all other variables and X the third atom c, forces L_i<L_j whenever
+i<j and r_i!=r_j. Otherwise the proposed minorant retains r_i when
+F_m omits it. In the alternating case L_1<...<L_m. Arbitrary passive
+core helpers do not evade the argument. Thus a finite list of owner
+orders depending only on K cannot serve as a complete normal form.
+
+The neutral residual in this example is generally NOT the passive
+serial spine. For m=2 it is (v1 union v2) choice_b v2. Separability
+follows instead by restricting the original read-once source predicates.

@@ -68,3 +68,53 @@ owner is precisely the corresponding pure-owner factor $B_t$.
 If a greatest actual full type existed, it would dominate all these
 types and therefore equal $B$, which is not actual.
 \end{proof}
+
+\paragraph{Exact types can force unbounded owner alternation.}
+Although a linear cover removes repeated distinguished leaves, its
+spines need not have bounded owner alternation, even at fixed $K$.
+
+\begin{proposition}[Ordered reset witnesses]
+\label{core:prop:ordered-reset-witnesses}
+Fix distinct owners $a,b,c$. For every $m\geq1$ there is a
+source-separable core operation on $X,v_1,\ldots,v_m$, with one-box
+distinguished source family and a one-$X$ realizer with union named,
+such that every primitive one-$X$ spine minorant attaining its canonical
+full type has at least $m$ gates.
+\end{proposition}
+\begin{proof}
+Let $r_i$ alternate between $a$ and $b$, and take the left-associated
+spine
+\[
+ T_m=X\star_{r_1}v_1\star_{r_2}\cdots\star_{r_m}v_m,
+ \qquad F_m=T_m+\partial_XT_m.
+\]
+Its canonical full $X$-type is
+\[
+ B_t(E)=\bigwedge_{i:r_i=t}[v_i\notin E].
+\]
+The original word is primitive read-once, so every source coefficient
+is a single owner box. Neutral restriction at $X$ preserves that
+factorization for the passive sources, and sink completion preserves
+the $X$ predicate. Thus $F_m$ is separable; $T_m$ is a spine minorant
+attaining $B$ in $m$ gates.
+
+Consider any primitive one-$X$ spine $S\subseteq F_m$ with this type.
+Every gate on it is owned by $a$ or $b$: a nonempty foreign-owned
+helper has positive top singleton profile, contradicting its
+identically true factor $B_t$. For each $i$, let $L_i$ be the last
+$r_i$-owned gate whose helper's $r_i$-profile is positive at
+$\{v_i\}$. Such a gate exists because $B_{r_i}(\{v_i\})=0$.
+
+For $i<j$ with $r_i\ne r_j$, set $v_i=\{r_i\}$,
+$v_j=\{r_j\}$, and every other passive input and $X$ to $\{c\}$.
+In $T_m$ the reset at $j$ erases $r_i$, and no later input introduces
+it. Its neutral residual also omits $r_i$: when querying that winner,
+the reset at $i$ already makes the original and neutralized prefixes
+equal. Thus $F_m$ omits $r_i$ on this row.
+In $S$, the only possible absorbing helpers are detected by their
+$r_i$-profile at $\{v_i\}$ or their $r_j$-profile at $\{v_j\}$.
+If $L_i>L_j$, its last absorbing helper resets the spine to $r_i$;
+every subsequent gate preserves that winner, a contradiction.
+Therefore $L_i<L_j$. In particular adjacent alternation forces
+$L_1<\cdots<L_m$, giving the claimed lower bound.
+\end{proof}
