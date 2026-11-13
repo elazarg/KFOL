@@ -1,0 +1,135 @@
+\paragraph{Terminal extensions of read-once baselines.}
+The two closure laws also suffice above every primitive read-once core
+operation. The construction uses disjoint supports at each node; it does
+not require the source-dependence graph to be acyclic.
+
+\begin{lemma}[Single-mask rigidity]\label{core:lem:read-once-single-mask}
+Let $C$ be primitive read-once, and let a terminal mask tuple satisfy
+\cref{core:lem:terminal-closure-laws}. If only $\psi_s$ can be nonzero,
+then $\psi_s=0$ or $\psi_s=\Phi_s(C)$.
+\end{lemma}
+\begin{proof}
+Every coalition $A$ failing $\Phi_s(C)$ can be reduced to empty by
+successively deleting captured inputs, using only foreign-owner capture
+contexts disjoint from the current coalition. To prove this, induct on
+the tree. At a leaf the failed coalition is already empty. At an
+$s$-root both child coalitions fail; run their deletion plans in turn.
+At a root $q\ne s$, one child $U$ fails. Run its plan, then fix all
+variables of $U$ to $q$. The $q$-root absorbs and captures the entire
+other child, deleting what remains.
+
+Captures inside a child lift to the whole word: the queried variable
+occurs nowhere outside that child, so the absence of its queried winner
+there implies absence in the whole word. A deletion may keep any other
+captured inputs: the second closure law and monotonicity allow deleting
+an arbitrary subset of the captured set. Thus the inductive plans remain
+valid in the whole tree and leave the other child untouched when needed.
+
+Since every foreign mask is zero, the second closure law preserves
+$\psi_s$ throughout this deletion. Hence
+$\Phi_s(C)(A)=0$ implies $\psi_s(A)=\psi_s(\varnothing)=0$.
+Conversely, if $\psi_s\ne0$ and $\Phi_s(C)(A)=1$, then
+$c_s(A)$ is the whole support, so the first closure law gives
+$\psi_s(A)=1$. This proves the assertion.
+\end{proof}
+
+\begin{lemma}[Disjoint union of terminal baselines]
+\label{core:lem:terminal-disjoint-union}
+Let $C_1,C_2$ be source-separable core operations on disjoint finite
+nonempty supports $W_1,W_2$. Suppose the terminal closure laws suffice
+for core realizability above each $C_i$. Then they suffice above
+$D=C_1+C_2$.
+\end{lemma}
+\begin{proof}
+The owner closures of $D$ are the direct sums
+$c_t^D(E)=c_t^1(E\cap W_1)\cup c_t^2(E\cap W_2)$.
+For proper component colorings $p,q$, put
+\[
+ P(p,q)=\bigwedge_t\neg\psi_t(p_t\cup q_t).
+\]
+Use this formula on all pairs of proper component colorings, even when
+their combined palette is full. Only the globally proper pairs will be
+needed for the final source predicate.
+
+Fix $q$. If some $\psi_t(q_t)=1$, the section $P(-,q)$ is zero,
+the bottom interval predicate. Otherwise its shifted masks
+$\psi_t^q(A)=\psi_t(A\cup q_t)$ are normalized and satisfy the
+closure laws for $C_1$. For the first law, sandwich
+$c_t^1(A)\cup q_t$ between $A\cup q_t$ and
+$c_t^D(A\cup q_t)$. For the second, apply the global law to
+$E\cup q_t$ and $A\cup q_s$, which are disjoint. Its deletion
+also removes $c_t^2(q_t)$ from the fixed $q_s$ block; monotonicity
+allows restoring those points, giving exactly the shifted law.
+By hypothesis this section is a predicate in $\mathcal I(C_1)$.
+Symmetrically every section $P(p,-)$ belongs to $\mathcal I(C_2)$.
+
+These sections give a finite rectangle decomposition. For each $p$ with
+nonempty positive row $B_p=\{q:P(p,q)=1\}$, let
+\[
+ A_p=\bigcap_{q\in B_p}\{u:P(u,q)=1\}.
+\]
+The interval lattice theorem makes $A_p$ an actual predicate above
+$C_1$, while $B_p$ is an actual predicate above $C_2$.
+One has $p\in A_p$ and $A_p\times B_p\subseteq P$, so the union
+of these rectangles is exactly $P$.
+If $F_1,F_2$ realize their factors, the interval operation
+\[
+ C_2(w_2)+F_1(F_2(X,w_2),w_1)
+\]
+has baseline $D$ and distinguished predicate equal to their product.
+Indeed its bounds are $D$ and $D\cup X$, and at a source probe the
+two distinguished coefficients multiply. Union over the rectangles
+therefore realizes the required predicate on every globally proper
+coloring. Source reconstruction gives the candidate itself.
+\end{proof}
+
+\begin{theorem}[Terminal extensions of read-once operations]
+\label{core:thm:read-once-terminal-extension}
+Let $C$ be a primitive read-once core operation, and give a new source
+$X$ normalized separable factors $B_t=\neg\psi_t$. The interval
+candidate with these distinguished factors and passive baseline $C$
+is core if and only if the two terminal closure laws hold.
+The same conclusion holds for disjoint unions of such baselines.
+\end{theorem}
+\begin{proof}
+Necessity is \cref{core:lem:terminal-closure-laws}. For sufficiency
+induct on the read-once tree. At a leaf every mask is either zero or
+the one-variable singleton test; attaching that variable to $X$ at
+the nonzero-mask owners, then adjoining the baseline, realizes the
+candidate.
+
+Write a nonleaf baseline as $C=C_1\star_r C_2$ on disjoint supports,
+and put $D=C_1+C_2$. The owner closures of $D$ are bounded by those
+of $C$. Both terminal laws descend to these smaller closures by
+monotonicity: every intermediate value lies between the equal endpoint
+values in the law for $C$.
+
+Suppose first $\psi_r\ne0$. The first law implies
+$\Phi_r(C)\leq\psi_r$. The preceding lemma and induction give a
+core terminal extension $H$ above $D$ with the specified masks.
+Then $H\star_r C$ is exactly the target.
+Where $C\ne\{r\}$, neither child is $\{r\}$, so $D=C$; also
+$H\supseteq C$ prevents an unintended $r$-absorption, and the final
+gate leaves $H$ unchanged. Where $C=\{r\}$, the positive $r$-mask
+makes the target equal $C$, and the final gate restores that value.
+
+Now suppose $\psi_r=0$. Fixing either whole child to $r$ captures
+the entire support. The second law forces every $\psi_t$ to vanish
+on coalitions contained in either child alone. For $t\ne r$ and fixed
+$A_2\subseteq W_2$, take the pure-$t$ section on the first child.
+Its shifted masks satisfy the child laws as in the preceding lemma;
+only the $t$-mask can be nonzero, since all the other masks are
+evaluated on first-child coalitions alone. Single-mask rigidity makes
+this section zero or $\Phi_t(C_1)$. Interchanging the children then
+shows that every nonzero global mask is
+\[
+ \psi_t(A_1\cup A_2)=
+ \Phi_t(C_1)(A_1)\Phi_t(C_2)(A_2)=\Phi_t(C)(A_1\cup A_2).
+\]
+Start a spine at $X$ and attach $C$ at each nonzero-mask owner, then
+adjoin $C$. Every gate stays in $C\cup X$, and its distinguished
+factors are exactly the prescribed ones. This realizes the candidate.
+
+Finally, repeated application of the disjoint-union lemma proves the
+claim for disjoint unions of primitive read-once baselines.
+\end{proof}

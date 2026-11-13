@@ -1,39 +1,55 @@
 \paragraph{One box can require two source occurrences.}
 Linear covers do not identify occurrence count with source-box rank,
-even in a source-separable interval above a profile maximum.
+even in a source-separable interval above a globally minimal core baseline.
 
 \begin{proposition}[A four-variable failure of maximal-type attainment]
 \label{core:prop:one-box-two-copies}
 For every $K\geq3$ there is a source-separable core operation
 $F(X,x,y,z)$ whose distinguished source family is one normalized owner
-box, but whose least number of $X$-occurrences is two when union is
-named. At $X$, it has no greatest actual full type.
+box, but whose least number of $X$-occurrences is two, both in the
+primitive signature and with union named. Its neutral baseline is
+globally minimal among core operations. At $X$, it has no greatest
+actual full type.
 \end{proposition}
 \begin{proof}
-Fix distinct owners $a,b,c$. Let $C(x,y,z)$ be the greatest profile
-completion with
+Fix distinct owners $a,b,c$, write $m$ for the two-out-of-three
+coalition predicate on $V=\{x,y,z\}$, and let $C$ be the greatest
+profile completion with
 \[
- f_a=x\land z,\qquad f_b=y\land z,\qquad
+ f_a=f_b=m,\qquad
  f_t=x\land y\land z\quad(t\notin\{a,b\}).
 \]
-These profiles are admissible: all winning coalitions contain $z$.
-Set
+Two two-element subsets of $V$ intersect, so these profiles are
+admissible. Choose passive core helpers with profiles
 \[
- F=C+((X\star_c x)\star_b C)+((X\star_c y)\star_a C).
+ \begin{array}{c|cccc}
+     &a&b&c&t\notin\{a,b,c\}\\\hline
+ H_a&m&x\land y&x\land y&x\land y\land z\\
+ H_b&x\land y&m&x\land y&x\land y\land z
+ \end{array}
 \]
-If $C=\{a\}$, then $x=z=\{a\}$; if $C=\{b\}$, then
-$y=z=\{b\}$; every other singleton value forces all three passive
-inputs to that singleton. Otherwise $C=x\cup y\cup z$.
-These cases show $C\subseteq F\subseteq C\cup X$.
-At a distinguished-source probe the two spines give
+by profile synthesis. Their admissibility says that any two-element
+coalition meets $\{x,y\}$. Put
 \[
- P=(\neg x_c\land\neg(y_bz_b))
-       \lor(\neg y_c\land\neg(x_az_a))
-   =\neg(x_cy_c).
+ S_a=(X\star_c H_a)\star_b C,\qquad
+ S_b=(X\star_c H_b)\star_a C,\qquad
+ F=S_a\star_c S_b.
 \]
-For the equality, $x_c$ excludes $x_a$ and $y_c$ excludes $y_b$;
-when both $c$-flags are false the two remaining blockers cannot
-hold together, since $z_a$ and $z_b$ are disjoint.
+Each spine lies between $C$ and $C\cup X$. For $S_a$, the $a$-singleton
+stratum of $C$ makes $H_a=\{a\}$; its $b$-singleton stratum is
+restored by the final gate. Every other singleton stratum forces all
+passive inputs and the helper to that singleton. Otherwise $C$ is the
+whole passive union, containing $H_a$; the final gate cannot lose $C$
+by absorbing at $b$, since $H_a=\{b\}$ requires $x=y=\{b\}$,
+which would make $C=\{b\}$. The argument for $S_b$ is symmetric.
+Thus either spine is $\{c\}$ only when $C=\{c\}$, when both are.
+Consequently their final $c$-choice is their union, and $F\in\mathcal I(C)$.
+At a distinguished-source probe the spines give
+\[
+ P=\neg(x_cy_c)\land\bigl(\neg m(E_b)\lor\neg m(E_a)\bigr)
+   =\neg(x_cy_c),
+\]
+since disjoint atomic sets $E_a,E_b$ cannot both have two elements.
 Thus the canonical full factors at $X$ are
 \[
  B_c(E)=[\{x,y\}\nsubseteq E],\qquad B_t=1\quad(t\ne c).
@@ -41,6 +57,19 @@ Thus the canonical full factors at $X$ are
 The passive predicates are those of $C$, which factor ownerwise as
 $\bigwedge_t\neg f_t(E_t)$ on proper source probes. Hence $F$ is
 source-separable, and $b(P)=1$.
+
+The baseline is globally minimal. In fact it is forced by its positive
+profile bits. On a singleton stratum this is immediate. Otherwise
+$|E_a|,|E_b|\leq1$. Given $k\in C(w)=\bigcup_iw_i$, choose
+$j$ with $k\in w_j$. Choose two-element coalitions $A_a,A_b$ with
+$A_a\cap A_b=\{j\}$, avoiding $E_b$ in $A_a$ when $b\ne k$ and
+$E_a$ in $A_b$ when $a\ne k$. Such a choice exists: the two forbidden
+atomic sets are disjoint and have at most one element, neither equal
+to $j$ when its avoidance is required. Take $V$ at all other owners.
+These coalitions certify $k\in\mathcal R_f(w)$, so the universal
+lower-bound argument in \cref{core:thm:read-once-minimum} forces $k$
+in every core operation retaining these profile bits. In particular
+$H\subseteq C$ implies $C\subseteq H$.
 
 Suppose the canonical full type $B$ were actual. By
 \cref{core:cor:interval-linear-cover} it would have a primitive

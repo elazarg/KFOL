@@ -32,10 +32,16 @@ Attach foreign helpers first and the own-owner helper last. Its absorption
 protects exactly the stratum on which the foreign helpers need no bound.
 
 This does not give a single-spine theorem over arbitrary multi-owner
-baselines. The four-variable counterexample in
+baselines. The strengthened four-variable counterexample in
 [appendix-core-box-repetition.tex](../../../sections/appendix-core-box-repetition.tex),
-`core:prop:one-box-two-copies`, is a separable interval above a profile
-maximum with box rank one and minimum named-union X count two. Its
+`core:prop:one-box-two-copies`, is a separable interval above a globally
+minimal profile maximum with box rank one and minimum X count two,
+even in the primitive signature. Its baseline has majority-2 profiles
+at a,b and unanimity at every other owner. Passive helpers have profiles
+(a:majority-2,b:xy,c:xy) and its a/b swap, with unanimity elsewhere.
+The two spines (X choice_c H_a) choice_b C and
+(X choice_c H_b) choice_a C both contain C, so their c-choice equals
+their union and uses exactly two X leaves. Its
 canonical maximal full type is not actual, so there is no greatest
 actual full type. The obstruction is the empty rainbow intersection of
 the forced helper coalitions {x,z}, {y,z}, and {x,y}.
@@ -66,6 +72,43 @@ adjoin a terminal separable source above any genuine separable core
 baseline. This adds no dependency cycle, but the one-owner construction
 does not extend directly: the four-variable example already disproves
 attainment by a single spine with the canonical maximal full type.
+
+## Primitive read-once baselines are now solved
+
+The two terminal laws suffice over every primitive read-once baseline,
+and over disjoint unions of such baselines. The complete written proof is
+[appendix-core-read-once-extensions.tex](../../../sections/appendix-core-read-once-extensions.tex),
+`core:thm:read-once-terminal-extension`.
+
+There are three ingredients.
+
+1. Single-mask rigidity: if only psi_s can be nonzero on a primitive
+   read-once baseline, then it is zero or Phi_s(C). Every coalition
+   failing Phi_s can be stripped to empty with foreign-owner capture
+   contexts disjoint from the current coalition. Lift child captures
+   using disjoint support. At an s-root strip both children; at a foreign
+   q-root strip one failing child, then fix that whole child to q to
+   capture the rest. Cross invariance preserves psi_s during stripping.
+2. Terminal realization is preserved by disjoint baseline union. Extend
+   the factor product to all pairs of proper component colorings,
+   including globally full-palette pairs. Every nonzero section satisfies
+   the component terminal laws. Its rows and columns are therefore actual
+   interval predicates. Finite intersections of columns give a rectangle
+   decomposition, and source composition realizes the rectangle products.
+3. At a read-once root r, descend the laws from C=C1 choice_r C2 to
+   D=C1 union C2. If psi_r is nonzero, synthesize H above D and take
+   H choice_r C; on C=r the target must equal C, and elsewhere C=D.
+   If psi_r=0, root capture forces every mask to vanish on coalitions
+   contained in just one child. Pure-owner sections then have only one
+   nonzero mask. Rigidity forces every nonzero psi_t to be
+   Phi_t(C1) AND Phi_t(C2)=Phi_t(C), which has a direct spine realization.
+
+Do not extend the rigidity lemma to named-union trees: input union has
+arbitrary single-mask extensions. The union lemma is valid more generally,
+but the read-once induction uses primitive choice children in its zero
+root-mask branch. Repeated-variable multi-owner baselines remain the
+unresolved terminal case; this theorem does not settle arbitrary cyclic
+joint-guard compatibility.
 
 ## No owner-only bound on exact spine order
 
