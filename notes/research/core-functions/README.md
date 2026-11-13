@@ -65,6 +65,10 @@ do not suffice even for a single active mask over a known core baseline:
 [profile-bounds.md](profile-bounds.md#remaining-target) gives a ternary
 passive counterexample with two explicit helpers covering all inputs but
 no common helper. Its sound type is not actual in C union T.
+The [profile image below a core bound](principal-profile-images.md) can
+realize any finite preorder on singleton coalitions. Even one same-owner
+implication on 2d inputs can need exactly 2^d-1 simultaneous bound rows,
+while the baseline's pure closures and singleton profiles remain trivial.
 
 Closed boundary/no-trap conditions now present every invariant relation in
 `Core/Hypergraphs`. This gives a complete infinite obstruction basis, still

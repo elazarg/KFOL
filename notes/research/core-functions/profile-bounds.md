@@ -189,3 +189,11 @@ admissibility. This replaces the earlier positive-only descent proof;
 Thus the missing compatibility is genuinely simultaneous, including for
 one active mask over a known core interval. It cannot be removed by
 intersecting the complete theories of individual bounds.
+
+The [principal profile image](principal-profile-images.md) can carry
+an arbitrary finite preorder on singleton coalitions. Even one same-owner
+implication below a genuine core bound on 2d variables can require EXACTLY
+2^d-1 bound rows; every smaller arbitrary sample has a bounded separator.
+Thus neither fixed K nor the existence of the baseline gives a bounded-row
+shortcut. Identity pure closures and unanimity profiles do not remove the
+exponential obstruction.

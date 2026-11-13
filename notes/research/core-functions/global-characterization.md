@@ -46,6 +46,14 @@ rows exclude any common helper. It also excludes the proposed sound full
 type in C union T, with a single active mask and all inherited inactive
 profiles. The proof is uniform for K>=3 and has not been formalized in Lean.
 
+[Principal profile images](principal-profile-images.md) now have a stronger
+written obstruction: any finite preorder can occur on singleton-coalition
+bits, and a single same-owner implication below a genuine core bound on
+2d inputs can require exactly 2^d-1 simultaneous rows. This refutes a
+bounded-row shortcut at fixed K. The sharp examples have identity pure
+closures and unanimity singleton profiles, isolating mixed source guards
+as the source of their growing correlation.
+
 The bichain is the algebra in Harding, Walker and Walker, *Type-2 Fuzzy Sets
 and Bichains* (2013), Definition 5 and Figure 1. Its older normal-form results
 for identities do not specify which formal normal forms arise from terms;

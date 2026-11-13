@@ -399,6 +399,18 @@ even one positive singleton-profile demand can have two projections covering
 all individual inputs below a core bound, with no common bounded witness.
 Negative profile requirements are therefore not the sole obstruction.
 
+The new [principal profile image results](principal-profile-images.md)
+rule out a bounded-row repair even in the genuine-core case. Every finite
+preorder occurs on singleton profile bits below a known core C. On 2d
+inputs, a Gray deletion patch has an exact same-owner implication whose
+smallest set of witnessing value bounds has size 2^d-1. Every smaller
+arbitrary sample admits a separating core helper. These are written
+`core:prop:principal-profile-preorders` and
+`core:thm:principal-profile-locality`; the new statements are not in Lean.
+The baselines have identity pure closures and unanimity singleton profiles.
+Thus the missing mixed-guard correlations can be exponentially large even
+under a known core bound, rather than only for arbitrary infeasible budgets.
+
 `Report.core_omission_independence` shows that all inputs containing an
 omitted winner may be changed arbitrarily without changing any output.
 `Report.core_negative_budget_obstructions` uses this to construct atomic

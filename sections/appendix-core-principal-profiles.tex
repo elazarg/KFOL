@@ -1,0 +1,131 @@
+\paragraph{Profiles below a core upper bound.}
+For a fixed core operation $C$, consider
+\[
+ \mathcal L_c(C)=\{\Phi_c(H):H\text{ is core and }H\subseteq C\}.
+\]
+This is a finite distributive lattice: bounded helpers are closed under
+owned choice, and choice by $c$ or by another owner gives profile
+disjunction or conjunction, respectively. Its implication preorder can
+already contain an arbitrary finite preorder on singleton coalitions.
+
+\begin{proposition}[Preorders in principal profile images]
+\label{core:prop:principal-profile-preorders}
+Fix $K\geq3$ and distinct owners $a,b,c$. For every finite preorder
+$(X,\preceq)$ there is a core operation $C$ on $X\sqcup\{p\}$ such that
+\[
+ \bigl\{\{x\in X:\Phi_c(H)(\{x\})=1\}:H\text{ core},\ H\subseteq C\bigr\}
+ =\operatorname{Up}(X,\preceq),
+\]
+where $\operatorname{Up}$ denotes the upward-closed subsets. Restriction
+to these singleton bits is a surjective lattice homomorphism from
+$\mathcal L_c(C)$ onto this upset lattice.
+\end{proposition}
+\begin{proof}
+For each upset $S\subseteq X$, put
+\[
+ \varphi_S(A)=[p\in A\text{ or }A\cap S\ne\varnothing].
+\]
+Take the greatest completion $E_S$ with $c$-profile $\varphi_S$,
+$b$-profile $1-\varphi_S(V\setminus -)$, and unanimity at other
+owners, where $V=X\sqcup\{p\}$. These profiles are admissible:
+a positive $c$-coalition meets $S\cup\{p\}$, and a positive
+$b$-coalition contains that set. Set $C=\sum_SE_S$.
+This is a nonempty finite core union, and $E_S\subseteq C$ realizes
+exactly $S$ on the singleton bits indexed by $X$.
+
+If $u\preceq v$ and $u\ne v$, use the input with $u=\{a\}$,
+$v=\{c\}$, and every other input, including $p$, equal to $\{b\}$.
+Here $E_S$ returns $c$ if $v\in S$, and otherwise returns $b$:
+upward closure then also gives $u\notin S$. The empty and full upsets
+show that $C$ is exactly $\{b,c\}$ at this input.
+The pair test \eqref{core:eq:profile-pair-safe} for
+$\Phi_c(\{u\})=1$, $\Phi_c(\{v\})=0$ fails under this bound.
+Indeed the difference input is $\{a\}$, the $c$-atomic set is
+$\{v\}$, and the $b$-atomic set misses $u$.
+Every bounded helper therefore respects $u\preceq v$. This proves the
+equality, and evaluation of profile bits preserves both lattice operations.
+The padding variable also handles $S=\varnothing$ and $X=\varnothing$.
+\end{proof}
+
+The number of simultaneous value bounds needed for one such implication
+can be exponential, even with trivial singleton profiles and pure closures.
+
+\begin{theorem}[Exact exponential threshold for a principal profile implication]
+\label{core:thm:principal-profile-locality}
+For every fixed $K\geq3$ and $d\geq2$, there are a core operation $C$
+on $2d$ inputs, an owner $c$, and coalitions $A,B$ such that:
+\begin{enumerate}
+\item Every core $H\subseteq C$ satisfies
+  $\Phi_c(H)(A)\leq\Phi_c(H)(B)$.
+\item For any sample of at most $2^d-2$ valuations, there is a core $H$
+  respecting the $C$-bound at every sampled valuation and satisfying
+  $\Phi_c(H)(A)=1$, $\Phi_c(H)(B)=0$.
+\item A sample of $2^d-1$ explicit atomic valuations excludes every
+  such separator.
+\end{enumerate}
+The baseline $C$ has unanimity singleton profiles and identity pure-owner
+closures.
+\end{theorem}
+\begin{proof}
+Use the paired transversals in \cref{core:thm:exponential-locality},
+with $m=2^d$, cyclic indices $0,\ldots,m-1$, and incidence
+$L_j\subseteq U_i$ exactly when $j=i$ or $j=i+1$.
+Recall $L(w)=\{j:w_j=\{c\}\}$, $U(w)=\{j:w_j\ne\{b\}\}$,
+and $\mathcal C_i=\{w:(L(w),U(w))=(L_i,U_i)\}$.
+Let $C=F_0$: it returns $\{b,c\}$ on the exceptional regions
+$\mathcal C_i$ for $1\leq i<m$, and input union elsewhere.
+The deletion-patch construction makes $C$ core. Put
+\[
+ A=U_{m-1},\qquad B=L_1.
+\]
+
+Its exact own-$c$ profile image is
+\begin{equation}\label{core:eq:patch-profile-image}
+ \mathcal L_c(C)=
+ \{\varphi:\varphi\text{ normalized monotone},\
+       \varphi(U_i)=\varphi(L_i)\ (1\leq i<m)\}.
+\end{equation}
+For necessity, take the atomic input $q_i$ with $c$ on $L_i$, $a$ on
+the unique point of $U_i\setminus L_i$, and $b$ elsewhere.
+Its bound is $\{b,c\}$. The pair test
+\eqref{core:eq:profile-pair-safe} excludes a positive $c$-bit on $U_i$
+and a negative one on $L_i$. Monotonicity gives equality.
+For sufficiency use the completion $E_\varphi$ with $c$-profile
+$\varphi$, dual $b$-profile, and unanimity elsewhere, as in
+\cref{core:lem:crown-patch}. On a retained exceptional region it is
+$\{c\}$ if the common endpoint bit is one, and $\{b\}$ if it is zero.
+Elsewhere provenance bounds it by the input union. This proves
+\eqref{core:eq:patch-profile-image} on arbitrary menus and for all extra
+owners.
+
+Form the directed graph of Boolean inclusions with reversed covers
+$U_i\to L_i$ for $1\leq i<m$. There is a path
+\[
+ U_{m-1}\longrightarrow L_{m-1}\longrightarrow U_{m-2}
+ \longrightarrow\cdots\longrightarrow U_1\longrightarrow L_1.
+\]
+Every path from $A$ to $B$ uses all these $m-1$ reversed covers.
+A path that ends at rank $d$ cannot visit ranks above $d+1$, since
+only the selected reversed covers decrease rank. At ranks $d,d+1$,
+the incidence law permits only the displayed backward progress;
+unselected vertices cannot provide another downward step.
+Thus (1) follows from \eqref{core:eq:patch-profile-image}.
+
+For each $1\leq i<m$, delete reversal $i$ as well. The reachability
+upset of $A$ is then a normalized monotone $\varphi_i$: it contains
+$V$ and cannot contain $\varnothing$, since every reversed cover ends
+at rank $d$. It has
+$\varphi_i(A)=1$, $\varphi_i(B)=0$, constant on every remaining
+reversed interval. Its completion $H_i=E_{\varphi_i}$ respects the
+$C$-bound everywhere outside $\mathcal C_i$. These regions are disjoint,
+so every valuation can exclude at most one of the $m-1$ helpers.
+Any $m-2$ valuations leave a common helper, proving (2).
+The $m-1$ atomic inputs $q_i$ enforce all retained endpoint equalities,
+and therefore exclude every separator, proving (3).
+
+Finally, exceptional outputs have two winners, so singleton outputs
+occur precisely on constant atomic tuples. An exception removes only
+winners outside $\{b,c\}$ and requires both $b$- and $c$-atomic inputs.
+No pure-owner source probe can therefore lose its supplied winner.
+Thus all pure-owner closures are identities.
+\end{proof}
