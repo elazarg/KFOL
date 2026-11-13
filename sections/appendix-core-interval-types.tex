@@ -1,0 +1,135 @@
+\paragraph{All full types above a profile maximum.}
+For a greatest profile completion, inherited singleton profiles completely
+determine which sound source boxes can occur at one marked leaf. This also
+gives the exact distinguished-source count, refining the interval bound in
+\cref{core:thm:profile-source-interval}.
+
+Fix finite $K\geq3$ and a greatest profile completion $C$ on a finite nonempty passive support
+$W$, write $f_a=\Phi_a(C)$, and let $F\in\mathcal I(C)$ have distinguished
+predicate $P_F$. A normalized full type $B=(B_r)_r$ consists of antitone
+factors $B_r:2^W\to\{0,1\}$ with $B_r(\varnothing)=1$. Put
+\[
+ \psi_r=\neg B_r,\qquad R=\{r:\psi_r\ne0\},\qquad
+ P_B(E)=\bigwedge_rB_r(E_r).
+\]
+Call the box sound for $F$ when $P_B\leq P_F$ on proper colorings.
+On a primitive one-$X$ spine, $R$ records exactly the owners occurring on
+the marked path: every nonempty passive helper has a positive top profile
+at its gate's owner.
+
+\begin{theorem}[Exact interval occurrence types]
+\label{core:thm:profile-interval-types}
+The full type $B$ is actual for $F$ if and only if its box is sound and
+the following conditions hold:
+\begin{enumerate}
+\item $f_r\leq\psi_r$ for each $r\in R$;
+\item for each $r\in R$, every coalition $A$ with $\psi_r(A)=1$ and
+  every choice of coalitions $A_a$ with $f_a(A_a)=1$ for the inactive
+  owners $a\notin R$ satisfy
+  \[
+   A\cap\bigcap_{a\notin R}A_a\ne\varnothing.
+  \]
+\end{enumerate}
+When these hold, there is a primitive spine $S\subseteq F$ containing
+$X$ once, with full type exactly $B$ and at most $2|R|$ owned nodes on
+its marked path. This bound counts path attachments, not gates inside
+the passive helpers.
+\end{theorem}
+\begin{proof}
+For necessity linearize an actual occurrence by
+\cref{core:cor:interval-linear-cover}, obtaining $S\subseteq F$ with
+the same type. \Cref{core:lem:linear-profile-inheritance} gives
+condition~(1) and makes every helper inherit the inactive profiles.
+For $r\in R$, the full factor formula gives
+\[
+ \psi_r=\bigvee_{\text{$r$-owned path gates}}\Phi_r(H).
+\]
+Choose an $r$-helper witnessing $\psi_r(A)=1$. Its inherited profiles
+at all inactive owners and its top profiles at the other active owners
+give condition~(2) by profile admissibility.
+
+Soundness follows from $S\subseteq F$ at source probes.
+
+Conversely, condition~(2) makes the profile tuple
+\[
+ \Phi_r(H_r)=\psi_r,\qquad
+ \Phi_a(H_r)=f_a\ (a\notin R),\qquad
+ \Phi_s(H_r)(A)=[A=W]\ (s\in R\setminus\{r\})
+\]
+admissible. Profile synthesis supplies a passive core helper $H_r$ for
+each $r\in R$. Start at $X$, attach $H_r$ once at owner $r$ for every
+active owner, and then attach $C$ once at every active owner, using any
+fixed orders in the two phases. The first phase gives exactly $B$.
+The restoring phase adds factors $\neg f_r$, which are redundant by
+condition~(1).
+
+To check the bound, if $C=\{s\}$ with $s\in R$, its $s$-stage in
+the restoring phase absorbs the prefix; subsequent copies of $C$ preserve
+that singleton. If $C=\{a\}$ with $a\notin R$, every helper is
+$\{a\}$ by inheritance, so the entire spine stays in $X\cup\{a\}$.
+If $C$ is ambiguous, it is the full passive union, containing every
+helper's value, so the spine stays in $C\cup X$ as well.
+Thus $C+S$ lies in the interval and has distinguished predicate $P_B$.
+Soundness gives $C+S\subseteq F$.
+
+Restore $F$ by derived union with $S$. This preserves the marked type:
+at a pure-$r$ source probe allowed by $B_r$, both operands contain the
+queried foreign winner and hence neither is the $r$ singleton. No
+subword of the union implementation can create that singleton, so its
+added $r$-filters are redundant. The marked type is therefore actual.
+If $R=\varnothing$, use $S=X$ and the same restoration argument.
+\end{proof}
+
+The profile parameters are independent once the active set is fixed.
+For $J\subseteq I$, put
+\[
+ h_J(A)=1\quad\Longleftrightarrow\quad
+ A\cap\bigcap_{a\in J}A_a\ne\varnothing
+ \text{ for every choice with }f_a(A_a)=1.
+\]
+The empty intersection is $W$. These are normalized monotone profiles.
+Before imposing soundness, the admissible tuples with active set $R$
+are exactly the independent choices of normalized monotone profiles
+\[
+ f_r\leq\psi_r\leq h_{I\setminus R}\quad(r\in R),
+ \qquad \psi_a=0\quad(a\notin R).
+\]
+Each interval is nonempty by admissibility of the baseline profiles.
+
+For a predicate $P$, let $b_C(P)$ be the least number of boxes $P_B\leq P$
+whose union is $P$ and whose factors satisfy (1)--(2). The empty cover has size zero.
+For $P=P_F$ a finite cover exists by the theorem, using the types of any
+realizer.
+
+\begin{corollary}[Exact relative source multiplicity]
+\label{core:cor:profile-interval-copy-number}
+The minimum number of $X$-occurrences in a realizer of $F$ with union
+named is $b_C(P_F)$.
+\end{corollary}
+\begin{proof}
+Every occurrence contributes one sound box, and these boxes cover $P_F$.
+The necessity argument above applies also with union named: extend marked
+linearization by skipping a union node on the marked path. Union adds no
+owner factor, and enlarging both the word and its residual preserves the
+linearization bound. Thus all these boxes satisfy (1)--(2).
+
+Conversely take a minimum cover, construct its primitive one-$X$ spines,
+and union them with $C$. The bounds and source reconstruction give exactly
+$F$, with one occurrence per box. If $P_F=0$, use $C$ alone.
+\end{proof}
+
+\begin{corollary}[A criterion for a greatest full type]
+\label{core:cor:profile-interval-greatest-type}
+Assume $P_F\ne0$, and recover the pure factors
+$D_r(E)=P_F(\text{only }E\text{ colored }r)$.
+There is a greatest actual full type if and only if $(D_r)_r$ is sound
+and satisfies (1)--(2). Soundness here is equivalent to separability of
+the distinguished source family.
+\end{corollary}
+\begin{proof}
+Pure probes bound every actual factor by $D_r$. In any realizer, the
+pointwise union of the marked $r$-factors is $D_r$ itself. A greatest
+actual type would therefore equal $D$, and the theorem characterizes
+exactly when $D$ is actual. Antitonicity gives
+$P_F\leq\bigwedge_rD_r$; soundness supplies the reverse inequality.
+\end{proof}

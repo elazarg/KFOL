@@ -127,6 +127,63 @@ core operation can require repeated occurrences even for a single positive
 source probe. The interval bound makes exactly those neutral contributions
 available to protect the linear spine.
 
+\begin{lemma}[Profile inheritance along a linear spine]
+\label{core:lem:linear-profile-inheritance}
+For $K\geq3$, let $C$ be any core baseline, and let a primitive one-$X$ spine $S$ with
+passive helpers satisfy $S\subseteq C\cup X$. Write $B_r$ for its full
+owner factors, $\psi_r=\neg B_r$, and $R=\{r:\psi_r\ne0\}$.
+Then:
+\begin{enumerate}
+\item $\Phi_r(C)\leq\psi_r$ for every active owner $r\in R$;
+\item every helper $H$ satisfies $\Phi_a(C)\leq\Phi_a(H)$ for every
+  inactive owner $a\notin R$;
+\item every helper satisfies $H(w)\subseteq C(w)$ whenever
+  $\psi_r(E_r(w))=0$ for all owners $r$.
+\end{enumerate}
+\end{lemma}
+\begin{proof}
+For each owner,
+$\psi_r=\bigvee_{\text{$r$-owned path gates}}\Phi_r(H)$.
+If $r$ is active, the deleted $r$-profile of the spine is nonzero:
+on the all-$r$ passive diagonal its first $r$-gate absorbs, and all later
+helpers remain $r$. The residual compiler preserves this profile.
+Since $\partial_XS\subseteq C$ and the deleted profile recurrence is
+bounded by the displayed disjunction,
+\[
+ \Phi_r(C)\leq\Phi_r(\partial_XS)\leq\psi_r.
+\]
+
+An inactive owner $a$ has no path gate, since every nonempty helper
+has a positive top profile. When $C=\{a\}$ and $X=\{a\}$,
+the bound forces $S=\{a\}$. Its $a$-singleton predicate is the
+conjunction of all helper $a$-profiles, giving~(2).
+
+For~(3), every helper avoids its gate owner's singleton at $w$.
+Give $X$ the ambiguous menu $I\setminus\{k\}$, for any $k\notin C(w)$.
+The prefix stays ambiguous, every gate takes union, and the bound makes
+every helper omit $k$. Varying $k$ gives the asserted containment.
+\end{proof}
+
+\begin{corollary}[Inactive-owner boxes]
+\label{core:cor:inactive-owner-box}
+Let $F\in\mathcal I(C)$ retain its distinguished source on the
+all-$a$ passive diagonal. Then
+\[
+ \theta_a(E):=\bigwedge_{r\ne a}\Phi_a(C)(W\setminus E_r)
+ \quad\Longrightarrow\quad P_F(E)=1
+\]
+for every proper coloring $E$.
+\end{corollary}
+\begin{proof}
+Choose an $X$-occurrence supplying a foreign winner at that diagonal and
+linearize it. Its factor $B_a(W)=1$ makes $a$ inactive. Every helper
+therefore inherits $\Phi_a(C)$. If an $r$-helper were the $r$ singleton
+at $E_r$ with $r\ne a$, its positive $r$-coalition would be disjoint
+from the inherited positive $a$-coalition $W\setminus E_r$, violating
+profile admissibility. Thus every owner factor of the spine is true at
+$E$. Its sound source box is contained in $P_F$, proving the implication.
+\end{proof}
+
 \begin{corollary}[Canonical sink completions need not glue]
 \label{core:cor:sink-completion-obstruction}
 For every fixed $K\geq3$ there are noncore operations $F$ at unbounded

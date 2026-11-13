@@ -73,34 +73,21 @@ zero on every foreign T_s. The explicit preorder is componentwise inclusion
 on unowned colorings, with one additional point r per owner and E<=r
 exactly when theta_r(E)=1. The T_r coordinates collapse to that point.
 
-### The derangement law
+### Profile inheritance and owned-tag boxes
 
 The lower bound lambda_r*theta_r<=P holds for ANY core baseline C.
-Fix a proper E, a missing owner k, and a derangement sigma of I\{r}.
-For each foreign s form u_s with X=sigma(s), E_s colored s, and all
-remaining passive inputs colored r. Let w be the canonical k-probe of E.
-Any core term satisfying
+Choose a marked X occurrence supplying a foreign winner on the all-r
+passive diagonal, and linearize it. Its r-factor is identically true,
+so the resulting spine has no r-owned gate. Every helper must inherit
+Phi_r(C): with C=r and X=r the spine is r, and its foreign path gates
+conjoin the helpers' r-singleton profiles.
 
-    t(u_s) subseteq {r,sigma(s)} for all s!=r,
-    t(w) subseteq N_k
-
-must have t(u_s)=r for all s. Suppose some sigma(s0) occurs. Query w
-cannot be singleton j!=r,k because its j-coalition is the same at u_j,
-whose bound excludes j. The k singleton is forbidden. The r singleton,
-when k!=r, would also hold at u_s0 by monotonicity, since E_r is contained
-in W\E_s0. Thus the query is ambiguous and its bound passes both children.
-
-At an r root, the pair test under the u_s0 bound gives
-Phi_r(W\E_s)=>Phi_r(W\E_s0); any absorber at another positive row
-would therefore absorb at u_s0 and lose sigma(s0). At a foreign-j root,
-only u_(sigma^-1(j)) could absorb, via profile Phi_j({X}). If j=k this
-contradicts the query budget directly. Otherwise the query's pair test
-forces Phi_j(E_j), contradicting the bound at u_j. All rows consequently
-act as union. Descend to a child supplying sigma(s0), preserving all
-budgets. No passive leaf supplies sigma(s0); X violates the query budget.
-
-If theta_r(E)=1, every u_s has C=r. Thus lambda_r=1 would supply
-sigma(s) at every u_s, contradicting the law when P(E)=0.
+If theta_r(E)=1, an s-helper could not absorb at E_s: its positive
+s-profile would be disjoint from the inherited positive r-coalition
+W\E_s, contradicting profile admissibility. Thus the entire source
+box of the marked spine is positive at E and is contained in P.
+The report proves this as `core:cor:inactive-owner-box`, using the
+general inheritance lemma; no row-derangement argument is needed.
 
 ### Explicit sufficiency and occurrence bounds
 
@@ -120,7 +107,9 @@ ambiguous C=U all helper contributions are already in C. The restoring
 stages preserve theta_r, since it vanishes on every foreign T_s.
 
 Union the P0 realizer with theta_r for each lambda_r=1. This gives P.
-In fact, with union named, the minimum X-occurrence count is between
+The [exact type criterion](interval-occurrence-types.md) refines the count
+to a minimum cover by sound boxes satisfying explicit profile-inheritance
+conditions. In particular, with union named, the minimum X-occurrence count is between
 b(P) and b(P)+K: intersect a minimum owner-box cover with the one box
 for the unowned region, realize these <=b(P) zero-tag boxes with one X
 each, and add at most K one-X theta spines.

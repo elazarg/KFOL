@@ -55,6 +55,13 @@ For arbitrary C, computing the implication preorder remains a subproblem.
 Even actual realizers for every proper neutral residual, together with
 the exact colored dependence laws, do not suffice above a general base.
 
+[Actual interval types](interval-occurrence-types.md) are completely
+characterized above profile maxima by soundness, active-owner profile
+containment, and rainbow compatibility with inactive-owner profiles.
+This gives the exact minimum source count by an admissible box cover and
+a criterion for a greatest actual full type. General baselines additionally
+require simultaneous helper-value bounds.
+
 Closed boundary/no-trap conditions now present every invariant relation in
 `Core/Hypergraphs`. This gives a complete infinite obstruction basis, still
 with auxiliary clutters. [global-characterization.md](global-characterization.md)

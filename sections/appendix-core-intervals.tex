@@ -74,69 +74,10 @@ the dual of each owner's profile. Put
 Each $\theta_r$ is one normalized owner box. It equals one on $T_r$
 and zero on $T_s$ for $s\ne r$, by the common-source property.
 
-\begin{lemma}[Derangement separation]\label{core:lem:interval-rows}
-Fix $r$, a proper coloring $E$, and a missing owner $k$.
-Choose a fixed-point-free permutation $\sigma$ of $I\setminus\{r\}$.
-For each $s\ne r$, form a row $u_s$ by setting $X=\{\sigma(s)\}$,
-the inputs of $E_s$ to $\{s\}$, and every other passive input to
-$\{r\}$. Let $w$ be the canonical $k$-probe for $E$, with $X=\{k\}$.
-If a core term $t$ satisfies
-\[
- t(u_s)\subseteq\{r,\sigma(s)\}\quad(s\ne r),\qquad
- t(w)\subseteq I\setminus\{k\},
-\]
-then $t(u_s)=\{r\}$ for every $s\ne r$.
-\end{lemma}
-\begin{proof}
-Such a permutation exists because $K-1\geq2$.
-Suppose $\sigma(s_0)\in t(u_{s_0})$.
-The value $t(w)$ cannot be a singleton $j\ne r,k$: its $j$-atomic
-coalition $E_j$ is the same at $u_j$, whose bound excludes $j$.
-The $k$ singleton violates the bound at $w$. If $k\ne r$, an $r$
-singleton at $w$ would have positive profile on $E_r$, which is
-contained in the $r$-coalition $W\setminus E_{s_0}$ at $u_{s_0}$.
-It would force $t(u_{s_0})=\{r\}$. If $k=r$, that singleton is
-already excluded by the bound. Thus $t(w)$ is ambiguous, and the
-root acts as union there.
-
-Suppose the root is owned by $r$. It also acts as union at $u_{s_0}$,
-since that value contains $\sigma(s_0)$. Each child therefore respects
-that row's bound. The pair test \eqref{core:eq:profile-pair-safe}
-under this bound gives, for every $s\ne r$,
-\[
- \Phi_r(W\setminus E_s)\ \Longrightarrow\
- \Phi_r(W\setminus E_{s_0}).
-\]
-Indeed the difference of the two coalitions lies in $E_{s_0}$,
-whose menu $\{s_0\}$ is outside the bound; the row's $r$-coalition
-is the conclusion coalition; and its only $\sigma(s_0)$-atom is $X$.
-An $r$-absorbing child at any $u_s$ would consequently absorb at
-$u_{s_0}$ too. Hence the root acts as union at every $u_s$.
-
-Suppose instead the root is owned by $j\ne r$. Every row except
-$u_{\sigma^{-1}(j)}$ excludes $j$, so acts as union.
-A $j$-absorbing child at the exceptional row has
-$\Phi_j(\{X\})=1$. Each child respects the bound at $w$.
-If $j=k$, the same coalition $\{X\}$ makes that child the forbidden
-$k$ singleton at $w$. If $j\ne k$, the pair test under the bound
-at $w$ gives
-$\Phi_j(\{X\})\Rightarrow\Phi_j(E_j)$:
-$X$ lies outside the bound, and neither an allowed atomic coalition
-nor the difference $E_j\setminus E_j$ can provide a pair-test witness.
-This would make the child, and hence the root, equal $j$ at $u_j$,
-again forbidden. Thus the root acts as union at every row.
-
-Follow a child supplying $\sigma(s_0)$ at $u_{s_0}$. It respects
-all bounds, including the bound at $w$. Repetition reaches a variable.
-No passive variable has value $\sigma(s_0)$ at $u_{s_0}$, whereas
-$X$ violates the bound at $w$. This is a contradiction.
-\end{proof}
-
-For any core $C$, the lemma shows that $\lambda_r=1$ forces
-$\theta_r\leq P$. Otherwise choose $E$ with $\theta_r(E)=1$ and
-$P(E)=0$. Each row $u_s$ has $C(u_s)=\{r\}$, since its
-$r$-coalition is $W\setminus E_s$. The interval operation would
-have value $\{r,\sigma(s)\}$ there, but omit $k$ at $w$.
+For any core $C$, a retained owner tag $\lambda_r=1$ forces
+$\theta_r\leq P$ by \cref{core:cor:inactive-owner-box}: a linearized
+occurrence on the all-$r$ diagonal has no $r$-owned path gate, and its
+helpers inherit the entire $r$-profile of the baseline.
 
 \begin{theorem}[Closed compatibility above a greatest profile completion]
 \label{core:thm:profile-source-interval}
@@ -153,7 +94,7 @@ in an interval realizer lies between $b(P)$ and $b(P)+K$.
 \end{theorem}
 \begin{proof}
 Necessity follows from source compatibility,
-\cref{core:thm:source-interval}, and the derangement lemma.
+\cref{core:thm:source-interval}, and \cref{core:cor:inactive-owner-box}.
 For sufficiency let $P_0$ equal $P$ off $\bigcup_rT_r$, and zero
 on that union. The unowned region is a downset, so $P_0$ is antitone.
 Take its greatest single-source completion retaining $U$, and attach

@@ -1,6 +1,11 @@
 Research arguments and exploratory counts, not new audited paper claims.
 The mixed-type characterization remains unresolved.
 
+For intervals above a greatest profile completion, the
+[complete profile-inheritance criterion](interval-occurrence-types.md)
+now replaces pruning tests: it gives all actual full types and exact
+source multiplicity. The arguments below concern more general targets.
+
 # Full source-type pruning: drift and owner-shadow tests
 
 ## Definitions
