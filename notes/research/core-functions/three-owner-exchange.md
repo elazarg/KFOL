@@ -302,6 +302,43 @@ empty. Whether the condition also excludes all configurations with
 repeated query owners is unproved here; this is the remaining
 closure-aggregation question, not a consequence of the normalization.
 
+### Two foreign owners: short alternating cycles are excluded
+
+Suppose there are two conditional closures d_1,d_2 and the preceding
+hereditary common-source condition holds. They are loopless, so every
+query with a nonempty head has a nonempty premise. A rainbow cover of
+that premise uses one opposite-owner head. Following selected covers
+therefore gives an alternating directed cycle of queries. Replace each
+cycle head by the preceding query's premise, a nonempty subset of that
+head. Captures and disjointness persist, giving sets, indexed cyclically,
+
+    A_i subseteq d_1(B_i), B_i subseteq d_2(A_(i+1));
+    A_i intersect B_i = B_i intersect A_(i+1) = empty.  (AC)
+
+Thus every counterexample contains an exact alternating set cycle.
+Cycles of length two or four contradict hereditary common-source:
+the unions of the A sets and B sets are disjoint, and each generates
+their whole union under the opposite closure.
+
+Length six is excluded too. Here i is taken modulo three. The only
+possible cross-color overlaps are
+
+    C_i=A_i intersect B_(i+1).
+
+These three sets are pairwise disjoint. Put L=UNION_i(A_i union B_i),
+A*=UNION_i A_i \ UNION_i B_i, and B*=UNION_i B_i \ UNION_i A_i.
+Then A_i subseteq A* union C_i and B_i subseteq B* union C_(i-1).
+Starting with B* union C_i, closure d_1 successively generates
+A_(i+1), C_(i+1), A_(i+2), C_(i+2), and A_i. Hence it contains L.
+The reverse cyclic argument shows d_2(A* union C_j) contains L for
+every j. Choose i!=j. The two generating coalitions B* union C_i
+and A* union C_j are disjoint, contradicting the condition on L.
+This reasoning also covers empty overlap sets C_i.
+
+Consequently any two-owner counterexample to closure aggregation must
+contain an alternating set cycle of length at least eight; the argument
+does not yet exclude those longer cycles.
+
 ## A counterexample to the previous closure laws
 
 Specialize to owners r=0,s=1,t=2 and variables V={x,y,z,W}. Define
