@@ -238,6 +238,70 @@ on joint pure ports, including (FE), as well as pair-cut and reciprocal
 intersection. Full guard compatibility retains information beyond
 this pure-port subproblem.
 
+### Independent bases and conditional foreign closures
+
+Call B r-independent when b notin c_r(B\{b}) for every b in B.
+For such B put U=c_r(B), D=U\B, and, for each s!=r, define on B
+
+    d_s(E)=c_s(E union D) intersect B.                 (IB)
+
+These are closures even without (FE) or foreign closedness of U.
+Extensivity and monotonicity are immediate. If G=c_s(E union D), then
+D union d_s(E) subseteq G, so d_s(d_s(E)) subseteq G intersect B=d_s(E);
+extensivity gives the reverse inclusion. In particular this argument
+applies when checking a proposed closure tuple. One must not assume that
+U is foreign-closed: the actual core word
+
+    a union (i choice_r a) union (j choice_s a)
+
+has c_r({a})={a,i} while c_s({a,i})={a,i,j}.
+
+**Independent-base form of (FE).** A loopless closure tuple satisfies
+strong (FE) exactly when, for every r-independent B, the conditional
+closures (IB) admit no configuration with the following properties:
+
+* queries i have owners s_i!=r and sets X_i,Q_i subseteq B;
+* X_i subseteq d_(s_i)(Q_i), X_i intersect Q_i=empty;
+* for every i, Q_i is covered by X_j from a selection of queries having
+  distinct owners, all different from s_i;
+* UNION_i X_i is nonempty.
+
+For necessity, lift each premise to P_i=Q_i union D. All queried sets
+lie in c_r(B), the rainbow covers are unchanged, and (FE) would give
+c_r(B)=c_r(B\UNION_i X_i). This contradicts independence.
+Conversely, if (FE) fails at A, choose an inclusion-minimal B subseteq A
+with c_r(B)=c_r(A). It is r-independent. Set
+
+    Y_i=X_i intersect B, Q_i=P_i intersect B.
+
+The original premises lie in c_r(A)=B union D, so
+Y_i subseteq c_(s_i)(Q_i union D) intersect B. Disjointness and the
+rainbow covers restrict to B. Some Y_i is nonempty: otherwise
+B subseteq A\UNION_i X_i would contradict the failure of (FE).
+Thus these restricted blocks form the forbidden configuration.
+
+**Necessary conditional profile compatibility.** If (FE) holds, every
+d_s is loopless and their spanning profiles are common-source admissible
+on every nonempty retained L subseteq B. To see this, suppose coalitions
+A_s subseteq L satisfy L subseteq d_s(A_s), but have empty common
+intersection. Use one query per foreign owner, with
+
+    X_s=L\A_s, Q_s=A_s.
+
+Each A_s is covered by the other X_t, since their common intersection
+is empty. Their head union is L, contradicting the independent-base
+form. Taking L={x}, A_s=empty for one owner and A_t=L for the others
+also excludes x in d_s(empty). Monotonicity and normalization of the
+retained spanning profiles then follow from the closure laws.
+
+Conversely this hereditary profile condition excludes configurations
+with at most one query per owner. Put L=UNION_s X_s and A_s=L\X_s,
+using A_s=L for absent query owners. Since Q_s subseteq L\X_s and
+X_s subseteq d_s(Q_s), every A_s spans L, while their intersection is
+empty. Whether the condition also excludes all configurations with
+repeated query owners is unproved here; this is the remaining
+closure-aggregation question, not a consequence of the normalization.
+
 ## A counterexample to the previous closure laws
 
 Specialize to owners r=0,s=1,t=2 and variables V={x,y,z,W}. Define
