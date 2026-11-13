@@ -189,9 +189,13 @@ compress exactly to a conditional mutual-capture test. However, an
 feedback elimination at all three supplied owners and still has no
 joint pure-port realizer. Extending any putative word by a fresh identity
 owner would violate the six-query feedback law. A complete criterion
-must therefore include this unused-owner coordinate. Sufficiency of
-feedback after adding that coordinate is unproved. Even the pure-port
-problem is smaller than ordinary guard realizability: the complete-head
+must therefore include this unused-owner coordinate. That is still
+insufficient: a [nine-variable tuple](feedback-profile-obstruction.md)
+passes feedback after every identity-owner extension, with exact
+dependence closures and hereditary omission, but its six captures
+force a missing singleton profile. Thus even the strengthened feedback
+criterion is false. The pure-port problem remains smaller than ordinary
+guard realizability: the complete-head
 example with a spare observer has actual pure ports and a noncore
 separable reconstruction.
 

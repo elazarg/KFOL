@@ -176,7 +176,11 @@ disjoint mutual captures. With three foreign colors, an
 profile test and still has repeated-query feedback. Restricted to its
 three nonidentity owners, it even satisfies full strong feedback
 elimination, yet has no common word: a fresh identity observer detects
-the obstruction. Thus that law alone does not characterize pure ports.
+the obstruction. Even after all unused-owner tests are included, the
+[nine-variable profile obstruction](feedback-profile-obstruction.md)
+passes feedback but has no common realizer: its six captures force an
+additional singleton profile. Its reconstruction also has exact
+dependence closures and hereditary omission independence.
 
 [Conditional foreign traces](conditional-trace-minorants.md) have an
 exact weaker property: their trace function admits a full-support core

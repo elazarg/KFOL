@@ -7,7 +7,8 @@ six-query feedback obstruction. The extended tuple still passes hereditary
 profile compatibility at every observer-independent base and simultaneous
 cross-value composition. Thus strong feedback at the original owners is
 insufficient, and conditional profile tests cannot replace fresh-owner
-feedback. The sufficiency of fresh-stable feedback remains unproved.
+feedback. Even fresh-stable feedback is insufficient, as the
+[nine-variable profile obstruction](feedback-profile-obstruction.md) proves.
 
 ## The eight variables and six capture rules
 
@@ -224,4 +225,5 @@ extensions' tests.
 Hence feedback stability under arbitrary unused-owner extensions is exactly
 feedback compatibility with one fresh identity coordinate. The example passes
 all original-owner feedback laws and fails this necessary strengthened test.
-No sufficiency claim is made for the strengthened condition.
+The [nine-variable obstruction](feedback-profile-obstruction.md) passes
+this strengthened condition and still has no common pure-port realizer.

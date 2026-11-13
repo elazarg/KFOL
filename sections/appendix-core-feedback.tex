@@ -4,8 +4,9 @@
 Pure-owner closures satisfy a closed feedback-elimination law.
 With two foreign owners its repeated queries compress to a single
 mutual-capture test. With three foreign owners this compression fails;
-the resulting example also shows that the feedback law alone does not
-characterize joint pure-port realizability.
+an eight-variable example detects the missing unused-owner test.
+Even after every such extension, a nine-variable example passes
+feedback but violates a forced singleton profile.
 
 For a core operation on essential support $V$, its pure-owner closure
 $c_r$ can be recovered from a one-owner trace. Replace foreign gates
@@ -246,4 +247,115 @@ One fresh identity owner already tests every extension by unused owners:
 an identity-colored query has $X_i\subseteq P_i$ and hence empty head,
 and all identity observers impose the same remaining conditions.
 These statements concern the displayed closure tests; full source-guard
-compatibility retains the mixed-owner information absent from pure ports.
+compatibility requires more even when every identity extension passes them.
+
+\begin{theorem}[Identity-stable feedback is insufficient]
+\label{core:thm:identity-stable-feedback}
+For every finite owner set containing three distinct owners there is a
+nine-variable loopless closure tuple satisfying (FE) after every extension
+by identity owners, but having no joint pure-port realizer.
+\end{theorem}
+\begin{proof}
+Keep the preceding table, adjoin an uncaptured variable $W$, and change
+only the premise of $a_0$:
+\[
+ P_{a_0}=Q_{a_0}\cup\{W\},\qquad P_i=Q_i\quad(i\ne a_0).
+\]
+Generate $c_a,c_b,c_c$ by these rules, and make every other owner closure
+the identity. As before, $c_s(E)$ is $E\cup H_s$ if an $s$-rule fires
+and $E$ otherwise; $W$ is never captured. These closures are loopless.
+
+First check (FE) for the three supplied owners, using the conditional
+criterion in \cref{core:thm:two-color-feedback}. For observer $b$ or $c$,
+an independent base is an old independent base, optionally with $W$.
+Its captured set $Z$ is unchanged. A retained $W$ belongs to every
+spanning coalition; without $W$, the conditional $a$-closure is below
+the old one, so the previously proved hereditary test still holds.
+For observer $a$, inactive bases have $Z=\varnothing$ and use the old
+$b,c$ test. Its active independent bases are exactly $P_{a_1}$ optionally
+with $e$ and/or $W$, or $P_{a_0}$ optionally with $e$.
+Their captured sets are respectively $X_{a_1}$ and $X_{a_0}$.
+After omitting the uncaptured $W$, their conditional foreign closures
+are precisely the two old pairs displayed above. Thus they too pass.
+
+For an identity observer there is no feedback family at all.
+A feedback head cannot contain $W$, so neither can a covered premise;
+the $a_0$ rule is unavailable. Every nonempty query can be replaced by
+one of the remaining five canonical queries: choose its first-fired
+rule, shrink the premise to that rule's premise, and enlarge the head
+to its head. Capture, disjointness and all rainbow covers persist.
+But $P_{b_0}$ needs both $e,t_+$: $X_{a_1}$ contains neither and no
+single $c$-head contains both. Also $P_{b_1}$ needs $p$, absent from
+$X_{a_1}$ and both $c$-heads. Hence no $b$-query is possible.
+Every remaining $a$- or $c$-premise contains $u_b$, which only a
+$b$-head could cover. There is no nonempty feedback family.
+Identity-colored queries have empty heads, so additional identity
+owners change neither argument. This proves the asserted stability.
+
+Nevertheless, the six capture constraints force an additional profile
+in every core word:
+\begin{equation}\label{core:eq:feedback-forced-profile}
+ \left(\forall i,\ X_i\subseteq c_{s_i}(P_i)\right)
+ \quad\Longrightarrow\quad \Phi_a(\{W\})=1.
+\end{equation}
+To prove this, interpret a hypothetical word with a fresh owner $\omega$.
+For each query give $X_i$ the full menu, give $P_i$ the atom $s_i$,
+and every other input the menu omitting only $\omega$.
+Capture says that the output omits $\omega$ at all six rows; call these
+the six omission budgets. As in the proof of
+\cref{core:prop:feedback-elimination}, a budget of owner $s$ and head
+$X$ forces the positive profile $\Phi_s(V\setminus X)$.
+That proof's profile-passage induction also applies directly to words:
+a positive $r$-profile at $A$, together with foreign budgets whose
+$A\cap P_i$ have rainbow covers, forces a positive $r$-profile at
+$A\setminus\bigcup_iX_i$.
+
+Suppose all budgets hold and $\Phi_a(\{W\})=0$. Descend to a child
+retaining both properties. At a $b$-root, the $a_0,c_1$ budgets pass
+to both children. Their heads cover either $b$-premise:
+\[
+ P_{b_0},P_{b_1}\subseteq X_{a_0}\cup X_{c_1}.
+\]
+The common-source condition, applied to their forced profiles, excludes
+a child's positive $b$-profile on either premise. Neither child can
+absorb at a $b$-budget, so those budgets pass too. All other budgets
+pass directly, and the foreign $a$-profile is an AND, allowing a child
+with its value still zero. At a $c$-root the same argument uses
+\[
+ P_{c_0},P_{c_1}\subseteq X_{a_1}\cup X_{b_1}.
+\]
+At an $a$-root both children have zero $a$-profile on $\{W\}$, while
+all $b,c$ budgets pass to both. The cover
+$P_{a_1}\subseteq X_{b_0}\cup X_{c_0}$ excludes an $a_1$ absorber.
+An $a_0$ absorber would give a child positive $a$-profile at $P_{a_0}$.
+For that child use budgets $b_0,c_0$ and the covers
+\[
+ P_{a_0}\cap P_{b_0}=\{u_c\}\subseteq X_{c_0},\qquad
+ P_{a_0}\cap P_{c_0}=\{u_b,t_-\}\subseteq X_{b_0}.
+\]
+Profile passage forces positivity at
+$P_{a_0}\setminus(X_{b_0}\cup X_{c_0})=\{W\}$, a contradiction.
+Thus both $a$-budgets pass as well. Union and additional-owner gates
+pass every budget directly, and their foreign $a$-profile selects a
+zero child. The descent must end at a leaf other than $W$.
+Every such variable lies in some $X_i$, so that leaf violates its
+omission budget. This proves \eqref{core:eq:feedback-forced-profile}.
+
+In the proposed tuple neither $a$-premise lies in $\{W\}$, so
+$c_a(\{W\})=\{W\}\ne V$. Its spanning predicate therefore violates
+\eqref{core:eq:feedback-forced-profile}, ruling out every joint realizer.
+\end{proof}
+
+The reconstruction $F_c$ of this tuple is nonempty: its uncaptured
+$W$ always supplies its whole menu. Its closures also express actual
+cofactor independence. Two different-owner premises share the third
+owner's star variable, so fixing one premise to its owner atom disables
+every foreign trigger. The cofactor becomes the one-owner trace;
+changing its captured inputs has no effect, while pure probes witness
+every uncaptured input's essentiality. If a winner is omitted, every
+input containing it is among those captured inputs, outside the fixed
+premise. Changing them preserves that premise and the output. Thus
+$F_c$ has omission independence as in \cref{core:prop:omission}.
+Neutral restriction merely removes rules whose premises are no longer
+present; surviving different-owner premises still intersect, so the
+same argument holds for every neutral restriction.

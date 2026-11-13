@@ -420,8 +420,11 @@ at every supplied owner, while a fresh identity coordinate rules out
 every common word. Two foreign colors admit complete compression to
 conditional mutual captures; three foreign colors require repeated
 queries, even after all independent-base profile tests are imposed.
-Compatibility after adding an unused owner is necessary; its sufficiency
-remains unproved and would still not settle separable hulls. A
+Compatibility after adding an unused owner is necessary but still
+insufficient: a [nine-variable tuple](feedback-profile-obstruction.md)
+passes all identity-extension feedback tests, yet six captures force a
+missing singleton profile. The counter retains exact dependence and
+hereditary omission. These tests do not settle even pure traces. A
 [naive lift to independent coalition nodes](coalition-lift-obstruction.md)
 does not repair this: a genuine core CNF already yields a mixed SCC
 with disjoint labels, and the coherence map fails to commute with gates.
