@@ -102,6 +102,11 @@ the pure-owner factors across observers, then the two colored arrow laws.
 This settles that case, not nonadditive closures or guard disjunctions.
 It also classifies joint realizability of additive pure-owner data from
 arbitrary core operations: their separable upper hull is always core.
+For arbitrary additive candidates, the same graph theory now computes
+their greatest core minorant: delete every mixed component and its
+descendants, then close paths by their first color. Empty surviving
+support means no minorant exists. This closed feasibility criterion
+does not extend to nonadditive constraints.
 [Loopless closures classify two-owner CNFs](closure-core-operations.md),
 and their [globally minimal operations are precisely matroid CNFs](minimal-cnf-matroids.md).
 [Canonical colored closures](separable-closures.md) also exist for every
@@ -189,6 +194,13 @@ feedback after adding that coordinate is unproved. Even the pure-port
 problem is smaller than ordinary guard realizability: the complete-head
 example with a spare observer has actual pure ports and a noncore
 separable reconstruction.
+
+[Conditional foreign traces](conditional-trace-minorants.md) cannot be
+required recursively to have a common realizer. What they admit is a
+full-support core minorant; this condition is also sufficient for their
+occurrence at an independent base. Its word witness still needs an
+intrinsic criterion. Raw-feedback absence alone is insufficient, already
+for two foreign colors on three variables.
 
 [Capture-trigger normal forms](capture-trigger-normal-form.md) supply
 another closed positive class. Every source-separable operation above

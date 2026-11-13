@@ -1,0 +1,129 @@
+\subsection{Conditional traces and core minorants}
+\label{app:core-conditional-traces}
+
+Conditional foreign closures at an independent base have an exact
+description by a minorant. They need not themselves have a common
+constant-free realization.
+
+Let $I$ be a finite set of at least two foreign owners. Write
+$Q=\{0<\alpha<\beta\}$ for the algebra $3_m$ of
+\cref{app:core-dissemilattice}, with $+$ the chain maximum and
+$uv=0$ if either operand is zero, and $uv=\max(u,v)$ otherwise.
+At coordinate $s$, interpret $\star_s$ as multiplication and every
+other choice as $+$. Let $P_I$ be the product of these coordinate
+algebras, with named coordinatewise union; $P_{I,0}$ additionally
+names its all-zero tuple. This zero is a trace value, not an empty
+winner-menu constant. Named union is available in the full core with
+one additional owner $\rho$.
+
+For loopless closures $d_s$ on a finite nonempty set $B$, let $f_d$
+be their coordinatewise trace function. At coordinate $s$ put
+$J_s(C)=B\setminus d_s(B\setminus C)$. On inputs zero outside $C$,
+$\beta$ on $M\subseteq C$, and $\alpha$ on $C\setminus M$, its value
+is zero if $J_s(C)$ is empty, $\beta$ if $J_s(C)\cap M\ne\varnothing$,
+and $\alpha$ otherwise. Each coordinate has the one-owner expression
+\[
+ f_{d,s}=\sum_{\substack{H\ne\varnothing\\B\setminus H\text{ closed}}}
+                 \prod_{j\in H}x_j.
+\]
+It therefore has a $P_{I,0}$ term: lift this expression using
+$\star_s$, attach zero at each foreign owner $t\ne s$ to isolate
+coordinate $s$, and sum the isolated coordinates.
+
+\begin{theorem}[Conditional trace characterization]
+\label{core:thm:conditional-trace-minorants}
+The following conditions on $(d_s)_{s\in I}$ are equivalent:
+\begin{enumerate}
+\item There is a core operation over $I\cup\{\rho\}$, an independent
+  base $B$ for $c_\rho$, and $D=c_\rho(B)\setminus B$, such that
+  $d_s(E)=c_s(E\cup D)\cap B$ for every $s\in I$ and $E\subseteq B$.
+\item There is a constant-free foreign-choice/union word $g$ using
+  every variable of $B$, with $g\leq f_d$ pointwise on $P_I$ in the
+  product chain order.
+\end{enumerate}
+In the reverse construction one extra variable suffices: $D$ can
+be a singleton.
+\end{theorem}
+The trace inequality is equivalently $c_s^g\supseteq d_s$ for every
+foreign owner. Extending $d$ by the identity at $\rho$, the source-factor
+formula also gives $g\leq F_d$ on winner menus.
+\begin{proof}
+Take the neutral residual on $U=c_\rho(B)$, whose closures restrict
+to $c_s(E)\cap U$ by \cref{core:thm:neutral-elimination}.
+Its $\rho$-profile is positive at $B$ and negative at every
+$B\setminus\{j\}$: independence excludes $j$ from that closure.
+Prune each $\rho$-owned node to a child positive at $B$; every foreign
+node and union node keeps both children. The remaining leaves lie in
+$B$, and the resulting foreign-choice/union word $g$ uses all of $B$.
+Otherwise its profile would be positive at some $B\setminus\{j\}$,
+where pruning can only decrease the original profile.
+
+Pruning decreases the $\rho$-player view at every input. Indeed the
+$\rho$-owned operation is join in that view, and each foreign gate
+is monotone in its order: foreign atoms lie below $\nv<\pv$.
+If $j\in d_s(E)\setminus E$, use the residual's pure-$s$ probe with
+$j=\{\rho\}$, $E\cup D$ at $\{s\}$, and everything else at the
+foreign menu $I$. Its output omits $\rho$.
+The pruned output does too, and $g$ has no $D$ inputs. Hence
+$c_s^g(E)\supseteq d_s(E)$. Its trace interior is therefore contained
+in $J_s$, which is exactly the pointwise trace bound $g\leq f_d$.
+
+Conversely choose a $P_{I,0}$ term $F$ for $f_d$, using the displayed
+isolators, and replace it by $F+0$. Introduce a new variable $Y$ in
+place of every zero, giving a constant-free word $T_0$, and put
+\[
+ T=T_0\star_\rho g.
+\]
+Each old choice and named union is join in the $\rho$-trace. Thus,
+writing $b=\sum_{j\in B}x_j$, the $\rho$-trace of $T$ is
+$(b+Y)b$. Its interior on $C\subseteq B\cup\{Y\}$ is $C$ when
+$C\cap B\ne\varnothing$, and empty otherwise. Consequently
+\[
+ c_\rho(E)=
+ \begin{cases}E\cup\{Y\},&B\subseteq E,\\E,&\text{otherwise}.
+ \end{cases}
+\]
+The base $B$ is independent and $c_\rho(B)\setminus B=\{Y\}$.
+At an old coordinate $s$, set $Y$ to trace zero. The root is join
+there, giving $f_{d,s}+g_s=f_{d,s}$, exactly the required conditional
+closure. Interpreting named unions by their core term gives an ordinary
+constant-free realization. Their $\rho$-trace remains join, including
+when that union term uses $\rho$ internally.
+\end{proof}
+
+\begin{proposition}[Conditional data need not be jointly realizable]
+\label{core:prop:conditional-trace-nonrealizable}
+An actual four-owner core operation can have, at an independent base,
+three conditional foreign closures with no common core realizer.
+\end{proposition}
+\begin{proof}
+Use foreign owners $0,1,2$ and $B=\{x,y,z,w\}$, with the rules
+\[
+ d_0:\{x,z,w\}\Rightarrow y,\qquad
+ d_1:\{y,z\}\Rightarrow x,\qquad d_2:\{x,y\}\Rightarrow z.
+\]
+These loopless closures have no common realizer. At the independent
+$0$-base $\{x,z,w\}$ their conditional foreign closures, with
+$D=\{y\}$, contain $z\Rightarrow x$ and $x\Rightarrow z$.
+This violates \eqref{core:eq:conditional-mutual-capture}, a necessary
+consequence of (FE).
+
+Their coordinate trace formulas are
+\[
+ f_0=m+ym,\quad m=x+z+w;\qquad
+ f_1=w+n+xn,\quad n=y+z;\qquad
+ f_2=w+p+zp,\quad p=x+y.
+\]
+There is nevertheless a full-support minorant. Put
+\[
+ h=y+(x\star_1(y\star_2z))+(z\star_2(y\star_1x)),
+ \qquad g=w+(w\star_0h).
+\]
+At coordinates $1,2$, distribution in $Q$ gives $g_s=f_s$.
+At coordinate $0$, $h=x+y+z$, so $g_0=0$ when $w=0$ and is the
+full input join otherwise. The function $f_0$ is zero only when
+$x=z=w=0$ and is the full join otherwise. Hence $g\leq f_d$.
+The preceding theorem, using the isolated-coordinate term $F$ and
+replacing its zeros by $Y$, supplies a five-variable core word
+$T_0\star_\rho g$ with precisely these conditional closures.
+\end{proof}

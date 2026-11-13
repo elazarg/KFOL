@@ -96,6 +96,11 @@ free completion. Captures needing joint premises remain outside this
 classification. For raw monomial source tables, agreement of the pure
 owner factors across observers is the additional necessary and sufficient
 coherence check.
+For arbitrary preorder data, delete mixed strongly connected components
+and their descendants, then complete paths using their first edge's
+color. This gives the greatest core minorant, or proves none exists
+when no variable survives. Mixed components, rather than only mixed
+simple cycles, are the relevant obstruction.
 The [joint pure-trace quotient](pure-trace-quotient.md) isolates the
 pure-owner compatibility problem as a colored product of three-state
 algebras. One coordinate has a five-relation basis of arity at most
@@ -172,6 +177,13 @@ profile test and still has repeated-query feedback. Restricted to its
 three nonidentity owners, it even satisfies full strong feedback
 elimination, yet has no common word: a fresh identity observer detects
 the obstruction. Thus that law alone does not characterize pure ports.
+
+[Conditional foreign traces](conditional-trace-minorants.md) have an
+exact weaker property: their trace function admits a full-support core
+minorant. They need not have a common realizer. Conversely every such
+minorant gives a one-variable independent-base construction. Even with
+two foreign colors, hereditary profile compatibility and absence of raw
+feedback do not ensure minorant feasibility.
 
 [Capture-trigger normal forms](capture-trigger-normal-form.md) give a
 closed positive class: every source-separable reconstruction above a

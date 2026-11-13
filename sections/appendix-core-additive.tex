@@ -1,0 +1,169 @@
+\subsection{Additive closures and their greatest core minorants}
+\label{app:core-additive}
+
+When owner closures are additive, pure-port compatibility has a closed
+graph criterion and an explicit component-spine construction. Arbitrary
+additive candidates also have a greatest core minorant whenever any
+core minorant exists.
+
+Let $c_r$ be loopless additive closures on finite nonempty $V$, so
+$c_r(E)=\bigcup_{i\in E}c_r(\{i\})$. Write $i\to_r j$ when
+$j\in c_r(\{i\})$; these are colored preorders, oriented from a
+capturing input to its dependent source. Let $F_c$ be the reconstruction
+\eqref{core:eq:closure-reconstruction}, initially allowing empty values.
+Consider the two conditions
+\begin{align}
+ i\ne j,\ i\to_r j&\quad\Longrightarrow\quad
+ c_s(\{j\})\subseteq c_r(\{i\})\quad\text{for every }s;
+ \tag{D}\label{core:eq:additive-descent}\\
+ i\ne j,\ i\to_r j,\ j\to_s i&\quad\Longrightarrow\quad r=s.
+ \tag{R}\label{core:eq:additive-reciprocity}
+\end{align}
+
+\begin{theorem}[Additive closure characterization]
+\label{core:thm:additive-closures}
+The following are equivalent: $F_c$ is core; $(c_r)_r$ is the joint
+pure-owner closure tuple of some core operation; and (D),(R) hold.
+When they hold, every source has a source-linear minorant attaining
+its complete canonical factor vector.
+\end{theorem}
+\begin{proof}
+Necessity applies to arbitrary core operations. If $i\to_r j$ and
+$k\in c_s(\{j\})\setminus c_r(\{i\})$, with $s\ne r$, use (FE)
+at $A=\{i,k\}$ with one query $(s,\{k\},\{j\})$. Its cover is
+empty and its sets lie in $c_r(A)$, so
+$c_r(\{i,k\})=c_r(\{i\})$, a contradiction. The case $s=r$ is
+idempotence, proving (D). Opposite differently colored arrows would
+make $\{i\}$ and $\{j\}$ winning at their respective owners in the
+neutral restriction to $\{i,j\}$. This contradicts the common-source
+condition of \cref{core:thm:profiles}, proving (R).
+
+Assume (D),(R). The uncolored union is transitive: a path
+$i\to_r j\to_s k$ with $i\ne j$ keeps its first color by (D).
+Its strongly connected components therefore form a partial order.
+Every nontrivial component $C$ has a unique internal color $r_C$.
+Indeed opposite arrows must share their color by (R); for three
+points, composing through two opposite pairs with (D), then applying
+(R), equates those colors. Incoming colors are uniform across a
+target component. Every nontrivial proper ancestor $H$ of $C$ also
+has $h\to_{r_H}C$ for every $h\in H$, by (D).
+
+Construct $S_C$ from the $r_C$-fold of $C$ if $C$ is nontrivial,
+or its single variable otherwise. Process proper ancestors of $C$
+nearest first: if $H$ precedes $L$ in the ancestor order, process
+$L$ before $H$. For a singleton $H=\{h\}$ attach $x_h$ at every
+color $s$ with $h\to_s C$. For nontrivial $H$, first attach $x_h$
+for each $h\in H$ at every such flag with $s\ne r_H$, then attach the $r_H$-fold of
+all variables in $H$ at owner $r_H$.
+
+Each target $j\in C$ occurs once, with exact factors
+\begin{equation}\label{core:eq:additive-source-factor}
+ D_{j,r}(E)=\bigwedge_{\substack{i\ne j\\i\to_r j}}[i\notin E].
+\end{equation}
+The starting fold supplies its internal filters, the singleton
+attachments supply their flags, and each ancestor fold supplies its
+required internal-owner flags. Every auxiliary occurrence is protected
+too. For $h$ introduced in $H$, an internal predecessor has color
+$r_H$ and is supplied by the $H$-fold, including for occurrences in
+earlier foreign attachments. An external predecessor $i\to_r h$
+lies in a proper ancestor of $H$, processed later. Condition (D)
+gives $i\to_r C$, so that later attachment or fold supplies the
+required filter. Thus every auxiliary factor is bounded by its
+canonical factor \eqref{core:eq:additive-source-factor}.
+
+Source decomposition gives $S_C\leq F_c$. Conversely, every winner
+in $F_c$ has a supplying source $j$ in some $C$, and its unique
+occurrence in $S_C$ has exactly the required factors. Hence
+$F_c=\sum_C S_C$, proving core realizability and nonemptiness.
+Pure probes recover the prescribed closures. The component word
+for $j$ is its asserted source-linear minorant.
+\end{proof}
+
+The test also reads directly on conjunctive guard data: a literal
+$[w_i\ne\{r\}]$ at source $j$ gives the nonloop arrow $i\to_r j$.
+For common owner factors, (D),(R) decide joint realizability without
+an auxiliary graph of occurrences or a supplied elimination order.
+
+Now retain arbitrary colored preorders and let $\operatorname{Reach}$
+be the reflexive transitive closure of their uncolored union. Call a
+strongly connected component \emph{mixed} when its internal nonloop
+arrows have at least two colors. Delete every mixed component and
+every vertex reachable from it, and let $S$ be the surviving set.
+On $S$ define the first-color completion
+\begin{equation}\label{core:eq:additive-first-color}
+ i\Rightarrow_r k\quad\Longleftrightarrow\quad
+ i=k\ \text{ or }\
+ \exists j\ne i\quad i\to_r j\ \text{ and }j\operatorname{Reach}k.
+\end{equation}
+Let $\bar c_r$ be the additive closures induced by these relations.
+
+\begin{theorem}[Greatest minorant of an additive candidate]
+\label{core:thm:additive-greatest-minorant}
+If $S=\varnothing$, $F_c$ has no constant-free core minorant.
+Otherwise its greatest core minorant, among all core operations
+including nonseparable ones, is the reconstruction $F_{\bar c}$
+on $S$, ignoring every variable outside $S$.
+A full-support minorant exists exactly when no component is mixed.
+\end{theorem}
+\begin{proof}
+The completion is the least extension of the original arrows satisfying
+(D). A completed nonloop $r$-arrow has an original first $r$-edge;
+following another arrow appends a reachable path and preserves that
+edge, proving (D) and transitivity. Conversely, the uncolored union
+of any (D)-closed family is transitive. An original first edge
+$i\to_r j$, $i\ne j$, followed by a path from $j$ to $k$ therefore
+forces $i\to_r k$. This proves minimality, including paths returning
+to their starting point.
+
+The completion preserves the original strongly connected components.
+An internal completed nonloop arrow has its original first edge
+inside that component. Every surviving nontrivial component has one
+color, so opposite completed arrows have the same color. Thus (R)
+holds and \cref{core:thm:additive-closures} constructs $G=F_{\bar c}$.
+The set $S$ is predecessor-closed; a path ending in $S$ never leaves
+it. No outside variable originally captures a source in $S$, and
+completion retains every original incoming arrow there. Hence every
+source contribution of $G$ satisfies the original guards, giving
+$G\leq F_c$.
+
+For greatestness let $T\leq F_c$ be any core word with nonempty
+essential support $U$. Its support is predecessor-closed: if an
+unused $i$ captured a used $j$, changing only $i$ to its capturing
+atom on a pure source probe could not remove $T$'s observed winner,
+contrary to $T\leq F_c$. On $U$, the singleton capture arrows of
+$T$ satisfy (D),(R), even when its full closures are nonadditive.
+Their strongly connected components are therefore monochromatic.
+If $U$ met an original mixed component, predecessor closure would
+put that entire component inside one monochromatic component of $T$,
+contradicting its original colors. Nor can $U$ meet any descendant
+of such a component. Thus $U\subseteq S$.
+
+Every first-color path ending at a used source lies in $U$. By the
+minimality argument for \eqref{core:eq:additive-first-color}, (D)
+forces all completed incoming arrows at that source in $T$.
+Its pure-owner coefficients, and therefore every actual occurrence
+factor, are bounded by those of $G$. Source decomposition gives
+$T\leq G$. If $S$ is empty, the nonempty support $U\subseteq S$
+is impossible. If no component is mixed, $S=V$ and $G$ has full
+support; a mixed component forbids full support by the same argument.
+\end{proof}
+
+For example, on $\{a,b,c\}$ take $a\leftrightarrow_0 b$ and
+$a\leftrightarrow_1 c$, with other arrows reflexive. The two
+monochromatic pairs form one mixed component, so there is no core
+minorant. This also shows why internal component colors matter:
+all its simple directed cycles are monochromatic.
+
+The same example closes a possible shortcut in
+\cref{core:thm:conditional-trace-minorants}. Its two foreign closures
+pass the hereditary profile test. On the whole set their minimal
+spanning coalitions are $\{a,c\},\{b,c\}$ at owner $0$ and
+$\{a,b\},\{b,c\}$ at owner $1$, and every pair intersects.
+On each proper retained set one closure
+is identity, so the test again holds. By
+\cref{core:thm:two-color-feedback} there is no raw two-color feedback,
+yet the required full-support trace minorant cannot exist: its pure
+source factors would be bounded by the prescribed factors, and source
+decomposition would give a core minorant of this reconstruction. Thus that
+trace-minorant condition is strictly stronger than absence of raw
+feedback.

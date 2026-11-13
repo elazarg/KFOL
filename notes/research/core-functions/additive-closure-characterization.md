@@ -6,7 +6,8 @@ owner preorders are necessary and sufficient for core realizability. The
 proof constructs finitely many component spines. Each chosen source has a
 linear subordinate word carrying its complete canonical factor vector.
 Marked completion then realizes all maximal vectors simultaneously and
-attains the greatest free extension.
+attains the greatest free extension. Arbitrary additive candidates also
+have a closed greatest core minorant whenever any core minorant exists.
 
 This is a characterization of the additive source-separable subclass.
 The general colored-closure and joint prime-guard problems remain open.
@@ -263,8 +264,78 @@ The inequalities are loose also when m=n=1. All the resulting terms
 are binary, so their gate counts are exactly one less than their leaf
 counts.
 
+## Greatest core minorants of arbitrary additive candidates
+
+Now drop (D),(R), retaining only the given loopless additive closures.
+Let Reach be the reflexive transitive closure of their uncolored union
+graph. Call an SCC bad when its internal nonloop arrows have at least
+two distinct owner colors. Delete every bad component and every vertex
+reachable from it, and let S be the surviving vertex set.
+
+For i,k in S define the first-color completion
+
+    i =>_r k iff i=k, or some original nonloop arrow i ->_r j
+                 has j Reach k.                         (GM)
+
+Paths may use any colors. Since S is predecessor-closed, a path ending
+in S never leaves it. Let cbar_r be the additive closures on S induced
+by these completed relations.
+
+**Theorem.** If S is empty, the candidate (1) has no constant-free core
+minorant. If S is nonempty, its greatest core minorant is the separable
+reconstruction G of cbar on S, ignoring all variables outside S.
+In particular some core minorant exists exactly when S is nonempty,
+and a full-support minorant exists exactly when no SCC is bad.
+
+First, (GM) is exactly the least extension of the original arrows on S
+satisfying (D). Its own relations are reflexive and transitive, and
+composing any completed nonloop r-arrow with an s-arrow preserves its
+original first r-edge and appends a reachable path. This proves (D).
+For minimality, the uncolored union of any (D)-closed reflexive family
+is transitive: a two-edge path with distinct first endpoints closes by
+(D), and an initial loop needs no new arrow. Thus an original head j
+reaching k has some colored shortcut j ->_s k in that family. Applying
+(D) to the original nonloop i ->_r j forces i ->_r k. This also handles
+paths returning to their starting vertex; no simple-path restriction is used.
+
+Completion adds only arrows along original paths, so its SCCs are unchanged.
+A completed internal arrow has its original first edge inside the same SCC.
+Every surviving nontrivial SCC is monochromatic by construction; hence
+opposite completed arrows cannot have different colors. Thus (R) holds.
+The characterization above realizes G by the component spines.
+Because S is predecessor-closed, no outside variable originally captures
+a source in S. Since the completed arrows extend the original ones on S,
+every contribution of G satisfies the original source guards. Hence G<=F.
+
+For greatestness let T<=F be any core word, and let U be its nonempty
+essential support. Its pure ports respect all original capture arrows.
+The support U is predecessor-closed: if j is used and i ->_r j, but i
+is unused, the pure-r source probe at j cannot lose its winner when i
+is changed to the r atom, contradicting the capture. On U the singleton
+capture graph of T satisfies (D),(R), whether or not T is separable or
+has additive full closures. Its uncolored SCCs are therefore monochromatic,
+by the component argument above. If U met an original bad SCC, predecessor
+closure would put that entire SCC in U, and it would lie inside one
+monochromatic SCC of T, contradicting its original internal colors.
+Nor can U meet a descendant of a bad SCC. Thus U subseteq S.
+
+Every first-color path ending at a used source lies entirely in U.
+The minimality argument for (GM), applied to T's singleton arrows,
+therefore forces all completed incoming arrows at every used source.
+Its pure-owner coefficients are bounded by those of G. Each occurrence
+factor is bounded by its pure-owner coefficient, so every full occurrence
+contribution of T is bounded by the separable product defining G.
+Consequently T<=G. If S were empty, U subseteq S would be impossible.
+
+The test uses mixed SCCs, not mixed simple directed cycles. For example,
+the arrows a<->_0 b and a<->_1 c have only monochromatic simple cycles,
+but form one mixed SCC. All three vertices are deleted, correctly ruling
+out a minorant. This is the parallel-pair obstruction in
+[conditional trace minorants](conditional-trace-minorants.md).
+
 ## Maximal full types and greatest free completion
 
+Return to (D),(R), the full-support reconstruction F, and its word T in (5).
 The plain derived-union expansion of (5) need not preserve all marked
 full vectors on independent flags. A marked completion is needed for
 the full-type and free-extension conclusions.
