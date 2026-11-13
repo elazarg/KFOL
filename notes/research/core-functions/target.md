@@ -170,6 +170,12 @@ relational basis, but the constant-free coupling survives idempotence
 and every maximal proper invariant relation in every finite power.
 The feedback counterexample even preserves every unary subalgebra,
 but fails two-point interpolation.
+Even a positive pure port can require its source to occur repeatedly:
+a four-variable word rules out every source-linear subordinate witness.
+A [five-variable separable core](pure-trace-quotient.md#repetition-persists-in-a-source-separable-core)
+has the same obstruction, with an explicit seven-word realization.
+Thus restricting to actual source-separable targets does not validate
+per-probe source-linear extraction.
 
 The [owner-extension theorem](owner-extension-stability.md) identifies
 canonical common-carrier attainment with realizability after adding

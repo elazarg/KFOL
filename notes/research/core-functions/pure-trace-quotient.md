@@ -110,10 +110,63 @@ The proof works for every ambient K>=3, including extra-owner gates.
 
 Equivalently, no x-linear core minorant of the separable pure-port
 upper hull of T retains this positive pure port. This refutes extraction
-under an arbitrary separable upper bound. T itself is not separable,
-so the statement does not refute a theorem restricted to genuinely
-separable core targets. The report statement is
-`core:prop:pure-source-repetition`.
+under an arbitrary separable upper bound. The report statement is
+`core:prop:pure-source-repetition`. The next construction strengthens
+this to an actual separable core target.
+
+## Repetition persists in a source-separable core
+
+Add a variable u. Prescribe the pure closures by
+
+    A: uxp => a;
+    C: aue => x;
+    B: axe => {u,p}, axp => {u,e}.
+
+Their separable reconstruction F is nonempty: the three capture colors
+cannot activate together. At a B trigger it returns B; at an A trigger
+it returns A union e; at a C trigger it returns C union p; otherwise
+it is full input union. Here A,B,C denote their singleton menus.
+
+F is core. Let sigma exchange a,x; p,e; A,C, fixing u,B, and put
+
+    T0 = (e choice_C x) choice_B ((x choice_C a) choice_A p);
+    X1 = (e choice_C x) choice_B
+           ((x choice_C a) choice_A (p choice_B u));
+    X2 = (x choice_C u) choice_B T0;
+    R  = u choice_B (T0 choice_A sigma(T0));
+    P  = p choice_B ((a choice_A x) choice_C e).
+
+Then
+
+    F = X1 union X2 union sigma(X1) union sigma(X2)
+        union R union P union sigma(P).
+
+All seven words meet the four capture budgets. Their source coefficients
+cover the prescribed ones directly: P and sigma(P) give the exact p,e
+factors. X1 gives at least NOT e_C OR (NOT a_C AND NOT(p_A u_A));
+X2 gives NOT u_C. Since u_C excludes u_A, they cover
+NOT(a_C u_C e_C); symmetry handles a. The B-profile of the sibling
+of u in R is
+
+    x_B(e_B OR a_B p_B) AND a_B(p_B OR x_B e_B)
+      = a_B x_B(e_B OR p_B),
+
+so R supplies the full u coefficient. Own-observer factors are omitted.
+This is a symbolic all-K proof; the report gives the complete calculation.
+
+Nevertheless no x-linear core minorant of F supplies C at x=C and all
+other variables B. A positive source path has no B-gates. Its siblings
+must meet the B budgets, so common-source compatibility again forces
+G_A nonzero and G_C=0 => G_A=beta. The excluded profile intersections
+are {u,p} intersect {a,e}, and
+{u,p,e} intersect {a,p} intersect {u,a,e}. Both are empty. Thus the
+same irreversible-marker argument excludes a safe x-linear path.
+
+Even unions of x-linear minorants cannot realize F. By symmetry the
+same holds for a. This refutes per-row source-linear extraction under
+a genuine source-separable core target, including positive pure ports.
+It is `core:prop:separable-source-repetition` in the report, with a written
+proof and no new Lean assertion.
 
 ## The conservative equational hull is strictly smaller
 

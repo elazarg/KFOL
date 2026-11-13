@@ -4,7 +4,8 @@
 Conditional foreign closures at an independent base have an exact
 description by a minorant. They need not themselves have a common
 constant-free realization. Even a single positive pure port of a
-realizable trace tuple can require its source to occur repeatedly.
+realizable trace tuple can require its source to occur repeatedly,
+including when the entire winner operation is source-separable.
 
 Let $I$ be a finite set of at least two foreign owners. Write
 $Q=\{0<\alpha<\beta\}$ for the algebra $3_m$ of
@@ -189,4 +190,97 @@ At the query $T$ has $B$-trace $\beta$. In a finite union equal to
 $T$, every summand is bounded by $T$ and at least one summand has
 positive trace there, proving the last assertion. Equality of pure
 traces is equality of term functions on $P_I$ by the trace formula.
+\end{proof}
+
+\begin{proposition}[Repetition in a source-separable core]
+\label{core:prop:separable-source-repetition}
+For every $K\geq3$ there is a five-variable source-separable core
+operation $F$, a variable $x$, and a positive pure probe of $x$ that
+no subordinate choice/union word using $x$ at most once can supply.
+Consequently $F$ is not a union of words each using $x$ at most once.
+\end{proposition}
+\begin{proof}
+Keep distinct owners $A,B,C$ and use variables $u,x,a,p,e$.
+Write $j_r=[w_j=\{r\}]$. Prescribe the following source factors:
+\[
+\begin{array}{c|c|c}
+ \text{source }j&\text{capturing owner }r& D_{j,r}\\\hline
+ x&C&\neg(a_Cu_Ce_C)\\
+ a&A&\neg(u_Ax_Ap_A)\\
+ p&B&\neg(a_Bx_Be_B)\\
+ e&B&\neg(a_Bx_Bp_B)\\
+ u&B&\neg\bigl(a_Bx_B(e_B\vee p_B)\bigr)
+\end{array}
+\]
+The coefficient for observer $k\ne r$ is the displayed factor,
+and for $k=r$ it is $1$. All other owner factors are $1$.
+These coefficients define $F$ by source reconstruction.
+The three capturing conditions are pairwise incompatible.
+When $a=x=e=\{B\}$ or $a=x=p=\{B\}$, the output is $\{B\}$;
+when $u=x=p=\{A\}$, it is $\{A\}\cup w_e$; when
+$a=u=e=\{C\}$, it is $\{C\}\cup w_p$; otherwise it is the input
+union. In particular $F$ is nonempty and source-separable.
+
+Here is an explicit core realization. Let $\sigma$ exchange
+$a,x$, $p,e$, and $A,C$, fixing $u,B$. Put
+\begin{align*}
+ T_0&=(e\star_Cx)\star_B((x\star_Ca)\star_Ap),\\
+ X_1&=(e\star_Cx)\star_B((x\star_Ca)\star_A(p\star_Bu)),\\
+ X_2&=(x\star_Cu)\star_BT_0,\\
+ R&=u\star_B(T_0\star_A\sigma T_0),\\
+ P&=p\star_B((a\star_Ax)\star_Ce).
+\end{align*}
+Then
+\begin{equation}\label{core:eq:separable-repetition-realizer}
+ F=X_1\cup X_2\cup\sigma X_1\cup\sigma X_2\cup R\cup P\cup\sigma P.
+\end{equation}
+To verify the lower bound, evaluate each of these seven words at
+the following pure trace budgets, in variable order $(u,a,x,p,e)$:
+\[
+\begin{array}{c|ccccc|c}
+ A&0&\beta&0&0&\alpha&\alpha\\
+ B\ (0)&\beta&0&0&\beta&0&0\\
+ B\ (1)&\beta&0&0&0&\beta&0\\
+ C&0&0&\beta&\alpha&0&\alpha
+\end{array}
+\]
+The last column is the value of \emph{every} word. These bounds
+give precisely the required captures
+$uxp\Rightarrow_Aa$, $aue\Rightarrow_Cx$,
+$axe\Rightarrow_B\{u,p\}$, and $axp\Rightarrow_B\{u,e\}$.
+Closure under implications gives every prescribed pure-port bound;
+the source-factor formula then puts each word below $F$.
+
+For the reverse bound, $P$ supplies exactly the prescribed $p$
+coefficient, and $\sigma P$ the $e$ coefficient. For the $x$
+coefficient, $X_1$ supplies at least
+$\neg e_C\vee(\neg a_C\wedge\neg(p_Au_A))$ and $X_2$ supplies
+at least $\neg u_C$, with the relevant factor omitted at its own
+observer. If $u_C$ holds, $u_A$ is false, so their union supplies
+$\neg(a_Cu_Ce_C)$. Symmetry handles $a$.
+Finally the $B$-profile of $T_0\star_A\sigma T_0$ is
+\[
+ x_B(e_B\vee a_Bp_B)\,a_B(p_B\vee x_Be_B)
+   =a_Bx_B(e_B\vee p_B).
+\]
+Thus $R$ supplies the complete $u$ coefficient. This proves
+\eqref{core:eq:separable-repetition-realizer} for all observers,
+including additional owners.
+
+At $w_x=\{C\}$ and $w_u=w_a=w_p=w_e=\{B\}$, the operation $F$
+contains $C$. Suppose a subordinate $x$-linear word did too.
+There is no $B$-gate on its $x$-path, since every sibling has query
+value $\{B\}$. The two $B$-budget bounds therefore pass to all
+siblings. For an $x$-free sibling $G$ they imply
+$G_A\ne0$ and $G_C=0\Rightarrow G_A=\beta$, as before:
+the forbidden profile intersections are respectively
+\[
+ \{u,p\}\cap\{a,e\}=\varnothing,\qquad
+ \{u,p,e\}\cap\{a,p\}\cap\{u,a,e\}=\varnothing.
+\]
+Here a budget bounded by $\alpha$ forces the profile on the
+complement of its $\beta$ positions by decreasing the $\alpha$
+positions to zero. The same path invariant forces a final $A$- or
+$C$-budget value $\beta$, contrary to subordination. A union can
+supply $C$ only if one summand does, proving the last assertion.
 \end{proof}
