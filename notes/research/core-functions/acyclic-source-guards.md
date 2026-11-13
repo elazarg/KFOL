@@ -111,8 +111,59 @@ A concrete maximal antitone fill for the missing q-facet is
 Every factor is an original proper coloring. On every facet missing a
 foreign owner s!=q it agrees exactly with the prescribed A=q cofactor;
 it is bounded by the neutral baseline and preserves the source order.
-The shared-root lemma makes its first active source retained. Preservation
-of full colored FD by this completion remains unproved.
+The shared-root lemma makes its first active source retained. This maximal
+fill nevertheless FAILS full colored FD, even for an actual acyclic core
+operation. The failure and the missing repair are explicit below.
+
+## Maximal fill can preserve dependence on a deleted source
+
+Fix q and a foreign owner r. Use retained roots A and R_t for every t!=q,
+and two additional inputs D,Z. In this paragraph + denotes derived union.
+Put
+
+    U=SUM_(t!=q) R_t,
+    H=U+SUM_(t!=q)(Z choice_t R_t),
+    G=D+H+(Z choice_r D),
+    J=A+U+(D choice_q A),
+    F=J+H+(G choice_q A).
+
+This is an explicit core word, so all its semantic FD laws hold. Its
+complete source predicates are
+
+    pi_A=pi_(R_t)=1,
+    pi_D=NOT A_q,
+    pi_Z=NOT(D_r AND AND_(t!=q)(R_t)_t).
+
+For pi_Z the syntactic word initially gives
+NOT A_q AND NOT D_r, disjoined with NOT(R_t)_t over the roots. The
+difference from the displayed predicate would require A=q together with
+every foreign root R_t=t, using ALL owners; no proper source coloring
+has this pattern. Thus the displayed family is exact and its graph is
+acyclic, in order A, roots, D, Z.
+
+At A=q, the cofactor is q+U+Z, independent of D. Indeed H contains Z
+unless every root has its indicated foreign color; at that exceptional
+root pattern q+U=I already. The total neutral-A residual is G.
+Maximal fill makes pi_D^q=0 everywhere. But every foreign-deletion
+factor of pi_Z^q is one (deleting color t removes its own root literal),
+so it leaves pi_Z^q=pi_Z, from the neutral-baseline factor alone.
+At R_t=t, Z=q, its output is N_q for D=r and I for D=q.
+Thus a globally captured D still affects the output, which is impossible
+for a core operation.
+
+The correct erasure H<=G has pi_Z=NOT AND_(t!=q)(R_t)_t and ignores D.
+It agrees with the A=q cofactor outside q: at the rainbow roots, U
+already contains every non-q winner. The maximal fill must therefore be
+shrunk by propagating captured-source equivalences into later guards.
+The example has K+2 variables for every K>=3 (five variables at K=3).
+
+One candidate repair is to process sources topologically and take the
+greatest antitone predicate below the initial maximal fill which respects
+the captures of the already processed sources. In this example it gives
+exactly H. Preservation of all prescribed foreign facets, particularly
+when an equivalence path crosses the missing-q facet, remains unproved.
+
+## Relative erasure and dependency compatibility
 
 Bare relative erasure is false. Given a fixed s, put
 
@@ -125,8 +176,7 @@ outside s would have to be empty there; a globally zero g fails at foreign
 diagonals. Thus the missing baseline compatibility cannot follow from
 inclusion alone. This example also violates dependency compatibility:
 D captures x at the displayed foreign-anchor context, while h still
-depends on x. Whether the full dependency conditions suffice for the
-needed acyclic erasure compiler remains open.
+depends on x.
 
 Dependency compatibility does remove that elementary empty-value obstruction.
 Normalize h={s}+G with G a nonempty constant-free core. Suppose G(v)={s}
@@ -139,5 +189,49 @@ so provenance and nonemptiness of G make that impossible. Consequently
     (h(v) without s) union (D(v) intersect {s})
 
 is always a nonempty pointwise erasure with the required bound and foreign
-memberships. Whether this allowable function, or a smaller function in
-the same foreign trace, has a core realization is the remaining issue.
+memberships. Nonemptiness does not ensure core realization, as follows.
+
+### Compatibility, a DAG baseline, and a common retained root still fail
+
+Let C be the s-owned fold of anchors y_r for r!=s, U their ordinary union,
+and introduce another input B. Put
+
+    G=x+B+C,
+    D=B+U+SUM_(r!=s)(x choice_r y_r),
+    h={s}+G.
+
+The baseline D has a source DAG: B and every anchor are retained; x is
+captured precisely at the foreign-rainbow context y_r=r for every r!=s.
+At that context C=N_s and h=I regardless of x, so h respects EVERY
+colored capture of D. Both retain B. Also G without s is contained in D:
+the r-owned summand retains every r-bit of x, while B+C is covered by B+U.
+
+Suppose a core erasure g<=D matched G outside s. Enlarge it by B+C;
+this preserves both requirements. G retains every s-bit in every input,
+so provenance gives g_s<=G_s. Hence, with C0=B+C,
+
+    C0 <= g <= C0+x.
+
+At foreign observers its x-coefficient is identically one. In the interval
+I(C0) this forces lambda_s=1. But Phi_s(C0)(A) says that A contains B
+and at least one anchor. On the coloring y_r=r, with B uncolored, every
+foreign-deletion complement contains B and another anchor, so theta_s=1.
+The universal derangement law forces g to retain s from x=s. At B=N_s
+the bound D is N_s, a contradiction. This works uniformly for K>=3.
+
+The obstruction's foreign predicates in h depend cyclically among the
+anchors through C. Thus it does not refute the acyclic-cofactor assembly
+problem: there the foreign source data of h must share D's source order.
+
+### Positive case: a greatest-profile-completion baseline
+
+If D is a profile maximum, dependency compatibility alone makes G<=D,
+so G itself is an eraser. On a monochromatic r-winning coalition A of D,
+all other inputs are D-inessential. Compatibility makes h constant there,
+equal to {s,r} by substituting all remaining inputs r. For r=s this forces
+G=s. For r!=s choose a third owner t and set every unfixed input to t.
+Provenance excludes s from G, so G=r with exactly A as its r-atomic set.
+The r-profile of G therefore forces r throughout this cofactor. Thus
+G agrees with D wherever D is singleton; elsewhere D is the full input
+union and contains G. General baseline assembly needs more than these
+singleton-profile constraints.
