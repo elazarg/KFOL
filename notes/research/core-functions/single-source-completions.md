@@ -74,6 +74,18 @@ If none equals S, all K owners already occur in the arguments, so S=I.
 Thus each original argument is used exactly K times. Singleton S follows
 by idempotence.
 
+Individual ranks do not bound simultaneous word size linearly. For fixed
+K>=3 and d>=1 put n=Kd+1 and t=(K-1)d+1. The greatest completion of the
+profiles [|E|>=t] is core, has rank one at every source, and needs at least
+t(n-t+1)=((K-1)d+1)(d+1) leaves in any choice/union word. Its singleton
+profile is the threshold t. An AND/OR formula partitions the pairs of
+adjacent Boolean layers of weights t-1,t into leaf rectangles. Adjacent
+edges in a leaf rectangle form a matching; Cauchy--Schwarz gives the bound.
+Thus total word size can be quadratic despite unit individual ranks.
+This is a word bound, not a circuit bound, and does not force any particular
+chosen source to repeat. The written report proposition is
+`core:prop:unit-ranks-quadratic`.
+
 ## The semantic meaning of the source predicate
 
 For any core F with source predicate P, fix the inputs of E_r to r and

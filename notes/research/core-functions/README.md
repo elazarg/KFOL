@@ -21,6 +21,8 @@ and full-winner patches are proved symbolically in Lean; see
 closed two-law criterion: antitonicity and observer agreement on overlaps.
 Each has a unique greatest core completion, retaining every other input.
 Minimum source reuse with named union is exactly its owner-box cover number.
+Unit ranks at every source nevertheless permit quadratic minimum total
+word size, so these marginal minima need not be simultaneously attainable.
 The source predicate also records functional dependence under proper partial
 atomic cofactors. Joint compatibility of different sources remains the target.
 

@@ -130,3 +130,57 @@ is union. The result is $S$: either some $A_r=S$, or all owners already
 occur among the arguments. Singleton $S$ follows by idempotence.
 Apply this construction to $U$ and the box spines.
 \end{proof}
+
+Individual box covers do not yield a simultaneous linear bound on word size.
+
+\begin{proposition}[Quadratic size with unit source ranks]
+\label{core:prop:unit-ranks-quadratic}
+For every fixed $K\geq3$ and $d\geq1$, put
+$n=Kd+1$ and $t=(K-1)d+1$. The operation on $n$ inputs
+\[
+ U_d(w)=\begin{cases}
+ \{r\},&\text{at least $t$ inputs equal }\{r\},\\
+ \bigcup_iw_i,&\text{otherwise}
+ \end{cases}
+\]
+is core and every source has box rank one. Nevertheless every
+choice/union word realizing it has at least
+\[
+ t(n-t+1)=((K-1)d+1)(d+1)
+\]
+leaves. Thus no constant depending only on $K$ bounds the word size
+by the sum of the individual source box ranks.
+\end{proposition}
+\begin{proof}
+The profiles $\Phi_r(E)=[|E|\geq t]$ are admissible: each positive
+coalition omits at most $d$ positions, so $K$ such coalitions have
+nonempty intersection. Their greatest completion is $U_d$ by
+\cref{core:prop:profile-maximum}. Two different quorums cannot coexist,
+since $2t>n$. At a canonical source probe the only way to lose its
+winner is a foreign quorum. Hence its coefficient is
+\[
+ c_{k,j}(E)=\bigwedge_{r\ne k}[|E_r|<t],
+\]
+the restriction of one normalized owner box. It is nonzero, so its
+rank is one.
+
+An owner's singleton profile of a word with $L$ leaves is a Boolean
+AND/OR formula with $L$ leaves; named union gives AND. We show that
+a formula for the threshold $t$ has $L\geq t(n-t+1)$.
+Let $A,B$ be the Boolean layers of weights $t-1,t$, respectively,
+and let $\mathcal E$ consist of pairs $(a,b)$ where $b$ adds one bit
+to $a$. Traverse the formula on a pair in $A\times B$: at OR select
+a child true at $b$, and at AND a child false at $a$, breaking ties
+in a fixed way. A leaf labeled $i$ has $a_i=0,b_i=1$.
+The choices partition $A\times B$ into at most $L$ rectangles
+$A_\ell\times B_\ell$. The edges of $\mathcal E$ in each rectangle
+change only its leaf's coordinate and form a matching. Therefore
+\[
+ |\mathcal E|\leq\sum_\ell\sqrt{|A_\ell||B_\ell|}
+ \leq\sqrt{L\sum_\ell|A_\ell||B_\ell|}
+ =\sqrt{L|A||B|}.
+\]
+Since $|\mathcal E|=|A|(n-t+1)=|B|t$, the bound follows.
+For fixed $K$ its value grows quadratically in $n$, whereas the sum
+of the source ranks is $n$.
+\end{proof}
