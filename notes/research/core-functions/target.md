@@ -96,6 +96,14 @@ should not be described as having met that stronger simplicity target.
 [Further failed approaches](global-characterization.md) record why atomic
 polarization and simple coherence schemas do not remove this remaining gap.
 
+[Retained-source normal forms](retained-sources.md) give a new positive
+reduction at every arity. If F always contains input j, then its neutral
+residual C is core and each atomic-j cofactor is {q} union g_q for an
+optional lower-arity core g_q<=C. Fixed-winner erasure proves necessity;
+explicit selectors prove sufficiency and bound j reuse by 2K^2 primitive
+occurrences. This reduces the globally retained-source class to lower
+arity. It does not yet localize to arbitrary nonconstant source guards.
+
 There are now closed positive classifications beyond read-once trees.
 [Additive owner closures](additive-closure-characterization.md), where a
 capture always has a single predecessor, have an exact two-law colored

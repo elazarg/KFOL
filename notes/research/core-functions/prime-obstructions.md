@@ -26,6 +26,8 @@ V=(Fin d) times Bool with all the following properties:
    common core realizer with these same unanimity profiles, while the
    full bundle family has none. A bundle includes every observer and every
    genuine passive pattern at its source.
+8. Every retained extension F_d union projection_j is core. Their
+   pointwise intersection is exactly F_d, which is not core.
 
 The original [Gray-crown proof](exponential-crowns.md) establishes property 1
 and supplies the actual core deletion patches used below. The remaining
@@ -149,7 +151,14 @@ Hamilton Gray enumeration visits both values in each coordinate, and hence
 flips that coordinate in both directions. Put H_j={h:q_h=j} and take the
 nonempty derived union Q_j of the deletion patches P_h with h in H_j.
 It restores input union on the regions C_h with h in H_j and agrees with
-F_d elsewhere.
+F_d elsewhere. Thus Q_j is exactly F_d union projection_j. On an exception
+with free position j, adding that input restores full input union; at any
+other exception the added input is already a b/c atom in the output.
+Moreover intersection_j(F_d union projection_j)=F_d: on exception regions
+both a b-atom and a c-atom occur among the fixed inputs, so the input menus
+have empty intersection; outside them F_d already contains every input.
+This proves property 8 and shows why independently normalizing all retained
+extensions does not supply a core realization of their common intersection.
 
 On a changed region, every input except j is a b/c singleton, with both
 present. Membership of b,c is therefore unchanged. Any other owner k can

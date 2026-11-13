@@ -1,0 +1,132 @@
+\paragraph{Retained sources and atomic cofactors.}
+The projection-profile fiber is part of a larger class with an exact
+lower-arity normal form. A source is \emph{retained} when its whole input
+menu is contained in every output. The first lemma removes a fixed winner
+from a cofactor without treating the empty set as a unit.
+
+\begin{lemma}[Erasing a fixed winner]\label{core:lem:winner-erasure}
+For $K\geq3$, fix a core word $t(X,v)$ and an owner $q$, and put
+$h(v)=t(\{q\},v)$ and $C=\partial_Xt$.
+Either $h$ is constantly $\{q\}$, or there is a core operation $g$ on
+the remaining variables such that, at every valuation,
+\[
+ g(v)\subseteq h(v)\cap C(v),\qquad
+ g(v)\setminus\{q\}=h(v)\setminus\{q\}.
+\]
+\end{lemma}
+\begin{proof}
+For each subword after fixing $X=\{q\}$, write $\psi_s(E)$ for its
+$s$-singleton predicate on the $s$-atomic positions of the remaining
+inputs. These predicates are monotone. The $q$-predicate is nonzero,
+and $\psi_q(\varnothing)=1$ exactly when the subword is constantly
+$\{q\}$. Along with the two inclusions in the statement, maintain
+\[
+ \Phi_s(g)=\psi_s\qquad\text{whenever }\psi_s\text{ is nonzero}.
+\]
+An ordinary variable is unchanged. An $X$-leaf is the constant case.
+
+At a root owned by $r$, a constant-$q$ child makes the parent constant
+when $r=q$; two constant children also do so. At a foreign root discard
+a constant-$q$ child and use the other child's erasure. This preserves
+all non-$q$ memberships and every nonzero singleton predicate of the
+parent. Suppose now both children are nonconstant and have erasures
+$g_1,g_2$. When $r=q$ use $g_1\star_qg_2$. Otherwise use
+\[
+\begin{array}{c|c|l}
+ \psi_r^1\ne0&\psi_r^2\ne0&\text{erasure at the root}\\\hline
+ 1&1&g_1\star_rg_2\\
+ 0&0&g_1+g_2\\
+ 0&1&(g_1+g_2)\star_rg_2\\
+ 1&0&g_1\star_r(g_1+g_2).
+\end{array}
+\]
+A child with zero $r$-predicate never equals $\{r\}$, although its
+erasure might. The added union prevents this artificial absorber from
+discarding the other operand. For a child with nonzero predicate, the
+induction hypothesis preserves its $r$-singleton test exactly. Hence
+each row has precisely the parent's non-$q$ memberships and is contained
+in its value. Foreign singleton predicates conjoin; at the root owner's
+one-zero case the profile is
+$(\Phi_r(g_1)\land\Phi_r(g_2))\lor\Phi_r(g_2)=\Phi_r(g_2)$,
+or symmetrically. This proves the profile invariant as well.
+
+For containment in $C$, use the unowned ghost from
+\cref{core:thm:neutral-elimination}. If the ghost root absorbs at $r$,
+some child is unmarked $\{r\}$, so its fixed-$q$ value is also
+$\{r\}$. Its nonzero predicate makes the reconstructed erasure absorb
+at $r$ too. Otherwise the ordinary residue is the union of the child
+residues, which contains the reconstructed erasure by induction. In the
+discarded-constant case at $r\ne q$, that child's ghost can only be
+marked or unmarked $\{q\}$: an unmarked ghost is unchanged by replacing
+it with $\{q\}$. It therefore cannot absorb at $r$. Any absorption by
+the other child is preserved; otherwise its residue is contained in the
+parent's. This completes the induction.
+\end{proof}
+
+\begin{theorem}[Normal form for a retained source]
+\label{core:thm:retained-source}
+Fix a finite owner set of size $K\geq3$. A core operation $F(X,v)$
+satisfying $X\subseteq F(X,v)$ is either the projection $X$, or has
+a core operation $C(v)$ and, for each owner $q$, an optional core
+operation $g_q(v)\leq C(v)$ such that
+\[
+ F(X,v)=
+ \begin{cases}
+  \{q\}\cup g_q(v),&X=\{q\},\\
+  X\cup C(v),&X\text{ ambiguous}.
+ \end{cases}
+\]
+An omitted $g_q$ contributes nothing. The baseline is intrinsic:
+$C=\partial_XF$. Conversely every such choice of lower-arity core
+operations defines a core operation retaining $X$.
+Every operation in this class has a primitive core realization with
+at most $2K^2$ occurrences of $X$, independently of its arity.
+\end{theorem}
+\begin{proof}
+Replace a realizing word $t$ by $t+X$, which has the same operation.
+Its ghost always survives. Neutral-source elimination therefore gives
+$F(X,v)=X\cup C(v)$ on ambiguous inputs. Empty residue gives the
+projection; otherwise $C$ is core. Apply
+\cref{core:lem:winner-erasure} at each atom $\{q\}$.
+Retention turns its non-$q$ equality into
+$F(\{q\},v)=\{q\}\cup g_q(v)$, and its residue bound gives $g_q\leq C$.
+Constant-$q$ cofactors are the omitted cases.
+
+For the converse and the size bound, start with the baseline piece
+$P_0=C\del X$. It has a realization by starting at $C$ and attaching
+$X$ once at each of the $K$ owners. At atomic $X$ its owner's stage
+absorbs to $X$; at ambiguous $X$, at most the first stage can absorb
+to an atom, and the next distinct owner restores $C\cup X$.
+Thus this realization uses $K$ occurrences of $X$.
+For each nonomitted $g_q$, form $P_q$ by starting at $g_q$ and
+attaching $X$ once at every owner other than $q$. Then
+\[
+ P_q(X,v)=
+ \begin{cases}
+ X,&X=\{s\},\ s\ne q,\\
+ X\cup g_q(v),&X=\{q\}\text{ or }X\text{ ambiguous}.
+ \end{cases}
+\]
+There are at least two attachment stages. If the first absorbs the
+starting value, the next distinct owner restores its union with $X$;
+at another atom $\{s\}$ the $s$-stage instead absorbs to $X$.
+These pieces use at most $K+K(K-1)=K^2$ occurrences of $X$.
+Their pointwise union is exactly the displayed normal form.
+
+To implement that union without further replication, choose distinct
+owners $a,b,c$. Fold all the pieces by $\star_a$, obtaining $W_a$,
+and separately by $\star_b$, obtaining $W_b$. For ambiguous $X$, all
+pieces are ambiguous and both folds equal $F$. At $X=\{q\}$ every
+piece contains $q$, so $W_a=F$ unless $q=a$; then the baseline piece
+forces $W_a=\{a\}$. The analogous assertion holds for $W_b$.
+Consequently $W_a\star_cW_b=F$ in every case. Each piece is used
+twice, proving the primitive bound $2K^2$.
+\end{proof}
+
+A retained source is detected by the canonical coefficients
+$c_{k,X}=1$ at every observer. Thus retained sources admit uniformly
+bounded reuse even though arbitrary
+sources do not (\cref{core:thm:robust-tree-size}). The normal form reduces
+this class to lower-arity core operations. Retained extensions still need
+not glue: \cref{core:cor:prime-obstructions} gives a noncore $F$ for which
+every $F+x_j$ is core, and whose pointwise intersection is $F$.

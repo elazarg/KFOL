@@ -40,6 +40,12 @@ disjoint composition to canonical smaller operations: the diagonal outer
 minor and the neutral inner sections. It applies to the full core, while
 leaving overlapping-input and prime-operation compatibility unresolved.
 
+[Retained sources](retained-sources.md) have an exact lower-arity normal
+form and a uniform 2K^2 bound on primitive copies of the retained input.
+The proof erases a fixed winner from atomic cofactors while preserving
+all other winners and every nonzero singleton profile. It gives a
+positive class despite the unbounded reuse required in general.
+
 For [read-once primitive core trees](read-once-profile-minimum.md), a closed
 rainbow formula in the singleton profiles gives the entire winner operation.
 Such a tree is the least core operation in its profile fibre. A direct
