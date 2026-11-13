@@ -370,6 +370,17 @@ full-owner rainbow test. For an unrestricted bound it is exactly the old
 admissibility criterion. This does not characterize simultaneous full-value
 source guards; see [profile-bounds.md](profile-bounds.md).
 
+The written ternary counterexample
+`core:prop:profile-bound-gluing` now rules out lifting these separate tests
+even under a known core upper bound C. Two explicit helpers with one common
+profile tuple cover every input pointwise below C, but no helper with that
+tuple is globally below C. The tuple extends C's profiles. In the genuine
+core interval C union T it yields a sound, profile-compatible single-owner
+type that passes every separate helper budget but is not actual
+(`core:cor:pointwise-helper-obstruction`). The proof is uniform for K>=3;
+these are written report results, not Lean theorems. Thus the general
+interval-type problem still requires genuinely simultaneous value constraints.
+
 `Report.core_omission_independence` shows that all inputs containing an
 omitted winner may be changed arbitrarily without changing any output.
 `Report.core_negative_budget_obstructions` uses this to construct atomic

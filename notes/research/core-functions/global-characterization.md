@@ -38,6 +38,14 @@ library results from research arguments that have not been formalized.
   proper neutral faces of the cyclic noncore operation are input unions.
   See [neutral-source elimination](ghost-elimination.md).
 
+For many bounds, the new written counterexample in
+[profile-bounds.md](profile-bounds.md#remaining-target) rules out gluing
+separate complete OneBound tests even beneath one genuine core operation.
+Two exact-profile helpers cover every input individually, but two atomic
+rows exclude any common helper. It also excludes the proposed sound full
+type in C union T, with a single active mask and all inherited inactive
+profiles. The proof is uniform for K>=3 and has not been formalized in Lean.
+
 The bichain is the algebra in Harding, Walker and Walker, *Type-2 Fuzzy Sets
 and Bichains* (2013), Definition 5 and Figure 1. Its older normal-form results
 for identities do not specify which formal normal forms arise from terms;

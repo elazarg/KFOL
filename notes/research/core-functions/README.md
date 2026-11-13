@@ -60,7 +60,11 @@ characterized above profile maxima by soundness, active-owner profile
 containment, and rainbow compatibility with inactive-owner profiles.
 This gives the exact minimum source count by an admissible box cover and
 a criterion for a greatest actual full type. General baselines additionally
-require simultaneous helper-value bounds.
+require simultaneous helper-value bounds. Separate complete one-point tests
+do not suffice even for a single active mask over a known core baseline:
+[profile-bounds.md](profile-bounds.md#remaining-target) gives a ternary
+passive counterexample with two explicit helpers covering all inputs but
+no common helper. Its sound type is not actual in C union T.
 
 Closed boundary/no-trap conditions now present every invariant relation in
 `Core/Hypergraphs`. This gives a complete infinite obstruction basis, still

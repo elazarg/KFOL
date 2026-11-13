@@ -118,41 +118,53 @@ pointwise tests do not give the sought global guard characterization.
 
 ## Remaining target
 
-Full source guards require many output bounds simultaneously. Intersecting
-the complete theories of individual bounds is insufficient: on three
-variables, the profile tuple (XYZ,XYZ,X) separately fits the bounds
+Full source guards require many output bounds simultaneously. Even a known
+core upper bound does not make separate OneBound tests sufficient. The
+following uniform K>=3 counterexample supersedes the earlier unrelated
+two-bound example. Its complete written proof is in
+[appendix-core-profile-gluing.tex](../../../sections/appendix-core-profile-gluing.tex),
+`core:prop:profile-bound-gluing` and `core:cor:pointwise-helper-obstruction`;
+it has not been formalized in Lean.
 
-    w=({0,2},{2},{1}), omit 1;
-    v=({1},{2},{0}), omit 2,
+For distinct owners a,b,c put
 
-but no common term realizes that tuple under both bounds. Here is a direct
-argument, not yet a public Lean claim. At the first row every joint-safe
-term must be ambiguous: it cannot be atom0 because no input is atom0;
-atom1 is forbidden; atom2 would also occur at the second row, which has the
-same set {Y} of atom2 inputs. At the second row it cannot be atom0 either:
-the first-row bound and omission independence permit replacing Z=1 by Z=0,
-whereupon its atom0 tests match the second row. This would make its first-row
-value atom0, already excluded.
+    P=x star_a y, S=x star_b y, Q=P star_c z, R=z star_c x,
+    C=(S star_b z) star_a Q,
+    H0=(R star_b S) star_a Q,
+    H1=(R star_a P) star_c (P star_b z).
 
-Induct on a joint-safe term. There is no absorber at the first row. If there
-is an absorber at the second, its value must be atom1, giving Phi1({X})=1.
-Otherwise both children satisfy both bounds, so induction forces that same
-positive profile bit in both children and hence at the root. The only
-joint-safe projection is X. Thus every joint-safe term has Phi1({X})=1,
-contradicting the target's unanimity profile for owner1.
+The baseline C has six leaves. Both seven-leaf helpers have the exact
+profile tuple
 
-Separate exact-profile witnesses can be written without enumeration. Put
-A=X star_2 (Y star_2 Z). The first row is handled by
+    phi_a=z(x OR y), phi_c=xy, phi_r=xyz for r outside {a,c}.
 
-    (X star_0 A) union (X star_1 A),
+This extends C's profiles, which differ only by phi_c(C)=xyz. At EVERY
+valuation one of H0,H1 is contained in C. If z=c and one of x,y=b,
+H0=C=bc; otherwise H1 is contained in C. This case split works for
+arbitrary menus and extra owners, without finite enumeration.
 
-and the second by
+Nevertheless no core H<=C has c-profile xy. At u=(a,b,c), v=(a,c,b),
+the baseline outputs bc,ab. Every term satisfying these two bounds obeys
 
-    (X star_1 A) union (X star_2 (Z star_0 Y)).
+    Phi_c(xy) implies Phi_c(z).
 
-Their profiles are both (XYZ,XYZ,X); their designated outputs are {0,2}
-and {0,1}, respectively. This is a written research proof, not a report claim.
+A root-to-leaf descent proves this. Keep a positive xy bit, a negative
+z bit, and both bounds. The value at v must be ambiguous, so its bound
+passes to both children. At u only a b-absorber is possible. If there is
+one, select that child; its b-winning coalition {y} excludes a c-winning
+coalition {z}. Otherwise choose a child preserving the positive/negative
+c-bits. The sole jointly safe projection is z, which fails the xy bit.
 
-The complete one-bound theorem therefore leaves a genuine compatibility
-problem across rows. The short direct structural characterization of jointly
-realizable guards remains open.
+This is also a counterexample on the specific mask-downset relevant to
+actual interval types. Set psi_c=xy, all other masks zero. The inactive
+inherited profiles together with psi_c are exactly phi. On the omitted
+trigger face x=y=c any such helper equals c and C=c union z, so bounding
+it only on the no-mask region is equivalent to bounding it everywhere.
+In F=C union T the sound full type B_c=not xy, B_r=1 otherwise therefore
+passes inherited-profile admissibility and EVERY separate one-point budget,
+yet is not actual. An actual type would linearize to T star_c H with
+H<=C and Phi_c(H)=xy.
+
+Thus the missing compatibility is genuinely simultaneous, including for
+one active mask over a known core interval. It cannot be removed by
+intersecting the complete theories of individual bounds.

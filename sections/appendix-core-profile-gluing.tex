@@ -1,0 +1,107 @@
+\paragraph{Pointwise bounds under a core operation.}
+Even when the upper bound is itself a core operation, separate bounded-profile
+tests need not have a common witness. This occurs on three passive variables
+and persists for the value bounds required by a single-owner occurrence type.
+
+Fix distinct owners $a,b,c$, and abbreviate
+\[
+ P=x\star_a y,\quad S=x\star_b y,\quad
+ Q=P\star_c z,\quad R=z\star_c x.
+\]
+Put
+\begin{equation}\label{core:eq:profile-gluing-words}
+ C=(S\star_b z)\star_a Q,\qquad
+ H_0=(R\star_b S)\star_a Q,\qquad
+ H_1=(R\star_a P)\star_c(P\star_b z).
+\end{equation}
+The profile notation below uses $x,y,z$ for coalition membership bits.
+
+\begin{proposition}[Pointwise profile bounds do not glue]
+\label{core:prop:profile-bound-gluing}
+For every $K\geq3$, the admissible profile family
+\[
+ \phi_a=z(x\lor y),\qquad \phi_c=xy,\qquad
+ \phi_r=xyz\quad(r\notin\{a,c\})
+\]
+contains all positive profile bits of $C$. At every valuation $w$, one of
+$H_0,H_1$ has value contained in $C(w)$, and both have exact profiles
+$\phi$. Nevertheless no core operation $H\subseteq C$ has these profiles.
+In fact no such $H$ has $\Phi_c(H)=xy$.
+\end{proposition}
+\begin{proof}
+Profile recursion gives the stated profiles of both helpers. The profiles
+of $C$ are $\Phi_a(C)=z(x\lor y)$ and $\Phi_r(C)=xyz$ for $r\ne a$.
+
+We prove the pointwise cover for arbitrary nonempty menus, allowing extra
+owners. If $z=\{c\}$ and either $x=\{b\}$ or $y=\{b\}$, then
+$C=H_0=\{b,c\}$. Otherwise $H_1\subseteq C$ as follows.
+If $P\ne\{a\}$, then $P=x\cup y$; neither $S\star_b z$ nor $Q$ is the
+$a$ singleton, so $C=(S\star_b z)\cup Q$. Also $R\ne\{a\}$ and
+$H_1\subseteq P\cup z$. One of $S\star_b z,Q$ equals $P\cup z$ unless
+both the $b$ and $c$ absorptions occur. Outside the excluded case, simultaneous
+absorption requires $z=\{b\}$ and $P=\{c\}$, where
+$C=P\cup z=\{b,c\}$ anyway. If $P=\{a\}$, direct evaluation gives
+$H_1=\{a\}\cup z$. For $z=\{a\},\{b\}$ this equals $C$.
+For $z=\{c\}$ outside the excluded case, $S\star_b z$ contains
+$\{a,c\}$. For every other $z$, the ambiguous value
+$Q=\{a\}\cup z$ is contained in $C$.
+
+For nonexistence, we establish the following two-row implication for every
+core term $t$:
+\begin{equation}\label{core:eq:two-row-profile-implication}
+ \begin{gathered}
+ t(\{a\},\{b\},\{c\})\subseteq\{b,c\},\qquad
+ t(\{a\},\{c\},\{b\})\subseteq\{a,b\}
+ \end{gathered}
+ \quad\Longrightarrow\quad
+ \Phi_c(t)(\{x,y\})\leq\Phi_c(t)(\{z\}).
+\end{equation}
+Call these inputs $u,v$. Suppose a counterexample exists, and descend its
+tree retaining both bounds, the positive $c$-bit on $\{x,y\}$, and the
+negative $c$-bit on $\{z\}$. Its value at $v$ is ambiguous: it cannot
+be the $c$ singleton by the bound, the $a$ singleton because the
+$a$-atomic coalition $\{x\}$ is the same at $u$, or the $b$ singleton
+because its coalition $\{z\}$ is disjoint from the positive $c$-coalition
+$\{x,y\}$. Thus both children satisfy the bound at $v$.
+At $u$ a singleton absorber can only be $b$: the bound excludes $a$,
+and the negative $c$-bit excludes $c$. If a $b$-root has a $b$-absorbing
+child at $u$, choose it. It retains the positive $c$-bit, while its
+positive $b$-bit on $\{y\}$ excludes the $c$-bit on $\{z\}$ by common
+source. In every other case both bounds pass to both children; the
+profile OR/AND recurrences select a child retaining the positive and
+negative $c$-bits. Extra-owner gates act as union at these two inputs.
+Descent reaches a projection, but the only projection satisfying both
+bounds is $z$, whose $c$-bit on $\{x,y\}$ is false. This contradiction
+proves \eqref{core:eq:two-row-profile-implication}.
+
+Finally $C(u)=\{b,c\}$ and $C(v)=\{a,b\}$. The profile $xy$ violates
+the implication, excluding every $H\subseteq C$ with that profile.
+\end{proof}
+
+\begin{corollary}[Pointwise helper budgets do not determine actual types]
+\label{core:cor:pointwise-helper-obstruction}
+In the core interval operation $F(T,w)=C(w)+T$, the full type
+\[
+ B_c(E)=[\{x,y\}\nsubseteq E],\qquad B_r(E)=1\quad(r\ne c)
+\]
+is sound and satisfies active-owner profile containment and admissibility
+with the inherited inactive-owner profiles. At every passive input, those
+exact helper profiles have a realizer bounded by $C$ there. The type is
+nevertheless not actual.
+\end{corollary}
+\begin{proof}
+The inherited profile family is exactly $\phi$ above, so the pointwise
+claims follow from \cref{core:prop:profile-bound-gluing}; soundness follows
+because $F$ retains $T$. If the type were actual, marked linearization
+(\cref{core:cor:interval-linear-cover}) would give a primitive one-$T$
+spine below $C+T$ with that exact type. Its path has only owner $c$:
+every passive helper has a positive top profile at its gate's owner.
+Associativity therefore writes it as $T\star_c H$, with
+$\Phi_c(H)=xy$. Its neutral residual is $H\subseteq C$, contradicting
+\cref{core:prop:profile-bound-gluing}.
+
+The obstruction also applies if helper bounds are imposed only where
+$\{x,y\}\nsubseteq E_c(w)$. On the omitted face $x=y=\{c\}$, every
+helper with $c$-profile $xy$ equals $\{c\}$ and
+$C=\{c\}\cup z$, so the remaining bounds hold automatically.
+\end{proof}

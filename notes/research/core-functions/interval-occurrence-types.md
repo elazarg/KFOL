@@ -88,9 +88,16 @@ absorbs there, so every gate unions; testing X=I\{k} forces every helper
 to omit each k outside C. For a type omitting owner a, the same bound
 also holds throughout theta_a^C, because inherited a-profiles prohibit
 all foreign helper absorptions there. These are simultaneous bounds;
-pointwise one-bound feasibility alone is not known to synthesize a
-common helper. The five-variable terminal counter violates this stronger
-helper compatibility despite all its functional-dependence laws.
+pointwise one-bound feasibility does NOT synthesize a common helper.
+The three-passive-variable counterexample in
+[profile-bounds.md](profile-bounds.md#remaining-target) has a genuine core
+baseline C and one active mask. Its exact inherited profiles extend C's
+profiles and have a bounded helper at every individual input (two explicit
+helpers cover all inputs), but two atomic rows exclude any common helper.
+The corresponding sound full type is not actual in the known core interval
+C union T (`core:cor:pointwise-helper-obstruction`). This is separate from
+the five-variable terminal counter, whose pointwise helper obstruction was
+already enough to exclude a realization.
 
 This solves the profile-maximum interval type problem, not arbitrary
 joint guard realizability or the general interval type spectrum.
