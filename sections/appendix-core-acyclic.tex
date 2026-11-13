@@ -1,0 +1,167 @@
+\paragraph{Acyclic source dependence.}
+A \emph{source order} is an order of the inputs in which the complete
+predicate $\pi_i$ at source $i$ depends only on predecessors of $i$.
+Equivalently, the graph recording dependence of one source predicate on
+another input's passive status is acyclic. To see the equivalence, erase
+later atomic statuses one at a time; every intermediate coloring remains
+proper. Write $q|_{<i}$ for the predecessor restriction of a coloring.
+The cofactor law below always concerns the entire function on the unfixed
+inputs, including changes of an unfixed menu to a different atomic color.
+
+\begin{lemma}[Captured-input rectangles]\label{core:lem:captured-rectangle}
+Let $C$ be core on $W$, and let a source-reconstructing operation $F$
+satisfy $C\subseteq F(X,v)\subseteq C\cup X$, with antitone source
+predicate $P$ and the colored-cofactor independence law.
+Let $R$ be a proper coloring, let $B\subseteq W$ be disjoint from its
+colored inputs, and suppose $C$ captures every input in $B$ under $R$.
+If $P(R)=1$, then the whole owner box
+\[
+ Q_{R,B}(E)=\bigwedge_{r\in I}[E_r\setminus B\subseteq R_r]
+\]
+is contained in $P$.
+\end{lemma}
+\begin{proof}
+The passive source families of $F$ equal those of $C$. Consequently $F$
+also captures every input in $B$ under $R$.
+Take $E$ in the box and put $T=R\cup(E|_B)$. These colorings are
+compatible, and $E\subseteq T$. If $T$ is proper, add its captured
+inputs one at a time. At a probe for a missing owner, cofactor independence
+preserves the sole $X$-winner, so $P(T)=P(R)=1$. Antitonicity gives
+$P(E)=1$.
+
+Suppose instead every owner occurs in $T$; some variables may still be
+uncolored. Choose $\ell$ unused by $R$. Its entire block $T_\ell$
+lies in $B$. The preceding proper-coloring argument gives
+$P(T^{\widehat\ell})=1$.
+For any owner $k$, suppose $P(T^{\widehat k})=0$.
+The new-source cofactor law would make $F$ independent of $X$ after
+fixing $T^{\widehat k}$. Extend this fixing by all of $T$, and give
+every still-uncolored passive input $I\setminus\{\ell\}$.
+All possible $\ell$-sources in $C$ are in $T_\ell$, and each is
+captured already under $R$. Thus $C$ omits $\ell$.
+With $X=I\setminus\{\ell\}$, $F$ omits it too; with $X=\{\ell\}$,
+$P(T^{\widehat\ell})=1$ supplies it. This contradicts independence.
+Hence $P(T^{\widehat k})=1$ for every $k$.
+Choose $k$ unused by $E$. Then $E\subseteq T^{\widehat k}$, giving
+$P(E)=1$ by antitonicity.
+\end{proof}
+
+\begin{lemma}[Reduction of a source pattern]\label{core:lem:source-pattern-reduction}
+Let $C$ be core and have a source order.
+For a proper coloring $q$, put
+\[
+ J(q)=\{i:\pi_i^C(q|_{<i})=1\},\qquad R(q)_r=q_r\cap J(q).
+\]
+Every input outside $J(q)$ is captured by $C$ after fixing $R(q)$.
+\end{lemma}
+\begin{proof}
+Process inputs in source order. Previously excluded inputs have already
+been captured under the retained predecessor colors. In a canonical
+source-$i$ probe, choose an observer unused by $q$. Change the excluded
+predecessors from neutral menus to their $q$-values. Cofactor independence
+preserves the queried winner, so
+\[
+ \pi_i^C(R(q)|_{<i})=\pi_i^C(q|_{<i}).
+\]
+If this value is zero, input $i$ is captured under the retained prefix,
+and remains captured after fixing the rest of $R(q)$. This proves the
+induction.
+\end{proof}
+
+\begin{theorem}[Acyclic source compatibility and ordered spines]
+\label{core:thm:acyclic-source-guards}
+Fix finite $K\geq3$ and $n\geq1$ inputs. Let $F$ be a nonempty
+operation reconstructed from its complete source predicates. Suppose
+these predicates agree across observer overlaps, are antitone, and
+admit a source order. Then $F$ is core if and only if a zero source
+predicate makes its proper atomic cofactor independent of that source.
+
+When these conditions hold, discard identically unused sources. For each
+remaining source $i$ and each maximal positive proper predecessor coloring
+$q$ of $\pi_i$, compute $J_i(q)=\{j<i:\pi_j(q|_{<j})=1\}$.
+Start a spine at input $i$. Process $j\in J_i(q)$ in decreasing source
+order, attaching input $j$ once by $\star_r$ for each owner $r$ with
+$j\notin q_r$. Fix any order within each such group.
+The union of these spines is exactly $F$.
+With union named it has at most
+$(1+K(n-1))nK^n$ leaves.
+Moreover every singleton profile is principal:
+\[
+ \Phi_r(F)(A)=1\quad\Longleftrightarrow\quad M_r\subseteq A,
+ \qquad M_r=\{i:\pi_i(\text{all predecessors colored }r)=1\}.
+\]
+\end{theorem}
+\begin{proof}
+Necessity is \cref{core:cor:colored-cofactor-dependence}.
+We first prove an interval construction over an already core baseline $C$
+with a source order. Let $F_P$ be a source-reconstructing interval candidate
+above $C$ satisfying the same cofactor law. Inputs unused by $C$ are
+also globally inessential in $F_P$ and may be omitted. The first remaining
+input of $C$ is retained, so its nonempty prefixes are core neutral
+residuals. Fix $P(q)=1$.
+Set $J=J(q)$, $R=R(q)$, and $B=W\setminus J$.
+Antitonicity gives $P(R)=1$. By the two preceding lemmas,
+\[
+ Q_q(E)=\bigwedge_{r\in I}[E_r\cap J\subseteq q_r]
+ \quad\Longrightarrow\quad P(E)=1.
+\]
+The indicated spine at $X$, using the variables in $J$ in decreasing
+order, has exactly $Q_q$ as its $X$-source predicate. At a probe the
+passive inputs omit the queried winner, so only $X$ can supply it.
+The forbidden-owner gates apply precisely the displayed factors; the
+queried owner's factor is automatically true.
+
+We show that this spine lies below $C\cup X$. A possible winner $k$
+outside that bound must come from a particular helper occurrence of an
+input $i\in J$. Thus $k\in v_i$ and $k\notin C(v)$.
+Let $T$ be the foreign-$k$ atomic coloring of the predecessors of $i$.
+Source decomposition and the source order give $\pi_i^C(T)=0$.
+The first retained input cannot be such a helper, since $C$ contains it.
+For any other $i$, consider the actual core prefix $C_{\leq i}$ as an
+interval extension of $C_{<i}$ by source $i$. These prefixes are neutral
+residuals of $C$; their earlier source predicates are unchanged.
+Its source-$i$ predicate is positive at $q|_{<i}$.
+Apply the captured-input rectangle lemma to this prefix extension.
+Its earlier active set is exactly $J(q)\cap\{j:j<i\}$, since earlier
+predicates are unchanged.
+If $T$ obeyed the rectangle determined by $q|_{<i}$, it would force
+$\pi_i^C(T)=1$, a contradiction. Therefore some earlier active
+$j\in J$, $j<i$, has $v_j=\{r\}$ for $r\ne k$ and $j\notin q_r$.
+The $j$-group is attached later on the spine. Its $r$-owned gate
+absorbs to $\{r\}$ and kills this particular helper occurrence's
+contribution of $k$. Every helper occurrence is covered by this argument;
+any later reintroduction must come from another occurrence, covered in turn.
+Thus no helper can supply a winner outside $C\cup X$.
+
+Union with $C$ now realizes $Q_q$ in the interval. Union over maximal
+positive $q$ realizes $P$: every positive coloring extends to a maximal
+one, and each rectangle is antitone, contains its defining $q$, and lies
+in $P$. The zero predicate uses $C$ alone.
+
+For the global result, remove sources with identically zero predicates.
+The cofactor law at the empty coloring makes them globally inessential.
+The first remaining source has no predecessors and has predicate one,
+so is retained and its prefix is a projection.
+Every topological prefix is the winnerwise neutral residual deleting
+later inputs: later inputs contribute no queried winner, while earlier
+predicates ignore their statuses. The cofactor law inherits to these
+prefixes by neutralizing the same later inputs in both compared valuations.
+Consequently each prefix is an interval extension of the preceding one.
+Induction with the interval construction makes every prefix core.
+Expanding its union of spines gives exactly the stated normal form;
+only original input variables occur in the helpers.
+
+Each proper predecessor coloring is represented by a canonical probe
+for one of its missing observers, with later inputs neutral. Thus the
+number of chosen spines is at most the $nK^n$ source observations.
+Each spine uses at most $1+K(n-1)$ leaves, proving the bound.
+
+Finally, apply pattern reduction to the all-$r$ coloring.
+Fixing $M_r$ to $r$ captures every other input, so forces the singleton
+$r$. Conversely, if an $r$-forcing coalition $A$ omitted some $i\in M_r$,
+antitonicity would give
+$\pi_i(A|_{<i})\geq\pi_i(\text{all predecessors }r)=1$.
+A sole-source probe at $i$ for any foreign winner would contradict the
+forced singleton. The core singleton-profile factorization identifies
+these forcing coalitions with $\Phi_r(F)$, giving the final formula.
+\end{proof}

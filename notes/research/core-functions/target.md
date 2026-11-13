@@ -91,12 +91,15 @@ laws and has core proper neutral residuals, but fixing a selector atom
 exposes a forbidden binary interval. Thus independent neutral interval
 data do not close even this relative gluing problem.
 
-An [acyclic source-dependence route](acyclic-source-guards.md) has two
-normalization lemmas: full colored FD forces singleton factorization and
-principal owner profiles, and every nonconstant proper fixed predecessor
-context shares a retained source with its neutral residual. Assembly below
-a common neutral-erasure baseline is still unproved; no acyclic sufficiency
-or full characterization is claimed.
+[Acyclic source dependence](acyclic-source-guards.md) now has a closed
+criterion and a canonical normal form. A nonempty source-reconstructing
+operation with antitone, observer-consistent guards and a source order is
+core exactly when it satisfies full colored cofactor independence.
+Captured-input rectangles, including a full-palette cross-facet argument,
+give safe raw-variable spines in reverse source order. Their union realizes
+the operation, with at most (1+K(n-1))*n*K^n leaves when union is named.
+Every owner profile is principal. This solves the acyclic subclass; the
+full goal still includes arbitrary cyclic source-dependence components.
 
 The [prime Gray obstructions](prime-obstructions.md) also have core-polynomial
 cofactors after fixing any nonempty set of inputs to arbitrary menus. A

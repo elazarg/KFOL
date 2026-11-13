@@ -8,6 +8,11 @@ guard table and its fixed source probes, proved in `Core/Peeling` and
 [peeling.md](peeling.md) gives the equations and their proof; the independent
 stdlib checker is `peeling.py`.
 
+[Acyclic source dependence](acyclic-source-guards.md) is now characterized
+by full colored cofactor independence, with a canonical union of safe
+reverse-order spines and principal singleton profiles. Cyclic dependence
+remains part of the full target.
+
 Finite relatedness is now disproved for every fixed finite K≥3: for each m,
 `Core.Crown.exists_local_obstruction` gives an (m+3)-ary nonterm operation
 with a common core interpolant on every m valuations. The cycle construction
