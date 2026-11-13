@@ -1,0 +1,161 @@
+\subsection{Rectangular guards and unavoidable tree size}
+\label{app:core-rectangles}
+
+Repeated occurrences can be necessary in exponentially large numbers.
+The obstruction is visible in the canonical source coefficients: one
+occurrence separates its filters by owner, even when each filter has
+many prime guards. We first record this rectangular structure.
+
+Fix distinct owners $A,B,C$, put $N=I\setminus\{B\}$, and choose
+disjoint passive variable blocks $\mathcal A,\mathcal C$ and a marked
+source $j$ outside them. For $U\subseteq\mathcal A$, $W\subseteq\mathcal C$,
+let $v_{U,W}$ give $\{B\}$ to $j$, $\{A\}$ to $U$, $\{C\}$ to $W$,
+and $N$ to every other input. Define the source matrix
+\[
+ M_t(U,W)=[B\in t(v_{U,W})].
+\]
+A \emph{rectangle} is a Cartesian product of a family of $U$-sets
+and a family of $W$-sets; it is positive if every entry in it is $1$.
+
+\begin{lemma}[Rectangular source contributions]\label{core:lem:source-rectangles}
+For any constant-free choice/union word $t$, the positive entries of
+$M_t$ are a union of at most $\#_j(t)$ positive rectangles, where
+$\#_j(t)$ counts occurrences of $j$. The rectangles can be chosen
+downward closed in both coordinates. In particular, if $m$ positive
+entries have the property that every two have at least one negative
+crossed entry, then $\#_j(t)\geq m$.
+\end{lemma}
+\begin{proof}
+Only $j$ supplies $B$. Fix one occurrence and follow its path.
+At an $A$-gate it survives precisely when the sibling's $A$-profile
+is false, a condition only on $U$. At a $C$-gate the condition only
+involves $W$. A $B$-gate imposes no filter; any other owner's singleton
+cannot occur on these inputs. Union imposes no filter either.
+Thus this occurrence's contribution is a product of two antitone
+predicates. Source decomposition gives the stated union. A positive
+rectangle containing two selected entries would contain both crossed
+entries, proving the last assertion.
+\end{proof}
+
+For distinct inputs $x,a_0,b_0,\ldots,a_{d-1},b_{d-1}$, define
+\begin{equation}\label{core:eq:iterated-mixed-circuit}
+ T_0=x,\qquad
+ T_{i+1}=(a_i\star_A T_i)\star_B(T_i\star_C b_i).
+\end{equation}
+The two references to $T_i$ may share its output in a circuit.
+
+\begin{theorem}[Exponential size throughout a core lower interval]
+\label{core:thm:robust-tree-size}
+For every $d\geq0$ and $K\geq3$, any constant-free choice/union word
+$s$ on these inputs with $s(w)\subseteq T_d(w)$ at every input satisfies
+\[
+ \#_x(s)\geq2^d,\qquad
+ \#_{a_i}(s),\#_{b_i}(s)\geq2^{d-i-1}\quad(0\leq i<d).
+\]
+Consequently it has at least $3\cdot2^d-2$ leaves. The unfolding of
+\eqref{core:eq:iterated-mixed-circuit} attains all these bounds, so
+$3\cdot2^d-2$ is the exact minimum even among all subordinate words.
+The unfolded tree has $3(2^d-1)$ binary gates, whereas the shared circuit has $3d$
+choice gates and $2d+1$ input nodes.
+\end{theorem}
+\begin{proof}
+The profiles obtained directly from the recurrence are
+\[
+ \Phi_A^{T_d}=x\prod_{i<d}b_i,\qquad
+ \Phi_C^{T_d}=x\prod_{i<d}a_i,\qquad
+ \Phi_B^{T_d}=x\prod_{i<d}(a_i\vee b_i).
+\]
+We first show that every subordinate $s$ has exactly this $B$-profile.
+All positive profile bits of $T_d$ persist in $s$ by nonemptiness.
+Put $P_A=\{x,b_i:i<d\}$ and $P_C=\{x,a_i:i<d\}$.
+Their intersection is $\{x\}$, so common-source compatibility forces
+every $B$-winning coalition of $s$ to contain $x$.
+
+Suppose such a coalition $E$ misses both members of pair $t$.
+Set $w_x=\{B\}$ and
+\[
+ w_{a_i}=\begin{cases}\{C\},&a_i\in E,\\\{A\},&a_i\notin E,\end{cases}
+ \qquad
+ w_{b_i}=\begin{cases}\{A\},&b_i\in E,\\\{C\},&b_i\notin E.\end{cases}
+\]
+Stage $t$ gives $T_{t+1}(w)=\{A,C\}$, and all later stages preserve
+this value. Hence $s(w)\subseteq\{A,C\}$.
+Apply \cref{core:thm:one-bound-profiles} to the positive coalitions
+$P_A,E,P_C$ of owners $A,B,C$, with full coalitions for additional
+owners and output bound $\{A,C\}$. Their common intersection is
+$\{x\}$, whose input is outside the bound. Moreover
+\[
+ E_A(w)\cap P_C\cap E=\varnothing,
+ \qquad E_C(w)\cap P_A\cap E=\varnothing.
+\]
+Neither permitted absorber is possible, a contradiction. Thus the
+$B$-winning coalitions are exactly those containing $x$ and at least
+one member of every pair.
+
+We use a separator observation. If
+$\Phi_B^s(H)=1$, $\Phi_B^s(H\setminus\{j\})=0$, and a probe gives
+$j$ the menu $\{B\}$ while every foreign atomic set misses $H$,
+then its output contains $B$. Descend through children retaining the
+positive/negative profile pair. At a $B$-gate choose a separating
+child. At any foreign gate both children are $H$-positive; its
+sibling cannot be its owner's singleton, by common-source compatibility
+with $H$. A separating child therefore retains its $B$ contribution.
+At a union root choose a separating child; union preserves its $B$.
+The selected leaf must be $j$, proving the observation.
+
+For source $x$, restrict $a_i$ to $\{A\},N$ and $b_i$ to $\{C\},N$.
+Writing $U=\{i:w_{a_i}=\{A\}\}$ and
+$W=\{i:w_{b_i}=\{C\}\}$, the recurrence gives
+\begin{equation}\label{core:eq:disjointness-source}
+ B\in T_d(v_{U,W})\quad\Longleftrightarrow\quad U\cap W=\varnothing.
+\end{equation}
+For each $S\subseteq\{0,\ldots,d-1\}$ take $(U,W)=(S,S^c)$.
+The coalition consisting of $x$ and the neutral partner of each pair
+is $B$-winning, and removing $x$ makes it losing. The separator
+observation forces $B$ in $s$ at all these $2^d$ probes.
+For distinct $S,R$, at least one cross has nonempty intersection,
+so \eqref{core:eq:disjointness-source} and $s\leq T_d$ make that cross
+negative for $s$. \Cref{core:lem:source-rectangles} gives
+$\#_x(s)\geq2^d$.
+
+For source $a_i$, set all inputs of $T_i$ and $b_i$ to $N$, and
+$a_i=\{B\}$. Then $T_i=N$ and $T_{i+1}=I$. Vary only the higher
+pairs as before. Their source matrix is the same disjointness matrix
+on $d-i-1$ pairs. At each positive complementary pair, choose $H$
+to contain $x$, one variable from each lower pair, $a_i$, and the
+neutral partner of each higher pair. Exclude $b_i$ from $H$.
+Then $H$ is $B$-winning, $H\setminus\{a_i\}$ is losing, and all
+foreign atomic sets miss $H$. The same separator and rectangle
+arguments give $\#_{a_i}(s)\geq2^{d-i-1}$. Interchanging $a_i,b_i$
+gives the other bound.
+
+Summing yields
+$2^d+2\sum_{i<d}2^{d-i-1}=3\cdot2^d-2$ leaves. The displayed
+unfolding has exactly these multiplicities. A binary tree has one
+fewer gate than leaves, while each shared stage adds three gates.
+\end{proof}
+
+In particular, no bound depending only on $K$ limits the occurrences
+of a chosen source in subordinate witnesses of positive probes.
+Taking unions of words with that fixed source bound does not repair
+the failure: every summand of a union equal to $T_d$ is subordinate.
+
+\begin{corollary}[The reset bound survives the full core]
+\label{core:cor:reset-ambient-tree-bound}
+Let $R_0=c\del z$ and
+$R_{i+1}=(R_i\del p_i)\del((R_i\del n_i)\del z)$.
+For $K\geq3$, every core choice/union word inducing $R_d$ has at
+least $2^d$ occurrences of $c$.
+\end{corollary}
+\begin{proof}
+Set $c=\{B\}$ and $z=N$, and restrict $p_i$ to $\{A\},N$ and
+$n_i$ to $\{C\},N$. No other input supplies $B$.
+The selection formula in \cref{reset:prop:large-circuit-table} then gives
+\[
+ B\in R_d\quad\Longleftrightarrow\quad
+ \forall i<d:\ p_i\text{ is ambiguous or }n_i\text{ is ambiguous}.
+\]
+This is exactly the disjointness matrix
+\eqref{core:eq:disjointness-source}, whose $2^d$ complementary
+pairs force the occurrence bound by \cref{core:lem:source-rectangles}.
+\end{proof}

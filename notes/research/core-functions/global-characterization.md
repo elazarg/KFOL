@@ -516,8 +516,11 @@ for an owner's profile, cannot introduce a third winner when the rest of
 a winning coalition is fixed to that owner's atom.
 The [five-variable separable example](pure-trace-quotient.md#repetition-persists-in-a-source-separable-core)
 also excludes extracting a source-linear minorant for every positive
-probe of a genuine separable target. A uniform bound larger than one
-on the number of marked-source occurrences has not been proved.
+probe of a genuine separable target. No larger uniform bound works
+for arbitrary core targets either: the
+[rectangular source hierarchy](rectangular-source-complexity.md)
+forces 2^d marked-source copies in every subordinate word, with an
+exact minimum of 3*2^d-2 leaves despite a linear-size circuit.
 
 A simple coherence schema records only the set of states occurring in a tuple:
 R_Gamma consists of tuples whose nonempty value-set belongs to Gamma. Requiring

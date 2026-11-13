@@ -119,6 +119,11 @@ has a positive pure port that no subordinate word using its source
 once retains. Even unions of such words cannot recover its traces.
 A [five-variable source-separable core](pure-trace-quotient.md#repetition-persists-in-a-source-separable-core)
 has the same obstruction, with an explicit seven-word realization.
+For general core operations there is no larger uniform copy bound for a chosen source:
+[owner rectangles](rectangular-source-complexity.md) force 2^d copies
+and exactly 3*2^d-2 leaves throughout the lower interval of an explicit
+linear-size core circuit. The same bound excludes bounded-copy
+subordinate witnesses of a single positive probe.
 The same two arrow laws characterize which additive pure-owner data come
 from any core operation; their product hull is always core, even when
 the original operation is nonseparable.

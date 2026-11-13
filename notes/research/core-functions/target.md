@@ -176,6 +176,13 @@ A [five-variable separable core](pure-trace-quotient.md#repetition-persists-in-a
 has the same obstruction, with an explicit seven-word realization.
 Thus restricting to actual source-separable targets does not validate
 per-probe source-linear extraction.
+Nor is there a larger uniform bound for arbitrary core targets: the
+[source-rectangle hierarchy](rectangular-source-complexity.md) forces
+2^d occurrences of one chosen source in every subordinate word, and
+the exact minimum total leaf count is 3*2^d-2. Its shared circuit has
+3d choice gates. This closes the bounded-copy normal-form route,
+including subordinate witnesses of one positive probe; it does not
+supply the direct guard characterization.
 
 The [owner-extension theorem](owner-extension-stability.md) identifies
 canonical common-carrier attainment with realizability after adding
