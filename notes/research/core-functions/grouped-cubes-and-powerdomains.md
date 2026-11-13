@@ -108,6 +108,41 @@ nonlinear substitution: flat absorption gives x meet (x join y)=x, whereas in
 B at x=N,y=P the two sides are P and N. Repeated independent occurrences are
 precisely where this transfer loses information.
 
+### A two-run presentation of the same correlation loss
+
+There is also an exact relational presentation on two Boolean runs:
+
+    b={00}, c={11}, N={00,11}, P={00,01,10,11}.
+
+Lift Boolean AND/OR to images of independently chosen relation elements.
+Their endpoint laws are the Boolean absorbing/identity laws; among N,P,
+both operations return N on (N,N) and P whenever an argument is P. These
+are exactly the bichain operations. Literal relation union is observer
+union, including b union c=N.
+
+For any monotone Boolean f, the image under f times f, using ONE relation
+pair for each original variable, is exactly the relation representing D_f.
+If the cube is constant, only its endpoint occurs. Otherwise both diagonal
+outputs occur. An off-diagonal output exists exactly when, after fixing
+the common N inputs, varying P inputs can change f. A Boolean edge along
+such a change makes one P-marked variable essential; conversely a pivotal
+edge supplies an off-diagonal pair. Symmetry supplies the other one.
+
+A formula instead allows each occurrence of a repeated variable to choose
+its relation pair independently. Correlated choices are a subset of these
+choices, so D_f is contained in every formula evaluation. On nonconstant
+cubes their only possible difference is the appearance of off-diagonal
+pairs: P in place of N. Thus exact residual support is equivalent to
+preserving these across-occurrence correlations at every input.
+
+This is an alternative presentation, not a new recognition criterion.
+The nearby information-flow interpretation treats N as an unknown public
+bit held equal between runs, and P as a bit allowed to vary. Reconvergent
+correlation and false positive gate-level tracking are discussed in
+[Hu et al., Sections III and V.F](https://cseweb.ucsd.edu/~kastner/papers/tifs12-complexity_glift.pdf).
+Their richer tracking synthesis does not supply a theorem recognizing
+our pure AND/OR clone. Ordinary hazard freedom also loses the N/P distinction.
+
 ### Even all naturally lifted flat invariants are insufficient
 
 For R subset D^m, define its correlated powerdomain lift by
