@@ -380,6 +380,10 @@ type that passes every separate helper budget but is not actual
 (`core:cor:pointwise-helper-obstruction`). The proof is uniform for K>=3;
 these are written report results, not Lean theorems. Thus the general
 interval-type problem still requires genuinely simultaneous value constraints.
+The related `core:prop:positive-profile-gluing` excludes a further shortcut:
+even one positive singleton-profile demand can have two projections covering
+all individual inputs below a core bound, with no common bounded witness.
+Negative profile requirements are therefore not the sole obstruction.
 
 `Report.core_omission_independence` shows that all inputs containing an
 omitted winner may be changed arbitrarily without changing any output.

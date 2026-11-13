@@ -165,6 +165,27 @@ passes inherited-profile admissibility and EVERY separate one-point budget,
 yet is not actual. An actual type would linearize to T star_c H with
 H<=C and Phi_c(H)=xy.
 
+Even ONE POSITIVE profile requirement can fail to glue under a known core
+bound; negative profile data are not the sole cause. Put
+
+    D=(S star_b z) union Q.
+
+At every input either the whole x-menu or the whole y-menu lies in D.
+If the b-fold is not b, D is full input union. Otherwise its b-absorber
+and Q's possible c-absorber ensure that D contains a whole b/c input
+among x,y; if Q does not absorb, it contains P, hence both x,y or an
+a-singleton among them. Thus projections x,y give pointwise witnesses
+for the SINGLE demand Phi_a(xy)=1.
+
+No joint witness exists. At the same atomic rows u,v, D outputs bc,ab.
+With a-positive xy the v-output cannot be a (its a-atomic coalition is
+the same at u), b (its b-atomic coalition z misses xy), or c (the bound).
+Thus that bound always passes to both children. At u a is forbidden and
+c cannot absorb, by the disjoint positive a-quorum. Select a b-absorbing
+child if present, otherwise any child retaining the positive a-bit.
+No bounded positive projection exists. This is
+`core:prop:positive-profile-gluing`, with a uniform written proof.
+
 Thus the missing compatibility is genuinely simultaneous, including for
 one active mask over a known core interval. It cannot be removed by
 intersecting the complete theories of individual bounds.

@@ -78,30 +78,35 @@ Finally $C(u)=\{b,c\}$ and $C(v)=\{a,b\}$. The profile $xy$ violates
 the implication, excluding every $H\subseteq C$ with that profile.
 \end{proof}
 
-\begin{corollary}[Pointwise helper budgets do not determine actual types]
-\label{core:cor:pointwise-helper-obstruction}
-In the core interval operation $F(T,w)=C(w)+T$, the full type
-\[
- B_c(E)=[\{x,y\}\nsubseteq E],\qquad B_r(E)=1\quad(r\ne c)
-\]
-is sound and satisfies active-owner profile containment and admissibility
-with the inherited inactive-owner profiles. At every passive input, those
-exact helper profiles have a realizer bounded by $C$ there. The type is
-nevertheless not actual.
-\end{corollary}
-\begin{proof}
-The inherited profile family is exactly $\phi$ above, so the pointwise
-claims follow from \cref{core:prop:profile-bound-gluing}; soundness follows
-because $F$ retains $T$. If the type were actual, marked linearization
-(\cref{core:cor:interval-linear-cover}) would give a primitive one-$T$
-spine below $C+T$ with that exact type. Its path has only owner $c$:
-every passive helper has a positive top profile at its gate's owner.
-Associativity therefore writes it as $T\star_c H$, with
-$\Phi_c(H)=xy$. Its neutral residual is $H\subseteq C$, contradicting
-\cref{core:prop:profile-bound-gluing}.
+The obstruction can also occur with just one positive profile requirement,
+without prescribing any negative bits or any other owner's profiles.
 
-The obstruction also applies if helper bounds are imposed only where
-$\{x,y\}\nsubseteq E_c(w)$. On the omitted face $x=y=\{c\}$, every
-helper with $c$-profile $xy$ equals $\{c\}$ and
-$C=\{c\}\cup z$, so the remaining bounds hold automatically.
+\begin{proposition}[A positive quorum need not glue]
+\label{core:prop:positive-profile-gluing}
+Put $D=(S\star_b z)+Q$. At every input $w$, either
+$w_x\subseteq D(w)$ or $w_y\subseteq D(w)$. Thus the positive requirement
+$\Phi_a(H)(\{x,y\})=1$ has a witness bounded by $D$ at each individual
+input, namely one of the projections $x,y$. Nevertheless no core
+$H\subseteq D$ meets that requirement.
+\end{proposition}
+\begin{proof}
+If $S\star_b z\ne\{b\}$, it is the full input union. Otherwise it
+equals $\{b\}$. If also $Q=\{c\}$, then either $z=\{c\}$ and some
+input among $x,y$ is $\{b\}$, or $P=\{c\}$ and $x=y=\{c\}$.
+Thus $D=\{b,c\}$ contains one of those whole inputs. If $Q\ne\{c\}$,
+then $Q=P\cup z$; either $P=x\cup y$ or $P=\{a\}$ supplies an
+$a$-singleton input among $x,y$. This proves the pointwise assertion.
+
+At the inputs $u,v$ above, $D(u)=\{b,c\}$ and $D(v)=\{a,b\}$.
+Suppose a core term satisfies both bounds and has a positive $a$-bit on
+$\{x,y\}$. Its value at $v$ is ambiguous: the bound excludes the $c$
+singleton; an $a$ singleton would also occur at $u$, where it is forbidden;
+and a $b$ singleton would have coalition $\{z\}$, disjoint from the
+positive $a$-coalition. Hence the $v$-bound passes to both children.
+At $u$, an $a$ absorber is forbidden and a $c$ absorber is incompatible
+with that same positive coalition. At a $b$-root with a $b$-absorbing child,
+choose that child; it retains the positive $a$-bit. Otherwise both bounds
+pass to both children, and a child retains that bit by the profile
+recurrence. Descent reaches a projection in $\{x,y\}$, but neither
+satisfies both bounds.
 \end{proof}
