@@ -86,6 +86,17 @@ theta_r(E)=AND_(s!=r) Phi_r(C)(W\E_s), with synthesis within K of the
 owner-box lower bound on source occurrences. For arbitrary C the implication
 preorder is still implicit, and the interval bounds do not cover arbitrary
 core operations.
+For K>=4 a four-input interval candidate passes the full colored-dependence
+laws and has core proper neutral residuals, but fixing a selector atom
+exposes a forbidden binary interval. Thus independent neutral interval
+data do not close even this relative gluing problem.
+
+An [acyclic source-dependence route](acyclic-source-guards.md) has two
+normalization lemmas: full colored FD forces singleton factorization and
+principal owner profiles, and every nonconstant proper fixed predecessor
+context shares a retained source with its neutral residual. Assembly below
+a common neutral-erasure baseline is still unproved; no acyclic sufficiency
+or full characterization is claimed.
 
 The [prime Gray obstructions](prime-obstructions.md) also have core-polynomial
 cofactors after fixing any nonempty set of inputs to arbitrary menus. A

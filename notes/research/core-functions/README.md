@@ -34,6 +34,8 @@ the criterion is closed: the additional implications are given by the dual
 profile boxes theta_r(E)=AND_(s!=r) Phi_r(C)(W\E_s). Its synthesis is within
 K of the general owner-box lower bound on distinguished-source occurrences.
 For arbitrary C, computing the implication preorder remains a subproblem.
+Even actual realizers for every proper neutral residual, together with
+the exact colored dependence laws, do not suffice above a general base.
 
 Closed boundary/no-trap conditions now present every invariant relation in
 `Core/Hypergraphs`. This gives a complete infinite obstruction basis, still
