@@ -160,6 +160,11 @@ three-state one-owner algebras; each coordinate has a five-relation
 ternary basis. Their colored compatibility is not supplied by the
 individual bases. An explicit five-leaf identity shows this quotient
 forgets actual mixed differences between core terms.
+Naming its zero gives independent coordinate assembly and a ternary
+relational basis, but the constant-free coupling survives idempotence
+and every maximal proper invariant relation in every finite power.
+The feedback counterexample even preserves every unary subalgebra,
+but fails two-point interpolation.
 
 The [owner-extension theorem](owner-extension-stability.md) identifies
 canonical common-carrier attainment with realizability after adding
@@ -179,10 +184,20 @@ ports is open. This is a smaller problem than ordinary guard
 realizability: the complete-head example with a spare observer passes
 every pure-port necessity and still has noncore separable reconstruction.
 
+[Capture-trigger normal forms](capture-trigger-normal-form.md) supply
+another closed positive class. Every source-separable operation above
+a greatest profile completion is core, with a source-linear minorant
+attaining each canonical full vector. The hypothesis is equivalent to
+common-source admissibility of the normalized upward closures of all
+capture premises. This is sufficient, not necessary; complete-head
+examples below can lie outside it.
+
 The [complete-head circuit classification](complete-head-circuits.md)
-settles an unbounded family: with distinct head owners and nonempty
-anchor contexts, realizability holds exactly when the heads represent
-every owner or some two contexts intersect. Short safe spines give the
+settles an unbounded family: with distinct head owners and arbitrary
+anchor contexts, realizability holds exactly when the nonempty contexts
+represent every owner or some two contexts intersect. The pure closures
+are jointly realizable exactly when at least two contexts are nonempty.
+Short safe spines give the
 greatest core minorant. Disjoint contexts with every owner represented
 are genuine separable operations with no greatest actual full head type;
 two actual types have the nonactual canonical vector as their join.

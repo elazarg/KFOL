@@ -7,8 +7,9 @@ description: maximal coefficients at the original observers, maximal
 occurrence types, and maximal extensions to the common carrier $D_I$.
 
 Fix distinct owners $r_1,\ldots,r_n\in I$, where $2\leq n\leq K$,
-head variables $H=\{h_1,\ldots,h_n\}$, and a disjoint finite set $A$
-of anchor variables. Choose nonempty contexts $L_i\subseteq A$, and put
+head variables $H=\{h_1,\ldots,h_n\}$, and a disjoint finite nonempty
+set $A$ of anchor variables. Choose contexts $L_i\subseteq A$, allowing
+empty contexts, and put
 $V=H\sqcup A$ and $P_i=(H\setminus\{h_i\})\cup L_i$.
 For a valuation $w$, write $E_r(w)=\{v:w_v=\{r\}\}$ and
 $Z(w)=\bigcup_{a\in A}w_a$. Define
@@ -17,8 +18,9 @@ $Z(w)=\bigcup_{a\in A}w_a$. Define
        \bigcup_{i:\,P_i\nsubseteq E_{r_i}(w)}w_{h_i}.
 \end{equation}
 Thus rule $i$ suppresses its head precisely when all its other heads
-and its context are $r_i$ singletons. Its own winner is then already
-supplied by $L_i$. The canonical coefficient at $h_i$, for observer
+and its context are $r_i$ singletons. The nonempty anchor set ensures
+that $F$ always has a winner, even when every context is empty.
+The canonical coefficient at $h_i$, for observer
 $k\ne r_i$, is $[P_i\nsubseteq E_{r_i}]$; for $k=r_i$ it is $1$.
 Every anchor coefficient is $1$. In particular these coefficients
 factor by owner: $F$ is \emph{source-separable}. A \emph{pure-owner}
@@ -37,11 +39,11 @@ The greatest core operation below $F$ is
                     F(w),&\text{otherwise}.
        \end{cases}
 \end{equation}
-It has the same pure-owner source coefficients and singleton profiles as
-$F$. Moreover
+If at least two contexts are nonempty, $R$ has the same pure-owner source
+coefficients and singleton profiles as $F$. Moreover
 \begin{equation}\label{core:eq:head-classification}
  F\text{ is core}\quad\Longleftrightarrow\quad
- \{r_1,\ldots,r_n\}=I\ \text{ or }\
+ \{r_i:L_i\ne\varnothing\}=I\ \text{ or }\
  L_i\cap L_j\ne\varnothing\text{ for some }i\ne j.
 \end{equation}
 \end{theorem}
@@ -51,11 +53,14 @@ indices different from $p$, start at $h_p$, attach each $h_j$ in order
 using $\star_{r_j}$, and finally attach $a$ using $\star_{r_p}$.
 Take the derived union of these words and all anchor projections,
 and call it $R_0$. Each word has at most four leaves and lies below $F$.
-If rule $p$ fires, its final anchor absorbs. If a listed head's rule
-$j$ fires, every preceding head is $\{r_j\}$, so its prefix is already
-$\{r_j\}$ and absorbs that head at its attachment. Subsequent heads
-are also $\{r_j\}$; the final anchor is an unconditional source.
-A suppressed head not in the word contributes nothing.
+If rule $p$ fires, its final anchor absorbs the entire prefix.
+Otherwise $h_p$ survives. If a listed head's rule $j$ fires, every
+preceding head is $\{r_j\}$, so its prefix is already $\{r_j\}$ and
+absorbs that head at its attachment. Subsequent heads are also
+$\{r_j\}$, a safe winner supplied by the surviving $h_p$; the final
+anchor is unconditional. If no listed head is suppressed, all inputs
+used by the word are safe. This also covers simultaneous triggers when
+$n=2$; a suppressed head absent from the word contributes nothing.
 
 At a bad valuation every word ends in its absorbing anchor, so $R_0=Z$.
 Otherwise choose $p$ and $a\in L_p$ with $w_a\ne\{r_p\}$. Take a winner
@@ -70,14 +75,14 @@ $j\notin\{i,p\}$ with $w_{h_j}\ne\{r_i\}$ and use
 \]
 Its first prefix is not $\{r_i\}$, and its final anchor is not
 $\{r_p\}$, so it retains $k$. Thus $R_0=R$.
-Overlapping contexts make bad valuations impossible. If the head owners
-exhaust $I$, a bad valuation has $Z=I$. These give the forward
-constructions in \eqref{core:eq:head-classification}.
+Overlapping contexts make bad valuations impossible. If the owners of
+nonempty contexts exhaust $I$, a bad valuation has $Z=I$. These give
+the forward constructions in \eqref{core:eq:head-classification}.
 
 The converse and greatestness use a uniform observer invariant.
-Suppose the contexts are pairwise disjoint and $\omega$ is outside the
-head owners; it may be an old owner or a newly added observer.
-In the ambient winner set $J$ put $N=J\setminus\{\omega\}$.
+Suppose the contexts are pairwise disjoint. Add a fresh observer
+$\omega$, put $J=I\cup\{\omega\}$ and $N=I$, and interpret an
+old-owner word on this enlarged carrier.
 At row $u_i$ give $h_i$ the menu $J$, every other head and every
 anchor in $L_i$ the menu $\{r_i\}$, and all other anchors $N$.
 At row $q$ give all heads $J$, each $L_i$ its atom $\{r_i\}$, and
@@ -110,24 +115,47 @@ Its erasing sibling satisfies all negative rows and $U_p=\{r_p\}$;
 (B) makes the sibling's query $\{r_p\}$, erasing the query as well.
 Owners outside the head list act as union throughout.
 
-The function $F$ omits $\omega$ at every $u_i$ but contains it at $q$,
-violating (C). This proves the converse in
-\eqref{core:eq:head-classification}. If $t\leq F$ and $w$ is bad,
-take $k\notin Z(w)$. Every head owner belongs to $Z(w)$, so $k$ is an
-outside observer. Enlarge all heads to $I$ and unused anchors to
-$I\setminus\{k\}$, keeping each context at its atom. The negative
-rows omit $k$ by the bound on $t$, so (C) makes the enlarged query
-omit $k$. Monotonicity gives $k\notin t(w)$. Thus $t\leq R$.
+Let $t\leq F$ be any core operation, and extend its old-owner word to
+$J$. It omits $\omega$ at every $u_i$. Indeed choose an old observer
+$s\ne r_i$. Its old source probe gives $h_i$ the menu $\{s\}$,
+every other head and $L_i$ the atom $\{r_i\}$, and all remaining
+anchors $I\setminus\{s\}$. The bound $t\leq F$ makes this probe
+omit $s$: its only possible source $h_i$ is suppressed. An occurrence
+supplying $\omega$ at $u_i$ would have all its old-owner factors true;
+omitting the $s$ factor would supply $s$ on that old probe, a
+contradiction. This reasoning allows $L_i=\varnothing$. Invariant (C)
+therefore makes $t(q)$ omit $\omega$.
 
-Finally, a head-source monochromatic probe cannot be bad: the nonempty
-contexts require at least two different atoms. Anchor probes retain
-their source in both functions, even when bad. Their pure-owner
-coefficients therefore agree. At bad both functions contain at least
-two anchor owners, so their singleton profiles also agree.
+For a bad old valuation $w$, take $k\notin Z(w)$. Every nonempty
+context has owner different from $k$. Decrease the unused anchors of
+$q$ from $I$ to $I\setminus\{k\}$, keeping its heads $J$ and its
+context atoms unchanged, and call the result $q'$. Monotonicity preserves
+$\omega$-absence. At $q'$, $k$ and $\omega$ occur at exactly the same
+inputs, namely all heads, and neither has a singleton input. Neither
+singleton can appear in a subword without one initially. Hence every
+old-owned gate treats their memberships identically: a $k$-owned gate
+acts as union, while every other absorption removes both. Thus
+$k\notin t(q')$. Since $w\leq q'$, monotonicity gives $k\notin t(w)$.
+This proves $t\leq R$ and the greatestness assertion.
+
+If no contexts overlap and their nonempty-context owners do not exhaust
+$I$, choose an old owner $k$ outside that set. Give every head $I$,
+each context its atom, and unused anchors $I\setminus\{k\}$. The
+valuation is bad and $Z$ omits $k$, but no rule fires because every
+head is ambiguous. Thus $k\in F\setminus R$, so $F$ is not core.
+This proves the converse in \eqref{core:eq:head-classification}.
+
+Finally suppose at least two contexts are nonempty. A head-source
+monochromatic probe cannot be bad, since those contexts require two
+different atoms. Anchor probes retain their source in both functions,
+even when bad. Their pure-owner coefficients therefore agree. At bad
+both functions contain at least two anchor owners, so their singleton
+profiles also agree.
 \end{proof}
 
-For the remaining results suppose $n=K\geq3$ and the contexts are
-pairwise disjoint. Then $F$ is core. Its profiles are
+For the remaining results suppose $n=K\geq3$ and every context is
+nonempty, with the contexts pairwise disjoint. Then $F$ is core.
+Its profiles are
 \begin{equation}\label{core:eq:head-profiles}
  \Phi_{r_i}(F)(E)=[V\setminus\{h_i\}\subseteq E].
 \end{equation}

@@ -10,9 +10,12 @@ term-induced even when the original operation is core.
 ## The family and its greatest core minorant
 
 Let I be a finite owner set with K>=3. Take n>=2 distinct owners r_i
-and heads h_i, with H={h_1,...,h_n}. Let A be a disjoint finite set of
-unconditional anchor inputs. For each i choose a **nonempty** context
-L_i subseteq A. The closures have just these nontrivial captures:
+and heads h_i, with H={h_1,...,h_n}. Let A be a disjoint finite
+**nonempty** set of unconditional anchor inputs. For each i choose a
+context L_i subseteq A, allowing empty contexts. The anchor assumption
+ensures that the functions below always have nonempty winner sets,
+including when every context is empty. The closures have just these
+nontrivial captures:
 
     (H\{h_i}) union L_i =>_(r_i) h_i.                (1)
 
@@ -34,13 +37,14 @@ The following function is the greatest core operation below F:
 
 Thus the classification is
 
-    F is core iff {r_i:i=1,...,n}=I
+    F is core iff {r_i:L_i is nonempty}=I
                  OR some L_i intersect L_j != empty
                     for distinct i,j.               (5)
 
-In particular disjoint nonempty contexts are realizable when every
-owner has a head, but lose realizability after adding an observing
-owner. Any one context overlap makes the operation core for every
+In particular disjoint contexts are realizable exactly when every
+owner has a head with a nonempty context. Disjoint nonempty contexts
+lose realizability after adding an observing owner. Any one context
+overlap makes the operation core for every
 ambient owner set containing the head owners; the context-intersection
 graph need not be connected.
 
@@ -53,14 +57,14 @@ These words have at most four leaves. Let R_0 be their union together
 with every anchor projection.
 
 Each word is below F. If rule p fires, the final anchor is r_p and
-absorbs. If a listed head h_j is suppressed by its rule, all preceding
-heads are r_j, so their prefix is r_j. Attaching h_j at owner r_j
-absorbs its possibly unsafe menu. Every later listed head is also
-r_j, and the final anchor is unconditional. Thus only safe winners
-remain. A suppressed head absent from the word contributes nothing.
-For n=2 two rules can fire together, but the same argument remains
-valid for each: their r_i winners are supplied by their nonempty
-anchor contexts. For n>=3 differently owned triggers are incompatible.
+absorbs the entire prefix. Otherwise h_p survives. If a listed head
+h_j is suppressed, all preceding heads are r_j, so their prefix is
+r_j. Attaching h_j at owner r_j absorbs its possibly unsafe menu.
+Every later listed head is also r_j, and this winner is safe because
+it occurs in the surviving h_p. The final anchor is unconditional.
+If no listed head is suppressed, every input used by the word is
+already safe. This argument also covers simultaneous triggers when
+n=2; a suppressed head absent from the word contributes nothing.
 
 At a bad valuation every such word ends in its absorbing own-owner
 anchor, so R_0=Z. At any other valuation choose p and a in L_p with
@@ -98,23 +102,24 @@ There are at most
 short spines. Derived union is available because K>=3. This gives
 a polynomial-size circuit; no exhaustive term generation is used.
 
-If a pair of contexts intersects, bad is impossible. If the head
-owners exhaust I, bad implies Z=I, so F=R there as well. These prove
-the positive directions of (5).
+If a pair of contexts intersects, bad is impossible. If the owners
+of the nonempty contexts exhaust I, bad implies Z=I, so F=R there
+as well. These prove the positive directions of (5).
 
 ### A uniform observer obstruction
 
-Assume the contexts are pairwise disjoint and let omega be an owner
-outside {r_i}. Put N=I\{omega}. Use n negative rows u_i and one query q:
+Assume the contexts are pairwise disjoint. Add a fresh owner omega,
+write J=I union {omega} and N=I, and interpret any old-owner word on
+this enlarged carrier. Use n negative rows u_i and one query q:
 
-* At u_i put I on h_i, {r_i} on every other head and on L_i,
+* At u_i put J on h_i, {r_i} on every other head and on L_i,
   and N on every other anchor.
-* At q put I on every head, {r_i} on L_i, and N on anchors outside
+* At q put J on every head, {r_i} on L_i, and N on anchors outside
   all the contexts.
 
 For a word T write U_i=T(u_i) and Q=T(q). Each U_i belongs to
-{{r_i},N,I}. At q a value without omega is an atom r_i or a union
-of old atoms; a value containing omega is I. Other owners, including
+{{r_i},N,J}. At q a value without omega is an atom r_i or a union
+of old atoms; a value containing omega is J. Other owners, including
 omega, have no singleton input on any row and act as union at every
 subword. An r_j gate acts as union on u_i whenever i!=j.
 
@@ -127,7 +132,7 @@ The following three simultaneous invariants hold for all core words:
 
     omega in Q implies omega in some U_i.                 (C)
 
-A head projection h_i has U_i=I, U_j={r_j} for j!=i, and Q=I.
+A head projection h_i has U_i=J, U_j={r_j} for j!=i, and Q=J.
 An anchor in L_i has U_i={r_i}, all other U_j=N, and Q={r_i}.
 An unused anchor has every U_i=Q=N. These establish the leaf cases.
 
@@ -158,26 +163,78 @@ budgets, so (B) makes its Q={r_p}, which would erase omega at the
 root query too. This is a contradiction. Other owners are union and
 pass all the negative budgets. The simultaneous induction is complete.
 
-At u_i the function F suppresses its sole possible omega-source h_i.
-At q no rule fires, because n>=2 and the other heads are ambiguous.
-Thus F violates (C). This proves the negative direction of (5).
+### Greatestness with empty contexts
 
-It also proves the greatestness assertion in (4). Let T be any core
-operation with T<=F, and take a bad valuation w. For k outside Z(w),
-every r_i belongs to Z(w), so k is an outside observing owner. Enlarge
-all heads to I and every unused anchor to I\{k}, leaving each L_i
-at its own atom. The negative rows for k are bounded by F and omit k,
-so (C) makes the enlarged query omit k. Input inclusion monotonicity
-makes T(w) omit k as well. Hence T(w) subseteq Z(w). Off bad the
-bound T<=F=R suffices. If contexts overlap there are no bad valuations,
-so this last argument is needed only for disjoint contexts.
+Let T be any core operation with T<=F, and extend its old-owner word
+to J. Its enlarged outputs omit omega at every u_i. To see this,
+choose an old observer s!=r_i. On the corresponding old source probe,
+h_i={s}, all other heads and L_i are {r_i}, and the remaining anchors
+are I\{s}. The function F suppresses h_i and omits s everywhere else,
+so T omits s too. An occurrence supplying omega at u_i would have
+all old-owner path factors true; omitting the s factor would then
+supply s on this old probe, a contradiction. Thus (C) makes T(q)
+omit omega. This argument does not require L_i to be nonempty.
 
-The pure ports of R and F coincide. At a head-source monochromatic
-probe, the distinct nonempty anchor contexts cannot all have their
-different owned atoms. Anchor-source ports are unconditional in both
-functions, including a probe where bad happens to hold. Their singleton
-profiles coincide too, since at bad both functions contain at least
-two anchor owners.
+Now take a bad old valuation w and k outside Z(w). A nonempty context
+L_i has its atom r_i in Z(w), so r_i!=k. Empty contexts impose no
+anchor atom. Decrease every unused anchor at q from I to I\{k},
+leaving the heads J and the context atoms unchanged; call the result
+q'. Inclusion monotonicity preserves omega-absence.
+
+At q', k and omega belong to exactly the same input menus, namely
+all heads. Neither has a singleton input. No subword can create either
+singleton without one initially. Thus every old-owned gate treats
+their membership identically: a k-owned gate acts as union, and every
+other absorption removes both winners. Since omega is absent from
+T(q'), k is absent as well. The original w is coordinatewise contained
+in q', so monotonicity gives k notin T(w). Hence T(w) subseteq Z(w).
+Off bad the bound T<=F=R suffices. This proves that (4) is the greatest
+core minorant. If contexts overlap there are no bad valuations.
+
+For the negative direction of (5), if the contexts are disjoint and
+their nonempty-context owners do not exhaust I, choose k outside
+that owner set. Give every head I, each context its own atom, and
+each unused anchor I\{k}. This is bad and its anchor union omits k.
+No rule fires because n>=2 and all heads are ambiguous, so F contains
+k whereas R omits it. Therefore F is not core.
+
+If at least two contexts are nonempty, R and F have the same pure-owner
+ports and singleton profiles. A head-source monochromatic probe cannot
+be bad: those contexts would require two different anchor atoms.
+Anchor-source ports are unconditional in both functions, including a
+probe where bad happens to hold. At bad both functions contain at least
+two anchor owners, so their singleton profiles agree too. This assertion
+is not made when fewer than two contexts are nonempty.
+
+## Which pure closures are jointly realizable
+
+The closure tuple (1) is the pure-owner data of some core operation
+if and only if at least two contexts are nonempty. This asks only
+for the ports, not necessarily for the separable reconstruction F.
+
+With at least two nonempty contexts, R is the required realizer by
+the pure-port agreement above. If at most one context is nonempty,
+choose p so L_j is empty for every j!=p. Apply
+[feedback elimination](three-owner-exchange.md) at observing owner r_p
+with
+
+    A_profile=(H\{h_p}) union L_p;
+    X_j={h_j}, P_j=H\{h_j}, owner r_j, for j!=p.
+
+Each displayed capture is required by (1), and their sets lie in
+c_(r_p)(A_profile), which contains all heads. Their rainbow covers are
+
+    A_profile intersect P_j=H\{h_p,h_j}
+        subseteq UNION_(l!=p,j) X_l.
+
+Feedback elimination therefore gives
+
+    c_(r_p)(A_profile)=c_(r_p)(L_p).
+
+The left side contains every head; the prescribed right side equals
+L_p and contains none. This contradiction handles empty L_p as well.
+Thus the strengthened feedback law exactly detects the nonrealizable
+pure tuples in this family. General pure-port sufficiency remains open.
 
 ## A context overlap restores maximal full types
 
@@ -204,13 +261,8 @@ its unique h_i occurrence has the canonical full vector.
 
 If i is isolated, choose an edge j-k with a in L_j intersect L_k.
 Let D be the four-input circuit operation on h_i,h_j,h_k,a with
-contexts empty,{a},{a}, respectively. It is core: the off-bad short-spine
-coverage proof above still works when some contexts are empty, provided
-an off-owner anchor exists at every valuation; the shared a cannot be
-both r_j and r_k, so it supplies that anchor. When the empty-context
-rule i fires, its safe r_i winner is supplied by the other two heads;
-their differently owned rules cannot fire at the same valuation.
-Thus the short-spine safety argument still applies. Its profiles are
+contexts empty,{a},{a}, respectively. By (5) it is core because its
+two nonempty contexts overlap. Its profiles are
 
     Phi_(r_i)=h_j h_k a;
     Phi_(r_j)=h_i h_k a;

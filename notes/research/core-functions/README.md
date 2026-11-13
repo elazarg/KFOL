@@ -100,6 +100,12 @@ The [joint pure-trace quotient](pure-trace-quotient.md) isolates the
 pure-owner compatibility problem as a colored product of three-state
 algebras. One coordinate has a five-relation basis of arity at most
 three, but joint realizability requires additional compatibility.
+Naming the product's existing zero removes that coupling and gives
+a ternary relational basis for the entire expansion. This does not
+recover the constant-free clone, even after imposing idempotence
+and every maximal proper invariant relation of every finite power.
+The counterexample even preserves every unary subalgebra, but fails
+two-point interpolation.
 This quotient is strictly coarser than full core semantics: an explicit
 five-leaf equation holds in every pure trace and fails in the core.
 The same two arrow laws characterize which additive pure-owner data come
@@ -161,11 +167,21 @@ axioms in the remaining pure-port problem. Its budget lemma has exact
 projection witnesses; same-owner budgets instead have an exact
 closure-complement test. Repeated mixed owners remain the difficult case.
 
+[Capture-trigger normal forms](capture-trigger-normal-form.md) give a
+closed positive class: every source-separable reconstruction above a
+greatest singleton-profile completion is core. Each canonical full
+source vector has a minorant in which that source occurs once. The
+closure tuples form a product of intervals, with explicit operations;
+one shared anchor permits arbitrary closure operators on all remaining
+variables. This criterion is sufficient, not necessary.
+
 [Complete-head circuits](complete-head-circuits.md) have an exact
 all-arity classification. Each head has its own owner and is suppressed
-when all other heads and its nonempty anchor context are that owner's
-atoms. This is core exactly when every owner has a head or some two
-contexts overlap. A union of at-most-four-leaf spines gives the greatest
+when all other heads and its anchor context are that owner's atoms;
+the context may be empty. This is core exactly when the owners with
+nonempty contexts exhaust the owner set or some two contexts overlap.
+The pure closures themselves are jointly realizable exactly when at
+least two contexts are nonempty. A union of at-most-four-leaf spines gives the greatest
 core minorant in every case. Disjoint contexts with every owner
 represented give genuine separable operations whose canonical head
 full types are all nonactual. Two explicit actual types join to each

@@ -3,9 +3,15 @@
 Mathematical research, without Lean claims. The greatest operation in a
 singleton-profile fiber has a particularly simple actual-type theory:
 soundness is a separate condition at each owner, and every sound type
-occurs in a realizer. Its greatest arbitrary antitone source extension is
-also term-induced. These assertions concern profile maxima; they do not
-hold for arbitrary core operations below them.
+occurs in a realizer. Each canonical maximal vector already has a
+minorant in which its source occurs exactly once. Its greatest arbitrary
+antitone source extension is also term-induced. These assertions concern
+profile maxima; they do not hold for arbitrary core operations below them.
+
+The [capture-trigger interval theorem](capture-trigger-normal-form.md)
+extends the source-linear maximal-vector construction to every separable
+operation above a profile maximum. The direct construction here uses just
+one attachment per active owner.
 
 Fix a finite owner set I with K>=3 and a finite nonempty full variable set
 V. Let Phi be an admissible singleton-profile tuple. Its greatest
@@ -63,6 +69,63 @@ force B_r(A) to imply NOT Phi_r(A). Conversely the conjunctions in
 Thus soundness of an entire full type already separates into its owner
 coordinates in this regime.
 
+## A source-linear minorant with the whole maximal vector
+
+**Theorem.** For every source j there is a core word S_j<=E in which j
+occurs exactly once, and that occurrence has the entire vector M_j
+from (3). Thus one source-linear minorant supplies every contribution
+of source j, at every observer and every independent flag pattern.
+
+If V={j}, take S_j=j. Otherwise put W=V\{j} and define, for A subseteq W,
+
+    f_r^0(A)=Phi_r(A);
+    f_r^1(A)=Phi_r(A union {j}).
+
+Call r active when f_r^0(W)=true. For each active r prescribe a sibling
+profile tuple on W by
+
+    beta_r^(r)=f_r^0;
+    beta_q^(r)=f_q^1 for q!=r.                      (D)
+
+This tuple is normalized. Its own coordinate has true top by activity.
+Every foreign top is Phi_q(V)=true. If a foreign bottom were true,
+Phi_q({j}) and Phi_r(W) would be two disjoint winning coalitions,
+contradicting common-source admissibility. All bottoms are therefore
+false. Monotonicity is inherited from Phi.
+
+It is also admissible. Given a positive rainbow for (D), use its
+r-coalition A_r unchanged in the original tuple Phi, and adjoin j to
+every foreign coalition. The original common intersection is nonempty.
+Since A_r excludes j, that intersection is exactly the common
+intersection of the passive coalitions themselves. The profile theorem
+therefore supplies a j-free core word G_r with profiles (D).
+
+Start at j and attach G_r by choice_r once for every active r, in any
+order. This is S_j. Only the r-owned stage changes its marked r-factor,
+and that stage adds NOT f_r^0. An inactive f_r^0 is identically false,
+so omitting its stage gives the same factor true. The marked full vector
+is consequently exactly M_j, and j occurs once.
+
+It remains to prove S_j<=E; the factor calculation alone would not
+control contributions of auxiliary sources. At any profile coordinate q,
+the own stage, when present, applies OR with f_q^0; every foreign active
+stage applies AND with f_q^1. These updates commute because f_q^0<=f_q^1.
+If there is a foreign active stage, the final profile is exactly
+
+    f_q^0 OR ([j is a q atom] AND f_q^1)=Phi_q.
+
+Here an absent own stage means f_q^0=false. If no foreign stage exists,
+the final profile is [j is a q atom] OR f_q^0 when q is active, and
+just [j is a q atom] when there are no active owners. In both cases it
+contains Phi_q by the same monotone Boolean decomposition. Thus every
+profile of S_j extends the corresponding prescribed profile Phi_q.
+
+Where E returns the singleton {q}, this extension makes S_j return
+that same singleton. Everywhere else E is the full input union, which
+contains S_j by conservativity. This proves the required bound. The
+argument includes zero or one active owner; it does not require a
+foreign active stage to obtain the inclusion.
+
 ## A completion that restores the whole profile maximum
 
 Fix a word realizing E, and let T be any core word on V. Choose an order
@@ -115,8 +178,9 @@ By (4) this does not change B_r. Every other factor is unchanged as well.
 Thus completion restores E and preserves the marked full vector exactly.
 This proves actualness.
 
-The vector M_j itself satisfies (4), so it is actual and bounds all
-other actual vectors. The result does not claim that one realizer can
+The source-linear construction above already gives M_j in a minorant;
+completion (5) preserves it and gives an E realizer. It bounds all other
+actual vectors by (4). The result does not claim that one realizer can
 contain every actual type exactly once: the spine completion can introduce
 many other occurrences and types.
 
@@ -128,9 +192,9 @@ product of the appropriate full factors. By (4), every E realizer has
 
     C^free_(j,k)(E)<=AND_(r!=k) NOT Phi_r(E_r).             (6)
 
-For each j choose the completion above realizing its maximal full vector
-M_j. Combine these E realizers by a fold of one fixed primitive owned
-choice. Idempotence preserves E. The marked maximal types survive each
+For each j complete its source-linear minorant above, realizing the
+maximal full vector M_j. Combine these E realizers by a fold of one fixed
+primitive owned choice. Idempotence preserves E. The marked maximal types survive each
 macro gate: the added sibling profile is Phi_h, whose exclusion is already
 the marked factor M_(j,h). Therefore the resulting term attains the right
 side of (6) for all sources and observers simultaneously.
@@ -159,8 +223,8 @@ extensions can coexist.
 The [quota normal form](quota-normal-form.md) is a more explicit subclass
 of this result. It supplies pivot-once recursive words, exact cardinality
 prime guards, and word/circuit size formulas. The argument here instead
-works for every admissible profile tuple and classifies all its maximum's
-sound full types.
+works for every admissible profile tuple, gives source-linear minorants
+for its maximal vectors, and classifies all its maximum's sound full types.
 
 For a general core operation F, a sound type need not satisfy owner-shadow
 or drift compatibility, and need not occur in any realizer. The sample

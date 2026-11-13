@@ -1,0 +1,174 @@
+\subsection{Capture-trigger normal forms}
+\label{app:core-capture-triggers}
+
+There is a closure-based sufficient condition for joint source-guard
+realizability. It gives whole intervals of source-separable operations,
+with marked occurrences attaining all their pure-owner bounds.
+
+Fix a finite nonempty variable set $V$. For each owner $r$, let $c_r$
+be a loopless closure operator on $V$: it is extensive, monotone and
+idempotent, with $c_r(\varnothing)=\varnothing$. Write
+$E_r(w)=\{v:w_v=\{r\}\}$ and define the reconstruction
+\begin{equation}\label{core:eq:closure-reconstruction}
+ k\in F_c(w)\quad\Longleftrightarrow\quad
+ \exists j\in V\quad k\in w_j\ \text{ and }\
+ j\notin\bigcup_{r\ne k}c_r(E_r(w)).
+\end{equation}
+Its intended source factors are
+$D_{j,r}(E)=[j\notin c_r(E)]$ for $E\subseteq V\setminus\{j\}$.
+On a pure-$r$ probe, \eqref{core:eq:closure-reconstruction} recovers
+this factor at every observer $k\ne r$; thus $c_r$ is its pure-owner
+closure. The source itself is not an $r$ atom on such a probe.
+Such a reconstruction is called \emph{source-separable}: one owner
+factor is shared by all observers other than that owner.
+The \emph{full type} of a marked occurrence is its vector of owner
+factors, each the conjunction of the complements of the sibling
+profiles at that owner's ancestors. Observer $k$ ignores its own factor.
+
+Call a profile tuple $p=(p_r)_r$ admissible when it satisfies
+\cref{core:thm:profiles}, and let $H_p$ be its greatest completion
+(\cref{core:prop:profile-maximum}). Define
+\begin{equation}\label{core:eq:profile-upper-closure}
+ c_r^p(E)=\begin{cases}V,&p_r(E)=1,\\E,&p_r(E)=0.\end{cases}
+\end{equation}
+These are loopless closures and are the pure-owner closures of $H_p$.
+
+\begin{theorem}[Upper intervals above profile maxima]
+\label{core:thm:capture-trigger-normal-form}
+If $\mathrm{id}\leq c_r\leq c_r^p$ for every owner, then $F_c$ is
+nonempty-valued and core, and $H_p\leq F_c$. For every source $j$
+there is a core word $S_j\leq F_c$ with a marked occurrence whose
+full type is exactly $(D_{j,r})_r$, using $j$ exactly once. These maximal
+full types are actual simultaneously in one $F_c$ realizer.
+Conversely, $H_p\leq F_c$ implies $c_r\leq c_r^p$ for all $r$.
+Thus these reconstructions are exactly the source-separable upper
+interval above $H_p$.
+\end{theorem}
+\begin{proof}
+For one owner $r$, call $B$ open if $V\setminus B$ is $c_r$-closed.
+Let $m_r(B)$ be the $\star_r$-fold of its nonempty variable set, and put
+\[
+ T_r=\sum_{\substack{B\ne\varnothing\\B\text{ open}}}m_r(B).
+\]
+The largest open subset of $V\setminus E$ is $V\setminus c_r(E)$.
+On a pure-$r$ source probe, an $r$-monomial supplies the observed winner
+exactly when it contains that source and avoids $E$. Hence $T_r$ has
+factor $D_{j,r}$ at $r$ and identically true factors elsewhere. It is
+the reconstruction with only $c_r$ nonidentity. It retains winner $r$
+from any input containing it; the open set $V$ ensures full support.
+
+If $D_{j,r}=1$ identically, $\{j\}$ is open and $x_j\leq T_r$.
+Otherwise factor $x_j$ from all its monomials. Distribution of
+$\star_r$ over union gives a $j$-free word $g_{j,r}$ such that
+\begin{equation}\label{core:eq:trigger-source-factor}
+ \begin{aligned}
+ x_j\star_r g_{j,r}&\leq T_r,\\
+ \Phi_r(g_{j,r})(A)&=q_{j,r}(A):=[j\in c_r(A)],
+ \qquad A\subseteq W:=V\setminus\{j\}.
+ \end{aligned}
+\end{equation}
+Explicitly, $g_{j,r}$ is the sum of $m_r(B\setminus\{j\})$ over
+open $B$ containing $j$; all residual sets are nonempty. A residual
+monomial is $r$ exactly when it meets $A$, proving the profile identity.
+The interval hypothesis gives $q_{j,r}(A)\Rightarrow p_r(A)$.
+
+For nonzero $q_{j,r}$, choose a $j$-free trigger $h_{j,r}$ on $W$
+with profiles
+\[
+ \beta_r(A)=p_r(A),\qquad
+ \beta_s(A)=p_s(A\cup\{j\})\quad(s\ne r).
+\]
+They are monotone and true at $W$. Nonzero $q_{j,r}$ implies $p_r(W)=1$,
+which forces $p_s(\{j\})=0$ for $s\ne r$. Thus they are normalized.
+For positive coalitions $A_s\subseteq W$, the original positive
+coalitions $A_r$ and $A_s\cup\{j\}$ have nonempty intersection;
+since $j\notin A_r$, that intersection is exactly $\bigcap_s A_s$.
+Now \cref{core:thm:profiles} supplies $h_{j,r}$.
+
+Start at $g_{j,r}+h_{j,r}$ and attach $h_{j,r}$ once at every foreign
+owner. Call the result $\widetilde g_{j,r}$. All its profiles are
+evaluated on the passive set $W$. Its $r$-profile remains $q_{j,r}$,
+since each step conjoins with $\beta_r$, already implied.
+If $h_{j,r}=\{r\}$, it is $g_{j,r}+\{r\}$:
+the initial union contains $r$, so foreign stages cannot absorb it.
+If $h_{j,r}=\{s\}$ with $s\ne r$, its $s$ stage absorbs to $\{s\}$ and
+all later stages preserve that value.
+
+Start $S_j$ at marked $x_j$ and attach each $\widetilde g_{j,r}$
+at owner $r$, omitting zero $q_{j,r}$. It uses $j$ exactly once and
+has marked type $(D_{j,r})_r$. If no $p_r(E_r(w))$ holds, all current
+closures are identities and $F_c(w)$ is the full input union, so
+conservativity proves the bound. Otherwise admissibility gives a
+unique trigger $s$. Foreign closures are identities, hence
+$F_c(w)=T_s(w)$, and $s\in T_s(w)$ since $E_s(w)\ne\varnothing$.
+These cases also show $H_p\leq F_c$ and nonemptiness.
+
+If $w_j\ne\{s\}$, then $E_s(w)\subseteq W$ and every derivative
+trigger $h_{j,r}$ equals $\{s\}$. Before stage $s$ its prefix is
+contained in $w_j\cup\{s\}$. At that stage,
+\[
+ (w_j\cup\{s\})\star_s(g_{j,s}\cup\{s\})
+   =(w_j\star_s g_{j,s})\cup\{s\}\subseteq T_s.
+\]
+This uses distribution, \eqref{core:eq:trigger-source-factor}, and
+$s\in T_s$. Subsequent siblings are $\{s\}$ and stay inside $T_s$.
+If the $s$ stage is absent, $x_j\leq T_s$ gives the same conclusion.
+If instead $w_j=\{s\}$, every foreign $h_{j,r}$ is $\{s\}$, so the
+prefix stays exactly $\{s\}$. Its own $s$ stage absorbs any sibling,
+and subsequent stages again leave $\{s\}$. This proves $S_j\leq F_c$.
+
+The sum of all $S_j$ realizes $F_c$: it is bounded by $F_c$, and its
+marked factors supply every contribution in
+\eqref{core:eq:closure-reconstruction}. Restore each $S_j$ by union
+with this realizer. Its sound type survives unchanged: where its
+$r$ factor holds, neither operand is an $r$ singleton on the pure-$r$
+source probe, so the union implementation adds no $r$ filter.
+Combining two $F_c$ realizers by any owned choice likewise preserves
+their marked types. Thus one realizer contains all the witnesses.
+Pure probes bound every actual factor by $D_{j,r}$, proving maximality.
+
+For the converse, if $p_r(E)=0$ but $j\in c_r(E)\setminus E$, put
+$j=\{k\}$ for $k\ne r$, give $E$ the $r$ atom and every other input
+$I\setminus\{k\}$. The reconstruction omits $k$. The greatest
+completion contains $k$: its only possible atoms are $r$ and $k$,
+and the $r$ profile is false. This contradicts $H_p\leq F_c$.
+\end{proof}
+
+Existence of an admissible bounding tuple is itself a closure test.
+The least normalized capture triggers are
+\[
+ p_r^{\rm cap}(E)=
+ [E=V\ \text{ or }\ \exists P\subseteq E\quad c_r(P)\ne P].
+\]
+An admissible $p$ bounds the closures precisely when it covers every
+nontrivial capture premise. Monotonicity gives $p^{\rm cap}\leq p$;
+admissibility passes to smaller predicates. Conversely, admissible
+$p^{\rm cap}$ supplies the required bound. This sufficient condition
+is not necessary: the complete-head contexts
+$L_0=L_1=\{a\}$, $L_2=\{b\}$ below give a core operation whose three
+capture premises have empty intersection.
+
+\begin{corollary}[Shared-anchor closure normal forms]
+\label{core:cor:shared-anchor-closures}
+Suppose $Y\in V$ and $c_r(E)=E$ whenever $Y\notin E$.
+Then $F_c$ is core. This class is parametrized by arbitrary closures
+$d_r$ on $W=V\setminus\{Y\}$, allowing loops, by setting
+\[
+ c_r(E)=\begin{cases}
+ E,&Y\notin E,\\
+ \{Y\}\cup d_r(E\setminus\{Y\}),&Y\in E.
+ \end{cases}
+\]
+These choices are independent for the different owners. The reconstructed
+operation is input union at ambiguous $Y$; at $Y=\{s\}$ it is
+\[
+ \{s\}\cup\bigcup_{j\in W\setminus d_s(E_s\setminus\{Y\})}w_j.
+\]
+\end{corollary}
+\begin{proof}
+Use $p_r(E)=[Y\in E]$, whose positive coalitions all contain $Y$.
+For $j\ne Y$ every derivative trigger can be $Y$; the anchor's factors
+are all true, giving $S_Y=Y$. Restriction to sets containing
+$Y$ gives $d_r(A)=c_r(A\cup\{Y\})\setminus\{Y\}$; the closure laws
+and the displayed winner formula follow directly.
+\end{proof}

@@ -422,9 +422,11 @@ with disjoint labels, and the coherence map fails to commute with gates.
 
 The [complete-head circuit classification](complete-head-circuits.md)
 gives an exact unbounded family. Each head has a distinct owner and
-is captured by that owner when every other head and its nonempty
+is captured by that owner when every other head and its possibly empty
 context are that owner's atoms. Realizability holds exactly when
-the heads exhaust the owners or some two contexts overlap. Short
+the nonempty contexts represent every owner or some two contexts overlap.
+Joint pure-port realizability requires exactly two nonempty contexts
+or more, and feedback elimination detects the excluded cases. Short
 spines give a closed greatest core minorant and the sharp behavior
 under owner extension. When every owner has a head and contexts are
 disjoint, the ordinary operation is genuine and source-separable,
@@ -443,8 +445,22 @@ pure-owner data with term operations on a colored product of
 three-state algebras. A single coordinate has a five-relation basis
 of arity at most three. The product has genuinely stronger
 compatibility conditions; its finite relatedness is not proved.
+Naming zero gives independent coordinate isolation and a ternary
+relational basis for the expansion. The constant-free clone is
+strictly smaller even on idempotent operations preserving every
+maximal proper invariant relation in every finite power. The same
+counterexample preserves every unary subalgebra and fails a binary
+invariant relation.
 An explicit five-leaf identity separates its equational theory from
 the full core, so this is a proper reduction of the pure-port problem.
+
+[Capture-trigger normal forms](capture-trigger-normal-form.md) settle
+every source-separable upper interval above a greatest profile
+completion. A derivative profile tuple supplies a source-free trigger
+for each owner stage; the resulting source-linear minorant attains the
+entire canonical vector. Arbitrary shared-anchor closures are a special
+case. This is an intrinsic sufficient criterion, not a characterization
+of all separable operations.
 
 For genuine separable targets, [owner-extension stability](owner-extension-stability.md)
 is equivalent to canonical common-carrier attainment. One new owner
