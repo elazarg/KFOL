@@ -1,8 +1,9 @@
 # Exact lower-arity normal forms for a retained source
 
 Written mathematical proofs, without new Lean claims. The statements and
-complete induction are `core:lem:winner-erasure` and
-`core:thm:retained-source` in
+complete inductions are `core:lem:winner-erasure`,
+`core:thm:retained-source`, `core:lem:owner-face-erasure`, and
+`core:thm:retained-profile-reduction` in
 [the report source](../../../sections/appendix-core-retained-sources.tex).
 
 Fix finite K>=3. A core operation F(X,v) retains X if X subseteq F(X,v)
@@ -79,6 +80,74 @@ X={q}, the a-fold equals F unless q=a, in which case the reset piece
 forces it to {a}; symmetrically for b. The final c-choice gives F in
 all cases. Each piece occurs twice, hence at most 2K^2 primitive X
 occurrences, independently of arity and helper complexity.
+
+## Owner-directed contractive erasure
+
+There is now a second erasure, directed by one owner a. Partition the input
+set as W disjoint-union R, and suppose a core H has a nonzero a-profile
+after all R flags are set to zero. There is a core G on W with
+
+    Phi_a(G)(E) = Phi_a(H)(E),
+    Phi_s(G)(E) >= Phi_s(H)(E union R) for EVERY s != a,
+    G(w) subseteq H(z,w) whenever each z_j != {a}, j in R.
+
+The foreign-profile inequality sets ALL deleted s-flags to ONE. This is
+stronger than preservation of their zero sections and preserves every actual
+foreign absorber throughout the owner-avoiding face.
+
+The compiler marks subwords active if their deleted a-profile is nonzero.
+An a-node is active iff either child is; a foreign node is active iff both
+are, since two nonzero monotone profiles meet at their top coalition.
+At an active a-node discard inactive children; at an active foreign node keep
+both children and its original gate. All remaining leaves are in W.
+Profile induction gives the two displayed assertions. On the non-a face,
+actual a-absorbers are preserved by the exact deleted profile; foreign
+absorbers are preserved by the stronger one-section domination. Inactive
+a-children cannot absorb there. At every other node the original value is
+union and contains the compiled child values. This proves contraction.
+
+The construction handles simultaneous deletion directly and agrees with
+successive deletions: a branch already inactive stays inactive after more
+flags are deleted. It is a contractive profile erasure, not the entire
+ordinary neutral residue.
+
+## Exact profile reduction below a retained upper bound
+
+Let F be ANY monotone winner correspondence retaining every input in a
+nonempty R; F need not be core. Put
+
+    D_a^R(w) = INTERSECTION_(q in (I\{a})^R) F(({q_j})_j,w).
+
+For every nonzero prescribed a-profile f on W, these are equivalent:
+
+1. Some core H<=F has deleted a-profile f.
+2. Some lower-arity core G<=D_a^R has a-profile f.
+
+Necessity is contractive erasure. Conversely attach the a-fold of R
+to G by a-choice. If a retained input is atom a, the result is a and is
+contained in F by retention. Otherwise choose a non-a atom from each
+retained menu; monotonicity gives G<=F at that input, and F already contains
+the retained union. Thus
+
+    H'=G choice_a (a-fold of R) <= F.
+
+This preserves all requested a-profile bits on coalitions avoiding R, so the
+same equivalence handles one positive query or a same-owner positive/negative
+pair. It gives the greatest monotone extension f OR OR_(j in R) x_j for every
+attainable zero section f. For the zero function that extension is the
+retained fold itself. Only (K-1)^|R| atomic cofactors are needed; ambiguous
+cofactors follow by menu-inclusion monotonicity.
+
+This explains the positive gluing counter. Its retained bound D has cofactors
+
+    D(z=b,x,y) = {b} union (x choice_a y),
+    D(z=c,x,y) = {c} union (x choice_b y).
+
+Their intersection is {b} at (a,b) and {a} at (a,c). Any common lower-arity
+core would therefore have b-winning coalition {y} and a-winning coalition
+{x}, contradicting common-source admissibility. The earlier tree-descent
+proof of this positive-only counter is superseded by this reduction in the
+report (`core:prop:positive-profile-gluing`).
 
 ## Relation to the full target
 

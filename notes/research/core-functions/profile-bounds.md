@@ -177,14 +177,14 @@ among x,y; if Q does not absorb, it contains P, hence both x,y or an
 a-singleton among them. Thus projections x,y give pointwise witnesses
 for the SINGLE demand Phi_a(xy)=1.
 
-No joint witness exists. At the same atomic rows u,v, D outputs bc,ab.
-With a-positive xy the v-output cannot be a (its a-atomic coalition is
-the same at u), b (its b-atomic coalition z misses xy), or c (the bound).
-Thus that bound always passes to both children. At u a is forbidden and
-c cannot absorb, by the disjoint positive a-quorum. Select a b-absorbing
-child if present, otherwise any child retaining the positive a-bit.
-No bounded positive projection exists. This is
-`core:prop:positive-profile-gluing`, with a uniform written proof.
+No joint witness exists. The
+[retained-input profile reduction](retained-sources.md#exact-profile-reduction-below-a-retained-upper-bound)
+erases z contractively on its non-a face and gives a lower-arity core G
+bounded by both {b} union (x star_a y) and {c} union (x star_b y).
+Their intersection is {b} at (a,b) and {a} at (a,c), forcing disjoint
+winning coalitions {y} at b and {x} at a. This contradicts common-source
+admissibility. This replaces the earlier positive-only descent proof;
+`core:prop:positive-profile-gluing` now follows from the general reduction.
 
 Thus the missing compatibility is genuinely simultaneous, including for
 one active mask over a known core interval. It cannot be removed by

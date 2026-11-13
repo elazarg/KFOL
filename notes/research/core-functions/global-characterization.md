@@ -53,6 +53,16 @@ they do not supply the missing guard characterization.
 
 ## Shared coordinates and one common observer carrier
 
+The retained-input profile reduction in
+[retained-sources.md](retained-sources.md#owner-directed-contractive-erasure)
+is a written positive result beyond separate one-point tests. Activity
+pruning preserves a chosen owner's zero section exactly, dominates every
+foreign one section, and is uniformly contractive on the owner's avoiding
+face. Thus profile queries excluding retained inputs reduce exactly to a
+lower-arity core body under the common atomic-cofactor bound. No supplied
+helper is needed for the normal form, but the lower-arity bound may be
+noncore, so it retains a genuine joint-minorant problem.
+
 The [status-selector representation](status-selectors.md) replaces separate
 per-owner selections on one atomic-status fibre by a canonical pair: fixed
 atomic winners and whole ambiguous inputs. Four-point interpolation already

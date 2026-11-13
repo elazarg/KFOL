@@ -157,6 +157,20 @@ explicit selectors prove sufficiency and bound j reuse by 2K^2 primitive
 occurrences. This reduces the globally retained-source class to lower
 arity. It does not yet localize to arbitrary nonconstant source guards.
 
+Owner-directed erasure now gives a second, contractive reduction. If one
+owner's profile survives deleting inputs R, an active-branch pruning
+preserves that deleted profile exactly, dominates every foreign profile
+with all R flags set to one, and lies below the original word whenever
+the deleted inputs avoid that owner's singleton. Consequently one-owner
+profile queries below any monotone upper bound retaining R reduce exactly
+to a lower-arity common bound on (K-1)^|R| atomic cofactors. This covers
+positive queries and same-owner separators whose coalitions avoid R.
+The cofactor intersection need not be core, so this does not finish the
+joint-guard problem. It supplies a complete normal form for this elimination
+step (`core:lem:owner-face-erasure`, `core:thm:retained-profile-reduction`),
+and replaces the positive gluing counter's tree-descent proof by a
+two-variable common-source contradiction.
+
 [Guarded-source gluing](guarded-source-gluing.md) records exact atomic
 and ambiguous cofactor data for one source-separable input. These data
 alone fail on the existing reciprocal example; adding every two-color

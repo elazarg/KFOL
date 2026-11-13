@@ -1,8 +1,9 @@
 \paragraph{Retained sources and atomic cofactors.}
 The projection-profile fiber is part of a larger class with an exact
 lower-arity normal form. A source is \emph{retained} when its whole input
-menu is contained in every output. The first lemma removes a fixed menu
-from a cofactor without treating the empty set as a unit.
+menu is contained in every output. Fixed-menu erasure gives the normal form;
+profile-directed erasure then reduces one-owner profile queries below
+retained upper bounds to common lower-arity atomic cofactors.
 
 \begin{lemma}[Erasing a fixed menu]\label{core:lem:winner-erasure}
 For $K\geq3$, fix a core word $t(X,v)$ and a nonempty menu $A$, and put
@@ -124,6 +125,134 @@ piece contains $q$, so $W_a=F$ unless $q=a$; then the baseline piece
 forces $W_a=\{a\}$. The analogous assertion holds for $W_b$.
 Consequently $W_a\star_cW_b=F$ in every case. Each piece is used
 twice, proving the primitive bound $2K^2$.
+\end{proof}
+
+\paragraph{Profile-directed erasure.}
+For a fixed owner, a different erasure is contractive on all cofactors
+avoiding that owner's atom. It need not preserve the entire neutral residue.
+
+\begin{lemma}[Erasure on an owner-avoiding face]
+\label{core:lem:owner-face-erasure}
+Partition the finite variable set as $V=W\sqcup R$, fix an owner $a$,
+and let $H$ be a core word. Suppose
+$f(E)=\Phi_a(H)(E)$ for $E\subseteq W$ is nonzero.
+There is a core word $G$ on $W$ such that
+\[
+ \Phi_a(G)(E)=\Phi_a(H)(E),\qquad
+ \Phi_s(G)(E)\geq\Phi_s(H)(E\cup R)\quad(s\ne a),
+\]
+and
+\[
+ G(w)\subseteq H(z,w)
+ \quad\text{whenever }z_j\ne\{a\}\text{ for every }j\in R.
+\]
+\end{lemma}
+\begin{proof}
+Call a subword active when its $a$-profile after setting all $R$-flags
+to zero is nonzero. An $a$-node is active exactly when at least one child
+is active; a foreign node is active exactly when both are active.
+This uses monotonicity: two nonzero monotone predicates are both true at
+the top coalition. Delete inactive subwords at $a$-nodes, retain the
+original gate when both children are active, and leave the $W$-leaves
+unchanged. This constructs a nonempty word $G$ on $W$.
+
+Induct simultaneously on the two profile assertions and containment.
+Deleting an inactive child at an $a$-node preserves its $a$-profile,
+while every foreign profile was a conjunction and can only increase.
+All other retained gates preserve the asserted profile inequalities.
+
+Now suppose every deleted input avoids $\{a\}$. An actual $a$-absorber
+has its deleted $a$-bit true, so its child is active and its compiled child
+is also $\{a\}$. An inactive child cannot be such an absorber.
+At a foreign $s$-node, both children are active. If an original child
+equals $\{s\}$, monotonicity of its profile followed by the inequality
+with all $R$-flags set to one makes its compiled child $\{s\}$ too.
+Thus every actual absorber is preserved. Where the original gate acts
+as union, the retained child or children are contained by induction.
+This proves the uniform containment on the stated face.
+\end{proof}
+
+\begin{theorem}[Retained-input reduction of profile queries]
+\label{core:thm:retained-profile-reduction}
+Let $F$ be any winner-set-valued operation monotone under menu inclusion,
+retaining every input in a nonempty set $R$, and put $W=V\setminus R$.
+For an owner $a$ define the lower-arity upper bound
+\[
+ D_a^R(w)=
+ \bigcap_{q\in(I\setminus\{a\})^R}
+       F\bigl((\{q_j\})_{j\in R},w\bigr).
+\]
+For any nonzero prescribed profile $f:2^W\to\{0,1\}$, the following
+are equivalent:
+\begin{enumerate}
+\item Some core $H\subseteq F$ has $\Phi_a(H)|_{2^W}=f$.
+\item Some core $G$ on $W$ satisfies $G\subseteq D_a^R$ and
+  $\Phi_a(G)=f$.
+\end{enumerate}
+When these hold, a witness for (1) is
+\[
+ G\star_a\Bigl(\mathop{\star_a}_{j\in R}x_j\Bigr).
+\]
+Only $(K-1)^{|R|}$ atomic cofactors enter the upper bound.
+\end{theorem}
+\begin{proof}
+For necessity apply \cref{core:lem:owner-face-erasure} to $H$ and
+restrict its face containment to the displayed atomic inputs.
+For sufficiency use the displayed word. If any retained input equals
+$\{a\}$, it returns $\{a\}$, which belongs to $F$ by retention.
+Otherwise choose $q_j\in z_j\setminus\{a\}$ for every $j\in R$.
+The bound on $G$ and monotonicity give
+$G(w)\subseteq F((\{q_j\})_j,w)\subseteq F(z,w)$.
+The retained fold is the union of its input menus, also contained in
+$F(z,w)$. Their owned choice is therefore contained in $F$.
+Its $a$-profile on coalitions contained in $W$ is exactly $f$.
+\end{proof}
+
+The same reduction applies to a positive $a$-bit, or a positive/negative
+pair of $a$-bits, whose coalitions avoid $R$: the erasure preserves these
+bits exactly, and the displayed attachment restores the deleted inputs.
+For a fixed attainable deleted profile $f$, it also gives the greatest
+monotone extension
+$f\lor\bigvee_{j\in R}x_j$ as the profile of a core minorant of $F$.
+For the zero deleted profile this greatest extension is realized by the
+retained fold alone. The bound $D_a^R$ need not itself be a core operation;
+its lower-arity common-minorant problem is retained by the reduction.
+
+\begin{proposition}[A positive quorum need not glue]
+\label{core:prop:positive-profile-gluing}
+For distinct owners $a,b,c$, put
+\[
+ D(z,x,y)=(x\star_b y\star_b z)+((x\star_a y)\star_c z).
+\]
+At every input $w$, the value $D(w)$ contains the whole $x$-menu or
+the whole $y$-menu. Both projections make $\{x,y\}$ an $a$-winning
+coalition, but no core minorant of $D$ does. Thus one positive profile
+requirement has bounded witnesses at every individual input without
+a common bounded witness.
+\end{proposition}
+\begin{proof}
+Write $L=x\star_b y\star_b z$ and $P=x\star_a y$.
+If $L\ne\{b\}$, it is the full input union. Otherwise $L=\{b\}$.
+If also $P\star_c z=\{c\}$, then either $z=\{c\}$ and some
+input among $x,y$ is $\{b\}$, or $P=\{c\}$ and $x=y=\{c\}$.
+Thus $D=\{b,c\}$ contains one of those whole inputs. Otherwise
+$P\star_c z=P\cup z$; either $P=x\cup y$ or $P=\{a\}$ supplies
+an $a$-singleton input among $x,y$. This proves the pointwise assertion.
+
+The operation $D$ retains $z$: the only remaining case is
+$L=\{b\}$ and $P\star_c z=\{c\}$, where the preceding alternatives
+give $z=\{c\}$ or $z=\{b\}$.
+Its atomic cofactors are
+\[
+ D(\{b\},x,y)=\{b\}\cup(x\star_a y),\qquad
+ D(\{c\},x,y)=\{c\}\cup(x\star_b y).
+\]
+If a common helper existed, \cref{core:thm:retained-profile-reduction}
+would give a core $G$ on $x,y$ bounded by both displayed cofactors.
+At $(x,y)=(\{a\},\{b\})$ their intersection is $\{b\}$;
+at $(\{a\},\{c\})$ it is $\{a\}$.
+Thus $G$ has a positive $b$-bit on $\{y\}$ and a positive $a$-bit
+on $\{x\}$, contradicting the common-source condition.
 \end{proof}
 
 A retained source is detected by the canonical coefficients

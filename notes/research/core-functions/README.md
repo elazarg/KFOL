@@ -95,6 +95,11 @@ The proof erases fixed menus from cofactors while preserving all winners
 outside the menu and every nonzero singleton profile. Neutral residuals
 have an exact local compiler with at most four gates per input gate. It gives a
 positive class despite the unbounded reuse required in general.
+Owner-directed erasure additionally preserves one deleted profile exactly,
+dominates foreign profiles with the deleted flags set to one, and is
+contractive whenever those inputs avoid its owner's atom. Thus one-owner
+profile queries below a retained upper bound reduce exactly to common
+lower-arity bounds on atomic cofactors, even if the upper bound is not core.
 
 For [read-once primitive core trees](read-once-profile-minimum.md), a closed
 rainbow formula in the singleton profiles gives the entire winner operation.
