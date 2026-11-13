@@ -26,6 +26,14 @@ word size, so these marginal minima need not be simultaneously attainable.
 The source predicate also records functional dependence under proper partial
 atomic cofactors. Joint compatibility of different sources remains the target.
 
+[Source intervals](source-intervals.md) isolate a relative compatibility
+problem: C <= F(X,v) <= C+X. Their activation predicates form a bounded
+distributive lattice, with meet given by substitution at X. All singleton-r
+fibers of C have one activation bit. The criterion above a binary owned
+choice is closed and explicit; it includes implications missed by
+antitonicity and passive cofactor independence. For arbitrary C, computing
+the interval's implication preorder remains a structural subproblem.
+
 Closed boundary/no-trap conditions now present every invariant relation in
 `Core/Hypergraphs`. This gives a complete infinite obstruction basis, still
 with auxiliary clutters. [global-characterization.md](global-characterization.md)

@@ -1,0 +1,149 @@
+\paragraph{Adding a source above a fixed operation.}
+Fix a core operation $C$ on the nonempty passive set $W$, and let
+\[
+ \mathcal I(C)=\{F\text{ core}:C(v)\subseteq F(X,v)
+                              \subseteq C(v)\cup X\}.
+\]
+The complete passive source families are fixed throughout this interval.
+Only the distinguished source family $P:\mathcal D_W\to\{0,1\}$ varies.
+Write $E^{\widehat k}$ for the coloring obtained from $E$ by erasing its
+entire $k$-block, and put
+$T_r=\{E\in\mathcal D_W:\Phi_r(C)(E_r)=1\}$.
+These sets are pairwise disjoint.
+
+\begin{theorem}[Relative source compatibility]
+\label{core:thm:source-interval}
+For finite $K\geq3$, each $F\in\mathcal I(C)$ is determined by its
+distinguished source predicate $P$, through
+\[
+ F(X,v)=C(v)\cup
+       \{k\in X:P(E(v)^{\widehat k})=1\}.
+\]
+The realizable predicates form a bounded distributive sublattice of
+$\{0,1\}^{\mathcal D_W}$. Join is pointwise union, and meet is
+composition at $X$:
+\[
+ (F\wedge G)(X,v)=F(G(X,v),v).
+\]
+Every realizable predicate is constant on each $T_r$.
+Moreover, any predicate whose restriction to every two colorings agrees
+with some member of this interval is itself realized in the interval.
+\end{theorem}
+\begin{proof}
+At a passive-source $k$-probe, $X$ omits $k$. The two bounds therefore
+force that source coefficient to equal its coefficient in $C$.
+Source decomposition proves the formula and its uniqueness. At an
+$X$-source probe, $C$ omits the queried winner, so $P$ is observable.
+The formula shows that union takes $P\lor Q$, while composition takes
+$P\land Q$. Both constructions remain in the interval. The bottom and
+top are $C$ and $C\cup X$.
+
+For constancy on $T_r$, fix $q\ne r$ and put $h(v)=F(\{q\},v)$.
+This is not constantly $\{q\}$, since $C$ takes the value $\{r\}$.
+The fixed-menu erasure lemma gives a nonempty core $g\leq C$.
+Whenever $C=\{r\}$, necessarily $g=\{r\}$.
+If $h$ ever equals $\{r\}$, preservation of its nonzero $r$-profile
+therefore makes it equal $\{r\}$ everywhere on this fiber. Otherwise
+it equals $\{r,q\}$ everywhere there. The $r$-profile of $F$ has the
+same $X$-flag for every $q\ne r$, so this alternative is independent
+of $q$. It gives the asserted constant value of $P$ on $T_r$.
+
+Finally, let $P$ have the stated two-coloring interpolation property.
+For each coloring $q$ with $P(q)=1$, intersect interval predicates
+that are positive at $q$ and negative at each coloring where $P=0$.
+The interpolation hypothesis supplies each factor. Their intersection
+stays positive at $q$ and vanishes wherever $P=0$. Union over the
+positive colorings gives exactly $P$. Empty intersections and unions
+use the top and bottom.
+\end{proof}
+
+Equivalently, the interval is the downset lattice of the preorder
+\[
+ p\preceq_C q\quad\Longleftrightarrow\quad
+ \forall F\in\mathcal I(C),\quad P_F(q)=1\ \Longrightarrow\ P_F(p)=1.
+\]
+The theorem reduces relative compatibility to implications between two
+source probes, but this definition of the preorder still quantifies over
+realizers. Antitonicity and passive cofactor independence give explicit
+edges. They do not give every edge, even for a binary base.
+
+\begin{lemma}[Three-row separation]\label{core:lem:interval-three-rows}
+Fix distinct owners $a,b,c$. In variable order $X,x,y$, put
+\[
+ u=(\{b\},\{a\},\{c\}),\qquad
+ v=(\{c\},\{b\},\{a\}),\qquad
+ w=(\{a\},\{b\},\{c\}).
+\]
+If a core term $t$ satisfies
+$t(u)\subseteq\{a,b\}$, $t(v)\subseteq\{a,c\}$, and
+$t(w)\subseteq\{b,c\}$, then
+$t(u)=t(v)=\{a\}$ and $t(w)=\{b,c\}$.
+\end{lemma}
+\begin{proof}
+Suppose $b\in t(u)$. The profile pair test
+\eqref{core:eq:profile-pair-safe}, applied to the bounds at $u,w$,
+respectively, gives
+\[
+ \Phi_a(t)(\{y\})\Rightarrow\Phi_a(t)(\{x\}),\qquad
+ \Phi_c(t)(\{X\})\Rightarrow\Phi_c(t)(\{y\}).
+\]
+The first excludes $t(v)=\{a\}$: it would force $t(u)=\{a\}$.
+The second excludes $t(v)=\{c\}$: it would force $t(u)=\{c\}$.
+Thus $t(v)=\{a,c\}$. Also $t(w)$ cannot be the $b$ singleton,
+whose atomic coalition $\{x\}$ is the same at $v$; nor can it be the
+$c$ singleton, whose coalition $\{y\}$ is the same at $u$.
+Hence $t(w)=\{b,c\}$.
+
+At the root, both $v$ and $w$ consequently act as union, so both
+children respect their two bounds. At $u$, follow a child containing
+$b$; if the root absorbs, it is owned by $b$ and one may follow a
+$b$-singleton child. In either case the chosen child also respects
+the bound at $u$. Repeat with this strictly smaller term. No variable
+satisfies the three bounds and contains $b$ at $u$, a contradiction.
+Thus $t(u)=\{a\}$. Swapping $x,y$ and $b,c$ gives $t(v)=\{a\}$.
+The same singleton-coalition comparisons now force $t(w)=\{b,c\}$.
+\end{proof}
+
+\begin{theorem}[Closed compatibility above a binary choice]
+\label{core:thm:binary-source-interval}
+Let $C(x,y)=x\star_a y$ and let
+$P:\mathcal D_{\{x,y\}}\to\{0,1\}$ be antitone. It is the
+distinguished source predicate of an operation in $\mathcal I(C)$
+if and only if:
+\begin{enumerate}
+\item $P$ has one value $\lambda$ on all colorings with $x=a$ or $y=a$;
+\item if $\lambda=1$, then $P(x=b,y=c)=1$ for every pair of distinct
+      owners $b,c\ne a$.
+\end{enumerate}
+\end{theorem}
+\begin{proof}
+The first condition follows from \cref{core:thm:source-interval}.
+If the second fails, the three rows of
+\cref{core:lem:interval-three-rows} would have respective outputs
+$\{a,b\},\{a,c\},\{b,c\}$, which that lemma excludes.
+
+For sufficiency with $\lambda=0$, let $Q_P$ be the greatest
+single-source completion retaining $x\cup y$, given by
+\cref{core:thm:source-completion}. Use $Q_P\star_a C$.
+When $C=\{a\}$ the result is $C$ and the required source coefficient
+is zero. Otherwise $C=x\cup y$, so $Q_P\supseteq C$ and the gate
+acts as union, returning $Q_P$. This proves both interval bounds and
+the required source family on every input menu.
+
+Suppose $\lambda=1$. Every coloring with an uncolored position
+extends to one with an $a$-atom, so has value one by antitonicity.
+The second condition handles every remaining coloring with two
+distinct foreign atoms. Thus only the values
+$P(x=r,y=r)$ for $r\ne a$ can be zero.
+Start from $C\cup X$ and attach $C$ by $\star_r$ once for each such
+zero. This suppresses $X$ exactly when $C=\{r\}$ for a selected
+foreign owner, giving precisely $P$ and preserving both bounds.
+\end{proof}
+
+For example, set $P=0$ exactly when both passive inputs are colored
+by owners different from $a$. This is antitone and respects every
+passive cofactor independence of $C$: fixing either input to $a$
+leaves $P$ constantly one. Its singleton-$a$ value is one, but its
+value at $(x=b,y=c)$ is zero. It therefore has no interval realizer.
+Binary identification minors of a larger base inherit the same
+additional implications.
