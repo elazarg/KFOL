@@ -441,12 +441,11 @@ the supplied owners. Strong (FE) at the original owner set alone is
 insufficient, including when that set has exactly three elements.
 
 Even compatibility with every unused identity owner is insufficient.
-The [nine-variable profile obstruction](feedback-profile-obstruction.md)
-passes all these feedback tests for every fixed owner count K>=3.
-Its six captures nevertheless force a singleton profile missing from
-the supplied closure data. This is a profile-persistence obstruction,
-not a malformed cofactor semantics: the reconstruction has exact
-dependence closures and hereditary omission independence.
+The [five-variable terminal obstruction](feedback-profile-obstruction.md)
+passes all these feedback tests for every fixed owner count K>=3,
+but its pure source port cannot be realized. Its reconstruction has
+full cofactor independence, a core baseline, and core proper neutral
+residuals.
 
 ## A counterexample to the previous closure laws
 

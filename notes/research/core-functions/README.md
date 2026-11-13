@@ -19,6 +19,13 @@ marked type then has an exact primitive one-source-linear minorant, giving
 linear covers of arbitrary one-source intervals. Canonical sink completions
 still fail to glue on the prime Gray obstructions.
 
+[Terminal separable extensions](one-owner-source-intervals.md) have exact
+two-law criteria above arbitrary one-owner traces and primitive read-once
+baselines, and the construction survives disjoint baseline union. The
+general criterion is false: the five-variable terminal obstruction has
+a core baseline and core proper neutral residuals, and passes every
+identity-extension feedback test, but has no pure-port realizer.
+
 Finite relatedness is now disproved for every fixed finite K≥3: for each m,
 `Core.Crown.exists_local_obstruction` gives an (m+3)-ary nonterm operation
 with a common core interpolant on every m valuations. The cycle construction
@@ -226,10 +233,10 @@ profile test and still has repeated-query feedback. Restricted to its
 three nonidentity owners, it even satisfies full strong feedback
 elimination, yet has no common word: a fresh identity observer detects
 the obstruction. Even after all unused-owner tests are included, the
-[nine-variable profile obstruction](feedback-profile-obstruction.md)
-passes feedback but has no common realizer: its six captures force an
-additional singleton profile. Its reconstruction also has exact
-dependence closures and hereditary omission independence.
+[five-variable terminal obstruction](feedback-profile-obstruction.md)
+passes feedback but has no common pure-port realizer. Its reconstruction
+has full cofactor independence, a core baseline, and core proper neutral
+residuals, even though its new source introduces no dependency cycle.
 
 [Conditional foreign traces](conditional-trace-minorants.md) have an
 exact weaker property: their trace function admits a full-support core

@@ -421,10 +421,10 @@ every common word. Two foreign colors admit complete compression to
 conditional mutual captures; three foreign colors require repeated
 queries, even after all independent-base profile tests are imposed.
 Compatibility after adding an unused owner is necessary but still
-insufficient: a [nine-variable tuple](feedback-profile-obstruction.md)
-passes all identity-extension feedback tests, yet six captures force a
-missing singleton profile. The counter retains exact dependence and
-hereditary omission. These tests do not settle even pure traces. A
+insufficient: a [five-variable terminal tuple](feedback-profile-obstruction.md)
+passes all identity-extension feedback tests but has no joint pure-port
+realizer. It has full cofactor independence, a core passive baseline,
+and core proper neutral residuals. These tests do not settle even pure traces. A
 [naive lift to independent coalition nodes](coalition-lift-obstruction.md)
 does not repair this: a genuine core CNF already yields a mixed SCC
 with disjoint labels, and the coherence map fails to commute with gates.

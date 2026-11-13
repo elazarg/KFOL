@@ -1,0 +1,135 @@
+\paragraph{A terminal source need not extend a cyclic baseline.}
+The read-once hypothesis cannot be replaced by a core realization of the
+baseline. The obstruction already has four passive inputs, one owner box
+at the new source, and core proper neutral residuals.
+
+\begin{theorem}[A separable terminal obstruction]
+\label{core:thm:terminal-separable-obstruction}
+For every $K\geq3$ there are a source-separable core baseline
+$C(x,y,z,t)$ and a source-separable operation $F(X,x,y,z,t)$ such that
+\begin{enumerate}
+\item $C\subseteq F\subseteq C\cup X$, and $X$ is a source sink;
+\item the new source has one normalized owner box, and the two terminal
+  closure laws hold, hence full colored-cofactor independence holds;
+\item every proper nonempty neutral residual is core;
+\item $F$ is not core. Even its pure-owner closure tuple has no joint
+  core realizer.
+\end{enumerate}
+\end{theorem}
+\begin{proof}
+Fix distinct owners $a,b,c$, and put
+\[
+ D=(x\star_b y)\star_a(x\star_b z)\star_a(y\star_b z),
+ \qquad C=D\star_a t.
+\]
+The operation $D$ returns the $a$ or $b$ singleton when at least two
+inputs are that singleton, and otherwise returns $x\cup y\cup z$.
+For the latter case, no inner clause is the $a$ singleton, and at
+most one input is the $b$ singleton; each foreign-$b$ source therefore
+survives in a clause avoiding that singleton. Thus $D$ is the greatest
+completion of its two majority profiles and the other owners' unanimity
+profiles.
+
+Write $W=\{x,y,z,t\}$, $W_0=\{x,y,z\}$, and
+$m(E)=[|E\cap W_0|\geq2]$. The baseline is separable, with closures
+\[
+ \begin{aligned}
+ c_a(E)&=\begin{cases}W,&t\in E\text{ or }m(E)=1,\\E,&\text{otherwise},\end{cases}\\
+ c_b(E)&=\begin{cases}W_0\cup(E\cap\{t\}),&m(E)=1,\\E,&\text{otherwise},\end{cases}\\
+ c_s(E)&=E\quad(s\notin\{a,b\}).
+ \end{aligned}
+\]
+Indeed the source factors of $D$ at $a,b$ exclude exactly the other
+two inputs being that atom. The last $a$-gate adds its $t$ factor;
+the $t$-source's only filter is the $a$-majority test in $D$.
+
+Set $A=\{y,z,t\}$ and define
+\[
+ F(X,w)=\begin{cases}
+ C(w),&w_y=w_z=w_t=\{c\},\\
+ C(w)\cup X,&\text{otherwise}.
+ \end{cases}
+\]
+Its new masks are $\psi_c(E)=[A\subseteq E]$ and $\psi_s=0$
+for $s\ne c$. They satisfy the terminal laws. The own-$c$ closure
+is the identity. In the only nontrivial cross law, if
+$\psi_c(B)=1$ and $E\cap B=\varnothing$, then
+$E\subseteq\{x\}$, which both $c_a,c_b$ fix. If $\psi_c(B)=0$,
+any deletion preserves zero by monotonicity. All other laws are
+immediate. \Cref{core:lem:terminal-closure-laws} therefore gives the
+stated value formula, separability, and full functional independence.
+
+We prove the stronger assertion that no core operation bounded by $F$
+can supply $c$ at the probe
+\[
+ p:\quad X=\{c\},\quad x=y=z=t=\{a\}.
+\]
+Here $C=\{a\}$ and $c\in F$.
+Suppose such an operation $T$ exists. A marked $X$-occurrence supplies
+its $c$, since every passive input omits $c$. Marked linearization
+gives a primitive one-$X$ spine $S$ preserving that contribution and
+bounded by $T+\partial_XT$. Since
+$\partial_XT\subseteq\partial_XF=C$, this spine is bounded by $F$.
+
+There is no $a$-owned gate on the spine's path: at $p$ every passive
+helper is $\{a\}$, and any such gate would erase $c$ permanently.
+
+For any valuation with $C=\{a\}$, put $X=\{a\}$. Then $S=\{a\}$.
+With no $a$-owned path gate, its $a$-singleton predicate is the
+conjunction of its helpers' $a$-singleton predicates. Hence every
+passive helper $H$ satisfies
+\[
+ \Phi_a(H)(\{x,y\})=1,\qquad \Phi_a(H)(\{t\})=1.
+\]
+The pure-$c$ trigger probe, with $X=\{a\}$, $y=z=t=\{c\}$,
+and $x=I\setminus\{a\}$, must omit $a$. The marked-source factor
+formula therefore forces some $c$-owned helper $G$ to have
+$\Phi_c(G)(A)=1$: no other owner has a nonempty atomic coalition
+on that probe.
+
+Now use the row
+\[
+ X=\{b,c\},\quad x=z=\{b\},\quad y=\{a\},\quad t=\{b,c\}.
+\]
+It has $C=F=\{b,c\}$. The helper $G$ must contain $a$ there.
+Apply \cref{core:thm:one-bound-profiles} with positive coalitions
+$\{x,y\}$ at $a$, $A$ at $c$, and allowed output $I\setminus\{a\}$.
+Their intersection is $\{y\}$, whose menu is the forbidden singleton
+$a$; the only allowed owner among these two is $c$, whose atomic set
+is empty. Both alternatives fail.
+
+No helper can absorb at this row. Its positive $a$-coalition $\{t\}$
+forces every foreign-owner winning coalition to contain $t$, by
+profile admissibility; but $t$ is ambiguous. All path owners are
+foreign to $a$, and the prefix starts ambiguous at $X=\{b,c\}$.
+Every gate consequently takes union, so $a\in G$ persists to the
+root, contradicting $S\subseteq F$.
+
+In particular $F$ is noncore. If a core word had its prescribed
+pure-owner closures, every marked owner factor would be bounded by
+the corresponding pure port, so the word would lie below the
+separable reconstruction $F$. Its pure-$a$ new-source port at $p$
+would nevertheless supply $c$, contradicting what was just proved.
+
+Finally, deleting $X$ gives $C$. Deleting any input of $A$ kills the
+mask and gives $X+\partial_iC$, which is core. Deleting $x$ gives
+baseline $B=(y+z)\star_a t$ and the mask
+$\psi_c=\Phi_c(B)$; this residual is
+$B+(X\star_c B)$, also core. All further proper nonempty neutral
+residuals are core by neutral elimination.
+They are nonzero whenever an input remains: every remaining source
+has a positive empty port.
+\end{proof}
+
+The two children $D$ and $t$ individually admit every compatible
+terminal extension. For a profile maximum, the terminal laws give the
+criterion in \cref{core:thm:profile-source-interval}. The constant tag
+values are $\lambda_r=[\psi_r=0]$: an active mask contains the
+$r$-profile by the first law, while an inactive mask lets a spanning
+$r$-coalition erase every foreign atomic block by the cross law.
+More generally, when $\psi_r=0$, the condition
+$\Phi_r(D)(W\setminus E_s)=1$ lets the cross law erase all of
+$E_s$, forcing $\psi_s(E_s)=0$. Thus $\theta_r\leq P$ whenever that
+tag is retained. This applies to $D$; the other child $t$ is a projection.
+Thus this extension property is preserved by disjoint union, but need
+not be preserved by disjoint owned choice.

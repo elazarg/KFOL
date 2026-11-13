@@ -67,11 +67,12 @@ If its mask is positive, F=C for every menu of j. Otherwise the two
 laws make all masks invariant under j, proving full functional
 independence. The new-source case follows immediately from the formula.
 
-The current synthesis question is whether these two laws suffice to
-adjoin a terminal separable source above any genuine separable core
-baseline. This adds no dependency cycle, but the one-owner construction
-does not extend directly: the four-variable example already disproves
-attainment by a single spine with the canonical maximal full type.
+The unrestricted terminal synthesis conjecture is false. The
+[five-variable counterexample](feedback-profile-obstruction.md) satisfies
+both laws over a genuine separable core baseline but has no joint
+pure-port realizer. All its proper neutral residuals are core, and it
+passes feedback after every identity-owner extension. Thus the failure
+does not come from a new dependency cycle or a noncore passive baseline.
 
 ## Primitive read-once baselines are now solved
 
@@ -106,9 +107,9 @@ There are three ingredients.
 Do not extend the rigidity lemma to named-union trees: input union has
 arbitrary single-mask extensions. The union lemma is valid more generally,
 but the read-once induction uses primitive choice children in its zero
-root-mask branch. Repeated-variable multi-owner baselines remain the
-unresolved terminal case; this theorem does not settle arbitrary cyclic
-joint-guard compatibility.
+root-mask branch. Repeated-variable multi-owner baselines do not obey
+this criterion, by the terminal counterexample above. Arbitrary cyclic
+joint-guard compatibility remains the full characterization target.
 
 ## No owner-only bound on exact spine order
 
