@@ -42,8 +42,9 @@ leaving overlapping-input and prime-operation compatibility unresolved.
 
 [Retained sources](retained-sources.md) have an exact lower-arity normal
 form and a uniform 2K^2 bound on primitive copies of the retained input.
-The proof erases a fixed winner from atomic cofactors while preserving
-all other winners and every nonzero singleton profile. It gives a
+The proof erases fixed menus from cofactors while preserving all winners
+outside the menu and every nonzero singleton profile. Neutral residuals
+have an exact local compiler with at most four gates per input gate. It gives a
 positive class despite the unbounded reuse required in general.
 
 For [read-once primitive core trees](read-once-profile-minimum.md), a closed

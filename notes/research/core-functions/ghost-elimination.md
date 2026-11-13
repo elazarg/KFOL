@@ -15,7 +15,8 @@ unowned winner survives. If a subtree is unmarked, substituting any ordinary
 A for X leaves its residue unchanged. If marked, the value contains A and is
 bounded by A union its residue; for ambiguous A equality holds.
 
-If children s,u have nonzero compiled residues g,h, compile their r-choice as
+The current Lean proof compiles children s,u with nonzero residues g,h
+using their original subwords:
 
     (g union s[h/X]) star_r (h union u[g/X]).
 
@@ -29,6 +30,46 @@ Consequently, among actual core operations, having exactly the singleton
 outputs of X is equivalent to being X or g(v) reset X. The alternatives are
 disjoint, g is unique as a full operation, and every core g has such a core
 lift at finite K. Owned choices within this fiber all coincide with union.
+
+## Local residual compiler and exact surviving profiles
+
+A shorter mathematical proof is now in `core:cor:residual-compiler` in the
+report; this stronger compiler/profile statement is not yet a Lean claim.
+For each subword u track the flags
+
+    S_u={r: Phi_r^u(V\{X})=1}.
+
+They say precisely which deletion singleton predicates are nonzero.
+The compiled residue preserves every such predicate exactly. Removed
+leaves have zero residue and no flags; ordinary leaves retain their input
+and have every flag. Discard a zero child. For nonzero child residues g,h
+at an r-owned root use:
+
+| r active on left | r active on right | Residue |
+| --- | --- | --- |
+| yes | yes | g choice_r h |
+| no | no | g union h |
+| no | yes | (g union h) choice_r h |
+| yes | no | g choice_r (g union h) |
+
+An active child's ghost equals the unmarked r atom exactly when its
+residue is r. An inactive ghost never equals that atom. The unions prevent
+an artificial singleton created by ghost removal from absorbing the other
+child. The owner-r profile in a one-active row is
+(g_r AND h_r) OR h_r = h_r; foreign profiles conjoin. This proves the
+residue and profile assertions simultaneously.
+
+All removed variables can be assigned the same ghost, so the construction
+also deletes arbitrary input sets in one pass. With sharing, each original
+choice emits at most four primitive choice gates: union takes three and
+an optional outer choice takes one. A d-gate circuit therefore has a
+residual circuit with at most 4d gates, or empty residual. Flag propagation
+costs O(K(d+1)) Boolean operations.
+
+For every fixed ambiguous menu A, the same residue C satisfies
+C subseteq t(A,v) and C\A=t(A,v)\A. Its nonzero singleton predicates
+are exactly those of that cofactor. Singleton menus instead use the
+[fixed-menu erasure compiler](retained-sources.md).
 
 ## Direct meaning for canonical guards
 

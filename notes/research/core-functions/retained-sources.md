@@ -10,9 +10,18 @@ at every valuation. Equivalently its canonical X-source coefficients
 are all identically true. This is a condition on the full source array,
 not on one occurrence's type in a chosen word.
 
-## Fixed-winner erasure
+## Fixed-menu erasure
 
-For ANY core word t(X,v) and owner q, put h(v)=t({q},v) and
+For any fixed ambiguous menu A, ordinary neutral elimination already
+supplies the same lower-arity erasure C=partial_X t: C<=t(A,v) and the
+outputs agree outside A. The local ghost/profile induction additionally
+shows that C preserves every nonzero singleton predicate of this cofactor.
+This is uniform in A; there is no need to choose a different erasure for
+different ambiguous menus. The residual is zero only when no passive input
+occurs, in which case the cofactor is constant A.
+
+Singleton menus need a different erasure. For ANY core word t(X,v) and
+owner q, put h(v)=t({q},v) and
 C=partial_X t. Either h is constantly {q}, or a lower-arity core g has
 
     g subseteq h intersection C,
@@ -86,3 +95,7 @@ retained extensions cannot finish the recognition problem: F_d union
 projection_j is core for every j, while their intersection is noncore F_d.
 These extensions are exactly the existing source-bundle deletion-patch
 unions, so this limitation needs no new counterexample construction.
+
+Further [guarded-source gluing data](guarded-source-gluing.md) isolate the
+remaining interface conditions. Even in the retained class the cofactor
+erasure is not canonically the literal intersection h intersection C.

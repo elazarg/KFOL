@@ -38,6 +38,9 @@ with at most $2K^2$ copies of that input
 Even the projection-profile
 fiber contains a copy of the whole lower-arity core, via neutral-source
 elimination and reset (\cref{core:thm:neutral-elimination,core:thm:projection-fiber}).
+Neutral residuals preserve every nonzero deletion profile and compile
+with at most four new choice gates per input gate
+(\cref{core:cor:residual-compiler}).
 Prime source-guard normal forms describe full values
 (\cref{app:core-source-guards}), with simultaneous independence of inputs
 containing an omitted winner (\cref{core:prop:omission}). Their joint realizability has a recursive
@@ -1290,19 +1293,54 @@ is contained in $A\cup G$, and equals $A\cup G$ if $A$ is ambiguous.
 Singleton tests are unchanged when $\{*\}$ is replaced by an ordinary
 ambiguous set. In particular the ordinary residue is $\partial_Xt$.
 
-Construct a realizing term recursively. A subtree using only $X$ has
-empty residue and may be deleted at its parent. Otherwise suppose the
-two children $s,u$ have nonempty residues realized by $g,h$. At a choice
-by $r$, use
+Construct a realizing term and its nonzero deletion profiles together.
+For a subword $u$, put
 \[
- \bigl(g+s[h/X]\bigr)\star_r\bigl(h+u[g/X]\bigr).
+ S_u=\{r:\Phi_r(u)(V\setminus\{X\})=1\}.
 \]
-Put $G=g(v)\cup h(v)$. Its left operand is $g(v)$ when the ghost
-output of $s$ is unmarked, and $G$ when it is marked; likewise on the
-right. The four marking cases therefore reproduce exactly the ordinary
-residue of the original choice. An ordinary leaf gives its input, and
-every subtree containing such a leaf has nonempty residue. Derived union
-and substitution keep the construction in the core.
+These are exactly the owners whose singleton predicate after deleting
+$X$ is nonzero. Maintain that the compiled residue $g$ has that exact
+predicate for every $r\in S_u$. An ordinary leaf compiles to itself,
+with $S_u=I$. An $X$-only subword has empty residue and $S_u=\varnothing$.
+At a root, discard an empty-residue child; two such children give empty
+residue. If both child residues $g,h$ are nonempty, compile the $r$-root by
+\[
+\begin{array}{c|c|l}
+ r\in S_s&r\in S_u&\text{compiled residue}\\\hline
+ 1&1&g\star_rh\\
+ 0&0&g+h\\
+ 0&1&(g+h)\star_rh\\
+ 1&0&g\star_r(g+h).
+\end{array}
+\]
+An $r$-active child's ghost is unmarked $\{r\}$ exactly when its
+residue is $\{r\}$, by the profile invariant. An inactive child's ghost
+never equals $\{r\}$, even if its residue does. The added union prevents
+such an artificial absorber. Thus these four rows give exactly the
+ordinary ghost residue. At foreign owners all four profile formulas
+conjoin the child profiles. At owner $r$, the one-active case has
+profile $(\Phi_r(g)\land\Phi_r(h))\lor\Phi_r(h)=\Phi_r(h)$,
+or symmetrically; the both-active case disjoins them. This proves the
+profile invariant simultaneously. An $X$-only child is a marked ghost,
+which never absorbs, and its removal preserves every nonzero parent
+predicate. Hence every subword with an ordinary leaf has a nonempty
+core residue.
+\end{proof}
+
+\begin{corollary}[Local residual compilation]\label{core:cor:residual-compiler}
+The neutral residual preserves every nonzero singleton predicate obtained
+by excluding $X$. The same holds when any set of inputs is deleted
+simultaneously. A core circuit with $d$ choice gates has a neutral-residual
+circuit with at most $4d$ choice gates, or has empty residual. For finite
+$K$, the construction uses $O(K(d+1))$ Boolean flag operations.
+\end{corollary}
+\begin{proof}
+The profile assertion is the preceding induction's invariant. For several
+deleted inputs, give all of them the same unowned ghost. Each table row
+uses at most four choice gates: derived union uses three, with both child
+outputs shared. The owner flags update by disjunction at their own gate
+and conjunction at every other gate. Process the input circuit once in
+its dependency order, sharing compiled outputs.
 \end{proof}
 
 \begin{theorem}[The full projection-profile fiber]\label{core:thm:projection-fiber}

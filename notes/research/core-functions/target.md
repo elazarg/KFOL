@@ -104,6 +104,14 @@ explicit selectors prove sufficiency and bound j reuse by 2K^2 primitive
 occurrences. This reduces the globally retained-source class to lower
 arity. It does not yet localize to arbitrary nonconstant source guards.
 
+[Guarded-source gluing](guarded-source-gluing.md) records exact atomic
+and ambiguous cofactor data for one source-separable input. These data
+alone fail on the existing reciprocal example; adding every two-color
+interface still fails on the three-head private-context example. Literal
+intersection also cannot choose the lower-arity erasures intrinsically.
+The exact residual compiler now uses four local cases and preserves every
+nonzero deletion profile, with at most 4d gates from a d-gate shared circuit.
+
 There are now closed positive classifications beyond read-once trees.
 [Additive owner closures](additive-closure-characterization.md), where a
 capture always has a single predecessor, have an exact two-law colored

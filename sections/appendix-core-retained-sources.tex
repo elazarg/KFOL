@@ -1,20 +1,30 @@
 \paragraph{Retained sources and atomic cofactors.}
 The projection-profile fiber is part of a larger class with an exact
 lower-arity normal form. A source is \emph{retained} when its whole input
-menu is contained in every output. The first lemma removes a fixed winner
+menu is contained in every output. The first lemma removes a fixed menu
 from a cofactor without treating the empty set as a unit.
 
-\begin{lemma}[Erasing a fixed winner]\label{core:lem:winner-erasure}
-For $K\geq3$, fix a core word $t(X,v)$ and an owner $q$, and put
-$h(v)=t(\{q\},v)$ and $C=\partial_Xt$.
-Either $h$ is constantly $\{q\}$, or there is a core operation $g$ on
+\begin{lemma}[Erasing a fixed menu]\label{core:lem:winner-erasure}
+For $K\geq3$, fix a core word $t(X,v)$ and a nonempty menu $A$, and put
+$h(v)=t(A,v)$ and $C=\partial_Xt$.
+Either $h$ is constantly $A$, or there is a core operation $g$ on
 the remaining variables such that, at every valuation,
 \[
  g(v)\subseteq h(v)\cap C(v),\qquad
- g(v)\setminus\{q\}=h(v)\setminus\{q\}.
+ g(v)\setminus A=h(v)\setminus A.
 \]
+The erasure $g$ preserves every nonzero singleton predicate of $h$.
+If $A$ is ambiguous and $C$ is nonempty, one may take $g=C$,
+simultaneously for all such menus $A$.
 \end{lemma}
 \begin{proof}
+For ambiguous $A$, the ghost comparison gives either $h=C$ or
+$h=A\cup C$ at each valuation. Empty residue gives the constant case;
+otherwise take $g=C$. The singleton predicates of $h$ are precisely
+those obtained by excluding $X$, so
+\cref{core:cor:residual-compiler} supplies the profile assertion.
+
+It remains to consider $A=\{q\}$.
 For each subword after fixing $X=\{q\}$, write $\psi_s(E)$ for its
 $s$-singleton predicate on the $s$-atomic positions of the remaining
 inputs. These predicates are monotone. The $q$-predicate is nonzero,
@@ -30,16 +40,9 @@ when $r=q$; two constant children also do so. At a foreign root discard
 a constant-$q$ child and use the other child's erasure. This preserves
 all non-$q$ memberships and every nonzero singleton predicate of the
 parent. Suppose now both children are nonconstant and have erasures
-$g_1,g_2$. When $r=q$ use $g_1\star_qg_2$. Otherwise use
-\[
-\begin{array}{c|c|l}
- \psi_r^1\ne0&\psi_r^2\ne0&\text{erasure at the root}\\\hline
- 1&1&g_1\star_rg_2\\
- 0&0&g_1+g_2\\
- 0&1&(g_1+g_2)\star_rg_2\\
- 1&0&g_1\star_r(g_1+g_2).
-\end{array}
-\]
+$g_1,g_2$. Use the four-row table in the proof of
+\cref{core:thm:neutral-elimination}, now testing their fixed-$q$
+$r$-predicates. At $r=q$ both are nonzero, giving $g_1\star_qg_2$.
 A child with zero $r$-predicate never equals $\{r\}$, although its
 erasure might. The added union prevents this artificial absorber from
 discarding the other operand. For a child with nonzero predicate, the
