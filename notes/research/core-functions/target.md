@@ -87,6 +87,13 @@ owner-box lower bound on source occurrences. For arbitrary C the implication
 preorder is still implicit, and the interval bounds do not cover arbitrary
 core operations.
 
+The [prime Gray obstructions](prime-obstructions.md) also have core-polynomial
+cofactors after fixing any nonempty set of inputs to arbitrary menus. A
+region forcing one chosen input to b or c avoids the whole cofactor, so a
+single deletion patch realizes it there. Thus even genuine realizers for
+all proper fixed-menu cofactors, together with all proper neutral residuals
+and source-bundle patches, do not supply the missing global term.
+
 ## Closed obstructions and the remaining target
 
 The report now proves three further structural results. One scalar observer

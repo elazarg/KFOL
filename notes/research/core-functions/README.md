@@ -259,7 +259,8 @@ virtual coalition nodes cannot inherit the additive theorem.
 
 The [prime-obstruction theorem](prime-obstructions.md) shows that the hard
 part persists at unbounded arity: the Gray crowns have core proper
-identification minors and input-union proper neutral residuals, yet fail
+identification minors, core-polynomial proper fixed-menu cofactors, and
+input-union proper neutral residuals, yet fail
 globally after passing all 2^d-point tests on 2d inputs. They admit no
 proper disjoint idempotent decomposition. Hence bounded-prime recognition
 and gluing compatible lower-arity operations do not finish the problem.

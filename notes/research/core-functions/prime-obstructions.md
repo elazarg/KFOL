@@ -3,8 +3,9 @@
 Mathematical result, without new Lean claims. The existing exponential crown
 construction has a stronger property than locality alone: every proper
 identification minor is core, and every proper neutral residual is ordinary
-input union. Hence its failure of realizability cannot be reduced to smaller
-operations by either of these input reductions or by disjoint factorization.
+input union. Every proper fixed-menu cofactor is a core polynomial. Hence
+its failure of realizability cannot be reduced to smaller operations by
+these input reductions or by disjoint factorization.
 
 Fix a finite role set I with K>=3 and write A for its nonempty subsets.
 Choose distinct owners a,b,c. For each d>=2 there is an operation F_d on
@@ -28,6 +29,9 @@ V=(Fin d) times Bool with all the following properties:
    genuine passive pattern at its source.
 8. Every retained extension F_d union projection_j is core. Their
    pointwise intersection is exactly F_d, which is not core.
+9. Every cofactor fixing at least one input to an arbitrary nonempty menu
+   is a core polynomial: a core word allowing constant menus. All further
+   fixed-menu cofactors have the same property.
 
 The original [Gray-crown proof](exponential-crowns.md) establishes property 1
 and supplies the actual core deletion patches used below. The remaining
@@ -73,6 +77,26 @@ an identification involving position i, omit the exceptional region whose
 unique c-input is i: every other input in that region differs from {c}.
 Thus its proper identification minors are core as well. No minimum-arity
 selection or extraction of an unspecified obstruction is needed.
+
+## Every fixed-menu cofactor has an exact polynomial realizer
+
+For every input i some exceptional region forces i=c, since a lower
+transversal contains i. Some region also forces i=b. To see the latter,
+choose a vertex in the halfcube whose transversals omit i. Its two distinct
+incident Hamilton-cycle edges cannot both leave that halfcube, since only
+the edge flipping i's coordinate can leave. An internal edge h->next(h)
+therefore has i outside U_h, so C_h fixes i=b.
+
+Fix any nonempty menu A at i. If A!=c, choose a c-forcing region; if A=c,
+choose a b-forcing region. The entire fixed-input face avoids this region,
+so F_d on that face is exactly the corresponding deletion patch P_h on
+the face. Substituting the constant A in its core word proves property 9.
+Further input fixings preserve polynomial realizability. The realizers
+automatically agree as functions on all overlaps.
+
+Thus every proper constant cofactor, not only its fixed-menu erasure, can
+be genuinely realized without a common term for the full operation. The
+qualification 'polynomial' matters: these words use constant menus.
 
 ## Neutral residuals are exactly input union
 

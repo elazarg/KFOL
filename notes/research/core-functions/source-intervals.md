@@ -173,6 +173,20 @@ realizers. In the example B={x} already fails. No sufficiency claim for
 this enlarged family of laws has been proved. The other one-input residual
 partial_y C is the partial reset (x+z) choice_a x.
 
+The depth of this missing constraint is unbounded. Put an a-owned fold
+of n masks x_1,...,x_n above L=y choice_b z, and use
+P_n=(AND_i [x_i uncolored])Q. All original laws still pass, with every
+owned bit zero. Deleting fewer than n inputs cannot expose the bad binary
+base while retaining both y,z: a mask remains and the same verification
+applies. If a deletion removes y or z, the residual predicate is just the
+remaining neutral-mask product; the residual base returns a when some
+remaining mask is a, and the union of all surviving inputs otherwise.
+It is its greatest profile completion, and the proved theorem realizes
+this residual predicate. Thus tests of the proposed laws through any
+fixed neutral-deletion depth are insufficient. This does not say that
+all these residual candidates are core: residuals retaining y,z and a
+mask remain noncore, with the same hidden deeper obstruction.
+
 An unrestricted union-base rule is false. Take C=x choice_a y and
 D=x choice_b y, a!=b. Every predicate realizable above either base has
 equal values at e=(x=a,y=b), f=(x=b,y=a), by singleton-fiber rigidity.
