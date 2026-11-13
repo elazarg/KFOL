@@ -113,6 +113,10 @@ The counterexample even preserves every unary subalgebra, but fails
 two-point interpolation.
 This quotient is strictly coarser than full core semantics: an explicit
 five-leaf equation holds in every pure trace and fails in the core.
+The quotient itself can require repeated sources: a
+[four-variable term](pure-trace-quotient.md#a-pure-source-can-require-repetition)
+has a positive pure port that no subordinate word using its source
+once retains. Even unions of such words cannot recover its traces.
 The same two arrow laws characterize which additive pure-owner data come
 from any core operation; their product hull is always core, even when
 the original operation is nonseparable.

@@ -3,7 +3,8 @@
 
 Conditional foreign closures at an independent base have an exact
 description by a minorant. They need not themselves have a common
-constant-free realization.
+constant-free realization. Even a single positive pure port of a
+realizable trace tuple can require its source to occur repeatedly.
 
 Let $I$ be a finite set of at least two foreign owners. Write
 $Q=\{0<\alpha<\beta\}$ for the algebra $3_m$ of
@@ -126,4 +127,66 @@ $x=z=w=0$ and is the full join otherwise. Hence $g\leq f_d$.
 The preceding theorem, using the isolated-coordinate term $F$ and
 replacing its zeros by $Y$, supplies a five-variable core word
 $T_0\star_\rho g$ with precisely these conditional closures.
+\end{proof}
+
+\begin{proposition}[A pure port can require a repeated source]
+\label{core:prop:pure-source-repetition}
+Fix three distinct owners $A,B,C\in I$ and variables $a,x,p,e$. Put
+\[
+ T=(e\star_C x)\star_B((x\star_C a)\star_A p).
+\]
+If a choice/union word $S$ contains $x$ at most once and satisfies
+$S\leq T$ pointwise on $P_I$, then its $B$-trace is zero when
+$x=\beta$ and $a=p=e=0$. Consequently every word with the same
+pure-owner traces as $T$ repeats $x$, and no finite union of words
+containing $x$ at most once has those traces.
+\end{proposition}
+\begin{proof}
+Evaluate the indicated trace coordinate at each of four scalar rows:
+\[
+\begin{array}{c|cccc|c}
+ \text{coordinate}&a&x&p&e&T\\\hline
+ A&\beta&0&0&\alpha&\alpha\\
+ B\ (0)&0&0&\beta&0&0\\
+ B\ (1)&0&0&0&\beta&0\\
+ C&0&\beta&\alpha&0&\alpha
+\end{array}
+\]
+Write $G_A,G_{B0},G_{B1},G_C$ for a word's four evaluations.
+For an $x$-free word $G$ with $G_{B0}=G_{B1}=0$, singleton-profile
+compatibility gives
+\begin{equation}\label{core:eq:linear-sibling-profiles}
+ G_A\ne0,\qquad G_C=0\ \Longrightarrow\ G_A=\beta.
+\end{equation}
+Indeed $G_A=0$ and $G_{B0}=0$ would give positive profiles
+$\Phi_A(\{p\})$ and $\Phi_B(\{a,e\})$, whose coalitions are disjoint.
+If $G_C=0$ and $G_A\leq\alpha$, the latter bound, after decreasing
+$e$ to zero in its $A$-row, forces $\Phi_A(\{p,e\})$.
+Together with $\Phi_B(\{a,p\})$ and $\Phi_C(\{a,e\})$ this gives
+three positive coalitions with empty common intersection. Both
+contradict \cref{core:thm:profiles}, using all variables for the
+remaining owners. Unused variables may be removed from every coalition.
+
+Suppose that $S$ has positive $B$-trace at the stated query.
+It contains $x$ exactly once. Follow this occurrence to the root.
+Every sibling is $x$-free, so its $B$-trace at the query is zero.
+No path gate can be owned by $B$: multiplication by zero would erase
+the positive trace permanently. The two $B$-rows are therefore maxima
+along this path. Since $S\leq T$ makes both final values zero, every
+sibling satisfies the hypotheses of \eqref{core:eq:linear-sibling-profiles}.
+
+The path preserves the invariant that its $A$-row or its $C$-row is
+$\beta$. It holds at leaf $x$. At an $A$-gate an existing $A$ value
+$\beta$ persists because the sibling's $A$ value is nonzero;
+an existing $C$ value $\beta$ persists by maximum. At a $C$-gate
+an existing $A$ value $\beta$ persists by maximum. To erase an
+existing $C$ value $\beta$, the sibling must have $G_C=0$, which
+introduces $G_A=\beta$. All other choices and union are maxima in
+these two coordinates. The invariant contradicts the final bounds
+$S_A,S_C\leq\alpha$.
+
+At the query $T$ has $B$-trace $\beta$. In a finite union equal to
+$T$, every summand is bounded by $T$ and at least one summand has
+positive trace there, proving the last assertion. Equality of pure
+traces is equality of term functions on $P_I$ by the trace formula.
 \end{proof}
