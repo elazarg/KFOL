@@ -31,6 +31,13 @@ hypothesis; this does not yield two-point interpolation for the full clone.
 For arbitrary C the remaining task is to compute this preorder directly
 from C. For every greatest profile completion it is now computed below.
 
+[Marked-source linearization](neutral-sink-completions.md) additionally
+proves that every actual interval operation is the union of C and primitive
+one-X minorants. Each actual full occurrence type has such an exact linear
+representative, including for cyclic baselines. This removes repeated X
+from the witnesses; the arbitrary-baseline implication preorder is still
+not given by a closed criterion.
+
 ## Singleton fibers collapse
 
 For each owner r, all proper colorings with Phi_r(C)(E_r)=1 have the same

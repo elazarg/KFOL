@@ -13,6 +13,12 @@ by full colored cofactor independence, with a canonical union of safe
 reverse-order spines and principal singleton profiles. Cyclic dependence
 remains part of the full target.
 
+[Neutral sink completions](neutral-sink-completions.md) are commuting least
+majorants which remove a chosen source's outgoing dependencies. Every
+marked type then has an exact primitive one-source-linear minorant, giving
+linear covers of arbitrary one-source intervals. Canonical sink completions
+still fail to glue on the prime Gray obstructions.
+
 Finite relatedness is now disproved for every fixed finite K≥3: for each m,
 `Core.Crown.exists_local_obstruction` gives an (m+3)-ary nonterm operation
 with a common core interpolant on every m valuations. The cycle construction

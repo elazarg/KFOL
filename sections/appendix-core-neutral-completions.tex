@@ -1,0 +1,159 @@
+\paragraph{Neutral completions and linear source types.}
+Call $X$ a \emph{source sink} when its passive status affects no other
+complete source predicate. For a source-reconstructing operation $T$ define
+\[
+ \mathsf S_XT=T+\partial_XT,
+\]
+regarding the residual as an operation ignoring $X$. A zero residual
+contributes no summand. This is a smaller completion than adjoining the
+union of all other input menus.
+
+\begin{proposition}[Least sink completions]\label{core:prop:sink-completions}
+The map $\mathsf S_X$ is a monotone closure operator on core operations,
+and $\mathsf S_XT$ is the least core majorant of $T$ making $X$ a source
+sink. It preserves $X$'s complete source predicate and replaces every
+other predicate by its restriction to neutral status at $X$.
+The closures commute. For $A\subseteq V$, their simultaneous completion is
+\[
+ \mathsf S_AT=\bigcup_{B\subseteq A}\partial_BT.
+\]
+Completing all sources gives input union on the essential support.
+For nonempty $V$ one also has the pointwise identity
+$T=\bigcap_{X\in V}\mathsf S_XT$.
+\end{proposition}
+\begin{proof}
+The ghost comparison gives $T\subseteq X\cup\partial_XT$.
+At any other source's probe, neutralizing $X$ can only enlarge its
+coefficient, so the union with the residual gives precisely that neutral
+restriction. At an $X$-source probe the residual contributes no queried
+winner, leaving that predicate unchanged. Thus the completion is a sink.
+Conversely a sink operation $G$ contains its neutral residual: its older
+source contributions are unchanged by $X$. If $G\supseteq T$, then
+$G\supseteq\partial_XG\supseteq\partial_XT$, proving minimality.
+Extensivity and monotonicity follow from the formula, and minimality
+gives idempotence.
+
+Neutral residuals commute and distribute over union, winner by winner.
+Expanding the commuting closures gives the displayed formula.
+The one-input residual at an essential source is its projection, while
+an inessential source contributes zero. Provenance gives the reverse
+containment in their input union.
+
+Finally suppose $k\notin T(v)$. If some input $X$ contains $k$,
+replacing it by $I\setminus\{k\}$ changes no foreign-$k$ atomic flag
+and removes only that input's $k$-contribution. Source decomposition
+therefore gives $k\notin\partial_XT(v)$. If no input contains $k$,
+no residual introduces it either. In both cases some sink completion
+still omits $k$, proving the intersection identity.
+\end{proof}
+
+\begin{lemma}[Linearizing a marked occurrence]
+\label{core:lem:neutral-marked-linearization}
+For every marked occurrence $o$ of $X$ in a core word $T(X,v)$ there is
+a primitive spine $S_o(X,v)$ with exactly one $X$-occurrence such that
+\[
+ S_o\subseteq T+\partial_XT.
+\]
+Its full owner-factor type equals that of $o$: for every owner, the
+conjunction of negative sibling profiles, evaluated with all $X$-flags
+false, is unchanged.
+\end{lemma}
+\begin{proof}
+For a subword $U$ write $C_U=\partial_XU$, possibly zero, and let its
+deleted $r$-profile be its $r$-profile with $X$ non-$r$.
+The residual compiler supplies three facts:
+\begin{enumerate}
+\item $U\subseteq X\cup C_U$;
+\item every nonzero deleted profile is preserved exactly in $C_U$;
+\item if $U=\{r\}$ but $C_U\ne\{r\}$, then $X=\{r\}$.
+\end{enumerate}
+The last follows from singleton-profile factorization and the second
+fact when $X$ is not the $r$ singleton; a zero deleted profile cannot
+produce that singleton in this case.
+
+Follow the marked path from its leaf. At an $r$-owned node, orient the
+marked child as $T_1$ and its sibling as $T_2$. If $T_2$'s deleted
+$r$-profile is zero, skip the node. Otherwise attach $C_2$ by
+$\star_r$. This is an $X$-free core helper, and its profile is exact.
+Thus every original marked owner factor is retained: skipped nodes
+had trivial factors, and attached helpers have the same nonzero profiles.
+The word stays a primitive spine with one $X$.
+
+For containment, assume its child spine satisfies $S\subseteq T_1+C_1$.
+Let $a,b$ indicate whether the two deleted $r$-profiles are nonzero,
+and let $C$ be the parent residual from the four-row compiler.
+If $b=0$, the discard rules and the compiler give $C_1\subseteq C$.
+An alleged winner of the skipped spine outside the parent value and $C$
+would belong to $T_1\setminus C_1\subseteq X$ and be killed by an
+$r$-absorbing sibling $T_2$. It is foreign to $r$, whereas $b=0$ and
+$T_2=\{r\}$ force $X=\{r\}$, a contradiction.
+
+Suppose $b=1$, so the new spine is $S\star_r C_2$.
+If $C_2=\{r\}$, the new spine and the parent residual are both $\{r\}$.
+If $C_2\ne\{r\}$ but $a=1$ and $C_1=\{r\}$, profile preservation
+gives $T_1=S=\{r\}$, so the new spine is again safe.
+In every remaining case the compiler gives $C=C_1\cup C_2$.
+Any unsafe winner must therefore come from $T_1\setminus C_1\subseteq X$.
+The root cannot lose its own owner, so such a winner is foreign to $r$;
+losing it requires $T_2=\{r\}$. Since $C_2\ne\{r\}$, fact~(3)
+again forces $X=\{r\}$, a contradiction.
+Empty residues obey the discard rules; $b=1$ ensures the attached
+$C_2$ is nonempty, and $C_1=0$ fits the last union case.
+This completes the safety induction.
+\end{proof}
+
+\begin{corollary}[Linear covers of arbitrary source intervals]
+\label{core:cor:interval-linear-cover}
+Every core $F\in\mathcal I(C)$ is the union of $C$ and primitive
+one-$X$ spines bounded by $F$. Every actual full $X$-occurrence type
+of any realizer of $F$ is realized exactly by one such spine.
+More generally these conclusions hold for $\mathsf S_XT$ with respect
+to every marked type in $T$, for arbitrary core $T$.
+\end{corollary}
+\begin{proof}
+The interval bounds give $\partial_XF=C$, so the preceding spines
+lie below $F+C=F$. A winner of $F$ outside $C$ must come from an
+$X$-occurrence. Its preserved owner factors make the corresponding
+spine supply it too. Union with $C$ therefore recovers $F$.
+For arbitrary $T$, union $\partial_XT$ with the spines obtained from
+its marked occurrences. They lie below $T+\partial_XT$ and cover
+every original $X$-source contribution. The remaining contributions
+are contained in the residual, since neutralizing $X$ only enlarges
+the other source coefficients. This gives the final assertion.
+\end{proof}
+
+The neutral completion is essential in the marked lemma: an arbitrary
+core operation can require repeated occurrences even for a single positive
+source probe. The interval bound makes exactly those neutral contributions
+available to protect the linear spine.
+
+\begin{corollary}[Canonical sink completions need not glue]
+\label{core:cor:sink-completion-obstruction}
+For every fixed $K\geq3$ there are noncore operations $F$ at unbounded
+arity with complete source-dependence graph, such that every nonempty
+simultaneous sink completion $\mathsf S_AF$ is core.
+Each single-source completion $\mathsf S_XF$ has acyclic dependence;
+if $|A|\geq2$, $\mathsf S_AF$ is ordinary input union.
+These canonical completions commute and satisfy
+$F=\bigcap_X\mathsf S_XF$ pointwise.
+\end{corollary}
+\begin{proof}
+Use the prime Gray operation from \cref{core:cor:prime-obstructions}.
+Its proper neutral residual at $X$ is input union on the other inputs.
+Thus $\mathsf S_XF$ is exactly the greatest completion of its single
+source family, retaining every other input, and is core by
+\cref{core:thm:source-completion}. Those other source predicates are
+unconditional, so its dependence is acyclic. Two distinct neutral
+residuals already have full input union as their union; this proves the
+assertion for larger $A$. The closure formulas and intersection proof
+apply to the source-reconstructing Gray operation as well.
+
+Every input $i$ is the free coordinate of some Gray region, since each
+bit flips in both directions along the cyclic walk. Put $\{a\}$ at
+that coordinate, with $a\notin\{b,c\}$, and the prescribed $b/c$
+atoms elsewhere. This is a canonical source-$i$ probe whose output omits $a$.
+Changing any other input $j$ to $I\setminus\{a\}$ creates two free
+coordinates, so no exceptional region remains and $a$ is present.
+Hence $\pi_i$ depends on every $j\ne i$, proving completeness of the
+source graph. Noncoreness is the Gray obstruction theorem.
+\end{proof}

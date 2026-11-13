@@ -101,6 +101,16 @@ the operation, with at most (1+K(n-1))*n*K^n leaves when union is named.
 Every owner profile is principal. This solves the acyclic subclass; the
 full goal still includes arbitrary cyclic source-dependence components.
 
+[Neutral sink completion](neutral-sink-completions.md) has a universal
+marked linearization theorem: each X-occurrence type of T has an exact
+one-X spine below T+partial_X T. Thus every actual one-source interval,
+even with a cyclic passive baseline, is covered by primitive one-X
+minorants. The completions S_X(T)=T+partial_X T are the commuting least
+sink majorants. Gray's noncore operation nevertheless has core acyclic
+single-source sink completions and full input union after any two;
+their canonical intersection is noncore. Joint feedback compatibility
+therefore remains the unresolved part.
+
 The [prime Gray obstructions](prime-obstructions.md) also have core-polynomial
 cofactors after fixing any nonempty set of inputs to arbitrary menus. A
 region forcing one chosen input to b or c avoids the whole cofactor, so a
