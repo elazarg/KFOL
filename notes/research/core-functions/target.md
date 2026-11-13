@@ -65,6 +65,17 @@ Nonfinite relatedness excludes characterization by a fixed finite family of
 invariant relations. It does not exclude every possible short structural law
 with unbounded quantification.
 
+## Complete single-source data
+
+[Single-source completion](single-source-completions.md) gives two closed
+necessary and sufficient conditions for one whole observer family:
+antitonicity and agreement on facet overlaps. It has a unique greatest core
+completion retaining all other inputs, and an exact minimum source-copy
+number given by an owner-box cover. Every proper colored cofactor is
+independent of the source exactly when that source predicate is false.
+The remaining problem concerns simultaneous realization of these individually
+classified families, not recognition of each family in isolation.
+
 ## Closed obstructions and the remaining target
 
 The report now proves three further structural results. One scalar observer

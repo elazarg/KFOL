@@ -1,0 +1,132 @@
+\paragraph{All observers at one source.}
+There is a closed criterion for prescribing the complete coefficient
+family of one source, together with a greatest core completion.
+Fix a source $x$ and a nonempty finite set $W$ of other inputs.
+Write
+\[
+\begin{aligned}
+ \mathcal D_W&=\{(E_r)_{r\in I}:E_r\subseteq W\text{ pairwise disjoint},
+                    \ E_k=\varnothing\text{ for some }k\},\\
+ \mathcal D_k&=\{E\in\mathcal D_W:E_k=\varnothing\}.
+\end{aligned}
+\]
+Order these partial colorings componentwise by inclusion. A coefficient
+at observer $k$ is a predicate $c_k$ on $\mathcal D_k$: its canonical
+probe puts $x=\{k\}$, the color-$r$ inputs at $\{r\}$, and all remaining
+inputs at $I\setminus\{k\}$.
+
+\begin{theorem}[Single-source compatibility and greatest completion]
+\label{core:thm:source-completion}
+For finite $K\geq3$, a family $(c_k)_k$ is the complete coefficient
+family of one source in a core word if and only if each $c_k$ is
+antitone and
+\[
+ c_k(E)=c_\ell(E)\qquad(E\in\mathcal D_k\cap\mathcal D_\ell).
+\]
+The predicates glue to a unique antitone $P:\mathcal D_W\to\{0,1\}$.
+Extend it by zero to partial colorings outside $\mathcal D_W$.
+Put $U(w)=\bigcup_{i\in W}w_i$ and $E_r(w)=\{i:w_i=\{r\}\}$.
+The unique greatest core operation with that source family is
+\[
+ F_P(X,w)=
+ \begin{cases}
+ U(w)\cup X,&P(E(w))=1,\\
+ U(w),&P(E(w))=0.
+ \end{cases}
+\]
+Consequently these are exactly the core operations retaining every
+input in $W$. The distinguished input is unused precisely when $P=0$;
+otherwise $P(\varnothing)=1$.
+\end{theorem}
+\begin{proof}
+For an occurrence $o$ of $x$, collect its path filters by owner:
+\[
+ B_{o,r}(E)=\bigwedge_{\substack{\text{$r$-ancestors of }o\\
+                          \text{with sibling }s}}
+       \neg\Phi_r(s)(E),\qquad E\subseteq W.
+\]
+Here all $x$-occurrences have false $r$-atomic flag. Each factor is
+antitone and $B_{o,r}(\varnothing)=1$. At observer $k$, the occurrence
+contributes $\bigwedge_{r\ne k}B_{o,r}(E_r)$. On $\mathcal D_k$ its
+missing factor is $B_{o,k}(\varnothing)=1$, so this is the full product.
+The disjunction of these products proves antitonicity and agreement on
+overlaps. Conversely, agreement defines $P$. If $E\leq E'$, choose an
+owner missing from $E'$; both colorings lie in its facet, proving that
+$P$ is antitone. Its value at the empty coloring is zero exactly when
+it is identically zero.
+
+For synthesis, for every positive coloring $E$ start a spine at $x$.
+For each $r$ with $W\setminus E_r\ne\varnothing$, attach by $\star_r$
+the $r$-fold of the variables in $W\setminus E_r$. Its owner-$r$ path
+factor at another coloring $E'$ is exactly $[E'_r\subseteq E_r]$.
+Take the union of all these spines with $U$. Every contribution from
+a passive input lies in $U$. If $k\notin U$, then $E'_k=\varnothing$,
+so the ignored own-$k$ factor is automatically true. A spine supplies
+$k$ from $X$ exactly when $E'\leq E$. Antitonicity proves soundness,
+and the spine indexed by $E'$ supplies every required winner outside
+$U$. If $U=I$, retention already determines the output, including when
+the coloring is outside $\mathcal D_W$. If $P=0$, use $U$ alone.
+
+To prove greatestness, any winner of another core completion lying
+outside $U$ must come from $x$. Its source coefficient is exactly
+$P(E(w))$, because the other inputs omit that queried winner. Thus the
+completion is below $F_P$. Finally any core operation retaining $W$
+must already contain $U$; the same argument forces it to equal $F_P$.
+\end{proof}
+
+\begin{corollary}[Colored cofactor dependence]
+\label{core:cor:colored-cofactor-dependence}
+Let $F$ be any core operation with the source predicate $P$ above.
+Fix the inputs in $E_r$ to $\{r\}$, for $E\in\mathcal D_W$, leaving
+the other inputs arbitrary. The resulting cofactor is independent of
+$x$ if and only if $P(E)=0$.
+\end{corollary}
+\begin{proof}
+Choose an unused owner $k$. If $P(E)=1$, the canonical probe with
+$x=\{k\}$ contains $k$, whereas replacing $x$ by $I\setminus\{k\}$
+makes every input omit $k$. This witnesses dependence.
+
+If $P(E)=0$, every $x$-occurrence is blocked on that probe by some
+foreign-owned ancestor with an absorbing sibling. That sibling's
+$r$-profile is true using only the fixed $E_r$ inputs; every unfixed
+input, including $x$, has false $r$-atomic flag on the probe. Changing
+unfixed inputs can only increase those flags, so this sibling stays
+$\{r\}$ and its parent stays $\{r\}$. Choose inclusion-maximal such
+constant subwords. They cover every $x$-occurrence, and replacing them
+by their fixed atoms leaves a word without $x$ for the entire cofactor.
+\end{proof}
+
+An \emph{owner box} on $\mathcal D_W$ is a predicate
+$\bigwedge_r B_r(E_r)$, where each $B_r$ is antitone on $2^W$ and
+$B_r(\varnothing)=1$. Define $b(P)$ as the least number of owner boxes
+whose disjunction is $P$ on $\mathcal D_W$, allowing $b(0)=0$.
+Principal boxes $[E'\leq E]$ show this number is finite.
+
+\begin{corollary}[Exact source multiplicity]\label{core:cor:source-box-rank}
+With union named, the least number of $x$-occurrences among all core
+words realizing the source family of $P$ is exactly $b(P)$.
+The greatest completion $F_P$ attains this minimum. A primitive core
+realization uses at most $K b(P)$ occurrences of $x$.
+\end{corollary}
+\begin{proof}
+Each occurrence in the preceding proof supplies one owner box, giving
+the lower bound for every realizer. Conversely, for a nontrivial factor
+$B_r$ choose an $x$-free core word with $r$-profile $\neg B_r$, using
+\cref{core:thm:profiles} with unanimity at the other owners. This tuple
+is admissible because every positive $r$-coalition is nonempty. Attach
+that word by $\star_r$ to a single $x$-leaf; omit factors identically
+one. The resulting spine has exactly the prescribed box. Its passive
+contributions lie in $U$, so the union with $U$ and the other box spines
+realizes $F_P$ with exactly $b(P)$ source occurrences.
+
+For the primitive bound, a union of any nonempty family of menus has a
+core realization using each argument $K$ times. Fold all arguments once
+at each owner $r$, obtaining $A_r$. If their union $S$ is ambiguous,
+each $A_r$ is either $\{r\}$ or $S$. Combine the $K$ distinct labeled
+leaves $A_r$ by a read-once tree whose node owner differs from the labels
+of its leaf children. There are at most two such forbidden labels, so
+$K\geq3$ suffices. Every nontrivial subtree is ambiguous and each gate
+is union. The result is $S$: either some $A_r=S$, or all owners already
+occur among the arguments. Singleton $S$ follows by idempotence.
+Apply this construction to $U$ and the box spines.
+\end{proof}

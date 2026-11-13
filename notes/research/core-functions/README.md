@@ -17,6 +17,13 @@ pass all 2^d-point tests and fail at 2^d+1 points. Its Gray-cycle construction
 and full-winner patches are proved symbolically in Lean; see
 [exponential-crowns.md](exponential-crowns.md).
 
+[Complete single-source families](single-source-completions.md) now have a
+closed two-law criterion: antitonicity and observer agreement on overlaps.
+Each has a unique greatest core completion, retaining every other input.
+Minimum source reuse with named union is exactly its owner-box cover number.
+The source predicate also records functional dependence under proper partial
+atomic cofactors. Joint compatibility of different sources remains the target.
+
 Closed boundary/no-trap conditions now present every invariant relation in
 `Core/Hypergraphs`. This gives a complete infinite obstruction basis, still
 with auxiliary clutters. [global-characterization.md](global-characterization.md)
