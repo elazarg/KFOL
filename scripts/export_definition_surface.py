@@ -29,7 +29,7 @@ import tempfile
 ROOT = Path(__file__).resolve().parent.parent
 ENTRYPOINTS = ("Paper", "Report")
 DEFAULT_ENTRYPOINT = "Paper"
-DEFAULT_OUTPUT = ROOT / "notes/paper-definition-surface.json"
+DEFAULT_OUTPUT = ROOT / "verification/paper-definition-surface.json"
 EXTRACTOR = ROOT / "scripts/DefinitionSurface.lean"
 
 POLICY = {
@@ -43,7 +43,7 @@ POLICY = {
 
 
 def default_output(entrypoint: str) -> Path:
-    return DEFAULT_OUTPUT if entrypoint == DEFAULT_ENTRYPOINT else ROOT / "notes/report-definition-surface.json"
+    return DEFAULT_OUTPUT if entrypoint == DEFAULT_ENTRYPOINT else ROOT / "verification/report-definition-surface.json"
 
 
 def entrypoint_policy(entrypoint: str) -> dict[str, str]:
@@ -282,7 +282,7 @@ def main() -> None:
     parser.add_argument("--no-build", action="store_true", help="use already current Paper and Report builds")
     parser.add_argument("--markdown", action="store_true", help="print a Markdown review index")
     parser.add_argument("--output", type=Path,
-                        help="JSON output path (default: notes/<entrypoint>-definition-surface.json)")
+                        help="JSON output path (default: verification/<entrypoint>-definition-surface.json)")
     parser.add_argument("--raw", type=Path, help=argparse.SUPPRESS)
     args = parser.parse_args()
     if args.output is None:

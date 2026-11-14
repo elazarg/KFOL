@@ -26,6 +26,9 @@ proofs.
 separate from the standard-library-only `make check-python` suite.
 
 The other Python files are shared models imported by these entry points.
+`python3 checks/check_core_peeling.py` is an optional standard-library
+regression of row deletion against independently generated finite closures;
+it is separate from the default suite.
 The four files `data/core-{small,six,seven,eight}-models.json` are fixed inputs
 to the atomic-basis check of principal-ideal quotients, as described in the
 verification appendix. No search program is needed to replay those checks.

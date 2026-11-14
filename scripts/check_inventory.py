@@ -10,7 +10,7 @@ from check_surfaces import ENTRYPOINTS, MANIFEST, check_facade, library_declarat
 
 
 ROOT = Path(__file__).resolve().parent.parent
-INVENTORY = ROOT / "notes/formalization-claims.json"
+INVENTORY = ROOT / "verification/formalization-claims.json"
 
 
 def require(condition, message):

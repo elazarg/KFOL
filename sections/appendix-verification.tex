@@ -2,7 +2,7 @@
 
 The paper's results are kernel-checked in Lean~4.35.0 with mathlib. \texttt{Paper.lean} restates, in the namespace \texttt{KFOL.Paper}, every theorem of the main text and the clauses of the report results that it cites: $85$ statements, listed by result in \cref{tab:status}. \texttt{Report.lean} restates $105$ further report results in the namespace \texttt{KFOL.Report} (\cref{tab:report}). Each proof is a single library theorem, and each file ends with a check that no declaration in its namespace uses an axiom beyond \texttt{propext}, \texttt{Classical.choice}, and \texttt{Quot.sound}; a separate audit covers the whole library. Nothing is admitted, and no theorem from the literature enters as a hypothesis. Where a written proof cites one, as for the reset basis and the minimum one-owner generator \cite{FreeseEtAl2002}, owned choice with union \cite{HardingRomanowska2017}, the atomic clone \cite{Szendrei2012}, and colored-graph decomposition \cite{Gurvich2009}, the Lean proof is direct.
 
-The vocabulary of the statements is in \path{KFOL/Definitions/PaperAlgebra.lean}, \path{PaperGames.lean}, and \path{Complexity.lean}, which build on the other files of \path{KFOL/Definitions}. \path{notes/audit-guide.md} gives a reading order, and \path{notes/paper-definition-surface.md} and \path{notes/report-definition-surface.md} list every definition that each statement depends on.
+The vocabulary of the statements is in \path{KFOL/Definitions/PaperAlgebra.lean}, \path{PaperGames.lean}, and \path{Complexity.lean}, which build on the other files of \path{KFOL/Definitions}. \path{verification/audit-guide.md} gives a reading order, and \path{verification/paper-definition-surface.md} and \path{verification/report-definition-surface.md} list every definition that each statement depends on.
 
 Winner sets are nonempty sets of roles. Subgame-perfect equilibrium uses full profiles and whole-player deviations in every subtree, independently of backward induction, and agrees with the GameTheory library's Nash equilibrium in every subtree. Sealed rounds use assessments with sequential rationality at every information set and consistency as a limit of completely mixed profiles. Complexity uses ComplexityLib's deterministic multitape Turing machines, explicit encodings, and polynomial-time many-one reductions. Tree inputs have binary variable names and explicit permutation arrays; uniform inputs also encode $K$ in binary. The decoders reject malformed words. The independent algebra modules import neither GameTheory nor ComplexityLib.
 
@@ -258,6 +258,10 @@ allowing arbitrary passive helpers.\\
 Preorders and sharp exponential row thresholds below core bounds
 (\cref{core:prop:principal-profile-preorders,core:thm:principal-profile-locality})
  & Written proofs, using profile completions and the existing Gray patches.\\
+Pair-erasure envelopes, full types, and relative source compatibility
+(\cref{core:thm:pair-erasure-envelope,core:lem:pair-support-profile,core:thm:pair-interval-types,core:thm:pair-source-interval})
+ & Written proofs, uniform in $K\geq3$; the criteria use Boolean reachability
+and projected support graphs. No new Lean claims.\\
 Capture-trigger normal forms and shared-anchor closures
 (\cref{core:thm:capture-trigger-normal-form,core:cor:shared-anchor-closures})
  & Written proofs.\\
@@ -836,7 +840,7 @@ arity bound as a replacement.
 allowed sets, conflicting requests, and two same-owner demands realized by
 owned choice although neither projection satisfies both.
 The independent standard-library program
-\path{notes/research/core-functions/peeling.py} compares the row-deletion
+\path{checks/check_core_peeling.py} compares the row-deletion
 recursion with unpruned finite core closures, including the six-row
 obstruction; its recognizer never calls the closure oracle.
 

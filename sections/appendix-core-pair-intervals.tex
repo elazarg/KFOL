@@ -1,0 +1,328 @@
+\paragraph{Boolean interval bounds.}
+The cyclic bounds used above belong to a class whose greatest core
+minorants and relative source compatibility have closed descriptions.
+Fix distinct owners $a,b,c$, a finite nonempty passive set $V$, and a
+finite family $\mathcal Z$ of intervals
+\[
+ \varnothing\ne L_i\subsetneq U_i\subsetneq V.
+\]
+The family may be empty. Write $q(L,U)$ for the atomic input with
+$c$ on $L$, $a$ on $U\setminus L$, and $b$ outside $U$.
+On $2^V$, draw the inclusion edges and the reversed edges $U_i\to L_i$;
+write $\preceq$ for reachability. Let $\mathcal B_{\mathcal Z}$ be the
+normalized monotone Boolean functions constant on these intervals.
+It contains the all-variable disjunction and conjunction.
+For normalized $f$, let $E_f$ be the greatest completion with
+$c$-profile $f$, $b$-profile $f^\partial(A)=1-f(V\setminus A)$,
+and unanimity at every other owner. Put
+\[
+ C_{\mathcal Z}=\sum_{f\in\mathcal B_{\mathcal Z}}E_f,
+ \qquad L(w)=\{j:w_j=\{c\}\},\quad U(w)=\{j:w_j\ne\{b\}\}.
+\]
+
+\begin{theorem}[Greatest pair-erasure bound]
+\label{core:thm:pair-erasure-envelope}
+The operation $C_{\mathcal Z}$ is the greatest core operation satisfying
+$H(q(L_i,U_i))\subseteq\{b,c\}$ for every $i$. On all winner inputs,
+\begin{equation}\label{core:eq:pair-erasure-envelope}
+ C_{\mathcal Z}(w)=
+ \begin{cases}
+ \{b,c\},&L(w)\subsetneq U(w),\ U(w)\preceq L(w),\\
+ \bigcup_jw_j,&\text{otherwise}.
+ \end{cases}
+\end{equation}
+Consequently, the operation that erases to $\{b,c\}$ precisely on the
+selected interval regions and is input union elsewhere is core if and
+only if every collapsed strict interval is selected.
+\end{theorem}
+\begin{proof}
+The functions in $\mathcal B_{\mathcal Z}$ are exactly the normalized
+isotone functions of $\preceq$. They all agree at $L\subseteq U$
+exactly when $U\preceq L$: otherwise the reachability upset of $U$
+separates them. No nonempty vertex reaches $\varnothing$, and $V$
+reaches only itself, so this separator is normalized whenever needed.
+The all-variable disjunction and conjunction also show that a collapsed
+strict interval has nonempty lower and proper upper endpoint.
+
+At $w$, $E_f$ returns $c$ if $f(L(w))=1$, $b$ if $f(U(w))=0$,
+and input union otherwise. The only other singleton case has every
+input equal to the same foreign atom and already equals input union.
+A separating $f$ therefore supplies the union. On a collapsed strict
+interval, disjunction supplies $c$ and conjunction supplies $b$.
+If $L(w)=U(w)$, the inputs are all $b/c$ atoms and these same two
+functions supply their union. This proves
+\eqref{core:eq:pair-erasure-envelope} and all selected bounds.
+
+Let $H$ satisfy the selected bounds. By the atomic-observer expansion
+\eqref{core:eq:atomic-observer-expansion}, its $a$-trace is a union of
+Boolean derivatives. Every component must be constant on all selected
+intervals, hence on every collapsed interval. Thus $H(q(L,U))$ omits
+$a$ whenever $U\preceq L$.
+Replace every input of an arbitrary $w$ other than an exact $b/c$ atom
+by $\{a\}$. If $H(w)$ has a winner outside $\{b,c\}$, the replacement
+has winner $a$. This follows by induction: the $b/c$ singleton tests
+are unchanged, so a $b/c$ root cannot acquire a new absorber; any other
+root either unions its children or retains $a$ by an $a$-absorption.
+Provenance excludes every other absorbing atom on the replacement.
+Therefore $H(w)\subseteq\{b,c\}$ on every collapsed region, and
+provenance gives $H\subseteq C_{\mathcal Z}$ elsewhere.
+
+For the final claim, a core below the selected-region operation is
+exactly a core satisfying its selected atomic bounds. Its greatest
+core minorant is therefore $C_{\mathcal Z}$. A missing collapsed
+interval differs at its canonical atomic row, where the selected-region
+operation is $\{a,b,c\}$ and $C_{\mathcal Z}$ is $\{b,c\}$.
+\end{proof}
+
+For any core $S(X,V)$, the neutral-residue bounds give the useful equivalence
+\begin{equation}\label{core:eq:pair-spine-tests}
+ S\subseteq C_{\mathcal Z}+X
+ \quad\Longleftrightarrow\quad
+ S(\{b,c\},q(L_i,U_i))\subseteq\{b,c\}\quad\text{for every }i.
+\end{equation}
+Indeed $S\subseteq C_{\mathcal Z}+X$ is equivalent to
+$\partial_XS\subseteq C_{\mathcal Z}$. At the selected rows the
+residue's $a$-bit is that of $S(I\setminus\{a\},q_i)$, also that of
+$S(\{b,c\},q_i)$ since the two ambiguous source menus have the same
+$a$-view. The latter uses only $a,b,c$, so omission of $a$ is the pair
+bound. This formulation works also when $K>3$.
+
+\paragraph{Supports for the other owners.}
+For $A\subseteq V$, project every selected reversed edge to
+$U_i\cap A\to L_i\cap A$ on $2^A$, retaining the inclusion edges.
+Define
+\[
+ \eta_{\mathcal Z}(A)=1
+ \quad\Longleftrightarrow\quad
+ A\text{ does not reach }\varnothing\text{ in this projected graph}.
+\]
+This is monotone in $A$, false at $\varnothing$, and true at $V$.
+
+\begin{lemma}[Outside-owner profile image]
+\label{core:lem:pair-support-profile}
+For $r\notin\{b,c\}$, the profiles of core operations below
+$C_{\mathcal Z}$ are exactly the normalized monotone $f$ with
+$f\leq\eta_{\mathcal Z}$.
+\end{lemma}
+\begin{proof}
+Suppose $H\subseteq C_{\mathcal Z}$ and $\Phi_r(H)(A)=1$.
+In each selected row replace the free $a$ atoms by a fresh unowned
+atom $\omega$. Outside-winner presence is unchanged: the $b/c$
+singleton tests agree, and every other owned root acts as OR on that
+presence bit, including a root that previously absorbed to $a$.
+Thus the new rows also satisfy the pair bound.
+
+Prune an $r$-winning profile proof on $A$: at an $r$-node keep a
+positive child, and at every other node keep both. All remaining
+leaves lie in $A$. On $r$-avoiding inputs this pruning is contractive,
+as in \cref{core:lem:owner-face-erasure}. Every fresh-$\omega$ row
+avoids $r$, so the resulting core on $A$ respects the projected bounds.
+Its atomic-observer expansion supplies a normalized Boolean function
+constant on every projected interval. Such a function exists exactly
+when $A$ does not reach $\varnothing$.
+
+Conversely, choose such a function on each feasible nonempty $A$.
+Its dual-profile completion on support $A$ lies below
+$C_{\mathcal Z}$ and has $r$-profile $[A\subseteq-]$.
+For a prescribed $f\leq\eta_{\mathcal Z}$, fold these completions
+by $\star_r$ over its positive coalitions. The fold stays below the
+idempotent bound and has profile $f$.
+\end{proof}
+
+\paragraph{Four helpers replace arbitrary anchor words.}
+For a full type $B$, put $\psi_r=\neg B_r$,
+$\beta=\psi_c$, and $\alpha=\psi_b^\partial$.
+Allow the constant functions $0,1$ in addition to normalized Boolean
+functions. Let $\gamma_*$ be the reachability upset of
+\[
+ \{A:\alpha(A)\beta(A)=1\}
+ \ \cup\ \{L_i:\alpha(L_i)=0<\alpha(U_i)=1\},
+ \qquad
+ \mathcal Z_0=\{i:\beta(L_i)=0,\ \alpha(U_i)=1\}.
+\]
+
+\begin{theorem}[Exact types over pair-erasure bounds]
+\label{core:thm:pair-interval-types}
+There is a primitive one-$X$ spine $S\subseteq C_{\mathcal Z}+X$
+with full type $B$ if and only if
+\[
+ \gamma_*\leq\beta,
+ \qquad \psi_r\leq\eta_{\mathcal Z_0}\quad(r\notin\{b,c\}).
+\]
+At most $K+2$ marked-path attachments suffice. For a known core
+$F\in\mathcal I(C_{\mathcal Z})$, the type is actual precisely when
+these conditions hold and its source box is sound for $F$.
+\end{theorem}
+\begin{proof}
+First consider a path with owners only $b,c$.
+At a canonical row, a $c$-helper with own profile $f$ can be replaced
+by $E_f$, and a $b$-helper with own profile $g$ by $E_{g^\partial}$.
+These replacements preserve the respective own singleton tests,
+can add the other permitted singleton, and cannot add an $a$-winner.
+For the last assertion, if $f(L)=0<f(U)$, the pair test excludes any
+helper with that $c$-profile bounded by $\{b,c\}$ at $q(L,U)$.
+Thus $E_f$'s $a$-winner was already present. The observer order on
+$\{b,c,N,P\}$ is monotone for both path gates, so safety is preserved.
+
+On passive $b/c$ inputs these canonical helpers have Boolean values.
+Let $\gamma,\delta$ be the path's Boolean endpoint functions with
+$X=b,c$. Induction along the path gives
+\begin{equation}\label{core:eq:pair-endpoint-identities}
+ \gamma=\beta\delta,\qquad \delta=\alpha\lor\gamma.
+\end{equation}
+At $q_i$, singleton sources are subsets of $\{b,c\}$, so safety makes
+both endpoints omit $a$. The canonical helpers take the three values
+$b,\{a,b,c\},c$, interpreted by Boolean endpoint pairs
+$(0,0),(0,1),(1,1)$. Hence $\gamma,\delta$ are constant on every
+zero interval. They satisfy $\alpha\beta\leq\gamma\leq\beta$.
+The least such $\gamma$ whose $\alpha\lor\gamma$ is also constant
+is exactly the indicated seed upset $\gamma_*$.
+
+Conversely, given $\gamma_*\leq\beta$, set
+$\gamma=\gamma_*$, $\delta=\alpha\lor\gamma$, and use the path
+\begin{equation}\label{core:eq:four-pair-helpers}
+ X\star_b E_\alpha\star_c E_\beta
+   \star_b E_\delta\star_c E_\gamma.
+\end{equation}
+Omit a $b$-attachment with function $1$, or a $c$-attachment with
+function $0$; these denote inactive factors, not constant core helpers.
+All remaining functions are normalized. The total marked factors are
+exact because $\alpha\land\delta=\alpha$ and
+$\beta\lor\gamma=\beta$.
+On a zero interval write $g\leq d$ for the common endpoint values
+of $\gamma,\delta$. If $g=d=1$ the last gate resets to $c$;
+if $g=d=0$ the third resets to $b$ and the last fixes it.
+If $g=0,d=1$, \eqref{core:eq:pair-endpoint-identities} forces
+$\alpha=1,\beta=0$ at both endpoints, so all four gates fix the
+source pair. This proves safety by \eqref{core:eq:pair-spine-tests}.
+
+Now allow all path owners. Deleting an outside-owned gate at a
+canonical row can only decrease the observer value; it acts as union
+on the outside bit. Thus the two-anchor condition remains necessary.
+At a row in $\mathcal Z_0$ no $b/c$ helper is its own gate's atom.
+Starting from the ambiguous pair, no such gate can erase an outside
+winner. Therefore every outside helper respects all these pair bounds.
+Its own-owner fold has profile $\psi_r$ and lies below
+$C_{\mathcal Z_0}$. The preceding lemma proves necessity.
+
+For sufficiency choose one such helper for each active outside owner
+and attach them before \eqref{core:eq:four-pair-helpers}.
+On $\mathcal Z_0$ the prefix stays exactly $\{b,c\}$.
+At every other selected row the anchor suffix has a constant reset,
+erasing the prefix. The bound is global by
+\eqref{core:eq:pair-spine-tests}, and every marked factor is exact.
+There are at most $K-2$ prefix attachments and four anchor attachments.
+Finally use marked linearization for necessity in $F$ and soundness
+with marked union completion for sufficiency, as in
+\cref{core:thm:profile-interval-types}.
+\end{proof}
+
+\paragraph{The complete relative source criterion.}
+The types above give an explicit interval preorder, including the
+implications caused by cyclic bounds. For each strongly connected
+component $M$ of the Boolean graph, retain the zero edges internal to
+$M$, denoted $\mathcal Z_M$, and define the owner box
+\begin{align*}
+ \Theta_M(E)&=\bigwedge_r B^M_r(E_r),\\
+ B^M_c(A)&=[\exists S\in M:\ A\subseteq S],\\
+ B^M_b(A)&=[\exists S\in M:\ S\cap A=\varnothing],\\
+ B^M_r(A)&=1-\eta_{\mathcal Z_M}(A)\quad(r\notin\{b,c\}).
+\end{align*}
+Its tag consists of the proper colorings
+\[
+ T_M=\{E:E_c,\ V\setminus E_b\in M\}.
+\]
+Every $T_M$ is nonempty: take a complete $b/c$ coloring corresponding
+to any vertex in $M$.
+The box $\Theta_M$ is zero on every other tag $T_N$: its two anchor
+factors would otherwise give paths $N\preceq M\preceq N$.
+
+\begin{theorem}[Source compatibility over pair-erasure bounds]
+\label{core:thm:pair-source-interval}
+A predicate $P$ on proper passive colorings is realized in
+$\mathcal I(C_{\mathcal Z})$ if and only if it is antitone and,
+for every component $M$,
+\[
+ P\text{ is positive somewhere on }T_M
+ \quad\Longrightarrow\quad \Theta_M\leq P.
+\]
+The least realizable predicate positive at a coloring $p$ is
+$\Theta_M$ if $p\in T_M$, and the principal downset of $p$ otherwise.
+Each of these least predicates has a one-$X$ minorant with at most
+$K+2$ marked-path attachments.
+\end{theorem}
+\begin{proof}
+Write $C=p_c$, $D=V\setminus p_b$, so $C\subseteq D$.
+For any actual type positive at $p$, its anchor endpoints satisfy
+$\gamma(C)=0$ and $\delta(D)=1$.
+Consequently the gap $\gamma=0,\delta=1$ contains every $A$ with
+$D\preceq A\preceq C$. This set is empty if $D\npreceq C$,
+and otherwise is the component $M$ containing $C,D$.
+
+In the latter case \eqref{core:eq:pair-endpoint-identities} gives
+$\beta=0,\alpha=1$ throughout $M$.
+A $c$-capture on $A$ is therefore impossible when $A$ is contained
+in some member of $M$; a $b$-capture is impossible when $A$ misses
+some member. On internal zero edges there is no anchor reset, so the
+outside profile bound gives $\psi_r\leq\eta_{\mathcal Z_M}$.
+Thus every type positive at $p$ contains the entire box $\Theta_M$.
+Marked linearization shows that every interval predicate positive at
+$p$ must contain it.
+
+To realize this box, put
+\[
+ \alpha_M(A)=[\exists S\in M:S\subseteq A],\qquad
+ \beta_M(A)=[\forall S\in M:A\nsubseteq S].
+\]
+Choose $C_0\in M$ and set
+\[
+ \gamma(A)=[A\npreceq C_0],\qquad
+ \delta(A)=\gamma(A)\lor[C_0\preceq A].
+\]
+These functions are constant on zero edges, and satisfy
+$\alpha_M\beta_M\leq\gamma\leq\beta_M$ and
+$\delta=\alpha_M\lor\gamma$, $\gamma=\beta_M\delta$.
+Indeed below $M$ the two endpoint functions are zero, on $M$ they
+are $0,1$, and outside its lower set they are both one; the definitions
+of $\alpha_M,\beta_M$ give the stated identities in each case.
+Moreover $\beta_M(L_i)=0,\alpha_M(U_i)=1$ holds exactly for internal
+edges. The preceding type theorem, or its four-helper construction,
+therefore realizes $\Theta_M$, using the outside profiles
+$\eta_{\mathcal Z_M}$.
+It is positive on $T_M$: for every outside color block
+$A\subseteq D\setminus C$, projecting an internal path $D\to C$
+gives a path $A\to\varnothing$, so its outside factor is one.
+The two anchor factors are one by $C,D\in M$.
+
+If $D\npreceq C$, take
+\[
+ \alpha(A)=[D\subseteq A],\quad
+ \beta(A)=[A\nsubseteq C],\quad
+ \gamma(A)=\delta(A)=[D\preceq A].
+\]
+Again the endpoint identities hold and all zero edges have equal
+endpoint functions, so $\mathcal Z_0$ is empty.
+Every outside profile $\psi_r(A)=[A\nsubseteq p_r]$ is then
+permitted. The constructed type is exactly the principal downset box
+$\bigwedge_r[A\subseteq p_r]$, positive at $p$.
+Antitonicity makes this the least possible predicate.
+
+Finally union these least boxes over the positive colorings of $P$,
+and add the passive baseline. The stated conditions put every box
+inside $P$, while each positive coloring belongs to its own box.
+The source reconstruction formula gives exactly $P$.
+\end{proof}
+
+For example, take $|V|\geq3$ and select every nondegenerate interval.
+Then $C_{\mathcal Z}(w)$ is $\{b,c\}$ whenever both a $b$-atomic and
+a $c$-atomic input occur, and is input union otherwise.
+All nonempty proper coalitions form one component $M$.
+Every proper support collapses to $\varnothing$ in its projected graph,
+whereas $V$ does not. Thus the component's activation box is simply
+\[
+ \Theta_M(E)=\bigwedge_r[E_r\ne V].
+\]
+Activating the source on any coloring with both anchor types therefore
+activates it on every coloring having no monochromatic full coalition.
+This baseline has unanimity singleton profiles, while its mixed-value
+bounds supply the additional implication.

@@ -1,12 +1,12 @@
 Rational Owned Choice: Finite Algebras of Multiplayer Games
 
 The paper is main.tex; its technical report is tr.tex. The mathematical audit
-entrypoints are root Paper.lean (79 main-paper and cited results) and
-Report.lean (73 further report statements and proof ingredients). Every theorem
+entrypoints are root Paper.lean (85 main-paper and cited results) and
+Report.lean (105 further report statements and proof ingredients). Every theorem
 repeats its complete proposition and has a single named library theorem as its
 proof. The scope is the entire main paper and the report material its claims
 need, rather than every result in the technical report. Start with
-notes/audit-guide.md for a human reading order.
+verification/audit-guide.md for a human reading order.
 
 Build and verify
 
@@ -43,8 +43,8 @@ make clean removes build/; Lake's compiled artifacts are under .lake/.
 
 Artifact and review entry points
 
-    Paper.lean        79 complete main-paper and cited mathematical statements
-    Report.lean       73 further audited report statements and proof ingredients
+    Paper.lean        85 complete main-paper and cited mathematical statements
+    Report.lean       105 further audited report statements and proof ingredients
     KFOL/Definitions/ Mathematical semantics, syntax and word formats
     KFOL/Results/     Library theorem assembly and detailed certificates
     KFOL/Algebra/     Independent mathlib-only algebra
@@ -53,23 +53,22 @@ Artifact and review entry points
     KFOL/Strategic/   Full-profile SPE and arbitrary-domain public quantifiers
     KFOL/Rounds/      Sealed-round and sequential-equilibrium semantics
     KFOL/Audit.lean   All-source, transitive axiom audit
-    notes/audit-guide.md  Reading order and meaning/proof audit distinction
+    verification/     Audit guide, claim inventory and definition indexes
     tests/            Lean statement, semantics and machine regressions
     checks/           Current paper regressions and their shared models
     main.tex, tr.tex  Main paper and technical report
     sections/         Manuscript sections and committed label snapshots
 
-Start with notes/formalization-status.md for coverage and validation, and
-notes/formalization-claims.json for the statement-level evidence inventory.
+Use verification/formalization-claims.json for the statement-level evidence inventory.
 python3 scripts/check_inventory.py validates its source fingerprints, statement
-snapshots and declaration references. Historical deliveries are archived in
-notes/formalization-history.{md,json}.
+snapshots and declaration references. Research notes remain local under the
+ignored notes/ directory.
 
 Read the mathematical vocabulary first in KFOL/Definitions/PaperAlgebra.lean,
 PaperGames.lean and Complexity.lean, then follow their underlying definitions.
 They are front doors to the semantics, not the whole definition closure. The
-human indexes notes/paper-definition-surface.md and
-notes/report-definition-surface.md, with complete JSON graphs beside them,
+human indexes verification/paper-definition-surface.md and
+verification/report-definition-surface.md, with complete JSON graphs beside them,
 start from every public theorem TYPE, follow project definitions and inductive
 constructors, and identify external semantic interfaces. They exclude theorem
 proof bodies. Check both reports with:
@@ -81,14 +80,13 @@ This meaning audit complements the kernel and axiom checks. Each entrypoint
 has one #audit_namespace command that rejects any declaration depending on an
 unsupported axiom. The whole-source audit also covers private library helpers.
 The previous 140 full statement contracts remain in
-KFOL/Results/Certificates.lean under KFOL.Results; notes/audit-relocations.json
+KFOL/Results/Certificates.lean under KFOL.Results; verification/audit-relocations.json
 records their original signatures. Codec, descriptor and machine contracts
 belong there and in their implementation modules, while the root entrypoints
 state the mathematical results. scripts/check_surfaces.py checks literal
 statements, single-theorem proofs and preservation of those original contracts.
 
-notes/formalization-definitions.md explains the carriers, syntax and semantics;
-notes/formalization-plan.md records the design and completion criteria.
+verification/formalization-definitions.md explains the carriers, syntax and semantics.
 GameTheory supports the strategic and rounds branches. Pure algebra and word
 definitions do not import it or the machine-complexity libraries; the import
 audit checks that boundary. The machine branch uses ComplexityLib's independent multitape Turing
@@ -117,7 +115,7 @@ The self-contained argument is in sections/appendix-open-games.tex,
 Lean proofs are pinned to GameTheory v1-final, revision
 02898a2d8b918f9b106a683420ca78c99867560e:
 https://github.com/elazarg/GameTheory/tree/02898a2d8b918f9b106a683420ca78c99867560e/GameTheory/Languages/OpenGame
-The immutable manifest is notes/integration/open-game-v1.json;
+The immutable manifest is verification/open-game-v1.json;
 scripts/check_external_open_game.py rebuilds and audits an isolated checkout
 at that pin. Do not modify the sibling GameTheory checkout. This refutes the
 specified composition, not probabilistic open games generally. The paper's

@@ -22,7 +22,7 @@ def main():
     checkout = args.checkout.resolve()
     if checkout == (ROOT.parent / "GameTheory").resolve():
         raise SystemExit("Use an isolated checkout; the sibling GameTheory checkout is read-only.")
-    manifest = json.loads((ROOT / "notes/integration/open-game-v1.json").read_text())
+    manifest = json.loads((ROOT / "verification/open-game-v1.json").read_text())
     for name, expected in manifest["source_hashes"].items():
         source = checkout / name
         if not source.is_file() or hashlib.sha256(source.read_bytes()).hexdigest() != expected:
