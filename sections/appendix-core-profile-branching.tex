@@ -1,0 +1,86 @@
+\paragraph{Joint deleted profiles can require branching.}
+The compatible face erasures do not give a one-source reconstruction of
+all selected profiles, even if arbitrary passive helpers are allowed.
+
+\begin{proposition}[Two source copies for joint profile requirements]
+\label{core:prop:joint-profile-repetition}
+Fix distinct owners $a,b,c$, and put
+\[
+ H=((Z\star_aY)\star_bW)\star_c((Z\star_bV)\star_aW),
+ \qquad C=H+Z.
+\]
+Among core words $S\subseteq C$ whose singleton profiles after excluding
+$Z$ are
+\[
+ \Phi_a(S)|_{Z=0}=YW,\qquad
+ \Phi_b(S)|_{Z=0}=VW,\qquad
+ \Phi_r(S)|_{Z=0}=0\quad(r\notin\{a,b\}),
+\]
+the minimum number of $Z$-occurrences is two. This holds in the primitive
+signature and with union named. The displayed primitive word $H$ attains
+the minimum.
+\end{proposition}
+\begin{proof}
+Profile recursion gives the stated deleted profiles of $H$.
+A word omitting $Z$ has a positive top profile at every owner, so cannot
+meet the zero profiles. Suppose instead that $S$ contains $Z$ once.
+Follow its unique path, treating each sibling as an arbitrary passive
+core helper. Only owners $a,b$ can occur on that path: at the top passive
+coalition a gate of any other owner would install a positive deleted
+profile, and every later helper has positive top profile, so that bit
+could not disappear. Union gates may also occur.
+
+The following four inputs give the bounds used below:
+\[
+\begin{array}{c|cccc|c}
+ &Z&Y&V&W&C\\\hline
+ P_a&a&b&b&a&\{a\}\\
+ P_b&b&a&a&b&\{b\}\\
+ Q_b&b&a&c&\{a,b\}&\{a,b\}\\
+ Q_a&a&c&b&\{a,b\}&\{a,b\}
+\end{array}
+\]
+Letters in the input columns denote singleton menus.
+
+At the passive input of $P_a$, the spine maps $Z=\{a\}$ to $\{a\}$
+but does not map $Z=I\setminus\{a\}$ to that atom, because its deleted
+$a$-profile is false on $\{W\}$. No helper can therefore be a reset
+to its gate's owner: that would make the entire one-$Z$ context constant.
+Every step is now extensive, including union, so the spine stays at
+$\{a\}$ throughout this input. Every $b$-helper must equal $\{a\}$,
+while no $a$-helper equals $\{a\}$. The symmetric argument at $P_b$
+gives, for every helper at the indicated gate,
+\[
+\begin{array}{c|cc}
+ \text{gate owner}&\Phi_a(\{W\})&\Phi_b(\{W\})\\\hline
+ a&0&1\\
+ b&1&0
+\end{array}
+\]
+
+At the passive input of $Q_b$, the atomic sets are
+$E_a=\{Y\}$, $E_b=\varnothing$, $E_c=\{V\}$.
+Every $a$-helper is ambiguous. Its positive $b$-coalition $\{W\}$
+excludes an $a$-singleton on the disjoint coalition $\{Y\}$ and a
+$c$-singleton on $\{V\}$ by common source; no other singleton can
+occur. Hence no $a$-gate resets here, and no $b$-gate resets because
+there is no $b$-atomic input. By the first $a$-gate the running value
+is ambiguous and still contains $b$; no later step can remove a winner.
+
+Some $b$-helper must have positive profile on $\{V,W\}$, since only
+a $b$-gate can introduce the required positive deleted bit from its
+initial zero value. That helper has a negative bit on $\{W\}$ by the
+table. The pair test \eqref{core:eq:profile-pair-safe} forces it to
+contain $c$ at $Q_b$, using provenance: the difference input $V=\{c\}$ is outside
+$\{a,b\}$, there is no $b$-atom, and the allowed foreign $a$-atom
+is at $Y$, outside $\{V,W\}$. It must therefore occur before the first
+$a$-gate, or the spine would retain a forbidden $c$.
+
+Symmetrically, at $Q_a$ every $b$-helper is ambiguous, and an $a$-helper
+positive on $\{Y,W\}$ and negative on $\{W\}$ must contain $c$.
+Such a helper exists and must occur before the first $b$-gate.
+Thus each owner must occur before the first occurrence of the other,
+a contradiction. Union steps are extensive throughout and cannot remove
+either forbidden contribution. This excludes every one-$Z$ word in both
+signatures, completing the sharp lower bound.
+\end{proof}

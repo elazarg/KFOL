@@ -65,6 +65,13 @@ Nonfinite relatedness excludes characterization by a fixed finite family of
 invariant relations. It does not exclude every possible short structural law
 with unbounded quantification.
 
+Serial reconstruction also fails as a universal approach. The
+[joint-profile branching obstruction](retained-sources.md#joint-profile-reconstruction-can-require-branching)
+requires two copies of a distinguished source below one retained core bound,
+even when arbitrary passive helpers are available and only the exact deleted
+singleton-profile tuple is prescribed. Thus the missing joint criterion must
+account for branching, not merely safe orderings of a selected helper family.
+
 ## Complete single-source data
 
 [Single-source completion](single-source-completions.md) gives two closed

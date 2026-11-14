@@ -44,6 +44,11 @@ word size, so these marginal minima need not be simultaneously attainable.
 The source predicate also records functional dependence under proper partial
 atomic cofactors. Joint compatibility of different sources remains the target.
 
+Even the weaker task of preserving joint deleted profiles below a retained
+core bound can require branching: a sharp four-input example needs two
+copies of its source, with arbitrary passive helpers and named union allowed.
+See [retained-sources.md](retained-sources.md#joint-profile-reconstruction-can-require-branching).
+
 [Source intervals](source-intervals.md) isolate a relative compatibility
 problem: C <= F(X,v) <= C+X. Their activation predicates form a bounded
 distributive lattice, with meet given by substitution at X. All singleton-r

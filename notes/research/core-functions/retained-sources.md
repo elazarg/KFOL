@@ -137,6 +137,37 @@ subsets of J. Thus a monotone upper bound imposes only
 written `core:cor:owner-face-family`. The shared face shrinks as J grows;
 the result does not assert a global reconstruction from one body.
 
+## Joint profile reconstruction can require branching
+
+This limitation is sharp even with arbitrary passive core helpers. For
+distinct owners a,b,c, let
+
+    H=((Z choice_a Y) choice_b W) choice_c
+          ((Z choice_b V) choice_a W),
+    C=H union Z.
+
+The deleted profiles of H are Y AND W at a, V AND W at b, and zero
+at every other owner. Among core words S<=C with this entire deleted
+profile tuple, the minimum number of Z leaves is exactly two. H attains
+it in the primitive signature; the lower bound also allows named union.
+This is `core:prop:joint-profile-repetition`, proved in
+[the branching argument](../../../sections/appendix-core-profile-branching.tex).
+
+A one-Z word would be a spine. The zero deleted profiles forbid every
+owner except a,b along that spine. Two singleton-bound rows force each
+a-helper to have a-negative/b-positive profile on {W}, and each b-helper
+to have the opposite pair. At (Z,Y,V,W)=(b,a,c,{a,b}), no gate can reset,
+and every a-helper is ambiguous. A b-helper supplying the required
+positive profile on {V,W} must contain c there, by the profile pair test,
+so it must occur before the first a-gate. The symmetric row forces an
+a-helper before the first b-gate. The incompatible orders exclude every
+one-Z word, including words with union steps.
+
+Thus even exact deleted profiles under a retained core bound cannot
+always be reconstructed by a serial context. The result uses the full
+deleted profile tuple, including its negative bits and inactive owners;
+it does not assert that the two positive quorums alone force repetition.
+
 ## Exact profile reduction below a retained upper bound
 
 Let F be ANY monotone winner correspondence retaining every input in a

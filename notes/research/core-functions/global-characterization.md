@@ -79,6 +79,15 @@ context has an exact triangular compression, with quadratic-order necessity.
 These results isolate helper selection and cross-face reconstruction from
 mere repetition in the spine word.
 
+The sharp [joint-profile branching obstruction](retained-sources.md#joint-profile-reconstruction-can-require-branching)
+now rules out serial reconstruction even with an unrestricted passive helper
+alphabet. Beneath one retained core bound, the exact deleted profiles at two
+active owners and zero profiles elsewhere require two source copies. Four
+rows force mutually incompatible first-gate orders in every one-source
+spine. This is a written proof, not a Lean claim. It isolates correlated
+branching from the fixed-library ordering problem; solving that ordering
+problem alone cannot settle joint guard compatibility.
+
 The [status-selector representation](status-selectors.md) replaces separate
 per-owner selections on one atomic-status fibre by a canonical pair: fixed
 atomic winners and whole ambiguous inputs. Four-point interpolation already
