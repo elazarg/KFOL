@@ -1,0 +1,218 @@
+The distinction between the two middle values is essential here.
+Nevertheless observer union does not enlarge this particular family.
+
+\begin{lemma}[Pure realizations of canonical extensions]
+\label{core:lem:essential-extension-pure}
+For every nonconstant monotone Boolean function $f$, the operation $D_f$
+has a term realization using $\wedge,\vee,\star_a$ if and only if it
+has one using only $\wedge,\vee$.
+\end{lemma}
+\begin{proof}
+Distribute the two bichain operations over observer union. Every pure
+component has Boolean restriction $f$, since a union of endpoint values
+is an endpoint only when all those values agree. Every essential marked
+coordinate forces $\mathsf p$ in each component: fix the other free
+coordinates at a pivotal Boolean edge, then enlarge them to their middle
+values in observer-union order. Both operations preserve this order.
+Conversely, no component can produce $\mathsf p$ where $D_f$ gives
+$\mathsf n$, since $\mathsf p$ absorbs observer union. Stable outputs
+are fixed by the cube endpoints. Each pure component therefore equals
+$D_f$ on every input.
+\end{proof}
+
+The canonical extension is always attainable at each individual input,
+even when no single word attains it everywhere.
+
+\begin{proposition}[Boolean cofactor lifting and the canonical envelope]
+\label{core:prop:essential-cofactor-lifting}
+Fix a nonconstant monotone Boolean function $f$.
+Every pure bichain realization of a Boolean cofactor of $f$ extends to
+a pure term with Boolean restriction $f$, whose literal cofactor is
+the chosen realization. Endpoint constants are permitted in the cofactor
+word. Consequently, for every bichain input $v$
+there is a pure term $t$ with Boolean restriction $f$ such that
+$t(v)=D_f(v)$.
+\end{proposition}
+\begin{proof}
+For one fixed coordinate $x$, write $f_0\leq f_1$ for the two Boolean
+cofactors. If $s$ realizes $f_0$ and $t_1$ realizes $f_1$, the term
+$(x\wedge t_1)\vee s$ computes $f$ and restricts exactly to $s$
+at $x=b$. To lift a realization $s$ of $f_1$, use
+$(x\vee t_0)\wedge s$, which restricts exactly to $s$ at $x=c$.
+Iterate over the fixed coordinates. Endpoint constants simplify away
+because the final Boolean function is nonconstant.
+
+For an input $v$ with $D_f(v)=\mathsf n$, restrict its stable
+coordinates first. Every coordinate marked $\mathsf p$ is inessential
+in this cofactor, so choose a formula using only its essential
+coordinates. Those inputs are all $\mathsf n$, and the formula gives
+$\mathsf n$. Its lift has the required value at $v$.
+At all other inputs every pure word computing $f$ already gives $D_f$,
+by stable endpoints and the essential marked-source bound.
+\end{proof}
+
+\begin{corollary}[When Boolean data determine the whole operation]
+\label{core:cor:essential-unique-fiber}
+Let $f$ be nonconstant with full essential support $V$. The bichain term operations
+whose Boolean restriction is $f$ form a singleton if and only if
+$f(x)=[\sum_{i\in V}x_i\geq r]$ for some $1\leq r\leq|V|$.
+This remains true when observer union is allowed. In the singleton
+case its unique member is $D_f$.
+\end{corollary}
+\begin{proof}
+For a uniform threshold, every free coordinate of every nonconstant
+cube is essential. All pure words computing $f$ therefore give $D_f$;
+observer-union expansion gives the same conclusion for full words.
+
+Otherwise $f$ is not constant on some cardinality layer. Connecting
+equal-size sets by one-element exchanges gives a set $S$ and distinct
+$i,j\notin S$ with $f(S\cup\{i\})=1$ and
+$f(S\cup\{j\})=0$. On the two-dimensional cube
+$[S,S\cup\{i,j\}]$, its restriction is the projection $i$.
+Put $\mathsf n$ at $i$ and $\mathsf p$ at $j$. Cofactor lifting
+gives a pure word computing $f$ with value $\mathsf n$ at this input.
+Replacing that word $t$ by $t\wedge(t\vee x_j)$ preserves its
+Boolean restriction but changes the displayed value to $\mathsf p$.
+Thus even the pure fiber is not a singleton.
+\end{proof}
+
+Two-level formulas have a precise matroid boundary. For a finite
+nonempty family $\mathcal C$ of nonempty subsets covering $V$, write
+\[
+ f_{\mathcal C}=\bigwedge_{C\in\mathcal C}\bigvee_{i\in C}x_i,
+ \qquad
+ T_{\mathcal C}=\bigwedge_{C\in\mathcal C}\bigvee_{i\in C}x_i,
+\]
+interpreting the first expression in the Boolean algebra and the second
+in the bichain. Define its loopless closure operator by
+\[
+ c_{\mathcal C}(E)=
+ V\setminus\bigcup\{C\in\mathcal C:C\cap E=\varnothing\}.
+\]
+This is the intersection of the clause complements containing $E$.
+A matroid closure additionally obeys exchange:
+$i\in c(E\cup\{j\})\setminus c(E)$ implies
+$j\in c(E\cup\{i\})$.
+
+\begin{theorem}[Matroid boundary for canonical CNFs]
+\label{core:thm:essential-cnf-matroid}
+The literal CNF $T_{\mathcal C}$ equals $D_{f_{\mathcal C}}$ if and
+only if $c_{\mathcal C}$ is a matroid closure. Equivalently, the
+inclusion-minimal clauses $\mathcal D$ are the cocircuits of a loopless
+matroid $M$, and each clause in $\mathcal C$ is the union of its
+contained members of $\mathcal D$. In that case $f_{\mathcal C}$ is
+the spanning predicate of $M$.
+\end{theorem}
+\begin{proof}
+First consider the cocircuit CNF of a loopless matroid. It tests spanning,
+since a set spans exactly when it meets every cocircuit. On a nonconstant
+cube $L\subseteq U$, the set $U$ spans and $L$ does not. No outer
+meet operand is therefore $b$. A marked position $j$ produces
+$\mathsf p$ exactly when some cocircuit contains $j$ and misses $L$,
+equivalently $j\notin\operatorname{cl}_M(L)$.
+
+This is also exactly Boolean essentiality of $j$ on that cube.
+Membership in $\operatorname{cl}_M(L)$ prevents $j$ from changing
+whether any superset of $L$ spans. Otherwise extend a basis of $L$
+together with $j$ to a basis $B\subseteq U$. The set
+$L\cup(B\setminus\{j\})$ is nonspanning but becomes spanning after
+adding $j$. This is a pivotal edge inside the cube. The CNF thus has
+exactly the marked-source observations of $D_{f_{\mathcal C}}$.
+
+We next characterize harmless redundant clauses. A clause $C$ that is
+the union of its contained minimal clauses cannot add a marked observation:
+if $C$ contains a marked $j$ and misses $L$, some contained minimal clause
+also contains $j$ and misses $L$. Stable outputs are unchanged by removing
+redundant Boolean clauses. Conversely, suppose $C$ contains a $j$ not
+covered by any minimal clause inside $C$. Put $\mathsf p$ at $j$,
+$c$ outside $C$, and $\mathsf n$ at all other positions.
+Every minimal clause containing $j$ is already satisfied by a fixed $c$.
+The restricted Boolean function is nonconstant, because $C$ contains a
+minimal clause avoiding $j$, and is independent of $j$. Its canonical
+value is $\mathsf n$. Yet the literal clause $C$ gives $\mathsf p$,
+and no clause gives $b$, so $T_{\mathcal C}$ gives $\mathsf p$.
+Hence equality requires, and allows us to assume, the union condition.
+
+It remains to force cocircuit elimination in the clutter $\mathcal D$.
+Suppose distinct $C_1,C_2\in\mathcal D$ contain $j$, but no member
+of $\mathcal D$ lies in $(C_1\cup C_2)\setminus\{j\}$.
+Choose $i\in C_2\setminus C_1$. Put $\mathsf p$ at $i$, $b$ on
+$C_1\setminus\{j\}$, $c$ outside $C_1\cup C_2$, and
+$\mathsf n$ at every remaining position. The clause $C_1$ restricts
+to the free coordinate $j$. Every clause avoiding $j$ meets the fixed-$c$
+region, while every other unsatisfied clause contains $j$. Thus the
+Boolean cofactor is exactly $j$, making the marked $i$ inessential.
+No clause is constantly $b$, by the antichain property, and $C_2$
+produces $\mathsf p$. Again the literal CNF differs from its canonical
+extension.
+
+The nonempty antichain $\mathcal D$ must therefore satisfy cocircuit
+elimination, so it is a matroid's cocircuit family. Its coverage of $V$
+excludes loops. These standard cocircuit axioms and the closure--hyperplane
+correspondence are as in \cite[Sections~1.1 and~2.1]{Oxley2011}.
+Finally, a set is a union of contained cocircuits precisely when its
+complement is a flat: $j\notin\operatorname{cl}_M(E)$ is equivalent
+to a cocircuit containing $j$ and missing $E$. Thus the displayed closure
+is the matroid closure under the two stated clause conditions.
+Conversely, if $c_{\mathcal C}$ is a matroid closure, all clause
+complements are flats; its hyperplanes, as maximal proper intersections
+of these complements, are exactly the complements of minimal clauses.
+This recovers both conditions.
+The first part and the redundant-clause argument prove sufficiency.
+\end{proof}
+
+\begin{corollary}[Both prime normal forms]
+\label{core:cor:essential-both-normal-forms}
+Let $f$ be a nonconstant monotone Boolean function on its full essential
+support $V$. Its prime CNF and prime DNF both realize $D_f$ if and only
+if $f(x)=[\sum_{i\in V}x_i\geq r]$ for some $1\leq r\leq|V|$.
+\end{corollary}
+\begin{proof}
+If the prime CNF is canonical, the theorem identifies $f$ with spanning
+in a loopless matroid $M$ of rank $r$. If $M$ is nonuniform, take a
+dependent $r$-set and a circuit $C$ inside it. For $j\in C$, put
+$\mathsf p$ at $j$, $c$ on $L=C\setminus\{j\}$ and $\mathsf n$
+elsewhere. The set $L$ is nonspanning and $j\in\operatorname{cl}_M(L)$,
+so $D_f=\mathsf n$. But a basis containing $j$ supplies $\mathsf p$
+in the prime DNF. No basis lies in $L$, so no monomial is the absorbing
+$c$ and the DNF gives $\mathsf p$. Thus $M$ must be uniform.
+Conversely, the prime CNF of a uniform threshold is its uniform matroid's
+cocircuit formula. Interchanging $b,c$ and $\wedge,\vee$ turns its prime
+DNF into the same construction for the dual threshold of rank
+$|V|-r+1$. Both are therefore canonical.
+\end{proof}
+
+Disjoint Boolean modules can also be separated without losing any
+marked-source information.
+
+\begin{proposition}[Disjoint substitution]
+\label{core:prop:essential-disjoint-substitution}
+Let $f$ and $g_1,\ldots,g_m$ be nonconstant monotone Boolean functions,
+with the $g_i$ on pairwise disjoint variable sets. Then
+\[
+ D_{f(g_1,\ldots,g_m)}=D_f(D_{g_1},\ldots,D_{g_m}).
+\]
+If every coordinate of $f$ is essential, the composite canonical
+extension is a bichain term operation if and only if $D_f$ and every
+$D_{g_i}$ are bichain term operations. The same equivalence holds
+with observer union allowed.
+\end{proposition}
+\begin{proof}
+Each block cube induces a fixed Boolean bit or a free outer coordinate.
+Disjointness lets these coordinates range independently over the entire
+outer cube. A variable in block $i$ is essential for the composite
+exactly when it is essential in $g_i$ and coordinate $i$ is essential
+for $f$ on the induced cube. Indeed a pivotal composite edge supplies
+both pivotal edges; conversely combine the two pivotal edges and
+independently realize the other block outputs. This proves the displayed
+identity, including stable outputs, and hence sufficiency by composition.
+
+For necessity, fix all but a pivotal variable in each block at Boolean
+endpoints. This recovers $f$ as a cofactor of the composite. To recover
+$g_i$, fix the other blocks to endpoint outputs along a pivotal edge
+for outer coordinate $i$. Canonical extension commutes with Boolean
+cofactors. In a pure term, endpoint constants simplify away whenever
+the resulting Boolean function is nonconstant. The pure-realization
+lemma handles observer union as well.
+\end{proof}
+
