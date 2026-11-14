@@ -1,0 +1,398 @@
+\section{Dual choice and excluded winners}\label{app:choice-duality}
+
+There are three different questions behind replacing union by intersection
+in owned choice. Complementing the observation gives an isomorphic algebra
+of players excluded from winning. Taking the meet in an owner's existing
+choice order gives a different operation, which needs an empty value.
+Adjoining the complement dual on the same carrier is a stronger extension:
+with the literal formulas on the full powerset, the two families and winner
+constants express every operation. We establish these statements before
+comparing the game constructions they suggest. Throughout, $K\geq3$.
+
+\subsection{The complement dual}
+
+Write $C(S)=I\setminus S$ and $e_r=I\setminus\{r\}$. Besides the
+winner carrier $\Pow=\mathcal P(I)\setminus\{\varnothing\}$, use the
+\emph{excluded-winner carrier}
+\[
+ \mathcal L=\mathcal P(I)\setminus\{I\}.
+\]
+Complementation is a bijection $C:\Pow\to\mathcal L$, with inverse
+given by the same formula. For $X,Y\in\mathcal L$, define
+\begin{equation}\label{dual:eq:choice}
+ X\diamond_r Y=C(C(X)\star_r C(Y))
+ =\begin{cases}
+ e_r,&X=e_r\text{ or }Y=e_r,\\
+ X\cap Y,&\text{otherwise}.
+ \end{cases}
+\end{equation}
+The exception is equality with $e_r$, not merely omission of $r$.
+For example, when $I=\{a,b,c\}$, neither $\{b\}$ nor $\{c\}$ is
+$e_a$, and $\{b\}\diamond_a\{c\}=\varnothing$.
+
+\begin{proposition}[Transport of the winner algebra]\label{dual:prop:transport}
+Each $\diamond_r$ is associative, commutative and idempotent, with
+absorbing element $e_r$. Complementation is an isomorphism from the
+winner algebra to the algebra on $\mathcal L$ with choices
+$\diamond_r$, constants $e_i$, and the usual action of role
+permutations. In particular, corresponding signatures have exactly the
+same identities, subalgebra and congruence structures, and term
+equivalence problems. For every finite nonempty family $(X_j)_{j\in J}$,
+\begin{equation}\label{dual:eq:fold}
+ \mathop{\diamond_r}_{j\in J}X_j=
+ \begin{cases}
+ e_r,&X_j=e_r\text{ for some }j,\\
+ \bigcap_{j\in J}X_j,&\text{otherwise}.
+ \end{cases}
+\end{equation}
+\end{proposition}
+\begin{proof}
+An operand's complement is $\{r\}$ precisely when the operand is
+$e_r$, and De Morgan's law gives the other case of
+\eqref{dual:eq:choice}. Isomorphism transports the semilattice laws,
+constants, and identities. A permutation $\pi$ commutes with $C$,
+since it is a bijection of $I$. Induction on terms transports their
+evaluations, giving the assertions about equivalence and structure.
+Complement the finite owned-choice fold to obtain
+\eqref{dual:eq:fold}.
+\end{proof}
+
+The derived neutral union becomes neutral intersection. Thus for distinct
+$r,s,t$ and all $X,Y\in\mathcal L$,
+\begin{equation}\label{dual:eq:intersection}
+ (X\diamond_r Y)\diamond_t(X\diamond_s Y)=X\cap Y.
+\end{equation}
+This follows by complementing \cref{game:thm:union}; it is an identity
+on the new carrier, not an intersection term on $\Pow$.
+
+\begin{proposition}[Players who never win]\label{dual:prop:semantics}
+For a public game $G$, let
+\[
+ L(G)=\{i:\text{$i$ loses in every SPE of $G$}\}.
+\]
+Then
+\[
+ L(G)=C(\den G),\qquad L(\at i)=e_i,\qquad
+ L(G\ch r H)=L(G)\diamond_r L(H).
+\]
+Every proper subset of $I$ occurs as some $L(G)$. Furthermore,
+$L(G)=e_r$ exactly when $r$ can force a win in $G$.
+\end{proposition}
+\begin{proof}
+Membership in $C(\den G)$ means that no SPE has winner $i$, which
+is exactly the displayed universal condition. Backward induction and
+\eqref{dual:eq:choice} give composition. Every nonempty winner set is
+realizable by \cref{game:prop:winner-budget}; complementing proves
+realizability here. The last assertion is the winner-atom criterion.
+\end{proof}
+
+If a branch has excluded-winner value $e_r$, its only possible SPE
+winner is $r$, so the owner ensures that every other player loses.
+Otherwise a player is excluded at the parent exactly when it is excluded
+in both branches. This is the intersection clause. The empty value says
+that every player wins in some SPE; the excluded value $I$ would say
+that there is no SPE. For example, an $a$-choice between terminal wins
+for $b$ and $c$ has excluded-winner value
+\[
+ \{a,c\}\diamond_a\{a,b\}=\{a\}
+ \qquad(I=\{a,b,c\}).
+\]
+
+These are universal losses, not possible losses. The set of players who
+lose in \emph{some} SPE is $e_i$ when $\den G=\{i\}$ and is $I$
+when $\den G$ is ambiguous. That observation discards the distinction
+between ambiguous values, whereas $L$ retains the entire winner value.
+
+\subsection{Order duality and the actual meet}
+
+The choice order on $\Pow$ is
+\[
+ S\sqsubseteq_r T
+ \quad\Longleftrightarrow\quad
+ T=\{r\}\ \text{or}\ (S\subseteq T\text{ and }S\ne\{r\}).
+\]
+The dual choice is meet for a different order on $\mathcal L$:
+\begin{equation}\label{dual:eq:order}
+ X\preceq_r Y
+ \quad\Longleftrightarrow\quad
+ X=e_r\ \text{or}\ (X\subseteq Y\text{ and }Y\ne e_r).
+\end{equation}
+Indeed $X\preceq_r Y$ is equivalent to
+$C(Y)\sqsubseteq_r C(X)$. Thus $e_r$ has been moved to the bottom
+of the inclusion order, just as $\{r\}$ was moved to the top.
+The original order on nonempty sets has no meet for two distinct
+nonowner atoms: they have no lower bound.
+
+For a comparison on a common carrier, extend both literal formulas to
+all of $\mathcal P(I)$. Denote these operations by $\star_r^+$ and
+$\diamond_r^+$: their definitions are respectively
+\eqref{game:eq:own} and \eqref{dual:eq:choice}, now allowing every
+subset. They remain complement conjugates. Here
+$\varnothing$ is an identity for $\star_r^+$ and $I$ is an identity
+for $\diamond_r^+$; their absorbers remain $\{r\}$ and $e_r$.
+
+\begin{proposition}[Meet in the choice order]\label{dual:prop:meet}
+On the full powerset, the order $\sqsubseteq_r$ is a bounded lattice,
+with bottom $\varnothing$, top $\{r\}$, join $\star_r^+$, and meet
+\begin{equation}\label{dual:eq:actual-meet}
+ M_r(S,T)=\begin{cases}
+ T,&S=\{r\},\\
+ S,&T=\{r\},\\
+ \varnothing,&S,T\ne\{r\}\text{ and }S\cap T=\{r\},\\
+ S\cap T,&\text{otherwise}.
+ \end{cases}
+\end{equation}
+This meet differs from $\diamond_r^+$. The pair
+$(\star_r^+,\diamond_r^+)$ does not satisfy the lattice absorption
+laws.
+\end{proposition}
+\begin{proof}
+When one input is top, the other is the greatest lower bound. Otherwise
+the lower bounds are exactly the subsets of $S\cap T$ other than
+$\{r\}$. If the intersection is $\{r\}$, only $\varnothing$
+remains; in every other case the intersection itself is greatest.
+The join assertion follows from the definition of $\sqsubseteq_r$.
+For distinct $r,b,c$, take $S=\{b\}$ and $T=\{r\}$.
+Then $M_r(S,T)=S$, but
+\[
+ S\diamond_r^+(S\star_r^+T)
+ =\{b\}\diamond_r^+\{r\}=\varnothing\ne S.
+\]
+Neither singleton is $e_r$, since $K\geq3$.
+\end{proof}
+
+Replacing union by intersection while keeping $\{r\}$ absorbing
+does not give a semilattice even after allowing the empty set. If
+$S\mathbin{\otimes_r}T$ is $\{r\}$ when an input is $\{r\}$
+and $S\cap T$ otherwise, take distinct $r,b,c$ and put
+$S=\{r,b\}$, $T=\{r,c\}$, $U=\{b\}$. Then
+\[
+ (S\mathbin{\otimes_r}T)\mathbin{\otimes_r}U=\{r\},\qquad
+ S\mathbin{\otimes_r}(T\mathbin{\otimes_r}U)=\varnothing.
+\]
+An ordinary intersection can create the exceptional singleton from two
+nonexceptional inputs, which then changes the next stage. The coatom
+exception in the complement dual avoids precisely this failure: an
+intersection of proper sets different from $e_r$ cannot equal $e_r$.
+
+The full-powerset extension just used is algebraic. It differs from the
+annihilating-zero extension in \cref{query:prop:relations} and from
+equilibrium composition with an equilibrium-free continuation in
+\cref{olv:prop:infinite-grafting}. In the latter situation, every
+off-path continuation must also carry an SPE, so an empty child makes
+the parent empty. In contrast,
+$\varnothing\star_r^+T=T$. Complementing the annihilating-zero
+extension gives an operation with $I$ absorbing; it agrees with
+$\diamond_r$ on $\mathcal L$ but differs from
+$\diamond_r^+$ at $I$. Thus neither typed algebra determines how the
+other endpoint should behave when the carriers are identified.
+
+Even identities of the original reduct can fail at the new endpoint.
+For $b\ne r$, distribution over union fails because
+\[
+ \{b\}\star_r^+(\varnothing\cup\{r\})=\{r\},\qquad
+ (\{b\}\star_r^+\varnothing)\cup
+ (\{b\}\star_r^+\{r\})=\{b,r\}.
+\]
+On nonempty inputs that distributive identity holds; complementing it
+gives distribution of $\diamond_r$ over intersection on $\mathcal L$.
+
+\subsection{Adjoining both literal operations}
+
+Fix the literal extensions from the preceding subsection. Let
+\[
+ \mathbf D_I=(\mathcal P(I);
+       (\star_r^+,\diamond_r^+)_{r\in I},(\{i\})_{i\in I}).
+\]
+There is no role-renaming operation in this signature. The neutral-union
+term and its complement dual define ordinary union and intersection on
+\emph{all} subsets. To see that neutral union still works at the new
+endpoint, if one argument is empty then both inner choices return the
+other argument, and idempotence finishes the calculation. The other
+cases are \cref{game:thm:union}. Complementation gives intersection,
+including at $I$. Consequently $\varnothing=\{a\}\cap\{b\}$
+for $a\ne b$, and $I=\bigcup_{i\in I}\{i\}$ are term constants.
+
+\begin{lemma}[Transfer of Boolean tests]\label{dual:lem:transfer}
+For distinct roles $p,q$, the term
+\begin{equation}\label{dual:eq:transfer}
+ N_{pq}(U)=(U\star_p^+\{q\})\cap\{q\}
+\end{equation}
+satisfies $N_{pq}(\varnothing)=\{q\}$ and
+$N_{pq}(\{p\})=\varnothing$.
+For any roles $p,q$, there are terms $P_{pq}$ and $Q_{pq}$ on
+$\{\varnothing,\{p\}\}$ such that
+\[
+ P_{pq}(U)=\begin{cases}\{q\},&U=\{p\},\\
+ \varnothing,&U=\varnothing,\end{cases}
+ \qquad
+ Q_{pq}(U)=\begin{cases}\varnothing,&U=\{p\},\\
+ \{q\},&U=\varnothing.\end{cases}
+\]
+\end{lemma}
+\begin{proof}
+The two evaluations of $N_{pq}$ follow from the identity and absorber
+laws for $\star_p^+$. If $p\ne q$, choose $h$ different from
+both and put $P_{pq}=N_{hq}\circ N_{ph}$; if $p=q$, use the
+identity. For $p\ne q$, put $Q_{pq}=N_{pq}$. For $p=q$, choose
+distinct $h,k$ outside $\{p\}$ and put
+$Q_{pp}=N_{kp}\circ N_{hk}\circ N_{ph}$.
+Two transfers preserve the truth bit and three negate it.
+\end{proof}
+
+In particular, complement itself is a term of $\mathbf D_I$:
+\begin{equation}\label{dual:eq:term-complement}
+ C(S)=\bigcup_{r\in I}Q_{rr}(S\cap\{r\}).
+\end{equation}
+Unlike the typed complementation $\Pow\leftrightarrow\mathcal L$,
+this is an internal operation of the enlarged algebra.
+
+\begin{theorem}[Functional completeness]\label{dual:thm:complete}
+For every finite $I$ with $|I|\geq3$ and every finite arity $n$,
+every function
+\[
+ f:\mathcal P(I)^n\longrightarrow\mathcal P(I)
+\]
+is a term operation of $\mathbf D_I$.
+\end{theorem}
+\begin{proof}
+Fix a marker $a\in I$. The term
+$P_{ra}(S_j\cap\{r\})$ is $\{a\}$ precisely when
+$r\in S_j$, and $Q_{ra}(S_j\cap\{r\})$ is $\{a\}$
+precisely when $r\notin S_j$. For a fixed input tuple
+$A=(A_1,\ldots,A_n)$, intersect the positive or negative test for
+each pair $(j,r)$ according to whether $r\in A_j$. Starting the
+intersection at $\{a\}$ gives a term $E_A$ with
+\[
+ E_A(S)=\begin{cases}\{a\},&S=A,\\
+ \varnothing,&S\ne A.\end{cases}
+\]
+This also covers $n=0$, when there is one input tuple and no tests.
+Now take the finite union
+\begin{equation}\label{dual:eq:truth-table}
+ \bigcup_{A\in\mathcal P(I)^n}\,
+ \bigcup_{r\in f(A)} P_{ar}(E_A(S)),
+\end{equation}
+using the empty-set constant for an empty union. Exactly the summand
+$A=S$ contributes, and its contribution is $f(S)$.
+All intersections, unions, tests, and constants used here are terms
+in the specified signature.
+\end{proof}
+
+The role threshold is sharp. With one or two roles the singleton values
+form a subalgebra for both literal choice families. For two roles,
+$e_r$ is the other singleton, so $\diamond_r^+$ on singleton inputs
+is the other owner's original choice; with one role, idempotence
+suffices. Thus a term with singleton constants sends every all-singleton
+input tuple to a singleton and cannot express the constant empty
+function. The proof for $K\geq3$ also shows that ordinary intersection,
+adjoined to owned choices and singleton constants, already suffices for
+functional completeness: dual choices are used only to define it.
+
+Thus this extension removes the restrictions on expressible operations
+in the original algebra. For example it has the discriminator
+$d(X,Y,Z)=Z$ if $X=Y$ and $d(X,Y,Z)=X$ otherwise, and the ternary
+majority operation
+$(X\cap Y)\cup(Y\cap Z)\cup(Z\cap X)$.
+The latter is a near-unanimity operation, in contrast with
+\cref{gen:cor:trace}. Functional completeness also implies that
+$\mathbf D_I$ has only equality and the universal congruence: if a
+congruence identifies distinct $X,Y$, an arbitrary unary term can
+send $X,Y$ to any prescribed pair of values.
+
+The endpoint convention is essential to the proof: the negating transfer
+uses $\varnothing\star_p^+\{q\}=\{q\}$.
+The theorem is about the specified algebra $\mathbf D_I$, rather than
+a representation of arbitrary functions by the original public games.
+
+\subsection{Alternative game readings}
+
+\paragraph{Reversing an owner's preference.}
+Changing a player's objective changes which branch is optimal; it does
+not change existential enumeration of equilibrium outcomes into
+intersection. More generally, allow each player $i$ a fixed set $A_i$
+of preferred terminal labels, with payoff one inside $A_i$ and zero
+outside. For an $i$-node write $A=A_i$. The original game is the case
+$A_i=\{i\}$.
+
+\begin{proposition}[Choice with a dichotomous objective]\label{dual:prop:objective}
+For nonempty child SPE-outcome sets $S,T$, the parent SPE-outcome set is
+\begin{equation}\label{dual:eq:objective}
+ S\mathbin{\Theta_A}T=
+ \begin{cases}
+ (S\cup T)\cap A,&S\subseteq A\text{ or }T\subseteq A,\\
+ S\cup T,&\text{otherwise}.
+ \end{cases}
+\end{equation}
+This is a nonempty associative, commutative, idempotent operation.
+Its finite nonempty fold filters the union by $A$ exactly when some
+input is contained in $A$.
+\end{proposition}
+\begin{proof}
+Fix an SPE in each child. The owner must choose a preferred outcome
+when one of the two prescribed outcomes is preferred, and otherwise
+may choose either branch. Whole-player deviations in a continuation
+are unprofitable by that continuation's SPE property. Every preferred
+outcome in either child can therefore occur. An unpreferred outcome
+in $S$ can occur exactly when $T$ has an unpreferred outcome to
+prescribe off path; symmetrically for $T$. This gives
+\eqref{dual:eq:objective}. When a child is contained in $A$, it is
+nonempty, so the filtered result is nonempty.
+
+For a fold, if no input is contained in $A$, every input has an
+unpreferred member and all intermediate unions do too. If an input
+is contained in $A$, its preferred members survive, all unpreferred
+members are removed when that input is combined, and every later
+stage retains exactly the preferred members accumulated so far.
+This proves the fold formula independently of grouping, and hence
+associativity. Symmetry and the diagonal give the other two laws.
+\end{proof}
+
+If the owner prefers its own loss, take $A=I\setminus\{r\}$.
+Then the output is $(S\cup T)\setminus\{r\}$ when $r$ is absent
+from either child, and is $S\cup T$ otherwise. In particular, a
+choice between wins for $b$ and $c$, both different from $r$, still
+has outcome set $\{b,c\}$.
+
+Complementing \eqref{dual:eq:objective} gives a useful explanation of
+the exceptional coatom in \eqref{dual:eq:choice}. If $B=I\setminus A$,
+then the excluded-outcome operation on proper subsets is
+\begin{equation}\label{dual:eq:objective-dual}
+ (X,Y)\longmapsto
+ \begin{cases}
+ (X\cap Y)\cup B,&B\subseteq X\text{ or }B\subseteq Y,\\
+ X\cap Y,&\text{otherwise}.
+ \end{cases}
+\end{equation}
+For $A=\{r\}$, $B=e_r$ and a proper set contains $B$ precisely
+when it equals $B$. In the exceptional case $(X\cap Y)\cup B=B$,
+recovering exactly $\diamond_r$.
+
+\paragraph{Requiring a common winner.}
+Intersection has a direct interpretation as a compatibility condition on
+\emph{two} equilibrium witnesses. Define
+\[
+ \operatorname{Sync}(G,H)=
+ \{i:\exists\sigma\in\operatorname{SPE}(G),\
+            \exists\tau\in\operatorname{SPE}(H),\
+            \operatorname{out}(\sigma)=\operatorname{out}(\tau)=i\}.
+\]
+By independent choice of the two witnesses,
+\begin{equation}\label{dual:eq:sync}
+ \operatorname{Sync}(G,H)=\den G\cap\den H.
+\end{equation}
+This relation can be empty even for two terminal games. It records
+compatible equilibrium witnesses; a game implementing agreement would
+also need actions and payoffs for disagreement. Those choices can change
+which profiles are equilibria.
+
+There is no ordinary public-game term implementing even the nonempty
+cases of \eqref{dual:eq:sync}, by
+\cref{query:prop:no-intersection}. Similarly the complement dual on
+possible-winner sets is not a public-game constructor: for distinct
+$r,b,c$, the nonempty singleton inputs $\{r\},\{b\}$ already
+give $\varnothing$ under $\diamond_r$. In the excluded-winner
+reading this causes no failure of equilibrium existence: the same
+empty value means that no player is excluded. The game interpretation
+therefore depends on retaining the distinction between winner sets,
+excluded-winner sets, and compatibility constraints.

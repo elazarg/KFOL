@@ -7,6 +7,7 @@ public import KFOL.Definitions.PaperGames
 public import KFOL.Query.Compilation
 public import KFOL.Query.Relations
 public import KFOL.Query.ZeroExtension
+public import KFOL.Algebra.ChoiceDuality
 public import KFOL.Core.TernaryInterpolation
 public import KFOL.Core.MinorantPatches
 public import KFOL.Core.MinorantFivePatches
@@ -54,6 +55,12 @@ noncomputable section
 namespace KFOL.Report
 open FirstOrder WinnerSet Classical
 universe u v w
+
+/-- `dual:thm:complete`: literal mixed choice expresses every operation. -/
+theorem literal_mixed_choice_functionally_complete {Role : Type u} {Var : Type v}
+    [Fintype Role] [Fintype Var] (three : Fin 3 ↪ Role)
+    (f : (Var → Set Role) → Set Role) : ChoiceDuality.Expressible f :=
+  ChoiceDuality.functional_complete three f
 
 /-- `game:prop:winner-count`: overlap and absorption exhaust the losses. -/
 theorem winner_accounting {Role : Type u} {Var : Type v} [Finite Role]
