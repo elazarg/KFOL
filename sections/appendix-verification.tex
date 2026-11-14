@@ -1,10 +1,17 @@
 \section{Verification details}\label{app:verification}
 
-The paper's results are kernel-checked in Lean~4.35.0 with mathlib. \texttt{Paper.lean} restates, in the namespace \texttt{KFOL.Paper}, every theorem of the main text and the clauses of the report results that it cites: $85$ statements, listed by result in \cref{tab:status}. \texttt{Report.lean} restates $115$ further report results in the namespace \texttt{KFOL.Report} (\cref{tab:report}). Each proof is a single library theorem, and each file ends with a check that no declaration in its namespace uses an axiom beyond \texttt{propext}, \texttt{Classical.choice}, and \texttt{Quot.sound}; a separate audit covers the whole library. Nothing is admitted, and no theorem from the literature enters as a hypothesis. Where a written proof cites one, as for the reset basis and the minimum one-owner generator \cite{FreeseEtAl2002}, owned choice with union \cite{HardingRomanowska2017}, the atomic clone \cite{Szendrei2012}, and colored-graph decomposition \cite{Gurvich2009}, the Lean proof is direct.
+The paper's results are kernel-checked in Lean~4.35.0 with mathlib. \texttt{Paper.lean} restates, in the namespace \texttt{KFOL.Paper}, every theorem of the main text and the clauses of the report results that it cites: $85$ statements, listed by result in \cref{tab:status}. \texttt{Report.lean} restates $123$ further report results in the namespace \texttt{KFOL.Report} (\cref{tab:report}). Each proof is a single library theorem, and each file ends with a check that no declaration in its namespace uses an axiom beyond \texttt{propext}, \texttt{Classical.choice}, and \texttt{Quot.sound}; a separate audit covers the whole library. Nothing is admitted, and no theorem from the literature enters as a hypothesis. Where a written proof cites one, as for the reset basis and the minimum one-owner generator \cite{FreeseEtAl2002}, owned choice with union \cite{HardingRomanowska2017}, the atomic clone \cite{Szendrei2012}, and colored-graph decomposition \cite{Gurvich2009}, the Lean proof is direct.
 
 The vocabulary of the statements is in \path{KFOL/Definitions/PaperAlgebra.lean}, \path{PaperGames.lean}, and \path{Complexity.lean}, which build on the other files of \path{KFOL/Definitions}. The auxiliary reading guides, definition indexes, and independent Python checks cited in this report are archived at repository commit \texttt{2099f25}; their paths refer to that revision.
 
 Atomic input validity and its two-sorted case calculus are defined in \path{KFOL/Definitions/AtomicDecision.lean} and \path{AtomicLogic.lean}; their native binary decision languages are in \path{AtomicProblems.lean}. The algebraic role-map condition is in \path{CoalitionMaps.lean}, and the independently defined equilibrium observation is kept separately in \path{CoalitionGames.lean}.
+
+The ideal-lattice and biideal vocabulary is in \path{KFOL/Definitions/IdealDuality.lean}.
+The representations in \path{KFOL/Representation/WinnerEquivalences.lean} recover
+arbitrary models of each generated variety in the original signature; the
+represented choices use adjoints of biideal co-operations, and permutations
+use inverse image. The generic inverse constructions and the homomorphism
+diagrams are proved separately in the same directory.
 
 Winner sets are nonempty sets of roles. Subgame-perfect equilibrium uses full profiles and whole-player deviations in every subtree, independently of backward induction, and agrees with the GameTheory library's Nash equilibrium in every subtree. Sealed rounds use assessments with sequential rationality at every information set and consistency as a limit of completely mixed profiles. Complexity uses ComplexityLib's deterministic multitape Turing machines, explicit encodings, and polynomial-time many-one reductions. Tree inputs have binary variable names and explicit permutation arrays; uniform inputs also encode $K$ in binary. The decoders reject malformed words. The independent algebra modules import neither GameTheory nor ComplexityLib.
 
@@ -97,7 +104,7 @@ Atomic ambiguity quotient (\cref{core:thm:atomic-basis})
 
 {\small
 \begin{longtable}{>{\raggedright\arraybackslash}p{0.34\linewidth}>{\raggedright\arraybackslash}p{0.60\linewidth}}
-\caption{The $115$ audited statements in \texttt{Report.lean}, followed by remaining report evidence.}\label{tab:report}\\
+\caption{The $123$ audited statements in \texttt{Report.lean}, followed by remaining report evidence.}\label{tab:report}\\
 \toprule
 Result & Audited statements or other evidence\\
 \midrule
@@ -117,6 +124,11 @@ Atomic input equation logic (\cref{olv:prop:atomic-substitution,olv:thm:atomic-c
 Role coalescing (\cref{olv:thm:coalition-maps})
  & \path{coalition_role_maps}, \path{coalition_direct_image},
    \path{coalition_singleton_team}, \path{coalition_winner_upper_bound}\\
+Ideal-lattice representation and recovery (\cref{olv:thm:ideal-representation})
+ & \path{core_ideal_representation}, \path{public_ideal_representation},
+   \path{full_ideal_representation}, \path{ideal_carrier_recovery},
+   \path{ideal_lattice_recovery}, \path{ideal_homomorphism_recovery},
+   \path{ideal_cooperation_recovery}, \path{ideal_operator_homomorphisms}\\
 Idempotency certificates (\cref{gen:thm:idem-domain})
  & \path{idempotency_certificates}\\
 Reset table size, substitution and feasible families (\cref{app:proofs-reset})

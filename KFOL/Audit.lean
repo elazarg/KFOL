@@ -589,6 +589,18 @@ import all KFOL.Complexity.AtomicWinVerifier
 import all KFOL.Complexity.AtomicWinWordVerifier
 import all KFOL.Complexity.AtomicWinPublic
 import all KFOL.Complexity.AtomicWinCompleteness
+import all KFOL.Definitions.IdealDuality
+import all KFOL.Representation.Adjoints
+import all KFOL.Representation.Biideals
+import all KFOL.Representation.Cooperations
+import all KFOL.Representation.FrameRecovery
+import all KFOL.Representation.Ideals
+import all KFOL.Representation.Morphisms
+import all KFOL.Representation.OperatorMorphisms
+import all KFOL.Representation.Recovery
+import all KFOL.Representation.WinnerEquivalences
+import all KFOL.Representation.WinnerModels
+
 meta import Lean.Elab.Command
 meta import Lean.Util.CollectAxioms
 

@@ -35,6 +35,9 @@ public import KFOL.Core.AtomicAmalgamation
 public import KFOL.Complexity.AtomicWinCompleteness
 public import KFOL.AtomicLogic.Unsorted
 public import KFOL.Strategic.CoalitionMaps
+public import KFOL.Representation.WinnerEquivalences
+public import KFOL.Representation.OperatorMorphisms
+public import KFOL.Representation.Recovery
 public import KFOL.Audit.Namespace
 
 /-! # Audited report statements and mathematical proof ingredients
@@ -1123,6 +1126,79 @@ theorem coalition_winner_upper_bound {Role : Type u} {Team : Type v}
     (f : Role → Team) (G : Strategic.Tree Role) :
     (Strategic.value (G.mapRoles f)).val ⊆ (CoalitionMaps.image f (Strategic.value G)).val :=
   CoalitionMaps.value_mapRoles_subset_image f G
+
+/-! ## Ideal representation of arbitrary winner-variety models -/
+
+attribute [local instance] Equational.coreStructure Equational.publicStructure
+  Equational.fullStructure
+
+/-- `olv:thm:ideal-representation`: recovery in the original core signature. -/
+theorem core_ideal_representation {Role : Type u} {M : Type v}
+    [(Equational.language (Equational.CoreSymbol Role)).Structure M]
+    (hM : Equational.InVariety (Equational.CoreSymbol Role) (WinnerSet Role) M)
+    (three : Fin 3 ↪ Role) :
+    letI := Core.modelSemilattice hM three
+    IsCompactlyGenerated (IdealDuality.Ideals M) ∧ Nontrivial (IdealDuality.Ideals M) ∧
+      (letI := IdealDuality.coreFrameStructure hM three
+       Nonempty (M ≃[Equational.language (Equational.CoreSymbol Role)]
+         IdealDuality.PositiveCompact (IdealDuality.Ideals M))) :=
+  IdealDuality.core_variety_representation hM three
+
+theorem public_ideal_representation {Role : Type u} {M : Type v}
+    [(Equational.language (Equational.PublicSymbol Role)).Structure M]
+    (hM : Equational.InVariety (Equational.PublicSymbol Role) (WinnerSet Role) M)
+    (three : Fin 3 ↪ Role) :
+    letI := (IdealDuality.coreToPublic Role).reduct M
+    letI := Core.modelSemilattice (IdealDuality.public_core_inVariety hM) three
+    IsCompactlyGenerated (IdealDuality.Ideals M) ∧ Nontrivial (IdealDuality.Ideals M) ∧
+      (letI := IdealDuality.publicFrameStructure hM three
+       Nonempty (M ≃[Equational.language (Equational.PublicSymbol Role)]
+         IdealDuality.PositiveCompact (IdealDuality.Ideals M))) :=
+  IdealDuality.public_variety_representation hM three
+
+theorem full_ideal_representation {Role : Type u} {M : Type v}
+    [(Equational.language (Equational.FullSymbol Role)).Structure M]
+    (hM : Equational.InVariety (Equational.FullSymbol Role) (WinnerSet Role) M)
+    (three : Fin 3 ↪ Role) :
+    letI := (IdealDuality.coreToFull Role).reduct M
+    letI := Core.modelSemilattice (IdealDuality.full_core_inVariety hM) three
+    IsCompactlyGenerated (IdealDuality.Ideals M) ∧ Nontrivial (IdealDuality.Ideals M) ∧
+      (letI := IdealDuality.fullFrameStructure hM three
+       Nonempty (M ≃[Equational.language (Equational.FullSymbol Role)]
+         IdealDuality.PositiveCompact (IdealDuality.Ideals M))) :=
+  IdealDuality.full_variety_representation hM three
+
+theorem ideal_carrier_recovery (A : Type u) [SemilatticeSup A] :
+    Nonempty (A ≃o IdealDuality.PositiveCompact (IdealDuality.Ideals A)) :=
+  IdealDuality.carrier_recovery A
+
+theorem ideal_lattice_recovery (L : Type u) [CompleteLattice L] [IsCompactlyGenerated L] :
+    Nonempty (L ≃o IdealDuality.Ideals (IdealDuality.PositiveCompact L)) :=
+  IdealDuality.frame_recovery L
+
+theorem ideal_homomorphism_recovery (A : Type u) (B : Type v)
+    [SemilatticeSup A] [SemilatticeSup B] :
+    (∀ f : SupHom A B, IdealDuality.recoverHom (IdealDuality.comap f) = f) ∧
+      (∀ g : IdealDuality.IdealMap (IdealDuality.Ideals B) (IdealDuality.Ideals A),
+        IdealDuality.comap (IdealDuality.recoverHom g) = g) :=
+  IdealDuality.hom_recovery A B
+
+theorem ideal_cooperation_recovery {L : Type u} [CompleteLattice L]
+    (δ : IdealDuality.IdealMap L
+      (IdealDuality.BiIdeal (IdealDuality.PositiveCompact L) (IdealDuality.PositiveCompact L)))
+    (x : L) :
+    IdealDuality.BiIdeal.operation (IdealDuality.reconstruct δ) (IdealDuality.compactIdeal x) =
+      δ x :=
+  IdealDuality.cooperation_reconstruct δ x
+
+theorem ideal_operator_homomorphisms {A : Type u} {B : Type v}
+    [SemilatticeSup A] [SemilatticeSup B]
+    (f : SupHom A B) (m : SupHom A (SupHom A A)) (n : SupHom B (SupHom B B)) :
+    (∀ a b, f (m a b) = n (f a) (f b)) ↔
+      ∀ J : IdealDuality.Ideals B,
+        IdealDuality.BiIdeal.operation m (IdealDuality.comap f J) =
+          IdealDuality.BiIdeal.preimage f f (IdealDuality.BiIdeal.operation n J) :=
+  IdealDuality.preserves_operation_iff_diagram f m n
 
 /-! ## Sealed rounds: distribution sets and the scalar fragment -/
 
