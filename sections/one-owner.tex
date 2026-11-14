@@ -6,17 +6,23 @@ Recall the guarded choice $H_a(x,y,z)=(y\star_a z)\del x$ of~\eqref{reset:eq:gua
 A term is ambiguous, or equal to $\{r\}$, exactly when its root variable is.
 \end{lemma}
 
-This is what union and owned choice lack: tests on subterms reduce to tests on input variables. Fix an observer $k\ne a$, and allow $H_k$ and $H_a$. A winner other than $a$ survives $y\star_a z$ exactly when neither child is $\{a\}$, so $k\in H_a(x,y,z)$ exactly when $k\in x$, or else the root of $x$ is ambiguous, the roots of $y$ and $z$ differ from $\{a\}$, and $k$ belongs
-to $y$ or $z$. Unfolding such laws gives one conjunction per variable occurrence (\cref{app:proofs-owner}): a \emph{guard} $g=(j,A,B)$ means that $k\in x_j$, the inputs in $A$ are ambiguous, and those in $B$ differ from $\{a\}$; and
+This is what union and owned choice lack: tests on subterms reduce to tests on input variables. With owned choice, whether a subterm equals $\{r\}$ depends on many inputs, which is what the reductions of \cref{sec:complexity} exploit; here it depends on one.
+
+Fix an observer $k\ne a$. A winner other than $a$ survives $y\star_a z$ exactly when neither child is $\{a\}$, so by \cref{owner:lem:root}
+\[
+ k\in H_a(x,y,z)\iff k\in x\ \text{ or }\ \bigl(\rho(x)\text{ is ambiguous},\ \rho(y),\rho(z)\ne\{a\},\text{ and }k\in y\cup z\bigr).
+\]
+Unfolding such laws gives one conjunction per variable occurrence (\cref{app:proofs-owner}): a \emph{guard} $g=(j,A,B)$ means that $k\in x_j$, the inputs in $A$ are ambiguous, and those in $B$ differ from $\{a\}$; and
 \begin{equation}\label{owner:eq:guards}
  k\in t\quad\Longleftrightarrow\quad\text{some guard in the list }\Gamma_k(t)\text{ holds}.
 \end{equation}
-We call $\Gamma_k(t)$ the \emph{table} of $t$ for $k$. For example, $H_a(x,y,z)$ has the guards $(x,\varnothing,\varnothing)$, $(y,\{x\},\{y,z\})$, and $(z,\{x\},\{y,z\})$.
+We call $\Gamma_k(t)$ the \emph{table} of $t$ for $k$. Guards extend the tables of reset terms (\cref{sec:reset}) by a second kind of test, and $H_k$ may be allowed as well, since for $k$ it needs no tests of that kind. For example, $H_a(x,y,z)$ has the guards $(x,\varnothing,\varnothing)$, $(y,\{x\},\{y,z\})$, and $(z,\{x\},\{y,z\})$.
+
 Say $h=(i,C,D)$ \emph{covers} $g=(j,A,B)$ when
 \begin{equation}\label{owner:eq:cover}
  i=j,\qquad C\subseteq A,\qquad D\subseteq A\cup B\cup\{j\}.
 \end{equation}
-Then $g$ implies $h$, and nothing more can be said. The tests see three levels of an input, $\{a\}$, then another atom, then ambiguity, and these form a chain. So a guard $g=(j,A,B)$ can be met as narrowly as possible: make the inputs in $A$ ambiguous, set the rest of $B$ to a fixed atom $\{b\}$ and all others to $\{a\}$, and let only $x_j$ contain $k$. A guard holds at this valuation exactly when it covers $g$, so a disjunction implied by $g$ has a disjunct implied by $g$. This is what makes comparison polynomial: an implication between lists reduces to comparing guards pairwise.
+So $h$ asks for nothing beyond $g$: the same source, and an input differs from $\{a\}$ whenever $g$ makes it ambiguous, tests it, or takes $k$ from it. Then $g$ implies $h$, and coverage is the only way one guard implies a list of guards. Indeed, the tests see three levels of an input, $\{a\}$, then another atom, then ambiguity, and these form a chain. So a guard $g=(j,A,B)$ can be met as narrowly as possible: make the inputs in $A$ ambiguous, set the rest of $B$ to a fixed atom $\{b\}$ and all others to $\{a\}$, and let only $x_j$ contain $k$. A guard holds at this valuation exactly when it covers $g$, so a disjunction implied by $g$ has a disjunct implied by $g$. This is what makes comparison polynomial: an implication between tables reduces to comparing guards pairwise.
 
 \begin{proposition}[Guard completeness]\label{owner:thm:guards}
 If all $H$ indices in $s,t$ belong to $\{k,a\}$, then $k\in s$ implies $k\in t$ on all valuations if and only if every guard of $\Gamma_k(s)$ is covered by a guard of $\Gamma_k(t)$. A failed comparison has an explicit countervaluation with at most two winners per input, using three roles.

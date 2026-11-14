@@ -4,7 +4,7 @@ By \cref{gen:cor:determinacy}, an idempotent atom-preserving term projects one i
 \begin{equation}\label{reset:eq:reset}
  S\del T=\begin{cases}T,&T\text{ an atom},\\S\cup T,&T\text{ ambiguous}.\end{cases}
 \end{equation}
-An atomic right operand discards the left one, and an ambiguous one keeps it. Reset is definable by owned choices: start with $S\cup T$ and apply $U\mapsto U\star_r T$ once for each role. It accounts for all the remaining behavior.
+An atomic right operand discards the left one, and an ambiguous one keeps it. Reset is definable by owned choices: start with $S\cup T$ and apply $U\mapsto U\star_r T$ once for each role. As a game, every player in turn may move play to the right operand. A player moves when that operand guarantees it the win, so an atomic right operand prevails, while an ambiguous one guarantees nobody anything and leaves every winner of either side possible. Reset accounts for all the remaining behavior.
 
 \begin{theorem}[Binary atom-preserving operations]\label{reset:thm:binary}
 The binary atom-preserving operations of $\mathbf C$ are exactly $x$, $y$, $x\del y$, and $y\del x$.
@@ -22,7 +22,7 @@ Arity three goes further. For a role $a$, the \emph{guarded choice} of $a$ is
 It returns $x$ when $x$ is an atom, and otherwise adds $a$'s choice between $y$ and $z$ to $x$. It is idempotent and atom-preserving, yet it tests whether an input is the atom of a particular role, which reset never does: with $x=\{a,b\}$ and $z=\{c\}$, its value omits $c$ at $y=\{a\}$ and contains $c$ at $y=\{b\}$. We return to it in \cref{sec:complexity,sec:one-owner}.
 
 A \emph{reset term}, built from variables by $\del$ alone, decides which inputs get through. Its \emph{root} is its rightmost variable, and it is ambiguous exactly when its root is. In $(x\del y)\del z$, the input $z$ is always kept, $y$ is kept when $z$ is ambiguous, and $x$ is kept when both are. In general, each input $j$ has a \emph{table}
-$\mathcal G_j(t)$: the antichain of minimal sets of inputs whose ambiguity makes $j$ contribute (\cref{reset:lem:selection}). One traversal of a term collects at most one such set per variable occurrence, and deleting nonminimal sets gives the tables, which are therefore small as well as complete.
+$\mathcal G_j(t)$: the antichain of minimal sets of inputs whose ambiguity makes $j$ contribute (\cref{reset:lem:selection}). For $(x\del y)\del z$ the tables are $\{\varnothing\}$ for $z$, $\{\{z\}\}$ for $y$, and $\{\{y,z\}\}$ for $x$. One traversal of a term collects at most one such set per variable occurrence, and deleting nonminimal sets gives the tables, which are therefore small as well as complete.
 
 \begin{proposition}[Canonical tables]\label{reset:thm:three}
 Two reset terms are equal on all valuations if and only if their tables agree, and this can be tested on the fixed chain
@@ -45,7 +45,7 @@ An equation between reset terms holds on all valuations if and only if it follow
 \end{proposition}
 
 Tables can record alternatives. In $((x_3\del x_1)\del x_0)\del((x_3\del x_2)\del x_0)$, input $3$ contributes when $0$ and either $1$ or $2$ are ambiguous, and no single partial order of prerequisites says this. The right object is an \emph{antimatroid} on a set $X$: a union-closed family of feasible subsets of $X$, containing $\varnothing$
-and $X$, in which every nonempty member can lose one element and remain feasible. Here $X$ is the set of variables of a term, and its feasible sets are those it selects entirely when exactly they are ambiguous.
+and $X$, in which every nonempty member can lose one element and remain feasible. Here $X$ is the set of variables of a term, and its feasible sets are those it selects entirely when exactly they are ambiguous. For $(x\del y)\del z$ they form the chain $\varnothing\subset\{z\}\subset\{y,z\}\subset\{x,y,z\}$, a single priority order. In the term above, $\{0,1,3\}$ and $\{0,2,3\}$ are feasible but $\{0,3\}$ is not, so input $3$ may follow either $1$ or $2$.
 
 \begin{theorem}[Antimatroid representation]\label{reset:thm:anti}
 Fix a set of inputs. The operations of reset terms correspond bijectively to the antimatroids whose ground set is a finite nonempty set of inputs and which have exactly one feasible singleton.

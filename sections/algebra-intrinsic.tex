@@ -1,6 +1,6 @@
 \section{The intrinsic core}\label{sec:intrinsic}
 
-Which operations combine their inputs without adding anything of their own? Call a term operation \emph{idempotent} if $t(S,\ldots,S)=S$ for every $S$. This semantic condition determines the syntax. For a variable occurrence, compose the role permutations on its path from the root.
+Which operations combine their inputs without adding anything of their own? Call a term operation \emph{idempotent} if $t(S,\ldots,S)=S$ for every $S$, that is, if filling every variable with games of one value $S$ gives a game of value $S$. This semantic condition determines the syntax. For a variable occurrence, compose the role permutations on its path from the root.
 
 \begin{theorem}[Idempotent elimination]\label{gen:thm:core}
 A term is idempotent if and only if it has no winner leaves and every variable occurrence has identity accumulated permutation. Consequently the idempotent term operations are exactly those of $\mathbf C$, and an equivalent term can be extracted in polynomial time.
@@ -13,7 +13,7 @@ Conversely, $\pi(u\star_r v)=\pi u\star_{\pi(r)}\pi v$ pushes renamings to the l
 
 So idempotency singles out $\mathbf C$. On ambiguous inputs a core term is the union of its variables, which excludes near-unanimity and Mal'cev terms and means that identities between core terms have the same variables on both sides (\cref{gen:cor:trace}), and every idempotent operation, even one defined with internal renamings, respects each player's view (\cref{gen:cor:views}).
 
-The next theorem is the simplest constraint we know on what terms can do. A \emph{source occurrence} is a winner or variable leaf together with its accumulated permutation.
+Terms cannot branch on who wins a subgame: no term returns $y$ when $x=\{a\}$ and $z$ when $x=\{b\}$. This follows from the simplest constraint we know on what terms can do, which says that a term cannot switch the leaf its winners come from as the inputs change. A \emph{source occurrence} is a winner or variable leaf together with its accumulated permutation.
 
 \begin{theorem}[One common source]\label{gen:thm:source}
 Fix valuations $v_e$ and pairwise disjoint regions $W_e\subseteq I$. If $t(v_e)\subseteq W_e$ for every $e$, then one source occurrence of $t$ has its value inside $W_e$ in every valuation simultaneously. With at least two regions, it is a variable occurrence.
@@ -30,10 +30,21 @@ leaf has the same nonempty value in all valuations and cannot fit
 two disjoint regions.
 \end{proof}
 
-So three valuations in which every input repeats a value cannot produce three distinct atoms. With the three atoms as regions, \cref{gen:thm:source} would give one variable occurrence whose renamed value is the required atom in each valuation, but that occurrence repeats a value, and a renaming keeps the repetition. In particular a term has no if-then-else: none returns $y$ when $x=\{a\}$ and $z$ when $x=\{b\}$ for all atoms $y,z$, as the atomic inputs $(x,y,z)=(a,a,a),(a,b,a),(b,a,c)$ show.
+So three valuations in which every input repeats a value cannot produce three distinct atoms. With the three atoms as regions, \cref{gen:thm:source} would give one variable occurrence whose renamed value is the required atom in each valuation, but that occurrence repeats a value, and a renaming keeps the repetition. An if-then-else would do exactly this on the atomic inputs
+\[
+ \begin{array}{ccc|c}
+ x&y&z&\text{if }x=\{a\}\text{ then }y\text{ else }z\\\hline
+ a&a&a&a\\
+ a&b&a&b\\
+ b&a&c&c
+ \end{array}
+\]
+in which every input repeats a value.
 
-The same fact shows what determinism costs. Call a term \emph{atom-preserving} if it returns an atom on atomic inputs, so that it induces a function $f:I^n\to I$. Then $f$ preserves the relation of triples with a repeat, and by the known classification of that clone \cite{Szendrei2012}, $f$ is essentially unary or takes at most two values (\cref{gen:thm:S2}). An idempotent $f$ is surjective, and the diagonal law then gives the following.
+The same fact shows what determinism costs. Call a term \emph{atom-preserving} if it returns an atom whenever all its inputs are atoms, so that it induces a function $f:I^n\to I$. By the argument above, whenever three input tuples repeat a value in every coordinate, $f$ repeats a value among the three outputs. Such functions depend on at most one argument or take at most two values, by Szendrei's classification of the clone they form \cite{Szendrei2012} (\cref{gen:thm:S2}). An idempotent $f$ takes all $K\geq3$ values, so it depends on one argument, and idempotence makes it that argument.
 
 \begin{corollary}[Determinacy]\label{gen:cor:determinacy}
 An idempotent atom-preserving term projects one input on atomic valuations.
 \end{corollary}
+
+So a construction that adds nothing and turns unique winners into a unique winner just passes one subgame's winner through. What it can still do when some input is ambiguous is the subject of \cref{sec:reset}.

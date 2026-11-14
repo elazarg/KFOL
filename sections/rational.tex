@@ -7,11 +7,33 @@ a public choice by its \emph{owner} $r$. A role values its own win at one and ev
 A \emph{profile} of a game $G$ selects a branch at every node, including nodes that play never reaches, and its \emph{outcome} is the winner of the leaf it reaches from the root. A profile is a \emph{Nash equilibrium} if no role that loses under it can win by changing only its own choices, and a \emph{subgame-perfect equilibrium} (SPE) if it restricts to a Nash equilibrium of every subtree, reached or not. The \emph{value} $\den G$ is the set of outcomes of the SPEs of $G$.
 \end{definition}
 
+\begin{figure}[t]
+\centering
+\begin{tikzpicture}[
+  level distance=10mm,
+  level 1/.style={sibling distance=34mm},
+  level 2/.style={sibling distance=15mm},
+  owner/.style={circle,draw,inner sep=1pt,minimum size=5.5mm},
+  win/.style={inner sep=2pt},
+  spe/.style={line width=1.4pt}]
+\node[owner,label={[font=\small]above:$\{a,b,c\}$}] {$a$}
+  child {node[owner,label={[font=\small]left:$\{a,c\}$}] {$b$}
+    child {node[win] {$\at a$}}
+    child {node[win] {$\at c$} edge from parent[spe]}}
+  child {node[owner,label={[font=\small]right:$\{b\}$}] {$b$}
+    child {node[win] {$\at b$} edge from parent[spe]}
+    child {node[win] {$\at c$}}
+    edge from parent[spe]};
+\end{tikzpicture}
+\caption{The game $D$, with the value of each subgame beside its node. Thick edges show an SPE won by $b$: at the left node, which play never reaches, $b$ picks $c$, so the root owner $a$ loses on both sides and may go right.}
+\label{fig:D}
+\end{figure}
+
 Choices that play never reaches can decide who wins. Consider
 \[
  D=(\at a\ch b\at c)\ch a(\at b\ch b\at c).
 \]
-On the right $b$ takes its own win, and on the left it loses whichever branch it picks. If it picks $c$ on the left, the root owner $a$ loses on both sides and may go right, so $b$ wins by a choice in a subtree that play never enters. Other SPEs are won by $a$ and by $c$, so $\den D=\{a,b,c\}$. Going right is weakly dominated for $a$, since only the left branch can make $a$ win. Refinements that exclude such choices, such as trembling-hand perfection \cite{Selten1975}, give $\{a,c\}$ here, but their outcome sets are not determined by those of subgames (\cref{app:proofs-rational}).
+In \cref{fig:D}, on the right $b$ takes its own win, and on the left it loses whichever branch it picks. If it picks $c$ on the left, the root owner $a$ loses on both sides and may go right, so $b$ wins by a choice in a subtree that play never enters. Other SPEs are won by $a$ and by $c$, so $\den D=\{a,b,c\}$. Going right is weakly dominated for $a$, since only the left branch can make $a$ win. Refinements that exclude such choices, such as trembling-hand perfection \cite{Selten1975}, give $\{a,c\}$ here, but their outcome sets are not determined by those of subgames (\cref{app:proofs-rational}).
 
 SPE values, in contrast, compose: the value of a choice depends only on the values of its branches, combined by \emph{owned choice}: for each role $r$ and all $S,T\subseteq I$,
 \begin{equation}\label{game:eq:own}
@@ -37,7 +59,7 @@ Terms extend games with variables and renamings:
  t ::= \at i\mid x_j\mid t\ch r t\mid\pi(t),
  \qquad \pi\in\Sym(I),
 \]
-where $\pi(t)$ renames the roles of a component, so that its value is the image under $\pi$ of the value of $t$. A valuation assigns values to the variables, and a term then evaluates by \cref{game:thm:adequacy}; repeated occurrences of a variable are independently solved copies. With the values as carrier, the full signature gives the \emph{winner algebra} $\mathbf A^{\rm sym}$. Its reduct without renamings is $\mathbf A$, and its reduct to owned choices alone is the \emph{core} $\mathbf C$, whose terms have no winner leaves.
+A variable stands for an unknown subgame, and $\pi(t)$ renames the roles of a component, so that its value is the image under $\pi$ of the value of $t$. With two players, renaming swaps them, which is how game semantics reads negation. A valuation assigns values to the variables, and a term then evaluates by \cref{game:thm:adequacy}. Substituting games for the variables gives a game whose value is the term evaluated at their values, since repeated occurrences of a variable are independently solved copies. An equation $s=t$ holds when both sides agree at every valuation, so that either side can replace the other in any game, whatever subgames fill the variables. These equations play the role that Boolean laws play for two-player evaluation games. With the values as carrier, the full signature gives the \emph{winner algebra} $\mathbf A^{\rm sym}$. Its reduct without renamings is $\mathbf A$, and its reduct to owned choices alone is the \emph{core} $\mathbf C$, whose terms have no winner leaves.
 
 Role names serve only to match choices with the leaves they aim at. Renaming a whole game therefore changes nothing but names, while renaming a component changes how it matches its context. A role may also stand for a coalition: its choices may be split among agents that share its objective without changing any SPE, and a team that wins when any member does behaves as one role (\cref{app:proofs-rational,context:prop:team-refinement}).
 
