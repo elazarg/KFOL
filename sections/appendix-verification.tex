@@ -1,6 +1,6 @@
 \section{Verification details}\label{app:verification}
 
-The paper's results are kernel-checked in Lean~4.35.0 with mathlib. \texttt{Paper.lean} restates, in the namespace \texttt{KFOL.Paper}, every theorem of the main text and the clauses of the report results that it cites: $86$ statements, listed by result in \cref{tab:status}. \texttt{Report.lean} restates $133$ further report results in the namespace \texttt{KFOL.Report} (\cref{tab:report}). Each proof is a single library theorem, and each file ends with a check that no declaration in its namespace uses an axiom beyond \texttt{propext}, \texttt{Classical.choice}, and \texttt{Quot.sound}; a separate audit covers the whole library. Nothing is admitted, and no theorem from the literature enters as a hypothesis. Where a written proof cites one, as for the reset basis and the minimum one-owner generator \cite{FreeseEtAl2002}, owned choice with union \cite{HardingRomanowska2017}, the atomic clone \cite{Szendrei2012}, and colored-graph decomposition \cite{Gurvich2009}, the Lean proof is direct.
+The paper's results are kernel-checked in Lean~4.35.0 with mathlib. \texttt{Paper.lean} restates, in the namespace \texttt{KFOL.Paper}, every theorem of the main text and the clauses of the report results that it cites: $87$ statements, listed by result in \cref{tab:status}. \texttt{Report.lean} restates $132$ further report results in the namespace \texttt{KFOL.Report} (\cref{tab:report}). Each proof is a single library theorem, and each file ends with a check that no declaration in its namespace uses an axiom beyond \texttt{propext}, \texttt{Classical.choice}, and \texttt{Quot.sound}; a separate audit covers the whole library. Nothing is admitted, and no theorem from the literature enters as a hypothesis. Where a written proof cites one, as for the reset basis and the minimum one-owner generator \cite{FreeseEtAl2002}, owned choice with union \cite{HardingRomanowska2017}, the atomic clone \cite{Szendrei2012}, and colored-graph decomposition \cite{Gurvich2009}, the Lean proof is direct.
 
 The vocabulary of the statements is in \path{KFOL/Definitions/PaperAlgebra.lean}, \path{PaperGames.lean}, and \path{Complexity.lean}, which build on the other files of \path{KFOL/Definitions}. The auxiliary reading guides, definition indexes, and independent Python checks cited in this report are archived at repository commit \texttt{2099f25}; their paths refer to that revision.
 
@@ -39,7 +39,7 @@ The library also proves the contracts of the implementation, such as codecs, des
 
 {\small
 \begin{longtable}{>{\raggedright\arraybackslash}p{0.30\linewidth}>{\raggedright\arraybackslash}p{0.64\linewidth}}
-\caption{The $86$ mathematical statements in \texttt{Paper.lean}, grouped by result.}\label{tab:status}\\
+\caption{The $87$ mathematical statements in \texttt{Paper.lean}, grouped by result.}\label{tab:status}\\
 \toprule
 Result & Statements\\
 \midrule
@@ -52,6 +52,8 @@ Result & Statements\\
 \endlastfoot
 Public backward induction and realizability (\cref{game:thm:adequacy,game:thm:union})
  & \path{public_backward_induction}, \path{public_realizability}, \path{neutral_union}\\
+Role-map descent (\cref{olv:thm:coalition-maps})
+ & \path{coalition_role_maps}\\
 Winner budget and optimal realizations (\cref{game:prop:winner-budget})
  & \path{winner_budget}, \path{public_optimal_realizability}\\
 Public choice and quantifiers (\cref{sec:rational,game:prop:choice-support})
@@ -126,7 +128,7 @@ Value-dependent execution (\cref{dep:thm:dynamic-execution})
 
 {\small
 \begin{longtable}{>{\raggedright\arraybackslash}p{0.34\linewidth}>{\raggedright\arraybackslash}p{0.60\linewidth}}
-\caption{The $133$ audited statements in \texttt{Report.lean}, followed by remaining report evidence.}\label{tab:report}\\
+\caption{The $132$ audited statements in \texttt{Report.lean}, followed by remaining report evidence.}\label{tab:report}\\
 \toprule
 Result & Audited statements or other evidence\\
 \midrule
@@ -143,8 +145,8 @@ Atomic possible-win complexity (\cref{olv:thm:atomic-sat})
 Atomic input equation logic (\cref{olv:prop:atomic-substitution,olv:thm:atomic-calculus})
  & \path{atomic_sorted_calculus}, \path{atomic_no_unsorted_basis},
    \path{atomic_sorted_substitution}\\
-Role coalescing (\cref{olv:thm:coalition-maps})
- & \path{coalition_role_maps}, \path{coalition_direct_image},
+Role coalescing: images and values (\cref{olv:thm:coalition-maps})
+ & \path{coalition_direct_image},
    \path{coalition_singleton_team}, \path{coalition_winner_upper_bound}\\
 Ideal-lattice representation and recovery (\cref{olv:thm:ideal-representation})
  & \path{core_ideal_representation}, \path{public_ideal_representation},

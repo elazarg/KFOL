@@ -7,6 +7,7 @@ public import KFOL.Core.AtomicBasis.Basis
 public import KFOL.Core.SourcePeeling
 public import KFOL.Core.FiniteRelationObstruction
 public import KFOL.DependentSchedule.Results
+public import KFOL.Strategic.CoalitionMaps
 public import KFOL.Audit.Namespace
 
 /-! # Claims of the main paper and the report results it cites
@@ -49,6 +50,15 @@ theorem winner_budget [Finite Role] (t : Term Role Var) (ν : Var → WinnerSet 
 theorem public_forcing (G : Strategic.Tree Role) (r : Role) :
     Strategic.CanForce G r ↔ Strategic.value G = WinnerSet.singleton r :=
   Results.public_forcing G r
+
+/-- `olv:thm:coalition-maps`: descent after recomputing equilibria. -/
+theorem coalition_role_maps {Team : Type v} (f : Role → Team) :
+    (∀ G H : Strategic.Tree Role,
+      Strategic.possibleWinners G = Strategic.possibleWinners H →
+      Strategic.possibleWinners (G.mapRoles f) = Strategic.possibleWinners (H.mapRoles f)) ↔
+      Function.Injective f ∨ (∃ q, ∀ r, f r = q) ∨
+        (∃ c q, f c ≠ q ∧ ∀ r, r ≠ c → f r = q) :=
+  CoalitionMaps.gameDescends_iff f
 
 theorem quantifier_fold {G : Strategic.QuantifiedTree.{u,v} Role} {binary : Strategic.Tree Role}
     (compiled : Strategic.QuantifiedTree.Compiles G binary) :

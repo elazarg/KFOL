@@ -1104,14 +1104,6 @@ theorem atomic_sorted_substitution {Role : Type u} {n m : ℕ}
       (AtomicLogic.WinnerTerm.ofNative (t.subst replacement)) :=
   AtomicLogic.derives_subst_atom_preserving proof replacement atomic
 
-theorem coalition_role_maps {Role : Type u} {Team : Type v} (f : Role → Team) :
-    (∀ G H : Strategic.Tree Role,
-      Strategic.possibleWinners G = Strategic.possibleWinners H →
-      Strategic.possibleWinners (G.mapRoles f) = Strategic.possibleWinners (H.mapRoles f)) ↔
-      Function.Injective f ∨ (∃ q, ∀ r, f r = q) ∨
-        (∃ c q, f c ≠ q ∧ ∀ r, r ≠ c → f r = q) :=
-  CoalitionMaps.gameDescends_iff f
-
 theorem coalition_direct_image {Role : Type u} {Team : Type v} (f : Role → Team) :
     CoalitionMaps.Intertwines f (CoalitionMaps.image f) ↔
       Function.Injective f ∨ (∃ q, ∀ r, f r = q) :=
