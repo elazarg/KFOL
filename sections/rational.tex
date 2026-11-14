@@ -1,7 +1,7 @@
 \section{Owned choice}\label{sec:rational}
 
-Throughout, $I$ is a finite set of $K\geq3$ \emph{roles}, or players; $a,b,c$ are distinct roles, $r$ is a role acting as an owner, and $k$ is a role acting as an observer. The case $K=2$ is different, and \cref{sec:discussion} returns to it. We present games as finite binary trees: a leaf $\at i$ declares that $i$ wins, and a node $G\ch r H$ is
-a public choice by its \emph{owner} $r$. A role values its own win at one and every other outcome at zero, so a role that cannot win has no opinion about who does. Ties are therefore everywhere, and we keep all of them.
+Throughout, $I$ is a finite set of $K\geq3$ \emph{roles}, or players; $a,b,c$ are distinct roles, and $r$ is a role acting as an owner. The case $K=2$ is different, and \cref{sec:discussion} returns to it. We present games as finite binary trees: a leaf $\at i$ declares that $i$ wins, and a node $G\ch r H$ is
+a public choice by its \emph{owner} $r$. A role values its own win at one and every other outcome at zero, so a role that cannot win has no opinion about who does. Ties are therefore everywhere, and we keep the winners of every equilibrium, however its ties are broken.
 
 \begin{definition}[Equilibria and values]\label{game:def:spe}
 A \emph{profile} of a game $G$ selects a branch at every node, including nodes that play never reaches, and its \emph{outcome} is the winner of the leaf it reaches from the root. A profile is a \emph{Nash equilibrium} if no role that loses under it can win by changing only its own choices, and a \emph{subgame-perfect equilibrium} (SPE) if it restricts to a Nash equilibrium of every subtree, reached or not. The \emph{value} $\den G$ is the set of outcomes of the SPEs of $G$.
@@ -37,7 +37,7 @@ Terms extend games with variables and renamings:
  t ::= \at i\mid x_j\mid t\ch r t\mid\pi(t),
  \qquad \pi\in\Sym(I),
 \]
-where $\pi(t)$ renames the roles of a component, so that its value is the image under $\pi$ of the value of $t$. A valuation assigns values to the variables, and a term then evaluates by \cref{game:thm:adequacy}; repeated occurrences of a variable are independently solved copies. We write $\mathbf A^{\rm sym}$ for this full signature, $\mathbf A$ for its reduct without permutations, and $\mathbf C$ for owned choices alone.
+where $\pi(t)$ renames the roles of a component, so that its value is the image under $\pi$ of the value of $t$. A valuation assigns values to the variables, and a term then evaluates by \cref{game:thm:adequacy}; repeated occurrences of a variable are independently solved copies. With the values as carrier, the full signature gives the \emph{winner algebra} $\mathbf A^{\rm sym}$. Its reduct without renamings is $\mathbf A$, and its reduct to owned choices alone is the \emph{core} $\mathbf C$, whose terms have no winner leaves.
 
 Role names serve only to match choices with the leaves they aim at. Renaming a whole game therefore changes nothing but names, while renaming a component changes how it matches its context. A role may also stand for a coalition: its choices may be split among agents that share its objective without changing any SPE, and a team that wins when any member does behaves as one role (\cref{app:proofs-rational,context:prop:team-refinement}).
 
@@ -50,7 +50,7 @@ For pairwise distinct $r,s,t$,
 \end{equation}
 \end{proposition}
 
-If just one inner choice collapses, its owner's atom belongs to the other result, and the outer owner is different; if both collapse, the outer choice unites them. We simply write $\cup$ from now on.
+If just one inner choice returns its owner's atom, that atom belongs to the other result, and the outer owner is different; if both do, the outer choice unites them. We simply write $\cup$ from now on.
 
 \begin{proposition}[Winner budget]\label{game:prop:winner-budget}
 At every valuation, the value of a term has at most $K$ members, and at most as many as its leaves supply: one at each winner leaf, and the size of the variable's value at each occurrence of a variable. So the value of a game with $n$ choices has at most $\min(K,n+1)$ members. Every nonempty $S\subseteq I$ is the value of a game with exactly $|S|-1$ choices, and of no smaller game.
@@ -60,4 +60,8 @@ At every valuation, the value of a term has at most $K$ members, and at most as 
 The value of a choice lies within the union of its branches' values, and renaming preserves sizes. For the construction, start from $\at a\ch c\at b$ with $a,b\in S$ and $c\notin\{a,b\}$, and add each further member of $S$ by a choice owned by $a$; the value is ambiguous and the new winner is not $a$, so each step is a union. The report counts the losses exactly (\cref{game:prop:winner-count,game:cor:ground-size}).
 \end{idea}
 
-The algebra is not Boolean in any coordinates. Indifference breaks distributivity: $\den{(\at a\ch a\at b)\ch b\at c}=\{a,c\}$, whereas distributing $\ch b$ over $\ch a$ gives $D$ (\cref{cor:no-boolean-product}).
+The algebra is not Boolean in any coordinates: it embeds in no product of Boolean algebras in which each owned choice acts coordinatewise as meet or join (\cref{cor:no-boolean-product}). All such products satisfy the distributive law
+\[
+ (x\ow a y)\ow b z=(x\ow b z)\ow a(y\ow b z),
+\]
+and indifference breaks it. At $x=\{a\}$, $y=\{b\}$, $z=\{c\}$ the left side is $\{a\}\ow b\{c\}=\{a,c\}$, and the right side is the value $\{a,b,c\}$ of $D$.

@@ -1,6 +1,6 @@
 \section{The complexity of equations}\label{sec:complexity}
 
-Reset has polynomial equality. What can we add and stay polynomial? Among the natural candidates, very little (\cref{tab:complexity}).
+Equations between reset terms can be decided in polynomial time. What can we add and stay polynomial? Among the natural candidates, very little (\cref{tab:complexity}).
 
 \begin{table}[ht]
 \centering
@@ -15,7 +15,7 @@ $H_a$ and $H_b$ & coNP-complete & \cref{thm:H-hardness}\\
 $\mathbf C$, $\mathbf A$, or $\mathbf A^{\rm sym}$ & coNP-complete & \cref{gen:thm:complexity}\\
 \bottomrule
 \end{tabular}
-\caption{The complexity of equations between tree terms, at fixed $K$.}
+\caption{The complexity of equation validity for terms without shared subexpressions, at fixed $K$. Here $H_a$ is the guarded choice~\eqref{reset:eq:guarded}.}
 \label{tab:complexity}
 \end{table}
 
@@ -31,18 +31,18 @@ Two owners use the same shape, reading a literal as false when it equals $\{a\}$
 \end{idea}
 
 \begin{corollary}[Equational complexity]\label{gen:thm:complexity}
-Equational validity in $\mathbf C$, $\mathbf A$, and $\mathbf A^{\rm sym}$ is coNP-complete, at every fixed $K$ and with $K$ as part of the input.
+Equation validity in $\mathbf C$, $\mathbf A$, and $\mathbf A^{\rm sym}$ is coNP-complete, at every fixed $K$ and with $K$ as part of the input.
 \end{corollary}
 
 Short certificates come from \cref{sym:thm:pairs}. So, unless $\mathrm P=\mathrm{NP}$, the core has no polynomial-time canonicalization with polynomial-time comparison.
 
-The tree representation matters. With shared subexpressions, even reset
-alone has coNP-complete equality, already on its three-element generator
-(\cref{reset:thm:circuits}). Sharing lets successive clauses reuse one
+The tree representation matters. With shared subexpressions, equation validity is coNP-complete even for
+reset alone, already when the variables range over the chain
+$Z\subset U\subset T$ of \cref{reset:thm:three} (\cref{reset:thm:circuits}). Sharing lets successive clauses reuse one
 continuation, so a circuit of linear size can compute an operation
 that every reset term needs exponentially many leaves to express
 (\cref{reset:prop:large-circuit-table}).
 
 Preserving atoms does not help: $\{H_a,H_b\}$ is already coNP-complete (\cref{thm:H-hardness}). When $z$ is ambiguous, $H_s(z,y,u)$ keeps a winner of $u$ lying outside $z$ and $y$ exactly when $y\ne\{s\}$, and the atoms $\{a\}$ and $\{b\}$ are mutually exclusive values of $y$, which is all a Boolean variable needs.
 
-Union also makes the number of roles visible. Reset has one equational theory for all $K$, but complete-graph coloring identities give $\{\del,\cup\}$ strictly fewer identities at each larger $K$ (\cref{thm:colouring-theories}).
+Union also makes the number of roles visible. Reset has one equational theory for all $K$, but $\{\del,\cup\}$ has strictly fewer identities at each larger $K$ (\cref{thm:colouring-theories}). For each $n$, one identity, in effect about colorings of a complete graph, fails only when $n$ inputs are distinct atoms and some role remains unused, so it holds for $K=n$ and fails for $K=n+1$.

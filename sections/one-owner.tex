@@ -1,6 +1,6 @@
 \section{One owner}\label{sec:one-owner}
 
-The $H$ operations of two distinct owners are hard. One owner's is not, however often it occurs, even though $H_a$ expresses reset and retains a genuine owner test. We work with terms built from variables, $\del$, and $H_r$. The \emph{root} $\rho(t)$ of such a term is the variable found by descending through $\rho(s\del t)=\rho(t)$ and $\rho(H_r(x,y,z))=\rho(x)$.
+Recall the guarded choice $H_a(x,y,z)=(y\star_a z)\del x$ of~\eqref{reset:eq:guarded}: it returns $x$ when $x$ is an atom, and otherwise adds $a$'s choice between $y$ and $z$ to $x$. The guarded choices of two distinct owners together give coNP-complete equations (\cref{thm:H-hardness}). One owner's do not, in terms of any size, although $H_a$ expresses reset, as $x\del y=H_a(y,x,x)$, and still tests whether an input is exactly $\{a\}$. We work with terms built from variables, $\del$, and $H_r$. The \emph{root} $\rho(t)$ of such a term extends that of a reset term: it is the variable found by descending through $\rho(s\del t)=\rho(t)$ and $\rho(H_r(x,y,z))=\rho(x)$.
 
 \begin{lemma}[Root status]\label{owner:lem:root}
 A term is ambiguous, or equal to $\{r\}$, exactly when its root variable is.
@@ -11,7 +11,7 @@ to $y$ or $z$. Unfolding such laws gives one conjunction per variable occurrence
 \begin{equation}\label{owner:eq:guards}
  k\in t\quad\Longleftrightarrow\quad\text{some guard in the list }\Gamma_k(t)\text{ holds}.
 \end{equation}
-For example, $H_a(x,y,z)$ has the guards $(x,\varnothing,\varnothing)$, $(y,\{x\},\{y,z\})$, and $(z,\{x\},\{y,z\})$.
+We call $\Gamma_k(t)$ the \emph{table} of $t$ for $k$. For example, $H_a(x,y,z)$ has the guards $(x,\varnothing,\varnothing)$, $(y,\{x\},\{y,z\})$, and $(z,\{x\},\{y,z\})$.
 Say $h=(i,C,D)$ \emph{covers} $g=(j,A,B)$ when
 \begin{equation}\label{owner:eq:cover}
  i=j,\qquad C\subseteq A,\qquad D\subseteq A\cup B\cup\{j\}.
@@ -34,10 +34,8 @@ A small algebra lies behind this. Fix $b\notin\{a,k\}$, and let $\mathbf F$ be t
 For every role $a$, the equations in $\del$ and $H_a$ that hold on all valuations are exactly those that hold in $\mathbf F$, and no smaller algebra has the same equations.
 \end{theorem}
 
-So this theory does not depend on $K$.
-
 \begin{idea}
-A guard minimal under coverage does not require its own source to be ambiguous, so its source can take the value $\{a,b,k\}$, and the valuation above then uses only these four values. For minimality, Freese et al.'s Theorem~3.2 forces a three-element candidate to have reset reduct $O_{2+1}$, and every such candidate satisfying the identities of $\mathbf F$ satisfies one of two further equations, both of which $\mathbf F$ refutes.
+A guard minimal under coverage does not require its own source to be ambiguous, so its source can take the value $\{a,b,k\}$, and the valuation above then uses only these four values. For minimality, Freese et al.'s Theorem~3.2 forces a three-element candidate to have reset reduct $O_{2+1}$, and every such candidate satisfying the identities of $\mathbf F$ satisfies one of two further equations, both of which $\mathbf F$ refutes. Since $\mathbf F$ uses only three roles, the theory does not depend on $K$.
 \end{idea}
 
 The tables also say which functions are expressible. Whether a table comes from a term can be recognized in polynomial time, and a term of size $O(nM)$ can be built from a table with $n$ inputs and $M$ guards (\cref{owner:thm:synthesis}).
@@ -65,9 +63,12 @@ Fix $K$ and $R\subseteq I$. For reset with $H_r$, $r\in R$, equation validity is
 
 So with $H_a$ and $H_b$, each owner's observational equality is polynomial while a third player's is coNP-complete, and even agreement of both owners on every valuation does not settle an equation (\cref{app:proofs-owner}). Tractability comes from the preserved root and the single chain of tests. Union loses the root. For an observer outside both owners, $H_a$ and $H_b$ test $y\ne\{a\}$ and $y\ne\{b\}$, and these break the chain: their disjunction always holds although neither test does.
 
-This dichotomy is specific to the $H$ family. The operation $G_{a,b}(x,y,z)=((y\star_b z)\star_a y)\del x$ names two owners, yet it is a strict tractable extension of reset: its inner expression is $y$ when $y$ is $\{a\}$ or $\{b\}$ and $y\cup z$ otherwise. More generally, for a set $D$ of roles, called a \emph{policy}, let $R_D(x,y,z)=u\del x$, where $u=y$ when $y$ is the atom of a member of $D$ and $u=y\cup z$ otherwise. So $G_{a,b}=R_{\{a,b\}}$, and \cref{app:selective} treats these operations.
+This dichotomy is specific to the $H$ family. The operation $G_{a,b}(x,y,z)=((y\star_b z)\star_a y)\del x$ names two owners, yet it is a strict tractable extension of reset: its inner expression is $y$ when $y$ is $\{a\}$ or $\{b\}$ and $y\cup z$ otherwise. More generally, for a set $D$ of roles, called a \emph{policy}, let
+\begin{equation}\label{owner:eq:policy}
+ R_D(x,y,z)=u\del x,\qquad u=\begin{cases}y,&y=\{d\}\text{ for some }d\in D,\\y\cup z,&\text{otherwise}.\end{cases}
+\end{equation} So $G_{a,b}=R_{\{a,b\}}$, and \cref{app:selective} treats these operations.
 
-Fix a finite family of policies and consider reset with their operations $R_D$. The atom of a role $r$ passes the test of $R_D$, so that $z$ is joined, exactly when $r\notin D$; the \emph{passing pattern} of $r$ is the set of policies in the family that omit it. Equality is polynomial if the patterns of the roles
+Fix a finite family of policies and consider reset with their operations $R_D$. The atom of a role $r$ passes the test of $R_D$, so that $z$ is joined, exactly when $r\notin D$; the \emph{passing pattern} of $r$ is the set of policies in the family that omit it. Equation validity is polynomial if the patterns of the roles
 form a chain, or if they are closed under intersection and two roles share a pattern;
 every other case is coNP-complete
 (\cref{selective:thm:families}). If the patterns form a chain, so do the policies, and their tests form a single chain. In the second case, take as observer a role $k$ whose pattern is shared. For each set of tests that a guard requires an input to pass, intersection closure gives an atom that passes those tests and as few others as possible, and the shared pattern lets it be the atom of a role other than $k$; such atoms separate inequivalent guards. In every other case, two incomparable patterns yield two policies whose tests break the chain, as those of $H_a$ and $H_b$ do.

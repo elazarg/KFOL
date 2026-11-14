@@ -8,11 +8,10 @@ A term is idempotent if and only if it has no winner leaves and every variable o
 
 \begin{idea}
 Evaluate the diagonal on ambiguous inputs. A winner leaf leaves a fixed nonempty constant in every output, but no role lies in all ambiguous sets. Without winner leaves every node is a union, so the value is $\bigcup\pi S$, and $\pi S\subseteq S$ for every pair forces $\pi$ to be the identity.
-Conversely, $\pi(u\star_r v)=\pi u\star_{\pi(r)}\pi v$ pushes switches to the leaves, where they vanish.
+Conversely, $\pi(u\star_r v)=\pi u\star_{\pi(r)}\pi v$ pushes renamings to the leaves, where they vanish.
 \end{idea}
 
-So idempotency singles out $\mathbf C$. On ambiguous inputs a core term is the union of its variables, which excludes near-unanimity and Mal'cev terms and means that identities between core terms have the same variables on both sides (\cref{gen:cor:trace}), and the player views apply to all idempotent operations, even those defined with internal
-switches (\cref{gen:cor:views}).
+So idempotency singles out $\mathbf C$. On ambiguous inputs a core term is the union of its variables, which excludes near-unanimity and Mal'cev terms and means that identities between core terms have the same variables on both sides (\cref{gen:cor:trace}), and every idempotent operation, even one defined with internal renamings, respects each player's view (\cref{gen:cor:views}).
 
 The next theorem is the simplest constraint we know on what terms can do. A \emph{source occurrence} is a winner or variable leaf together with its accumulated permutation.
 
@@ -20,18 +19,18 @@ The next theorem is the simplest constraint we know on what terms can do. A \emp
 Fix valuations $v_e$ and pairwise disjoint regions $W_e\subseteq I$. If $t(v_e)\subseteq W_e$ for every $e$, then one source occurrence of $t$ has its value inside $W_e$ in every valuation simultaneously. With at least two regions, it is a variable occurrence.
 \end{theorem}
 \begin{proof}
-At an owned node with owner $r$, at most one target contains $r$.
+At an owned node with owner $r$, at most one region contains $r$.
 In every other valuation the output cannot collapse to $\{r\}$;
-it is union, so both children lie in the target. In the possible
-exceptional valuation, either both children lie in the target or a
+it is union, so both children lie in the region. In the possible
+exceptional valuation, either both children lie in the region or a
 child is the absorbing owner atom and lies in it. Choose that child:
-it works in all valuations. Descend to a leaf. At a switch pull the
-targets back along the permutation, preserving disjointness. A winner
+it works in all valuations. Descend to a leaf. At a renaming pull the
+regions back along the permutation, preserving disjointness. A winner
 leaf has the same nonempty value in all valuations and cannot fit
-two disjoint targets.
+two disjoint regions.
 \end{proof}
 
-So three valuations with a repeated entry in every input cannot produce three distinct atoms, since \cref{gen:thm:source} would give one permutation doing so. In particular a term has no if-then-else: none returns $y$ when $x=\{a\}$ and $z$ when $x=\{b\}$ for all atoms $y,z$, as the atomic inputs $(x,y,z)=(a,a,a),(a,b,a),(b,a,c)$ show.
+So three valuations in which every input repeats a value cannot produce three distinct atoms. With the three atoms as regions, \cref{gen:thm:source} would give one variable occurrence whose renamed value is the required atom in each valuation, but that occurrence repeats a value, and a renaming keeps the repetition. In particular a term has no if-then-else: none returns $y$ when $x=\{a\}$ and $z$ when $x=\{b\}$ for all atoms $y,z$, as the atomic inputs $(x,y,z)=(a,a,a),(a,b,a),(b,a,c)$ show.
 
 The same fact shows what determinism costs. Call a term \emph{atom-preserving} if it returns an atom on atomic inputs, so that it induces a function $f:I^n\to I$. Then $f$ preserves the relation of triples with a repeat, and by the known classification of that clone \cite{Szendrei2012}, $f$ is essentially unary or takes at most two values (\cref{gen:thm:S2}). An idempotent $f$ is surjective, and the diagonal law then gives the following.
 

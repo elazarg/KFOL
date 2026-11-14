@@ -1,10 +1,10 @@
 \section{Reset}\label{sec:reset}
 
-At binary arity, \cref{gen:cor:determinacy} leaves only the behavior on inputs that are not all atoms, and one operation accounts for it:
+By \cref{gen:cor:determinacy}, an idempotent atom-preserving term projects one input on atomic valuations, so at binary arity only its behavior on inputs that are not all atoms remains. We call the following operation \emph{reset}:
 \begin{equation}\label{reset:eq:reset}
  S\del T=\begin{cases}T,&T\text{ an atom},\\S\cup T,&T\text{ ambiguous}.\end{cases}
 \end{equation}
-An atomic right operand discards the left one, and an ambiguous one keeps it. Reset is definable by owned choices: start with $S\cup T$ and apply $U\mapsto U\star_r T$ once for each role.
+An atomic right operand discards the left one, and an ambiguous one keeps it. Reset is definable by owned choices: start with $S\cup T$ and apply $U\mapsto U\star_r T$ once for each role. It accounts for all the remaining behavior.
 
 \begin{theorem}[Binary atom-preserving operations]\label{reset:thm:binary}
 The binary atom-preserving operations of $\mathbf C$ are exactly $x$, $y$, $x\del y$, and $y\del x$.
@@ -15,9 +15,13 @@ Suppose the term projects $x$. Freezing $x=\{r\}$ leaves a unary expression whos
 contain $x$, and an occurrence of $y$ cannot be suppressed, which gives $y\del x$.
 \end{idea}
 
-Arity three goes further. The \emph{guarded choice} $H_a(x,y,z)=(y\star_a z)\del x$ is idempotent and atom-preserving, but it can see an owner: with $x=\{a,b\}$ and $z=\{c\}$, its value omits $c$ at $y=\{a\}$ and contains $c$ at $y=\{b\}$. We return to it in \cref{sec:complexity,sec:one-owner}.
+Arity three goes further. For a role $a$, the \emph{guarded choice} of $a$ is
+\begin{equation}\label{reset:eq:guarded}
+ H_a(x,y,z)=(y\star_a z)\del x.
+\end{equation}
+It returns $x$ when $x$ is an atom, and otherwise adds $a$'s choice between $y$ and $z$ to $x$. It is idempotent and atom-preserving, yet it tests whether an input is the atom of a particular role, which reset never does: with $x=\{a,b\}$ and $z=\{c\}$, its value omits $c$ at $y=\{a\}$ and contains $c$ at $y=\{b\}$. We return to it in \cref{sec:complexity,sec:one-owner}.
 
-A reset term decides which inputs get through. Its \emph{root} is its rightmost variable, and it is ambiguous exactly when its root is. In $(x\del y)\del z$, the input $z$ is always kept, $y$ is kept when $z$ is ambiguous, and $x$ is kept when both are. In general, each input $j$ has a \emph{table}
+A \emph{reset term}, built from variables by $\del$ alone, decides which inputs get through. Its \emph{root} is its rightmost variable, and it is ambiguous exactly when its root is. In $(x\del y)\del z$, the input $z$ is always kept, $y$ is kept when $z$ is ambiguous, and $x$ is kept when both are. In general, each input $j$ has a \emph{table}
 $\mathcal G_j(t)$: the antichain of minimal sets of inputs whose ambiguity makes $j$ contribute (\cref{reset:lem:selection}). One traversal of a term collects at most one such set per variable occurrence, and deleting nonminimal sets gives the tables, which are therefore small as well as complete.
 
 \begin{proposition}[Canonical tables]\label{reset:thm:three}
@@ -44,7 +48,7 @@ Tables can record alternatives. In $((x_3\del x_1)\del x_0)\del((x_3\del x_2)\de
 and $X$, in which every nonempty member can lose one element and remain feasible. Here $X$ is the set of variables of a term, and its feasible sets are those it selects entirely when exactly they are ambiguous.
 
 \begin{theorem}[Antimatroid representation]\label{reset:thm:anti}
-Reset term functions on a fixed set of inputs correspond bijectively to antimatroids with one feasible singleton on nonempty sets of those inputs.
+Fix a set of inputs. The operations of reset terms correspond bijectively to the antimatroids whose ground set is a finite nonempty set of inputs and which have exactly one feasible singleton.
 \end{theorem}
 
 Tables are the single-rooted dependency structures with choice of Bazerman et al., whose correspondence with antimatroids is theirs \cite{BazermanMinichielloPuzio2023}, and Freese et al.'s path normal form, taken maximally and read backwards, lists the orderings of $X$ all of whose prefixes are feasible (\cref{reset:rem:priority}). What tables add is a compact form, with polynomial recognition and synthesis and a substitution formula (\cref{app:proofs-reset}).
