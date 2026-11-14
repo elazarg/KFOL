@@ -111,6 +111,32 @@ successive deletions: a branch already inactive stays inactive after more
 flags are deleted. It is a contractive profile erasure, not the entire
 ordinary neutral residue.
 
+## Compatible erasures for several owners
+
+Choose a single-owner pruning G_a once for every owner a whose deleted
+profile is nonzero. For each nonempty subset J of those owners, put
+
+    G_J=UNION_(a in J) G_a.
+
+This is a coherent common lower-arity body:
+
+    Phi_a(G_J)=the deleted Phi_a(H) for a in J;
+    Phi_s(G_J)(E)>=Phi_s(H)(E union R) for s outside J;
+    G_J<=H whenever deleted menus avoid all singleton owners in J;
+    G_(J union L)=G_J union G_L.
+
+At a selected owner its own component has the exact profile; every other
+component dominates the one section and hence that zero section. Union
+conjoins these bits, giving exactness. Face containment holds for every
+component, hence for the union. Testing all deleted inputs at N_k also
+shows G_J is contained in the ordinary neutral residue.
+
+The minimal menus on this face are the atoms outside J and the two-element
+subsets of J. Thus a monotone upper bound imposes only
+(K-|J|+binom(|J|,2))^|R| cofactor bounds on that common body. This is the
+written `core:cor:owner-face-family`. The shared face shrinks as J grows;
+the result does not assert a global reconstruction from one body.
+
 ## Exact profile reduction below a retained upper bound
 
 Let F be ANY monotone winner correspondence retaining every input in a

@@ -1,0 +1,148 @@
+\paragraph{A fixed helper alphabet.}
+Unbounded owner alternation does not require unbounded repetition of the
+same helper. Fix $K\geq3$. A helper letter $e=(r_e,H_e)$ acts on the current value by
+$A\mapsto A\star_{r_e}H_e(w)$, where $H_e$ omits the distinguished input
+$X$. For a word $u$ in these letters, write $S_u(X,w)$ for its spine.
+The helpers may be arbitrary nonempty-valued operations in the value
+statements below; the marked-type statements assume they are core.
+
+\begin{theorem}[Last-occurrence bounds and triangular blocks]
+\label{core:thm:spine-block-normal-form}
+Suppose a spine word uses $m$ distinct helper letters. Order them
+$f_1,\ldots,f_m$ by their last occurrence, and write
+\[
+ P=f_1f_2\cdots f_m,\qquad
+ T=(f_m\cdots f_1)(f_m\cdots f_2)\cdots(f_m).
+\]
+For $m=0$ take both words empty.
+Then
+\[
+ S_P\subseteq S_u\subseteq S_T.
+\]
+All three have the same singleton-output tests. For core helpers they
+also have the same exact marked full type, which depends only on the
+used alphabet. Moreover, $u$ has an equivalent subword of length at most
+$m(m+1)/2$.
+\end{theorem}
+\begin{proof}
+Fix a passive valuation. Each letter is either a constant reset, when
+$H_e=\{r_e\}$, or a monotone extensive map. Deleting a nonfinal copy of
+a letter therefore decreases the final value: an extensive copy can only
+enlarge its input, while a resetting copy is made irrelevant by its later
+copy. At any singleton-output test, a letter acts on its Boolean bit by
+identity or by a constant. Its final copy makes every earlier copy
+irrelevant. Deleting all nonfinal copies gives $P$ and preserves these
+tests. The marked factors are conjunctions of the helper filters, so
+repeating a letter does not change them.
+
+Cut $u$ into blocks, block $i$ ending at the last $f_i$.
+Its letters belong to $\{f_i,\ldots,f_m\}$ and it ends in $f_i$.
+We show that the value depends only on these block contents and final
+letters. If resets occur, let $h$ be the largest last-occurrence index of
+a resetting letter. The reset at the end of block $h$ erases the prefix;
+put $p=r_{f_h}$. All later letters are nonresetting. If there is no reset
+and the input is an atom, put $h=0$ and let $p$ be that atom's owner.
+A letter fixes $\{p\}$ exactly when its owner is $p$ or its helper is
+$\{p\}$.
+
+Let $\beta$ be the first block after $h$ containing a letter not fixing
+$\{p\}$. If none exists, the final value is $\{p\}$. Otherwise the
+value becomes ambiguous in that block. The final $f_\beta$ lies at or after
+this change, and every letter with later last index still has a copy ahead.
+Thus the final value is exactly
+\[
+ \{p\}\cup\bigcup_{j\geq\beta}H_{f_j}(w).
+\]
+This is independent of repetitions and internal order within each block,
+provided $f_i$ stays last. With no reset and an ambiguous input, every
+gate is union and the same independence is immediate.
+
+Keep one copy of each letter in each block, retaining $f_i$ at its end.
+This gives an equivalent subword with at most $m-i+1$ letters in block $i$,
+hence the triangular bound. To obtain the upper bound, insert every missing
+later letter into each block. Each insertion is before that letter's final
+copy and can only increase the context, by the deletion argument.
+Block-order independence identifies the result with $T$.
+\end{proof}
+
+\begin{corollary}[Safety reduces to a permutation]
+\label{core:cor:spine-permutation-safety}
+For $K\geq3$ and a specified finite helper alphabet, a spine using every letter and
+satisfying $S_u\subseteq C\cup X$ exists if and only if a permutation
+of that alphabet satisfies the same bound. Singleton-profile constraints
+and the exact marked full type can be preserved as well.
+
+For a permutation $f_1,\ldots,f_m$, the following is an exact safety test
+at each passive valuation. Put $A_i=H_{f_i}(w)$, and let $h$ be the largest
+index with $A_h=\{r_{f_h}\}$, or zero if there is no such index.
+\begin{enumerate}
+\item If $h=0$, require $A_i\subseteq C(w)$ for every $i$.
+\item If $h>0$, put $p=r_{f_h}$ and require $p\in C(w)$. For each
+  $k\notin C(w)$ let $\ell_k=\max\{i:k\in A_i\}$, with maximum zero
+  for the empty set. Require
+  \[
+   r_{f_i}=p\ \text{or}\ A_i=\{p\}
+   \qquad(h<i\leq\ell_k).
+  \]
+\end{enumerate}
+\end{corollary}
+\begin{proof}
+The least permutation in \cref{core:thm:spine-block-normal-form} proves
+the existence equivalence. With no reset, an ambiguous input
+$X=I\setminus\{k\}$ detects each forbidden helper winner $k$, so all
+helpers must be bounded by $C$; this also suffices because every gate is
+contained in its operands' union. After a last reset, the output is
+independent of $X$, so its bound for every $X$ is containment in $C$.
+It always contains $p$. A forbidden $k$ appears exactly when the first change from $\{p\}$
+occurs no later than its last helper contribution, namely $\ell_k$.
+The stated fixing conditions exclude exactly that event.
+\end{proof}
+
+Exact contexts can still need quadratically many copies of their letters.
+This concerns equivalence over a fixed elementary alphabet.
+
+\begin{proposition}[Quadratic length is necessary for exact contexts]
+\label{core:prop:spine-quadratic-alphabet}
+Let $s,t\geq1$ and choose distinct owners $a,b,c$.
+Use independent helper variables $x_1,\ldots,x_s$ at owner $a$ and
+$y_1,\ldots,y_t$ at owner $b$. The word
+\[
+ (y_1\cdots y_t)x_1\,(y_1\cdots y_t)x_2\,\cdots\,
+ (y_1\cdots y_t)x_s\,(y_1\cdots y_t)
+\]
+has length $st+s+t$, and no shorter word over the same elementary
+alphabet has its unary context on all winner-valued inputs.
+In particular, for $m=s+t$ letters the worst-case length is at least
+$\lfloor m^2/4\rfloor+m$.
+\end{proposition}
+\begin{proof}
+Every letter must occur in an equivalent word: make it alone reset to
+its owner's atom, set every other helper and $X$ to $\{c\}$, and use
+provenance to detect its owner. Write $\operatorname{last}(e)$ for a
+letter's last position in such a word.
+
+Set $x_i=\{a\}$, $y_j=\{b\}$, and every other helper to $\{c\}$.
+The output retains the owner of the last reset and cannot acquire the
+other reset owner afterwards. In the displayed word the last reset is
+$y_j$, so equivalence forces
+$\operatorname{last}(x_i)<\operatorname{last}(y_j)$ for every $i,j$.
+
+For $2\leq i\leq s$, set $X=\{a\}$,
+$x_{i-1}=\{a\}$, $x_i=\{b\}$, $y_j=\{c\}$, every other $x$ to
+$\{c\}$, and every other $y$ to $\{a\}$.
+There is just one resetting letter, $x_{i-1}$. Afterwards the only
+letter that can first change the atom $a$ is $y_j$, and the only source
+of $b$ is $x_i$, whose own $a$-gate fixes that atom until it changes.
+The displayed word includes $b$, so every equivalent word has a copy of
+$y_j$ after the last $x_{i-1}$ and before some $x_i$.
+In particular the last $x_i$ positions strictly increase, and every
+consecutive gap contains a copy of every $y_j$.
+For the first gap use the same test without a reset: $X=\{a\}$,
+$x_1=\{b\}$, $y_j=\{c\}$, other $x$ equal to $\{c\}$ and other $y$
+equal to $\{a\}$. It forces $y_j$ before the last $x_1$.
+Finally the reset-order test forces another $y_j$ after the last $x_s$.
+These $s+1$ disjoint gaps require $t(s+1)$ occurrences of $y$-letters,
+in addition to at least $s$ occurrences of $x$-letters.
+The displayed word attains this lower bound. Balancing $s,t$ gives the
+last assertion.
+\end{proof}

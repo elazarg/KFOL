@@ -101,3 +101,10 @@ already enough to exclude a realization.
 
 This solves the profile-maximum interval type problem, not arbitrary
 joint guard realizability or the general interval type spectrum.
+
+For a supplied finite helper library, repetition can now be eliminated:
+[last-occurrence normalization](spine-word-blocks.md) gives a pointwise
+smaller permutation spine with the same exact full type and all singleton
+tests. Thus fixed-library type attainment is exactly an order problem,
+with an explicit reset/break/carrier safety test. This does not identify
+which lower-arity helper operations the arbitrary-baseline criterion needs.

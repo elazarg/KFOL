@@ -171,6 +171,21 @@ step (`core:lem:owner-face-erasure`, `core:thm:retained-profile-reduction`),
 and replaces the positive gluing counter's tree-descent proof by a
 two-variable common-source contradiction.
 
+These erasures now have a coherent simultaneous version: choose G_a once
+and put G_J=UNION_(a in J)G_a. It has every selected owner's deleted profile
+exactly, foreign one-section domination, contraction on the common avoiding
+face, and G_(J union L)=G_J union G_L (`core:cor:owner-face-family`).
+
+For a [fixed helper library](spine-word-blocks.md), an additional word
+normal form removes unbounded repetition. Deleting all nonfinal copies of
+each helper letter gives a pointwise smaller spine with the SAME singleton
+tests and full marked type. Thus safety/type attainment reduces exactly to
+a permutation. Arbitrary words have equivalent triangular block subwords
+of length <=m(m+1)/2; a fixed-alphabet family needs floor(m^2/4)+m letters
+for exact equivalence. The resulting reset/break/carrier safety condition
+is closed once the library is supplied. Selecting helpers intrinsically
+and lifting the simultaneous erasures remain the full-guard frontier.
+
 [Guarded-source gluing](guarded-source-gluing.md) records exact atomic
 and ambiguous cofactor data for one source-separable input. These data
 alone fail on the existing reciprocal example; adding every two-color

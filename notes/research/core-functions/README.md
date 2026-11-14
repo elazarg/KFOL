@@ -104,6 +104,15 @@ dominates foreign profiles with the deleted flags set to one, and is
 contractive whenever those inputs avoid its owner's atom. Thus one-owner
 profile queries below a retained upper bound reduce exactly to common
 lower-arity bounds on atomic cofactors, even if the upper bound is not core.
+For several owners the chosen erasures form a coherent join family,
+preserving every selected deleted profile on their common avoiding face.
+
+[Fixed helper alphabets](spine-word-blocks.md) have exact last-occurrence
+forms. A permutation is the least spine with its last-occurrence order,
+so safe type attainment never needs repeated letters from a fixed library.
+Exact contexts admit triangular compression of length m(m+1)/2, and some
+variable-helper alphabets need quadratic length. Choosing the library from
+general guard data is still unresolved.
 
 For [read-once primitive core trees](read-once-profile-minimum.md), a closed
 rainbow formula in the singleton profiles gives the entire winner operation.

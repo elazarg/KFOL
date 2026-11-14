@@ -70,6 +70,14 @@ face. Thus profile queries excluding retained inputs reduce exactly to a
 lower-arity core body under the common atomic-cofactor bound. No supplied
 helper is needed for the normal form, but the lower-arity bound may be
 noncore, so it retains a genuine joint-minorant problem.
+The erasures can now be chosen coherently for all selected owner sets by
+joining the single-owner bodies; exact selected profiles survive that join
+on the shared face. Separately,
+[spine block forms](spine-word-blocks.md) reduce safe attainment over a
+fixed helper alphabet to a permutation of its letters. The entire unary
+context has an exact triangular compression, with quadratic-order necessity.
+These results isolate helper selection and cross-face reconstruction from
+mere repetition in the spine word.
 
 The [status-selector representation](status-selectors.md) replaces separate
 per-owner selections on one atomic-status fibre by a canonical pair: fixed
