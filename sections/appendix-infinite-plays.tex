@@ -1,0 +1,149 @@
+\subsection{Infinite plays and objective-sensitive fixpoints}\label{app:infinite-plays}
+
+Infinite plays require an objective for the infinite trace. They do not
+require changing the public owned-choice operation when continuations
+have equilibria. We separate this composition fact from a fixpoint
+description of full subgame perfection.
+
+The general equilibrium-existence and definability questions have
+established answers. Ummels \cite[Theorems~6 and~13]{Ummels2006} proves
+pure SPE existence for qualitative Borel multiplayer objectives and
+modal $\mu$-calculus definability of constrained SPE existence when the
+finite player set, the $\omega$-regular objectives and the payoff
+constraints are fixed. The
+construction below instead gives an explicit, self-contained formula
+for a specified complete profile. Profiles remain quantified; we do not
+use an existence or determinacy theorem in its proof.
+
+\paragraph{Public composition.}
+Write $E(G)$ for the possible winners of pure SPEs, allowing $E(G)$ to
+be empty. Strategies retain decisions in every subgame, including
+unreached ones. Each play has exactly one winner, and player $i$'s
+payoff is the indicator of that winner being $i$. Each continuation
+keeps its original winner objective when grafted.
+
+\begin{proposition}[Public grafting]\label{olv:prop:infinite-grafting}
+Let $G,H$ be continuation games, finite or infinite, with the stated
+winner payoffs. Adding one public choice owned by $r$ gives
+\[
+ E(G\ow r H)=
+ \begin{cases}
+  \varnothing,&E(G)=\varnothing\text{ or }E(H)=\varnothing,\\
+  \{r\},&\text{both values are nonempty and one is }\{r\},\\
+  E(G)\cup E(H),&\text{otherwise}.
+ \end{cases}
+\]
+In particular, on nonempty continuation values this is exactly the
+paper's owned choice.
+\end{proposition}
+\begin{proof}
+A full profile at the graft consists of the root choice and complete
+profiles in both children. Subgame perfection requires both child
+profiles to be SPEs, proving the empty case. Fix child SPEs with
+winners $a,b$. The root profile is Nash precisely when its selected
+winner is $r$ whenever $a=r$ or $b=r$. For necessity, the root owner
+can switch branches without changing either continuation. For
+sufficiency, a nonowner's deviation stays in the selected child and
+is unprofitable by its Nash property. The owner's deviation can
+select either child, but its Nash property prevents an improvement
+there unless that child's original winner is already $r$.
+
+If a child value is $\{r\}$ this condition forces $r$. Otherwise
+each child has a losing SPE for $r$. Any desired non-$r$ winner in
+either value is realized by selecting its SPE and taking such a
+losing SPE in the other child. A desired winner $r$ is realized by
+selecting an SPE that awards $r$. These are all possible winners.
+\end{proof}
+
+\paragraph{Finite-priority objectives.}
+Let the public history tree be $M^*$: every node offers the same
+nonempty move set $M$, while its owner and priority may depend on the entire history.
+Assign priorities in a finite nonempty chain and assign each priority
+one winning role. An infinite play is won by the role assigned to its
+largest priority occurring infinitely often. Earlier finite prefixes
+do not affect the winner of a subgame. This includes total
+action-labelled cyclic arenas by unfolding. Finite terminating games
+can be included by replacing a terminal winner by a constant-priority
+absorbing continuation.
+
+Fix a complete profile $\sigma$, a move at every history. Let
+$R_\sigma$ follow that move. For player $i$, let $R_i^\sigma$ allow
+every move at $i$'s nodes and follow $\sigma$ at other nodes. Write
+$\operatorname{Pre}_R X=\{h:\exists k,\ hRk\land k\in X\}$.
+All fixpoints below are on the complete lattice of sets of histories.
+For a priority $p$, put $P_p=\{h:\operatorname{priority}(h)=p\}$ and
+$Q_p=\{h:\operatorname{priority}(h)\leq p\}$, and define
+\begin{align*}
+ B_p^R&=\nu Z.\,\mu Y.\,
+       (P_p\cap\operatorname{Pre}_R Z)
+       \cup(Q_p\cap\operatorname{Pre}_R Y),\\
+ W_i^R&=\bigcup_{p:\operatorname{winner}(p)=i}
+       \mu X.\,(B_p^R\cup\operatorname{Pre}_R X),\\
+ N_\sigma&=\{h:\forall i,\ h\in W_i^{R_i^\sigma}
+                              \Longrightarrow h\in W_i^{R_\sigma}\},\\
+ S_\sigma&=\nu Z.\,(N_\sigma\cap\square Z),
+\end{align*}
+where $\square Z$ requires every one-move continuation to be in $Z$.
+
+\begin{theorem}[Full SPE by fixpoints]\label{olv:thm:infinite-fixpoints}
+For every complete profile $\sigma$ and history $h$,
+\[
+ \sigma\text{ is subgame perfect from }h
+ \quad\Longleftrightarrow\quad h\in S_\sigma.
+\]
+Consequently the possible SPE winners are exactly
+\[
+ E(G,h)=\{i:\exists\sigma,\ h\in S_\sigma\cap W_i^{R_\sigma}\}.
+\]
+The equivalence uses arbitrary history-dependent strategies and whole
+unilateral replacements, with no equilibrium-existence premise.
+\end{theorem}
+\begin{proof}
+First, for any relation $R$, $B_p^R$ is exactly the set of starts of
+infinite $R$-paths staying in $Q_p$ and visiting $P_p$ arbitrarily late.
+For the forward direction, unfold the outer greatest fixpoint. The
+inner least fixpoint supplies a finite path to a $P_p$ state with
+an edge back into the greatest fixpoint. At each state choose a
+witness of minimum finite length. Before reaching length zero,
+one step strictly decreases this length; at length zero take the
+return edge. Iterating gives an infinite path, and a length-zero
+state occurs after every finite prefix. Conversely, the states of
+any such path form a postfixed set: from every position a later
+$P_p$ visit followed by its next edge witnesses the inner least
+fixpoint. Greatest-fixpoint coinduction gives membership.
+
+The outer least fixpoint in $W_i^R$ permits a finite prefix before
+this repeatedly visiting tail. An infinite sequence over a finite priority set has a
+largest recurrent priority, and every larger priority occurs only
+finitely often. Thus $h\in W_i^R$ means exactly that some infinite
+$R$-path from $h$ is won by $i$.
+
+For $R_\sigma$ the path is the profile's unique play. An
+$R_i^\sigma$-path is exactly the play of some complete unilateral
+replacement by $i$. In the reverse direction, prescribe its moves
+on the path and use $\sigma$ everywhere else; path histories have
+distinct lengths, so these prescriptions are consistent. Hence
+$N_\sigma$ is exactly the set of histories where $\sigma$ is Nash
+against complete deviations. Finally,
+$\nu Z.(N_\sigma\cap\square Z)$ consists exactly of histories
+whose every finite continuation belongs to $N_\sigma$. This is
+the independent definition of subgame perfection. Existentially
+quantifying profiles gives the winner formula.
+\end{proof}
+
+Whole deviations matter. Suppose $a$ repeatedly chooses Continue or
+Exit; Exit awards $b$, while continuing forever awards $a$. The
+always-Exit profile cannot be improved by changing its move at finitely
+many histories, even after any history. The complete always-Continue
+replacement improves it from the initial history. The path test above
+detects this deviation; a one-step or finite-deviation test does not.
+
+The least and greatest fixpoints concern the objective-sensitive
+history predicates, not just sets of possible winners. Taking the
+least fixpoint of $X\mapsto X\ow{a}^{0}\{a\}$, where
+$\ow{a}^{0}$ is the strict empty-value extension, gives the empty set.
+Yet in the game where $a$ chooses between repeating this choice and
+exiting to its own win, with infinite repetition awarded to $b\ne a$,
+the SPE value is $\{a\}$. Public grafting is therefore compatible
+with infinite continuations, while recursive feedback needs the
+trace objective as well as the finite winner observation.

@@ -6,6 +6,7 @@ public import KFOL.Results.Games
 public import KFOL.Core.AtomicBasis.Basis
 public import KFOL.Core.SourcePeeling
 public import KFOL.Core.FiniteRelationObstruction
+public import KFOL.DependentSchedule.Results
 public import KFOL.Audit.Namespace
 
 /-! # Claims of the main paper and the report results it cites
@@ -687,6 +688,12 @@ theorem two_player_round_contexts :
       Rounds.Game.SameContextualWinners G H) ∧
     Rounds.Game.possibleWinners (Rounds.Game.diagonal (0 : Fin 2) 1 (.leaf 0) (.leaf 0)).value = {0,1} :=
   Results.Games.two_player_round_contexts
+
+/-- `dep:thm:dynamic-execution`: value-dependent move orders preserve the
+shared trace and every dependent terminal return. -/
+theorem dependent_execution (G : DependentSchedule.Script.{u,v} Role)
+    (p : G.Strategies) : G.runFull p = G.run (G.reduceProfile p) :=
+  DependentSchedule.Results.public_execution G p
 
 end KFOL.Paper
 

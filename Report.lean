@@ -38,6 +38,9 @@ public import KFOL.Strategic.CoalitionMaps
 public import KFOL.Representation.WinnerEquivalences
 public import KFOL.Representation.OperatorMorphisms
 public import KFOL.Representation.Recovery
+public import KFOL.DependentSchedule.Results
+public import KFOL.InfiniteGames.Adequacy
+public import KFOL.InfiniteGames.Continuation
 public import KFOL.Audit.Namespace
 
 /-! # Audited report statements and mathematical proof ingredients
@@ -1199,6 +1202,93 @@ theorem ideal_operator_homomorphisms {A : Type u} {B : Type v}
         IdealDuality.BiIdeal.operation m (IdealDuality.comap f J) =
           IdealDuality.BiIdeal.preimage f f (IdealDuality.BiIdeal.operation n J) :=
   IdealDuality.preserves_operation_iff_diagram f m n
+
+/-! ## Value-dependent schedules and private boundaries -/
+
+theorem dependent_unbounded_execution {Role : Type u} (alice bob carol : Role) :
+    WellFounded (DependentSchedule.Script.Child.{u,v} (Role := Role)) ∧
+    (∀ n, ¬DependentSchedule.Script.DepthLE n
+      (DependentSchedule.Script.unbounded alice bob carol)) ∧
+    ∀ n, DependentSchedule.Script.traceLength
+      (DependentSchedule.Script.unbounded alice bob carol)
+      ((DependentSchedule.Script.unbounded alice bob carol).runFull
+        (DependentSchedule.Script.unboundedStrategies alice bob carol n)).1 = n + 1 :=
+  DependentSchedule.Results.wellFounded_with_unbounded alice bob carol
+
+open DependentSchedule in
+theorem dependent_private_connection {View : Type u} {Answer : View → Type v}
+    {Result : Type w} {NextResult : Type*} {Role : Type*}
+    (G : ViewArena View Answer Result)
+    (next : Result → ViewArena View Answer NextResult) :
+    Nonempty ((ViewArena.graft G next).Policies ≃
+      Views.GluingData Answer G.legalViews (ViewArena.suffixViews G next)) ∧
+    (∀ policy : (ViewArena.graft G next).Policies,
+      (ViewArena.graft G next).run policy =
+        (next (G.run (ViewArena.firstPolicy G next policy))).run
+          (ViewArena.secondPolicy G next policy
+            (G.run (ViewArena.firstPolicy G next policy))
+            (ViewArena.run_exits G (ViewArena.firstPolicy G next policy)))) ∧
+    ∀ (owner : View → Role) (player : Role)
+      (source target : (ViewArena.graft G next).Policies),
+      Views.Deviation owner player source target ↔
+        Views.Deviation owner player (ViewArena.firstPolicy G next source)
+          (ViewArena.firstPolicy G next target) ∧
+        Views.Deviation owner player (ViewArena.remainingPolicy G next source)
+          (ViewArena.remainingPolicy G next target) :=
+  DependentSchedule.Results.private_connection G next
+
+open DependentSchedule in
+theorem dependent_graft_associativity {View : Type u} {Answer : View → Type v}
+    {Result : Type w} {Middle Last : Type*}
+    (G : ViewArena View Answer Result) (next : Result → ViewArena View Answer Middle)
+    (last : Middle → ViewArena View Answer Last) :
+    ViewArena.graft (ViewArena.graft G next) last =
+      ViewArena.graft G (fun result => ViewArena.graft (next result) last) :=
+  ViewArena.graft_assoc G next last
+
+open DependentSchedule in
+theorem dependent_graft_identity {View : Type u} {Answer : View → Type v} {Result : Type w}
+    (G : ViewArena View Answer Result) : ViewArena.graft G ViewArena.done = G :=
+  ViewArena.graft_done G
+
+/-! ## Infinite public plays and objective-sensitive fixed points -/
+
+theorem infinite_buchi_path {State : Type u} (step : State → State → Prop)
+    (allowed visits : Set State) (inside : visits ⊆ allowed) (state : State) :
+    state ∈ InfiniteGames.buchi step allowed visits ↔
+      InfiniteGames.BuchiRun step allowed visits state :=
+  InfiniteGames.mem_buchi_iff inside
+
+theorem infinite_subgame_perfection {Role : Type u} {Move : Type v} {n : ℕ}
+    (G : InfiniteGames.PriorityGame Role Move n)
+    (σ : InfiniteGames.Profile Move) (h : List Move) :
+    G.IsSubgamePerfect σ h ↔ h ∈ G.equilibriumRegion σ :=
+  G.isSubgamePerfect_iff_equilibriumRegion σ h
+
+theorem infinite_possible_winners {Role : Type u} {Move : Type v} {n : ℕ}
+    (G : InfiniteGames.PriorityGame Role Move n) (h : List Move) :
+    G.possibleWinners h = G.fixedpointPossibleWinners h :=
+  G.possibleWinners_eq_fixedpointPossibleWinners h
+
+theorem infinite_public_grafting {Role : Type u} (owner : Role)
+    (G : InfiniteGames.PublicGrafting.Continuation.{u,v} Role)
+    (H : InfiniteGames.PublicGrafting.Continuation.{u,w} Role) :
+    InfiniteGames.PublicGrafting.possibleWinners owner G H =
+      InfiniteGames.PublicGrafting.strictChoice owner G.possibleWinners H.possibleWinners :=
+  InfiniteGames.PublicGrafting.possibleWinners_eq_strictChoice owner
+
+theorem infinite_priority_grafting {Role : Type u} {Move Move' : Type v} {n m : ℕ}
+    (G : InfiniteGames.PriorityGame Role Move n) (H : InfiniteGames.PriorityGame Role Move' m)
+    (owner : Role) :
+    InfiniteGames.PublicGrafting.possibleWinners owner G.asContinuation H.asContinuation =
+      InfiniteGames.PublicGrafting.strictChoice owner (G.possibleWinners [])
+        (H.possibleWinners []) :=
+  G.graft_possibleWinners_eq_strictChoice H owner
+
+theorem infinite_nonempty_choice {Role : Type u} (owner : Role) (S T : WinnerSet Role) :
+    InfiniteGames.PublicGrafting.strictChoice owner S.val T.val =
+      (WinnerSet.choice owner S T).val :=
+  InfiniteGames.PublicGrafting.strictChoice_winnerSet owner S T
 
 /-! ## Sealed rounds: distribution sets and the scalar fragment -/
 

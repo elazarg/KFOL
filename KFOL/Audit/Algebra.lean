@@ -22,6 +22,12 @@ import all KFOL.Query.ZeroExtension
 import all KFOL.Algebra.FullBasis.NonfiniteBasis
 import all KFOL.Owner.FourVariableObstruction
 import all KFOL.Owner.Basis.Exchange
+import all KFOL.Algebra.AtomicDecision
+import all KFOL.Algebra.CoalitionMapsImages
+import all KFOL.AtomicLogic.Unsorted
+import all KFOL.Representation.WinnerEquivalences
+import all KFOL.Representation.OperatorMorphisms
+import all KFOL.Representation.Recovery
 meta import Lean.Elab.Command
 
 /-! # Independent algebra and representation import boundary

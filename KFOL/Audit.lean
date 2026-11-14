@@ -601,6 +601,24 @@ import all KFOL.Representation.Recovery
 import all KFOL.Representation.WinnerEquivalences
 import all KFOL.Representation.WinnerModels
 
+import all KFOL.Definitions.DependentSchedule
+import all KFOL.DependentSchedule.Adequacy
+import all KFOL.DependentSchedule.Examples
+import all KFOL.DependentSchedule.Execution
+import all KFOL.DependentSchedule.PolicyGluing
+import all KFOL.DependentSchedule.Public
+import all KFOL.DependentSchedule.Results
+import all KFOL.DependentSchedule.ViewArena
+import all KFOL.DependentSchedule.WellFounded
+import all KFOL.Definitions.InfiniteGames
+import all KFOL.Definitions.InfiniteGrafting
+import all KFOL.InfiniteGames.Adequacy
+import all KFOL.InfiniteGames.Buchi
+import all KFOL.InfiniteGames.Continuation
+import all KFOL.InfiniteGames.Equilibrium
+import all KFOL.InfiniteGames.Grafting
+import all KFOL.InfiniteGames.Priorities
+import all KFOL.InfiniteGames.Profiles
 meta import Lean.Elab.Command
 meta import Lean.Util.CollectAxioms
 
