@@ -7,7 +7,13 @@ a public choice by its \emph{owner} $r$. A role values its own win at one and ev
 A \emph{profile} of a game $G$ selects a branch at every node, including nodes that play never reaches, and its \emph{outcome} is the winner of the leaf it reaches from the root. A profile is a \emph{Nash equilibrium} if no role that loses under it can win by changing only its own choices, and a \emph{subgame-perfect equilibrium} (SPE) if it restricts to a Nash equilibrium of every subtree, reached or not. The \emph{value} $\den G$ is the set of outcomes of the SPEs of $G$.
 \end{definition}
 
-\begin{figure}[t]
+Choices that play never reaches can decide who wins. Consider
+\[
+ D=(\at a\ch b\at c)\ch a(\at b\ch b\at c).
+\]
+In \cref{fig:D}, on the right $b$ takes its own win, and on the left it loses whichever branch it picks. If it picks $c$ on the left, the root owner $a$ loses on both sides and may go right, so $b$ wins by a choice in a subtree that play never enters. Other SPEs are won by $a$ and by $c$, so $\den D=\{a,b,c\}$. Going right is weakly dominated for $a$, since only the left branch can make $a$ win. Refinements that exclude such choices, such as trembling-hand perfection \cite{Selten1975}, give $\{a,c\}$ here, but their outcome sets are not determined by those of subgames (\cref{app:proofs-rational}).
+
+\begin{figure}[htb]
 \centering
 \begin{tikzpicture}[
   level distance=10mm,
@@ -16,24 +22,18 @@ A \emph{profile} of a game $G$ selects a branch at every node, including nodes t
   owner/.style={circle,draw,inner sep=1pt,minimum size=5.5mm},
   win/.style={inner sep=2pt},
   spe/.style={line width=1.4pt}]
-\node[owner,label={[font=\small]above:$\{a,b,c\}$}] {$a$}
-  child {node[owner,label={[font=\small]left:$\{a,c\}$}] {$b$}
+\node[owner,label={[font=\small]above:$\{a,b,c\}$}] (root) {$a$}
+  child {node[owner,label={[font=\small]left:$\{a,c\}$}] (L) {$b$}
     child {node[win] {$\at a$}}
-    child {node[win] {$\at c$} edge from parent[spe]}}
-  child {node[owner,label={[font=\small]right:$\{b\}$}] {$b$}
-    child {node[win] {$\at b$} edge from parent[spe]}
-    child {node[win] {$\at c$}}
-    edge from parent[spe]};
+    child {node[win] (Lc) {$\at c$}}}
+  child {node[owner,label={[font=\small]right:$\{b\}$}] (R) {$b$}
+    child {node[win] (Rb) {$\at b$}}
+    child {node[win] {$\at c$}}};
+\draw[spe] (root) -- (R) (R) -- (Rb) (L) -- (Lc);
 \end{tikzpicture}
-\caption{The game $D$, with the value of each subgame beside its node. Thick edges show an SPE won by $b$: at the left node, which play never reaches, $b$ picks $c$, so the root owner $a$ loses on both sides and may go right.}
+\caption{The game $D$, with the value of each subgame beside its node. A profile picks a branch at every node, and the thick edges show one SPE, won by $b$. At the left node, which play never reaches, $b$ picks $c$; so the root owner $a$ loses on both sides and may go right, where $b$ takes its own win.}
 \label{fig:D}
 \end{figure}
-
-Choices that play never reaches can decide who wins. Consider
-\[
- D=(\at a\ch b\at c)\ch a(\at b\ch b\at c).
-\]
-In \cref{fig:D}, on the right $b$ takes its own win, and on the left it loses whichever branch it picks. If it picks $c$ on the left, the root owner $a$ loses on both sides and may go right, so $b$ wins by a choice in a subtree that play never enters. Other SPEs are won by $a$ and by $c$, so $\den D=\{a,b,c\}$. Going right is weakly dominated for $a$, since only the left branch can make $a$ win. Refinements that exclude such choices, such as trembling-hand perfection \cite{Selten1975}, give $\{a,c\}$ here, but their outcome sets are not determined by those of subgames (\cref{app:proofs-rational}).
 
 SPE values, in contrast, compose: the value of a choice depends only on the values of its branches, combined by \emph{owned choice}: for each role $r$ and all $S,T\subseteq I$,
 \begin{equation}\label{game:eq:own}
