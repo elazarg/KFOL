@@ -62,6 +62,123 @@ Equivalently, the interval is the downset lattice of the preorder
  p\preceq_C q\quad\Longleftrightarrow\quad
  \forall F\in\mathcal I(C),\quad P_F(q)=1\ \Longrightarrow\ P_F(p)=1.
 \]
+Its principal downsets have more structure than those of an arbitrary
+preorder.
+
+\begin{proposition}[Principal activation boxes]
+\label{core:prop:principal-activation-boxes}
+For every proper coloring $p$, the least realizable interval predicate
+positive at $p$ is one actual owner box $\Theta_{C,p}$.
+Writing $q^{(r)}$ for the coloring retaining only $q_r$, one has
+\[
+ q\preceq_C p\quad\Longleftrightarrow\quad
+ q^{(r)}\preceq_C p\text{ for every owner }r.
+\]
+Consequently, in the quotient poset, every coloring is the join of its
+monochromatic blocks.
+\end{proposition}
+\begin{proof}
+Intersect the finitely many interval predicates positive at $p$.
+Their intersection $L$ is realizable and still positive there.
+Choose an occurrence supplying the distinguished winner at that probe
+in a word for $L$. Marked linearization gives a one-$X$ minorant with
+the same full type and source box $B$, positive at $p$.
+Adjoin $C$ to that minorant. Its interval predicate is $B\leq L$;
+minimality of $L$ forces equality. Its factors are uniquely recovered
+on monochromatic colorings, proving the displayed equivalence and
+the join assertion.
+\end{proof}
+
+Write $R(X,y)$ for the fold starting at $X$ and attaching $y$ once
+at each of the $K$ owners. It equals $y$ when $y$ is atomic and
+$X\cup y$ otherwise. The least nonzero interval predicate has a direct
+expression for every core bound, even when the other principal boxes
+remain implicit.
+
+\begin{proposition}[Least nontrivial source extension]
+\label{core:prop:least-source-extension}
+Let $S$ be the essential passive support of $C$. The least nonzero
+predicate in $\mathcal I(C)$ is
+\[
+ P_0(E)=[E_r\cap S=\varnothing\text{ for every }r].
+\]
+Its operation equals $C\cup X$ when every input in $S$ is ambiguous,
+and equals $C$ otherwise. If a primitive word for $C$ has $m$ leaves,
+this operation has a primitive realizer with exactly one $X$ and at
+most $|S|(m+K-1)+1$ leaves. That occurrence has full factors
+$B_r(A)=[A\cap S=\varnothing]$.
+\end{proposition}
+\begin{proof}
+Choose one occurrence of each used variable $j$ in the word for $C$,
+and replace only that occurrence by $R(X,v_j)$.
+Every original singleton status, hence every original absorber test,
+is unchanged. The resulting one-$X$ context $C_j$ therefore satisfies
+$C\subseteq C_j\subseteq C\cup X$.
+Its source vanishes whenever $j$ is colored, and survives whenever
+all inputs in $S$ are uncolored.
+
+Compose these $|S|$ contexts at $X$. Composition intersects source
+predicates, so the result has exactly $P_0$ and still contains $X$
+once. Each reset contributes the factor $[j\notin A]$ at every owner;
+all other helper profiles are supported in $S$, so the resulting
+factors are exactly those displayed. Each context has $m+K$ leaves,
+giving the stated count under one-hole composition.
+
+An interval operation ignores every passive variable outside $S$.
+Otherwise that variable would contribute a fresh winner on an
+all-ambiguous input, contradicting the upper bound $C\cup X$.
+Every nonzero antitone predicate is positive at the empty coloring,
+and independence of the unused variables then makes it contain $P_0$.
+Finally, if the used atomic inputs have just one owner $k$, $C$
+already contains $k$: no rival atomic absorber can remove it.
+Thus the apparent extra additions on such inputs in the source
+reconstruction formula are redundant. This gives the stated
+whole-menu description.
+\end{proof}
+
+\begin{proposition}[Reset interval lattice]
+\label{core:prop:reset-interval-lattice}
+For a fresh passive input $w$, put $D(w,v)=R(C(v),w)$.
+The lattice of realizable predicates in $\mathcal I(D)$ is the ordinal
+sum of the corresponding lattice for $C$ and the Boolean lattice $2^I$:
+identify the top of the first lattice with the bottom of the second.
+Explicitly, each $F\in\mathcal I(D)$ has a unique
+$G\in\mathcal I(C)$ and bits $\lambda_s$ such that
+\[
+ F(X,w,v)=
+ \begin{cases}
+ \{s\}\cup( X\text{ if }\lambda_s=1),&w=\{s\},\\
+ w\cup G(X,v),&w\text{ ambiguous}.
+ \end{cases}
+\]
+If any $\lambda_s=1$, necessarily $G=C\cup X$.
+Conversely all these choices are realized. The lower ideal embeds by
+$G\mapsto R(G,w)$ and is recovered by neutral deletion of $w$.
+\end{proposition}
+\begin{proof}
+Take $G=\partial_wF$. The interval bounds give
+$C\subseteq G\subseteq C\cup X$; it is nonzero and core by neutral
+elimination. The singleton profiles of $D$ are
+$\Phi_r(D)(A)=[w\in A]$, so the
+singleton-fiber assertion makes each atomic cofactor
+$\{s\}\cup\lambda_s X$. On ambiguous $w$, source reconstruction
+gives $w\cup G$.
+
+If $\lambda_s=1$, the retained-source normal form supplies a nonempty
+core erasure $g_s\subseteq G$ with
+$g_s\setminus\{s\}=X\setminus\{s\}$.
+It uses no passive variable: on all-ambiguous inputs, such a variable
+could supply a winner $k\ne s$ absent from $X$, contradicting this
+equality. Hence $g_s$ uses only $X$, so idempotence gives $g_s=X$.
+Thus $G=C\cup X$.
+
+Conversely, all-zero atomic bits give $R(G,w)$ for any $G$.
+When $G=C\cup X$, the retained-source normal form realizes any
+chosen set of positive atomic bits by taking $g_s=X$ at those owners
+and omitting it elsewhere. Order is exactly coordinatewise order on
+$G$ and the atomic bits, proving the ordinal-sum assertion.
+\end{proof}
+
 For arbitrary $C$ this preorder is implicit.
 \Cref{core:thm:pair-source-interval} computes it for pair-erasure bounds.
 We first give a closed description when $C$ is the greatest completion
@@ -150,6 +267,80 @@ at every $(x=b,y=c)$ with distinct $b,c\ne a$.
 Setting $P=0$ exactly when both inputs are foreign-$a$ atoms violates
 this rule, although it respects antitonicity and all passive cofactor
 independences of $C$.
+
+\paragraph{The whole ambiguity pattern matters.}
+Even equal atomic tables and equal lower profile images do not determine
+the relative source interval. The failure persists after retaining any
+fixed number of ambiguous inputs.
+
+\begin{proposition}[No bounded ambiguity test for interval compatibility]
+\label{core:prop:interval-ambiguity-depth}
+For every fixed $K\geq3$ and $h\geq1$, there are full-support core
+operations $C_h\subseteq D_h$ on $h+3$ passive inputs such that:
+\begin{enumerate}
+\item $C_h,D_h$ agree whenever at most $h$ inputs are ambiguous;
+\item their singleton profiles are the same projection profile, and
+  every core minorant of either operation has precisely that profile tuple;
+\item the realizable source predicates above $C_h$ form a proper subset
+  of those above $D_h$.
+\end{enumerate}
+\end{proposition}
+\begin{proof}
+Choose distinct owners $a,b,c$, put $U=y\cup z$, $L=y\star_b z$,
+and use the reset $R(H,x)$ from the preceding construction. Start with
+\[
+ C_0=x\star_a L,\qquad D_0=R(U,x)\star_a L.
+\]
+They agree whenever $x$ is atomic, and $C_0\subseteq D_0$.
+Add $w_1,\ldots,w_h$ and set
+\[
+ C_i=R(C_{i-1},w_i),\qquad D_i=R(D_{i-1},w_i).
+\]
+An atomic padding input erases any preceding difference.
+If all $h$ padding inputs are ambiguous and at most $h$ inputs are
+ambiguous altogether, $x$ is atomic. This proves (1).
+At $x=\{a,b\},y=\{c\},z=\{b\}$ the initial outputs are
+$\{a,b\}$ and $\{a,b,c\}$. Taking every $w_i=I\setminus\{c\}$
+preserves their difference, with exactly $h+1$ ambiguous inputs.
+All inputs occur and are essential on all-ambiguous valuations.
+
+The last reset gives
+$\Phi_r(C_h)(A)=\Phi_r(D_h)(A)=[w_h\in A]$.
+Every minorant must retain these singleton outputs. An additional
+$r$-winning coalition omitting $w_h$ would be disjoint from the
+foreign winning coalition $\{w_h\}$, contradicting common source.
+This proves (2).
+
+For (3), let $Q(y,z)$ be zero precisely when both inputs are colored
+owners different from $b$, and one otherwise. It is antitone and is
+realizable above $U$ by \cref{core:thm:profile-source-interval}.
+Let $G$ be such an interval realizer. Then
+\[
+ R(G,x)\star_a L\ \in\mathcal I(D_0)
+\]
+has source predicate $P=[x\text{ uncolored}]\,Q$.
+For atomic $x$ the two operations agree; for ambiguous $x$, their
+first arguments remain ambiguous, so the same $L$-absorber applies
+and all added winners belong to $X$.
+At a source probe, colored $x$ erases the source; uncolored $x$
+passes it unless $L=a$. That exception requires $y=z=a$, where
+$Q=0$ already. Thus the stated predicate is exact.
+
+It is not realizable above $C_0$. Neutral deletion of $x$ would
+give an interval above $L$ with source predicate $Q$.
+Its all-$b$ activation is one, while its value at $y=a,z=c$ is zero,
+contradicting the binary criterion just given.
+
+The lower-ideal embedding of \cref{core:prop:reset-interval-lattice}
+preserves this strict distinction at every padding step. Its witness is
+\[
+ P_h=P\bigwedge_{i=1}^h[w_i\text{ uncolored}]
+ \quad\text{above }D_h.
+\]
+Finally, increasing a core bound preserves every realizable source
+predicate: union its realizer with the larger bound. Hence the
+inclusion is proper.
+\end{proof}
 
 \begin{proposition}[Neutral residuals do not determine relative compatibility]
 \label{core:prop:interval-neutral-obstruction}
