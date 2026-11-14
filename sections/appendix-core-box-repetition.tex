@@ -132,3 +132,74 @@ every subsequent gate preserves that winner, a contradiction.
 Therefore $L_i<L_j$. In particular adjacent alternation forces
 $L_1<\cdots<L_m$, giving the claimed lower bound.
 \end{proof}
+
+\paragraph{One conditional capture can force the whole order.}
+With two spare owners, the ordered witnesses also apply to a single
+capture query, with every other marked factor unrestricted.
+
+\begin{proposition}[Exact depth for a single capture]
+\label{core:prop:single-capture-depth}
+Fix distinct owners $a,b,c,d$ and an odd $m\geq1$. Let $r_i=a$
+for odd $i$ and $r_i=b$ for even $i$, and put
+\[
+ T_m=X\star_{r_1}v_1\star_{r_2}\cdots\star_{r_m}v_m,
+ \qquad C_m=\partial_XT_m.
+\]
+Every one-$X$ spine $S\subseteq C_m\cup X$ whose marked capture
+profile satisfies $\psi_a(\{v_1\})=1$ has at least $m$ choice gates
+on its marked path. At least $(m+1)/2$ are $a$-owned and have
+pairwise distinct helper profiles. Union attachments are allowed.
+The depth bound is attained by $T_m$, also with positivity at the probe
+\[
+ p_a=\{v_i:i\text{ even}\},\qquad
+ p_b=\{v_i:i\text{ odd}\},\qquad p_s=\varnothing\ (s\notin\{a,b\}).
+\]
+The greatest $a$-capture profile attainable while retaining that
+positivity is the disjunction of the odd variables.
+\end{proposition}
+\begin{proof}
+Neutral elimination makes $C_m$ nonempty and core; neutral comparison gives
+$T_m\subseteq C_m\cup X$. Its own-$a$ helper profiles are the odd
+projections, and its source box is positive at $p$, since every helper
+there is its gate's opposite atom.
+
+Put $U=\{c,d\}$. For adjacent indices $i,i+1$, use the row
+\[
+ X=U,\quad v_i=\{r_i\},\quad v_{i+1}=\{r_{i+1}\},
+ \quad v_j=U\ (j\notin\{i,i+1\}).
+\]
+At stage $i+1$ the unmarked singleton resets both the original and
+neutral computations to $r_{i+1}$. Later helpers are $U$, so
+$C_m\cup X$ omits $r_i$ on this row.
+Only $a,b$ occur as atomic input owners. Therefore no helper can be
+a singleton of another owner, and neither an extra-owned gate nor a
+union attachment can erase an installed $a$- or $b$-winner.
+
+The case $m=1$ is immediate; assume $m\geq3$.
+The requested capture supplies an $a$-helper positive on $\{v_1\}$;
+let $L_1$ be its last such location. On the row for $(1,2)$ this
+helper resets the running value to $a$. Safety forces a later
+$b$-helper positive on $\{v_2\}$, since that is the only way to
+remove $a$. Thus its last location $L_2$ exists and $L_1<L_2$.
+The row for $(2,3)$ then forces a later $a$-helper positive on
+$\{v_3\}$. Induction gives
+\[
+ L_1<L_2<\cdots<L_m.
+\]
+All later singleton captures are forced by the first one. The odd
+locations are $a$-owned. Their helper profiles are distinct: a later
+one positive on an earlier odd singleton would contradict the
+definition of its last location. This proves both lower bounds,
+and $T_m$ attains the depth bound.
+
+Finally, positivity at $p$ forbids capture on every subset of the
+even variables. The disjunction of the odd variables is the greatest
+monotone profile with that restriction, and $T_m$ attains it.
+\end{proof}
+
+By \cref{core:prop:principal-activation-boxes}, the least interval
+predicate positive at this $p$ is one actual box. Its $a$-capture
+profile is exactly the displayed maximum. Every one-$X$ spine attaining
+this principal box therefore has at least $m$ marked-path choice gates.
+Principal boxes can thus require arbitrarily many ordered helpers,
+already at fixed $K=4$; even one prescribed capture bit forces this depth.

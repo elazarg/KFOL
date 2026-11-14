@@ -6,6 +6,48 @@ $X$. For a word $u$ in these letters, write $S_u(X,w)$ for its spine.
 The helpers may be arbitrary nonempty-valued operations in the value
 statements below; the marked-type statements assume they are core.
 
+\begin{lemma}[Closing and squaring a spine]
+\label{core:lem:spine-neutral-closure}
+For a nonempty helper word $u$, put
+$U(w)=\bigcup_{e\text{ used in }u}H_e(w)$. Then
+\[
+ \partial_XS_u=S_u(U,w)
+   =\bigcup_{e\text{ used in }u}S_u(H_e,w).
+\]
+Consequently $S_u\subseteq C\cup X$ if and only if every closed
+substitution $S_u(H_e,w)$ is contained in $C$.
+Moreover $S_{uuu}=S_{uu}$. The square has the same neutral residue
+and, for core helpers, the same exact full marked type.
+\end{lemma}
+\begin{proof}
+Fix the passive input. If a helper equals its gate's owner, that gate
+resets the context, making its final value independent of $X$.
+All the displayed expressions then equal that constant.
+Otherwise every path map is extensive. The neutral residue is $U$:
+no winner can come from outside the helpers, while $k\in H_e$ can
+be supplied by starting at an atom different from $k$ and $r_e$.
+That atom lies in $I\setminus\{k\}$ and persists until $e$, preventing absorption there,
+and the newly supplied $k$ persists afterwards. This uses $K\geq3$.
+Starting at $U$ also gives $U$. Each $S_u(H_e)$ contains $H_e$ and
+is contained in $U$, proving the union equality.
+The budget assertion follows from
+$S_u\subseteq(\partial_XS_u)\cup X$ and evaluation at $I\setminus\{k\}$.
+
+In the extensive case, an ambiguous input collects all helpers in
+one pass. An atom either remains fixed, or becomes ambiguous; a second
+pass then collects every helper skipped before that change. The result
+is fixed, so a third pass adds nothing. The residue is unchanged by
+the same dichotomy. Squaring repeats precisely the same helper filters,
+so idempotence of their conjunctions preserves the full type.
+\end{proof}
+
+These closed tests remove $X$ from a supplied witness, while retaining
+its helper choice. In particular, the baseline in
+\cref{core:prop:single-capture-depth} has the explicit core expression
+\[
+ C_m=T_m(v_1\cup\cdots\cup v_m,v).
+\]
+
 \begin{theorem}[Last-occurrence bounds and triangular blocks]
 \label{core:thm:spine-block-normal-form}
 Suppose a spine word uses $m$ distinct helper letters. Order them
@@ -25,8 +67,8 @@ used alphabet. Moreover, $u$ has an equivalent subword of length at most
 $m(m+1)/2$.
 \end{theorem}
 \begin{proof}
-Fix a passive valuation. Each letter is either a constant reset, when
-$H_e=\{r_e\}$, or a monotone extensive map. Deleting a nonfinal copy of
+Fix a passive valuation and use the reset/extensive dichotomy above.
+Deleting a nonfinal copy of
 a letter therefore decreases the final value: an extensive copy can only
 enlarge its input, while a resetting copy is made irrelevant by its later
 copy. At any singleton-output test, a letter acts on its Boolean bit by
