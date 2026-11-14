@@ -32,6 +32,9 @@ public import KFOL.Core.Hypergraphs
 public import KFOL.Core.ExponentialCrown
 public import KFOL.Core.BichainFiber
 public import KFOL.Core.AtomicAmalgamation
+public import KFOL.Complexity.AtomicWinCompleteness
+public import KFOL.AtomicLogic.Unsorted
+public import KFOL.Strategic.CoalitionMaps
 public import KFOL.Audit.Namespace
 
 /-! # Audited report statements and mathematical proof ingredients
@@ -1052,6 +1055,74 @@ theorem permutation_envelope_cardinality {Role : Type u} [DecidableEq Role] [Fin
     Fintype.card (Envelope.Carrier Role M) =
       1 + (Fintype.card Role).factorial * Fintype.card M :=
   Results.Algebra.permutation_envelope_cardinality M
+
+/-! ## Atomic input logic and coalescing roles -/
+
+theorem atomic_possible_win_np_complete {K : ℕ} (two : 2 ≤ K) (winner : Fin K) :
+    Cslib.Complexity.NPComplete Turing.MultiTapeTM.encBits
+      (Problems.atomicPossibleWinLanguage K winner) :=
+  Complexity.AtomicWin.language_npComplete_of_two two winner
+
+theorem public_atomic_possible_win_p {K : ℕ} (winner : Fin K) :
+    Problems.publicAtomicPossibleWinLanguage K winner ∈
+      Cslib.Complexity.P Turing.MultiTapeTM.encBits :=
+  Complexity.AtomicWin.public_language_mem_P winner
+
+theorem public_atomic_possible_win_test {Role : Type u} {Var : Type v}
+    {term : Term Role Var} (publicOnly : term.IsPublic) (winner : Role) :
+    term.AtomicPossibleWin winner ↔
+      winner ∈ (term.eval (fun _ => WinnerSet.singleton winner)).val :=
+  publicOnly.atomicPossibleWin_iff winner
+
+theorem atomic_sorted_calculus {Role : Type u} [Finite Role] :
+    (Set.range (@AtomicLogic.basis Role)).Finite ∧
+      ∀ (n : ℕ) (s t : Term Role (Fin n)),
+        AtomicLogic.Valid s t ↔ AtomicLogic.Derives
+          (AtomicLogic.WinnerTerm.ofNative s) (AtomicLogic.WinnerTerm.ofNative t) :=
+  AtomicLogic.finite_sorted_presentation
+
+theorem atomic_no_unsorted_basis {Role : Type u} [Fintype Role] (three : Fin 3 ↪ Role) :
+    ¬ ∃ theory : Equational.Theory (Equational.FullSymbol Role),
+      ∀ (n : ℕ) (s t : Term Role (Fin n)),
+        AtomicLogic.Valid s t ↔ Equational.Derives theory
+          (Equational.Full.encode s) (Equational.Full.encode t) :=
+  AtomicLogic.no_unsorted_equational_presentation three
+
+theorem atomic_sorted_substitution {Role : Type u} {n m : ℕ}
+    {s t : Term Role (Fin n)}
+    (proof : AtomicLogic.Derives (AtomicLogic.WinnerTerm.ofNative s)
+      (AtomicLogic.WinnerTerm.ofNative t))
+    (replacement : Fin n → Term Role (Fin m))
+    (atomic : ∀ x, (replacement x).AtomPreserving) :
+    AtomicLogic.Derives (AtomicLogic.WinnerTerm.ofNative (s.subst replacement))
+      (AtomicLogic.WinnerTerm.ofNative (t.subst replacement)) :=
+  AtomicLogic.derives_subst_atom_preserving proof replacement atomic
+
+theorem coalition_role_maps {Role : Type u} {Team : Type v} (f : Role → Team) :
+    (∀ G H : Strategic.Tree Role,
+      Strategic.possibleWinners G = Strategic.possibleWinners H →
+      Strategic.possibleWinners (G.mapRoles f) = Strategic.possibleWinners (H.mapRoles f)) ↔
+      Function.Injective f ∨ (∃ q, ∀ r, f r = q) ∨
+        (∃ c q, f c ≠ q ∧ ∀ r, r ≠ c → f r = q) :=
+  CoalitionMaps.gameDescends_iff f
+
+theorem coalition_direct_image {Role : Type u} {Team : Type v} (f : Role → Team) :
+    CoalitionMaps.Intertwines f (CoalitionMaps.image f) ↔
+      Function.Injective f ∨ (∃ q, ∀ r, f r = q) :=
+  CoalitionMaps.image_intertwines_iff f
+
+theorem coalition_singleton_team {Role : Type u} {Team : Type v}
+    (f : Role → Team) (c : Role) (q : Team)
+    (different : f c ≠ q) (others : ∀ r, r ≠ c → f r = q) (G : Strategic.Tree Role) :
+    Strategic.value (G.mapRoles f) =
+      if Strategic.value G = WinnerSet.singleton c then WinnerSet.singleton (f c)
+        else WinnerSet.singleton q :=
+  CoalitionMaps.value_mapRoles_singletonBlock f c q different others G
+
+theorem coalition_winner_upper_bound {Role : Type u} {Team : Type v}
+    (f : Role → Team) (G : Strategic.Tree Role) :
+    (Strategic.value (G.mapRoles f)).val ⊆ (CoalitionMaps.image f (Strategic.value G)).val :=
+  CoalitionMaps.value_mapRoles_subset_image f G
 
 /-! ## Sealed rounds: distribution sets and the scalar fragment -/
 

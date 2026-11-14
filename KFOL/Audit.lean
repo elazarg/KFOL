@@ -569,6 +569,26 @@ import all KFOL.Core.AtomicBasis.Quotient
 import all KFOL.Core.AtomicBasis.Separation
 import all KFOL.Core.AtomicBasis.Soundness
 import all KFOL.Core.AtomicBasis.Variety
+import all KFOL.Definitions.AtomicDecision
+import all KFOL.Definitions.AtomicProblems
+import all KFOL.Definitions.AtomicLogic
+import all KFOL.Definitions.CoalitionMaps
+import all KFOL.Definitions.CoalitionGames
+import all KFOL.Algebra.AtomicDecision
+import all KFOL.Algebra.CoalitionMaps
+import all KFOL.Algebra.CoalitionMapsImages
+import all KFOL.Strategic.CoalitionMaps
+import all KFOL.AtomicLogic.Soundness
+import all KFOL.AtomicLogic.Completeness
+import all KFOL.AtomicLogic.Substitution
+import all KFOL.AtomicLogic.Unsorted
+import all KFOL.Reductions.AtomicWin
+import all KFOL.Complexity.AtomicWinMachines
+import all KFOL.Complexity.AtomicWinHardness
+import all KFOL.Complexity.AtomicWinVerifier
+import all KFOL.Complexity.AtomicWinWordVerifier
+import all KFOL.Complexity.AtomicWinPublic
+import all KFOL.Complexity.AtomicWinCompleteness
 meta import Lean.Elab.Command
 meta import Lean.Util.CollectAxioms
 

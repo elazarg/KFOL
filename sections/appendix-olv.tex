@@ -2,6 +2,11 @@
 
 Olde Loohuis and Venema \cite{OldeLoohuisVenema2010} and this paper ask the same basic question with different observations. Each takes the value of a multiplayer evaluation game, turns agreement at every valuation into an equational theory, and asks how to decide and axiomatize it. They observe who can force a win; we observe who wins in some subgame-perfect equilibrium. This appendix records how the two settings correspond, which of their questions the paper answers, and which remain open here. Section numbers below refer to their paper.
 
+The atomic-input comparison gives a finite sorted proof calculus and a
+complexity distinction according to whether role renamings are available
+(\cref{app:atomic-inputs}). Merging roles has an exact classification of
+when it acts on the winner observation (\cref{olv:thm:coalition-maps}).
+
 \subsection{The two settings}
 
 \begin{center}
@@ -33,9 +38,9 @@ Their algebra $O_I$ \cite[Definition~3.20]{OldeLoohuisVenema2010} is a power of 
 
 \paragraph{Expressiveness.} They show that their language is not functionally complete and leave the relative expressive power of sets of connectives aside. The paper determines the idempotent operations (\cref{gen:thm:core}) and the binary atom-preserving ones (\cref{reset:thm:binary}), defines union from owned choices (\cref{game:thm:union}), and shows that no finite family of relations characterizes the core's term operations (\cref{core:thm:not-finitely-related}).
 
-\paragraph{Single-winner valuations.} They introduce valuations that give each proposition letter one winner, note that a formula can then have no player who forces a win, and leave the logic of these valuations open \cite[Definition~2.12]{OldeLoohuisVenema2010}. One winner at each leaf is our standing assumption, and a game has an ambiguous value exactly when nobody can force a win in it. The basis of \cref{core:thm:atomic-basis} axiomatizes the choice operations of $O_I$ on its empty and singleton values, but its variables may take the empty value, so it is not the logic of single-winner valuations itself. Equation validity stays coNP-complete when every variable takes an atom: the two-owner reduction in the proof of \cref{thm:raw-pairs} refutes the equation of a satisfiable formula with an atomic valuation, and an unsatisfiable formula gives an equation valid at every valuation.
+\paragraph{Single-winner valuations.} They introduce valuations that give each proposition letter one winner, note that a formula can then have no player who forces a win, and leave their logic open \cite[Definition~2.12]{OldeLoohuisVenema2010}. One winner at each leaf is our standing assumption, and a game has an ambiguous value exactly when nobody can force a win in it. The basis of \cref{core:thm:atomic-basis} axiomatizes the choice operations of $O_I$ on its empty and singleton values, but its variables may take the empty value, so it is not the logic of single-winner valuations itself. \Cref{app:atomic-inputs} gives a finite sorted presentation and proves that unrestricted one-sorted substitution is unsound for atomic validity. Equation validity stays coNP-complete when every variable takes an atom: the two-owner reduction in the proof of \cref{thm:raw-pairs} refutes the equation of a satisfiable formula with an atomic valuation, and an unsatisfiable formula gives an equation valid at every valuation.
 
-\paragraph{One player's possible win.} They decide whether a player can win under some valuation in linear time, by evaluating at the valuation in which every player wins every letter, and observe that single-winner valuations make the problem NP-complete \cite[Theorem~5.49]{OldeLoohuisVenema2010}. The first part holds here too.
+\paragraph{One player's possible win.} They decide whether a player can win under some valuation in linear time, by evaluating at the valuation in which every player wins every letter, and observe that single-winner valuations make the problem NP-complete \cite[Theorem~5.49]{OldeLoohuisVenema2010}. For unrestricted winner-set valuations, the same linear-time test works here; \cref{olv:thm:atomic-sat} resolves the atomic-input problem.
 
 \begin{proposition}[One player's possible win]\label{olv:prop:sat}
 For every term $t$ of $\mathbf A^{\rm sym}$ and every role $k$, some valuation puts $k$ in the value of $t$ if and only if the valuation assigning $I$ to every variable does. So this can be decided in linear time at fixed $K$.
@@ -43,6 +48,8 @@ For every term $t$ of $\mathbf A^{\rm sym}$ and every role $k$, some valuation p
 \begin{proof}
 Owned choice is monotone for inclusion: if $S\subseteq S'$, then $S\ow r T\subseteq S'\ow r T$. Indeed, if $S'\ow r T=\{r\}$, then $S'=\{r\}$ or $T=\{r\}$, and in both cases $S\ow r T=\{r\}$. Otherwise $S'\ow r T=S'\cup T$, which contains $S\ow r T$, whether that is $S\cup T$ or $\{r\}$ with $r\in S$. Renamings are monotone and winner leaves are constant, so every term operation is monotone, and its value is largest when every variable is $I$.
 \end{proof}
+
+\input{sections/appendix-atomic-inputs}
 
 \subsection{Their directions for further research}
 
@@ -59,7 +66,9 @@ So the guaranteed winners under their clause are the players who can force a win
 
 \paragraph{Uncertainty.} They suggest imperfect and incomplete information. The sealed rounds of \cref{app:sealed} add simultaneous hidden moves; with three players, no compositional semantics with finitely many values tracks even who might win (\cref{se:thm:infinite}).
 
-\paragraph{Coalitions.} They suggest operators indexed by groups of players, or negations that form coalitions, possibly by non-injective maps of roles. Here a coalition that shares one objective behaves as a single role, and a team that wins when any member does has the same identities as the core for three or more roles (\cref{context:prop:team-refinement}); and \cref{context:prop:observable-coalitions} determines which coalition powers the winner operation records. Renamings are always permutations here.
+\paragraph{Coalitions.} They suggest operators indexed by groups of players, or negations that form coalitions, possibly by non-injective maps of roles. Here a coalition that shares one objective behaves as a single role, and a team that wins when any member does has the same identities as the core for three or more roles (\cref{context:prop:team-refinement}); and \cref{context:prop:observable-coalitions} determines which coalition powers the winner operation records. The next theorem determines exactly when a non-injective role map nevertheless acts on the existing winner values.
+
+\input{sections/appendix-coalition-maps}
 
 \paragraph{Fixpoints.} They propose a multiplayer $\mu$-calculus, whose plays may be infinite. Our games are well founded (\cref{game:prop:choice-support}); infinite plays are not treated.
 
@@ -75,9 +84,6 @@ The atom $\{s\}$ is the only value absorbing for $\ow s$: if $Z$ absorbs, then $
 \subsection{Open questions}
 
 \begin{itemize}
-\item The logic of single-winner valuations: a basis, or a proof that none is finite, for the equations that hold when every variable takes an atom.
-\item To do: the complexity of deciding whether a player can win under some atomic valuation, which they find NP-complete in their setting. The reductions of \cref{sec:complexity} use atomic countervaluations, so NP-hardness is expected here as well.
 \item A representation or duality theorem for the varieties generated by the winner algebras, as they give for theirs.
-\item Coalitions formed by non-injective maps of roles, which change incentives and so are not renamings of values.
 \item Infinite plays, and multiplayer fixpoint operators.
 \end{itemize}
