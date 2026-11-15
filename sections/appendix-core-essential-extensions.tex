@@ -1,23 +1,30 @@
-The distinction between the two middle values is essential here.
-Nevertheless observer union does not enlarge this particular family.
+Observer union can produce a non-Boolean value even on Boolean inputs.
+When the output is always Boolean there, it adds no term operations.
 
-\begin{lemma}[Pure realizations of canonical extensions]
+\begin{lemma}[Eliminating observer union on Boolean fibers]
 \label{core:lem:essential-extension-pure}
-For every nonconstant monotone Boolean function $f$, the operation $D_f$
-has a term realization using $\wedge,\vee,\star_a$ if and only if it
+Every term operation of the union-expanded bichain whose Boolean restriction
+is Boolean-valued has a pure realization using only $\wedge,\vee$.
+Endpoint constants may be included. If two pure operations have the same
+Boolean restriction, their meet, join, and observer union coincide and
+give their least upper bound in observer-union order.
+In particular, for every nonconstant monotone Boolean function $f$,
+$D_f$ has a realization using $\wedge,\vee,\star_a$ if and only if it
 has one using only $\wedge,\vee$.
 \end{lemma}
 \begin{proof}
-Distribute the two bichain operations over observer union. Every pure
-component has Boolean restriction $f$, since a union of endpoint values
-is an endpoint only when all those values agree. Every essential marked
-coordinate forces $\pv$ in each component: fix the other free
-coordinates at a pivotal Boolean edge, then enlarge them to their middle
-values in observer-union order. Both operations preserve this order.
-Conversely, no component can produce $\pv$ where $D_f$ gives
-$\nv$, since $\pv$ absorbs observer union. Stable outputs
-are fixed by the cube endpoints. Each pure component therefore equals
-$D_f$ on every input.
+For two pure operations with Boolean restriction $f$, stable cube endpoints
+force the same endpoint output. On a nonconstant cube both outputs are
+middle values. The two bichain operations and observer union coincide
+on each such pair: they return $\pv$ if either entry is $\pv$, and
+$\nv$ otherwise. This proves the least-upper-bound assertion.
+
+Distribute the two bichain operations over observer union in a full word.
+If its Boolean restriction is $f$, every pure component has that same
+restriction, since a union of endpoint values is an endpoint only when
+all agree. Their observer union therefore equals their pure meet.
+Replacing the expansion by that meet proves elimination and its stated
+special case.
 \end{proof}
 
 The canonical extension is always attainable at each individual input,
@@ -49,6 +56,150 @@ coordinates. Those inputs are all $\nv$, and the formula gives
 $\nv$. Its lift has the required value at $v$.
 At all other inputs every pure word computing $f$ already gives $D_f$,
 by stable endpoints and the essential marked-source bound.
+\end{proof}
+
+The opposite envelope is always one term operation. It also identifies
+the only copy of the full free distributive lattice that is a section
+of Boolean restriction. In the following proposition the signature is
+the pure bichain signature with endpoint constants, without observer union.
+
+\begin{proposition}[The greatest Boolean-fiber section]
+\label{core:prop:boolean-reflection-section}
+Let $\mathcal T_V$ be the algebra of pure bichain term operations on a
+finite variable set $V$, with endpoint constants. Boolean restriction
+\[
+ \beta:\mathcal T_V\longrightarrow\mathcal D_V
+\]
+is the reflection into bounded distributive lattices, where $\mathcal D_V$
+is the lattice of all monotone Boolean functions on $V$.
+It has exactly one bounded lattice-homomorphic section $\sigma$.
+For a bichain input $v$ with Boolean cube $[L,U]$, this section is
+\[
+ \sigma(f)(v)=
+ \begin{cases}
+ b,&f(U)=0,\\
+ c,&f(L)=1,\\
+ \pv,&f(L)=0,\ f(U)=1\text{ and some }v_j=\pv,\\
+ \nv,&\text{otherwise}.
+ \end{cases}
+\]
+The fiber $\beta^{-1}(f)$ is a finite join-semilattice in pointwise
+observer-union order, with join given by either pure operation and
+greatest element $\sigma(f)$. For any word $H$ computing $f$, a word for
+this greatest element is
+\[
+ H^{\max}=\bigwedge_{j\in V}\bigl(H\wedge(H\vee x_j)\bigr),
+\]
+with $H^{\max}=H$ when $V$ is empty. Consequently
+$\sigma\beta$ is an extensive idempotent endomorphism of $\mathcal T_V$
+and a closure operator in that order.
+The fiber has a least element if and only if $D_f$ is term-realizable;
+that least element is $D_f$. Equivalently, the fiber is a lattice in
+observer-union order if and only if $D_f$ is term-realizable.
+Its lattice meet is taken in that order, rather than being one of the
+two bichain operations, which both give its join.
+
+Every subalgebra of $\mathcal T_V$ on which the bichain operations satisfy
+absorption is distributive and embeds under $\beta$.
+The image of $\sigma$ is the unique such subalgebra
+whose Boolean restrictions include every monotone Boolean function.
+\end{proposition}
+\begin{proof}
+Boolean restriction is a surjective homomorphism. If a homomorphism
+from $\mathcal T_V$ has values in a bounded distributive lattice,
+two words with the same Boolean function have the same image: their
+equality holds in the free bounded distributive lattice on $V$.
+It therefore factors uniquely through $\beta$, proving the reflection.
+
+Stable cube endpoints force the first two cases of the displayed formula
+for every realization of $f$. On a nonconstant cube a pure word returns
+one of the two middle values. If no input is $\pv$, no gate creates it.
+Otherwise, the factor of $H^{\max}$ for a marked input sends either
+middle value of $H$ to $\pv$, and all other factors are middle values.
+Their meet is $\pv$. Thus $H^{\max}$ has the stated semantics,
+independently of $H$, and it is greatest in its Boolean fiber.
+The preceding lemma gives the fiber's join operation.
+At each fixed input all values of $\sigma$ lie in the ordinary chain
+$b<\nv<c$ or $b<\pv<c$. Endpoint semantics on that chain preserves
+meet, join, and constants, so $\sigma$ is a section.
+
+For uniqueness let $s$ be a section and put $r_i=s(x_i)$.
+At an input $v$, a stable $v_i$ forces $r_i(v)=v_i$.
+If $v_i=\pv$, its essential marked source forces $r_i(v)=\pv$.
+If some coordinate is marked, the image of $s$ cannot also contain
+$\nv$ at this input: the pair $\nv,\pv$ violates absorption.
+Hence every nonstable $r_i(v)$ is $\pv$.
+If no coordinate is marked, all nonstable $r_i(v)$ are $\nv$.
+This determines the images of all free generators and proves $s=\sigma$.
+The endomorphism $\sigma\beta$ is extensive and idempotent by its
+greatest-fiber property. Comparable term operations have equal Boolean
+restrictions, since $b,c$ are incomparable in observer-union order;
+the endomorphism is therefore monotone, giving the closure assertion.
+
+Every realization lies pointwise above $D_f$. Conversely, at each input
+some member of the fiber attains $D_f$, by
+\cref{core:prop:essential-cofactor-lifting}; constant $f$ is immediate.
+Thus a least member, if present, must be $D_f$ itself.
+A finite join-semilattice with a bottom is a lattice: join the common
+lower bounds to form each meet. The converse follows by taking the
+meet of all members of the nonempty finite fiber.
+
+Finally, at any input a lattice subalgebra cannot contain both middle
+values. Its coordinate image lies in an ordinary chain, proving
+distributivity. Two of its members with equal Boolean restriction can
+differ only by their middle values on nonconstant cubes, which absorption
+again excludes. Thus $\beta$ is injective there. If its restriction is
+surjective as well, its inverse is a section, necessarily $\sigma$.
+\end{proof}
+
+These fiber lattices need not be distributive, even for a projection.
+This differs from the lattice subalgebras of the preceding proposition:
+the fiber's two bichain operations both give its observer-order join.
+
+\begin{corollary}[A non-semidistributive projection fiber]
+\label{core:cor:boolean-fiber-nondistributive}
+On variables $z,x,y$, let $E(z,u)=z\wedge(z\vee u)$ and put
+\[
+ A=E(z,x),\qquad B=E(z,x\wedge y),\qquad C=E(z,x\vee y).
+\]
+All three have Boolean restriction $z$. In the observer-order lattice
+of that fiber, with operations $\sqcap,\sqcup$,
+\[
+ B\sqcup C=\sigma(z),\qquad
+ A\sqcap B=A\sqcap C=z,\qquad A\ne z.
+\]
+In particular $A\sqcap(B\sqcup C)=A$ whereas
+$(A\sqcap B)\sqcup(A\sqcap C)=z$.
+The fiber fails both meet- and join-semidistributivity.
+\end{corollary}
+\begin{proof}
+The three words have Boolean restriction $z$ by Boolean absorption.
+They equal $z$ whenever $z$ is an endpoint or $\pv$.
+When $z=\nv$, $E(z,u)$ is $\pv$ exactly when $u=\pv$.
+At least one of $x\wedge y,x\vee y$ is $\pv$ exactly when one
+of $x,y$ is $\pv$. This proves $B\sqcup C=\sigma(z)$.
+
+Let $p$ be a common lower bound of $A$ and $B$ in this fiber.
+It has a pure word by \cref{core:lem:essential-extension-pure};
+endpoint constants simplify away since its Boolean restriction is
+nonconstant. At $(z,x,y)=(\nv,\nv,\pv)$ the value of $A$ is $\nv$.
+Any occurrence of $y$ in this constant-free word would give $\pv$,
+since both operations on middle inputs pass every marked input.
+Thus the word contains no $y$. At $(z,x,y)=(\nv,\pv,b)$ the value
+of $B$ is $\nv$, so the same argument excludes $x$ as well.
+The remaining word equals $z$ by idempotence. Since $z=D_z$ is the
+bottom of its fiber, this proves $A\sqcap B=z$.
+For $A\sqcap C$ use $(\nv,\pv,c)$ in the second step instead.
+Finally $A=\pv\ne z$ at $(z,x,y)=(\nv,\pv,\nv)$.
+These equalities already violate meet-semidistributivity.
+For its join dual, put $Y=E(z,y)$ and $D=A\sqcup B$.
+By symmetry $Y\sqcap C=z$, while
+\[
+ D\sqcup Y=D\sqcup C=\sigma(z),\qquad
+ D\sqcup(Y\sqcap C)=D\ne\sigma(z).
+\]
+The last inequality holds at $(z,x,y)=(\nv,b,\pv)$, where
+$D=\nv$ and $\sigma(z)=\pv$.
 \end{proof}
 
 An entire marked-source fragment has a realizer when its marked variables
