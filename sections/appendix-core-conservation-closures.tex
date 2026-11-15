@@ -669,21 +669,26 @@ $c$ on every budget row and the word there equals $T_\Phi$.
 This realizes every initial upset, proving the equality.
 \end{proof}
 
-\begin{corollary}[Connected zero faces]
+\begin{corollary}[One nontrivial zero-face component]
 \label{core:cor:conservation-connected-zero-faces}
 Under the hypotheses of \cref{core:prop:conservation-threshold-apex-reduction},
 suppose that $p$ has relative conservation. Form the graph on the
 $k$-subsets of $V$, joining distinct $A,B$ when $p(A\cup B)=0$.
-If this graph is connected, then $B_k$ and
-$p\lor z\operatorname{Thr}_k(V)$ have relative conservation.
-In particular, this holds if $p(A)=0$ whenever $|A|\leq k+1$.
+If this graph has at most one component with more than one vertex, then
+$B_k$ and $p\lor z\operatorname{Thr}_k(V)$ have relative conservation.
+In particular, this holds if the graph is connected, or if
+$p(A)=0$ whenever $|A|\leq k+1$.
 \end{corollary}
 \begin{proof}
-Write $R_k$ for the initial preorder of $B_k$. Its zero vertices of size
-at least $k$ form one strongly connected component $C$. A constant-zero
-cube with lower endpoint of size $k$ identifies each such vertex with
-its $k$-subsets; each graph edge identifies its endpoints through their
-zero union. Every budget edge preserves $p$.
+Write $R_k$ for the initial preorder of $B_k$. A zero vertex of size at
+least $k$ is $R_k$-equivalent to its $k$-subsets, by constant-zero cubes;
+each graph edge identifies its two faces through their zero union.
+Thus the high zero classes are exactly the face components.
+Every budget row has its lower endpoint in a nonsingleton component:
+inessentiality gives $p(L\cup\{j\})=0$, and this set contains a zero
+$(k+1)$-set whose $k$-faces are mutually adjacent.
+If there is no nonsingleton component, $B_k$ is empty. Otherwise write
+$C$ for its unique component and the corresponding $R_k$-class.
 
 Every $R_p$ comparison between positive vertices survives in $R_k$.
 For a marked deletion with positive target $A$ and lower endpoint $L$
@@ -691,17 +696,71 @@ of size less than $k$, choose $L\subseteq K\subseteq A$ with $|K|=k$.
 The restricted cube remains nonconstant because $p(K)=0$, and retains
 the deletion. Paths starting at positive vertices remain positive.
 
-In fact every $R_p$ comparison $xR_py$ with $|y|\geq k$ survives.
-If $x$ is positive use the preceding argument. If $x$ is zero, it either
-belongs to $C$ or extends to a zero $k$-set in $C$. A zero target $y$
-belongs to $C$; a positive target contains a zero $k$-set, giving the
-remaining path by inclusion. Apply
-\cref{core:lem:conservation-buffer} with $q=\operatorname{Thr}_k(V)$,
-then \cref{core:prop:conservation-threshold-apex-reduction}.
+Let $\phi$ be an $R_k$-upset. If $\phi(C)=1$, let $D_C$ be the monotone
+indicator of the upward closure of the faces in $C$. Then $D_C\leq\phi$
+and $D_C(L)=1$ on every budget row. The join of any Boolean formulas
+for $\phi,D_C$ still computes $\phi$ and is safe, since its second
+operand is stably one on every row.
+
+Suppose $\phi(C)=0$. Every active zero vertex $X$, meaning
+$\phi(X)=1$ and $p(X)=0$, has $|X|\leq k$, and every $(k+1)$-superset
+of $X$ is positive. A larger zero vertex would itself lie in $C$;
+a zero $(k+1)$-superset would have a $k$-face containing $X$ in $C$,
+contradicting monotonicity of $\phi$.
+Such an $X$ has no outgoing initial marked deletion in $R_p$.
+If $X\to X\setminus\{j\}$
+were witnessed by $[L,U]$, extend $X$ inside $U$ to a $(k+1)$-set $K$;
+this is possible since $p(U)=1$. Then $p(K)=1$ whereas
+$p(K\setminus\{j\})=0$, and both sets lie in $[L,U]$ since
+$j\notin L$. This contradicts inessentiality of $j$.
+Together with positive-path preservation and monotonicity, this proves
+that $\phi$ is an $R_p$-upset.
+A $p$-relative-safe realizer of $\phi$ is also $B_k$-safe: every added
+constant-zero cube lies entirely in $C$, where $\phi=0$.
+Thus every initial upset is realized, proving conservation of $B_k$;
+the threshold-apex reduction proves conservation of the extension.
 
 Finally, if all $(k+1)$-sets are zero, exchanging one element of a
-$k$-set at a time gives paths in the graph between any two vertices.
-The one-vertex case is included.
+$k$-set at a time gives paths between any two faces. The one-vertex
+case is included.
+\end{proof}
+
+\begin{corollary}[Several threshold inputs]
+\label{core:cor:conservation-iterated-threshold}
+Let $V$ be finite and $1\leq k\leq|V|$. Suppose $p(A)=0$ whenever
+$|A|\leq k$, and $p$ has relative conservation. If its zero-$k$-face graph has
+at most one nonsingleton component, then for every finite nonempty set
+$Z$ of fresh variables the Boolean function
+\[
+ H=p\lor\left(\left(\bigvee_{z\in Z}z\right)
+                    \land\operatorname{Thr}_{k+1}(V\cup Z)\right)
+\]
+has relative conservation. For every ordering $z_1,\ldots,z_m$ of $Z$,
+its canonical bichain realization is specified by
+\[
+ T_0=D_p,\qquad
+ T_i=T_{i-1}\vee\left(z_i\wedge
+ D_{\operatorname{Thr}_k(V\cup\{z_1,\ldots,z_{i-1}\})}\right),
+ \qquad 1\leq i\leq m.
+\]
+Then $T_m=D_H$ for every such ordering.
+\end{corollary}
+\begin{proof}
+At each threshold extension, old zero-face graph edges remain unchanged.
+Every new $k$-face contains the fresh variable; its union with any distinct
+$k$-face contains at least $k$ old-stage variables and is therefore
+positive. Thus the new faces are isolated, preserving the graph hypothesis.
+Every true set still has size greater than $k$.
+Conservation follows inductively from
+\cref{core:cor:conservation-connected-zero-faces}, and the threshold-apex
+reduction gives the canonical word at each step.
+
+To identify the final Boolean function, if all fresh variables are false
+only $p$ remains. Otherwise take the last true fresh variable in the chosen
+order. All other true variables are already available when it is adjoined,
+so its threshold clause holds exactly when the total true set has size at
+least $k+1$. Any earlier successful clause also implies that size bound.
+This proves the displayed formula for $H$ and gives $T_m=D_H$ in every order.
 \end{proof}
 
 \begin{theorem}[Matroid threshold extensions]
@@ -752,61 +811,10 @@ Here $B_k$ is the budget from
 \cref{core:prop:conservation-threshold-apex-reduction}, on $V\cup\{t\}$.
 \end{theorem}
 \begin{proof}
-All $k$-subsets of $V$ are zero vertices of $p$ and lie in one zero-face
-component $C$: their unions omit $t$. A remaining $k$-face is
-$\{t\}\cup B$ with $|B|=k-1$. If a zero $k$-set of $G$ contains $B$,
-this face connects to $C$ through that set. Otherwise every $k$-set
-containing $B$ is $G$-positive, and $\{t\}\cup B$ is isolated: its union
-with any other $k$-face is positive. These are all the components.
-Every zero vertex of size at least $k$ is identified with its $k$-faces
-by constant-zero cubes. Also write $C$ for the resulting component of
-the initial preorder $R_k$ of $B_k$.
-
-Let $D$ be the upward closure of the faces in $C$, viewed as a monotone
-Boolean function. It is stably one on every $B_k$ cube. Indeed, a zero
-lower endpoint $L$ of size at least $k$ with $D(L)=0$ must be one of the
-isolated faces $\{t\}\cup B$. At that lower endpoint every free old
-coordinate is essential, since adjoining it makes $G$ positive. Hence
-such a cube has no inessential mark.
-
-Let $\phi$ be an $R_k$-upset. If $\phi(C)=1$, then $\phi\geq D$.
-The join of any monotone
-formulas for $\phi,D$ still computes $\phi$ and is safe on $B_k$, because
-the second formula is stably one there.
-
-Suppose instead that $\phi(C)=0$. It vanishes on every vertex omitting
-$t$: small old sets extend to old $k$-sets. The $p$-positive vertices
-form one $R_p$-component by \cref{core:thm:conservation-disjoint}.
-Their comparisons survive in $R_k$ by the positive-path argument in
-\cref{core:cor:conservation-connected-zero-faces}. Thus either $\phi=0$,
-or it is one at every $p$-positive vertex.
-
-In the latter case, any active zero vertex $\{t\}\cup S$ has $|S|<k$.
-Moreover every old $k$-set containing $S$ is $G$-positive; otherwise its
-union with $\{t\}$ would be a zero vertex in $C$ above this active vertex.
-For such an $S$ define
-\[
- \chi_S=G\lor\bigwedge_{i\in S}x_i.
-\]
-This is an $R_G$-upset. A violating marked deletion $A\cup\{j\}\to A$
-would have both endpoints $G$-zero, with $j\in S\subseteq A\cup\{j\}$.
-Universality of $S$ forces $|A\cup\{j\}|<k$. If $[L,U]$ witnesses this
-deletion, choose a $k$-set $K\subseteq U$ containing $L\cup S$.
-Then $G(K)=1$, whereas $G(K\setminus\{j\})=0$; both sets lie in the
-cube. This contradicts the inessentiality of $j$.
-Since $\chi_S$ is one on every $G$-positive vertex, it also respects
-$R_G^+$.
-
-Consequently each $t\land\chi_S$ is an $R_p$-upset, and so is
-\[
- \phi=p\lor
-   \bigvee_{\substack{G(S)=0\\\phi(\{t\}\cup S)=1}}
-       \left(t\land\bigwedge_{i\in S}x_i\right).
-\]
-Conservation of $p$ supplies a formula safe on $S_p$. It is also safe
-on every added constant-zero cube of $B_k$: an isolated zero $k$-face
-has no larger zero superset, so every such cube lies entirely in $C$,
-where $\phi$ is zero. Thus every $R_k$-upset has a $B_k$-safe formula.
-
-The threshold-apex reduction proves conservation of the displayed extension.
+All old $k$-subsets lie in one zero-face component: their unions omit $t$.
+A remaining face $\{t\}\cup B$, $|B|=k-1$, joins this component whenever
+a $G$-zero old $k$-set contains $B$. Otherwise every old $k$-set containing
+$B$ is $G$-positive, so its union with any other $k$-face is positive;
+this face is isolated. Thus there is at most one nonsingleton component.
+Apply \cref{core:cor:conservation-connected-zero-faces}.
 \end{proof}
