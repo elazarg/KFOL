@@ -44,7 +44,9 @@ circuits provide a further exactly classified family
 \paragraph{Complete recognition and global obstructions.}
 Arbitrary guard tables have an exact recursive recognition criterion using
 atomic challenges and strict row deletion
-(\cref{core:cor:guard-peeling}). There is also a complete infinite
+(\cref{core:cor:guard-peeling}). Maximal ordered observer separators have
+linear separating contexts at every outside point, including for mixed
+observers (\cref{core:thm:maximal-linear-separation}). There is also a complete infinite
 relational characterization: an operation is core exactly when it
 preserves the relations presented by colored clutters satisfying the
 boundary and cut conditions of \cref{core:thm:hypergraph-basis}.
@@ -87,8 +89,8 @@ finite spine normal forms and sharp quadratic order bounds
 
 \paragraph{Boolean behavior and ambiguity.}
 A three-owner observer quotient is the four-element bichain with observer
-union added (\cref{core:prop:bichain}). Maximal ordered separators in
-this quotient admit linear separating contexts
+union added (\cref{core:prop:bichain}). In this quotient maximal linear
+separation also permits arbitrary forbidden lower sets
 (\cref{core:thm:bichain-maximal-linear-separation}). Its Boolean-projection fiber
 already contains a copy of the entire lower-arity union-expanded clone
 (\cref{core:thm:bichain-fiber}). For a monotone Boolean function $f$,
@@ -2261,86 +2263,6 @@ observations, proving uniqueness. A full term takes the value $\pv$
 when all its inputs do, separating its lift from the distinguished projection.
 \end{proof}
 
-\subsection{Linear separation in the four-state quotient}
-\label{app:core-bichain-linear-separation}
-
-Use the observer-union order $\sqsubseteq$ on $\mathbf B$, with $b,c$
-incomparable below $\nv\sqsubseteq\pv$. On $\mathbf B^{m+1}$ reverse
-this order at coordinate zero and retain it at the other coordinates;
-call the resulting order \emph{signed}. A forbidden set $D$ may be any
-signed lower set. For example, given $\alpha,\beta_1,\ldots,\beta_m\in\mathbf B$,
-a principal forbidden cone is
-\[
- D=\{x:\alpha\sqsubseteq x_0,
-                 \ x_i\sqsubseteq\beta_i\ (1\leq i\leq m)\}.
-\]
-The possible-winner interpolation problem has $\alpha=\pv$ and
-$\beta_i=\nv$. An \emph{elementary $U$-translation} is
-$x\mapsto x\star_r u$, with $u\in U$ and $r\in\{a,b,c\}$;
-a word of these translations contains its variable exactly once.
-
-\begin{theorem}[Maximal linear separation]
-\label{core:thm:bichain-maximal-linear-separation}
-Let $U\subseteq\mathbf B^{m+1}$ be a signed upward-closed subalgebra,
-maximal subject to avoiding $D$, and containing the two diagonal tuples
-$\bar b=(b,\ldots,b)$ and $\bar c=(c,\ldots,c)$.
-Every $x\notin U$ has a word of elementary $U$-translations whose value
-at $x$ belongs to $D$. The empty word is allowed. If maximality is taken
-among all subalgebras instead, the same conclusion holds for an arbitrary
-forbidden subset $D$, without either order assumption.
-\end{theorem}
-\begin{proof}
-Let $L$ be the set of points from which no such word reaches $D$.
-It contains $U$, is invariant under elementary $U$-translations, and is
-signed upward closed because $D$ is signed lower.
-
-A scalar coordinate of a translation word is either constant or
-extensive in $\sqsubseteq$: each elementary map is extensive unless
-its helper is an absorbing atom, when it is constant. Suppose $S$ is
-a strongly connected component of the $U$-translation graph. For each
-$z\in S$ there is a return word $R_z$ fixing $z$ and constant at every
-coordinate that varies in $S$. Indeed, take return paths through points
-that witness all varying coordinates. If a scalar path changes a value
-and returns, at least one of its two directions must be constant;
-two extensive maps cannot make a nontrivial cycle. Compose these finitely
-many return words. Each fixes $z$, so earlier coordinate resets persist.
-
-For any $y,z\in S$ the following identities hold coordinatewise:
-\[
- y\star_b z=y\star_b R_z(\bar c),\qquad
- y\star_c z=y\star_c R_z(\bar b).
-\]
-For the first identity, a varying coordinate is reset exactly to $z_i$.
-At a globally constant coordinate with value $b$, absorption suffices;
-with value $c$, the return word fixes $c$. With value $\nv$, its value
-at $c$ is $c$ or $\nv$: monotonicity bounds it above by $\nv$, while
-the constant-or-extensive property excludes $b$. With value $\pv$,
-its value at $c$ is $c,\nv$, or $\pv$, so it cannot absorb $\pv$
-at owner $b$. These are all cases, including coordinate zero. The
-second identity is symmetric. Both passive tuples $R_z(\bar b)$ and
-$R_z(\bar c)$ belong to $U$.
-
-If $L\setminus U$ were nonempty, choose a sink strongly connected
-component $S$ in its finite translation graph. Every elementary
-translation from $S$ stays in $S$ or enters $U$. Thus products of two
-members of $U\cup S$ lie in $U\cup S$ for each foreign choice:
-use invariance for $U\times U$, the sink property for $U\times S$,
-and the displayed identities for $S\times S$.
-The tuple $\overline{\nv}=\bar b\star_a\bar c$ belongs to $U$.
-By \cref{core:prop:bichain}, observer union is the median term in the
-two foreign choices with parameter $\overline{\nv}$. Hence $U\cup S$
-is closed under observer union as well, and is already a subalgebra.
-Its signed upward closure is a $D$-avoiding strict extension of $U$,
-since it is contained in $L$. This contradicts maximality, so $L=U$.
-For the unordered variant, omit upward closure and apply maximality
-directly to the $D$-avoiding subalgebra $U\cup S$.
-\end{proof}
-
-The theorem concerns maximal separators with one common three-role
-observer. It does not contract arbitrary formulas to one occurrence.
-For mixed observers or additional foreign roles, the coordinate identities
-used in its proof need not hold.
-
 \subsection{Canonical essential-source extensions}
 \label{app:core-cographs}
 
@@ -3065,6 +2987,172 @@ are no positive coefficients. Canonicity then identifies the prime guard
 families by $(*)$. For empty variables, the empty rainbow challenge fails,
 matching the absence of nullary core terms.
 \end{proof}
+
+\subsection{Maximal observer separators}
+\label{app:core-maximal-separation}
+
+Fix finite $K\geq3$ and observers $k_0,\ldots,k_m$, which need not agree.
+Let $\mathcal V=\prod_{i=0}^m C_{k_i}$ be their product of native views
+from \cref{app:core-native}. Write $+$ for observer union and
+$\sqsubseteq$ for its semilattice order: foreign atoms are incomparable
+below $n\sqsubseteq p$. The \emph{signed order} reverses this order at
+coordinate zero and retains it at the negative coordinates $1,\ldots,m$.
+An \emph{elementary $U$-translation} is $x\mapsto x\star_r u$, with
+$u\in U$. A finite word of such translations contains its variable once;
+the empty word is the identity.
+
+Let $D\subseteq\mathcal V$ be signed downward closed and satisfy
+\[
+ x+y\in D\quad\Longrightarrow\quad x\in D\text{ or }y\in D.
+\]
+These hypotheses include the possible-winner forbidden cones
+\[
+ D_\beta=\{x:x_0=p,\quad x_i\sqsubseteq\beta_i\ (1\leq i\leq m)\}
+\]
+for arbitrary negative bounds $\beta_i$. Indeed, a join below a negative
+bound puts both operands below it, and $p$ at the positive coordinate
+must come from one operand. The usual absence constraints have
+$\beta_i=n$.
+
+\begin{theorem}[Maximal linear separation]
+\label{core:thm:maximal-linear-separation}
+A signed upward-closed subalgebra $U\subseteq\mathcal V$ disjoint from
+$D$ is maximal with these properties if and only if every $x\notin U$
+has a word of elementary $U$-translations whose value at $x$ lies in $D$.
+\end{theorem}
+\begin{proof}
+Let $L$ be the set of points from which no $U$-translation word reaches
+$D$. It contains $U$, is closed under elementary $U$-translations, and is
+signed upward closed. It is also closed under observer union. Every
+translation word $C$ preserves $+$ by bilinearity. If $C(x+y)\in D$,
+then $C(x)+C(y)\in D$, so one operand belongs to $D$ by hypothesis.
+Thus $x,y\in L$ implies $x+y\in L$.
+
+A scalar coordinate map of a translation word is constant or extensive
+in $\sqsubseteq$. An absorbing-atom helper makes an elementary map
+constant; every other helper gives an extensive map. Composition
+preserves this dichotomy. For a strongly connected component $S$ of the
+translation graph and $z\in S$, there is a return word $R_z$ fixing $z$
+and constant at every coordinate that varies in $S$. To obtain it,
+compose return paths through finitely many points witnessing the varying
+coordinates. A scalar path that changes a value and returns must have a
+constant factor: two extensive maps cannot make a nontrivial cycle.
+Each return fixes $z$, so previously reset coordinates remain reset.
+
+Suppose owner $r$ occurs on an internal edge of $S$, with helper $u\in U$.
+Then for every $y,z\in S$,
+\[
+ y\star_r z=y\star_r R_z(u).                         \tag{$*$}
+\]
+At varying coordinates the return word supplies $z_i$ exactly. At a
+constant coordinate of value $v$, the internal edge gives
+$v\star_r u_i=v$. If $v$ is an atom of owner $t\ne r$, this forces
+$u_i=v$, which the return word fixes. If $v$ is the $r$-atom, absorption
+suffices. If $v=n$, then $u_i\sqsubseteq n$ and $u_i$ is not the
+$r$-atom. Monotonicity gives $R_z(u_i)\sqsubseteq R_z(n)=n$; it cannot
+be the $r$-atom, since a constant return fixing $n$ is constant $n$,
+while an extensive map cannot send a different input to that minimal atom.
+If $v=p$, the internal helper again is not the $r$-atom, and a return
+fixing $p$ cannot send it to that atom. This proves $(*)$ in all
+coordinates, including coordinate zero and views where the $r$-atom is
+absent. Its passive coefficient $R_z(u)$ belongs to $U$.
+
+If owner $r$ has no internal edge in $S$, every internal path avoids it.
+At any other owner, the $r$-singleton flag is updated by conjunction and
+can only decrease along a path. Strong connectivity therefore makes that
+flag constant on $S$ at every coordinate. For $y,z\in S$, both are the
+$r$-atom or neither is, coordinatewise; hence
+\[
+ y\star_r z=y+z.                                    \tag{$**$}
+\]
+
+Now suppose $L\setminus U$ is nonempty and choose a sink strongly
+connected component $S$ of its finite translation graph. Translations
+from $S$ enter $S$ or $U$. Let $E$ be the closure of $U\cup S$ under
+finite nonempty observer unions. It lies in $L$. Every owned choice of
+two generators lies in $E$: use invariance for $U\times U$, the sink
+property for $U\times S$, $(*)$ and the sink property for an internal
+owner on $S\times S$, and $(**)$ for a missing owner. Bilinearity
+therefore makes $E$ invariant under all owned choices. Its signed upward
+closure is an invariant strict extension of $U$ inside $L$, contradicting
+maximality. Thus $L=U$.
+
+Conversely, any strict invariant extension contains an outside point and
+its witnessing word, hence meets $D$. This proves the equivalence.
+\end{proof}
+
+\begin{proposition}[Short separating words]
+\label{core:prop:linear-separation-length}
+For $D_\beta$, any translation word with nonempty inverse image of
+$D_\beta$ has a subsequence of at most $m+2$ translations with the same
+inverse image. In particular, the words supplied by
+\cref{core:thm:maximal-linear-separation} can be chosen with this bound.
+\end{proposition}
+\begin{proof}
+Adjoin an ideal cap $\bot$ for the empty ideal; cap $p$ denotes the
+whole view. Pulling a principal ideal backward through a scalar
+translation gives another principal ideal. The caps $\bot,p$ are fixed.
+From cap $n$, a foreign absorbing helper gives cap $p$; a helper $p$
+gives the owner's atom if available and $\bot$ otherwise; every other
+case retains $n$. From an atomic cap $a_t$, the new cap is $p$ when
+both the owner and helper equal $t,a_t$, remains $a_t$ when exactly one
+does, and is $\bot$ when neither does. These rules follow directly from
+absorption and ordinary union.
+
+The inverse image of $D_\beta$ is a box whose positive coordinate lies
+outside its capped ideal and whose negatives lie inside theirs.
+Initially the positive cap is $n$ and the negative caps are $\beta_i$.
+Process translations in reverse order. A cap can only remain fixed,
+move from $n$ to one atom, or enter $\bot$ or $p$, which are absorbing.
+Nonemptiness excludes final positive cap $p$ and final negative cap
+$\bot$.
+
+For each negative coordinate ending at an atom, retain its atom-entry
+step if one is needed. For one ending at $p$, retain only its first
+$p$-entry step. If that step followed an atom $a_t$, it has owner $t$
+and helper $a_t$, and sends both caps $n,a_t$ to $p$.
+All intervening atom-stabilizing maps preserve $\{n,a_t\}$, so the
+earlier atom-entry can be omitted. Thus each negative coordinate needs
+at most one retained step. A negative cap that never changes needs none.
+For the positive coordinate, retain its atom-entry and its first
+$\bot$-entry when present: at most two steps. Take the union of these
+coordinate selections. The cap rules show that every intervening
+retained subsequence still reaches the same final caps; after an
+absorbing cap is reached no later step matters. Hence at most $m+2$
+steps preserve the entire inverse image.
+\end{proof}
+
+\begin{corollary}[Four-state strengthening]
+\label{core:thm:bichain-maximal-linear-separation}
+In the homogeneous three-role product $\mathbf B^{m+1}$, suppose $U$
+contains the diagonal tuples $\bar b,\bar c$. Then maximal linear
+separation holds for any signed lower forbidden set $D$, without the
+union condition. If maximality is taken among all subalgebras instead,
+it holds for an arbitrary forbidden subset $D$, without either order
+assumption.
+\end{corollary}
+\begin{proof}
+Use the safe set and return words from the theorem's proof, without
+assuming that the safe set is union closed. For any component $S$ and
+$y,z\in S$, the four coordinate values give
+\[
+ y\star_b z=y\star_b R_z(\bar c),\qquad
+ y\star_c z=y\star_c R_z(\bar b).
+\]
+A varying coordinate is reset exactly. At a constant $b$ coordinate
+absorption proves the first identity; at $c$ the return fixes $c$;
+at $n$ it sends $c$ to $c$ or $n$; at $p$ it sends $c$ to $c,n$, or $p$.
+The second identity is symmetric. Thus for an outside sink component,
+$U\cup S$ is closed under both foreign choices. It contains
+$\overline n=\bar b\star_a\bar c$, so the median identity of
+\cref{core:prop:bichain} makes it closed under observer union as well.
+It is already an avoiding subalgebra. Its signed upward closure contradicts
+ordered maximality; for unordered maximality no upward closure is needed.
+\end{proof}
+
+These theorems allow arbitrary elements of a maximal separator as helpers.
+They do not assert one-occurrence realizations over a prescribed input
+alphabet.
 
 \subsection{Closed hypergraph obstructions}
 \label{app:core-hypergraphs}
