@@ -29,6 +29,7 @@ public import KFOL.Core.ProfilePersistence
 public import KFOL.Core.CyclicPersistence
 public import KFOL.Core.CrownFullSyntax
 public import KFOL.Core.AtomicObserver
+public import KFOL.Core.IntervalMinorant
 public import KFOL.Core.Hypergraphs
 public import KFOL.Core.ExponentialCrown
 public import KFOL.Core.BichainFiber
@@ -282,6 +283,55 @@ theorem core_observer_amalgamation :
         ∀ i, t.eval (Core.AtomicAmalgamation.atomicInput i) =
           F (Core.AtomicAmalgamation.atomicInput i) :=
   Core.AtomicAmalgamation.exists_amalgamation_failure
+
+open Core.Intervals in
+/-- `core:thm:interval-masks`: path closure recognizes full-menu interval masks. -/
+theorem core_interval_masks {Role : Type u} {Var : Type v}
+    [Fintype Role] [Fintype Var] [Nonempty Var] (three : Fin 3 ↪ Role)
+    (selected : Set (Finset Var × Finset Var)) (proper : Proper selected) :
+    Saturated selected ↔ ∃ t : Term Role Var, t.IsCore ∧ ∀ values,
+      t.eval values = operation (three 1) (three 2) selected values :=
+  saturated_iff_exists_term three selected proper
+
+open Core.Intervals in
+/-- `core:cor:interval-mask-interior`: saturation is greatest among all core minorants. -/
+theorem core_interval_mask_minorant {Role : Type u} {Var : Type v}
+    [Fintype Role] [Fintype Var] [Nonempty Var] (three : Fin 3 ↪ Role)
+    (selected : Set (Finset Var × Finset Var)) (proper : Proper selected) :
+    ∃ t : Term Role Var, t.IsCore ∧
+      (∀ values, t.eval values = operation (three 1) (three 2) (saturation selected) values) ∧
+      (∀ values, (t.eval values).val ⊆ (operation (three 1) (three 2) selected values).val) ∧
+      ∀ s : Term Role Var, s.IsCore →
+        (∀ values, (s.eval values).val ⊆ (operation (three 1) (three 2) selected values).val) →
+        ∀ values, (s.eval values).val ⊆ (t.eval values).val :=
+  exists_greatest_minorant three selected proper
+
+open Core.Intervals in
+/-- The owned-choice law of `core:cor:interval-mask-interior`, for every owner. -/
+theorem core_interval_mask_choice {Role : Type u} {Var : Type v}
+    [Fintype Var] [Nonempty Var] (b c r : Role) (distinct : b ≠ c)
+    (selected other : Set (Finset Var × Finset Var))
+    (proper : Proper selected) (other_proper : Proper other) (values : Var → WinnerSet Role) :
+    WinnerSet.choice r (operation b c selected values) (operation b c other values) =
+      operation b c (selected ∩ other) values :=
+  choice_operation b c r distinct selected other proper other_proper values
+
+open Core.Intervals in
+/-- The greatest common core minorant in `core:cor:interval-mask-interior`. -/
+theorem core_interval_mask_common_minorant {Role : Type u} {Var : Type v}
+    [Fintype Role] [Fintype Var] [Nonempty Var] (three : Fin 3 ↪ Role)
+    (selected other : Set (Finset Var × Finset Var))
+    (proper : Proper selected) (other_proper : Proper other) :
+    ∃ t : Term Role Var, t.IsCore ∧
+      (∀ values, t.eval values =
+        operation (three 1) (three 2) (saturation (selected ∪ other)) values) ∧
+      (∀ values, (t.eval values).val ⊆ (operation (three 1) (three 2) selected values).val ∧
+        (t.eval values).val ⊆ (operation (three 1) (three 2) other values).val) ∧
+      ∀ s : Term Role Var, s.IsCore →
+        (∀ values, (s.eval values).val ⊆ (operation (three 1) (three 2) selected values).val) →
+        (∀ values, (s.eval values).val ⊆ (operation (three 1) (three 2) other values).val) →
+        ∀ values, (s.eval values).val ⊆ (t.eval values).val :=
+  exists_greatest_common_minorant three selected other proper other_proper
 
 /-- `core:lem:cyclic-persistence`: cyclic derivatives cannot point in only one direction. -/
 theorem core_cyclic_persistence {Role : Type u} {Var : Type v} [Finite Var]

@@ -547,6 +547,8 @@ import all KFOL.Definitions.CoreIntervals
 import all KFOL.Definitions.CrownFrame
 import all KFOL.Definitions.GrayCrown
 import all KFOL.Core.IntervalCompletion
+import all KFOL.Core.IntervalRecognition
+import all KFOL.Core.IntervalMinorant
 import all KFOL.Core.CrownFrame
 import all KFOL.Core.GrayCrown
 import all KFOL.Core.IntervalCrownCompletion

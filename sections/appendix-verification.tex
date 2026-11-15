@@ -1,6 +1,6 @@
 \section{Verification details}\label{app:verification}
 
-The paper's results are kernel-checked in Lean~4.35.0 with mathlib. \texttt{Paper.lean} restates, in the namespace \texttt{KFOL.Paper}, every theorem of the main text and the clauses of the report results that it cites: $87$ statements, listed by result in \cref{tab:status}. \texttt{Report.lean} restates $139$ further report results in the namespace \texttt{KFOL.Report} (\cref{tab:report}). Each proof is a single library theorem, and each file ends with a check that no declaration in its namespace uses an axiom beyond \texttt{propext}, \texttt{Classical.choice}, and \texttt{Quot.sound}; a separate audit covers the whole library. Nothing is admitted, and no theorem from the literature enters as a hypothesis. Where a written proof cites one, as for the reset basis and the minimum one-owner generator \cite{FreeseEtAl2002}, owned choice with union \cite{HardingRomanowska2017}, the atomic clone \cite{Szendrei2012}, and colored-graph decomposition \cite{Gurvich2009}, the Lean proof is direct.
+The paper's results are kernel-checked in Lean~4.35.0 with mathlib. \texttt{Paper.lean} restates, in the namespace \texttt{KFOL.Paper}, every theorem of the main text and the clauses of the report results that it cites: $87$ statements, listed by result in \cref{tab:status}. \texttt{Report.lean} restates $143$ further report results in the namespace \texttt{KFOL.Report} (\cref{tab:report}). Each proof is a single library theorem, and each file ends with a check that no declaration in its namespace uses an axiom beyond \texttt{propext}, \texttt{Classical.choice}, and \texttt{Quot.sound}; a separate audit covers the whole library. Nothing is admitted, and no theorem from the literature enters as a hypothesis. Where a written proof cites one, as for the reset basis and the minimum one-owner generator \cite{FreeseEtAl2002}, owned choice with union \cite{HardingRomanowska2017}, the atomic clone \cite{Szendrei2012}, and colored-graph decomposition \cite{Gurvich2009}, the Lean proof is direct.
 
 The vocabulary of the statements is in \path{KFOL/Definitions/PaperAlgebra.lean}, \path{PaperGames.lean}, and \path{Complexity.lean}, which build on the other files of \path{KFOL/Definitions}. The auxiliary reading guides, definition indexes, and independent Python checks cited in this report are archived at repository commit \texttt{2099f25}; their paths refer to that revision.
 
@@ -157,7 +157,7 @@ Value-dependent execution (\cref{dep:thm:dynamic-execution})
 
 {\small
 \begin{longtable}{>{\raggedright\arraybackslash}p{0.34\linewidth}>{\raggedright\arraybackslash}p{0.60\linewidth}}
-\caption{The $139$ audited statements in \texttt{Report.lean}, followed by remaining report evidence.}\label{tab:report}\\
+\caption{The $143$ audited statements in \texttt{Report.lean}, followed by remaining report evidence.}\label{tab:report}\\
 \toprule
 Result & Audited statements or other evidence\\
 \midrule
@@ -246,6 +246,10 @@ Omission independence and unbounded row tests (\cref{core:prop:omission,core:thm
  & \path{core_omission_independence}, \path{core_negative_budget_obstructions}\\
 Closed atomic-observer test (\cref{core:thm:atomic-observer})
  & \path{core_atomic_observer}\\
+Interval-mask recognition and greatest core minorants
+(\cref{core:thm:interval-masks,core:cor:interval-mask-interior})
+ & \path{core_interval_masks}, \path{core_interval_mask_minorant},
+   \path{core_interval_mask_choice}, \path{core_interval_mask_common_minorant}\\
 Separate observer realizations without amalgamation (\cref{core:prop:observer-amalgamation})
  & \path{core_observer_amalgamation}\\
 Cyclic winner persistence (\cref{core:lem:cyclic-persistence})
@@ -335,11 +339,6 @@ One-owner presentations (\cref{owner:thm:conservative-basis,owner:cor:small-four
  & Written; finite checks.\\
 Core subvarieties and presentations (\cref{core:prop:dissemilattice-lift,core:prop:binary,core:prop:unary-polynomials,core:thm:conservative-basis,core:cor:small-countermodel,core:prop:atomic-uniform-lift})
  & Written; finite checks. Congruence distributivity uses \cite{Mitschke1978}.\\
-Interval-mask recognition and greatest core minorants
-(\cref{core:thm:interval-masks,core:cor:interval-mask-interior})
- & Written proofs. Boolean inclusion and interval reversals determine
-recognition and the greatest core operation below each mask bound,
-on all winner-set inputs and for every $K\geq3$.\\
 Maximal linear separation for observer products and its four-state strengthening
 (\cref{core:thm:maximal-linear-separation,core:prop:linear-separation-length,core:thm:bichain-maximal-linear-separation})
  & Written proofs. The general result covers mixed observers, arbitrary
@@ -355,7 +354,8 @@ Essential-context coloring and exact source repetition in canonical extensions
  & Written proofs, uniform in $K\geq3$ and allowing all core choices and union.\\
 Grouped ambiguity constraints and nested cuts
 (\cref{core:lem:grouped-cut,core:prop:grouped-safety-preorder,core:prop:grouped-cut-nesting})
- & Written proofs, including an explicit four-row obstruction.\\
+ & Written proofs, including an explicit four-row obstruction with
+exactly two free coordinates in every row.\\
 Relative conservation under disjoint and apex extensions
 (\cref{core:thm:conservation-substitution,core:thm:conservation-disjoint,core:cor:readonce-relative-helpers,core:cor:conservation-majority-wrapper,core:thm:conservation-apex,core:prop:conservation-threshold-apex-reduction,core:cor:conservation-connected-zero-faces,core:thm:conservation-required-input})
  & Written proofs, including an exact initial preorder for arbitrary
@@ -840,6 +840,15 @@ unanimity singleton profiles, and complete realization of each observer view
 by a separate core term. Kernel-checked finite tables certify these properties
 and a choice-closed relation excluding a common realization on the three
 atomic rows; the argument does not enumerate term operations.
+
+The interval masks use the independently defined operations and path closure
+in \path{KFOL/Definitions/CoreIntervals.lean}.
+\path{KFOL/Core/IntervalRecognition.lean} proves the full-menu recognition
+criterion, constructs Boolean separators, and proves that saturation is a
+closure operator. \path{KFOL/Core/IntervalMinorant.lean} proves the greatest
+core minorant among all core operations, transfers the atomic omission
+argument to arbitrary menus, and proves the owned-choice and common-minorant
+laws. These proofs reuse profile completion and the atomic observer theorem.
 
 The cyclic obstruction is specified directly in
 \path{KFOL/Definitions/CoreCrown.lean}.
