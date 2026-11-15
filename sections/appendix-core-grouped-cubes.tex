@@ -3,7 +3,9 @@
 
 Within the four-state quotient, a negative observation may distinguish
 one marked source from other free inputs. Such constraints retain more
-information than their separate Boolean edges. Direct grouped edges
+information than their separate Boolean edges. If each row leaves only
+its own marked coordinate free among the marks, the initial edges suffice.
+Direct grouped edges
 suffice for two marked coordinates; raw cuts and transitivity suffice
 for three. Four marks can require a derived cut as a premise of another.
 
@@ -167,6 +169,45 @@ Every row-graph edge follows a marked-coordinate edge, so the row graph
 is acyclic too. Its cyclic part is empty, whose implication theory is
 inclusion. Apply \cref{core:thm:budget-cyclic-reduction} and the bounded
 lattice characterization of safe functions.
+\end{proof}
+
+\begin{theorem}[One free marked coordinate per row]
+\label{core:thm:one-free-mark-budgets}
+If every row of $Z$ satisfies
+\[
+ (u_z\setminus l_z)\cap M(Z)=\{j_z\},
+\]
+then $\preceq_Z=R_Z$. There is no restriction on the number of marked
+coordinates or quiet parameters. The bound of one free marked coordinate
+per row is sharp.
+\end{theorem}
+\begin{proof}
+Put $M=M(Z)$ and $Y=V\setminus M$, and let $g$ be any $R_Z$-upset.
+For each $S\subseteq Y$ choose a pure Boolean formula $T_S$ on $M$
+for $g(-,S)$, with endpoint constants permitted. Define, in decreasing
+order of $|S|$,
+\[
+ K_S=T_S\vee\bigvee_{y\in Y\setminus S}
+                   (y\wedge K_{S\cup\{y\}}).
+\]
+Boolean induction and monotonicity of $g$ show that $K_\varnothing$
+computes $g$.
+
+At a row $z$, trace a putative surviving $\pv$ to a leaf in some
+payload $T_S$. Its parameter gates require $S\subseteq u_z\cap Y$,
+and its marked upper corner has $g(u_z\cap M,S)=1$.
+Put $W=S\cup(l_z\cap Y)$, a quiet Boolean point of the row's cube.
+Monotonicity gives $g(u_z\cap M,W)=1$. Initial-edge invariance makes
+$j_z$ inessential on this cube. Since only $j_z$ is free among $M$,
+the two marked corners at context $W$ agree, so $T_W$ is stably $c$.
+Hence $K_W=c$. Every parameter in $W\setminus S$ is fixed $c$ at the
+row. Following these expansion branches propagates $c$ back to $K_S$,
+absorbing the alleged marked payload. Thus $K_\varnothing$ is $Z$-safe.
+Every initial upset therefore has a safe formula, proving equality of
+the preorders. For sharpness, use the $m=2$ instance of
+\cref{core:thm:proper-marked-fragments}. Both rows keep two marks free;
+their Boolean function respects the initial edges but violates a safe
+implication.
 \end{proof}
 
 For a budget marking only one coordinate $j$, the principal upsets even
