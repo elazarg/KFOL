@@ -51,6 +51,66 @@ At all other inputs every pure word computing $f$ already gives $D_f$,
 by stable endpoints and the essential marked-source bound.
 \end{proof}
 
+An entire marked-source fragment has a realizer when its marked variables
+never occur together in a prime minterm. The other variables may have
+arbitrary quiet values $b,\nv,c$.
+
+\begin{theorem}[Linear marked-source fragments]
+\label{core:thm:linear-marked-fragments}
+Partition a finite variable set as $X\sqcup Y$, and let $f$ be a
+nonconstant monotone Boolean function. If each prime minterm of $f$
+contains at most one coordinate of $X$, there is a pure term $T$ with
+\[
+ T(\nu)=D_f(\nu)\qquad
+ \text{whenever }\{u:\nu_u=\pv\}\subseteq X.
+\]
+The same conclusion holds if each prime clause contains at most one
+coordinate of $X$.
+\end{theorem}
+\begin{proof}
+The minterm hypothesis gives
+\[
+ f(x,y)=a_0(y)\vee\bigvee_{j\in X}\bigl(x_j\wedge a_j(y)\bigr),
+\]
+with monotone coefficient functions on $Y$: take $a_0(y)=f(0_X,y)$
+and $a_j(y)=f(1_{\{j\}},y)$. For $S\subseteq Y$, define expressions
+in decreasing order of $|S|$ by
+\begin{equation}\label{core:eq:linear-marked-expansion}
+ K_S=
+ \begin{cases}
+ c,&a_0(S)=1,\\
+ \displaystyle\bigvee_{j:\,a_j(S)=1}x_j\ \vee\
+ \displaystyle\bigvee_{y\in Y\setminus S}
+       \bigl(y\wedge K_{S\cup\{y\}}\bigr),&a_0(S)=0.
+ \end{cases}
+\end{equation}
+Here coefficient values use characteristic assignments, and an empty
+disjunction is $b$. Unfolding the finite subset recursion gives a term.
+Its Boolean value is $f$: an expansion path adds true parameter variables
+until a true baseline coefficient or an available marked coefficient
+is reached. Monotonicity makes this equivalent to evaluating $f$.
+
+Fix an input in the stated fragment and its Boolean cube $[L,U]$.
+Any marked source reaching the root comes from a leaf $x_j$ in some
+$K_S$, with $a_j(S)=1$. Its path uses the parameter gates in $S$, so
+survival forces $S\subseteq U\cap Y$. Suppose $j$ is inessential.
+Set the parameters to $W=S\cup(L\cap Y)$, retain all fixed true
+$X$-coordinates, and set every other free $X$-coordinate except $j$ to
+zero. Setting $j=1$ makes $f$ true, so inessentiality makes it true at
+$j=0$ too. The displayed linear form then gives either $a_0(W)=1$ or
+$a_k(W)=1$ for a fixed true $x_k\in L\cap X$.
+Consequently $K_W=c$ on the original input.
+
+Starting at $K_S$, add the parameters in $W\setminus S$ along an
+expansion path. Each is fixed $c$, so every gate on that path passes
+$K_W=c$ back to $K_S$; an earlier baseline $c$ has the same effect.
+Thus $K_S=c$, absorbing the putative marked leaf. No inessential marked
+source can reach the root. Stable outputs and essential marked sources
+already have their canonical values, so $K_\varnothing=D_f$ on the
+whole fragment. Its endpoint constants simplify away because $f$ is
+nonconstant. Boolean duality proves the prime-clause version.
+\end{proof}
+
 \begin{corollary}[When Boolean data determine the whole operation]
 \label{core:cor:essential-unique-fiber}
 Let $f$ be nonconstant with full essential support $V$. The bichain term operations

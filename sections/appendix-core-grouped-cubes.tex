@@ -240,6 +240,88 @@ this proves equality. The formula-existence clause follows from the
 bounded lattice characterization of safe functions.
 \end{proof}
 
+\begin{corollary}[Helly bound for safe realizers]
+\label{core:cor:marked-helly}
+Under either hypothesis of \cref{core:thm:two-marked-budgets}, put
+$m=|M(Z)|$. A monotone Boolean function has a pure $Z$-safe formula if
+and only if it has such a formula for every subbudget of at most $m$ rows.
+The bound is sharp for every $m\geq2$.
+\end{corollary}
+\begin{proof}
+If a function has no safe formula, it fails to respect some direct edge:
+otherwise it would respect $D_Z^*=\preceq_Z$. Choose one witnessing row
+per deleted coordinate. There are at most $m$ such coordinates, and the
+same direct edge rules out a safe formula on this subbudget. The reverse
+implication is restriction. Sharpness follows from the next construction.
+\end{proof}
+
+In fact one can require all marked sources together, even when every
+proper source fragment has a realizer on its entire input domain.
+For $m\geq2$, use variables $X=\{x_1,\ldots,x_m\}$ and parameters
+$P=\{p_1,\ldots,p_m\}$, and put
+\begin{equation}\label{core:eq:marked-obstruction-family}
+ f_m=\bigwedge_i x_i\ \vee\ \bigvee_{i\ne j}(p_i\wedge x_j).
+\end{equation}
+
+\begin{theorem}[All proper marked-source fragments]
+\label{core:thm:proper-marked-fragments}
+The canonical extension $D_{f_m}$ has no term realizer even on the fragment
+where only coordinates in $X$ may be marked $\pv$. Nevertheless, for
+every proper $D\subsetneq X$ there is one pure term $T_D$ such that
+\[
+ T_D(\nu)=D_{f_m}(\nu)\qquad
+ \text{whenever }\{u:\nu_u=\pv\}\subseteq D.
+\]
+Nonrealizability is witnessed by $m$ rows, all keeping every $x_i$ free;
+every proper subbudget of these rows has a safe realizer with Boolean
+restriction $f_m$.
+\end{theorem}
+\begin{proof}
+Write
+\[
+ H_i=p_i\wedge\bigvee_{j\ne i}x_j,\qquad H=\bigvee_iH_i,\qquad
+ q_D=\bigwedge_i x_i\ \vee\ \bigvee_{x_i\in D}p_i.
+\]
+Choose $x_k\notin D$. The required term is
+\[
+ T_D=H\vee(x_k\wedge q_D).
+\]
+Its Boolean function is $f_m$: every extra term $p_ix_k$, $x_i\in D$,
+already belongs to $H$, since $i\ne k$.
+
+We verify safety on the full nonconstant semantic budget restricted to
+marks in $D$. First every $H_i$ is safe. A surviving marked $x_j$,
+$j\ne i$, requires $p_i\in U$ and $L\cap X\subseteq\{x_i\}$.
+If $L\cap X=\varnothing$, set all other $x$ inputs to zero, retain fixed
+parameters, set $p_i=1$, and toggle $x_j$; this changes $f_m$ from zero
+to one. If $L\cap X=\{x_i\}$, the condition $f_m(L)=0$ forces every
+fixed true parameter to be $p_i$. Set just $x_i,p_i$ true and toggle
+$x_j$, again witnessing essentiality. Thus an inessential mark cannot
+survive in $H_i$.
+
+A marked output in $q_D$ requires every $x_i$ to lie in $U$.
+For an inessential marked $x_j\in D$, the parameter $p_j$ must be fixed
+true. Indeed, if a different $p_r$ is fixed true, adding $x_j$ to $L$
+already makes $f_m$ true. If no parameter is fixed true, set them all
+false and toggle $x_j$ with every other $x_i$ true; the conjunction makes
+this edge pivotal. Hence $p_j=c$ absorbs the mark in $q_D$.
+Finally $x_k$ is unmarked and always quiet. Thus $T_D$ is safe.
+Stable endpoints and essential marked sources always have their canonical
+values; the single-mark flag argument of
+\cref{core:cor:canonical-pair-locality} then gives equality with $D_{f_m}$
+on the whole stated fragment.
+
+At row $z_i$, mark $x_i$, leave every other $x_j$ neutral, set $p_i=c$,
+and set every other $p_j=b$. The Boolean cofactor is
+$\bigvee_{j\ne i}x_j$, so the marked coordinate is inessential.
+All rows together give $XD_ZP$, but $f_m(X)=1$ and $f_m(P)=0$.
+No realizer can be safe on all these rows. Omitting $z_k$ permits the
+term $T_{X\setminus\{x_k\}}$ above. Distributing observer union into
+pure components gives the same exclusion, since every component must
+have Boolean restriction $f_m$ and be quiet on these rows. This also
+proves the sharp Helly claim.
+\end{proof}
+
 \begin{corollary}[Endpoint projection with three marks]
 \label{core:cor:three-mark-endpoint-projection}
 Suppose $|M(Z)|\leq3$ and $j\in M(Z)$. If $j$ lies in no lower endpoint
