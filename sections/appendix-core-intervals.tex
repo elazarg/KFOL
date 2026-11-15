@@ -119,6 +119,113 @@ $P_j^C\leq P_j^D$ for every $j$: a reverse step absent for $C$ must
 also be absent for $D$. Source reconstruction gives $C\subseteq D$.
 \end{proof}
 
+Write $C_p$ for the full cofactor obtained by fixing the colored inputs
+according to $p$, leaving every uncolored input free.
+
+\begin{proposition}[Activation equivalence preserves cofactors]
+\label{core:prop:activation-cofactor-invariance}
+For every core $C$ and proper colorings $p,q$,
+\[
+ p\sim_Cq\quad\Longrightarrow\quad C_p=C_q.
+\]
+The converse fails already for input union on two variables.
+\end{proposition}
+\begin{proof}
+Induct on a primitive word for $C$. For a projection $v_j$,
+$v_j+(X\star_r v_j)$ tests whether $j$ is not colored $r$.
+These predicates distinguish all its colors and its uncolored status.
+Equivalent colorings therefore give the same clamped projection.
+
+Suppose $C=C_1\star_r C_2$ and put $D=C_1+C_2$.
+The actual predicate $\neg\Phi_r(C)(E_r)$, realized by
+$C+(X\star_r C)$, ensures that $p,q$ either both belong to $T_r(C)$
+or both lie outside it. In the first case both full cofactors are
+constantly $\{r\}$. In the second,
+\cref{core:cor:owned-choice-activation} gives $p\sim_Dq$.
+Since $C_i\subseteq D$, every interval predicate above $C_i$ is also
+available above $D$. Thus $p\sim_{C_i}q$ for both children.
+Induction gives $(C_i)_p=(C_i)_q$, proving $C_p=C_q$.
+
+For the converse, $C=x+y$ has the same constant cofactor $\{a,b\}$
+at $(a,b)$ and $(b,a)$, but $C+(X\star_a x)$ separates these two
+colorings.
+\end{proof}
+
+Faithfulness recovers the baseline from elementary equivalences, but
+those equivalences need not generate the whole activation kernel.
+Join two proper colorings by a \emph{capture edge} when they differ
+only by coloring or uncoloring one input whose source guard vanishes
+at the common fixing of the other inputs. Every such edge is an
+activation equivalence by the preceding theorem.
+
+\begin{proposition}[Nonlocal activation equivalence]
+\label{core:prop:activation-kernel-cycle}
+For every $K\geq3$, there is a four-input core operation with two
+activation-equivalent proper colorings, each isolated in the graph
+of capture edges. For distinct owners $a,b,c$, take
+\[
+ D=(x\star_a y)+(y\star_b z)+(z\star_a w)+(w\star_b x)
+\]
+and the colorings
+\[
+ p=(a,b,a,b),\qquad q=(b,a,b,a)
+ \quad\text{on }(x,y,z,w).
+\]
+\end{proposition}
+\begin{proof}
+Put $V=\{x,y,z,w\}$, $N=\{a,b\}$, and $P=\{a,b,c\}$.
+The following four rows all give $D=N$:
+\[
+\begin{array}{c|cccc|cc}
+ \text{marked input}&x&y&z&w&l&u\\\hline
+ x&P&a&N&b&\{y\}&V\setminus\{w\}\\
+ z&N&b&P&a&\{w\}&V\setminus\{y\}\\
+ y&a&P&b&N&\{x\}&V\setminus\{z\}\\
+ w&b&N&a&P&\{z\}&V\setminus\{x\}
+\end{array}
+\]
+Here atoms abbreviate their singleton menus. In the $c$-observer
+quotient these are the marked cubes $(l,u,j)$ of
+\cref{app:core-grouped-cubes}, with Boolean endpoints $b=0,a=1$,
+unmarked free value $N$, and marked free value $P$.
+
+Let $F\in\mathcal I(D)$ have distinguished input $X$.
+Restrict all inputs to subsets of $\{a,b,c\}$ and take the
+$c$-observer quotient. Choices at owners other than $a,b$ act as
+observer union. Distributing the two bichain operations over this
+union expresses $F$ as an observer union of pure $a,b$ words.
+For each such word, both endpoint cofactors $X=a$ and $X=b$ are
+safe on all four marked rows: the bound $F\subseteq D+X$ excludes
+$c$ there, and observer union cannot remove a $c$ observation.
+
+Put $A=\{x,z\}$ and $B=\{y,w\}$.
+By \cref{core:lem:grouped-cut}, one has
+$A\preceq B$ using the rows marked $x,z$: their marked coordinates
+are exactly $A\setminus B$, each upper endpoint contains $A$,
+and each lower endpoint lies in $B$.
+The rows marked $y,w$ give $B\preceq A$ in the same way.
+Thus both endpoint cofactors of every pure word agree at $p,q$.
+With old inputs fixed at endpoints and $X=P$, a pure word observes
+$c$ exactly when its two endpoint cofactors differ. It therefore
+observes $c$ at $p$ exactly when it does at $q$. Taking observer
+union proves $P_F(p)=P_F(q)$, hence $p\sim_Dq$.
+
+Finally the source guards of $D$ vanish precisely under the fixings
+\[
+ \begin{array}{c|c}
+ x&y=a,\ w=b\\
+ y&x=a,\ z=b\\
+ z&y=b,\ w=a\\
+ w&z=a,\ x=b.
+ \end{array}
+\]
+For instance, $x$ contributes through its first or fourth summand,
+so both paths are blocked exactly in the displayed case.
+None of these four capture conditions holds at $p$ or $q$.
+Both colorings are fully colored, so no capture edge leaves either
+one. This proves the asserted isolation.
+\end{proof}
+
 Principal downsets have more structure than those of an arbitrary
 preorder.
 
@@ -203,6 +310,70 @@ spine. Neutral deletion is monotone and its deletions commute; identifying
 a block before deleting it has the same effect as deleting all of its
 inputs. Consequently the final spine is contained in $\partial_ZS$,
 and its full factors have the stated shifts.
+\end{proof}
+
+\begin{theorem}[Live-source reduction and common fixing]
+\label{core:thm:activation-common-fixing}
+Let $j$ be a passive input of a core operation $C$, and suppose
+$D=\partial_jC$ is nonzero. For proper colorings $p,q$ leaving $j$
+uncolored with $Q_j(p)=Q_j(q)=1$,
+\[
+ p\preceq_Cq\quad\Longleftrightarrow\quad
+ p|_{V\setminus\{j\}}\preceq_Dq|_{V\setminus\{j\}}.
+\]
+For every core $C$, activation equivalence is preserved by a common
+further fixing: if $p\sim_Cq$, and $e$ is a coloring compatible with
+both such that $p\cup e,q\cup e$ are proper, then
+\[
+ p\cup e\sim_Cq\cup e.
+\]
+If $p,q$ themselves are compatible and their union is proper, they
+are activation-equivalent exactly when a path of capture edges joins them.
+\end{theorem}
+\begin{proof}
+Neutral deletion sends every $F\in\mathcal I(C)$ into
+$\mathcal I(D)$. Its distinguished predicate is exactly the
+restriction of $P_F$ to colorings leaving $j$ uncolored, since
+neutral deletion gives $j$ an ambiguous menu. This proves the
+reverse implication in the first assertion.
+
+For the forward implication, let $A_j(Z,v)$ be the reset-replacement
+realizer of $Q_j$ in \cref{core:thm:activation-faithfulness}.
+Given $G\in\mathcal I(D)$, substitute $G(X,v_{\ne j})$ for $Z$.
+If $v_j$ is atomic the result is $C$. Otherwise the neutral residue
+$D$ is contained in $C$ by the ghost comparison of
+\cref{core:thm:neutral-elimination}, so the result still lies between
+$C$ and $C+X$. Its distinguished predicate is $Q_jP_G$.
+Testing these predicates proves the required $D$-comparison wherever
+both $Q_j$ bits are one.
+
+Every fixed-$j$ color section of an actual $C$-interval predicate
+also extends to a predicate in $\mathcal L(D)$. Indeed cover the
+predicate by its marked-occurrence boxes. A box whose fixed-color
+background has value zero has zero section. For every other box,
+\cref{core:lem:spine-background-erasure} supplies a spine with the
+exact section and bound $D+X$. Adjoin $D$ and take the union of
+these realizers. The resulting predicate agrees with the section
+whenever the combined coloring is proper.
+
+It suffices now to fix one additional input $j$. If $j$ is free at
+both equivalent colorings, their $Q_j$ bits agree. When both bits
+are zero, the fixing is a capture edge at both points. When both
+are one, the first assertion gives equivalence above $D$, and the
+fixed-color section construction gives equivalence after the fixing.
+If $j$ was already colored at one point, its $Q_j$ bit there is zero;
+the free point therefore has a zero bit too, and the fixing is again
+a capture edge. If $D=0$, neutral elimination says that $C$ uses
+only $j$, so $C$ is its projection and the assertion is immediate.
+Iterate over the inputs fixed by $e$; all intermediate colorings
+are proper as subcolorings of the two proper final ones.
+
+For the last assertion put $u=p\cup q$. Common fixing makes $u$
+equivalent to both $p$ and $q$. Every intermediate point on an
+ordinary addition chain from either point to $u$ lies between
+equivalent endpoints in the activation preorder. Each step is
+therefore an equivalence, hence a capture edge by faithfulness.
+The converse holds for every capture path.
 \end{proof}
 
 \begin{theorem}[Disjoint activation products]
