@@ -185,6 +185,111 @@ It is safe: on any marked row $w$, either $A_x=b$, or $w$ occurs in
 $H_x$ and its lower monomial is $c$, which absorbs the marked input.
 Empty conjunctions and disjunctions are the permitted endpoint constants.
 
+The same initial data give a complete graph criterion for a further class.
+For an arbitrary budget $Z$, draw the direct edge
+\begin{equation}\label{core:eq:direct-marked-edge}
+ xD_Zy\quad\Longleftrightarrow\quad
+ \forall j\in x\setminus y\ \exists z\in Z:\quad
+ j_z=j,\quad x\subseteq u_z,\quad l_z\subseteq y.
+\end{equation}
+Write $D_Z^*$ for its reflexive transitive closure. Inclusion and every
+initial marked edge are already direct edges.
+
+\begin{theorem}[Direct recognition with two marked coordinates]
+\label{core:thm:two-marked-budgets}
+If $|M(Z)|\leq2$, or if every row keeps every coordinate of $M(Z)$ free,
+then
+\[
+ \preceq_Z=D_Z^*.
+\]
+Consequently a Boolean function has a pure $Z$-safe formula exactly when
+it respects the direct edges \eqref{core:eq:direct-marked-edge}.
+\end{theorem}
+\begin{proof}
+Every direct edge is sound for any budget. If $x\subseteq y$, use
+inclusion. Otherwise choose one witnessing row per coordinate of
+$x\setminus y$ and let $S$ be the resulting subbudget. The grouped-cut
+lemma with the inclusion preorder gives $x\preceq_Sy$, hence
+$x\preceq_Zy$.
+
+First suppose all marks are free in every row, a property inherited by
+subbudgets. Induct on $|S|$. The empty case is inclusion. By induction
+$B_S\subseteq D_S^*$. If a pair in $\preceq_S$ is outside $B_S$, its
+joined lower-budget paths give $xB_Su_z$ and $l_zB_Sy$ for every row.
+Every coordinate outside $M(S)$ has a safe projection for all lower
+budgets, so it cannot decrease along $B_S$. Since $u_z$ contains all
+marks and $l_z$ contains none, these premises imply the literal
+inclusions $x\subseteq u_z$ and $l_z\subseteq y$. The remaining
+condition $x\setminus M(S)\subseteq y\setminus M(S)$ says that every
+deleted coordinate has a marked row. Choosing any such row proves
+$xD_Sy$. This closes the induction.
+
+Now suppose there are at most two marks. Delete each row in which some
+other mark is fixed. With two marks, a fixed-false other mark makes that
+row a sink; a fixed-true other mark permits the dual elimination.
+These conditions persist if one mark disappears. Thus
+\cref{core:thm:budget-cyclic-reduction} and its dual give
+\[
+ \preceq_Z=R_Z\vee\preceq_{Z^\circ},\qquad
+ Z^\circ=\{z\in Z:M(Z)\subseteq u_z\setminus l_z\}.
+\]
+Every mark of the residual budget is free in every row. The first case
+therefore gives $\preceq_{Z^\circ}=D_{Z^\circ}^*\subseteq D_Z^*$,
+and $R_Z\subseteq D_Z^*$ as well. Together with unconditional soundness
+this proves equality. The formula-existence clause follows from the
+bounded lattice characterization of safe functions.
+\end{proof}
+
+\begin{proposition}[Three marks and component gluing]
+\label{core:prop:cyclic-component-gluing}
+The cycle-reaching budget in \cref{core:thm:budget-cyclic-reduction}
+cannot be replaced by the rows lying on cycles, or by the join of the
+separate strongly connected component theories. The direct graph of
+\cref{core:thm:two-marked-budgets} is also incomplete with three marks.
+Both failures occur for four rows with two free coordinates each.
+\end{proposition}
+\begin{proof}
+On variables $a,b,c,d,z$, put $f=ab\vee cd\vee zad$ and take
+\[
+\begin{array}{c|ccc|c}
+ &l&u&\text{mark}&f|_{[l,u]}\\\hline
+ C_1&c&acd&a&d\\
+ C_2&b&abd&d&a\\
+ W_1&ac&acdz&z&d\\
+ W_2&bd&abdz&z&a
+\end{array}
+\]
+Write $C=\{C_1,C_2\}$ and $W=\{W_1,W_2\}$. The row graph has the
+cycle $C_1\leftrightarrow C_2$; each $W_i$ points to both cycle rows,
+and no edge returns. Two formulas with Boolean function $f$ are
+\[
+ T_C=ab\vee cd\vee zad,\qquad
+ T_W=ab\vee cd\vee ad(z\vee b\vee c).
+\]
+Their values on the four rows are respectively
+$(\nv,\nv,\pv,\pv)$ and $(\pv,\pv,\nv,\nv)$.
+Thus $f$ respects $\preceq_C\vee\preceq_W$, including each component
+theory. Since $W$ marks only $z$, \cref{core:thm:acyclic-marked-budgets}
+also gives $\preceq_W=R_W$. Hence $f$ respects $R_{C\cup W}\vee\preceq_C$.
+
+Nevertheless a grouped cut gives $zad\preceq_{C\cup W}bc$.
+For the upper premises, add $c$ or $b$ to $zad$ and erase $z$ using
+$W_1$ or $W_2$ to reach $acd$ or $abd$; the feeder upper endpoints
+are reached by inclusion. The lower endpoints $c,b$ are already
+contained in $bc$, while $ac\to c$ and $bd\to b$ use $C_1,C_2$.
+The removed coordinates $a,d,z$ are exactly the marks. But
+$f(zad)=1$ and $f(bc)=0$, so $f$ does not respect the full theory.
+
+Finally $f$ respects every edge of $D_{C\cup W}$. An $ab$ witness
+cannot lose $a$, whose deletion row has $b$ fixed false; $b$ is unmarked
+and cannot decrease. An existing $cd$ witness persists dually. From a
+$zad$ witness, neither $a$ nor $d$ can be deleted while $z$ is present,
+since their upper endpoints omit $z$. If $z$ is deleted, its row forces
+$ac$ or $bd$ in the target, producing a $cd$ or $ab$ witness because
+$a,d$ persist. Thus $f$ respects $D_{C\cup W}^*$, which cannot contain
+$zad\to bc$.
+\end{proof}
+
 The derived information in $B_S$ cannot in general be replaced by initial marked
 edges, even if one takes all raw grouped cuts over every subbudget.
 Precisely, call the grouped-cut premises with $Q=R_S$ a \emph{raw cut},
