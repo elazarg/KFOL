@@ -28,6 +28,7 @@ import all KFOL.AtomicLogic.Unsorted
 import all KFOL.Representation.WinnerEquivalences
 import all KFOL.Representation.OperatorMorphisms
 import all KFOL.Representation.Recovery
+import all KFOL.Core.ProfileBudgets.Profiles
 meta import Lean.Elab.Command
 
 /-! # Independent algebra and representation import boundary

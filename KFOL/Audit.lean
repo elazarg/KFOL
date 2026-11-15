@@ -619,6 +619,12 @@ import all KFOL.InfiniteGames.Equilibrium
 import all KFOL.InfiniteGames.Grafting
 import all KFOL.InfiniteGames.Priorities
 import all KFOL.InfiniteGames.Profiles
+import all KFOL.Definitions.ProfileBudgets
+import all KFOL.Core.ProfileBudgets.Closure
+import all KFOL.Core.ProfileBudgets.Folds
+import all KFOL.Core.ProfileBudgets.Profiles
+import all KFOL.Core.ProfileBudgets.Pruning
+import all KFOL.Core.ProfileBudgets.Queries
 meta import Lean.Elab.Command
 meta import Lean.Util.CollectAxioms
 

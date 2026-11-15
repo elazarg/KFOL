@@ -42,6 +42,7 @@ public import KFOL.Representation.Recovery
 public import KFOL.DependentSchedule.Results
 public import KFOL.InfiniteGames.Adequacy
 public import KFOL.InfiniteGames.Continuation
+public import KFOL.Core.ProfileBudgets.Profiles
 public import KFOL.Audit.Namespace
 
 /-! # Audited report statements and mathematical proof ingredients
@@ -452,6 +453,40 @@ theorem core_bounded_profiles {Role : Type u} {Var : Type v}
       ∃ t : Equational.Term (Equational.CoreSymbol Role) Var,
         (∀ r A, Core.profile r A t = Φ r A) ∧ (t.realize values).val ⊆ U :=
   Core.ProfileBounds.profileCondition_iff three Φ values U
+
+/-- `core:thm:simultaneous-profile-budgets`: a single closure couples all rows. -/
+theorem core_simultaneous_budget_profiles {Role : Type u} {Var : Type v} {Row : Type w}
+    [DecidableEq Role] [Fintype Role] [Fintype Var] (three : Fin 3 ↪ Role)
+    (budgets : Row → Core.ProfileBudgets.Budget Role Var) (owner : Role)
+    (single : Core.ProfileBudgets.SingleAbsorber budgets owner)
+    (Φ : Role → (Var → Bool) → Bool) :
+    letI := Equational.coreStructure Role
+    Core.ProfileBudgets.ProfileCondition budgets owner Φ ↔
+      ∃ t : Equational.Term (Equational.CoreSymbol Role) Var,
+        (∀ r A, Core.profile r A t = Φ r A) ∧ Core.ProfileBudgets.Satisfies budgets t :=
+  Core.ProfileBudgets.profileCondition_iff three budgets owner single Φ
+
+theorem core_simultaneous_budget_pair {Role : Type u} {Var : Type v} {Row : Type w}
+    [DecidableEq Role] [Fintype Var]
+    (budgets : Row → Core.ProfileBudgets.Budget Role Var) (owner : Role)
+    (single : Core.ProfileBudgets.SingleAbsorber budgets owner) (q : Role) (A B : Var → Bool) :
+    letI := Equational.coreStructure Role
+    Core.ProfileBudgets.PairCondition budgets owner q A B ↔
+      ∃ t : Equational.Term (Equational.CoreSymbol Role) Var,
+        Core.profile q A t = true ∧ Core.profile q B t = false ∧
+          Core.ProfileBudgets.Satisfies budgets t :=
+  Core.ProfileBudgets.pairCondition_iff budgets owner single q A B
+
+theorem core_simultaneous_budget_rainbow {Role : Type u} {Var : Type v} {Row : Type w}
+    [DecidableEq Role] [Fintype Var]
+    (budgets : Row → Core.ProfileBudgets.Budget Role Var) (owner : Role)
+    (single : Core.ProfileBudgets.SingleAbsorber budgets owner)
+    (owners : Finset Role) (A : Role → Var → Bool) :
+    letI := Equational.coreStructure Role
+    Core.ProfileBudgets.RainbowCondition budgets owner owners A ↔
+      ∃ t : Equational.Term (Equational.CoreSymbol Role) Var,
+        (∀ r ∈ owners, Core.profile r (A r) t = true) ∧ Core.ProfileBudgets.Satisfies budgets t :=
+  Core.ProfileBudgets.rainbowCondition_iff budgets owner single owners A
 
 /-- Removing the bound recovers exactly the original singleton-profile conditions. -/
 theorem core_unbounded_profile_condition {Role : Type u} {Var : Type v} [Fintype Role]
