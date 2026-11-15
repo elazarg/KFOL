@@ -253,6 +253,139 @@ would force equality. Observer union is covered by
 \cref{core:lem:essential-extension-pure}.
 \end{proof}
 
+\paragraph{Gates on the two canonical cofactors.}
+Reconstructing a parent from its variable and the values of its two
+canonical cofactors is a more restrictive problem than realizing the
+parent. The successful gates have an exact two-form description.
+For a Boolean cube $Q$, write $\operatorname{Ess}(g,Q)$ for the set
+of coordinates essential in the restriction of $g$ to $Q$.
+
+\begin{theorem}[Two Shannon forms]
+\label{core:thm:canonical-cofactor-gates}
+Let $g_0,g_1$ be distinct nonconstant monotone Boolean functions on
+finite $V$ with $g_0\leq g_1$, and suppose $D_{g_0},D_{g_1}$ have
+term realizers.
+For a fresh variable $z$ put
+\[
+ F(z,x)=g_0(x)\vee\bigl(z\wedge g_1(x)\bigr),
+ \qquad u=D_{g_0},\quad v=D_{g_1},
+\]
+and define
+\[
+ H_\vee(z,x)=u(x)\vee\bigl(z\wedge v(x)\bigr),\qquad
+ H_\wedge(z,x)=v(x)\wedge\bigl(z\vee u(x)\bigr).
+\]
+Let $\mathsf E$ be the condition
+\[
+ g_0(X\cup\{j\})\leq g_1(X)
+ \qquad(X\subseteq V,\ j\in V\setminus X).
+\]
+Let $\mathsf U$ mean
+$\operatorname{Ess}(g_0,Q)\subseteq\operatorname{Ess}(g_1,Q)$ on every
+cube $Q$ where $g_1$ is nonconstant. Let $\mathsf L$ mean the reverse
+inclusion on every cube where $g_0$ is nonconstant. Then
+\[
+ H_\vee=D_F\ \Longleftrightarrow\ \mathsf E\land\mathsf U,
+ \qquad
+ H_\wedge=D_F\ \Longleftrightarrow\ \mathsf E\land\mathsf L.
+\]
+Every term $q$ in just the three inputs $z,u,v$ whose substituted
+operation has Boolean restriction $F$ lies above $H_\vee$ or $H_\wedge$.
+The minimal operations with Boolean restriction $F$ obtainable from
+these three argument values are exactly the minimal members of
+$\{H_\vee,H_\wedge\}$, with
+\[
+ H_\vee\leq H_\wedge\ \Longleftrightarrow\ \mathsf U,
+ \qquad
+ H_\wedge\leq H_\vee\ \Longleftrightarrow\ \mathsf L.
+\]
+In particular, there exists a term $q$ satisfying
+$q(z,D_{g_0}(x),D_{g_1}(x))=D_F(z,x)$ for every input if and only if
+one of these two Shannon forms does. The gate may use observer union
+and endpoint constants. Thus its existence is equivalent to
+$\mathsf E\land(\mathsf U\lor\mathsf L)$.
+\end{theorem}
+\begin{proof}
+Condition $\mathsf E$ says exactly that no cube has
+$g_0|_Q=g_1|_Q$ nonconstant. Indeed a violation gives a Boolean edge
+on which both functions change from zero to one. Conversely a common
+nonconstant restriction has such a pivotal edge.
+
+For $H_\vee$, fixing $z=b$ gives $u$ exactly. Fixing $z=c$ gives
+$u\vee v$; on a $g_1$-nonconstant cube its old-source set is the union
+of the two essential sets. Absence of extra old sources is precisely
+$\mathsf U$. If $z$ is free and quiet, an old coordinate essential in
+either cofactor is essential in $F$, so no extra condition arises.
+If $z=\pv$ and every old input is quiet, the marked source survives
+on every nonconstant combined cube. It is genuine unless the two
+restricted cofactors agree nonconstantly, exactly the case excluded by
+$\mathsf E$. Stable outputs are forced by Boolean endpoints.
+This proves the first equivalence on one-source inputs; the definition
+of $D_F$ and flag decomposition extend it to all inputs.
+The dual argument proves the equivalence for $H_\wedge$.
+
+It remains to prove that arbitrary gates add nothing. All three legal
+Boolean cofactor pairs $00,01,11$ occur, since $g_0,g_1$ are distinct
+and nonconstant. A pure gate correct on these pairs has only three
+possible monotone Boolean functions: the two remaining Boolean points,
+where $u=1,v=0$, are ordered, so their values are $00,01$, or $11$.
+The resulting functions are
+\[
+ v(z\vee u),\qquad \operatorname{Maj}_3(z,u,v),\qquad u\vee zv.
+\]
+Their canonical extensions have pure realizers: the first and third
+are read-once and the second is a uniform threshold. Each is therefore
+below every pure gate with its respective Boolean function.
+After substitution of $D_{g_0},D_{g_1}$ these are actual realizers of
+$F$, and every pure gate lies above one of them.
+For a gate with observer union, first expand into pure components.
+Every component agrees with $F$ on the legal Boolean triples and lies
+below their observer union, so the same lower-bound conclusion applies.
+
+On actual cofactor outputs, $u=c$ implies $v=c$ and $v=b$ implies $u=b$.
+On these pairs the substituted majority is
+$H_\vee\star_a H_\wedge$. If either cofactor is stable the three
+gates agree. If both are middle values, majority equals $H_\wedge$ at
+$z=b$, equals $H_\vee$ at $z=c$, and all three agree when $z$ is middle.
+This proves the identity. Thus every gate lies above one of the two
+Shannon forms, which themselves belong to the gate language, proving
+the assertion about minimal operations.
+At $z=b$, $H_\vee\leq H_\wedge$ always, and at $z=c$ the reverse
+inequality always holds. At middle $z$ the forms agree.
+The other endpoint inequalities are exactly $\mathsf U$ and $\mathsf L$
+by the old-source analysis above. Finally every realizer of $F$ lies
+above $D_F$, so an exact gate forces one Shannon form to equal $D_F$.
+This proves the stated existence criterion.
+\end{proof}
+
+Both forms are needed. For $(g_0,g_1)=(ABC,A\vee B)$, conditions
+$\mathsf E,\mathsf L$ hold but $\mathsf U$ fails at the full cube:
+only $g_0$ depends on $C$. Thus only $H_\wedge$ works. Boolean duality
+gives $(AB,A\vee B\vee C)$, for which only $H_\vee$ works.
+The excluded degenerate cases are direct: if $g_0=g_1$ the parent
+ignores $z$; if $g_0=0$ or $g_1=1$, disjoint AND or OR reconstructs it.
+
+\begin{corollary}[A read-once obstruction to cofactor reconstruction]
+\label{core:cor:cofactor-gate-obstruction}
+The read-once canonical extension of $F(z,x,y)=x\vee zy$ has no
+realizer of the form
+\[
+ q\bigl(z,x,x\vee y\bigr)
+\]
+using only these three argument values, even with observer union and
+endpoint constants. Three essential Boolean variables are necessary
+for such a failure and suffice here.
+\end{corollary}
+\begin{proof}
+Its canonical cofactors are $g_0=x$ and $g_1=x\vee y$.
+Condition $\mathsf E$ fails already at $X=\varnothing,j=x$.
+At $(z,x,y)=(\pv,\nv,b)$ both cofactor values are $\nv$, although
+$D_F=\nv$ and the marked $z$ is inessential.
+With at most two essential Boolean variables, cofactors in any variable
+are equal or one is constant, so the preceding degenerate constructions
+always apply, ignoring unused inputs.
+\end{proof}
+
 An entire marked-source fragment has a realizer when its marked variables
 never occur together in a prime minterm. The other variables may have
 arbitrary quiet values $b,\nv,c$.

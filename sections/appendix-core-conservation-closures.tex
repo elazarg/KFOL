@@ -610,6 +610,8 @@ Its initial preorder has the same triangular form, with
 \]
 on the $z=1$ face, and $R_p$ augmented by the constant-zero cubes of
 $B_k$ on the $z=0$ face.
+If $p$ and $B_k$ have relative conservation, so does
+$p\lor z\operatorname{Thr}_k(V)$.
 \end{proposition}
 \begin{proof}
 With $z=0$ use $D_p$. If $|L|\geq k$, the threshold is one and the
@@ -618,6 +620,53 @@ If $|L|<k\leq|U|$, every free old coordinate is essential by setting
 $z=1$. A $k$-set between $L,U$ has $p=0$ and threshold one, so $z$ is
 essential too when free. If $|U|<k$, the whole function is zero. These cases give
 canonicality and the asserted marks.
+
+For the last assertion, an upset of the lower-face preorder has an
+$S_p$-safe realizer. It is constant on each added zero cube, since the
+preorder includes every marked deletion there, so that realizer is safe
+on the added cubes as well. An upset of the full triangular preorder is
+a pair $u_0\leq u_1$ of lower- and upper-face upsets. Choose corresponding
+safe realizers $T_0,T_1$. Then $T_0\lor(z\land T_1)$ realizes the pair:
+on $z=0$ rows use $T_0$, and on free-$z$ rows both old formulas are
+$B_k$-safe while $z$ is an unmarked neutral input.
+\end{proof}
+
+\begin{lemma}[Buffering an upper completion]
+\label{core:lem:conservation-buffer}
+Let $p,q$ be monotone Boolean functions on finite $V$, with $p$ having
+relative conservation. Let $\mathcal B$ be a budget of $p$-inessential
+cubes $(L,U,j)$ such that $p(L)=0$ and $q(L)=1$.
+Whenever such a cube is $p$-constant zero, suppose that all its marked
+versions $(L,U,i)$, $i\in U\setminus L$, belong to $\mathcal B$.
+Write $R_{\mathcal B}$ for its initial preorder and assume
+\[
+ q(y)=1,\quad xR_py\quad\Longrightarrow\quad xR_{\mathcal B}y.
+\]
+Then $\preceq_{\mathcal B}=R_{\mathcal B}$.
+\end{lemma}
+\begin{proof}
+For an $R_{\mathcal B}$-upset $\phi$, take its $R_p$-upward completion
+\[
+ \Phi(y)=1\quad\Longleftrightarrow\quad
+ \exists x\ (\phi(x)=1\text{ and }xR_py).
+\]
+It is an $R_p$-upset, $\Phi\geq\phi$, and the assumed transfer gives
+$\Phi(y)=\phi(y)$ whenever $q(y)=1$.
+Conservation of $p$ supplies an $S_p$-safe formula $T_\Phi$.
+It is also safe on each added constant-zero cube: all its vertices have
+$q=1$ and are $R_{\mathcal B}$-equivalent by the marked-version
+assumption. Thus $\phi$, and hence $\Phi$, is constant on that cube,
+so $T_\Phi$ takes a stable endpoint there.
+
+Choose arbitrary pure formulas $A_\phi,Q$ computing $\phi,q$.
+The word
+\[
+ (A_\phi\vee Q)\wedge T_\Phi
+\]
+still computes $\phi$: where $q=0$ use $\phi\leq\Phi$, and where
+$q=1$ use $\Phi=\phi$. It is $\mathcal B$-safe, since $Q$ is stably
+$c$ on every budget row and the word there equals $T_\Phi$.
+This realizes every initial upset, proving the equality.
 \end{proof}
 
 \begin{corollary}[Connected zero faces]
@@ -642,24 +691,53 @@ of size less than $k$, choose $L\subseteq K\subseteq A$ with $|K|=k$.
 The restricted cube remains nonconstant because $p(K)=0$, and retains
 the deletion. Paths starting at positive vertices remain positive.
 
-Let $\phi$ be an $R_k$-upset. If $\phi(C)=0$, then $\phi$ vanishes at
-every zero vertex: a vertex of size less than $k$ extends to a zero
-$k$-set. The positive-comparison observation therefore makes $\phi$
-an $R_p$-upset. A $p$-relative-safe realizer is also $B_k$-safe,
-since it is stably zero on every added constant-zero cube.
-
-If $\phi(C)=1$, monotonicity gives
-$\phi\geq\operatorname{Thr}_k(V)$. Choose monotone formulas $M,Q$
-for $\phi,\operatorname{Thr}_k(V)$. Then $M\lor Q$ still computes
-$\phi$ and is $B_k$-safe: on every budget cube $Q$ is stably one
-because $|L|\geq k$. Thus every $R_k$-upset has a safe formula.
-The other face preorder is conserved by the constant-zero-cube
-argument, and the triangular synthesis proves conservation of the
-threshold extension.
+In fact every $R_p$ comparison $xR_py$ with $|y|\geq k$ survives.
+If $x$ is positive use the preceding argument. If $x$ is zero, it either
+belongs to $C$ or extends to a zero $k$-set in $C$. A zero target $y$
+belongs to $C$; a positive target contains a zero $k$-set, giving the
+remaining path by inclusion. Apply
+\cref{core:lem:conservation-buffer} with $q=\operatorname{Thr}_k(V)$,
+then \cref{core:prop:conservation-threshold-apex-reduction}.
 
 Finally, if all $(k+1)$-sets are zero, exchanging one element of a
 $k$-set at a time gives paths in the graph between any two vertices.
 The one-vertex case is included.
+\end{proof}
+
+\begin{theorem}[Matroid threshold extensions]
+\label{core:thm:conservation-matroid-threshold}
+Let $p$ be the spanning predicate of a finite matroid $M$ of rank $r$.
+For every $1\leq k<r$, the budget $B_k$ of
+\cref{core:prop:conservation-threshold-apex-reduction} has relative
+conservation, and so does
+\[
+ p(x)\lor\bigl(z\land\operatorname{Thr}_k(V)(x)\bigr).
+\]
+\end{theorem}
+\begin{proof}
+Write $R_k$ for the initial preorder of $B_k$. We prove
+\[
+ |y|\geq k,\quad xR_py\quad\Longrightarrow\quad xR_ky.
+\]
+By \cref{core:thm:matroid-safe-prunings}, $x\subseteq h_M(y)$.
+Construct $h_M(y)$ by the Horn rules $L\to j$ with $L$ nonspanning and
+$j\in\operatorname{cl}_M(L)$. At a genuine addition the current set
+$A$ contains $y$, so $|A|\geq k$, and $j\notin A$.
+If $|L|<k$, enlarge $L$ inside $A$ to a $k$-set $L'$; otherwise take
+$L'=L$. It is nonspanning, since in the first case $k<r$.
+Moreover $j\in\operatorname{cl}_M(L')$, so $j$ is inessential on the
+nonconstant cube $[L',V]$. This is a $B_k$ row and licenses the reverse
+step $A\cup\{j\}\to A$.
+Reverse the entire Horn derivation and precede it by the inclusion
+$x\subseteq h_M(y)$. This proves the displayed transfer, including
+when $x$ has fewer than $k$ elements.
+
+The matroid spanning predicate has conservation by
+\cref{core:thm:matroid-safe-prunings}. All marked versions of a
+constant-zero $B_k$ cube belong to $B_k$ by definition. Thus
+\cref{core:lem:conservation-buffer}, with
+$q=\operatorname{Thr}_k(V)$, proves conservation of $B_k$.
+The threshold-apex reduction proves conservation of the extension.
 \end{proof}
 
 \begin{theorem}[A required input]
@@ -730,7 +808,5 @@ on every added constant-zero cube of $B_k$: an isolated zero $k$-face
 has no larger zero superset, so every such cube lies entirely in $C$,
 where $\phi$ is zero. Thus every $R_k$-upset has a $B_k$-safe formula.
 
-The other face preorder is conserved by the constant-zero-cube argument.
-The triangular synthesis from the threshold-apex reduction now proves
-conservation of the displayed extension.
+The threshold-apex reduction proves conservation of the displayed extension.
 \end{proof}
