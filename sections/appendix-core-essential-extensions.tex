@@ -681,3 +681,108 @@ the resulting Boolean function is nonconstant. The pure-realization
 lemma handles observer union as well.
 \end{proof}
 
+There is also an exact criterion for an overlapping substitution to
+preserve canonicality for every inner function. It uses the same gap and
+essentiality conditions as the cofactor gates above.
+
+\begin{theorem}[Universal overlapping substitution]
+\label{core:thm:essential-universal-overlap}
+Let $u\leq v$ be monotone Boolean functions on a finite set $Y$.
+The identity
+\begin{equation}\label{core:eq:universal-overlap}
+ D_{v(Y)\wedge g(u(Y),X)}
+   =D_v\wedge D_g(D_u,X)
+\end{equation}
+holds for every finite set $X$ disjoint from $Y$ and every monotone
+$g(w,X)$ if and only if both conditions hold:
+\begin{align*}
+ \mathsf E:\quad&u(S\cup\{j\})\leq v(S)
+       &&(S\subseteq Y,\ j\notin S),\\
+ \mathsf L:\quad&\operatorname{Ess}(v,Q)\subseteq
+                 \operatorname{Ess}(u,Q)
+       &&(u|_Q\text{ nonconstant}).
+\end{align*}
+Here $Q$ ranges over Boolean cubes on $Y$. It suffices to test the
+identity for just $g(w)=w$ and $g(w,x)=w\vee x$.
+No term-realizability assumption is needed for this identity of operations.
+When $D_u,D_v,D_g$ are realizable, it supplies a canonical realizer of
+the composite. The dual identity for $u(Y)\vee g(v(Y),X)$ is characterized
+by $\mathsf E$ and
+$\operatorname{Ess}(u,Q)\subseteq\operatorname{Ess}(v,Q)$ whenever
+$v|_Q$ is nonconstant.
+\end{theorem}
+\begin{proof}
+The gap condition $\mathsf E$ has the following consequence. On any cube
+where $u=0$ is feasible and $v=1$ is feasible, some completion has
+$(u,v)=(0,1)$. Otherwise $u=v$ on the whole cube; their common function
+is nonconstant and has a pivotal edge, contradicting $\mathsf E$.
+The converse follows by taking an edge as the cube.
+
+Stable endpoints in \eqref{core:eq:universal-overlap} agree. The marked
+flag of $D_h$ is the disjunction over its essential marked coordinates,
+and the gates preserve this one-source decomposition, as in
+\cref{core:lem:essential-extension-pure}. We can therefore work with
+one marked source. First mark a coordinate of $X$. If $v$ is stably zero,
+the composite is zero. Otherwise every feasible inner bit has a
+completion with $v=1$: for bit one use $u\leq v$, and for bit zero use
+the gap consequence. Thus its essentiality on the induced $g$-cube is
+exactly its essentiality for the composite. These are exactly the
+sources emitted by the right side.
+
+Now mark $j\in Y$. A source through $D_u$ requires that $j$ is essential
+in $u$ and that $w$ is essential in $g$ on the induced cube.
+Choose an $X$-completion where $g(0,X)=0,g(1,X)=1$; at this completion
+the composite is $u$, so the source is genuine. An outer $D_v$ source
+survives only if $g$ has a true completion at an available inner bit.
+If $g(0,X)$ has a true completion, fixing it makes the composite $v$.
+Otherwise survival requires a true completion of $g(1,X)$ and feasible
+$u=1$. Since $v$ is nonconstant, $u$ cannot be constantly one; it is
+nonconstant, and $\mathsf L$ makes $j$ essential in $u$.
+At that $X$-completion the composite is $u$, again witnessing the source.
+Conversely, a pivotal $Y$-edge either changes $v$ from zero to one,
+emitting the outer source, or has $v=1$ at both ends and changes $u$
+across a pivotal $w$-edge of $g$, emitting the inner source.
+This proves sufficiency, including constant $u,v$.
+
+If $\mathsf L$ fails, mark its witness $j$ on its witnessing cube and
+use $g(w)=w$. The desired composite is $u$, whose value is $\nv$,
+but $D_v\wedge D_u=\pv\wedge\nv=\pv$.
+If $\mathsf E$ fails, its witnessing edge has $u=v$ equal to its free
+coordinate. Put $\nv$ there and $\pv$ at a fresh $x$, and use
+$g(w,x)=w\vee x$. On this cube the composite is independent of $x$,
+so has value $\nv$, whereas the right side is
+$\nv\wedge(\nv\vee\pv)=\pv$.
+These are the asserted two tests. Boolean duality gives the final clause.
+\end{proof}
+
+Two different thresholds provide the gap and essentiality inclusion
+without restricting the inner function.
+
+\begin{corollary}[Two thresholds on one block]
+\label{core:prop:essential-threshold-band}
+Let $g(w,X)$ be monotone, let $Y$ be a finite variable set disjoint from
+$X$, and let $1\leq\ell<k\leq|Y|$. Put
+\[
+ F=\operatorname{Thr}_{\ell}(Y)\wedge
+       g(\operatorname{Thr}_k(Y),X).
+\]
+Then
+\[
+ D_F=D_{\operatorname{Thr}_{\ell}(Y)}\wedge
+       D_g(D_{\operatorname{Thr}_k(Y)},X).
+\]
+In particular, realizability of $D_g$ implies realizability of $D_F$.
+The Boolean-dual identity holds for
+$\operatorname{Thr}_k(Y)\vee g(\operatorname{Thr}_{\ell}(Y),X)$.
+For $Y=\{A,B\}$ the displayed identity reads
+\[
+ D_{(A\vee B)g(AB,X)}=(A\vee B)\wedge D_g(A\wedge B,X).
+\]
+\end{corollary}
+\begin{proof}
+Take $u=\operatorname{Thr}_k$ and $v=\operatorname{Thr}_{\ell}$.
+The strict gap gives $\mathsf E$, and every free coordinate of a
+nonconstant threshold cube is essential, giving $\mathsf L$.
+Uniform thresholds have canonical realizers, so the realizability
+clause follows as well.
+\end{proof}
