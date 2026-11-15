@@ -86,7 +86,106 @@ Stable endpoint semantics then makes the same formula safe at $z$.
 Thus it separates the pair on the whole budget $S$.
 \end{proof}
 
-The derived information in $B_S$ cannot be replaced by initial marked
+The non-initial implications can be confined to an explicit cyclic part
+of the given budget. On its rows draw $z\to w$ when
+$j_w\ne j_z$ and $j_w\in u_z$. Let $Z_{\rm cyc}$ consist of the rows
+from which a directed cycle is reachable. The upper endpoint includes
+both the fixed true and the free coordinates.
+
+\begin{theorem}[Cyclic reduction of marked budgets]
+\label{core:thm:budget-cyclic-reduction}
+The full implication theory is
+\[
+ \preceq_Z=R_Z\vee\preceq_{Z_{\rm cyc}}.
+\]
+In particular, deleting a sink row $z$ from a budget $S$ gives
+$\preceq_S=R_S\vee\preceq_{S\setminus\{z\}}$.
+\end{theorem}
+\begin{proof}
+Fix a nonempty subbudget $S$ and a sink row $z$, so that
+$u_z\cap M(S)=\{j_z\}$. Put
+\[
+ Q_S=R_S\vee\bigvee_{w\in S}\preceq_{S\setminus\{w\}}.
+\]
+Every component is valid on $S$, so $Q_S\subseteq\preceq_S$.
+Suppose $x\preceq_Sy$ but not $xQ_Sy$. The joined lower-budget formula
+forces each path in $B_S\vee E_w$ to use the added reversal
+$u_w\to l_w$. Its first and last uses give
+\[
+ xQ_Su_w,\qquad l_wQ_Sy\quad(w\in S),\qquad
+ x\setminus M(S)\subseteq y\setminus M(S).
+\]
+Every globally unmarked projection is safe for each lower budget, and
+initial edges never delete its coordinate. Hence $Q_S$ preserves all
+these bits, and $l_w\setminus M(S)\subseteq y$ for every $w$.
+Put $\pi(A)=A\cap(M(S)\cup y)$.
+
+This projection preserves $Q_S$. For initial edges, it keeps every mark
+and lower endpoint and only removes other cube coordinates.
+For a lower-budget theory, substitute $b$ for the coordinates removed
+by $\pi$ in any of its safe formulas. At its rows these coordinates
+are unmarked and never fixed $c$, so the substitution changes only
+$\nv$ to $b$. Monotonicity in observer-union order preserves omission
+of $\pv$. Thus a safe Boolean function $g$ gives another safe function
+$g\circ\pi$, which proves that $\pi$ preserves the lower-budget
+implication theory as well. It therefore preserves their join $Q_S$.
+
+Now $\pi(x)=x$. Project the upper path $xQ_Su_z$.
+Its endpoint has only the marked bit $j_z$ and still contains $l_z$.
+Deleting $j_z$ by row $z$, an edge of $R_S\subseteq Q_S$, leaves a
+subset of $y$. Inclusion then gives $xQ_Sy$, a contradiction. We have
+proved $\preceq_S=Q_S$ whenever $S$ has a sink row.
+
+Fix such a row $z$. It remains a sink in every subbudget containing it.
+Induction on the size of these subbudgets therefore gives
+$\preceq_S=R_S\vee\preceq_{S\setminus\{z\}}$: every proper-budget
+theory in $Q_S$ is contained in this right side by induction and
+monotonicity in the budget. The reverse containment always holds.
+
+Finally remove sink rows successively. Eligibility persists under
+further deletions. In a finite directed graph the remaining vertices
+are exactly those from which a cycle is reachable: such vertices cannot
+be deleted, while every nonempty remainder with no sink contains an
+infinite path and hence a reachable cycle. Each removed row contributes
+only initial edges, already in $R_Z$. Iterating the sink formula proves
+the displayed equality.
+\end{proof}
+
+By Boolean duality, the same row-elimination identity holds when
+$M(S)\setminus\{j_z\}\subseteq l_z$, so all other marks are fixed true.
+
+\begin{theorem}[Acyclic marked budgets]
+\label{core:thm:acyclic-marked-budgets}
+If the directed graph on $M(Z)$ with edges $j_z\to k$ for
+$k\in u_z\cap M(Z)$, $k\ne j_z$, is acyclic, then
+$\preceq_Z=R_Z$. Equivalently, every upset of the initial preorder has a
+pure formula safe on all of $Z$.
+\end{theorem}
+\begin{proof}
+Every row-graph edge follows a marked-coordinate edge, so the row graph
+is acyclic too. Its cyclic part is empty, whose implication theory is
+inclusion. Apply \cref{core:thm:budget-cyclic-reduction} and the bounded
+lattice characterization of safe functions.
+\end{proof}
+
+For a budget marking only one coordinate $j$, the principal upsets even
+have explicit safe formulas. If $j\notin x$, use the monomial on $x$.
+Otherwise put
+\[
+ A_x=\bigwedge_{k\in x\setminus\{j\}}x_k,\qquad
+ H_x=\bigvee_{z:\,x\setminus\{j\}\subseteq u_z}
+             \bigwedge_{k\in l_z}x_k.
+\]
+Then $A_x\wedge(x_j\vee H_x)$ defines $\{y:xR_Zy\}$.
+An initial path can only add the other coordinates; if it deletes $j$,
+some row $z$ has $x\setminus\{j\}\subseteq u_z$ and $l_z\subseteq y$.
+Conversely these conditions allow deletion at
+$(x\setminus\{j\})\cup l_z$. This proves the formula.
+It is safe: on any marked row $w$, either $A_x=b$, or $w$ occurs in
+$H_x$ and its lower monomial is $c$, which absorbs the marked input.
+Empty conjunctions and disjunctions are the permitted endpoint constants.
+
+The derived information in $B_S$ cannot in general be replaced by initial marked
 edges, even if one takes all raw grouped cuts over every subbudget.
 Precisely, call the grouped-cut premises with $Q=R_S$ a \emph{raw cut},
 and let $Q_Z$ be the preorder generated by $R_Z$ and all such cuts
