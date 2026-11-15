@@ -1,7 +1,7 @@
 \section{Testing equations on small inputs}\label{sec:pair-tests}
 
 Values are the nonempty sets of roles, so each variable of an equation ranges over $2^K-1$ values, and checking it directly means evaluating both sides at all $(2^K-1)^n$ valuations of its $n$ variables. Without internal renaming, the views show that $K+2$ fixed values suffice for $K\geq4$: the atoms and two disjoint pairs (\cref{view:cor:optimal}). The full signature needs more, though still few. Everything $\star_r$ does beyond union lies in one test: is an operand
-exactly $\{r\}$? So assign each input variable a \emph{status}, either a specified atom or an unspecified ambiguous set. Such an assignment is a \emph{status cell}. Whether a subterm's value is an atom, and which one, depends only on the statuses of the inputs, so a cell fixes every such test throughout the term, and what remains is a union.
+exactly $\{r\}$? So give each input variable a \emph{status}: either a specified atom, or `ambiguous', leaving the set open. The valuations that agree with one assignment of statuses form a \emph{status cell}, and the cells partition the valuations. Whether a subterm's value is an atom, and which one, depends only on the statuses of the inputs. So on a cell every test inside a term has a fixed outcome, and the term computes a fixed union of its constants and inputs. For example, $x\ow a y$ is $x\cup\{b\}$ throughout the cell where $x$ is ambiguous and $y=\{b\}$, and $\{a\}$ throughout the cell where $y=\{a\}$.
 
 \begin{lemma}[Permutation provenance on a status cell]\label{sym:lem:provenance}
 On every fixed status cell, a term denotes
@@ -12,11 +12,13 @@ where $S_j$ is the value of $x_j$, $C\subseteq I$, only ambiguous input variable
 and every $P_j$ is a finite, possibly empty, set of permutations.
 \end{lemma}
 
+Shrinking an ambiguous input to a pair keeps it ambiguous, so it stays in the same cell, where both sides of an equation keep their union formulas. This is how a failure can be moved to small inputs.
+
 \begin{theorem}[Pair countervaluations]\label{sym:thm:pairs}
 If an equation between terms of $\mathbf A^{\rm sym}$ fails, it fails at a valuation in which every variable has one or two possible winners.
 \end{theorem}
 \begin{proof}
-Take a failed valuation, fix its statuses, and choose a role $k$ present
+Take a failed valuation and its status cell, and choose a role $k$ present
 in the left output and absent from the right, interchanging sides if
 necessary. Apply \cref{sym:lem:provenance} to both terms.
 
