@@ -16,6 +16,13 @@ Write $R_f^+$ for the preorder obtained by identifying all $f$-positive
 vertices, and $R_f^-$ for the analogous identification of the negative
 vertices. These identifications retain the original orientation from zero
 to one.
+Let $S_f^+$ add to $S_f$ every marked cube on which $f$ is constantly
+one, and let $S_f^-$ add every constantly zero cube. Their initial
+preorders are $R_f^+,R_f^-$: the added cubes connect the corresponding
+fiber through its top or bottom vertex. If $f$ has conservation, so do
+both enlarged budgets. Indeed their upsets are $R_f$-upsets constant
+on the enlarged fiber, so any $S_f$-safe realizer is automatically
+stable on each added cube.
 
 Matroid spanning predicates have conserved theories with cofactor helper
 bases in every Boolean realizer. For a finite
@@ -92,9 +99,16 @@ then so does $f$.
 More precisely, suppose $F$ is not a projection. Call $i$ an
 \emph{AND-canalyzing} coordinate if $F|_{i=0}=0$, and
 \emph{OR-canalyzing} if $F|_{i=1}=1$. Every other coordinate has both
-cofactors nonconstant. The two canalyzing types cannot coexist. For conservation of $f$, it
-suffices that $F$ and the $g_i$ at canalyzing coordinates have conservation,
-while the remaining $D_{g_i}$ are term-realizable. Put
+cofactors nonconstant. The two canalyzing types cannot coexist.
+For conservation of $f$, the following conditions suffice:
+\begin{enumerate}[label=(\roman*)]
+\item $F$ has relative conservation;
+\item $S_{g_i}^+$ has conservation at each AND-canalyzing coordinate,
+      and $S_{g_i}^-$ at each OR-canalyzing coordinate;
+\item the remaining $D_{g_i}$ are term-realizable.
+\end{enumerate}
+If every coordinate of $F$ is essential, these conditions are also
+necessary. Put
 $T_i=R_{g_i}^+$ for an AND-canalyzing coordinate and
 $T_i=R_{g_i}^-$ for an OR-canalyzing coordinate. Without any conservation
 assumption, the initial preorder is
@@ -156,9 +170,10 @@ For a projection, ignored blocks are freely connected by the same
 cube-lifting argument, giving the stated separate case.
 
 It remains to separate every pair outside this preorder by a safe
-formula. Use the assumed canonical realizers of the $g_i$, obtaining them from
-conservation where needed: $g_i$ itself respects $R_{g_i}$, so conservation
-gives an $S_{g_i}$-safe formula, and constant Boolean cubes have stable
+formula. Use the assumed canonical realizers of the $g_i$, obtaining
+them from saturated conservation at canalyzing coordinates: $g_i$
+respects $R_{g_i}^+$ and $R_{g_i}^-$, so the respective assumption
+supplies an $S_{g_i}$-safe formula. Constant Boolean cubes have stable
 endpoint values automatically.
 An $S_F$-safe formula composed with these realizers is $S_f$-safe.
 Indeed a marked inner source either is inessential within its block,
@@ -167,16 +182,35 @@ on the induced nonconstant outer cube, when outer safety removes it.
 Such substituted helpers separate any pair failing the outer comparison.
 
 A pair failing a canalyzing comparison has a separating $T_i$-upset.
-It is an $R_{g_i}$-upset constant on the saturated fiber, so conservation
-of $g_i$ gives a safe formula for it. In the AND case, an $f$-nonconstant
-cube sees that block either nonconstant or constantly one; its original
-safety handles the first case and its constant winning-fiber value the
-second. The OR case is dual. Marks in other blocks cannot appear in
-this helper. These formulas separate all remaining missing pairs.
+The respective saturated conservation assumption gives a safe formula
+for it. In the AND case, an $f$-nonconstant cube sees that block either
+nonconstant or constantly one; these are exactly the cases covered
+by $S_{g_i}^+$. The OR case is dual. Marks in other blocks cannot
+appear in this helper. These formulas separate all remaining missing pairs.
 Since safe Boolean functions form a bounded lattice, their implication
 preorder is therefore exactly $R_f$. The projection case follows by
 lifting the inner safe helpers; constant outer functions have empty
 budgets and are immediate.
+
+For necessity, assume every outer coordinate is essential and that $f$
+has conservation. An $R_F$-upset $H$ pulls back to the $R_f$-upset
+$H(g_1,\ldots,g_m)$, by the projection part of the formula.
+Choose an $S_f$-safe realizer. In each block fix all but a variable
+on a pivotal edge, so that $g_i$ becomes that variable. The cofactored
+word computes $H$. Every marked cube of $S_F$ lifts to a marked cube
+of $S_f$ along these fixed pivotal edges, so this word is $S_F$-safe.
+Thus $F$ has conservation.
+
+An upset of $R_{g_i}^+$ or $R_{g_i}^-$ at a canalyzing coordinate
+also pulls back, independently of all other blocks, to an $R_f$-upset.
+Restrict an $S_f$-safe realizer at an outer pivotal context for coordinate
+$i$. This gives an $S_{g_i}$-safe word for the chosen upset. Since
+the upset is constant on the saturated fiber, the same word is stable
+on all the added cubes, proving (ii). Finally, conservation of $f$
+gives $D_f$; the cofactor part of
+\cref{core:prop:essential-disjoint-substitution} gives every $D_{g_i}$,
+proving (iii). None of these restrictions asserts general cofactor
+heredity of conservation.
 \end{proof}
 
 \begin{corollary}[Disjoint conjunction and disjunction]
@@ -188,7 +222,10 @@ supports. Then
  \qquad
  R_{g\lor h}=R_g^-\times R_h^-.
 \]
-If $g,h$ have relative conservation, so do $g\land h$ and $g\lor h$.
+The conjunction has relative conservation if and only if both
+$S_g^+,S_h^+$ have conservation; the disjunction does if and only if
+both $S_g^-,S_h^-$ do. In particular, conservation of $g,h$ implies
+conservation of both composites.
 \end{corollary}
 \begin{proof}
 Apply \cref{core:thm:conservation-substitution} to the two Boolean gates.
@@ -320,6 +357,106 @@ if $a(L)=0$ this is a nonconstant $g$-row, and otherwise the normalization
 just proved applies. The pair bits are quiet and introduce no old
 marked source. There are no inessential pair-source rows to check.
 Thus the displayed word realizes every initial upset safely.
+\end{proof}
+
+\begin{lemma}[Pair gluing through common inessentiality]
+\label{core:lem:conservation-pair-common-budget}
+Let $g(w,X)$ have conservation, with cofactors $a\leq b$, and suppose
+\[
+ \operatorname{Ess}(b,Q)\subseteq\operatorname{Ess}(a,Q)
+ \qquad(a|_Q\text{ nonconstant}).
+\]
+Define the old-variable budget
+\[
+ W=\{(L,U,j):j\text{ inessential in both }a|_{[L,U]},b|_{[L,U]},
+                         \ b(U)=1\}.
+\]
+Then $(A\vee B)g(AB,X)$ has conservation if and only if $W$ does.
+\end{lemma}
+\begin{proof}
+Use the notation from the preceding proof. The essentiality inclusion
+gives $K_0\subseteq W$, hence $K=W$. Without the gap, the only extra
+pair-source rows have the other pair bit fixed one and an old cube
+where $a=b$ nonconstantly. They give the reversals $11\to10,01$;
+there is still no deletion of the last true pair bit.
+Thus any $R_W$-upset $h$ extends to the initial upset $A\vee B\vee h$
+of the pair function. If that function has conservation, restrict a
+safe realizer to $A=B=0$. Every $W$-row lifts to a semantic old-source
+row with both pair bits neutral, and endpoint restriction preserves
+quietness. This proves necessity.
+
+Conversely assume $W$ conserved, and let an initial upset have slices
+$\alpha\leq\beta\leq\delta$ and $\alpha\leq\gamma\leq\delta$.
+The three lower slices respect $R_W$; the upper slice respects
+$R_H$, where $H=S_b\cup W$. The pair-source reversals make
+$\beta=\gamma=\delta$ on each common nonconstant cube of $a,b$.
+Consequently $\beta\vee w\delta$ and $\gamma\vee w\delta$
+respect $R_g$. Choose $g$-safe words $U,V$ for them.
+
+They may be chosen quiet on every old $W$-row for each quiet parameter
+value. A row with $a(L)=0$ follows by $g$-safety at neutral $w$ and
+endpoint restriction. For $a(L)=1$, both slice preorders identify
+the whole $a$-positive filter. If a common nonconstant cube exists,
+its positive vertex forces the lower and upper saturated values to
+agree; the words are therefore stably constant on that filter.
+If none exists, use the normalization in the preceding proof.
+
+The product $Z=U(B,X)\wedge V(A,X)$ has slices
+$(\beta\gamma,\beta,\gamma,\delta)$ and is pair-safe. Old-source rows
+outside the fixed upper face are $W$-rows, so both factors are quiet;
+on the upper face use their $S_b$-safe endpoints. At a pair-source
+row use $g$-safety of the factor receiving the marked parameter; the
+other factor receives only quiet inputs. Choose a $W$-safe word
+$T_\alpha$. The word $A\vee B\vee T_\alpha$ is also pair-safe:
+the pair disjunction is stably one on upper-face and pair-source rows,
+and every remaining old-source row belongs to $W$.
+Its meet with $Z$ has exactly the four desired slices. This proves
+sufficiency.
+\end{proof}
+
+\begin{corollary}[A conjunction lower cofactor]
+\label{core:cor:conservation-pair-conjunction}
+Let $g(w,X)$ have conservation and satisfy
+$g(0,X)=\bigwedge_{x\in X}x$. Then $(A\vee B)g(AB,X)$ has conservation.
+\end{corollary}
+\begin{proof}
+Let $b=g(1,X)$ and factor its required variables as
+$b=(\bigwedge J)b_0(Y)$, where $Y=X\setminus J$ and $b_0$ has no
+required variable. If $Y$ is empty, $g$ ignores $w$ and the pair
+function is a disjoint conjunction; the empty-$X$ case is immediate.
+Otherwise put $h=\bigwedge Y\vee wb_0$. Then
+$g=(\bigwedge J)h$. The exact disjoint criterion gives conservation
+of $S_h^+$; if $J$ is empty, use conservation of $h=g$ and the
+automatic saturation observation instead.
+
+Write $p=b_0^d$ for the Boolean dual. It has no positive singleton.
+Duality turns $h$ into the ordinary apex
+$G=p\vee z\bigvee Y$, and $S_h^+$ into $S_G^-$. Hence the latter
+budget is conserved. Every $R_{B_1(p)}$-upset $u\ne1$ has
+$u(\varnothing)=0$. The apex's triangular preorder admits the
+slice pair $(0,u)$, and this function is zero at every $G$-negative
+vertex. It therefore respects $R_G^-$ and has an $S_G^-$-safe word.
+On a $B_1(p)$ row, adding free $z$ gives a nonconstant $G$-row:
+$\bigvee Y$ is stably one and $p(L)=0$. Restricting the safe word to
+$z=1$ yields a $B_1(p)$-safe realizer of $u$. The constant upset is
+immediate, so $B_1(p)$ is conserved.
+
+For the full conjunction $a=g(0,X)$, the essentiality inclusion of
+the preceding lemma is automatic. Its common budget $W$ has no
+$J$-marks. Indeed $b(U)=1$ requires all of $J$ available, and any
+free required variable is essential in $b$. Its old $Y$-rows are
+exactly
+\[
+ U\subsetneq Y,\qquad b_0(U)=1,\qquad
+ j\text{ inessential in }b_0|_{[L,U]},
+\]
+with every $J$ coordinate available and any lower $J$-subset.
+Taking those coordinates all free induces the same old edges at every
+Boolean $J$ vertex. Boolean duality identifies the $Y$ budget with
+$B_1(p)$. Thus the initial preorder is the product
+of that old preorder with inclusion on $J$, and safe old helpers
+together with the quiet $J$ projections prove conservation of $W$.
+The preceding lemma now proves the assertion.
 \end{proof}
 
 \paragraph{The five minima of the path function.}
