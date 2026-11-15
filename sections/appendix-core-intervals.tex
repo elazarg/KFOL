@@ -89,56 +89,148 @@ on monochromatic colorings, proving the displayed equivalence and
 the join assertion.
 \end{proof}
 
-\begin{proposition}[Disjoint activation outside saturated palettes]
-\label{core:prop:activation-palette-reduction}
-Let $K\geq3$, let $C_1,C_2$ be core on disjoint nonempty finite
-supports $V_1,V_2$, and put $D=C_1+C_2$. Let $p,q$ be globally
-proper colorings and suppose $q_i\preceq_{C_i}p_i$ for both component
-restrictions. If $q\not\preceq_D p$, then there is an owner $r$ such that
-both $p_i$ use exactly the colors $I\setminus\{r\}$ and both $q_{i,r}$
-are nonempty. In particular, the componentwise product implication
-holds if either $p_i$ uses at most $K-2$ colors.
-\end{proposition}
-\begin{proof}
-We first transfer one factor of an actual owner box $B$, positive at
-component colorings $(u,v)$ in its formal full-factor extension.
-Suppose $u'\preceq_{C_1}u$. Its $r$-factor remains positive after
-replacing $u$ by $u'$ provided either $v_r$ is empty or $u$ omits
-some owner $k\ne r$.
+The full factors of a box also have a meaning on colorings using every
+owner, even though these are not source probes. The following erasure
+construction lets us use such formal sections without observing them.
 
-If $v_r$ is empty, delete the second block neutrally. This leaves a
-$C_1$-interval positive at $u$, by antitonicity. Activation transfers
-positivity to $u'$, and then to its monochromatic $r$-restriction,
-proving the required factor. Otherwise delete all second-block inputs
-outside $v_r$ and identify the remaining inputs with $Y$.
-The resulting core word $T$ satisfies
+\begin{lemma}[Background erasure along a marked spine]
+\label{core:lem:spine-background-erasure}
+Let $K\geq3$, and let $S(X,w,z)$ be a primitive one-$X$ spine on
+disjoint finite passive supports $W,Z$, with full owner factors $B_r$.
+Let $b=(b_r)_{r\in I}$ be disjoint color classes in $Z$, not necessarily
+omitting an owner, and suppose $\bigwedge_r B_r(b_r)=1$.
+There is a primitive one-$X$ spine $S_b(X,w)$ such that
 \[
- C_1\subseteq T\subseteq C_1\cup X\cup Y,\qquad
- C_1\subseteq\partial_YT\subseteq C_1\cup X.
+ S_b\subseteq\partial_ZS,\qquad
+ B_r^{S_b}(A)=B_r(A\cup b_r)\quad(A\subseteq W).
 \]
-Fix $Y=\{r\}$, obtaining $h$. It contains $C_1$ and is not constantly
-$\{r\}$, so winner-erasure gives $g\subseteq h\cap\partial_YT$
-agreeing with $h$ outside $r$. Thus $G=C_1+g$ belongs to
-$\mathcal I(C_1)$ and has the same agreement.
-At $u$ choose the missing queried owner $k\ne r$. Antitonicity of $B$
-gives positivity after discarding all foreign blocks of $v$, so the
-source predicate of $G$ is positive at $u$. It is therefore positive at
-$u'$, then at its monochromatic $r$-restriction by antitonicity.
-At that probe any queried owner different from $r$ witnesses
-$B_r(u'_r\cup v_r)=1$. This argument does not require the intermediate
-combined coloring to be proper: only the two observed probes are used.
+\end{lemma}
+\begin{proof}
+There are two elementary compilations, both retaining the marked spine.
+First delete a set $E$ of passive inputs neutrally. At a path gate owned
+by $s$, let $H$ be its passive helper and let $\delta_s$ be its
+$s$-singleton predicate with the $E$ flags false. If $\delta_s=0$,
+omit the gate. Otherwise attach the nonempty core helper $\partial_EH$.
+Local residual compilation preserves its nonzero $s$-predicate exactly.
+Thus the full marked factors are unchanged with $E$ absent.
 
-Now take the principal actual box $B$ positive at $p$ above $D$.
-For each $r$, transfer $p_1$ to $q_1$ using the preceding argument.
-If $p_{2,r}$ is nonempty, global properness of $p$ supplies a missing
-owner different from $r$; otherwise use the empty-block case.
-Thus every factor is admitted and $B(q_1,p_2)=1$ formally.
-Transfer the second block next. A final $r$-factor can fail only if
-$q_{1,r}$ is nonempty and $p_2$ uses every owner other than $r$.
-Choose an actually failing factor, which exists because $B(q)=0$.
-Reversing the two transfer steps for that same factor forces
-$q_{2,r}$ nonempty and $p_1$ to use every owner other than $r$.
-Their global properness makes $r$ the common sole missing owner.
+This compiled spine is contained in $\partial_ES$. To see this, give
+$E$ the unowned ghost used in neutral-source elimination and induct
+along the marked path. If the ghost prefix is the unmarked $s$
+singleton, its compiled nonempty minorant is also $\{s\}$. If the
+ghost helper is that singleton, then $\delta_s\ne0$, so the retained
+helper is $\{s\}$ too. These are exactly the absorbing cases. A
+deleted gate cannot have an unmarked $s$-singleton helper. In all
+remaining cases the ghost residue is the union of the child residues,
+which contains the compiled prefix and any attached helper.
+
+Second, identify a nonempty background block $R$ with one variable $Y$
+and fix $Y=\{r\}$. Assume its current $r$-factor satisfies $B_r(R)=1$.
+For a gate owned by $s$, put $h=H(\{r\},-)$. Again omit the gate
+if its owned singleton predicate is zero. Otherwise $h$ is not constantly
+$\{r\}$: for $s\ne r$ this follows from its nonzero $s$-predicate;
+for $s=r$ a constant value would give $B_r(R)=0$.
+\Cref{core:lem:winner-erasure} supplies a core helper
+$g\subseteq h\cap\partial_YH$ with exactly the same nonzero
+$s$-singleton predicate. Attach $g$ instead. The full factors are
+precisely the old factors with $R$ fixed to $r$.
+The same ghost induction proves containment in $\partial_YS$:
+an unmarked owned singleton helper stays that singleton after fixing
+$Y$ and after erasure, and the prefix and union cases are as above.
+
+Apply the first compilation to $Z\setminus\bigcup_r b_r$, then apply
+the second successively to the nonempty blocks $b_r$. Previously fixed
+colors shift only their own factors, so the hypothesis at the next
+stage is still the original $B_r(b_r)=1$. Every stage leaves a core
+spine. Neutral deletion is monotone and its deletions commute; identifying
+a block before deleting it has the same effect as deleting all of its
+inputs. Consequently the final spine is contained in $\partial_ZS$,
+and its full factors have the stated shifts.
+\end{proof}
+
+\begin{theorem}[Disjoint activation products]
+\label{core:thm:disjoint-activation-product}
+Let $K\geq3$, let $C_1,C_2$ be arbitrary core operations on disjoint
+nonempty finite supports $V_1,V_2$, and put $D=C_1+C_2$.
+For globally proper colorings $p,q$,
+\[
+ q\preceq_D p\quad\Longleftrightarrow\quad
+ q|_{V_1}\preceq_{C_1}p|_{V_1}
+ \quad\text{and}\quad
+ q|_{V_2}\preceq_{C_2}p|_{V_2}.
+\]
+This holds for any nonempty finite family of disjoint core baselines.
+Moreover, every member of $\mathcal I(D)$ is a finite union of operations
+\[
+ C_2(w_2)+F_1(F_2(X,w_2),w_1),\qquad F_i\in\mathcal I(C_i).
+\]
+\end{theorem}
+\begin{proof}
+Let $S\subseteq D+X$ be a primitive one-$X$ spine with full box $B$,
+so $D+S$ is an interval realizer of $B$. Fix any background coloring
+$b$ on $V_2$ and consider its formal full-factor section
+\[
+ B^b(a)=\bigwedge_r B_r(a_r\cup b_r).
+\]
+If $B(b)=0$, this section is identically zero by antitonicity, hence
+is the bottom predicate above $C_1$. Otherwise the preceding lemma
+gives a spine $S_b$ with these exact factors and
+\[
+ S_b\subseteq\partial_{V_2}S
+       \subseteq\partial_{V_2}(D+X)=C_1+X.
+\]
+Thus $C_1+S_b\in\mathcal I(C_1)$ realizes the whole section on proper
+component colorings, even when the combined coloring uses every owner.
+The same assertion holds with the components exchanged.
+
+Adjoining the unused baseline lifts every component interval to
+$\mathcal I(D)$, proving the forward implication. For the reverse,
+take the principal actual box $B=\Theta_{D,p}$. Its section by $p_2$
+is an actual $C_1$-interval predicate positive at $p_1$, so component
+activation gives $B(q_1,p_2)=1$. Its section by $q_1$ is an actual
+$C_2$-interval predicate positive at $p_2$, so $B(q_1,q_2)=1$.
+The intermediate positivity is formal; only the two component probes
+and the final globally proper coloring are observed. This proves
+$q\preceq_Dp$. Induction gives the finite product rule.
+
+Finally, for every positive coloring $p$ of an interval predicate $P$,
+choose $F_i$ realizing $\Theta_{C_i,p_i}$. The displayed composite
+has baseline $D$, lies below $D+X$, and has distinguished predicate
+$\Theta_{C_1,p_1}\Theta_{C_2,p_2}$. By the product rule this is
+exactly $\Theta_{D,p}$ on globally proper colorings. Union over the
+positive colorings of $P$ recovers $P$ and hence its operation.
+If there are no positive colorings, use the baseline $D$ itself,
+which also has the displayed form with $F_i=C_i$.
+\end{proof}
+
+\begin{corollary}[Activation outside an absorbing singleton stratum]
+\label{core:cor:owned-choice-activation}
+Let $C=C_1\star_r C_2$ and $D=C_1+C_2$ be core operations on the
+same finite passive support. If $\Phi_r(C)(p_r)=0$, then
+\[
+ \Theta_{C,p}=\Theta_{D,p}.
+\]
+If the two children have disjoint supports, activation from such $p$
+is therefore exactly the componentwise product. All remaining source
+colorings, those in $T_r(C)$, are equivalent above $C$.
+\end{corollary}
+\begin{proof}
+Since $C\subseteq D$, adjoining $D$ to a member of $\mathcal I(C)$
+gives a member of $\mathcal I(D)$ with the same distinguished predicate.
+Conversely, if a $D$-interval predicate $P$ vanishes on $T_r(C)$,
+and $F$ realizes it, then $F\star_r C$ realizes $P$ above $C$.
+Indeed, where $C\ne\{r\}$ one has $D=C$, and the final gate leaves
+$F$ unchanged. Where $C=\{r\}$, $P$ supplies no foreign winner and
+the final gate returns exactly $\{r\}$.
+
+The predicate $R(E)=\neg\Phi_r(C)(E_r)$ is actual above $D$, realized
+by $D+(X\star_r C)$, because $C\subseteq D$.
+It is positive at $p$, so $\Theta_{D,p}\leq R$ and the preceding
+construction realizes $\Theta_{D,p}$ above $C$. The two inclusions of
+interval predicates now prove equality of the principal predicates.
+The disjoint case follows from \cref{core:thm:disjoint-activation-product};
+equivalence on $T_r(C)$ is the singleton-fiber constancy in
+\cref{core:thm:source-interval}.
 \end{proof}
 
 Write $R(X,y)$ for the fold starting at $X$ and attaching $y$ once
