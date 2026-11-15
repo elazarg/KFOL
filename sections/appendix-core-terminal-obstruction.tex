@@ -1,3 +1,85 @@
+\paragraph{Activation after an owned attachment.}
+A fresh block attached at one owner can impose compatibility conditions
+that neither component imposes alone. At the monochromatic activation
+point, these conditions have an exact profile description.
+
+\begin{theorem}[A fresh owned block over a profile maximum]
+\label{core:thm:tagged-profile-activation}
+Let $K\geq3$ and let $D$ be a core operation on finite nonempty $V$
+that is the greatest completion of its singleton profiles $\phi_r=\Phi_r(D)$.
+For each owner $s$, define
+\[
+ \Gamma_s(A)=1\quad\Longleftrightarrow\quad
+ A\cap\bigcap_{r\ne s}A_r\ne\varnothing
+ \quad\text{whenever }\phi_r(A_r)=1\ (r\ne s).
+\]
+Let $T$ be a nonempty fresh finite set of inputs, fix an owner $a$, and
+put $C=D\star_a\operatorname{fold}_{\star_a}(T)$.
+At the coloring $p$ assigning $a$ to every passive input, the principal
+activation box above $C$ is
+\[
+ \Theta_{C,p}(E)=
+ \bigwedge_{s\ne a}\neg\bigl([T\subseteq E_s]\,
+                         \Gamma_s(E_s\cap V)\bigr).
+\]
+In particular the formula involves only the profile table of $D$ and
+the input coalitions, with no auxiliary helper choice.
+\end{theorem}
+\begin{proof}
+First, $\Gamma_s$ is the largest $s$-profile of a core minorant of $D$.
+Any such minorant must preserve every singleton value of $D$, so its
+profiles dominate $\phi_r$. Profile admissibility gives the displayed
+rainbow condition for each of its winning $s$-coalitions.
+Conversely the tuple with $s$-profile $\Gamma_s$ and other profiles
+$\phi_r$ is monotone and admissible by definition. Original admissibility
+gives $\phi_s\leq\Gamma_s$, and choosing all other coalitions equal
+to $V$ gives $\Gamma_s(\varnothing)=0$. The tuple dominates the
+original tuple, and is realized by \cref{core:thm:profiles}.
+Its realizer $G_s$ lies below $D$: on a singleton stratum it agrees
+with $D$, and elsewhere $D$ is the union of all inputs.
+
+The helpers $H_s=G_s\star_a\operatorname{fold}_{\star_a}(T)$ lie below
+$C$. Start at $X$, attach $H_s$ at every owner $s\ne a$, and adjoin
+$C$. This is an interval operation with the displayed source box,
+positive at $p$, since its foreign profiles are
+$[T\subseteq E_s]\Gamma_s(E_s\cap V)$.
+
+For minimality take a principal one-$X$ spine positive at $p$ and
+bounded by $C\cup X$, using \cref{core:prop:principal-activation-boxes}.
+There is no $a$-owned gate on its path: every passive helper equals
+$\{a\}$ at $p$, and that gate would permanently erase the distinguished
+foreign winner. Every helper $H$ therefore inherits the positive
+$a$-coalitions $\{t\}$ for each $t\in T$, and all winning
+$a$-coalitions of $D$. Indeed, when $X=\{a\}$ and $C=\{a\}$,
+every path gate is foreign to $a$ and conjoins the two $a$-profile bits.
+Profile admissibility makes every foreign winning coalition of $H$
+contain all of $T$.
+
+If any tag menu is ambiguous, no helper is a foreign singleton.
+With ambiguous $X$ every path gate consequently takes union.
+For each winner $k$ omitted by $C$, choose $X=I\setminus\{k\}$;
+the bound on the spine forces every helper to omit $k$.
+Thus $H\subseteq C$ on all such rows. This extends to atomic tag
+menus. If any tag is $\{a\}$, or $D=\{a\}$, the inherited profile
+makes $H=C=\{a\}$. Otherwise $C$ is $D$ union the tag menus.
+For any missing $k$, enlarge one tag atom to an ambiguous menu still
+omitting $k$, possible since $K\geq3$. The enlarged $C$ still omits
+$k$, and menu-inclusion monotonicity gives the same omission before
+enlargement. Every helper is therefore a global minorant of $C$.
+
+Suppose $H$ wins at foreign owner $s$ on $A\cup T$, with $A\subseteq V$.
+Fix the tags successively to $\{s\}$ and use
+\cref{core:lem:winner-erasure}. At each step the constant-$s$ case
+is impossible: old all-$a$ inputs still force the value $\{a\}$.
+The erasures preserve the positive $s$-coalition, and neutral deletion
+of each tag preserves containment in the corresponding residue of $C$.
+The final core erasure is a minorant of $D$, so $\Gamma_s(A)=1$.
+Every foreign helper profile is thus bounded by the displayed mask.
+The spine's $a$-mask is zero and its other masks are unions of those
+helper profiles. Its box contains the one already attained, proving
+that this is exactly the principal box.
+\end{proof}
+
 \paragraph{A terminal source need not extend a cyclic baseline.}
 The read-once hypothesis cannot be replaced by a core realization of the
 baseline. The obstruction already has four passive inputs, one owner box
@@ -59,49 +141,19 @@ any deletion preserves zero by monotonicity. All other laws are
 immediate. \Cref{core:lem:terminal-closure-laws} therefore gives the
 stated value formula, separability, and full functional independence.
 
-We prove the stronger assertion that no core operation bounded by $F$
-can supply $c$ at the probe
-\[
- p:\quad X=\{c\},\quad x=y=z=t=\{a\}.
-\]
-Here $C=\{a\}$ and $c\in F$.
-Suppose such an operation $T$ exists. A marked $X$-occurrence supplies
-its $c$, since every passive input omits $c$. Marked linearization
-gives a primitive one-$X$ spine $S$ preserving that contribution and
-bounded by $T+\partial_XT$. Since
-$\partial_XT\subseteq\partial_XF=C$, this spine is bounded by $F$.
+Let $p$ be the all-$a$ passive coloring, and let $q$ color exactly
+$A=\{y,z,t\}$ by $c$. For the two majority profiles of $D$,
+$\Gamma_b$ is the same majority predicate. For every
+$s\notin\{a,b\}$, intersections of an $a$-winning and a $b$-winning
+pair range over all three singletons, so $\Gamma_s$ is unanimity on
+$W_0$. \Cref{core:thm:tagged-profile-activation} therefore gives
+$\Theta_{C,p}(q)=1$, while the candidate's predicate is positive at
+$p$ and zero at $q$.
 
-There is no $a$-owned gate on the spine's path: at $p$ every passive
-helper is $\{a\}$, and any such gate would erase $c$ permanently.
-
-Profile inheritance (\cref{core:lem:linear-profile-inheritance}) therefore
-makes every passive helper $H$ satisfy
-\[
- \Phi_a(H)(\{x,y\})=1,\qquad \Phi_a(H)(\{t\})=1.
-\]
-The pure-$c$ trigger probe, with $X=\{a\}$, $y=z=t=\{c\}$,
-and $x=I\setminus\{a\}$, must omit $a$. The marked-source factor
-formula therefore forces some $c$-owned helper $G$ to have
-$\Phi_c(G)(A)=1$: no other owner has a nonempty atomic coalition
-on that probe.
-
-Now use the row
-\[
- X=\{b,c\},\quad x=z=\{b\},\quad y=\{a\},\quad t=\{b,c\}.
-\]
-It has $C=F=\{b,c\}$. The helper $G$ must contain $a$ there.
-Apply \cref{core:thm:one-bound-profiles} with positive coalitions
-$\{x,y\}$ at $a$, $A$ at $c$, and allowed output $I\setminus\{a\}$.
-Their intersection is $\{y\}$, whose menu is the forbidden singleton
-$a$; the only allowed owner among these two is $c$, whose atomic set
-is empty. Both alternatives fail.
-
-No helper can absorb at this row. Its positive $a$-coalition $\{t\}$
-forces every foreign-owner winning coalition to contain $t$, by
-profile admissibility; but $t$ is ambiguous. All path owners are
-foreign to $a$, and the prefix starts ambiguous at $X=\{b,c\}$.
-Every gate consequently takes union, so $a\in G$ persists to the
-root, contradicting $S\subseteq F$.
+In fact no core $T\subseteq F$ can supply $c$ when $X=\{c\}$ and
+all passive inputs equal $\{a\}$. Otherwise $C+T$ would be an actual
+interval operation positive at $p$ and bounded by $F$, contradicting
+that forced activation at $q$.
 
 In particular $F$ is noncore. If a core word had its prescribed
 pure-owner closures, every marked owner factor would be bounded by

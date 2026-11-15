@@ -35,13 +35,26 @@ $\psi_s(A)=1$. This proves the assertion.
 
 \begin{lemma}[Disjoint union of terminal baselines]
 \label{core:lem:terminal-disjoint-union}
-Let $C_1,C_2$ be source-separable core operations on disjoint finite
-nonempty supports $W_1,W_2$. Suppose the terminal closure laws suffice
-for core realizability above each $C_i$. Then they suffice above
-$D=C_1+C_2$.
+Let $C_1,C_2$ be core operations on disjoint finite nonempty supports
+$W_1,W_2$, and put $D=C_1+C_2$.
+If both components are source-separable and their terminal closure laws
+suffice for core realizability, then those laws suffice above $D$.
+If at least one component has these two properties, the full activation
+preorder is the restricted product:
+\[
+ q\preceq_D p\quad\Longleftrightarrow\quad
+ q|_{W_1}\preceq_{C_1}p|_{W_1}
+ \quad\text{and}\quad
+ q|_{W_2}\preceq_{C_2}p|_{W_2}
+\]
+for globally proper $p,q$. The same product rule holds for any finite
+number of disjoint core baselines when all but at most one have the
+stated source-separability and terminal property.
 \end{lemma}
 \begin{proof}
-The owner closures of $D$ are the direct sums
+For the first assertion assume both components are source-separable
+and have the terminal property. Take normalized masks satisfying the
+terminal laws for $D$. Its owner closures are the direct sums
 $c_t^D(E)=c_t^1(E\cap W_1)\cup c_t^2(E\cap W_2)$.
 For proper component colorings $p,q$, put
 \[
@@ -81,7 +94,58 @@ Indeed its bounds are $D$ and $D\cup X$, and at a source probe the
 two distinguished coefficients multiply. Union over the rectangles
 therefore realizes the required predicate on every globally proper
 coloring. Source reconstruction gives the candidate itself.
+
+For the activation claim, adjoining the other baseline to any component
+interval realizer proves the forward implication. For the reverse assume
+$C_2$ is source-separable with the terminal property, and let $\Theta$ be the actual
+principal owner box positive at $p$. Transfer the first block factor
+by factor as in \cref{core:prop:activation-palette-reduction}.
+Every transfer succeeds from globally proper $p$: either the second
+block has no $r$-input, or the first block omits an owner other than $r$.
+Thus $\Theta(q|_{W_1},p|_{W_2})=1$ formally, even if the intermediate
+coloring uses every owner. Shift its complementary masks by $q|_{W_1}$.
+The last positivity normalizes them. Their two laws follow from local
+capture probes in $C_2$, without a separability assumption on $C_1$.
+For the own-$r$ law choose a queried owner $k\ne r$, neutralize the
+background $k$-block, and recolor the inputs captured by $c_r^2(E)$
+to $r$. For the foreign-$s$ law choose $k\notin\{r,s\}$, assume the
+shifted $r$-mask vanishes, and neutralize $A\cap c_r^2(E)$.
+Every fixed background factor is one, so these probes read precisely
+the shifted masks. A locally captured input is also captured by $D$,
+since $C_1$ is independent of it, and by the interval realizer, whose
+passive source families equal those of $D$. Colored-cofactor independence
+therefore preserves the queried values. The shifted box satisfies both
+laws and is actual by the terminal property of $C_2$. Component activation gives
+$\Theta(q)=1$. The final coloring is globally proper, proving
+$q\preceq_D p$. The finite case follows by first combining the components
+having the terminal property, using the first assertion.
 \end{proof}
+
+\begin{corollary}[Adjoining passive union inputs]
+\label{core:prop:union-input-activation}
+Let $K\geq3$, let $C$ be core on $V$, and let $Z$ be a disjoint finite
+set of passive inputs. Put $D=C+\bigcup_{z\in Z}z$.
+For globally proper colorings $p,q$ on $V\cup Z$,
+\[
+ q\preceq_D p\quad\Longleftrightarrow\quad
+ q|_V\preceq_C p|_V\ \text{ and }\ q|_Z\subseteq p|_Z,
+\]
+where the last relation is ordinary componentwise subcoloring.
+\end{corollary}
+\begin{proof}
+If $Z$ is empty this is immediate. Otherwise its passive union is a
+one-owner trace with identity closure. Its terminal laws suffice by
+\cref{core:thm:one-owner-source-interval}, and its activation order is
+ordinary subcoloring by \cref{core:thm:one-owner-activation-order}.
+Apply the preceding product rule, with no restriction on $C$.
+\end{proof}
+
+For disjoint one-owner traces the component preorders are the explicit
+closure/interior tests of \cref{core:thm:one-owner-activation-order}.
+Their conjunction therefore characterizes every terminal predicate
+above the union, including nonseparable predicates. The baseline owners
+of the blocks may differ. Only globally proper colorings are retained;
+not every tuple of component activation types need have such a representative.
 
 \begin{theorem}[Terminal extensions of read-once operations]
 \label{core:thm:read-once-terminal-extension}
