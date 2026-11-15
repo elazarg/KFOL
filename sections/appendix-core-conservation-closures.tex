@@ -1,4 +1,4 @@
-\subsection{Relative safety under disjoint and apex extensions}
+\subsection{Relative safety and conserved helper theories}
 \label{app:core-conservation-closures}
 
 For a monotone Boolean function $f$ on a finite set $V$, let $S_f$ consist
@@ -16,6 +16,75 @@ Write $R_f^+$ for the preorder obtained by identifying all $f$-positive
 vertices, and $R_f^-$ for the analogous identification of the negative
 vertices. These identifications retain the original orientation from zero
 to one.
+
+Matroid spanning predicates have conserved theories whose safe helpers
+can be extracted from any Boolean formula for the predicate. For a finite
+matroid $M$ of positive rank on $V$, let $h_M$ be the Horn closure with rules
+\[
+ L\longrightarrow j\qquad
+ \bigl(L\text{ nonspanning},\quad j\in\operatorname{cl}_M(L)\bigr).
+\]
+An \emph{occurrence pruning} replaces any leaf occurrences independently
+by endpoint constants and simplifies the resulting formula.
+
+\begin{theorem}[Matroid safe-pruning basis]
+\label{core:thm:matroid-safe-prunings}
+Let $f$ be the spanning predicate of $M$, and let $T$ be any pure Boolean
+formula for $f$. Then $f$ has relative conservation, and
+\[
+ xR_fy\quad\Longleftrightarrow\quad x\subseteq h_M(y).
+\]
+The $S_f$-safe occurrence prunings of $T$ separate every pair outside this
+preorder. Hence every relative-safe Boolean function is a monotone
+combination of these prunings. The Boolean dual
+$f^d(x)=1-f(V\setminus x)$ also has conservation,
+with
+\[
+ xR_{f^d}y\quad\Longleftrightarrow\quad
+ V\setminus y\subseteq h_M(V\setminus x),
+\]
+and the corresponding safe-pruning assertion holds for every formula for $f^d$.
+\end{theorem}
+\begin{proof}
+On a nonconstant cube $[L,U]$, $L$ is nonspanning and $U$ spans.
+The marked $j$ is inessential exactly when
+$j\in\operatorname{cl}_M(L)$, as in
+\cref{core:thm:essential-cnf-matroid}. Every such cube can be enlarged to
+$[L,V]$. Thus the initial edges are precisely the contextual reversals
+of the displayed Horn rules. Reversing a Horn derivation and using
+inclusion proves $xR_fy$ exactly when $x\subseteq h_M(y)$.
+
+Suppose $j\in x\setminus h_M(y)$. Choose an inclusion-maximal
+$h_M$-closed set $B\supseteq y$ avoiding $j$. This set contains a
+matroid hyperplane $F$. If $B$ is nonspanning, Horn closure makes it
+matroid-closed and keeps $j$ outside its closure. Extend a basis of $B$
+together with $j$ to a matroid basis; the closure after removing $j$
+is a hyperplane containing $B$ and avoiding $j$. It is $h_M$-closed,
+so maximality makes it $B$ itself. If $B$ spans, choose an independent
+$(\operatorname{rank}M-1)$-set $I\subseteq B$. Its closure is a
+hyperplane, and the Horn rules give
+$F=\operatorname{cl}_M(I)\subseteq B$.
+
+The clause $q_B=\bigvee_{i\notin B}x_i$ separates $x,y$ and is $S_f$-safe.
+Indeed a marked $j'$ in this clause could produce $\pv$ only if
+$L\subseteq B$; inessentiality would then give
+$j'\in\operatorname{cl}_M(L)\subseteq h_M(B)=B$, a contradiction.
+We show that this clause is an occurrence pruning of $T$.
+
+Every prime implicate of a monotone formula can be extracted as a pure
+disjunction by occurrence pruning. Induct on the formula: at a meet,
+choose a child supplying the prime clause and set the other child to $c$;
+at a join, extract a clause from each child, whose union is the required
+prime clause. This is the usual CNF induction, with minimality ensuring
+equality of the extracted clauses. The cocircuit $V\setminus F$ is a
+prime implicate of the spanning predicate. Extract it from $T$, then
+set its variables in $B\setminus F$ to $b$, leaving exactly $q_B$.
+
+All these safe prunings respect $R_f$, and they separate every missing
+pair. The full safe implication theory is therefore $R_f$. The bounded
+lattice characterization gives the final generation assertion.
+Swapping the endpoints and the two gates proves the dual statement.
+\end{proof}
 
 \begin{theorem}[Disjoint substitution]
 \label{core:thm:conservation-substitution}
