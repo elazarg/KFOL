@@ -8,6 +8,8 @@ its own marked coordinate free among the marks, the initial edges suffice.
 Direct grouped edges
 suffice for two marked coordinates; raw cuts and transitivity suffice
 for three. Four marks can require a derived cut as a premise of another.
+A quiet parameter can repair an infeasible budget without changing the
+Boolean function, and its influence can survive pointwise minimization.
 
 Fix a finite variable set $V$. A \emph{marked cube} $z=(l_z,u_z,j_z)$ has
 $l_z\subseteq u_z\subseteq V$ and $j_z\in u_z\setminus l_z$.
@@ -623,4 +625,57 @@ Boolean restriction is $f$, every component has that same restriction:
 distinct endpoint outputs would union to $\nv$.
 Safety of the union forces every component to be safe. The pure
 nonexistence just proved therefore excludes observer union as well.
+\end{proof}
+
+The four-row obstruction also shows why a Boolean-inessential parameter
+cannot always be eliminated. Continue with these rows, write
+$H=ABC\vee BCD\vee ACE\vee ADE$, and use the words $T_1,T_2$ from
+the preceding proof. Put
+\[
+ d=B\wedge D,\qquad
+ h=(B\wedge C)\vee(A\wedge E)\vee(C\wedge E),\qquad
+ G=T_1\vee d.
+\]
+
+\begin{proposition}[A parameter that survives minimization]
+\label{core:prop:inessential-parameter-minimal}
+The pure word
+\[
+ T(t)=G\wedge\bigl(T_2\vee(t\wedge h)\bigr)
+\]
+has Boolean restriction $H$, independently of the additional variable $t$.
+It is safe on the four rows with $t$ respectively $b,c,b,b$, although
+no $t$-independent $H$-realizer lies below $T$ in observer-union order.
+Its two endpoint cofactors have no common lower bound in the old
+Boolean fiber of $H$.
+Consequently the extended Boolean fiber has a pointwise-minimal member
+that depends on $t$. These assertions also allow observer union and
+endpoint constants.
+\end{proposition}
+\begin{proof}
+The Boolean functions of $G,h$ satisfy
+\[
+ G=H\vee BD,\qquad H\leq h,\qquad
+ (BD)h=BCD\vee ABDE\leq H.
+\]
+Thus $Gh=H$, and the Boolean restriction of $T$ is
+$G(H\vee th)=H\vee tH=H$.
+On the four rows $G$ takes values $(c,\nv,\nv,c)$.
+With the stated parameter values the right factor of $T$ takes values
+$(\nv,c,\nv,\nv)$: the term $C\wedge E$ gives $h$ the stable value
+$c$ on row $z_2$, and $t=b$ masks $h$ on the other rows.
+Hence $T=\nv$ on all four extended rows.
+
+If a $t$-independent $H$-realizer lay below $T$, it would be quiet on
+all four original rows. Fixing $t=b$ in a word for it would give an
+$H$-formula safe on the original budget, contradicting
+\cref{core:prop:grouped-cut-nesting}. That obstruction already allows
+observer union; endpoint constants simplify away after purification
+because $H$ is nonconstant.
+The cofactor assertion follows from
+\cref{core:prop:boolean-independent-minorants}.
+Finally the extended Boolean fiber is finite. Choose a minimal member
+$U$ below $T$. Any member strictly below $U$ would also lie below $T$,
+so $U$ is globally minimal in that fiber. It must depend on $t$ by the
+absence of an independent minorant.
 \end{proof}
