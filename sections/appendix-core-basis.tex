@@ -36,6 +36,9 @@ absorber (\cref{core:thm:simultaneous-profile-budgets}). Explicit compatibility
 criteria are available above greatest profile completions, for pair-erasure
 bounds computed by Boolean reachability, and for additive owner closures
 (\cref{core:thm:profile-source-interval,core:thm:pair-source-interval,core:thm:additive-closures}).
+Interval masks have a direct path criterion, and closing their paths gives
+the greatest core operation below the specified bound
+(\cref{core:thm:interval-masks,core:cor:interval-mask-interior}).
 For source-separable operations, owner closures record which inputs an
 owner makes irrelevant and organize their reconstructions. Complete-head
 circuits provide a further exactly classified family
@@ -2475,6 +2478,131 @@ The required triple has codes $(6,5,3)$; entry $(6,5)$ is $112$, whose
 bit $2$ is zero. Thus it is not in $R$.
 \end{proof}
 
+\subsection{Interval masks and path closure}
+\label{app:core-interval-masks}
+
+Fix distinct owners $b,c$, a finite nonempty variable set $V$, and
+$K\geq3$. For an input tuple $S$, put
+\[
+ L(S)=\{j:S_j=\{c\}\},\qquad
+ U(S)=\{j:S_j\ne\{b\}\}.
+\]
+Let $\mathcal J(V)$ consist of the strict interior intervals
+$\varnothing\ne L\subsetneq U\subsetneq V$. For any
+$\mathcal M\subseteq\mathcal J(V)$ define the \emph{interval mask}
+\[
+ F_{\mathcal M}(S)=
+ \begin{cases}
+  \{b,c\},&(L(S),U(S))\in\mathcal M,\\
+  \displaystyle\bigcup_jS_j,&\text{otherwise}.
+ \end{cases}
+\]
+Both retained winners occur among the inputs on every masked interval.
+Every such operation, whether core or not, has exactly the unanimity
+singleton profiles.
+
+On $2^V$, draw every inclusion edge and the reversal $U\to L$ of every
+interval in $\mathcal M$. Write $\preceq_{\mathcal M}$ for reachability
+and put
+\[
+ \overline{\mathcal M}=
+ \{(L,U)\in\mathcal J(V):U\preceq_{\mathcal M}L\}.
+\]
+Equivalently, $(L,U)\in\overline{\mathcal M}$ when some nonempty
+sequence $(L_1,U_1),\ldots,(L_t,U_t)$ from $\mathcal M$ satisfies
+\begin{equation}\label{core:eq:interval-mask-path}
+ U\subseteq U_1,\qquad L_i\subseteq U_{i+1}\ (i<t),\qquad L_t\subseteq L.
+\end{equation}
+This description groups the inclusion steps between successive reversals.
+
+\begin{theorem}[Interval-mask recognition]\label{core:thm:interval-masks}
+The operation $F_{\mathcal M}$ is core if and only if
+$\overline{\mathcal M}=\mathcal M$.
+\end{theorem}
+\begin{proof}
+For necessity choose $a\notin\{b,c\}$ and assign $c$ on $L$, $a$ on
+$U\setminus L$, and $b$ outside $U$. By
+\eqref{core:eq:atomic-observer-expansion}, the $a$-trace of any core
+realizer is a nonempty union of Boolean derivatives. Absence of $a$ on
+each masked interval forces every Boolean component $\varphi$ to satisfy
+$\varphi(L_i)=\varphi(U_i)$ there. Consequently $\varphi$ respects
+$\preceq_{\mathcal M}$ and is constant on every interval of
+$\overline{\mathcal M}$. If such an interval were unmasked, its required
+full input union would contain $a$, a contradiction.
+
+Conversely, let $\mathcal B$ be all normalized monotone Boolean functions
+respecting $\preceq_{\mathcal M}$. It contains the all-variable
+disjunction and conjunction: each reversal has nonempty lower endpoint
+and proper upper endpoint. Every strict unmasked interval is separated
+by some $\varphi\in\mathcal B$. For an interior interval use the
+principal upset of $U$ in the reachability preorder. For a boundary
+interval use disjunction if $L=\varnothing$, or conjunction if $U=V$.
+
+For each $\varphi\in\mathcal B$, prescribe singleton profiles
+\[
+ \Phi_c(E)=\varphi(E),\qquad
+ \Phi_b(E)=1-\varphi(V\setminus E),\qquad
+ \Phi_r(E)=[E=V]\quad(r\notin\{b,c\}).
+\]
+They are admissible: disjoint winning $b,c$ coalitions would contradict
+monotonicity of $\varphi$, and every other winning coalition is $V$.
+By \cref{core:thm:profiles,core:prop:profile-maximum}, their greatest
+completion $E_\varphi$ is core. At an input with endpoints $L,U$, it
+returns $\{c\}$ if $\varphi(L)=1$, $\{b\}$ if $\varphi(U)=0$, and
+the full input union otherwise. A singleton case for any other owner
+requires unanimous singleton inputs and already equals that union.
+
+Take the finite derived union of these completions. On a masked interval
+every summand is $\{b\}$ or $\{c\}$; disjunction gives $c$ and
+conjunction gives $b$. On a strict unmasked interval a separating summand
+returns the full input union, which bounds all others by provenance.
+If $L=U$, all inputs are $b/c$ atoms, and the disjunction and conjunction
+completions together give their union. Thus the resulting core term is
+$F_{\mathcal M}$ on every winner-set input.
+\end{proof}
+
+\begin{corollary}[Greatest core minorant]\label{core:cor:interval-mask-interior}
+For arbitrary $\mathcal M\subseteq\mathcal J(V)$,
+$F_{\overline{\mathcal M}}$ is the greatest core operation pointwise
+below $F_{\mathcal M}$, among all core operations of this arity.
+For path-closed masks $\mathcal M,\mathcal N$ and every owner $r$,
+\[
+ F_{\mathcal M}\star_r F_{\mathcal N}=F_{\mathcal M\cap\mathcal N}.
+\]
+Their greatest common core minorant is
+$F_{\overline{\mathcal M\cup\mathcal N}}$.
+\end{corollary}
+\begin{proof}
+Adding reversals between already mutually reachable endpoints does not
+change reachability. Thus $\overline{\mathcal M}$ is path-closed, and
+the preceding theorem makes $F_{\overline{\mathcal M}}$ core and below
+$F_{\mathcal M}$.
+
+Let a core operation $T$ satisfy $T\subseteq F_{\mathcal M}$ pointwise.
+For each $k\notin\{b,c\}$, repeat the necessity argument with $k$ in
+place of $a$. It shows that $T$ omits $k$ on the atomic input with $c$
+on $L$, $k$ on $U\setminus L$, and $b$ elsewhere, whenever
+$(L,U)\in\overline{\mathcal M}$. Now take any winner-set input with
+these endpoints. In player $k$'s view, replacing every free input by
+$\{k\}$ raises it to the greatest element, while the fixed $b,c$
+inputs are unchanged. Monotonicity of the view operations therefore
+makes $T$ omit $k$ on the original input too. Doing this for every
+outside owner gives $T\subseteq\{b,c\}$ on each saturated interval;
+elsewhere provenance gives $T\subseteq\bigcup_jS_j$. Hence
+$T\subseteq F_{\overline{\mathcal M}}$.
+
+Both $\{b,c\}$ and the full input union on an interior interval are
+ambiguous, so every owned choice of them is their union. This proves
+the displayed identity. Intersections of path-closed masks are
+path-closed. Finally
+$F_{\mathcal M}\cap F_{\mathcal N}=F_{\mathcal M\cup\mathcal N}$
+pointwise, so the greatest-minorant formula gives the last assertion.
+\end{proof}
+
+The criterion concerns deletion of every free source at an interval.
+General source guards can delete selected sources while retaining others;
+those distinctions are not recorded by an interval mask.
+
 \subsection{No finite relational characterization}
 \label{app:core-crown}
 
@@ -2557,79 +2685,43 @@ Thus $F(N_i)=\{b,c\}$ and $F(Q_i)=\{a,b,c\}$, violating
 \cref{core:lem:cyclic-persistence}. In particular, $F$ is not core.
 
 \paragraph{Deleting one region.}
-We next realize every $F_h$ by one core term. Let $\mathcal B_h$ be
-all monotone Boolean functions $\varphi:2^V\to\{0,1\}$
-with $\varphi(\varnothing)=0$, $\varphi(V)=1$, and
-\[
- \varphi(L_i)=\varphi(U_i)\qquad(i\ne h).
-\]
-For $L\subseteq U$, a function in $\mathcal B_h$ separates $L$ from
-$U$ if and only if
+The interval-mask criterion realizes every $F_h$. More generally suppose
+$L_i\subsetneq U_i$ are Boolean covers with nonempty lower and proper
+upper endpoints, indexed cyclically with $n\geq3$, and
+\begin{equation}\label{core:eq:crown-incidence}
+ L_j\subseteq U_i\quad\Longleftrightarrow\quad j=i\text{ or }j=i+1.
+\end{equation}
+Omit one edge $h$, and let $\mathcal M_h$ contain the retained intervals.
+The normalized monotone Boolean functions constant on these intervals
+separate $L\subseteq U$ exactly when
 \begin{equation}\label{core:eq:crown-separation}
  L\ne U\quad\text{and}\quad
  (L,U)\ne(L_i,U_i)\text{ for every }i\ne h.
 \end{equation}
-Here separation means $\varphi(L)=0$, $\varphi(U)=1$.
-A single formula proves the reverse implication and will also apply to
-larger crowns. More generally suppose $L_i\subsetneq U_i$ are covers of
-a Boolean lattice, $L_i\ne\varnothing$, $U_i\ne V$, and
-\begin{equation}\label{core:eq:crown-incidence}
- L_j\subseteq U_i\quad\Longleftrightarrow\quad j=i\text{ or }j=i+1
-\end{equation}
-with cyclic indices. Relabel the omitted index as $h=n-1$. For nonempty
-$A\subseteq V$, put
-\[
- \begin{aligned}
- \psi_A(X)=1\quad\Longleftrightarrow\quad& A\subseteq X\quad\text{or}\\
- &\exists\,0\leq j\leq i<n-1\quad A\subseteq U_i,\quad L_j\subseteq X.
- \end{aligned}
-\]
-This is monotone and normalized. It is constant on each retained
-$L_p\subsetneq U_p$: if the second disjunct holds at $U_p$,
-\eqref{core:eq:crown-incidence} gives $j=p$ or $p+1$, so $p\leq i$
-and the same disjunct holds at $L_p$; the first disjunct is handled by
-$i=j=p$.
 
-If $C\subsetneq A$ and $\psi_A(C)=1$, the first disjunct is impossible.
-The second gives $L_j\subseteq C\subsetneq A\subseteq U_i$.
-Incidence and $j\leq i<n-1$ force $j=i$. Since $L_i\subsetneq U_i$
-is a cover, $C=L_i$ and $A=U_i$. Thus $\psi_A$ separates every
-strict interval except a retained matching edge. Equality at those edges
-proves the forward implication of \eqref{core:eq:crown-separation}.
+Indeed relabel $h=n-1$. Along any path
+\eqref{core:eq:interval-mask-path}, the retained reversal indices weakly
+decrease: incidence permits staying at the same index or moving to its
+predecessor, and the omitted index prevents wraparound. If the path
+collapses a strict interval $L\subsetneq U$, its first and last indices
+$j,i$ satisfy
+\[
+ i\leq j<n-1,\qquad L_i\subseteq L\subsetneq U\subseteq U_j.
+\]
+Incidence forces $i=j$, and the cover condition then forces
+$(L,U)=(L_i,U_i)$. Thus $\mathcal M_h$ is path-closed, and the Boolean
+separators in the proof of \cref{core:thm:interval-masks} give
+\eqref{core:eq:crown-separation}.
 
 \begin{lemma}[One-region deletion patches]\label{core:lem:crown-patch}
-For every $h$, the operation $F_h$ is a core term operation.
+For every $h$, the operation $F_h$ is a core term operation. The same
+holds for the interval masks of any cover crown satisfying
+\eqref{core:eq:crown-incidence}, with one interval omitted.
 \end{lemma}
 \begin{proof}
-For $\varphi\in\mathcal B_h$, prescribe owner-$c$ profile
-$\varphi(E)$, owner-$b$ profile $1-\varphi(V\setminus E)$, and
-unanimity for every other owner. These profiles are admissible:
-if the first two profiles win on coalitions $E_c,E_b$, then
-$E_c\cap E_b\ne\varnothing$, since otherwise monotonicity would give
-$1=\varphi(E_c)\leq\varphi(V\setminus E_b)=0$.
-Every other winning coalition is $V$.
-By \cref{core:thm:profiles,core:prop:profile-maximum}, there is a core
-completion $E_\varphi$ with these singleton profiles and full input
-union on every ambiguous output. At an input $S$, put
-\[
- L=\{j:S_j=\{c\}\},\qquad U=\{j:S_j\ne\{b\}\}.
-\]
-Then $L\subseteq U$. The completion returns $\{c\}$ when
-$\varphi(L)=1$, and $\{b\}$ when $\varphi(U)=0$. If the interval
-is separated, it returns the full input union: any remaining singleton
-case requires all inputs to be the same other owner's atom, whose
-value already equals that union.
-
-Take the finite derived union of $E_\varphi$ over
-$\varphi\in\mathcal B_h$. If the interval is separated, one summand
-is the full union and every other summand is contained in it by
-provenance. If $L=U$, all inputs are $b/c$ atoms; the all-variable disjunction
-and conjunction profiles ensure that the resulting union
-contains every input winner. In the remaining case,
-$(L,U)=(L_i,U_i)$ for some $i\ne h$, exactly describing $C_i$.
-Every summand is then $\{b\}$ or $\{c\}$; the all-variable disjunction gives
-$c$ and the all-variable conjunction gives $b$. Thus the union is
-$\{b,c\}$. These are precisely the values of $F_h$.
+Apply \cref{core:thm:interval-masks} to the path-closed mask
+$\mathcal M_h$. The original regions $C_i$ are exactly its intervals
+$(L_i,U_i)=(\{i\},\{i,i+1\})$.
 \end{proof}
 
 \begin{proof}[Proof of \cref{core:thm:not-finitely-related}]
@@ -2690,9 +2782,8 @@ For a winner input $S$, write $L(S)=\{j:S_j=\{c\}\}$ and
 $U(S)=\{j:S_j\ne\{b\}\}$. Define $F(S)=\{b,c\}$ when
 $(L(S),U(S))=(L_x,U_x)$ for some $x$, and return the full input union
 otherwise. The exceptional regions are disjoint because $L(S)$ identifies
-$x$. The separation formula above and the completion proof of
-\cref{core:lem:crown-patch} apply without change, so deleting any one of
-these $2^d$ regions gives a core operation.
+$x$. By \cref{core:lem:crown-patch}, deleting any one of these $2^d$
+regions gives a core operation.
 
 There is one further core patch: take the union of the two greatest
 completions for the all-variable disjunction and conjunction. It equals
