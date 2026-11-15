@@ -67,3 +67,44 @@ essential marked coordinate forces possible in every Boolean realizer.
 Induction therefore gives equality with $D_f$. Apply this to the
 displayed cofactors and their permutations.
 \end{proof}
+
+The same operation also has exact realizers on every two-source marked
+fragment, even with arbitrary neutral inputs elsewhere.
+
+\begin{corollary}[Pairwise marked-source locality]
+\label{core:cor:canonical-pair-locality}
+For each set $J$ of at most two coordinates of $F$, there is one pure
+term $t_J$ such that
+\[
+ t_J(v)=D_F(v)\qquad
+ \text{whenever }\{i:v_i=\pv\}\subseteq J.
+\]
+\end{corollary}
+\begin{proof}
+Let $Z_J$ be the semantic budget of $F$ restricted to marks in $J$.
+Its direct graph is \eqref{core:eq:direct-marked-edge}. We show that
+$F$ respects every direct edge. Its minterms are $ab,cd,zad,zbc$, and
+its maximal false facets are $bc,ad,zac,zbd$. Every minterm-minus-facet
+has size one, except $zad\setminus bc$ and $zbc\setminus ad$, which
+have size three.
+
+If a direct edge crossed from true to false, shrink its source to a
+minterm $A$ and enlarge its target to a false facet $B$. The same row
+witnesses remain valid, so $A\setminus B\subseteq J$ and this difference
+must be a singleton $\{j\}$. But $j$ is essential on every compatible
+cube $L\subseteq B$, $U\supseteq A$: the assignment
+$L\cup(A\setminus\{j\})\subseteq B$ is false, and adding $j$ makes
+it true. No row of $Z_J$ can witness the required inessentiality.
+
+By \cref{core:thm:two-marked-budgets}, $F$ therefore has a pure formula
+safe on all of $Z_J$. Its endpoint constants simplify away because $F$
+is nonconstant, giving the required $t_J$.
+Stable outputs agree with the cube endpoints, and an essential marked
+coordinate forces $\pv$ in every Boolean realizer. For the remaining
+inputs, a term returns $\pv$ exactly when it does so with just one of
+the marked coordinates retained: replacing other $\pv$ inputs by
+$\nv$ leaves all stable-endpoint tests unchanged, and each gate
+passes the disjunction of its unabsorbed marked-source flags.
+Every such single-mark input is in $Z_J$, where the formula is safe.
+Thus all inputs in the stated fragment agree with $D_F$.
+\end{proof}

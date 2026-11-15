@@ -17,33 +17,32 @@ vertices, and $R_f^-$ for the analogous identification of the negative
 vertices. These identifications retain the original orientation from zero
 to one.
 
-Matroid spanning predicates have conserved theories whose safe helpers
-can be extracted from any Boolean formula for the predicate. For a finite
+Matroid spanning predicates have conserved theories with cofactor helper
+bases in every Boolean realizer. For a finite
 matroid $M$ of positive rank on $V$, let $h_M$ be the Horn closure with rules
 \[
  L\longrightarrow j\qquad
  \bigl(L\text{ nonspanning},\quad j\in\operatorname{cl}_M(L)\bigr).
 \]
-An \emph{occurrence pruning} replaces any leaf occurrences independently
-by endpoint constants and simplifies the resulting formula.
+A Boolean cofactor fixes selected variables consistently at endpoint constants.
 
-\begin{theorem}[Matroid safe-pruning basis]
+\begin{theorem}[Matroid cofactor helper basis]
 \label{core:thm:matroid-safe-prunings}
 Let $f$ be the spanning predicate of $M$, and let $T$ be any pure Boolean
 formula for $f$. Then $f$ has relative conservation, and
 \[
  xR_fy\quad\Longleftrightarrow\quad x\subseteq h_M(y).
 \]
-The $S_f$-safe occurrence prunings of $T$ separate every pair outside this
+The $S_f$-safe Boolean cofactors of $T$ separate every pair outside this
 preorder. Hence every relative-safe Boolean function is a monotone
-combination of these prunings. The Boolean dual
+combination of these cofactors. The Boolean dual
 $f^d(x)=1-f(V\setminus x)$ also has conservation,
 with
 \[
  xR_{f^d}y\quad\Longleftrightarrow\quad
  V\setminus y\subseteq h_M(V\setminus x),
 \]
-and the corresponding safe-pruning assertion holds for every formula for $f^d$.
+and the corresponding safe-cofactor assertion holds for every formula for $f^d$.
 \end{theorem}
 \begin{proof}
 On a nonconstant cube $[L,U]$, $L$ is nonspanning and $U$ spans.
@@ -69,18 +68,15 @@ The clause $q_B=\bigvee_{i\notin B}x_i$ separates $x,y$ and is $S_f$-safe.
 Indeed a marked $j'$ in this clause could produce $\pv$ only if
 $L\subseteq B$; inessentiality would then give
 $j'\in\operatorname{cl}_M(L)\subseteq h_M(B)=B$, a contradiction.
-We show that this clause is an occurrence pruning of $T$.
+It is an actual Boolean cofactor of $T$: fix $F$ to $c$ and
+$B\setminus F$ to $b$. The remaining Boolean function is precisely
+the disjunction on $V\setminus B$, since a hyperplane together with
+any outside element spans. Every pure formula for this disjunction has
+the same bichain semantics, by the uniform-threshold case of
+\cref{core:cor:essential-unique-fiber}. Thus the cofactored term really
+evaluates to $q_B$ on all bichain inputs.
 
-Every prime implicate of a monotone formula can be extracted as a pure
-disjunction by occurrence pruning. Induct on the formula: at a meet,
-choose a child supplying the prime clause and set the other child to $c$;
-at a join, extract a clause from each child, whose union is the required
-prime clause. This is the usual CNF induction, with minimality ensuring
-equality of the extracted clauses. The cocircuit $V\setminus F$ is a
-prime implicate of the spanning predicate. Extract it from $T$, then
-set its variables in $B\setminus F$ to $b$, leaving exactly $q_B$.
-
-All these safe prunings respect $R_f$, and they separate every missing
+All these safe cofactors respect $R_f$, and they separate every missing
 pair. The full safe implication theory is therefore $R_f$. The bounded
 lattice characterization gives the final generation assertion.
 Swapping the endpoints and the two gates proves the dual statement.
@@ -221,6 +217,23 @@ connected component, by the disjoint formula. Positive saturation therefore
 reduces its preorder to the two-class truth preorder. The OR-root case
 is dual. The disjoint supports make the block truth map surjective, and
 the theorem supplies safety and all its upsets.
+\end{proof}
+
+\begin{corollary}[Read-once cofactor helper basis]
+\label{core:cor:readonce-cofactor-helpers}
+Let $f$ be a nonconstant full-support read-once Boolean function, and let
+$T$ be any pure formula realizing $D_f$. Its $S_f$-safe Boolean cofactors
+separate the initial preorder $R_f$ and generate all relative-safe Boolean
+functions under monotone combination.
+\end{corollary}
+\begin{proof}
+Use the maximal opposite-root blocks $g_i$ of
+\cref{core:cor:readonce-relative-helpers}. Fix all variables in the other
+blocks to the outer gate's neutral endpoint. Applying this same assignment
+to $T$ gives a Boolean cofactor realizing $D_{g_i}$, since canonical
+extensions commute with Boolean cofactors. The block functions $g_i$ are
+$S_f$-safe and separate every pair outside $R_f$, by the preceding
+corollary. Thus these actual cofactors of $T$ supply the claimed basis.
 \end{proof}
 
 \begin{corollary}[Majority wrapper]
