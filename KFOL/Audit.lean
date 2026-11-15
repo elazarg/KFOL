@@ -625,6 +625,12 @@ import all KFOL.Core.ProfileBudgets.Folds
 import all KFOL.Core.ProfileBudgets.Profiles
 import all KFOL.Core.ProfileBudgets.Pruning
 import all KFOL.Core.ProfileBudgets.Queries
+import all KFOL.Definitions.BichainEssential
+import all KFOL.Definitions.BichainSwitch
+import all KFOL.Core.BichainCanonical
+import all KFOL.Core.BichainReadOnce
+import all KFOL.Core.BichainSeparatingSource
+import all KFOL.Core.BichainSwitch
 meta import Lean.Elab.Command
 meta import Lean.Util.CollectAxioms
 

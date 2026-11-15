@@ -43,6 +43,7 @@ public import KFOL.DependentSchedule.Results
 public import KFOL.InfiniteGames.Adequacy
 public import KFOL.InfiniteGames.Continuation
 public import KFOL.Core.ProfileBudgets.Profiles
+public import KFOL.Core.BichainSwitch
 public import KFOL.Audit.Namespace
 
 /-! # Audited report statements and mathematical proof ingredients
@@ -1103,6 +1104,28 @@ theorem permutation_envelope_cardinality {Role : Type u} [DecidableEq Role] [Fin
     Fintype.card (Envelope.Carrier Role M) =
       1 + (Fintype.card Role).factorial * Fintype.card M :=
   Results.Algebra.permutation_envelope_cardinality M
+
+/-! ## Canonical Boolean extensions and cofactor obstructions -/
+
+theorem canonical_stable_separating_source {Var : Type u} [Fintype Var] [DecidableEq Var]
+    (f : (Var → Bool) → Bool) (realized : Bichain.HasCanonicalRealizer f) :
+    ∀ A B, f A = true → f B = false → ∃ j, A j = true ∧ B j = false ∧
+      ∀ lower upper, lower ≤ upper → lower ≤ B → A ≤ upper →
+        Bichain.Essential f lower upper j :=
+  Bichain.HasCanonicalRealizer.stableSeparatingSource realized
+
+theorem canonical_cofactor_obstruction :
+    Monotone Bichain.squareSwitch ∧ ¬ Bichain.HasCanonicalRealizer Bichain.squareSwitch ∧
+      ∀ j bit, ∃ t : Bichain.Term (Fin 5), t.IsReadOnce ∧
+        ∀ v, t.eval v = Bichain.canonicalExtension
+          (Bichain.booleanCofactor Bichain.squareSwitch j bit) v :=
+  Bichain.squareSwitch_cofactor_obstruction
+
+theorem read_once_canonical_extension {Var : Type u} [Fintype Var] [DecidableEq Var]
+    (t : Bichain.Term Var) (readOnce : t.IsReadOnce) (f : (Var → Bool) → Bool)
+    (boolean : ∀ a, t.eval (fun i => Bichain.Value.ofBool (a i)) = Bichain.Value.ofBool (f a)) :
+    ∀ v, t.eval v = Bichain.canonicalExtension f v :=
+  Bichain.Term.IsReadOnce.canonical readOnce f boolean
 
 /-! ## Atomic input logic and coalescing roles -/
 
