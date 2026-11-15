@@ -17,7 +17,104 @@ vertices, and $R_f^-$ for the analogous identification of the negative
 vertices. These identifications retain the original orientation from zero
 to one.
 
-\begin{theorem}[Disjoint composition]
+\begin{theorem}[Disjoint substitution]
+\label{core:thm:conservation-substitution}
+Let $F$ and $g_1,\ldots,g_m$ be nonconstant monotone Boolean functions,
+with the $g_i$ on pairwise disjoint finite variable sets, and put
+$f=F(g_1,\ldots,g_m)$. If all these functions have relative conservation,
+then so does $f$.
+
+More precisely, suppose $F$ is not a projection. Call $i$ an
+\emph{AND-canalyzing} coordinate if $F|_{i=0}=0$, and
+\emph{OR-canalyzing} if $F|_{i=1}=1$. Every other coordinate has both
+cofactors nonconstant. The two canalyzing types cannot coexist. For conservation of $f$, it
+suffices that $F$ and the $g_i$ at canalyzing coordinates have conservation,
+while the remaining $D_{g_i}$ are term-realizable. Put
+$T_i=R_{g_i}^+$ for an AND-canalyzing coordinate and
+$T_i=R_{g_i}^-$ for an OR-canalyzing coordinate. Without any conservation
+assumption, the initial preorder is
+\[
+ xR_fy\quad\Longleftrightarrow\quad
+ g(x)R_Fg(y)\ \text{ and }\ x_iT_iy_i
+ \text{ for every canalyzing }i,
+ \qquad g(x)=(g_i(x_i))_i.
+\]
+For a projection $F=x_i$, it is $R_{g_i}$ on that block and the universal
+preorder on all other blocks.
+\end{theorem}
+\begin{proof}
+A cube in the product of the inner variable sets induces an outer cube:
+each block contributes its constant value or a free outer coordinate.
+This outer cube is nonconstant exactly when $f$ is nonconstant on the
+original cube. If a marked inner coordinate changes $g_i$, its
+$f$-inessentiality says that outer coordinate $i$ is inessential on this
+outer cube. Thus every initial $f$-edge projects to an $R_F$-edge.
+
+An AND-canalyzing coordinate is essential whenever it is free on a
+nonconstant outer cube, and cannot be fixed zero there. Consequently
+an initial deletion within its block either comes from a nonconstant
+$g_i$-inessential cube or stays within the winning fiber. These are
+$R_{g_i}^+$-edges. The OR case is dual. This proves the forward implication
+in the displayed formula. It also shows that a canalyzing outer bit can
+never decrease along $R_F$.
+
+For the reverse implication, first observe that every $R_{g_i}$-edge
+lifts with all other block vertices unchanged: enlarge those other
+blocks to their full cubes. The inner nonconstant cube makes the
+composite lower value zero and upper value one, and its marked coordinate
+remains inessential. A constant-$c$ inner cube lifts in the same way
+whenever $F|_{i=c}$ is nonconstant. Such cubes connect every pair of
+vertices in the $c$-fiber: use their union when $c=1$ and their intersection
+when $c=0$. Hence both fibers collapse for an interior coordinate,
+whereas the winning fiber collapses for an AND-canalyzing coordinate
+and the losing fiber for an OR-canalyzing coordinate. All these moves
+are available independently of the other blocks.
+
+An outer marked deletion can affect only an interior coordinate.
+Choose any Boolean boundary edge of its $g_i$. With the other blocks
+ranging over their required outer states, this gives a nonconstant
+$f$-cube on which the marked inner boundary coordinate is inessential.
+The two fiber collapses let it connect any prescribed inner vertices
+of the two truth values. Outer inclusions lift similarly.
+
+To coordinate these lifts with the canalyzing blocks, in the AND case
+perform all prescribed $T_i$ paths first. Clamp each corresponding
+outer bit that changes from zero to one to its final value one along
+an $R_F$ path from $g(x)$ to $g(y)$. This remains a valid outer path:
+every nonconstant semantic cube has that bit free or fixed one, so
+its clamped vertices still belong to the original cube. Inclusion
+steps are preserved as well. The other canalyzing bits remain constant,
+and the interior steps lift as above. For OR-canalyzing coordinates,
+clamp changing bits to their initial zero, lift the outer path first,
+and perform the prescribed inner paths last. This proves the formula.
+For a projection, ignored blocks are freely connected by the same
+cube-lifting argument, giving the stated separate case.
+
+It remains to separate every pair outside this preorder by a safe
+formula. Use the assumed canonical realizers of the $g_i$, obtaining them from
+conservation where needed: $g_i$ itself respects $R_{g_i}$, so conservation
+gives an $S_{g_i}$-safe formula, and constant Boolean cubes have stable
+endpoint values automatically.
+An $S_F$-safe formula composed with these realizers is $S_f$-safe.
+Indeed a marked inner source either is inessential within its block,
+when the inner realizer removes it, or survives there and is inessential
+on the induced nonconstant outer cube, when outer safety removes it.
+Such substituted helpers separate any pair failing the outer comparison.
+
+A pair failing a canalyzing comparison has a separating $T_i$-upset.
+It is an $R_{g_i}$-upset constant on the saturated fiber, so conservation
+of $g_i$ gives a safe formula for it. In the AND case, an $f$-nonconstant
+cube sees that block either nonconstant or constantly one; its original
+safety handles the first case and its constant winning-fiber value the
+second. The OR case is dual. Marks in other blocks cannot appear in
+this helper. These formulas separate all remaining missing pairs.
+Since safe Boolean functions form a bounded lattice, their implication
+preorder is therefore exactly $R_f$. The projection case follows by
+lifting the inner safe helpers; constant outer functions have empty
+budgets and are immediate.
+\end{proof}
+
+\begin{corollary}[Disjoint conjunction and disjunction]
 \label{core:thm:conservation-disjoint}
 Let $g,h$ be nonconstant monotone Boolean functions on disjoint finite
 supports. Then
@@ -27,32 +124,11 @@ supports. Then
  R_{g\lor h}=R_g^-\times R_h^-.
 \]
 If $g,h$ have relative conservation, so do $g\land h$ and $g\lor h$.
-\end{theorem}
+\end{corollary}
 \begin{proof}
-Consider $f=g\land h$ and a marked coordinate in $g$'s support. On an
-$f$-nonconstant cube, $h$ has a true completion. If $g$ is nonconstant,
-the coordinate is $f$-inessential exactly when it is $g$-inessential;
-if $g$ is constantly one, every free coordinate is $f$-inessential.
-The constantly-zero case is impossible. Thus every initial edge belongs
-to the asserted product preorder.
-
-Conversely, lift each nonconstant $g$-inessential cube against the full
-$h$-cube. Its edges occur at every $h$-context. Lift each constant-one
-$g$-cube in the same way; the resulting function is $h$, so it remains
-nonconstant. In particular $[a,V_g]$, for any winning $a$, connects that
-vertex to the top in both directions. Hence all positive vertices of
-$g$ are identified. The same argument applies to $h$, proving the formula.
-
-An $R_g^+$-upset is an $R_g$-upset constant on the winning region.
-By conservation it has a $g$-relative-safe formula. That formula is
-$f$-safe: the preceding cube classification either invokes its original
-safety or puts it on a Boolean-constant cube. Marks in the other factor
-do not occur in the formula. The same holds for $R_h^+$-upsets.
-Every upset of a finite product preorder is a union of principal
-rectangles. Meets of the two factor formulas realize the rectangles,
-and their join realizes the desired upset. Quiet values are closed under
-both operations, so safety is preserved. Boolean duality proves the
-disjunction statements.
+Apply \cref{core:thm:conservation-substitution} to the two Boolean gates.
+Their initial preorders are inclusion, and their saturated factor
+comparisons already imply the required comparison of truth values.
 \end{proof}
 
 \begin{corollary}[Read-once relative helpers]
