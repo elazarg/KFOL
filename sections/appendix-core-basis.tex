@@ -87,7 +87,9 @@ finite spine normal forms and sharp quadratic order bounds
 
 \paragraph{Boolean behavior and ambiguity.}
 A three-owner observer quotient is the four-element bichain with observer
-union added (\cref{core:prop:bichain}). Its Boolean-projection fiber
+union added (\cref{core:prop:bichain}). Maximal ordered separators in
+this quotient admit linear separating contexts
+(\cref{core:thm:bichain-maximal-linear-separation}). Its Boolean-projection fiber
 already contains a copy of the entire lower-arity union-expanded clone
 (\cref{core:thm:bichain-fiber}). For a monotone Boolean function $f$,
 the canonical extension $D_f$ tracks exactly which marked inputs remain
@@ -2258,6 +2260,86 @@ by its $\pv$ observations. Its neutral lift determines those
 observations, proving uniqueness. A full term takes the value $\pv$
 when all its inputs do, separating its lift from the distinguished projection.
 \end{proof}
+
+\subsection{Linear separation in the four-state quotient}
+\label{app:core-bichain-linear-separation}
+
+Use the observer-union order $\sqsubseteq$ on $\mathbf B$, with $b,c$
+incomparable below $\nv\sqsubseteq\pv$. On $\mathbf B^{m+1}$ reverse
+this order at coordinate zero and retain it at the other coordinates;
+call the resulting order \emph{signed}. A forbidden set $D$ may be any
+signed lower set. For example, given $\alpha,\beta_1,\ldots,\beta_m\in\mathbf B$,
+a principal forbidden cone is
+\[
+ D=\{x:\alpha\sqsubseteq x_0,
+                 \ x_i\sqsubseteq\beta_i\ (1\leq i\leq m)\}.
+\]
+The possible-winner interpolation problem has $\alpha=\pv$ and
+$\beta_i=\nv$. An \emph{elementary $U$-translation} is
+$x\mapsto x\star_r u$, with $u\in U$ and $r\in\{a,b,c\}$;
+a word of these translations contains its variable exactly once.
+
+\begin{theorem}[Maximal linear separation]
+\label{core:thm:bichain-maximal-linear-separation}
+Let $U\subseteq\mathbf B^{m+1}$ be a signed upward-closed subalgebra,
+maximal subject to avoiding $D$, and containing the two diagonal tuples
+$\bar b=(b,\ldots,b)$ and $\bar c=(c,\ldots,c)$.
+Every $x\notin U$ has a word of elementary $U$-translations whose value
+at $x$ belongs to $D$. The empty word is allowed. If maximality is taken
+among all subalgebras instead, the same conclusion holds for an arbitrary
+forbidden subset $D$, without either order assumption.
+\end{theorem}
+\begin{proof}
+Let $L$ be the set of points from which no such word reaches $D$.
+It contains $U$, is invariant under elementary $U$-translations, and is
+signed upward closed because $D$ is signed lower.
+
+A scalar coordinate of a translation word is either constant or
+extensive in $\sqsubseteq$: each elementary map is extensive unless
+its helper is an absorbing atom, when it is constant. Suppose $S$ is
+a strongly connected component of the $U$-translation graph. For each
+$z\in S$ there is a return word $R_z$ fixing $z$ and constant at every
+coordinate that varies in $S$. Indeed, take return paths through points
+that witness all varying coordinates. If a scalar path changes a value
+and returns, at least one of its two directions must be constant;
+two extensive maps cannot make a nontrivial cycle. Compose these finitely
+many return words. Each fixes $z$, so earlier coordinate resets persist.
+
+For any $y,z\in S$ the following identities hold coordinatewise:
+\[
+ y\star_b z=y\star_b R_z(\bar c),\qquad
+ y\star_c z=y\star_c R_z(\bar b).
+\]
+For the first identity, a varying coordinate is reset exactly to $z_i$.
+At a globally constant coordinate with value $b$, absorption suffices;
+with value $c$, the return word fixes $c$. With value $\nv$, its value
+at $c$ is $c$ or $\nv$: monotonicity bounds it above by $\nv$, while
+the constant-or-extensive property excludes $b$. With value $\pv$,
+its value at $c$ is $c,\nv$, or $\pv$, so it cannot absorb $\pv$
+at owner $b$. These are all cases, including coordinate zero. The
+second identity is symmetric. Both passive tuples $R_z(\bar b)$ and
+$R_z(\bar c)$ belong to $U$.
+
+If $L\setminus U$ were nonempty, choose a sink strongly connected
+component $S$ in its finite translation graph. Every elementary
+translation from $S$ stays in $S$ or enters $U$. Thus products of two
+members of $U\cup S$ lie in $U\cup S$ for each foreign choice:
+use invariance for $U\times U$, the sink property for $U\times S$,
+and the displayed identities for $S\times S$.
+The tuple $\overline{\nv}=\bar b\star_a\bar c$ belongs to $U$.
+By \cref{core:prop:bichain}, observer union is the median term in the
+two foreign choices with parameter $\overline{\nv}$. Hence $U\cup S$
+is closed under observer union as well, and is already a subalgebra.
+Its signed upward closure is a $D$-avoiding strict extension of $U$,
+since it is contained in $L$. This contradicts maximality, so $L=U$.
+For the unordered variant, omit upward closure and apply maximality
+directly to the $D$-avoiding subalgebra $U\cup S$.
+\end{proof}
+
+The theorem concerns maximal separators with one common three-role
+observer. It does not contract arbitrary formulas to one occurrence.
+For mixed observers or additional foreign roles, the coordinate identities
+used in its proof need not hold.
 
 \subsection{Canonical essential-source extensions}
 \label{app:core-cographs}
