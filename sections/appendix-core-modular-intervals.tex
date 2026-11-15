@@ -157,9 +157,89 @@ preserves every singleton value of $D$. Thus $M_b^D\geq x$, and
 the same two-coalition compatibility bound gives equality.
 \end{proof}
 
-Disjointness is also essential to the composition laws themselves.
-For distinct $a,b,c$, derived union gives
-$(x\star_a y)\star_c(x\star_b y)=x+y$.
-Each child has $c$-envelope $xy$, while the result has $c$-envelope
-$x\lor y$ by the union law on its two inputs. Identifying child inputs
-can therefore create new envelope bits that the disjoint rule does not supply.
+Identification can create new envelope bits even from a read-once tree.
+In general, if $\pi:V\to W$ relabels inputs and $C^\pi$ is the resulting
+operation, then
+\[
+ M_s^C(\pi^{-1}A)\leq M_s^{C^\pi}(A).
+\]
+Every minorant can be relabelled, proving the inequality, but equality
+need not hold. For distinct $a,b,c$, take the read-once tree
+$C=(x\star_a y)\star_b z$ and identify $z$ with $x$.
+The disjoint laws give $M_c^C=xyz$, so
+$M_c^C(\{x,z\})=0$.
+After identification, $C^\pi=(x\star_a y)\star_b x$ retains $x$:
+the right child supplies it, and a $b$-singleton left child already
+requires $x=y=\{b\}$. Thus projection $x$ is a minorant and
+$M_c^{C^\pi}(\{x\})=1$.
+In fact its envelopes are $M_s^{C^\pi}=x$ at every owner: the
+baseline's $a$- and $b$-projection profiles force every minorant's
+winning coalition to contain $x$, and projection $x$ attains them all.
+One identification therefore suffices to invalidate direct pullback of
+the disjoint interfaces.
+
+\paragraph{Pruning a fixed realizer does not compute the envelopes.}
+A pruning of a primitive word replaces selected internal nodes by one
+child, leaving the remaining owners and leaf labels unchanged.
+Even one positive minorant-profile bit can require a different word.
+
+\begin{proposition}[A minorant profile need not come from a pruning]
+\label{core:prop:minorant-pruning-obstruction}
+Fix distinct owners $a,b,c$, and put
+\[
+ \begin{aligned}
+ L&=(w\star_a z)\star_c x,\\
+ C&=L\star_b\bigl((x\star_c y)\star_a z\bigr),\\
+ G&=L\star_b\bigl(x\star_c(y\star_a z)\bigr).
+ \end{aligned}
+\]
+For every $K\geq3$, $G\subseteq C$ and $M_c^C=x\lor yzw$.
+Nevertheless no pruning $P$ of the displayed word for $C$ satisfies
+both $P\subseteq C$ and $\Phi_c(P)(\{x\})=1$.
+\end{proposition}
+\begin{proof}
+Write $R=(x\star_c y)\star_a z$ and $S=x\star_c(y\star_a z)$.
+Their $b$-singleton predicates are both $xyz$, so the outer $b$-gate
+absorbs on exactly the same rows in $C$ and $G$.
+Otherwise these values are $L\cup R$ and $L\cup S$.
+The occurrence paths in $R,S$ give
+\[
+ S\subseteq R\cup x,\qquad z=\{c\}\ \Longrightarrow\ S\subseteq R.
+\]
+Indeed the two $y$-contributions have identical filters, and every
+$z$-contribution of $S$ survives in $R$. Only $x$ can supply an
+additional winner; when $z=\{c\}$ its filters also coincide.
+Finally $L$ contains $x$ unless $w\star_a z=\{c\}$, which requires
+$w=z=\{c\}$. These two inclusions therefore imply
+$L\cup S\subseteq L\cup R$, proving the bound for all menus.
+
+The profiles of $C$ are
+\[
+ \Phi_a=x(z\lor yw),\qquad
+ \Phi_b=xz(w\lor y),\qquad
+ \Phi_c=z(x\lor yw),
+\]
+with $xyzw$ at the other owners. The profiles of $G$ differ only at
+$c$, where they are $x\lor yzw$.
+Every minorant's $c$-winning coalition must meet each of
+$\{x,z\},\{x,w\},\{x,y\}$: these are intersections of winning
+$a$- and $b$-coalitions of $C$. Rainbow compatibility thus bounds
+its $c$-profile by $x\lor yzw$, and $G$ attains that bound.
+
+Suppose a pruning $P\subseteq C$ also wins $c$ on $\{x\}$.
+It must retain the old $c$-winning coalition $B=\{y,z,w\}$ and
+all other positive profile bits of $C$.
+If the top $b$-gate remains, its right pruning must win $c$ both
+on $\{x\}$ and on $B$, since that gate conjoins $c$-bits.
+The only such pruning of $R$ is $x\star_c y$: retaining its
+$a$-root cannot win $\{x\}$, while selecting the leaf $x$ loses
+$B$. But $x\star_c y$ loses the old $a$-bit $\{x,z\}$.
+The same argument excludes deleting the top gate to a pruning of $R$.
+
+If the top gate is deleted to the left, its two required $c$-bits
+force a pruning $K\star_c x$, where
+$K\in\{w,z,w\star_a z\}$.
+The old $b$-bit $\{x,y,z\}$ forces $K=z$.
+Then $z\star_c x$ loses the old $a$-bit $\{x,y,w\}$.
+All possible prunings have been excluded.
+\end{proof}
