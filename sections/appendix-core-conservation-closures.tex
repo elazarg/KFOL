@@ -236,6 +236,92 @@ $S_f$-safe and separate every pair outside $R_f$, by the preceding
 corollary. Thus these actual cofactors of $T$ supply the claimed basis.
 \end{proof}
 
+\begin{theorem}[Pair substitution under a cofactor gap]
+\label{core:thm:conservation-pair-gap}
+Let $g(w,X)$ have relative conservation, put $a=g|_{w=0}$ and
+$b=g|_{w=1}$, and suppose
+\[
+ a(S\cup\{j\})\leq b(S)\qquad(S\subseteq X,\ j\notin S).
+\]
+For fresh $A,B$, the function
+\[
+ F(A,B,X)=(A\vee B)\wedge g(A\wedge B,X)
+\]
+has relative conservation.
+\end{theorem}
+\begin{proof}
+The gap says that $a,b$ have no common nonconstant restriction cube,
+as in \cref{core:thm:canonical-cofactor-gates}. Thus no nonconstant
+$g$-cube has a free inessential $w$. Nor does a nonconstant $F$-cube
+have an inessential $A$ or $B$. For example, if $B=0$, a true completion
+makes $A$ pivotal; if $B=1$, inessentiality would give a common
+nonconstant cube of $a,b$. If $B$ is free, avoiding $A$-pivots first
+forces $a=0$ on the $B=0$ face and then $b=a$ on the $B=1$ face,
+making $F$ constantly zero.
+
+For old marked cubes $Q=[L,U]$ define budgets
+\[
+\begin{aligned}
+ K_0&=\{(L,U,j):j\text{ inessential in }a|_Q,\ a(U)=1\},\\
+ W&=\{(L,U,j):j\text{ inessential in both }a|_Q,b|_Q,\ b(U)=1\},\\
+ K&=K_0\cup W,\qquad H=S_b\cup W.
+\end{aligned}
+\]
+Listing the nine quiet $A,B$ patterns gives initial old-variable edges
+$K$ on layers $00,10,01$ and $H$ on layer $11$, with no pair-bit
+deletions. Fixed $10,01$ give $S_a$, fixed $11$ gives $S_b$;
+one free bit with the other zero gives $K_0$, and both free give $W$.
+One free bit with the other one gives the nonconstant part of $W$.
+Consequently an initial upset has slices
+\[
+ \alpha\leq\beta\leq\delta,\qquad \alpha\leq\gamma\leq\delta,
+\]
+where $\alpha,\beta,\gamma$ are $R_K$-upsets and $\delta$ is an
+$R_H$-upset. Both budgets identify every $a$-positive vertex with the
+top old vertex, by their constant-one cubes. Hence every nonzero
+upset of either budget equals one throughout that filter.
+
+Both budgets have conservation. For an $R_K$-upset $h$, the function
+$h\vee w$ respects $R_g$: its lower face respects the old marked
+edges and its upper face is constant one; there are no downward
+$w$-edges. Restrict a $g$-safe realizer to $w=0$. This is safe on
+nonconstant-$a$ rows of $K_0$. For a $W$-row with $a(L)=0$, use its
+nonconstant $g$-cube with $w=\nv$, then restrict to the endpoint:
+observer-union monotonicity preserves quietness. Rows with $a(L)=1$
+are stable, since $h$ is constant on that cube. This covers $K$.
+For an $R_H$-upset $d$, use $wd$ and restrict a $g$-safe realizer to
+$w=1$; the same reasoning covers $S_b$ and $W$.
+
+More generally, $h\leq d$ with these respective upset properties gives
+an $R_g$-upset $h\vee wd$. Choose a $g$-safe word $T_{hd}$ for it.
+If $h\ne0$, then $h=d=1$ on every $a$-positive cube, so this word
+is stably one there even with $w$ free. If $h=0$, instead take
+$T_{0d}=wU_d$, where $U_d$ is an $H$-safe realizer. It is $g$-safe:
+$w=0$ masks, $w=1$ uses $S_b$, and free $w$ uses $W$; there are no
+inessential $w$-marks. On an $a$-positive cube, $U_d$ is stably one
+unless $d=0$, when it is zero. Thus in either case $T_{hd}$ is also
+quiet on old marked cubes where $a=b=1$, for every quiet value of $w$.
+Its endpoint words are respectively $K$-safe and $H$-safe by the
+preceding endpoint argument.
+
+Now the word
+\[
+ T_{\alpha\delta}(AB,X)
+ \ \vee\ A\,T_{\beta\delta}(B,X)
+ \ \vee\ B\,T_{\gamma\delta}(A,X)
+\]
+has the required four Boolean slices. Each disjunct is $S_F$-safe.
+At fixed pair $11$, all surviving words use their $H$-safe
+$\delta$ endpoint; at $10,01$, they use $K$-safe lower endpoints or
+are masked by zero. With one free pair bit and the other zero use
+$K_0$. With one free bit and the other one use a $g$-safe interpolant
+or an $H$-safe endpoint on a $W$-row. With both bits free use $W$:
+if $a(L)=0$ this is a nonconstant $g$-row, and otherwise the normalization
+just proved applies. The pair bits are quiet and introduce no old
+marked source. There are no inessential pair-source rows to check.
+Thus the displayed word realizes every initial upset safely.
+\end{proof}
+
 \paragraph{The five minima of the path function.}
 Initial completeness can also hold at every minimal realizer of a
 noncanonical Boolean function. The four-variable path gives an exact
@@ -819,6 +905,103 @@ the threshold-apex reduction proves conservation of the extension.
 Finally, if all $(k+1)$-sets are zero, exchanging one element of a
 $k$-set at a time gives paths between any two faces. The one-vertex
 case is included.
+\end{proof}
+
+The transfer condition in \cref{core:lem:conservation-buffer} is stronger
+than conservation, even when its zero target belongs to a nontrivial
+face component. There is a sharp small-codimension range where transfer
+does hold without any realizability assumption.
+
+\begin{proposition}[Zero-face target transfer and its sharp limit]
+\label{core:prop:zero-face-transfer-limit}
+Let $p$ be monotone on finite $V$, with $1\leq k\leq|V|$ and
+$p(A)=0$ whenever $|A|\leq k$.
+Let $C$ be a component of its zero-$k$-face graph, and suppose every
+inclusion-maximal zero set whose $k$-faces lie in $C$ has codimension
+at most two. If $p(y)=0$, $|y|\geq k$, and the $k$-faces of $y$ lie
+in $C$, then
+\[
+ xR_py\quad\Longrightarrow\quad xR_{B_k}y.
+\]
+In particular this holds for every nonsingleton $C$ when $|V|\leq k+3$.
+The arity bound cannot be increased: at $k=2$, a six-variable $p$ with
+both $p$ and $B_2$ conserved has a comparison violating this implication
+between two nonsingleton zero-face components.
+\end{proposition}
+\begin{proof}
+Let $\mathcal D_C$ be the downward closure of the zero sets of size
+at least $k$ belonging to $C$. These high zero sets form one $R_{B_k}$
+class. No marked edge ends below size $k$, so
+\[
+ xR_{B_k}y\quad\Longleftrightarrow\quad x\in\mathcal D_C.
+\]
+To prove the implication, it suffices to show that $\mathcal D_C$ is
+$R_p$-downward closed. Inclusions already preserve it. Suppose an initial
+deletion $A\cup\{j\}\to A$ enters it from outside, and choose a
+maximal zero set $H\supseteq A$ belonging to $C$. Then $j\notin H$
+and $|A|<k$: a zero extension of a high face would stay in its component.
+Let $[L,U]$ witness the deletion.
+
+If $|H\cap U|\geq k$, choose
+$A\subseteq K\subseteq H\cap U$ with $|K|=k$. If
+$p(K\cup\{j\})=0$, its zero $(k+1)$-set connects $K$ to a face
+containing $A\cup\{j\}$, putting the source back in $\mathcal D_C$.
+Thus $p(K\cup\{j\})=1$, whereas $p(K)=0$, contradicting
+inessentiality of $j$ on $[L,U]$. Hence $|H\cap U|\leq k-1$.
+But $p(U\setminus\{j\})=1$, so $U\setminus\{j\}$ has at least
+$k+1$ members, at least two outside $H$. Together with $j$, this
+forces codimension at least three, a contradiction.
+For a nonsingleton component every maximal zero facet has size at
+least $k+1$, since every face has a zero union with a neighbouring face.
+Thus $|V|\leq k+3$ gives the required codimension bound.
+
+For sharpness, split $E$ in \cref{core:prop:conservation-without-prunings}
+into the disjoint block $E\vee F$. This gives the canonical conserved function
+\[
+ P=(A\vee B)\bigl(CD\vee(E\vee F)(AB\vee C\vee D)\bigr)
+\]
+on $V=\{A,B,C,D,E,F\}$, by disjoint substitution. Its maximal zero
+sets are
+\[
+ ABC,\quad ABD,\quad AEF,\quad BEF,\quad CDEF.
+\]
+The zero-pair components are
+$C_1=\{AB,AC,AD,BC,BD\}$ and the ten other pairs, forming $C_2$.
+The marked $B$-cube $[A,ABCD]$ has cofactor $CD$, so
+$AB\to A\subseteq AE$ is an $R_P$ route. Its endpoints lie in
+different high-zero components and cannot be $R_{B_2}$-related.
+
+The filtered budget is nevertheless conserved. Its initial preorder has
+ten classes: the empty set, six singleton classes, the two high-zero
+classes, and one positive class. To see the last assertion, delete $F$
+or $E$ at the nonconstant cube $[CD,V]$, whose cofactor is $A\vee B$.
+The positive routes in \cref{core:prop:conservation-without-prunings}
+then apply on either one-copy face; all their lower endpoints have size
+at least two. They reach every positive minterm.
+No reverse edge reaches a singleton. Inclusions give the remaining
+class comparisons: $A,B,C,D$ lie below both zero classes, $E,F$ below
+$C_2$, and both zero classes below the positive class.
+
+Here are canonical indicators of the nine nonconstant principal upsets:
+\[
+\begin{array}{c|l}
+ X\in\{A,B,C,D\}&X\vee\operatorname{Thr}_2(V\setminus\{X\})\\
+ E&E\vee CD\vee F(A\vee B\vee C\vee D)\\
+ F&F\vee CD\vee E(A\vee B\vee C\vee D)\\
+ C_1&AB\vee(A\vee B)(C\vee D)\\
+ C_2&CD\vee EF\vee(E\vee F)(A\vee B\vee C\vee D)\\
+ \text{positive}&P
+\end{array}
+\]
+The first row uses disjoint OR and a threshold. The next two use
+disjoint OR and an ordinary apex; the $C_1$ indicator is
+$\operatorname{Maj}_3(A,B,C\vee D)$. The $C_2$ indicator is obtained
+by two successive ordinary apex extensions of $CD$ on $\{A,B,C,D\}$.
+Thus each has a canonical realizer. Each indicator respects the initial
+class order, so its marked coordinates are inessential on every budget
+row; its canonical realizer is therefore safe. Their joins, together
+with the constant for the bottom class, realize every initial upset.
+This proves conservation of $B_2$ and completes the example.
 \end{proof}
 
 \begin{corollary}[Several threshold inputs]
