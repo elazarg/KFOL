@@ -121,3 +121,189 @@ formula is stably one on every $f$-constant-one cube, hence $S_F$-safe by
 the cube classification for disjoint conjunction. It separates the stated
 vertices despite its own nonrealizable canonical extension.
 \end{proof}
+
+\paragraph{Canonical intermediate values require unbounded gate arity.}
+The difficulty also occurs inside a realizing circuit. A formula is
+\emph{hereditarily canonical} if every subformula has a Boolean-valued
+restriction and equals its canonical extension. We allow gates of arbitrary
+finite arity, so this property records which intermediate functions are
+retained after flattening associative gates. Even uniform-threshold gates
+of bounded arity cannot provide such presentations for all realizable
+canonical extensions.
+
+A uniform-threshold gate denotes the canonical bichain extension of its
+Boolean threshold. Fix $m\geq3$, write $[m]=\{1,\ldots,m\}$, use disjoint
+variable sets $P=\{p_1,\ldots,p_m\}$ and $Q=\{q_1,\ldots,q_m\}$, and put
+\[
+ h_i=q_i\wedge\operatorname{Thr}_{m-2}(Q\setminus\{q_i\}),
+ \qquad
+ g_i=\bigvee_{j\ne i}p_j\vee h_i,
+ \qquad F_m=\bigwedge_{i=1}^m g_i.
+\]
+Here a threshold on a variable set counts its true coordinates. Equivalently,
+\[
+ F_m=\operatorname{Thr}_2(P)\vee\bigwedge Q\vee\bigvee_i(p_i\wedge h_i).
+\]
+Indeed zero true $p$'s leave the conjunction of all $h_i$, which is
+$\bigwedge Q$; exactly one true $p_i$ leaves $h_i$; two or more make
+every factor true. Each $g_i$ has a pure canonical realizer $G_i$ by
+uniform thresholds and disjoint substitution.
+
+\begin{proposition}[An explicit relative-safe helper lattice]
+\label{core:prop:canonical-helper-lattice}
+The word $\bigwedge_iG_i$ realizes $D_{F_m}$. Write
+$g_I=\bigwedge_{i\in I}g_i$ and $K=\bigvee_i g_i$. Its relative-safe
+Boolean functions are exactly
+\[
+ \mathcal L_{S_{F_m}}
+ =\{0,1,K\}\ \cup\ \{g_I:\varnothing\ne I\subseteq[m]\}.
+\]
+The interval $[F_m,K]$ is a Boolean lattice of rank $m$, with the
+constant functions $0,1$ below and above it. In particular, $F_m$ has relative conservation.
+Among these, exactly $0,1,K,F_m,g_1,\ldots,g_m$ have realizable canonical
+extensions. Thus every conjunction of between two and $m-1$
+distinct factors has a nonrealizable canonical extension.
+\end{proposition}
+\begin{proof}
+Write $V=P\cup Q$. Every nonconstant inessential marked cube is contained
+in one of the following families. In the second row, $q_i\in R\subseteq Q$
+and $|R|=m-2$; in the last two rows $j\ne i$.
+\[
+\begin{array}{c|c|c|c}
+ \text{mark}&L&U&F_m|_{[L,U]}\\\hline
+ p_i&Q\setminus\{q_i\}&V&\displaystyle\bigvee_{j\ne i}p_j\vee q_i\\
+ q_i&\varnothing&P\cup R&\operatorname{Thr}_2(P)\\
+ q_i&\{p_j\}&V\setminus\{q_j\}&\displaystyle\bigvee_{k\ne j}p_k\\
+ q_i&\{p_j\}\cup(Q\setminus\{q_i,q_j\})&V&\displaystyle\bigvee_{k\ne j}p_k\vee q_j
+\end{array}
+\]
+To check completeness, first mark $p_i$. No foreign $p$ is fixed one:
+otherwise setting $p_i$ to one wins already at the lower assignment,
+and inessentiality would make the original lower endpoint win.
+If a foreign $p_j$ is available, set just that foreign $p$ to one.
+The two $p_i$-cofactors are $h_j$ and $1$, so inessentiality forces
+$h_j$ stably one. Thus at least $m-1$ $q$'s are fixed one.
+They cannot all be fixed one on a nonconstant cube. If the unique missing
+one were $q_k$ with $k\ne i$, setting it to zero and all foreign $p$'s
+to zero would make $p_i$ pivotal. Hence all $Q\setminus\{q_i\}$ are
+fixed one. If no foreign $p$ is available, the winning upper endpoint
+and inessentiality require all $q$'s available; the same pivotal
+assignments again force every foreign $q$ fixed one. This is the first family.
+
+Now mark $q_i$. At most one $p$ is fixed one. Its pivotal conditions,
+according to the true $p$-coordinates, are
+\[
+\begin{array}{c|c}
+ \text{true }p\text{'s}&\text{$q_i$ pivotal}\\\hline
+ \varnothing&\displaystyle\bigwedge_{j\ne i}q_j\\
+ \{p_i\}&\operatorname{Thr}_{m-2}(Q\setminus\{q_i\})\\
+ \{p_j\},\ j\ne i&q_j\ \wedge\ [\text{exactly }m-3\text{ true in }Q\setminus\{q_i,q_j\}]\\
+ \text{at least two}&0
+\end{array}
+\]
+If no $p$ is fixed one, the first condition excludes an upper endpoint
+containing all of $Q$. If that endpoint contains $m-1$ $q$'s, let $q_k$
+be the missing one. The other two conditions exclude every available
+$p_j$ except possibly $p_k$, which alone cannot make the upper endpoint
+win. Thus at most $m-2$ $q$'s are available, giving the second family.
+If $p_i$ is fixed one, the second condition gives the same conclusion.
+If instead $p_j$ is fixed one, put $R'=Q\setminus\{q_i,q_j\}$.
+Avoiding the third condition means that $q_j$ is unavailable, all of
+$R'$ is fixed one, or at most $m-4$ elements of $R'$ are available.
+These give the third, fourth, and second families, respectively.
+
+On the first family $G_i=\nv$ and all other $G_j=c$.
+On the second every $G_i=\nv$. On either remaining family $G_j=\nv$
+and the other helpers equal $c$. Restricting an unmarked neutral input
+to an endpoint cannot introduce $\pv$, so all $G_i$ are $S_{F_m}$-safe.
+Their conjunction has Boolean function $F_m$ and is safe on its entire
+semantic budget. Stable corners and essential marked sources prove that
+it is $D_{F_m}$.
+
+The initial preorder $R_{F_m}$ has a bottom class
+\[
+ E_0=\{S\subseteq Q:|S|\leq m-2\},
+\]
+$m$ incomparable middle classes
+\[
+ E_i=\{\{p_i\}\cup S:S\subseteq Q,\ |S|\leq m-2\}
+       \ \cup\ \{Q\setminus\{q_i\},\ \{p_i\}\cup(Q\setminus\{q_i\})\},
+\]
+and a top class consisting of every $F_m$-positive vertex.
+The displayed Boolean formula classifies all negative vertices into
+these classes. The second row family clears small $Q$-sets, with or
+without $p_i$. The third clears $Q\setminus\{q_i\}$ in the presence
+of $p_i$, and the first identifies this $Q$-set with $p_i$.
+These give the stated negative classes.
+
+Every positive vertex reaches $V$ by inclusion. Conversely, $V$ reaches
+every minterm. To reach $p_ip_j$, delete the other $p$'s by the first
+family, then $q_i,q_j$ by the fourth, and all remaining $q$'s by the
+second. To reach $Q$, delete all $p$'s by the first. To reach
+$\{p_i\}\cup(Q\setminus\{q_k\})$ for $k\ne i$, delete the other
+$p$'s by the first, then $q_k$ by the fourth. These are all the minterms.
+Inclusion puts $E_0$ below each $E_i$ and each $E_i$ below the positive
+class. The safe features $g_i$ exclude further comparisons: their flag
+vectors are $0^m$ on $E_0$, one everywhere except coordinate $i$ on
+$E_i$, and $1^m$ on the positive class.
+
+The upsets of this preorder are exactly the functions in the statement.
+All of them have safe formulas, being monotone combinations of the
+$G_i$ and constants. Hence they are exactly $\mathcal L_{S_{F_m}}$.
+The function $K=\bigvee P\vee\operatorname{Thr}_{m-1}(Q)$ has a canonical
+realizer by disjoint substitution.
+
+Suppose $2\leq|I|\leq m-1$, and choose $i,j\in I$ and $k\notin I$.
+Keep the three paired indices $i,j,k$, fix all other $p$'s to zero and
+all other $q$'s to one. The retained factors $g_i,g_j$ become their
+six-variable versions at $m=3$. Every other factor in $I$ becomes
+$\bigvee_{\ell\in\{i,j,k\}}p_\ell\vee
+\operatorname{Thr}_2(\{q_i,q_j,q_k\})$, which dominates both retained
+factors. Finally fix $p_k=0$. The resulting cofactor is
+\[
+ p_ip_j\vee q_iq_j\vee q_k(p_iq_i\vee p_jq_j),
+\]
+the noncanonical square switch of
+\cref{core:thm:canonical-cofactor-obstruction}, after renaming.
+Canonical extensions commute with Boolean cofactors, proving the claimed
+nonrealizability of every intermediate $g_I$.
+\end{proof}
+
+\begin{corollary}[Unbounded arity of canonical gate presentations]
+\label{core:cor:canonical-gate-arity}
+For every $m\geq3$, the minimum possible maximum gate arity of a
+hereditarily canonical formula for $D_{F_m}$ is exactly $m$, even when
+arbitrary uniform-threshold gates and observer union are allowed.
+The upper bound is attainable using only AND and OR gates. The same
+minimum holds for circuits.
+\end{corollary}
+\begin{proof}
+Interpret a uniform-threshold gate by its canonical bichain extension.
+At a gate with Boolean restriction $F_m$, each $S_{F_m}$ row makes the
+outer threshold nonconstant on the independent cube of its children's
+endpoint values: its lower corner gives $F_m(L)=0$ and its upper corner
+gives $F_m(U)=1$. Every free argument of a nonconstant uniform threshold
+is essential. Thus a marked child would give a marked parent, and all
+children are $S_{F_m}$-safe.
+
+By the proposition, a canonical child has Boolean function $0$, $1$,
+$K$, $F_m$, or one of the $g_i$. If a child has restriction $F_m$,
+descend to it. Otherwise each child agrees on the positive class
+and on every middle class except possibly its one index $i$ when the
+child is $g_i$. Fewer than $m$ children therefore leave some $E_i$
+with exactly the same child-value vector as the positive class. No gate
+can then output $F_m$. Finite descent cannot finish at a variable or
+constant, so some gate has arity at least $m$.
+In a hereditarily canonical formula an observer-union gate has identical
+Boolean restrictions in all children; their canonical extensions agree,
+so it can be erased without increasing the other gate arities.
+
+For the upper bound use the flat $m$-ary conjunction of the $G_i$.
+Within $G_i$, the threshold on $m-1$ variables is a flat disjunction of
+its $m-1$ monomials, each an $(m-2)$-ary conjunction. Every one of these
+subformulas is canonical, as are the disjoint conjunction with $q_i$
+and the disjoint disjunction with the other $p$'s. All remaining gate
+arities are at most $m-1$. Finally, unfolding a circuit into a formula
+preserves both gate arities and hereditary canonicality, so sharing
+cannot improve the minimum.
+\end{proof}
