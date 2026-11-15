@@ -1,0 +1,123 @@
+\subsection{Relative safety and canonical extensions}
+\label{app:core-relative-canonical}
+
+A helper can be safe on another function's semantic budget while its own
+canonical essential-source extension is not term-realizable.
+Put
+\[
+ f=ABC\vee ACD\vee BCD\vee ABE\vee ACE\vee BCE,
+ \qquad F=Z\land f.
+\]
+\begin{theorem}[Relative helpers need not be canonical]
+\label{core:thm:relative-helper-not-canonical}
+The extensions $D_f,D_F$ are term-realizable. A pure $S_F$-safe formula
+separates $(0,AC)$ from $(0,BC)$, but no $R_F$-upset separating these
+vertices has a term-realizable canonical extension. In particular,
+canonical relative-safe helpers do not generate the bounded lattice of
+relative-safe Boolean functions.
+\end{theorem}
+\begin{proof}
+A canonical realizer of $f$ is
+\[
+ (A\vee B)\wedge\bigl(C(D\vee E\vee AB)\vee ABE\bigr).
+\]
+Writing $Y=AB$, the bracket is the paw $YE\vee C(D\vee Y\vee E)$.
+Its canonicality follows from the cograph criterion and disjoint substitution
+(\cref{core:thm:cograph-extension,core:prop:essential-disjoint-substitution}).
+The final meet loses no source. A bracket source outside $A,B$ witnessed
+at $A=B=0$ can instead be witnessed with exactly one available $A,B$ set to one;
+$AB$ stays zero. Bracket sources $A,B$ already require the other to be one.
+For a clause source $A$, set $B=0$ and $C(D\vee E)=1$ when possible.
+Otherwise the bracket is $AB(C\vee E)$, whose nonconstancy makes $A$ genuine.
+The case of $B$ is symmetric. This proves canonicality on nonconstant cubes;
+stable endpoints agree. Disjoint conjunction with $Z$ makes $D_F$ realizable.
+
+Set
+\[
+ H_0=AC\vee BCD\vee BCE\vee ABE,
+ \qquad H_1=AC\vee CD\vee CE\vee ABE.
+\]
+The only $f$-zero vertex added by $H_0=f\vee AC$ is $AC$.
+It has no outgoing initial deletion. A cube permitting deletion of $A$
+would have lower endpoint contained in $C$ and upper containing $AC$ and
+some $W\in\{B,D,E\}$; then $CW\to ACW$ is an $A$-pivotal edge inside it.
+Deleting $C$ is symmetric. Every strict inclusion from $AC$ enters the
+$f$-positive region, which cannot return to zero. Thus $H_0$ respects
+$R_f^+$ and separates $AC,BC$.
+
+We determine every $R_f^+$-upset $u$ separating them. It is nonzero,
+so $u\geq f$, and monotonicity gives $u\geq H_0$. The following initial
+rows of $f$ supply the indicated false-vertex routes:
+\[
+\begin{array}{c|c|c|c}
+ L&U&j&f|_{[L,U]}\\\hline
+ BD&ABCD&A&C\\
+ \varnothing&ABDE&D&ABE\\
+ D&ACDE&E&AC\\
+ D&BCDE&E&BC
+\end{array}
+\qquad
+\begin{aligned}
+ ABD&\to BD\to B\subseteq BC,\\
+ ADE&\to AD\subseteq ABD\to BD\to B\subseteq BC,\\
+ BDE&\to BD\to B\subseteq BC.
+\end{aligned}
+\]
+These and $BC$ are all maximal false vertices of $H_1$, so $u\leq H_1$.
+The only undecided vertices are $CD,CE,CDE$. They are equivalent in $R_f$:
+$CD\subseteq CDE\to CE$ uses the $D$-marked cube $[CE,ABCDE]$;
+$CE\subseteq CDE\to CD$ uses the $E$-marked cube $[CD,ABCDE]$.
+Both cofactors are $A\vee B$. Hence $u$ is exactly $H_0$ or $H_1$.
+
+Neither canonical extension is realizable. Here are raw grouped-cut
+certificates; every displayed cofactor is nonconstant and omits its mark:
+\[
+\begin{array}{c|c|c|c|c}
+ &L&U&j&\text{cofactor}\\\hline
+ H_0&\varnothing&ABC&B&AC\\
+ &BD&ABCD&A&C\\
+ &\varnothing&ABDE&D&ABE\\
+ &CD&ABCDE&E&A\vee B\\
+ &A&ABCDE&D&C\vee BE\\\hline
+ H_1&B&ABDE&D&AE\\
+ &D&ACDE&E&C\\
+ &DE&ACDE&A&C\\
+ &C&ABCDE&B&A\vee D\vee E
+\end{array}
+\]
+For $H_0$ take the positive vertex $ABE$ and negative vertex $CDE$.
+Its upper routes are $ABE\subseteq ABCDE\to ABCD\to ABC$ and
+$ABE\subseteq ABDE$; its lower routes are
+$A\subseteq ABD\to BD\to B\to\varnothing\subseteq CDE$ and $CD\subseteq CDE$.
+The marks cover $ABE\setminus CDE=\{A,B\}$.
+For $H_1$ take positive $ABE$ and negative $BC$.
+Its upper routes are $ABE\subseteq ABDE$ and $ABE\subseteq ABCDE\to ACDE$;
+its lower routes are $DE\to D\subseteq BD\to B\subseteq BC$ and $C\subseteq BC$.
+The marks cover $ABE\setminus BC=\{A,E\}$.
+Thus \cref{core:lem:grouped-cut} excludes both helpers. Distributing observer
+union into pure components gives the same exclusion in the full signature:
+every component would be safe and have the same Boolean restriction, since
+disagreeing endpoint outputs would union to $\nv$.
+
+By \cref{core:thm:conservation-disjoint},
+$R_F=R_Z^+\times R_f^+$. A canonical $R_F$-upset separating the two
+vertices would restrict at $Z=0$ to a canonical $R_f^+$-upset separating
+$AC,BC$. It would be $H_0$ or $H_1$, a contradiction.
+
+Finally an actual relative-safe separator exists. The read-once function
+$g_0=C(A\vee B(D\vee E))$ respects $R_f$.
+Indeed $C$ is essential on every nonconstant $f$-cube where $C$ is free: the
+cofactors are $ABE$ and $AB\vee AD\vee BD\vee AE\vee BE$.
+If $ABE$ has no true completion, a positive completion makes $C$ pivotal.
+Otherwise, unless $A,B,E$ are all fixed one, set one free member to zero
+and the other two to one; $C$ is again pivotal. The excluded case makes
+$f$ constantly one. Thus $C$ never decreases in $R_f$.
+Now $g_0=(f\wedge C)\vee AC$. At its $f$-positive winning vertices,
+$f,C$ remain one along $R_f$; the only extra winning vertex is $AC$,
+already treated above. Its canonical term is therefore $S_f$-safe.
+Joining it with the canonical term for $f$ realizes $H_0$ safely on $S_f$.
+Since $H_0\geq f$, this
+formula is stably one on every $f$-constant-one cube, hence $S_F$-safe by
+the cube classification for disjoint conjunction. It separates the stated
+vertices despite its own nonrealizable canonical extension.
+\end{proof}
