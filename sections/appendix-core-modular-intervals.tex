@@ -1,0 +1,165 @@
+\paragraph{Minorant profiles and disjoint owned choice.}
+Disjoint union combines activation preorders directly. For owned choice,
+the remaining singleton stratum is determined by a second piece of data.
+For a core operation $C$ on finite nonempty $V$, define its
+\emph{minorant profile envelope} at owner $s$ by
+\[
+ M_s^C(A)=\bigvee_{G\text{ core},\ G\subseteq C}\Phi_s(G)(A).
+\]
+This whole profile is attained by one minorant: there are finitely many
+core operations at this arity, their minorants are closed under every
+owned choice, and a $\star_s$-fold disjoins their $s$-profiles.
+The envelope is monotone, is zero at $\varnothing$, and is one at $V$.
+
+\begin{theorem}[Minorant profiles under disjoint composition]
+\label{core:thm:disjoint-minorant-profiles}
+Let $K\geq3$, let $C_i$ be arbitrary core operations on disjoint finite
+nonempty $V_i$, and write $A_i=A\cap V_i$. Then
+\[
+ \begin{aligned}
+ M_s^{C_1+C_2}(A)&=M_s^{C_1}(A_1)\lor M_s^{C_2}(A_2),\\
+ M_r^{C_1\star_r C_2}(A)&=M_r^{C_1}(A_1)\lor M_r^{C_2}(A_2),\\
+ M_s^{C_1\star_r C_2}(A)&=M_s^{C_1}(A_1)\land M_s^{C_2}(A_2)
+       \qquad(s\ne r).
+ \end{aligned}
+\]
+\end{theorem}
+\begin{proof}
+For the union upper bound, let $G\subseteq C_1+C_2$ and
+$\Phi_s(G)(A_1\cup A_2)=1$. If $A_2=\varnothing$, neutral deletion
+of $V_2$ already gives a minorant of $C_1$ positive at $A_1$.
+Otherwise neutrally delete $V_2\setminus A_2$, identify the remaining
+$A_2$ inputs with $Y$, and fix $Y=\{s\}$. The nonzero $s$-profile
+survives the first deletion exactly. If the fixed cofactor is not
+constantly $\{s\}$, fixed-menu erasure gives a core operation positive
+at $A_1$ and bounded by
+$\partial_{V_2}G\subseteq C_1$.
+If it is constantly $\{s\}$, the exact profile preservation gives
+$\Phi_s(G)(A_2)=1$ already before deletion. Neutral deletion of $V_1$
+then gives a minorant of $C_2$ positive at $A_2$.
+This proves the disjunction. Conversely, combine minorants attaining
+the two child envelopes by $\star_s$. They lie below $C_1+C_2$, and
+their $s$-profiles disjoin.
+
+Put $C=C_1\star_r C_2$. A minorant $G\subseteq C$ satisfies
+\[
+ \partial_{V_2}G\subseteq C_1,\qquad
+ \partial_{V_1}G\subseteq C_2,\qquad
+ \Phi_r(G)(V_1)=\Phi_r(G)(V_2)=1.
+\]
+Indeed $\partial_{V_2}C=C_1$ and $\partial_{V_1}C=C_2$:
+at each winner's neutral menu, the other child is that same ambiguous
+menu by idempotence. Fixing either whole block to $r$ makes $C=\{r\}$.
+For $s\ne r$, suppose $\Phi_s(G)(A_1\cup A_2)=1$.
+Both $A_i$ are nonempty, by compatibility with the two displayed
+$r$-coalitions. Perform the same partial deletion and fixed-$s$
+erasure as above. Its constant-$s$ alternative is now impossible:
+the preserved $r$-profile at $V_1$ still makes the cofactor equal
+$\{r\}$ there. Thus the erasure is a minorant of $C_1$ positive
+at $A_1$. Interchanging the blocks gives the analogous minorant of
+$C_2$. This proves the foreign-owner conjunction.
+This extraction argument uses only the two residual bounds and the
+two $r$-profile bits displayed above, not the full bound $G\subseteq C$.
+
+For owner $r$, the union formula is an upper bound since
+$C\subseteq C_1+C_2$. For every owner, combining envelope-attaining
+child minorants by $\star_r$ stays below $C$ and attains the stated
+disjunction or conjunction. This completes all three equalities.
+\end{proof}
+
+\begin{theorem}[Activation under disjoint owned choice]
+\label{core:thm:disjoint-owned-activation}
+Under the same hypotheses, put $C=C_1\star_r C_2$.
+For proper colorings $p,E$ on $V_1\cup V_2$, its principal activation
+predicate is
+\[
+ \Theta_{C,p}(E)=
+ \begin{cases}
+  \Theta_{C_1,p_1}(E_1)\,\Theta_{C_2,p_2}(E_2),
+       &\Phi_r(C)(p_r)=0,\\[2pt]
+  \displaystyle\bigwedge_{s\ne r}
+       \neg\bigl(M_s^{C_1}(E_s\cap V_1)\,
+                 M_s^{C_2}(E_s\cap V_2)\bigr),
+       &\Phi_r(C)(p_r)=1.
+ \end{cases}
+\]
+\end{theorem}
+\begin{proof}
+The first case is \cref{core:cor:owned-choice-activation,core:thm:disjoint-activation-product}.
+For the second, singleton-fiber constancy lets us take $p$ all-$r$.
+For each $s\ne r$, choose child minorants $G_s^i$ attaining
+$M_s^{C_i}$. The helper $G_s^1\star_r G_s^2$ lies below $C$ and
+has $s$-profile equal to the displayed product.
+Attach these helpers to $X$ at their owners $s$, then adjoin $C$.
+The resulting interval operation has exactly the stated box and is
+positive at $p$.
+
+For minimality take a principal one-$X$ spine $S\subseteq C+X$
+positive at $p$. It has no $r$-owned path gate, since every passive
+helper is $\{r\}$ on the all-$r$ diagonal.
+Every helper $H$ satisfies
+$\Phi_r(H)(V_1)=\Phi_r(H)(V_2)=1$:
+when $X=\{r\}$ and either whole passive block is fixed to $r$,
+the bound makes the spine the $r$ singleton, and its foreign path
+gates conjoin all these helper profile bits.
+
+Give every input in $V_2$ an ambiguous menu. No helper can be a
+foreign singleton, since its foreign winning coalition would be
+disjoint from the positive $r$-coalition $V_2$.
+With $X=I\setminus\{k\}$, every path gate consequently takes union.
+Whenever $C$ omits $k$, the spine bound forces every helper to omit
+$k$ too. Thus $H\subseteq C$ on these rows, and winnerwise neutral
+deletion gives $\partial_{V_2}H\subseteq C_1$.
+The analogous bound holds after deleting $V_1$.
+Apply the preceding proof's foreign-profile extraction to $H$.
+It bounds each owned helper profile by the corresponding product
+$M_s^{C_1}M_s^{C_2}$. The spine's $s$-mask is the disjunction of
+these helper profiles, and its $r$-mask is zero.
+Its box therefore contains the box already attained, proving equality.
+\end{proof}
+
+Thus activation and minorant profile envelopes together admit exact
+composition rules for disjoint union and disjoint owned choice.
+The ordinary singleton profiles used to select the branch obey their
+usual gate rules: owned choice disjoins its owner's bits and conjoins
+the others, while union conjoins every owner's bits.
+The envelopes concern bounded core operations, rather than just the
+singleton profiles of the baseline. Explicit starting cases below give
+closed tests for disjoint compositions without searching for minorants.
+
+\begin{proposition}[Minorant envelopes see more than singleton profiles]
+\label{core:prop:minorant-profile-data}
+For every $K\geq3$ there are three-input core operations $T,D$ with
+the same singleton profiles but different minorant profile envelopes.
+Specifically, for distinct owners $a,b,c$, put
+\[
+ T=(u\star_a x)\star_b(x\star_c v)
+\]
+and let $D$ be its greatest profile completion. Writing variable names
+for coalition membership bits, one has
+\[
+ M_b^T=x(u\lor v),\qquad M_b^D=x.
+\]
+\end{proposition}
+\begin{proof}
+The profiles of $T$ are
+$\Phi_a=xv$, $\Phi_c=xu$, $\Phi_b=x(u\lor v)$, and $xuv$ at all
+other owners. Any minorant preserves the winning $a$-coalition
+$\{x,v\}$ and $c$-coalition $\{x,u\}$, so every winning
+$b$-coalition must contain $x$ by rainbow compatibility.
+It cannot be $\{x\}$: at $w_u=\{a\},w_x=\{b\},w_v=\{c\}$,
+$T(w)=\{a,c\}$, whereas that positive profile bit would force a
+minorant to return $\{b\}$. Hence $M_b^T=\Phi_b(T)$.
+Replacing the $b$-profile by $x$ and retaining all other profiles
+gives an admissible tuple: every winning coalition contains $x$.
+Its core realizer lies below the profile maximum $D$, because it
+preserves every singleton value of $D$. Thus $M_b^D\geq x$, and
+the same two-coalition compatibility bound gives equality.
+\end{proof}
+
+Disjointness is also essential to the composition laws themselves.
+For distinct $a,b,c$, derived union gives
+$(x\star_a y)\star_c(x\star_b y)=x+y$.
+Each child has $c$-envelope $xy$, while the result has $c$-envelope
+$x\lor y$ by the union law on its two inputs. Identifying child inputs
+can therefore create new envelope bits that the disjoint rule does not supply.

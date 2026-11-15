@@ -1,7 +1,8 @@
 \paragraph{Activation after an owned attachment.}
 A fresh block attached at one owner can impose compatibility conditions
-that neither component imposes alone. At the monochromatic activation
-point, these conditions have an exact profile description.
+that neither component imposes alone. For a profile-maximum child, the
+minorant envelopes and the resulting activation box are explicit rainbow
+intersection tests.
 
 \begin{theorem}[A fresh owned block over a profile maximum]
 \label{core:thm:tagged-profile-activation}
@@ -13,6 +14,7 @@ For each owner $s$, define
  A\cap\bigcap_{r\ne s}A_r\ne\varnothing
  \quad\text{whenever }\phi_r(A_r)=1\ (r\ne s).
 \]
+Then $M_s^D=\Gamma_s$ for every owner $s$.
 Let $T$ be a nonempty fresh finite set of inputs, fix an owner $a$, and
 put $C=D\star_a\operatorname{fold}_{\star_a}(T)$.
 At the coloring $p$ assigning $a$ to every passive input, the principal
@@ -26,8 +28,7 @@ In particular the formula involves only the profile table of $D$ and
 the input coalitions, with no auxiliary helper choice.
 \end{theorem}
 \begin{proof}
-First, $\Gamma_s$ is the largest $s$-profile of a core minorant of $D$.
-Any such minorant must preserve every singleton value of $D$, so its
+Every core minorant of $D$ must preserve every singleton value of $D$, so its
 profiles dominate $\phi_r$. Profile admissibility gives the displayed
 rainbow condition for each of its winning $s$-coalitions.
 Conversely the tuple with $s$-profile $\Gamma_s$ and other profiles
@@ -38,47 +39,20 @@ original tuple, and is realized by \cref{core:thm:profiles}.
 Its realizer $G_s$ lies below $D$: on a singleton stratum it agrees
 with $D$, and elsewhere $D$ is the union of all inputs.
 
-The helpers $H_s=G_s\star_a\operatorname{fold}_{\star_a}(T)$ lie below
-$C$. Start at $X$, attach $H_s$ at every owner $s\ne a$, and adjoin
-$C$. This is an interval operation with the displayed source box,
-positive at $p$, since its foreign profiles are
-$[T\subseteq E_s]\Gamma_s(E_s\cap V)$.
-
-For minimality take a principal one-$X$ spine positive at $p$ and
-bounded by $C\cup X$, using \cref{core:prop:principal-activation-boxes}.
-There is no $a$-owned gate on its path: every passive helper equals
-$\{a\}$ at $p$, and that gate would permanently erase the distinguished
-foreign winner. Every helper $H$ therefore inherits the positive
-$a$-coalitions $\{t\}$ for each $t\in T$, and all winning
-$a$-coalitions of $D$. Indeed, when $X=\{a\}$ and $C=\{a\}$,
-every path gate is foreign to $a$ and conjoins the two $a$-profile bits.
-Profile admissibility makes every foreign winning coalition of $H$
-contain all of $T$.
-
-If any tag menu is ambiguous, no helper is a foreign singleton.
-With ambiguous $X$ every path gate consequently takes union.
-For each winner $k$ omitted by $C$, choose $X=I\setminus\{k\}$;
-the bound on the spine forces every helper to omit $k$.
-Thus $H\subseteq C$ on all such rows. This extends to atomic tag
-menus. If any tag is $\{a\}$, or $D=\{a\}$, the inherited profile
-makes $H=C=\{a\}$. Otherwise $C$ is $D$ union the tag menus.
-For any missing $k$, enlarge one tag atom to an ambiguous menu still
-omitting $k$, possible since $K\geq3$. The enlarged $C$ still omits
-$k$, and menu-inclusion monotonicity gives the same omission before
-enlargement. Every helper is therefore a global minorant of $C$.
-
-Suppose $H$ wins at foreign owner $s$ on $A\cup T$, with $A\subseteq V$.
-Fix the tags successively to $\{s\}$ and use
-\cref{core:lem:winner-erasure}. At each step the constant-$s$ case
-is impossible: old all-$a$ inputs still force the value $\{a\}$.
-The erasures preserve the positive $s$-coalition, and neutral deletion
-of each tag preserves containment in the corresponding residue of $C$.
-The final core erasure is a minorant of $D$, so $\Gamma_s(A)=1$.
-Every foreign helper profile is thus bounded by the displayed mask.
-The spine's $a$-mask is zero and its other masks are unions of those
-helper profiles. Its box contains the one already attained, proving
-that this is exactly the principal box.
+The foreign envelopes of the fresh $\star_a$-fold are
+$M_s(A)=[T\subseteq A]$, by \cref{core:thm:disjoint-minorant-profiles}
+applied to its leaves. Substitute these and $M_s^D=\Gamma_s$ in
+\cref{core:thm:disjoint-owned-activation} at the all-$a$ coloring.
+This gives exactly the stated box.
 \end{proof}
+
+Together with \cref{core:cor:one-owner-minorant-profiles,core:thm:one-owner-activation-order,core:thm:profile-source-interval},
+these formulas give explicit starting activation preorders and envelopes
+for one-owner traces and profile maxima. The disjoint composition laws
+therefore give both pieces of data for every expression formed from
+such blocks on disjoint supports, using arbitrary owners and union.
+Repeated inputs inside an initial block are allowed; this does not
+assert a rule for overlapping composition.
 
 \paragraph{A terminal source need not extend a cyclic baseline.}
 The read-once hypothesis cannot be replaced by a core realization of the
