@@ -224,3 +224,76 @@ Finally, if all $(k+1)$-sets are zero, exchanging one element of a
 $k$-set at a time gives paths in the graph between any two vertices.
 The one-vertex case is included.
 \end{proof}
+
+\begin{theorem}[A required input]
+\label{core:thm:conservation-required-input}
+Let $1\leq k\leq|V|$, let $G$ be nonconstant and monotone on $V$, and
+suppose $G(A)=0$ whenever $|A|<k$. Let $t,z$ be new inputs and put
+$p=t\land G$. If $p$ has relative conservation, then so do $B_k$ and
+\[
+ p\lor z\operatorname{Thr}_k(V\cup\{t\}).
+\]
+Here $B_k$ is the budget from
+\cref{core:prop:conservation-threshold-apex-reduction}, on $V\cup\{t\}$.
+\end{theorem}
+\begin{proof}
+All $k$-subsets of $V$ are zero vertices of $p$ and lie in one zero-face
+component $C$: their unions omit $t$. A remaining $k$-face is
+$\{t\}\cup B$ with $|B|=k-1$. If a zero $k$-set of $G$ contains $B$,
+this face connects to $C$ through that set. Otherwise every $k$-set
+containing $B$ is $G$-positive, and $\{t\}\cup B$ is isolated: its union
+with any other $k$-face is positive. These are all the components.
+Every zero vertex of size at least $k$ is identified with its $k$-faces
+by constant-zero cubes. Also write $C$ for the resulting component of
+the initial preorder $R_k$ of $B_k$.
+
+Let $D$ be the upward closure of the faces in $C$, viewed as a monotone
+Boolean function. It is stably one on every $B_k$ cube. Indeed, a zero
+lower endpoint $L$ of size at least $k$ with $D(L)=0$ must be one of the
+isolated faces $\{t\}\cup B$. At that lower endpoint every free old
+coordinate is essential, since adjoining it makes $G$ positive. Hence
+such a cube has no inessential mark.
+
+Let $\phi$ be an $R_k$-upset. If $\phi(C)=1$, then $\phi\geq D$.
+The join of any monotone
+formulas for $\phi,D$ still computes $\phi$ and is safe on $B_k$, because
+the second formula is stably one there.
+
+Suppose instead that $\phi(C)=0$. It vanishes on every vertex omitting
+$t$: small old sets extend to old $k$-sets. The $p$-positive vertices
+form one $R_p$-component by \cref{core:thm:conservation-disjoint}.
+Their comparisons survive in $R_k$ by the positive-path argument in
+\cref{core:cor:conservation-connected-zero-faces}. Thus either $\phi=0$,
+or it is one at every $p$-positive vertex.
+
+In the latter case, any active zero vertex $\{t\}\cup S$ has $|S|<k$.
+Moreover every old $k$-set containing $S$ is $G$-positive; otherwise its
+union with $\{t\}$ would be a zero vertex in $C$ above this active vertex.
+For such an $S$ define
+\[
+ \chi_S=G\lor\bigwedge_{i\in S}x_i.
+\]
+This is an $R_G$-upset. A violating marked deletion $A\cup\{j\}\to A$
+would have both endpoints $G$-zero, with $j\in S\subseteq A\cup\{j\}$.
+Universality of $S$ forces $|A\cup\{j\}|<k$. If $[L,U]$ witnesses this
+deletion, choose a $k$-set $K\subseteq U$ containing $L\cup S$.
+Then $G(K)=1$, whereas $G(K\setminus\{j\})=0$; both sets lie in the
+cube. This contradicts the inessentiality of $j$.
+Since $\chi_S$ is one on every $G$-positive vertex, it also respects
+$R_G^+$.
+
+Consequently each $t\land\chi_S$ is an $R_p$-upset, and so is
+\[
+ \phi=p\lor
+   \bigvee_{\substack{G(S)=0\\\phi(\{t\}\cup S)=1}}
+       \left(t\land\bigwedge_{i\in S}x_i\right).
+\]
+Conservation of $p$ supplies a formula safe on $S_p$. It is also safe
+on every added constant-zero cube of $B_k$: an isolated zero $k$-face
+has no larger zero superset, so every such cube lies entirely in $C$,
+where $\phi$ is zero. Thus every $R_k$-upset has a $B_k$-safe formula.
+
+The other face preorder is conserved by the constant-zero-cube argument.
+The triangular synthesis from the threshold-apex reduction now proves
+conservation of the displayed extension.
+\end{proof}
