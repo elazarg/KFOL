@@ -111,6 +111,72 @@ whole fragment. Its endpoint constants simplify away because $f$ is
 nonconstant. Boolean duality proves the prime-clause version.
 \end{proof}
 
+For two designated marked sources there is an exact condition on four
+Boolean cofactors. Let $u,v$ be distinct, let $Y$ be the quiet parameter
+set, and write
+\[
+ A(y)=f(0,0,y),\quad B(y)=f(1,0,y),\quad
+ C(y)=f(0,1,y),\quad D(y)=f(1,1,y).
+\]
+These are monotone functions on $2^Y$, with $A\leq B,C\leq D$.
+
+\begin{theorem}[Two marked sources by four cofactors]
+\label{core:thm:two-marked-cofactors}
+The canonical extension of a nonconstant monotone $f$ has a pure realizer
+on the whole fragment with marked support contained in $\{u,v\}$ if and
+only if, on every parameter interval $[L,U]$ with $D(L)=1$ and $A(U)=0$,
+the restrictions of $B,C$ are comparable: either $B\leq C$ throughout
+that interval or $C\leq B$ throughout it. Equivalently, for all $r,s\subseteq Y$,
+\begin{equation}\label{core:eq:two-marked-cofactor-test}
+ D(r\cap s)\wedge B(r)\wedge C(s)
+ \ \leq\ A(r\cup s)\vee C(r)\vee B(s).
+\end{equation}
+Every failure is witnessed by two fixed-parameter projection cubes.
+\end{theorem}
+\begin{proof}
+Let $Z$ consist of all nonconstant cubes of $f$ whose marked coordinate
+is $u$ or $v$ and is inessential on that cube. Safety on $Z$, together
+with Boolean restriction $f$, is exactly the required fragment semantics:
+stable endpoints and essential marked sources are forced, and a marked
+output survives exactly when some individual marked source survives.
+By \cref{core:thm:two-marked-budgets}, such a formula exists exactly when
+$f$ respects every direct edge $xD_Zy$. Endpoint constants simplify away
+because $f$ is nonconstant.
+
+Consider a crossing edge with $f(x)=1$ and $f(y)=0$. Every deleted
+coordinate is marked. It cannot delete just one coordinate $j$:
+for its witnessing row $z$, put $w=u_z\cap y$. Then
+$l_z\subseteq w$, $x\setminus\{j\}\subseteq w$, and $w\cup\{j\}\subseteq u_z$.
+Thus $f(w)=0$ and $f(w\cup\{j\})=1$, contradicting inessentiality on
+that row. The edge must therefore delete both marks, so
+\[
+ x=(1,1,L),\qquad y=(0,0,U),\qquad
+ L\subseteq U,\quad D(L)=1,\quad A(U)=0.
+\]
+
+Any compatible row has both marks free. If its quiet cube is
+$[\lambda,\mu]$, then $\lambda\subseteq U$ and $L\subseteq\mu$.
+The point $r=L\cup\lambda$ belongs both to this cube and to $[L,U]$.
+At that point $A(r)=0$ and $D(r)=1$. For a row marked $v$,
+inessentiality gives $A=C$ and $B=D$, hence $B(r)=1,C(r)=0$:
+the fixed-parameter cofactor is the projection $u$.
+A row marked $u$ similarly gives a point $s\in[L,U]$ with
+$B(s)=0,C(s)=1$, whose cofactor is the projection $v$.
+
+Conversely, any two such points give the two compatible rows directly:
+fix the quiet parameters to $r$, leave $u,v$ free and mark $v$;
+fix them to $s$ and mark $u$. Their nonconstant cofactors are the
+opposite projections, so both marked coordinates are inessential.
+These rows witness the crossing direct edge. Thus crossings are exactly
+the failures of interval comparability.
+
+Two opposite witnesses in any critical interval also lie in the smaller
+interval $[r\cap s,r\cup s]$, which remains critical by monotonicity.
+This gives exactly a violation of \eqref{core:eq:two-marked-cofactor-test},
+and every violation gives the same two projection rows. Their grouped
+cut uses inclusion alone for its endpoint premises.
+\end{proof}
+
 \begin{corollary}[When Boolean data determine the whole operation]
 \label{core:cor:essential-unique-fiber}
 Let $f$ be nonconstant with full essential support $V$. The bichain term operations
