@@ -1,22 +1,28 @@
-\paragraph{One box can require two source occurrences.}
-Linear covers do not identify occurrence count with source-box rank,
-even in a source-separable interval above a globally minimal core baseline.
+\paragraph{One box can require exponentially many source occurrences.}
+Linear covers do not identify occurrence count with source-box rank.
+The gap is exponential even for source-separable intervals with linear-size
+shared circuits. The first block already has a globally minimal baseline.
 
-\begin{proposition}[A four-variable failure of maximal-type attainment]
-\label{core:prop:one-box-two-copies}
-For every $K\geq3$ there is a source-separable core operation
-$F(X,x,y,z)$ whose distinguished source family is one normalized owner
-box, but whose least number of $X$-occurrences is two, both in the
-primitive signature and with union named. Its neutral baseline is
-globally minimal among core operations. At $X$, it has no greatest
-actual full type.
-\end{proposition}
+\begin{theorem}[Exponential source multiplicity at box rank one]
+\label{core:thm:one-box-exponential-copies}
+For every fixed $K\geq3$, chosen owner $c$, and $m\geq1$, there is a source-separable core
+operation $F_m$ on $X$ and $m$ passive triples $\{x_i,y_i,z_i\}$,
+whose distinguished source predicate is the single owner box
+\[
+ P_m(E)=\bigwedge_{i=1}^m[\{x_i,y_i\}\nsubseteq E_c].
+\]
+Its least number of $X$-occurrences is exactly $2^m$, both in the
+primitive signature and with union named. For $m=1$ the neutral baseline
+is globally minimal. At every $m$, there is no greatest actual full type
+at $X$, and $F_m$ has a primitive circuit with $O_K(m)$ gates.
+\end{theorem}
 \begin{proof}
-Fix distinct owners $a,b,c$, write $m$ for the two-out-of-three
-coalition predicate on $V=\{x,y,z\}$, and let $C$ be the greatest
+First construct one block. Choose distinct owners $a,b$ different from $c$.
+Write $q$ for the two-out-of-three coalition predicate on
+$V=\{x,y,z\}$, and let $C$ be the greatest
 profile completion with
 \[
- f_a=f_b=m,\qquad
+ f_a=f_b=q,\qquad
  f_t=x\land y\land z\quad(t\notin\{a,b\}).
 \]
 Two two-element subsets of $V$ intersect, so these profiles are
@@ -24,8 +30,8 @@ admissible. Choose passive core helpers with profiles
 \[
  \begin{array}{c|cccc}
      &a&b&c&t\notin\{a,b,c\}\\\hline
- H_a&m&x\land y&x\land y&x\land y\land z\\
- H_b&x\land y&m&x\land y&x\land y\land z
+ H_a&q&x\land y&x\land y&x\land y\land z\\
+ H_b&x\land y&q&x\land y&x\land y\land z
  \end{array}
 \]
 by profile synthesis. Their admissibility says that any two-element
@@ -46,7 +52,7 @@ Thus either spine is $\{c\}$ only when $C=\{c\}$, when both are.
 Consequently their final $c$-choice is their union, and $F\in\mathcal I(C)$.
 At a distinguished-source probe the spines give
 \[
- P=\neg(x_cy_c)\land\bigl(\neg m(E_b)\lor\neg m(E_a)\bigr)
+ P=\neg(x_cy_c)\land\bigl(\neg q(E_b)\lor\neg q(E_a)\bigr)
    =\neg(x_cy_c),
 \]
 since disjoint atomic sets $E_a,E_b$ cannot both have two elements.
@@ -71,16 +77,92 @@ lower-bound argument in \cref{core:thm:read-once-minimum} forces $k$
 in every core operation retaining these profile bits. In particular
 $H\subseteq C$ implies $C\subseteq H$.
 
-The canonical full type $B$ fails condition~(2) of
-\cref{core:thm:profile-interval-types}: its active coalition
-$\{x,y\}$ at $c$ and the inactive winning coalitions
-$\{x,z\}$ at $a$ and $\{y,z\}$ at $b$ have empty common intersection.
-It is therefore nonactual, and
-\cref{core:cor:profile-interval-greatest-type} excludes a greatest
-actual type. A one-box cover would have to use precisely this canonical
-type, as pure probes recover each factor. The exact source-count
-criterion thus excludes one $X$ with union named. The displayed primitive
-two-copy realizer proves optimality in both signatures.
+No actual sound one-$X$ box below this $P$ can be positive at both the
+all-$a$ and all-$b$ colorings. Such positivity makes its $a$- and
+$b$-factors identically one. Soundness makes its $c$-factor vanish at
+$\{x,y\}$. A $c$-owned helper witnessing this vanishing would inherit
+both majority profiles, contradicting the empty intersection of
+$\{x,z\}$ at $a$, $\{y,z\}$ at $b$, and $\{x,y\}$ at $c$.
+This is condition~(2) of \cref{core:thm:profile-interval-types}.
+The two diagonals therefore already require two occurrences, and the
+displayed primitive construction attains them.
+
+Now take $m$ disjoint copies $C_i,F_i$ of this construction and put
+$D_m=\sum_i C_i$. Compose the $F_i$ at their distinguished input,
+then adjoin $D_m$ by named union. The result lies in
+$\mathcal I(D_m)$ and has source predicate $P_m$:
+composition multiplies the distinguished predicates, while adjoining
+the baseline restores every passive source.
+There are exactly $2^m$ occurrences of $X$ in this word.
+The passive source families are those of $D_m$, which remain separable,
+and $P_m$ is one owner box, so $F_m$ is source-separable.
+Sharing each composed output gives a linear-size circuit at fixed $K$.
+
+The same source count is attainable primitively. For each pattern
+$\sigma\in\{a,b\}^m$, compose the one-$X$ spines $S_{\sigma_i}$
+instead, obtaining $Q_\sigma\subseteq D_m+X$. Its masks are
+\[
+ \psi_c^\sigma=\bigvee_i x_i y_i,\qquad
+ \psi_a^\sigma=\bigvee_{\sigma_i=b}q_i,\qquad
+ \psi_b^\sigma=\bigvee_{\sigma_i=a}q_i,
+\]
+where $q_i$ is the majority predicate on the $i$th triple and all
+other masks are zero. Choose $t\in\{a,b\}$ with a nonempty indicated
+index set. Then
+\[
+ \Phi_t(D_m)=\bigwedge_i q_i\leq\psi_t^\sigma,\qquad
+ \Phi_c(D_m)=\bigwedge_i x_i y_i z_i\leq\psi_c^\sigma.
+\]
+For distinct $t,c$, two attachments always restore the passive menu:
+\[
+ D\subseteq (Y\star_t D)\star_c D\subseteq Y\cup D.
+\]
+The singleton-$t$ and singleton-$c$ cases are immediate; otherwise a
+first-gate absorption can only leave $\{t\}$, and the second gate
+unions $D$ back in. Thus
+$T_\sigma=(Q_\sigma\star_t D_m)\star_c D_m$ belongs to
+$\mathcal I(D_m)$ with the same full box: the added profile masks
+are redundant by the two displayed inequalities.
+Moreover $T_\sigma=\{c\}$ exactly when $D_m=\{c\}$, by its lower
+bound and its final gate. Consequently the $\star_c$-fold of all
+$2^m$ such spines equals their pointwise union.
+Its source predicate is $P_m$, since the two local boxes cover each
+$P_i$. It is therefore $F_m$, with exactly $2^m$ primitive occurrences
+of $X$; expanding the passive expression $D_m$ adds none.
+
+For the lower bound, consider the $2^m$ colorings $p_\sigma$ indexed
+by $\sigma\in\{a,b\}^m$, assigning $\sigma_i$ to all of the $i$th
+triple. All omit $c$ and are positive for $P_m$.
+Each distinguished occurrence of any realizer contributes one full box
+$B\leq P_m$. Marked linearization gives a primitive one-$X$ spine
+$S\subseteq F_m$ with that same box, since
+$\partial_XF_m=D_m\subseteq F_m$.
+With union named, skip union nodes along the marked path as in
+\cref{core:cor:profile-interval-copy-number}; union adds no owner filter.
+
+Suppose $B$ were positive at two distinct patterns $p_\sigma,p_\tau$.
+Choose a block $i$ where they differ. On the other blocks fix the
+background $b$ to their common colors, leaving every other input
+uncolored. This background is below both patterns. Antitonicity makes
+the box positive with this same background and either the all-$a$
+or all-$b$ coloring on block $i$.
+\Cref{core:lem:spine-background-erasure} supplies a one-$X$ spine
+on that block, bounded by $C_i+X$, with full
+factors $B_r'(A)=B_r(A\cup b_r)$.
+Adjoining $C_i$ makes an actual interval box positive at both diagonals.
+
+Monochromatic probes recover factors, so $B\leq P_m$ gives
+$B_c(A)\leq[\{x_i,y_i\}\nsubseteq A]$ for $A\subseteq\{x_i,y_i,z_i\}$.
+Since $b_c=\varnothing$, its compiled $c$-factor is unchanged.
+The resulting actual box contradicts the one-block two-diagonal
+obstruction just proved. Thus each occurrence covers at most one
+$p_\sigma$, and at least $2^m$ occurrences are necessary.
+
+Finally, a greatest actual full type would have to equal the canonical
+factors of $P_m$: actual occurrence boxes cover it, and pure probes
+recover each factor. Linearizing that greatest type and adjoining
+$D_m$ would realize $F_m$ with one $X$ and union named, contrary to
+the lower bound. This proves all the assertions.
 \end{proof}
 
 \paragraph{Exact types can force unbounded owner alternation.}

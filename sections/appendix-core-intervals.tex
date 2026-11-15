@@ -57,12 +57,69 @@ positive colorings gives exactly $P$. Empty intersections and unions
 use the top and bottom.
 \end{proof}
 
-Equivalently, the interval is the downset lattice of the preorder
+Write $\mathcal L(C)$ for the lattice of realizable distinguished
+predicates. Equivalently, it is the downset lattice of the preorder
 \[
  p\preceq_C q\quad\Longleftrightarrow\quad
  \forall F\in\mathcal I(C),\quad P_F(q)=1\ \Longrightarrow\ P_F(p)=1.
 \]
-Its principal downsets have more structure than those of an arbitrary
+Elementary coloring steps already recover every source guard of the
+baseline from this preorder.
+
+\begin{theorem}[Activation faithfully determines the baseline]
+\label{core:thm:activation-faithfulness}
+Let $K\geq3$ and let $C$ be core on a finite nonempty support $V$.
+Write $P_j^C$ for the complete source predicate of $j\in V$.
+Let $p$ be a proper coloring leaving $j$ uncolored, and let $q$
+add color $r$ at $j$, with $q$ still proper. Then
+\[
+ p\preceq_C q,\qquad
+ q\preceq_C p\quad\Longleftrightarrow\quad
+ P_j^C(p|_{V\setminus\{j\}})=0.
+\]
+The greatest predicate in $\mathcal L(C)$ vanishing whenever $j$ is
+colored is
+\[
+ Q_j(p)=[j\text{ uncolored in }p]\,
+             P_j^C(p|_{V\setminus\{j\}}).
+\]
+For core $C,D$ on the same passive support,
+\[
+ C\subseteq D\quad\Longleftrightarrow\quad
+ \mathcal L(C)\subseteq\mathcal L(D)
+ \quad\Longleftrightarrow\quad
+ {\preceq_D}\ \subseteq\ {\preceq_C}.
+\]
+In particular, equal activation preorders imply equal operations.
+\end{theorem}
+\begin{proof}
+Antitonicity gives $p\preceq_C q$. If $P_j^C=0$ at the displayed
+fixing, every interval realizer has the same zero passive source
+predicate there, also with its distinguished input free.
+Colored-cofactor independence therefore permits recoloring $j$ without
+changing any interval predicate. Query a missing owner of $q$, which
+differs from $r$, to read equality at $p,q$.
+
+To separate the opposite case, replace every $j$-leaf in a word for
+$C$ by $X\del v_j$. This reset keeps $v_j$ when it is atomic and
+adds $X$ otherwise. All original singleton flags and hence all absorber
+tests are unchanged, so the new word lies between $C$ and $C+X$.
+Its new source follows precisely the old $j$-paths when $j$ is uncolored
+and is absent otherwise. Its predicate is therefore $Q_j$.
+When $P_j^C=1$, it is positive at $p$ and zero at $q$, proving the
+strict step. Any actual predicate vanishing on colored $j$ must also
+vanish at uncolored $p$ with $P_j^C=0$, by the equivalence just proved.
+Every such $p$ admits a proper recoloring of $j$, so $Q_j$ is greatest.
+
+If $C\subseteq D$, send an interval realizer $F$ to $D+F$.
+It preserves the distinguished predicate and lies in $\mathcal I(D)$.
+Inclusion of the predicate families reverses their defining preorders.
+Conversely, preorder inclusion and the elementary-step test give
+$P_j^C\leq P_j^D$ for every $j$: a reverse step absent for $C$ must
+also be absent for $D$. Source reconstruction gives $C\subseteq D$.
+\end{proof}
+
+Principal downsets have more structure than those of an arbitrary
 preorder.
 
 \begin{proposition}[Principal activation boxes]
@@ -455,35 +512,9 @@ $r$-winning coalition omitting $w_h$ would be disjoint from the
 foreign winning coalition $\{w_h\}$, contradicting common source.
 This proves (2).
 
-For (3), let $Q(y,z)$ be zero precisely when both inputs are colored
-owners different from $b$, and one otherwise. It is antitone and is
-realizable above $U$ by \cref{core:thm:profile-source-interval}.
-Let $G$ be such an interval realizer. Then
-\[
- R(G,x)\star_a L\ \in\mathcal I(D_0)
-\]
-has source predicate $P=[x\text{ uncolored}]\,Q$.
-For atomic $x$ the two operations agree; for ambiguous $x$, their
-first arguments remain ambiguous, so the same $L$-absorber applies
-and all added winners belong to $X$.
-At a source probe, colored $x$ erases the source; uncolored $x$
-passes it unless $L=a$. That exception requires $y=z=a$, where
-$Q=0$ already. Thus the stated predicate is exact.
-
-It is not realizable above $C_0$. Neutral deletion of $x$ would
-give an interval above $L$ with source predicate $Q$.
-Its all-$b$ activation is one, while its value at $y=a,z=c$ is zero,
-contradicting the binary criterion just given.
-
-The lower-ideal embedding of \cref{core:prop:reset-interval-lattice}
-preserves this strict distinction at every padding step. Its witness is
-\[
- P_h=P\bigwedge_{i=1}^h[w_i\text{ uncolored}]
- \quad\text{above }D_h.
-\]
-Finally, increasing a core bound preserves every realizable source
-predicate: union its realizer with the larger bound. Hence the
-inclusion is proper.
+Part~(3) now follows from $C_h\subsetneq D_h$ and
+\cref{core:thm:activation-faithfulness}: equality of their predicate
+lattices would recover equal baselines.
 \end{proof}
 
 \begin{proposition}[Neutral residuals do not determine relative compatibility]
