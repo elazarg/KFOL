@@ -1,0 +1,185 @@
+\subsection{Relative safety under disjoint and apex extensions}
+\label{app:core-conservation-closures}
+
+For a monotone Boolean function $f$ on a finite set $V$, let $S_f$ consist
+of its marked cubes $(L,U,j)$, with $j\in U\setminus L$, on which
+$f(L)=0$, $f(U)=1$, and $j$ is inessential. Write $R_f$ for the reflexive
+transitive closure of inclusion and all their marked deletion edges,
+and $P_f$ for the implication preorder of Boolean functions
+having pure bichain formulas safe on $S_f$, in the sense of
+\cref{app:core-grouped-cubes}. Endpoint constants are allowed.
+Say that $f$ has \emph{relative conservation} if $P_f=R_f$: every upset of
+the initial preorder already has a safe formula. The equivalence follows
+from the bounded distributive lattice of safe Boolean functions.
+
+Write $R_f^+$ for the preorder obtained by identifying all $f$-positive
+vertices, and $R_f^-$ for the analogous identification of the negative
+vertices. These identifications retain the original orientation from zero
+to one.
+
+\begin{theorem}[Disjoint composition]
+\label{core:thm:conservation-disjoint}
+Let $g,h$ be nonconstant monotone Boolean functions on disjoint finite
+supports. Then
+\[
+ R_{g\land h}=R_g^+\times R_h^+,
+ \qquad
+ R_{g\lor h}=R_g^-\times R_h^-.
+\]
+If $g,h$ have relative conservation, so do $g\land h$ and $g\lor h$.
+\end{theorem}
+\begin{proof}
+Consider $f=g\land h$ and a marked coordinate in $g$'s support. On an
+$f$-nonconstant cube, $h$ has a true completion. If $g$ is nonconstant,
+the coordinate is $f$-inessential exactly when it is $g$-inessential;
+if $g$ is constantly one, every free coordinate is $f$-inessential.
+The constantly-zero case is impossible. Thus every initial edge belongs
+to the asserted product preorder.
+
+Conversely, lift each nonconstant $g$-inessential cube against the full
+$h$-cube. Its edges occur at every $h$-context. Lift each constant-one
+$g$-cube in the same way; the resulting function is $h$, so it remains
+nonconstant. In particular $[a,V_g]$, for any winning $a$, connects that
+vertex to the top in both directions. Hence all positive vertices of
+$g$ are identified. The same argument applies to $h$, proving the formula.
+
+An $R_g^+$-upset is an $R_g$-upset constant on the winning region.
+By conservation it has a $g$-relative-safe formula. That formula is
+$f$-safe: the preceding cube classification either invokes its original
+safety or puts it on a Boolean-constant cube. Marks in the other factor
+do not occur in the formula. The same holds for $R_h^+$-upsets.
+Every upset of a finite product preorder is a union of principal
+rectangles. Meets of the two factor formulas realize the rectangles,
+and their join realizes the desired upset. Quiet values are closed under
+both operations, so safety is preserved. Boolean duality proves the
+disjunction statements.
+\end{proof}
+
+\begin{corollary}[Read-once relative helpers]
+\label{core:cor:readonce-relative-helpers}
+Flatten the root of a nonconstant full-support read-once formula $f$ into
+maximal opposite-root blocks $g_1,\ldots,g_m$, allowing individual variables.
+For a projection take $m=1$ and $g_1=f$.
+Then
+\[
+ xR_fy\quad\Longleftrightarrow\quad
+ g_i(x)\leq g_i(y)\text{ for every }i.
+\]
+The Boolean functions of its relative-safe helpers are exactly
+$H(g_1,\ldots,g_m)$ for arbitrary monotone Boolean $H$, including constants.
+The original block formulas composed with any formula for $H$ give safe
+realizers.
+\end{corollary}
+\begin{proof}
+At an AND root each opposite-root OR block has one negative strongly
+connected component, by the disjoint formula. Positive saturation therefore
+reduces its preorder to the two-class truth preorder. The OR-root case
+is dual. The disjoint supports make the block truth map surjective, and
+the theorem supplies safety and all its upsets.
+\end{proof}
+
+There is also a closure with overlap across every old variable. Let
+$p$ be monotone on finite nonempty $V$ with $p(\{i\})=0$ for every $i$,
+and put $s=\bigvee_{i\in V}x_i$. The zero function is permitted.
+
+\begin{theorem}[Apex extension]
+\label{core:thm:conservation-apex}
+If $p$ has relative conservation, then
+\[
+ F(z,x)=p(x)\lor\bigl(z\land s(x)\bigr)
+\]
+has relative conservation. The literal composition
+$D_p\lor(z\land s)$ is its canonical essential-source extension.
+\end{theorem}
+\begin{proof}
+On a cube $[L,U]$ with $L\ne\varnothing$, $s$ is constantly one and
+the composition reduces to $D_p\lor z$. If $L=\varnothing$, every free
+old coordinate is essential when $z$ is free or fixed to one: set $z=1$
+and use $s$. On a nonconstant cube with $z$ free it is essential as well,
+since an available singleton has $p=0,s=1$. With $z=0$ use $D_p$.
+These cases prove canonicality.
+
+Define two budgets on $V$:
+\[
+\begin{aligned}
+ B_1&=\{(L,U,j):L\ne\varnothing,\ p(L)=0,
+                   \ j\text{ inessential on }[L,U]\},\\
+ B_0&=S_p\cup\{(L,U,j):L\ne\varnothing,\ p(U)=0\}.
+\end{aligned}
+\]
+Let their initial preorders be $R_1\subseteq R_0$. No nonconstant
+$F$-cube has an inessential $z$. Cubes with $z=0$ give $S_p$; cubes
+with $z=1$ give no marks; cubes with $z$ free give precisely $B_1$.
+Consequently the two faces of $R_F$ carry $R_0,R_1$, respectively, and
+\[
+ (0,x)R_F(1,y)\Longleftrightarrow xR_0y,
+ \qquad (1,x)\not R_F(0,y).
+\]
+
+We prove conservation for $B_1$. Join distinct $i,j\in V$ by an edge
+when $p(\{i,j\})=0$, and let $\mathcal C$ be the set of components.
+Every nonempty zero set lies in one component. All nonempty zero sets
+within a component are $R_1$-equivalent: constant-zero cubes with
+nonempty lower endpoints identify a zero set with its singletons, and
+zero pairs connect the singletons along graph paths. Different components
+cannot connect through the zero region, and no positive vertex can
+return to zero. Empty is alone.
+
+Every $R_p$ comparison between positive vertices survives in $R_1$.
+For a marked deletion with empty lower endpoint and positive target $A$,
+restrict the lower endpoint to any $\ell\in A$. It remains nonconstant,
+since $p(\{\ell\})=0$, and retains the deletion. Positive paths never
+leave the positive region.
+
+Let $\phi$ be an $R_1$-upset. If $\phi(\varnothing)=1$, use the constant
+formula. Otherwise let $b_C$ be its common value on the nonempty zero
+sets in $C\in\mathcal C$, and let $\psi$ equal $\phi$ on positive vertices and zero
+on all zero vertices. The preceding positive-path observation makes
+$\psi$ an $R_p$-upset. A $p$-relative-safe realizer of $\psi$ is also
+$B_1$-safe, since it is constantly zero on every added zero cube.
+
+Each $s_C=\bigvee_{j\in C}x_j$ is $B_1$-safe. Otherwise a marked
+$j\in C$ would have $L\cap C=\varnothing$. Choose $\ell\in L$ outside
+$C$. Then $p(\{\ell,j\})=1$, while $p(L)=0$, making $j$ essential
+already at the lower corner, a contradiction. Finally
+\[
+ \phi=\psi\lor\bigvee_{C\in\mathcal C:\,b_C=1}s_C.
+\]
+This is exact on zero vertices; on positive vertices monotonicity from
+the activated singleton values makes every added $s_C$ lie below $\phi$.
+Thus $B_1$ is conserved.
+
+An $R_0$-upset has a $p$-relative-safe realizer and is constant on every
+added zero cube, so $B_0$ is conserved too. An $R_F$-upset is a pair
+$u_0\leq u_1$ of $R_0$- and $R_1$-upsets. Choose safe realizers
+$T_0,T_1$. Then $T_0\lor(z\land T_1)$ realizes the pair and is safe on
+all $F$-rows: on a $z=0$ row use $T_0$; on a free-$z$ marked row both
+old formulas are quiet and $z$ is an unmarked neutral input. This proves
+conservation.
+\end{proof}
+
+\begin{proposition}[Threshold apex reduction]
+\label{core:prop:conservation-threshold-apex-reduction}
+Let $1\leq k\leq|V|$ and suppose $p(A)=0$ whenever $|A|\leq k$.
+If $D_p$ is term-realizable, then
+\[
+ D_p\lor\bigl(z\land D_{\operatorname{Thr}_k(V)}\bigr)
+   =D_{p\lor z\operatorname{Thr}_k(V)}.
+\]
+Its initial preorder has the same triangular form, with
+\[
+ B_k=\{(L,U,j):|L|\geq k,\ p(L)=0,
+                    \ j\text{ inessential on }[L,U]\}
+\]
+on the $z=1$ face, and $R_p$ augmented by the constant-zero cubes of
+$B_k$ on the $z=0$ face.
+\end{proposition}
+\begin{proof}
+With $z=0$ use $D_p$. If $|L|\geq k$, the threshold is one and the
+operation is $p\lor z$.
+If $|L|<k\leq|U|$, every free old coordinate is essential by setting
+$z=1$. A $k$-set between $L,U$ has $p=0$ and threshold one, so $z$ is
+essential too when free. If $|U|<k$, the whole function is zero. These cases give
+canonicality and the asserted marks. Conservation of $B_k$ for general
+$k\geq2$ is a separate question.
+\end{proof}
