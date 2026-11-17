@@ -122,32 +122,47 @@ also be absent for $D$. Source reconstruction gives $C\subseteq D$.
 Write $C_p$ for the full cofactor obtained by fixing the colored inputs
 according to $p$, leaving every uncolored input free.
 
-\begin{proposition}[Activation equivalence preserves cofactors]
+\begin{proposition}[Cofactors and single-input changes]
 \label{core:prop:activation-cofactor-invariance}
 For every core $C$ and proper colorings $p,q$,
 \[
  p\sim_Cq\quad\Longrightarrow\quad C_p=C_q.
 \]
-The converse fails even if the full cofactors agree for every core
-minorant of $C$.
+If $p,q$ have different statuses at one input $j$ and agree elsewhere,
+with common restriction $R$, then
+\[
+ p\sim_Cq\quad\Longleftrightarrow\quad P_j^C(R)=0.
+\]
+Equality of full cofactors does not imply activation equivalence,
+even if those cofactors agree for every core minorant of $C$.
 \end{proposition}
 \begin{proof}
 Induct on a primitive word for $C$. For a projection $v_j$,
 $v_j+(X\star_r v_j)$ tests whether $j$ is not colored $r$.
 These predicates distinguish all its colors and its uncolored status.
-Equivalent colorings therefore give the same clamped projection.
+Equivalent colorings therefore give the same clamped projection;
+a projection of another input is independent of $j$.
 
 Suppose $C=C_1\star_r C_2$ and put $D=C_1+C_2$.
 The actual predicate $\neg\Phi_r(C)(E_r)$, realized by
 $C+(X\star_r C)$, ensures that $p,q$ either both belong to $T_r(C)$
 or both lie outside it. In the first case both full cofactors are
-constantly $\{r\}$. In the second,
+constantly $\{r\}$. If only $j$ changes, one endpoint does not
+color it $r$; its winning $r$-coalition is therefore already in
+the common restriction $R$. Thus $C$ is constantly $\{r\}$ under
+$R$, capturing $j$. In the second case,
 \cref{core:cor:owned-choice-activation} gives $p\sim_Dq$.
 Since $C_i\subseteq D$, every interval predicate above $C_i$ is also
 available above $D$. Thus $p\sim_{C_i}q$ for both children.
 Induction gives $(C_i)_p=(C_i)_q$, proving $C_p=C_q$.
+When only $j$ changes, induction captures it in both children;
+their combination is independent of it too, so captures it by
+\cref{core:cor:colored-cofactor-dependence}.
+Conversely, if $j$ is captured, erase and recolor it via the common
+restriction $R$. Both steps are capture equivalences by
+\cref{core:thm:activation-faithfulness} and remain proper.
 
-For the converse use the three-input baseline $C$ in the one-block
+For failure of the cofactor converse use the three-input baseline $C$ in the one-block
 construction of \cref{core:thm:one-box-exponential-copies}. Its profiles
 are majority at distinct owners $a,b$ and unanimity at all other owners,
 and it is globally minimal among core operations. At
