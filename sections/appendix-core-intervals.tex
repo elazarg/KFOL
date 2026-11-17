@@ -599,6 +599,61 @@ allowed atomic step fixes $v$, throughout any chain. Such a chain
 cannot reach $D$.
 \end{proof}
 
+\begin{theorem}[Unanimity does not determine monochromatic activation]
+\label{core:thm:unanimity-activation-obstruction}
+For every $K\geq4$ there is a core operation $C$ on twelve inputs
+whose singleton profile at every owner is unanimity, as for input
+union. For a designated owner $a$ and the all-$a$ coloring $q$,
+every one-input coloring
+$e_{j,r}$ nevertheless lies below $q$, for every input $j$ and owner
+$r$. In particular, changing one entry of the all-$a$ coloring to
+any other owner still gives a coloring below $q$.
+\end{theorem}
+\begin{proof}
+Choose three owners $b,c,d$ different from $a$. Take two vertices
+of each of these three colors. Between each pair of color classes
+orient the four edges as a directed cycle. Each vertex has one outgoing
+edge to each of the other two colors. Write $r_e$ for the color of the
+head of $e$ and use one variable $x_e$ per directed edge.
+
+At the valuation indexed by vertex $i$, put $x_e=\{r_e\}$ if $i$
+is an endpoint of $e$, and $x_e=\{a\}$ otherwise. The bound at $i$
+excludes the color of $i$. Any core helper satisfying all six bounds
+avoids every foreign singleton at every row. Indeed, for an allowed
+$s\ne a$ occurring atomically at $i$, the only $s$-atomic input there
+is the outgoing edge to a vertex of color $s$. That input is still
+$s$-atomic at its head. By monotonicity of the $s$-profile, a helper
+equal to $\{s\}$ at $i$ would violate the head's bound. An owner with
+no atomic input cannot be the singleton output.
+
+For $e:i\to j$, let $f,g$ be the two outgoing edges of $j$ and put
+\[
+ H_e=(x_e\star_{r_f}x_f)\star_a(x_e\star_{r_g}x_g),
+ \qquad C=\sum_e H_e .
+\]
+At $j$ both inner gates absorb, giving $H_e=\{r_f,r_g\}$. At $i$
+neither $f$ nor $g$ is incident, since no edge returns from $j$ to
+$i$. Thus $H_e=\{a,r_e\}$. At every other vertex $x_e=\{a\}$
+and at least one of $x_f,x_g$ is also $\{a\}$, so $H_e=\{a\}$.
+These values satisfy every bound. In the Boolean variables denoting
+membership of the inputs in $A$, the $a$-profile of $H_e$ is
+$x_e(x_f\lor x_g)$. At any other owner the outer gate gives a
+conjunction. At least one inner gate also gives a conjunction, since
+$r_f\ne r_g$, so this profile too requires $x_e$. Union conjoins
+singleton profiles. Since every edge appears as its own required
+input, every profile of $C$ is unanimity.
+
+No $a$-owned enlargement is allowed at $q$, by idempotence at the
+all-$a$ valuation. A guard for any other owner respects all six bounds
+as long as the current baseline does. It can therefore never absorb
+at these rows. Induction along the enlargements shows that their
+greatest reachable operation respects all six bounds. Each projection
+violates its head's bound, so \cref{core:cor:singleton-color-refinement}
+gives $e_{j,r}\preceq_Cq$ for every $j,r$. The final assertion follows
+by combining the monochromatic blocks in
+\cref{core:prop:principal-activation-boxes}.
+\end{proof}
+
 \input{sections/appendix-core-graph-activation}
 
 The full factors of a box also have a meaning on colorings using every
