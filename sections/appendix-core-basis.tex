@@ -31,7 +31,14 @@ construction (\cref{core:thm:acyclic-source-guards}). There is also an
 intrinsic test when every strongly connected component of the source
 graph has at most two inputs. A cycle may depend on earlier cycles
 in the component order. The only operations enumerated
-are on one or two inputs (\cref{core:cor:binary-source-components}). Adding a source
+are on one or two inputs (\cref{core:cor:binary-source-components}).
+Components of arbitrary size also admit a test when, at each earlier
+coloring, their minimal internal blocking patterns have size at most
+one or all use one owner. Restricting the original minimal zeros to
+the component gives the exact constraints. Colored reachability or
+Horn closure then gives its greatest coefficient and activation
+preorder (\cref{core:lem:block-source-patterns,core:thm:conditional-component-capture}).
+Adding a source
 above a fixed core operation gives a distributive lattice of activation
 predicates. At each passive valuation an extension either ignores the
 new menu or adjoins it whole; blocking it whenever $j=r$ is equivalent
@@ -105,7 +112,7 @@ ordinary subcoloring or admits every singleton color at four or more
 inputs in a single strongly connected component.
 For every $K\geq4$, a nine-input operation has unanimity profiles at
 every owner but admits every foreign one-input coloring there
-(\cref{core:thm:unanimity-activation-obstruction,core:cor:unanimity-source-component}).
+(\cref{core:thm:unanimity-activation-obstruction,core:cor:unanimity-component-patterns}).
 Mixing owner blocks of equivalent square colorings also forces a
 foreign monochromatic point strictly below their class, although that
 point has no extension satisfying the class's edge conditions, even
@@ -210,6 +217,12 @@ separately realizable without a common term
 The crown obstruction also passes every marked profile-transfer law;
 those laws alone do not control joint ambiguous outputs
 (\cref{core:cor:marked-transfer-incomplete}).
+In fact the general recognition problem at each fixed $K\geq3$
+reduces to candidates whose only departures from union delete
+one winner from the full set. For any prescribed $m$, the reduction
+can require at least $m$ singleton inputs of each remaining color.
+The exponential interpolation threshold persists under this restriction
+(\cref{core:thm:mixed-guard-reduction,core:cor:mixed-guard-locality}).
 
 The obstructions also occur under genuine core bounds: separate pointwise
 profile requirements need not have a common bounded witness, even for a
@@ -395,8 +408,8 @@ using AND/OR gates and cannot be improved by circuit sharing
 
 \paragraph{The remaining characterization question.}
 The unresolved step is a short intrinsic condition directly on arbitrary
-joint source guards, accounting for strongly connected components of
-unbounded size without recursive synthesis or auxiliary invariant
+joint source guards, including components with multi-input blocking
+patterns involving several owners, without recursive synthesis or auxiliary invariant
 structures. Nonfinite relatedness rules
 out a fixed finite relational basis; it does not rule out short structural
 laws with unbounded quantification. The positive classifications and
@@ -3197,6 +3210,31 @@ Thus these $2^d+1$ rows have no common interpolant.
 Finally a constant input lies in no exceptional region, since those regions
 have both a $b$-singleton and a $c$-singleton. Hence $F$ is idempotent,
 and \cref{gen:thm:core} excludes full-language realizations as well.
+\end{proof}
+
+\begin{corollary}[Exact locality with a single omitted winner]
+\label{core:cor:mixed-guard-locality}
+For $K\geq3$, $d\geq2$ and $m\geq1$, there is an operation on
+$mK(2d+K-1)$ inputs satisfying the first clause of
+\cref{core:thm:mixed-guard-reduction} which is $2^d$-point
+interpolable but fails $(2^d+1)$-point interpolation.
+\end{corollary}
+\begin{proof}
+Apply the reduction to the Gray operation just constructed. Its
+only blocked source is the free input of an exceptional region,
+under the prescribed $b,c$ coloring of the other inputs, as seen
+by an observer outside $\{b,c\}$. For any $2^d$ valuations of the
+new operation, each copy of the Gray operation is queried on at
+most $2^d$ valuations. Choose a core interpolant independently in
+each copy and substitute it in the displayed word of the reduction.
+
+For the converse, in the copy for $a$ set the added inputs to $q^a$,
+fill the other copies by $I\setminus\{a\}$ and identify repeated
+inputs. This reads precisely the original $a$-bit on each of the
+$2^d+1$ separating rows. From any proposed core interpolant erase
+the fixed menus, all of which omit $a$, by
+\cref{core:lem:winner-erasure}. The positive row ensures a nonzero
+word, which would separate the original rows at $a$.
 \end{proof}
 
 \input{sections/appendix-core-pair-intervals}

@@ -131,6 +131,47 @@ block, by the section argument with $Y$ marked. The first comparison
 therefore transfers positivity to $p$, as required.
 \end{proof}
 
+\paragraph{Reading the coefficients from guards.}
+Suppose the sources in $J$ have the predicates of $B$ independently
+of $W$. For $i\in W$, write $(b,t)$ for a minimal proper coloring
+at which its proposed antitone source predicate $\pi_i$ vanishes.
+Here $b$ colors inputs in $J$ and $t$ colors inputs in
+$W\setminus\{i\}$. For each proper $q$ on $J$ set
+\[
+ \mathcal T_{q,i}=\min_{\subseteq}
+       \{t:(b,t)\text{ is a minimal zero of }\pi_i,\ b\preceq_B q\}.
+\]
+
+\begin{lemma}[Restriction of minimal blocking patterns]
+\label{core:lem:block-source-patterns}
+For the candidate reconstructed from these predicates, $D_q$ is the
+greatest core operation $h$ on $W$ satisfying
+$\pi_i^h(t)=0$ for every $i\in W$ and $t\in\mathcal T_{q,i}$,
+or zero if there is none. Give zero the constantly false source
+predicates. The candidate is core exactly when
+\[
+     \pi_i(e,d)=\pi_i^{D_e}(d)
+     \qquad(i\in W,\ (e,d)\text{ proper}).
+\]
+\end{lemma}
+\begin{proof}
+For necessity choose an owner $k$ missing from $(b,t)$, use the
+specified atoms, set $i$ to $\{k\}$ and every hole to
+$I\setminus\{k\}$. The background lies in $L_q$ since its full
+factors at $b$ hold. Only $i$ could supply $k$, and the proposed
+guard blocks it. Thus every bounded $h$ has a zero at $t$.
+Conversely suppose $u\in L_q$ and a source $i$ supplies $k$ in
+$h(w)$ outside the candidate. Put $e=E(u)^{\widehat k}$ and let
+$d$ be the other internal statuses with their $k$-block erased.
+Some minimal zero $(b,t)$ lies in $(e,d)$. Since
+$b\subseteq e\preceq_B q$, the constraints and antitonicity give
+$\pi_i^h(d)=0$, a contradiction. Finally the greatest-minorant
+formula in \cref{core:thm:block-source-extension} has exactly the
+displayed internal predicates, by the same sole-source probes, and
+the prescribed background predicates. Source reconstruction proves
+the criterion.
+\end{proof}
+
 \begin{corollary}[Joint guards with components of size at most two]
 \label{core:cor:binary-source-components}
 For a candidate family of complete source predicates, draw an edge
@@ -152,11 +193,10 @@ additional component $W$ the new prefix lies between the previous
 prefix $B$ and $B+U_W$, directly by source reconstruction.
 
 Compare the first prefix with the unary or binary list of
-\cref{core:prop:binary}. For each subsequent component form $D_q$
-by retaining just those members of the same list bounded on $L_q$,
-and compare the new prefix with the first formula of the theorem.
-Its second formula gives the principal boxes for the next step;
-their full factors are read on monochromatic probes.
+\cref{core:prop:binary}. For each subsequent component use
+\cref{core:lem:block-source-patterns} to filter the same list by
+its source bits and compare the required predicates. The activation
+product gives the principal boxes for the next step.
 For a projection the principal tests ordinary subcoloring at its
 own coordinate. Every binary operation in the list using both
 inputs is its greatest profile completion, since every nonsingleton
@@ -200,4 +240,108 @@ one-input coloring by \cref{core:cor:unanimity-released-inputs};
 these colorings also pass the product. If the source graph has several
 components, that factor gives a smaller counterexample. If any input
 excludes a singleton color, the same cited corollary reduces arity.
+\end{proof}
+
+\paragraph{How many colors a blocking pattern needs.}
+Any zero of a source predicate is visible at a valuation with at most
+$K-1$ singleton colors. Choose an observer $\ell$ missing from the
+pattern, give its source an ambiguous menu containing $\ell$, and give
+every uncolored passive input $I\setminus\{\ell\}$. The source alone
+could supply $\ell$. Consequently agreement with union on all such
+valuations forces a source-reconstructed operation to be union. One
+fewer color leaves the full recognition problem.
+
+\begin{theorem}[Reduction to blocking patterns using every color but one]
+\label{core:thm:mixed-guard-reduction}
+Fix $K\geq3$ and $m\geq1$. From any nonempty-valued candidate $G$ on
+$n\geq1$ inputs reconstructed from antitone, observer-independent
+source predicates, one can form a candidate on $mK(n+K-1)$ inputs
+over the same owners with the following properties.
+\begin{enumerate}
+\item Every departure from input union changes $I$ to
+$I\setminus\{\ell\}$ for a single winner $\ell$. Each remaining
+winner then occurs at least $m$ times as a singleton input. In
+particular all singleton profiles are unanimous.
+\item For every $O\subseteq I$, one core word can reproduce
+membership of every winner in $O$ in the new candidate if and only
+if one can do so in $G$. In particular it is core if and only if
+$G$ is core.
+\end{enumerate}
+\end{theorem}
+\begin{proof}
+First take $m=1$. For each observer $k$, take a copy $W$ of the
+original inputs. Write
+$U$ for their union and $A_k$ for their $\star_k$-fold. For each
+$s\ne k$ adjoin an input $X_s$. Put
+$B=\sum_{s\ne k}X_s$. The test at $s$ is $X_s=\{s\}$. Define $F^k$
+by adjoining the indicated entry to $B$.
+\[
+\begin{array}{c|ccc}
+ \text{number of tests failed}&0&1&\text{at least }2\\ \hline
+ \text{contribution from }W& G&G+A_k&U
+\end{array}
+\]
+Take the union of the $F^k$ on disjoint copies of all their inputs.
+Every added input contributes unconditionally. For a source in $W$ the three
+entries give its predicate according to the tests on the
+observer-erased background. Erasing the observed color can change
+a test only when $B$ already supplies that winner. The entries
+decrease as more tests pass.
+
+If all tests pass, every color other than $k$ is present in $B$
+as an input atom. If just the test at $\ell$ fails, a loss requires
+an internal $k$-atom, since otherwise $A_k=U$. Then $A_k$ supplies
+$k$, and $B$ supplies all other colors except possibly $\ell$.
+In either case a lost winner is the only one missing and each
+remaining winner occurs as an input atom. A loss in the disjoint
+union must occur in a copy containing the lost winner in its inputs.
+This proves the first assertion for $m=1$, including unanimity since
+$K-1\geq2$.
+
+If a core word $g$ realizes $G$, a word for $F^k$ is
+\[
+ B+g+\sum_{s\ne k}(A_k\star_s X_s)
+ +\sum_{\substack{s<t\\s,t\ne k}}((U\star_s X_s)\star_t X_t),
+\]
+in any fixed order of the owners. When a test fails, its gate retains
+every winner of its other operand. When it passes, that gate
+contributes only its tested atom, already in $B$. This gives the
+three entries. Since $g$ occurs only as a union summand, the same
+construction works if $g$ agrees with $G$ only on observers in $O$.
+
+Let $q^k$ color each added input by its prescribed color. Its
+coefficient in $F^k$ is the greatest core minorant of $G$, or zero.
+Indeed, any such minorant is bounded by $F^k$ on every background.
+For the reverse bound, take a zero $t$ of an internal source in $G$.
+If $t$ omits $k$, the joint pattern $(q^k,t)$ is proper and blocks
+that source. Otherwise choose $\ell$ missing from $t$ and erase just
+$X_\ell$ from $q^k$. On this subcoloring exactly
+one test fails. The source is still blocked, since $G$ blocks it and
+the $k$-atom in $t$ makes $A_k$ absorb. The joint pattern now
+omits $\ell$. In either case \cref{core:lem:block-source-patterns}
+forces the coefficient to respect the zero at $t$.
+
+For the converse take a word agreeing with the disjoint union on
+the observers in nonempty $O$. For each $k\in O$, neutrally erase
+the other copies. This preserves agreement on $O$ in the $k$-copy,
+since erased menus $I\setminus\{\ell\}$ cannot supply the observer
+$\ell$. Erase the background at $q^k$ by the marked-word construction
+in \cref{core:thm:block-source-extension}. The resulting word $h_k$
+on $W$, or zero, has exactly the formal source bits of the word at
+that background. On patterns omitting $k$ they are the bits of $G$.
+For any zero $t$ visible to some $\ell\in O$, the preceding proof
+exhibits a subcoloring of $q^k$ where the bit is zero as observed
+by $k$ or $\ell$. A formal source bit is antitone even when all
+colors occur, so it is still zero at $(q^k,t)$. Hence $h_k$ respects
+every zero visible to $O$. Taking the union of the nonzero $h_k$
+supplies every positive bit visible to $O$, and source reconstruction
+gives agreement on $O$. Nonemptiness on a diagonal $\{k\}$ ensures
+a nonzero summand. For $O=\varnothing$ any projection suffices.
+
+Finally replace every input by the union of $m$ fresh inputs.
+Substitution preserves realizability on each $O$ in both directions,
+since identifying the $m$ copies recovers the original operation.
+Such a union is the $s$-atom exactly when all its inputs are the
+$s$-atom. Each of the $K-1$ colors needed for a loss now requires
+$m$ singleton inputs, and the singleton profiles remain unanimous.
 \end{proof}
