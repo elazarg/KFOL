@@ -185,6 +185,76 @@ only by coloring or uncoloring one input whose source guard vanishes
 at the common fixing of the other inputs. Every such edge is an
 activation equivalence by the preceding theorem.
 
+\paragraph{Enlarging the baseline.}
+Fix a proper $q$. Call $C\longrightarrow_q D$ an \emph{atomic
+enlargement} if $C,D$ are core and there are a core $H\subseteq C$
+and an owner $r$ such that $C\subseteq D$, $\Phi_r(H)(q_r)=0$,
+and $C=D$ wherever $H\ne\{r\}$.
+
+\begin{lemma}[Atomic repair and confluence]
+\label{core:lem:atomic-repair}
+An atomic enlargement preserves the principal predicate at $q$.
+A primitive one-$X$ upper spine for the enlarged principal pulls
+back with one extra gate and the same box. At fixed finite arity,
+the operations reachable by atomic enlargements from $C$ are closed
+under pointwise union and have a greatest member.
+\end{lemma}
+\begin{proof}
+For a step guarded by $H,r$, put $R(E)=\neg\Phi_r(H)(E_r)$.
+It is actual above $D$, realized by $D+(X\star_r H)$, and positive
+at $q$. Given $F\in\mathcal I(D)$, its repair is
+$C+(F\star_r H)$. Where $H=\{r\}$ this equals $C$; elsewhere
+$C=D$ and $F$ contains $H$, so the repair equals $F$.
+It therefore lies in $\mathcal I(C)$ with predicate $P_FR$.
+The enlarged principal lies below $R$, so its repair preserves it;
+monotonicity of interval lattices gives equality of the principals.
+
+If only $S\subseteq D+X$ is given, $S\star_r H\subseteq C+X$
+by the same two cases. For an enlarged principal spine the extra
+factor $R$ is redundant. This keeps one primitive $X$-occurrence.
+
+To combine two reachable operations, start at one of them, $A$,
+and follow the other chain $C=B_0\longrightarrow_q\cdots
+\longrightarrow_q B_m$. Every $A+B_i\longrightarrow_q A+B_{i+1}$
+is again an atomic step, with the same guard: it remains a minorant,
+and equality off its atomic stratum survives union.
+Since $A+C=A$, the result is $A+B_m$. Finitely many operations
+exist at this arity, so their reachable union is a greatest member.
+\end{proof}
+
+\begin{proposition}[Atomic enlargements do not exhaust a principal fibre]
+\label{core:prop:atomic-repair-incomplete}
+Two core operations $C\subsetneq D$ can have the same principal
+at $q$ and the same essential support, while no chain of atomic
+enlargements from $C$ reaches $D$.
+\end{proposition}
+\begin{proof}
+For distinct $a,b,c$, put
+\[
+ C=(x\star_a y)+(z\star_a w),\qquad
+ f_a=(x\lor y)(z\lor w),
+\]
+and let $D$ be the greatest profile completion with $a$-profile
+$f_a$ and unanimity profiles at the other owners. These are the
+profiles of $C$, so $C\subseteq D$.
+At the all-$a$ coloring $q$, the disjoint-product and profile-maximum
+formulas give the same principal for both operations:
+\[
+ \bigwedge_{s\ne a}\neg(x_sy_s)\,\neg(z_sw_s).
+\]
+Both return input union on all-ambiguous menus, so all four inputs
+are essential. At
+\[
+ v=(\{a\},\{a,c\},\{a,b\},\{a,b\})
+\]
+one has $C(v)=\{a,b\}$ and $D(v)=\{a,b,c\}$.
+Every core guard is $\{a\}$ at the all-$a$ input, so no
+$a$-owned step is allowed. On a valuation whose only atomic inputs
+are $a$, no core guard can be a foreign singleton. Thus every
+allowed atomic step fixes $v$, throughout any chain. Such a chain
+cannot reach $D$.
+\end{proof}
+
 \input{sections/appendix-core-graph-activation}
 
 Principal downsets have more structure than those of an arbitrary

@@ -208,33 +208,24 @@ The principal predicate has a primitive interval realizer with one
 $X$ and at most $(K+1)|V|+(K-1)|E|+2$ gates on its marked path.
 \end{theorem}
 \begin{proof}
-We first enlarge the baseline without changing its principal
-predicate at $q$. Write $D_0,D_1$ for the current and enlarged
-baselines in each step. Each of the following enlargements has an
-actual mask positive at $q$. The enlarged principal predicate
-lies below this mask, so the indicated repair preserves it.
-Monotonicity of the interval lattices then proves equality of
-the old and new principal predicates.
+We first normalize by atomic enlargements, which preserve the principal
+predicate by \cref{core:lem:atomic-repair}. Write $D_0,D_1$ for
+the current and enlarged baselines at each step.
 
 For an edge $H=v_i\star_r v_j$ not owned at $q$, replace it by
-$v_i+v_j$. The mask is $\neg\Phi_r(H)(E_r)$, and the repair of
-an enlarged interval realizer $F$ is $D_0+(F\star_r H)$.
-Where $H\ne\{r\}$ the baselines agree and the repair leaves $F$
-unchanged; where $H=\{r\}$ it returns $D_0$.
+$v_i+v_j$. The guard $H\subseteq D_0$ has
+$\Phi_r(H)(q_r)=0$, and the baselines agree wherever $H\ne\{r\}$.
 
 Next consider a triangle with $ij,jh$ owned by $r$ and $ih$
 owned by $s\ne r$. Put $H=v_i\star_s v_h$. The baseline
 contains $v_j$ whenever $H\ne\{r\}$: both incident $r$-edges
 can discard $v_j$ only when $v_i=v_h=\{r\}$, equivalently
-$H=\{r\}$. If $ih$ is owned at $q$, the same mask and repair
-permit adjoining the projection $v_j$.
+$H=\{r\}$. If $ih$ is owned at $q$, this guard permits
+adjoining the projection $v_j$.
 Finally, when $v_i$ is already retained and $q_i\ne r_{ij}$,
-adjoin $v_j$ using mask $[i\text{ is not colored }r_{ij}]$
-and repair $D_0+(F\star_{r_{ij}}v_i)$.
+adjoin $v_j$ using guard $v_i$ at owner $r_{ij}$.
 Where $v_i\ne\{r_{ij}\}$, the retained $v_i$ and its incident
-edge already contain $v_j$; on the remaining stratum the repair
-returns $D_0$. All three masks are actual by adjoining the
-corresponding guarded fresh source to the enlarged baseline.
+edge already contain $v_j$, and the guard's owner profile vanishes at $q$.
 
 These steps retain exactly $U=U(q)$. Drop edges with both
 endpoints in $U$, which their retained projections dominate.
@@ -291,13 +282,8 @@ every owner except $q_i$ (all owners if $q_i$ is uncolored), and
 attach each edge outside $U$ at every owner except its edge owner.
 The helpers lie below $B$, so the spine is bounded by $B+X$ and
 has the desired principal box. Reverse each enlargement with its
-one repair gate, postponing restoration of the lower bound.
-Indeed, if the corresponding passive guard equals its owning atom,
-the gate returns that atom in the old baseline; otherwise the
-baselines agree and the guard lies below them. Thus the gate keeps
-the upper bound even without a lower bound on the incoming spine.
-Its mask is redundant in the principal predicate, so the box is
-unchanged. Finally replace the spine $S$ by
+one repair gate using \cref{core:lem:atomic-repair}, postponing
+restoration of the lower bound. Finally replace the spine $S$ by
 $(S\star_uD)\star_vD$, with distinct $u,v$ avoiding any singleton
 forced by $D$ at $q$. This lies between $D$ and $D+S$.
 There are two such owners because $K\geq3$; positivity at $q$
