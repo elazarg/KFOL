@@ -1,0 +1,173 @@
+\paragraph{Simultaneous recoloring from capture probes.}
+An input can be irrelevant after one fixing but live at both endpoints
+of a simultaneous recoloring. The following profile argument lets us
+use such intermediate capture probes without choosing a path through them.
+For a valuation $w$, write $E_s(w)=\{i:w_i=\{s\}\}$.
+
+\begin{lemma}[Marked profile transfer]
+\label{core:lem:marked-profile-transfer}
+Let $H$ be core, with $\Phi_r(H)(A)=1$ and $\Phi_r(H)(B)=0$.
+Fix an observed winner $k$. For each $j\in A\setminus B$, suppose
+there is a valuation $w^j$ with
+\[
+ k\in w^j_j,\qquad E_r(w^j)\subseteq B,\qquad
+ E_s(w^j)\cap A=\varnothing\quad(s\ne r).
+\]
+Then $k\in H(w^j)$ for at least one such $j$.
+\end{lemma}
+\begin{proof}
+Suppose otherwise. Descend a word for $H$, preserving its positive
+$r$-profile at $A$, its negative $r$-profile at $B$, and omission of
+$k$ on all the displayed rows.
+At an $r$-root choose a child positive at $A$; both children are
+negative at $B$. Neither can be an $r$-absorber on a row whose
+$r$-coalition lies in $B$, so rowwise omission passes to both.
+At a foreign $s$-root both children are positive at $A$; choose one
+negative at $B$. Neither child can be singleton $s$ on a row:
+its winning $s$-coalition would be disjoint from its winning
+$r$-coalition $A$, contrary to \cref{core:thm:profiles}.
+Thus omission again passes to both children.
+A resulting leaf must be indexed by $j\in A\setminus B$ and
+contains $k$ on its own designated row, a contradiction.
+\end{proof}
+
+\begin{theorem}[A simultaneous capture-probe rule]
+\label{core:thm:simultaneous-capture-probes}
+Let $K\geq3$, let $C$ be core on $V$, and let proper colorings
+$p,q$ have a common missing owner. Put $S=\{j:p_j\ne q_j\}$,
+where a status is an owner or the uncolored status.
+Suppose that for each $j\in S$ there is a coloring $e^j$ of
+$V\setminus\{j\}$ with $P_j^C(e^j)=0$ and
+\[
+ e^j_r\subseteq
+ \begin{cases}
+ q_r,&r=p_j,\\
+ p_r,&r=q_j,\\
+ p_r\cap q_r,&r\notin\{p_j,q_j\}.
+ \end{cases}
+\]
+Then $p\sim_Cq$.
+\end{theorem}
+\begin{proof}
+Choose a common missing owner $k$, and put $N=I\setminus\{k\}$.
+At the two positive probes give the distinguished input $X$ the menu
+$I$, and give passive inputs their fixed atom or $N$ according to
+$p,q$. For each $j\in S$, let $R_j$ have $X=N$, passive input
+$j=I$, and all other passive inputs fixed by $e^j$, using $N$ for
+uncolored inputs. The capture assumption makes $C$ omit $k$ there.
+The displayed inclusions imply, for every owner $r$, that the
+$r$-atomic coalition of $R_j$ lies inside $p_r$ or $q_r$.
+
+Call a word quiet if it omits $k$ on every $R_j$.
+By \cref{core:lem:marked-profile-transfer}, every quiet word has
+identical singleton flags at the positive probes. Indeed, to transfer
+owner $r$ from $p$ to $q$, use rows indexed by $p_r\setminus q_r$:
+their $r$-coalitions lie in $q_r$, and their foreign coalitions are
+disjoint from $p_r$. Reverse the endpoints for the converse.
+
+Induct on a word to show that quietness forces equality of its two
+positive outputs. The distinguished leaf has menu $I$ at both.
+An unchanged passive leaf has the same menu at both; a changed leaf
+$j$ is not quiet on $R_j$. At a root, atomic positive outputs agree
+by profile transfer. Otherwise both outputs are ambiguous, so neither
+child is the root owner's singleton at either positive probe.
+The coalition inclusions rule out that absorber in either child on
+every $R_j$ too. Thus quietness passes to both children. Induction
+makes their positive values equal, and the root takes union at both.
+
+For $F\in\mathcal I(C)$, the bound $F\subseteq C+X$ makes $F$
+quiet, since both $C$ and $X$ omit $k$ on every $R_j$. Its two
+positive outputs therefore agree. Their $k$-membership reads exactly
+$P_F(p),P_F(q)$, proving the assertion.
+\end{proof}
+
+\paragraph{An exact kernel for graph sums.}
+Let $G=(V,E)$ be a finite simple graph with at least one edge.
+Assign an arbitrary owner $r_{ij}$ to each edge, and put
+\[
+ D(v)=\sum_{\{i,j\}\in E}v_i\star_{r_{ij}}v_j.
+\]
+Isolated vertices are allowed and are ignored by $D$.
+
+\begin{theorem}[The activation kernel of a graph sum]
+\label{core:thm:graph-activation-kernel}
+For $K\geq3$, proper partial colorings $p,q$ are activation-equivalent
+above $D$ exactly when every edge $\{i,j\}$ satisfies
+\[
+ r_{ij}\in\{p_i,p_j\}\cap\{q_i,q_j\}
+ \quad\text{or}\quad p_i=q_i\ \text{and}\ p_j=q_j.
+\]
+\end{theorem}
+\begin{proof}
+Each edge summand is a core minorant of $D$, so its interval
+predicates lift by adjoining $D$. The kernel for a single owned
+choice, given by \cref{core:thm:profile-source-interval}, has one
+class where some endpoint is its owner, and singleton classes on
+its two endpoint statuses elsewhere. This proves necessity.
+
+For sufficiency first suppose $p,q$ have a common missing owner.
+For every changed vertex $j$, color each neighbor $i$ by its edge
+owner $r_{ij}$ and leave all other inputs uncolored. Simplicity
+makes this a well-defined coloring $e^j$. Every incident edge then
+absorbs the source $j$, so $P_j^D(e^j)=0$.
+The local edge test gives exactly the required inclusions:
+\[
+ e^j_r\subseteq
+ \begin{cases}
+ q_r,&r=p_j,\\
+ p_r,&r=q_j,\\
+ p_r\cap q_r,&r\notin\{p_j,q_j\}.
+ \end{cases}
+\]
+For example, an $r$-neighbor of a vertex leaving $r$ must enter
+$r$, and an $r$-neighbor of a vertex entering $r$ must leave it.
+If neither status is $r$, the neighbor must be unchanged at $r$.
+The simultaneous capture-probe rule proves equivalence.
+
+If there is no common missing owner, choose $r$ used by $p$ but
+absent at $q$. Every $p$-colored $r$ vertex is captured at $p$:
+an incident $r$-edge would require an $r$ endpoint at $q$, while
+any differently owned edge already has its owner at the neighbor.
+These $r$-colored vertices are pairwise nonadjacent. Erase all their
+old colors, then add their target statuses from $q$.
+All updates are captures. The erasure phase stays inside $p$'s
+palette; the addition phase omits $r$, so stays proper too.
+The resulting $p'$ still passes the local edge test with $q$,
+and both omit $r$. The preceding case gives $p'\sim_Dq$;
+the capture path gives $p\sim_Dp'$.
+\end{proof}
+
+For distinct owners $a,b$, if all edge labels and input colors belong
+to $\{a,b\}$, each edge
+is Boolean: an $a$-edge takes OR and a $b$-edge takes AND, with
+$a=1,b=0$. Here the whole activation preorder is equality of edge-value
+vectors. Indeed $D+(X\star_a H)$ and $D+(X\star_b H)$, for an
+edge summand $H$, separate unequal Boolean values in both directions.
+Equal vectors satisfy the theorem's local test.
+Each class is a monotone 2-CNF solution set: an $a$-edge with output
+$1$ gives $x_i\lor x_j$, and output $0$ fixes both endpoints to $0$;
+a $b$-edge with output $0$ gives $\neg x_i\lor\neg x_j$, and
+output $1$ fixes both endpoints to $1$.
+
+The simple-graph hypothesis matters. Oppositely labelled parallel
+edges on one pair give $D=x+y$. The swapped colorings $(a,b)$ and
+$(b,a)$ agree in both local owner classes, yet
+$D+(X\star_a x)$ separates them.
+
+\begin{proposition}[Nonlocal activation equivalence]
+\label{core:prop:activation-kernel-cycle}
+For every $K\geq3$, there is a four-input core operation with two
+activation-equivalent proper colorings, each isolated in the graph
+of capture edges. For distinct owners $a,b$, take
+\[
+ D=(x\star_a y)+(y\star_b z)+(z\star_a w)+(w\star_b x),
+ \qquad p=(a,b,a,b),\quad q=(b,a,b,a).
+\]
+\end{proposition}
+\begin{proof}
+Every edge has its owner at one endpoint under both colorings, so
+\cref{core:thm:graph-activation-kernel} gives $p\sim_Dq$.
+Every vertex has an incident edge of each label. Under either
+alternating coloring one incident edge leaves that vertex's source
+live. Both colorings are fully colored, so neither has a capture edge.
+\end{proof}

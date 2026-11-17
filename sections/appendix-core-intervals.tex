@@ -128,7 +128,8 @@ For every core $C$ and proper colorings $p,q$,
 \[
  p\sim_Cq\quad\Longrightarrow\quad C_p=C_q.
 \]
-The converse fails already for input union on two variables.
+The converse fails even if the full cofactors agree for every core
+minorant of $C$.
 \end{proposition}
 \begin{proof}
 Induct on a primitive word for $C$. For a projection $v_j$,
@@ -146,9 +147,20 @@ Since $C_i\subseteq D$, every interval predicate above $C_i$ is also
 available above $D$. Thus $p\sim_{C_i}q$ for both children.
 Induction gives $(C_i)_p=(C_i)_q$, proving $C_p=C_q$.
 
-For the converse, $C=x+y$ has the same constant cofactor $\{a,b\}$
-at $(a,b)$ and $(b,a)$, but $C+(X\star_a x)$ separates these two
-colorings.
+For the converse use the three-input baseline $C$ in the one-block
+construction of \cref{core:thm:one-box-exponential-copies}. Its profiles
+are majority at distinct owners $a,b$ and unanimity at all other owners,
+and it is globally minimal among core operations. At
+$p=(b,c,c)$ and $q=(c,b,c)$, for $c\notin\{a,b\}$, its full
+cofactors are both constantly $\{b,c\}$. Every core minorant is $C$
+itself, so all minorant cofactors agree too. Nevertheless the same
+one-block construction, with its input names permuted, supplies the
+actual predicates
+\[
+ \neg(x_cz_c),\qquad \neg(y_cz_c).
+\]
+They separate $p,q$ in opposite directions. Thus these two colorings
+are activation-incomparable.
 \end{proof}
 
 Faithfulness recovers the baseline from elementary equivalences, but
@@ -158,73 +170,7 @@ only by coloring or uncoloring one input whose source guard vanishes
 at the common fixing of the other inputs. Every such edge is an
 activation equivalence by the preceding theorem.
 
-\begin{proposition}[Nonlocal activation equivalence]
-\label{core:prop:activation-kernel-cycle}
-For every $K\geq3$, there is a four-input core operation with two
-activation-equivalent proper colorings, each isolated in the graph
-of capture edges. For distinct owners $a,b,c$, take
-\[
- D=(x\star_a y)+(y\star_b z)+(z\star_a w)+(w\star_b x)
-\]
-and the colorings
-\[
- p=(a,b,a,b),\qquad q=(b,a,b,a)
- \quad\text{on }(x,y,z,w).
-\]
-\end{proposition}
-\begin{proof}
-Put $V=\{x,y,z,w\}$, $N=\{a,b\}$, and $P=\{a,b,c\}$.
-The following four rows all give $D=N$:
-\[
-\begin{array}{c|cccc|cc}
- \text{marked input}&x&y&z&w&l&u\\\hline
- x&P&a&N&b&\{y\}&V\setminus\{w\}\\
- z&N&b&P&a&\{w\}&V\setminus\{y\}\\
- y&a&P&b&N&\{x\}&V\setminus\{z\}\\
- w&b&N&a&P&\{z\}&V\setminus\{x\}
-\end{array}
-\]
-Here atoms abbreviate their singleton menus. In the $c$-observer
-quotient these are the marked cubes $(l,u,j)$ of
-\cref{app:core-grouped-cubes}, with Boolean endpoints $b=0,a=1$,
-unmarked free value $N$, and marked free value $P$.
-
-Let $F\in\mathcal I(D)$ have distinguished input $X$.
-Restrict all inputs to subsets of $\{a,b,c\}$ and take the
-$c$-observer quotient. Choices at owners other than $a,b$ act as
-observer union. Distributing the two bichain operations over this
-union expresses $F$ as an observer union of pure $a,b$ words.
-For each such word, both endpoint cofactors $X=a$ and $X=b$ are
-safe on all four marked rows: the bound $F\subseteq D+X$ excludes
-$c$ there, and observer union cannot remove a $c$ observation.
-
-Put $A=\{x,z\}$ and $B=\{y,w\}$.
-By \cref{core:lem:grouped-cut}, one has
-$A\preceq B$ using the rows marked $x,z$: their marked coordinates
-are exactly $A\setminus B$, each upper endpoint contains $A$,
-and each lower endpoint lies in $B$.
-The rows marked $y,w$ give $B\preceq A$ in the same way.
-Thus both endpoint cofactors of every pure word agree at $p,q$.
-With old inputs fixed at endpoints and $X=P$, a pure word observes
-$c$ exactly when its two endpoint cofactors differ. It therefore
-observes $c$ at $p$ exactly when it does at $q$. Taking observer
-union proves $P_F(p)=P_F(q)$, hence $p\sim_Dq$.
-
-Finally the source guards of $D$ vanish precisely under the fixings
-\[
- \begin{array}{c|c}
- x&y=a,\ w=b\\
- y&x=a,\ z=b\\
- z&y=b,\ w=a\\
- w&z=a,\ x=b.
- \end{array}
-\]
-For instance, $x$ contributes through its first or fourth summand,
-so both paths are blocked exactly in the displayed case.
-None of these four capture conditions holds at $p$ or $q$.
-Both colorings are fully colored, so no capture edge leaves either
-one. This proves the asserted isolation.
-\end{proof}
+\input{sections/appendix-core-graph-activation}
 
 Principal downsets have more structure than those of an arbitrary
 preorder.
