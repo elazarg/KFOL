@@ -389,7 +389,8 @@ exist at this arity, so their reachable union is a greatest member.
 
 \begin{theorem}[Greatest extension on the principal box]
 \label{core:thm:principal-box-extension}
-Fix a proper coloring $q$ and write the principal predicate as
+Fix a proper coloring $q$ of the passive input set $V$ and write
+the principal predicate as
 $\Theta_{C,q}(E)=\bigwedge_r B_r(E_r)$. Put
 \[
  L=\{v:\ \forall r,\ B_r(E_r(v))=1\}.
@@ -398,6 +399,11 @@ This definition includes valuations using every atomic color. Each
 factor $B_r$ is determined by the proper monochromatic probes.
 The greatest operation $M$ reachable from $C$ by atomic enlargements
 at $q$ is the greatest core operation agreeing with $C$ on $L$.
+Equivalently, a core operation $H$ lies below $M$ exactly when
+\[
+ P_j^H(p|_{V\setminus\{j\}})\leq P_j^C(p|_{V\setminus\{j\}})
+ \quad\text{whenever }p\preceq_C q\text{ leaves }j\text{ uncolored}.
+\]
 Its bounded helpers recover each principal factor:
 \[
  B_r(A)=1\quad\Longleftrightarrow\quad
@@ -442,6 +448,18 @@ $A\subseteq G$ wherever $G\ne\{r\}$. Thus $M+A$ is an atomic
 enlargement of $M$. Maximality gives $A\subseteq M$. Starting from
 $S(D)\subseteq C$ proves $D\subseteq M$.
 
+In particular $H\subseteq M$ means precisely $H\subseteq C$ on $L$,
+by applying the result to $C+H$. To read a source bit at a proper
+$p\preceq_Cq$ with $j$ uncolored, choose an omitted color $k$. Put
+$v_j=I$ and give every other uncolored input the menu
+$I\setminus\{k\}$. This valuation has coloring $p$, lies in $L$, and
+has $j$ as its only possible source of $k$. Conversely a winner of
+$H(v)\setminus C(v)$ at $v\in L$ has a supplying source $j$ by
+source decomposition. Erase the $k$-block of $E(v)$ for this winner
+$k$. The resulting proper coloring still satisfies every factor and
+leaves $j$ uncolored. At $j$ it witnesses a positive bit for $H$ and
+a zero for $C$, proving the stated equivalence.
+
 For the factor formula, each helper $H$ of $S$ satisfies
 $C+H=C$ on $L$, so the maximality just proved gives $H\subseteq M$.
 These helpers witness every zero of $B_r$ and each avoids its gate's
@@ -464,6 +482,8 @@ With $M$ as above, let $e_{j,r}$ color just $j$, by $r$. Then
  e_{j,r}\preceq_C q
  \quad\Longleftrightarrow\quad j\in q_r\ \text{ or }\ v_j\nsubseteq M .
 \]
+The second alternative holds exactly when some $p\preceq_Cq$ leaves
+$j$ uncolored and captures it in $C$.
 In particular $\Theta_{C,q}(p)=[p\subseteq q]$ exactly when $M$
 is input union. More generally, let $P$ be a realizable predicate and
 let $J$ consist of the inputs $j$ for which $P(e_{j,r})=0$ for at
@@ -471,6 +491,17 @@ least one $r$. For every predicate $R$ antitone under ordinary
 inclusion of colorings on $J$, the refinement
 $P(p)\land R(p|_J)$ is realizable. If $J$ comprises all inputs,
 every antitone predicate below $P$ is realizable.
+
+Conversely, let $P$ be antitone, depend only on $J$, and exclude at
+least one singleton coloring of each $j\in J$. For each
+inclusion-maximal coloring $q$ with $P(q)=1$, form the greatest
+atomic enlargement $M_q$ of $C$ at $q$. Then
+\[
+ P\in\mathcal L(C)\quad\Longleftrightarrow\quad
+ \forall q\text{ as above},\ \forall j\in J,\quad v_j\subseteq M_q .
+\]
+This applies to any conjunction of literal exclusions, with $J$ the
+set of inputs mentioned.
 \end{corollary}
 \begin{proof}
 Subcolorings lie below $q$. If $v_j\subseteq M$ and $j\notin q_r$,
@@ -481,6 +512,8 @@ its input. If $v_j\nsubseteq C(v)$ there, passive-menu erasure
 allows changing $v_j$ to $\{r\}$ with this nonconstant cofactor
 unchanged. Excluding $e_{j,r}$ forces it to be constant under that
 fixing. Thus $C+v_j=C$ on $L$ and $v_j\subseteq M$ by the theorem.
+Its source-bit criterion applied to the projection $v_j$ gives the
+capture witness in the second alternative.
 If the principal is the ordinary subcoloring predicate, every input
 has an excluded color, so $M$ contains every projection. Conversely,
 when $M$ is input union the formula excludes every incompatible
@@ -491,6 +524,12 @@ singleton excluded by $P$. The formula therefore gives $v_j\subseteq M$
 for all $j\in J$. Any $p\preceq_Cq$ satisfies $p|_J\subseteq q|_J$,
 by applying the formula to the singletons of $p$. The refinement is
 thus a downset of the activation preorder and belongs to $\mathcal L(C)$.
+The same argument proves necessity in the last test. For sufficiency,
+every positive coloring extends to a maximal positive $q$. Its
+principal is contained in the principal at $q$ by ordinary
+subcoloring. The proposed test forces every $p\preceq_Cq$ to
+satisfy $p|_J\subseteq q|_J$, hence $P(p)=1$. Thus $P$ is the
+union of these principals, including the empty union when $P=0$.
 \end{proof}
 
 \begin{corollary}[Realizers below one principal]
