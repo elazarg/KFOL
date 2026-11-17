@@ -941,6 +941,8 @@ therefore an equivalence, hence a capture edge by faithfulness.
 The converse holds for every capture path.
 \end{proof}
 
+\input{sections/appendix-core-block-activation}
+
 \begin{theorem}[Disjoint activation products]
 \label{core:thm:disjoint-activation-product}
 Let $K\geq3$, let $C_1,C_2$ be arbitrary core operations on disjoint
@@ -959,32 +961,12 @@ Moreover, every member of $\mathcal I(D)$ is a finite union of operations
 \]
 \end{theorem}
 \begin{proof}
-Let $S\subseteq D+X$ be a primitive one-$X$ spine with full box $B$,
-so $D+S$ is an interval realizer of $B$. Fix any background coloring
-$b$ on $V_2$ and consider its formal full-factor section
-\[
- B^b(a)=\bigwedge_r B_r(a_r\cup b_r).
-\]
-If $B(b)=0$, this section is identically zero by antitonicity, hence
-is the bottom predicate above $C_1$. Otherwise the preceding lemma
-gives a spine $S_b$ with these exact factors and
-\[
- S_b\subseteq\partial_{V_2}S
-       \subseteq\partial_{V_2}(D+X)=C_1+X.
-\]
-Thus $C_1+S_b\in\mathcal I(C_1)$ realizes the whole section on proper
-component colorings, even when the combined coloring uses every owner.
-The same assertion holds with the components exchanged.
-
-Adjoining the unused baseline lifts every component interval to
-$\mathcal I(D)$, proving the forward implication. For the reverse,
-take the principal actual box $B=\Theta_{D,p}$. Its section by $p_2$
-is an actual $C_1$-interval predicate positive at $p_1$, so component
-activation gives $B(q_1,p_2)=1$. Its section by $q_1$ is an actual
-$C_2$-interval predicate positive at $p_2$, so $B(q_1,q_2)=1$.
-The intermediate positivity is formal; only the two component probes
-and the final globally proper coloring are observed. This proves
-$q\preceq_Dp$. Induction gives the finite product rule.
+Apply \cref{core:thm:block-source-extension} with $B=C_1$ and second
+block $V_2$. Every coefficient is $C_2$: it is a minorant, and giving
+every first-block input $I\setminus\{k\}$ shows that no minorant can
+supply $k$ outside $C_2$. The empty singleton coloring satisfies all
+principal factors. This gives the binary equivalence, and induction
+gives the finite product rule.
 
 Finally, for every positive coloring $p$ of an interval predicate $P$,
 choose $F_i$ realizing $\Theta_{C_i,p_i}$. The displayed composite
@@ -1014,48 +996,15 @@ Consequently,
 \]
 \end{theorem}
 \begin{proof}
-Source reconstruction makes $B$ union-preserving in $U$:
-\[
- B(A\cup A',v)=B(A,v)\cup B(A',v).
-\]
-For every owner $t$, the reader
-\[
- H_t(Y;U,v)=B(U,v)+B(U\star_tY,v)
-\]
-lies in $\mathcal I(B)$. Indeed monotonicity and the displayed identity
-bound its second summand by
-$B(U,v)+B(Y,v)\subseteq B(U,v)+Y$.
-Its distinguished predicate is $P(E_V)[U\text{ is not colored }t]$.
-Since $C\subseteq B$, every $B$-comparison gives the required
-$C$-comparison. If $P(q_V)=1$, also $P(p_V)=1$; the readers then
-force status inclusion. This proves necessity.
-
-If status inclusion holds, the disjoint product for $C+U$ gives
-$p\preceq_{C+U}q$, hence $p\preceq_Bq$ because $B\subseteq C+U$.
-It remains to prove sufficiency when $P(q_V)=0$.
-Choose the principal box $T=\Theta_{B,q}$ and a marked spine
-$S\subseteq B+Y$ with this full type, so $B+S$ realizes $T$.
-The old source $U$ is
-captured at $q_V$, so $T$ is positive with $U$ uncolored too.
-Apply \cref{core:lem:captured-rectangle} to this interval realizer.
-For each owner $r$, the proper monochromatic coloring having just
-$q_r\cap V$ and $U$ colored $r$ lies in its rectangle. Thus
-\[
- T_r\bigl((q_r\cap V)\cup\{U\}\bigr)=1\qquad(r\in I).
-\]
-Together with positivity at $q_V$, these factor inequalities make
-the full section of $T$ at any fixed $U$-status positive at $q_V$,
-even if the combined palette is full.
-
-Take the section at $p_U$, using an empty background if $p_U$ is
-uncolored. Its background is positive by antitonicity, so
-\cref{core:lem:spine-background-erasure} compiles it to a spine
-bounded by $\partial_U S\subseteq C+Y$; here $\partial_U B=C$.
-Adjoining $C$ gives an actual $C$-interval predicate with these
-exact section factors. It is positive at $q_V$, hence at $p_V$
-by the assumed $C$-comparison. Therefore $T(p)=1$, proving
-$p\preceq_Bq$. The kernel formula follows by applying the order
-formula in both directions; $P$ is constant on each $C$-class.
+Use \cref{core:thm:block-source-extension} with the one-input block
+$U$. Its coefficient at a background coloring $e$ is the projection
+if $P(e)=1$, and zero otherwise. Indeed in the first case
+$\Theta_{C,e}\leq P$. On $L_e$, erasing any winner's color still
+passes $P$, so $B(U,v)=C(v)\cup U$. In the second case choose $k$
+missing from $e$, give its holes $I\setminus\{k\}$ and put
+$U=\{k\}$. This background belongs to $L_e$ and $B$ omits $k$,
+excluding the projection. The block formula gives the asserted order.
+Since $P$ is constant on each $C$-class it also gives the kernel.
 \end{proof}
 
 \begin{corollary}[Activation outside an absorbing singleton stratum]
