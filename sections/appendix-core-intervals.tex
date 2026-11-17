@@ -19,6 +19,8 @@ distinguished source predicate $P$, through
  F(X,v)=C(v)\cup
        \{k\in X:P(E(v)^{\widehat k})=1\}.
 \]
+For each fixed passive valuation $v$, its unary cofactor is either the
+constant $C(v)$ or the function $X\mapsto C(v)\cup X$.
 The realizable predicates form a bounded distributive sublattice of
 $\{0,1\}^{\mathcal D_W}$. Join is pointwise union, and meet is
 composition at $X$:
@@ -34,6 +36,9 @@ At a passive-source $k$-probe, $X$ omits $k$. The two bounds therefore
 force that source coefficient to equal its coefficient in $C$.
 Source decomposition proves the formula and its uniqueness. At an
 $X$-source probe, $C$ omits the queried winner, so $P$ is observable.
+By \cref{core:prop:unary-polynomials}, a nonconstant unary polynomial
+contains its input, so the interval bounds force $C(v)\cup X$.
+For a constant cofactor, the same bounds force $C(v)$.
 The formula shows that union takes $P\lor Q$, while composition takes
 $P\land Q$. Both constructions remain in the interval. The bottom and
 top are $C$ and $C\cup X$.
@@ -55,6 +60,57 @@ The interpolation hypothesis supplies each factor. Their intersection
 stays positive at $q$ and vanishes wherever $P=0$. Union over the
 positive colorings gives exactly $P$. Empty intersections and unions
 use the top and bottom.
+\end{proof}
+
+\begin{lemma}[Passive-menu erasure]
+\label{core:lem:interval-passive-erasure}
+Let $F\in\mathcal I(C)$ and fix a passive valuation $v$. Put
+$S=\{i\in W:v_i\nsubseteq C(v)\}$.
+If $w_i=v_i$ for every $i\notin S$, then
+\[
+ C(w)=C(v),\qquad F(Y,w)=F(Y,v)\quad\text{for every }Y.
+\]
+\end{lemma}
+\begin{proof}
+First change one menu $v_i$ with $k\in v_i\setminus C(v)$.
+The source coefficient of $i$ in $C$ vanishes at the statuses
+$\sigma_k(v_j)$, $j\ne i$, which specify a proper fixing omitting
+owner $k$. The unchanged passive source families give the same zero
+coefficient for $i$ in $F$, with $Y$ left uncolored.
+By \cref{core:cor:colored-cofactor-dependence}, both operations are
+independent of $i$ under this fixing, and $F$ is so for every $Y$.
+Thus changing $v_i$ arbitrarily preserves both displayed values.
+Iterate over the original set $S$. At each step the baseline remains
+$C(v)$, while every unchanged menu in $S$ still contains its original
+omitted winner; the same argument therefore applies to the next menu.
+\end{proof}
+
+\begin{corollary}[Source-reader absorption]
+\label{core:cor:source-reader-absorption}
+Let $F\in\mathcal I(C)$, let $j\in W$, and let $r$ be an owner.
+Write $e_{j,r}$ for the proper coloring with only $j$ colored, by $r$.
+Then
+\[
+ P_F(e_{j,r})=0
+ \quad\Longleftrightarrow\quad
+ F(Y\star_r v_j,v)=F(Y,v)\quad\text{for all }Y,v.
+\]
+\end{corollary}
+\begin{proof}
+Suppose $P_F(e_{j,r})=0$. A constant unary cofactor is unchanged by
+the reader. Otherwise \cref{core:thm:source-interval} gives the
+nonconstant cofactor $C(v)\cup Y$. Colored-cofactor independence
+excludes $v_j=\{r\}$.
+We claim $v_j\subseteq C(v)$. Otherwise
+\cref{core:lem:interval-passive-erasure} permits replacing $v_j$ by
+$\{r\}$ without changing the entire unary cofactor. But $P_F(e_{j,r})=0$ makes that
+cofactor constant, a contradiction.
+Thus $v_j\subseteq C(v)$ and $v_j\ne\{r\}$,
+which give $C(v)\cup(Y\star_r v_j)=C(v)\cup Y$.
+
+Conversely, fix $v_j=\{r\}$. The reader $Y\star_r v_j$ is constant,
+so the identity makes $F$ independent of $Y$ under this fixing.
+Colored-cofactor dependence gives $P_F(e_{j,r})=0$.
 \end{proof}
 
 Write $\mathcal L(C)$ for the lattice of realizable distinguished

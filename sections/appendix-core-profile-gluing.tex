@@ -1,7 +1,63 @@
 \paragraph{Pointwise bounds under a core operation.}
 Even when the upper bound is itself a core operation, separate bounded-profile
-tests need not have a common witness. This occurs on three passive variables
+tests need not have a common witness. A single positive profile bit already
+fails to glue on three variables. The failure also occurs with exact profiles
 and persists for the value bounds required by a single-owner occurrence type.
+
+\begin{lemma}[Singleton-profile absorption]\label{core:lem:singleton-profile-absorption}
+For a core operation $H$, an input $j$, and an owner $r$,
+\[
+ \Phi_r(H)(\{j\})=1
+ \quad\Longleftrightarrow\quad H=j\star_r H.
+\]
+Equivalently, at every valuation $w$, if $w_j=\{r\}$ then
+$H(w)=\{r\}$; otherwise $H(w)=\{r\}$ or $w_j\subseteq H(w)$.
+\end{lemma}
+\begin{proof}
+For the forward direction, induct on a core term with the positive profile
+bit. A projection must be $j$. At an $r$-root, one child has the same
+positive bit. If either child is the $r$ singleton, so is the root;
+otherwise the inductive child contains $w_j$, and union retains it.
+At a foreign $s$-root, both children have the bit. If both are the $r$
+singleton, so is the root. Otherwise one contains $w_j$. An $s$-absorbing
+child also contains $w_j$, so absorption can occur only with
+$w_j=\{s\}$; without absorption union retains $w_j$.
+In addition, $w_j=\{r\}$ forces the $r$ singleton by profile monotonicity.
+These are precisely the pointwise conditions for $H=j\star_r H$.
+Conversely that identity forces $H=\{r\}$ whenever $j=\{r\}$, proving
+the positive profile bit.
+\end{proof}
+
+\begin{proposition}[A positive singleton-profile bit does not glue]
+\label{core:prop:singleton-profile-bound-gluing}
+Fix distinct owners $a,b,c$, and put
+\[
+ C=(x\star_b j)\star_a(j\star_c y),\qquad
+ H_0=j,\qquad H_1=j\star_b x.
+\]
+Both helpers satisfy $\Phi_b(H_i)(\{j\})=1$, and at every valuation $w$
+at least one satisfies $H_i(w)\subseteq C(w)$. Nevertheless no core
+operation $H\subseteq C$ satisfies $\Phi_b(H)(\{j\})=1$.
+\end{proposition}
+\begin{proof}
+The profile bits are immediate. If $j\subseteq C$, use $H_0$.
+Otherwise the outer $a$-gate cannot absorb: its $a$-profile is
+$j(x\lor y)$, so an $a$ output would contain $j=\{a\}$.
+Both children must therefore omit some member of $j$, forcing their
+respective $b$- and $c$-absorptions. Thus $C=\{b,c\}$ and
+$j\ne\{b\},\{c\}$, whence $x=\{b\}$ and $y=\{c\}$.
+Now $H_1=\{b\}\subseteq C$.
+
+Suppose a bounded $H$ has the positive bit. At the atomic input
+$(x,j,y)=(\{b\},\{a\},\{c\})$, the bound is $\{b,c\}$.
+The absorption lemma forces $H=\{b\}$, giving
+$\Phi_b(H)(\{x\})=1$. At
+$(x,j,y)=(\{b\},\{a\},\{a\})$, the bound is $\{a\}$, giving
+$\Phi_a(H)(\{j,y\})=1$. These positive coalitions are disjoint,
+contradicting the common-source property.
+\end{proof}
+
+We next keep the helpers' entire profiles fixed.
 
 Fix distinct owners $a,b,c$, and abbreviate
 \[
