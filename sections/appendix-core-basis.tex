@@ -162,9 +162,11 @@ Interval masks have a direct path criterion, and closing their paths gives
 the greatest core operation below the specified bound
 (\cref{core:thm:interval-masks,core:cor:interval-mask-interior}).
 The least operation retaining a given winner from every input is the
-fold at that owner. On three inputs, the interval masks classify all
+fold at that owner. For $n\geq3$, operations with unanimous singleton
+profiles can be distinguished using at most $n-3$ ambiguous inputs,
+and this is sharp. On three inputs, the interval masks classify all
 operations retaining two designated winners
-(\cref{core:prop:retained-winner-folds,core:cor:ternary-retained-pair}).
+(\cref{core:prop:retained-winner-folds,core:thm:sharp-ambiguity-probes,core:cor:ternary-retained-pair}).
 For source-separable operations, owner closures record which inputs an
 owner makes irrelevant and organize their reconstructions. Complete-head
 circuits provide a further exactly classified family
@@ -2768,6 +2770,53 @@ observer $a$ remains, its choice can be replaced throughout the
 witness term by union: these operations agree in the $a$-view
 (\cref{view:thm:view}). This reduces the lifting question in this
 interval to one observer.
+
+\begin{theorem}[Sharp number of ambiguous test inputs]
+\label{core:thm:sharp-ambiguity-probes}
+Fix $n\geq2$ and a set $R\subsetneq I$ of winners required to be
+retained, possibly empty. Put $d=|R|$, or $d=\max(2,|R|)$ if
+unanimity is also required at every singleton profile.
+If $n\leq d$, input union is the only such core operation. Otherwise
+the least $h$ for which valuations with at most $h$ ambiguous inputs
+distinguish all such operations is
+\[
+ h=n-1-d.
+\]
+In particular, atomic valuations determine all ternary operations
+with unanimous profiles. At every arity $n\geq4$ a pair with those
+profiles requires $n-3$ ambiguous inputs to distinguish.
+\end{theorem}
+\begin{proof}
+A zero of a source predicate must use every color of $R$, by the
+retention test above. Under unanimity it must also use at least two
+colors: fixing all other inputs to any one atom leaves the marked
+input essential, as in \cref{core:thm:unanimity-activation-obstruction}.
+Thus two differing source bits fix at least $d$ of the $n-1$ passive
+inputs. Their canonical probe gives the marked source an omitted
+owner singleton and gives just the uncolored passive inputs the
+ambiguous menu omitting that owner. This proves the upper bound.
+If $n\leq d$, all bits are positive, giving input union.
+
+For sharpness choose $D\supseteq R$ of size $d$ and $k\notin D$.
+Among the $n-1$ passive inputs, color $d$ of them bijectively by $D$
+and leave the rest uncolored, obtaining $e$. Let $P$ accept just the
+proper colorings omitting some member of $D$, and let $Q$ also accept
+$e$. Both predicates are antitone, since every strict subcoloring of
+$e$ omits a member of $D$. For $D=\varnothing$, $P$ is empty and
+$Q$ accepts just the empty coloring.
+Use their greatest source completions from
+\cref{core:thm:source-completion}. Both terms retain all passive
+menus. They also retain every $r\in R$ from the marked source: if
+the passive union omits $r$, the coloring passes $P$. When $d\geq2$,
+both terms have unanimous profiles. A singleton output requires a
+unanimous passive singleton, and there both predicates adjoin the
+marked input.
+
+The completions can differ only when the passive coloring is exactly
+$e$, with $n-1-d$ ambiguous inputs. Give each of those inputs
+$I\setminus\{k\}$, keep the fixed singletons, and give the marked
+input $\{k\}$. Only the second completion returns $k$.
+\end{proof}
 
 Fix distinct owners $b,c$, a finite nonempty variable set $V$, and
 $K\geq3$. For an input tuple $S$, put
