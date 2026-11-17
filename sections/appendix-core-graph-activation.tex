@@ -33,8 +33,8 @@ contains $k$ on its own designated row, a contradiction.
 
 \begin{theorem}[A simultaneous capture-probe rule]
 \label{core:thm:simultaneous-capture-probes}
-Let $K\geq3$, let $C$ be core on $V$, and let proper colorings
-$p,q$ have a common missing owner. Put $S=\{j:p_j\ne q_j\}$,
+Let $K\geq3$, let $C$ be core on $V$, and let $p,q$ be proper
+colorings. Put $S=\{j:p_j\ne q_j\}$,
 where a status is an owner or the uncolored status.
 Suppose that for each $j\in S$ there is a coloring $e^j$ of
 $V\setminus\{j\}$ with $P_j^C(e^j)=0$ and
@@ -49,36 +49,48 @@ $V\setminus\{j\}$ with $P_j^C(e^j)=0$ and
 Then $p\sim_Cq$.
 \end{theorem}
 \begin{proof}
-Choose a common missing owner $k$, and put $N=I\setminus\{k\}$.
-At the two positive probes give the distinguished input $X$ the menu
-$I$, and give passive inputs their fixed atom or $N$ according to
-$p,q$. For each $j\in S$, let $R_j$ have $X=N$, passive input
-$j=I$, and all other passive inputs fixed by $e^j$, using $N$ for
-uncolored inputs. The capture assumption makes $C$ omit $k$ there.
-The displayed inclusions imply, for every owner $r$, that the
-$r$-atomic coalition of $R_j$ lies inside $p_r$ or $q_r$.
-
+Choose an owner $k$ missing at $q$ and put $N=I\setminus\{k\}$.
+Every $e^j$ uses only the intersection of the endpoint palettes,
+so also omits $k$. Form the negative row $R_j$ by giving $X$ menu
+$N$, input $j$ menu $I$, and all other inputs their $e^j$ atom or
+$N$ when uncolored. The capture assumption makes $C$ omit $k$ there.
 Call a word quiet if it omits $k$ on every $R_j$.
-By \cref{core:lem:marked-profile-transfer}, every quiet word has
-identical singleton flags at the positive probes. Indeed, to transfer
-owner $r$ from $p$ to $q$, use rows indexed by $p_r\setminus q_r$:
-their $r$-coalitions lie in $q_r$, and their foreign coalitions are
-disjoint from $p_r$. Reverse the endpoints for the converse.
 
-Induct on a word to show that quietness forces equality of its two
-positive outputs. The distinguished leaf has menu $I$ at both.
-An unchanged passive leaf has the same menu at both; a changed leaf
-$j$ is not quiet on $R_j$. At a root, atomic positive outputs agree
-by profile transfer. Otherwise both outputs are ambiguous, so neither
-child is the root owner's singleton at either positive probe.
-The coalition inclusions rule out that absorber in either child on
-every $R_j$ too. Thus quietness passes to both children. Induction
-makes their positive values equal, and the root takes union at both.
+Fix any common assignment $v$ to the passive inputs and any menu
+$M$ for $X$. At one positive evaluation overwrite the colored slots
+of $v$ by $p$; at the other overwrite them by $q$, using $X=M$
+in both. Write $A_r,B_r$ for their atomic coalitions, including the
+common $X$ flag if $M=\{r\}$. Then $p_r\subseteq A_r$ and
+$q_r\subseteq B_r$.
+Every $j\in A_r\setminus B_r$ lies in $S$: unchanged inputs have
+identical menus. Its original $p$-status is either $r$ or uncolored,
+and its original $q$-status is not $r$. The capture bounds imply
+\[
+ e^j_r\subseteq q_r\subseteq B_r,\qquad
+ e^j_s\subseteq p_s\quad(s\ne r).
+\]
+The latter sets are disjoint from $A_r$, since their inputs remain
+fixed at $s$. By \cref{core:lem:marked-profile-transfer}, every quiet
+word therefore has identical singleton flags at the positive
+evaluations. Interchanging the endpoints proves the reverse transfer.
 
-For $F\in\mathcal I(C)$, the bound $F\subseteq C+X$ makes $F$
-quiet, since both $C$ and $X$ omit $k$ on every $R_j$. Its two
-positive outputs therefore agree. Their $k$-membership reads exactly
-$P_F(p),P_F(q)$, proving the assertion.
+Induct on a word to show that quietness forces equality of these
+positive outputs. The distinguished leaf has the same menu $M$ at
+both. An unchanged passive leaf also has identical menus; a changed
+leaf $j$ is not quiet on $R_j$. At a root, atomic positive outputs
+agree by profile transfer. Otherwise both are ambiguous, so neither
+child is the root owner's singleton at either positive evaluation.
+Each negative atomic coalition $e^j_r$ lies in $p_r$ or $q_r$,
+hence in $A_r$ or $B_r$, ruling out that absorber there too.
+Quietness passes to both children; induction gives equal child
+values, and the root takes union at both positive evaluations.
+
+Since $v$ and $M$ were arbitrary, every quiet word has equal full
+clamped cofactors under $p,q$. Any $F\in\mathcal I(C)$ is quiet
+by its upper bound $C+X$. Its two cofactors are therefore either
+both independent of $X$ or both dependent on it. By
+\cref{core:cor:colored-cofactor-dependence}, this says exactly
+$P_F(p)=0$ if and only if $P_F(q)=0$, proving $p\sim_Cq$.
 \end{proof}
 
 \paragraph{An exact kernel for graph sums.}
@@ -105,8 +117,7 @@ choice, given by \cref{core:thm:profile-source-interval}, has one
 class where some endpoint is its owner, and singleton classes on
 its two endpoint statuses elsewhere. This proves necessity.
 
-For sufficiency first suppose $p,q$ have a common missing owner.
-For every changed vertex $j$, color each neighbor $i$ by its edge
+For sufficiency, at every changed vertex $j$ color each neighbor $i$ by its edge
 owner $r_{ij}$ and leave all other inputs uncolored. Simplicity
 makes this a well-defined coloring $e^j$. Every incident edge then
 absorbs the source $j$, so $P_j^D(e^j)=0$.
@@ -122,19 +133,9 @@ The local edge test gives exactly the required inclusions:
 For example, an $r$-neighbor of a vertex leaving $r$ must enter
 $r$, and an $r$-neighbor of a vertex entering $r$ must leave it.
 If neither status is $r$, the neighbor must be unchanged at $r$.
-The simultaneous capture-probe rule proves equivalence.
-
-If there is no common missing owner, choose $r$ used by $p$ but
-absent at $q$. Every $p$-colored $r$ vertex is captured at $p$:
-an incident $r$-edge would require an $r$ endpoint at $q$, while
-any differently owned edge already has its owner at the neighbor.
-These $r$-colored vertices are pairwise nonadjacent. Erase all their
-old colors, then add their target statuses from $q$.
-All updates are captures. The erasure phase stays inside $p$'s
-palette; the addition phase omits $r$, so stays proper too.
-The resulting $p'$ still passes the local edge test with $q$,
-and both omit $r$. The preceding case gives $p'\sim_Dq$;
-the capture path gives $p\sim_Dp'$.
+The bounds also make each $e^j$ proper, since its palette lies in
+both proper endpoint palettes. The simultaneous capture-probe rule
+therefore proves equivalence.
 \end{proof}
 
 \begin{proposition}[Graph comparisons need not factor edgewise]
@@ -182,7 +183,70 @@ edges on one pair give $D=x+y$. The swapped colorings $(a,b)$ and
 $(b,a)$ agree in both local owner classes, yet
 $D+(X\star_a x)$ separates them.
 
-\begin{proposition}[Nonlocal activation equivalence]
+\begin{theorem}[Activation below an owning coloring]
+\label{core:thm:bipartite-owning-activation}
+Suppose $G$ is bipartite and all its edge labels belong to two
+distinct owners $a,b$. Let $q$ be any proper coloring with an
+owner-colored endpoint at every edge. Then for every proper $p$,
+\[
+ p\preceq_Dq\quad\Longleftrightarrow\quad
+ \forall\{i,j\}\in E,\ \forall s\ne r_{ij},\quad
+ \neg(p_i=p_j=s).
+\]
+Thus no edge may be monochromatic in a color different from its owner.
+\end{theorem}
+\begin{proof}
+By the graph-kernel theorem, replace $q$ by the coloring giving
+$a$ to one bipartition class $L$ and $b$ to the other class $R$.
+The swapped coloring $q'$ is equivalent too.
+Let $T=\Theta_{D,q}$, realized by a primitive one-$X$ spine
+$S\subseteq D+X$. Choose $c\notin\{a,b\}$ and put
+$N=I\setminus\{c\}$. At row $R_j$ give input $j$ menu $I$,
+each neighbor its incident edge owner, and all other inputs and
+$X$ menu $N$. Every incident edge absorbs the marked source,
+so $D+X$ and hence $S$ omit $c$ there.
+
+Every $a$- or $b$-owned path helper avoids its owner's singleton
+on both $L$ and $R$, since $T$ is positive at $q,q'$.
+Its owner's atomic coalition at $R_j$ lies in one bipartition
+class, so it cannot absorb there either. Other owners have no
+atomic inputs on $R_j$. Starting at ambiguous $X=N$, all path
+gates therefore take union on these rows. Each helper must itself
+omit $c$ on every $R_j$.
+
+Fix an owner $s$ and a set $A$ containing no edge with owner
+different from $s$. No $s$-owned helper can have
+$\Phi_s(H)(A)=1$. For $s=a$, it has negative profile at $L$.
+Rows indexed by $j\in A\setminus L$ have $a$-coalition inside
+$L$ and $b$-coalition disjoint from $A$, since $A$ contains no
+$b$-edge. Marked profile transfer forces $c$ in a helper output,
+a contradiction. The case $s=b$ is symmetric, using $R$.
+For other $s$, take the negative coalition empty: $A$ is independent
+in the whole graph, so every neighbor coalition at a row marked
+in $A$ is disjoint from $A$. The same transfer again contradicts
+omission of $c$.
+Thus $T_s(A)=1$ for all such $A$.
+
+Conversely, if $A$ contains an edge $e$ owned by $r\ne s$,
+its summand $H_e$ is a minorant of $D$.
+The interval $D+(X\star_s H_e)$ is positive at $q$ but zero on
+the monochromatic $s$-coloring of $A$. Hence $T_s(A)=0$.
+The resulting exact factors give the stated equivalence.
+\end{proof}
+
+Bipartiteness cannot be omitted. On the triangle
+$D=(x\star_a y)+(y\star_a z)+(z\star_b x)$, the target
+$q=(b,a,b)$ owns every edge, while $t=(\circ,c,\circ)$ has no
+monochromatic edge. Yet the interval
+\[
+ D+\bigl((X\star_c y)\star_a(x\star_b z)\bigr)
+\]
+has distinguished predicate positive at $q$ and zero at $t$.
+To check its upper bound, if
+$x=z=a$ its last gate returns $a$; if $y=a$, both passive helper
+contributions belong to $D$; otherwise $D$ is the full input union.
+
+\begin{proposition}[Nonlocal activation and ownerwise mixing]
 \label{core:prop:activation-kernel-cycle}
 For every $K\geq3$, there is a four-input core operation with two
 activation-equivalent proper colorings, each isolated in the graph
@@ -191,6 +255,10 @@ of capture edges. For distinct owners $a,b$, take
  D=(x\star_a y)+(y\star_b z)+(z\star_a w)+(w\star_b x),
  \qquad p=(a,b,a,b),\quad q=(b,a,b,a).
 \]
+For $c\notin\{a,b\}$, the monochromatic point
+$t=(c,\circ,\circ,\circ)$ lies strictly below both $p,q$.
+Yet no coloring, even one using every owner, has $x=c$ and
+an owner-colored endpoint at every edge.
 \end{proposition}
 \begin{proof}
 Every edge has its owner at one endpoint under both colorings, so
@@ -198,4 +266,12 @@ Every edge has its owner at one endpoint under both colorings, so
 Every vertex has an incident edge of each label. Under either
 alternating coloring one incident edge leaves that vertex's source
 live. Both colorings are fully colored, so neither has a capture edge.
+
+The square is bipartite, and $t$ has no monochromatic edge.
+Thus \cref{core:thm:bipartite-owning-activation} gives
+$t\preceq_Dp$.
+The interval $D+(X\star_a(x\star_a y))$ has predicate one at
+$t$ and zero at $p$, excluding the reverse comparison.
+Finally $x=c$ would successively force $y=a,z=b,w=a$ to cover
+the first three edges, leaving the final $b$-edge uncovered.
 \end{proof}
