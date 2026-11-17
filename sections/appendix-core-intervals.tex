@@ -113,6 +113,69 @@ so the identity makes $F$ independent of $Y$ under this fixing.
 Colored-cofactor dependence gives $P_F(e_{j,r})=0$.
 \end{proof}
 
+\begin{proposition}[Literal source masks]
+\label{core:prop:literal-source-masks}
+Let $K\geq3$, let $C$ be core on a nonempty passive set $W$, and let
+$\varnothing\ne J\subseteq W$. For an owner $r$, put
+$H_J=\mathop{\star_r}_{j\in J}v_j$. Then
+\[
+ P_{J,r}(E)=\bigwedge_{j\in J}[j\notin E_r]
+ \text{ is realizable in }\mathcal I(C)
+ \quad\Longleftrightarrow\quad H_J\subseteq C.
+\]
+For $j\in W$ and a nonempty owner set $R$, likewise
+\[
+ P_{j,R}(E)=\bigwedge_{r\in R}[j\notin E_r]
+ \text{ is realizable in }\mathcal I(C)
+ \quad\Longleftrightarrow\quad v_j\subseteq C.
+\]
+Whenever realized, each mask has a realizer using $Y$ once if union
+is named. For the one-owner mask $P_{J,r}$, the minimum number of
+$Y$-occurrences in the primitive owned-choice signature is exactly two.
+For $P_{j,R}$, that minimum is one when $|R|\geq2$ and two when $|R|=1$.
+\end{proposition}
+\begin{proof}
+For the first mask, a passive valuation with no $r$-atomic $J$-menu
+gives cofactor $C(v)\cup Y$ by the source formula. If some $J$-menu
+is $\{r\}$, colored-cofactor independence gives the constant $C(v)$.
+Suppose $H_J(v)\nsubseteq C(v)$. In the first case an unsafe $J$-menu
+can be changed to $\{r\}$ by \cref{core:lem:interval-passive-erasure},
+contradicting these two cofactors. In the second case $H_J(v)=\{r\}$,
+so every $r$-atomic $J$-menu is unsafe. Change all of them to ambiguous
+menus, obtaining the same contradiction. Here $C(v)\ne I$, so the
+constant and union cofactors differ.
+Conversely, if $H_J\subseteq C$, the expression
+$C+(Y\star_r H_J)$ realizes $P_{J,r}$ and uses $Y$ once with union
+named.
+
+For the second mask, if $v_j\nsubseteq C(v)$, passive-menu erasure
+permits changing $v_j$ both to an ambiguous menu and to $\{r\}$ for
+any $r\in R$. The prescribed cofactors are respectively $C(v)\cup Y$
+and $C(v)$, again impossible. If $v_j\subseteq C$, compose the
+realizers $C+(Y\star_r v_j)$ for $r\in R$ at $Y$; their predicates
+intersect and the resulting expression still uses $Y$ once.
+
+Expanding the derived union in $C+(Y\star_r H_J)$ uses $Y$ twice.
+To exclude a primitive one-occurrence realizer, follow its marked path.
+Any path gate owned by $s\ne r$ has a passive helper equal to
+$\{s\}$ on the all-$s$ fixing, so captures $Y$ there, whereas
+$P_{J,r}$ is positive. Thus every path gate must be $r$-owned.
+At passive inputs all $\{s\}$, $s\ne r$, and $Y=\{r\}$, such a
+path stays $\{r\}$, violating the lower bound $C=\{s\}$.
+The empty path has the same defect. Finally $P_{J,r}(\varnothing)=1$
+rules out a realizer without $Y$.
+
+For $|R|\geq2$, choose distinct $s,t\in R$ and let $S(Y)$ be the
+chain of readers $Z\mapsto Z\star_r v_j$, one for each $r\in R$.
+It has predicate $P_{j,R}$ and lies below $C+Y$. The expression
+$(S\star_s C)\star_t C$ restores the lower bound.
+Since $v_j\subseteq C$, the implication
+$\Phi_s(C)(A)=1\Rightarrow j\in A$ holds, and likewise for $t$.
+Thus the restoration's extra zero conditions are already required by
+$P_{j,R}$, so its predicate is unchanged. This primitive realizer uses
+$Y$ once, and positivity at the empty coloring excludes zero occurrences.
+\end{proof}
+
 Write $\mathcal L(C)$ for the lattice of realizable distinguished
 predicates. Equivalently, it is the downset lattice of the preorder
 \[
@@ -420,13 +483,25 @@ and its full factors have the stated shifts.
 
 \begin{theorem}[Live-source reduction and common fixing]
 \label{core:thm:activation-common-fixing}
-Let $j$ be a passive input of a core operation $C$, and suppose
-$D=\partial_jC$ is nonzero. For proper colorings $p,q$ leaving $j$
-uncolored with $Q_j(p)=Q_j(q)=1$,
+Let $C$ be core on $V$, let $J\subseteq V$, and put
+$B=V\setminus J$, $D=\partial_JC$, and $Q_J=\bigwedge_{j\in J}Q_j$.
+If $q$ leaves $J$ uncolored and $Q_J(q)=1$, then
+for every proper coloring $p$,
 \[
  p\preceq_Cq\quad\Longleftrightarrow\quad
- p|_{V\setminus\{j\}}\preceq_Dq|_{V\setminus\{j\}}.
+ Q_J(p)=1\ \text{ and, if }D\ne0,\quad p|_B\preceq_Dq|_B.
 \]
+A predicate $P$ vanishing whenever any input in $J$ is colored is
+realizable above $C$ exactly when its neutral restriction $P_0$ to $B$
+is realizable above $D$ (constant if $D=0$) and
+\[
+ P_0(b)=1\quad\Longrightarrow\quad
+ P_j^C(b)=1\quad(j\in J),
+\]
+where all other inputs in $J$ are left uncolored.
+If $J$ consists of all live holes of $q$ (those with $Q_j(q)=1$),
+and $D\ne0$, every remaining hole in $q|_B$ is captured above $D$.
+Any total proper extension of $q|_B$ therefore lies in its activation class.
 For every core $C$, activation equivalence is preserved by a common
 further fixing: if $p\sim_Cq$, and $e$ is a coloring compatible with
 both such that $p\cup e,q\cup e$ are proper, then
@@ -437,22 +512,40 @@ If $p,q$ themselves are compatible and their union is proper, they
 are activation-equivalent exactly when a path of capture edges joins them.
 \end{theorem}
 \begin{proof}
-Neutral deletion sends every $F\in\mathcal I(C)$ into
-$\mathcal I(D)$. Its distinguished predicate is exactly the
-restriction of $P_F$ to colorings leaving $j$ uncolored, since
-neutral deletion gives $j$ an ambiguous menu. This proves the
-reverse implication in the first assertion.
+Suppose first $D\ne0$. Neutral deletion sends every $F\in\mathcal I(C)$ into
+$\mathcal I(D)$, with distinguished predicate its restriction to
+colorings leaving $J$ uncolored. Compose the reset-replacement
+realizers of the $Q_j$ to obtain $T\in\mathcal I(C)$ with predicate
+$Q_J$; the empty meet is $C+X$.
+For $G\in\mathcal I(D)$, substitute $G(X,v_B)$ for the distinguished
+input of $T$. If any $J$-menu is atomic, $T$ is constantly $C$.
+Otherwise source decomposition gives $D(v_B)\subseteq C(v)$, so the
+composite still lies between $C$ and $C+X$. Its predicate is $Q_JP_G$.
+Since $Q_J$ is actual and positive at $q$, any $p\preceq_Cq$ has
+$Q_J(p)=1$, and these lifted predicates give the $D$-comparison.
+Conversely $Q_J(p)=1$ leaves $J$ uncolored at $p$ as well. Applying
+the $D$-comparison to the restriction of each actual predicate gives
+$p\preceq_Cq$.
 
-For the forward implication, let $A_j(Z,v)$ be the reset-replacement
-realizer of $Q_j$ in \cref{core:thm:activation-faithfulness}.
-Given $G\in\mathcal I(D)$, substitute $G(X,v_{\ne j})$ for $Z$.
-If $v_j$ is atomic the result is $C$. Otherwise the neutral residue
-$D$ is contained in $C$ by the ghost comparison of
-\cref{core:thm:neutral-elimination}, so the result still lies between
-$C$ and $C+X$. Its distinguished predicate is $Q_jP_G$.
-Testing these predicates proves the required $D$-comparison wherever
-both $Q_j$ bits are one.
+For the predicate criterion, necessity of realizability of $P_0$ is
+neutral deletion. If $P_0(b)=1$ but some $P_j^C(b)=0$, a proper
+recoloring of $j$ is a capture edge. It preserves $P$ but makes it
+zero, a contradiction. Conversely the condition makes $Q_JP_0=P$,
+so the same substitution realizes $P$. If $D=0$, the neutral
+residual of any interval realizer is zero or a core operation bounded
+by $X$. Only $X$ has the latter property, since a passive source
+probe cannot contribute its queried winner and a unary core operation
+is the identity. Thus all neutral restrictions are constant. This
+gives the order assertion when $D=0$. For the predicate assertion,
+$C$ realizes zero, and $T$ realizes the prescribed extension of the
+constant one restriction exactly under the displayed liveness condition.
 
+Neutral deletion leaves all remaining source coefficients unchanged
+when $J$ is uncolored. Thus holes not live at $q$ are still captured
+in $q|_B$. Further fixings preserve their zero bits by antitonicity,
+so any total proper extension is reached by capture edges.
+
+For common fixing, take $J=\{j\}$ and first suppose $D=\partial_jC\ne0$.
 Every fixed-$j$ color section of an actual $C$-interval predicate
 also extends to a predicate in $\mathcal L(D)$. Indeed cover the
 predicate by its marked-occurrence boxes. A box whose fixed-color
