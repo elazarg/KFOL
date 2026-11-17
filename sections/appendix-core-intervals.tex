@@ -599,59 +599,85 @@ allowed atomic step fixes $v$, throughout any chain. Such a chain
 cannot reach $D$.
 \end{proof}
 
-\begin{theorem}[Unanimity does not determine monochromatic activation]
+\begin{theorem}[Unanimity and activation at a monochromatic target]
 \label{core:thm:unanimity-activation-obstruction}
-For every $K\geq4$ there is a core operation $C$ on twelve inputs
-whose singleton profile at every owner is unanimity, as for input
-union. For a designated owner $a$ and the all-$a$ coloring $q$,
-every one-input coloring
-$e_{j,r}$ nevertheless lies below $q$, for every input $j$ and owner
-$r$. In particular, changing one entry of the all-$a$ coloring to
-any other owner still gives a coloring below $q$.
+Let $q$ assign owner $a$ to every input. On at most three inputs, if
+the $a$-singleton profile of $C$ is unanimity then
+$\Theta_{C,q}(p)=[p\subseteq q]$ for every proper coloring $p$.
+
+For every $K\geq4$ there is a nine-input core operation $C$ whose
+singleton profile at every owner is unanimity, as for input union,
+yet $e_{j,r}\preceq_C q$ for every input $j$ and owner $r$.
+In particular, recoloring one entry of $q$ by any other owner still
+gives a coloring below $q$.
 \end{theorem}
 \begin{proof}
-Choose three owners $b,c,d$ different from $a$. Take two vertices
-of each of these three colors. Between each pair of color classes
-orient the four edges as a directed cycle. Each vertex has one outgoing
-edge to each of the other two colors. Write $r_e$ for the color of the
-head of $e$ and use one variable $x_e$ per directed edge.
+Write $U$ for input union and use $L,M$ from
+\cref{core:thm:principal-box-extension}. It suffices to bound a helper
+$H$ by $C$ on the rows $N=\{v\in L:C(v)\ne U(v)\}$ to obtain
+$H\subseteq M$, by provenance. Such a helper cannot be a foreign
+singleton on $L$: for $s\ne a$ its $s$-profile is zero at
+$q_s=\varnothing$, so the factor formula excludes that singleton.
 
-At the valuation indexed by vertex $i$, put $x_e=\{r_e\}$ if $i$
-is an endpoint of $e$, and $x_e=\{a\}$ otherwise. The bound at $i$
-excludes the color of $i$. Any core helper satisfying all six bounds
-avoids every foreign singleton at every row. Indeed, for an allowed
-$s\ne a$ occurring atomically at $i$, the only $s$-atomic input there
-is the outgoing edge to a vertex of color $s$. That input is still
-$s$-atomic at its head. By monotonicity of the $s$-profile, a helper
-equal to $\{s\}$ at $i$ would violate the head's bound. An owner with
-no atomic input cannot be the singleton output.
+Suppose the $a$-profile is unanimity. Fixing all other inputs to
+$\{a\}$ leaves each $j$ essential, since changing $j$ from $\{a\}$
+to another atom changes the $a$-singleton test. Its source predicate
+is therefore positive under that fixing and every subcoloring.
+Source decomposition now gives $C=U$ on inputs with no foreign atom.
+If all but one input are $\{a\}$ and the remaining one is a foreign
+atom $s$, the only possible winners are $a,s$. On $L$ unanimity rules
+out the $a$ singleton and the factor formula rules out the $s$
+singleton. Thus every row of $N$ has at least two inputs different
+from $\{a\}$. With at most three inputs it has at most one $a$-atom.
 
-For $e:i\to j$, let $f,g$ be the two outgoing edges of $j$ and put
+Fix $j$. Descend a word for $C$, keeping a subword $H$ bounded on
+$N$ and satisfying $\Phi_a(H)(V\setminus\{j\})=0$. At a foreign
+root absorption is impossible on $N$, so both children fit the bounds
+and one keeps the zero bit. At an $a$-root both children keep it. If
+the root absorbs on a row, $j$ must be its sole $a$-atom. A child with
+positive $a$-profile on $\{j\}$ therefore absorbs on every such row.
+Choose it, or either child if there is no absorption. Both children
+fit the bounds on all other rows. The resulting leaf must be $j$, so
+$v_j\subseteq M$. This gives $M=U$ and the first claim follows from
+\cref{core:cor:singleton-color-refinement}.
+
+For the example, index inputs and valuations by
+$(\mathbb Z/3\mathbb Z)^2$. Each vertex $i=(u,v)$ has arrows to
+$f=(u+1,v)$ and $g=(u,v+1)$. Label vertices by three foreign owners
+according to $u-v$ modulo three, writing $r_i$ for the label of $i$.
+The labels of $i,f,g$ are distinct. Neither neighbor points back to $i$,
+and there is no arrow between $f$ and $g$.
+At row $i$ give $x_i,x_f,x_g$ their respective singleton labels
+and give all other inputs $\{a\}$. The row bound excludes $r_i$.
+Every helper satisfying all nine bounds avoids every foreign singleton
+on these rows. Indeed, an allowed foreign atom comes from a unique
+neighbor $h$ and its column is still the same atom at row $h$.
+Monotonicity of its singleton profile would transfer that singleton
+to the row forbidding it.
+
+Using the same two neighbors for each $i$, put
 \[
- H_e=(x_e\star_{r_f}x_f)\star_a(x_e\star_{r_g}x_g),
- \qquad C=\sum_e H_e .
+ H_i=(x_i\star_{r_f}x_f)\star_a(x_i\star_{r_g}x_g),
+ \qquad C=\sum_i H_i .
 \]
-At $j$ both inner gates absorb, giving $H_e=\{r_f,r_g\}$. At $i$
-neither $f$ nor $g$ is incident, since no edge returns from $j$ to
-$i$. Thus $H_e=\{a,r_e\}$. At every other vertex $x_e=\{a\}$
-and at least one of $x_f,x_g$ is also $\{a\}$, so $H_e=\{a\}$.
-These values satisfy every bound. In the Boolean variables denoting
-membership of the inputs in $A$, the $a$-profile of $H_e$ is
-$x_e(x_f\lor x_g)$. At any other owner the outer gate gives a
-conjunction. At least one inner gate also gives a conjunction, since
-$r_f\ne r_g$, so this profile too requires $x_e$. Union conjoins
-singleton profiles. Since every edge appears as its own required
-input, every profile of $C$ is unanimity.
+At row $i$ both inner gates absorb and $H_i=\{r_f,r_g\}$. At row
+$f$ the inputs $x_i,x_g$ are both $\{a\}$, so $H_i=\{a\}$, and
+likewise at $g$. At any remaining row $h$, only $x_h$ can supply
+the forbidden label $r_h$; it is absent from $H_i$. Thus $C$ respects
+the bounds. In coalition membership bits the $a$-profile of $H_i$
+is $x_i(x_f\lor x_g)$. At any other owner the outer gate conjoins,
+and at least one inner gate also conjoins, since $r_f\ne r_g$. Thus
+every profile of $H_i$ requires $x_i$. Union conjoins the profiles,
+so all profiles of $C$ are unanimity.
 
-No $a$-owned enlargement is allowed at $q$, by idempotence at the
-all-$a$ valuation. A guard for any other owner respects all six bounds
-as long as the current baseline does. It can therefore never absorb
-at these rows. Induction along the enlargements shows that their
-greatest reachable operation respects all six bounds. Each projection
-violates its head's bound, so \cref{core:cor:singleton-color-refinement}
-gives $e_{j,r}\preceq_Cq$ for every $j,r$. The final assertion follows
-by combining the monochromatic blocks in
-\cref{core:prop:principal-activation-boxes}.
+No $a$-owned enlargement is allowed at $q$, by idempotence.
+As long as the current baseline respects the nine bounds, a guard
+for any foreign owner also respects them and cannot absorb on these
+rows. Every enlargement therefore preserves the bounds. The greatest
+reachable operation omits each projection on its own row. By
+\cref{core:cor:singleton-color-refinement}, $e_{j,r}\preceq_Cq$
+for every $j,r$. Combining monochromatic blocks in the principal box
+gives the final recoloring claim.
 \end{proof}
 
 \input{sections/appendix-core-graph-activation}
