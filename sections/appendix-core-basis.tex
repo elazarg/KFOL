@@ -160,6 +160,10 @@ bounds computed by Boolean reachability, and for additive owner closures
 Interval masks have a direct path criterion, and closing their paths gives
 the greatest core operation below the specified bound
 (\cref{core:thm:interval-masks,core:cor:interval-mask-interior}).
+The least operation retaining a given winner from every input is the
+fold at that owner. On three inputs, the interval masks classify all
+operations retaining two designated winners
+(\cref{core:prop:retained-winner-folds,core:cor:ternary-retained-pair}).
 For source-separable operations, owner closures record which inputs an
 owner makes irrelevant and organize their reconstructions. Complete-head
 circuits provide a further exactly classified family
@@ -2716,6 +2720,54 @@ bit $2$ is zero. Thus it is not in $R$.
 \subsection{Interval masks and path closure}
 \label{app:core-interval-masks}
 
+Say that an operation \emph{retains} $r$ if it returns $r$ as a
+possible winner whenever $r$ belongs to any input menu. Write
+$U(v)=\bigcup_{j\in V}v_j$. For a nonempty set of owners $R$, put
+\[
+ D_R=\sum_{r\in R}\mathop{\star_r}_{j\in V}v_j .
+\]
+This equals $U$ unless every owner in $R$ occurs as an input
+singleton, in which case it returns $R$.
+
+\begin{proposition}[Least operations retaining prescribed winners]
+\label{core:prop:retained-winner-folds}
+A core operation $C$ retains every $r\in R$ exactly when $D_R\subseteq C$.
+For each $r$, it suffices to test atomic valuations with exactly one
+input equal to $\{r\}$. If $R\subsetneq I$, the least arity of an
+operation retaining $R$ and differing from input union is $|R|+1$.
+At any proper target coloring $q$ omitting a retained owner, input
+union is reachable from $C$ by a single atomic enlargement.
+\end{proposition}
+\begin{proof}
+By source decomposition and agreement across observers
+(\cref{core:thm:source-guards,core:thm:source-completion}), $C$
+retains $r$ exactly when every source predicate $P_j^C$ is positive
+on every coloring omitting $r$. Indeed, a zero can be extended to
+a total coloring of the other inputs by owners different from $r$:
+the predicate is antitone. Giving $j$ the singleton $\{r\}$ now
+makes it the only source of $r$, which is lost.
+If no input is the $r$ singleton, every source probe for every winner
+omits $r$, so retention gives $C(v)=U(v)$. Otherwise $C(v)$ contains
+$r$. These are exactly the two bounds required by $D_{\{r\}}\subseteq C$.
+Conversely that fold always retains $r$. Taking unions proves the
+claim for $R$. A loss above $D_R$ requires distinct inputs for all
+the protected singletons and another input carrying a winner outside
+$R$. The bound is attained by $D_R$ itself on such atomic inputs.
+Finally, if $q$ omits $r\in R$, the bounded guard $D_{\{r\}}$ is
+nonabsorbing at $q$ and $C=U$ wherever the guard is not $\{r\}$.
+These are the conditions for the enlargement to $U$.
+\end{proof}
+
+In particular, a proposed operation between $D_R$ and $U$ is core
+precisely when one core term realizes
+its winner memberships outside $R$ on the valuations where every
+$r\in R$ occurs as a singleton. Adjoining $D_R$ to that term by
+union gives the prescribed operation everywhere. When a single
+observer $a$ remains, its choice can be replaced throughout the
+witness term by union: these operations agree in the $a$-view
+(\cref{view:thm:view}). This reduces the lifting question in this
+interval to one observer.
+
 Fix distinct owners $b,c$, a finite nonempty variable set $V$, and
 $K\geq3$. For an input tuple $S$, put
 \[
@@ -2834,9 +2886,33 @@ $F_{\mathcal M}\cap F_{\mathcal N}=F_{\mathcal M\cup\mathcal N}$
 pointwise, so the greatest-minorant formula gives the last assertion.
 \end{proof}
 
-The criterion concerns deletion of every free source at an interval.
-General source guards can delete selected sources while retaining others;
-those distinctions are not recorded by an interval mask.
+\begin{corollary}[Three inputs retaining two winners]
+\label{core:cor:ternary-retained-pair}
+For every $K\geq3$ there are exactly $50$ ternary core operations
+retaining two designated winners $b,c$. They are the interval masks
+on the six edges joining singleton subsets of $V$ to containing
+two-element subsets. Either all six edges are masked, or each of the
+two alternating perfect matchings of this cycle has an unmasked edge.
+\end{corollary}
+\begin{proof}
+By \cref{core:prop:retained-winner-folds}, a loss is possible only
+with one input fixed to $\{b\}$ and another to $\{c\}$. Any outside
+winner must come from the third input. Its source predicate sees
+the same two fixed atoms for every such winner, so either all its
+outside winners survive or none do. This gives exactly one mask
+bit per edge, distinguished by putting an outside singleton in the
+third input. Conversely the path-closed masks are core by
+\cref{core:thm:interval-masks}, and all retain $b,c$.
+For an unmasked edge, a return path from its upper endpoint to its
+lower one must go the other way around the six-cycle. It requires
+the three reverse edges from the opposite matching. The empty and
+full subsets give no detours, since neither belongs to a reversal.
+Thus masking an entire matching forces the other one. There are
+$(2^3-1)^2+1=50$ choices.
+\end{proof}
+
+At higher arity several free sources can share an interval. General
+source guards can then delete some of them while retaining others.
 
 \subsection{No finite relational characterization}
 \label{app:core-crown}
