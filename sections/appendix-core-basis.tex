@@ -38,6 +38,18 @@ one or all use one owner. Restricting the original minimal zeros to
 the component gives the exact constraints. Colored reachability or
 Horn closure then gives its greatest coefficient and activation
 preorder (\cref{core:lem:block-source-patterns,core:thm:conditional-component-capture}).
+Without any restriction on the source graph, minimal zeros in which
+each color occurs at most once admit a polynomial reachability test.
+Every positive query then has a witness built by attaching single-owner
+folds to its source (\cref{core:thm:injective-blockers}). Singleton-profile
+demands account for every remaining case on three inputs, at any $K$;
+ten valuations suffice to witness failure
+(\cref{core:cor:ternary-uniform-interpolation}). With three owners and unanimous profiles, the criterion reduces to four
+rules on six permutation rows
+(\cref{core:cor:ternary-guard-recognition,core:thm:ternary-unanimity}).
+In arbitrary arity, repetitions belonging to one owner and nested by
+inclusion admit an intrinsic test by flags of input constraints
+(\cref{core:thm:nested-repeated-guards}).
 Adding a source
 above a fixed core operation gives a distributive lattice of activation
 predicates. At each passive valuation an extension either ignores the
@@ -204,7 +216,11 @@ The latter criterion is closed, but quantifies over auxiliary structures.
 At every fixed $K\geq3$, no finite family of invariant relations determines
 the core clone (\cref{core:thm:not-finitely-related}). The number of
 valuations needed to witness nonrealizability can grow exponentially with
-arity (\cref{core:thm:exponential-locality}). In the prime obstruction
+arity (\cref{core:thm:exponential-locality}). At fixed $K$ and a bounded
+number of distinct repeated color classes in the minimal zeros, a
+nonrealizable guard family has a witness on only linearly many valuations
+(\cref{core:cor:input-guard-cuts,core:cor:repetition-locality}).
+In the prime obstruction
 family, every proper identification minor is core, every fixed-menu
 cofactor is a core polynomial, every nonempty proper neutral residual
 is input union, and every proper
@@ -408,9 +424,9 @@ using AND/OR gates and cannot be improved by circuit sharing
 
 \paragraph{The remaining characterization question.}
 The unresolved step is a short intrinsic condition directly on arbitrary
-joint source guards, including components with multi-input blocking
-patterns involving several owners, without recursive synthesis or auxiliary invariant
-structures. Nonfinite relatedness rules
+joint source guards without recursive synthesis or auxiliary invariant
+structures. The remaining cases include interacting guards in which a
+single blocking pattern uses an owner at several inputs. Nonfinite relatedness rules
 out a fixed finite relational basis; it does not rule out short structural
 laws with unbounded quantification. The positive classifications and
 global obstructions above locate this gap between recognizing individual
@@ -2689,6 +2705,9 @@ family nonempty. Extra owners introduce no additional traces because their
 choices act as union on these inputs.
 \end{proof}
 
+\input{sections/appendix-core-guard-reachability}
+\input{sections/appendix-core-ternary-guards}
+
 The complete observer views do not, however, glue automatically. Even
 when each view has a core realization on all winner inputs and all singleton
 profiles are unanimity, three atomic rows can obstruct a common realization.
@@ -2721,28 +2740,9 @@ nonempty and that each $T_r$, as well as $F$, is a singleton exactly at a
 unanimous singleton input. Membership of $r$ agrees by definition, so their
 complete $r$-views agree.
 
-For the joint obstruction, encode a winner set $A$ by
-$q(A)=\sum_{r\in A}2^r\in\{1,\ldots,7\}$. Let $R$ contain the triples
-$(A,B,C)$ for which bit $q(C)-1$ of entry $(q(A),q(B))$ in the following
-matrix is one, with rows and columns numbered from one and bits from zero:
-\[
- \begin{pmatrix}
- 103&0&0&0&0&0&0\\
- 0&82&0&8&114&112&114\\
- 0&0&118&8&118&112&118\\
- 0&85&85&8&0&85&85\\
- 0&87&119&0&118&117&119\\
- 0&85&85&8&112&117&117\\
- 0&87&119&8&118&117&119
- \end{pmatrix}.
-\]
-This finite relation contains the three input columns, whose codes are
-$(1,1,2),(2,4,4),(4,2,1)$, and is closed under each coordinatewise
-$\star_r$. These checks use only the rule that choice returns $2^r$ if
-either code equals $2^r$, and otherwise returns their bitwise union.
-Induction therefore puts every core term's output triple in $R$.
-The required triple has codes $(6,5,3)$; entry $(6,5)$ is $112$, whose
-bit $2$ is zero. Thus it is not in $R$.
+The three prescribed outputs give the premises $012-0$, $021-1$ and
+$120-2$ of the third implication in \eqref{core:eq:ternary-loss-rules}.
+Its conclusion excludes winner $2$ at $012$, contrary to the first output.
 \end{proof}
 
 \subsection{Interval masks and path closure}
@@ -3237,6 +3237,64 @@ the fixed menus, all of which omit $a$, by
 word, which would separate the original rows at $a$.
 \end{proof}
 
+How many different repeated coalitions can an obstruction require?
+For a family of negative source queries let $d$ count the distinct pairs
+$(r,t_r)$ with $|t_r|\ge2$ in its rows. Write $n=|V|$.
+
+\begin{corollary}[Locality with bounded repetition]
+\label{core:cor:repetition-locality}
+If a positive source query is incompatible with the negatives, it is
+already incompatible with at most
+\[
+ n\min(K,n)\,d!\sum_{h=0}^d\frac1{h!}
+\]
+of them. In particular at fixed $K,d$ the witness bound is linear in $n$.
+For a nonrealizable operation specified by antitone, observer-agreeing
+joint guards, one further
+valuation, for the positive bit, suffices in addition to this bound on
+its minimal zeros, provided the candidate has at least one positive bit.
+\end{corollary}
+\begin{proof}
+We bound the number $f(d)$ of negatives needed for a failing primitive
+test of \cref{core:thm:repeated-blocker-budgets}, keeping its marked,
+rainbow or profile-gap condition fixed. Apply the fold deletions to
+obtain a failing set $S$ with $S_r=S$ for every $r$. As in
+\cref{core:thm:nested-repeated-guards}, one row per head and one
+reachability witness for each singleton color in that row preserve
+all heads and reachable sets, even if any further rows of $S$ are
+retained. This costs at most $C=n\min(K,n)$ rows.
+
+For each repeated pair $(r,A)$ in $S$, its branch fails. Choose one
+failed primitive conjunct there. By induction it already fails on at
+most $f(d-1)$ of the rows left after dropping those with $A\subseteq t_r$.
+Add these rows to the forest and head witnesses for every branch.
+On the resulting family every projection still fails and every tail
+lies in its owner's reachable set. Every repeated pair still present
+came from $S$. Its branch still contains the chosen failing subfamily,
+so the enlarged family fails the original test. This gives
+$f(0)\le C$ and $f(d)\le C+d f(d-1)$, yielding the displayed bound.
+
+If a full guard candidate fails, some positive bit has no common word
+with all minimal zeros: otherwise union gives a realizer.
+Take one ordinary source probe for the positive and one for each
+selected negative, using an owner missing from its coloring.
+An interpolant agreeing at these valuations would realize the required
+bits. The profile tests within the proof use no additional sample valuations.
+\end{proof}
+
+The exponential threshold in \cref{core:thm:exponential-locality}
+requires exponentially many distinct repeated coalitions at fixed $K$.
+Indeed, if $d_r$ distinct repeats have color $r$, its tail is empty,
+a singleton, or one of those $d_r$ coalitions. A proper coloring omits
+some owner. Hence even before any pruning there are at most
+\[
+ n\sum_{c\in I}\prod_{r\ne c}(n+1+d_r)
+ \ \le\ Kn(n+1+d)^{K-1}
+\]
+different negative rows. A $2^m$-point-interpolable guard candidate
+with no global realizer needs at least $2^m$ minimal negative rows,
+by the positive-bit argument above. For the Gray construction
+$n=2m$, so $d\ge (2^m/(Kn))^{1/(K-1)}-n-1$.
 \input{sections/appendix-core-pair-intervals}
 
 \input{sections/appendix-core-principal-profiles}

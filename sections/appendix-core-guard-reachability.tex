@@ -1,0 +1,383 @@
+\subsection{Reachability and repeated colors in joint source guards}
+\label{app:core-injective-blockers}
+
+Consider a bit query $(i,p)$, where $i$ is an input and $p$ is a proper
+partial coloring of the other inputs. Write $p_r$ for its set of inputs
+colored $r$. The query asks whether source $i$ contributes at $p$, in
+the sense of \cref{core:thm:source-completion}. Let $Z$ be a finite set
+of queries $(j,t)$ required to have bit zero. We call $j$ its head.
+The heads, colors and inputs may recur freely across queries.
+
+For $S\subseteq Z$ and each owner $r$, draw an edge $u\to j$ for
+every $(j,t)\in S$ with $t_r=\{u\}$. Let $D_r(S;p)$ consist of the
+vertices reachable, including by an empty path, from
+\[
+ p_r\ \cup\ \{j:(j,t)\in S,\ t_r=\varnothing\}.
+\]
+Thus the reachability tests use only the specified source bits.
+
+\begin{theorem}[Reachability for joint source guards]
+\label{core:thm:injective-blockers}
+Let $K\ge3$. Suppose every negative query $(j,t)\in Z$ has
+$|t_r|\le1$ for each owner $r$. A core word supplies $(i,p)$ and
+omits every query in $Z$ if and only if every $S\subseteq Z$ satisfies
+\begin{equation}\label{core:eq:injective-blockers}
+ i\notin\{j:(j,t)\in S\}
+ \quad\text{or}\quad
+ \exists (j,t)\in S,\ r\in I:\ t_r\not\subseteq D_r(S;p).
+\end{equation}
+When this holds, one can start at the leaf $i$ and attach at most $|Z|$
+siblings. Each attachment by $\star_r$ uses as its sibling a nonempty
+$\star_r$-fold of inputs.
+\end{theorem}
+\begin{proof}
+To read $(j,t)$, choose any owner $c$ missing from $t$. Give $j$ the
+menu $I$, every colored input its prescribed singleton, and each other
+input $I\setminus\{c\}$. Only $j$ supplies $c$, and the singleton
+coalitions at this valuation are exactly the $t_r$, since $K\ge3$.
+Thus membership of $c$ reads the source bit by the source formula
+of \cref{core:thm:source-completion}. Call $c$ the mark of this row.
+A subword supplying it cannot be a singleton: the only possible such
+singleton would be $\{c\}$, and no input is that singleton.
+
+Suppose \eqref{core:eq:injective-blockers} fails at $S$, and take a
+shortest word witnessing the requirements for $S$. A leaf supplying the
+positive must be $i$, which occurs as a head in $S$. At an $r$-root,
+both children lose the $r$-singleton test on $p_r$, since the positive
+mark survives. We claim that for each $v\in D_r(S;p)$ both children
+also lose that test on $\{v\}$. This holds on $p_r$ by monotonicity.
+If $t_r=\varnothing$, neither child can absorb at the corresponding
+negative query. If $t_r=\{u\}$ and the claim holds at $u$, neither
+can absorb there either. In both cases both children must omit that
+row's mark. A child winning the $r$-test on $\{j\}$ would, by
+singleton-profile absorption
+(\cref{core:lem:singleton-profile-absorption}), either be the
+$r$ singleton there or contain the entire menu of $j$, including its mark. Both alternatives
+are excluded, proving the claim at the head $j$ and hence along
+every path. Since $t_r\subseteq D_r(S;p)$ for every row of $S$ and
+$|t_r|\le1$, neither child absorbs at any of these rows. Both omit
+all their marks and one supplies the positive mark, contrary to
+minimality. A named union likewise passes every omission to both children.
+
+Conversely, induct on the number of remaining rows $S$, starting with
+$S=Z$. If $i$ is absent from its heads, use the projection $i$.
+Otherwise choose an owner $r$ from the second alternative and let
+$T=V\setminus D_r(S;p)$. The $r$-fold of $T$ is nonempty and does
+not absorb at the positive query. At every row with
+$t_r\cap T\ne\varnothing$ it absorbs. At each remaining row its head
+is in $D_r(S;p)$, by the initial-vertex or edge rule, so the fold
+itself omits the mark. At least one row was absorbed. The induction
+hypothesis gives a word for the remaining rows and the same positive.
+Attaching the fold to this word by $\star_r$ enforces every removed
+row. On the remaining rows neither operand supplies the mark, and at
+the positive the inductive word supplies it and the fold cannot erase
+it. This gives the stated spine.
+\end{proof}
+
+For a full family of antitone source predicates agreeing across observers,
+take $Z$ to be all inclusion-minimal zeros at their respective heads.
+If the family has a positive bit and every such zero uses each color
+at most once, \eqref{core:eq:injective-blockers} on the maximal positive
+bits is necessary and sufficient for realization. Take the union of
+their witnessing spines. Antitonicity settles all other bits, and
+source decomposition then settles every winner valuation. A family
+with no positive bit cannot be realized: any leaf of a word transmits
+its mark when all passive inputs are uncolored.
+
+The test is polynomial in the explicitly listed positive and negative
+queries. For each positive start with all negatives. Whenever the
+second alternative applies, delete all rows on which the chosen fold absorbs.
+Reachable sets can only shrink under deletion. Thus every subfamily
+failing \eqref{core:eq:injective-blockers} stays present throughout:
+none of its tails can meet the complement of the larger reachable set.
+The process either exposes such a subfamily or reaches a set without
+head $i$. It takes at most $|Z|$ rounds of ordinary graph reachability.
+
+\begin{corollary}[Cuts on the input set]\label{core:cor:input-guard-cuts}
+Under the hypotheses of \cref{core:thm:injective-blockers}, the
+positive query is impossible exactly when some $H\subseteq V$ contains
+$i$ and satisfies the following condition for every owner $r$ and every
+nonempty $U\subseteq H\setminus p_r$:
+\[
+ \exists (j,t)\in Z:\quad j\in U,\qquad
+   t_r\cap U=\varnothing,\qquad t_s\subseteq H\cup p_s\quad(s\in I).
+\]
+For $n=|V|\ge3$, every impossible query already fails with at most
+$n\min(K,n)$ of the given negatives. The optimal worst-case bound
+is $\Theta(n\min(K,n))$, uniformly in $K$ and $n$.
+\end{corollary}
+\begin{proof}
+Let $S$ violate \eqref{core:eq:injective-blockers} and let $H$ be its
+heads. Then $D_r(S;p)=p_r\cup H$: every head is reached either as an
+initial vertex or from its reached tail. A first entry into $U$ is
+therefore witnessed by a row of the displayed kind, including an
+empty-tail row if it supplies the initial vertex.
+
+Conversely, take all rows with $j\in H$ and $t_s\subseteq H\cup p_s$
+for every $s$. If any vertices of $H$ are unreached at $r$, their set
+$U$ satisfies the displayed cut condition. Its witness is either an
+empty-tail row or an edge from a reached vertex, so reaches a member
+of $U$, a contradiction. Every vertex of $H$ is a head: for $j\in H$
+apply the condition to $U=\{j\}$ at an owner with $j\notin p_r$.
+Thus these rows violate \eqref{core:eq:injective-blockers}.
+
+Choose one row at each head $j$ of $S$. For every color $r$ present
+in that row with $j\notin p_r$, also retain the row first reaching $j$
+in the original $r$-search. For all other colors the chosen row makes
+$j$ an initial vertex or $j\in p_r$. Induction in discovery order
+therefore preserves every reachable set. Each chosen row has at most
+$\min(K-1,n-1)$ colors, so at most $n\min(K,n)$ rows suffice.
+
+For the lower bound take $d$ owners in a set $R\subsetneq I$, with
+$2\le d<n$. Use inputs $x_1,\ldots,x_m$ and $u_s$ for $s\in R$,
+where $m=n-d$, and query $x_m$ at the empty coloring. At each $x_j$
+give one row for each $r\in R$: its $r$-tail is $x_{j-1}$ if $j>1$
+and empty if $j=1$, and its $s$-tail is $u_s$ for every $s\in
+R\setminus\{r\}$. The only row at $u_s$ has $s$-tail $x_m$.
+All unspecified colors are empty. The full family violates the
+reachability criterion: at each $r\in R$ the $r$-rows reach
+$x_1,\ldots,x_m,u_r$ in order, and every other $u_s$ is initial.
+In any obstruction $x_m$ must be reached at every $r$. Its first
+arrival precedes any visit to $u_r$, whose sole incoming $r$-edge is
+from $x_m$. The only route to $x_m$ avoiding $u_r$ starts with the
+empty $r$-tail at $x_1$ and uses the $r$-row at every subsequent $x_j$.
+Thus all $dm$ rows at these heads are required. Since $d\ge2$, at $x_1$
+each $u_s$ occurs as an $s$-tail in a required row of another owner.
+Reaching that tail forces the sole row at $u_s$. All $d(m+1)$
+negatives are therefore necessary. Take
+$d=\min(K-1,\max(2,\lfloor n/2\rfloor))$ to obtain the claimed order.
+\end{proof}
+
+\begin{corollary}[Complexity of the sample test]\label{core:cor:guard-cut-complexity}
+For every fixed $K\ge3$, feasibility of one positive query and
+explicitly listed negatives as in \cref{core:thm:injective-blockers}
+is $\mathrm P$-complete under logspace reductions, even with at most two
+colored inputs per negative and an acyclic graph of dependencies.
+\end{corollary}
+\begin{proof}
+The deletion algorithm above gives polynomial time. Reduce monotone
+circuit value \cite{Goldschlager1977} to infeasibility. Give each
+circuit vertex a variable and take the output as the positive head with
+$p$ empty. A true input has an empty-tail negative, a false input none.
+An AND gate has one negative with its two predecessors colored $a,b$;
+an OR gate has two alternatives, each with one predecessor colored $a$.
+A gate with identical predecessors uses a single one-tail row.
+The construction uses logarithmic workspace. Any obstructing $H$ has
+at each head a row with all tails in $H$, by the singleton cut at that
+head. Induction in circuit order makes every head in $H$ true.
+Conversely, if the output is true, take all true vertices for $H$.
+In any nonempty $U\subseteq H$, its earliest vertex has a row whose
+tails are true and precede it, so the row meets the cut condition at
+every owner. Thus the output is true exactly when the query is
+infeasible. Closure of $\mathrm P$ under complement gives the stated
+hardness for feasibility.
+\end{proof}
+
+\paragraph{When a color repeats.}
+The same graphs eliminate all rows with singleton color classes even
+when a witness must win specified coalitions. This bounds the remaining
+search by the number of rows in which a color repeats. A single such row,
+of arbitrary size, still admits a polynomial test.
+
+A repeated color can already invalidate the criterion on three inputs.
+For distinct $a,b$ consider $x\star_a(y\star_b z)$. Its minimal zeros are
+\[
+\begin{array}{c|l}
+ x & y=z=a\\
+ y & x=a\quad\text{or}\quad z=b\\
+ z & x=a\quad\text{or}\quad y=b .
+\end{array}
+\]
+At the uncolored positive for $x$, even replacing singleton edges by
+the implications $t_r\subseteq D_r\Rightarrow j\in D_r$ gives
+$D_r=\{x,y,z\}$ for every $r$ on this whole family. For $r=a$ the two
+$b$ rows initially give $y,z$, and their joint implication gives $x$.
+For $r=b$ the empty tails already give all three heads, as they do for
+every other owner. The inner word wins the $a$-test on $\{y,z\}$
+although it loses on both singleton coalitions. This is the step
+in the necessity proof that changes when a color repeats.
+
+Write $r:A$ for the demand $\Phi_r(A)=1$. We use three tests on a set
+$S$ of negative source queries. Each asks for one word omitting all
+their marks and satisfying one of the conditions below. The last column
+gives a set of vertices $L_r$ for each prospective gate owner $r$:
+\[
+\begin{array}{c|l|l}
+ &\text{condition}&L_r\\ \hline
+ M &\text{the positive source query }(i,p)&p_r\\
+ R &s:A_s\ (s\in J),\ \text{one coalition per owner}
+     &\displaystyle\bigcup_{s\in J\setminus\{r\}}(V\setminus A_s)\\
+ G &k:A,\ \Phi_k(B)=0
+     &B\ \text{if }r=k,\quad V\setminus A\ \text{otherwise}.
+\end{array}
+\]
+The empty selection in $R$ asks for any bounded word. Let $D_r$ be
+the vertices reachable on the edges $u\to j$ with $t_r=\{u\}$,
+starting from $L_r$ and all heads $j$ of rows $(j,t)\in S$ with
+$|t_r|\ne1$. Put $S_r=\{(j,t)\in S:t_r\subseteq D_r\}$.
+
+To describe the test, we also need to express conjunctions of demands
+in terms of these three forms. Given a finite family $P$ of demands
+$s:A$, require $R$ for every subfamily with pairwise distinct owners,
+including the empty subfamily. If a mark $(i,p)$ is also requested,
+require $M$ for that mark and $G$ on $(s,A,p_s)$ for every $s:A$ in
+$P$. If a losing coalition $\Phi_k(B)=0$ is requested instead, require
+$G$ on $(k,A,B)$ for $A=V$ and for each $k:A$ in $P$.
+All tests use the same negative rows.
+
+\begin{theorem}[Recognition with repeated color classes]
+\label{core:thm:repeated-blocker-budgets}
+For each of $M,R,G$, the following rules decide feasibility.
+\begin{enumerate}
+\item A projection satisfying the rows and the requested condition succeeds.
+\item If $S_r\subsetneq S$ for some $r$, replace $S$ by $S_r$,
+keeping the condition. Any such $r$ may be used.
+\item Otherwise try each distinct $(r,A)$ with $A=t_r$ and $|A|\ge2$
+in some row of $S$. Drop all rows with $A\subseteq t_r$ and add the
+demand $r:A$ to the requested condition. Test the resulting conjunction
+as above. Success requires at least one successful choice.
+\end{enumerate}
+Only the third rule branches on a repeated class. Along a branch it
+is used at most once per distinct repeated pair $(r,A)$, and at most
+once per row containing a repeated class.
+\end{theorem}
+\begin{proof}
+First justify the conjunction tests. Take one representative of every
+term operation omitting all specified marks, giving a finite set $H$.
+It is closed under owned choice up to equality of operations. For each
+$s:A$ let $E_{s,A}=\{h\in H:\Phi_s(h)(A)=1\}$. The least prospective
+profile at owner $s$ on the inputs $H$ has as winning coalitions
+the upsets generated by its required $E_{s,A}$ and by $H$ itself.
+The rainbow tests say exactly that these profiles have the common-source
+property of \cref{core:thm:profiles}, including $H\ne\varnothing$.
+They therefore synthesize a term in these bounded inputs meeting all
+demands. To make $B$ losing at $k$, every generator of the required
+$k$-upset must escape $E_{k,B}$, precisely the stated gap tests.
+
+For the mark query use the valuation in the proof of
+\cref{core:thm:injective-blockers}, with marked winner $c$.
+Test $M$ puts $c$ in the union of the bounded inputs and ensures that $H$
+escapes every $E_{s,p_s}$: a value containing $c$ cannot be a singleton.
+The remaining gap tests make
+each required $E_{s,A}$ escape $E_{s,p_s}$ too. The synthesized term
+therefore has no atomic output on the query. Its greatest profile
+completion (\cref{core:prop:profile-maximum}), still composed of
+bounded inputs, supplies their union there. Conversely, a common
+witness supplies all the intersection, gap and mark tests.
+
+For the second rule put $T=V\setminus D_r$. Attaching its $r$-fold
+to a witness for $S_r$ absorbs on the deleted rows; each remaining
+head lies outside $T$, so the fold omits its mark. For $M$, the fold
+cannot absorb at $p$. For $R$, $T\subseteq A_s$ for each foreign
+demand, and the witness retains the own-owner demand at the attachment.
+For $G$ at $r=k$ the fold loses on $B$, while at $r\ne k$ it wins
+the foreign test on $A$. Thus attachment preserves the condition in
+each case. Restriction proves the converse.
+
+At the third rule a successful branch supplies an atom $\{r\}$ on every
+dropped row. To prove necessity suppose instead that there is a shortest
+witness but no branch succeeds. No witness can win on a repeated
+$t_r$, since it would pass that branch. At an $r$-root both children
+therefore fail to absorb on the $r$-repeated rows, and also on rows
+with empty $t_r$. They omit those marks. By singleton-profile
+absorption, both lose the $r$-profile on each of these singleton heads.
+Both also lose on every singleton in $L_r$: for $M$ this follows from
+survival of the mark, for a foreign demand from the common-source
+property, and for the own-owner gap from loss on $B$. Propagating along
+the edges as in \cref{core:thm:injective-blockers} proves singleton
+loss throughout $D_r$. As $S_r=S$, neither child absorbs on any of
+the remaining singleton-tail rows. Both children consequently meet
+all the negative rows. One inherits the primitive condition: a surviving
+mark comes from a child, foreign positive demands pass to both, and for
+a same-owner gap the OR/AND profile rules preserve both signs in one
+child. This contradicts shortestness unless a projection succeeds.
+Each branch in the third rule removes a row containing the chosen
+repetition and all occurrences of that pair.
+\end{proof}
+
+On an explicitly listed sample the first two rules take polynomial
+time between branches: each strict restriction drops at least one row.
+With just one row containing repetitions, at most $K$ branches remain;
+each adds one demand and leaves only singleton or empty color classes.
+More generally, for $d$ distinct repeated pairs the running time is
+$2^{O(d^2+d\log(d+1))}$ times a polynomial in the explicit input
+length when starting from a marked query. There are at most $d$
+exceptional choices per level, at most $d$ levels, and at most $d+1$
+demands in any conjunction, hence at most $2^{d+1}$ rainbow tests
+per choice. This also decides an explicit joint guard table by testing
+its maximal positive bits against its minimal zeros.
+
+\paragraph{Nested repeated coalitions of one owner.}
+Suppose all pairs $(r,t_r)$ with $|t_r|\ge2$ have the same owner $a$
+and that these coalitions form a chain under inclusion. Arbitrarily
+many negative rows may use any of them, mixed with other colors.
+Fix a positive query $(i,p)$ and put $B=p_a$. Use the marked test $M$
+and the profile-gap test $G(A)$ asking for $\Phi_a(A)=1$ and
+$\Phi_a(B)=0$. For either test on rows $S$, call $S$ \emph{closed
+for the test} when every eligible projection is a head of $S$ and
+$t_r\subseteq D_r$ for every row and owner, with the seeds of that
+test in \cref{core:thm:repeated-blocker-budgets}. The eligible
+projections are $i$ for $M$ and the vertices of $A\setminus B$
+for $G(A)$.
+
+\begin{theorem}[A flag criterion for nested repetitions]
+\label{core:thm:nested-repeated-guards}
+The positive query is impossible exactly when there are a flag
+$S_0\supsetneq\cdots\supsetneq S_h$ of subfamilies of the given
+negatives and a strictly decreasing chain $Q_0\supsetneq\cdots
+\supsetneq Q_{h-1}$ of repeated coalitions with the following properties.
+\begin{enumerate}
+\item $S_0$ is closed for $M$, and $S_j$ is closed for $G(Q_{j-1})$
+for $1\le j\le h$.
+\item At each $j<h$, the largest repeated coalition in $S_j$ is $Q_j$,
+and no row of $S_{j+1}$ contains $Q_j$ in its $a$-class.
+The last family $S_h$ has no repetition.
+\end{enumerate}
+The test takes polynomial time on explicitly listed queries. With $n$
+inputs a failure already occurs on at most $n(n\min(K,n)+1)$ negative
+queries.
+\end{theorem}
+\begin{proof}
+At a gap test discard all rows containing $A$ in their $a$-class:
+a witness for the gap absorbs on all of them. At either test apply
+the projection and fold rules until they succeed or leave a closed
+subfamily. At a closed subfamily without a repetition the test fails.
+Otherwise let $Q$ be its largest repetition. By
+\cref{core:thm:repeated-blocker-budgets}, feasibility requires a
+witness winning at some repeated coalition and hence, by inclusion,
+one winning at $Q$. Put $S'=\{(j,t)\in S:Q\not\subseteq t_a\}$.
+
+For $M$, feasibility is equivalent to both $M$ and $G(Q)$ being
+feasible on $S'$. A marked witness winning at $Q$ also
+loses at $B$ because it supplies the mark. Conversely attach a gap
+witness to a marked witness by $\star_a$. Both omit the marks on
+$S'$, the gap witness absorbs on every removed row, and its loss at
+$B$ protects the positive mark. For $G(A)$ with $A$ in the chain,
+the initial deletion gives $Q\subsetneq A$. Winning at $Q$ supplies
+the old demand, so it suffices to test $G(Q)$ alone on $S'$.
+
+If the mark is impossible, take an inclusion-minimal failing subfamily
+$S_0$. It must be closed, since a fold would give a smaller failing
+subfamily. If it has a repeat, $M$ is feasible on its proper subset
+$S'$, so $G(Q_0)$ fails there. Successively take a minimal failing
+subfamily for this gap and the resulting smaller gaps. This gives
+the flag. Conversely its terminal family fails. At every preceding
+family the next gap is necessary already on the full set $S'$.
+Failure on the displayed subfamily therefore implies failure one
+stage earlier.
+
+For polynomial time one need not find minimal subfamilies. Apply
+the projection, fold and largest-coalition tests just proved. Each
+successive largest coalition is strictly smaller. There are at most
+$n$ marked stages, each starting at most one sequence of at most $n$
+gap stages. Projection and reachability take polynomial time.
+To shorten a failing flag, retain at each stage one row per head.
+If its $r$-tail is a singleton and that head is outside $L_r$, also
+retain the row first reaching the head in the original $r$-search;
+otherwise the head is already a seed or belongs to $L_r$.
+As in \cref{core:cor:input-guard-cuts}, at most $n\min(K,n)$ rows preserve
+all heads and reachable sets. Retain one further row for the largest
+repetition if present. At each stage also retain the witnesses from
+all later stages. They were already in that stage, so its closure
+and largest repetition persist. There are at most $n$ stages.
+\end{proof}
