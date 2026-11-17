@@ -14,6 +14,27 @@ winner, source decomposition traces it to some $j\notin A$ with
 $P_j^H(e(A,r))=1$. In particular a zero on a total monochromatic
 passive coloring is a singleton profile demand by itself.
 
+When the number of owners is part of the input, even these monochromatic
+samples give a coNP-complete feasibility problem. The input lists demands
+$r:A$ by the corresponding group of negative queries in
+\eqref{core:eq:total-monochromatic-source}, and requests one fixed
+source at the uncolored positive query. By \cref{core:thm:profiles},
+the demands can coexist exactly when each selection of at most one
+coalition per owner has a common input. The least profiles generated
+by the demands and $V$ then have a greatest completion; it supplies
+the marked source since no input of its marked probe is a singleton.
+A selection with empty intersection certifies failure.
+
+For hardness take the variables of a nonempty 3CNF as owners, padding
+to three if needed, and its clauses as inputs. For each variable and
+each of its two truth values require the coalition of clauses that this
+choice alone does not satisfy. An assignment satisfies the formula
+exactly when the corresponding coalitions have empty intersection.
+Any partial selection with empty intersection extends to such an
+assignment. The negative queries have polynomial total size, giving a
+reduction from unsatisfiability. Here the number of inputs varies;
+the bounded-arity test below applies even when the owner set varies.
+
 \begin{corollary}[Joint guard recognition on three inputs]
 \label{core:cor:ternary-guard-recognition}
 For any finite $K\geq3$, consider a nonempty finite input set and
@@ -110,6 +131,88 @@ ensures a positive bit. Every ternary candidate now falls under
 \cref{core:cor:ternary-guard-recognition}, and $1+3b=10$.
 \end{proof}
 
+There is also a bound on the number of owner labels needed to test a
+ternary operation given by such guards. It is core exactly when every
+restriction to a palette $J\subseteq I$ with $3\le |J|\le20$ is core.
+A term restricts by replacing each outside owner's choice by union.
+Conversely, in the failure certificate above each of the at most ten
+valuations asks for a source bit using at most two passive colors, or
+for a singleton profile at one owner. Put these labels in $J$ and pad
+to three if necessary. Each source query can be read using any mark
+in $J$ missing from its coloring. The restricted operation gives the
+same bits by guard reconstruction; its singleton demands are read by
+the same monochromatic test with $J$ in place of $I$. A realizing word
+over $J$, read over $I$, would therefore meet all the original
+constraints. This contradicts the certificate.
+
+\paragraph{Unanimous profiles at any number of owners.}
+On three inputs, unanimity forces every source bit with at most one
+passive color to be positive: color both passive inputs $r$ and give
+the head a foreign singleton. Losing the head would give a
+nonunanimous singleton output. Antitonicity gives all subcolorings.
+Thus a candidate is specified by a list $Z$ of losses $(j,t)$, each
+coloring both other inputs with distinct owners. Call $(r,T)$, with
+$\varnothing\ne T\subseteq V$, an allowed fold when
+\[
+ (j,t)\in Z,\ j\in T\quad\Longrightarrow\quad T\cap t_r\ne\varnothing.
+\]
+These are precisely the folds $\mathop{\star_r}_{u\in T}u$ omitting
+every listed mark. They can be read off the list: a singleton requires
+an input with no losses; a pair requires that each head of the pair
+sees the other input colored $r$ at every loss; the full set requires
+$r$ in every loss.
+
+\begin{proposition}[Two conditions for ternary unanimous guards]
+\label{core:prop:ternary-fold-transversals}
+For three inputs and any $K\ge3$, $Z$ is the exact list of losses of
+a core operation with unanimous singleton profiles if and only if
+both conditions hold.
+\begin{enumerate}
+\item On a row of three distinct singleton inputs, at most one of its
+winner omissions is listed.
+\item For each positive source query $(i,p)$ there is an allowed
+fold $(r,T)$ with $T\cap p_r=\varnothing$.
+\end{enumerate}
+\end{proposition}
+\begin{proof}
+The first condition makes the reconstructed operation unanimous. A
+loss requires two distinct passive singletons. If the head is ambiguous
+then those two passive sources survive, since each sees an ambiguous
+input. On a row using at most two singleton colors, a uniquely
+supplied winner sees a monochromatic passive coloring, while a winner
+with two suppliers has a positive bit at either supplier. On three
+distinct singletons the first condition prevents any singleton output.
+
+Apply \cref{core:cor:input-guard-cuts} to a positive $(i,p)$.
+An obstruction with $H=V$ makes every allowed fold meet $p_r$:
+if $T\cap p_r=\varnothing$, its cut $U=T$ would need a row at a
+head of $T$ with $t_r\cap T=\varnothing$. Conversely, in the absence
+of such a fold, every nonempty $U\subseteq V\setminus p_r$ has just
+such a row. The cut condition thus holds for $H=V$.
+
+No smaller $H$ obstructs. For $H=\{i\}$ a row with internal tails
+must agree with $p$ on both passive positions, contradicting positivity.
+For $H=\{i,j\}$ the third input must have a fixed color $c$ in $p$
+and in every eligible row. Both heads must occur. If a row at $i$
+colors $j$ by $s$ and a row at $j$ colors $i$ by $u\ne s$, the row
+with $i=u$, $j=s$ and third input $c$ loses two distinct winners.
+Hence every eligible row colors the other head by the same $s$.
+To pass the owner-$s$ cut on $H$, some vertex of $H$ must already
+lie in $p_s$. Only $j$ can do so, making $p$ itself a listed loss
+at $i$. This contradiction proves the second condition sufficient;
+the cut with $H=V$ proves necessity.
+\end{proof}
+
+Six owners can be needed to see incompatibility. Give each of the
+three heads one loss, using six distinct colors across the three
+passive pairs, and make all other bits positive. There is no allowed
+fold: a pair would need a shared color in two rows and the full set
+a color in three. Yet on any palette of at most five owners at least
+one of the losses disappears. The unused head then supplies an allowed
+singleton fold at every owner, and the first condition holds since two
+losses never agree at their common passive position. The restriction
+to any such palette of size at least three is therefore core.
+
 \paragraph{Three inputs and three owners.}
 Suppose that every owner's singleton profile is unanimity. On a
 permutation row $\sigma=\sigma_0\sigma_1\sigma_2$, the three inputs
@@ -146,13 +249,8 @@ $S(u,v)=u\star_s v$ for $r\ne s$, and $A=S(x,S(y,z))$. The terms are
 where $x,y,z$ may be permuted and $r,s$ chosen anew in each summand.
 \end{theorem}
 \begin{proof}
-Mark input $i$ and give both other inputs the same singleton $r$.
-Giving $i$ a foreign singleton $k$ forces $k$ to survive: otherwise
-the output would be the nonunanimous singleton $\{r\}$.
-The source predicate at $i$ therefore accepts this monochromatic coloring
-and every subcoloring, independently of the choice of $k$
-(\cref{core:thm:source-completion}). The only remaining colorings of the
-two passive inputs assign them distinct colors. Each is tested by the
+All monochromatic colorings and their subcolorings are already positive.
+The only remaining colorings of the two passive inputs assign them distinct colors. Each is tested by the
 unique permutation row putting the missing color at $i$. This proves
 uniqueness. Conversely, a core word that passes the nine monochromatic
 tests (one per $i,r$) has unanimous profiles. A winning proper
