@@ -700,6 +700,8 @@ There is a primitive one-$X$ spine $S_b(X,w)$ such that
  S_b\subseteq\partial_ZS,\qquad
  B_r^{S_b}(A)=B_r(A\cup b_r)\quad(A\subseteq W).
 \]
+Moreover $S_b(X,w)\subseteq S(X,w,u)$ whenever the singleton
+coloring of the background menus $u$ is a subcoloring of $b$.
 \end{lemma}
 \begin{proof}
 There are two elementary compilations, both retaining the marked spine.
@@ -742,6 +744,107 @@ spine. Neutral deletion is monotone and its deletions commute; identifying
 a block before deleting it has the same effect as deleting all of its
 inputs. Consequently the final spine is contained in $\partial_ZS$,
 and its full factors have the stated shifts.
+
+For the last bound, perform the compilations one input at a time.
+An attached helper lies below the original helper at the specified
+singleton and at every ambiguous menu: in the latter case the neutral
+residue is contained in the value by the ghost comparison. An omitted
+gate cannot have an absorbing helper at an allowed menu. Indeed an
+owned singleton there would persist at the specified fixing, since its
+atomic coalition can only grow, and its predicate would be nonzero.
+At a retained gate the same argument preserves an absorbing helper.
+An absorbing prefix stays that singleton by induction and nonemptiness.
+At a nonabsorbing gate the original value is the union of its children.
+This proves the bound at each compilation and hence on the whole face.
+\end{proof}
+
+\begin{theorem}[Factoring ordinary subcoloring coordinates]
+\label{core:thm:principal-face-factor}
+Let $q$ be a proper coloring on $V=W\mathbin{\dot\cup}J$.
+On $W$ let $D$ be the greatest core operation satisfying
+\[
+ D(w)\subseteq C(w,u)
+ \quad\text{whenever the singleton coloring of $u$ on $J$ is
+ contained in $q|_J$}.
+\]
+Take $D=0$ if there is none, and interpret its principal as constantly
+true. For every proper $p$,
+\[
+ p|_J\subseteq q|_J\quad\text{and}\quad
+ \Theta_{D,q|_W}(p|_W)=1
+ \quad\Longrightarrow\quad p\preceq_C q .
+\]
+This is an equivalence precisely when the principal at $q$ excludes
+at least one one-input coloring at every $j\in J$. In particular one
+can take all such $j$ together. Then the remaining principal admits
+every one-input coloring on $W$.
+\end{theorem}
+\begin{proof}
+Pointwise union gives the greatest bounded operation if one exists;
+on empty $W$ there are no core words. Choose a primitive one-source
+interval spine $S$ for the principal at $q$. Erase $J$ at $q|_J$
+by \cref{core:lem:spine-background-erasure}. The resulting spine
+$T$ has the full factors of the fixed section, and
+$T(X,w)\subseteq C(w,u)\cup X$ throughout the displayed face.
+Testing with $X=I\setminus\{k\}$ for each $k$ shows that its neutral
+residue $\partial_XT$ satisfies the bound defining $D$. The residue
+is zero or core, and the ghost comparison gives $T\subseteq D+X$.
+If $D=0$ then $T=X$, since any passive occurrence would give a
+nonempty residue. Otherwise $D+T$ realizes its source predicate above
+$D$. That predicate is positive at $q|_W$, so it contains the
+principal there. Thus the full factors of $S$ hold with $J$ fixed to
+$q|_J$, and hence with any subcoloring on $J$, whenever the displayed
+lower-arity principal is positive. This argument also covers a
+combined fixed section using the whole palette.
+
+For the converse under the exclusion hypothesis,
+\cref{core:cor:singleton-color-refinement} forces
+$p|_J\subseteq q|_J$ for every $p\preceq_Cq$.
+If $D\ne0$, take any $G\in\mathcal I(D)$ positive at $q|_W$ and
+substitute $G(X,w)$ at the marked input of $S$. At a passive valuation
+where $S$ has nonconstant cofactor, no path helper absorbs, so all
+principal factors hold on the full singleton coloring. The exclusions
+therefore put $u$ on the displayed face. On that face $G\subseteq C+X$,
+and the nonconstant cofactor is union with $C$. At every other valuation
+the cofactor is constant $C$. The composite belongs to $\mathcal I(C)$.
+On a source probe its predicate is the intersection of the principal of
+$S$ and the predicate of $G$ on $W$: the passive inputs all omit the
+queried winner. The composite is positive at $q$, so every $p\preceq_Cq$
+passes the test from $G$. This proves the reverse implication.
+Conversely, the product formula itself excludes every incompatible
+singleton at each $j\in J$. The assertion for the remaining inputs
+follows by evaluating the product at their one-input colorings.
+\end{proof}
+
+In particular, above an operation retaining all inputs in $J$ the
+formula is exact at every target, by the projection readers. A minimal
+forbidden coalition of size at least two in any principal factor can
+therefore use only inputs at which \emph{every} singleton color is
+admitted: take $J$ maximal in the theorem and test on monochromatic
+probes.
+
+\begin{corollary}[Number of inputs admitting extra colors]
+\label{core:cor:unanimity-released-inputs}
+Suppose $q$ assigns $a$ to every input and the $a$-profile of $C$ is
+unanimity. Either its principal is ordinary subcoloring, or at least
+four inputs admit every one-input coloring. In the latter case there
+is a lower-arity or equal-arity core operation on precisely those
+inputs with unanimous $a$-profile and exactly the remaining principal.
+\end{corollary}
+\begin{proof}
+Take maximal $J$ in \cref{core:thm:principal-face-factor}. If $W$ is
+empty the product is ordinary. Otherwise fix the inputs of $J$ to
+$\{a\}$ one at a time. At each step the fixed cofactor has nonzero
+$a$-singleton predicate, precisely unanimity on the remaining inputs.
+Since $W$ is nonempty this cofactor is nonconstant.
+The erasure in \cref{core:lem:winner-erasure} preserves that predicate
+and is bounded by the original word both at $\{a\}$ and at all
+ambiguous menus. Iteration gives a core word on $W$ bounded on the
+whole face, with unanimous $a$-profile. Hence $D$ exists and its
+$a$-profile is also unanimity, by containment and idempotence.
+Its principal admits every one-input coloring by the theorem.
+For $1\leq |W|\leq3$ this contradicts
+\cref{core:thm:unanimity-activation-obstruction}.
 \end{proof}
 
 \begin{theorem}[Live-source reduction and common fixing]
