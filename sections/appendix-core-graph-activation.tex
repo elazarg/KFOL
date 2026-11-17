@@ -183,58 +183,151 @@ edges on one pair give $D=x+y$. The swapped colorings $(a,b)$ and
 $(b,a)$ agree in both local owner classes, yet
 $D+(X\star_a x)$ separates them.
 
-\begin{theorem}[Activation below an owning coloring]
-\label{core:thm:bipartite-owning-activation}
-Suppose $G$ is bipartite and all its edge labels belong to two
-distinct owners $a,b$. Let $q$ be any proper coloring with an
-owner-colored endpoint at every edge. Then for every proper $p$,
+Call an edge \emph{owned at $q$} when one endpoint has its owner's
+color. For a proper $q$, let $U(q)$ be the least vertex set satisfying:
+\begin{enumerate}
+\item it contains both endpoints of every edge not owned at $q$;
+\item if $ij$ and $jh$ have owner $r$, while $ih$ has a different
+  owner and is owned at $q$, then it contains $j$;
+\item if $i\in U(q)$ and $q_i\ne r_{ij}$, then $j\in U(q)$.
+\end{enumerate}
+The uncolored status differs from every owner in the third rule.
+
+\begin{theorem}[The activation preorder of a graph sum]
+\label{core:thm:graph-activation-order}
+For arbitrary proper partial colorings $p,q$, one has
+$p\preceq_Dq$ exactly when both conditions hold:
+\begin{enumerate}
+\item $p|_{U(q)}\subseteq q|_{U(q)}$ as partial colorings;
+\item no edge in the induced graph on $V\setminus U(q)$ is
+  monochromatic at $p$ in a color different from its owner.
+\end{enumerate}
+In the first condition, $p_i$ is uncolored or equals $q_i$;
+an uncolored $q_i$ therefore forces an uncolored $p_i$.
+The principal predicate has a primitive interval realizer with one
+$X$ and at most $(K+1)|V|+(K-1)|E|+2$ gates on its marked path.
+\end{theorem}
+\begin{proof}
+We first enlarge the baseline without changing its principal
+predicate at $q$. Write $D_0,D_1$ for the current and enlarged
+baselines in each step. Each of the following enlargements has an
+actual mask positive at $q$. The enlarged principal predicate
+lies below this mask, so the indicated repair preserves it.
+Monotonicity of the interval lattices then proves equality of
+the old and new principal predicates.
+
+For an edge $H=v_i\star_r v_j$ not owned at $q$, replace it by
+$v_i+v_j$. The mask is $\neg\Phi_r(H)(E_r)$, and the repair of
+an enlarged interval realizer $F$ is $D_0+(F\star_r H)$.
+Where $H\ne\{r\}$ the baselines agree and the repair leaves $F$
+unchanged; where $H=\{r\}$ it returns $D_0$.
+
+Next consider a triangle with $ij,jh$ owned by $r$ and $ih$
+owned by $s\ne r$. Put $H=v_i\star_s v_h$. The baseline
+contains $v_j$ whenever $H\ne\{r\}$: both incident $r$-edges
+can discard $v_j$ only when $v_i=v_h=\{r\}$, equivalently
+$H=\{r\}$. If $ih$ is owned at $q$, the same mask and repair
+permit adjoining the projection $v_j$.
+Finally, when $v_i$ is already retained and $q_i\ne r_{ij}$,
+adjoin $v_j$ using mask $[i\text{ is not colored }r_{ij}]$
+and repair $D_0+(F\star_{r_{ij}}v_i)$.
+Where $v_i\ne\{r_{ij}\}$, the retained $v_i$ and its incident
+edge already contain $v_j$; on the remaining stratum the repair
+returns $D_0$. All three masks are actual by adjoining the
+corresponding guarded fresh source to the enlarged baseline.
+
+These steps retain exactly $U=U(q)$. Drop edges with both
+endpoints in $U$, which their retained projections dominate.
+Call the resulting baseline $B$. Every remaining edge is owned
+at $q$, and an edge from $i\in U$ to $j\notin U$ has
+$q_i=r_{ij}$. There is no two-colored triangle entirely outside
+$U$: its opposite edge would be owned at $q$ and would have
+retained the repeated-owner center.
+
+Let $T=\Theta_{B,q}$, with primitive one-$X$ spine $S\subseteq B+X$.
+Choose an owner $c$ missing from $q$ and put $N=I\setminus\{c\}$.
+For each $j\notin U$, row $R_j$ marks $j$ by $I$, fixes every
+remaining neighbor to its edge owner, and gives all other inputs
+and $X$ the menu $N$. Thus $B+X$, and hence $S$, omits $c$.
+Write $N_r(j)$ for the remaining neighbors along $r$-edges.
+Every path helper $H$ at an $r$-gate satisfies
+$\Phi_r(H)(q_r)=0$.
+
+Suppose a helper equals its gate's owner on a negative row, and
+choose the last such gate. Write its owner as $r$ and let
+$H(R_j)=\{r\}$, so $\Phi_r(H)(A)=1$ for $A=N_r(j)$.
+If $i\in A\cap U$, the boundary condition gives $q_i=r$.
+Hence all indices $i\in A\setminus q_r$ are outside $U$, where
+$N_r(i)\subseteq q_r$. Their foreign neighbor coalitions are
+disjoint from $A$. Indeed a foreign edge from such $i$ to
+$h\in A$ would give a two-colored triangle outside $U$ if
+$h\notin U$; if $h\in U$, its edges to $j$ and $i$ would
+force two different values of $q_h$.
+Marked profile transfer gives $c\in H(R_i)$ at some such row.
+No $r$-owned path helper can absorb there, since its $r$-coalition
+lies in $q_r$. Starting at ambiguous $X=N$, the prefix never
+becomes the singleton $r$. The chosen gate therefore admits
+the helper's $c$, and no later helper can absorb it by the
+last-gate choice. This contradicts the upper bound.
+Consequently all gates take union on the negative rows, and every
+helper omits $c$ there.
+
+Fix $s$ and a set $A$ containing no foreign-owned remaining edge,
+with $A\cap U\subseteq q_s$. If an $s$-owned helper were positive
+at $A$, marked profile transfer against its negative coalition
+$q_s$ would force $c$ on a negative row. All required indices
+$A\setminus q_s$ lie outside $U$; their $s$-neighbors lie in
+$q_s$, and their foreign neighbors avoid $A$. Thus $T_s(A)=1$.
+Conversely, edge readers $B+(X\star_s H_e)$ exclude every
+foreign-owned edge in $A$. Projection readers
+$B+(X\star_s v_i)$ exclude $i\in U$ whenever $q_i\ne s$.
+These are positive at $q$, so they give exactly the reverse factors.
+Edges incident with $U$ impose no extra condition under the
+status bound, since their retained endpoint has its edge's owner.
+This proves the stated criterion.
+
+For the path bound, start at $X$, attach each retained $v_i$ at
+every owner except $q_i$ (all owners if $q_i$ is uncolored), and
+attach each edge outside $U$ at every owner except its edge owner.
+The helpers lie below $B$, so the spine is bounded by $B+X$ and
+has the desired principal box. Reverse each enlargement with its
+one repair gate, postponing restoration of the lower bound.
+Indeed, if the corresponding passive guard equals its owning atom,
+the gate returns that atom in the old baseline; otherwise the
+baselines agree and the guard lies below them. Thus the gate keeps
+the upper bound even without a lower bound on the incoming spine.
+Its mask is redundant in the principal predicate, so the box is
+unchanged. Finally replace the spine $S$ by
+$(S\star_uD)\star_vD$, with distinct $u,v$ avoiding any singleton
+forced by $D$ at $q$. This lies between $D$ and $D+S$.
+There are two such owners because $K\geq3$; positivity at $q$
+and minimality preserve the principal predicate.
+If $e$ edges were expanded, $t$ triangle centers promoted, and
+$m_0$ edges lie outside $U$, then $e+m_0\leq|E|$ and $t\leq|V|$.
+The path length is at most
+\[
+ K|U|+(K-1)m_0+e+t+2
+ \leq (K+1)|V|+(K-1)|E|+2.
+\]
+\end{proof}
+
+\begin{corollary}[Activation below an owning coloring]
+\label{core:thm:graph-owning-activation}
+Suppose no triangle of $G$ has exactly two edge owners, and let
+$q$ be any proper coloring with an owner-colored endpoint at every
+edge. Then for every proper $p$,
 \[
  p\preceq_Dq\quad\Longleftrightarrow\quad
  \forall\{i,j\}\in E,\ \forall s\ne r_{ij},\quad
  \neg(p_i=p_j=s).
 \]
-Thus no edge may be monochromatic in a color different from its owner.
-\end{theorem}
+\end{corollary}
 \begin{proof}
-By the graph-kernel theorem, replace $q$ by the coloring giving
-$a$ to one bipartition class $L$ and $b$ to the other class $R$.
-The swapped coloring $q'$ is equivalent too.
-Let $T=\Theta_{D,q}$, realized by a primitive one-$X$ spine
-$S\subseteq D+X$. Choose $c\notin\{a,b\}$ and put
-$N=I\setminus\{c\}$. At row $R_j$ give input $j$ menu $I$,
-each neighbor its incident edge owner, and all other inputs and
-$X$ menu $N$. Every incident edge absorbs the marked source,
-so $D+X$ and hence $S$ omit $c$ there.
-
-Every $a$- or $b$-owned path helper avoids its owner's singleton
-on both $L$ and $R$, since $T$ is positive at $q,q'$.
-Its owner's atomic coalition at $R_j$ lies in one bipartition
-class, so it cannot absorb there either. Other owners have no
-atomic inputs on $R_j$. Starting at ambiguous $X=N$, all path
-gates therefore take union on these rows. Each helper must itself
-omit $c$ on every $R_j$.
-
-Fix an owner $s$ and a set $A$ containing no edge with owner
-different from $s$. No $s$-owned helper can have
-$\Phi_s(H)(A)=1$. For $s=a$, it has negative profile at $L$.
-Rows indexed by $j\in A\setminus L$ have $a$-coalition inside
-$L$ and $b$-coalition disjoint from $A$, since $A$ contains no
-$b$-edge. Marked profile transfer forces $c$ in a helper output,
-a contradiction. The case $s=b$ is symmetric, using $R$.
-For other $s$, take the negative coalition empty: $A$ is independent
-in the whole graph, so every neighbor coalition at a row marked
-in $A$ is disjoint from $A$. The same transfer again contradicts
-omission of $c$.
-Thus $T_s(A)=1$ for all such $A$.
-
-Conversely, if $A$ contains an edge $e$ owned by $r\ne s$,
-its summand $H_e$ is a minorant of $D$.
-The interval $D+(X\star_s H_e)$ is positive at $q$ but zero on
-the monochromatic $s$-coloring of $A$. Hence $T_s(A)=0$.
-The resulting exact factors give the stated equivalence.
+The defining seed sets of $U(q)$ are empty, so $U(q)=\varnothing$.
+Apply \cref{core:thm:graph-activation-order}.
 \end{proof}
 
-Bipartiteness cannot be omitted. On the triangle
+The triangle condition cannot be omitted. On the triangle
 $D=(x\star_a y)+(y\star_a z)+(z\star_b x)$, the target
 $q=(b,a,b)$ owns every edge, while $t=(\circ,c,\circ)$ has no
 monochromatic edge. Yet the interval
@@ -267,11 +360,58 @@ Every vertex has an incident edge of each label. Under either
 alternating coloring one incident edge leaves that vertex's source
 live. Both colorings are fully colored, so neither has a capture edge.
 
-The square is bipartite, and $t$ has no monochromatic edge.
-Thus \cref{core:thm:bipartite-owning-activation} gives
+The square has no triangles, and $t$ has no monochromatic edge.
+Thus \cref{core:thm:graph-owning-activation} gives
 $t\preceq_Dp$.
 The interval $D+(X\star_a(x\star_a y))$ has predicate one at
 $t$ and zero at $p$, excluding the reverse comparison.
 Finally $x=c$ would successively force $y=a,z=b,w=a$ to cover
 the first three edges, leaving the final $b$-edge uncovered.
+\end{proof}
+
+\begin{proposition}[A singleton kernel class can have extra lower points]
+\label{core:prop:frozen-owning-target}
+For every $K\geq3$, a simple two-owner graph sum has a proper
+coloring $q$ whose activation class is a singleton and whose every
+input is live, but with a strictly lower point having a foreign color.
+Even repeated ownerwise mixing and captured-input rectangles,
+starting from its kernel class, do not generate its principal downset.
+The owner box $[E\subseteq q]$ is constant under the edgewise
+equivalences even on colorings using every owner, and is preserved
+by capture rectangles and formal
+changes satisfying the simultaneous capture-probe rule, but is not
+an actual interval predicate.
+\end{proposition}
+\begin{proof}
+Use vertices $0,\ldots,7$ on a cycle. Put $q_i=a$ for even $i$
+and $q_i=b$ for odd $i$, label the edge $i(i+1)$ by $q_i$,
+with indices modulo eight, and add the $a$-edge $04$.
+Covering every cycle edge by its owner forces exactly one of the
+two alternating orientations: each vertex can cover at most one
+cycle edge, so all eight vertices must cover one each.
+The added chord excludes the swapped orientation. The graph-kernel
+theorem therefore makes the class of $q$ a singleton.
+Each source is live through its outgoing cycle edge, so no input
+is captured under $q$ or under any of its subcolorings.
+
+There are no triangles. For $c\notin\{a,b\}$ the point coloring
+only vertex $0$ by $c$ has no monochromatic edge, and hence lies
+below $q$ by \cref{core:thm:graph-owning-activation}.
+The edge reader for the $a$-edge $01$ excludes the reverse comparison.
+Starting from the singleton class, ownerwise mixing gives only
+subcolorings of $q$. None has a captured input, so captured-input
+rectangles cannot enlarge this family. Thus these two closure
+operations miss the strictly lower foreign-colored point.
+
+Every subcoloring of $q$ also has no other coloring, even one using
+every owner, satisfying the edgewise kernel test.
+If it has a hole at $i$, its outgoing cycle edge is unowned and
+fixes $i,i+1$. Moving backward around the cycle, an owned edge
+forces its preceding endpoint to its old color, while an unowned
+edge fixes that endpoint outright. Thus all statuses are fixed;
+the full coloring $q$ was already handled above.
+The capture-probe inclusions force the same edgewise test even
+for formal changes, so they cannot leave this positive box either.
+Since the box omits the actual lower foreign-colored point, it is
+not an interval predicate.
 \end{proof}
