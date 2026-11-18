@@ -1,0 +1,95 @@
+\paragraph{A polynomial test when the positive and foreign colors are disjoint.}
+Fix an owner $a$. The negative queries may use $a$ arbitrarily often,
+but each uses every other color at most once. For a positive $(i,p)$
+put $B=p_a$. Suppose no vertex of $B$ receives a foreign color in
+any negative query. In particular $B$ may be empty. There is no
+inclusion condition on the repeated $a$-coalitions.
+
+For a set $U$ of negative queries and $s\ne a$, draw $j\to u$ for
+$(j,t)\in U$ with $t_s=\{u\}$, and $j\to\dagger$ if $t_s$ is empty.
+Let $C_s^U(v)$ be the set reachable from $v$, including $v$.
+If it contains $\dagger$, regard it as contained in no input coalition.
+Otherwise it is the least support containing $v$ whose $s$-fold
+omits every mark in $U$. Indeed, whenever its support contains a
+head $j$, the fold must absorb on that row, forcing its $s$-colored
+vertex into the support.
+
+For a given budget $S$ start with $U_0=\varnothing$ and put
+\[
+ U_{m+1}=\bigl\{(j,t)\in S:
+   C_s^{U_m}(v)\not\subseteq t_a
+   \text{ for every }s\ne a,\ v\notin B\bigr\}.
+\]
+These sets increase. Write $U$ for their eventual value.
+
+\begin{theorem}[Removing all attainable $a$-singletons]
+\label{core:thm:disjoint-foreign-guards}
+For every $A\subseteq V$ some $S$-bounded word wins the $a$-test on
+$A$ and loses it on $B$ if and only if $C_s^U(v)\subseteq A$ for
+some $s\ne a$ and $v\notin B$. If there is any such word, a single
+$a$-fold of at most $(K-1)|V|$ foreign folds attains all these positive
+tests simultaneously while losing on $B$.
+
+To decide the positive source query, form $U$ for the current budget.
+A projection supplying $(i,p)$ and omitting the marks of $U$ succeeds.
+Otherwise apply any foreign fold from the reachability test of
+\cref{core:thm:injective-blockers} that deletes a nonempty set of
+rows from $U$, and repeat on the retained rows. If there is no such
+fold, the query fails. The algorithm takes polynomial time on an
+explicit sample. Every impossible query is already impossible with
+at most $(K-1)|V|(|V|+1)+1$ of its original negative rows.
+\end{theorem}
+\begin{proof}
+We claim at each stage that no word bounded on $U_m$ and losing the
+$a$-test on $B$ wins that test on the $a$-tail of any row of $U_m$.
+This starts vacuously. Under that claim, suppose a word bounded on
+$U_m$ wins on $A$ and loses on $B$. If it is a projection, its input
+$v$ lies in $A\setminus B$ and is absent from the heads, so its closure is $\{v\}$.
+At an $a$-root no row of $U_m$ absorbs by the claim. Both children
+therefore fit the rows, and one retains both profile tests.
+At a foreign $s$-root without absorption on $U_m$ both children
+again fit the rows and one retains both tests. If instead this root
+absorbs on a row with $t_s=\{v\}$, the whole word wins the $s$-test
+on $\{v\}$ and $v\notin B$ by hypothesis. All its winning singleton
+inputs for $s$ lie in $A$ by the common-source property. They are
+closed under the displayed edges and avoid $\dagger$: by
+\cref{core:lem:singleton-profile-absorption} the word can omit a
+winning input's mark only by returning $\{s\}$ there. Thus
+$C_s^{U_m}(v)\subseteq A$. Descent proves the asserted necessity.
+Its converse is the $s$-fold of this closure. In particular no
+$U_m$-bounded word losing on $B$ can win on any $a$-tail in
+$U_{m+1}$. Since $U_m\subseteq U_{m+1}$, this proves the induction
+claim at the next stage.
+
+At the fixed point take the $a$-fold of all the foreign folds on the
+closures avoiding $\dagger$ with $v\notin B$. Each omits the marks of
+$U$ and loses the $a$-test on $B$. Every row of $S\setminus U$ is
+absorbed by at least one factor. This gives the simultaneous witness;
+if there are no factors, the proved necessity excludes every bounded
+word losing on $B$, since every word wins on $V$.
+
+A marked witness on $U$ loses the $a$-test on $B$ and therefore
+provides a nonempty family of factors. Attaching the simultaneous
+witness at owner $a$ preserves the mark and enforces $S\setminus U$.
+It remains to recognize the mark on $U$. A foreign fold that passes
+the reachability test is safe there and preserves the mark on attachment.
+If none passes, at a foreign root both children fit every row of $U$
+by the reachability argument. At an $a$-root both fit by the induction
+claim, since the marked word loses on $B$. Descent must reach the
+positive projection. Computing the closures and strictly enlarging or
+restricting finite row sets takes polynomial time.
+
+For the size bound take the terminal failing budget $U$. All its rows
+enter the increasing process starting at the empty set even when
+started with $U$ alone: deleting rows outside its limit does not change
+any stage. Keep the first row introducing each edge $j\to u$ or
+$j\to\dagger$ in each foreign graph, and one row with head $i$.
+In the original order of entry, each retained row still enters: all
+edges available before its entry have an equally early retained witness.
+The final graphs are therefore unchanged. The retained rows still
+exclude the projection and every $a$-absorption. They also exclude
+every foreign escape: reversing the singleton edges and using
+the empty-tail heads as seeds recovers the same reachable vertices,
+so each retained tail is reached. There are at most
+$(K-1)|V|(|V|+1)$ edges.
+\end{proof}

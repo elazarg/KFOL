@@ -1,0 +1,135 @@
+\subsection{Joint guards with one repeating owner}
+\label{app:core-ordered-guards}
+
+Fix an owner $a$. In a negative source query $(j,t)$ several inputs
+may carry $a$, and each other color occurs at most once. We give a
+single system of Horn implications on ordered lists of the foreign
+colored inputs. The same system handles arbitrarily many incomparable
+$a$-coalitions. The positive query $(i,p)$ has no color restriction.
+
+Let $E=\{(s,u):s\ne a,\ t_s=\{u\}\text{ in some negative query}\}$.
+A letter $(s,T)$ names a nonempty set of pairs $(s,u)\in E$ with
+$u\in T$. A path consists of a list of letters and a final input $v$.
+No pair in $E$ may occur twice in the list. For a path $w$ of length
+$d$ (counting only letters), define its suffix supports
+\[
+ D_w(k)=\{v\}\cup\bigcup_{k<h\le d}T_h,\qquad 0\le k\le d.
+\]
+Choose a path $m$ ending at $i$ for which
+$T_h\cap p_{s_h}=\varnothing$ at every letter.
+To distinguish the contemplated path from other paths which use the
+same letters, tag its letters with $1$. Other paths may follow an
+initial segment of these tagged letters, then take only letters
+tagged $0$; they may also terminate at any prefix. Write $[u,w]$ for
+the length of the common prefix of letters, including their tags.
+The sets $D_w(k)$ ignore tags.
+
+Initially discard each path $w$ with $D_w([w,m])\subseteq p_a$.
+For each negative $(j,t)$ scan $w$ from the start. Stop at the first
+letter $(s,T)$ with $T\cap t_s\ne\varnothing$. Before this stop,
+an occurrence of $j\in T$ is an emission. The terminal input is also
+an emission when the scan reaches it and it equals $j$. If any
+emission occurs, let $k$ be the number of letters strictly before the
+first one. Add the Horn implication
+\begin{equation}\label{core:eq:ordered-guard-horn}
+ \bigl(\text{every }u\text{ with }D_u(\min(k,[w,u]))\subseteq t_a
+                    \text{ is discarded}\bigr)
+ \quad\Longrightarrow\quad w\text{ is discarded}.
+\end{equation}
+
+\begin{theorem}[Ordered foreign inputs and joint guard recognition]
+\label{core:thm:ordered-foreign-guards}
+A word omits all the specified negative bits and supplies $(i,p)$
+if and only if some choice of $m$ survives the least set of discards
+closed under \eqref{core:eq:ordered-guard-horn}. Consequently this
+criterion on each maximal positive bit recognizes full observer-agreeing
+antitone guard data with at least one positive bit whenever only $a$
+may repeat in a minimal zero. For $f=|E|$ the test takes
+$2^{O(f\log(f+2))}$ times a polynomial in the explicit input size.
+\end{theorem}
+\begin{proof}
+Write $F_s(T)$ for the $s$-fold of the inputs in $T$. Use the unary
+operation
+\[
+ H_{s,T}(x)=(x+F_s(T))\star_s F_s(T).
+\]
+It returns $\{s\}$ if $T$ contains an $s$-singleton input, and
+otherwise adjoins all the menus in $T$ to $x$. Its $a$-profile is
+therefore the conjunction of the payload's $a$-profile and the
+condition that all of $T$ is $a$.
+
+First we show that witnesses may be built using only projections,
+$a$-folds, and these unary operations, with pairwise disjoint sets of
+foreign pairs along a path. In a marked witness we also distinguish
+a leaf $i$ that transmits the mark all the way to the root. Prove
+this simultaneously for the mark and for a gap $\Phi_a(A)=1$,
+$\Phi_a(p_a)=0$, using the strict restrictions in
+\cref{core:thm:repeated-blocker-budgets}. A projection needs no
+gate. A deleting $a$-fold attaches directly. For a deleting foreign
+$s$-fold restrict its support $T$ to the $s$-slots actually occurring
+in the current budget. It still absorbs on precisely the deleted
+rows. Every remaining head lies outside $T$, so $H_{s,T}$ enforces
+all the negatives. It preserves the mark from the payload since
+$T\cap p_s=\varnothing$. In a gap construction $T\subseteq A$, so
+attachment preserves the positive $a$-test and also preserves loss
+at $p_a$. None of its pairs remains in the child's budget.
+At the exceptional rule the only added demand is $\Phi_a(C)=1$
+for a repeated tail $C$. On the smaller budget use a witness for
+the original task and another for the gap at $C,p_a$. Their
+$a$-choice preserves the task, absorbs on the deleted rows, and
+retains the designated marked leaf when present. A witness
+satisfying the original task and the added demand on that budget
+supplies both smaller tasks, since supplying the mark entails loss
+at $p_a$. This proves the normal form by induction.
+
+Flatten adjacent $a$-gates. The result is a tree of $a$-folds, with
+a foreign letter on each edge to a child fold and projections at
+the nodes. Tag the foreign edges on the designated path by $1$ and
+all others by $0$. Siblings with the same tagged letter may be
+merged under one copy of the letter, taking the $a$-fold of their
+payloads. Indeed for $H=H_{s,T}$ one has
+\[
+ H(x\star_a y)\subseteq H(x)\star_a H(y).
+\]
+If $H$ returns $\{s\}$ both sides agree. Otherwise it adjoins a fixed
+menu $U$. When the right side absorbs, $U=\{a\}$ and one operand
+already equals $\{a\}$; in all other cases it contains the left
+side. The $a$-profiles of the two expressions agree, by distributivity
+of the Boolean condition $T\subseteq A$ over disjunction. Merging
+cannot introduce a negative mark, by monotonicity. It cannot erase
+the designated mark either: merging takes place off its path, and
+at an $a$-fold on that path the competing $a$-profiles are preserved.
+Thus the surviving tree is specified by a set of the listed paths,
+joined at each common tagged prefix.
+
+Conversely any nonempty set $X$ of listed paths gives such a word:
+at each prefix combine its terminal projections and its letter-wrapped
+children by $a$-fold. At prefix $v$ the value is the $a$ singleton
+on a row with $a$-coalition $A$ exactly when some descendant path
+$u\in X$ satisfies $D_u(|v|)\subseteq A$. This follows from the
+$a$-profile of $H_{s,T}$ and disjunction at the folds. The initial
+discards thus exclude exactly the paths that would quench the
+designated leaf at a shared prefix: suffix supports shrink with
+prefix length.
+
+On a negative row, each emission before a foreign absorption
+contributes the mark unless an enclosing $a$-fold absorbs.
+For the first emission on $w$, such a fold exists precisely when
+some path $u\in X$ has $D_u(\min(k,[w,u]))\subseteq t_a$:
+this is the deepest shared prefix enclosing the emission.
+One absorption there also masks every later emission on $w$.
+The argument includes emissions by the foreign fold itself, for
+which only prefixes above that letter can absorb. Consequently $X$
+omits every requested mark precisely when each implication with
+conclusion in $X$ has a premise path in $X$. The complement of
+the least Horn closure is the greatest such $X$ avoiding the
+initial discards. If it contains $m$, its word supplies the positive
+and omits every negative; the normalized witness proves the converse.
+Union of the positive witnesses gives the full table.
+
+Finally a list orders a subset of $f$ pairs and groups consecutive
+pairs into letters. Even with independent binary tags there are at
+most $\sum_{h=0}^f \binom fh h!4^h$ lists. Enumerating distinguished
+paths, comparing suffix supports and closing explicit Horn implications
+cost polynomial time in this number and the sample size.
+\end{proof}
