@@ -46,6 +46,7 @@ public import KFOL.InfiniteGames.Continuation
 public import KFOL.Core.ProfileBudgets.Profiles
 public import KFOL.Core.BichainSwitch
 public import KFOL.Core.CompletionDepthChain
+public import KFOL.Core.CompletionSuspension
 public import KFOL.Core.LayerInterpolation
 public import KFOL.Core.BichainCubeCuts
 public import KFOL.Audit.Namespace
@@ -191,6 +192,23 @@ theorem core_completion_depth_hierarchy {Role : Type u} [Fintype Role] [Decidabl
       ∀ f : Core.CompletionDepth.Expr Role (Fin (m+1)),
         (∀ v, f.eval v = e.eval v) → m ≤ f.depth :=
   Core.CompletionDepth.exact_depth three m
+
+/-- A single residual works for all fixed menus with the given singleton statuses. -/
+theorem core_completion_erasure {Role : Type u} [Fintype Role] [DecidableEq Role]
+    {Var : Type v} {Fix : Type w} (three : Fin 3 ↪ Role)
+    (e : Core.CompletionDepth.Expr Role (Var ⊕ Fix)) (status : Fix → Option Role) :
+    ∃ z : Core.CompletionDepth.Residual Role Var, z.depth ≤ e.depth ∧
+      ∀ w : Fix → WinnerSet Role, (∀ j r, w j = WinnerSet.singleton r ↔ status j = some r) →
+        z.Represents (⋃ j, (w j).val) (fun v => e.eval (Sum.elim v w)) :=
+  Core.CompletionDepth.Expr.exists_erasure three e status
+
+/-- Suspension by two distinct singleton values increases least depth by one. -/
+theorem core_completion_suspension {Role : Type u} [Fintype Role] [DecidableEq Role]
+    {Var : Type v} (three : Fin 3 ↪ Role) (b c : Role) (hbc : b ≠ c)
+    (f : (Var → WinnerSet Role) → WinnerSet Role) (d : ℕ) :
+    Core.CompletionDepth.FeasibleAtDepth d (fun g => g = Core.CompletionDepth.suspension b c f) ↔
+      ∃ h, h + 1 ≤ d ∧ Core.CompletionDepth.FeasibleAtDepth h (fun g => g = f) :=
+  Core.CompletionDepth.suspension_atDepth three b c hbc f d
 
 /-- Interpolation with arbitrary row bounds, singleton demands and one
 optional positive at a prescribed completion depth. -/

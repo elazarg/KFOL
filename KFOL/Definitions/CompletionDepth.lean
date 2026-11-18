@@ -55,4 +55,40 @@ def FeasibleAtDepth {Role : Type u} {Var : Type v} (d : ℕ)
     (P : ((Var → WinnerSet Role) → WinnerSet Role) → Prop) : Prop :=
   ∃ e : Expr Role Var, e.depth ≤ d ∧ P e.eval
 
+
+/-- A constant cofactor has a fixed singleton status. A live cofactor
+has a residual expression and a mask of singleton statuses it preserves. -/
+inductive Residual (Role : Type u) (Var : Type v) where
+  | dead (atom : Option Role)
+  | live (expr : Expr Role Var) (mask : Role → Bool)
+
+namespace Residual
+variable {Role : Type u} {Var : Type v}
+
+def depth : Residual Role Var → ℕ
+  | .dead _ => 0
+  | .live e _ => e.depth
+
+/-- The residual retains only winners of the original operation. Every
+winner it omits belongs to a fixed input. The mask records exactly which
+of its singleton outputs are also singleton outputs of the original. -/
+def Represents (B : Set Role) (f : (Var → WinnerSet Role) → WinnerSet Role) :
+    Residual Role Var → Prop
+  | .dead a => ∃ c : WinnerSet Role, c.val ⊆ B ∧
+      (∀ r, c = WinnerSet.singleton r ↔ a = some r) ∧ ∀ v, f v = c
+  | .live e M => ∀ v, (e.eval v).val ⊆ (f v).val ∧
+      (f v).val ⊆ (e.eval v).val ∪ B ∧
+      ∀ r, f v = WinnerSet.singleton r ↔ M r = true ∧ e.eval v = WinnerSet.singleton r
+
+end Residual
+
+/-- The fresh input takes precedence at either designated singleton. At all
+other menus, its winners are added to the original output. -/
+noncomputable def suspension {Role : Type u} {Var : Type v} (b c : Role) (f : (Var → WinnerSet Role) → WinnerSet Role)
+    (values : Var ⊕ Unit → WinnerSet Role) : WinnerSet Role := by
+  classical
+  let y := values (.inr ())
+  exact if y = WinnerSet.singleton b ∨ y = WinnerSet.singleton c then y
+    else (f (fun j => values (.inl j))).union y
+
 end KFOL.Core.CompletionDepth

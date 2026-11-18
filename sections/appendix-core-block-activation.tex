@@ -206,6 +206,139 @@ whole of $e$ uses every color: it suffices that its original row
 $(b,t)$ is proper.
 \end{proof}
 
+Erasing background inputs also preserves a bound on the number of
+completion layers. The singleton tests that cease to be attainable
+under the fixing have to be recorded separately.
+
+\begin{theorem}[Erasure at fixed completion depth]\label{core:thm:completion-erasure}
+Fix the singleton statuses of the background ports $J$ of a completion
+expression $t$, leaving ports $H$ free. A background menu $b_j$ with
+neutral status may be any nonsingleton. Write $U_b=\bigcup_{j\in J}b_j$.
+Either, for every such $b$, the output is constant in the free inputs
+and lies in $U_b$, or there are one expression $s$ on $H$ of depth at
+most that of $t$ and a set $M$ of owners such that for all $b,w$
+\[
+ s(w)\subseteq t(b,w)\subseteq s(w)\cup U_b,\qquad
+ t(b,w)=\{r\}\ \Longleftrightarrow\ r\in M\text{ and }s(w)=\{r\}.
+\]
+In the constant case the singleton status depends only on the fixed
+statuses and no free source survives. In the second case $s$ also preserves each free source's
+survival at the fixing, including on colorings using all owners.
+\end{theorem}
+\begin{proof}
+Proceed up the expression. A background port is constant; a free port
+has mask $I$. At a free union keep the union of its surviving children
+and intersect the sets of owners that can be singleton in its children,
+using the singleton status of a constant child. If both children are
+constant the union is constant.
+
+At a gate let $P$ be the set of surviving child ports, with masks $M_j$.
+The other children are constant. Let $C_r$ be the constant ports with
+value $\{r\}$. On $A\subseteq P$ put
+\[
+ f_r(A)=\Phi_r\bigl(C_r\cup\{j\in A:r\in M_j\}\bigr).
+\]
+These functions give the original gate's atomic tests when $A$ lists
+the surviving children whose residual values are $\{r\}$.
+If $f_r(\varnothing)=1$, the output is always $\{r\}$, and some
+constant port supplies $r$. With $P=\varnothing$ the output is also
+constant. Otherwise put $M=\{r:f_r(P)=1\}$. On $P$ use $f_r$ for
+$r\in M$ and unanimity for the other owners. For at least two active
+owners a rainbow selection has a common port by the original profiles;
+it cannot be constant since their $C_r$ are disjoint. For one active
+owner its winning selection is nonempty since $f_r(\varnothing)=0$.
+If none is selected, use any port in $P$. This gives a greatest
+completion on the surviving children, hence preserves the depth bound.
+
+An original singleton survives with its owner, and a new singleton
+at an inactive owner $r$ requires every surviving residual to equal
+$\{r\}$. In this last case the original gate takes the union of its
+children, which contains $r$ and has no other winner outside $U_b$.
+When both gates are ambiguous the two inclusions follow by taking
+unions. This proves the assertions on ordinary menus. For source
+survival, track a mark carried only by a free ambiguous input and
+erased by any singleton output, as in the proof of
+\cref{core:thm:block-source-extension}. At an inactive new singleton
+none of the surviving children carries the mark. In every other case
+the two gates both erase it or both pass it from their children.
+This argument uses only the statuses, so no unused owner is needed.
+\end{proof}
+
+For a feasible sample in \cref{core:lem:unmarked-background}, let $d$
+be its minimum completion depth and $d_H$ the minimum for the indicated
+internal sample. Then
+\[
+                  d_H\ \le\ d\ \le\ d_H+\min(K,|J|).
+\]
+For the lower bound erase the background at $e$ in a witness of depth
+$d$. Its surviving positive rules out a constant residue. On a negative
+with $b\subseteq e$, extending $b$ to $e$ can only remove surviving
+sources: on the path from a marked leaf, an absorbing sibling remains
+absorbing when additional inputs are posted. Equivalently, at a
+completion gate each positive atomic test persists under the extra
+postings. The residual consequently meets all internal negatives.
+For the upper bound start with an optimal internal expression.
+Every other negative has some background posting $v:r$ with
+$v\notin e_r$. Group these rows by such a color or by such an input.
+As in \cref{core:thm:one-source-depth}, each group is enforced by one
+greatest completion on the current witness and background projections.
+The latter carry no marks at any negative head. This establishes the
+inequality and, by using the minimizing partition of the background
+tails in that theorem, can further reduce the overhead. The bound is
+sharp already for $|H|=1$, where the internal depth is zero and a
+matching of input--color pairs forces $\min(K,|J|)$ layers.
+
+Two singleton fixings can force erasure to remove an entire layer.
+Choose distinct $b,c$. For any nonempty-winner-set valued operation
+$f$ introduce a fresh input $y$ and put
+\[
+ \widehat f(w,y)=
+ \begin{cases}
+  y,&y=\{b\}\text{ or }y=\{c\},\\
+  f(w)\cup y,&\text{otherwise}.
+ \end{cases}
+\]
+
+\begin{theorem}[Adding exactly one completion layer]\label{core:thm:completion-suspension}
+For every $d\ge0$, $f$ has a realization of depth at most $d$ if and
+only if $\widehat f$ has one of depth at most $d+1$.
+No $\widehat f$ has depth zero. Thus this construction increases every
+finite minimum depth by exactly one and preserves nonrealizability.
+\end{theorem}
+\begin{proof}
+Apply a binary greatest completion to $f$ and $y$, with the second
+projection's profiles at $b,c$ and unanimity elsewhere. This gives
+the displayed operation.
+
+Conversely, take a realization of $\widehat f$ and pass through outer
+free unions to its summands. When $y=\{b\}$ or $y=\{c\}$ each summand
+must take that same value, so its profiles at both owners win on the
+single port $y$. By \cref{core:lem:singleton-profile-absorption} it
+contains the whole menu of $y$ at every valuation: the two possible
+absorbing singleton exceptions are distinct. On a neutral fixing of
+$y$ every summand is therefore ambiguous. A projection summand can
+only be $y$. Every outer completion summand now takes the union of its
+children. Erase neutral $y$ from those children by
+\cref{core:thm:completion-erasure} and collect their surviving
+residuals in one free union. They each have depth at most $d$ and
+depend only on the neutral status, independently of the menu chosen.
+For any winner $k$, take $y=I\setminus\{k\}$, neutral since $K\ge3$.
+The constant residues and the projection $y$ omit $k$, and a surviving
+child contributes $k$ exactly when its residual does. The union thus
+has exactly the memberships of $f$. There must be a surviving child
+since $f$ has nonempty values. The same argument excludes depth zero,
+where only projection summands would be available.
+\end{proof}
+
+On canonical source guards this transformation has linear cost at
+fixed $K$, counting the listed guards and their literals. Give $y$ the
+empty guard. At each old head and observer $k$, adjoin to every prime
+the literals excluding the postings of $y$ in $\{b,c\}\setminus\{k\}$.
+Every sufficient guard must exclude both visible postings, as can be
+tested on $y$ alone. After these exclusions its other literals form
+a sufficient guard exactly when they did before. This proves
+canonicity, including empty lists at unused heads.
+
 \begin{theorem}[Compatibility over retained inputs]
 \label{core:thm:retained-background-cuts}
 Suppose the family has a positive bit. Let $H$ be its nonempty set

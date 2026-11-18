@@ -647,8 +647,61 @@ either: use projection $i$ if its head differs from $i$; otherwise
 feasibility requires some posting $j\in t_r\setminus p_r$, and the
 single offer $(r,\{j\})$ works.
 
-Even the first layer depends on how many colors occur across the
-losses at one source.
+When all negatives have the queried head $i$, nesting has an intrinsic
+description that allows repetitions of any color. For a positive $(i,p)$
+label each negative $(i,t)$ with a color $r$ satisfying
+$t_r\setminus p_r\ne\varnothing$. A block of labeled rows is admissible
+if every choice of one tail from each of several distinct labels has
+nonempty intersection.
+
+\begin{theorem}[Completion depth at one source]\label{core:thm:one-source-depth}
+The minimum depth is the least number of admissible blocks partitioning
+the negatives, minimized over their labels. The empty family has depth
+zero; a row with no eligible label makes the query impossible. For
+$n$ inputs, the maximum finite depth is $\min(K,n-1)$, including for
+complete families with every source other than $i$ always retained.
+\end{theorem}
+\begin{proof}
+Follow a child supplying the positive mark, starting at the root of a
+fitting expression. A free union passes all remaining omissions to
+that child. At a completion gate, assign each remaining negative on
+which the output is a singleton to the block of this gate, labeled
+by that owner $r$. The profile of the entire subexpression wins on
+$t_r$ and loses on $p_r$, since it supplies the mark at the positive.
+Its rainbow condition gives every required intersection. On all other
+remaining negatives the gate is ambiguous and therefore passes their
+omissions to the chosen child. At a leaf supplying the mark only
+$x_i$ is possible, and it omits no negative headed at $i$.
+
+Conversely, start with $x_i$ and attach the blocks in any order.
+For one block take a completion on the original input ports. At each
+owner generate its profile by the tails labeled with that owner and
+by the full port set. Admissibility gives the rainbow condition. Plug
+the previous expression into port $i$, leaving the other ports as
+projections. Each labeled tail still forces its singleton, since it
+omits $i$. On a previously enforced negative all ports omit the mark,
+so the new gate preserves the omission. At the positive every labeled tail escapes $p_r$, and the full
+port set escapes it because port $i$ is ambiguous. The gate therefore
+supplies the mark from that port. Thus one layer per block suffices.
+
+Grouping by eligible label gives at most $K$ blocks. Alternatively
+choose a witness $v\in t_r\setminus p_r$ per row and group by $v$,
+giving at most $n-1$. For sharpness take $\min(K,n-1)$ distinct
+passive inputs with distinct colors, each a sole posting on its own
+row, and the empty positive. No two rows fit in one block.
+The complete family retaining every passive input and suppressing $i$
+exactly above those rows has the same depth: take the free union of
+the bounded witnesses for its maximal positives and all passive
+projections. The same construction gives the upper bound for every
+complete family retaining all other inputs.
+\end{proof}
+
+For single-posting losses with a common head, the exact number is the
+minimum vertex cover size in the bipartite graph of their input--color
+pairs, provided all postings are eligible. Within a block, either all
+edges use one color, or the intersection test forces every edge to use
+the very same input. Conversely every such star is admissible. With
+larger tails even the depth-one test depends on the number of colors.
 
 \begin{proposition}[One source at depth one]\label{core:prop:common-head-depth-one}
 Suppose every negative has head $i$ and the positive is $(i,\varnothing)$.
@@ -658,16 +711,8 @@ NP-complete, even when each row has exactly two colors and a
 depth-two realization always exists.
 \end{proposition}
 \begin{proof}
-Choose one posted color $r$ for each row and take its whole tail $t_r$.
-A completion exists exactly when every rainbow selection of chosen
-tails intersects. Indeed, every negative head belongs to the support,
-so omission requires a singleton there. Its winning coalition fits
-inside the tail, giving the necessary intersections. Conversely take
-full support. The chosen tails generate the winning coalitions at their
-respective owners, with the full set adjoined at each owner. The
-rainbow condition realizes these profiles, and their greatest completion
-supplies the head at the empty coloring. A row with no offer makes the
-test fail. With two colors give each row a Boolean choice, fix
+By \cref{core:thm:one-source-depth} one must choose a nonempty
+tail per row so that every rainbow selection intersects. With two colors give each row a Boolean choice, fix
 the one-option rows, and forbid each disjoint pair of different colors.
 These are all the constraints. With three colors a guessed selection
 is checked on at most triples, giving NP membership.
@@ -701,48 +746,34 @@ restore its head's mark. Both folds pass the mark at the empty
 coloring, proving the depth-two bound.
 \end{proof}
 
-\begin{lemma}[Increasing the least depth by one]\label{core:lem:depth-increment}
-Take a sample with one positive and finite least depth $h\ge1$.
-Suppose it has an input $u$ that is neither posted nor a head on any
-of its queries. Add a fresh input $y$, unposted on the old queries.
-For each input $v$ posted on an old negative, add two negatives
+\begin{lemma}[Increasing the least sample depth by one]\label{core:lem:depth-increment}
+Take a feasible sample with one positive and add a fresh input $y$,
+unposted on the old queries. At every old input $v$ add two negatives
 headed at $v$, with sole posting $y:b$ and $y:c$, respectively, for
-two distinct colors $b,c$. The new least depth is $h+1$.
+two distinct colors $b,c$. The new minimum depth is the old one plus one.
 \end{lemma}
 \begin{proof}
-Attach $y$ to an old witness by the binary greatest completion with
-second projection profile at $b,c$ and unanimity elsewhere. It absorbs
-the new rows; on old rows $y$ is unposted and carries no mark, so
-every omission and the positive are preserved.
-
-A word fitting the new negatives cannot be singleton on an old
-negative. Otherwise its $r$-profile wins on that row's nonempty
-$r$-coalition $A$ for some $r$. Choose $s\in\{b,c\}$ different from
-$r$. Give the inputs in $A$ their $r$ singleton, give $y$ its
-$s$ singleton, and give every other input $I\setminus\{r\}$.
-The output is $\{r\}$, supplied by some $v\in A$. Its source
-coefficient at observer $r$ sees only foreign singleton postings
-(\cref{core:thm:source-completion}), here just $y:s$. The new
-negative at $v$ forbids exactly this contribution.
-
-In a minimum-depth expression take a summand supplying the positive
-through all outer free unions. It still omits every negative. It
-cannot be a projection: substituting $u$ for $y$, which has identical
-values on the old probes, would give a depth-zero old witness. Its
-completion root thus takes the union of its supported children on
-every old negative and at the positive. A child supplying the mark
-omits all old negatives; the same substitution gives an old witness
-one layer lower.
+The binary gate of \cref{core:thm:completion-suspension} fits the new
+sample when applied to an old witness and $y$. Conversely take any
+outer summand supplying the old positive. For $s=b,c$ its $s$-profile
+must win on $\{y\}$. Indeed give $y$ its $s$ singleton and all old
+inputs their $r$ singleton for some $r\ne s$. At observer $r$ the only
+visible posting is $y:s$, so the new negatives exclude $r$ from
+every old source. Only $s$ remains. By singleton-profile absorption
+the summand contains $y$ everywhere. Thus on old probes it is
+ambiguous. It cannot be a projection: only $y$ satisfies these two
+profile tests, and $y$ omits the positive mark. A child of the outer
+gate supplies that mark and omits every old negative. Erasing $y$ at
+neutral status preserves those source bits by
+\cref{core:thm:completion-erasure}, giving an old witness one layer lower.
 \end{proof}
 
 For every fixed $d\ge1$ and $K\ge3$, deciding depth at most $d$ is
 NP-complete even for one positive at the empty coloring, at most two
 posting colors per negative, and the promise that the optimum is $d$
 or $d+1$. Start with the depth-one versus depth-two instances in
-\cref{core:prop:common-head-depth-one}. One extra unposted, unmarked
-input changes none of the tail intersections in that proof. Apply
-\cref{core:lem:depth-increment} $d-1$ times; the extra input continues
-to satisfy its hypothesis. Each iteration adds one input and at most
+\cref{core:prop:common-head-depth-one}. Apply
+\cref{core:lem:depth-increment} $d-1$ times. Each iteration adds one input and at most
 twice the current input count in rows. Membership follows from
 \cref{core:thm:layer-interpolation}.
 

@@ -633,6 +633,9 @@ import all KFOL.Core.BichainCanonical
 import all KFOL.Core.BichainReadOnce
 import all KFOL.Core.BichainCubeCuts
 import all KFOL.Core.CompletionDepthChain
+import all KFOL.Core.CompletionSuspension
+import all KFOL.Core.CompletionDepthErasure
+import all KFOL.Core.CompletionGateRestriction
 import all KFOL.Core.LayerInterpolation
 import all KFOL.Core.CompletionDepthStep
 import all KFOL.Definitions.LayerInterpolation
