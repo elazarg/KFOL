@@ -307,6 +307,96 @@ demands in any conjunction, hence at most $2^{d+1}$ rainbow tests
 per choice. This also decides an explicit joint guard table by testing
 its maximal positive bits against its minimal zeros.
 
+\paragraph{Obstructions on subfamilies of the given queries.}
+For arbitrary repetitions one can use just one coalition per owner.
+Fix the positive $(i,p)$ and a set $Z$ of negatives. Write $h(S)$
+for the heads of $S\subseteq Z$. A partial assignment $a$ selects,
+for each owner in its domain, a nonempty coalition occurring at that
+owner in $Z$. Define the eligible inputs by
+\[
+ L(a)=
+ \begin{cases}
+ \{i\},&\operatorname{dom}a=\varnothing,\\
+ a_r\setminus p_r,&\operatorname{dom}a=\{r\},\\
+ \displaystyle\bigcap_{r\in\operatorname{dom}a}a_r,
+      &|\operatorname{dom}a|\ge2 .
+ \end{cases}
+\]
+For a nonempty $r$-coalition $A$ of a row in $S$, put
+$S_{r,A}=\{(j,t)\in S:A\not\subseteq t_r\}$. Write $a[r:=A]$
+for insertion or replacement at $r$.
+
+\begin{theorem}[A cut on subfamilies of source queries]
+\label{core:thm:pointed-guard-cut}
+The positive cannot be supplied while omitting $Z$ exactly when
+there is a collection of pairs $(S,a)$ containing a pair with empty
+assignment and satisfying the following conditions at every member:
+\begin{enumerate}
+\item $L(a)\subseteq h(S)$;
+\item for each nonempty $r$-coalition $A$ occurring in $S$, the
+collection contains a pair $(T,a[r:=A])$ with $T\subseteq S_{r,A}$.
+\end{enumerate}
+For the sample decision problem let $m=|Z|$, and let $W$ be the sum, over
+owners, of the widths of their inclusion orders on the distinct
+nonempty coalitions occurring in $Z$. Feasibility is decidable in
+polynomial space, and in time $(m+1)^{2W}$ times a polynomial in the
+explicit input size. In particular, at fixed $K$, arbitrarily many
+rows and arbitrarily many repeated coalitions at every owner are allowed
+in polynomial time if each owner's coalitions form a chain.
+\end{theorem}
+\begin{proof}
+With an empty assignment ask for the mark. With a single entry $r$
+ask for a word winning the $r$-test on $a_r$ and losing it on $p_r$.
+With two or more entries ask for all their positive singleton tests.
+A projection satisfies the assignment and omits the rows of $S$
+precisely when its input is in $L(a)\setminus h(S)$.
+
+A nonempty coalition $A$ of owner $r$ gives the following construction.
+On $S_{r,A}$ take a word for $a$ and a word for $a[r:=A]$.
+Combine them by $\star_r$. This absorbs every removed row. For an
+empty $a$, the second word loses on $p_r$ and the first transmits
+the mark. If $a$ has the sole entry $r$, both words lose on $p_r$
+and the first wins on $a_r$. If $a$ has a sole entry $s\ne r$, both
+words win the $s$-test on $a_s$ and the first loses on $p_s$.
+For multiple entries, all foreign tests pass to both operands and
+the first supplies any required $r$-test. Thus the result meets $a$
+on $S$ in all cases.
+
+Conversely, take a shortest word meeting $a$ on $S$. If it is no
+projection, it must yield a singleton on some row of $S$. Otherwise
+the root is a union on every row, so both children omit all their
+marks. One child retains the assignment: a mark comes from one child,
+positive foreign tests pass to both, and the owned test is disjunctive.
+For a gap the losing test passes to both children at its own gate and
+to at least one at a foreign gate. Descent contradicts shortestness.
+If the word yields $\{r\}$ on a row with $t_r=A$, then $A\ne\varnothing$,
+its $r$-test on $A$ is positive, and the word itself meets both
+assignments on $S_{r,A}$. When $a$ was empty this uses that a surviving
+mark precludes an $r$-singleton at $p$. We have proved equivalence to
+a fitting projection or a choice of $(r,A)$ with both smaller tests
+feasible.
+
+For each assignment separately, take all inclusion-minimal infeasible
+subfamilies of $Z$. At any such $S$ the old assignment is feasible on
+the proper subset $S_{r,A}$. The construction forces the updated
+assignment to be infeasible there, giving the second cut condition.
+If $Z$ fails the positive query this collection includes a member with
+empty assignment. In the other direction, a feasible member of a cut
+with the fewest rows cannot use a projection. Its singleton row gives
+an updated assignment feasible on $S_{r,A}$ and hence on the smaller
+member $T$, a contradiction.
+
+The two smaller tests can be run in depth first order with at most $m$
+strict row deletions. For the time bound, cache each pair of a remaining
+budget and an assignment. At an owner $r$ the coalitions used for
+deletion generate an upset in the poset of the original coalitions.
+Its minimal elements form an antichain of size at most the width $w_r$,
+so there are at most $(m+1)^{w_r}$ choices. These upsets determine the
+remaining rows. Each active owner also has at most $m+1$ possible
+assignment entries, counting absence, and there are at most $W$ active
+owners. Each pair takes polynomial work once its children are known.
+\end{proof}
+
 \paragraph{Nested repeated coalitions of one owner.}
 Suppose all pairs $(r,t_r)$ with $|t_r|\ge2$ have the same owner $a$
 and that these coalitions form a chain under inclusion. Arbitrarily
