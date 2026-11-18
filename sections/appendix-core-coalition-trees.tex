@@ -87,56 +87,103 @@ $P_r\le\sum_{j=0}^{d}\binom nj$.
 \label{core:prop:winning-offer-rounds}
 At fixed $K\ge3$ the maximum necessary number of rounds on $n$
 inputs has base-two logarithm $n+o(n)$. The lower bound holds for
-a single feasible positive query
-of a complete family with polynomial-size canonical prime lists,
-even when a polynomial-size primitive word witnesses the query and
-all coalitions may be offered.
+a single feasible positive query of a complete family with
+polynomial-size canonical prime lists, even when a polynomial-size
+primitive word witnesses the query, all coalitions may be offered,
+and deleting one input makes the posting graph acyclic. The offers
+giving the lower bound lie inside one component of the residual
+posting graph. On the same instances, a deterministic summary of a
+prefix that suffices to check every prescribed continuation strategy,
+or to answer every profile implication on its remaining budget,
+requires $2^{n-o(n)}$ bits.
 \end{proposition}
 \begin{proof}
 The upper bound is $K(2^n-1)$. Take distinct owners $r,s$, a head
-$h$, and $d\ge2$ disjoint blocks $B_1,\ldots,B_d$ of size $m$
-indexed cyclically. Fix $1\le k\le m$. At $h$ prescribe a loss when
-every block has at least $k$ postings at $r$. At each $v\in B_l$
-prescribe a loss when at least $m-k+1$ members of $B_{l+1}$ are
-posted at $s$. At $h$ each prime excludes the $r$-postings of
-$m-k+1$ inputs in a single block: these are the minimal hitting
-sets of the choices of $k$ inputs per block. At $v$ each prime
-excludes the $s$-postings of $k$ members of the successor block,
-by the same hitting-set calculation. An observer hiding the
-posting color has the empty prime.
+$h$, and disjoint blocks $B_0,\ldots,B_d$ indexed cyclically,
+$d\ge2$. Block $B_0=\{u\}$ has threshold $1$; all other blocks
+have size $m$ and threshold $1\le k\le m$. The dual of threshold
+$k_l$ on $B_l$ is $|B_l|-k_l+1$. At $h$ prescribe a loss when
+every block meets its threshold at $r$. At each $v\in B_l$
+prescribe a loss when $B_{l+1}$ meets its dual threshold at $s$.
+At $u$ also prescribe a loss when $h$ and a fixed dual-threshold
+subset $D$ of $B_2$ are all posted at $s$. At $h$ each prime
+excludes a dual threshold's worth of $r$-postings
+in a single block, a minimal hitting set of the choices of $k_l$
+inputs per block. At $v\in B_l$ each prime excludes $k_{l+1}$
+different $s$-postings in the successor block, by the same calculation.
+At $u$ it must also exclude one posting from $D\cup\{h\}$, disjoint
+from $B_1$. An observer hiding the posting color has the empty prime.
+The arcs between successive blocks go from $B_{l+1}$ to $B_l$.
+Every block points to $h$ and the added row points from $h$ and $D$
+to $u$. Thus these inputs lie in one component, and deleting $u$
+breaks every cycle. Give a spare input the empty prime everywhere.
+It supplies its whole menu and is unposted in every minimal loss,
+so none of the losses is forced by a singleton.
 
 Ask for $h$ with every block posted at $s$. For $B_l$ take the
-$r$-fold $T_l$ of all $s$-folds of its $k$-subsets. Its
-$r$-profile wins when at least $k$ inputs in $B_l$ are posted at
-$r$. Its $s$-profile wins when the $s$-postings hit every such
-subset, hence when there are at least $m-k+1$ of them. Therefore
-$h\star_r(T_1\star_s\cdots\star_s T_d)$ witnesses the query.
+$r$-fold $T_l$ of all $s$-folds of its $k_l$-subsets. Its
+$r$-profile wins at the threshold. Its $s$-profile wins when the
+$s$-postings hit every such subset, hence at the dual threshold.
+Therefore $h\star_r(T_0\star_s\cdots\star_s T_d)$ witnesses the query.
 The inner fold gives $r$ on every $h$-loss and gives $s$ both at
-the positive and on every block-head loss.
+the positive and on every block-head loss, including the added row.
 
-On the all-decline branch every block-head loss remains: an offer
+On the all-decline branch every successor-block loss remains: an offer
 covering one would demand an $s$-win on a subset of $p_s$ while
 losing on $p_s$ in the acceptance branch. To cover a minimal
 $h$-loss an offer must be $r:A$ with $A$ inside its $r$-postings.
 The acceptance branch gives a word winning $r:A$ and omitting every
-block-head loss. At each $r$-gate keep a child winning $r:A$ and at
+successor-block loss. At each $r$-gate keep a child winning $r:A$ and at
 every other gate keep both. The remaining nonempty support $H$ lies
 in $A$. Every $r$-gate takes union on each block-head row, so pruning
 only decreases menus there and preserves omissions. If $v\in
-H\cap B_l$, then $H$ must hit every $(m-k+1)$-subset of $B_{l+1}$:
-posting a missed subset at $s$ leaves all retained inputs ambiguous,
-so their union transmits $v$'s mark. Consequently $H$ contains at
-least $k$ inputs of every block around the cycle. The offer $A$
+H\cap B_l$, then $H$ must meet every subset of $B_{l+1}$ of its
+dual threshold size: posting a missed subset at $s$ leaves all
+retained inputs ambiguous, so their union transmits $v$'s mark.
+Consequently $H$ meets every block's threshold around the cycle. The offer $A$
 covers only the chosen minimal $h$-loss. Since $h$ is the only
 eligible terminal, all $\binom{m}{k}^{d}$ such losses must be covered.
 
 Already $m=2,k=1$ gives $2^d$ offers with linear-size lists and word.
 For general $n$ take $m=\lfloor\log_2 n\rfloor$,
-$k=\lceil m/2\rceil$ and $d=\lfloor(n-1)/m\rfloor$, giving the
+$k=\lceil m/2\rceil$ and $d=\lfloor(n-3)/m\rfloor$, giving the
 remaining inputs the empty prime on every facet. The prime lists
 and word use $O_K(nm2^m)$ entries and symbols. Since
 $\binom mk\ge2^m/(m+1)$ and $dm=n-O(m)$, the logarithm of the
 lower bound is $n-O(n\log m/m+m)$.
+
+Write $M=\binom{m}{k}^{d}$ and call the $M$ minimal $r$-posting
+sets at $h$ transversals. Offer any chosen subfamily in a fixed
+order and decline throughout. All these histories have the same
+blank register. To test whether a particular transversal $A$ was
+offered, prescribe the following continuation. Offer all
+transversals except $A$ at $r$, stopping at $h$ if all are
+declined. On the first acceptance of $r:T$, offer all the
+$s$-singletons from $T$. These cover every block-head loss, since
+$T$ meets every dual-threshold subset. If some singleton is
+accepted use the last such input, and otherwise use any member of
+$T$. It is eligible and heads no remaining loss. Thus the continuation
+wins against every response exactly when $A$ had already been
+offered in the prefix. These prescriptions use at most $2M+n$
+rounds, within the arbitrary-coalition bound. Even the prefixes of
+length $\lfloor M/2\rfloor$ therefore require
+$\binom{M}{\lfloor M/2\rfloor}$ distinguishable summaries. Their
+base-two logarithm is at least $M-\log_2(M+1)$.
+
+The actual profile theories of these budgets also differ. For every
+transversal $A$, the implication
+$\Phi_r(\{h\})\Rightarrow\Phi_r(A)$ holds for all bounded words
+exactly when the loss at $A$ remains. On that loss's probe, a word
+winning on $\{h\}$ must either give the $r$-singleton or transmit
+$h$'s mark by \cref{core:lem:singleton-profile-absorption}.
+Conversely, if $A$ was removed, take the $r$-fold of $h$ and the
+$s$-folds of the remaining transversals, using $h$ alone if none
+remain. It absorbs every remaining $h$-loss, and all its transversal
+folds absorb on the block-head losses, including the row using $D$.
+It wins at $\{h\}$ and loses at $A$ since no remaining transversal
+is contained in $A$. The space bounds thus concern exact summaries
+of arbitrary supplied histories. Recognition may choose its own
+strategy or recompute a budget.
 \end{proof}
 
 \begin{theorem}[Counting coalitions inside source components]

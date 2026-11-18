@@ -1028,65 +1028,232 @@ makes this test exact, and its cost is polynomial at fixed $w$.
 For $K_{2,n}$ one bag per vertex on the large side, together with
 the two common vertices, gives width two.
 
-\begin{theorem}[Space bound from source components]
-\label{core:thm:prime-component-space}
-Fix $K\ge3$. Let $N$ be the length of the complete prime-guard
-presentation and $w$ the largest number of inputs in a strongly
-connected component of its source graph. Recognition uses deterministic
-space $N^{O(1)}2^{O_K(w)}$. In particular it is in PSPACE for
-$w=O(\log N)$, with no bound on the number of minimal zeros.
+\paragraph{One positive coloring through the source components.}
+Consider a sample of proper negative rows and order the strongly
+connected components of its posting-to-head graph topologically. Write
+a row at $i\in C$ as $(i,b,t)$, where $t$ gives the postings inside
+$C$ and $b$ the earlier postings. Fix a proper coloring $p$ of the
+inputs. The principal $\Theta_{0,q}$ for the absent operation is
+constantly true.
+
+\begin{theorem}[A component pass for partial source queries]
+\label{core:thm:component-mark-sweep}
+Process the components in order. On $C$ keep the internal loss
+$(i,t)$ from each row $(i,b,t)$ satisfying
+\[
+       \Theta_{D_U,p|_U}(b|_U)=1
+       \qquad\text{at every earlier component }U.
+\]
+Let $D_C$ be the union of all core operations on $C$ omitting the
+kept internal losses, or zero if none does. A word omitting the
+original sample supplies the mark at $i\in C$ under
+$p|_{V\setminus\{i\}}$ exactly when
+$\pi_i^{D_C}(p|_{C\setminus\{i\}})=1$.
+
+For a listed sample the cost is a function of $K$ and the largest
+component size $w$ times a polynomial in the input length. At this
+$p$, all the answers are preserved by a common subfamily of at most
+$\sum_C |C|(K+1)^{|C|-1}$ original rows.
 \end{theorem}
 \begin{proof}
-On a proper coloring, evaluate a source bit using the prime list of
-any missing observer. Agreement can be checked by scanning all such
-colorings and observers. The source graph can also be computed by a
-scan: put $j\to i$ if erasing the posting at $j$ changes some bit at
-$i$. Two colorings differing only at $j$ have the same erasure,
-so this detects changes of color as well. These scans take polynomial
-space. If canonicity is to be checked, enumerate candidate exclusion
-sets on each facet and test sufficiency and minimality by scanning
-its colorings. Remove dummy inputs as in
-\cref{core:cor:binary-source-components} and order the components
-topologically.
+At each prefix take the union $B$ of all words on that prefix
+omitting its rows, allowing zero. The earlier source bits of any
+bounded word on a larger prefix lie below those of $B$, even if
+later inputs are posted: a witness for such a bit localizes to
+the source's ancestors by \cref{core:thm:component-profile-factorization}.
+Conversely $B$, when nonzero, omits all later-headed marks.
 
-For a block $W$ of at most $w$ inputs, a table of menu values has at
-most $(2^K-1)^w$ entries. Whether a given table is a core operation
-is an explicit subpower membership test: take every internal valuation
-as a row, the projections as generators and the table as target.
-By \cref{core:thm:subpower-complexity} this takes space polynomial in
-the explicit length. The same test computes any requested activation
-comparison $p\preceq_h q$ for a nonzero core table $h$ on $W$:
-enumerate the core tables in $\mathcal I(h)$ on $W$ and one fresh
-source, rejecting the comparison if any source predicate is positive
-at $q$ and negative at $p$. For zero every comparison holds.
+For an extension by $C$ with $B\ne0$, take the upper bound whose
+earlier source predicates are those of $B$ and whose new source
+predicates lose just on extensions of the given new rows.
+Source reconstruction puts it between $B$ and $B+U_C$.
+By the preceding observation its core minorants are exactly
+the bounded words. By \cref{core:lem:block-source-patterns}, the
+coefficient of their union at the earlier part of $p$ is the
+greatest local word omitting those internal losses for which
+$b\preceq_B p|_{\mathrm{prefix}}$. The activation product of
+\cref{core:thm:block-source-extension} identifies this comparison
+with the displayed tests, and multiplies it by the factor
+$\Theta_{D_C,p|_C}$ for the next step. This uses each original
+proper row: its internal postings need not give a proper coloring
+when combined with the positive background.
 
-Test the reconstructed prefixes in order, checking the first block
-by its table. Suppose the previous prefix $B$ has passed. For a
-background $q$, compute $D_q$ of \cref{core:lem:block-source-patterns}
-by enumerating core tables $h$ on the new block $W$. Discard $h$
-if, for some head $j\in W$ and proper coloring $(b,t)$ off $j$,
-\[
-        \pi_j(b,t)=0,\qquad b\preceq_B q,\qquad \pi_j^h(t)=1 .
-\]
-The first bit is given by the primes, with later inputs uncolored.
-Testing all losses here is equivalent to testing the minimal ones:
-a smaller loss has a smaller background, hence one still below $q$,
-and its internal pattern is still positive for $h$. Take the union
-of the surviving tables, using zero if there are none. Stream all
-proper $(q,d)$ to compare the required bits at the new heads with
-those of $D_q$. The block lemma gives exactly the prefix test.
+If $B=0$, no word on the extended prefix satisfying the rows can
+use an earlier input. Any occurrence supplies its own mark at the
+empty coloring, which would localize to the earlier prefix. Hence
+all earlier postings can be erased and every earlier factor is
+constantly true. This also starts the induction at the empty prefix.
 
-On a verified prefix the activation product in
-\cref{core:thm:block-source-extension} computes a comparison from
-one comparison on its preceding prefix and one on its local
-coefficient table. Computing the latter table as above asks for
-comparisons only on that same shorter prefix. Thus all recursive
-calls between prefixes strictly decrease the prefix length.
-Depth-first evaluation keeps at most one frame per component, each
-holding a polynomial number of input indices and bits, local tables,
-and workspace polynomial in their explicit length. With at most
-$N$ components and local arity at most $w+1$, this gives the stated
+For fixed $K,w$ enumerate the local term tables and their principals
+once, then test the displayed conditions directly. To preserve all
+$D_C$ keep one original row for each different internal loss retained
+in the pass. The new pass has identical local losses and coefficients
+by induction. There are at most $(K+1)^{|C|-1}$ patterns per head.
+\end{proof}
+
+\begin{corollary}[One internal posting owner per component]
+\label{core:cor:component-owner-marks}
+Suppose all postings from a component $C$ to its own heads have
+the same owner $r_C$. A specified marked query takes polynomial
+time on listed negatives, for arbitrary positive colorings and
+component sizes. At the uncolored query the same holds on complete
+canonical prime lists, without listing minimal zeros.
+\end{corollary}
+\begin{proof}
+By \cref{core:thm:conditional-component-capture}, each retained
+loss at $i$ with internal tail $A$ gives the Horn rule $A\to i$.
+For their closure $c$, the coefficient is a one-owner trace on
+$C\setminus c(\varnothing)$, or zero if this is empty.
+\Cref{core:thm:one-owner-activation-order} evaluates every nonzero
+coefficient's comparison by Horn closure on this support. Its
+source $i$ supplies the mark at $p$ exactly when
+$i\notin c((p_{r_C}\cap C)\setminus\{i\})$. Thus the component pass on a listed
+sample needs polynomially many closure computations.
+
+At the uncolored query only the live support of each coefficient is
+needed: an earlier comparison allows precisely the colorings leaving
+that support unposted, by \cref{core:thm:activation-faithfulness}.
+To compute $c(\varnothing)$ from primes, maintain the derived set $X$.
+For each underived head $i$ allow internal postings only at $r_C$
+on $X$, forbid postings on earlier live supports and on later inputs,
+and leave the remaining earlier inputs unrestricted. On each facet
+these exclusions form a guard. Some retained rule derives $i$
+exactly when one such guard contains no listed prime, since its box
+then contains a zero. Forward chaining therefore computes every
+live support in polynomial time.
+\end{proof}
+
+\begin{theorem}[Prime-guard complexity from source components]
+\label{core:thm:prime-component-space}
+Fix $K\ge3$ and let $N$ be the length of the complete canonical
+prime lists of an observer-agreeing antitone family. At bounded
+component size $w$, feasibility of a specified positive query is in
+coNP. It is polynomial for $w=1$ and coNP-complete already for
+disjoint two-cycles feeding one additional source, even with at
+most three exclusions per prime.
+
+If $c$ inputs belong to nontrivial components meeting the support of
+the positive coloring, the specified query takes time $f(K,w,c)N^{O(1)}$.
+In particular the uncolored query is polynomial at bounded $w$.
+For full realizability the complexity at bounded $w$ is coNP-complete
+already for acyclic dependence. At arbitrary $w$ full recognition uses
+deterministic space $N^{O(1)}2^{O_K(w)}$, hence polynomial space for
+$w=O(\log N)$.
+\end{theorem}
+\begin{proof}
+A posting belongs to a minimal zero on a facet exactly when it
+occurs in a prime, by minimal hitting-set duality. Thus the lists
+give the graph. For a failed query guess the subfamily in
+\cref{core:thm:component-mark-sweep}, check that each selected row
+is zero on a missing owner's facet, and run the explicit pass.
+For full recognition also guess the missing positive: a common word
+exists precisely when the individual positives can all be supplied,
+by union, provided there is at least one positive. A family with
+no positive bit has no realizer. The acyclic bounds for the two
+problems are \cref{core:thm:acyclic-marked-source-test,core:thm:complete-acyclic-guard-complexity}.
+
+For fixed-query hardness reduce 3CNF unsatisfiability. Remove
+redundant clauses containing another, taking nonempty clauses.
+Give each variable two inputs for its opposite literals, with a
+loss at each when the other is posted at $a$. Their only bounded
+binary operation is $\star_a$ by \cref{core:prop:binary}. At the
+positive post the first input of every pair at $a$. Its local
+principal admits exactly the colorings that do not put both
+literals at the same foreign color: this is $\theta_a$ of
+\cref{core:thm:profile-source-interval}, since the $a$-profile is
+disjunction. At the final head $h$ prescribe loss when the literals
+posted at $b\ne a$ meet every clause. On facets seeing $b$, the
+canonical primes exclude all the $b$-postings of one clause;
+the clause antichain makes these exactly the minimal such guards.
+The other facet has the empty guard. A loss passes the pair
+principals precisely when a consistent choice of literals meets
+every clause: a satisfying assignment uses only $b$-postings, and
+an allowed coloring cannot post opposite literals at $b$. Thus the
+$h$-mark is feasible exactly for an unsatisfiable formula.
+
+For the time bound, an earlier singleton block permits every posting
+if $D_U=0$, and otherwise only subcolorings of $p|_U$. An uncolored
+block permits exactly the colorings with no post on the support of
+$D_U$: each used source supplies its all-neutral mark, so the
+predicate $Q_j$ of \cref{core:thm:activation-faithfulness} excludes
+any post there; unused inputs have no effect. Enumerate the colorings
+on the remaining earlier blocks, involving at most $c$ inputs, and
+discard choices failing their local principals. Also enumerate the
+internal coloring $t$ at the head being tested. To test whether the
+local loss $t$ or a subcoloring is forced, allow every subcoloring
+of these choices, impose the indicated individual restrictions on
+earlier singleton and uncolored blocks, and leave later inputs
+unposted. On each observer facet these restrictions enable one
+guard. It contains a listed prime exactly when its entire box is
+positive. A zero in a tested box gives a retained internal loss
+below $t$, by antitonicity of the principals. Conversely every
+retained loss is tested at an observer absent from its coloring.
+Discard a candidate local word if any of its positive internal
+patterns admits such a loss. This computes $D_C$ within the claimed
 bound.
+
+For the general space bound, stream all positive probes through the
+pass. Each local table has at most $(2^K-1)^w$ entries. Its core
+membership is a subpower test on the explicit table, using space
+polynomial in its length by \cref{core:thm:subpower-complexity}.
+Compute $p'\preceq_D q$ on a local table $D$ by enumerating core
+tables above $D$ and below $D+X$ on one extra variable: none may
+separate the two bits in the forbidden direction. Zero allows every
+comparison. Testing a trial local word requires only a scan of
+original zero patterns and the already stored local tables.
+Storing the union of the successful tables at each prefix and this
+workspace costs $N^{O(1)}2^{O_K(w)}$ space. If agreement or canonicity
+is to be checked, scanning all patterns and candidate guards also
+uses polynomial space.
+\end{proof}
+
+\begin{corollary}[Distinct posting colors within each component]
+\label{core:cor:component-injective-marks}
+Suppose the postings from the head's own component have distinct
+colors in every negative row. A specified marked query on explicitly
+listed negatives takes polynomial time, with no bound on the sizes
+or number of components or on the repetitions in earlier components.
+At fixed $K\ge3$, feasibility from canonical prime lists is coNP-complete
+under this restriction on the minimal zeros, as is full realization.
+The specified uncolored query takes polynomial time even on the
+prime presentation.
+\end{corollary}
+\begin{proof}
+In the component pass there is no need to construct the table $D$
+of a component $C$. Let $S$ be its retained internal losses. For
+proper $b,p$ on $C$, the comparison $b\preceq_D p$ fails exactly
+when a word omitting $S$ supplies a fresh source $Y$ at $p$ while
+omitting it at $b$. Indeed an interval separator above $D$ is such a
+word. Conversely any witness $g$ lies below $D+Y$: each old source
+bit it supplies localizes to $C$, since no old loss posts $Y$, so
+the old contribution is bounded by $D$. Thus $D+g$ is an interval
+separator with the same $Y$-bits. For $D=0$ no witness can use an
+old input, by applying localization to its all-neutral mark; the
+projection $Y$ fails the new loss. This gives exactly the
+constantly true comparison at zero.
+
+Each comparison is therefore a marked test on $S$ with just one
+extra loss, at $Y$. Only that row can repeat a posting color, so
+\cref{core:thm:repeated-blocker-budgets} gives polynomial time.
+The final internal mark test has no repeated class. With listed
+negatives the pass makes polynomially many of these calls.
+
+At fixed $K$ only $O_K(n^K)$ internal rows can occur across all
+components: each has at most $K-1$ postings. One original row
+per retained internal pattern again certifies failure, giving the
+prime-input coNP bound for both problems. The marked lower bound
+in \cref{core:thm:prime-component-space} uses only singleton internal
+postings, and the full lower bound is already acyclic.
+
+At the uncolored query, determine the support of every $D$ by the
+internal uncolored mark tests. Earlier comparisons then merely
+exclude postings on these supports. For each possible injective
+internal pattern $t$, allow its subcolorings and these earlier
+postings, leaving later inputs unposted. As in the prime test above,
+one guard per facet decides whether the box contains an original
+zero. Keeping $t$ whenever it contains a retained internal loss
+gives the same bounded words. Enumerating the $O_K(n^K)$ patterns
+and using the explicit local test completes the pass.
 \end{proof}
 
 \begin{corollary}[Localizing monochromatic activation to one component]

@@ -286,6 +286,20 @@ lattice of remaining rows, and owner colorings classify those lattices
 (\cref{core:prop:guard-sequent,core:thm:offer-lattice}). There is a polynomial algorithm at
 bounded total width of the coalition orders, even with several repeating
 owners (\cref{core:thm:pointed-guard-cut,core:cor:alternating-transversal}).
+With one arbitrary loss per head, each posting colors a directed
+edge. An uncolored mark is possible exactly when following these
+edges reaches an unheaded input or a monochromatic cycle: backward
+induction on the input names gives a surviving head whenever every
+owner's edges decrease in its own order. With several losses per
+head the same obstruction uses a choice of one row per head when
+heads with several rows lie on monochromatic cycles of at most one color.
+With one loss per head and no monochromatic cycle, closing the endpoints
+of each edge tests the complete family in polynomial time. Allowing two losses per
+head already makes recognition coNP-complete, even if no two heads
+of the same owner are adjacent. With monochromatic cycles present,
+an admissible profile and all the boundary cuts together can still
+miss a forced singleton
+(\cref{core:lem:ranked-posting-survivor,core:thm:monochromatic-head-cut,core:cor:monochromatic-boundary-recognition,core:thm:two-monochromatic-losses,core:prop:monochromatic-cut-obstruction}).
 If each color class in a loss is independent in the graph joining
 heads to their postings, a query with no postings takes polynomial
 time. For an arbitrary query, the ordered-path test needs only
@@ -587,14 +601,22 @@ With three posting colors, deciding from primes whether even one
 layer suffices is NEXP-complete. This already holds on acyclic
 families guaranteed to have depth one or two
 (\cref{core:thm:succinct-layer-hardness}).
+For a specified positive, processing the source components in order
+gives a polynomial test on listed losses when component size is
+bounded, each row uses distinct posting colors inside its component,
+or all internal postings of each component have a common owner.
+With prime guards, a specified positive becomes coNP-complete already
+for disjoint two-cycles feeding one source.
 At arbitrary colors, polynomial space suffices when source components
 have logarithmic size, when polynomially many distinct coalitions
 remain after removing inputs posted at just one owner, or when only
 polynomially many offered coalitions meet their head's own component. Even with a
 short realizing word, the offer test for a single positive can require
-$2^{n-o(n)}$ rounds on $n$ inputs. Deleting ten inputs to break all
+$2^{n-o(n)}$ rounds on $n$ inputs whose cycles all pass through one
+input. The same bound in bits is needed to summarize an arbitrary
+offer history for all subsequent profile implications. Deleting ten inputs to break all
 cycles already allows PSPACE-hardness
-(\cref{core:thm:prime-component-space,core:thm:mixed-part-offers,core:thm:cyclic-coalition-space,core:prop:winning-offer-rounds,core:cor:source-feedback-hardness}). For unrestricted prime lists, the bounds remain PSPACE-hardness and
+(\cref{core:thm:component-mark-sweep,core:thm:prime-component-space,core:cor:component-owner-marks,core:cor:component-injective-marks,core:thm:mixed-part-offers,core:thm:cyclic-coalition-space,core:prop:winning-offer-rounds,core:cor:source-feedback-hardness}). For unrestricted prime lists, the bounds remain PSPACE-hardness and
 exponential space. A family outside the polynomial-space cases above
 must have superpolynomially many distinct coalitions meeting their
 heads' components after the singleton-forced losses are removed.
