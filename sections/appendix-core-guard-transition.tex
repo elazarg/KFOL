@@ -110,3 +110,80 @@ the canonical lists, as in \cref{core:thm:compact-depth-upper-bounds}.
 The state transition theorem gives the required number of slots;
 \cref{core:thm:completion-fold-schedule} yields the depth bound.
 \end{proof}
+
+\paragraph{Ordinary source queries.}
+The rail inputs can themselves require long witnesses. This matters
+when completing a compact family of upper bounds to a full prime list:
+even a single requested positive on a rail can preclude a cover by
+shallow terms.
+
+\begin{theorem}[Depth forced by an ordinary rail]\label{core:thm:rail-transition-depth}
+For every fixed $K\ge3$ and $l\ge2$ there are source bounds on the
+$8l$ rails of the counter, with $O_K(l^2)$ posting occurrences in
+their canonical prime lists and at most five per prime guard.
+One core operation respects the bounds and supplies each rail at
+every probe with that rail at $k\ne c$ and all other rails at $c$.
+For the rail selecting zero at the highest data bit of the $a$-group,
+any bounded witness supplying $a$ at this probe needs at least
+$l2^l-1$ owner slots. It also uses at least one $a$-group rail from
+every lower data bit.
+\end{theorem}
+\begin{proof}
+Use the bounds of \cref{core:cor:width-five-depth} on the rail
+sources, with no distinguished input. Add to each loss the condition
+that the rival group's owner postings meet every pair in its group.
+This is one clause of width two per pair and guarantees that some
+complete rival address is posted. Each loss still uses only one color
+per input, so facet minimization gives the claimed canonical bounds.
+The extra test holds at every equal-address and successor comparison.
+
+Include all valid addresses in the construction of the rail spine.
+The graph on valid addresses is acyclic: from any stage it halts or
+reaches stage zero with carry one, after which complete sweeps
+increment the data until overflow. In a topological order, attach
+the $c$-fold of $A_s$ at $a$ and then the $c$-fold of $B_s$ at $b$
+for each valid state $s$. Also attach the two helpers for every
+invalid address, in any order, at the beginning. Start this spine
+at a rail $v$.
+At a loss with a unique $c$-free address in the head's group, the
+loss clauses force that address to be valid. Only its helper can
+carry the mark, and the matching opposite reset follows it. At a
+loss with two $c$-postings in one of that group's pairs, no helper
+in the group can carry the mark. A contribution from the initial
+$v$ at a loss of $v$ is erased by the rival reset at some complete
+address, valid or invalid, which the new clauses guarantee.
+On the requested probe for $v$, no $a$- or
+$b$-helper can reset: each helper uses one rail per pair and hence
+contains a $c$-input. The union of the spines starting at the
+various rails supplies all the requested marks.
+
+For the lower bound, take $v$ to be the indicated high zero rail.
+From the initial state the first $H=l2^{l-1}$ states have high bit
+zero. Consider a path from an occurrence supplying $a$ at the probe
+for $v$ in any scheduled term. At each slot combine its siblings
+into one helper by associativity. On each comparison within these
+$H$ states, $v$ is still posted at $a$, and the $c$-postings are
+contained in the $c$-postings of the probe. No $c$-helper on the
+path can reset at the probe, so monotonicity of singleton profiles
+rules out its resetting on the comparisons. Owners other than
+$a,b,c$ have no atoms there. The $a$-helpers' reset positions depend
+only on the posted $A_s$ and the $b$-helpers' only on the posted
+$B_t$. Write $L_a(s)$ and $L_b(t)$ for their last such positions.
+
+On the equal-address comparison for the initial state $s_0$, the
+leaf supplies $a$ and the bounds omit $a$, so $L_b(s_0)$ exists.
+At each successor comparison for an edge $s\to t$, $L_b(s)$, if
+it exists, installs $b$, which the output must omit. Thus $L_a(t)$
+exists and is strictly later. At the equal-address comparison for
+$t$ this forces a later $L_b(t)$ in turn. The resulting chain has
+$2H-1$ distinct positions on the path.
+
+For a lower data bit $j$, take the prefix ending at stage zero
+with data $2^j$ and carry one. It still has high bit zero, and its
+address differs from $s_0$ in exactly bit $j$. If the term uses
+neither $a$-group rail at bit $j$, its $a$-helpers have the same
+reset positions at the two addresses. The chain ending with the
+last $a$-reset of this prefix would then give $L_a(s_0)>L_b(s_0)$.
+The initial equal-address comparison forces $L_b(s_0)>L_a(s_0)$,
+a contradiction.
+\end{proof}

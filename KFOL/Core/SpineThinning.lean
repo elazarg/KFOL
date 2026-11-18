@@ -54,6 +54,26 @@ theorem eval_le_with_last_reset (first keptFirst : List (Attachment Role))
     or_true, ite_true]
   exact eval_sublist_le_of_no_reset sub none _
 
+/-- A winner present at the start can disappear only at a helper which
+resets to a different owner. -/
+theorem exists_foreign_reset_of_not_mem_eval (steps : List (Attachment Role))
+    {x : WinnerSet Role} {r : Role} (present : r ∈ x.val) (absent : r ∉ (eval steps x).val) :
+    ∃ step ∈ steps, step.1 ≠ r ∧ Resets step := by
+  induction steps generalizing x with
+  | nil => exact (absent present).elim
+  | cons head tail ih =>
+    by_cases foreign : head.1 ≠ r ∧ Resets head
+    · exact ⟨head, by simp, foreign⟩
+    · have survives : r ∈ (WinnerSet.choice head.1 x head.2).val := by
+        by_cases resets : Resets head
+        · have same : head.1 = r := not_ne_iff.mp (fun ne => foreign ⟨ne, resets⟩)
+          have atom := (WinnerSet.choice_eq_owner_iff x head.2 head.1).2 (Or.inr resets)
+          rw [atom, same]
+          simp
+        · exact WinnerSet.subset_choice_of_right_ne _ _ _ resets present
+      obtain ⟨step, step_mem, step_resets⟩ := ih survives absent
+      exact ⟨step, List.mem_cons_of_mem _ step_mem, step_resets⟩
+
 /-- Retain the last matching position for each query that matches at all.
 The number of retained positions is bounded by the number of queries. -/
 theorem exists_last_positions {Letter Query : Type*} [Fintype Query]
