@@ -96,6 +96,285 @@ constant subwords. They cover every $x$-occurrence, and replacing them
 by their fixed atoms leaves a word without $x$ for the entire cofactor.
 \end{proof}
 
+\paragraph{Prescribing source guards with the singleton profiles fixed.}
+Let $V=H\mathbin{\dot\cup}W$, with both parts nonempty, and fix an
+admissible family $\phi_r:2^V\to\{0,1\}$ of singleton profiles.
+For each $h\in H$ prescribe its source predicate $P_h$ on $\mathcal D_W$.
+Thus inputs in $W$ may be posted at any owners, and all other heads in
+$H$ are uncolored. The profiles, in contrast, are prescribed on
+\emph{all} coalitions in $V$. Write $Z_h$ for the minimal zeros of
+$P_h$, and put $Z_v=\varnothing$ for $v\in W$.
+
+\begin{theorem}[Source guards on uncolored heads at fixed profiles]
+\label{core:thm:uncolored-head-profiles}
+A core word has profiles $\phi$ and the given source predicates on
+$\mathcal D_W$ if and only if the $P_h$ are antitone and the following hold.
+\begin{enumerate}
+\item If $P_h(t)=1$, then $\phi_r(t_r)=0$ for every $r$.
+\item For each choice of winning coalitions $A_r$ at all owners,
+some $v\in\bigcap_r A_r$ satisfies
+\[
+  \forall t\in Z_v\quad \exists q\in I:\quad
+             t_q\cap\bigcap_{r\ne q}A_r\ne\varnothing .
+\]
+\item For each owner $r$ and coalitions $A,B$ with
+$\phi_r(A)=1$ and $\phi_r(B)=0$, some $v\in A\setminus B$ satisfies
+\[
+ \forall t\in Z_v\quad
+ t_r\setminus B\ne\varnothing
+ \quad\text{or}\quad
+ \exists q\ne r:\ t_q\cap A\ne\varnothing .
+\]
+\end{enumerate}
+\end{theorem}
+\begin{proof}
+At a probe for $(h,t)$ choose an owner $k$ missing from $t$, give $h$
+the menu $I$, give posted inputs their atoms and all other inputs
+$I\setminus\{k\}$. These menus have exactly the singleton coalitions
+$t_r$, and only $h$ carries $k$. The probe reads the source bit since
+its foreign singleton tests and its input memberships of $k$ are
+unchanged from the canonical probe. A prescribed singleton therefore
+excludes the mark, proving the first condition.
+
+Call a word safe if it omits the mark at every listed zero. Consider
+one rainbow demand $(A_r)_r$ in (2) or one pair $(r,A,B)$ in (3).
+An eligible $v$ belongs to the displayed intersection or difference.
+If $v$ passes its test, start with $x_v$. For each $t\in Z_v$, attach
+a posted input $x_u$ by choice at its posting owner $q$, using the
+witness in the test. For (3) take $q=r$ and $u\in t_r\setminus B$
+in the first alternative. At that gate the posting absorbs the mark
+on its row. All attachments use inputs from $W$, so later gates
+cannot reintroduce it, and no other head occurs. In a rainbow the
+helper belongs to every foreign winning coalition. For a pair, an
+own-owner helper lies outside $B$ and a foreign helper belongs to
+$A$. Thus every gate preserves the demands of its predecessor.
+
+Conversely, if every eligible $v$ fails, select one offending row
+there. A term satisfying the demand cannot be singleton at any of
+these selected probes. Indeed a $q$-singleton wins on $t_q$, so in
+a rainbow common source gives an input in
+$t_q\cap\bigcap_{r\ne q} A_r$. For a pair at owner $r$, a
+$q$-singleton with $q\ne r$ similarly gives an input in $t_q\cap A$,
+and an $r$-singleton forces $t_r\setminus B\ne\varnothing$ by
+monotonicity. A safe term satisfying the demand would therefore take
+a union at its root on every selected row. Both children omit those
+marks, and the profile rules select one child retaining the demand.
+Descending on the selected rows ends at an eligible projection,
+contradicting its own selected loss. This proves the equivalence for
+each demand separately.
+
+The profile tables of the safe words form a relation closed under
+every owned gate. By \cref{core:thm:profile-relations} the two tests
+place $\phi$ in this relation: a partial rainbow extends with top
+coalitions at the missing owners, and a forced bit is tested by
+pairing it with its owner's top coalition. Let $s$ be a safe word
+with profiles $\phi$. For every $h\in H$, the greatest single-source
+completion from \cref{core:thm:source-completion} on $W\cup\{h\}$
+realizes $P_h$ and uses no other head. Take the union $u$ of these
+completions. Its bit at $(h,t)$ is exactly $P_h(t)$, since only its
+$h$-summand can carry the mark. Now $u\del s$ has exactly the
+profiles of $s$. At a desired positive, (1) makes $s$ ambiguous and
+reset adds the mark from $u$. At a zero both words omit it, by
+antitonicity and safety. This realizes the whole family.
+\end{proof}
+
+In fact the construction gives the greatest completion on all menus.
+Write $C_\phi$ for the greatest profile completion and $F_{P_h}$ for
+the single-source completion on $W\cup\{h\}$. Whenever the tests pass,
+the greatest operation with the specified profiles and source predicates is
+\begin{equation}\label{core:eq:fixed-profile-block-maximum}
+                 C_\phi\ \cap\ \bigcup_{h\in H} F_{P_h}.
+\end{equation}
+The intersection is pointwise. Indeed at any full coloring $p$ away
+from $h$, a supplying $h$ must already supply at $p|_W$, by
+antitonicity. Source reconstruction therefore bounds every realizer by
+$u=\bigcup_hF_{P_h}$, which retains all passive inputs. In particular
+$s$ from the proof is also bounded by $u$: its zeros on $\mathcal D_W$
+include all the specified zeros. At a prescribed singleton $u$ contains
+that winner, and elsewhere $C_\phi$ returns the whole input union.
+Thus $u\del s$ realizes exactly the displayed intersection.
+
+\begin{corollary}[Complete guards after accounting for prescribed singletons]
+\label{core:cor:profile-residual-guards}
+Given a complete antitone, observer-agreeing guard family, reconstruct
+its candidate $F$ by \cref{core:thm:source-guards}. Read $\phi_r(A)$
+by testing $F=\{r\}$ with $A$ at $\{r\}$ and the remaining inputs at
+$I$. Write $U_j(p)=[\forall r,\ \phi_r(p_r)=0]$ on proper colorings
+away from $j$. Require $\phi$ to be admissible and $P_j\le U_j$ for
+all $j$. Let $H$ be the heads $j$ with $P_j\ne U_j$, and
+$W=V\setminus H$. Suppose every minimal zero $p$ with $U_j(p)=1$
+posts only inputs in $W$. Then the complete family is realizable
+if and only if conditions (2) and (3) above hold for the predicates
+restricted to colorings on $W$ at the heads in $H$.
+\end{corollary}
+\begin{proof}
+A realizer must have the profiles read at the stated valuations.
+For $h\in H$ the hypothesis gives, on every proper coloring,
+\[
+                 P_h(p)=U_h(p)\land P_h(p|_W).
+\]
+Indeed, if $U_h(p)=1$ then it is also one at every subcoloring. Any
+loss below $p$ thus contains a minimal loss supported on $W$.
+Formula \eqref{core:eq:fixed-profile-block-maximum} has exactly these
+bits, as its marked probe is either a competing singleton or the union
+of the indicated completions. The other heads have bits $U_j$.
+When $H$ is empty use $C_\phi$. If $H=V$, each head has a minimal
+loss with $U_j=1$, necessarily at the empty coloring, so every head
+is unused and (2) fails on the top coalitions.
+\end{proof}
+
+\begin{corollary}[Recognition after deleting losses forced by singletons]
+\label{core:cor:profile-residual-height}
+Draw arrows from posted inputs to heads using only
+minimal losses $p$ with $U_j(p)=1$. At fixed $K$, recognition from
+complete canonical prime lists is in coNP when these arrows form a DAG
+of bounded height. It is coNP-complete at height at most two and
+PSPACE-complete at unrestricted acyclic height, even with the generators
+of principal singleton profiles supplied in the hardness examples.
+\end{corollary}
+\begin{proof}
+The bit $\phi_r(A)$ is read by a single evaluation of the reconstruction.
+A violation of admissibility or of $P_j\le U_j$ has a polynomial
+certificate. Otherwise omit only the indicated minimal losses.
+Every other minimal loss is automatic at profiles $\phi$. By
+\cref{core:thm:profile-relations} a safe word with profiles $\phi$
+exists exactly when every winning rainbow and every same-owner
+winning/losing pair is feasible under these omissions. To realize the
+full table it remains to supply each positive under the same omissions:
+reset the union of the positive witnesses by the safe profile word.
+It is ambiguous on each positive probe by $P_j\le U_j$.
+Thus a failure specifies one rainbow, pair or positive.
+\Cref{core:thm:bounded-height-guard-certificate} gives a polynomial
+certificate for that failure. Each cited loss can be checked from
+the primes by testing the coloring and its single-posting deletions,
+and by computing $U_j(p)$. For hardness, the depth-two acyclic
+instances of \cref{core:thm:complete-acyclic-guard-complexity}
+already have polynomial complete prime lists. Removing losses only
+deletes arrows. At arbitrary acyclic height the same primitive tests
+use polynomial space by \cref{core:thm:bounded-height-guard-certificate}:
+enumerate the coalitions and colorings, checking membership in the
+remaining minimal losses from $P_j$ and $U_j$. The reduction in
+\cref{core:thm:complete-guard-pspace} has precisely the acyclicity
+required here and supplies its canonical primes in logarithmic space.
+\end{proof}
+
+\Cref{core:thm:uncolored-head-profiles} also allows a finite list of requested positives $(h,p)$ in
+which other heads may be posted, while all prescribed zeros still
+post only $W$. Replace (1) by the two conditions
+$\phi_r(p_r)=0$ for every $r$ and
+$t\nsubseteq p|_W$ for every $t\in Z_h$. Both are necessary.
+For sufficiency use in the reset construction at $h$ the downset
+generated by the restrictions $p|_W$ of its requested positives.
+The resulting summand reads only $h$ and $W$, so posting other heads
+at a positive does not affect its contribution.
+
+For the complete predicates on $\mathcal D_W$, (2) and (3) can
+also be read directly from their canonical positive prime lists.
+For each demand write $R_q$ for the passive inputs that qualify
+as helpers at $q$ in its displayed test. At observer $k$ form the
+guard forbidding every posting $(u,q)$ with $u\in R_q$ and
+$q\ne k$. It enables exactly the colorings with no qualifying helper.
+An eligible head $v$ works for this demand if and only if at each
+observer the guard contains a listed prime for $v$. An eligible
+passive input works unconditionally. It suffices to use minimal
+winners for the $A_r,A$ and maximal losers for $B$, since enlarging
+a winning coalition or shrinking a losing one only adds witnesses.
+To check (1), test the pure coloring $A:r$ for each minimal winning
+$A\subseteq W$ and each head: positivity at any coloring with an
+$r$-singleton would imply positivity there. These tests take polynomial
+time at fixed $K$ given the primes on $\mathcal D_W$ and the extremal
+coalitions of the admissible profiles.
+
+Individual feasibility at different heads need not imply joint
+feasibility. Take $H=\{x,y\}$, $W=\{u,v\}$ and three profiles, written
+as monotone Boolean formulas,
+\[
+ \phi_0=xu(y\lor v),\qquad \phi_1=yu(x\lor v),\qquad \phi_2=xyv .
+\]
+Every minimal winning rainbow has a common input: if owner $0$ takes
+$xyu$ then $y$ is common, if owner $1$ takes $xyu$ then $x$ is common,
+and otherwise $v$ is common. Require $x$ to lose when both passive
+inputs are posted at $1$, and $y$ to lose when both are posted at $0$.
+For the first loss, a gap at owner $0$ or $2$ has a passive input in
+its winning coalition. For a gap at owner $1$ with $A\setminus B=\{x\}$,
+$y,u\in B$ and $v\notin B$ since $B$ loses, so $v$ is a helper. Every
+rainbow has either a common input other than $x$ or a helper: if the
+minimal $0$-coalition is $xyu$ then $y$ is common, and otherwise the
+$0$- and $2$-coalitions share $v$. Thus $x$ can lose as required.
+Swapping $x,y$ and $0,1$ gives the other omission. Together the losses
+fail (2) on $(xyu,xyu,xyv)$: the only common inputs are $x,y$, and for
+either loss the two foreign coalitions meet only in $\{x,y\}$.
+
+For one head $h$, this gives a distributive lattice with explicit
+endpoints. For $t\in\mathcal D_W$ put $U(t)=[\forall r,\ \phi_r(t_r)=0]$.
+Put $L(t)=1$ if (2) or (3) fails with the single loss $Z_h=\{t\}$.
+These definitions use only coalitions and the given profiles.
+
+\begin{corollary}[The range of one source at fixed profiles]
+\label{core:cor:fixed-profile-source}
+The predicates at $h$ realized by words with profiles $\phi$ are
+exactly the antitone $P$ with $L\le P\le U$. Equivalently they are
+in bijection, under restriction, with the downsets of
+$\{t:L(t)=0,\ U(t)=1\}$ in the induced order.
+For unanimity profiles $\phi_r(A)=[A=V]$, they are precisely the
+antitone predicates containing every coloring that uses at most one owner.
+\end{corollary}
+\begin{proof}
+The proof of the theorem identifies $L(t)=1$ with failure to omit
+$t$ at profiles $\phi$, so $L$ is the intersection of the attained
+predicates. Their maximum is $U$ by \cref{core:prop:profile-maximum}.
+For each demand in (2) or (3), an eligible input in $W$ works for
+every row. If there is no such input, the only eligible input is $h$,
+by admissibility. It works on a list exactly when it works on each
+row individually. Thus the tests on all zeros reduce to $L\le P$.
+The inverse to restriction adjoins the downset $\{t:L(t)=1\}$.
+
+For unanimity, $U=1$ and every rainbow has a passive common input.
+The only gap without a passive witness has $A=V$, $B=W$. At owner
+$r$ its test reads $t_q\ne\varnothing$ for some $q\ne r$. Hence a
+loss is allowed exactly when at least two owners are posted.
+\end{proof}
+
+The intersection also has a term construction. For two words $s,u$
+with profiles $\phi$, replace every $h$-leaf of $s$ by $u$.
+At a coalition $A$ this changes its $h$-bit to $\phi_r(A)$.
+Changing one input of a monotone Boolean function to its current
+output preserves that output, so the profiles stay $\phi$. At a
+marked probe the new bit is the conjunction of the two old bits:
+if $u$ loses the mark no input supplies it, and if $u$ supplies it
+then $u$ is ambiguous and has the same foreign singleton tests as
+the old $h$-input. Iterating gives a word $s$ attaining $L$. For
+any unrestricted single-source predicate $P$ realized by $u$, reset
+$u\del s$ then attains $L\lor(P\land U)$ at the prescribed profiles.
+
+The same substitution limits how often a head must be tested in a
+general obstruction, even when the other heads depend cyclically on
+one another.
+
+\begin{corollary}[One loss per unposted head]
+\label{core:cor:unposted-head-omissions}
+Fix the singleton profiles and any list of positive source queries.
+In an inclusion-minimal infeasible list of additional losses, a head
+with two losses must itself be posted at a loss of another head where
+the prescribed output is ambiguous.
+\end{corollary}
+\begin{proof}
+Suppose $h$ is never so posted. If each of its losses separately fits
+all the other heads' losses and the positives, combine the witnesses
+by successive substitution at $h$. Its own bits intersect. At a
+different head $j$, read the probe with $j$ carrying the ambiguous
+menu $I$. If the fixed profiles prescribe a singleton, every combined
+word has that singleton. Otherwise the substituted word is ambiguous.
+On a loss the old $h$-menu was also ambiguous, so no singleton test
+changes, and neither word supplies the mark. On a positive the only
+input carrying the mark before substitution was $j$. Replacing $h$
+by an ambiguous menu can only erase a foreign posting at $h$; by
+antitonicity $j$ still supplies the mark. Thus every common requirement
+is preserved. Two or more losses at $h$ would each fit the other heads
+by minimality, contradicting infeasibility.
+\end{proof}
+
+\paragraph{Occurrences of one source.}
 An \emph{owner box} on $\mathcal D_W$ is a predicate
 $\bigwedge_r B_r(E_r)$, where each $B_r$ is antitone on $2^W$ and
 $B_r(\varnothing)=1$. Define $b(P)$ as the least number of owner boxes

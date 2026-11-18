@@ -24,11 +24,23 @@ occurrence count
 (\cref{core:thm:source-completion,core:cor:source-box-rank}). These guards
 also determine whether fixing other inputs to owner singletons makes the
 source irrelevant (\cref{core:cor:colored-cofactor-dependence}).
+Fixing the complete singleton profiles restricts the predicates of one
+source to an explicit interval of downsets. Several sources can be
+prescribed together on colorings of the remaining inputs: each demand on
+winning coalitions must admit an eligible input whose losses can all
+be absorbed by compatible postings. This also recognizes complete
+families when, after accounting for the singleton outputs, no remaining
+minimal loss posts another head with such a loss. If the remaining
+arrows form a DAG, prime-list recognition is coNP-complete at height
+two and PSPACE-complete at unrestricted height
+(\cref{core:thm:uncolored-head-profiles,core:cor:profile-residual-guards,core:cor:profile-residual-height,core:cor:fixed-profile-source}).
 
 Several simultaneous compatibility problems also have closed solutions.
 Acyclic source dependence admits an exact criterion and an ordered-spine
-construction (\cref{core:thm:acyclic-source-guards}). Checking that
-criterion on complete prime guards is coNP-complete even for a
+construction. To supply a single mark, one pass in source order suffices:
+each loss at a source must post some already active predecessor
+differently from the queried coloring
+(\cref{core:thm:acyclic-source-guards,core:thm:acyclic-marked-source-test}). Checking compatibility on complete prime guards is coNP-complete even for a
 dependency graph of depth two, but takes polynomial time if the underlying
 graph has no triangles or four-cycles
 (\cref{core:thm:complete-acyclic-guard-complexity,core:thm:girth-five-cofactor}).
@@ -72,7 +84,9 @@ preorder (\cref{core:lem:block-source-patterns,core:thm:conditional-component-ca
 Without any restriction on the source graph, minimal zeros in which
 each color occurs at most once admit a polynomial reachability test.
 Every positive query then has a witness built by attaching single-owner
-folds to its source (\cref{core:thm:injective-blockers}). Singleton-profile
+folds to its source. The polynomial test extends to arbitrary repetitions
+when each color posts at most one input that is itself a negative head
+(\cref{core:thm:injective-blockers,core:thm:repeated-blocker-budgets}). Singleton-profile
 demands account for every remaining case on three inputs, at any $K$;
 ten valuations suffice to witness failure
 (\cref{core:cor:ternary-uniform-interpolation}). With unanimous profiles
@@ -90,7 +104,7 @@ For several repeating owners, the inputs posted at both of any two
 owners suffice for their joint singleton tests. For a bounded positive color class, only the sizes of connected
 components of these overlaps matter for fixed-parameter tractability
 and linear obstruction size: every feasible rainbow or gap already has
-a witness in one connected component of the negative rows
+a witness on the directed ancestors of one eligible input
 (\cref{core:thm:component-profile-factorization,core:cor:connected-palette-overlaps}). For disjoint color classes a single closure law on the minimal
 zeros suffices: choosing one zero per head and eliminating acyclic
 same-color dependencies forces zeros on the external inputs alone
@@ -320,7 +334,7 @@ Polynomial-size prime lists still allow $2^{n-o(n)}$; width four
 already allows exponential growth. A separate counting bound for
 any fixed prime width applies to arbitrary operations
 (\cref{core:thm:interval-mask-locality-rate,core:thm:compact-prime-locality,core:cor:compact-locality-rate,core:thm:prime-width-locality}). At fixed $K$ and a bounded
-number of distinct repeated color classes in the minimal zeros, a
+number of distinct repeated color classes containing a head of a minimal zero, a
 nonrealizable guard family has a witness on only linearly many valuations
 (\cref{core:cor:input-guard-cuts,core:cor:repetition-locality}).
 In the prime obstruction
@@ -544,8 +558,8 @@ families by choices of coalitions and a final common input. The
 terminal test can read the prime guards directly. The number of
 alternating choices can grow with the input. Recognition is
 PSPACE-complete with both canonical presentations supplied, already
-with at most four minimal zeros per head
-(\cref{core:thm:complete-guard-pspace}). Even counting monadic second-order logic, with sets of
+with at most four minimal zeros per head and explicit principal singleton
+profiles (\cref{core:thm:complete-guard-pspace}). Even counting monadic second-order logic, with sets of
 incidence edges, cannot define realization on the listed entries.
 This excludes a fixed test using sets of guards and postings,
 connectivity and modular counting
@@ -573,11 +587,17 @@ With three posting colors, deciding from primes whether even one
 layer suffices is NEXP-complete. This already holds on acyclic
 families guaranteed to have depth one or two
 (\cref{core:thm:succinct-layer-hardness}).
-For arbitrary colors the polynomial-space upper bound extends to source
-graphs with logarithmic component size; deleting ten inputs to break
-all cycles already allows PSPACE-hardness
-(\cref{core:thm:prime-component-space,core:cor:source-feedback-hardness}). The general prime-only problem
-with unboundedly many minimal zeros has no matching upper bound here.
+At arbitrary colors, polynomial space suffices when source components
+have logarithmic size, when polynomially many distinct coalitions
+remain after removing inputs posted at just one owner, or when only
+polynomially many offered coalitions meet their head's own component. Even with a
+short realizing word, the offer test for a single positive can require
+$2^{n-o(n)}$ rounds on $n$ inputs. Deleting ten inputs to break all
+cycles already allows PSPACE-hardness
+(\cref{core:thm:prime-component-space,core:thm:mixed-part-offers,core:thm:cyclic-coalition-space,core:prop:winning-offer-rounds,core:cor:source-feedback-hardness}). For unrestricted prime lists, the bounds remain PSPACE-hardness and
+exponential space. A family outside the polynomial-space cases above
+must have superpolynomially many distinct coalitions meeting their
+heads' components after the singleton-forced losses are removed.
 Whether the prime covering test can dispense with the auxiliary
 coalition trees by using another intrinsic structure remains open.
 
@@ -3786,7 +3806,8 @@ word, which would separate the original rows at $a$.
 
 How many different repeated coalitions can an obstruction require?
 For a family of negative source queries let $d$ count the distinct pairs
-$(r,t_r)$ with $|t_r|\ge2$ in its rows. Write $n=|V|$.
+$(r,t_r)$ with $|t_r|\ge2$ whose coalition contains a negative head.
+Write $n=|V|$.
 
 \begin{corollary}[Locality with bounded repetition]
 \label{core:cor:repetition-locality}
@@ -3811,13 +3832,13 @@ reachability witness for each singleton color in that row preserve
 all heads and reachable sets, even if any further rows of $S$ are
 retained. This costs at most $C=n\min(K,n)$ rows.
 
-For each repeated pair $(r,A)$ in $S$, its branch fails. Choose one
+For each pair $(r,A)$ eligible to branch in $S$, its branch fails. Choose one
 failed primitive conjunct there. By induction it already fails on at
 most $f(d-1)$ of the rows left after dropping those with $A\subseteq t_r$.
 Add these rows to the forest and head witnesses for every branch.
 On the resulting family every projection still fails and every tail
-lies in its owner's reachable set. Every repeated pair still present
-came from $S$. Its branch still contains the chosen failing subfamily,
+lies in its owner's reachable set. Any pair eligible to branch in this reduced family was eligible in $S$,
+since its heads also occurred in $S$. Its branch still contains the chosen failing subfamily,
 so the enlarged family fails the original test. This gives
 $f(0)\le C$ and $f(d)\le C+d f(d-1)$, yielding the displayed bound.
 
@@ -3831,17 +3852,18 @@ bits. The profile tests within the proof use no additional sample valuations.
 
 The exponential threshold in \cref{core:thm:exponential-locality}
 requires exponentially many distinct repeated coalitions at fixed $K$.
-Indeed, if $d_r$ distinct repeats have color $r$, its tail is empty,
+Here count all repetitions, including those disjoint from the heads. If
+$d_r$ distinct repeats have color $r$ and $D=\sum_r d_r$, its tail is empty,
 a singleton, or one of those $d_r$ coalitions. A proper coloring omits
 some owner. Hence even before any pruning there are at most
 \[
  n\sum_{c\in I}\prod_{r\ne c}(n+1+d_r)
- \ \le\ Kn(n+1+d)^{K-1}
+ \ \le\ Kn(n+1+D)^{K-1}
 \]
 different negative rows. A $2^m$-point-interpolable guard candidate
 with no global realizer needs at least $2^m$ minimal negative rows,
 by the positive-bit argument above. For the Gray construction
-$n=2m$, so $d\ge (2^m/(Kn))^{1/(K-1)}-n-1$.
+$n=2m$, so $D\ge (2^m/(Kn))^{1/(K-1)}-n-1$.
 \input{sections/appendix-core-pair-intervals}
 
 \input{sections/appendix-core-principal-profiles}

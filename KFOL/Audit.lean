@@ -289,6 +289,10 @@ import all KFOL.Core.AtomicInterpolation
 import all KFOL.Core.BoundedGeneration
 import all KFOL.Core.FiniteInterpolation
 import all KFOL.Core.SourceNormalForm
+import all KFOL.Core.ProfileSourceFiber
+import all KFOL.Core.SingleSourceCompletion
+import all KFOL.Core.PassiveProfileBounds
+import all KFOL.Core.AcyclicSourceQueries
 import all KFOL.Core.SourceReciprocity
 import all KFOL.Core.FacetPosting
 import all KFOL.Core.SquareSourceObstruction

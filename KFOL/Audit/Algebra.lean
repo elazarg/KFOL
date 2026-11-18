@@ -34,6 +34,10 @@ import all KFOL.Core.BichainCubeCuts
 import all KFOL.Core.CompletionDepthChain
 import all KFOL.Core.CompletionSuspension
 import all KFOL.Core.AddressedGuards
+import all KFOL.Core.ProfileSourceFiber
+import all KFOL.Core.SingleSourceCompletion
+import all KFOL.Core.PassiveProfileBounds
+import all KFOL.Core.AcyclicSourceQueries
 import all KFOL.Core.SourceReciprocity
 import all KFOL.Core.FacetPosting
 import all KFOL.Core.SquareSourceObstruction

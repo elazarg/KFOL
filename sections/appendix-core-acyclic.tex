@@ -166,6 +166,67 @@ forced singleton. The core singleton-profile factorization identifies
 these forcing coalitions with $\Phi_r(F)$, giving the final formula.
 \end{proof}
 
+\paragraph{Partial observations in a source order.}
+For a list of negative source queries the same ordered spines give
+an explicit test for each possible positive, even when no complete
+source predicates have been prescribed.
+
+\begin{theorem}[One pass for an acyclic marked sample]
+\label{core:thm:acyclic-marked-source-test}
+Suppose every negative $(h,t)$ posts only predecessors of $h$ in a
+fixed input order. Fix a proper coloring $p$. Process inputs in order,
+declaring $h$ active if every negative at $h$ has a posting $u:r$
+at an earlier active input with $u\notin p_r$.
+Then a word omitting all negatives supplies the mark at $h$ under
+$p|_{V\setminus\{h\}}$ exactly when $h$ is active. A successful
+query has an ordered spine with at most $1+K(n-1)$ leaves; a failure
+already follows from at most one given row per inactive input.
+
+For each fixed $K\ge3$ this sample problem on explicit negatives is
+$\mathrm P$-complete under logspace reductions, even at the empty
+positive coloring with only one posting owner. For complete canonical
+prime lists with acyclic source dependence the same test on a specified
+positive takes polynomial time, without enumerating minimal zeros.
+\end{theorem}
+\begin{proof}
+For active $h$ start at $x_h$. In decreasing order of the earlier
+active inputs $u$, attach $x_u$ once by $\star_r$ for each $r$ with
+$u\notin p_r$. At the positive no such attachment captures the mark.
+If a source $v$ occurring on this spine is marked on a negative
+$(v,t)$, its activation gives an earlier active $u$ with $u:r$ in
+$t$ and $u\notin p_r$. The $r$-attachment at $u$ occurs after
+every occurrence of $v$, absorbing its mark. An absent head cannot
+emit one. Thus the spine omits all the negatives.
+
+For each inactive $v$ keep one row $(v,t)$ for which all postings
+at active predecessors agree with $p$. Fix just the postings of
+$p$ on active inputs. For every word omitting the kept rows, the
+resulting cofactor is independent of each inactive input. Induct
+in source order: when comparing two valuations differing only at
+$v$, set the inactive predecessors posted in $t$ to their indicated
+atoms in both valuations. The induction hypothesis preserves both
+outputs. The two changed valuations now extend $t$, so their outputs
+agree by \cref{core:cor:colored-cofactor-dependence}. This proves the
+induction. In particular an inactive $h$ remains inessential on
+fixing all postings of $p$ other than at $h$, and the same cofactor
+law excludes the requested mark.
+
+The pass takes polynomial time. For hardness encode monotone circuit
+value \cite{Goldschlager1977}, querying its output at the empty
+coloring. A true input has no negative, a false input an empty one.
+At an AND gate give two rows, each posting one predecessor; at an
+OR gate give one row posting both. Use the same owner throughout.
+Activation reads precisely the gate value, and the construction is
+computable in logspace.
+
+With canonical primes use the order read from posting occurrences
+in the prime lists. At each observer $k$ and head $h$ form the guard
+consisting of $(u,r)$ with $u$ earlier and active, $r\ne k$, and
+$u\notin p_r$. Every zero on that facet has a mismatching active
+posting exactly when this guard is sufficient, equivalently when it
+contains some listed prime. The test must pass on every facet.
+\end{proof}
+
 \paragraph{Complexity for complete guard families.}
 Here every source bit is specified. The lists of prime sufficient guards
 and of minimal zeros can both be short even when deciding realization

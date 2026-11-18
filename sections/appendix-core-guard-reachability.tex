@@ -211,7 +211,8 @@ gives a set of vertices $L_r$ for each prospective gate owner $r$:
      &B\ \text{if }r=k,\quad V\setminus A\ \text{otherwise}.
 \end{array}
 \]
-The empty selection in $R$ asks for any bounded word. Let $D_r$ be
+The empty selection in $R$ asks for any bounded word. Write $h(S)$
+for the heads occurring in $S$. Let $D_r$ be
 the vertices reachable on the edges $u\to j$ with $t_r=\{u\}$,
 starting from $L_r$ and all heads $j$ of rows $(j,t)\in S$ with
 $|t_r|\ne1$. Put $S_r=\{(j,t)\in S:t_r\subseteq D_r\}$.
@@ -233,13 +234,16 @@ For each of $M,R,G$, the following rules decide feasibility.
 \item If $S_r\subsetneq S$ for some $r$, replace $S$ by $S_r$,
 keeping the condition. Any such $r$ may be used.
 \item Otherwise try each distinct $(r,A)$ with $A=t_r$ and $|A|\ge2$
-in some row of $S$. Drop all rows with $A\subseteq t_r$ and add the
+in some row of $S$ such that $A\setminus L_r$ meets $h(S)$.
+Drop all rows with $A\subseteq t_r$ and add the
 demand $r:A$ to the requested condition. Test the resulting conjunction
 as above. Success requires at least one successful choice.
 \end{enumerate}
-Only the third rule branches on a repeated class. Along a branch it
-is used at most once per distinct repeated pair $(r,A)$, and at most
-once per row containing a repeated class.
+Only repeated classes containing a negative head can branch, and each
+such pair $(r,A)$ or row can be used at most once along a branch.
+In particular, arbitrary repetitions among inputs that are never heads,
+together with arbitrary singleton dependencies between heads, admit a
+polynomial test.
 \end{theorem}
 \begin{proof}
 First justify the conjunction tests. Take one representative of every
@@ -275,9 +279,18 @@ the foreign test on $A$. Thus attachment preserves the condition in
 each case. Restriction proves the converse.
 
 At the third rule a successful branch supplies an atom $\{r\}$ on every
-dropped row. To prove necessity suppose instead that there is a shortest
-witness but no branch succeeds. No witness can win on a repeated
-$t_r$, since it would pass that branch. At an $r$-root both children
+dropped row. Conversely, every current $r$-class lies in
+$D_r\subseteq L_r\cup h(S)$, since every reachability edge ends at a head.
+If a class $A$ lies in $L_r$, no witness can win $r:A$. For $M$ it
+would absorb at $p$. For $R$ the class misses the intersection of the
+foreign demands, contrary to the common-source property. For $G$ it
+is contained in the losing coalition $B$ if $r=k$, and is disjoint
+from the winning coalition at $k$ otherwise. Thus every winning repeated
+class passes the branching condition.
+
+Suppose now that there is a shortest witness but no branch succeeds.
+No witness can win on a repeated $t_r$, since it would pass that branch.
+At an $r$-root both children
 therefore fail to absorb on the $r$-repeated rows, and also on rows
 with empty $t_r$. They omit those marks. By singleton-profile
 absorption, both lose the $r$-profile on each of these singleton heads.
@@ -297,20 +310,31 @@ repetition and all occurrences of that pair.
 
 On an explicitly listed sample the first two rules take polynomial
 time between branches: each strict restriction drops at least one row.
-With just one row containing repetitions, at most $K$ branches remain;
-each adds one demand and leaves only singleton or empty color classes.
-More generally, for $d$ distinct repeated pairs the running time is
-$2^{O(d^2+d\log(d+1))}$ times a polynomial in the explicit input
-length when starting from a marked query. There are at most $d$
-exceptional choices per level, at most $d$ levels, and at most $d+1$
-demands in any conjunction, hence at most $2^{d+1}$ rainbow tests
-per choice. This also decides an explicit joint guard table by testing
-its maximal positive bits against its minimal zeros.
+If only one row has a repeated class meeting $h(S)$, at most $K$
+choices need be tried and none of the smaller budgets branches.
+More generally, let $d$ count the distinct repeated pairs $(r,A)$
+with $A\cap h(S)\ne\varnothing$ in the initial sample. The running time
+for a marked query is $2^{O(d\log(d+1))}$ times a polynomial in its
+explicit length. Indeed each choice needs only two smaller tests:
+the original condition and that condition with its $r$-entry replaced
+by $r:A$, in the assignment notation of \cref{core:thm:pointed-guard-cut}
+below. Their $r$-choice meets the original condition and the added
+demand; conversely a common witness solves both tests. At most $d$
+choices branch at each of at most $d$ levels.
+For a marked query $d$ can be reduced further. Its projection
+suffices if $i\notin h(S)$. Otherwise apply
+\cref{core:lem:unmarked-background} with $H=h(S)$ first:
+keep just the rows whose postings outside $H$ are contained in $p$,
+and erase those outside postings. It now suffices to count distinct
+$(r,t_r\cap H)$ of size $|t_r\cap H|\ge2$. In particular, each
+color may occur arbitrarily often in a row without any branching
+if at most one of its postings there is at a negative head. Testing
+each maximal positive bit against the minimal zeros decides an
+explicit joint guard table.
 
 \paragraph{Obstructions on subfamilies of the given queries.}
 For arbitrary repetitions one can use just one coalition per owner.
-Fix the positive $(i,p)$ and a set $Z$ of negatives. Write $h(S)$
-for the heads of $S\subseteq Z$. A partial assignment $a$ selects,
+Fix the positive $(i,p)$ and a set $Z$ of negatives. A partial assignment $a$ selects,
 for each owner in its domain, a nonempty coalition occurring at that
 owner in $Z$. Define the eligible inputs by
 \[

@@ -1,3 +1,214 @@
+\paragraph{Which coalitions must be offered?}
+Let $W_r$ consist of the inputs posted at $r$ in the minimal losses,
+and let $M$ consist of the inputs belonging to at least two of the
+$W_r$. Call the remaining inputs private. For each owner $r$ let
+$P_r$ count the different sets $t_r\cap M$ in minimal losses
+$(j,t)$ with $t_r\ne\varnothing$; the empty intersection counts if
+it occurs.
+
+\begin{theorem}[Offers with at most one private input]
+\label{core:thm:mixed-part-offers}
+In the game of \cref{core:cor:alternating-transversal} it suffices
+to offer, at $r$, a nonempty coalition of the form
+\[
+                 (t_r\cap M)\cup U,\qquad
+                 U\subseteq t_r\setminus M,\quad |U|\le1,
+\]
+from a remaining minimal loss $(j,t)$. Consequently at most
+$(n+1)\sum_rP_r$ rounds suffice on $n$ inputs. With $N$ the length
+of the complete prime lists, recognition takes deterministic space
+$N^{O(1)}(1+\sum_r P_r)$. In particular it is in PSPACE if the
+number of distinct mixed parts is polynomial in $N$, if
+$|M|=O(\log N)$, or if every $|t_r\cap M|$ is bounded by a fixed
+constant.
+\end{theorem}
+\begin{proof}
+Use the marked, gap and rainbow tasks of
+\cref{core:thm:pointed-guard-cut}, with each register entry
+contained in its owner's palette. Two facts from the proof of
+\cref{core:thm:palette-overlap} apply to every remaining budget $S$.
+First, a feasible rainbow at two or more owners has a witness on
+$M$: the two chosen owners persist throughout the two-child
+construction, so every eligible projection is in their palette
+intersection. Second, a feasible $r$-gap has a witness built from
+projections, $r$-folds and shells $H_{s,g}(x)=(x+g)\star_s g$,
+with $s\ne r$ and $g$ on mixed inputs. That construction works for
+any demanded $r$-coalition inside $W_r$: its own-owner steps replace
+the demand and its foreign steps keep it in a two-owner rainbow.
+If such a witness wins the $r$-test at $t_r$, it wins on $t_r\cap M$
+together with at most one private member of $t_r$. Follow a winning
+child at each $r$-fold. At a shell both $x$ and $g$ win the test;
+the mixed part already suffices for $g$. Only the terminal projection
+can require a private input. The same conclusion holds for a
+mixed-only word.
+
+Consider a feasible state with no fitting projection. For a marked
+task descend through children retaining the task until a witness is
+singleton on a row of $S$. If that singleton is $r$, the witness
+meets the $r$-gap at $t_r,p_r$. The preceding normal form for this
+gap supplies an offer of the displayed size. For a rainbow with at
+least two owners descend instead within a mixed-only witness. A
+singleton at a row gives an offer $t_s\cap M$ at its owner $s$.
+In both descents a word ambiguous on every row passes all omissions
+to both children, one of which retains the task.
+
+For a one-owner $r$-gap take a witness in the indicated normal
+form. A row with output $\{r\}$ gives the restricted offer by the
+terminal argument. An output $\{s\}$ with $s\ne r$ supplies a
+feasible rainbow consisting of the original $r$-demand and $s:t_s$.
+Its mixed-only witness still wins on $t_s\cap M$. If every row
+is ambiguous, descend at an $r$-fold to a child retaining the gap.
+At a shell with no absorption, both $x$ and $g$ omit all marks,
+both win the required $r$-test and at least one loses on $p_r$.
+Continue in that child. Inside a mixed-only word ordinary descent
+preserves the support and the gap. All descents end in a fitting
+projection or in one of the singleton cases above.
+
+In each singleton case the old task and the updated task are both
+feasible on $S$ itself, hence on the budget left by the offer.
+Conversely every such offer is sound by the original two-child
+construction. At least the chosen loss is removed, so no offer
+repeats on a branch. The displayed round bound counts these offers.
+
+For the space bound enumerate one coloring and head at a time.
+Loss and minimality are tests against the input primes and single
+posting deletions. These scans also give $M$ and enumerate all
+candidate offers. Traverse the two responses depth first, saving one
+offer, register and enumeration position per round. Whether a
+scanned row remains is read from the saved offers. Each frame takes
+polynomial space in $N$, including the owner indices when $K$ varies:
+the complete presentation has a list for each head and observer.
+Enumerating positive probes reuses the space. Finally
+$P_r\le 2^{|M|}$, and if the mixed parts have size at most $d$ then
+$P_r\le\sum_{j=0}^{d}\binom nj$.
+\end{proof}
+
+\begin{proposition}[Sharp exponential rate for winning transcripts]
+\label{core:prop:winning-offer-rounds}
+At fixed $K\ge3$ the maximum necessary number of rounds on $n$
+inputs has base-two logarithm $n+o(n)$. The lower bound holds for
+a single feasible positive query
+of a complete family with polynomial-size canonical prime lists,
+even when a polynomial-size primitive word witnesses the query and
+all coalitions may be offered.
+\end{proposition}
+\begin{proof}
+The upper bound is $K(2^n-1)$. Take distinct owners $r,s$, a head
+$h$, and $d\ge2$ disjoint blocks $B_1,\ldots,B_d$ of size $m$
+indexed cyclically. Fix $1\le k\le m$. At $h$ prescribe a loss when
+every block has at least $k$ postings at $r$. At each $v\in B_l$
+prescribe a loss when at least $m-k+1$ members of $B_{l+1}$ are
+posted at $s$. At $h$ each prime excludes the $r$-postings of
+$m-k+1$ inputs in a single block: these are the minimal hitting
+sets of the choices of $k$ inputs per block. At $v$ each prime
+excludes the $s$-postings of $k$ members of the successor block,
+by the same hitting-set calculation. An observer hiding the
+posting color has the empty prime.
+
+Ask for $h$ with every block posted at $s$. For $B_l$ take the
+$r$-fold $T_l$ of all $s$-folds of its $k$-subsets. Its
+$r$-profile wins when at least $k$ inputs in $B_l$ are posted at
+$r$. Its $s$-profile wins when the $s$-postings hit every such
+subset, hence when there are at least $m-k+1$ of them. Therefore
+$h\star_r(T_1\star_s\cdots\star_s T_d)$ witnesses the query.
+The inner fold gives $r$ on every $h$-loss and gives $s$ both at
+the positive and on every block-head loss.
+
+On the all-decline branch every block-head loss remains: an offer
+covering one would demand an $s$-win on a subset of $p_s$ while
+losing on $p_s$ in the acceptance branch. To cover a minimal
+$h$-loss an offer must be $r:A$ with $A$ inside its $r$-postings.
+The acceptance branch gives a word winning $r:A$ and omitting every
+block-head loss. At each $r$-gate keep a child winning $r:A$ and at
+every other gate keep both. The remaining nonempty support $H$ lies
+in $A$. Every $r$-gate takes union on each block-head row, so pruning
+only decreases menus there and preserves omissions. If $v\in
+H\cap B_l$, then $H$ must hit every $(m-k+1)$-subset of $B_{l+1}$:
+posting a missed subset at $s$ leaves all retained inputs ambiguous,
+so their union transmits $v$'s mark. Consequently $H$ contains at
+least $k$ inputs of every block around the cycle. The offer $A$
+covers only the chosen minimal $h$-loss. Since $h$ is the only
+eligible terminal, all $\binom{m}{k}^{d}$ such losses must be covered.
+
+Already $m=2,k=1$ gives $2^d$ offers with linear-size lists and word.
+For general $n$ take $m=\lfloor\log_2 n\rfloor$,
+$k=\lceil m/2\rceil$ and $d=\lfloor(n-1)/m\rfloor$, giving the
+remaining inputs the empty prime on every facet. The prime lists
+and word use $O_K(nm2^m)$ entries and symbols. Since
+$\binom mk\ge2^m/(m+1)$ and $dm=n-O(m)$, the logarithm of the
+lower bound is $n-O(n\log m/m+m)$.
+\end{proof}
+
+\begin{theorem}[Counting coalitions inside source components]
+\label{core:thm:cyclic-coalition-space}
+Draw the arrows from postings to heads of the given losses. Count
+the distinct offers $(r,t_r)$ for which some row $(j,t)$ has an
+input of $t_r$ in the strongly connected component of $j$; write
+$q$ for their number. A marked query, rainbow or signed gap can be
+decided in space polynomial in $n,K,q$ and the space for testing
+membership in the input loss set. For complete prime lists the same
+space bound applies to recognition, counting offers only in the
+residual minimal losses of \cref{core:cor:profile-residual-height}.
+In particular, polynomially many such coalitions suffice for PSPACE,
+with no bound on component size or on the number of other losses.
+\end{theorem}
+\begin{proof}
+Rank the components in topological order. At a row of rank $t$ call
+a nonempty offer \emph{lower} if all its inputs have rank less than
+$t$; otherwise it is one of the $q$ counted offers. Its rank in the
+latter case is the maximum rank in the coalition, independently of
+the row that offers it. As in
+\cref{core:thm:bounded-height-guard-certificate}, the task $P[e]$
+updated at an offer $e$ can be tested on the initial segment through
+that maximum rank. The new positive demand is supported there and
+the segment contains all its ancestors. A witness on the segment
+ignores all higher heads. If the updated task succeeds after removing
+all rows covered by $e$, its witness also omits those rows, by the
+positive test at $e$.
+
+For a task $P$ on a budget $B$ through rank $k$, sweep ranks
+$t=0,\ldots,k$. Keep the survivors of earlier ranks fixed. At rank
+$t$ discard each row having a lower offer whose updated task succeeds
+on these earlier survivors. Its lower witness omits every other
+rank-$t$ or higher loss, so the two-child construction allows deletion
+of this single row. Next, for each counted offer $e$ of a surviving
+rank-$t$ row, test $P[e]$ on the survivors through $t$ after removing
+all rows covered by $e$. Upon success, record $e$ and delete all its
+covered rows from the budget, then repeat until no further offer
+succeeds. No such deletion reaches earlier ranks. Each step preserves
+feasibility by the two-child construction. A row surviving the
+finished sweep has no successful updated task: its lower tests used
+the final survivors below its rank, and its counted offers were
+tested against the final survivors through its rank. Localization and
+the shortest-word descent of \cref{core:thm:pointed-guard-cut} now
+give success exactly when a projection fits.
+
+For space, store the outer budget predicate $B$, the task $P$ and
+the list of recorded offers, of length at most $q$. Membership of
+a row in the survivors through a processed rank is tested by
+membership in $B$, exclusion of the recorded offers that cover it,
+and failure of its lower offers on the earlier survivors. The same
+test works during the counted-offer loop at its current rank;
+lower eligibility there is already fixed. A recursive test of
+$P[e]$ passes this description by reference and, for a counted
+offer, excludes the tested $e$ as well. A lower test on a row of
+rank $t$ has ceiling at most $t-1$, including when recomputing an
+older survivor predicate. At unchanged ceiling a new solver call
+therefore tests a counted offer of that rank, excluding it throughout
+the descendant budget. No such offer repeats along that segment
+of the call stack. Ceilings never increase, so at most $n+q+1$
+solver calls are simultaneously active. Membership tests between
+successive calls only consult successively older stored budgets,
+also of polynomial depth. Each frame stores polynomially many bits;
+scans over rows and the final projection test reuse the space.
+
+For complete prime input, scan proper colorings to test minimal
+loss and whether the reconstructed profiles force it. This also
+computes the residual posting graph in polynomial space. Enumerate
+the profile tests and positive queries of
+\cref{core:cor:profile-residual-height}, reusing the same workspace.
+\end{proof}
+
 \paragraph{A covering condition directly on the prime lists.}
 The negative rows can be eliminated from the statement. Take a finite
 rooted tree with edges labeled by pairs $(r,A)$, where $r$ is an owner

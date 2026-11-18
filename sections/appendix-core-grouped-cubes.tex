@@ -467,11 +467,15 @@ Depth-first evaluation uses polynomial space.
 
 \begin{theorem}[Two-color interpolation is PSPACE-complete]
 \label{core:thm:two-color-pspace}
-Deciding $P(Z,X,Y)$ is PSPACE-complete, even when $X\setminus Y$ is
-a singleton and each negative row colors at most three inputs, all in
-one of two colors. For every fixed $K\ge3$, feasibility of listed source bits is also
-PSPACE-complete with these monochromatic negatives and a single positive
-at the empty coloring.
+Deciding $P(Z,X,Y)$ is PSPACE-complete even when $X\setminus Y$ is
+a singleton, each negative row colors at most three inputs in one
+color, and the directed graph from posted inputs to the heads of $Z$
+is acyclic. For every fixed $K\ge3$ the same holds for a core word
+omitting $Z$ with the signed gap $\Phi_c(X)=1$, $\Phi_c(Y)=0$,
+or with the two positive tests $\Phi_c(X)=\Phi_b(V\setminus Y)=1$.
+With a single positive source at the empty coloring, listed source-bit
+feasibility is also PSPACE-complete for monochromatic negatives of
+size at most three.
 \end{theorem}
 \begin{proof}
 Reduce truth of a prenex quantified Boolean formula with CNF matrix
@@ -534,6 +538,17 @@ incident labels, so the extra monochromatic rows encoding their
 profile demands satisfy the same bound. The initial difference is a
 singleton and the construction has polynomial size.
 
+For the posting graph of $Z$, put the permanently unmarked labels
+first, then the occurrence labels, then all control labels in
+decreasing order of the lower level of their edges. Each occurrence
+is marked only by its resource row, which posts only a permanent
+label. A control row at level $j$ marks a label on edges between
+levels $j-2$ and $j-1$. Every control label it posts is on an
+incident edge of lower level $j-1$ or $j$. This includes the
+rectangles spanning both edges at a split or a merge: those edges
+have the same lower level. The clause tree and its test paths also
+use successive levels. Thus all posting-to-head arcs point forward.
+
 A true formula gives a winning strategy. Request the next vertex on a
 single-successor edge, the chosen vertex at an existential split, or each
 successor in turn at a universal split. If all these requests are declined,
@@ -558,10 +573,20 @@ current edge and otherwise challenge to an empty cell. Thus only true literal oc
 single successors along the false clause. Its last edge has only a
 still-marked literal label, and neither endpoint is a branch vertex.
 The same response to the remaining requests prevents any win. This proves hardness;
-polynomial-space membership follows from the recursion. The source-bit
-version follows by encoding the endpoint demands as in
-\cref{core:thm:two-repeater-hardness}; membership follows from
-\cref{core:thm:pointed-guard-cut}.
+polynomial-space membership follows from the recursion.
+
+For the signed gap, distribute observer union to write the view of
+a core witness as a union of pure bichain formulas, as in
+\cref{core:thm:two-repeater-hardness}. Every summand omits every
+mark in $Z$. On the Boolean input $X$ every summand must be $c$.
+On $Y$ the union loses the $c$-singleton test, so at least one
+summand is $b$ there. This summand is a pure separator and satisfies
+both positive tests. Conversely a pure separator gives both forms
+of the profile demand. Keeping those demands as tests leaves the
+acyclic budget just proved. Encoding them instead as additional
+monochromatic rows gives the stated source-bit version by
+\cref{core:thm:two-repeater-hardness}; its space bound follows
+from \cref{core:thm:pointed-guard-cut}.
 \end{proof}
 
 The remaining rows can contain information which the current endpoints
@@ -599,8 +624,11 @@ is PSPACE-complete from the list of minimal zeros, including when
 all canonical prime sufficient guards are also supplied. The reductions
 use logarithmic space. Hardness holds with at most four minimal zeros
 per source and at most four literals per prime guard, with nonempty
-reconstructed outputs and agreement across observers. On this restricted
-class recognition from the prime guards alone is likewise PSPACE-complete.
+reconstructed outputs and agreement across observers. All singleton profiles
+are principal and their generating coalitions may be supplied. The posting graph
+of the minimal losses remaining after deletion of those forced by
+singleton profiles is acyclic. On this restricted class recognition from
+the prime guards alone is likewise PSPACE-complete.
 \end{theorem}
 \begin{proof}
 Use the three-posting reduction of \cref{core:thm:two-color-pspace}.
@@ -637,19 +665,24 @@ both profile demands, so omits all of $Z$. It uses every input in
 $W$. Thus the two conditions both encode truth of the quantified
 formula. Each head in $W$ has acquired at most two endpoint rows.
 
-Give each row $z=(j,t_z)$ a distinct complete binary code $e_z$
-on fresh selector inputs $J$, using singleton postings $b,c$.
-A nonempty $J$ of size $1+\lceil\log_2(|Z|+1)\rceil$ suffices.
+Use complete binary codes $e_z$ on fresh selector inputs $J$, with
+postings $b,c$. Give every $c:X$ endpoint row the all-$c$ code and
+every $b:W\setminus Y$ endpoint row the all-$b$ code. Give the
+original marked rows distinct codes using both colors. A set $J$ of
+size $1+\lceil\log_2(|Z|+1)\rceil$ suffices.
 Define $C$ by retaining the selectors and prescribing on $W$
 just the minimal zeros $(j,e_z,t_z)$. These rows are proper, since
-they omit $a$, and distinct codes are incompatible. The operation
-$C$ is core for every instance. Indeed in
-\cref{core:lem:unmarked-background} at most one row survives at
-any positive internal query. The single-loss family on $W$ is
-realized by \cref{core:thm:source-completion}, retaining all other
-inputs. If the positive has the head of that loss, its coloring
-lies outside the zero upset. With no surviving row a projection
-suffices. Union of the witnesses and the selectors gives $C$.
+they omit $a$. In \cref{core:lem:unmarked-background} at most one
+code survives at a positive internal query. A mixed code leaves
+just one loss on $W$, realized by \cref{core:thm:source-completion}.
+For the all-$c$ code use the greatest profile completion on $W$
+whose $c$-profile wins exactly on coalitions containing $X$, with
+unanimity at every other owner. This is admissible since $X$ is
+nonempty. It returns $c$ whenever $X$ is posted at $c$ and the
+whole input union otherwise, giving exactly the endpoint losses.
+The all-$b$ code works the same way with $W\setminus Y$.
+With no surviving code use a projection. Union of the witnesses
+and the selectors gives $C$ for every instance.
 
 The complete target $F$ keeps the listed internal zeros and adds,
 at each selector head, the single zero posting every member of
@@ -665,6 +698,27 @@ Outside the first case every selector supplies all its winners.
 In the first case every internal input is the $a$ singleton and
 an internal source supplies $a$: the original losses all require
 nonempty $b$- or $c$-postings on $W$. The output is always nonempty.
+
+In fact the singleton profiles of $F$ are principal. Their generators are
+\[
+    W\quad(a),\qquad J\cup X\quad(c),\qquad
+    J\cup(W\setminus Y)\quad(b),\qquad J\cup W\quad(r\notin\{a,b,c\}).
+\]
+The cap returns $a$ when all of $W$ is $a$. Otherwise every selector
+is retained, so a singleton output $r$ requires all selectors to be
+$r$. For $r=a$ no internal loss is then enabled and the input union
+contains a foreign winner. For $r=c$ only the all-$c$ endpoint code
+can suppress an input. It gives $c$ when all of $X$ is $c$, and any
+foreign winner at an input of $X$ survives. The argument for $b$
+uses its endpoint code. At every remaining owner no code is enabled
+when all selectors take its atom, so unanimity is necessary and sufficient.
+
+The selector losses and both families of coded endpoint losses are
+therefore forced by the singleton profiles. Every mixed-code original
+loss has neither all selectors posted at one owner nor all of $W$
+posted at $a$, so these are exactly the remaining losses. Their
+posting arcs add only arrows out of $J$ and the unheaded padding
+input $s$ to the acyclic graph of \cref{core:thm:two-color-pspace}.
 
 For a yes instance take the padded word $g$. It lies below $C$
 at every valuation, since each forbidden internal bit at a coded
@@ -701,7 +755,8 @@ clauses to a power of two by repeating its last clause and index the
 tree as a binary heap. The successors, marked labels, rectangle
 incidences, and endpoint rows can now be enumerated with a fixed
 number of logarithmic counters, rescanning the formula for occurrences
-of a prescribed sign. Each selector code is the row index in binary.
+of a prescribed sign. Reserve the two constant selector codes and
+enumerate the other codes by original row index.
 Finally enumerate sorted sets of up to four postings and check by
 rescanning the at most four facet zeros that the set hits each,
 and ceases to do so upon removing any one posting. This streams both
@@ -716,9 +771,7 @@ per head need be stored, so this also uses polynomial space.
 \end{proof}
 
 For unrestricted prime lists alone, this proves PSPACE-hardness.
-Enumerating all minimal zeros gives an exponential-space upper bound;
-the polynomial-space upper bound above uses their explicit list or
-the bound on their number.
+Enumerating all minimal zeros gives an exponential-space upper bound.
 
 \begin{proposition}[Distinguishable word contexts for a single target]
 \label{core:prop:prime-target-syntactic-algebra}
@@ -779,10 +832,10 @@ bare tails. Each head has at most four tails of at most four inputs,
 including the padded endpoint coalitions. Every induced undirected
 subgraph has average degree at most $32$, so successive deletion
 of a vertex of degree at most $32$ and coloring in reverse order
-gives at most $33$ independent classes. Use two nonempty classes
-if only one was needed. Assign all rows with heads in the same
-class the same six-bit selector code. At any background at most
-one class $H$ is active. Its tails lie entirely in $W\setminus H$.
+gives at most $33$ independent classes. Keep the two constant
+codes for the endpoint rows and assign the original rows of each
+class a common mixed six-bit code. At a mixed-code background at
+most one class $H$ is active. Its tails lie entirely in $W\setminus H$.
 For each $j\in H$ its single-source completion on $j$ and those
 passive inputs respects all its losses. Their union with the
 passive inputs realizes exactly the required class, since none of
@@ -814,16 +867,8 @@ A source dependence $u\to j$ requires $u$ to occur in a tail at
 $j$, since each loss is given by containing a listed pattern.
 The selector postings, both endpoint tails, and the posting of $s$
 on each original row therefore contribute no remaining arc.
-Order the remaining labels as follows. First come the permanent
-labels, which no original row marks. Next come the literal-test
-labels: the resource row marking one posts only its permanent
-label. Finally order the control labels by decreasing level of
-the edges they label. A control row at level $i+2$ marks a label
-on one or two edges between levels $i$ and $i+1$. Every control
-label it posts lies on an edge incident to its own vertex, between
-levels $i+1,i+2$ or $i+2,i+3$. It therefore comes strictly earlier
-in the order. This gives a topological order of the induced graph,
-including the clause-selection and literal-test paths.
+Every remaining arc belongs to the acyclic posting graph of
+\cref{core:thm:two-color-pspace}.
 The six-selector construction gives polynomial-time hardness;
 the four-zero bound gives PSPACE membership by
 \cref{core:thm:complete-guard-pspace}.
