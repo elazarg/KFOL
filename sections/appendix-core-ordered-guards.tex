@@ -145,8 +145,11 @@ omitting the marks of $S$ has $\Phi_r(A)=1$ and $\Phi_r(B)=0$.
 \label{core:thm:palette-overlap}
 For each $r$ form the finite alphabet of pairs $(s,g)$, where $s\ne r$
 and $g$ is a core term operation on $D_{rs}$. An empty $D_{rs}$
-contributes no letter. Write $b_r$ for the alphabet size and
-$L_r=\sum_{h=0}^{b_r} b_r!/(b_r-h)!$.
+contributes no letter. Write $b_r$ for the alphabet size and put
+\[
+ h_r=\sum_{s\ne r}(2^{|D_{rs}|}-1),\qquad
+ L_r=\sum_{h=0}^{\min(b_r,h_r)} b_r!/(b_r-h)! .
+\]
 The following test recognizes an arbitrary marked query $(i,p)$:
 \[
  \forall S\subseteq Z:\qquad
@@ -158,6 +161,8 @@ $nL_r$ paths as described below. At fixed $K,d$ the test takes
 polynomial time in the explicit sample size. More precisely its time
 is $f(K,d)$ times a fixed polynomial, for a computable $f$.
 An impossible query is witnessed by at most $1+n\sum_rL_r$ negatives.
+For fixed $K$ the parameter factor in the time and locality bounds
+can be taken to be $2^{2^{O_K(d+1)}}$.
 \end{theorem}
 \begin{proof}
 In the two-child construction of \cref{core:thm:pointed-guard-cut},
@@ -181,9 +186,11 @@ belong to the smaller budget of the offer, so both operands omit
 their marks. The gap is preserved since $\Phi_r(H_{s,g}(x))=
 \Phi_r(x)\land\Phi_r(g)$. Normalize the primary witness on the
 smaller budget obtained by dropping \emph{all} rows where $g=\{s\}$.
-This letter can never again be needed on that path: a foreign offer
-always absorbs on a remaining row. Thus the letters along a path are
-distinct.
+Each such letter absorbs on a remaining row. Charge it to
+$(s,t_s\cap D_{rs})$ at that row. This intersection is nonempty,
+and the letter absorbs on every row with the same intersection.
+Neither this charge nor the same letter can recur on the path.
+Thus a list of distinct letters of length at most $h_r$ suffices.
 
 A path $w$ consists of such an ordered list followed by an input $v$.
 For a prefix length $k$ and coalition $C$, put
@@ -225,7 +232,10 @@ that removal. Each gap system computes all its positive answers at
 once for the fixed $B=p_r$. Its size and the work of Horn closure are
 polynomial in the number of paths and the explicit input length.
 The catalogues are computable by closure on the operation tables of
-arity at most $d$ on the fixed $2^K-1$ menus. For the locality bound,
+arity at most $d$. With $q=2^K-1$ menus there are at most $q^{q^d}$
+tables per owner pair, and $h_r\le(K-1)(2^d-1)$. Enumerating the
+catalogues and the lists of length at most $h_r$ gives the displayed
+doubly exponential factor. For the locality bound,
 take a failing $S$ and, for each owner, keep one justifying row for
 each noninitial path discard, in derivation order. Keep also a row
 headed by $i$. With the same catalogues these rows reproduce every

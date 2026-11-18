@@ -327,8 +327,8 @@ Depth-first evaluation uses polynomial space.
 \begin{theorem}[Two-color interpolation is PSPACE-complete]
 \label{core:thm:two-color-pspace}
 Deciding $P(Z,X,Y)$ is PSPACE-complete, even when $X\setminus Y$ is
-a singleton and each negative row uses only one of the two colors.
-For every fixed $K\ge3$, feasibility of listed source bits is also
+a singleton and each negative row colors at most three inputs, all in
+one of two colors. For every fixed $K\ge3$, feasibility of listed source bits is also
 PSPACE-complete with these monochromatic negatives and a single positive
 at the empty coloring.
 \end{theorem}
@@ -362,27 +362,48 @@ to $W$. The row of $W$ marks one label on $(B,T),(B,F)$, and the row of
 $D$ marks one label on $(T,W),(F,W)$. Both pairs of edges are rectangles.
 The next quantifier starts at $(W,D)$. All these control labels are fresh.
 
-For each signed literal add one resource row on the side opposite its
-corresponding branch vertex $T$ or $F$. Its cell with that vertex alone has
-a fresh, permanently unmarked label. Replacing the current endpoint by this resource vertex reaches an
-unmarked coordinate exactly when the other endpoint is its branch vertex. At the final common edge $(A,B)$ add a vertex $C$ adjacent to $B$
-for every clause. Their rows all mark the same label on $(A,B)$. The mark
-of each literal resource labels precisely the cells $(B,C)$ whose clause
-contains that literal, again a rectangle. There are no further labels.
-The initial difference is a singleton,
-and the instance has polynomial size.
+For each literal occurrence add a resource row opposite the vertex of
+its sign. A branch vertex and all its occurrence resources carry one
+permanently unmarked label on the rectangle joining them. A requested
+resource thus gives an immediate win on replacement exactly when the
+other endpoint is its branch vertex.
+
+Choose a clause by a binary tree of universal splits. At an edge
+$(A,B)$ the two children are adjacent to $B$ and both mark the same
+fresh control label on $(A,B)$. Continue independently at the two
+child edges. At a leaf a single successor starts a path testing the
+literals of its clause in order. Each test edge carries the mark of
+the corresponding occurrence resource. Except at the last literal it
+also carries a fresh control label marked by its unique successor.
+Separate consecutive test edges by a single edge with just a control
+label for the next move. The edge leading into a clause path likewise
+has only a control label. One may assume all clauses are nonempty.
+Every label introduced here occupies a rectangle, with no other cells
+labeled.
+
+The number of colored inputs of a row is the number of different
+labels incident to its vertex. A variable branch sees its two control
+labels and at most one resource label. A merging vertex sees one
+control label on its pair of branch edges and at most two on the
+other side. A clause-selection vertex has at most three single-label
+edges, while a clause-path vertex lies on at most one test edge and
+one single-control edge. Each occurrence resource sees only its
+permanent label. The initial endpoints also have at most three
+incident labels, so the extra monochromatic rows encoding their
+profile demands satisfy the same bound. The initial difference is a
+singleton and the construction has polynomial size.
 
 A true formula gives a winning strategy. Request the next vertex on a
 single-successor edge, the chosen vertex at an existential split, or each
 successor in turn at a universal split. If all these requests are declined,
 the edge's control label is unmarked. Accepting any request advances along
-the corresponding branch. On reaching a branch vertex, request its literal
-resource: acceptance gives the permanently unmarked label; declining records
-the chosen literal by removing its row. At the clause split, request each
-clause in turn. Every accepted clause has a true literal already unmarked.
+the corresponding branch. On reaching a branch vertex, request each of its occurrence resources.
+Acceptance gives the permanent label; if all are declined, their marks
+are now free. In every selected clause the path reaches a true literal
+with a free mark, unless the opponent releases a control label earlier.
 
 For a false formula the opponent follows a falsifying universal strategy,
-and designates a false clause at the last split. At any edge of successive
+and follows a path to a false clause in the clause tree. At any edge of successive
 levels $i,i+1$, accept an intended successor at level $i+2$, except that at
 a universal split or the clause split only the designated successor is
 accepted. Declining its siblings leaves their common label marked. A request
@@ -392,11 +413,10 @@ only such later vertices adjacent to this edge are its successors. Decline
 requests for control vertices at level at most $i+1$: their marks occur
 only on edges of earlier levels. Challenge an incorrectly oriented request.
 For a literal resource, decline exactly when its branch vertex is on the
-current edge and otherwise challenge to an empty cell. Hence only literals
-of the assignment followed can lose their resources. The designated false
-clause has no unmarked label, and neither endpoint there is a literal's
-branch vertex. The opponent can continue declining irrelevant requests and
-challenging the rest until the rows are exhausted. This proves hardness;
+current edge and otherwise challenge to an empty cell. Thus only true literal occurrences can lose their resources. Accept the
+single successors along the false clause. Its last edge has only a
+still-marked literal label, and neither endpoint is a branch vertex.
+The same response to the remaining requests prevents any win. This proves hardness;
 polynomial-space membership follows from the recursion. The source-bit
 version follows by encoding the endpoint demands as in
 \cref{core:thm:two-repeater-hardness}; membership follows from
