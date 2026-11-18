@@ -66,6 +66,7 @@ import all KFOL.Core.OfferLattice
 import all KFOL.Core.DecreasingPaths
 import all KFOL.Core.TransversalContexts
 import all KFOL.Core.LayerInterpolation
+import all KFOL.Core.OwnerFoldClosure
 import all KFOL.Core.IntervalMinorant
 meta import Lean.Elab.Command
 

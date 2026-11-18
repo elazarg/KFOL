@@ -1,0 +1,94 @@
+\subsection{Forcing the bounds at an owner fold}
+\label{app:core-owner-folds}
+
+At a fold of one owner, each row can absorb only to that owner's atom.
+This determines which bounds all the children must meet and allows
+several positive requests to be tested on the same pool.
+Fix an owner $r$, a finite set of rows $Q$, upper bounds $A_i\subseteq I$,
+and a pool $C$ of permissible child columns in $\Pow^Q$. A finite list
+of observations can require an atom $\{a\}$, forbid that atom, or require
+the winner $a$ at a specified row $i$. The table gives the resulting
+tests on children of a nonempty $\star_r$-fold. An empty entry imposes
+no condition.
+\[
+\begin{array}{ccll}
+\text{Observation at }i & \text{Case}& \text{Every child }c & \text{Some child }c \\
+\hline
+\text{Require }\{a\} & r=a & & c(i)=\{a\} \\
+ & r\ne a & c(i)=\{a\} & \\
+\text{Forbid }\{a\} & r=a & c(i)\ne\{a\} & \\
+ & r\ne a & & c(i)\ne\{a\} \\
+\text{Require }a & r=a & & a\in c(i) \\
+ & r\ne a & c(i)\ne\{r\} & a\in c(i)
+\end{array}
+\]
+In fact the fold gives $\{r\}$ if a child does and otherwise gives the
+union. In particular a foreign singleton requires unanimous children.
+
+Let $B\subseteq C$ be the child columns satisfying every universal
+test in the table. For $S\subseteq Q$ put
+\[
+ C(S)=\{c\in B:\forall i\in S,\ c(i)\subseteq A_i\},\qquad
+ F(S)=\{i\in Q:\ r\notin A_i\text{ or no }c\in C(S)
+                              \text{ has }c(i)=\{r\}\}.
+\]
+Starting at $S=\varnothing$, iterate $F$ to its least fixed point $S_*$.
+As $S$ grows the pool $C(S)$ shrinks, so $F$ is monotone and the
+iteration makes at most $|Q|$ strict increases.
+
+\begin{theorem}[Greatest pool for an owner fold]\label{core:thm:owner-fold-closure}
+There is a nonempty finite fold of columns from $C$ meeting all bounds
+and observations if and only if $C(S_*)$ is nonempty and each
+existential test in the table has a witness in $C(S_*)$. Every such
+fold uses only columns in $C(S_*)$. Moreover, any finite set of columns
+in $C(S_*)$ can be included in a successful fold when the tests pass.
+\end{theorem}
+\begin{proof}
+Every child of a successful fold lies in $B$. If they all lie in
+$C(S)$, then on a row of $F(S)$ there is no child that can absorb to an
+allowed atom. The bound at that row therefore requires every child to
+obey it. Induction gives containment in $C(S_*)$ and proves necessity.
+
+For sufficiency start with any finite set of columns in $C(S_*)$ and
+one default column there. Include one witness per existential test and,
+on each row outside $S_*$, one column giving the allowed atom $\{r\}$.
+The latter witnesses exist because $F(S_*)=S_*$. At rows in $S_*$
+all chosen columns obey the bounds, and outside $S_*$ the chosen atoms
+absorb. The universal tests hold on every chosen column, so together
+with the witnesses they give the required observations.
+\end{proof}
+
+A schedule is a finite word of owners. At its first slot use a
+nonempty fold of that owner on any columns supplied by the suffix;
+at the empty schedule use a projection. A unary fold can skip a slot.
+To decide observations at a slot, compute $S_*$ by one suffix test
+per repair query, with the universal observations and the current
+bounds in $S$, and with the atom $\{r\}$ required at the queried row.
+At stabilization the same suffix tests check nonemptiness and the
+individual existential requests, each on the fixed bounds $S_*$.
+For a fixed schedule length the number of queries is polynomial in
+the explicit observation list. In each slot there are at most
+$|Q|(|Q|+1)$ repair queries and one final query per existential request
+in addition to the nonemptiness test. All requests in the recursion
+are still bounds, atom requirements or prohibitions, or winner
+requirements on the same rows.
+
+\begin{corollary}[A uniform schedule for finite samples]\label{core:cor:owner-fold-schedule}
+On a nonempty finite set $Q$ of sample rows, repeat any fixed listing
+of the $K$ owners $K|Q|$ times. A core term satisfies the sample bounds
+and observations exactly when the test for this schedule succeeds.
+In particular, on the probes of \cref{core:cor:guard-peeling}, one can
+require all positive source bits in the same test and use the same
+negative bounds. Along with canonicity this recognizes the prime
+source-guard normal forms.
+\end{corollary}
+\begin{proof}
+A witness has some exact tuple of outputs $T_i$ on $Q$. By
+\cref{core:thm:subpower-complexity}, the same tuple has a binary witness
+in the owner gates of depth at most $\sum_i|T_i|\leq K|Q|$.
+For each tree level, use its corresponding sweep of the owners,
+placing each gate in the slot for its owner and padding with unary
+folds. Conversely, expand any successful finite fold into binary
+gates. The guard specialization follows from the probe characterization
+in \cref{core:cor:guard-peeling}.
+\end{proof}
