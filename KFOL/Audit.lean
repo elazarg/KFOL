@@ -297,6 +297,9 @@ import all KFOL.Core.MonochromaticLosses
 import all KFOL.Core.MonochromeLossLift
 import all KFOL.Core.BlockerCovers
 import all KFOL.Core.CompulsoryPruning
+import all KFOL.Core.PruningModules
+import all KFOL.Core.PruningExclusion
+import all KFOL.Core.SupportModules
 import all KFOL.Core.GraphPruning
 import all KFOL.Core.BipartitePruning
 import all KFOL.Core.IncidencePruning
