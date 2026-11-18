@@ -42,6 +42,8 @@ import all KFOL.Core.MonochromaticLosses
 import all KFOL.Core.MonochromeLossLift
 import all KFOL.Core.BlockerCovers
 import all KFOL.Core.CompulsoryPruning
+import all KFOL.Core.PruningContextRows
+import all KFOL.Core.PruningContextProduct
 import all KFOL.Core.PruningModules
 import all KFOL.Core.PruningExclusion
 import all KFOL.Core.SupportModules
