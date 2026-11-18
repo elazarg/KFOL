@@ -125,4 +125,28 @@ theorem successor_clauses_iff [LT Bit] (bits : Bit → Bool) (available : Bit �
       · left
         cases t <;> cases hbit : bits i <;> simp_all
 
+/-- Encode an output depending on a local set of bits by one clause for
+each local assignment. On a unique address the clauses require exactly
+the update's rail, allowing the receiving input to post both rails. -/
+theorem local_update_clauses_iff (bits : Bit → Bool) (scope : Set Bit)
+    (update : (Bit → Bool) → Bool) (available : Bool → Prop)
+    (locality : ∀ x y, Set.EqOn x y scope → update x = update y) :
+    (∀ s : Bit → Bool, (∃ i ∈ scope, bits i = !(s i)) ∨ available (update s)) ↔
+      available (update bits) := by
+  classical
+  constructor
+  · intro clauses
+    rcases clauses bits with ⟨i, _, hi⟩ | covers
+    · cases eq : bits i <;> simp [eq] at hi
+    · exact covers
+  · intro covers s
+    by_cases agree : Set.EqOn bits s scope
+    · exact Or.inr ((locality bits s agree) ▸ covers)
+    · left
+      by_contra noMismatch
+      apply agree
+      intro i hi
+      by_contra diff
+      exact noMismatch ⟨i, hi, by cases s i <;> cases bits i <;> simp_all⟩
+
 end KFOL.Core.AddressedGuards

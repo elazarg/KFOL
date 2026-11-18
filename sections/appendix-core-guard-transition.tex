@@ -1,0 +1,112 @@
+\paragraph{State transitions and bounded guard width.}
+Let $G$ be a directed graph on a subset of the bit strings of length
+$m$, with a designated start state $s_0$. As above, use two groups
+of $m$ rail pairs and write $A_s,B_s$ for the coalitions selecting the
+bits of $s$. The loss at $X$ is the posting $a:A_{s_0}$, and the
+positive request is $X$ when the rail inputs are all $c$-atoms.
+
+At a rail source, allow losses only if every pair in its group has a
+$c$-posting. If every pair has exactly one, the other rails specify an
+address $s$, which includes the head. In the $a$-group require that
+$s$ is a state and all of $B_s$ is posted at $b$. In the $b$-group
+require that $s$ is a state and all of $A_t$ is posted at $a$ for some
+arc $s\to t$. These requirements specify exactly the losses on unique
+addresses. Where a pair has two $c$-postings, any extension consistent
+with antitonicity of the source predicate can be used. For instance,
+one can take the upward closure of the losses specified on unique
+addresses. Use the same loss predicate on all proper observer facets.
+
+\begin{theorem}[State transitions forced by source losses]
+\label{core:thm:guard-transition-depth}
+These bounds and the distinguished positive are feasible exactly when
+the part of $G$ reachable from $s_0$ is acyclic. If $H$ is the largest
+number of vertices on a path from $s_0$ in that part, the least number
+of owner slots is between $2H$ and $2H+1$.
+\end{theorem}
+\begin{proof}
+Write $L(a,A_s)$ and $L(b,B_s)$ for the last attachments in a
+linearized marked spine that win their indicated tests. As in
+\cref{core:thm:compact-depth-upper-bounds}, the start loss forces
+$L(a,A_{s_0})$, and the all-$c$ positive forbids a $c$-attachment.
+For each state $s$, post $A_s$ at $a$ and $B_s$ at $b$, giving
+the other rail inputs $\{c\}$ and giving $X$ a menu omitting $a$.
+The bounds omit every $a$-source there. If $L(a,A_s)$ exists, it
+therefore forces a strictly later $L(b,B_s)$. For each arc $s\to t$,
+use the corresponding comparison with $B_s$ at $b$ and $A_t$ at $a$,
+omitting $b$ from $X$. In each comparison use the full complement
+of the omitted owner as $X$'s menu. Now $L(b,B_s)$ forces a strictly later
+$L(a,A_t)$. The selected spine inherits both omissions from the
+realizer and its neutral residue, just as in the previous proof.
+A reachable cycle is impossible. Following a path of $H$ states
+forces $2H$ distinct attachments, with one per slot on the
+linearized path.
+
+Conversely assume there is no reachable cycle. Give each reachable
+state the maximum length of a path from $s_0$ to it. In increasing
+rank order attach, in one $a$-fold, all the $c$-folds on the $A_s$
+of that rank, and then in one $b$-fold all the $c$-folds on the
+corresponding $B_s$. Begin with $X$. A rail mark at a loss can come
+only from the helper of the unique $c$-free address of its group,
+if that address is reachable. In the $a$-group the $b$-fold of the
+same rank then absorbs it. In the $b$-group some successor's $a$-fold
+absorbs it at a later rank. No subsequent helper can reintroduce that
+mark. If a pair has two $c$-postings there is no helper that carries
+it. The $a$-fold at the start absorbs at the required loss of $X$,
+and no helper can reintroduce $X$. At the all-$c$ positive none of
+the $a$- or $b$-folds can suppress the mark. All local $c$-folds fit
+one final slot, after padding their branches by unary folds. The
+schedule has at most $2H+1$ slots.
+\end{proof}
+
+\begin{corollary}[Exponential depth at prime width five]
+\label{core:cor:width-five-depth}
+For every fixed $K\ge3$ and $l\ge2$ there are feasible bounds on
+$8l+1$ inputs, given by complete canonical prime lists with
+$O_K(l^2)$ posting occurrences and at most five per guard, for which
+one positive requires $2l\,2^l$ owner slots or more. Consequently
+completion depth is exponential even at this fixed prime width.
+\end{corollary}
+\begin{proof}
+Use states of a counter that handles one bit at each step. A state
+has $l$ data bits $x_0,\ldots,x_{l-1}$, a carry bit $d$, and $l-1$
+stage flags $p_1,\ldots,p_{l-1}$. Interpret $p_0=1,p_l=0$ as fixed
+endpoints. Valid flags form a nonincreasing list, so the active stage
+is the unique $i$ with $p_i=1,p_{i+1}=0$. At stage $i$ replace
+$x_i$ by $x_i\mathbin{\mathrm{xor}}d$, leaving the other data bits
+unchanged. Advance the stage, keeping carry $d\land x_i$. At the
+last stage halt if $d=x_{l-1}=1$; otherwise wrap to stage zero with
+carry one. Start with data zero, stage zero and carry one. Each full
+sweep increments the data by one. On the last sweep the overflow
+halts at its final stage, so the path from the start has $l\,2^l$
+states. Its stage-zero states have distinct data, and other states
+cannot repeat because a deterministic path with a repeated state
+would cycle and could never halt.
+
+There are $m=2l$ address bits. For a head's own group retain the
+pair clauses for $c$ and use the $C$-literals of
+\cref{core:thm:compact-depth-upper-bounds} to test its address.
+Validity is checked by adjacent implications on the flags. At a
+unique address the $a$-side uses equality of code bits, as before.
+At a unique $b$-address, allow a transition precisely when the
+state is valid and the three bits for overflow do not give a halt.
+Require the corresponding next-state rails at $a$ by local clauses.
+For an output data bit its old bit, the carry and the two adjacent
+flags suffice. Each next stage flag tests its predecessor and the
+last flag. For next carry, make a rule per stage using the two flag
+tests selecting that stage, the old carry and the stage's data bit.
+The wrap rule sets carry one. Expand each rule by taking the
+opposite $C$-literals of its premises and adjoining the required
+$a$-posting. At most four premises occur in each rule, with only
+constantly many truth-table entries per bit or stage. Thus there
+are $O(l)$ clauses of width at most five per rail head, and the loss
+at $X$ contributes $O(l)$ singleton guards. On exact addresses the
+clauses impose exactly the transitions of this counter. Doubled
+$c$-postings may also satisfy the clauses, which is an allowed
+extension in \cref{core:thm:guard-transition-depth}.
+
+All literals have one fixed color at each input within each loss
+predicate, so minimizing the clauses on each observer facet gives
+the canonical lists, as in \cref{core:thm:compact-depth-upper-bounds}.
+The state transition theorem gives the required number of slots;
+\cref{core:thm:completion-fold-schedule} yields the depth bound.
+\end{proof}
