@@ -42,6 +42,9 @@ import all KFOL.Core.MonochromaticLosses
 import all KFOL.Core.MonochromaticHeadCuts
 import all KFOL.Core.MonochromaticCutObstruction
 import all KFOL.Core.SinglePostingObstruction
+import all KFOL.Core.PurePostingPaths
+import all KFOL.Core.ProfileCutObstruction
+import all KFOL.Core.AnchoredPostingObstruction
 import all KFOL.Core.SourceReciprocity
 import all KFOL.Core.FacetPosting
 import all KFOL.Core.SquareSourceObstruction

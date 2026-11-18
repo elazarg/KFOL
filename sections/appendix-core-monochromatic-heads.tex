@@ -300,6 +300,63 @@ there since their tails contain other controls. This gives the
 violating cut.
 \end{proof}
 
+\begin{corollary}[The activation principal from the surviving inputs]
+\label{core:cor:monochromatic-principal-box}
+Let $D$ be the greatest word omitting the prescribed losses, or $0$ if
+there is none. Assume the two cycle hypotheses of
+\cref{core:thm:monochromatic-head-cut} for a proper coloring $p$.
+Let $A$ consist of the inputs $j$ whose mark is possible at
+$p|_{V\setminus\{j\}}$. For every proper coloring $b$,
+\[
+             b\preceq_D p\quad\Longleftrightarrow\quad
+                    b|_A\subseteq p|_A .
+\]
+If $A\ne\varnothing$, a single word omitting the losses has support
+exactly $A$ and supplies all these marks. Thus the tests of
+\cref{core:thm:monochromatic-head-cut} compute the whole principal.
+\end{corollary}
+\begin{proof}
+Grow a set $J$, initially empty. Discard losses headed in $J$ and
+those whose postings on $J$ are outside $p|_J$; strip $J$ from the
+remaining rows. If a safe $r$-fold on a nonempty set
+$T\subseteq V\setminus(J\cup p_r)$ exists for this reduced sample,
+adjoin $T$ to $J$. On its own support the fold supplies every mark
+at $p$ and its principal there is ordinary subcoloring:
+in \cref{core:thm:one-owner-activation-order} its closure of the
+empty set is empty.
+
+Maintain a word $B$ on exactly $J$ with these two properties,
+omitting the original losses. The first fold serves as $B$. For a
+later fold $F$, use \cref{core:thm:block-source-extension} over $B$
+with coefficient $F$ on backgrounds $q\preceq_B p|_J$ and zero
+elsewhere. This extension preserves the old source bits. A loss at
+a new head either lies outside that principal or is omitted by $F$
+on its stripped row. All other heads outside $J\cup T$ are absent.
+At $p$ each old and new source survives, giving exactly the claimed
+support. The greatest coefficient at $p|_J$ contains $F$.
+By \cref{core:thm:block-source-extension,core:thm:activation-faithfulness}
+the new principal requires subcoloring on both $J$ and $T$;
+antitonicity supplies the converse.
+
+At termination there is no nonzero safe word on the reduced sample.
+An unheaded variable would give an admissible projection; otherwise
+the removal argument of \cref{core:thm:monochromatic-head-cut}
+applies on the reduced graph. It gives either a safe fold on an
+$r$-cycle component avoiding $p_r$, or one row at each remaining
+head with no monochromatic cycle. The former would have extended
+$J$, and the latter excludes every word by \cref{core:lem:ranked-posting-survivor}.
+Write $R=p|_J$. By \cref{core:lem:unmarked-background}, applied after
+discarding the $J$-headed losses, no word omitting the original losses
+can supply any outside mark even at $R$. Thus $J=A$. If $D=0$ the
+principal is constantly true. Otherwise $D$ captures all outside inputs
+under $R$ by \cref{core:cor:colored-cofactor-dependence}. Every interval
+predicate above $D$ positive at $p$ is positive at $R$, so
+\cref{core:lem:captured-rectangle} includes the entire displayed box.
+The reverse inclusion follows from $B\subseteq D$ by
+\cref{core:thm:activation-faithfulness}, extending the predicates of
+$B$ over the unused inputs; for $J=\varnothing$ it is automatic.
+\end{proof}
+
 \begin{proposition}[A single posting missed by every boundary cut]
 \label{core:prop:monochromatic-cut-obstruction}
 For every $K\ge3$ a seven-input family with one monochromatic loss per
@@ -390,59 +447,186 @@ at any valuation each bounded word must either return $\{d\}$ or
 include the entire menu at $X$.
 \end{proof}
 
-\begin{corollary}[The activation principal from the surviving inputs]
-\label{core:cor:monochromatic-principal-box}
-Let $D$ be the greatest word omitting the prescribed losses, or $0$ if
-there is none. Assume the two cycle hypotheses of
-\cref{core:thm:monochromatic-head-cut} for a proper coloring $p$.
-Let $A$ consist of the inputs $j$ whose mark is possible at
-$p|_{V\setminus\{j\}}$. For every proper coloring $b$,
-\[
-             b\preceq_D p\quad\Longleftrightarrow\quad
-                    b|_A\subseteq p|_A .
-\]
-If $A\ne\varnothing$, a single word omitting the losses has support
-exactly $A$ and supplies all these marks. Thus the tests of
-\cref{core:thm:monochromatic-head-cut} compute the whole principal.
+Even agreement on every source mark at every single-color posting
+can leave a mixed posting undetermined. The following path construction
+gives a way to check that agreement without enumerating the postings.
+
+\begin{lemma}[Realizing the single-color source marks]
+\label{core:lem:pure-posting-paths}
+Give each input $j$ one loss with nonempty tail $T_j$ posted at
+$c(j)$. Suppose every edge between inputs of the same owner is
+reciprocal. For each $r$, delete the inputs of owner $r$ and
+suppose every remaining input can reach a reciprocal pair of one
+owner in the remaining graph. Then a single core word omits every
+prescribed loss and has exactly the prescribed source marks on all
+proper colorings using at most one owner.
+\end{lemma}
+\begin{proof}
+Fix a pure $r$-posting at which $h$ must supply its mark. If $c(h)\ne r$,
+start with $h$. Otherwise some $u\in T_h$ is unposted. If $c(u)=r$,
+the fold $h\star_r u$ works: each input absorbs on the other's
+loss, and neither absorbs at the positive. If $c(u)\ne r$, start
+with $h\star_r u$. This omits all losses except possibly the one at
+its last input $u$, and supplies $h$ at the positive.
+
+In either case still requiring a path, the last input $v$ has owner
+different from $r$. Follow its path after the deletion. For an edge
+$v\to w$ replace the current word $t$ by $t\star_{c(v)}w$.
+The posting of $w$ absorbs on the loss at $v$, and only the loss at
+$w$ can acquire a mark. At the positive the gate preserves $h$:
+on a probe with the full menu at $h$ the only possible singleton
+is $r$. At the terminal reciprocal pair $j,k$ of owner $s$,
+attach $j\star_s k$ by $\star_s$. This fold absorbs on both
+terminal losses and introduces no others. Taking the derived union
+over the required positives preserves every omission and supplies
+all the marks. The empty posting is included by choosing any $r$.
+\end{proof}
+
+\begin{proposition}[A mixed loss invisible on all single-color postings]
+\label{core:prop:pure-posting-obstruction}
+For every $K\ge3$, an eight-input family with one monochromatic loss
+per head passes every acyclic boundary cut. A single word obeys all
+its losses and agrees with every source mark on every single-color
+posting, hence also with its entire singleton profile. Yet no word
+obeying the losses supplies a prescribed mark on a two-color posting.
+\end{proposition}
+\begin{proof}
+In \cref{core:prop:monochromatic-cut-obstruction} give $A$ and $a$
+one extra posting $U$ each, and give $U$ owner $\alpha$ and tail
+$\{A,a\}$. Each new edge belongs to a reciprocal $\alpha$-pair.
+If a consistent cut encloses an old edge, its intersection with
+the old inputs still has a consistent boundary there, so contains
+$X,Y$. If it encloses a new edge, it already has a reciprocal pair.
+
+The native pairs are $AU,aU,XY$. After deleting the $\alpha$-heads,
+$B$ reaches $Y$, $b$ reaches $X$, and $Z$ reaches $b$. After deleting
+the $\beta$-heads, only $Z$ needs a path, and it reaches $A$. After
+deleting the $d$-heads, $B,b$ both reach $A$. These paths also
+suffice when deleting an unused owner.
+\Cref{core:lem:pure-posting-paths} gives the required word.
+Its singleton profiles agree with the family's: post any coalition
+at $r$ and give every other input the full menu. The result is
+$\{r\}$ precisely when no unposted input supplies a foreign winner.
+
+Finally test the mark at $A$ with $X{:}d,U{:}\alpha$ as the only
+postings. The listed loss at $A$ does not suppress it. Discard the
+row at $U$ and fix that input to $\alpha$. Every one of the seven
+old rows survives the background restriction of
+\cref{core:lem:unmarked-background}. A witness would therefore
+supply the mark of $A$ with only $X{:}d$ posted while omitting the
+original seven rows, contrary to \cref{core:prop:monochromatic-cut-obstruction}.
+\end{proof}
+
+\paragraph{One private input at each head.}
+The same path construction gives the greatest possible source predicates
+for a class with arbitrarily many monochromatic cycles.
+Start with a loopless directed graph on inputs $h_i$, whose outgoing
+edges have color $c_i$. At $h_i$ post its successors at $c_i$.
+Give each $h_i$ a fresh input $u_i$, add $u_i$ to its tail, and let the
+sole loss at $u_i$ post $h_i$ at $c_i$. The word $h_i\star_{c_i}u_i$
+omits all the losses, so the enlarged family admits a greatest core
+minorant, obtained by union.
+
+\begin{theorem}[Source marks after adjoining reciprocal pairs]
+\label{core:thm:reciprocal-pair-extension}
+At a query with coloring $p$, call pair $j$ open if neither $h_j$
+nor $u_j$ is posted at $c_j$. Keep an original edge $i\to j$ when
+$h_j$ is not posted at $c_i$. In the greatest minorant the mark at
+$h_i$ is possible exactly when one of the following holds:
+\begin{enumerate}
+\item A path of kept edges from $i$, possibly empty, reaches an open pair.
+\item The original losses admit the mark at $h_i$ on the restriction
+of $p$ to the original inputs.
+\end{enumerate}
+At $u_i$ the mark is possible exactly when $h_i$ is not posted at $c_i$.
+If the original graph has no monochromatic directed cycle, the path
+test alone is exact at every $h_i$.
+\end{theorem}
+\begin{proof}
+A witness in the original inputs still works, since its losses have
+only gained postings and it uses no $u_j$. For a path start with
+$h_i$, attach each next variable $h_j$ at the owner of its predecessor,
+and finish by attaching the open pair's fold at its owner. As in
+\cref{core:lem:pure-posting-paths}, each step absorbs the current
+head on its own loss. On the positive probe only $h_i$ carries the
+observed winner, and its menu is full. A subword carrying this mark
+is ambiguous, since no input is a singleton at the observed owner.
+The next variable on a kept edge cannot absorb, and the terminal fold
+cannot be its owner's singleton at an open pair. Thus the mark survives.
+The pair fold itself answers the query at $u_i$ whenever its loss is absent.
+
+Suppose no open pair is reachable and let $R$ be the reachable
+vertices. A witness keeps its mark if we set $u_j=\{c_j\}$ for
+every $j\in R$: if this changes a menu, $h_j$ was already posted at
+$c_j$ and the loss at $u_j$ gives cofactor independence.
+Every changed color was already present, so the observer still reads
+the same mark. Keep just the enlarged $h_j$-losses for $j\in R$.
+All their postings outside the original inputs of $R$ agree with the
+new coloring: the $u_j$ have been fixed, and an original edge leaving
+$R$ was discarded precisely because its posting agrees.
+By \cref{core:lem:unmarked-background} there is a witness on the
+original inputs of $R$ omitting their restricted losses. This word
+also works on the original graph: adding back postings preserves
+omission, and every other head is absent. If the original graph has
+no monochromatic cycle, the restricted rows have one head at every
+remaining input and no such cycle either.
+\Cref{core:lem:ranked-posting-survivor} then rules out that witness.
+\end{proof}
+
+When the original graph has no monochromatic cycle, the theorem also
+tests the complete family in polynomial time. Start from the endpoints
+of each original edge and repeatedly insert every vertex reached in
+one step from two included vertices of different owners. The family
+is realizable exactly when each resulting set uses all $K$ owners.
+Indeed, at a missed positive all reachable pairs are closed, so all
+their owners occur in the proper coloring. The reachable set contains
+an edge, since the queried pair is closed and the mark is prescribed
+positive. It contains each forced insertion, since a vertex outside
+it is posted at the color of every incoming edge from inside.
+Conversely, if the closure of an edge $i\to j$ misses an owner,
+post each included $u_l$ at $c_l$ and each outside successor at its
+unique boundary color. Leave the included original inputs unposted.
+The mark at $h_i$ is prescribed positive because of $j$, but cannot
+reach an open pair.
+
+\begin{corollary}[A sharp number of posting colors]
+\label{core:cor:reciprocal-pair-colors}
+For $2\le m\le K$ there is a family on $2m$ inputs with one
+monochromatic loss per head and at most four postings per loss
+such that a single bounded word realizes all prescribed marks on
+every coloring using fewer than $m$ colors. The whole family is
+realizable exactly when $m=K$.
 \end{corollary}
 \begin{proof}
-Grow a set $J$, initially empty. Discard losses headed in $J$ and
-those whose postings on $J$ are outside $p|_J$; strip $J$ from the
-remaining rows. If a safe $r$-fold on a nonempty set
-$T\subseteq V\setminus(J\cup p_r)$ exists for this reduced sample,
-adjoin $T$ to $J$. On its own support the fold supplies every mark
-at $p$ and its principal there is ordinary subcoloring:
-in \cref{core:thm:one-owner-activation-order} its closure of the
-empty set is empty.
-
-Maintain a word $B$ on exactly $J$ with these two properties,
-omitting the original losses. The first fold serves as $B$. For a
-later fold $F$, use \cref{core:thm:block-source-extension} over $B$
-with coefficient $F$ on backgrounds $q\preceq_B p|_J$ and zero
-elsewhere. This extension preserves the old source bits. A loss at
-a new head either lies outside that principal or is omitted by $F$
-on its stripped row. All other heads outside $J\cup T$ are absent.
-At $p$ each old and new source survives, giving exactly the claimed
-support. The greatest coefficient at $p|_J$ contains $F$.
-By \cref{core:thm:block-source-extension,core:thm:activation-faithfulness}
-the new principal requires subcoloring on both $J$ and $T$;
-antitonicity supplies the converse.
-
-At termination there is no nonzero safe word on the reduced sample.
-An unheaded variable would give an admissible projection; otherwise
-the removal argument of \cref{core:thm:monochromatic-head-cut}
-applies on the reduced graph. It gives either a safe fold on an
-$r$-cycle component avoiding $p_r$, or one row at each remaining
-head with no monochromatic cycle. The former would have extended
-$J$, and the latter excludes every word by \cref{core:lem:ranked-posting-survivor}.
-Write $R=p|_J$. By \cref{core:lem:unmarked-background}, applied after
-discarding the $J$-headed losses, no word omitting the original losses
-can supply any outside mark even at $R$. Thus $J=A$. If $D=0$ the
-principal is constantly true. Otherwise $D$ captures all outside inputs
-under $R$ by \cref{core:cor:colored-cofactor-dependence}. Every interval
-predicate above $D$ positive at $p$ is positive at $R$, so
-\cref{core:lem:captured-rectangle} includes the entire displayed box.
-The reverse inclusion follows from $B\subseteq D$ by
-\cref{core:thm:activation-faithfulness}, extending the predicates of
-$B$ over the unused inputs; for $J=\varnothing$ it is automatic.
+Give the $m$ vertices of a cycle distinct owners. From $i$ draw
+edges to $i-1,i+1,i+2$ modulo $m$, omitting loops and repetitions,
+and adjoin the private inputs. The closure of any edge contains an
+adjacent pair: $i$ and $i+2$ both point to $i+1$. Each successive
+adjacent pair forces the next vertex, so this closure is the whole
+cycle. At a missed positive the reachable set must therefore contain
+every vertex and all its pairs must be closed. This takes $m$ colors.
+For $m=K$ such a coloring has no observer. For $m<K$, posting just
+$u_j{:}c_j$ for every $j$ is proper, and every original head is
+prescribed positive there. The greatest minorant gives the single
+word on all smaller palettes.
 \end{proof}
+
+In fact the greatest minorant agrees with the candidate on every menu
+tuple in which some pair lacks its native singleton. Erasing the
+observed color and freeing its source for the probe can only open
+more pairs. When all pairs contain their native singleton, the
+minorant returns exactly $\{c_1,\ldots,c_m\}$. The pair folds supply
+all these owners. For a winner outside this set, any input that
+carries it is not its own native singleton, so freeing that source
+and erasing the observed color leaves every pair closed.
+
+Among these graphs with one vertex per owner, four postings are
+necessary when a missed mark first occurs at $m\ge4$ colors.
+Otherwise each original vertex has at most two successors, and every
+edge must close to the full vertex set. To grow from the endpoints
+of any edge, they must have a common successor. At a vertex with an
+outgoing edge there must then be two successors $a,b$, with edges
+$a\to b$ and $b\to a$. Their common successor $w$ exhausts the
+outgoing edges of both. For the edges $a\to w$ and $b\to w$ to have
+common successors, $w$ must point to both $b$ and $a$. The closure of
+$a,b$ thus stays in $\{a,b,w\}$.
