@@ -210,6 +210,43 @@ theorem fold_mem_iff (r : Role) (pool : Finset Column) (hn : pool.Nonempty)
     rw [mem_choiceFold_of_no_owner r pool hn values none]
     exact ⟨fun h => ⟨h, fun _ => none⟩, And.left⟩
 
+/-- Three successive owners suffice to take the union of a nonempty finite
+family, regardless of the number of operands. -/
+theorem val_union_three_folds (a b c : Role) (ab : a ≠ b) (ac : a ≠ c) (bc : b ≠ c)
+    (pool : Finset Column) (hn : pool.Nonempty) (values : Column → WinnerSet Role) :
+    (choiceFold a pool hn (fun i => choice b (values i) (choiceFold c pool hn values))).val =
+      ⋃ i ∈ pool, (values i).val := by
+  classical
+  let U : Set Role := ⋃ i ∈ pool, (values i).val
+  let inner := choiceFold c pool hn values
+  let middle i := choice b (values i) inner
+  have sub i (hi : i ∈ pool) : (values i).val ⊆ U :=
+    fun k hk => Set.mem_iUnion.mpr ⟨i, Set.mem_iUnion.mpr ⟨hi, hk⟩⟩
+  have innerSub : inner.val ⊆ U := (fold_bound_iff c pool hn values U).mpr (Or.inl sub)
+  have midSub i (hi : i ∈ pool) : (middle i).val ⊆ U :=
+    (choice_subset_union b _ _).trans (Set.union_subset (sub i hi) innerSub)
+  have midRetains i (hi : i ∈ pool) : (values i).val ⊆ (middle i).val := by
+    by_cases atom : values i = singleton b ∨ inner = singleton b
+    · change (values i).val ⊆ (choice b (values i) inner).val
+      rw [choice, ite_eq_left atom]
+      rcases atom with eq | eq
+      · rw [eq]
+      · rw [(choiceFold_eq_other_iff c b bc.symm pool hn values).mp eq i hi]
+    · change (values i).val ⊆ (choice b (values i) inner).val
+      rw [choice, ite_eq_right atom]
+      exact Set.subset_union_left
+  change (choiceFold a pool hn middle).val = U
+  apply Set.Subset.antisymm ((fold_bound_iff a pool hn middle U).mpr (Or.inl midSub))
+  intro k hk
+  obtain ⟨i, hi, mem⟩ := by simpa only [U, Set.mem_iUnion] using hk
+  by_cases absorbs : ∃ j ∈ pool, middle j = singleton a
+  · rw [(choiceFold_eq_owner_iff a pool hn middle).mpr absorbs]
+    obtain ⟨j, _, h⟩ := absorbs
+    have eq : inner = singleton a := (choice_eq_other_iff _ _ _ ab.symm).mp h |>.2
+    rwa [(choiceFold_eq_other_iff c a ac.symm pool hn values).mp eq i hi] at mem
+  · exact (mem_choiceFold_of_no_owner a pool hn middle
+      (fun j hj eq => absorbs ⟨j, hj, eq⟩) k).mpr ⟨i, hi, midRetains i hi mem⟩
+
 /-- Tests besides the ordinary winner-set upper bounds. -/
 inductive Observation (Row Role : Type*)
   | atom (i : Row) (r : Role)

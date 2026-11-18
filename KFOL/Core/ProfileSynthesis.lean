@@ -2,6 +2,7 @@ module
 
 public import KFOL.Definitions.CoreFunctions
 public import KFOL.Core.Folds
+import KFOL.Core.Exhaustion
 public import Mathlib.Data.Fintype.Pi
 
 /-! # Synthesis of all singleton-winning profiles
@@ -244,5 +245,99 @@ theorem winnerSet_eq_singleton_iff_profile
         hs, ht]
     · simp only [WinnerSet.choice_eq_other_iff _ _ r hri, profile_choice,
         ite_eq_right hri, Bool.and_eq_true, hs, ht]
+
+attribute [local instance] Equational.coreStructure
+
+omit [DecidableEq Role] in
+private theorem realize_subset_input_union
+    (t : Equational.Term (Equational.CoreSymbol Role) Var) (v : Var → WinnerSet Role) :
+    (t.realize v).val ⊆ ⋃ j, (v j).val := by
+  induction t using induction_choice with
+  | var x => exact fun k hk => Set.mem_iUnion.mpr ⟨x, hk⟩
+  | choice r s t hs ht =>
+    rw [realize_choice_winner]
+    exact (WinnerSet.choice_subset_union r _ _).trans (Set.union_subset hs ht)
+
+omit [DecidableEq Role] in
+private theorem mem_realize_unionFamily (three : Fin 3 ↪ Role) {A : Type w} [Fintype A]
+    (a : A) (f : A → Equational.Term (Equational.CoreSymbol Role) Var)
+    (v : Var → WinnerSet Role) (j : A) :
+    ((f j).realize v).val ⊆ ((unionFamily three a f).realize v).val := by
+  have includeTerm (xs : List (Equational.Term (Equational.CoreSymbol Role) Var))
+      (t : Equational.Term (Equational.CoreSymbol Role) Var) (ht : t ∈ xs) :
+      (t.realize v).val ⊆ ((xs.foldr (unionTerm three) (f a)).realize v).val := by
+    induction xs with
+    | nil => simp at ht
+    | cons s xs ih =>
+      simp only [List.foldr_cons, realize_union_winner, WinnerSet.val_union]
+      rcases List.mem_cons.mp ht with rfl | ht
+      · exact Set.subset_union_left
+      · exact (ih ht).trans Set.subset_union_right
+  exact includeTerm _ _ (List.mem_map.mpr ⟨j, by simp, rfl⟩)
+
+omit [DecidableEq Role] in
+private theorem realize_le_foldTerm_of_ne (r : Role)
+    (xs : List (Equational.Term (Equational.CoreSymbol Role) Var))
+    (last : Equational.Term (Equational.CoreSymbol Role) Var) (v : Var → WinnerSet Role)
+    (no : (foldTerm r xs last).realize v ≠ WinnerSet.singleton r) :
+    (last.realize v).val ⊆ ((foldTerm r xs last).realize v).val := by
+  classical
+  induction xs with
+  | nil => exact Set.Subset.rfl
+  | cons t xs ih =>
+    change WinnerSet.choice r (t.realize v) ((foldTerm r xs last).realize v) ≠
+      WinnerSet.singleton r at no
+    have noSub := fun h => no ((WinnerSet.choice_eq_owner_iff _ _ _).mpr h)
+    change (last.realize v).val ⊆
+      (WinnerSet.choice r (t.realize v) ((foldTerm r xs last).realize v)).val
+    rw [WinnerSet.choice, ite_eq_right noSub]
+    exact (ih fun he => noSub (Or.inr he)).trans Set.subset_union_right
+
+namespace ProfileSynthesis
+
+variable [Fintype Role] [Fintype Var] {F : Role → (Var → Bool) → Bool}
+
+private theorem input_union_subset_build (hF : AdmissibleProfiles F) (three : Fin 3 ↪ Role)
+    (rs : List Role) (v : Var → WinnerSet Role)
+    (no : ∀ r ∈ rs, F r (fun x => decide (v x = WinnerSet.singleton r)) ≠ true) :
+    (⋃ j, (v j).val) ⊆ ((build hF three rs (full hF)).realize v).val := by
+  classical
+  induction rs with
+  | nil =>
+    intro k hk
+    obtain ⟨j, hj⟩ := Set.mem_iUnion.mp hk
+    let x : Intersection (full hF) := ⟨j, fun _ => rfl⟩
+    change k ∈ ((leaf hF three (full hF)).realize v).val
+    unfold leaf
+    exact mem_realize_unionFamily three _ (fun a : Intersection (full hF) => .var a.val) v x hj
+  | cons r rs ih =>
+    have notAtom : (build hF three (r :: rs) (full hF)).realize v ≠ WinnerSet.singleton r := by
+      intro h
+      exact negative hF three _ _ _ _ (no r (by simp)) (by simp [full])
+        ((winnerSet_eq_singleton_iff_profile _ _ _).mp h)
+    have eq : Function.update (full hF) r (full hF r) = full hF := by
+      exact Function.update_eq_self r (full hF)
+    apply (ih fun s hs => no s (List.mem_cons_of_mem r hs)).trans
+    let next (w : Winning (F := F) r) := build hF three rs (Function.update (full hF) r w)
+    have retain := realize_le_foldTerm_of_ne r (Finset.univ.toList.map next) (next (full hF r)) v notAtom
+    exact (show (next (full hF r)).realize v = (build hF three rs (full hF)).realize v by
+      dsimp only [next]
+      rw [eq]) ▸ retain
+
+end ProfileSynthesis
+
+/-- The original ordered coalition construction already takes the greatest
+value at every ambiguous input. Its all-top branch carries the input union. -/
+theorem val_synthesizeProfiles_of_ambiguous [Fintype Role] [Fintype Var]
+    (three : Fin 3 ↪ Role) (F : Role → (Var → Bool) → Bool) (hF : AdmissibleProfiles F)
+    (v : Var → WinnerSet Role) (h : ((synthesizeProfiles three F hF).realize v).Ambiguous) :
+    ((synthesizeProfiles three F hF).realize v).val = ⋃ j, (v j).val := by
+  classical
+  apply Set.Subset.antisymm (realize_subset_input_union _ _)
+  apply ProfileSynthesis.input_union_subset_build hF three _ v
+  intro r _ hr
+  apply h r
+  rw [winnerSet_eq_singleton_iff_profile, profile_synthesizeProfiles]
+  exact hr
 
 end KFOL.Core

@@ -20,17 +20,10 @@ private theorem exists_complete_term [Fintype Role] (three : Fin 3 ↪ Role)
       ∀ v : Fin (n + 1) → WinnerSet Role, (t.realize v).Ambiguous →
         (t.realize v).val = ⋃ i, (v i).val := by
   classical
-  obtain ⟨s, hs⟩ := (exists_term_iff_admissibleProfiles three F).2 hF
-  obtain ⟨e, he, ha, hu, _⟩ := exists_profile_maximum three
-    (Equational.Core.decode s) (Equational.Core.isCore_decode s)
-  refine ⟨Equational.Core.encode e he, ?_, ?_⟩
-  · intro v r
-    rw [← Equational.Core.eval_decode, Equational.Core.decode_encode, ha,
-      Equational.Core.eval_decode, winnerSet_eq_singleton_iff_profile, hs]
-    rfl
-  · intro v hamb
-    rw [← Equational.Core.eval_decode, Equational.Core.decode_encode] at hamb ⊢
-    exact hu v fun r hr => hamb r ((ha v r).2 hr)
+  refine ⟨synthesizeProfiles three F hF, ?_, val_synthesizeProfiles_of_ambiguous three F hF⟩
+  intro v r
+  rw [winnerSet_eq_singleton_iff_profile, profile_synthesizeProfiles]
+  rfl
 
 namespace Gate
 
