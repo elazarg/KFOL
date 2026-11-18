@@ -379,3 +379,99 @@ covers at most one of these pairs. There are at least
 $\binom{l-1}{\lfloor l/2\rfloor-1}-1$ of them. The depth lower bound
 is in the arity, and leaves open a polynomial bound in the length of
 the complete prime lists.
+
+\begin{theorem}[Exponential depth with short lists of upper bounds]
+\label{core:thm:compact-depth-upper-bounds}
+Fix $K\ge3$ and $l\ge2$. On $4l+1$ inputs there are upper bounds on
+the source predicates whose complete canonical prime lists have
+$O_K(l^3)$ posting occurrences. The bounds admit a core witness
+attaining the entire prescribed predicate at one distinguished
+source $X$. Any word respecting the bounds and supplying $X$ when
+all other inputs are $c$-atoms needs at least $2^{l+1}$ owner slots.
+Thus it needs completion depth at least $(2^{l+1}-3)/(K+6)$.
+\end{theorem}
+\begin{proof}
+Use two groups of $l$ pairs of passive inputs, one group for $a$ and
+one for $b$, with $a,b,c$ distinct. A bit string $s$ selects one member
+per pair, giving coalitions $A_s,B_s$ in the respective groups. Order
+strings by binary value, starting at $0$. In a spine $T$ from $X$,
+attach the $c$-fold of $A_s$ at owner $a$ and then the $c$-fold of
+$B_s$ at owner $b$, for each $s$ in order. Prescribe the $X$ predicate
+of $T$. At an owner $r\in\{a,b\}$ its factor requires that some pair
+of that group has neither member posted at $r$. Take one such pair
+per visible owner to form its prime guards. This uses $O(l^2)$
+postings and suppresses $X$ in particular on $a:A_0$.
+
+\emph{Upper bounds at the other sources.}
+For a source $v$ in the $a$-group, let $C_{i,t}$ denote posting at $c$
+the opposite rail to bit $t$ in pair $i$ of that group. Let $D_{i,t}$
+denote posting at $b$ the rail of bit $t$ in the other group. A
+symbol for posting the head itself is false. Write a condition for
+loss using all the following clauses. At each pair require at least
+one $C_{i,t}$, with the opposite rail required at the head's pair.
+At each coordinate $i$ and bit $t$ require
+$C_{i,1-t}\lor D_{i,t}$. If exactly one $C$-posting occurs per pair,
+they determine the only possible $c$-free coalition $A_s$. The last
+clauses then say that all of $B_s$ is posted at $b$.
+
+For a head in the $b$-group, use the analogous $C$-postings there and
+let $D_{i,t}$ now post the other group's rail at $a$. Require the
+same pair and head clauses, and require $\bigvee_i C_{i,0}$ to exclude
+the all-ones address when the code is unique. Number the bits in
+increasing order of significance. For each $i,t$ require
+\[
+ C_{i,1-t}\ \lor\ \bigvee_{j<i} C_{j,0}\ \lor\ D_{i,1-t},
+ \qquad C_{i,1-t}\lor C_{j,1}\lor D_{i,t}\quad(j<i).
+\]
+On a unique $c$-free address $s$, the first clause demands a flip
+if all lower bits are one; the others demand a copy if some lower
+bit is zero. Thus they require all of $A_{s+1}$ posted at $a$.
+
+All these loss clauses use at most one color per passive input.
+On each facet discard the literals at its hidden owner. An empty
+clause means there are no losses, giving the empty guard. In general
+the prime guards are exactly the inclusion-minimal remaining clause sets:
+if a guard contains no clause, posting every relevant literal
+outside it gives a consistent loss enabling it. This proves
+canonicity and the stated size bound. The same clauses are read on
+each observer facet, so the bounds agree on overlaps.
+
+The spine $T$ respects these upper bounds. On a loss at a rail head,
+every pair of its group has a $c$-posting. If a pair has two, no
+helper of that group can transmit the mark. If each has one, only
+the helper of the resulting $c$-free address can transmit it.
+In the $a$-group its mark is erased by the immediately following
+$b$-reset, and in the $b$-group by the following $a$-reset, precisely
+as the clauses require. The helpers ignore $X$ and use only their
+own group, so the mark does not reappear. At the all-$c$ coloring,
+$T$ supplies $X$.
+
+\emph{Depth.}
+For each consecutive pair of attachments, post both of their
+coalitions at the respective owners and put $\{c\}$ at the other
+passive inputs. Let $r$ be the first attachment's owner and give
+$X$ the menu $I\setminus\{r\}$. Every possible source of $r$ is a
+rail of the first coalition. Each has a prescribed loss at this
+valuation: the two addresses are equal for an $a$-loss and differ
+by increment for a $b$-loss. Thus any witness $U$ omits $r$ there.
+Its neutral residue also omits $r$ by the definition of
+$\partial_XU$.
+
+In any scheduled witness, linearize an occurrence supplying $X$
+at the all-$c$ coloring, as in
+\cref{core:thm:exponential-completion-depth}. The spine has at most
+one attachment per slot and is bounded by $U+\partial_XU$, so it
+obeys all the comparison omissions. Its preserved type loses at
+$a:A_0$ and is positive at the all-$c$ coloring. No $c$-attachment
+can occur on it. Exactly the same last-reset argument forces a
+strictly later reset for each successive coalition, starting at
+$A_0$. This takes $2^{l+1}$ attachments and proves the claimed
+completion-depth bound by \cref{core:thm:completion-fold-schedule}.
+\end{proof}
+
+Here the complete prime lists describe upper bounds. The ordinary
+sources are free to drop additional marks, while the $X$ predicate
+is attained in full by the witness. The statement therefore applies
+to succinctly specified samples of omissions and positives. It also
+applies to the greatest core operation below the supplied bounds:
+the union of all bounded operations still attains the $X$ predicate.

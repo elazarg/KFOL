@@ -82,4 +82,47 @@ theorem minimal_hitsAll_iff (F : Set Posting) (B : Bit → Bool → Set Posting)
     obtain ⟨C, hC, hCH⟩ := (hitsAll_iff_contains_candidate F B H).1 hH
     exact (hmin hC (hCH.trans hHG)).trans hCH
 
+/-- On an exact address, the positive clauses for binary increment require
+the opposite rail at a carry and the same rail otherwise. The first clause
+excludes the last address. The available rails may contain both values. -/
+theorem successor_clauses_iff [LT Bit] (bits : Bit → Bool) (available : Bit → Bool → Prop) :
+    ((∃ i, bits i = false) ∧
+      (∀ i t, bits i = !t ∨ (∃ j, j < i ∧ bits j = false) ∨ available i (!t)) ∧
+      (∀ i t j, j < i → bits i = !t ∨ bits j = true ∨ available i t)) ↔
+    ((∃ i, bits i = false) ∧
+      (∀ i, (∀ j, j < i → bits j = true) → available i (!(bits i))) ∧
+      (∀ i, (∃ j, j < i ∧ bits j = false) → available i (bits i))) := by
+  classical
+  constructor
+  · rintro ⟨nonfinal, flips, copies⟩
+    refine ⟨nonfinal, fun i carry => ?_, fun i ⟨j, hj, zero⟩ => ?_⟩
+    · rcases flips i (bits i) with h | ⟨j, hj, zero⟩ | h
+      · cases hbit : bits i <;> simp [hbit] at h
+      · exact Bool.noConfusion (zero.symm.trans (carry j hj))
+      · exact h
+    · rcases copies i (bits i) j hj with h | one | h
+      · cases hbit : bits i <;> simp [hbit] at h
+      · exact Bool.noConfusion (zero.symm.trans one)
+      · exact h
+  · rintro ⟨nonfinal, flips, copies⟩
+    refine ⟨nonfinal, ?_, ?_⟩
+    · intro i t
+      by_cases bit : bits i = t
+      · by_cases low : ∃ j, j < i ∧ bits j = false
+        · exact Or.inr (Or.inl low)
+        · have carry (j) (hj : j < i) : bits j = true := by
+            cases hjbit : bits j
+            · exact (low ⟨j, hj, hjbit⟩).elim
+            · rfl
+          exact Or.inr (Or.inr (bit ▸ flips i carry))
+      · left
+        cases t <;> cases hbit : bits i <;> simp_all
+    · intro i t j hj
+      by_cases bit : bits i = t
+      · rcases hjbit : bits j with _ | _
+        · exact Or.inr (Or.inr (bit ▸ copies i ⟨j, hj, hjbit⟩))
+        · exact Or.inr (Or.inl rfl)
+      · left
+        cases t <;> cases hbit : bits i <;> simp_all
+
 end KFOL.Core.AddressedGuards
