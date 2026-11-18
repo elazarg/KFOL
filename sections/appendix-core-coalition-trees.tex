@@ -1,0 +1,432 @@
+\paragraph{A covering condition directly on the prime lists.}
+The negative rows can be eliminated from the statement. Take a finite
+rooted tree with edges labeled by pairs $(r,A)$, where $r$ is an owner
+and $A$ a nonempty set of inputs. At a vertex $x$ write $E_x$ for
+its outgoing labels. Siblings have distinct labels, and
+$E_y\subseteq E_x$ at every child $y$ of $x$. Let $a_x$ give
+the last coalition on the path to $x$ at each owner occurring there.
+The available colorings at $x$ are those proper passive colorings
+$t$ all of whose nonempty blocks occur as labels $(r,t_r)\in E_x$.
+Availability at a head $v$ excludes postings of $v$, as usual.
+At a leaf only the empty coloring is available.
+
+\begin{theorem}[A prime guard cover on trees of coalitions]
+\label{core:thm:prime-tree-cover}
+Fix an observer-agreeing antitone family and a requested positive
+$(i,p)$. A core word supplies this mark and respects all prescribed
+zeros if and only if every tree as above has a vertex $x$ and an
+input $v\in L(a_x)$ for which the prime guards at $v$ cover every
+available coloring at $x$. Coverage means that a guard is enabled on
+the coloring's observer facet. For a complete family with at least
+one positive, testing this condition at its maximal positives
+characterizes joint realizability.
+\end{theorem}
+\begin{proof}
+If a tree violates the condition, choose at each vertex and each
+eligible input one available coloring missed by its guards. For a
+vertex $x$ let $S_x$ be all the resulting negative rows in its
+subtree. Every eligible projection has a chosen loss in $S_x$. A shortest
+feasible word must be singleton at a row of $S_x$, by the descent in
+\cref{core:thm:pointed-guard-cut}. If its owner is $r$ and its block
+is $A$, the label $(r,A)$ occurs where that row was chosen and hence
+at $x$. The word itself meets the updated register at the
+corresponding child, including the required gap when $a_x$ was
+empty. It still omits all the child's rows. Induction from the
+leaves rules this out.
+
+Conversely start with an inclusion-minimal failing set of minimal
+losses for the blank register. At a current minimal failing set
+$S$ put all its nonempty blocks in $E_x$. Each eligible input
+heads some row of $S$, whose coloring is available and missed.
+For an outgoing $(r,A)$ delete the rows with $A\subseteq t_r$.
+The old register is feasible on the proper subset left. The updated
+register must fail there by the two-child construction. Use a
+minimal failing subset for that child and repeat. This terminates
+and gives the required tree. In fact a child reached through $(r,A)$
+retains no label $(r,B)$ with $A\subseteq B$. Finally take the
+union of the separate witnesses for the maximal positives.
+\end{proof}
+
+The trees in this condition can be large even for short prime lists.
+For a cover crown, the same matching rows recur below many different
+sequences of offers.
+
+\begin{proposition}[Size of a tree witnessing noncoverage]
+\label{core:prop:prime-tree-size}
+For the opposite query of a cover crown of length $m$, every tree
+witnessing failure in \cref{core:thm:prime-tree-cover} has at least
+$2^m$ vertices, already counting only paths that offer the same owner
+throughout. On $n$ inputs at fixed $K$, the worst-case minimum size
+of a failing tree has double logarithm $n+o(n)$ to base two. The
+lower rate holds for polynomial-size canonical prime lists.
+\end{proposition}
+\begin{proof}
+Use the matching intervals $(L_j,U_j)$, indexed from $1$ to $m$
+cyclically, and the opposite query $(L_1,U_m)$. Each matching
+interval is a cover, so its only negative coloring has its head at
+the sole free input and posts $c$ on $L_j$ and $b$ outside $U_j$.
+These are all the negative colorings; more than one observer may
+read the same row. The rows in any failing tree's root subtree
+must include all $m$: deleting any one gives a patch supplying the
+opposite mark (\cref{core:lem:crown-patch}). Its root therefore has
+all $m$ outgoing labels $(c,L_j)$.
+
+At a vertex reached using only $c$ offers and ending in $(c,L_j)$
+the register asks to win on $L_j$ and lose on $L_1$. For every
+$1\le k<j$, its subtree must contain matching row $k$. Otherwise
+take the greatest bichain completion of the monotone Boolean function
+\[
+             f(X)=[\,L_h\subseteq X\text{ for some }k<h\le j\,].
+\]
+It wins on $L_j$ and loses on $L_1$, since the lower endpoints form
+an antichain by \eqref{core:eq:crown-incidence}. It omits the mark at
+every matching row except $k$: $f(U_\ell)$ reads membership of
+$\ell$ or $\ell+1$ in the cyclic interval $(k,j]$, whereas
+$f(L_\ell)$ reads membership of $\ell$ alone. This would realize the
+register on all the subtree rows, contradicting the preceding proof.
+Nested outgoing labels thus force a child $(c,L_k)$ for every $k<j$.
+Every decreasing sequence of indices occurs as a distinct path from
+the root, including the empty one. There are $2^m$.
+
+For the upper bound put $d=K(2^n-1)$. In the tree constructed in the
+theorem no edge label repeats along a path, so there are at most
+$\sum_{h=0}^d d!/(d-h)!$ vertices. Its double logarithm is at most
+$n+O_K(\log n)$. \Cref{core:cor:compact-locality-rate} gives the
+matching lower rate using polynomial-size prime lists. For all
+sufficiently large arities the cover crowns of
+\cref{core:thm:interval-mask-locality-rate} give
+$m\ge 2^{n-O(\log n)}$ without the prime-size restriction.
+\end{proof}
+
+Sharing subtrees changes this bound. Allow a finite rooted acyclic
+directed graph, with the register written on each vertex and updated
+along each edge. The same local test is exact, by unfolding the graph.
+For a crown of length $m$ the least number of vertices in such a
+certificate is exactly $(m+1)(m+2)/2$. Indeed, after a first offer $(c,L_j)$,
+the preceding proof forces matching row $k$ somewhere below it for
+every $k<j$. This forces edges $(b,V\setminus U_k)$ at that vertex
+as well. Their children carry $\binom m2$ distinct two-owner
+registers, in addition to the $2m$ forced one-owner registers and
+the blank root.
+
+For the upper bound take the path from $U_m$ to $L_1$ that reverses
+matching rows $m,m-1,\ldots,1$ in order, using the inclusion
+$L_j\subseteq U_{j-1}$ between reversals. Keep one vertex for each
+contiguous segment of this path's list of reversals, including the
+$m+1$ empty segments at its cuts. At a segment use the labels
+$(c,L_j)$ and $(b,V\setminus U_j)$ of all its rows. The first edge
+keeps the suffix after $j$ and the second keeps the prefix before $j$.
+The endpoints $P,N$ of the segment start as $U_m,L_1$; a $c$-edge
+replaces $P$ by $L_j$, and a $b$-edge replaces $N$ by $U_j$.
+The segment boundaries thus determine both the register and its
+eligible set $P\setminus N$, including the sole free head at the
+root. Each $v\in P\setminus N$ must leave the running set somewhere
+on this path. An inclusion cannot remove it, so it is the free head
+of a reversal in the segment. That row supplies a missed coloring
+using the vertex's outgoing labels. For an empty segment $P\subseteq N$.
+This proves noncoverage everywhere with at most
+$(m+1)(m+2)/2$ vertices.
+
+\paragraph{Which lattices of remaining rows occur?}
+Keep the rows left uncovered by a sequence of offers, irrespective of
+the replies. These subsets of $Z$ form a finite lattice $L$ under
+inclusion: concatenating two sequences takes the intersection, and
+the empty sequence leaves $Z$. Write $z_r$ for the $r$-coalition of
+row $z$. For $T\subseteq Z$ the least reachable set containing $T$ is
+\begin{equation}\label{core:eq:offer-closure}
+ \overline T=\{z\in Z:\ \forall r\text{ with }z_r\ne\varnothing,
+                 \exists y\in T,\ z_r\subseteq y_r\}.
+\end{equation}
+Indeed, every offer that removes such a $z$ also removes a row of $T$.
+For a row failing the test, offer its offending block $z_r$. Doing so
+for every failing row leaves exactly $\overline T$. In particular,
+allowing unobserved coalitions gives the same lattice. Each membership
+$z\in\overline T$ uses at most $K-1$ witnesses in $T$.
+
+For minimal losses this lattice distinguishes exactly the histories
+that have different answers to a future head-coverage test. If $z$
+survives in one history alone, let $j$ be its head. For every row
+$y$ of the other history headed by $j$, some block $y_r$ is not
+contained in $z_r$, by minimality. Offering those blocks covers
+every remaining loss at $j$ in the other history and leaves $z$
+in the first. Histories with identical surviving rows give the same
+coverage after every continuation. The accepted coalitions in the
+second terminal condition of \cref{core:cor:alternating-transversal}
+are recorded separately.
+
+Here is an intrinsic description of these lattices. In a finite
+lattice write $J$ for the nonzero join-irreducibles and $M$ for the
+nonunit meet-irreducibles. Put $M_j=\{m\in M:j\nleq m\}$.
+
+\begin{theorem}[Owner colorings of the lattice of remaining rows]
+\label{core:thm:offer-lattice}
+Let $K\ge3$. A finite lattice occurs as the lattice of remaining
+minimal losses of a core operation on $K$ owners if and only if there
+is a coloring $c:M\to I$ such that, for every $j\in J$,
+\[
+ c(M_j)\ne I,\qquad
+ j\nleq\bigvee\{m\in M_j:c(m)=r\}\quad(r\in I).
+\]
+Every such lattice occurs with one loss per conditional source and
+all its postings on retained inputs.
+\end{theorem}
+\begin{proof}
+In a lattice of remaining rows, each element $x$ is the join of the
+closures of its individual rows. Thus for $j\in J$ choose $z$ with
+$j=\overline{\{z\}}$: membership of $z$ in any $x$ means $j\le x$.
+Every element is an intersection of single-offer survivor sets, so each
+$m\in M$ is itself the survivor set of one offer. Color $m$ by the
+owner of a chosen such offer. If $m\in M_j$, its offer removes $z$;
+hence its color occurs on $z$, which omits an owner. For a nonempty
+family of offers at one owner the union of their survivor sets is
+itself a survivor set: offer the union of their coalitions. Thus this
+union is their lattice join. If every one removes $z$, their join
+still omits $z$. The empty join lies strictly below $j$. This proves
+both conditions.
+
+Conversely represent $x$ by $J(x)=\{j\in J:j\le x\}$. Make one
+head for each $j$ and one retained input $u_m$ for each $m\in M$.
+At head $j$ prescribe the single minimal loss posting exactly
+$u_m:c(m)$ for $m\in M_j$. This coloring is proper by the first
+condition; it is nonempty since the meet-irreducibles separate $j$
+from the bottom element. These losses occur together in a core
+operation: for each head take its one-source completion on the common
+retained inputs (\cref{core:thm:source-completion}) and take their
+union. A head absent from a summand has no source there. For the
+one-element lattice use a projection with no losses.
+
+An offer can remove a row only if it consists of retained inputs
+$u_m$ all posted at its owner, say with nonempty index set $X$. Its
+survivors are $\bigcup_{m\in X}J(m)$. This equals $J(\bigvee X)$:
+a join-irreducible absent from every $J(m)$ is absent from their join
+by the second condition. Ineffective offers leave the top. Every
+history therefore leaves a set $J(x)$, and offering $u_m$ alone at
+$c(m)$ leaves $J(m)$. Since every $x$ is a meet of meet-irreducibles,
+all $J(x)$ occur. The order on them is the original lattice order.
+\end{proof}
+
+For example, take a height-two lattice with $d\ge3$ atoms. Two
+different atoms join above any third, so the atoms need distinct
+colors. Conversely $d$ colors suffice, since $M_j$ omits $j$.
+Adjoining a new top above this lattice raises the least number of
+owners to $d+1$: the new top is join-irreducible and sees all $d$
+colors among the atoms it misses. Giving the old top any one of
+those colors and leaving the extra color unused meets both conditions.
+Thus even among acyclic realizable families the number of owners
+gives a strict hierarchy of lattices. A lattice type by itself cannot
+exclude a candidate family: every type arising from proper rows
+already occurs among realizable families, by the same construction.
+
+For three and four owners the coloring test is ordinary graph
+colorability. Put vertices $J\sqcup M$, join $j$ to each member of
+$M_j$, and join $m,m'$ if their join lies above a $j$ missing from
+both. A lattice coloring extends to this graph by assigning each
+$j$ a missing color. Conversely suppose the graph is properly colored.
+The maximal members of $M_j$ have distinct colors: the join of two of
+them lies above $j$ by maximality. Consider a color class $X$ in
+$M_j$. If its color occurs at a maximal member $m$, every member of
+$X$ lies below $m$, by the same edge test. Otherwise at most $K-2$
+maximal members occur: both the color of $j$ and the color of $X$
+are missing among them. If no maximal member bounds $X$, one can
+choose a member of $X$ outside each such bound. Their join lies above
+$j$, since any element missing $j$ lies below a maximal member of
+$M_j$. For $K\le4$ this contradicts the pair test. The same argument
+for general $K$ shows that monochromatic subsets of size at most
+$\max(2,K-2)$ suffice in \cref{core:thm:offer-lattice}.
+
+\paragraph{An implicational test and the size of its countermodels.}
+There is also a test in ordinary intuitionistic implication. It uses
+one atom $d_z$ per listed negative and one atom $w_a$ per register
+assignment, including the blank assignment $\varnothing$. For a list
+$B$ of rows let $[B]w$ abbreviate the nested implications with
+premises $d_z$ for $z\in B$ and conclusion $w$; an empty list gives
+$w$. Write $Z_v$ for the rows with head $v$ and $C_e$ for those
+covered by a nonblank observed offer $e$. Use the hypotheses
+\[
+ [Z_v]w_a \quad(v\in L(a)),\qquad
+ ([C_e]w_a)\ \to\ ([C_e]w_{a[e]})\ \to\ w_a
+       \quad\text{(every $a,e$)},
+\]
+where $a[e]$ replaces the entry at the offered owner.
+These formulas have polynomial total length on an explicit sample at
+fixed $K$: there are at most $(1+K|Z|)^K$ assignments.
+
+\begin{proposition}[An implicational criterion for guard realization]
+\label{core:prop:guard-sequent}
+The hypotheses entail $w_\varnothing$ in intuitionistic logic exactly
+when the marked query is feasible. On failure the lattice of remaining
+rows, ordered by reverse inclusion, supplies a finite Kripke
+countermodel. If every failing subfamily of the negatives has at
+least $b$ rows, then every finite Kripke countermodel has width at
+least $\lceil b/|V|\rceil$.
+\end{proposition}
+\begin{proof}
+Read a winning tree from its leaves upward. At a leaf use the first
+hypothesis for its eligible input; each required $d_z$ has already
+been supplied on the path. At an offer abstract the assumptions for
+$C_e$ in both continuation proofs and apply the second hypothesis.
+This gives a derivation of the root atom with no row assumptions.
+
+On the reverse lattice force $d_z$ at $S$ when $z\notin S$, and
+$w_a$ when $a$ is feasible on $S$. Both predicates persist upon
+deletion. The first world above $S$ forcing every $d_z$ for $z\in C_e$
+is $S\setminus C_e$. Thus $[C_e]w_a$ holds at $S$ exactly when
+$a$ is feasible on this smaller set. The two-child construction of
+\cref{core:thm:pointed-guard-cut} validates the offer hypothesis;
+a fitting projection validates the leaf hypothesis. Failure makes
+$w_\varnothing$ false at the initial world $Z$.
+
+In any finite countermodel of width $q$ consider only worlds above
+and including the refuting root. For each head $v$ the worlds where
+at least one $d_z$ for $z\in Z_v$ is false form a downset.
+At each of its maximal worlds retain one such row. At most $q|V|$
+rows are retained. Persistence means that a false premise still
+exists everywhere in that downset. The leaf hypotheses therefore
+still hold: whenever $w_a$ is false, every eligible head has a false
+premise at that world. Removing premises from $[C_e]w$ makes this
+antecedent of the offer rule harder to satisfy, so all remaining offer
+hypotheses still hold. Discard the offers and register assignments
+absent from the restricted sample. The same root still refutes the
+conclusion, so the retained sample fails, proving the bound.
+\end{proof}
+
+The implication test has a succinct form on the canonical primes
+alone. Use finite, constant index domains for the inputs, owners,
+proper passive colorings, nonblank offers and register assignments;
+their indices have polynomial bit length. Let $X_r(A)$ be an atomic
+predicate on nonempty coalitions, subject to
+$X_r(A)\to X_r(B)$ for $A\subseteq B$.
+For a coloring $t$ at $v$ write $P_v(t)$ for the rigid input test
+that some listed prime guard is enabled on its observer facet.
+Agreement makes the choice of a missing observer immaterial. Put
+\[
+ Q(v)=\forall t\text{ at }v\quad
+ \left(P_v(t)\ \lor\!
+       \bigvee_{r:\,t_r\ne\varnothing} X_r(t_r)\right).
+\]
+Use just the following two universally quantified hypotheses, in
+addition to monotonicity:
+\[
+  Q(v)\to W(a)\quad(v\in L(a)),\qquad
+  (X_r(A)\to W(a))\to(X_r(A)\to W(a[r:=A]))\to W(a).
+\]
+The query succeeds exactly when these hypotheses entail
+$W(\varnothing)$. Quantifiers here abbreviate finite conjunctions or
+finite case distinctions over the stated domains. Keeping the indices
+bound gives polynomial length in the prime presentation; expanding
+them can take exponential space.
+
+Indeed, along a successful branch the assumed offers cover every
+losing coloring of the terminal input. For each such coloring,
+monotonicity gives $X_r(t_r)$ from a covering offer, proving $Q(v)$
+by cases. Conversely use the same countermodel with $X_r(A)$ true
+at $S$ when no row left in $S$ is covered by $(r,A)$. This predicate
+is monotone in $A$ and persistent under deletion. The first extension
+making it true deletes exactly those rows. If a loss at $v$ survives,
+its own coloring falsifies $Q(v)$, since every nonempty block covers
+that very row. If none survives, every losing coloring extends a
+minimal loss at $v$ already deleted by some offer. That offer and
+all enlargements of its coalition are true at $S$. Thus $Q(v)$
+holds exactly when the leaf $v$ is available. The two hypotheses
+follow as in the explicit sequent. Every countermodel of the indexed
+form also gives one for the explicit sequent on the same frame: set
+$d_z=\bigvee_{r:z_r\ne\varnothing}X_r(z_r)$, with the empty
+disjunction false. Truth of all minimal-loss premises for $v$ implies
+$Q(v)$ by monotonicity. Forcing an offer forces $d_z$ for every row
+it covers, giving the explicit offer hypothesis.
+
+\begin{proposition}[Shared certificates and finite countermodels]
+\label{core:prop:guard-dag-countermodel}
+For a failing indexed query, let $D$ be the least number
+of vertices in a graph certifying noncoverage and $F$ the least number
+of worlds in a countermodel. For $n=|V|$ one has
+\[
+                         F\le D\le F(1+nF)^K .
+\]
+\end{proposition}
+\begin{proof}
+For the first inequality order the graph by descent from its root.
+Choose one missed row for each eligible input at each vertex.
+Force $X_r(A)$ at $x$ when $(r,A)$ covers no chosen row at or below
+$x$. Make $W(a)$ false at $x$ when some descendant $y$, possibly
+$x$, has a register on the same owners containing $a$ coordinatewise.
+The eligible inputs of $a$ are then eligible at $y$, whose chosen
+rows refute their $Q(v)$ at $x$. To check the offer rule for
+$e=(r,A)$, start at this $y$. If $e$ covers no chosen row below it,
+the old register is still false there and $X_r(A)$ holds.
+Otherwise some such row has a block $B\supseteq A$ at $r$.
+Heredity gives an edge $(r,B)$ here. Take this edge and repeat until
+$e$ covers no remaining row. The graph is finite and acyclic, so the
+process terminates. The final register contains $a[r:=A]$, since
+only $r$ was updated. Thus at least one of the two antecedents in
+the offer rule fails at $x$. Both predicates persist under descent,
+and the blank register fails at the root.
+
+Conversely, use pairs $(x,a)$ where $x$ is a maximal world at
+which $W(a)$ is false. Start at such a world for the blank register
+above the refuting root. For each input $v$
+choose a missed coloring at each maximal world failing $Q(v)$.
+Its nonempty blocks have false atoms there, since a coloring
+witnessing failure at an extension also witnesses it at the original
+world. At $(x,a)$ use as labels the blocks $(r,A)$ of the selected colorings
+for which $X_r(A)$ is false at $x$.
+Every eligible $v$ at $x$ still has a selected coloring all of whose
+blocks are false at $x$, by persistence. For each outgoing label $e$, failure of an
+offer antecedent
+gives a world above $x$ forcing its atom where the old or updated
+register fails. This world is strictly above $x$, so maximality
+excludes the old register. Extend to a maximal world failing the
+updated register and use that pair as the child. Persistence gives
+nested labels; monotonicity removes the whole upset of the accepted
+coalition. At frame width $u$ at most $nu$ colorings were selected;
+there are at most $1+nu$ register entries per owner, including absence.
+This gives at most $F(1+nu)^K$ pairs and hence the bound.
+\end{proof}
+
+For the opposite query of a cover crown of length $m$ from
+\cref{core:thm:exponential-locality}, the least possible countermodel
+height is exactly $m+1$, counting worlds. As in \cref{core:prop:prime-tree-size}, write $z_j$ for
+matching row $j$, use $(L_1,U_m)$ as the opposite query, and offer
+$(c,L_j)$ in order $m,m-1,\ldots,1$. Each offer covers just $z_j$,
+by \eqref{core:eq:crown-incidence}. At the root $d_{z_m}$ would
+force $w_\varnothing$: deleting $z_m$ gives a patch supplying the
+mark. The offer hypothesis for the first step therefore forces a strict successor
+where $d_{z_m}$ holds and the register $c:L_m$ fails.
+
+Consider the subsequent step from $c:L_j$ to $c:L_{j-1}$ for $j>1$.
+Once $d_{z_{j-1}}$ also holds, the old register must succeed.
+Indeed its task is to win on $L_j$ and lose on $L_1$ at $c$.
+The Boolean function $X\mapsto[L_j\subseteq X]$ does this, and its
+greatest bichain completion omits every row except possibly $z_j$
+and $z_{j-1}$: these are the only upper endpoints containing $L_j$.
+The derivation above, starting at this register, thus forces its atom
+under the two row assumptions. Consequently $d_{z_{j-1}}$ is still
+false at the present world. By the offer hypothesis it becomes true
+at a strict successor where the new register fails. This gives $m$
+strict steps. The reverse lattice on $m$ rows has height at most
+$m+1$, proving equality. Every deletion patch supplies the opposite
+query, so the width bound is at least $\lceil m/|V|\rceil$ as well.
+
+The same crowns require $\Theta(m^2)$ worlds in total. Offer
+$(c,L_j)$ and then $(b,V\setminus U_k)$ for $1\le k<j\le m$. Each forces a successor as above:
+the deletion patch at $j$ forces the blank register under $d_{z_j}$,
+and the separator for $(k,j]$ in \cref{core:prop:prime-tree-size}
+forces the $c:L_j$ register under $d_{z_k}$. At the resulting world
+$d_{z_k},d_{z_j}$ are true and the two-owner register fails.
+Every $d_{z_h}$ with $k<h<j$ must be false there: the separator
+for $(h,j]$ wins on $L_j$, is zero on $U_k$, and omits every mark
+except $h$. Keeping $k\le\lfloor m/2\rfloor<j$, the nearest true
+indices on either side of this cut therefore recover $k,j$.
+This gives at least $\lfloor m^2/4\rfloor$ distinct worlds.
+Pairs with both endpoints strictly increasing give
+$\lfloor m/2\rfloor$ incomparable worlds, since each forces a row
+false at the other. The interval graph gives a countermodel of
+quadratic size by the preceding construction and has width at most
+$m+1$: segments with a common left boundary are linearly ordered by
+reachability (a prefix edge cuts at any row).
+Thus minimum width has order $m$, and minimum height is $m+1$.
+The lower bounds hold for the explicit as well as the indexed
+sequent, by the same row implications. For the polynomial prime
+lists of \cref{core:cor:compact-locality-rate} both dimensions can
+be $2^{|V|-o(|V|)}$. At width four of the primes both already grow
+exponentially (\cref{core:thm:compact-prime-locality}).

@@ -720,7 +720,60 @@ Enumerating all minimal zeros gives an exponential-space upper bound;
 the polynomial-space upper bound above uses their explicit list or
 the bound on their number.
 
-There is also a polynomial-time reduction with only six selectors.
+\begin{proposition}[Distinguishable word contexts for a single target]
+\label{core:prop:prime-target-syntactic-algebra}
+For each fixed $K\ge3$ and $d\ge1$ there is a core operation on
+$2d+1$ inputs with $O_K(d)$ canonical prime-list entries and posting
+incidences such that recognizing which core words realize it requires
+at least $2^{2^d}$ states in any deterministic bottom-up tree automaton.
+All but one of the distinguishing words have the same full singleton
+profiles at every owner.
+\end{proposition}
+\begin{proof}
+Let $x$ be the hub, divide the other inputs into $d$ disjoint pairs,
+and let $\mathcal T$ consist of the $2^d$ sets choosing one input
+per pair. Fix an owner $r$ and write $U$ for the union of the
+passive inputs. For $\varnothing\ne S\subseteq\mathcal T$ put
+\[
+   H_S=\mathop{\bigstar}\nolimits_{r,T\in S}
+          \left(\bigcup_{j\in T}y_j\right),\qquad
+   P_S=U+(x\star_r H_S),\qquad P_{\varnothing}=U+x .
+\]
+Here the outer operation in $H_S$ is the $r$-fold. Its output is
+$\{r\}$ exactly when every member of some $T\in S$ is posted at
+$r$. On this condition $P_S=U$, and otherwise $P_S=U+x$; indeed
+$H_S\subseteq U$, including when $x$ itself is $\{r\}$.
+For nonempty $S$ the $r$-profile requires precisely all passive
+inputs, and every foreign profile requires every input.
+
+The target is $P_{\mathcal T}$. Each passive input is retained;
+at the hub on an observer facet other than $r$, a loss requires an
+$r$-posting in every pair. Its primes are exactly the $d$ guards
+excluding both $r$-postings of one pair. On the $r$-facet the empty
+guard suffices. Moreover $P_S$ realizes this target only for
+$S=\mathcal T$: for a missing $T$, post exactly its members at $r$,
+give the other passive inputs $I\setminus\{k\}$ with $k\ne r$,
+and set $x=\{k\}$. Then only $P_S$ supplies $k$.
+
+For nonempty $D\subseteq\mathcal T$ the substitution
+$C_D(z)=U+(z\star_r H_D)$ satisfies $C_D(P_S)=P_{S\cup D}$.
+When $H_D=\{r\}$ it gives $U$; otherwise $H_D\subseteq U\subseteq P_S$
+and it leaves $P_S$ unchanged. Use the identity for $D=\varnothing$.
+For distinct subfamilies choose a transversal in one but not the
+other, and let $D$ be the complement of the subfamily containing
+it. Exactly one resulting word realizes the target.
+Expand each union into owned choices by \cref{game:thm:union}.
+If the expansion uses $z$ several times, replace its occurrences one
+at a time. Some single replacement changes acceptance, giving a
+one-hole context in the pure core signature. A deterministic
+bottom-up automaton must assign the two words different states.
+Conversely the full $n$-ary operation table is always a sufficient
+state. It has at most $(2^K-1)^{(2^K-1)^n}$ possible values, so the
+doubly exponential order in the input arity is sharp.
+\end{proof}
+
+The reduction in \cref{core:thm:complete-guard-pspace} also has a
+polynomial-time version with only six selectors.
 On $W$ draw an arc from each head to every variable in one of its
 bare tails. Each head has at most four tails of at most four inputs,
 including the padded endpoint coalitions. Every induced undirected

@@ -87,9 +87,11 @@ positive query's repeated-owner color class avoids the foreign slots
 of the negatives
 (\cref{core:thm:nested-repeated-guards,core:thm:disjoint-foreign-guards}).
 For several repeating owners, the inputs posted at both of any two
-owners suffice for their joint singleton tests. Bounded pairwise overlap
-gives fixed-parameter tractability and linear obstruction size at fixed
-$K$. For disjoint color classes a single closure law on the minimal
+owners suffice for their joint singleton tests. For a bounded positive color class, only the sizes of connected
+components of these overlaps matter for fixed-parameter tractability
+and linear obstruction size: every feasible rainbow or gap already has
+a witness in one connected component of the negative rows
+(\cref{core:thm:component-profile-factorization,core:cor:connected-palette-overlaps}). For disjoint color classes a single closure law on the minimal
 zeros suffices: choosing one zero per head and eliminating acyclic
 same-color dependencies forces zeros on the external inputs alone
 (\cref{core:thm:palette-overlap,core:cor:palette-boundary}).
@@ -259,8 +261,15 @@ Arbitrary guard tables have an exact recursive recognition criterion using
 atomic challenges and strict row deletion
 (\cref{core:cor:guard-peeling}). Alternatively, a cut on subfamilies of
 the given negative queries carries at most one coalition per owner.
-Equivalently, an alternating transversal condition chooses only observed
-coalitions and tests one input. There is a polynomial algorithm at
+Directly on prime lists, every finite tree of nested sets of
+coalitions must contain a vertex where one eligible input's guards
+cover all available colorings. A failing tree can require doubly
+exponentially many vertices in the input arity; for a cover crown
+of length $m$, sharing subtrees reduces the size from at least $2^m$
+to order $m^2$ (\cref{core:thm:prime-tree-cover,core:prop:prime-tree-size}).
+The equivalent implicational test has finite countermodels on the
+lattice of remaining rows, and owner colorings classify those lattices
+(\cref{core:prop:guard-sequent,core:thm:offer-lattice}). There is a polynomial algorithm at
 bounded total width of the coalition orders, even with several repeating
 owners (\cref{core:thm:pointed-guard-cut,core:cor:alternating-transversal}).
 If each color class in a loss is independent in the graph joining
@@ -305,10 +314,12 @@ boundary and cut conditions of \cref{core:thm:hypergraph-basis}.
 The latter criterion is closed, but quantifies over auxiliary structures.
 
 At every fixed $K\geq3$, no finite family of invariant relations determines
-the core clone (\cref{core:thm:not-finitely-related}). The number of
-valuations needed to witness nonrealizability can grow exponentially with
-arity, even for complete prime lists of polynomial length and width
-four (\cref{core:thm:exponential-locality,core:thm:compact-prime-locality}). At fixed $K$ and a bounded
+the core clone (\cref{core:thm:not-finitely-related}). An interval mask on $n$ inputs always has a witness to failure
+on at most $2^n$ valuations, and may need $2^{n-O(\log n)}$.
+Polynomial-size prime lists still allow $2^{n-o(n)}$; width four
+already allows exponential growth. A separate counting bound for
+any fixed prime width applies to arbitrary operations
+(\cref{core:thm:interval-mask-locality-rate,core:thm:compact-prime-locality,core:cor:compact-locality-rate,core:thm:prime-width-locality}). At fixed $K$ and a bounded
 number of distinct repeated color classes in the minimal zeros, a
 nonrealizable guard family has a witness on only linearly many valuations
 (\cref{core:cor:input-guard-cuts,core:cor:repetition-locality}).
@@ -542,9 +553,10 @@ a polynomial-time final test exists on this representation if and only
 if the polynomial hierarchy equals PSPACE. One direction is the
 hardness theorem; the other is the quantified-predicate definition
 of the polynomial hierarchy and the polynomial-space upper bound.
-Even without restrictions on how the valuations are chosen, a
-polynomial-size sample cannot always certify rejection from the
-prime lists (\cref{core:thm:compact-prime-locality}).
+Even checking words against one realizable target of linear
+prime-list size can require a doubly exponential number of
+states in a deterministic bottom-up tree automaton
+(\cref{core:prop:prime-target-syntactic-algebra}).
 For interval masks the relevant structure is directed reachability; its
 prime-only recognition problem is itself PSPACE-complete
 (\cref{core:prop:compact-cube-masks}). With two posting colors the same
@@ -3322,59 +3334,113 @@ term clone.
 
 The number of observations needed can be exponential in the input arity.
 
-\begin{theorem}[An exact exponential locality threshold]
+\begin{theorem}[Exact locality of a cover crown]
 \label{core:thm:exponential-locality}
-Fix $K\geq3$ and $d\geq2$. There is an idempotent operation on $2d$ inputs
-that is $2^d$-point interpolable but is not $(2^d+1)$-point interpolable.
-It has no term realization even with winner constants and internal role
-permutations.
+Fix $K\ge3$. The interval mask of a cover crown
+\eqref{core:eq:crown-incidence} of length $M$ is $M$-point interpolable
+by words of completion depth at most one, but fails interpolation on
+$M+1$ atomic valuations. It is idempotent and has no term realization
+even with winner constants and internal role permutations.
+In particular $M=2^d$ is achievable on $2d$ inputs for every $d\ge2$.
 \end{theorem}
 \begin{proof}
-Take $V=\{1,\ldots,d\}\times\{0,1\}$. List all $2^d$ binary words in
-cyclic reflected Gray order, so successive words differ in one coordinate.
-For a word $x$ and its successor $x^+$ put
-\[
- L_x=\{(j,x_j):1\leq j\leq d\},\qquad U_x=L_x\cup L_{x^+}.
-\]
-Every $L_x$ has size $d$ and every $U_x$ size $d+1$, hence the intervals
-are covers with nonempty lower and proper upper endpoints. A transversal
-$L_y$ lies in $U_x$ exactly when $y=x$ or $y=x^+$: the one changed block
-allows two choices, and every other block allows only one. These are
-precisely the incidences in \eqref{core:eq:crown-incidence}.
+By \cref{core:lem:crown-patch}, deleting any one of the $M$ masked
+intervals gives a core operation. These deletion patches have depth
+at most one by the construction of \cref{core:thm:interval-masks}.
+Take one further patch, the union of the greatest completions for the
+all-variable Boolean disjunction and conjunction. On every masked
+interval it gives precisely $\{b,c\}$, since the lower end is
+nonempty and the upper end is proper. An input in a masked interval
+can thus exclude only that interval's deletion patch, and any other
+input can exclude only the extra patch. Any $M$ valuations have a
+common interpolant.
 
-For a winner input $S$, write $L(S)=\{j:S_j=\{c\}\}$ and
-$U(S)=\{j:S_j\ne\{b\}\}$. Define $F(S)=\{b,c\}$ when
-$(L(S),U(S))=(L_x,U_x)$ for some $x$, and return the full input union
-otherwise. The exceptional regions are disjoint because $L(S)$ identifies
-$x$. By \cref{core:lem:crown-patch}, deleting any one of these $2^d$
-regions gives a core operation.
+For the converse take the $M$ atomic rows giving $c$ on $L_i$, $a$ on
+$U_i\setminus L_i$, and $b$ elsewhere, together with the corresponding
+row for one opposite interval $(L_{i+1},U_i)$, where $a\notin\{b,c\}$.
+The rows in the matching omit $a$. By
+\eqref{core:eq:atomic-observer-expansion}, each Boolean component
+$\varphi$ of an interpolating word must satisfy
+$\varphi(L_{i+1})\le\varphi(U_i)=\varphi(L_i)$ at every edge.
+Equality follows around the cycle, so the word omits $a$ at the
+unmasked opposite interval as well, a contradiction. Constant input
+tuples lie outside every masked interval, giving idempotence; now
+\cref{gen:thm:core} excludes realizations in the expanded signatures.
 
-There is one further core patch: take the union of the two greatest
-completions for the all-variable disjunction and conjunction. It equals
-$\{b,c\}$ on every exceptional region, since $L_x\ne\varnothing$ and
-$U_x\ne V$. At an exceptional input only its own deletion patch may
-differ from $F$; elsewhere only this extra patch may differ. Thus every
-valuation excludes at most one of $2^d+1$ core patches, and any $2^d$
-valuations have a common interpolant. In fact each interpolant has
-completion depth at most one: the deletion patches are path-closed
-interval masks, represented in \cref{core:thm:interval-masks} by unions
-of greatest completions, and the extra patch has the same form.
-Thus even local interpolation at depth one on all $2^d$-row samples
-can fail to give a core operation at any depth.
+For the example take one pair of inputs per bit of a $d$-bit word.
+For each word $x$ in cyclic reflected Gray order let $L_x$ select
+its bit values and let $U_x=L_x\cup L_{x^+}$ for its successor $x^+$.
+Only the changed bit allows two choices in $U_x$. Hence precisely
+$L_x,L_{x^+}$ lie below it, and $L_x\subsetneq U_x$ is a cover.
+\end{proof}
 
-For the converse, take the $2^d$ atomic matching rows for intervals
-$(L_x,U_x)$, together with one opposite row $(L_{x^+},U_x)$.
-$F$ omits $a$ at every matching row and includes it at the opposite row.
-For any core term, absence on the matching rows forces each Boolean
-component to satisfy
-\[
- \varphi(L_{x^+})\leq\varphi(U_x)=\varphi(L_x).
-\]
-The finite cycle forces equality, contradicting the positive opposite row.
-Thus these $2^d+1$ rows have no common interpolant.
-Finally a constant input lies in no exceptional region, since those regions
-have both a $b$-singleton and a $c$-singleton. Hence $F$ is idempotent,
-and \cref{gen:thm:core} excludes full-language realizations as well.
+\begin{theorem}[Locality of interval masks]\label{core:thm:interval-mask-locality-rate}
+Every noncore interval mask on $N$ inputs fails interpolation on at
+most $2^N$ valuations. For all sufficiently large $N$ there is such
+a mask interpolable on every sample of $2^{N-O(\log N)}$ valuations.
+Its local interpolants can all have completion depth at most one.
+\end{theorem}
+\begin{proof}
+Choose a strict unmasked interval $(L,U)$ in the path closure, by
+\cref{core:thm:interval-masks}. A simple path from $U$ to $L$ in
+the preorder graph uses at most $2^N-1$ edges. For each masked interval
+reversed on this path, take one valuation with the $c$-singleton on
+its lower end, the $b$-singleton outside its upper end, and the full
+menu $I$ at every free input. Take the same valuation for $(L,U)$.
+
+Fix $a\notin\{b,c\}$. On all these valuations every owned gate other
+than $b,c$ acts as union in the $a$-observer: no other singleton occurs.
+Distributing the two remaining gates over observer union writes the
+trace of an arbitrary core word as one union of pure bichain formulas
+valid on all the chosen rows. For each component the three observer
+values $b,\pv,c$ on these rows form a chain, with $b$-choice as meet
+and $c$-choice as join. Its value on a row $(L',U')$ is therefore
+$\pv$ exactly when its monotone Boolean restriction separates $L'$
+from $U'$: the two thresholds of the chain read these two endpoints.
+Omitting $a$ on a masked row forces every component to take equal
+Boolean values on its endpoints. Each component now respects all
+inclusions and all reversals of the path, hence is constant on
+$(L,U)$ as well. At this last valuation the mask requires $a$.
+This proves the upper bound for arbitrary interpolating words.
+
+For the lower bound take an even integer $n\ge6$, and an odd $t$
+within one of $n/2$. List the $t$-subsets $X_i$ of
+$\{0,\ldots,n-1\}$ in cyclic single-exchange order. For instance,
+the weight-$t$ binary reflected Gray list is obtained by prefixing
+$0$ to the weight-$t$ list on $n-1$ positions and then prefixing
+$1$ to its reversed weight-$(t-1)$ list. The first and last strings
+are $0^{n-t}1^t$ and $1\,0^{n-t}1^{t-1}$ for $0<t<n$;
+these endpoints verify both joins of the recursion, with the
+one-string lists at weights $0,n$. The cycle length $\binom nt$ is
+even: swapping the two members in each of $n/2$ disjoint pairs has
+no fixed $t$-subset. Put $\chi(X)=\sum_{x\in X}x\bmod n$.
+The $t$-subsets of any $(t+1)$-set have distinct colors.
+
+Add two slots of $\lceil\log_2 n\rceil$ bits each, using two inputs
+per bit and selecting one of the pair. Tag each edge $X_iX_{i+1}$
+by the colors of its even and odd endpoints in those respective
+slots. Over $X_i$, move from its incoming edge tag to its outgoing
+edge tag by changing the differing bits once each. Its own parity
+slot remains $\chi(X_i)$. Then exchange $X_i$ for $X_{i+1}$ at
+their common edge tag. Use each resulting selection as a lower set,
+and the union of successive selections as an upper set. Their
+sizes differ by one. During a tag change any lower set below the
+union must have primary part $X_i$. The tag changes each bit at
+most once over $X_i$, so only the two endpoints fit. During a primary
+exchange a lower set below the union must have the exact common tag.
+Its own fixed slot gives it the color of one of the two endpoints,
+and its primary part lies in $X_i\cup X_{i+1}$. Distinctness of the
+colors there identifies the endpoint, and its local path uses the
+tag only once. This proves \eqref{core:eq:crown-incidence}.
+
+The resulting cover crown uses $n+4\lceil\log_2 n\rceil$ inputs
+and has length $M\ge\binom nt=2^{n-O(\log n)}$. Its length is even:
+the primary exchanges are even in number, and each tag bit changes
+an even number of times around the cycle. \Cref{core:thm:exponential-locality}
+gives the exact interpolation threshold $M$. For a prescribed
+large $N$, take the largest even $n$ fitting this input bound and
+add unused ground elements to the Boolean intervals. Incidence and
+the cover property are preserved, and $n=N-O(\log N)$.
 \end{proof}
 
 \begin{theorem}[Exponential locality from short prime lists]
@@ -3449,6 +3515,156 @@ prime-guard reconstruction: departures from input union suppress
 only the sole free source at the indicated fully posted patterns.
 The $5d$ bits give $10d$ inputs. This proves the claim.
 \end{proof}
+
+\begin{corollary}[Locality rate from polynomial-size prime lists]
+\label{core:cor:compact-locality-rate}
+At fixed $K\ge3$ there are polynomial-time constructible canonical
+prime lists on $N$ inputs, of width $O(\log N)$, whose interval masks
+are noncore and interpolable on $2^{N-o(N)}$ valuations. For every
+$\epsilon>0$ one can instead keep the width constant and obtain
+$2^{(1-\epsilon)N}$-point interpolation.
+\end{corollary}
+\begin{proof}
+Use the even cover crown of \cref{core:thm:interval-mask-locality-rate}
+as the states $0,\ldots,M-1$ of one digit, on $m$ inputs, with
+$\log_2 M=m-O(\log m)$. Advancing the digit exchanges one selected
+input. Use $g$ disjoint digits in the counter of
+\cref{core:thm:compact-prime-locality}, retaining its four flags per
+digit as eight further inputs. At $C_i$ record the parity $p$ of the
+old digit in $E_{i,p}$. Clear $C_i$, advance the digit modulo $M$,
+set $C_{i+1}$ if the digit wrapped and a higher digit exists, and
+otherwise set $R_i$. Clear $E_{i,p}$ and use the same return steps
+as before. At a sole $E_{i,p}$ the old and new values have opposite
+parities, including at wraparound. Together with the flags this
+distinguishes every intermediate stage. At sole $C_i$ or sole $R_i$
+the lower $i$ digits are zero and all values of the other digits
+occur once during a full count. Thus the cycle is simple and contains
+at least the $M^g$ count states. At each exchange all unchanged
+blocks have fixed cardinality; in the changed block the local crown
+or the two flag values allow precisely the two endpoints below their
+union. The global selections consequently satisfy
+\eqref{core:eq:crown-incidence}, giving the asserted local patches.
+
+For each newly selected input the posting records are a union of
+an absolute constant number of products over the digit blocks,
+with all flags fixed within each product. For a change within
+digit $i$, choose the parity flag $E_{i,p}$; the allowed old states
+are precisely those of that parity whose next exchange adds that
+input. The lower digits are zero and the higher digits are free.
+For a flag change the possible stages are the carry step with either
+parity, the choice of carry or return after advancing, or a return
+from the adjacent position. Each stage restricts only the current
+digit beyond the fixed zero prefix. This description groups all its
+allowed local states into one factor, regardless of $M$.
+
+On a product a sufficient guard must hit a fixed posting or hit
+every pattern in a single digit factor, since missed patterns in
+different factors can be chosen independently. Each digit has at
+most $2m$ possible postings. Enumerating all its minimal guards
+thus takes $2^{O(m)}$ time from the local crown. Each product has
+$O(g\,2^{O(m)})$ guards of width $O(m)$. Taking minimal unions of
+one per product keeps width $O(m)$ and costs $(g\,2^{O(m)})^{O(1)}$
+with absolute exponents. As in \cref{core:thm:compact-prime-locality},
+only observers outside $\{b,c\}$ see these losses.
+
+Taking the even primary dimension of the local crown of order
+$\log g$ gives $m=\Theta(\log g)$. The full lists are polynomial
+in $N=(m+8)g$, while $g\log_2 M\ge N-O(N\log\log N/\log N)$.
+Alternatively fix $m$ large enough that
+$\log_2 M/(m+8)\ge1-\epsilon$, and then let $g$ grow.
+\end{proof}
+
+\begin{theorem}[A sample bound from prime width]\label{core:thm:prime-width-locality}
+Let $K\ge3$, $n\ge1$ and $w\ge1$. Define $\lambda>1$ by
+\[
+                  \lambda(\lambda-1)^{w-1}=(K-1)^w .
+\]
+Then $\lambda<K$. At any head and observer, a complete prime list
+of width at most $w$ has at most $\min(w,\lambda)^{n-1}$ minimal
+losses. Any noncore $n$-ary operation whose probe guards have this
+width fails interpolation on at most
+\[
+                     1+Kn\min(w,\lambda)^{n-1}
+\]
+valuations. If the operation is an interval mask and all its masked
+intervals are covers with lower ends of the same size, at most
+$1+n2^{(1-1/w)(n-1)}$ valuations suffice.
+\end{theorem}
+\begin{proof}
+Put $d=n-1$. On one observer facet a coloring uses $K$ symbols per
+passive input, neutral and $K-1$ colors. A minimal loss is a consistent
+minimal set of postings that hits every guard. An empty guard forbids
+all losses, and a list with no guards has just the empty minimal loss.
+For the bound $w^d$, branch on the postings of one still-unhit guard.
+Discard inconsistent branches. Every productive branch adds a new
+input and has at most $w$ children. Every minimal loss appears at a
+leaf, by following its postings as long as a guard is unhit.
+
+For the other bound we use random-order forcing as in the
+satisfiability coding lemma of Paturi, Pudl{\'a}k and Zane
+\cite{PaturiPudlakZane1999}; Moss{\'e}, Sha and Tan use a coding lemma
+to bound Boolean prime implicants \cite{MosseShaTan2022}. Here a
+guard may contain several different colors of the same input, and
+a coloring must actually post one of its literals. Assign the inputs
+in a uniformly random order, normally sampling neutral with probability
+$t=1/\lambda$ and each color with probability $p=(1-t)/(K-1)$.
+If an unhit guard has only the current input left, condition on
+hitting all such guards. Abort if impossible or if a guard has
+already been missed.
+
+Each posted input in a minimal loss $z$ has a private guard hit only
+by its posting. With probability at least $1/w$ the input is processed
+last among the coordinates of that guard. Along $z$ such a step
+excludes neutral, raising the probability of its prescribed posting
+by a factor at least $(1-t)^{-1}$. Conditioning at any other step
+compatible with $z$ cannot lower its probability. If $s$ inputs are
+posted, the expected number of these forced steps is at least $s/w$.
+Convexity of the exponential therefore bounds the probability of
+generating $z$ from below by
+\[
+                 t^{d-s}p^s(1-t)^{-s/w}=t^d .
+\]
+The equality is the defining equation of $\lambda$, whose left side
+is strictly increasing on $(1,\infty)$ and exceeds $(K-1)^w$ at $K$.
+Distinct minimal losses are disjoint outcomes, giving the bound.
+
+For the sample claim, failure of three-point interpolation already
+suffices. Otherwise \cref{core:prop:local-guards} gives the canonical
+reconstruction. Two-point interpolation on the two probes for an
+overlap also forces observer agreement there. Take a canonical probe
+for each minimal loss at each head and observer. Only its head
+carries the queried winner, which the operation omits. Repeated
+probes can be discarded. If no term obeys these omissions, the
+collected valuations suffice. Otherwise, if each positive bit has
+a term obeying the omissions and supplying its mark, union all such
+terms. Every nonminimal loss contains a tested minimal one on its
+own facet, so antitonicity preserves all omissions. Source
+reconstruction now gives the entire operation. There is a positive
+bit since the output is nonempty. Thus a noncore operation has some
+positive whose one additional probe rules out every interpolant.
+
+For the last assertion fix a head $j$ and an observer outside
+$\{b,c\}$. On total binary postings at the other $d$ inputs the
+loss predicate is a Boolean CNF: each prime requires that one of
+its listed postings occur. Its satisfying assignments are exactly
+the masked cover edges at $j$. All have the same Hamming weight,
+so changing any single bit falsifies the formula. The isolated-solution
+bound of \cite{PaturiPudlakZane1999} gives at most $2^{(1-1/w)d}$
+such assignments. Indeed each bit has a clause satisfied only by
+that bit, and placing it last in that clause forces its exact value.
+Uniform binary guesses at unforced steps give each solution
+probability at least $2^{-d+d/w}$ by the same calculation.
+The masked edges at all heads, together with one unmasked interval
+in their path closure, give the required actual valuations as in
+\cref{core:thm:interval-mask-locality-rate}.
+\end{proof}
+
+In particular the dependence of the constant width on $\epsilon$
+in \cref{core:cor:compact-locality-rate} is necessary for such
+constant-rank covers. For large fixed $w$, taking the local digit
+size proportional to $w$, with a sufficiently small absolute
+factor, gives locality exponent at least $1-O(\log w/w)$; the last
+bound gives at most $1-1/w$ up to a polynomial factor in $n$.
 
 \paragraph{Acyclicity of a directed cube.}
 The two-input encoding of a bit also gives a direct structural
