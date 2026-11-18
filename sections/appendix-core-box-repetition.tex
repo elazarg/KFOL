@@ -298,3 +298,84 @@ $s\ne c$. This gives the box with $K-1$ gates and upper bound $U+X$.
 Pull back the $m$ expansions with one repair gate each, and restore
 $C_m$ with two gates at $a,b$. Thus the principal's least marked-path
 depth lies between $m$ and $m+K+1$, despite its simple logical form.
+
+\begin{theorem}[Exponential completion depth in the arity]
+\label{core:thm:exponential-completion-depth}
+Fix $K\ge3$. For each $l\ge2$ there is a core operation on $2l+1$
+inputs for which every owner schedule has length at least
+$m=2\binom{l}{\lfloor l/2\rfloor}$. Its least completion depth is
+at least $(m-3)/(K+6)$, and hence grows exponentially in the arity.
+The lower bound is forced by one positive principal box.
+\end{theorem}
+\begin{proof}
+Choose owners $a,b,c$ and two disjoint groups of $l$ passive inputs.
+List the middle-sized subsets of the first group at owner $a$, and
+those of the second at owner $b$, alternating the two lists. Write
+$(r_i,A_i)$ for the $i$th pair in this combined list. Let $H_i$ be
+the $c$-fold on $A_i$. Beginning at $X$, attach $H_i$ by $\star_{r_i}$
+in list order, obtaining the spine $T$. Its neutral residue $C$ is core,
+and $T\subseteq C+X$, by \cref{core:lem:spine-neutral-closure}.
+
+For each adjacent pair $i,i+1$, use the comparison valuation which
+posts $A_i$ at $r_i$ and $A_{i+1}$ at $r_{i+1}$, with every other
+passive input equal to $\{c\}$. The two groups are disjoint, so this
+is a valuation. At it $H_i$ and $H_{i+1}$ give their respective
+owner atoms. Every other $H_j$ gives $\{c\}$, since its coalition
+in its group has the same size and differs from the posted one.
+Thus the last reset of $T$ is at $i+1$, and every later helper
+supplies only $c$. The result omits $r_i$ independently of $X$,
+so $C$ also omits $r_i$ there, by evaluating at the union of the
+helpers as in \cref{core:lem:spine-neutral-closure}.
+
+Let $q$ post every passive input at $c$. The interval term $C+T$
+supplies the mark at $q$ and loses it on the monochromatic coloring
+$a:A_1$. Take $F\in\mathcal I(C)$ with the principal predicate at
+$q$. It supplies the mark at $q$ and also loses it at $a:A_1$,
+by minimality of the principal. For any spine $S\subseteq F$ supplying
+the mark at $q$, no attachment can be $c$-owned, since every passive
+helper equals $\{c\}$ at $q$. There must be an $a$-attachment whose
+helper wins on $A_1$, since $S$ loses the source there. At each $i$
+let $L_i$ be the last $r_i$-attachment winning on $A_i$, when it exists.
+
+On comparison valuation $i$, give $X$ the menu $\{c\}$. If $L_i$
+exists, it installs $r_i$. The spine's final value omits $r_i$, by
+$S\subseteq F\subseteq C+X$. The only later attachment capable of
+removing $r_i$ is an $r_{i+1}$-reset: $c$ is unavailable as a gate
+owner, and the other colors have no atomic inputs. The singleton
+test for that reset is exactly the test on $A_{i+1}$. So $L_{i+1}$
+exists and $L_i<L_{i+1}$. Starting from $L_1$ forces $m$ attachments.
+
+Now take any scheduled witness for $F$ and follow one occurrence
+supplying the mark at $q$. At a nonunary fold, write it as the owned
+choice of the selected child and the fold of all its other children.
+Associativity gives an equivalent binary word with at most one gate
+per slot on the selected path. Marked linearization
+(\cref{core:lem:neutral-marked-linearization,core:cor:interval-linear-cover})
+keeps that occurrence's full type and gives a spine below $F$ with
+at most that many gates. This spine must have at least $m$ attachments
+by the preceding argument. Finally use the schedule compilation of
+\cref{core:thm:completion-fold-schedule}.
+\end{proof}
+
+The example also has exponentially many prime guards. To see this,
+index the $a$-coalitions and the $b$-coalitions separately within their
+respective lists, so the $i$th $a$-attachment precedes the $i$th
+$b$-attachment. Fix an input $v$ of the first group and observe $a$.
+Choose $i$ whose $a$-coalition contains $v$. Give $v$ the atom $\{a\}$,
+the other first-group inputs in that coalition the ambiguous menu
+$I\setminus\{a\}$, and its remaining inputs the atom $\{c\}$. In the
+second group choose coalition $j$, with $\{b\}$ there and $\{c\}$
+elsewhere. Give $X$ the menu $I\setminus\{a\}$. Only $v$ supplies $a$.
+Only helper $i$ in the first group can carry its contribution and the
+only $b$-reset is at $j$ in the second group. Evaluating $C$ at the
+union of its helpers as above, the $a$-bit is therefore $[i>j]$.
+The interval bounds make this also the bit of $F$.
+
+Take the positive pairs $(i,i-1)$ over the coalitions containing $v$
+with $i\ge2$. Any guard admitting two such pairs also admits the
+first-group coloring of the smaller $i$ with the second-group
+coloring of the larger one, which is negative. Each guard thus
+covers at most one of these pairs. There are at least
+$\binom{l-1}{\lfloor l/2\rfloor-1}-1$ of them. The depth lower bound
+is in the arity, and leaves open a polynomial bound in the length of
+the complete prime lists.

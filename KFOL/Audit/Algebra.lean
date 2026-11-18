@@ -68,6 +68,7 @@ import all KFOL.Core.TransversalContexts
 import all KFOL.Core.LayerInterpolation
 import all KFOL.Core.GuardConsensus
 import all KFOL.Core.OwnerFoldClosure
+import all KFOL.Core.SpineThinning
 import all KFOL.Core.IntervalMinorant
 meta import Lean.Elab.Command
 

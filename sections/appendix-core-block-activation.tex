@@ -131,6 +131,67 @@ block, by the section argument with $Y$ marked. The first comparison
 therefore transfers positivity to $p$, as required.
 \end{proof}
 
+\paragraph{Spines with helpers in separate source components.}
+The activation product also factors its term witnesses. This matters
+when many different coalitions of earlier inputs occur in the same
+component's losses.
+
+\begin{theorem}[Component-local principal spines]\label{core:thm:local-principal-spines}
+Let $F$ be a core operation and partition its used inputs into the
+strongly connected components $C_1,\ldots,C_m$ of their source graph,
+in topological order. Let $w=\max_j|C_j|$.
+For each proper coloring $q$, its principal box has a primitive spine
+bounded by $F+X$ whose helpers, from the marked input outward, lie in
+one block per component in reverse topological order. Each block has
+at most $K(2^{|C_j|}-1)$ attachments and uses only its own inputs.
+Consequently $F$ has completion depth at most
+\[
+ K(2^K-1)^w + K\sum_{j<m}(2^{|C_j|}-1).
+\]
+In particular this is polynomial in the length of the complete prime
+lists at fixed $K$ when $w$ is logarithmic in that length.
+\end{theorem}
+\begin{proof}
+A source absent at the empty coloring cannot occur in a word for
+$F$, so unused inputs can be omitted. At each topological prefix the
+earlier source predicates are independent of later inputs. Erasing
+the later inputs neutrally gives the core prefix with exactly those
+predicates. For consecutive prefixes $B,F'$ separated by a component
+$C$, source reconstruction gives $B\subseteq F'\subseteq B+U_C$.
+
+For a proper coloring $q$ of this prefix, let $e$ be its restriction
+to the inputs of $B$.
+Take the principal spine $S_B(Y,u)$ for $B$ at $e$ from the preceding
+components. On $C$ take a local principal spine $S_D(X,w')$ for
+the coefficient $D_e$ at $q|_C$, using $X$ alone if $D_e=0$.
+The initial component is handled by the same local construction.
+\Cref{core:prop:principal-activation-boxes} gives a local spine;
+\cref{core:lem:spine-last-resets} shortens it to the stated bound.
+
+Substitute $S_D$ for $Y$ in $S_B$. If an outer attachment resets at
+$u$, the result is independent of $Y$. Since $S_B(Y,u)\subseteq B(u)\cup Y$
+for every $Y$, that result is contained in $B(u)$. Otherwise all full
+factors of the outer spine hold at the singleton coloring of $u$,
+so $u\in L_e$. There $D_e(w')\subseteq F'(u,w')$ by definition of the
+coefficient. Using $S_D(X,w')\subseteq D_e(w')\cup X$ in the bound on
+$S_B$ proves that the composite lies below $F'+X$. Its marked factors
+multiply because the marked paths concatenate. The activation product
+in \cref{core:thm:block-source-extension} identifies the result with
+the principal at $q$. This proves the spine claim by induction.
+
+For the depth bound, at each prefix the block extension formula
+realizes the new part by the union of the preceding prefix's principal
+spines with the corresponding $D_e$ substituted for the marked input.
+Omit zero bodies. This is the construction in
+\cref{core:thm:block-source-extension}, now using the factored spines.
+Flatten the unions over all components, including the first prefix.
+Each substituted body and each helper is a core operation on at most
+$w$ inputs. Its exact table has at most $(2^K-1)^w$ rows. By
+\cref{core:thm:subpower-complexity} it has a primitive word of depth
+at most $K(2^K-1)^w$. Each attachment contributes one more layer,
+and the unions of the summands are free, giving the bound.
+\end{proof}
+
 \paragraph{Reading the coefficients from guards.}
 Suppose the sources in $J$ have the predicates of $B$ independently
 of $W$. For $i\in W$, write $(b,t)$ for a minimal proper coloring
@@ -1035,6 +1096,41 @@ a row at $i\in C$ as $(i,b,t)$, where $t$ gives the postings inside
 $C$ and $b$ the earlier postings. Fix a proper coloring $p$ of the
 inputs. The principal $\Theta_{0,q}$ for the absent operation is
 constantly true.
+
+\begin{corollary}[Shallow witnesses under source omissions]
+\label{core:cor:shallow-source-witness}
+For a finite budget of source omissions on $n$ inputs, let $w$ be the
+largest strongly connected component size in its posting graph.
+If a core word omits the budget, there is one word of completion depth
+at most $K(2^K-1)^w+Kn(2^w-1)$ which omits it and supplies every feasible
+positive source bit and every feasible requested winner at once.
+The bound allows arbitrarily many distinct coalitions attaching to an
+input in its own component.
+\end{corollary}
+\begin{proof}
+Let $B$ be the union of the finitely many operations induced by words
+omitting the budget. Union preserves all omissions, and $B$ supplies
+every bit or winner that one of its summands can supply.
+By \cref{core:thm:component-profile-factorization}, a source bit at $i$
+has a witness exactly when it has one supported on the ancestors of
+$i$. Its truth therefore depends only on the postings in that ancestor
+set. The source graph of $B$ is contained in the reachability graph
+of the budget, so its strongly connected components have size at most
+$w$. Apply \cref{core:thm:local-principal-spines} to $B$.
+\end{proof}
+
+For a realizable operation, let $d_{\rm prof}$ be the least depth of a
+word with its required singleton profiles that omits its residual
+losses. If the residual graph has largest component size $w$, put
+$D=K(2^K-1)^w+Kn(2^w-1)$. Then the least depth of the whole operation
+lies between $d_{\rm prof}$ and $1+\max(d_{\rm prof},D)$. Indeed choose
+such a profile witness $S$ and the greatest residual witness $B$ of
+\cref{core:cor:shallow-source-witness}. The reset $B\del S$ is the
+greatest completion on two ports with the singleton profiles of the
+second projection. It keeps the prescribed profiles and the residual
+losses. At a positive sole-source probe with neutral head status, $S$
+is ambiguous, so reset includes the requested mark from $B$. The
+profiles account for the discarded losses as before.
 
 \begin{theorem}[A component pass for partial source queries]
 \label{core:thm:component-mark-sweep}

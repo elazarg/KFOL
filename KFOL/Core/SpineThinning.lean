@@ -1,0 +1,79 @@
+module
+
+public import KFOL.Algebra.Monotone
+public import Mathlib.Data.Fintype.Card
+import Mathlib.Data.Finset.Max
+
+/-! # Thinning an owned-choice spine at its last resets -/
+
+@[expose] public section
+namespace KFOL.Core.Spine
+
+variable {Role : Type*}
+
+abbrev Attachment (Role : Type*) := Role × WinnerSet Role
+
+/-- An attachment is a reset when its helper is its own atom. -/
+def Resets (step : Attachment Role) : Prop := step.2 = WinnerSet.singleton step.1
+
+/-- Attach successive fixed helpers to an input. -/
+noncomputable def eval (steps : List (Attachment Role)) (input : WinnerSet Role) : WinnerSet Role :=
+  steps.foldl (fun x step => WinnerSet.choice step.1 x step.2) input
+
+private theorem eval_mono (steps : List (Attachment Role)) {x y : WinnerSet Role}
+    (sub : x.val ⊆ y.val) : (eval steps x).val ⊆ (eval steps y).val := by
+  induction steps generalizing x y with
+  | nil => exact sub
+  | cons s steps ih =>
+    exact ih (WinnerSet.choice_mono s.1 sub Set.Subset.rfl)
+
+/-- Deleting any nonresetting attachments can only decrease the value
+on a fixed passive valuation if the entire spine is reset free. -/
+theorem eval_sublist_le_of_no_reset {short long : List (Attachment Role)}
+    (sub : short.Sublist long) (no : ∀ step ∈ long, ¬ Resets step) (x : WinnerSet Role) :
+    (eval short x).val ⊆ (eval long x).val := by
+  induction sub generalizing x with
+  | slnil => exact Set.Subset.rfl
+  | cons s _ ih =>
+    apply (ih (fun step h => no step (List.mem_cons_of_mem _ h)) x).trans
+    exact eval_mono _ (WinnerSet.subset_choice_of_right_ne _ _ _ (no s (by simp)))
+  | cons_cons s _ ih =>
+    exact ih (fun step h => no step (List.mem_cons_of_mem _ h)) _
+
+/-- When the last reset and a sublist of its suffix are retained, the
+resulting value is contained in the old value, independently of which
+earlier attachments are retained. -/
+theorem eval_le_with_last_reset (first keptFirst : List (Attachment Role))
+    (reset : Attachment Role) (fires : Resets reset)
+    {last keptLast : List (Attachment Role)} (sub : keptLast.Sublist last)
+    (none : ∀ step ∈ last, ¬ Resets step) (x : WinnerSet Role) :
+    (eval (keptFirst ++ reset :: keptLast) x).val ⊆
+      (eval (first ++ reset :: last) x).val := by
+  simp only [eval, List.foldl_append, List.foldl_cons,
+    show reset.2 = WinnerSet.singleton reset.1 from fires, WinnerSet.choice,
+    or_true, ite_true]
+  exact eval_sublist_le_of_no_reset sub none _
+
+/-- Retain the last matching position for each query that matches at all.
+The number of retained positions is bounded by the number of queries. -/
+theorem exists_last_positions {Letter Query : Type*} [Fintype Query]
+    (word : List Letter) (fires : Query → Letter → Prop) :
+    ∃ kept : Finset (Fin word.length), kept.card ≤ Fintype.card Query ∧
+      ∀ q (i : Fin word.length), fires q word[i] → ∃ j ∈ kept, i ≤ j ∧ fires q word[j] := by
+  classical
+  let candidates (q : Query) : Finset (Fin word.length) :=
+    Finset.univ.filter (fun i : Fin word.length => fires q word[i])
+  let active : Finset Query := Finset.univ.filter (fun q => (candidates q).Nonempty)
+  let last (q : active) : Fin word.length :=
+    (candidates q).max' (Finset.mem_filter.mp q.property).2
+  refine ⟨active.attach.image last, ?_, ?_⟩
+  · exact (Finset.card_image_le.trans Finset.card_attach.le).trans (Finset.card_le_univ _)
+  · intro q i hi
+    have mem : i ∈ candidates q := Finset.mem_filter.mpr ⟨Finset.mem_univ _, hi⟩
+    have nonempty : (candidates q).Nonempty := ⟨i, mem⟩
+    let a : active := ⟨q, Finset.mem_filter.mpr ⟨Finset.mem_univ _, nonempty⟩⟩
+    have latest : last a ∈ candidates q := Finset.max'_mem _ _
+    exact ⟨last a, Finset.mem_image.mpr ⟨a, Finset.mem_attach _ _, rfl⟩,
+      Finset.le_max' _ _ mem, (Finset.mem_filter.mp latest).2⟩
+
+end KFOL.Core.Spine
