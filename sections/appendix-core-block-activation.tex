@@ -784,29 +784,192 @@ one distinct passive neighbor posted at each of the $K$ colors,
 has a star graph and requires all $K$ layers.
 \end{proof}
 
-A single four-cycle can already violate the second condition.
-Take three owners $a,b,k$, retain $w,p,q$, and give three further
-inputs $u,v,h$ one minimal loss each:
+\paragraph{Fixing the retained inputs.}
+Cycles through retained inputs can be handled without any restriction
+on how many of their neighbors they control. Let $U$ be the globally
+retained inputs and $W=V\setminus U$. Fix a coloring $e$ on $U$
+omitting $k$. Call an original minimal loss \emph{active at $e$} if
+its postings in $U$ are contained in $e$, and write $t=z|_W$ for its
+internal postings. On $k$-free internal colorings put
+$P_i(d)=\pi_i(e,d)$ for each $i\in W$. Write $T$ for the heads on
+which $P_i$ is identically one.
+
+\begin{theorem}[Recognition from the graph on conditional inputs]
+\label{core:thm:conditional-girth-five}
+Suppose the graph induced by $W$ has no triangle or four-cycle;
+the whole graph may contain both. A live, antitone, observer-agreeing
+family is core if and only if the following tests hold for every $e,k$
+for which some internal $P_i$ is positive:
+\begin{enumerate}
+\item An identically zero $P_i$ has no outgoing dependence. After
+deleting these inputs, every edge between two conditional heads of
+the restricted family satisfies the matching rule on the $k$-free facet.
+\item For each active minimal loss at $i$ with internal postings $t$,
+if $P_i(t^{\widehat k})=1$, then $t_k\cap T\ne\varnothing$.
+\end{enumerate}
+Failure has a polynomial-size certificate from the complete prime
+lists. Recognition is coNP-complete at every fixed $K\ge3$.
+\end{theorem}
+\begin{proof}
+The facet family $P$ extends by erasing $k$-postings. Once zero
+heads are removed, \cref{core:thm:triangle-free-source-guards} gives
+a core realizer for this extension exactly under the first test,
+since its graph lies in the graph on $W$ and its losses omit $k$.
+If the original family is core, fix and erase $U$ at $e$ by
+\cref{core:thm:completion-erasure}. The residual is nonzero since it
+supplies a positive; on $k$-free colorings it has the stated bits.
+Replacing its $k$-gates by union gives the required facet extension.
+It also follows by \cref{core:lem:unmarked-background}, applied to
+each positive and then taking their union, that one word on $W$
+supplies all these positives while omitting all active internal losses.
+
+Take an active loss with $P_i(t^{\widehat k})=1$.
+The set $A=t_k$ is nonempty, since the active loss itself forces
+$P_i(t)=0$ if $t$ omits $k$. If $A$ misses $T$, for each $j\in A$
+choose a $k$-free zero of $P_j$. It contains the internal part of
+an active $k$-free original minimal loss: restrict a minimal
+original loss inside the fixing by $e$ and that zero.
+In the graph on $W$, these internal losses post only neighbors of
+their respective heads. Their postings outside $\{i\}\cup A$ are
+pairwise disjoint and avoid all neighbors of $i$ by the girth
+hypothesis. The $i$-bit is therefore still positive when they are
+added to $t^{\widehat k}$, with $A$ neutral. This contradicts
+\cref{core:lem:monochromatic-opposite-losses} for the internal word.
+
+Conversely, start with the facet realizer from the first test and
+attach every projection in $T$ by $\star_k$. It still realizes
+every $k$-free positive and fits every active internal loss.
+Indeed, if $P_i(t^{\widehat k})=0$, the facet realizer already omits
+the mark there and $i\notin T$. Otherwise a member of $T$ posted
+at $k$ absorbs the fold. The background lemma now lifts any requested
+positive with that fixing. The globally retained projections and a
+union over the internal positives realize the family.
+
+To compute the complete restricted primes, drop each $k$-facet
+guard violated by $e$, remove its $U$-literals from each surviving
+guard and take the inclusion-minimal results. For completeness,
+adjoin to a sufficient restricted guard all exclusions on $U$ not
+violated by $e$. The resulting guard is sound before restriction:
+on $U$ it allows only subcolorings of $e$. It therefore contains an
+original prime which survives at $e$. This proves that the first
+test and $T$ are computable in polynomial time for specified $e,k$.
+For failure of the second, exhibit one original minimal loss and
+evaluate its restricted bit; minimality is checked by single-post
+deletions. If $W$ is empty the retained projections suffice.
+The lower bound is \cref{core:cor:two-by-n-source-hardness}, where
+the conditional vertices induce a three-vertex path.
+\end{proof}
+
+With four-cycles, the losses at the members of $A=z_k$ may impose
+conflicting postings on a shared input. For a minimal loss $z$ at
+$h$ and each nonempty $A=z_k$, impose the following rule:
+\begin{equation}\label{core:eq:compatible-facet-losses}
+ \begin{gathered}
+ \text{there is no choice of one $k$-free minimal loss at each
+ $j\in A$}\\
+ \text{whose postings outside $\{h\}\cup A$ agree wherever they overlap.}
+ \end{gathered}
+\end{equation}
+
+\begin{theorem}[Triangle-free dependence with shared retained inputs]
+\label{core:thm:triangle-free-shared-inputs}
+For a live, antitone, observer-agreeing family with triangle-free
+source graph, facetwise matching and
+\eqref{core:eq:compatible-facet-losses} are necessary for realization.
+Together they imply full colored-cofactor independence. They characterize
+realization if either the dependencies are directed acyclically or every
+undirected four-cycle contains an input retained everywhere.
+On both classes, failure has a polynomial-size certificate from the
+complete prime lists.
+\end{theorem}
+\begin{proof}
+The necessity argument in \cref{core:thm:girth-five-source-guards}
+uses absence of four-cycles only to guarantee that the outside
+postings agree. For the cofactor law, fix a minimal loss $z$ at $h$
+and test any winner $k$. If $z_k=\varnothing$, the $k$-facet extension
+has the same loss and is core by matching. Its cofactor is independent
+of $h$, and its $k$-membership equals that of the original operation
+on all valuations since that observer ignores $k$-postings. Otherwise
+all $j\in z_k$ carry $k$ at every valuation extending the fixing.
+If none supplied it, their zero bits on the $k$-facet would give a
+selection of minimal losses compatible with that valuation, violating
+\eqref{core:eq:compatible-facet-losses}. Thus $k$ is always present.
+Every fixing at a loss extends a minimal one. The acyclic implication
+is \cref{core:thm:acyclic-source-guards}; a live input with no
+predecessors ensures nonemptiness in that case.
+
+If every square meets the globally retained set $U$, apply
+\cref{core:thm:conditional-girth-five}. Its first test holds by
+fixing $e$ in the core $k$-facet extension and erasing $U$.
+For its second test, suppose an active $k$-block $A$ misses $T$.
+Choose active $k$-free losses for the heads in $A$ as in that theorem.
+Their postings on $U$ are compatible because all lie in $e$.
+Away from $U$ and the original head they have disjoint supports,
+since no square lies outside $U$. This contradicts
+\eqref{core:eq:compatible-facet-losses}.
+
+Facet matching is checked directly from the prime lists. For the
+other rule a certificate lists $k$, one minimal loss $z$ and the
+compatible losses at its $k$-posted inputs. Each listed coloring
+has at most one posting per input; evaluating its prime predicate
+and erasing each posting in turn verifies minimality.
+\end{proof}
+
+\begin{proposition}[One square separates the facet tests from realizability]
+\label{core:prop:square-facet-obstruction}
+Take three owners $a,b,k$ and retain $p,q$. Give $u,v,h$ the losses
 \[
   (w:a,p:b)\longrightarrow u,\qquad
   (w:b,q:a)\longrightarrow v,\qquad
   (u:k,v:k)\longrightarrow h .
 \]
-Here the two $k$-postings at the last loss are both outside $U_k$.
-Nevertheless the operation is core. Under a fixing suppressing $u$
-or $v$, retained inputs already supply $a,b$, and the $k$-bit of $h$
-ignores postings at $k$. Under the fixing suppressing $h$, the two
-$k$-inputs cannot both be suppressed: their losses require different
-postings at $w$. Thus the full cofactor is independent of the
-suppressed input in all three cases.
-Apply \cref{core:thm:acyclic-source-guards}.
+Retaining $w$ gives a core operation. Giving $w$ the single minimal
+loss $(u:a,v:b)\longrightarrow w$ gives a noncore operation.
+Both families satisfy the two conditions of
+\cref{core:thm:triangle-free-shared-inputs}, and their undirected graph
+is the same four-cycle with two pendant vertices.
+\end{proposition}
+\begin{proof}
+In both families, the $a$- and $b$-free facets have only $h$
+conditional. On the $k$-free facet with $w$ retained only $u,v$
+are conditional, and neither affects the other. With the additional
+loss, the $k$-free conditional edges $uw,vw$ match at $a,b$,
+respectively. In \eqref{core:eq:compatible-facet-losses}, the
+$k$-postings at the $h$-loss are protected because losses at $u,v$
+require different colors at $w$. Each color class of every other
+listed loss contains an input retained on that color's facet.
+The first family is directed acyclic, so the corollary realizes it.
+
+For the second family ask for the positive at $h$ on the coloring
+$P=(u:a,v:b,p:b,q:a)$, with $w$ neutral. Give a marked head the
+ambiguous menu $I$ as above. A word supplying the mark cannot have
+a winning $a$-test on $P_a$ or a winning $b$-test on $P_b$.
+It therefore cannot be singleton on the $w$-loss. On the $u$-loss
+its only possible singleton is $a$, since $p\in P_b$.
+That would give $\Phi_a(\{w\})=1$. On the $w$-loss the word omits
+the mark carried by $w$, so singleton-profile absorption
+(\cref{core:lem:singleton-profile-absorption}) forces the value
+$\{a\}$ there. This gives $\Phi_a(\{u\})=1$, impossible since
+$u\in P_a$. The $v$-loss is symmetric.
+
+A singleton on the $h$-loss would give $\Phi_k(\{u,v\})=1$.
+Prune to one winning child at each $k$-gate as in
+\cref{core:lem:monochromatic-opposite-losses}. The resulting word uses
+only $u,v$ and still omits the mark on both their $k$-free loss probes.
+Both of its inputs are ambiguous on each of those probes, so any leaf
+supplies the forbidden mark on its own row. This rules out the last
+singleton. The root must therefore take union on all four losses.
+Both children omit those marks and one still supplies the positive.
+Descent would reach the projection $h$, which fails its own loss.
+\end{proof}
 
 \begin{corollary}[Two common neighbors suffice for hardness]
 \label{core:cor:two-by-n-source-hardness}
 For each fixed $K\ge3$, recognition from complete canonical prime
 lists is coNP-complete on acyclic orientations of complete bipartite
 graphs $K_{2,n}$ of depth two. Deleting either vertex of the two-element
-side leaves a tree.
+side leaves a tree. In particular both classes of
+\cref{core:thm:triangle-free-shared-inputs} have coNP-complete recognition.
 \end{corollary}
 \begin{proof}
 Use the hypergraph two-colorability instances of
@@ -842,6 +1005,28 @@ These are all cofactor tests, giving realizability by
 \cref{core:thm:acyclic-source-guards}. Membership is the acyclic upper
 bound of \cref{core:thm:complete-acyclic-guard-complexity}.
 \end{proof}
+
+If both the prime guards and the minimal losses are given, recognition
+on these acyclic $K_{2,n}$ graphs takes polynomial time. More generally
+this holds for an acyclic dependency graph supplied with a tree
+decomposition of fixed width $w$. To find a cofactor violation,
+enumerate its captured head $h$ and one minimal loss there, the observed
+winner $k$, the two menu classes at $h$, a positive supplier and one
+of its $k$-primes on the second valuation. As in
+\cref{core:thm:girth-five-cofactor}, this imposes only individual menu
+restrictions. On the first valuation each input $i$ must either omit
+$k$ or satisfy one of its listed $k$-free losses. Introduce a variable
+for this choice at $i$. Each choice places individual restrictions
+on the menu at $i$ or at its predecessors. This is a binary constraint
+problem, with at most $K+2$ menu classes and one more choice than
+the number of listed losses per input. Replace each input in each
+bag by its menu and choice variables. Every constraint then lies in
+a bag of size at most $2w+2$. Tabulate the assignments in each bag
+satisfying its constraints and matching a feasible assignment in each
+child on their intersection. Connectedness of the bags for each variable
+makes this test exact, and its cost is polynomial at fixed $w$.
+For $K_{2,n}$ one bag per vertex on the large side, together with
+the two common vertices, gives width two.
 
 \begin{theorem}[Space bound from source components]
 \label{core:thm:prime-component-space}

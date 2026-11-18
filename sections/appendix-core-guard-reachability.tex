@@ -397,8 +397,132 @@ assignment entries, counting absence, and there are at most $W$ active
 owners. Each pair takes polynomial work once its children are known.
 \end{proof}
 
-One can also compute all positive queries from a common theory of
-singleton tests. Choose a finite set of bits $d_{r,A}$, with owner $r$
+\paragraph{Independent color classes.}
+Join the head of each negative row to every input colored in that row,
+forming an undirected graph on $V$. On a triangle-free graph, each
+neighborhood is independent, so every color class of every row is
+independent. Only the latter property will be needed. For each
+$S\subseteq Z$ and owner $r$, let $D_r$ be the least set closed under
+the implications $t_r\subseteq D_r\Rightarrow j\in D_r$ for
+$(j,t)\in S$, starting from the empty set. Put $T_r(S)=V\setminus D_r$.
+This is the greatest support of a safe $r$-fold, allowing empty support:
+a nonempty fold omits all marks exactly when every row whose head it
+contains has an $r$-posting in its support.
+
+\begin{theorem}[Winning an independent coalition]
+\label{core:thm:triangle-free-neighborhood-profile}
+Let $K\ge3$. If the color classes of the rows in $S$ and the
+coalition $A$ are independent, a word omitting $S$ wins $r:A$
+exactly when $A\cap T_r(S)\ne\varnothing$. For independent coalitions
+$A_1,\ldots,A_d$ at $d\ge2$ distinct owners, a word omitting $S$
+wins all these tests exactly when their intersection contains an
+input outside $h(S)$, with no restriction on the row color classes.
+\end{theorem}
+\begin{proof}
+For the second assertion such an input gives a projection. Conversely,
+if every $v$ in the intersection is a head, retain one row at each
+such $v$. For every $j$, the neighbors of $v$ miss $A_j$ since $v$
+belongs to the independent set $A_j$. A word winning all the tests
+cannot be atomic on any retained row. Indeed, for any proposed atom one of the required owners
+is different, and its coalition misses the atom's row coalition,
+contrary to common source (\cref{core:thm:profiles}). At the root both
+children therefore omit the retained marks. One child keeps all the
+demands: foreign wins pass to both and the gate owner's win, if
+requested, passes to one. Descending with these same rows reaches a
+projection in the intersection that fails its own retained row.
+
+For the first assertion, if $A$ meets $T_r(S)$, fold that support at
+$r$. For necessity, form $D_r$ in rounds $D^0=\varnothing$,
+adding at round $d$ the heads of all rows with $t_r\subseteq D^{d-1}$.
+For each new head choose one such row and let $S_d$ contain all chosen
+rows through round $d$. We show that no word omitting $S_d$ wins any
+independent coalition $A\subseteq D^d$ at $r$. At $d=0$ no word
+wins the empty coalition. Otherwise take a shortest witness. A
+projection in $A$ fails its own chosen row. If the word is atomic on
+a chosen row at owner $r$, it wins that row's $r$-coalition, which
+is independent and lies in $D^{d-1}$, while omitting $S_{d-1}$.
+This contradicts induction. An atom at a different owner would give
+two wins whose coalitions intersect only in $D^d=h(S_d)$, contrary
+to the second assertion. With no atomic output on these rows both
+children omit their marks and one still wins $r:A$, contradicting
+shortestness. At stabilization this excludes every independent
+$A\subseteq D_r$.
+\end{proof}
+
+Consequently, when all color classes are independent one can test
+a mark $(i,\varnothing)$ in polynomial time, with no bound on color
+repetitions. Start at $S=Z$. If head
+$i$ is absent use its projection. Otherwise, whenever some $T_r(S)$
+meets a remaining $r$-tail, delete all rows with such a meeting and
+continue. The $r$-fold on this support omits $S$, absorbs on the
+deleted rows and cannot absorb at the empty coloring. Attaching it
+by $\star_r$ lifts any witness for the smaller set. If the process
+stops with head $i$ still present, the theorem excludes every atom
+on every remaining row for a word omitting $S$. Descent through a
+child carrying the positive mark would then reach the forbidden
+projection $i$. Each deletion is strict and each closure is finite
+Horn propagation.
+
+\begin{corollary}[Recognition with independent color classes]
+\label{core:cor:triangle-free-marked-paths}
+If every negative color class is independent, a query $(i,p)$ is decidable in
+$2^{O(b\log(b+2))}$ times a polynomial in the explicit input size,
+where $b=\max_r|p_r|$. More precisely, let $B_r$ consist of the
+members of $p_r$ posted both at $r$ and at some other owner in the
+negative rows. Put $L_r=\sum_{h=0}^{|B_r|}|B_r|!/(|B_r|-h)!$ and
+$n=|V|$. At owner $r$
+the path test of \cref{core:thm:palette-overlap} needs only lists of
+distinct members of $B_r$ followed by a terminal input, hence at most
+$nL_r$ paths. An impossible query has a witness of at most
+$1+n\sum_r L_r$ negative rows.
+\end{corollary}
+\begin{proof}
+For a gap at owner $r$ put $B=p_r$ and let $A$ be the demanded
+$r$-tail. In the construction of
+\cref{core:thm:pointed-guard-cut} an $r$-offer combines the two
+smaller witnesses by $\star_r$. A foreign offer $s:C$ requires a
+witness winning both $r:A$ and $s:C$ on $S_{s,C}$. By
+\cref{core:thm:triangle-free-neighborhood-profile} some
+$v\in A\cap C$ is absent from its heads. It is already absent from
+$h(S)$, since a row headed by $v$ cannot post $v\in C$.
+If $v\notin B$, its projection solves the entire gap. Otherwise
+$v\in B_r$ by its occurrences in $A$ and $C$. Use
+the unary operation $H_v(x)$ returning $\{s'\}$ when $v$ is any
+foreign singleton $\{s'\}$, and $x+x_v$ otherwise. It is a core
+term: successively apply $y\mapsto(y+x_v)\star_{s'}x_v$ for every
+$s'\ne r$. Its $r$-profile on $D$ is $\Phi_r(x)(D)\land[v\in D]$.
+Delete every row posting $v$ at any foreign owner. This includes all
+rows covered by the offer. On the smaller set construct the original
+gap witness and apply $H_v$: it absorbs all deleted rows, adds no
+mark elsewhere since $v$ is head-free, and preserves both gap tests.
+No descendant can select $v$ at another foreign offer. Induction gives
+the claimed lists, with $r$-folds at their common prefixes.
+
+Explicitly, the suffix support after $k$ letters consists of the
+remaining letters and the terminal input. Discard paths whose full
+support lies in $B$. On a row $(j,t)$ scan each path until its first
+foreign singleton. An earlier letter $j$, or a reached terminal $j$,
+emits the mark. For a first emission after $k$ letters on $w$ use the
+Horn rule \eqref{core:eq:ordered-guard-horn}: discard $w$ if every
+path $u$ whose suffix after $\min(k,[w,u])$ lies in $t_r$ is already
+discarded, where $[w,u]$ is the common prefix length. The proof of
+\cref{core:thm:palette-overlap} applies verbatim: each $H_v$ either
+absorbs or adjoins one fixed menu, so shared prefixes merge and each
+suffix support reads its $r$-profile. The word assembled from the
+surviving paths wins on $A$ exactly when one has full support in $A$.
+As there, repeatedly delete rows
+with winning gaps until $i$ is head-free or no deletion is possible.
+At a failing set keep a row headed by $i$ and one reason for each
+noninitial path discard, reproducing the same failure and the stated
+size bound. In the three-input example preceding
+\cref{core:thm:repeated-blocker-budgets}, the color class $\{y,z\}$
+contains an edge of the triangle. There the test already fails at
+the empty coloring.
+\end{proof}
+
+\paragraph{A common theory of singleton tests.}
+For arbitrary negative rows one can compute all positive queries from
+a common theory. Choose a finite set of bits $d_{r,A}$, with owner $r$
 and coalition $A\subseteq V$, including $d_{r,t_r}$ for every row
 $(j,t)\in Z$ and $d_{r,p_r}$ for each query $(i,p)$ to be tested,
 at every owner. Write $v_j(d_{r,A})=[j\in A]$ for the profile vector

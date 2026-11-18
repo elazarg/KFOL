@@ -291,6 +291,7 @@ import all KFOL.Core.FiniteInterpolation
 import all KFOL.Core.SourceNormalForm
 import all KFOL.Core.SourceReciprocity
 import all KFOL.Core.FacetPosting
+import all KFOL.Core.SquareSourceObstruction
 import all KFOL.Core.SourceCompatibility
 import all KFOL.Core.Profiles
 import all KFOL.Core.Interpolation

@@ -36,6 +36,7 @@ import all KFOL.Core.CompletionSuspension
 import all KFOL.Core.AddressedGuards
 import all KFOL.Core.SourceReciprocity
 import all KFOL.Core.FacetPosting
+import all KFOL.Core.SquareSourceObstruction
 import all KFOL.Core.LayerInterpolation
 import all KFOL.Core.IntervalMinorant
 meta import Lean.Elab.Command
