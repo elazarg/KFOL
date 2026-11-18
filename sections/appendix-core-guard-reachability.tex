@@ -774,6 +774,36 @@ supply that head at the empty coloring. The two singleton offers
 from either pair suffice in the unrestricted game: a saved offer
 can terminate at its retained input.
 
+For canonical lists the terminal coverage condition is an ordinary
+hypergraph implication. At a final input $v$ use the common list
+$\widehat\Gamma_v$ of \cref{core:cor:common-prime-list}. With each
+nonblank offer $(r,A)$ associate the posting set
+$\{(i,r):i\in A\}$, discarding offers with $v\in A$, which cannot cover
+a loss at $v$. The offers cover all losses there exactly when
+\[
+ \forall T\subseteq (V\setminus\{v\})\times I:\qquad
+ \bigl(\forall G\in\widehat\Gamma_v,\ T\cap G\ne\varnothing\bigr)
+ \ \Longrightarrow\ \text{$T$ contains an offered posting set}.
+\]
+Indeed every hitting set contains a minimal proper loss, and containment
+of an offer persists under enlarging the posting set. Thus one can use
+ordinary Boolean variables for the postings, with no clauses for
+mutual exclusion. A counterexample meets every guard and fails to
+contain each offer. Equivalently, every transversal of the offered
+sets contains a guard. In either form one still needs the eligibility
+test $v\in L(a)$ from \cref{core:cor:alternating-transversal}.
+
+Even with a list using just one color and offers of pairs, terminal
+coverage is coNP-complete. For a Boolean CNF, give the two literals of
+each variable distinct inputs, both at that color. List the positive
+guards consisting of each variable's pair and the sets of literals in
+each clause. Remove supersets to obtain the prime list, since all the
+postings are at distinct inputs. Use each variable's pair as an offer.
+A failing transversal contains exactly one literal per variable and
+meets every clause, so it is a satisfying assignment, and conversely.
+The same list on every facet exposing the color and the empty guard on
+the remaining facet give agreement on all overlaps.
+
 In particular, recognition from the complete lists of minimal zeros is
 in PSPACE at fixed $K$, even when the maximal positives are not supplied.
 Enumerate one head and one proper passive coloring at a time. Inclusion

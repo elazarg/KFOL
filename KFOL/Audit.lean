@@ -289,6 +289,7 @@ import all KFOL.Core.AtomicInterpolation
 import all KFOL.Core.BoundedGeneration
 import all KFOL.Core.FiniteInterpolation
 import all KFOL.Core.SourceNormalForm
+import all KFOL.Core.GuardConsensus
 import all KFOL.Core.ProfileSourceFiber
 import all KFOL.Core.SingleSourceCompletion
 import all KFOL.Core.PassiveProfileBounds
