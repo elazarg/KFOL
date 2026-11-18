@@ -1,0 +1,158 @@
+\paragraph{The cost of one layer from prime lists.}
+A prime list can prescribe exponentially many losses even when every
+source reads only one earlier group of inputs. With three posting
+colors, choosing compatible singleton outputs on these losses encodes
+the truth tables of Boolean functions.
+
+\begin{theorem}[Succinct recognition at prescribed depth]
+\label{core:thm:succinct-layer-hardness}
+For every fixed $K\ge3$ and $d\ge1$, deciding from complete canonical
+prime guards whether depth at most $d$ suffices is NEXP-complete.
+Hardness holds on realizable families of minimum depth $d$ or $d+1$
+with acyclic source dependence. For $d=1$ every dependency path has
+at most two edges.
+\end{theorem}
+\begin{proof}
+Expanding all probes and applying \cref{core:thm:layer-interpolation}
+gives nondeterministic exponential time. We prove hardness at depth one.
+
+\emph{Addressed choices.}
+Start with a dependency quantified Boolean formula. Each existential
+variable chooses a Boolean function of its specified universal bits,
+and the matrix must hold on every universal assignment. This problem
+is NEXP-hard \cite{ChenHuangLuTan2022}. Use clauses of width three by
+introducing gate variables depending on all universal bits. Remove
+tautologies. A remaining all-universal clause makes the instance false
+and can be replaced, together with the rest of the instance, by the
+fixed contradiction $z\land\neg z$. A fresh satisfiable unit on its
+own variable ensures there is at least one type.
+
+A type has one row per bit string on its address coordinates. Each row
+must choose one of two truth values with distinct colors among $a,b,c$,
+or a single forced option. Make one master type per existential
+variable, addressed by its dependency bits. Make a separate type for
+each existential occurrence, with the same address coordinates. Repeat
+an occurrence with fresh copies to give each clause three existential
+slots when it has fewer. Give the three falsifying options distinct
+colors. Forbid the triple of these options precisely when the addresses
+agree on shared coordinates and agree with the values falsifying the
+universal literals in that clause. These conditions characterize
+extension to a common falsifying universal assignment.
+
+Tie every occurrence to its master as in
+\cref{core:prop:common-head-depth-one}. Join their ordered pairs of
+true and false colors by a path changing one coordinate at a time;
+a direct link also works for identical pairs. Use fresh intermediate
+types on the same address coordinates. For each link forbid both
+truth-value mismatches at equal addresses. Each mismatch uses two
+colors. Adjoin a fresh one-option type of the third color with empty
+address to turn it into a forbidden triple. Thus all forbidden patterns
+have three distinct types and colors. Each triple of option types has
+at most one prohibition, conditioned solely on equalities between
+bits of different addresses and on fixed bits. A selection avoids all
+prohibitions exactly when the input formula is true.
+
+\emph{Intersections on polynomially many inputs.}
+Construct a set $W$ so that a rainbow selection of at most three options
+from distinct addressed rows has intersecting tails exactly when it is
+allowed. For each nonempty rainbow pattern of option types with
+distinct underlying types, allocate a private coordinate if it has no
+prohibition, posting it at all its named options. If it has a
+prohibition, allocate one coordinate for each way of violating one
+address condition: the wrong value of a fixed bit, or one of the two
+mismatches of equal bits. Post this coordinate at each named option
+whose part of that witness holds, unconditionally at a named option
+with no part to check. It belongs to all three tails precisely on that
+mismatch. No coordinate is posted at an unnamed option. For a pattern
+with two options of the same type, use coordinates witnessing a
+differing address bit in each of the two orientations. Use the indicated
+bit at the two options and post unconditionally at the third, if present.
+The opposite options of a single addressed row consequently have
+disjoint tails. A coordinate for a smaller pattern cannot fill a
+forbidden triple.
+
+For every type, address bit, and ordered pair of distinct colors of
+its options, also add a private coordinate switching between the first
+color at bit zero and the second at bit one. These serve only one type
+and preserve all forbidden triples. In particular each option has an
+always-posted private coordinate from its one-option pattern. There
+are polynomially many coordinates. At each type any coordinate is
+fixed or its posting depends on just one address bit.
+
+\emph{The complete prime lists.}
+Use $W$ as passive inputs and a disjoint copy $P$ of $W$. Copy every
+$b$- and $c$-posting onto its twin in $P$. Give every $a$-option
+one more passive input $m$, posted at $a$. Each type $\lambda$ has a
+head $j_\lambda$ whose losses are the upsets of its addressed rows
+with these enlarged tails. Add a head $i$. Its losses each post all of
+$P$ at $a$ together with one further input at $a$ from
+$J=\{m\}\cup\{j_\lambda\}$. All passive inputs are always retained.
+
+Here these specifications give the full canonical prime lists in
+polynomial time. If an observer is an option color of a type, every
+addressed row uses that color and the facet has the empty guard.
+On any other facet the posting set at address $x$ has the form
+$F\cup\bigcup_h B_{h,x_h}$, with $F$ fixed and one block per address
+bit. A guard hits every such row precisely when it hits $F$ or hits
+both blocks of a single bit: otherwise choose an unhit block at
+each bit. Every addressed row itself is a proper consistent coloring.
+The minimal hitting sets are obtained by listing the singletons from
+$F$ and the pairs from opposite blocks, then minimizing. At $i$ the
+$a$-facet has the empty guard. On another facet exclude one $a$-posting
+from $P$, or exclude all the $a$-postings from $J$. These are all the
+primes. Dependence runs from passive inputs to type heads and from
+passive inputs and type heads to $i$.
+
+\emph{The distinguished positive.}
+Ask for $i$ with just $P$ posted at $a$. In a depth-one realization
+some completion on a support $H$ supplies this mark and fits all losses,
+by \cref{core:thm:fixed-offer-completion}. It uses $i$. At an $i$-loss
+its ambiguous value would pass the mark, so its $a$-profile wins on
+$H\cap(P\cup\{j\})$ for every $j\in J$ and loses on $H\cap P$ at
+the positive. Hence $J\subseteq H$. Every addressed row of every type
+must now yield a singleton, as its head is in $H$. Choose that option
+in the row. All rainbow selections intersect by admissibility. A
+forbidden triple could not acquire an intersection on $P$ or at $m$:
+no $a$-option posts in $P$, and only $a$-options post $m$. The original
+choices therefore satisfy the formula.
+
+Conversely take a satisfying selection. On full support generate
+profiles by its chosen tails, the $a$-sets $P\cup\{j\}$ for $j\in J$,
+and unanimity. Chosen options intersect on $W$ for every rainbow
+selection. When a new $a$-set is selected instead, the other chosen
+tails have a common coordinate in $P$ by the copying rule. Thus these
+profiles are admissible, and their greatest completion omits every
+specified loss. It supplies $i$ on every positive coloring posting all
+$P$ at $a$: no member of $J$ then posts at $a$, every chosen
+$a$-tail contains $m$, and every other chosen tail meets $P$.
+If some $v\in P$ is missing at $a$, the term $x_i\star_a x_v$
+already supplies this positive and fits all losses.
+
+\emph{The other positives and the depth promise.}
+At a positive headed at $j_\lambda$, either a fixed posting of that
+type is absent or each block of some bit has an absent posting. In
+the first case attach its input at its owner to $x_{j_\lambda}$.
+In the second choose one absent posting from each block. If their
+colors agree the two corresponding singleton coalitions are admissible.
+If the colors differ, adjoin their private switching coordinate to
+both coalitions. They now intersect; each still escapes the positive
+and wins on its whole branch of addresses. In both cases the resulting
+completion uses just $j_\lambda$ and passive inputs, omits all the
+losses and supplies the requested mark. Passive heads use projections.
+A free union of these witnesses completes the depth-one realization.
+
+Regardless of satisfiability, two layers suffice. Only the $i$-positives
+with all $P$ posted at $a$ need another witness. For a type with an
+option $s\ne a$, choose its always-posted private input $v$ in $P$ and
+use the helper $x_{j_\lambda}\star_s x_v$. For an $a$-only type use
+$x_{j_\lambda}\star_a x_m$. Each helper omits every type loss, including
+those at its own head. Take the $a$-fold of $x_i$, $x_m$ and all helpers.
+At an $i$-loss its extra posting forces an $a$ singleton, through the
+associated helper or through $x_m$. At the positive no helper is an
+$a$ singleton since no member of $J$ posts at $a$. The fold passes
+$i$ and introduces no lost mark. The optimum cannot be zero since $i$
+is conditional. This proves the depth-one promise. Finally apply
+\cref{core:thm:completion-suspension} $d-1$ times. Its prime-list
+transformation is polynomial and each fresh input precedes the old
+heads, preserving acyclicity.
+\end{proof}
