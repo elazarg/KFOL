@@ -105,6 +105,43 @@ theorem iff_enabled_prime [Fintype Role] [Fintype Var] {k : Role} {j : Var}
   · rintro ⟨g, hg, hp⟩
     exact hg.prop p hp
 
+/-- A product of nonempty local domains contains a loss exactly when each
+prime guard lists a posting available in its own coordinate. The domains
+may exclude neutral and may allow several colors at the same coordinate. -/
+theorem exists_loss_in_domains_iff [Fintype Role] [Fintype Var] {k : Role} {j : Var}
+    (F : Pattern k j → Prop) (hF : Monotone F)
+    (D : {i : Var // i ≠ j} → Set (Passive k)) (hne : ∀ i, (D i).Nonempty) :
+    (∃ p : Pattern k j, (∀ i, p i ∈ D i) ∧ ¬ F p) ↔
+      ∀ g : Guard k j, Prime F g → ∃ a ∈ g, Passive.atom a.2 ∈ D a.1 := by
+  classical
+  constructor
+  · rintro ⟨p, hp, hfalse⟩ g hg
+    by_contra! h
+    exact hfalse (hg.prop p fun a ha he => h a ha (he ▸ hp a.1))
+  · intro hits
+    let excluded : Guard k j := Finset.univ.filter (fun a => Passive.atom a.2 ∉ D a.1)
+    have bad : ¬ Sound F excluded := by
+      intro hs
+      obtain ⟨g, hsub, hg⟩ := exists_minimal_le_of_wellFoundedLT (Sound F) excluded hs
+      obtain ⟨a, ha, havail⟩ := hits g hg
+      exact (Finset.mem_filter.mp (hsub ha)).2 havail
+    obtain ⟨p, enabled, hfalse⟩ : ∃ p, Enabled excluded p ∧ ¬ F p := by
+      simpa only [Sound, not_forall, exists_prop] using bad
+    have atom_mem (i) (r) (h : p i = .atom r) : Passive.atom r ∈ D i := by
+      by_contra hmem
+      exact enabled (i, r) (by simpa [excluded] using hmem) h
+    let q : Pattern k j := fun i => if h : p i ∈ D i then p i else (hne i).choose
+    have hqp : q ≤ p := by
+      intro i
+      cases h : p i with
+      | neutral => exact Or.inl rfl
+      | atom r =>
+        exact Or.inr (by simp [q, h, atom_mem i r h])
+    refine ⟨q, fun i => ?_, fun hf => hfalse (hF hqp hf)⟩
+    by_cases h : p i ∈ D i
+    · simp [q, h]
+    · simpa [q, h] using (hne i).choose_spec
+
 @[simp] theorem mem_normalForm [Fintype Role] [Fintype Var] (three : Fin 3 ↪ Role)
     (f : (Var → WinnerSet Role) → WinnerSet Role) (k : Role) (j : Var) (g : Guard k j) :
     g ∈ normalForm three f k j ↔ Prime (fun p => k ∈ (f (probe three k j p)).val) g := by

@@ -512,6 +512,324 @@ predicates, as do $z,w$, and the predicates in the second pair also
 depend on the first. Here the representing coefficient is zero on
 backgrounds coloring $x$ or $y$ by $a$, and $D$ elsewhere.
 
+\paragraph{When conditional inputs occur in pairs.}
+Delete unused inputs as in \cref{core:cor:binary-source-components}.
+Write $U$ for the inputs retained at every coloring and $H$ for the
+remaining live inputs. Thus each $i\in H$ has a minimal loss. In the
+undirected source graph, two inputs are adjacent if a minimal loss
+at either posts the other. For an edge $ij$ within $H$, consider the
+condition
+\begin{equation}\label{core:eq:reciprocal-postings}
+ \text{for some }r_{ij}\in I,\quad
+ \text{every loss at $i$ posts $j:r_{ij}$ and every loss at $j$ posts
+ $i:r_{ij}$.}
+\end{equation}
+Such an owner, when it exists, is unique.
+
+\begin{theorem}[Source guards on triangle-free graphs]
+\label{core:thm:triangle-free-source-guards}
+Let a live, complete source family be antitone and agree across observers.
+Suppose no edge within $H$ lies in a triangle. For every such edge $ij$
+and every pair of minimal losses at $i,j$ with at least one posting the
+opposite input, suppose their postings outside $\{i,j\}$ together omit
+an owner. Then the family is core exactly when
+\eqref{core:eq:reciprocal-postings} holds on every edge within $H$.
+This test is polynomial on the canonical prime lists under the stated
+hypotheses.
+
+On any graph satisfying \eqref{core:eq:reciprocal-postings}, a realizing
+word is the union of the projections in $U$, the choices
+$x_i\star_{r_{ij}}x_j$ on the edges within $H$, and one-source
+completions on $\{i\}\cup U$, $i\in H$.
+In particular, when every input is conditional the edge choices alone
+give the entire operation.
+\end{theorem}
+\begin{proof}
+Orient an edge by choosing a minimal loss $p$ at $j$ that posts
+$i:r$. Take any minimal loss $q$ at $i$. Outside $i,j$, the two
+neighborhoods are disjoint. The outside postings of $p,q$ therefore
+have a consistent union $b$, proper by hypothesis. At $b$, with
+$i$ neutral, the $j$-bit is positive: its restriction to neighbors
+of $j$ is $p$ with $i:r$ deleted, and $p$ is minimal.
+Apply \cref{core:lem:unmarked-background} to this positive and the
+two losses, keeping just $i,j$. The binary witness uses $j$, and
+$j$ alone violates $p$, so it also uses $i$. The classification
+in \cref{core:prop:binary} says that the only binary operation
+using and losing both sources is $x_i\star_s x_j$; it loses $j$
+at $i:r$ only for $s=r$. Thus $q$ posts $j:r$. Now each minimal
+loss at $i$ posts $j:r$. Fix one of them and reverse the argument
+to obtain the same conclusion for every loss at $j$.
+
+For the construction, let $e_i$ post each conditional neighbor of
+$i$ at its edge owner. Every loss at $i$ contains $e_i$, and no
+minimal loss can mention any other conditional input. The incident
+edge choices supply $i$ exactly when a required posting is absent.
+To supply its remaining positives, prescribe on $U$ the predicate
+\[
+       P_i(d)=1\quad\Longleftrightarrow\quad
+       q|_U\not\subseteq d\ \text{for every minimal loss $q$ at $i$}.
+\]
+Under $e_i$ this gives precisely the desired bit wherever the
+coloring is proper. Its greatest single-source completion exists
+by \cref{core:thm:source-completion}; it retains $U$ and only
+affects the one conditional source $i$. Omit it if $P_i=0$.
+For $U=\varnothing$ every $P_i$ is zero, since $i$ has a loss.
+Taking the indicated union realizes every source bit. This construction
+uses neither the triangle nor the palette hypothesis. If there are
+only conditional inputs, an isolated vertex would have no possible
+nonempty minimal loss, so the edge sum is nonempty.
+
+On the facet omitting $k$, every loss at $i$ posts $j:r$ exactly
+when the singleton exclusion of $j:r$ suffices for a positive
+$i$-bit. For $k=r$ use the empty exclusion. Sufficiency means that
+a listed prime is contained in this exclusion. The edges can also
+be read from the lists: each literal of a prime is necessary there,
+so erasing that posting in a counterexample to the shortened guard
+changes the bit. Conversely a posting that changes a bit violates
+a prime satisfied before the posting. This gives the polynomial test.
+\end{proof}
+
+The palette hypothesis always holds if one owner occurs in no minimal
+loss, or if $\deg(i)+\deg(j)\le K+1$ on the conditional edges: at
+most $\deg(i)+\deg(j)-2$ outside inputs can be posted. In particular
+the theorem covers every path and every cycle of length at least four,
+at every $K\ge3$.
+
+The degree bound is sharp even on trees. Partition $I=A\sqcup B$
+with both parts nonempty, choose $a\in A$, and take a retained input
+$u_r$ for each owner. Let $x$ have just the minimal loss posting
+$y:a$ and $u_r:r$ for $r\in A$. Let $y$ have just the minimal loss
+posting $u_r:r$ for $r\in B$. Both losses are proper.
+Their outside union uses every owner, so the two-source criterion
+of \cref{core:cor:two-conditional-guard-complexity} gives a core
+operation. Yet $y$ affects $x$ and no loss at $y$ posts $x$.
+The conditional edge has degree sum $K+2$. Retaining these same two
+minimal losses after adding a fresh owner makes the family
+nonrealizable, since their outside union now omits that owner.
+
+\begin{corollary}[Source guards on a star]\label{core:thm:star-source-guards}
+Let every satellite $j$ be live and depend only on the hub $x$.
+Write $R_j$ for the owners at which posting $x$ suppresses $j$.
+An antitone observer-agreeing family is core precisely when every
+hub loss posts $j:r$ for every $j$ and every $r\in R_j$.
+If every $R_j$ is nonempty and the hub has a loss, each
+$R_j=\{r_j\}$ and the operation is exactly $\sum_j(x\star_{r_j}y_j)$.
+\end{corollary}
+\begin{proof}
+For a live hub, apply \cref{core:thm:triangle-free-source-guards}:
+a conditional satellite has only single-post losses, so the outside
+postings in an opposite-head pair are contained in the hub loss.
+A retained satellite contributes no restriction. For an unused hub
+the condition holds exactly when every satellite is retained, giving
+their union; any outgoing dependence from an unused hub is impossible.
+\end{proof}
+
+\paragraph{Gluing the observer facets.}
+For $k\in I$, delete all $k$-postings from a coloring $q$ to obtain
+$q^{\widehat k}$. The $k$-facet family extends to all proper colorings by
+$\pi_i^{(k)}(q)=\pi_i(q^{\widehat k})$. Write $U_k$ for the inputs
+retained everywhere on this facet. Consider the following condition
+on the minimal losses $z$ at every head:
+\begin{equation}\label{core:eq:facet-retained-posting}
+             z_k\ne\varnothing\quad\Longrightarrow\quad
+                         z_k\cap U_k\ne\varnothing .
+\end{equation}
+
+\begin{proposition}[Realization from observer facets]
+\label{core:prop:facet-source-gluing}
+If a family is core, each of its facet extensions $\pi^{(k)}$ is core.
+Conversely, if every extension is core and
+\eqref{core:eq:facet-retained-posting} holds for every $k$, the original
+family is core. These implications hold on any source graph.
+\end{proposition}
+\begin{proof}
+Read source survival with the unowned mark of
+\cref{core:thm:block-source-extension}. In a realizing word replace all
+$k$-owned gates by union. On a $k$-free coloring no input is the
+$k$-singleton in this test, hence no subterm
+takes that singleton and the replacement preserves every surviving mark.
+In the resulting word, restoring a $k$-posting cannot change an
+absorbing test at any gate: the remaining owners' singleton tests
+depend only on their own postings. It therefore realizes $\pi^{(k)}$.
+
+For the converse take a realizer $w_k$ of $\pi^{(k)}$ and attach
+each projection in $U_k$ by $\star_k$. On the $k$-free facet no
+attachment absorbs, and the extra projections are retained there.
+At a minimal loss using $k$, a projection in $U_k$ is the $k$-singleton
+by \eqref{core:eq:facet-retained-posting}. The entire fold then equals
+that singleton and drops the marked source. Every other minimal loss
+already lies on the $k$-free facet. Thus this word obeys all losses
+and supplies every positive on its facet. Their union over $k$
+supplies all positives since every proper coloring omits an owner.
+\end{proof}
+
+\begin{theorem}[Recognition on source graphs of girth at least five]
+\label{core:thm:girth-five-source-guards}
+Let the live, complete source family be antitone and agree across
+observers. Suppose its underlying undirected source graph has no
+triangles or four-cycles. It is core exactly when, for every $k$,
+\begin{enumerate}
+\item on the graph of the $k$-free facet, every edge between two
+nonretained inputs satisfies \eqref{core:eq:reciprocal-postings}
+for the minimal losses on that facet;
+\item every minimal loss satisfies \eqref{core:eq:facet-retained-posting}.
+\end{enumerate}
+These conditions can be tested in polynomial time on complete canonical
+prime lists, uniformly in $K\ge3$. In particular they decide realization
+on every forest, with arbitrary directions on its edges.
+When they hold, one can construct a realizing word with union named
+and with $O(L)$ leaves, where $L$ counts one per head--observer list,
+one per listed guard and one per literal occurrence. Its completion
+depth is at most $K$, and this uniform depth bound is sharp on stars.
+\end{theorem}
+\begin{proof}
+The minimal losses of $\pi^{(k)}$ are precisely the original minimal
+losses omitting $k$. Its source graph is a subgraph of the original,
+and $k$ is absent from all its losses. By
+\cref{core:thm:triangle-free-source-guards}, the first condition is
+equivalent to realizability of this extension. Thus
+\cref{core:prop:facet-source-gluing} gives sufficiency and necessity
+of the first condition.
+
+For necessity of the second, suppose a minimal loss $z$ at $h$ has
+$A=z_k\ne\varnothing$, with no member in $U_k$. For each $j\in A$
+choose a $k$-free minimal loss $q^j$ at $j$. Keep the inputs
+$H=\{h\}\cup A$. Outside $H$, combine the postings of $z$ and all
+$q^j$ into $e$. The neighbors of distinct $j\in A$ outside $h$
+are disjoint by absence of four-cycles, and none is a neighbor of
+$h$ by absence of triangles. Thus $e$ is consistent, omits $k$,
+and restricts on the neighbors of $h$ to $z^{\widehat k}$.
+With all of $A$ neutral, $h$ is positive at $e$ by minimality of $z$.
+Apply \cref{core:lem:unmarked-background} to that positive and the
+losses $z,q^j$. Any realizer gives a core word $u$ on $H$ losing $h$
+at $A:k$ and losing each $j\in A$ at the internal part of $q^j$.
+That part is empty or posts just $h$ at an owner other than $k$.
+
+In $u$ give $h$ the menu $I$ and all of $A$ the $k$-singleton.
+The loss at $h$ excludes every winner outside $k$, since $h$ would
+be its only source. Thus $\Phi_k(u)(A)=1$.
+Starting at the root, keep one $k$-winning child at each $k$-owned
+gate, and both children at every other gate or union. The singleton
+profile laws give a nonempty resulting word with all leaves in $A$.
+This pruning preserves each required omission of the mark at
+$j\in A$: probe the row for winner $k$ with menu $I$ at the marked input
+and $I\setminus\{k\}$ at every hole. This reads the same coefficient,
+and no input is the $k$-singleton. Each $k$-gate therefore acts as
+union, and retaining a child can only shrink the output by monotonicity.
+Choose an input $j$ occurring in the pruned word. On its own probe
+every input in $A$ is ambiguous, and only $j$ carries $k$. All gates
+of the pruned word take union there, so it supplies $k$, a contradiction.
+
+For the algorithm, $U_k$ consists of the heads with the empty prime
+guard on the $k$-facet. Read that facet's edges from its prime literals
+and apply the singleton-exclusion test of
+\cref{core:thm:triangle-free-source-guards} on this list alone: a
+posting is required in every $k$-free loss precisely when excluding
+it suffices on this facet. No other observer's presentation of the
+extension is needed.
+
+To test the second condition, enumerate a head $h$, distinct owners
+$k,\ell$, and a prime $G$ at $h$ on the $\ell$-facet. On that facet
+forbid the postings $j:k$ for $j\in U_k$, and every posting in $G$
+whose color differs from $k$. Test whether the allowed postings
+contain a loss, using the product-domain guard scan in the proof of
+\cref{core:thm:girth-five-cofactor}. Any minimal loss so obtained
+must use $k$, since deleting all $k$-postings satisfies $G$.
+Conversely a minimal loss violating \eqref{core:eq:facet-retained-posting}
+omits some $\ell$, and deleting its nonempty $k$-block satisfies
+some $\ell$-facet prime $G$ by minimality. It is found by this test.
+The scans and the number of choices are polynomial in the input.
+
+For synthesis on the $k$-facet, the losses at a conditional head $i$
+all consist of its mandatory conditional-neighbor postings $e_i$
+together with postings on $U_k$. The minimal hitting sets are
+therefore the singleton exclusions of members of $e_i$ and the
+minimal hitting sets of the remaining parts on $U_k$. If some
+remaining part is empty, there are no guards of the latter kind.
+Include the retained projections and the owned choice for each
+conditional edge, once. These choices supply a head whenever one
+of its mandatory postings is absent. For each remaining prime $G$
+at $i$, start at $x_i$. For every color $r$ occurring in $G$, take
+the $\star_r$-fold of the current word and the projections $x_j$ for
+all $j:r$ excluded by $G$. This spine supplies the $i$-mark exactly
+when $G$ is satisfied; its other leaves are retained. Thus the sum
+of these terms realizes the facet extension, including heads whose
+only contributions come from edges.
+
+Each spine has $1+|G|$ leaves. Charge the two leaves of each
+edge choice to a singleton prime at one of its conditional endpoints;
+distinct edges have distinct charges. Each retained projection
+occurs once in the facet sum and once more in the final $\star_k$-fold
+of \cref{core:prop:facet-source-gluing}. This gives the stated
+linear count after summing over $k$. A fold at one owner is one
+greatest-completion gate: its owner wins on any nonempty coalition,
+and every other owner requires unanimity. Each spine uses at most
+$K-1$ such layers since $k$ is absent. An edge choice uses one
+and gluing adds at most one. Free unions preserve the maximum depth.
+The single-head family of \cref{core:thm:one-source-depth}, with
+one distinct passive neighbor posted at each of the $K$ colors,
+has a star graph and requires all $K$ layers.
+\end{proof}
+
+A single four-cycle can already violate the second condition.
+Take three owners $a,b,k$, retain $w,p,q$, and give three further
+inputs $u,v,h$ one minimal loss each:
+\[
+  (w:a,p:b)\longrightarrow u,\qquad
+  (w:b,q:a)\longrightarrow v,\qquad
+  (u:k,v:k)\longrightarrow h .
+\]
+Here the two $k$-postings at the last loss are both outside $U_k$.
+Nevertheless the operation is core. Under a fixing suppressing $u$
+or $v$, retained inputs already supply $a,b$, and the $k$-bit of $h$
+ignores postings at $k$. Under the fixing suppressing $h$, the two
+$k$-inputs cannot both be suppressed: their losses require different
+postings at $w$. Thus the full cofactor is independent of the
+suppressed input in all three cases.
+Apply \cref{core:thm:acyclic-source-guards}.
+
+\begin{corollary}[Two common neighbors suffice for hardness]
+\label{core:cor:two-by-n-source-hardness}
+For each fixed $K\ge3$, recognition from complete canonical prime
+lists is coNP-complete on acyclic orientations of complete bipartite
+graphs $K_{2,n}$ of depth two. Deleting either vertex of the two-element
+side leaves a tree.
+\end{corollary}
+\begin{proof}
+Use the hypergraph two-colorability instances of
+\cref{core:cor:two-conditional-guard-complexity}, deleting isolated
+vertices and taking the edges to be a nonempty antichain of nonempty
+sets. Choose distinct owners $a,b,k$. Retain the vertex inputs and
+one flag $f_r$ for each $r\ne k$. Let $u$ lose when all flags have
+their indicated colors and the vertices posted at $a$ meet every edge.
+Use the same rule at $v$ with $b$ in place of $a$. Let $h$ lose
+exactly when $u,v$ are both posted at $k$. The two-element side
+is $\{u,v\}$. Each vertex input affects both predicates: for an
+edge containing that vertex one can post the vertex and everything
+outside that edge, meeting every edge by the antichain condition,
+then erase the vertex to miss the chosen edge.
+
+On the $k$-facet the primes for $u$ exclude one flag posting or
+all the $a$-postings of one edge; all allowed $a$-postings can be
+made simultaneously. This proves sufficiency and exhaustiveness,
+with minimality by the antichain assumption. The $v$-list is analogous.
+Other facets of $u,v$ have the empty guard. At $h$ the only nontrivial
+primes exclude $u:k$ or $v:k$. These complete lists have polynomial size.
+
+Two disjoint transversals extend to a proper two-coloring of the
+hypergraph, and the two color classes of any such coloring are
+transversals. If they exist, post them at $a,b$, set every flag
+and fix $u,v$ to $k$. Neither intermediate input can now supply $k$,
+and changing $h$ to $\{k\}$ introduces it, contrary to the cofactor
+law. If there are no disjoint transversals, at least one of $u,v$
+always supplies $k$ under this fixing. The $h$-bit is zero at every
+other observer there. Under a fixing suppressing $u$ or $v$ the flags
+supply all winners except $k$, and the $k$-bit of $h$ is unconditional.
+These are all cofactor tests, giving realizability by
+\cref{core:thm:acyclic-source-guards}. Membership is the acyclic upper
+bound of \cref{core:thm:complete-acyclic-guard-complexity}.
+\end{proof}
+
 \begin{theorem}[Space bound from source components]
 \label{core:thm:prime-component-space}
 Fix $K\ge3$. Let $N$ be the length of the complete prime-guard

@@ -289,6 +289,7 @@ import all KFOL.Core.AtomicInterpolation
 import all KFOL.Core.BoundedGeneration
 import all KFOL.Core.FiniteInterpolation
 import all KFOL.Core.SourceNormalForm
+import all KFOL.Core.SourceReciprocity
 import all KFOL.Core.SourceCompatibility
 import all KFOL.Core.Profiles
 import all KFOL.Core.Interpolation

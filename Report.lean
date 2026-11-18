@@ -13,6 +13,7 @@ public import KFOL.Core.MinorantPatches
 public import KFOL.Core.MinorantFivePatches
 public import KFOL.Core.FivePointInterpolation
 public import KFOL.Core.SourceCertificates
+public import KFOL.Core.SourceReciprocity
 public import KFOL.Core.LocalNormalForm
 public import KFOL.Core.ProfileEnvelope
 public import KFOL.Core.ProfileRelations
@@ -184,6 +185,17 @@ theorem core_relative_profile_maximum {Role : Type u} {Var : Type v} [Fintype Ro
           ((∀ v, (f v).val ⊆ (e.eval v).val) ↔
            ∀ v r, t.eval v = WinnerSet.singleton r → f v = WinnerSet.singleton r) :=
   Core.relative_profile_maximum three bound t hb ht hle
+
+open Core.Sources in
+/-- Losing an isolated source makes the whole cofactor independent of that input. -/
+theorem core_colored_cofactor_independence {Role : Type u} {Var : Type v}
+    (three : Fin 3 ↪ Role) (t : Term Role Var) (ht : t.IsCore)
+    (k : Role) (j : Var) (p : Pattern k j) :
+    k ∉ (t.eval (probe three k j p)).val ↔
+      ∀ v w : Var → WinnerSet Role, (∀ i, i ≠ j → v i = w i) →
+        (∀ (i : {i // i ≠ j}) r, p i = .atom r → v i.val = WinnerSet.singleton r.val) →
+        t.eval v = t.eval w :=
+  probe_loss_iff_cofactor_independent three t ht k j p
 
 /-- Exact depth at every layer of greatest completions, with free union. -/
 theorem core_completion_depth_hierarchy {Role : Type u} [Fintype Role] [DecidableEq Role]

@@ -234,3 +234,77 @@ inessential under the fixing. No retained input has a zero, so these
 are all the cofactor conditions. The acyclic characterization gives
 a common core word.
 \end{proof}
+
+\begin{theorem}[Cofactor testing on source graphs of girth at least five]
+\label{core:thm:girth-five-cofactor}
+Given complete canonical prime guard lists, colored-cofactor independence
+can be tested in polynomial time if the underlying undirected source graph
+has no triangles or four-cycles. The bound is polynomial also in $K\ge3$.
+Consequently recognition is polynomial on this class when the directed
+source graph is acyclic, in particular on orientations of forests.
+Allowing four-cycles already gives coNP-completeness on acyclic bipartite
+source graphs of depth two, for each fixed $K\ge3$.
+\end{theorem}
+\begin{proof}
+On an observer facet, consider a product of nonempty sets of allowed menus.
+Let $L$ contain all foreign singleton postings allowed at their respective
+inputs. The product contains a valuation with source bit zero exactly when
+$L$ meets every prime guard on that facet. Indeed, the guards are the
+minimal hitting sets of the minimal zeros. If $L$ contains no such zero,
+its complement hits them all and contains a prime guard disjoint from $L$.
+Conversely, if $L$ contains a minimal zero, its postings are mutually
+consistent; choose those menus and fill the other inputs from their allowed
+sets. Extra foreign postings preserve the zero. This test needs only a scan
+of the prime list, even when $L$ allows several colors at the same input.
+
+Write $N(h)$ for the undirected neighbors of $h$. A violation consists of
+a proper fixing suppressing $h$ and two valuations extending it, differing
+only at $h$, such that a winner $k$ occurs only in the second output.
+The fixing may be restricted to $N(h)$, since these include all inputs on
+which $\pi_h$ depends. Guess its missing owner $\ell$. We look for menus
+on $N(h)$ whose $\ell$-foreign postings give a zero. This is equivalent
+to extending such a fixing, by antitonicity.
+
+By source reconstruction, some input $s$ supplies $k$ on the second side.
+It lies in $\{h\}\cup N(h)$: every other input has both its menu and its
+$k$-coefficient unchanged. All inputs outside this closed neighborhood
+can now be made $k$-free, preserving their foreign-$k$ singleton postings.
+Replace each menu containing $k$ there by the ambiguous menu
+$I\setminus\{k\}$. This preserves the supplier's coefficient and keeps
+the first output $k$-free. The same replacement is available at $h$ on
+the first side, since the fixing omits $h$. Thus the first menu at $h$
+may be assumed $k$-free. For the rest of the test there are only $K+2$
+menu classes per input: its $K$ possible singletons and the ambiguous
+menus containing or omitting $k$. These classes determine both membership
+of $k$ and singleton postings on every facet.
+
+Enumerate $h,k,\ell,s$, the two menu classes at $h$, and a prime guard of
+$s$ on the $k$-facet. Require the second menu at $s$ to carry $k$ and
+all postings excluded by this guard to be absent on the second side.
+These requirements impose only individual menu restrictions. For each
+$j\in N(h)$, determine which of its allowed menu classes extend to
+menus on $N(j)\setminus\{h\}$ keeping $j$ from supplying $k$ on the
+first side. If its menu omits $k$, check just that the private domains
+are nonempty. Otherwise require a zero of $\pi_j$ on the $k$-facet,
+using the first menu at $h$ and the product-domain test above.
+The sets $N(j)\setminus\{h\}$ avoid $N(h)$ by absence of triangles
+and are pairwise disjoint by absence of four-cycles. Each private domain
+includes the $k$-free restriction and any restriction from the chosen
+positive guard. Thus the neighbor tests are independent.
+
+Discard the choice if any neighbor has no surviving menu. Test for an
+$\ell$-facet zero at $h$ on the product of these surviving domains.
+A successful test supplies the fixing. Each neighbor's menu extends on
+its own private set, and all other inputs may be made ambiguous and
+$k$-free. The first output then omits $k$, while the chosen guard makes
+$s$ supply it in the second. Conversely every violation yields one of
+the choices above. There are polynomially many choices and each uses
+only polynomially many guard scans.
+
+For acyclic dependence apply \cref{core:thm:acyclic-source-guards}.
+The hardness construction in
+\cref{core:thm:complete-acyclic-guard-complexity} is bipartite, with
+the clause inputs on one side and all other inputs on the other.
+Two clause inputs share both the final head and a flag as neighbors.
+The reduction may ensure two clauses by adding fresh unit clauses.
+\end{proof}
