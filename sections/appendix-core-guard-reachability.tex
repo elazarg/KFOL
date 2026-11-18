@@ -797,13 +797,6 @@ can pass to that child without a move. Descent gives a schedule of
 length at most the expression's depth.
 \end{proof}
 
-Each productive move removes all remaining occurrences of at least one
-pair $(r,v)$, with $v$ posted at $r$. Thus at fixed $K$ these samples
-never require more than $K|V|$ layers, regardless of the number of
-rows. The same bound holds for a complete realizable family with
-$|t_r|\le1$ on its minimal losses: take the free union of the
-witnesses for its maximal positives.
-
 \begin{corollary}[Sharp depth and shortest common supersequences]
 \label{core:cor:completion-depth-hierarchy}
 For every $m\ge1$ the maximum least depth of a feasible sample with
@@ -841,6 +834,148 @@ shortest common supersequence problem with no consecutive equal
 letters. That problem is NP-complete
 \cite[Corollary~6]{LagoutteTavenas2015}, and the construction preserves
 the optimum. Additional owners delete no rows.
+\end{proof}
+
+\begin{theorem}[Sharp arity bound for completion depth]
+\label{core:thm:additive-completion-depth}
+For $n\ge1$ and $K\ge3$, the greatest depth required by a feasible
+sample on $n$ inputs with one positive, when each color occurs at most
+once in each negative, is
+\[
+                         \left\lfloor\frac{3(n-1)}2\right\rfloor .
+\]
+The same maximum holds for realizable complete families under this
+restriction on their minimal losses. It is attained even by families
+with one prime guard per observer and source and one posting per loss.
+For $n\ge2$, restricting all postings to two colors lowers the maximum
+to $n-1$; restricting them to one color lowers it to one.
+\end{theorem}
+\begin{proof}
+Use the two moves of \cref{core:thm:completion-depth}, stopping as
+soon as the queried input $i$ is head-free. Whenever a head-free
+input move can remove a row, take such a move. Otherwise take a
+productive owner move. These choices preserve feasibility since
+they only delete rows. A nonterminal feasible budget always admits
+a productive move by the schedule theorem.
+
+A head-free input move at $v$ clears every posting of $v$ eligible
+at the positive, so it can be used only once. Now consider an owner
+move at $r$, and choose a removed posting $v\notin D_r(S;p)$.
+Since $v\notin p_r$, the priority rule implies that $v$ is still a
+head. Every row headed at $v$ must have a posting $u$ at $r$ outside
+$D_r(S;p)$: an empty tail would seed $v$, and a reached tail would
+reach it. Choose such a row. Its posting $u$ differs from its head
+$v$, and the same priority argument makes $u$ a head. Every row
+headed at either $u$ or $v$ has its $r$-posting outside $D_r(S;p)$,
+so this move frees at least two previously occupied heads.
+
+If the last move is an input move, no owner move freed $i$. There
+are at most $\lfloor(n-1)/2\rfloor$ owner moves and at most $n-1$
+input moves. If the last move is an owner move, its two newly freed
+heads are never used for input moves. There are then at most
+$\lfloor n/2\rfloor$ owner moves and at most $n-2$ input moves.
+Both totals give the upper bound; an initially head-free $i$ needs
+no move. Taking the free union of witnesses over the positive bits
+gives the same bound for complete families.
+
+With only two posting colors, continue to take productive head-free
+moves first. Each such move settles one input: it has no eligible
+posting left. At an owner move at $r$ choose the two newly freed
+inputs $u,v$ above. All their $r$-postings have been removed. If $i$
+is now free, charge just this step to one of $u,v$ different from $i$
+and stop. Otherwise clear the eligible postings of $u,v$ at the other
+color $s$ in one further layer, if needed. Attach an $s$-fold of the
+residual witness and those of $u,v$ outside $p_s$ that still post at
+$s$. It absorbs on the deleted rows, misses the mark at the heads of
+all retained rows since its added inputs are head-free, and preserves
+the positive. This settles both inputs. No settled input can be charged
+again, so at most $n-1$ layers are charged before $i$ is free.
+With only one posting color $r$, the owner move clears all rows with
+a tail outside $D_r(S;p)$. Its deletion preserves $D_r(S;p)$: the
+initial heads and every edge between reached vertices remain. No
+further owner move can then remove a row; an eligible head-free tail
+would itself be outside the reached set. By feasibility the queried
+head must already be free.
+
+For sharpness take $d=\lfloor(n-1)/2\rfloor$ ordered pairs
+$\{u_j,v_j\}$ followed by a final input $i$. For even $n$ put one
+more singleton $h$ immediately before $i$. In each pair put both
+internal arrows at $a$. To every later vertex put $a$-arrows from
+both members, $b$-arrows from $u_j$ and $c$-arrows from $v_j$, with
+$a,b,c$ distinct. Add $h\to_a i$ if $h$ is present. With reflexive
+arrows understood these data satisfy descent and reciprocity: every
+nonloop first arrow already reaches every proper descendant in its
+first color, and reverse arrows occur only within a pair.
+The reconstruction is core. On each observer facet its sole prime
+excludes the incoming postings visible there. Each such literal
+is necessary on its one-posting row.
+
+Ask for $i$ at the empty coloring. At the first remaining pair the
+only productive initial move is at owner $a$: its two internal heads
+seed the other colors, and its foreign arrows seed every later
+vertex at $a$. That move clears the pair's $a$-arrows. It leaves a
+$b$-posting from $u_j$ and a $c$-posting from $v_j$ to every later
+vertex, including $i$. Clearing one kind requires its owner move
+or the head-free move at its own member. Neither clears the other
+kind. Until both are cleared, every later pair is still seeded at
+$a$; its internal $a$-arrows seed $b,c$ and keep both members from
+being head-free. No later pair can begin early. Thus each pair costs
+three moves in succession, and $h\to_a i$ costs a further move in
+the even case. This gives $3d+[n\text{ even}]$ as claimed.
+
+For two colors take one directed path of $n$ vertices with alternating
+outgoing colors. Give each vertex arrows of its outgoing color to all
+later vertices. This is a realizable conjunctive family by descent
+and reciprocity. Its adjacent-edge sample alone requires $n-1$ moves
+by \cref{core:cor:completion-depth-hierarchy}. For one color a single
+nonloop arrow already requires one layer.
+\end{proof}
+
+\begin{corollary}[Optimizing a complete conjunctive guard family]
+\label{core:cor:additive-depth-complexity}
+For a realizable complete family with one prime per observer and
+source, every positive coloring at a given source has the same least
+witness depth as its empty coloring. Deciding whether the operation
+has depth at most $d$ is NP-complete for each fixed $K\ge3$, already
+when the capture graph is acyclic after omission of reflexive arrows.
+\end{corollary}
+\begin{proof}
+Fix source $i$ and its predecessor set $H$, including $i$.
+Restricting a deletion schedule to rows headed in $H$ cannot increase
+its length. Reachability can only shrink, and an input move outside
+$H$ clears no such row. Conversely a witness on $H$ ignores every
+other head. For every nonloop arrow $u\to_r v$ within $H$, either
+$u=i$ or descent along a path from $v$ to $i$ gives $u\to_r i$.
+Thus a positive $p$ posts no $r$-tail of any such row at $r$.
+In every remaining budget the extra seeds $p_r$ in $D_r(S;p)$
+therefore have no outgoing reachability edges and are not candidate
+$r$-tails. They change neither the rows removed by an owner move nor
+the permitted postings of a head-free input move. The possible
+schedules on $H$ are exactly those for the empty coloring.
+
+The depth of the operation is the maximum of these minima over the
+heads: the operation witnesses each query, and the free union of
+witnesses of all its positive bits realizes it. One schedule per head
+is therefore an NP certificate, polynomial in size by
+\cref{core:thm:additive-completion-depth}.
+
+For hardness take the disjoint paths ending at a common queried head
+from \cref{core:cor:completion-depth-hierarchy}, oriented from a
+posting to its head. On each path, give every vertex of outgoing color
+$r$ an $r$-arrow to every vertex strictly closer to the common head.
+There are quadratically many arrows. Descent and reciprocity hold,
+so their conjunctive guards give a realizable operation. Each
+head-free input move deletes postings of just one color and is
+dominated by that owner move. On a path an owner move clears its
+initial run of the chosen color in the direction of the arrows.
+A vertex beyond an earlier remaining vertex of another color is
+already seeded for this move by the direct arrow between them.
+Thus it cannot delete postings out of order, even after completion
+of the paths. The least depth at the common head is exactly the
+shortest common supersequence length. Other heads use just a prefix
+of one path in that order and require no greater depth. The optimum
+of the complete operation is therefore the same as that of the
+original supersequence instance.
 \end{proof}
 
 \begin{proposition}[Exponential length of fixed offer lists]
