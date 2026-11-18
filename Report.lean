@@ -46,6 +46,7 @@ public import KFOL.InfiniteGames.Continuation
 public import KFOL.Core.ProfileBudgets.Profiles
 public import KFOL.Core.BichainSwitch
 public import KFOL.Core.CompletionDepthChain
+public import KFOL.Core.LayerInterpolation
 public import KFOL.Core.BichainCubeCuts
 public import KFOL.Audit.Namespace
 
@@ -190,6 +191,25 @@ theorem core_completion_depth_hierarchy {Role : Type u} [Fintype Role] [Decidabl
       ∀ f : Core.CompletionDepth.Expr Role (Fin (m+1)),
         (∀ v, f.eval v = e.eval v) → m ≤ f.depth :=
   Core.CompletionDepth.exact_depth three m
+
+/-- Interpolation with arbitrary row bounds, singleton demands and one
+optional positive at a prescribed completion depth. -/
+theorem core_layer_interpolation {Role : Type u} [Fintype Role] [DecidableEq Role]
+    {Row : Type v} [Fintype Row] [DecidableEq Row] {Var : Type w}
+    (three : Fin 3 ↪ Role) (values : Row → Var → WinnerSet Role) (U : Row → Set Role)
+    (d : ℕ) (N : Finset Row) (D : Finset (Row × Role)) (p : Option (Row × Role)) :
+    Core.Interpolation.LayerFits values U d N D p ↔
+      ∃ e : Core.CompletionDepth.Expr Role Var, e.depth ≤ d ∧
+        Core.Interpolation.Fits N U D p (fun i => e.eval (values i)) :=
+  Core.Interpolation.layerFits_iff_exists_expr three values U d N D p
+
+/-- The complete table determines whether the operation has depth at most d. -/
+theorem core_operation_at_depth {Role : Type u} [Fintype Role] [DecidableEq Role]
+    {Var : Type v} [Fintype Var] (three : Fin 3 ↪ Role)
+    (f : (Var → WinnerSet Role) → WinnerSet Role) (d : ℕ) :
+    Core.Interpolation.RecognizesOperationAtDepth f d ↔
+      ∃ e : Core.CompletionDepth.Expr Role Var, e.depth ≤ d ∧ e.eval = f :=
+  Core.Interpolation.operationAtDepth_iff three f d
 
 theorem core_profile_nonconvexity {Role : Type u} [Fintype Role] (three : Fin 3 ↪ Role) :
     ∃ s t : Term Role (Fin 3), s.IsCore ∧ t.IsCore ∧

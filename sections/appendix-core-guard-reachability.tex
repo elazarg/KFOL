@@ -701,6 +701,51 @@ restore its head's mark. Both folds pass the mark at the empty
 coloring, proving the depth-two bound.
 \end{proof}
 
+\begin{lemma}[Increasing the least depth by one]\label{core:lem:depth-increment}
+Take a sample with one positive and finite least depth $h\ge1$.
+Suppose it has an input $u$ that is neither posted nor a head on any
+of its queries. Add a fresh input $y$, unposted on the old queries.
+For each input $v$ posted on an old negative, add two negatives
+headed at $v$, with sole posting $y:b$ and $y:c$, respectively, for
+two distinct colors $b,c$. The new least depth is $h+1$.
+\end{lemma}
+\begin{proof}
+Attach $y$ to an old witness by the binary greatest completion with
+second projection profile at $b,c$ and unanimity elsewhere. It absorbs
+the new rows; on old rows $y$ is unposted and carries no mark, so
+every omission and the positive are preserved.
+
+A word fitting the new negatives cannot be singleton on an old
+negative. Otherwise its $r$-profile wins on that row's nonempty
+$r$-coalition $A$ for some $r$. Choose $s\in\{b,c\}$ different from
+$r$. Give the inputs in $A$ their $r$ singleton, give $y$ its
+$s$ singleton, and give every other input $I\setminus\{r\}$.
+The output is $\{r\}$, supplied by some $v\in A$. Its source
+coefficient at observer $r$ sees only foreign singleton postings
+(\cref{core:thm:source-completion}), here just $y:s$. The new
+negative at $v$ forbids exactly this contribution.
+
+In a minimum-depth expression take a summand supplying the positive
+through all outer free unions. It still omits every negative. It
+cannot be a projection: substituting $u$ for $y$, which has identical
+values on the old probes, would give a depth-zero old witness. Its
+completion root thus takes the union of its supported children on
+every old negative and at the positive. A child supplying the mark
+omits all old negatives; the same substitution gives an old witness
+one layer lower.
+\end{proof}
+
+For every fixed $d\ge1$ and $K\ge3$, deciding depth at most $d$ is
+NP-complete even for one positive at the empty coloring, at most two
+posting colors per negative, and the promise that the optimum is $d$
+or $d+1$. Start with the depth-one versus depth-two instances in
+\cref{core:prop:common-head-depth-one}. One extra unposted, unmarked
+input changes none of the tail intersections in that proof. Apply
+\cref{core:lem:depth-increment} $d-1$ times; the extra input continues
+to satisfy its hypothesis. Each iteration adds one input and at most
+twice the current input count in rows. Membership follows from
+\cref{core:thm:layer-interpolation}.
+
 \begin{corollary}[Two-color recognition of unions of profile completions]
 \label{core:cor:fixed-offer-prime-space}
 Fix $K\ge3$. When all minimal losses use only $b,c$, recognition of
@@ -935,9 +980,10 @@ nonloop arrow already requires one layer.
 \label{core:cor:additive-depth-complexity}
 For a realizable complete family with one prime per observer and
 source, every positive coloring at a given source has the same least
-witness depth as its empty coloring. Deciding whether the operation
-has depth at most $d$ is NP-complete for each fixed $K\ge3$, already
-when the capture graph is acyclic after omission of reflexive arrows.
+witness depth as its empty coloring. The depth is computable in
+polynomial time with at most two posting colors. With three posting
+colors, deciding depth at most $d$ is NP-complete for each fixed
+$K\ge3$, already when the capture graph has no nonloop cycle.
 \end{corollary}
 \begin{proof}
 Fix source $i$ and its predecessor set $H$, including $i$.
@@ -958,6 +1004,33 @@ heads: the operation witnesses each query, and the free union of
 witnesses of all its positive bits realizes it. One schedule per head
 is therefore an NP certificate, polynomial in size by
 \cref{core:thm:additive-completion-depth}.
+
+With two colors $b,c$, an owner move at $r$ leaves $D_r$ unchanged:
+it deletes only edges from outside $D_r$, and no empty $r$-tail.
+After this move every currently head-free input has no remaining
+$r$-posting. Indeed it lies outside $D_r$ on the residual graph,
+as $p$ is empty. Any subsequent input move can therefore be replaced
+by the other owner move, which deletes at least the same rows.
+All moves remain valid on smaller budgets, with a possibly larger
+set of deletions. Repeated moves of the same owner are redundant.
+Thus one may alternate owners after the first owner move.
+
+Among optimal schedules of this form minimize the length of the
+initial input-only prefix. Two consecutive inputs $v,w$ in the
+prefix cannot both already be free before $v$: an owner move at
+$b$ followed by one at $c$ covers all postings of both, permitting
+an earlier switch. Thus $v$ frees $w$, which requires an arrow
+$v\to w$. The chosen inputs form a chain in capture order. At this
+stage only postings out of already chosen inputs have been deleted,
+so every proper predecessor of a chosen input was chosen earlier.
+A nontrivial component cannot supply the first of its own inputs.
+Consequently a nonempty prefix is exactly the predecessor set of
+its final vertex, including that vertex, linearly ordered with
+singleton components. Enumerate these at most $|H|$ prefixes and the
+empty one. After each try both alternating owner sequences until
+$i$ is free or a complete pair of moves makes no progress. Taking
+the least length over these polynomially many simulations gives
+the exact depth.
 
 For hardness take the disjoint paths ending at a common queried head
 from \cref{core:cor:completion-depth-hierarchy}, oriented from a
