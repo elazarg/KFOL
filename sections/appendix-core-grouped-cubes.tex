@@ -445,6 +445,223 @@ it differs from $x$, and the prover can finish with satisfying gate
 values and a recorded true literal in every clause. This contradicts
 the claimed winning response.
 
+\paragraph{Recognition of complete normal forms.}
+The alternating choices remain necessary in the complexity-theoretic
+sense even when the input specifies every source bit. The reduction
+uses retained inputs to select one constraint at a time. It then
+forces a word on the original inputs to satisfy them all.
+
+\begin{theorem}[Complete guard recognition is PSPACE-complete]
+\label{core:thm:complete-guard-pspace}
+Fix $K\ge3$. Recognition of realizable complete source predicates
+is PSPACE-complete from the list of minimal zeros, including when
+all canonical prime sufficient guards are also supplied. The reductions
+use logarithmic space. Hardness holds with at most four minimal zeros
+per source and at most four literals per prime guard, with nonempty
+reconstructed outputs and agreement across observers. On this restricted class recognition from the prime guards
+alone is likewise PSPACE-complete.
+\end{theorem}
+\begin{proof}
+Use the three-posting reduction of \cref{core:thm:two-color-pspace}.
+It gives marked rows in two colors $b,c$ and Boolean endpoints
+$X,Y$. Each coordinate is marked on at most two of the original
+rows: only the two alternatives of a universal split mark the
+same control label; each literal occurrence has its own mark.
+Choose a third owner $a$.
+
+Adjoin an input $s$ fixed to $b$ on all these rows and outside both
+Boolean sets $X,Y$. Call the enlarged input set $W$. Impose also
+the demands $c:X$ and $b:W\setminus Y$ by the monochromatic
+negative rows of \eqref{core:eq:total-monochromatic-source}.
+Let $Z$ consist of all the resulting negative source queries.
+The following two conditions are equivalent:
+\begin{enumerate}
+\item There exists a core word omitting every mark in $Z$.
+\item A word using only $\star_b,\star_c$ and every input in $W$
+omits every mark in $Z$.
+\end{enumerate}
+Indeed, any witness
+gives a pure Boolean separator on the marked rows by the proof of
+\cref{core:thm:two-repeater-hardness}. Substituting the Boolean
+bottom $b$ for $s$ recovers a separator of the original instance;
+bottom is the identity for the join and the absorber for the meet
+on these observer rows. Conversely let $g_0$ be an original pure
+separator. In the notation $\vee=\star_c$, $\wedge=\star_b$, put
+\[
+               g=g_0\vee\left(s\wedge\bigwedge_{j\in W}x_j\right).
+\]
+The added summand is bottom at every original marked row and at
+both Boolean endpoints. Hence $g$ is still quiet there and meets
+both profile demands, so omits all of $Z$. It uses every input in
+$W$. Thus the two conditions both encode truth of the quantified
+formula. Each head in $W$ has acquired at most two endpoint rows.
+
+Give each row $z=(j,t_z)$ a distinct complete binary code $e_z$
+on fresh selector inputs $J$, using singleton postings $b,c$.
+A nonempty $J$ of size $1+\lceil\log_2(|Z|+1)\rceil$ suffices.
+Define $C$ by retaining the selectors and prescribing on $W$
+just the minimal zeros $(j,e_z,t_z)$. These rows are proper, since
+they omit $a$, and distinct codes are incompatible. The operation
+$C$ is core for every instance. Indeed in
+\cref{core:lem:unmarked-background} at most one row survives at
+any positive internal query. The single-loss family on $W$ is
+realized by \cref{core:thm:source-completion}, retaining all other
+inputs. If the positive has the head of that loss, its coloring
+lies outside the zero upset. With no surviving row a projection
+suffices. Union of the witnesses and the selectors gives $C$.
+
+The complete target $F$ keeps the listed internal zeros and adds,
+at each selector head, the single zero posting every member of
+$W$ at $a$. On a valuation it has the following simple meaning:
+\[
+ F(u,w)=
+ \begin{cases}
+ \{a\},& w_j=\{a\}\text{ for every }j\in W,\\
+ C(u,w),&\text{otherwise}.
+ \end{cases}
+\]
+Outside the first case every selector supplies all its winners.
+In the first case every internal input is the $a$ singleton and
+an internal source supplies $a$: the original losses all require
+nonempty $b$- or $c$-postings on $W$. The output is always nonempty.
+
+For a yes instance take the padded word $g$. It lies below $C$
+at every valuation, since each forbidden internal bit at a coded
+row is already suppressed by $g$ without its selector postings.
+Its $a$-profile is exactly the conjunction of all $W$-inputs:
+it uses them all and has no $a$-gate. Consequently
+$C\star_a g=F$.
+
+Conversely, a realizer of $F$ passes the $a$-singleton test on $W$,
+with all selector flags false. At each $a$-gate keep a child
+passing this test, and at every other gate keep both. The resulting
+word has only leaves in $W$. This pruning can only decrease the
+$a$-observer view at every valuation: the $a$-gate is join there,
+and every other gate is monotone in the view order. On the probe
+of each coded negative, using observer $a$, the original word omits
+the mark. The pruned word still omits it and ignores the selectors.
+It therefore omits every mark in $Z$, proving the reverse implication.
+
+The construction lists at most four zeros per internal head and
+one per selector. On each observer facet the primes are the minimal
+hitting sets of the listed zeros omitting that observer. With at
+most four zeros, enumerate a posting from each and minimize the
+resulting sets. This has polynomial cost, including for the long
+selector zero, and gives at most four literals per prime.
+
+For the space bound, quantified Boolean truth is complete under
+logspace reductions \cite[Theorem~4.3]{StockmeyerMeyer1973}.
+The final existential gate variables and the clauses of the Boolean
+matrix can be named by input positions; a rescan with a nesting
+counter finds the operands of each gate. In the rectangle construction,
+index the variable gadgets by prefix position and the resource vertices
+by clause and literal positions. For the clause tree, pad the list of
+clauses to a power of two by repeating its last clause and index the
+tree as a binary heap. The successors, marked labels, rectangle
+incidences, and endpoint rows can now be enumerated with a fixed
+number of logarithmic counters, rescanning the formula for occurrences
+of a prescribed sign. Each selector code is the row index in binary.
+Finally enumerate sorted sets of up to four postings and check by
+rescanning the at most four facet zeros that the set hits each,
+and ceases to do so upon removing any one posting. This streams both
+canonical lists in logarithmic space.
+
+The upper bound from minimal zeros follows from
+\cref{core:thm:pointed-guard-cut} by streaming the positive queries.
+With only prime guards and the stated bound on the number of zeros,
+enumerate one proper coloring at a time, test loss and minimality
+from the guards, and store each minimal zero once. At most four
+per head need be stored, so this also uses polynomial space.
+\end{proof}
+
+\begin{corollary}[No fixed incidence test]
+\label{core:cor:guard-incidence-lower-bound}
+At fixed $K\ge3$ no first-order sentence on the explicitly supplied
+inputs, owners, heads, postings, minimal zeros and prime guards,
+with their incidence relations, characterizes core realization.
+This holds also with the lists ordered. More generally recognition
+on these complete lists is outside deterministic polylogarithmic
+space.
+\end{corollary}
+\begin{proof}
+A fixed first-order sentence can be evaluated by keeping one index
+per bound variable and scanning the lists for atomic tests.
+This takes logarithmic space. Any procedure using
+$O((\log N)^c)$ space on descriptions of length $N$, composed with
+the logspace reduction above, would put all of PSPACE in that
+space bound. The deterministic space hierarchy theorem excludes
+this \cite{StearnsHartmanisLewis1965}. At fixed $K$ the profile
+conditions illustrate the difference: for listed positive coalitions
+the common-input test quantifies one entry per owner and one input.
+\end{proof}
+
+\begin{corollary}[Small complete guard lists can require large trees]
+\label{core:cor:compact-guards-large-trees}
+For every fixed $K\ge3$ there are realizable families on $O(d)$
+inputs with both canonical lists of polynomial length in $d$ for
+which every core word has $2^{\Omega(d)}$ leaves. Every binary core
+circuit for these families has depth $\Omega(d)$.
+\end{corollary}
+\begin{proof}
+Use the true quantified formula
+$\forall x_1\cdots\forall x_d\,\exists y_1\cdots\exists y_d
+\,[x=y]$. Its matrix has $2d$ binary clauses. The endpoint game
+of \cref{core:thm:two-color-pspace} therefore uses $m=O(d)$ rows
+and $O(d)$ coordinates. Consider a prover whose move depends on
+the two visible endpoints and an internal state. Choosing a deleted
+row is illegal, and a stop must name an unmarked coordinate on
+the current cell.
+
+Fix any assignment to $x$. The opponent accepts its designated
+successor at each universal split, declines the sibling, and accepts
+sole successors. As in the false-instance strategy, challenge a
+wrong orientation or a request for a later nonsuccessor, decline
+earlier control vertices, and decline a resource only while its
+own branch vertex lies on the current edge. Each prefix edge thus
+retains a marked control until an intended successor is accepted.
+A winning prover must reach the same edge before the first $y$-split,
+for each of the $2^d$ assignments. If two histories give it the
+same state there, respond identically in the $y$-stages, accepting
+the first immediate successor requested at every existential split.
+The same visible endpoints and responses give the same moves; a
+move already deleted in either history would lose that play.
+Future controls cannot have been removed on a winning path, since
+premature requests for them were challenged. Hence both histories
+advance with the same $y$. In a history with $x\ne y$, select a
+false equality clause. Only resources of visited signs could have
+been released, so each of its literals is still marked. The
+false-clause response in \cref{core:thm:two-color-pspace} prevents
+a winning stop. Thus a winning prover needs at least $2^d$ states.
+
+A pure separating formula $h$ gives such a prover with at most
+$(m+1)|h|+1$ states, where $|h|$ counts nodes. At its current
+subformula scan the remaining rows on whose Boolean cube that
+subformula is constant, in a fixed order. For a constantly true
+row offer its lower endpoint, and for a constantly false row offer
+its upper endpoint. Either response leaves the subformula true
+at the current lower endpoint and false at the upper one. When
+the scan is exhausted, both children are quiet on every remaining
+row: a marked child could be absorbed only at a stable row.
+Descend to a child separating the current endpoints, choosing
+deterministically if both do. A leaf is now a legal stop. At a
+node the rows deleted before its scan are precisely those stable
+at some strict ancestor; the path to that node determines them.
+A node and one scan index suffice as internal state.
+
+Apply the complete-target construction above. From any core tree
+for that target, profile pruning produces a tree on $W$ of no
+greater size. At the marked rows and Boolean endpoints every
+remaining gate outside $b,c$ acts by observer union. Replacing
+each such gate by either child decreases the observer view.
+Quiet rows stay quiet and the endpoint atoms, being minimal in
+this order, stay fixed. Substitute bottom for $s$ and simplify
+the constants. This gives a pure separator of no greater size.
+The state bound therefore forces exponentially many leaves in the
+original tree. The complete lists have polynomial length by the
+construction, and unfolding a binary circuit of depth $D$ gives
+fewer than $2^{D+1}$ nodes.
+\end{proof}
+
 \paragraph{Exact interpolation in a power.}
 For a fixed algebra, the subpower membership problem asks whether one
 given tuple belongs to the subalgebra generated by a list of tuples in
