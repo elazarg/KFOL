@@ -55,6 +55,11 @@ polynomial flag test, and a polynomial graph test applies when the
 positive query's repeated-owner color class avoids the foreign slots
 of the negatives
 (\cref{core:thm:nested-repeated-guards,core:thm:disjoint-foreign-guards}).
+For several repeating owners, the inputs posted at both of any two
+owners suffice for their joint singleton tests. Bounded pairwise overlap
+gives fixed-parameter tractability and linear obstruction size at fixed
+$K$; disjoint color classes need only Horn closure on the inputs
+(\cref{core:thm:palette-overlap}).
 Adding a source
 above a fixed core operation gives a distributive lattice of activation
 predicates. At each passive valuation an extension either ignores the
@@ -212,8 +217,10 @@ Arbitrary guard tables have an exact recursive recognition criterion using
 atomic challenges and strict row deletion
 (\cref{core:cor:guard-peeling}). Alternatively, a cut on subfamilies of
 the given negative queries carries at most one coalition per owner.
-It gives polynomial time at bounded total width of the coalition orders,
-even with several repeating owners (\cref{core:thm:pointed-guard-cut}).
+Equivalently, an alternating transversal condition chooses only observed
+coalitions and tests one input. There is a polynomial algorithm at
+bounded total width of the coalition orders, even with several repeating
+owners (\cref{core:thm:pointed-guard-cut,core:cor:alternating-transversal}).
 Maximal ordered observer separators have
 linear separating contexts at every outside point, including for mixed
 observers (\cref{core:thm:maximal-linear-separation}). There is also a complete infinite
@@ -358,10 +365,14 @@ every safe Boolean function
 The same conclusion holds, without acyclicity, if each row leaves only
 its own marked coordinate free among the marks
 (\cref{core:thm:one-free-mark-budgets}).
-Even under either restriction, separating two prescribed endpoints is
-coNP-complete. This makes joint source interpolation coNP-hard with
-two repeated colors at every fixed owner count
-(\cref{core:thm:two-repeater-hardness}).
+Under either restriction, separating two prescribed endpoints is
+coNP-complete. With arbitrary rows, interpolation of listed source
+bits is PSPACE-complete at every fixed owner count, even when each
+negative uses just one of two colors and the positive is uncolored
+(\cref{core:thm:two-repeater-hardness,core:thm:two-color-pspace}).
+For subpower membership the threshold is two owner gates: zero or one
+gives polynomial time and two already give PSPACE-completeness, with
+union optional in both cases (\cref{core:thm:subpower-complexity}).
 With at most two marked coordinates, a direct graph gives the entire
 safe theory, even for cyclic budgets; three marks can require more
 (\cref{core:thm:two-marked-budgets,core:prop:cyclic-component-gluing}).
@@ -436,12 +447,15 @@ using AND/OR gates and cannot be improved by circuit sharing
 (\cref{core:prop:canonical-helper-lattice,core:cor:canonical-gate-arity}).
 
 \paragraph{The remaining characterization question.}
-The unresolved step is a short intrinsic condition directly on arbitrary
-joint source guards without recursive synthesis or auxiliary invariant
-structures. Beyond the ordered-list criterion, the unresolved cases allow
-two or more owners to repeat across interacting minimal zeros. Nonfinite relatedness rules
-out a fixed finite relational basis; it does not rule out short structural
-laws with unbounded quantification. The positive classifications and
+\Cref{core:cor:alternating-transversal} uses only the coalitions of the
+given zeros and a final common input. Its number of alternating choices
+grows with the sample. A fixed number of alternating blocks of
+polynomially many bits with a polynomial-time final test for arbitrary
+listed samples would put PSPACE in the polynomial hierarchy, by
+\cref{core:thm:two-color-pspace}. A shorter structural law specific
+to complete guard families remains open. The lower bound concerns
+partial samples; nonfinite relatedness rules out a fixed finite
+relational basis for complete families. The positive classifications and
 global obstructions above locate this gap between recognizing individual
 source families and realizing all of them simultaneously.
 

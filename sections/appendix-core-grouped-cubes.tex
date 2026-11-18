@@ -229,21 +229,19 @@ It is safe: on any marked row $w$, either $A_x=b$, or $w$ occurs in
 $H_x$ and its lower monomial is $c$, which absorbs the marked input.
 Empty conjunctions and disjunctions are the permitted endpoint constants.
 
-\paragraph{Two repeated colors already give coNP-hard interpolation.}
+\paragraph{The complexity of two-color interpolation.}
 Fix distinct owners $b,c$. Write a negative row as $(l,u,j)$: the
 $c$-inputs are $l$, the $b$-inputs are $V\setminus u$, the mark is
 $j\in u\setminus l$, and all other inputs are uncolored. Let $Z$ be a
 list of such rows and $M$ its set of marked inputs.
 
-\begin{theorem}[Complexity with two repeated colors]
+\begin{theorem}[Two restricted endpoint problems]
 \label{core:thm:two-repeater-hardness}
-For every fixed $K\ge3$, feasibility of explicitly listed negative
-source bits and one positive bit is coNP-hard, even if all colors used
-in the negatives belong to $\{b,c\}$ and the positive coloring is empty.
-A restricted problem is coNP-complete as well. Given $Z$ and
-$X,Y\subseteq V$ with $X\setminus Y=\{i\}$, require omission on $Z$
-and $\Phi_c(X)=1$, $\Phi_b(V\setminus Y)=1$. This holds under either of two promises, $(u\setminus l)\cap M=\{j\}$ on every row, or the
-acyclicity condition of \cref{core:thm:acyclic-marked-budgets}.
+Fix $K\ge3$. Given $Z$ and $X,Y\subseteq V$ with
+$X\setminus Y=\{i\}$, ask for omission on $Z$ and the two tests
+$\Phi_c(X)=1$, $\Phi_b(V\setminus Y)=1$. This problem is coNP-complete
+under either of two promises: $(u\setminus l)\cap M=\{j\}$ on every
+row, or the acyclicity condition of \cref{core:thm:acyclic-marked-budgets}.
 \end{theorem}
 \begin{proof}
 Represent each positive profile demand by the monochromatic source
@@ -302,6 +300,195 @@ choice. Thus $X\mathrel{R_Z}Y$ holds exactly for satisfiable instances.
 Both promises hold: each stage fixes all the other marks, and the only
 possible edge between distinct marks is $h_k\to h_{k+1}$. The rows,
 the monochromatic demands, and $(h_0,\varnothing)$ have polynomial size.
+\end{proof}
+
+Write $P(S,A,B)$ when some pure formula is safe on $S$, true at $A$ and false at $B$.
+A projection certifies this if its coordinate lies in $(A\setminus B)\setminus M(S)$.
+Otherwise the exact recursion is
+\[
+ P(S,A,B)\quad\Longleftrightarrow\quad
+ \exists z\in S:\quad P(S-z,A,B)\ \land \bigl(P(S-z,l_z,B)\lor P(S-z,A,u_z)\bigr).
+\]
+Indeed, in the first alternative join the two witnessing formulas. Their join
+is true already at $l_z$ and hence stable at $z$. In the second alternative
+meet the witnesses to obtain a formula false at $u_z$. Conversely a witness
+stable at some $z$ satisfies the corresponding three endpoint conditions
+itself. If a shortest witness is unstable on every row, each child is safe
+on every row: a surviving mark in that child could only be absorbed by a
+stable endpoint, making the parent stable there. One child preserves the
+gap, so a shortest such witness is a projection.
+
+Equivalently, the prover may stop at an unmarked coordinate of $A\setminus B$.
+Otherwise choose a remaining row and one endpoint to replace, $A$ by $l_z$
+or $B$ by $u_z$. The opponent either accepts the replacement or keeps both
+endpoints. Either response deletes $z$. A pair with $A\subseteq B$ always loses.
+Depth-first evaluation uses polynomial space.
+
+\begin{theorem}[Two-color interpolation is PSPACE-complete]
+\label{core:thm:two-color-pspace}
+Deciding $P(Z,X,Y)$ is PSPACE-complete, even when $X\setminus Y$ is
+a singleton and each negative row uses only one of the two colors.
+For every fixed $K\ge3$, feasibility of listed source bits is also
+PSPACE-complete with these monochromatic negatives and a single positive
+at the empty coloring.
+\end{theorem}
+\begin{proof}
+Reduce truth of a prenex quantified Boolean formula with CNF matrix
+\cite[Theorem~4.3]{StockmeyerMeyer1973}. One obtains this matrix from an arbitrary
+Boolean matrix by placing existential gate variables after its original
+prefix and imposing their defining clauses. We first
+describe how to specify the row endpoints. Draw two classes of vertices,
+left and right. Rows have a vertex on just one side, and there is an initial
+vertex on each side. A coordinate labels the cells of a rectangle $I\times J$.
+Put it in the lower endpoint at the left vertices in $I$ and omit it from
+the upper endpoint at the right vertices in $J$. Elsewhere use the opposite
+membership. Take $u_z=V$ for a left row and $l_z=\varnothing$ for a right
+row. The initial left and right vertices specify $X,Y$ in the same way.
+Thus $A\setminus B$ consists exactly of the labels on the current cell.
+Each row marks one label whose rectangle omits its own vertex on that
+side. Its mark is therefore in $u_z\setminus l_z$.
+Replacing the wrong side gives a losing cell. We describe a cell by its two
+vertices in either order.
+
+Use alternating left and right levels, starting with an edge between the
+two initial vertices. Add one vertex in the next level, adjacent to the
+second initial vertex. Its row marks the sole label on the initial edge.
+Starting at the new edge, repeat the following construction for each quantifier.
+At the current edge $(A,B)$, in level order, add two vertices $T,F$ in the
+next level, each adjacent to $B$. For an existential quantifier their rows mark
+distinct labels on $(A,B)$; for a universal quantifier they mark the same
+label there. Add a vertex $W$ adjacent to $T,F$, then a vertex $D$ adjacent
+to $W$. The row of $W$ marks one label on $(B,T),(B,F)$, and the row of
+$D$ marks one label on $(T,W),(F,W)$. Both pairs of edges are rectangles.
+The next quantifier starts at $(W,D)$. All these control labels are fresh.
+
+For each signed literal add one resource row on the side opposite its
+corresponding branch vertex $T$ or $F$. Its cell with that vertex alone has
+a fresh, permanently unmarked label. Replacing the current endpoint by this resource vertex reaches an
+unmarked coordinate exactly when the other endpoint is its branch vertex. At the final common edge $(A,B)$ add a vertex $C$ adjacent to $B$
+for every clause. Their rows all mark the same label on $(A,B)$. The mark
+of each literal resource labels precisely the cells $(B,C)$ whose clause
+contains that literal, again a rectangle. There are no further labels.
+The initial difference is a singleton,
+and the instance has polynomial size.
+
+A true formula gives a winning strategy. Request the next vertex on a
+single-successor edge, the chosen vertex at an existential split, or each
+successor in turn at a universal split. If all these requests are declined,
+the edge's control label is unmarked. Accepting any request advances along
+the corresponding branch. On reaching a branch vertex, request its literal
+resource: acceptance gives the permanently unmarked label; declining records
+the chosen literal by removing its row. At the clause split, request each
+clause in turn. Every accepted clause has a true literal already unmarked.
+
+For a false formula the opponent follows a falsifying universal strategy,
+and designates a false clause at the last split. At any edge of successive
+levels $i,i+1$, accept an intended successor at level $i+2$, except that at
+a universal split or the clause split only the designated successor is
+accepted. Declining its siblings leaves their common label marked. A request
+for a vertex at level $i+2$ other than a successor, or at any later level,
+is sent to an empty cell: control edges join successive levels, and the
+only such later vertices adjacent to this edge are its successors. Decline
+requests for control vertices at level at most $i+1$: their marks occur
+only on edges of earlier levels. Challenge an incorrectly oriented request.
+For a literal resource, decline exactly when its branch vertex is on the
+current edge and otherwise challenge to an empty cell. Hence only literals
+of the assignment followed can lose their resources. The designated false
+clause has no unmarked label, and neither endpoint there is a literal's
+branch vertex. The opponent can continue declining irrelevant requests and
+challenging the rest until the rows are exhausted. This proves hardness;
+polynomial-space membership follows from the recursion. The source-bit
+version follows by encoding the endpoint demands as in
+\cref{core:thm:two-repeater-hardness}; membership follows from
+\cref{core:thm:pointed-guard-cut}.
+\end{proof}
+
+The remaining rows can contain information which the current endpoints
+alone cannot supply. In the endpoint game above, suppose the opponent's
+response uses the two endpoints, the current proposal, and an internal
+state updated from the visible play. If the opponent has no other
+access to the set of deleted rows, a family of false instances with
+$O(d)$ vertices and labels requires at least $2^d$ internal states.
+
+Indeed, use $\exists x_1\cdots x_d\,\forall y_1\cdots y_d$ followed by
+existential gate variables for the test $x\ne y$. The formula is false.
+The prover can insist on any of the $2^d$ assignments to $x$: declining
+the proposed existential branch releases its own label, accepting its
+literal-resource request loses immediately, and declining a sole
+successor releases its label. All histories reach the same edge at the
+first $y$-split. If two different $x$-prefixes have the same internal
+state, propose the two fresh branches of each universal split in the
+same order until one is accepted. Declining both loses; the same
+resource and single-successor requests carry both plays to the next
+split. The resulting $y$ is the same in both plays. In at least one
+it differs from $x$, and the prover can finish with satisfying gate
+values and a recorded true literal in every clause. This contradicts
+the claimed winning response.
+
+\paragraph{Exact interpolation in a power.}
+For a fixed algebra, the subpower membership problem asks whether one
+given tuple belongs to the subalgebra generated by a list of tuples in
+the same finite power \cite{BulatovMayrSzendrei2019}. Here these tuples
+are input columns, and each coordinate prescribes an exact output.
+
+\begin{theorem}[Subpower membership for owned choices]
+\label{core:thm:subpower-complexity}
+Fix $K\ge3$ and any subset of the owner gates, with or without union.
+Subpower membership is in $\mathrm P$ with at most one owner gate
+and PSPACE-complete with at least two. For all these signatures,
+realizable exact outputs $T_q$ on a nonempty list of rows $q$ have a
+witness of depth at most $\sum_q|T_q|$.
+\end{theorem}
+\begin{proof}
+Take a shortest word fitting the specified outputs. If its root
+absorbs at a row, require the absorbing child to give the target
+singleton there and leave the other child unconstrained. In every
+other row prescribe the two actual child values, each contained in
+the target. These child conditions suffice to reconstruct the parent.
+The sum of prescribed cardinalities for either child is strictly
+smaller: equality would require that child to give the original target
+on every row, contradicting shortestness. Induction gives the depth
+bound, using any projection on an unconstrained child. Guessing such
+splits and checking both children in depth first order takes polynomial
+space. Empty generator lists can be handled separately.
+
+For hardness choose two available owners $b,c$. Use the source samples
+from \cref{core:thm:two-color-pspace}, whose yes instances admit pure
+$b,c$ witnesses, including the monochromatic endpoint requirements.
+Choose a third owner $a$. It is absent from every prescribed coloring.
+On each probe give its head $I$ and each uncolored passive input
+$D=I\setminus\{a\}$. Its source bit is read by membership of $a$.
+Add the constant column $d(q)=D$ at every row. Require the exact
+output $D$ at each negative and $I$ at the positive. Since $D$ is
+a nonsingleton,
+$(x\star_bD)\star_cD=x\cup D$, so a positive witness gives the exact tuple.
+
+Conversely a word for the tuple uses the original marked input at the
+positive: every input there is ambiguous and only that one supplies
+$a$. Delete all leaves labeled by $d$, contracting nodes with only
+one remaining child. On each negative this can only shrink the value.
+Indeed a deleted subtree evaluates to $d(q)$ by idempotence, and
+attaching this nonsingleton always retains the surviving child's
+menu. Monotonicity handles nodes retaining both children. At the
+positive the retained marked input still contributes, since every
+gate acts as union there. This recovers a witness to the source bits
+in the full core and proves the lower bound for every stated reduct.
+
+With a single semilattice operation, a tuple is generated exactly when
+it is the join of all input columns below it in the semilattice order,
+and that family is nonempty. The empty signature requires a projection.
+For $\star_r$ together with union, distributivity expresses a word as
+a union of nonempty $r$-folds. For each $e\in T_p$ test for one fold
+bounded on all rows that supplies $e$ at $p$. Its support $J$ must omit
+every input whose menu is not contained in $T_q$ on a
+row with $r\notin T_q$. On a row with $r\in T_q$, selecting such an
+input requires selecting an input with menu $\{r\}$. If $e\ne r$,
+also omit all $r$-singleton inputs at $p$. Starting with the remaining
+inputs, repeatedly delete a selected input whose required singleton
+is unavailable. The resulting greatest support works precisely when
+one of its inputs supplies $e$ at $p$. Taking the union of the
+successful folds for all requested winners then yields the exact tuple.
+All deletions and comparisons take polynomial time.
 \end{proof}
 
 The same initial data give a complete graph criterion for a further class.

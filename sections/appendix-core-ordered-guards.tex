@@ -133,3 +133,112 @@ most $\sum_{h=0}^f \binom fh h!4^h$ lists. Enumerating distinguished
 paths, comparing suffix supports and closing explicit Horn implications
 cost polynomial time in this number and the sample size.
 \end{proof}
+
+\paragraph{Inputs used by two owners.}
+For negatives $Z$ put $W_r=\bigcup_{(j,t)\in Z}t_r$ and
+$D_{rs}=W_r\cap W_s$ for $r\ne s$. Only these intersections require
+a catalogue of operations. Let $d=\max_{r\ne s}|D_{rs}|$ and
+$n=|V|$. For $S\subseteq Z$, write $G_{r,S}(A,B)$ if a word
+omitting the marks of $S$ has $\Phi_r(A)=1$ and $\Phi_r(B)=0$.
+
+\begin{theorem}[Recognition by pairwise palette overlaps]
+\label{core:thm:palette-overlap}
+For each $r$ form the finite alphabet of pairs $(s,g)$, where $s\ne r$
+and $g$ is a core term operation on $D_{rs}$. An empty $D_{rs}$
+contributes no letter. Write $b_r$ for the alphabet size and
+$L_r=\sum_{h=0}^{b_r} b_r!/(b_r-h)!$.
+The following test recognizes an arbitrary marked query $(i,p)$:
+\[
+ \forall S\subseteq Z:\qquad
+ i\notin h(S)\quad\text{or}\quad
+ \exists (j,t)\in S,\ r\in I:\quad G_{r,S}(t_r,p_r).
+\]
+Each gap in this display is decided by Horn implications on at most
+$nL_r$ paths as described below. At fixed $K,d$ the test takes
+polynomial time in the explicit sample size. More precisely its time
+is $f(K,d)$ times a fixed polynomial, for a computable $f$.
+An impossible query is witnessed by at most $1+n\sum_rL_r$ negatives.
+\end{theorem}
+\begin{proof}
+In the two-child construction of \cref{core:thm:pointed-guard-cut},
+once the assignment has entries at distinct owners $r,s$, every
+descendant still has entries there, drawn from the original tails at
+those owners. All eligible projections thus lie in $D_{rs}$.
+The same construction realizes every feasible such assignment using
+only those inputs.
+
+For a gap at $r$ the construction therefore needs only projections,
+$r$-folds, and unary operations
+\[
+ H_{s,g}(x)=(x+g)\star_s g\qquad (s\ne r).
+\]
+An own-owner offer combines the two smaller gap witnesses by
+$\star_r$. At a foreign offer with tail $C$, the updated assignment
+requires both $r:A$ and $s:C$, so its witness $g$ is in the indicated
+catalogue. On rows where $g=\{s\}$ the unary operation absorbs; on
+all others it adjoins $g$ to its argument. Those remaining rows
+belong to the smaller budget of the offer, so both operands omit
+their marks. The gap is preserved since $\Phi_r(H_{s,g}(x))=
+\Phi_r(x)\land\Phi_r(g)$. Normalize the primary witness on the
+smaller budget obtained by dropping \emph{all} rows where $g=\{s\}$.
+This letter can never again be needed on that path: a foreign offer
+always absorbs on a remaining row. Thus the letters along a path are
+distinct.
+
+A path $w$ consists of such an ordered list followed by an input $v$.
+For a prefix length $k$ and coalition $C$, put
+\[
+ A_w(k,C)=[v\in C]\ \land \bigwedge_{(s,g)\text{ after }k}\Phi_r(g)(C\cap D_{rs}).
+\]
+This says that the suffix can force the $r$ singleton on $C$.
+Sharing identical prefixes preserves $r$-profiles and can only
+decrease outputs, by the merging inequality in
+\cref{core:thm:ordered-foreign-guards}: when a letter does not absorb
+it adjoins the fixed menu $g$ at that row. No tagged copy is needed
+for a gap. Initially discard $w$ if $A_w(0,B)$. On a negative row,
+scan each path until the first letter with $g=\{s\}$.
+A preceding letter emits when its $g$ carries the mark, and a terminal
+input emits when it is the head. For a first emission after $k$ letters,
+discard $w$ if every $u$ with
+$A_u(\min(k,[u,w]),t_r)$ has been discarded. Here a letter's own
+emission has only the preceding prefixes available to shield it.
+These are the Horn implications from the ordered-path proof, with
+$A_u$ as the suffix test. At a shared prefix the $r$-fold absorbs
+exactly when a retained descendant passes this test. The complement of
+the least closed discard set therefore assembles a bounded word losing
+on $B$, provided it is nonempty. It wins on $A$ precisely when some
+retained $w$ has $A_w(0,A)$. The normal form proves necessity as well.
+Only positive coalitions $A$ occurring as $r$-tails are used here.
+
+To justify the displayed criterion, a gap witness absorbs its row
+and can be attached by $\star_r$ to a positive witness for the
+remaining rows. It cannot absorb at $p$. Conversely, if all the gaps
+fail on a family $S$, no bounded word supplying $p$ can be atomic on
+any row of $S$: such an atom gives a positive tail test, and survival
+at $p$ gives the corresponding negative test. Both children of its
+root must then omit every negative mark. Following a child supplying
+the positive reaches the projection $i$, so $i\notin h(S)$.
+
+For the running time, one can greedily remove a row with a successful
+gap; restriction and attachment give equivalence before and after
+that removal. Each gap system computes all its positive answers at
+once for the fixed $B=p_r$. Its size and the work of Horn closure are
+polynomial in the number of paths and the explicit input length.
+The catalogues are computable by closure on the operation tables of
+arity at most $d$ on the fixed $2^K-1$ menus. For the locality bound,
+take a failing $S$ and, for each owner, keep one justifying row for
+each noninitial path discard, in derivation order. Keep also a row
+headed by $i$. With the same catalogues these rows reproduce every
+discard, so every gap for a retained row still fails. The same
+catalogues apply to subfamilies since every letter is a core operation
+and the required overlaps only shrink.
+\end{proof}
+
+When no input is ever posted in two different colors, all the
+alphabets are empty. For owner $r$ the paths are just the inputs,
+and the discard set is the least subset $C_r$ of $V$ containing
+$p_r$ and closed under $t_r\subseteq C_r\Rightarrow j\in C_r$
+for $(j,t)\in S$. The gap for a row holds precisely when
+$t_r\not\subseteq C_r$. Thus ordinary Horn closure on the input set
+handles arbitrary repetitions at every owner, including simultaneous
+repetitions in one negative row. The positive coloring is unrestricted.

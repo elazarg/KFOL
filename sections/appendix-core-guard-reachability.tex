@@ -397,6 +397,45 @@ assignment entries, counting absence, and there are at most $W$ active
 owners. Each pair takes polynomial work once its children are known.
 \end{proof}
 
+The same characterization has a quantified form involving only the
+supplied coalitions, bits, and one input. Write $e=(r,A)$ for an offer
+of a nonempty coalition occurring at $r$ in $Z$, and allow a blank
+offer. An offer covers $(j,t)$ when $A\subseteq t_r$; a blank covers
+nothing.
+
+\begin{corollary}[An alternating transversal condition]
+\label{core:cor:alternating-transversal}
+Let $m=|Z|$. The positive $(i,p)$ is feasible exactly when
+\[
+  \exists e_1\ \forall b_1\in\{0,1\}\ \cdots\
+  \exists e_m\ \forall b_m\in\{0,1\}\ \exists v\in V
+\]
+satisfies the following two conditions:
+\begin{enumerate}
+\item Every negative with head $v$ is covered by some $e_h$.
+\item Retain those nonblank offers for which $b_h=1$, and let $a_r$
+be the last retained coalition of each represented owner $r$. Then
+$v\in L(a)$.
+\end{enumerate}
+An observer-agreeing antitone guard family with a positive bit is
+realizable exactly when this condition holds at each maximal positive,
+with its minimal zeros for $Z$.
+\end{corollary}
+\begin{proof}
+After each offer delete the rows it covers. Bit zero keeps the previous
+assignment, and bit one replaces its entry at the offered owner; a
+blank does neither. The two successor tests in the proof of
+\cref{core:thm:pointed-guard-cut} justify this step even if the
+coalition occurs only in previously deleted rows: its own singleton
+still enforces every row it covers. A successful construction can
+choose an offer from a remaining row at each step until a projection
+fits, and then use blanks. At most $m$ offers are needed.
+Conversely the two conditions at the end say exactly that the
+projection $v$ works on the remaining rows with the last retained
+coalitions. Combining the two continuations at each nonblank offer
+gives a witness. Union over maximal positives proves the final claim.
+\end{proof}
+
 \paragraph{Nested repeated coalitions of one owner.}
 Suppose all pairs $(r,t_r)$ with $|t_r|\ge2$ have the same owner $a$
 and that these coalitions form a chain under inclusion. Arbitrarily
