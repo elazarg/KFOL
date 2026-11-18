@@ -458,8 +458,8 @@ is PSPACE-complete from the list of minimal zeros, including when
 all canonical prime sufficient guards are also supplied. The reductions
 use logarithmic space. Hardness holds with at most four minimal zeros
 per source and at most four literals per prime guard, with nonempty
-reconstructed outputs and agreement across observers. On this restricted class recognition from the prime guards
-alone is likewise PSPACE-complete.
+reconstructed outputs and agreement across observers. On this restricted
+class recognition from the prime guards alone is likewise PSPACE-complete.
 \end{theorem}
 \begin{proof}
 Use the three-posting reduction of \cref{core:thm:two-color-pspace}.
@@ -574,6 +574,32 @@ from the guards, and store each minimal zero once. At most four
 per head need be stored, so this also uses polynomial space.
 \end{proof}
 
+For unrestricted prime lists alone, this proves PSPACE-hardness.
+Enumerating all minimal zeros gives an exponential-space upper bound;
+the polynomial-space upper bound above uses their explicit list or
+the bound on their number.
+
+There is also a polynomial-time reduction with only six selectors.
+On $W$ draw an arc from each head to every variable in one of its
+bare tails. Each head has at most four tails of at most four inputs,
+including the padded endpoint coalitions. Every induced undirected
+subgraph has average degree at most $32$, so successive deletion
+of a vertex of degree at most $32$ and coloring in reverse order
+gives at most $33$ independent classes. Use two nonempty classes
+if only one was needed. Assign all rows with heads in the same
+class the same six-bit selector code. At any background at most
+one class $H$ is active. Its tails lie entirely in $W\setminus H$.
+For each $j\in H$ its single-source completion on $j$ and those
+passive inputs respects all its losses. Their union with the
+passive inputs realizes exactly the required class, since none of
+these summands uses another head in $H$. Thus $C$ is again core
+and both directions of the reduction go through. Remove duplicate
+or redundant tails at a head before listing its zeros. Now every
+internal head has a constant number of zeros of size at most ten
+and a constant number of primes. Each of the six selector heads
+has one zero of size $|W|$ and at most $|W|$ singleton primes per
+observer. Together the two lists use $O_K(|W|)$ posting incidences.
+
 \begin{corollary}[No fixed incidence test]
 \label{core:cor:guard-incidence-lower-bound}
 At fixed $K\ge3$ no first-order sentence on the explicitly supplied
@@ -598,9 +624,12 @@ the common-input test quantifies one entry per owner and one input.
 \begin{corollary}[Small complete guard lists can require large trees]
 \label{core:cor:compact-guards-large-trees}
 For every fixed $K\ge3$ there are realizable families on $O(d)$
-inputs with both canonical lists of polynomial length in $d$ for
+inputs with $O_K(d)$ posting incidences in the two canonical lists
+together, for
 which every core word has $2^{\Omega(d)}$ leaves. Every binary core
-circuit for these families has depth $\Omega(d)$.
+circuit for these families has depth $\Omega(d)$. Even permitting
+arbitrary fan-in at an associative gate, some path needs
+$\Omega(d)$ successive owner layers.
 \end{corollary}
 \begin{proof}
 Use the true quantified formula
@@ -638,7 +667,7 @@ $(m+1)|h|+1$ states, where $|h|$ counts nodes. At its current
 subformula scan the remaining rows on whose Boolean cube that
 subformula is constant, in a fixed order. For a constantly true
 row offer its lower endpoint, and for a constantly false row offer
-its upper endpoint. Either response leaves the subformula true
+its upper endpoint, processing the true rows before the false rows. Either response leaves the subformula true
 at the current lower endpoint and false at the upper one. When
 the scan is exhausted, both children are quiet on every remaining
 row: a marked child could be absorbed only at a stable row.
@@ -648,7 +677,7 @@ node the rows deleted before its scan are precisely those stable
 at some strict ancestor; the path to that node determines them.
 A node and one scan index suffice as internal state.
 
-Apply the complete-target construction above. From any core tree
+Apply the six-selector construction above. From any core tree
 for that target, profile pruning produces a tree on $W$ of no
 greater size. At the marked rows and Boolean endpoints every
 remaining gate outside $b,c$ acts by observer union. Replacing
@@ -657,9 +686,16 @@ Quiet rows stay quiet and the endpoint atoms, being minimal in
 this order, stay fixed. Substitute bottom for $s$ and simplify
 the constants. This gives a pure separator of no greater size.
 The state bound therefore forces exponentially many leaves in the
-original tree. The complete lists have polynomial length by the
-construction, and unfolding a binary circuit of depth $D$ gives
-fewer than $2^{D+1}$ nodes.
+original tree. The construction uses linearly many posting incidences. Unfolding
+a binary circuit of depth $D$ gives
+fewer than $2^{D+1}$ nodes. For arbitrary fan-in flatten consecutive
+equal gates of the pure separator. At an internal node the same
+strategy makes at most two consecutive blocks of like-oriented
+offers before choosing a separating child. But the accepted
+successors along the universal prefix alternate endpoint sides for
+$\Omega(d)$ moves. Hence the play must visit $\Omega(d)$ layers.
+Pruning and removing constants cannot increase the number of
+owner layers on any path.
 \end{proof}
 
 \paragraph{Exact interpolation in a power.}

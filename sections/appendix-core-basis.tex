@@ -252,7 +252,8 @@ The latter criterion is closed, but quantifies over auxiliary structures.
 At every fixed $K\geq3$, no finite family of invariant relations determines
 the core clone (\cref{core:thm:not-finitely-related}). The number of
 valuations needed to witness nonrealizability can grow exponentially with
-arity (\cref{core:thm:exponential-locality}). At fixed $K$ and a bounded
+arity, even for complete prime lists of polynomial length and width
+four (\cref{core:thm:exponential-locality,core:thm:compact-prime-locality}). At fixed $K$ and a bounded
 number of distinct repeated color classes in the minimal zeros, a
 nonrealizable guard family has a witness on only linearly many valuations
 (\cref{core:cor:input-guard-cuts,core:cor:repetition-locality}).
@@ -470,9 +471,9 @@ using AND/OR gates and cannot be improved by circuit sharing
 
 \paragraph{The complexity of a structural characterization.}
 \Cref{core:cor:alternating-transversal} characterizes complete
-families by choices of observed coalitions and a final common input.
-Its number of alternating choices grows with the number of minimal
-zeros. Even when every bit is specified, recognition is
+families by choices of coalitions and a final common input. The
+terminal test can read the prime guards directly. The number of
+alternating choices can grow with the input. Recognition is
 PSPACE-complete with both canonical presentations supplied, already
 with at most four minimal zeros per head
 (\cref{core:thm:complete-guard-pspace}). No fixed first-order test
@@ -483,9 +484,15 @@ a polynomial-time final test exists on this representation if and only
 if the polynomial hierarchy equals PSPACE. One direction is the
 hardness theorem; the other is the quantified-predicate definition
 of the polynomial hierarchy and the polynomial-space upper bound.
-This addresses tests of the form used for singleton profiles.
-A shorter structural description using more powerful tests remains
-open.
+Even without restrictions on how the valuations are chosen, a
+polynomial-size sample cannot always certify rejection from the
+prime lists (\cref{core:thm:compact-prime-locality}).
+For interval masks the relevant structure is directed reachability; its
+prime-only recognition problem is itself PSPACE-complete
+(\cref{core:prop:compact-cube-masks}). The general prime-only problem
+with unboundedly many minimal zeros has no matching upper bound here.
+The lower bounds leave open a shorter structural description using
+more than first-order incidence.
 
 The final subsections classify unary polynomials and conservative models,
 and give a finitely based subvariety obtained by collapsing ambiguity
@@ -3267,6 +3274,166 @@ Thus these $2^d+1$ rows have no common interpolant.
 Finally a constant input lies in no exceptional region, since those regions
 have both a $b$-singleton and a $c$-singleton. Hence $F$ is idempotent,
 and \cref{gen:thm:core} excludes full-language realizations as well.
+\end{proof}
+
+\begin{theorem}[Exponential locality from short prime lists]
+\label{core:thm:compact-prime-locality}
+Fix $K\ge3$. For every $d\ge1$ there is an idempotent operation
+on $10d$ inputs specified by $O_K(d^3)$ canonical prime guards of
+at most four literals each. It is interpolable on every set of
+$14(2^d-1)$ valuations, and fails on a set of one more valuation.
+Thus no polynomial in the length of the complete prime lists bounds
+the size of a noninterpolable sample for every noncore family.
+\end{theorem}
+\begin{proof}
+In the construction of \cref{core:thm:exponential-locality}, any
+simple cycle of single-bit flips works. Represent each bit by two
+inputs, one for each value, and select one input per bit at a state
+$x$. The union of its selection and that at the next state contains
+just these two full selections. Thus the same deletion patches and
+the same cyclic contradiction give the exact interpolation threshold
+equal to the length of the cycle. We choose a counter whose flip
+at each specified bit in each direction is enabled on at most two
+subcubes of states.
+
+Use data bits $B_0,\ldots,B_{d-1}$ in increasing significance,
+carry flags $C_i$, return flags $R_i$, and two intermediate flags
+$E_{i,0},E_{i,1}$ per position. Initially all data are zero and
+only $C_0$ is set. At a sole $C_i$ read $s=B_i$. Make the following
+five flips, each changing one bit:
+\[
+ E_{i,s}\gets1,\quad C_i\gets0,\quad B_i\gets1-s,\quad
+ q\gets1,\quad E_{i,s}\gets0 ,
+\]
+where $q=C_{i+1}$ if $s=1$ and $i<d-1$, and $q=R_i$ otherwise.
+At a sole $R_i$ set $R_{i-1}$ for $i>0$ or $C_0$ for $i=0$,
+then clear $R_i$. Each return to sole $C_0$ increments the data
+modulo $2^d$.
+
+At a sole $C_i$ the lower $i$ data bits are zero and every assignment
+to the other bits occurs exactly once: before the increment the low
+$i$ bits were all ones. The same statement at sole $R_i$ follows
+because precisely the completed counts divisible by $2^i$ return
+through $i$, including zero at overflow. Each intermediate flag
+identifies its branch, the two sole-$E_{i,s}$ states differ at
+$B_i$, and each pair of simultaneously set flags identifies the
+transition between them. The cycle is therefore simple, of length
+$(5+2)\sum_{i=0}^{d-1}2^{d-i}=14(2^d-1)$.
+
+For a fixed directed flip the preceding states form at most two
+subcubes, with all flags fixed in each. An intermediate-flag flip
+or data flip determines its instruction, its lower bits, and the
+old or new value of $B_i$; the higher bits are arbitrary. Clearing
+$C_i$ has the two choices of $s$, and setting it has only one
+predecessor. Setting $R_i$ can come from the local zero branch or
+the return above, and at the top from either local branch.
+Clearing $R_i$ is a single return step. The counts at the sole
+flags show that the indicated free data bits attain every
+combination.
+
+Only an observer outside $\{b,c\}$ can see a loss, at the head
+corresponding to the newly selected input of a flip. On the other
+inputs that loss posts $c$ at the old selection and $b$ outside the
+union of the two selections. For a single subcube these total
+rows share fixed postings and, at each free data bit with inputs
+$u,v$, independently allow either $u:b,v:c$ or $u:c,v:b$.
+A minimal guard hitting all rows of the subcube is a singleton
+fixed posting or hits both alternatives of one free pair with two
+postings. Indeed if neither happens, choose a missed alternative
+independently in every pair. There are $O(d)$ such local guards.
+For a union of two subcubes the primes are the minimal unions of
+one guard from each, giving $O(d^2)$ primes of width at most four
+per observer and head. The resulting operation is exactly its
+prime-guard reconstruction: departures from input union suppress
+only the sole free source at the indicated fully posted patterns.
+The $5d$ bits give $10d$ inputs. This proves the claim.
+\end{proof}
+
+\paragraph{Acyclicity of a directed cube.}
+The two-input encoding of a bit also gives a direct structural
+criterion in a class where the full prime lists can be exponentially
+shorter than the minimal zeros. Let $G$ be a directed graph on
+$D$-bit strings, $D\ge2$, whose edges are single-bit flips, with at
+most one orientation per unordered edge. Let $L_x$ select one input
+per bit as above. For each edge $x\to y$ mask
+$(L_x,L_x\cup L_y)$.
+
+\begin{proposition}[Cube masks from prime guards]
+\label{core:prop:compact-cube-masks}
+This mask is core exactly when $G$ is acyclic. At fixed $K\ge3$,
+recognition of interval masks specified only by their complete prime
+guards is PSPACE-complete. Hardness holds for these directed-cube
+masks with at most four literals per prime.
+\end{proposition}
+\begin{proof}
+Each reversal goes from level $D+1$ to level $D$. A path collapsing
+a strict interval must start at the upper endpoint of a listed edge
+and end at a selected transversal of size $D$. Only the two endpoints
+of that edge are transversals below its upper endpoint. In the
+notation of an edge $x\to y$, its reversal leads to $L_x$;
+subsequent inclusion-reversal pairs on transversals can stay put
+or traverse an edge of $G$ backwards. Thus the other interval, at
+$L_y$, is collapsed exactly when $G$ has a path from $y$ back to
+$x$. It is unlisted by the orientation assumption. Apply
+\cref{core:thm:interval-masks}.
+
+For the upper bound on arbitrary promised interval masks, test
+whether $(L,U)$ is masked by evaluating the prime guards on the
+input giving $c$ on $L$, a third winner on $U\setminus L$, and
+$b$ elsewhere. Store one Boolean vertex at a time; an inclusion or
+a permitted reversal is testable in polynomial space. Failure of
+path closure is witnessed by reachability on this graph of $2^{|V|}$
+vertices, which takes polynomial space by the usual midpoint
+recursion. If the interval-mask form itself must be verified,
+stream every menu tuple and compare its prescribed output to the
+mask read from the atomic rows.
+
+For hardness start with a deterministic polynomial-space decider
+on its specified input. Encode one configuration and a binary
+clock larger than the number of its configurations in polynomially
+many bits. A polynomial-size Boolean circuit computes the next
+configuration and increments the clock. From an accepting state
+it resets everything to the designated start with clock zero;
+at rejection, an invalid configuration or clock expiry it stops.
+Away from reset the clock increases strictly. Hence the configuration
+graph contains a directed cycle precisely when the start accepts.
+The successor and the continue bit have polynomial-size circuits
+of two-input NAND gates, copies and constants: a tape update reads
+the state, head position and symbol, and the clock uses binary
+increment. Complementing the decider exchanges the answers for
+acyclicity.
+
+To implement one circuit sweep by single-bit flips, use a distinct
+register for each gate and then copy the results into the
+configuration inputs. Each register has just one writing stage.
+Use at least three cyclically ordered stages $Q_i$ and two
+intermediate flags $H_{i,0},H_{i,1}$ per stage. With sole flag
+$Q_i$, set $H_{i,e}$ for the desired output $e$ of its instruction.
+Clear $Q_i$, change the destination bit to $e$ if necessary, set
+the next stage flag once the destination equals $e$, and clear
+$H_{i,e}$. At the wrap to the first stage require the computed
+continue bit. These are all the edges; every specified flag
+pattern fixes all other flags to zero. A sweep from the first
+stage overwrites scratch registers before reading them. Intermediate
+states can advance only to the next stage or a sink, so every cycle
+crosses the first stage and projects to a cycle of the configuration
+graph. Conversely a configuration cycle gives an infinite run of
+the finite compiled graph, hence a cycle. The flag patterns and
+distinct consecutive stages ensure that no edge has its reverse.
+
+For each bit and direction the states enabling its flip form at most
+two Boolean subcubes. A data flip has a unique writing stage and
+intermediate flag. Setting an intermediate flag tests one gate value,
+whose true and false sets each use at most two subcubes for NAND,
+a copy or a constant. Clearing it has one flag pattern. Setting or
+clearing a stage flag has at most two patterns, one per intermediate
+flag, with prescribed destination and continue bits when needed.
+The hitting-set calculation in \cref{core:thm:compact-prime-locality}
+therefore generates all primes in polynomial time, with at most
+four postings each. There can be exponentially many minimal zeros
+even here: unused data bits give disjoint copies of the same graph
+and independent free pairs at every existing edge. This proves
+hardness on the stated prime presentation.
 \end{proof}
 
 \begin{corollary}[Exact locality with a single omitted winner]
