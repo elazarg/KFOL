@@ -294,6 +294,8 @@ import all KFOL.Core.SingleSourceCompletion
 import all KFOL.Core.PassiveProfileBounds
 import all KFOL.Core.AcyclicSourceQueries
 import all KFOL.Core.MonochromaticLosses
+import all KFOL.Core.MonochromeLossLift
+import all KFOL.Core.RainbowWinnerLift
 import all KFOL.Core.MonochromaticHeadCuts
 import all KFOL.Core.MonochromaticCutObstruction
 import all KFOL.Core.SinglePostingObstruction
