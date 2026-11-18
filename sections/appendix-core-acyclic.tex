@@ -165,3 +165,72 @@ A sole-source probe at $i$ for any foreign winner would contradict the
 forced singleton. The core singleton-profile factorization identifies
 these forcing coalitions with $\Phi_r(F)$, giving the final formula.
 \end{proof}
+
+\paragraph{Complexity for complete guard families.}
+Here every source bit is specified. The lists of prime sufficient guards
+and of minimal zeros can both be short even when deciding realization
+is hard.
+
+\begin{theorem}[Recognition of complete acyclic guard families]
+\label{core:thm:complete-acyclic-guard-complexity}
+Fix $K\ge3$. Recognizing realizability of complete, observer-agreeing
+antitone source predicates defining a nonempty operation with acyclic
+source dependence is coNP-complete. Hardness holds when both the complete
+prime guard lists and the complete minimal zero lists are supplied, the
+source graph has depth two, and all but its last head use only zeros
+of size at most $K$.
+\end{theorem}
+\begin{proof}
+Under these hypotheses, \cref{core:thm:acyclic-source-guards} gives
+a certificate of failure: specify a head, a proper fixing at which
+its source bit is zero, and two full valuations extending the fixing
+that differ only at that head and have different outputs. Each bit and
+output can be evaluated in polynomial time in either representation.
+
+Reduce CNF unsatisfiability. Use distinct owners $a,b,c$. The inputs
+are a flag $f_r$ for each $r\ne c$, a truth input $x_v$ for each
+Boolean variable, one input $h_j$ per clause, and a final input $g$.
+All flags and truth inputs are retained unconditionally. A positive
+literal is confirmed by posting $a$ at its truth input and a negative
+literal by posting $b$. The minimal zeros at $h_j$ post every flag
+in its own color and confirm one literal of clause $j$. The only
+zero needed at $g$ posts $c$ at every $h_j$. Omit tautologies and duplicate literals, and use instances with at
+least one nonempty clause and no empty clauses; a fresh unit clause
+ensures the former restriction. These are
+proper colorings; the flags use every color but $c$. The retained
+inputs ensure nonemptiness.
+
+The prime guards at $h_j$ exclude one prescribed flag posting or
+exclude all the confirming postings of that clause. Indeed a sufficient
+guard must hit every one of its listed zero patterns, and these are
+exactly their minimal hitting sets for observer $c$. Every other
+observer erases a required flag and hence has the empty guard.
+At $g$ each observer other than $c$ has one prime for each clause
+input, excluding its $c$ posting; observer $c$ has the empty guard. Thus both presentations
+have polynomial size and are canonical. Dependence goes from the
+retained inputs to the clause inputs and from there to $g$.
+
+If the CNF has a model, fix all $h_j$ to $\{c\}$. The prescribed
+source bit at $g$ is zero at this proper fixing. Now post every flag
+and the truth values of the model. For observer $c$ all clause inputs
+are suppressed, and no retained input contains $c$. Erasing the
+$c$-postings makes $g$'s coefficient positive for this observer.
+Changing $g$ from $\{a\}$ to $\{c\}$ therefore introduces $c$,
+violating the cofactor condition.
+
+If the CNF is unsatisfiable, at every valuation some clause has no
+confirmed literal: any mutually consistent partial assignment
+confirming one literal per clause extends to a model. For observer
+$c$ such a clause input is live. Under a fixing suppressing $g$,
+every clause input is $\{c\}$. A live one supplies $c$; the fixing
+blocks $g$ for each other observer. The output is independent of $g$.
+
+Under a fixing suppressing $h_j$, the flags already supply all
+winners except $c$, and $h_j$ is suppressed for observer $c$ under
+every extension. The only other coefficient that can change with
+$h_j$ is that of $g$. For observer $c$ this coefficient is identically one
+because all $c$-postings are erased. Thus $h_j$ is
+inessential under the fixing. No retained input has a zero, so these
+are all the cofactor conditions. The acyclic characterization gives
+a common core word.
+\end{proof}

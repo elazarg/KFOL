@@ -172,6 +172,169 @@ the prescribed background predicates. Source reconstruction proves
 the criterion.
 \end{proof}
 
+\paragraph{How many sources can be lost?}
+Call a source conditional if its predicate is not identically one;
+this includes an unused source. When only these sources can be
+lost, eliminating the retained inputs gives a direct implication
+test on the minimal zeros. In particular the choice between the
+two canonical presentations can matter already at two conditional
+sources.
+
+\begin{lemma}[Eliminating inputs outside the queried heads]
+\label{core:lem:unmarked-background}
+Consider one positive query $(i,e,d)$ and arbitrary negative queries
+$(j,b,t)$. Let $H$ contain $i$ and all the negative heads, and
+split the postings into their parts on $J=V\setminus H$ and $H$.
+There is a witness exactly when a word on $H$ supplies $(i,d)$
+and omits $(j,t)$ for each row with $b\subseteq e$.
+\end{lemma}
+\begin{proof}
+The case $J=\varnothing$ is immediate. Form a complete upper bound
+by retaining $J$ and prescribing just the upsets of the given
+negatives as losses. It is nonempty because it contains the union
+on $J$. A sample witness is below this bound by source decomposition
+and antitonicity. Adjoining the union on $J$ preserves its
+negative and positive bits. Conversely any word under the bound
+supplying the positive is a witness. By
+\cref{core:lem:block-source-patterns} the greatest coefficient at $e$
+omits exactly the bits forced by the indicated internal constraints:
+the activation preorder of the retained union is subcoloring by
+\cref{core:thm:source-completion}. Thus its bit at $(i,d)$ is
+positive precisely when some internal word supplies it. This
+argument also covers an internal negative $t$ whose union with the
+whole of $e$ uses every color: it suffices that its original row
+$(b,t)$ is proper.
+\end{proof}
+
+\begin{theorem}[Compatibility over retained inputs]
+\label{core:thm:retained-background-cuts}
+Suppose the family has a positive bit. Let $H$ be its nonempty set
+of conditional sources and let $J$ be the retained inputs. Write a listed minimal zero as $(j,b,t)$,
+where $b$ posts background inputs in $J$ and $t$ posts inputs in
+$H\setminus\{j\}$. Fix $i\in H$, a proper internal coloring $d$ off
+$i$, and an observer $k$ missing from $d$. Take the list of core
+operations $u$ on $H$ for which $\pi_i^u(d)=1$. For each such $u$
+select a listed zero $(j_u,b_u,t_u)$ with $\pi_{j_u}^u(t_u)=1$.
+A complete family is realizable if and only if it obeys the following
+rule for every such selection:
+\[
+ \text{if } b=\bigcup_u b_u\text{ is a consistent coloring omitting }k,
+ \qquad \pi_i(b,d)=0.
+\]
+For fixed $K$ and $|H|$, this gives polynomial-time recognition
+from the minimal zeros and coNP membership from the prime guards.
+\end{theorem}
+\begin{proof}
+Use \cref{core:lem:unmarked-background} at a positive $(i,e,d)$
+against all minimal zeros. Retained inputs supply their own
+positives by projection. If all operations capable of supplying
+$(i,d)$ are excluded, take one excluding row per operation.
+Their backgrounds unite inside $e$. Conversely a consistent union
+omitting $k$ gives a proper fixing at which all the selected operations
+are excluded. Antitonicity proves the rule in both directions:
+every positive must be supplied by the greatest allowed coefficient.
+For a fixed internal arity the list of operations is constant.
+With explicit minimal zeros one may enumerate the selections; with
+prime guards one may guess proper zero rows instead of minimal ones,
+since each contains a minimal zero, and test their bits and the
+positive at their union directly.
+\end{proof}
+
+\begin{corollary}[A pair rule for two conditional sources]
+\label{core:cor:two-conditional-guard-complexity}
+Suppose $x,y$ are the only conditional sources and the family has
+a positive bit. Choose a minimal zero at each of $x,y$. Remove
+postings of $x,y$ from these two zeros and let $b$ be the union
+of the remaining postings. If $b$ is a consistent proper coloring
+and the two removed postings are not both present with the same
+color, require
+\[
+                  \pi_x(b,\varnothing)=\pi_y(b,\varnothing)=0 .
+\]
+This one rule characterizes realization. Recognition from complete
+prime guards is coNP-complete at each fixed $K\ge3$, even when
+only one of $x,y$ depends on the other and every prime has at most
+four literals. With just one conditional source and a retained
+input every antitone observer-agreeing family is realized.
+\end{corollary}
+\begin{proof}
+At a fixed proper background $e$, collect the internal constraints
+whose backgrounds are contained in $e$, as in
+\cref{core:thm:retained-background-cuts}. A constraint at $x$ rules
+out the projection $x$, and likewise at $y$. If both heads have
+constraints, a nonzero coefficient must therefore use both inputs.
+By \cref{core:prop:binary} the only binary word losing each source
+at some pattern is $x\star_r y$: in both directions the loss must
+post the other input at the same $r$. An incompatible pair forces
+coefficient zero already on its background union. This proves
+necessity.
+
+Conversely a background containing an incompatible pair has both
+heads lost there already, by the rule and antitonicity.
+If both heads have constraints but no such pair exists, all of them
+post the same $r$ and $x\star_r y$ gives exactly the required bits
+on the proper extensions of $e$. If only $x$ has constraints, use
+$y$ when an empty internal pattern occurs. Otherwise retain $y$
+and suppress $x$ just when $y$ has a color in the listed set, using
+the corresponding one-sided binary normal form. Interchange the
+heads for the other case and take union if neither has constraints.
+The block criterion now realizes the family. The one-source
+assertion is \cref{core:thm:source-completion}.
+
+For the complexity lower bound, reduce failure of hypergraph
+two-colorability, where each edge must meet both colors. 3SAT gives
+such instances with edges of size at most four: use two complementary
+vertices per variable joined by an edge, and a marker $z$. Each
+clause gives the edge consisting of $z$ and its literal vertices.
+Color $z$ false. The complementary pairs give a truth assignment
+and the clause edges require a true literal. Remove edges containing
+a smaller one and take a nonempty edge family without empty edges.
+
+Choose distinct owners $a,b,c$ and retain one input per vertex.
+Prescribe a zero at $x$ exactly when the vertices posted at $a$ meet
+every edge. Prescribe a zero at $y$ exactly when $x$ is posted at
+$c$ and the vertices posted at $b$ meet every edge. The primes at
+$x$ for observers other than $a$ are the guards excluding the
+$a$-postings of one whole edge. At $y$ for observers outside
+$\{b,c\}$ they are the single exclusion of $x$ at $c$ and the
+analogous edge guards for $b$. All remaining facets have the
+empty guard. These lists are canonical: all allowed vertices of the
+tested color can be posted together, so a sufficient guard must
+disable the required internal posting or exclude every vertex of
+one edge. The edge antichain gives minimality.
+
+Every opposite-head pair has just one internal posting, at $x$.
+Its backgrounds are compatible precisely when the chosen
+$a$-transversal and $b$-transversal are disjoint. Their union omits
+$c$ and leaves $y$ live without the internal posting. Hence the
+pair rule fails exactly when two disjoint transversals exist.
+These extend to a two-coloring; conversely each color class of a
+two-coloring contains a minimal transversal. This proves the
+lower bound. Membership follows from
+\cref{core:thm:retained-background-cuts}.
+\end{proof}
+
+The pair rule is necessary even among arbitrarily many conditional
+sources. Apply \cref{core:lem:unmarked-background} to the two
+selected losses and the proposed positive alone. More generally,
+with three conditional sources there is a gluing test uniform
+in the number of owners. Choose at most nine minimal zeros with
+consistent background union $b$. After dropping their background
+postings, every internal bit $(i,d)$ impossible on these rows must
+already satisfy $\pi_i(b,d)=0$ whenever $(b,d)$ is proper.
+This rule is also sufficient. Indeed for three internal inputs a
+repeated color in a negative occupies both passive slots, so that
+row by itself is exactly one singleton-profile demand. All other
+negative rows use each color at most once. The marked, rainbow and
+gap certificate bounds in the proof of
+\cref{core:cor:ternary-uniform-interpolation} therefore apply to
+the partial internal sample, with each demanded profile costing
+its one original negative. They give at most nine negatives for
+an impossible internal positive. Their backgrounds are contained
+in that of the positive by \cref{core:lem:unmarked-background}.
+Taking their union gives the stated rule. The ternary tests and the
+number of selections are polynomial even with $K$ supplied as input.
+
 \begin{corollary}[Joint guards with components of size at most two]
 \label{core:cor:binary-source-components}
 For a candidate family of complete source predicates, draw an edge

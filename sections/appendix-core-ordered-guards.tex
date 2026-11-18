@@ -252,3 +252,305 @@ for $(j,t)\in S$. The gap for a row holds precisely when
 $t_r\not\subseteq C_r$. Thus ordinary Horn closure on the input set
 handles arbitrary repetitions at every owner, including simultaneous
 repetitions in one negative row. The positive coloring is unrestricted.
+
+\begin{corollary}[Eliminating heads in disjoint color classes]
+\label{core:cor:palette-boundary}
+Suppose the sets $W_r$ are pairwise disjoint. Choose one of the given
+zeros $(j,t^j)$ at each head of a nonempty set $H$. Its boundary is
+the coloring
+\[
+ e_r=\bigcup_{j\in H}t^j_r\setminus H .
+\]
+On $H$ draw $j\to u$ when $j,u\in W_r$ and $u\in t^j_r$.
+A positive $(i,p)$ is impossible exactly when there is such a
+selection with $i\in H$, $e\subseteq p$, and an acyclic graph.
+In particular at most $|V|$ negatives are required.
+
+Consequently a complete family given by its minimal zeros, with at
+least one positive bit, is realizable precisely when it satisfies one
+closure condition. For every such acyclic selection with proper
+boundary, the boundary already contains a listed zero at each selected
+head.
+\end{corollary}
+\begin{proof}
+If the sample fails, take a failing $S$ from
+\cref{core:thm:palette-overlap} and let $H_0=h(S)$. At every $r$
+the Horn closure of $p_r$ contains every tail of $S$ and hence every
+head. Apart from the seeds $p_r$ it adds only heads. Remove from
+$H_0$ each head already seeded in its own color, obtaining $H$;
+the positive head $i$ remains. For each $j\in H\cap W_r$ choose
+the rule that first added $j$ at $r$. For a head belonging to no
+$W_r$ choose any of its rows. A tail outside $H_0$ was already a
+seed. By disjointness, a tail in $H_0\setminus H$ was seeded in the
+color in which it occurs. Thus $e\subseteq p$. Every graph edge
+goes to an earlier addition at the same owner, so there is no cycle.
+
+Conversely use only the selected rows and start the Horn closures at
+$p_r$. Each external tail is seeded. Working backwards along the
+acyclic graph derives every $j\in H\cap W_r$ at $r$: these are all
+the heads that can occur in an internal $r$-tail. Consequently every
+tail is reached in its color, and $i\in H$ makes the family an
+obstruction. Taking $p=e$ gives necessity of the closure condition.
+If it holds, any obstructed positive extends a boundary already
+containing a zero at its own head, a contradiction. Union of the
+individual witnesses realizes the full family.
+\end{proof}
+The same class has a representation by closed sets on the original
+inputs. Fix a coloring $\lambda:V\to I$ extending every negative
+posting; an input that never occurs in a tail may take any color.
+Write $E(t)=\bigcup_r t_r$ for the support of a negative coloring.
+Call $C\subseteq V$ closed for the data when
+\[
+   (j,t)\in Z,\quad E(t)\subseteq C\quad\Longrightarrow\quad j\in C .
+\]
+Let $\mathcal L$ be these sets, and let $\mathcal L_\lambda$ consist
+of the members reachable from $V$ along a descending chain in
+$\mathcal L$ in which each difference has just one color. Put
+$P=\{u:p(u)=\lambda(u)\}$ for a positive query $(i,p)$.
+
+\begin{theorem}[Closed sets for a fixed input coloring]
+\label{core:thm:colored-closure-guards}
+A word supplies $(i,p)$ and omits the specified negatives exactly
+when some $C\in\mathcal L_\lambda$ contains $P$ and omits $i$.
+There is then a read-once word supplying this bit and omitting the
+negatives.
+
+The family $\mathcal L_\lambda$ is the largest closure system contained
+in $\mathcal L$ in which each cover adds inputs of just one color.
+Consequently, on proper native colorings, a complete family with a
+positive bit is realizable exactly when its prescribed zeros are the
+closure implications of such a system: $j$ is lost at $E\subseteq
+V\setminus\{j\}$ exactly when $j$ belongs to the closure of $E$.
+At arbitrary colorings the source predicates depend only on $P$.
+\end{theorem}
+\begin{proof}
+Take a chain to $C$ and stop at its first difference containing $i$.
+Write the differences in order as $T_1,\ldots,T_h$, with colors $r_k$.
+Start with the $r_h$-fold of $T_h$ and attach the folds of
+$T_{h-1},\ldots,T_1$ at their respective owners. The supports are
+disjoint. Each fold avoids its own color at the positive, so $i$
+transmits its mark. If a negative head $j$ occurs in $T_k$, closure
+after its deletion implies that some member of its tail lies in a
+block $T_\ell$ with $\ell\le k$. That block absorbs at owner
+$r_\ell$, masking the only possible emission. A head outside the
+blocks never emits.
+
+Conversely take an inclusion-minimal reachable $C$ containing $P$.
+Suppose $i\in C$, and set $H=C\setminus P$. For each $r$, the ordinary
+Horn closure of $(C\setminus\lambda^{-1}(r))\cup P$ is $C$: a
+proper subset would be one further monochromatic deletion retaining
+$P$. For each $j\in H$ take the row first deriving it in this process
+at $r=\lambda(j)$. All tails lie in $C$; the external ones lie in
+$P$, and edges within each color go to earlier derivations. These
+rows give the obstruction of \cref{core:cor:palette-boundary} at $i$.
+
+If $B,C$ are reachable, intersect $B$ with a chain from $V$ to $C$.
+All resulting sets are closed, and its nonempty differences are
+monochromatic. Appending it to a chain for $B$ proves reachability of
+$B\cap C$. Intersecting a chain for $A$ with $B$ likewise interpolates
+any inclusion $A\subseteq B$ of reachable sets by monochromatic
+steps, proving the cover property. Every member of any closure
+subsystem with that property is reachable along a chain of its own
+covers. This proves maximality. For complete data the first assertion
+identifies forced zeros with closure in this largest system. Conversely
+any representing subsystem is contained in the largest one, so it
+separates each prescribed positive there. Union of the read-once
+witnesses then realizes the family.
+\end{proof}
+
+If one color never occurs in the image of $\lambda$, every native
+subset is a proper coloring. In that case the representation amounts
+to two intrinsic conditions on the given table. Define
+\[
+ c(E)=E\cup\{j:\exists (j,t)\in Z,\ E(t)\subseteq E\}.
+\]
+Then $c$ must be a closure operator, and every cover of its closed-set
+lattice must have monochromatic difference. Both conditions are
+polynomial to check from the minimal zeros. For the first, write
+$A\to x$ for a listed rule. For each pair $A\to x$, $B\to y$ with
+$x\in B$, require $y\in c(A\cup(B\setminus\{x\}))$.
+To see sufficiency, suppose $y\in c(c(E))\setminus c(E)$ and take
+a rule for $y$ on $c(E)$. Replace a premise $x\notin E$ by a rule
+for $x$ on $E$. The pair test supplies a new rule for $y$ with fewer
+premises outside $E$ (or $y$ itself is one of the remaining premises,
+which would put $y\in c(E)$). Iteration is a contradiction.
+
+For the second test take each pair $A\to x$, $B\to y$ of different
+head colors with $y\in A$, $x\in B$. Require that $c((A\setminus
+\{y\})\cup(B\setminus\{x\}))$ contain $x$ or $y$. A violating pair
+gives a closed set above which either head generates the other.
+A maximal proper closed subset of their common extension containing
+the starting set omits both, giving a cover with two colors. Conversely
+if a cover adds $x,y$ of different colors, adjoining either head to
+its lower set generates the upper set. Directness of $c$ supplies
+two listed rules witnessing failure of the pair test. These tests
+also allow inputs which are lost already at the empty coloring.
+
+\begin{theorem}[Two presentations of fixed-color guards]
+\label{core:thm:palette-presentation}
+Fix $K\ge3$ and suppose every input has a fixed posting color
+$\lambda(u)$. For complete antitone observer-agreeing guard data with
+a positive bit, recognition from the prime sufficient guards takes
+polynomial time. Recognition from the minimal zeros is coNP-complete,
+even for acyclic source dependence of depth two. If a posting color is
+unused, recognition from either presentation takes polynomial time.
+\end{theorem}
+\begin{proof}
+Write $W_r=\lambda^{-1}(r)$. Given the primes, ordinary Horn closure
+can be computed without listing the zeros. For a current set $X$ and
+a head $j\notin X$, some listed rule has its tail in $X$ exactly when
+the predicate at $j$ is zero on $X\setminus W_k$ in its native
+colors for some observer $k$. Indeed each minimal zero misses an
+owner and each zero contains a minimal one. Evaluate these predicates
+and add forced heads until the set is closed.
+
+For a native seed $E$ compute the least member of $\mathcal L_\lambda$
+containing $E$. Start at $C=V$; whenever possible replace $C$ by
+the ordinary closure of $(C\setminus W_r)\cup E$ strictly inside
+$C$. Each step is a monochromatic deletion. If the least reachable
+set containing $E$ is still strictly smaller than $C$, intersecting
+a chain to it with $C$ gives a first proper monochromatic deletion
+retaining $E$. The indicated closure for that color can also delete.
+Thus at most $|V|$ deletions suffice.
+
+For observer $k$ and a prime $G$ at head $j$, test the single seed
+\[
+ E=(V\setminus(\{j\}\cup W_k))\setminus
+       \{u:(u,\lambda(u))\in G\}.
+\]
+This is the largest native part of a coloring enabling $G$ for
+observer $k$. It enables $G$ itself, since all its postings are
+native. The criterion of \cref{core:thm:colored-closure-guards}
+requires the least reachable closed set above $E$ to omit $j$.
+By antitonicity a witness then serves every positive enabling $G$.
+Checking all the supplied primes takes polynomial time. If the
+minimal zeros are supplied instead, the obstruction of
+\cref{core:cor:palette-boundary} gives a polynomial certificate of
+failure. The pair tests above handle an unused color.
+
+For hardness reduce CNF unsatisfiability, taking nonempty clauses
+and at least one clause. Choose different owners $a,c$. Retain a
+flag $f_r$ of native color $r$ for every $r\ne c$ and two inputs
+$u_v^+,u_v^-$ of color $a$ for each Boolean variable $v$.
+Use a head $h_j$ of color $c$ for every clause and one final head
+$g$. For each literal in clause $j$, prescribe the zero at $h_j$
+consisting of all flags together with that literal's input. At $g$
+prescribe the set of all clause inputs and also each opposite pair
+$\{u_v^+,u_v^-\}$. All these tails use native colors, are proper,
+and at each head form an antichain after removing duplicate literals.
+The only paths of length two go from a retained input through a
+clause input to $g$.
+
+For this acyclic implication system every closed set $C$ is reachable:
+delete the inputs outside $C$ one by one in source order. When a head
+is deleted, every rule for it has a premise outside $C$, already
+deleted. Thus $\mathcal L_\lambda=\mathcal L$. The one-step map $c(E)$
+above must therefore agree with ordinary Horn closure on every proper
+native $E$. A difference can first occur only at $g$. This requires
+all clause inputs in the closure, at least one newly derived clause
+input, and no opposite pair in $E$. Deriving a clause input requires
+all flags in $E$. As $E$ is proper and the flags use every color
+other than $c$, no clause input belongs to $E$. Hence every clause
+contains a selected literal, and the absence of opposite pairs
+makes the selection consistent. Conversely a model supplies a
+proper $E$ consisting of the flags and its true literal inputs.
+Its first step adds all clause inputs and its second adds $g$.
+Thus the family is realizable exactly for unsatisfiable instances.
+\end{proof}
+
+\paragraph{Reading complete prime guards with overlapping colors.}
+An input is \emph{mixed} if its postings in the minimal zeros use
+at least two colors. Each other posted input has one private color.
+These palettes can be read directly from the complete prime lists.
+At a fixed observer and head a prime is a minimal hitting set of the
+minimal zeros on that facet. Every member of a minimal hitting set is
+its unique intersection with some minimal zero. Conversely, deleting
+one posting from a minimal zero enables a prime whose only intersection
+with that zero is the deleted posting. These arguments include
+constant predicates, which contribute no postings.
+
+\begin{theorem}[Recognition and synthesis from complete prime guards]
+\label{core:thm:compact-overlap-guards}
+Let $b$ be the number of mixed inputs. From the complete prime lists
+of an observer-agreeing antitone family one can decide realizability
+and, when it holds, construct a core word in time
+$f(K,b)$ times a fixed polynomial in the input length. This also
+holds with $b$ replaced by the largest pairwise overlap
+$\max_{r\ne s}|W_r\cap W_s|$, since $b\le\sum_{r<s}|W_r\cap W_s|$.
+There is no restriction on source cycles or on the sizes of the
+minimal zeros.
+\end{theorem}
+\begin{proof}
+Use the path alphabets of \cref{core:thm:palette-overlap}, formed once
+from the original palettes. Work only with rows whose postings occur
+in these palettes. They include all minimal zeros. At fixed observer
+$k$, group negative rows by head $j$ and by a coloring $\tau$ of
+the mixed inputs other than the head, omitting $k$. The remaining
+postings form a subset $E$ of the available private inputs of colors
+other than $k$, excluding $j$. Maintain one set $X$ of allowed private
+inputs per group. Its remaining rows are exactly
+\[
+    E\subseteq X,\qquad \pi_j(\tau\cup E)=0 ,
+\]
+where $E$ is posted in its private colors. Initially $X$ contains
+all available inputs. A group has a remaining row precisely when
+its predicate is zero at $X$. This test uses the supplied primes.
+
+Fix a positive $(i,p)$. In the path system for an $r$-gap with
+negative test $p_r$, use only terminals in $W_r$. Indeed the other
+paths can neither win an $r$-tail nor shield any emission there.
+Removing them preserves every absorption at the shared prefixes
+needed by the remaining paths, and only weakens the $r$-test at $p_r$.
+Every letter uses only mixed inputs.
+
+We compute the same least set of discards as with the rows explicitly
+listed. For a path $w$ and a group, the position of its first unblocked
+emission is fixed: letter values depend only on the mixed-input
+probe menus, and a terminal emits exactly at its own head. At this
+position consider the possible shielding paths $u$ not yet discarded.
+In $A_u(\min(k',[w,u]),t_r)$, where $k'$ is the emission depth,
+all suffix profile factors are fixed by $\tau$. For a path passing
+these factors, only its terminal still needs to be $r$-posted.
+If one such mixed terminal is already posted at $r$, there is no
+unshielded row in this group. Otherwise remove from $X$ all the
+passing private terminals of color $r$, temporarily obtaining $X'$.
+An unshielded negative exists exactly when $\pi_j(\tau\cup X')=0$:
+loss is upward closed in the remaining private postings. Discard
+$w$ in that case. Iteration gives all the surviving paths, and
+their common prefix tree is a single word which loses the test
+at $p_r$ and omits every remaining negative. An empty tree cannot
+win a gap.
+
+At the root of that tree the same terminal test describes all
+rows on which it is $\{r\}$. Remove these rows permanently:
+erase a group if an always-posted mixed terminal passes, and
+otherwise delete its passing private terminals from $X$. If some
+row is removed, keep the tree as a helper for an $r$-choice and
+repeat. Fitting a projection or making a deletion is necessary
+and sufficient by \cref{core:thm:palette-overlap}; the tree
+absorbs on every deleted row and preserves the mark at $p$.
+If no row with head $i$ remains, start at $i$ and attach the
+recorded helpers in reverse deletion order. If such a row remains
+and no owner removes a row, the query is impossible.
+
+Each group can lose at most $|V|$ private inputs and can be erased
+once. There are at most $K|V|(K+1)^b$ groups, and the number of paths
+per owner is at most $|V|L_r$. Each fixed-point step, removal and
+coefficient evaluation therefore has the required time bound.
+To cover the positives it suffices, for each observer, head, prime
+and mixed coloring enabling the mixed part of that prime, to test
+the largest private seed which enables it. Post every available
+private input whose native posting the prime permits. Postings
+outside an input's palette can be ignored here: all $r$-helpers
+use terminals in $W_r$ and letters on subsets of $W_r$, so their
+$r$-tests depend only on $p_r\cap W_r$. The same marked spine
+supplies every enabling query with these mixed statuses and a
+subset of the private seed. Mixed postings outside their palettes
+may likewise be erased in these tests. Union of the resulting
+words realizes precisely the given family. An all-zero family
+has no word. Each helper trie has parameter-bounded letter depth
+and polynomially many nodes. Expanding its shells thus costs a
+parameter factor; the final union can use each summand only $K$
+times by the construction of \cref{core:cor:source-box-rank}.
+This gives the time bound also for writing the primitive word.
+\end{proof}

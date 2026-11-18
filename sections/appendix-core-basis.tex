@@ -27,9 +27,18 @@ source irrelevant (\cref{core:cor:colored-cofactor-dependence}).
 
 Several simultaneous compatibility problems also have closed solutions.
 Acyclic source dependence admits an exact criterion and an ordered-spine
-construction (\cref{core:thm:acyclic-source-guards}). There is also an
-intrinsic test when every strongly connected component of the source
-graph has at most two inputs. A cycle may depend on earlier cycles
+construction (\cref{core:thm:acyclic-source-guards}). Checking that
+criterion on complete prime guards is coNP-complete even for a
+dependency graph of depth two (\cref{core:thm:complete-acyclic-guard-complexity}).
+Two conditional sources admit a single rule on opposite-head pairs
+of minimal zeros, even when the sources depend on each other.
+Testing it from prime guards is already coNP-complete. For any fixed
+number of conditional sources, combining the background postings of
+minimal zeros gives a polynomial test. Three conditional sources
+require at most nine losses in one test, uniformly in the number of
+owners (\cref{core:lem:unmarked-background,core:thm:retained-background-cuts,core:cor:two-conditional-guard-complexity}).
+There is also an intrinsic test when every strongly connected component
+of the source graph has at most two inputs. A cycle may depend on earlier cycles
 in the component order. The only operations enumerated
 are on one or two inputs (\cref{core:cor:binary-source-components}).
 Components of arbitrary size also admit a test when, at each earlier
@@ -58,8 +67,19 @@ of the negatives
 For several repeating owners, the inputs posted at both of any two
 owners suffice for their joint singleton tests. Bounded pairwise overlap
 gives fixed-parameter tractability and linear obstruction size at fixed
-$K$; disjoint color classes need only Horn closure on the inputs
-(\cref{core:thm:palette-overlap}).
+$K$. For disjoint color classes a single closure law on the minimal
+zeros suffices: choosing one zero per head and eliminating acyclic
+same-color dependencies forces zeros on the external inputs alone
+(\cref{core:thm:palette-overlap,core:cor:palette-boundary}).
+Equivalently, the zeros are represented by a closure system whose
+covers add one color at a time. When the input coloring leaves an owner
+unused, two tests on pairs of listed implications decide the complete
+family. With all colors used, the complete prime guards still give a
+polynomial test, while recognition from the minimal zeros alone is
+coNP-complete. The prime-list algorithm extends to arbitrary cycles
+with bounded pairwise overlap and constructs a realizing word in the
+same parameterized time
+(\cref{core:thm:colored-closure-guards,core:thm:palette-presentation,core:thm:compact-overlap-guards}).
 Adding a source
 above a fixed core operation gives a distributive lattice of activation
 predicates. At each passive valuation an extension either ignores the
@@ -453,9 +473,11 @@ grows with the sample. A fixed number of alternating blocks of
 polynomially many bits with a polynomial-time final test for arbitrary
 listed samples would put PSPACE in the polynomial hierarchy, by
 \cref{core:thm:two-color-pspace}. A shorter structural law specific
-to complete guard families remains open. The lower bound concerns
-partial samples; nonfinite relatedness rules out a fixed finite
-relational basis for complete families. The positive classifications and
+to complete guard families remains open. Their recognition from canonical
+guards is already coNP-hard on acyclic source graphs
+(\cref{core:thm:complete-acyclic-guard-complexity}); the PSPACE lower
+bound concerns partial samples. Nonfinite relatedness rules out a fixed
+finite relational basis. The positive classifications and
 global obstructions above locate this gap between recognizing individual
 source families and realizing all of them simultaneously.
 
