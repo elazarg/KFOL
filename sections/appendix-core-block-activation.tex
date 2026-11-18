@@ -663,6 +663,36 @@ and supplies every positive on its facet. Their union over $k$
 supplies all positives since every proper coloring omits an owner.
 \end{proof}
 
+\begin{lemma}[Opposite losses over a monochromatic coalition]
+\label{core:lem:monochromatic-opposite-losses}
+On any source graph, take a loss $z$ at $h$, a nonempty color class
+$A=z_k$, and $H=\{h\}\cup A$. At each $j\in A$ choose a loss $q^j$
+whose postings within $H$ are empty or consist just of $h$ at a color
+different from $k$. Let $b$ be the union outside $H$ of the postings
+of $z$ and all $q^j$. If $b$ is a consistent proper coloring, every
+head in $H$ must already be lost at $b$, with the other inputs in $H$
+neutral.
+\end{lemma}
+\begin{proof}
+Any contrary positive gives, by \cref{core:lem:unmarked-background},
+a core word $u$ on $H$ satisfying all the indicated internal losses.
+Give $h$ the menu $I$ and all of $A$ the $k$-singleton. The loss at
+$h$ excludes every other winner since only $h$ could supply one.
+Hence $\Phi_k(u)(A)=1$. Starting at the root, keep one $k$-winning
+child at each $k$-gate and both children at other gates or union.
+The singleton profile laws leave a nonempty word with all leaves
+in $A$.
+
+For each $j\in A$, probe its internal loss for observer $k$, giving
+$j$ menu $I$ and the holes $I\setminus\{k\}$. This reads the same
+coefficient as the canonical probe. No input is the $k$-singleton;
+each deleted $k$-gate acts as union. Monotonicity therefore preserves
+the omission at every one of these probes. But any $j$ occurring in
+the pruned word supplies $k$ at its own probe: every input in $A$
+is ambiguous there, so every gate takes union. This contradiction
+proves the assertion.
+\end{proof}
+
 \begin{theorem}[Recognition on source graphs of girth at least five]
 \label{core:thm:girth-five-source-guards}
 Let the live, complete source family be antitone and agree across
@@ -691,34 +721,17 @@ equivalent to realizability of this extension. Thus
 \cref{core:prop:facet-source-gluing} gives sufficiency and necessity
 of the first condition.
 
-For necessity of the second, suppose a minimal loss $z$ at $h$ has
-$A=z_k\ne\varnothing$, with no member in $U_k$. For each $j\in A$
-choose a $k$-free minimal loss $q^j$ at $j$. Keep the inputs
-$H=\{h\}\cup A$. Outside $H$, combine the postings of $z$ and all
-$q^j$ into $e$. The neighbors of distinct $j\in A$ outside $h$
-are disjoint by absence of four-cycles, and none is a neighbor of
-$h$ by absence of triangles. Thus $e$ is consistent, omits $k$,
-and restricts on the neighbors of $h$ to $z^{\widehat k}$.
-With all of $A$ neutral, $h$ is positive at $e$ by minimality of $z$.
-Apply \cref{core:lem:unmarked-background} to that positive and the
-losses $z,q^j$. Any realizer gives a core word $u$ on $H$ losing $h$
-at $A:k$ and losing each $j\in A$ at the internal part of $q^j$.
-That part is empty or posts just $h$ at an owner other than $k$.
-
-In $u$ give $h$ the menu $I$ and all of $A$ the $k$-singleton.
-The loss at $h$ excludes every winner outside $k$, since $h$ would
-be its only source. Thus $\Phi_k(u)(A)=1$.
-Starting at the root, keep one $k$-winning child at each $k$-owned
-gate, and both children at every other gate or union. The singleton
-profile laws give a nonempty resulting word with all leaves in $A$.
-This pruning preserves each required omission of the mark at
-$j\in A$: probe the row for winner $k$ with menu $I$ at the marked input
-and $I\setminus\{k\}$ at every hole. This reads the same coefficient,
-and no input is the $k$-singleton. Each $k$-gate therefore acts as
-union, and retaining a child can only shrink the output by monotonicity.
-Choose an input $j$ occurring in the pruned word. On its own probe
-every input in $A$ is ambiguous, and only $j$ carries $k$. All gates
-of the pruned word take union there, so it supplies $k$, a contradiction.
+For necessity of the second, take a minimal loss $z$ at $h$ with
+$A=z_k\ne\varnothing$ and $A\cap U_k=\varnothing$. Choose a $k$-free
+minimal loss $q^j$ at each $j\in A$. In a triangle-free graph none
+of these posts another member of $A$ and none of its outside postings
+is at a neighbor of $h$. Thus whenever their postings outside
+$H=\{h\}\cup A$ are consistent, they unite with those of $z$ to
+give a $k$-free coloring $b$. On the neighbors of $h$ it agrees
+with $z^{\widehat k}$, where $h$ is live by minimality. This
+contradicts \cref{core:lem:monochromatic-opposite-losses}.
+In the absence of four-cycles the outside neighborhoods of the
+distinct $j$ are disjoint, so consistency is automatic.
 
 For the algorithm, $U_k$ consists of the heads with the empty prime
 guard on the $k$-facet. Read that facet's edges from its prime literals
