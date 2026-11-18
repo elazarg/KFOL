@@ -295,6 +295,13 @@ import all KFOL.Core.PassiveProfileBounds
 import all KFOL.Core.AcyclicSourceQueries
 import all KFOL.Core.MonochromaticLosses
 import all KFOL.Core.MonochromeLossLift
+import all KFOL.Core.BlockerCovers
+import all KFOL.Core.CompulsoryPruning
+import all KFOL.Core.GraphPruning
+import all KFOL.Core.BipartitePruning
+import all KFOL.Core.IncidencePruning
+import all KFOL.Core.EdgeSupportPruning
+import all KFOL.Core.NonrectangularPruning
 import all KFOL.Core.RainbowWinnerLift
 import all KFOL.Core.MonochromaticHeadCuts
 import all KFOL.Core.MonochromaticCutObstruction
