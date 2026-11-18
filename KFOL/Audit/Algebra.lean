@@ -30,6 +30,8 @@ import all KFOL.Representation.OperatorMorphisms
 import all KFOL.Representation.Recovery
 import all KFOL.Core.ProfileBudgets.Profiles
 import all KFOL.Core.BichainSwitch
+import all KFOL.Core.BichainCubeCuts
+import all KFOL.Core.CompletionDepthChain
 import all KFOL.Core.IntervalMinorant
 meta import Lean.Elab.Command
 

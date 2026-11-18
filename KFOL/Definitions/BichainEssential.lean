@@ -46,6 +46,48 @@ def canonicalExtension [Fintype Var] [DecidableEq Var]
         then .possible else .neutral
     else .b
 
+/-- A positive observation is either a mark at a row or separation of two
+Boolean vertices, with the positive vertex given first. -/
+inductive CubeQuery (Var : Type*) where
+  | mark (row : Var → Value)
+  | separate (pos neg : Var → Bool)
+
+namespace CubeQuery
+
+/-- The Boolean vertex at which a witness must be true. -/
+def pos : CubeQuery Var → Var → Bool
+  | .mark row => cubeUpper row
+  | .separate p _ => p
+
+/-- The Boolean vertex at which a witness must be false. -/
+def neg : CubeQuery Var → Var → Bool
+  | .mark row => cubeLower row
+  | .separate _ n => n
+
+/-- The input coordinates that witness the query on their own. -/
+def Eligible : CubeQuery Var → Var → Prop
+  | .mark row, j => row j = .possible
+  | .separate p n, j => p j = true ∧ n j = false
+
+/-- Direct observation of a term at the specified row or Boolean vertices. -/
+def Holds : CubeQuery Var → Term Var → Prop
+  | .mark row, t => t.eval row = .possible
+  | .separate p n, t =>
+    t.eval (fun j => Value.ofBool (p j)) = .c ∧ t.eval (fun j => Value.ofBool (n j)) = .b
+
+end CubeQuery
+
+/-- A cut covers the eligible coordinates by marked rows. At each covering
+row, dropping that row must still rule out both ways of separating its
+endpoints from the query. All comparisons use only the given cubes. -/
+inductive CubeCut {Row : Type*} [DecidableEq Row] (rows : Row → Var → Value) :
+    Finset Row → CubeQuery Var → Prop where
+  | cover {budget selected : Finset Row} {q : CubeQuery Var} (subset : selected ⊆ budget)
+      (covered : ∀ j, q.Eligible j → ∃ z ∈ selected, rows z j = .possible)
+      (left : ∀ z ∈ selected, CubeCut rows (selected.erase z) (.separate (cubeLower (rows z)) q.neg))
+      (right : ∀ z ∈ selected, CubeCut rows (selected.erase z) (.separate q.pos (cubeUpper (rows z)))) :
+      CubeCut rows budget q
+
 /-- A single marked coordinate in a Boolean cube; the hypotheses making the
 specified coordinate free are used by theorems, rather than by this definition. -/
 def markedCube [DecidableEq Var] (lower upper : Var → Bool) (j : Var) : Var → Value :=

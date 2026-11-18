@@ -397,7 +397,121 @@ assignment entries, counting absence, and there are at most $W$ active
 owners. Each pair takes polynomial work once its children are known.
 \end{proof}
 
-The same characterization has a quantified form involving only the
+One can also compute all positive queries from a common theory of
+singleton tests. Choose a finite set of bits $d_{r,A}$, with owner $r$
+and coalition $A\subseteq V$, including $d_{r,t_r}$ for every row
+$(j,t)\in Z$ and $d_{r,p_r}$ for each query $(i,p)$ to be tested,
+at every owner. Write $v_j(d_{r,A})=[j\in A]$ for the profile vector
+of a projection. Let $\mathcal H$ consist of the clauses of
+\cref{core:thm:profile-relations}: a positive unit, an implication
+between two bits of the same owner, or a forbidden conjunction of bits
+of distinct owners (including the empty conjunction). Write $H(P)$
+for the clauses of $\mathcal H$ true at every vector in $P$, and
+$C(\Sigma)$ for those entailed by a set of clauses $\Sigma$.
+
+\begin{theorem}[A common Horn theory for source queries]
+\label{core:thm:joined-profile-theory}
+For $S\subseteq Z$, let $E(S)$ consist of the pairs $e=(r,A)$ with
+$A\ne\varnothing$ occurring as $t_r$ in $S$. Write $d_e=d_{r,A}$
+and $S_e=\{(j,t)\in S:A\not\subseteq t_r\}$. Put
+\[
+ B_S=C\biggl(\bigcup_{e\in E(S)}T_{S_e}\biggr),\qquad
+ T_S=H(\{v_j:j\notin h(S)\})\ \cap\
+ \bigcap_{e\in E(S)} C\bigl(B_S\cup\{d_e\}\bigr).
+\]
+When $E(S)$ is empty, only the projection theory remains; this includes
+$S=\varnothing$. Every other $S_e$ in the formula is a proper subbudget.
+The models of $T_S$ are exactly the profile vectors of words omitting
+$S$. Without prescribing a profile, a word omitting $Z$ can supply
+$(i,p)$ exactly when the following obstruction is absent:
+\begin{equation}\label{core:eq:joined-profile-quiet}
+ \exists S\subseteq Z:\qquad i\in h(S),\qquad
+ (d_{r,t_r}\Rightarrow d_{r,p_r})\in T_S
+       \quad((j,t)\in S,\ r\in I).
+\end{equation}
+More generally, prescribe an exact profile vector $x$ and any finite
+set of queries to supply while omitting $Z$. This is possible exactly
+when $x\models T_Z$, none of the requested queries is forced quiet,
+and $x(d_{r,p_r})=0$ for each requested $(i,p)$ and every $r$.
+\end{theorem}
+\begin{proof}
+The profile vectors attained on any budget are closed under all owner
+gates: a gate on two words omitting a row also omits it.
+By \cref{core:thm:profile-relations} these vectors are precisely the
+models of their $\mathcal H$-theory. Induct on $|S|$. A model of $B_S$
+is attainable separately on each lower budget $S_e$. If it makes
+$d_e$ true for $e=(r,A)$, its witness on $S_e$ has value $\{r\}$
+on every removed row, since $A\subseteq t_r$ there. Each of these
+rows omits its mark, since the marked owner has no singleton input
+there. Thus every model of a conditioned theory is attained on $S$.
+Conversely every word omitting $S$ either has a singleton on one of its
+rows, is an unmarked projection, or has two children that both omit
+$S$: in the last case the root takes their union on every row.
+The singleton case gives a true $d_{r,t_r}$ with $t_r\ne\varnothing$
+and a model of the corresponding conditioned theory, as the word fits
+every lower budget. When $E(S)$ is empty, no word is singleton on
+any of its rows. Induction on the word
+therefore shows that these models and the unmarked projections generate
+all attained profile vectors. The theory of a generated union is the
+intersection of the theories of its generators, giving $T_S$.
+
+Suppose $S$ witnesses \eqref{core:eq:joined-profile-quiet}. A word
+supplying $(i,p)$ is ambiguous there: its mark occurs only in the
+head's nonsingleton menu. If the word omits $S$, the implications in
+$T_S$ force it to be ambiguous on every row of $S$ as well. Both
+children then omit $S$, and one supplies the requested mark. Descent
+would reach the projection $i$, which a row of $S$ marks.
+Conversely suppose no subbudget witnesses the display. On a current
+budget $S$ with $i\notin h(S)$, projection $i$ works. Otherwise a
+failed implication supplies an $S$-bounded word winning a test
+$d_{r,t_r}$ and losing $d_{r,p_r}$. Hence $e=(r,t_r)\in E(S)$.
+On $S_e$ a second word supplies the mark by induction.
+Their $r$-choice absorbs on the deleted
+rows, omits the others, and retains the requested mark.
+
+For the last assertion, take a word $t$ of profile $x$ omitting $Z$.
+If there are requested marks, take the union $w$ of their separate
+bounded witnesses. As in \cref{core:prop:profile-maximum}, the reset
+$w\del t$ is a core word: it returns $t$ on singleton outputs of $t$
+and $w+t$ elsewhere. It keeps all profiles of $t$ and
+omits $Z$. At each requested mark the zero profile bits make $t$
+ambiguous, so the reset includes $w$ there. With no marks take $t$
+itself. Conversely an attained mark precludes every singleton at its
+query, and its word supplies the other two conditions directly.
+\end{proof}
+
+All entailments above are graph and subset tests. To test a clause
+with positive premise $D$, start at its bits and all positive units
+and follow the same-owner implication edges. If the reached set
+contains a forbidden conjunction, the premise is inconsistent and
+entails every conclusion. Otherwise the reached set itself is a
+model, so it entails exactly its reached bits and does not imply
+falsehood. With $b$ listed bits there are at most
+$b+b^2+(b+1)^K$ clauses to test.
+In particular, with no prescribed profiles or marks the omission
+budget alone is feasible exactly when $T_Z$ lacks the empty conflict.
+An inconsistent theory contains every implication, including those
+in \eqref{core:eq:joined-profile-quiet}. A color absent at a query
+has $p_r=\varnothing$, whose bit is false for every core word.
+
+For all explicitly queried marks, the time at fixed $K$ is a polynomial
+in the total input length times $\prod_r a_r$, where $a_r$ counts all
+antichains, including the empty one, in the inclusion order on the
+distinct nonempty $r$-coalitions of $Z$. Indeed, successive deletions
+accumulate an upset at each owner. Its minimal elements form an
+antichain and the upsets together determine the remaining budget.
+Start the table at $Z$ and compute only its reachable subbudgets,
+with polynomial work per budget for fixed $K$. All requested marks
+use this table. For each, start at $S=Z$: if its head is absent the
+projection succeeds; otherwise delete the full upset of any $e$
+giving a failed implication in \eqref{core:eq:joined-profile-quiet}.
+Restriction and the $r$-choice in the proof give equivalence before
+and after this deletion. If all implications hold, $S$ certifies
+failure. There are at most $m$ deletions per query. In the notation
+of \cref{core:thm:pointed-guard-cut}, the antichain factor is at most
+$(m+1)^W$, since an antichain at $r$ has at most $w_r$ elements.
+
+The cut of \cref{core:thm:pointed-guard-cut} also has a quantified form involving only the
 supplied coalitions, bits, and one input. Write $e=(r,A)$ for an offer
 of a nonempty coalition occurring at $r$ in $Z$, and allow a blank
 offer. An offer covers $(j,t)$ when $A\subseteq t_r$; a blank covers
@@ -470,6 +584,315 @@ in one of the zero upsets decides its prescribed bit. Run the sample
 test on every positive, reusing the workspace and requiring at least
 one positive. This representation can prescribe exponentially many
 positive bits from a short list.
+
+\paragraph{Offers fixed before any responses.}
+A fixed list has a direct algebraic interpretation. A greatest profile
+completion on a nonempty support $H\subseteq V$ has the prescribed
+singleton outputs there and returns the union of the menus in $H$
+whenever its output is ambiguous (\cref{core:prop:profile-maximum}).
+Inputs outside $H$ are ignored.
+
+\begin{theorem}[Fixed lists and greatest profile completions]
+\label{core:thm:fixed-offer-completion}
+A fixed list wins at $(i,p)$ against $Z$ if and only if a greatest
+profile completion on some $H\ni i$ supplies that mark and omits $Z$.
+Consequently the complete nonzero families admitting a fixed winning
+list at every maximal positive are exactly the finite nonempty unions
+of these completions, allowing different supports.
+\end{theorem}
+\begin{proof}
+For a winning list let $H$ consist of the heads at which it covers
+every negative, including inputs with no negatives. Declining every
+offer puts $i$ in $H$. Accepting only $(r,A)$ gives
+$(A\cap H)\setminus p_r\ne\varnothing$. Accepting one offer at each
+of several distinct owners shows that their coalitions meet in $H$.
+These conditions also suffice for every response, since only the last
+acceptance at each owner counts.
+
+On $H$ give $r$ the upward closure of its offered coalitions $A\cap H$,
+adjoining $H$ at every owner. Every rainbow selection intersects by
+the preceding tests, so \cref{core:thm:profiles} realizes the
+profiles. None wins on $p_r\cap H$, since even $H$ contains the
+unposted input $i$. The greatest completion supplies the mark.
+For a negative headed in $H$, some covering offer makes its owner
+the singleton output. A negative headed outside $H$ has no source.
+
+Conversely, offer the minimal winning coalitions of the profiles on
+$H$. A loss headed there must be atomic, since the ambiguous value
+would contain the head's mark. Its winning coalition gives a covering
+offer. All singleton tests lose at the positive, and the rainbow
+condition gives every required intersection in $H$. This list wins.
+With explicitly given negatives one can keep at most one covering
+offer per row headed in $H$, enlarging it to that row's observed
+coalition. All the required intersections persist. The complete-family
+statement follows by taking the union of the positive witnesses;
+conversely each summand respects all zeros and some summand supplies
+each positive.
+\end{proof}
+
+Three inputs and two losses can already require adaptation. Use
+the word $(y\star_c x)\star_b z$. Require $x$ quiet with $y,z$
+posted at $b$, and $y$ quiet with $x$ posted at $c$. Ask for $y$
+with $x$ posted at $b$ and $z$ at $c$. The outer and inner gates
+respect the two losses, respectively, and both pass the mark at the
+positive. To cover the loss at $y$ a fixed list must offer
+$(c,\{x\})$. Accepting only this forces the loss at $x$ to be
+covered as well, by a nonempty $b$-coalition in $\{y,z\}$. Accepting
+both leaves no eligible input. Taking the word's complete guards
+therefore gives a core operation outside the union class of
+\cref{core:thm:fixed-offer-completion}. Two inputs cannot give this
+separation: by \cref{core:prop:binary} every binary core operation
+is its greatest completion on its support. One loss cannot give it
+either: use projection $i$ if its head differs from $i$; otherwise
+feasibility requires some posting $j\in t_r\setminus p_r$, and the
+single offer $(r,\{j\})$ works.
+
+Even the first layer depends on how many colors occur across the
+losses at one source.
+
+\begin{proposition}[One source at depth one]\label{core:prop:common-head-depth-one}
+Suppose every negative has head $i$ and the positive is $(i,\varnothing)$.
+With at most two posting colors, feasibility by a greatest profile
+completion is decidable by 2-SAT. With three posting colors it is
+NP-complete, even when each row has exactly two colors and a
+depth-two realization always exists.
+\end{proposition}
+\begin{proof}
+Choose one posted color $r$ for each row and take its whole tail $t_r$.
+A completion exists exactly when every rainbow selection of chosen
+tails intersects. Indeed, every negative head belongs to the support,
+so omission requires a singleton there. Its winning coalition fits
+inside the tail, giving the necessary intersections. Conversely take
+full support. The chosen tails generate the winning coalitions at their
+respective owners, with the full set adjoined at each owner. The
+rainbow condition realizes these profiles, and their greatest completion
+supplies the head at the empty coloring. A row with no offer makes the
+test fail. With two colors give each row a Boolean choice, fix
+the one-option rows, and forbid each disjoint pair of different colors.
+These are all the constraints. With three colors a guessed selection
+is checked on at most triples, giving NP membership.
+
+Reduce 3-SAT. Give each literal occurrence its own two options for
+the underlying variable's truth value, in distinct colors. Within
+each clause color its three falsifying options with three distinct
+colors and forbid that triple. Assign any different color to each
+remaining option. To enforce equal truth values at occurrences of a
+variable, connect their ordered pairs of true and false colors by
+paths of two-option rows, changing one color at a time. Such paths
+exist: the six ordered pairs are arranged in the cycle
+$12,13,23,21,31,32,12$. Between adjacent rows forbid the two
+mismatched truth-value pairs. Each is rainbow, since the ordered
+color pairs agree in one coordinate and neither repeats a color.
+These constraints admit a selection exactly for satisfiable formulas.
+
+Realize the forbidden pairs and triples as empty intersections. For
+each rainbow subset of at most three options with at most one from
+each row and containing no forbidden set, introduce one passive input.
+Post it exactly at the options in that subset. The two tails of a
+row are disjoint and nonempty. Any rainbow selection with at most
+one option per row has a common input exactly when it contains no
+forbidden set. This uses polynomially
+many inputs. Add the common head $i$ without posting it; each
+two-color row is proper. Finally fix two of the three colors.
+Starting with $x_i$, fold the current word with all passive inputs
+at each of those owners in succession. Each row posts at least one
+chosen color, which absorbs there, and later passive inputs cannot
+restore its head's mark. Both folds pass the mark at the empty
+coloring, proving the depth-two bound.
+\end{proof}
+
+\begin{corollary}[Two-color recognition of unions of profile completions]
+\label{core:cor:fixed-offer-prime-space}
+Fix $K\ge3$. When all minimal losses use only $b,c$, recognition of
+unions of greatest profile completions from the complete prime guards
+is PSPACE-complete, even on the directed-cube masks of
+\cref{core:prop:compact-cube-masks}.
+\end{corollary}
+\begin{proof}
+For a positive $(i,p)$ choose $H\ni i$ and put
+$L=p_c\cap H$, $U=H\setminus p_b$. On $2^H$ take inclusion and the
+reversals
+\[
+     H\setminus t_b\longrightarrow H\cap t_c
+       \qquad ((j,t)\text{ a loss using }b,c,\ j\in H).
+\]
+There is a fixed winning list exactly when some $H$ has no path
+from $U$ to $L$. Indeed, in the fixed-list proof other owners cover
+no minimal losses and may be dropped. On its covered heads let $f$
+be the monotone Boolean function with terms $A\cap H$ for the
+$c$-offers and one more term $U$. Then $f(U)=1$, $f(L)=0$.
+A $c$-offer covering a row makes $f(H\cap t_c)=1$.
+A covering $b$-offer meets every term, including $U$, so
+$f(H\setminus t_b)=0$. Thus $f$ respects every reversal.
+Conversely, without the path, the vertices reachable from $U$
+form an upset separating $U$ from $L$ and constant on each reversed
+interval. Offer its minimal true sets at $c$ and the complements in
+$H$ of its maximal false sets at $b$. Constancy covers every loss
+headed in $H$, and separation and monotonicity give all the required
+intersections.
+
+Require at least one positive, then stream the positives and the subsets $H$. Testing an edge needs
+only a scan of two-color partial colorings and prime evaluations.
+Midpoint reachability on at most $2^{|H|}$ vertices uses polynomial
+space. For hardness use the directed-cube construction of
+\cref{core:prop:compact-cube-masks}. A cyclic instance is outside
+the core. An acyclic mask is path-closed, and the proof of
+\cref{core:thm:interval-masks} already expresses every such mask as
+a union of greatest completions on $V$.
+\end{proof}
+
+\paragraph{Depth of compositions.}
+Count one layer for a greatest profile completion on any nonempty
+support, applied to earlier outputs. Projections have depth zero;
+finite unions take the maximum depth of their arguments. On negatives
+using each color at most once, the least depth needed for a positive
+query has the following description.
+
+\begin{theorem}[Minimum completion depth]\label{core:thm:completion-depth}
+Suppose $|t_r|\le1$ on every negative. Starting at $S=Z$, the minimum
+depth for $(i,p)$ is the minimum number of moves needed to reach
+$i\notin h(S)$, with minimum $\infty$ when this is impossible.
+The moves are:
+\begin{enumerate}
+\item choose an owner $r$ and delete all rows with
+      $t_r\setminus D_r(S;p)\ne\varnothing$;
+\item choose $v\notin h(S)$ and delete all rows posting $v$ at a
+      color $r$ for which $v\notin p_r$.
+\end{enumerate}
+\end{theorem}
+\begin{proof}
+At a terminal budget take $x_i$. For the first move, combine a
+witness on the remaining rows and all inputs outside $D_r(S;p)$ in
+one $r$-fold. Such a fold is its greatest completion: it absorbs an
+$r$ singleton and otherwise takes the union. The reachability proof
+of \cref{core:thm:injective-blockers} shows that it fits the budget
+and passes the mark. For the second move use a binary completion on
+the witness and $x_v$. Give it the second projection's profile at the
+colors $r$ with $v\notin p_r$, and unanimity at every other color.
+Every winning coalition contains the second input, so these profiles
+are admissible. The completion absorbs on the deleted rows.
+Elsewhere $x_v$ supplies no negative mark, and at the positive no
+profile absorbs: the witness is ambiguous and $v$ is unposted at
+each projection color.
+
+Conversely take a fitting expression. A free union passes to a
+mark-supplying summand that still omits $S$. At a completion root,
+each row with singleton output $\{r\}$ has $t_r=\{v\}$ and
+$\Phi_r(\{v\})=1$ for the whole expression. All such $v$ lie outside
+$D_r(S;p)$. Indeed the mark precludes a positive bit at $p_r$.
+A positive bit on a negative head forces the $r$ singleton there
+by \cref{core:lem:singleton-profile-absorption}, as the alternative
+contains its head menu. Thus empty $r$-tails have losing heads and a
+losing singleton tail has a losing head, proving the claim by reachability.
+If all singleton outputs have one color, the first move covers them.
+If two or more colors occur, every winning singleton coalition just
+identified must use the same input $v$, by the rainbow intersection
+condition. Two different colors winning on $\{v\}$ force the entire
+menu of $v$ to survive at every valuation, again by singleton-profile
+absorption. Hence $v\notin h(S)$, and the second move covers all
+these rows. Wherever the completion is ambiguous it takes the union
+of its supported children. One such child supplies the positive, and
+each fits the remaining rows. If there were no singleton outputs one
+can pass to that child without a move. Descent gives a schedule of
+length at most the expression's depth.
+\end{proof}
+
+Each productive move removes all remaining occurrences of at least one
+pair $(r,v)$, with $v$ posted at $r$. Thus at fixed $K$ these samples
+never require more than $K|V|$ layers, regardless of the number of
+rows. The same bound holds for a complete realizable family with
+$|t_r|\le1$ on its minimal losses: take the free union of the
+witnesses for its maximal positives.
+
+\begin{corollary}[Sharp depth and shortest common supersequences]
+\label{core:cor:completion-depth-hierarchy}
+For every $m\ge1$ the maximum least depth of a feasible sample with
+$m$ negatives and one positive is $m$. The classes of operations of
+successive depths are strictly increasing for every $K\ge3$.
+On explicitly listed negatives with $|t_r|\le1$, deciding whether
+depth at most $d$ suffices is NP-complete at every fixed $K\ge3$.
+\end{corollary}
+\begin{proof}
+Even for unrestricted negatives the two-child construction of
+\cref{core:thm:pointed-guard-cut} gives depth at most $m$: each owner
+choice is a binary greatest completion and drops a row on both branches.
+For the lower bound take a path $x_0,\ldots,x_m$. Its $j$th edge gives
+a negative headed at $x_{j-1}$ with sole posting $x_j:r_j$; ask for
+$x_0$ at the empty coloring. More generally, take several such paths
+sharing only $x_0$. In a remaining path prefix an owner move deletes
+its entire terminal run of that color, and no earlier edge: the
+terminal target is head-free, while the first different color puts
+its head in the initial set for reachability, which then propagates
+backwards through the preceding run. A head-free input move deletes
+at most one terminal edge, since targets are private to paths.
+Replacing it with the corresponding owner move can only shorten the
+remaining prefixes. It therefore suffices to minimize over owner
+schedules. Such a schedule succeeds exactly when it contains every
+reversed run sequence as a subsequence. The least depth is the
+length of a shortest common supersequence.
+
+One path of alternating colors gives depth $m$. Its left-associated
+word obtained by adjoining $x_j$ by $\star_{r_j}$ at step $j$ fits
+this sample, so its full operation also has exact depth $m$.
+For the complexity claim, a schedule of at most $\min(d,|Z|)$
+productive moves is a polynomially checkable certificate. Conversely
+use one path for the reverse of each input word of the three-letter
+shortest common supersequence problem with no consecutive equal
+letters. That problem is NP-complete
+\cite[Corollary~6]{LagoutteTavenas2015}, and the construction preserves
+the optimum. Additional owners delete no rows.
+\end{proof}
+
+\begin{proposition}[Exponential length of fixed offer lists]
+\label{core:prop:fixed-offer-parity}
+At each fixed $K\ge3$ there are realizable complete prime families on
+$O(d)$ inputs, of polynomial description size with at most four postings
+per guard, and a positive query admitting a winning list of arbitrary
+coalition offers fixed before any responses. Every such list has length
+at least $2^{d-1}-1$.
+\end{proposition}
+\begin{proof}
+Use the directed cube masks of \cref{core:prop:compact-cube-masks}.
+A bit string $x$ selects one rail per bit, forming $L_x$. An edge
+$e:x\to y$ masks $(L_x,U_e)$ with $U_e=L_x\cup L_y$.
+Use its opposite probe: its head is the rail in $L_x\setminus L_y$,
+with $p_c=L_y$ and $p_b=V\setminus U_e$, observed by a third owner.
+If only one direction of each edge occurs, this probe is positive.
+
+By the forward proof of \cref{core:cor:fixed-offer-prime-space}, a
+winning list of length $s$ gives a monotone Boolean DNF $f$ with at
+most $s+1$ terms. Pull it back from $H$ to all the rails by intersection
+with $H$. It satisfies $f(L_y)=0$, $f(U_e)=1$, and is constant on
+every masked cover whose differing rail belongs to $H$. On the
+other covers the two endpoints have the same intersection with $H$.
+Consequently $f(L_v)\le f(L_u)$ on every directed edge $u\to v$.
+
+Now store an address $x\in\{0,1\}^d$. Interpret its first $d-1$ bits
+as the low bits of a binary counter and the parity of all $d$ bits as
+its high bit. Increment in these coordinates, stopping at the last
+count. Encoding, binary increment and decoding use $O(d)$ two-input
+gates. Starting at zero, the counter visits every even-parity address
+before every odd one. Apply the one-bit circuit sweep from
+\cref{core:prop:compact-cube-masks}, testing the continue bit before
+entering a sequence of constant-zero writes that clears all scratch
+before returning to the first stage. Each scratch bit now has at most
+two writing stages, one subcube per direction at each. Each directed
+control flip still has at most two subcubes. The same prime calculation
+therefore gives the stated description bound. The directed graph is
+acyclic: a cycle would pass the first stage and hence would repeatedly
+advance a counter that halts. Its complete mask is core.
+
+Choose $e$ on the run between the last even and first odd address at
+the first stage. There the scratch bits are zero and the flags fixed.
+The gap above gives $f(L_x)=1$, $f(L_y)=0$ at the ends of $e$, so on
+all the first-stage addresses $f$ is precisely even parity.
+Each rail term restricts there to a conjunction of address literals.
+A satisfiable conjunction implying parity fixes every bit, so at least
+$2^{d-1}$ terms are necessary.
+
+A fixed winning list exists at this positive by the acyclic case in
+\cref{core:cor:fixed-offer-prime-space}.
+\end{proof}
 
 \paragraph{Nested repeated coalitions of one owner.}
 Suppose all pairs $(r,t_r)$ with $|t_r|\ge2$ have the same owner $a$

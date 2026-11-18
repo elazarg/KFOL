@@ -45,6 +45,8 @@ public import KFOL.InfiniteGames.Adequacy
 public import KFOL.InfiniteGames.Continuation
 public import KFOL.Core.ProfileBudgets.Profiles
 public import KFOL.Core.BichainSwitch
+public import KFOL.Core.CompletionDepthChain
+public import KFOL.Core.BichainCubeCuts
 public import KFOL.Audit.Namespace
 
 /-! # Audited report statements and mathematical proof ingredients
@@ -168,6 +170,27 @@ theorem core_profile_maximum {Role : Type u} [Fintype Role]
         ∀ v, (f v).val ⊆ (e.eval v).val :=
   Core.exists_profile_maximum three t ht
 
+/-- Greatest completion of a singleton profile in a principal ideal. -/
+theorem core_relative_profile_maximum {Role : Type u} {Var : Type v} [Fintype Role]
+    (three : Fin 3 ↪ Role) (bound t : Term Role Var) (hb : bound.IsCore) (ht : t.IsCore)
+    (hle : ∀ v, (t.eval v).val ⊆ (bound.eval v).val) :
+    ∃ e : Term Role Var, e.IsCore ∧
+      (∀ v r, e.eval v = WinnerSet.singleton r ↔ t.eval v = WinnerSet.singleton r) ∧
+      (∀ v, (t.eval v).Ambiguous → e.eval v = bound.eval v) ∧
+      ∀ f : (Var → WinnerSet Role) → WinnerSet Role,
+        (∀ v, (f v).val ⊆ (bound.eval v).val) →
+          ((∀ v, (f v).val ⊆ (e.eval v).val) ↔
+           ∀ v r, t.eval v = WinnerSet.singleton r → f v = WinnerSet.singleton r) :=
+  Core.relative_profile_maximum three bound t hb ht hle
+
+/-- Exact depth at every layer of greatest completions, with free union. -/
+theorem core_completion_depth_hierarchy {Role : Type u} [Fintype Role] [DecidableEq Role]
+    (three : Fin 3 ↪ Role) (m : ℕ) :
+    ∃ e : Core.CompletionDepth.Expr Role (Fin (m+1)), e.depth = m ∧
+      ∀ f : Core.CompletionDepth.Expr Role (Fin (m+1)),
+        (∀ v, f.eval v = e.eval v) → m ≤ f.depth :=
+  Core.CompletionDepth.exact_depth three m
+
 theorem core_profile_nonconvexity {Role : Type u} [Fintype Role] (three : Fin 3 ↪ Role) :
     ∃ s t : Term Role (Fin 3), s.IsCore ∧ t.IsCore ∧
       (∀ v r, s.eval v = WinnerSet.singleton r ↔ t.eval v = WinnerSet.singleton r) ∧
@@ -249,6 +272,13 @@ theorem observer_bichain :
     ∀ x y : Bichain.Value,
       Bichain.Value.median x y .neutral = Bichain.Value.union x y :=
   Bichain.Value.observer_model
+
+/-- A cut in the given cubes characterizes forced quietness and Boolean implication. -/
+theorem bichain_cube_cuts {Var : Type v} {Row : Type w} [DecidableEq Row]
+    (rows : Row → Var → Bichain.Value) (budget : Finset Row) (q : Bichain.CubeQuery Var) :
+    Bichain.CubeCut rows budget q ↔ ∀ t : Bichain.Term Var, t.IsPure →
+      (∀ z ∈ budget, t.eval (rows z) ≠ .possible) → ¬ q.Holds t :=
+  Bichain.cubeCut_iff rows budget q
 
 /-- `core:thm:bichain-fiber`: existence in the Boolean projection fiber. -/
 theorem bichain_projection_fiber {Var : Type v} (t : Bichain.Term (Option Var))

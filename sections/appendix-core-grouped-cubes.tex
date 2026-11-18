@@ -3,9 +3,12 @@
 
 Within the four-state quotient, a negative observation may distinguish
 one marked source from other free inputs. Such constraints retain more
-information than their separate Boolean edges. If each row leaves only
-its own marked coordinate free among the marks, the initial edges suffice.
-Direct grouped edges
+information than their separate Boolean edges. The implications between
+Boolean endpoints of safe formulas determine exactly which additional
+marked sources must be quiet. This gives the greatest core operation
+under a mask that can suppress individual free inputs on each cube.
+If each row leaves only its own marked coordinate free among the marks,
+the initial edges suffice. Direct grouped edges
 suffice for two marked coordinates; raw cuts and transitivity suffice
 for three. Four marks can require a derived cut as a premise of another.
 A quiet parameter can repair an infeasible budget without changing the
@@ -90,6 +93,144 @@ lower budget. Its two cube endpoints agree because $E_z$ is included.
 Stable endpoint semantics then makes the same formula safe at $z$.
 Thus it separates the pair on the whole budget $S$.
 \end{proof}
+
+The same Boolean preorders determine the fate of each marked input.
+Write $\operatorname{cl}(Z)$ for the marked cubes $(l,u,j)$ satisfying
+\begin{equation}\label{core:eq:pointed-cube-closure}
+ \exists S\subseteq Z:\qquad j\in M(S),\qquad
+ l_z\preceq_S l\ \text{ and }\ u\preceq_S u_z
+ \quad\text{for every }z\in S .
+\end{equation}
+Here $c$ is true and absorbs at join, while $b$ is false and absorbs
+at meet. The bottom and top vertices of a cube are its sets of fixed
+and possible true inputs, respectively.
+
+\begin{theorem}[Closure of partially marked cubes]
+\label{core:thm:partially-marked-cube-closure}
+Every $Z$-safe pure formula is quiet at $(l,u,j)$ exactly when
+$(l,u,j)\in\operatorname{cl}(Z)$. With several marked inputs on a
+cube, quietness is forced exactly when each of their single-mark
+rows belongs to $\operatorname{cl}(Z)$.
+\end{theorem}
+\begin{proof}
+A pure formula with Boolean function $f$ has value $c$ on a cube
+exactly when $f(l)=1$, and value $b$ exactly when $f(u)=0$,
+by induction on its gates. Otherwise a surviving mark comes from a
+child and can be masked at a gate only by an absorbing endpoint.
+In particular the absorbing tests are independent of which free
+inputs carry the mark. Taking their individual contributions gives
+the statement about several marks.
+
+Suppose $S$ witnesses \eqref{core:eq:pointed-cube-closure}. An
+$S$-safe word marked at $(l,u,j)$ has $f(l)=0$ and $f(u)=1$.
+The comparisons give $f(l_z)=0$, $f(u_z)=1$ on every row of $S$.
+Its root therefore absorbs on none of them, so both children are
+$S$-safe; one still supplies the requested mark. Following such
+a child must reach the projection $j$, which is unsafe on $S$.
+
+Conversely, if the condition fails, it also fails on every subbudget.
+Start with the current budget $S=Z$. If no row has head $j$, its
+projection works. Otherwise, at some row $z$ a comparison fails.
+If $l_z\not\preceq_S l$, an $S$-safe separator is $c$ on $z$ and
+does not absorb at join on the requested cube. Drop all rows where
+it is $c$, obtain a marked witness on the remaining rows by
+induction, and take their join. If $u\not\preceq_S u_z$, use instead
+an $S$-safe separator true at $u$ and false at $u_z$, and attach it
+by meet. Each step removes at least $z$. Endpoint constants in
+separators simplify away because the separators are nonconstant.
+\end{proof}
+
+The endpoint tests can themselves be written as cuts on strictly
+smaller budgets. Allow several marked inputs per row, and write
+$M(S)$ for their union. For a query with eligible coordinates $E$,
+positive endpoint $X$ and negative endpoint $Y$, a cut chooses
+$S\subseteq Z$ with $E\subseteq M(S)$. At each $z\in S$ it requires
+two cuts on $S\setminus\{z\}$, for the Boolean separations
+$(l_z,Y)$ and $(X,u_z)$. A Boolean separation $(A,B)$ has eligible
+set $A\setminus B$. A mark query has $E$ its marked inputs and
+$(X,Y)=(u,l)$. In both cases a cut exists exactly when the query
+is impossible. Indeed, take a minimal budget preventing the query.
+Its marks cover $E$, since an uncovered projection would work.
+A separator on a one-row deletion that is true at $l_z$ or false
+at $u_z$ is already stable on the deleted row. Joining or meeting
+it with a witness on that deletion gives the forbidden witness on
+the full budget. Conversely the two smaller cuts force any witness
+on the selected rows to be unstable on each of them. Descending
+to a witnessing child reaches a covered projection. This argument
+allows any set of coordinates and only requires finitely many rows.
+
+For a fixed query, a witnessing $S$ can also be found by starting
+with $Z$ and repeatedly deleting every row failing either comparison
+in the current budget. Each witnessing subbudget survives every
+deletion by monotonicity of the preorders. At termination it is
+enough to test whether $j$ remains a head.
+
+To lift this closure to winner sets, take any $Z$ of marked interior
+cubes, so $\varnothing\ne l\subsetneq u\subsetneq V$. For a tuple
+$v$, let $l=L(v)$, $u=U(v)$ be its $c$-singleton and non-$b$-singleton
+positions as in \cref{app:core-interval-masks}, and set
+\[
+ F_Z(v)=D_{\{b,c\}}(v)\cup
+   \bigcup_{\substack{j\in u\setminus l\\(l,u,j)\notin Z}}v_j .
+\]
+Thus on an interior cube it retains $b,c$ and all menus from the
+individual unmasked free positions. On the boundary the two retained
+folds already give the full input union. In the following statement
+the closure is restricted to marked interior cubes.
+
+\begin{corollary}[Greatest core operation under a source mask]
+\label{core:cor:partially-marked-mask-interior}
+For every $K\ge3$, $F_{\operatorname{cl}(Z)}$ is the greatest core
+operation pointwise below $F_Z$. In particular $F_Z$ is core exactly
+when $Z=\operatorname{cl}(Z)$. When $K=3$ these closed masks describe
+all core operations retaining $b,c$.
+\end{corollary}
+\begin{proof}
+For each marked interior cube outside the closure take the pure
+witness given by \cref{core:thm:partially-marked-cube-closure}.
+Interpret its joins as $\star_c$ and its meets as $\star_b$, and take
+their derived union together with $D_{\{b,c\}}$. For any observer
+$a\notin\{b,c\}$ the four values record the two endpoint singletons,
+a free menu containing $a$, and a free menu omitting $a$. They compute
+both gates exactly for these observations: only the relevant endpoint
+absorbs, and otherwise membership of $a$ passes by disjunction.
+Thus on every interior cube the union supplies $a$ exactly when
+some free input carrying $a$ has a single-mark row outside the
+closure. The two retained folds supply precisely $b,c$ there, and
+already give the full input union on the boundary. This proves the
+claimed core realization, also when no witness is needed.
+
+For greatestness, let a core word $T$ be bounded by $F_Z$. Fix
+$a\notin\{b,c\}$. On each single-mark probe give the head $I$,
+the other free inputs $I\setminus\{a\}$, and the fixed inputs
+their $b,c$ singletons. Only the head supplies $a$. Every gate
+other than $b,c$ acts as observer union on these probes, since
+no other singleton is available. Distributing the two endpoint
+gates over union expresses the trace as a union of pure formulas.
+Each component is quiet on $Z$, by the bound on $T$, and hence
+on its closure by \cref{core:thm:partially-marked-cube-closure}.
+On any actual valuation where $T$ supplies $a$, source decomposition
+gives a contributing input $j$ containing $a$. Erasing all passive
+singleton postings except $b,c$ preserves its positive source bit
+by antitonicity. Its single-mark row $(L(v),U(v),j)$ therefore lies
+outside the closure if the cube is interior. This proves the upper
+bound there; on the boundary use whole-input provenance.
+
+Each marked interior cube is detected by its single-mark probe, so
+the equality criterion follows. With three owners there is only one
+outside winner. A core operation retaining $b,c$ is already full
+union on the boundary by \cref{core:prop:retained-winner-folds}.
+On an interior cube its sole remaining membership bit is the
+disjunction of the contributing single-mark bits, since the
+observer sees only $b,c$ among passive singletons. Its operation
+therefore equals the mask given by its quiet single-mark rows.
+\end{proof}
+
+For a mask suppressing all free positions of each designated interval,
+the two greatest-minorant formulas
+\cref{core:cor:interval-mask-interior,core:cor:partially-marked-mask-interior}
+give the same operation. Thus the individual rows forced quiet are
+exactly the free positions on the path closure of those intervals.
 
 The non-initial implications can be confined to an explicit cyclic part
 of the given budget. On its rows draw $z\to w$ when
@@ -599,6 +740,41 @@ internal head has a constant number of zeros of size at most ten
 and a constant number of primes. Each of the six selector heads
 has one zero of size $|W|$ and at most $|W|$ singleton primes per
 observer. Together the two lists use $O_K(|W|)$ posting incidences.
+
+\begin{corollary}[Deleting a bounded number of inputs to break all cycles]
+\label{core:cor:source-feedback-hardness}
+Fix $K\ge3$. Recognition from the complete prime guards remains
+PSPACE-complete on families with at most four minimal zeros per
+head whose source graph becomes acyclic after deleting at most ten
+inputs. The deletion set may be supplied with the instance.
+\end{corollary}
+\begin{proof}
+In the six-selector reduction delete the selectors and the two
+endpoint coalitions $X$ and $W\setminus Y$. Before padding, these
+coalitions are the sets of labels incident to the two initial
+vertices. The first vertex sees only the initial edge, whose sole
+label is also incident to the second vertex; the latter sees at
+most three labels. Padding adds just $s$ to $W\setminus Y$.
+Thus at most ten inputs are deleted.
+
+A source dependence $u\to j$ requires $u$ to occur in a tail at
+$j$, since each loss is given by containing a listed pattern.
+The selector postings, both endpoint tails, and the posting of $s$
+on each original row therefore contribute no remaining arc.
+Order the remaining labels as follows. First come the permanent
+labels, which no original row marks. Next come the literal-test
+labels: the resource row marking one posts only its permanent
+label. Finally order the control labels by decreasing level of
+the edges they label. A control row at level $i+2$ marks a label
+on one or two edges between levels $i$ and $i+1$. Every control
+label it posts lies on an edge incident to its own vertex, between
+levels $i+1,i+2$ or $i+2,i+3$. It therefore comes strictly earlier
+in the order. This gives a topological order of the induced graph,
+including the clause-selection and literal-test paths.
+The six-selector construction gives polynomial-time hardness;
+the four-zero bound gives PSPACE membership by
+\cref{core:thm:complete-guard-pspace}.
+\end{proof}
 
 \begin{corollary}[No fixed incidence test]
 \label{core:cor:guard-incidence-lower-bound}

@@ -42,6 +42,44 @@ private theorem unionInputs_mem (three : Fin 3 ↪ Role) (xs : List Var) (base :
       List.mem_cons, exists_eq_or_imp]
     tauto
 
+/-- In the principal ideal below a core operation, completion of an attained
+profile is right adjoint to taking singleton outputs, ordered by reverse
+inclusion. The competing bounded operation can be arbitrary. -/
+theorem relative_profile_maximum [Fintype Role] (three : Fin 3 ↪ Role)
+    (bound t : Term Role Var) (hb : bound.IsCore) (ht : t.IsCore)
+    (hle : ∀ v, (t.eval v).val ⊆ (bound.eval v).val) :
+    ∃ e : Term Role Var, e.IsCore ∧
+      (∀ v r, e.eval v = WinnerSet.singleton r ↔ t.eval v = WinnerSet.singleton r) ∧
+      (∀ v, (t.eval v).Ambiguous → e.eval v = bound.eval v) ∧
+      ∀ f : (Var → WinnerSet Role) → WinnerSet Role,
+        (∀ v, (f v).val ⊆ (bound.eval v).val) →
+          ((∀ v, (f v).val ⊆ (e.eval v).val) ↔
+           ∀ v r, t.eval v = WinnerSet.singleton r → f v = WinnerSet.singleton r) := by
+  classical
+  let e := Reset.Term.resetTerm three Finset.univ.toList bound t
+  have he (v : Var → WinnerSet Role) : e.eval v = (bound.eval v).reset (t.eval v) :=
+    Reset.Term.eval_resetTerm three Finset.univ.toList (by simp) bound t v
+  have ha (v : Var → WinnerSet Role) (h : (t.eval v).Ambiguous) : e.eval v = bound.eval v := by
+    rw [he, WinnerSet.reset_of_ambiguous _ _ h]
+    apply Subtype.ext
+    exact Set.union_eq_left.mpr (hle v)
+  have hs (v : Var → WinnerSet Role) (r : Role) :
+      e.eval v = WinnerSet.singleton r ↔ t.eval v = WinnerSet.singleton r := by
+    rw [he, WinnerSet.reset_eq_singleton]
+  refine ⟨e, Reset.Term.isCore_resetTerm three _ _ _ hb ht, hs, ha, ?_⟩
+  intro f hf
+  constructor
+  · intro h v r hr
+    apply WinnerSet.eq_singleton_of_subset _ r
+    simpa only [(hs v r).mpr hr, WinnerSet.val_singleton] using h v
+  · intro h v
+    by_cases hv : (t.eval v).Ambiguous
+    · rw [ha v hv]
+      exact hf v
+    · obtain ⟨r, hr⟩ : ∃ r, t.eval v = WinnerSet.singleton r := by
+        simpa only [WinnerSet.Ambiguous, not_forall, not_not] using hv
+      rw [h v r hr, (hs v r).mpr hr]
+
 /-- Every realizable singleton-profile family has a greatest provenance-
 preserving completion, itself a core operation. All ambiguous outputs of the
 completion are the union of all inputs. -/
@@ -65,24 +103,11 @@ theorem exists_profile_maximum [Fintype Role] [Fintype Var] (three : Fin 3 ↪ R
     exact ⟨fun h => h.elim (fun h => ⟨base, h⟩) id, fun h => Or.inr h⟩
   have htU (v : Var → WinnerSet Role) : (t.eval v).val ⊆ ⋃ j, (v j).val :=
     ht.eval_subset_of_support v _ (fun j _ r hr => Set.mem_iUnion.mpr ⟨j, hr⟩)
-  let e := Reset.Term.resetTerm three Finset.univ.toList U t
-  have he (v : Var → WinnerSet Role) : e.eval v = (U.eval v).reset (t.eval v) :=
-    Reset.Term.eval_resetTerm three Finset.univ.toList (by simp) U t v
-  have hamb (v : Var → WinnerSet Role) (h : (t.eval v).Ambiguous) :
-      (e.eval v).val = ⋃ j, (v j).val := by
-    rw [he, WinnerSet.reset_of_ambiguous _ _ h, WinnerSet.val_union, hU]
-    exact Set.union_eq_left.mpr (htU v)
-  refine ⟨e, Reset.Term.isCore_resetTerm three _ U t (unionInputs_core three _ _) ht,
-    ?_, hamb, ?_⟩
-  · intro v r
-    rw [he, WinnerSet.reset_eq_singleton]
-  · intro f hbound hprofile v
-    by_cases h : (t.eval v).Ambiguous
-    · rw [hamb v h]
-      exact hbound v
-    · obtain ⟨r, hr⟩ : ∃ r, t.eval v = WinnerSet.singleton r := by
-        simpa only [WinnerSet.Ambiguous, not_forall, not_not] using h
-      rw [(hprofile v r).mpr hr, he, hr, WinnerSet.reset_singleton]
+  obtain ⟨e, he, hs, ha, hmax⟩ := relative_profile_maximum three U t
+    (unionInputs_core three _ _) ht (fun v => hU v ▸ htU v)
+  refine ⟨e, he, hs, fun v hv => ha v hv ▸ hU v, ?_⟩
+  intro f hf hprofile
+  exact (hmax f (fun v => hU v ▸ hf v)).mpr fun v r => (hprofile v r).mpr
 
 /-- Core operations in a fixed profile class need not be order-convex among
 all operations in that class, even under all ternary relational tests. -/

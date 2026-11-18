@@ -379,6 +379,67 @@ predicates, as do $z,w$, and the predicates in the second pair also
 depend on the first. Here the representing coefficient is zero on
 backgrounds coloring $x$ or $y$ by $a$, and $D$ elsewhere.
 
+\begin{theorem}[Space bound from source components]
+\label{core:thm:prime-component-space}
+Fix $K\ge3$. Let $N$ be the length of the complete prime-guard
+presentation and $w$ the largest number of inputs in a strongly
+connected component of its source graph. Recognition uses deterministic
+space $N^{O(1)}2^{O_K(w)}$. In particular it is in PSPACE for
+$w=O(\log N)$, with no bound on the number of minimal zeros.
+\end{theorem}
+\begin{proof}
+On a proper coloring, evaluate a source bit using the prime list of
+any missing observer. Agreement can be checked by scanning all such
+colorings and observers. The source graph can also be computed by a
+scan: put $j\to i$ if erasing the posting at $j$ changes some bit at
+$i$. Two colorings differing only at $j$ have the same erasure,
+so this detects changes of color as well. These scans take polynomial
+space. If canonicity is to be checked, enumerate candidate exclusion
+sets on each facet and test sufficiency and minimality by scanning
+its colorings. Remove dummy inputs as in
+\cref{core:cor:binary-source-components} and order the components
+topologically.
+
+For a block $W$ of at most $w$ inputs, a table of menu values has at
+most $(2^K-1)^w$ entries. Whether a given table is a core operation
+is an explicit subpower membership test: take every internal valuation
+as a row, the projections as generators and the table as target.
+By \cref{core:thm:subpower-complexity} this takes space polynomial in
+the explicit length. The same test computes any requested activation
+comparison $p\preceq_h q$ for a nonzero core table $h$ on $W$:
+enumerate the core tables in $\mathcal I(h)$ on $W$ and one fresh
+source, rejecting the comparison if any source predicate is positive
+at $q$ and negative at $p$. For zero every comparison holds.
+
+Test the reconstructed prefixes in order, checking the first block
+by its table. Suppose the previous prefix $B$ has passed. For a
+background $q$, compute $D_q$ of \cref{core:lem:block-source-patterns}
+by enumerating core tables $h$ on the new block $W$. Discard $h$
+if, for some head $j\in W$ and proper coloring $(b,t)$ off $j$,
+\[
+        \pi_j(b,t)=0,\qquad b\preceq_B q,\qquad \pi_j^h(t)=1 .
+\]
+The first bit is given by the primes, with later inputs uncolored.
+Testing all losses here is equivalent to testing the minimal ones:
+a smaller loss has a smaller background, hence one still below $q$,
+and its internal pattern is still positive for $h$. Take the union
+of the surviving tables, using zero if there are none. Stream all
+proper $(q,d)$ to compare the required bits at the new heads with
+those of $D_q$. The block lemma gives exactly the prefix test.
+
+On a verified prefix the activation product in
+\cref{core:thm:block-source-extension} computes a comparison from
+one comparison on its preceding prefix and one on its local
+coefficient table. Computing the latter table as above asks for
+comparisons only on that same shorter prefix. Thus all recursive
+calls between prefixes strictly decrease the prefix length.
+Depth-first evaluation keeps at most one frame per component, each
+holding a polynomial number of input indices and bits, local tables,
+and workspace polynomial in their explicit length. With at most
+$N$ components and local arity at most $w+1$, this gives the stated
+bound.
+\end{proof}
+
 \begin{corollary}[Localizing monochromatic activation to one component]
 \label{core:cor:unanimity-source-component}
 Let $F$ have unanimous $a$-profile and let $q$ color every input by

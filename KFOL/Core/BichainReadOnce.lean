@@ -68,7 +68,7 @@ theorem IsReadOnce.isPure {t : Term Var} (ht : t.IsReadOnce) : t.IsPure := by
   | union => exact ht.elim
 
 omit [DecidableEq Var] in
-private theorem pure_eval_cubeLower (t : Term Var) (ht : t.IsPure) (v : Var → Value) :
+theorem pure_eval_cubeLower (t : Term Var) (ht : t.IsPure) (v : Var → Value) :
     t.eval (fun j => Value.ofBool (cubeLower v j)) = Value.ofBool (t.eval v == .c) := by
   induction t with
   | var => rfl
@@ -79,7 +79,7 @@ private theorem pure_eval_cubeLower (t : Term Var) (ht : t.IsPure) (v : Var → 
   | union => exact ht.elim
 
 omit [DecidableEq Var] in
-private theorem pure_eval_cubeUpper (t : Term Var) (ht : t.IsPure) (v : Var → Value) :
+theorem pure_eval_cubeUpper (t : Term Var) (ht : t.IsPure) (v : Var → Value) :
     t.eval (fun j => Value.ofBool (cubeUpper v j)) = Value.ofBool (t.eval v != .b) := by
   induction t with
   | var => rfl

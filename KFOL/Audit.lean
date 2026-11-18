@@ -631,6 +631,11 @@ import all KFOL.Definitions.BichainEssential
 import all KFOL.Definitions.BichainSwitch
 import all KFOL.Core.BichainCanonical
 import all KFOL.Core.BichainReadOnce
+import all KFOL.Core.BichainCubeCuts
+import all KFOL.Core.CompletionDepthChain
+import all KFOL.Core.CompletionDepth
+import all KFOL.Core.SingletonProfileAbsorption
+import all KFOL.Definitions.CompletionDepth
 import all KFOL.Core.BichainSeparatingSource
 import all KFOL.Core.BichainSwitch
 meta import Lean.Elab.Command

@@ -241,6 +241,17 @@ Equivalently, an alternating transversal condition chooses only observed
 coalitions and tests one input. There is a polynomial algorithm at
 bounded total width of the coalition orders, even with several repeating
 owners (\cref{core:thm:pointed-guard-cut,core:cor:alternating-transversal}).
+A common Horn theory describes the singleton profiles attainable under
+each omission budget. Once a profile is fixed, all individually possible
+marks can be supplied together at its ambiguous rows
+(\cref{core:thm:joined-profile-theory}). Fixing the offers before any
+responses gives exactly unions of greatest profile completions on
+subsets of the inputs. Three inputs already separate this class from
+the full core (\cref{core:thm:fixed-offer-completion}). Even iterating
+these completions with free union gives a strict hierarchy: an alternating
+path of $m$ single postings needs exactly $m$ layers. For paths sharing
+a root the least depth is the length of a shortest common supersequence
+of their reversed color runs (\cref{core:thm:completion-depth,core:cor:completion-depth-hierarchy}).
 Maximal ordered observer separators have
 linear separating contexts at every outside point, including for mixed
 observers (\cref{core:thm:maximal-linear-separation}). There is also a complete infinite
@@ -382,7 +393,10 @@ inner input
 Grouped ambiguity constraints have an exact lower-budget preorder
 recurrence. Beyond the initial edges, their implications depend only on
 rows that can reach a cycle in the upper-endpoint dependency graph.
-When this graph is acyclic, the initial preorder already determines
+The same Boolean comparisons determine which individual sources must be quiet.
+At three owners this classifies every operation retaining two specified
+winners (\cref{core:thm:partially-marked-cube-closure,core:cor:partially-marked-mask-interior}).
+When the graph is acyclic, the initial preorder already determines
 every safe Boolean function
 (\cref{core:thm:budget-cyclic-reduction,core:thm:acyclic-marked-budgets}).
 The same conclusion holds, without acyclicity, if each row leaves only
@@ -489,7 +503,14 @@ polynomial-size sample cannot always certify rejection from the
 prime lists (\cref{core:thm:compact-prime-locality}).
 For interval masks the relevant structure is directed reachability; its
 prime-only recognition problem is itself PSPACE-complete
-(\cref{core:prop:compact-cube-masks}). The general prime-only problem
+(\cref{core:prop:compact-cube-masks}). With two posting colors the same
+bound holds for recognizing unions of greatest profile completions,
+even though a fixed winning list may need exponential length
+(\cref{core:cor:fixed-offer-prime-space,core:prop:fixed-offer-parity}).
+For arbitrary colors the polynomial-space upper bound extends to source
+graphs with logarithmic component size; deleting ten inputs to break
+all cycles already allows PSPACE-hardness
+(\cref{core:thm:prime-component-space,core:cor:source-feedback-hardness}). The general prime-only problem
 with unboundedly many minimal zeros has no matching upper bound here.
 The lower bounds leave open a shorter structural description using
 more than first-order incidence.
@@ -1251,6 +1272,33 @@ when $t(S)$ is atomic it returns that atom, and otherwise it returns
 $U(S)\cup t(S)=U(S)$ by provenance. Thus it preserves exactly the
 singleton outputs. Any operation with those outputs agrees with
 $t^{\max}$ on its atomic outputs and is bounded by $U$ on the others.
+\end{proof}
+
+The same construction works in any principal ideal. Order the profiles
+attained below a core operation $B$ by reverse inclusion of winning
+coalitions. Thus $\Phi(F)\le\phi$ means that every singleton prescribed
+by $\phi$ is also a singleton of $F$ at the same valuations.
+
+\begin{proposition}[Profile completion under a bound]
+\label{core:prop:relative-profile-maximum}
+On core operations below $B$, taking singleton profiles has a right
+adjoint. It sends an attained profile $\phi$ to the operation
+$C_B(\phi)$ that returns its prescribed singleton wherever one is
+prescribed and returns $B$ everywhere else. Thus
+\[
+ F\subseteq C_B(\phi)\quad\Longleftrightarrow\quad
+ \Phi(F)\le\phi\qquad(F\subseteq B).
+\]
+Every attained profile is recovered by taking the profile of its
+completion, so the adjunction is a Galois insertion.
+\end{proposition}
+\begin{proof}
+Take any $t\subseteq B$ with profile $\phi$. Then $B\del t$ realizes
+the displayed operation. At its singleton rows a nonempty subset must
+be that same singleton. At the other rows the inclusion is exactly
+the given bound. The argument for the equivalence works even for an
+arbitrary nonempty-valued $F$ below $B$, reading its singleton outputs
+directly.
 \end{proof}
 
 The profile recursion also classifies every closed relation of profile bits,
@@ -3259,7 +3307,12 @@ $\{b,c\}$ on every exceptional region, since $L_x\ne\varnothing$ and
 $U_x\ne V$. At an exceptional input only its own deletion patch may
 differ from $F$; elsewhere only this extra patch may differ. Thus every
 valuation excludes at most one of $2^d+1$ core patches, and any $2^d$
-valuations have a common interpolant.
+valuations have a common interpolant. In fact each interpolant has
+completion depth at most one: the deletion patches are path-closed
+interval masks, represented in \cref{core:thm:interval-masks} by unions
+of greatest completions, and the extra patch has the same form.
+Thus even local interpolation at depth one on all $2^d$-row samples
+can fail to give a core operation at any depth.
 
 For the converse, take the $2^d$ atomic matching rows for intervals
 $(L_x,U_x)$, together with one opposite row $(L_{x^+},U_x)$.

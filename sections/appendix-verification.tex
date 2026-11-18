@@ -1,6 +1,6 @@
 \section{Verification details}\label{app:verification}
 
-The paper's results are kernel-checked in Lean~4.35.0 with mathlib. \texttt{Paper.lean} restates, in the namespace \texttt{KFOL.Paper}, every theorem of the main text and the clauses of the report results that it cites: $87$ statements, listed by result in \cref{tab:status}. \texttt{Report.lean} restates $143$ further report results in the namespace \texttt{KFOL.Report} (\cref{tab:report}). Each proof is a single library theorem, and each file ends with a check that no declaration in its namespace uses an axiom beyond \texttt{propext}, \texttt{Classical.choice}, and \texttt{Quot.sound}; a separate audit covers the whole library. Nothing is admitted, and no theorem from the literature enters as a hypothesis. Where a written proof cites one, as for the reset basis and the minimum one-owner generator \cite{FreeseEtAl2002}, owned choice with union \cite{HardingRomanowska2017}, the atomic clone \cite{Szendrei2012}, and colored-graph decomposition \cite{Gurvich2009}, the Lean proof is direct.
+The paper's results are kernel-checked in Lean~4.35.0 with mathlib. \texttt{Paper.lean} restates, in the namespace \texttt{KFOL.Paper}, every theorem of the main text and the clauses of the report results that it cites: $87$ statements, listed by result in \cref{tab:status}. \texttt{Report.lean} restates $146$ further report results in the namespace \texttt{KFOL.Report} (\cref{tab:report}). Each proof is a single library theorem, and each file ends with a check that no declaration in its namespace uses an axiom beyond \texttt{propext}, \texttt{Classical.choice}, and \texttt{Quot.sound}; a separate audit covers the whole library. Nothing is admitted, and no theorem from the literature enters as a hypothesis. Where a written proof cites one, as for the reset basis and the minimum one-owner generator \cite{FreeseEtAl2002}, owned choice with union \cite{HardingRomanowska2017}, the atomic clone \cite{Szendrei2012}, and colored-graph decomposition \cite{Gurvich2009}, the Lean proof is direct.
 
 The vocabulary of the statements is in \path{KFOL/Definitions/PaperAlgebra.lean}, \path{PaperGames.lean}, and \path{Complexity.lean}, which build on the other files of \path{KFOL/Definitions}. The auxiliary reading guides, definition indexes, and independent Python checks cited in this report are archived at repository commit \texttt{2099f25}; their paths refer to that revision.
 
@@ -157,7 +157,7 @@ Value-dependent execution (\cref{dep:thm:dynamic-execution})
 
 {\small
 \begin{longtable}{>{\raggedright\arraybackslash}p{0.34\linewidth}>{\raggedright\arraybackslash}p{0.60\linewidth}}
-\caption{The $143$ audited statements in \texttt{Report.lean}, followed by remaining report evidence.}\label{tab:report}\\
+\caption{The $146$ audited statements in \texttt{Report.lean}, followed by remaining report evidence.}\label{tab:report}\\
 \toprule
 Result & Audited statements or other evidence\\
 \midrule
@@ -205,8 +205,8 @@ Core proof ingredients and ambient variety (\cref{core:prop:basis-arity,core:lem
  & \path{core_variable_bound_obstruction}, \path{core_typed_upper_clone_cover}, \path{native_nonfinite_basis}\\
 Singleton profiles and three-valuation persistence (\cref{core:thm:profiles,core:prop:persistence})
  & \path{core_singleton_profiles}, \path{core_three_valuation_persistence}\\
-Profile maxima and gaps in core realizability (\cref{core:prop:profile-maximum,core:cor:profile-nonconvex})
- & \path{core_profile_maximum}, \path{core_profile_nonconvexity}\\
+Profile maxima and gaps in core realizability (\cref{core:prop:profile-maximum,core:prop:relative-profile-maximum,core:cor:profile-nonconvex})
+ & \path{core_profile_maximum}, \path{core_relative_profile_maximum}, \path{core_profile_nonconvexity}\\
 Normal forms from ternary tests (\cref{core:prop:local-guards})
  & \path{core_local_normal_forms}\\
 Prime source-guard normal forms (\cref{core:thm:source-guards,core:prop:guard-synthesis})
@@ -265,10 +265,18 @@ Joint guard reachability, repeated color classes and ternary operations
  in the proof tests all $4^6$ omission tables and gives a union of explicit
  terms for every accepted table.\\
 Subfamilies of source queries with arbitrary repeated colors
-(\cref{core:thm:pointed-guard-cut,core:cor:alternating-transversal})
- & Written proof by minimal infeasible subfamilies, with a time bound
- in terms of the widths of the observed coalition orders.\\
-Complete canonical guard recognition (\cref{core:thm:complete-guard-pspace,core:cor:guard-incidence-lower-bound,core:cor:compact-guards-large-trees})
+(\cref{core:thm:pointed-guard-cut,core:thm:joined-profile-theory,core:cor:alternating-transversal,core:thm:fixed-offer-completion,core:prop:common-head-depth-one,core:cor:fixed-offer-prime-space,core:prop:fixed-offer-parity})
+ & Written proofs by subfamily cuts and the Horn theory of attainable profiles.
+ For fixed offers the proofs use greatest completions, Boolean reachability,
+ and a parity lower bound.\\
+Depth of compositions of greatest profile completions
+(\cref{core:thm:completion-depth,core:cor:completion-depth-hierarchy})
+ & \path{core_completion_depth_hierarchy} gives an operation of exact
+ depth $m$ for every $m$. The library theorem \path{exact_depth_sample}
+ certifies the lower bound on one positive and $m$ negative observations.
+ The optimal deletion schedule, the upper bound on arbitrary samples,
+ and the supersequence reduction have written proofs.\\
+Complete canonical guard recognition (\cref{core:thm:complete-guard-pspace,core:cor:source-feedback-hardness,core:cor:guard-incidence-lower-bound,core:cor:compact-guards-large-trees})
  & Written PSPACE upper bound and quantified Boolean reduction using
  selector codes. The attachment and extraction steps are
  \path{KFOL.Core.realize_choice_of_unanimous_profile} and
@@ -434,8 +442,11 @@ Subpower membership (\cref{core:thm:subpower-complexity})
  & Written depth bound, reduction to exact outputs, and polynomial
  one-owner support algorithm.\\
 Grouped ambiguity constraints, cyclic reduction, and nested cuts
-(\cref{core:lem:grouped-cut,core:prop:grouped-safety-preorder,core:thm:budget-cyclic-reduction,core:thm:acyclic-marked-budgets,core:thm:one-free-mark-budgets,core:thm:two-marked-budgets,core:lem:unit-cap-boundary,core:thm:unit-cap-raw-completeness,core:cor:three-marked-raw-completeness,core:cor:marked-helly,core:thm:proper-marked-fragments,core:cor:three-mark-endpoint-projection,core:prop:cyclic-component-gluing,core:prop:grouped-cut-nesting})
- & Written proofs, with exact sink-row removal, initial completeness for
+(\cref{core:thm:partially-marked-cube-closure,core:cor:partially-marked-mask-interior,core:lem:grouped-cut,core:prop:grouped-safety-preorder,core:thm:budget-cyclic-reduction,core:thm:acyclic-marked-budgets,core:thm:one-free-mark-budgets,core:thm:two-marked-budgets,core:lem:unit-cap-boundary,core:thm:unit-cap-raw-completeness,core:cor:three-marked-raw-completeness,core:cor:marked-helly,core:thm:proper-marked-fragments,core:cor:three-mark-endpoint-projection,core:prop:cyclic-component-gluing,core:prop:grouped-cut-nesting})
+ & \path{bichain_cube_cuts} proves the cut criterion for marks and Boolean
+ endpoint separation, allowing multiple marks on each row. The lift to the
+ greatest core operation under the mask has a written proof. Other written
+ results include exact sink-row removal, initial completeness for
 one free mark per row, direct recognition for at most two marks, and explicit principal-upset formulas for one marked
 coordinate. A marked-linear principal-upset construction proves raw-cut
 completeness for three marks and, more generally, unit marked caps.
@@ -551,13 +562,14 @@ core baselines and a finite normal form by compositions of component
 extensions, without terminal-law assumptions. Restoring an owned-choice
 gate changes no principal predicate outside its absorbing singleton
 stratum; all colorings in that stratum are equivalent.\\
-Block extensions and source components of size at most two
-(\cref{core:thm:block-source-extension,core:lem:block-source-patterns,core:cor:binary-source-components,core:cor:unanimity-source-component})
+Block extensions and source components
+(\cref{core:thm:block-source-extension,core:lem:block-source-patterns,core:cor:binary-source-components,core:thm:prime-component-space,core:cor:unanimity-source-component})
  & Written proofs. An unowned winner tracks a marked source through
 fixed and neutral erasure, including sections that together use every
 owner. The resulting interval predicates transfer a whole block's
 source bits. Principal spines assemble the greatest minorant, and
-the activation formula supplies the next component's tests.
+the activation formula supplies the next component's tests. Streaming
+ the prime guards bounds space by the largest component size.
 At a monochromatic target each component coefficient inherits
 unanimity, localizing a counterexample to one component.\\
 Reduction to blocking patterns using $K-1$ colors
@@ -715,10 +727,10 @@ Actual interval types, greatest types, and exact relative source multiplicity
  & Written proofs.\\
 Pointwise profile budgets and unattainable interval types
 (\cref{core:lem:singleton-profile-absorption,core:prop:singleton-profile-bound-gluing,core:prop:profile-bound-gluing,core:prop:positive-profile-gluing,core:cor:pointwise-helper-obstruction})
- & Written proofs, uniform in $K\geq3$, with two explicit pointwise witnesses
-for each profile problem. Singleton-profile absorption follows by term
-induction; two atomic input bounds exclude the singleton-positive
-request despite its pointwise witnesses.\\
+ & \path{KFOL/Core/SingletonProfileAbsorption.lean} proves the absorption
+identity and its whole-input consequence. The other results have written
+proofs, uniform in $K\geq3$, with two explicit pointwise witnesses
+for each profile problem.\\
 Source rectangles, robust tree size, and the ambient reset bound
 (\cref{core:lem:source-rectangles,core:thm:robust-tree-size,core:cor:reset-ambient-tree-bound})
  & Written proofs. The reset-only bound remains kernel-checked separately.\\
