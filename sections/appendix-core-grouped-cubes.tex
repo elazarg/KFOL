@@ -773,6 +773,100 @@ per head need be stored, so this also uses polynomial space.
 For unrestricted prime lists alone, this proves PSPACE-hardness.
 Enumerating all minimal zeros gives an exponential-space upper bound.
 
+\paragraph{Coding a loss without listing all losses.}
+The selector construction also applies when losses are supplied by
+short clauses. Keeping every child that passes the cap test
+preserves the cap owner's entire profile on the original inputs.
+
+\begin{theorem}[From bounded profiles to complete prime lists]
+\label{core:thm:succinct-profile-cap}
+Let $W$ be a nonempty input set. At each head $v\in W$ give the
+loss predicate by a positive CNF of width at most $w$ in postings
+on $W\setminus\{v\}$. At a given head use at most one color per
+input, and let all heads avoid an owner $k_0$. Fix a cap owner
+$c$ and two distinct selector colors outside $\{c,k_0\}$.
+Let $\psi$ be a positive CNF of the $c$-flags on $W$, true at $W$
+and false on all coalitions of size at most one. There is a
+complete canonical prime family on polynomially many inputs that
+is core exactly when a word on $W$ respects the bounds and has
+$c$-profile $\psi$. Its lists are computable in $2^{O(w)}$ times a
+polynomial in the input length.
+\end{theorem}
+\begin{proof}
+Use a block of selectors $J$ consisting of a nonempty binary code
+for the head and a binary selector for each posting literal used
+anywhere on $W$. The two binary values use the two selector colors.
+Retain every selector. A complete selector code designates at most
+one head $v$ and, at that head, a set $T$ of selected literals from
+its formula. Allow a loss at $v$ exactly when $T$ satisfies the
+formula and every literal in $T$ is posted on $W$. The resulting
+operation $C$ is core. Indeed, at any fixing of the background
+postings the restricted internal budget is empty or consists of
+the upset of a single loss at a single head. At every positive
+query use a projection or the single-source completion to witness
+that restricted budget. Apply \cref{core:lem:unmarked-background}
+and take the union of the witnesses and the selectors.
+
+Here are the prime lists for $C$. Write $z_\ell^0,z_\ell^1$ for the
+two postings of selector $z_\ell$. At the head $v$ impose its fixed
+head code by unit clauses, require totality $z_\ell^0\lor z_\ell^1$
+for every mask selector, and impose $z_\ell^0\lor\ell$ for each
+literal $\ell$ of the head's formula. For each original clause
+$D$, require $\bigvee_{\ell\in D}z_\ell^1$, together with all its
+variants that replace any subset of the $z_\ell^1$ by the matching
+$\ell$. The variants follow from totality and the matching clauses.
+Resolving a variant against a matching clause gives another variant.
+Resolution against a totality clause retains the other clause, and
+these exhaust the conflicts, since the original literals at a head
+have fixed colors. By \cref{core:thm:guard-consensus}, inclusion
+minimization gives the canonical lists. Drop hidden literals and
+minimize again for each observer. There are at most $2^w$ variants
+per original clause.
+
+Define $F$ to return $\{c\}$ when the $c$-flags on $W$ satisfy
+$\psi$, and $C$ elsewhere. At each valuation activating the cap,
+at least two inputs are $c$-atoms and at most one internal source
+can be lost by $C$. Thus $C$ already supplies $c$, and the cap
+leaves the $c$-coefficients unchanged. At an observer other than
+$c$, a source now loses either at a loss of $C$ or at a valuation
+activating the cap. The latter has the prime list obtained from
+the clauses of $\psi$ by forbidding the head's posting and then
+minimizing. A sufficient guard for both lists' losses must contain
+a guard from each list. The canonical primes are therefore the
+inclusion-minimal pairwise unions. These lists reconstruct $F$:
+for a source containing an observed winner other than $c$, fixing
+that source as the observer's atom leaves all $c$-flags unchanged.
+The construction has the stated cost.
+
+If a bounded word $g$ on $W$ has $c$-profile $\psi$, source
+decomposition gives $g\subseteq C$, since every coded loss is one
+of its required omissions and $C$ retains the selectors. Hence
+$C\star_c g$ realizes $F$.
+
+Conversely take a core word for $F$. When no selector is a
+$c$-atom its $c$-singleton test is exactly $\psi$, because $C$
+retains those selectors. In particular it passes the $c$-test
+on all of $W$. At a $c$-owned node discard just the children
+that do not pass this test, and at any other node keep both
+children. Recurse on retained children: the $c$-test is OR at
+its own owner and AND at the others. The leaves now belong to $W$.
+On valuations with no selector $c$-atom, a discarded child cannot
+absorb, by monotonicity of its $c$-profile. Thus its removal can only
+decrease the value. The pruning also preserves the $c$-singleton
+test there, since every discarded child had a false $c$-test and
+the retained children preserve theirs by induction. The resulting
+word has profile $\psi$ on $W$.
+
+For every internal loss choose the complete selector code for its
+head and its literal set, and use observer $k_0$. The selectors
+are neither $c$-atoms nor $k_0$-sources. The coded operation omits
+$k_0$, and the pruned word, which ignores selectors and is below
+$F$ there, still omits it. This checks the common loss predicate,
+since the $k_0$-facet contains these colorings and predicates agree
+on every overlap. The remaining observers and irrelevant postings
+follow by this agreement and antitonicity.
+\end{proof}
+
 \begin{proposition}[Distinguishable word contexts for a single target]
 \label{core:prop:prime-target-syntactic-algebra}
 For each fixed $K\ge3$ and $d\ge1$ there is a core operation on

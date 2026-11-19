@@ -187,3 +187,134 @@ last $a$-reset of this prefix would then give $L_a(s_0)>L_b(s_0)$.
 The initial equal-address comparison forces $L_b(s_0)>L_a(s_0)$,
 a contradiction.
 \end{proof}
+
+\paragraph{Alternating state transitions.}
+Use four distinct owners $a,b,d,c$ and three groups of rail pairs,
+whose address coalitions are $A_s,B_s,D_s$. A finite state game has
+accepting and rejecting states, and conjunction and disjunction states
+with two successors $s_b,s_d$. An accepting state has height one.
+At a disjunction one may choose a successor, and at a conjunction
+both are required. The height of a winning state is the least height
+of a finite tree ending in accepting states under these rules.
+
+As before, the seed loss at $X$ posts $A_{s_0}$ at $a$, and the
+requested positive has all the rails at $c$. At each rail head, a loss
+requires at least one $c$-posting per pair in its group. When there is
+exactly one in each pair, let $s$ be the address of the remaining
+rails, including the head. Prescribe the following losses.
+\begin{itemize}
+\item For an $a$-group head at a conjunction state, require $B_s$
+posted at $b$ or $D_s$ posted at $d$. At a disjunction state require
+both postings. At a rejecting state impose the loss unconditionally;
+at an accepting state impose none.
+\item For a $b$-group or $d$-group head at a nonterminal state,
+require $A_{s_b}$ or $A_{s_d}$, respectively, posted at $a$. There
+are no losses on terminal or invalid addresses in these groups.
+\end{itemize}
+Invalid addresses in the $a$-group have no losses either. Use any
+antitone extension on doubled $c$-postings, as in the preceding
+construction.
+
+\begin{theorem}[Alternating reachability forced by source losses]
+\label{core:thm:alternating-rail-transitions}
+The bounds and the positive are feasible exactly when $s_0$ is
+winning. If it has height $H$, the least number of owner slots
+is between $2H-1$ and $3H-1$.
+\end{theorem}
+\begin{proof}
+Linearize a supplying occurrence of $X$ as in
+\cref{core:thm:guard-transition-depth}. The seed forces an
+$a$-attachment winning on $A_{s_0}$, and the positive rules out
+$c$-attachments on the marked path. Let $L_a(s),L_b(s),L_d(s)$ be
+the last attachments of the respective owners winning on their
+indicated address coalitions. For a comparison, post those addresses
+being tested at their respective owners, put all remaining rails
+at $c$ and give $X$ the full complement of the owner to be omitted.
+The spine inherits the corresponding omission, as before.
+
+A rejecting state cannot have $L_a(s)$: compare with just $A_s$
+posted at $a$, so no other owner can reset after it. At a conjunction,
+compare $A_s$ separately with $B_s$ and $D_s$. In each comparison the
+omission of $a$ forces the competing reset strictly after $L_a(s)$.
+At a disjunction, compare with both rival addresses. At least one
+of their resets must then follow $L_a(s)$. For every competing reset
+so obtained, the comparison with the appropriate successor address
+forces the successor's $a$-reset strictly after that competing reset.
+Thus finite increasing chains of positions give a winning tree, and
+a branch of height at least $H$ uses at least $2H-1$ positions.
+
+Conversely take the states reachable under decreasing-height choices
+from $s_0$, choosing one winning successor of smaller height at
+disjunctions and both at conjunctions. Starting at $X$, process
+these states in batches of decreasing height. In each batch first
+attach the $c$-folds on its $A_s$ by an $a$-fold. Then, by a $b$-fold
+and a $d$-fold, attach the $c$-folds on the chosen $B_s$ and $D_s$,
+respectively. Omit a fold if no address needs it. A loss with a
+unique address can only get its mark from that address's helper.
+For an $a$-loss a chosen competitor then absorbs, by the appropriate
+state rule. For a $b$- or $d$-loss at a used address the successor
+absorbs in a later batch. At doubled $c$-postings no helper of the
+losing group transmits its mark. The seed absorbs $X$ at its loss
+and the spine supplies $X$ at the requested probe. The last batch
+needs only the $a$-fold, and one extra slot suffices for all the
+helper $c$-folds. This gives at most $3H-1$ slots.
+\end{proof}
+
+\begin{corollary}[Hardness of supplying one bounded source]
+\label{core:cor:exptime-bounded-source}
+For fixed $K\ge4$, feasibility of one positive under source upper
+bounds specified by canonical prime lists is EXPTIME-hard under
+polynomial-time many-one reductions. This holds with a fixed bound
+on the number of postings in each guard.
+\end{corollary}
+\begin{proof}
+Use a fixed alternating polynomial-space machine for an
+EXPTIME-complete language, with at most two successors per state
+\cite[Corollary~3.6 and proof of Theorem~5.4]{ChandraKozenStockmeyer1981}.
+Acceptance is the finite-tree
+condition above. For example, the space-bounded alternating
+acceptance problem with a unary space bound is complete for
+EXPTIME: its finitely many configurations and their least accepting
+set can be enumerated in exponential time, and instances of any
+fixed alternating polynomial-space computation reduce to it.
+
+For a polynomial tape bound $M$, encode its configurations by tape
+symbols from a fixed alphabet, a fixed number of control bits, and
+$M-1$ nonincreasing head flags between the endpoints $1,0$.
+The unique descent chooses the scanned cell. Validity uses adjacent
+flag implications and finite symbol and control tests. Each transition
+has a polynomial list of rules of bounded scope. For the symbol bits
+at a given cell, test the two flags at that cell and either keep the
+old symbol or use the update from the control and the scanned symbol.
+To update a control bit or a head flag, make a rule for each location
+of the old head, control code and scanned symbol. The two flags at
+that location and the constant-size control and symbol tests suffice.
+Out-of-bounds moves may be sent to rejection. Each nonterminal
+control has two named moves, duplicating a move if needed.
+
+As in \cref{core:cor:width-five-depth}, impose the pair and validity
+clauses at each rail head. For the $b$- and $d$-groups, a local rule
+requiring a successor bit gives one clause consisting of the opposite
+$c$-literals for its premises and the required $a$-posting. Terminal
+control codes are ruled out by their opposite $c$-literals. For the
+$a$-group, guard the clauses of each state rule by the opposite
+$c$-literals of its control code. At disjunctions require matching
+rival rails in both groups, one clause per bit and bit value, with
+one additional opposite $c$-literal for the bit premise. At
+conjunctions, the disjunction of the two complete-address tests
+is equivalent to requiring that every pair of required rails, one
+from each rival address, has at least one of its two postings.
+For every pair of bit indices, expand this using their bit premises
+and the control guard. Accepting and rejecting codes give a
+forbidden local pattern and no additional clauses, respectively.
+
+The width of each clause is bounded by the fixed machine's local
+scope and there are polynomially many clauses. Each head uses only
+$c$-postings on its own group and a single fixed color per rival
+group. Dropping the hidden literals and minimizing on every facet
+therefore gives the complete canonical lists in polynomial time.
+These clauses give exactly the specified bounds on unique addresses
+and an antitone extension on doubled $c$-postings. The seed address
+is computed from the input configuration. Apply
+\cref{core:thm:alternating-rail-transitions}.
+\end{proof}

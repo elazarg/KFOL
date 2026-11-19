@@ -2,6 +2,7 @@ module
 
 public import KFOL.Core.ProfileSynthesis
 public import KFOL.Algebra.ViewOrders.Monotone
+import KFOL.Algebra.Monotone
 
 /-! # Pruning a positive singleton profile and realizing a unanimous singleton face -/
 
@@ -64,6 +65,69 @@ theorem exists_omitting_of_profile {Row : Type w} (a : Role) (A : Var → Bool)
       ∀ j, a ∉ (u.realize (fun x => rows j x.val)).val := by
   obtain ⟨u, _, hu⟩ := exists_view_below_of_profile a A t positive
   exact ⟨u, fun j wins => omitted j (((WinnerSet.view_below_iff _ _ _).mp (hu (rows j))).1 wins)⟩
+
+/-- Keep every branch which can pass the owner test on the selected inputs.
+On valuations with no other atom of that owner, deleting the other branches
+preserves the owner test and gives a pointwise smaller word. -/
+theorem exists_below_preserving_profile (a : Role) (A : Var → Bool)
+    (t : Equational.Term (Equational.CoreSymbol Role) Var) (positive : profile a A t = true) :
+    ∃ u : Equational.Term (Equational.CoreSymbol Role) {x // A x = true},
+      ∀ v : Var → WinnerSet Role, (∀ x, v x = WinnerSet.singleton a → A x = true) →
+        (u.realize (fun x => v x.val)).val ⊆ (t.realize v).val ∧
+          (u.realize (fun x => v x.val) = WinnerSet.singleton a ↔ t.realize v = WinnerSet.singleton a) := by
+  classical
+  have cannotAbsorb (s : Equational.Term (Equational.CoreSymbol Role) Var)
+      (failed : profile a A s ≠ true) (v : Var → WinnerSet Role)
+      (inside : ∀ x, v x = WinnerSet.singleton a → A x = true) :
+      s.realize v ≠ WinnerSet.singleton a := by
+    intro atom
+    apply failed
+    exact profile_mono a _ A (by simpa only [decide_eq_true_eq] using inside) s
+      ((winnerSet_eq_singleton_iff_profile s a v).mp atom)
+  induction t using induction_choice with
+  | var x => exact ⟨.var ⟨x, positive⟩, fun _ _ => ⟨Set.Subset.rfl, Iff.rfl⟩⟩
+  | choice r s t ihs iht =>
+    by_cases keepS : profile a A s = true <;> by_cases keepT : profile a A t = true
+    · obtain ⟨u, hu⟩ := ihs keepS
+      obtain ⟨w, hw⟩ := iht keepT
+      refine ⟨choiceTerm r u w, fun v inside => ?_⟩
+      obtain ⟨subU, atomU⟩ := hu v inside
+      obtain ⟨subW, atomW⟩ := hw v inside
+      change (WinnerSet.choice r _ _).val ⊆ (WinnerSet.choice r _ _).val ∧
+        (WinnerSet.choice r _ _ = WinnerSet.singleton a ↔ WinnerSet.choice r _ _ = WinnerSet.singleton a)
+      refine ⟨WinnerSet.choice_mono r subU subW, ?_⟩
+      by_cases own : r = a
+      · subst r
+        exact (WinnerSet.choice_eq_owner_iff _ _ _).trans
+          ((or_congr atomU atomW).trans (WinnerSet.choice_eq_owner_iff _ _ _).symm)
+      · exact (WinnerSet.choice_eq_other_iff _ _ _ own).trans
+          ((and_congr atomU atomW).trans (WinnerSet.choice_eq_other_iff _ _ _ own).symm)
+    · have own : r = a := by
+        by_contra ne
+        exact keepT ((by simpa only [profile_choice, ite_eq_right ne, Bool.and_eq_true] using positive :
+          profile a A s = true ∧ profile a A t = true).2)
+      subst r
+      obtain ⟨u, hu⟩ := ihs keepS
+      refine ⟨u, fun v inside => ?_⟩
+      obtain ⟨sub, atom⟩ := hu v inside
+      have no := cannotAbsorb t keepT v inside
+      refine ⟨sub.trans (WinnerSet.subset_choice_of_right_ne _ _ _ no), ?_⟩
+      exact atom.trans ((or_iff_left no).symm.trans (WinnerSet.choice_eq_owner_iff _ _ _).symm)
+    · have own : r = a := by
+        by_contra ne
+        exact keepS ((by simpa only [profile_choice, ite_eq_right ne, Bool.and_eq_true] using positive :
+          profile a A s = true ∧ profile a A t = true).1)
+      subst r
+      obtain ⟨u, hu⟩ := iht keepT
+      refine ⟨u, fun v inside => ?_⟩
+      obtain ⟨sub, atom⟩ := hu v inside
+      have no := cannotAbsorb s keepS v inside
+      change _ ⊆ (WinnerSet.choice a (s.realize v) (t.realize v)).val ∧
+        (_ = WinnerSet.singleton a ↔ WinnerSet.choice a (s.realize v) (t.realize v) = WinnerSet.singleton a)
+      rw [WinnerSet.choice_comm (s.realize v) (t.realize v) a]
+      refine ⟨sub.trans (WinnerSet.subset_choice_of_right_ne _ _ _ no), ?_⟩
+      exact atom.trans ((or_iff_left no).symm.trans (WinnerSet.choice_eq_owner_iff _ _ _).symm)
+    · by_cases own : r = a <;> simp [profile_choice, own, keepS, keepT] at positive
 
 open Classical in
 /-- Attaching a pointwise contained word with unanimous owner profile realizes the

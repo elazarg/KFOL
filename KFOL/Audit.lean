@@ -317,6 +317,7 @@ import all KFOL.Core.ProfileCutObstruction
 import all KFOL.Core.AnchoredPostingObstruction
 import all KFOL.Core.SourceReciprocity
 import all KFOL.Core.FacetPosting
+import all KFOL.Core.ProfilePruning
 import all KFOL.Core.SquareSourceObstruction
 import all KFOL.Core.OfferLattice
 import all KFOL.Core.DecreasingPaths
