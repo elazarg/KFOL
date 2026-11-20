@@ -74,6 +74,49 @@ theorem exists_foreign_reset_of_not_mem_eval (steps : List (Attachment Role))
       obtain ⟨step, step_mem, step_resets⟩ := ih survives absent
       exact ⟨step, List.mem_cons_of_mem _ step_mem, step_resets⟩
 
+/-- A singleton reached from a different value needs a reset at its own owner. -/
+theorem exists_reset_of_eval_eq_singleton (steps : List (Attachment Role))
+    {x : WinnerSet Role} {r : Role} (initial : x ≠ WinnerSet.singleton r)
+    (final : eval steps x = WinnerSet.singleton r) :
+    ∃ step ∈ steps, step.1 = r ∧ Resets step := by
+  induction steps generalizing x with
+  | nil => exact (initial final).elim
+  | cons head tail ih =>
+    by_cases wins : WinnerSet.choice head.1 x head.2 = WinnerSet.singleton r
+    · have own : head.1 = r := by
+        by_contra ne
+        exact initial ((WinnerSet.choice_eq_other_iff _ _ _ ne).mp wins).1
+      have resets : Resets head := (WinnerSet.choice_eq_owner_iff x head.2 head.1).mp
+        (by simpa only [own] using wins) |>.resolve_left (fun atom => initial (by simpa only [own] using atom))
+      exact ⟨head, by simp, own, resets⟩
+    · obtain ⟨step, inside, owner, resets⟩ := ih wins final
+      exact ⟨step, List.mem_cons_of_mem _ inside, owner, resets⟩
+
+/-- If the designated helper can supply the omitted winner or reset to
+its own owner, a different carried value forces a foreign reset somewhere
+in the intervening spine. -/
+theorem exists_foreign_reset_of_helper_eq_or_mem (before after : List (Attachment Role))
+    {x h : WinnerSet Role} {b c : Role} (distinct : b ≠ c)
+    (initial : x ≠ WinnerSet.singleton b) (helper : h = WinnerSet.singleton b ∨ c ∈ h.val)
+    (absent : c ∉ (eval (before ++ (b, h) :: after) x).val) :
+    ∃ step ∈ before ++ (b, h) :: after, step.1 ≠ c ∧ Resets step := by
+  rcases helper with own | present
+  · exact ⟨(b, h), by simp, distinct, own⟩
+  · by_cases carried : eval before x = WinnerSet.singleton b
+    · obtain ⟨step, inside, owner, resets⟩ := exists_reset_of_eval_eq_singleton before initial carried
+      exact ⟨step, List.mem_append_left _ inside, owner.trans_ne distinct, resets⟩
+    · have no : h ≠ WinnerSet.singleton b := by
+        rintro rfl
+        have same : c = b := by simpa using present
+        exact distinct same.symm
+      have passes : c ∈ (WinnerSet.choice b (eval before x) h).val := by
+        rw [WinnerSet.choice, ite_eq_right (not_or.mpr ⟨carried, no⟩), WinnerSet.val_union]
+        exact Or.inr present
+      have lost : c ∉ (eval after (WinnerSet.choice b (eval before x) h)).val := by
+        simpa only [eval, List.foldl_append, List.foldl_cons] using absent
+      obtain ⟨step, inside, foreign, resets⟩ := exists_foreign_reset_of_not_mem_eval after passes lost
+      exact ⟨step, List.mem_append_right _ (List.mem_cons_of_mem _ inside), foreign, resets⟩
+
 /-- Retain the last matching position for each query that matches at all.
 The number of retained positions is bounded by the number of queries. -/
 theorem exists_last_positions {Letter Query : Type*} [Fintype Query]
