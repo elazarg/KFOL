@@ -188,6 +188,36 @@ The initial equal-address comparison forces $L_b(s_0)>L_a(s_0)$,
 a contradiction.
 \end{proof}
 
+\begin{corollary}[Exponential depth from complete prime lists]
+\label{core:cor:exact-prime-exponential-depth}
+For fixed $K\ge4$ and $l\ge2$ there is a core operation on $O_K(l)$
+inputs whose complete canonical prime lists have $O_K(l^3)$ posting
+occurrences and width at most six. Every owner schedule for the
+operation has at least $l2^l-1$ slots, so its least completion depth
+is at least $(l2^l-4)/(K+6)$.
+\end{corollary}
+\begin{proof}
+Use the rail bounds and the spines from
+\cref{core:thm:rail-transition-depth}. At the owner $c$, all
+attachments act by conjunction of the two singleton tests.
+Thus the spine starting at $v$ can be $\{c\}$ only if $v$ is
+$\{c\}$. The union of the spines has exactly the unanimous
+$c$-profile. Apply \cref{core:thm:succinct-profile-cap} with the
+unanimous profile, using an unused owner for every $k_v$.
+The canonical lists before the cap have $O_K(l)$ clauses per head,
+each of width at most five. There are $O_K(l)$ selector inputs,
+and the cap unions each guard with at most one new posting at $c$.
+This gives the size and width stated.
+
+Every scheduled realizer yields a bounded rail word of the same
+schedule with unanimous $c$-profile. At the probe for the high zero
+rail of the $a$-group, that word cannot give $\{c\}$, and only
+$a,c$ occur in the inputs. It supplies $a$, so
+\cref{core:thm:rail-transition-depth} bounds its schedule from
+below. Apply \cref{core:thm:completion-fold-schedule} to get the
+completion-depth lower bound.
+\end{proof}
+
 \paragraph{Alternating state transitions.}
 Use four distinct owners $a,b,d,c$ and three groups of rail pairs,
 whose address coalitions are $A_s,B_s,D_s$. A finite state game has
@@ -317,4 +347,84 @@ These clauses give exactly the specified bounds on unique addresses
 and an antitone extension on doubled $c$-postings. The seed address
 is computed from the input configuration. Apply
 \cref{core:thm:alternating-rail-transitions}.
+\end{proof}
+
+\paragraph{From one positive to a complete family.}
+Restart choices let an accepting instance supply the unanimous
+$c$-profile. This makes the selector reduction applicable without
+supplying any accepting strategy as part of the input.
+
+\begin{theorem}[Exponential-time hardness from complete prime lists]
+\label{core:thm:exptime-complete-guards}
+For each fixed $K\ge4$, deciding whether complete canonical prime
+lists describe a core operation is EXPTIME-hard under polynomial-time
+many-one reductions, even with a fixed bound on prime width. The
+reduction produces nonempty outputs and lists agreeing on observer
+overlaps.
+\end{theorem}
+\begin{proof}
+Start with the machine game of \cref{core:cor:exptime-bounded-source}.
+Use an entry state and an execution state for each configuration,
+distinguished by one extra bit. An entry state is a disjunction
+between its own execution state and the initial entry state. At an
+execution state use the original rule with successors given by
+their entry states. Replace rejection by a disjunction whose two
+edges restart at the initial entry state. Acceptance is unchanged.
+A minimum-height winning tree at the initial entry state cannot
+contain another occurrence of that state below the root, since its
+subtree would be a smaller proof of the same win. Hence no restart
+is used in such a tree, and contracting the entries recovers an
+original accepting tree. Conversely a winning tree for the original
+start gives one for the new start by using no restarts. Once the
+new start wins, every entry wins by restarting, and every execution
+state wins by its rule. These changes preserve the bounded-scope
+encoding: a restart writes the bits of the fixed initial address,
+and the entry and execution rules each test the extra bit.
+
+Take the alternating rail bounds for the new game, with the seed
+loss on $X$. Strengthen each $a$-group loss by requiring some fully
+posted rival address at $b$ or $d$, and each $b$- or $d$-group
+loss by requiring some fully posted address at $a$. Each such
+address test says that the corresponding owner postings meet
+every pair. The disjunction of two such conjunctions expands
+into clauses of width four, one for each pair of clauses from
+the two conjunctions. These restrictions leave every comparison
+in \cref{core:thm:alternating-rail-transitions} unchanged.
+
+If the new start wins, all valid states have finite winning height.
+Schedule all of them in decreasing height, as in
+\cref{core:thm:alternating-rail-transitions}. Put every unused
+$b$- or $d$-helper in an initial batch, before any valid
+$a$-helper, along with the helpers of all three groups for
+invalid addresses. Include the terminal states' rival helpers
+in this initial batch. Thus every complete address at a rival
+owner can give a reset somewhere. The early helpers respect the
+bounds: at a loss of an early $b$- or $d$-helper's address,
+the required $a$-successor reset is later; an invalid address
+cannot supply a mark at a loss with a unique valid address.
+With doubled $c$-postings, no helper of the losing group can
+transmit its mark. At any other rail loss the scheduled reset
+after its uniquely addressed helper still removes that mark.
+
+Run this schedule starting from each projection in turn, including
+$X$. If the starting input is a rail, the strengthened tests ensure
+a rival reset at every loss at that input, including at doubled
+$c$-postings. Each rail-start spine ignores $X$. The spine starting
+at $X$ obeys its seed loss because the seed's $a$-attachment occurs.
+The union of all these spines respects the bounds and has the
+unanimous $c$-profile, since every main attachment is foreign to $c$.
+Conversely, in any bounded word with unanimous $c$-profile,
+put $X$ at $a$ and all other inputs at $c$. The output cannot be
+$\{c\}$, so $X$ supplies $a$. The alternating comparison argument
+forces the new start to win.
+
+Finally apply \cref{core:thm:succinct-profile-cap} to ask for the
+unanimous $c$-profile. At each rail head one can use its own group's
+owner as the missing observer and the other two non-$c$ owners
+as selector colors. The seed loss uses only $a$ and also allows
+such a palette. These choices work with four owners. All clauses
+of the strengthened bounds have constant width; the unanimous
+cap uses unit clauses. The lifting theorem gives the required
+complete lists in polynomial time, with nonempty reconstructed
+outputs and observer agreement.
 \end{proof}

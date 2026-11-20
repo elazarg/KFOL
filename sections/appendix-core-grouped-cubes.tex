@@ -770,8 +770,10 @@ from the guards, and store each minimal zero once. At most four
 per head need be stored, so this also uses polynomial space.
 \end{proof}
 
-For unrestricted prime lists alone, this proves PSPACE-hardness.
-Enumerating all minimal zeros gives an exponential-space upper bound.
+With prime lists alone and no bound on the number of losses,
+enumerating all minimal zeros gives an exponential-space upper bound.
+\Cref{core:thm:exptime-complete-guards} gives a stronger lower bound
+using the selector construction below.
 
 \paragraph{Coding a loss without listing all losses.}
 The selector construction also applies when losses are supplied by
@@ -783,23 +785,29 @@ preserves the cap owner's entire profile on the original inputs.
 Let $W$ be a nonempty input set. At each head $v\in W$ give the
 loss predicate by a positive CNF of width at most $w$ in postings
 on $W\setminus\{v\}$. At a given head use at most one color per
-input, and let all heads avoid an owner $k_0$. Fix a cap owner
-$c$ and two distinct selector colors outside $\{c,k_0\}$.
+input, and let its postings avoid an owner $k_v$. Fix a cap owner
+$c$. For each head require two distinct selector colors outside
+$\{c,k_v\}$.
 Let $\psi$ be a positive CNF of the $c$-flags on $W$, true at $W$
 and false on all coalitions of size at most one. There is a
 complete canonical prime family on polynomially many inputs that
 is core exactly when a word on $W$ respects the bounds and has
 $c$-profile $\psi$. Its lists are computable in $2^{O(w)}$ times a
-polynomial in the input length.
+polynomial in the input length. A realizer of the complete family
+gives such a bounded word on the same owner schedule.
 \end{theorem}
 \begin{proof}
 Use a block of selectors $J$ consisting of a nonempty binary code
 for the head and a binary selector for each posting literal used
-anywhere on $W$. The two binary values use the two selector colors.
-Retain every selector. A complete selector code designates at most
-one head $v$ and, at that head, a set $T$ of selected literals from
-its formula. Allow a loss at $v$ exactly when $T$ satisfies the
-formula and every literal in $T$ is posted on $W$. The resulting
+anywhere on $W$. Interpret the two bits using the head's choice of
+colors. Choose the head code strings of postings to be distinct
+even across different palettes. For this, use a length with at
+least $|W|$ strings at each palette and choose each head's code
+from its first $|W|$ strings avoiding the earlier ones. Retain
+every selector. A complete selector code designates at most one
+head $v$ and, at that head, a set $T$ of selected literals from its
+formula. Allow a loss at $v$ exactly when $T$ satisfies the formula
+and every literal in $T$ is posted on $W$. The resulting
 operation $C$ is core. Indeed, at any fixing of the background
 postings the restricted internal budget is empty or consists of
 the upset of a single loss at a single head. At every positive
@@ -858,13 +866,19 @@ the retained children preserve theirs by induction. The resulting
 word has profile $\psi$ on $W$.
 
 For every internal loss choose the complete selector code for its
-head and its literal set, and use observer $k_0$. The selectors
-are neither $c$-atoms nor $k_0$-sources. The coded operation omits
-$k_0$, and the pruned word, which ignores selectors and is below
+head $v$ and its literal set, and use observer $k_v$. The selectors
+are neither $c$-atoms nor $k_v$-sources. The coded operation omits
+$k_v$, and the pruned word, which ignores selectors and is below
 $F$ there, still omits it. This checks the common loss predicate,
-since the $k_0$-facet contains these colorings and predicates agree
+since the $k_v$-facet contains these colorings and predicates agree
 on every overlap. The remaining observers and irrelevant postings
 follow by this agreement and antitonicity.
+
+On an owner schedule the same pruning works on nonempty folds.
+At a $c$-slot at least one child passes the test on $W$, and at
+every other slot all children pass it. A discarded child cannot
+absorb at the valuations under consideration. Retain the other
+children at their original slots, allowing unary folds.
 \end{proof}
 
 \begin{proposition}[Distinguishable word contexts for a single target]

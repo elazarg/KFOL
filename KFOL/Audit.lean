@@ -668,6 +668,7 @@ import all KFOL.Core.BichainCubeCuts
 import all KFOL.Core.CompletionDepthChain
 import all KFOL.Core.CompletionSuspension
 import all KFOL.Core.AddressedGuards
+import all KFOL.Core.AlternatingReachability
 import all KFOL.Core.CompletionDepthErasure
 import all KFOL.Core.CompletionGateRestriction
 import all KFOL.Core.LayerInterpolation
