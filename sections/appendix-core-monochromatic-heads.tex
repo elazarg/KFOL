@@ -1486,6 +1486,42 @@ each owner block of a row is singleton, saturation
 is exact, so it gives the greatest operation
 in the selected-fold clone.
 
+The walk witnesses use at most $|V|+1$ leaves
+in the binary fold and mask generators. A simple
+path to an unheaded input uses each vertex once.
+For a cycle witness choose a simple path first
+entering a simple selected cycle at its endpoint,
+so only the endpoint occurs twice in the mask
+path and the cycle fold together.
+
+The extra leaf can be necessary. Use three
+inputs $i,x,y$ with losses $x{:}s$ at $i$,
+$y{:}r$ at $x$, and $x{:}r$ at $y$, where
+$r\ne s$. At the neutral probe for $i$,
+$(i\star_s x)\star_r(x\star_r y)$
+is a bounded witness. A word supplying $i$
+must use $x$ by the loss at $i$, and must
+then use $y$ by the loss at $x$. Omitting a
+required operand would make every used input
+unposted on the corresponding loss.
+
+In a three-leaf word one input is alone at the
+root. If it is $x$, the root has to absorb from
+$x$ on both $x{:}r$ and $x{:}s$ to clear $y$
+and $i$ respectively, which a single-owner
+gate cannot do. If it is $y$, the root must
+absorb from $y$ at $r$ to clear $x$. The inner
+gate on $i,x$ must absorb at $s$ to clear $i$.
+It then takes union on $x{:}r$ with $i$ unposted,
+so the root cannot clear $y$ on that loss.
+If the lone input is $i$, clearing $i$ on
+$x{:}s$ forces an inner singleton at $s$ and a
+root absorbing at $s$. The inner gate then
+takes union on $y{:}r$ with $x$ unposted and
+the root cannot clear $x$. Thus three leaves
+are insufficient even allowing single-owner
+masks and union as binary gates.
+
 This test compiles directly from canonical primes into a
 polynomial-size monotone circuit shared by all colorings.
 Let $U$ mark the postings in the union of the fold supports
