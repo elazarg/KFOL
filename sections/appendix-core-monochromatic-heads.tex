@@ -8092,6 +8092,48 @@ used. The resulting witness therefore respects the original as
 well as the enlarged losses. Taking the union gives the full
 realization.
 
+A repeated owner can also help across the edge shared by two
+triangles. Let the symmetric graph have all edges on $x,y,z,w$
+except $zw$, with owners $a,b,a,c$, respectively, where $a,b,c$
+are distinct. The original family is realizable for every $K\ge3$.
+In particular, when $K>3$, the rainbow triangle $xyw$ can supply
+its cross-owner marks using the other triangle even though its
+palette does not exhaust the owners. The reciprocal extension
+is then realizable as well.
+
+Here is a finite verification with explicit witnesses. Write
+$U[r]V$ for $U\star_r V$. In each row of the table, use the
+words in order for the indicated head. The last column counts
+the positive probes still uncovered after each word.
+\[
+\begin{array}{c|l|r}
+x & (x[a]y)[b](x[a]z),\quad (x[a]z)[b](y[c](x[a]w)) &3,0\\
+y & y[b](x[a]z),\quad z[a](y[b](x[c](x[a]w))) &3,0\\
+z & z[a](x[b]y) &0\\
+w & (x[a]z)[b](y[c]w),\quad (x[b]y)[a](z[a](x[c]w)),\quad
+       (x[a]z)[b](y[a](x[c]w)) &15,3,0
+\end{array}
+\]
+To verify the table, record a menu by its singleton status
+$a,b,c$ or $*$ (all other menus), and a bit for the mark.
+At an $r$-gate, if either status is $r$, return status $r$
+and bit zero. Otherwise return the common status if the
+statuses agree and $*$ if they differ, and take the OR of the
+bits. This is exact because a union can be singleton $s$ only
+when both nonempty operands are singleton $s$. At each loss,
+give the head status $*$ and bit one, its neighbors the
+singleton status of the head's owner, and the remaining
+input status $*$ and bit zero. Every displayed word has bit
+zero on all four such rows. For the positive counts, give only
+the tested head status $*$ and bit one. Independently run through
+the four statuses at each of the other three inputs with bit
+zero, excluding the assignments where all neighbors have the
+head's owner. Starting from $63,63,60,60$ assignments for
+$x,y,z,w$, respectively, discard each assignment when a word
+returns bit one. This tests every proper probe, and allows
+additional status assignments so that the check is independent
+of $K$ and of which observer is missing.
+
 \begin{corollary}[A sharp number of posting colors]
 \label{core:cor:reciprocal-pair-colors}
 For $2\le m\le K$ there is a family on $2m$ inputs with one
