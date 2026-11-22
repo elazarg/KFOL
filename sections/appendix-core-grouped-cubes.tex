@@ -881,6 +881,196 @@ absorb at the valuations under consideration. Retain the other
 children at their original slots, allowing unary folds.
 \end{proof}
 
+\paragraph{Exact recognition with singleton primes.}
+For every fixed $K\ge4$, exact recognition from complete
+canonical prime lists is PSPACE-complete when each prime
+has at most one posting. The hard instances have nonempty
+outputs and agreement across observers. The upper bound
+uses the one-loss-per-facet enumeration of
+\cref{core:thm:guard-consensus} and the explicit cut test
+\cref{core:thm:pointed-guard-cut}.
+
+Take the bare budget $Z$ on $W$ at the start of the proof of
+\cref{core:thm:complete-guard-pspace}, before adding selectors.
+In an accepting instance there is a pure $b,c$ word that uses
+every input and omits $Z$. Its profile at a third owner $a$
+is unanimity. Conversely any nonzero word omitting $Z$
+means the quantified formula is true. At each head there are
+at most four monochromatic losses. If four occur, the two
+profile-demand rows among them have different owners.
+
+Assign distinct omitted observers to the losses at each
+head, avoiding the original color of each loss.
+For four owners every loss has at least three choices.
+If four choices of rows are needed, their allowed observer
+sets together contain all four owners, since both demand
+colors occur. Thus an assignment exists, and
+also exists when more owners are available.
+
+Add a retained body input $z$ and let $W'=W\cup\{z\}$.
+Give each loss a distinct complete selector code, using two
+colors other than $a$ and its assigned observer $k$.
+Use a common block of code inputs so that no proper
+coloring enables two different codes, even for different
+palettes. As in the preceding lift, a logarithmic number
+of code inputs suffices. Also give the selector block an
+input for each owner other than $a$. In the row with
+assigned observer $k$, post these inputs at their owners
+except for the input of $k$ if $k\ne a$. Extend the
+original tail by its code and these extra postings.
+For $k\ne a$ also add $z:a$. For $k=a$ leave $z$
+unposted. In either case the extended loss uses every
+color except $k$.
+
+Retain the selectors and prescribe precisely the coded
+losses on $W'$. This gives a core operation $C$: at each
+selector coloring there is at most one internal loss, so
+single-source completion gives its local body. These
+local operations are antitone in the selector colorings,
+so block extension over their retained union realizes
+the exact predicates. The body input $z$ is always
+retained. Cap $C$ to $\{a\}$ when all of $W'$ is posted
+at $a$. There $C$ already supplies $a$ from $z$.
+The cap therefore changes no $a$-coefficient, and it
+changes no foreign coefficient at a body head because
+that head is not an $a$-singleton on its foreign probe.
+At a selector head the cap gives just the one loss
+posting all of $W'$ at $a$. The result has at most one
+loss per head on each facet, so its canonical guards
+are the singleton postings of that loss, or the empty
+guard on a facet with no loss. This also proves observer
+agreement and polynomial output size.
+
+In the accepting case extend the pure witness $g$ to
+$g\star_b z$. It has $a$-unanimity on $W'$ and omits the
+body losses. On each probe at its assigned observer, the
+menu of $z$ omits that observer: it is $\{a\}$ if
+$k\ne a$ and $I\setminus\{a\}$ if $k=a$. The extended word is
+therefore below $C$, and its $a$-choice with $C$ realizes
+the target. Conversely prune any realizer on the
+$a$-test of $W'$ as before. Each coded loss has a probe
+with no selector $a$-atom and no selector supplying the
+assigned observer, so the body word obtained by pruning
+omits the coded losses. Fix $z=\{a\}$. This cofactor is
+not constantly $\{a\}$, because the pruned word has
+unanimous $a$-profile on $W'$. By
+\cref{core:lem:winner-erasure} it yields a core word on
+$W$ below both the fixed-$a$ cofactor and the neutral
+residue. The first bound preserves all the losses
+assigned to $k\ne a$. The second preserves the losses
+assigned to $a$, which were read with $z=I\setminus\{a\}$.
+A loss need only be read at its assigned observer, by
+observer agreement. The resulting word omits $Z$, which
+forces acceptance.
+
+At three owners the same idea gives PSPACE-hardness at
+prime width two. Separate the old game rows from the two
+profile demands. Use two common selector inputs to choose
+one of the three modes $(b,c),(c,c),(b,b)$.
+In mode $(b,c)$ use a complete binary code over $b,c$
+for each game row, with $z$ unposted. These losses all
+omit $a$, and at a fixed selector coloring at most one
+such loss is active. In mode $(c,c)$ impose the $c:X$
+demand by its old rows, adding $z:a$ to every tail.
+In mode $(b,b)$ impose the $b:W\setminus Y$ demand in
+the same way. No head codes are needed in these last two
+modes.
+
+Each demand mode has an exact core body at each fixing
+of the selectors. Its conditional heads are outside
+the demanded coalition, and their losses depend just on
+that coalition and $z$, which are all retained. Union
+of the single-source completions realizes the body.
+The modes are mutually exclusive and each coded loss
+is monotone in the selector postings. Block extension
+and the $a$-unanimity cap therefore work as above.
+Pruning and erasure read the game rows at observer $a$
+through the neutral residue, the $c$-demand at observer
+$b$, and the $b$-demand at observer $c$ through the fixed
+$a$-cofactor. The extracted word omits every specified loss.
+
+Only the game mode is visible on the $a$-facet at old
+heads, with at most two losses there. The other two
+facets each see only their one demand row. Thus the
+canonical primes have width at most two and polynomial
+total size. At most four minimal losses occur per head,
+so recognition on this restricted class of prime inputs
+is PSPACE-complete by \cref{core:thm:complete-guard-pspace}.
+
+\paragraph{A lift with one selector color per head.}
+For a unanimous $c$-cap, one selector color per head suffices
+under a condition on overlaps of the head buckets. Keep the
+fixed-color-per-input loss CNFs of the preceding theorem,
+but for each head $v$ choose just one selector color
+$d_v\notin\{c,k_v\}$. Group heads by this choice. Assume
+each bucket is a proper subset of $W$ and no loss at a head
+in a bucket posts any input in that same bucket. Then one
+can produce complete prime lists in polynomial time at
+fixed width, with a core realizer exactly when a bounded
+word on $W$ has the unanimous $c$-profile. This applies at
+three owners even if the missing observer is different from
+$c$ at every head.
+
+Use one common selector $z_*$ and a selector $z_v$ for each
+head. Enable a head $v$ only when both are posted at $d_v$.
+A single mask selector for each literal, posted at $d_v$,
+enables that literal. At $v$ forbid its mark exactly when
+its head is enabled and every original clause has an enabled
+literal which is also posted on $W$. This is a positive CNF:
+replace a clause $D$ by the conjunction obtained by distributing
+$\bigvee_{\ell\in D}(m_\ell^{d_v}\land\ell)$, and add the
+two head-code units. There are at most $2^{|D|}$ clauses
+in the replacement, and the postings at each head have a
+fixed color per input. Retain all the selectors.
+
+At a fixing of the selectors only one bucket can be enabled.
+Every loss there uses only inputs outside the bucket, which
+are retained. For each head inside it use the single-source
+completion of its restricted predicate over the retained
+outside inputs, ignoring the other bucket heads. Union of
+these words and the retained inputs gives the exact internal
+operation. If no bucket is enabled use input union. These
+operations decrease under extension of the selector coloring,
+because every coded loss is monotone in the postings.
+The block extension over the retained selector union therefore
+gives a core operation $C$ with exactly the specified source
+predicates. This argument allows several heads in the same
+bucket to be enabled simultaneously.
+
+Now return $\{c\}$ when all of $W$ is posted at $c$, and
+$C$ otherwise. At every cap valuation $C$ already supplies
+$c$, from an input outside the enabled bucket if there is
+one, or any old input otherwise. The cap leaves the
+$c$-coefficients unchanged. It also leaves the complete
+predicates at heads in $W$ unchanged: an old source probe
+for a foreign winner cannot have the entire $W$ at $c$.
+At selector heads the only new loss is the full $c$-posting
+of $W$. Thus the indicated primes are obtained by facet
+restriction and inclusion minimization. For a bounded word
+$g$ with the prescribed profile, $g\subseteq C$ and
+$C\star_c g$ gives the capped target. Conversely prune at
+the $c$-test on $W$, as in
+\cref{core:thm:succinct-profile-cap}. To check any loss at
+$v$, enable just its code and the mask postings for that
+loss. All these selectors are posted at $d_v$, which is
+neither $c$ nor $k_v$. On this probe no discarded subtree
+can absorb, so the pruned word satisfies the loss. This
+checks every bound and retains the unanimous profile.
+
+The within-bucket restriction cannot simply be dropped.
+For example take a single bucket with conditional heads
+$x,z$ and a retained input $y$. The original losses are
+$x$ at $y:b$ and $z$ at $x:b$, where $b\ne c$ and the
+selector color is $b$. Their bounds admit the $b$-fold of
+$x,y,z$, whose $c$-profile is unanimous. At a collision
+activating both codes and their masks, however, the proposed
+target captures $x$ under $y:b$ with the selectors fixed.
+By \cref{core:cor:colored-cofactor-dependence} a core word
+would then be independent of $x$. With $z$ a singleton at
+a third owner, changing $x$ from an ambiguous menu omitting
+that owner to $\{b\}$ loses the $z$-mark. The unanimous cap
+is inactive at both valuations. This contradicts independence.
+
 \begin{proposition}[Distinguishable word contexts for a single target]
 \label{core:prop:prime-target-syntactic-algebra}
 For each fixed $K\ge3$ and $d\ge1$ there is a core operation on

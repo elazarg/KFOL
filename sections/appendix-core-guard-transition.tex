@@ -58,51 +58,71 @@ one final slot, after padding their branches by unary folds. The
 schedule has at most $2H+1$ slots.
 \end{proof}
 
-\begin{corollary}[Exponential depth at prime width five]
-\label{core:cor:width-five-depth}
+\begin{corollary}[Exponential depth at prime width three]
+\label{core:cor:width-three-depth}
 For every fixed $K\ge3$ and $l\ge2$ there are feasible bounds on
-$8l+1$ inputs, given by complete canonical prime lists with
-$O_K(l^2)$ posting occurrences and at most five per guard, for which
+$16l+9$ inputs, given by complete canonical prime lists with
+$O_K(l^2)$ posting occurrences and at most three per guard, for which
 one positive requires $2l\,2^l$ owner slots or more. Consequently
 completion depth is exponential even at this fixed prime width.
 \end{corollary}
 \begin{proof}
-Use states of a counter that handles one bit at each step. A state
-has $l$ data bits $x_0,\ldots,x_{l-1}$, a carry bit $d$, and $l-1$
-stage flags $p_1,\ldots,p_{l-1}$. Interpret $p_0=1,p_l=0$ as fixed
-endpoints. Valid flags form a nonincreasing list, so the active stage
-is the unique $i$ with $p_i=1,p_{i+1}=0$. At stage $i$ replace
-$x_i$ by $x_i\mathbin{\mathrm{xor}}d$, leaving the other data bits
-unchanged. Advance the stage, keeping carry $d\land x_i$. At the
-last stage halt if $d=x_{l-1}=1$; otherwise wrap to stage zero with
-carry one. Start with data zero, stage zero and carry one. Each full
-sweep increments the data by one. On the last sweep the overflow
-halts at its final stage, so the path from the start has $l\,2^l$
-states. Its stage-zero states have distinct data, and other states
-cannot repeat because a deterministic path with a repeated state
-would cycle and could never halt.
+Use a rotating counter with $l$ data bits $x_0,\ldots,x_{l-1}$,
+a carry $d$, stage flags $p_1,\ldots,p_{l-1}$, and a sentinel
+bit fixed at zero. The stage flags are nonincreasing, with
+$p_0=1$. The last stage is the one with $p_{l-1}=1$.
+At this stage halt if $d=x_0=1$. Otherwise update by
+\[
+ \begin{aligned}
+ x_i'&=x_{i+1} &&(0\le i<l-1),&
+ x_{l-1}'&=x_0\mathbin{\mathrm{xor}}d,\\
+ d'&=p_{l-1}\lor(d\land x_0),&&&
+ p_i'&=p_{i-1}\land\neg p_{l-1} &&(1\le i<l).
+ \end{aligned}
+\]
+Keep the sentinel at zero. Starting with zero data, all flags
+zero and carry one, each full sweep visits the original data bits
+in order from least to most significant. It brings the data back
+to their original positions, incremented by one, and resets
+the carry. The overflowing sweep halts at its last stage.
+The path from the start has $l2^l$ states. From any valid
+state the counter halts in its current sweep or reaches a
+sweep boundary with carry one, so the entire valid state
+graph is acyclic.
 
-There are $m=2l$ address bits. For a head's own group retain the
-pair clauses for $c$ and use the $C$-literals of
-\cref{core:thm:compact-depth-upper-bounds} to test its address.
-Validity is checked by adjacent implications on the flags. At a
-unique address the $a$-side uses equality of code bits, as before.
-At a unique $b$-address, allow a transition precisely when the
-state is valid and the three bits for overflow do not give a halt.
-Require the corresponding next-state rails at $a$ by local clauses.
-For an output data bit its old bit, the carry and the two adjacent
-flags suffice. Each next stage flag tests its predecessor and the
-last flag. For next carry, make a rule per stage using the two flag
-tests selecting that stage, the old carry and the stage's data bit.
-The wrap rule sets carry one. Expand each rule by taking the
-opposite $C$-literals of its premises and adjoining the required
-$a$-posting. At most four premises occur in each rule, with only
-constantly many truth-table entries per bit or stage. Thus there
-are $O(l)$ clauses of width at most five per rail head, and the loss
-at $X$ contributes $O(l)$ singleton guards. On exact addresses the
-clauses impose exactly the transitions of this counter. Doubled
-$c$-postings may also satisfy the clauses, which is an allowed
-extension in \cref{core:thm:guard-transition-depth}.
+To make every next bit depend on at most two current bits,
+split one update into two register maps. Let $A$ store the
+data, carry, and stage flags. Let $B$ store the updated data
+and flags, together with $e=d\land x_0$ and $z=p_{l-1}$.
+The map $f$ from $A$ to $B$ computes those entries. The map
+$g$ from $B$ to $A$ copies its data and flags and sets the
+carry to $e\lor z$. Use states $(A,B)$ and update them by
+\[
+                       (A,B)\longmapsto (g(B),f(A)).
+\]
+Require the flags in both registers to be nonincreasing and
+include the fixed zero sentinel as a separate bit. Halt when
+$A$ has the old halt pattern. Both register maps preserve
+validity, and in every two steps the $A$-register advances
+by one original update. Thus there is no cycle on valid
+states. Start at $(A_0,f(A_0))$ for the original initial
+register $A_0$. At the even steps before halting the registers
+are $(A_j,f(A_j))$ for successive states $A_j$ of the rotating
+counter. There are at least $l2^l$ states on this path.
+
+There are $m=4l+2$ address bits. Retain the pair clauses for
+$c$ and use the $C$-literals of
+\cref{core:thm:compact-depth-upper-bounds} to test the address.
+Validity uses adjacent flag implications and the sentinel unit.
+The $a$-side uses equality of code bits. At a unique
+$b$-address the three-bit halt pattern is forbidden. Enumerate
+the at most two-bit premises for each next bit and use one
+clause containing the opposite $C$-literals of the premise
+and the required $a$-posting. Thus there are $O(l)$ clauses
+of width at most three per rail head. The seed contributes only
+singleton guards. On unique addresses the clauses impose
+exactly the displayed updates; their behavior on doubled
+postings is an allowed monotone extension.
 
 All literals have one fixed color at each input within each loss
 predicate, so minimizing the clauses on each observer facet gives
@@ -110,6 +130,70 @@ the canonical lists, as in \cref{core:thm:compact-depth-upper-bounds}.
 The state transition theorem gives the required number of slots;
 \cref{core:thm:completion-fold-schedule} yields the depth bound.
 \end{proof}
+
+\paragraph{Binary clauses in a state transition.}
+The state-transition construction has polynomial depth if the
+valid states and the edge relation on unique addresses are
+given by 2-CNF. Let $D_j$ be the states from which a path of
+$j$ edges starts, beginning with all valid states at $D_0$.
+Each $D_{j+1}$ is the existential projection of the edge formula
+conjoined with $D_j$ on its successor coordinates. It is again
+2-CNF: eliminating a variable by resolution keeps clauses of
+size at most two. The $D_j$ decrease, and whenever containment
+is strict a new unit or binary clause, or the empty clause,
+becomes a consequence. There are only $O(m^2)$ such clauses
+on $m$ state bits. The chain therefore stabilizes in $O(m^2)$
+steps. A state in the stable set can follow edges there
+indefinitely and reaches a cycle. Every state outside it has
+finite path length at most $O(m^2)$. Iterating the normalized
+2-CNF consequence sets computes membership and finite path
+lengths in polynomial time.
+
+In the dual-rail encoding with a common transition formula,
+width-two clauses of the state and edge tests restrict on unique
+addresses to 2-CNF clauses on the address bits. Thus such tests
+give only polynomially many slots for a feasible marked query,
+by \cref{core:thm:guard-transition-depth}. This applies also
+when some bits encode auxiliary registers, provided they are
+counted among the state bits.
+
+The quadratic finite-path bound is attained in order of growth.
+Take two rings of Boolean registers with consecutive lengths
+and shift each ring by one position per step. The copy rules
+are 2-CNF. Forbid a transition out of a state where the first
+register of both rings is one, using a two-literal clause.
+Start with a single one on each ring, one step after their
+alignment at the first registers. The first return to alignment
+takes the product of the lengths minus one steps, by coprimality.
+The reachable path therefore has quadratic length and no cycle.
+
+The same argument allows explicitly listed control modes when
+each mode has at most one possible successor mode. Keep one
+2-CNF $D_j$ per mode and project the edge formula to its known
+successor's coordinates. A strict step adds an implicate in
+at least one mode, so $s$ modes stabilize in $O(sm^2)$ steps
+for $m$ data bits. The argument also allows several edge
+formulas per mode if their combined relation is 2-CNF and
+they have that same successor mode.
+
+A constant number of state-dependent 2-CNF pieces behaves
+differently. The rotating counter above, before the register
+split, is already an acyclic example with exponential path
+length. Split its relation according to the old values of
+$p_{l-1}$ and $d$. In each of the four pieces the halt test
+is either absent or a unit condition on $x_0$. The appended
+bit copies or negates $x_0$, the next carry is a constant or
+copies $x_0$, and each next flag is either a copy or zero.
+All other data updates are copies. Validity of the flags and
+the fixed sentinel remains 2-CNF. The pieces have disjoint
+source domains, so their union is deterministic. In the
+backward iteration a state can now use whichever piece its
+bits select. The union of the projected sets need not be
+2-CNF, and the counter exhibits exponentially many strict
+steps. Thus the quadratic bound concerns a common 2-CNF
+relation or a statically determined mode sequence. This
+piecewise relation alone does not provide width-two source
+guards for the counter.
 
 \paragraph{Ordinary source queries.}
 The rail inputs can themselves require long witnesses. This matters
@@ -119,17 +203,17 @@ shallow terms.
 
 \begin{theorem}[Depth forced by an ordinary rail]\label{core:thm:rail-transition-depth}
 For every fixed $K\ge3$ and $l\ge2$ there are source bounds on the
-$8l$ rails of the counter, with $O_K(l^2)$ posting occurrences in
-their canonical prime lists and at most five per prime guard.
+$16l+8$ rails of the counter, with $O_K(l^2)$ posting occurrences in
+their canonical prime lists and at most three per prime guard.
 One core operation respects the bounds and supplies each rail at
 every probe with that rail at $k\ne c$ and all other rails at $c$.
-For the rail selecting zero at the highest data bit of the $a$-group,
-any bounded witness supplying $a$ at this probe needs at least
-$l2^l-1$ owner slots. It also uses at least one $a$-group rail from
-every lower data bit.
+For the zero sentinel rail of the $a$-group, any bounded witness
+supplying $a$ at this probe needs at least $2l2^l-1$ owner slots.
+It also uses at least one $a$-group rail from each of $l$
+disjoint groups of address coordinates.
 \end{theorem}
 \begin{proof}
-Use the bounds of \cref{core:cor:width-five-depth} on the rail
+Use the bounds of \cref{core:cor:width-three-depth} on the rail
 sources, with no distinguished input. Add to each loss the condition
 that the rival group's owner postings meet every pair in its group.
 This is one clause of width two per pair and guarantees that some
@@ -157,9 +241,9 @@ $b$-helper can reset: each helper uses one rail per pair and hence
 contains a $c$-input. The union of the spines starting at the
 various rails supplies all the requested marks.
 
-For the lower bound, take $v$ to be the indicated high zero rail.
-From the initial state the first $H=l2^{l-1}$ states have high bit
-zero. Consider a path from an occurrence supplying $a$ at the probe
+For the lower bound, take $v$ to be the zero sentinel rail.
+All states on the path from the initial state have sentinel
+zero, and the path length $H$ is at least $l2^l$. Consider a path from an occurrence supplying $a$ at the probe
 for $v$ in any scheduled term. At each slot combine its siblings
 into one helper by associativity. On each comparison within these
 $H$ states, $v$ is still posted at $a$, and the $c$-postings are
@@ -178,23 +262,26 @@ exists and is strictly later. At the equal-address comparison for
 $t$ this forces a later $L_b(t)$ in turn. The resulting chain has
 $2H-1$ distinct positions on the path.
 
-For a lower data bit $j$, take the prefix ending at stage zero
-with data $2^j$ and carry one. It still has high bit zero, and its
-address differs from $s_0$ in exactly bit $j$. If the term uses
-neither $a$-group rail at bit $j$, its $a$-helpers have the same
-reset positions at the two addresses. The chain ending with the
-last $a$-reset of this prefix would then give $L_a(s_0)>L_b(s_0)$.
-The initial equal-address comparison forces $L_b(s_0)>L_a(s_0)$,
-a contradiction.
+For any data bit $j$, take the even-step prefix ending at
+$(A_j^*,f(A_j^*))$, where $A_j^*$ is at stage zero with data
+$2^j$ and carry one. Relative to the initial address, only
+the $j$th data coordinate in $A$ and the coordinates of $f(A)$
+depending on it can change. These groups are disjoint for
+different $j$: rotation sends each old data bit to a distinct
+output and only $x_0$ affects $e$. If the term uses no $a$-group
+rail from this group, its $a$-helpers have the same reset
+positions at the two addresses. The chain ending with the
+last $a$-reset of this prefix would then give
+$L_a(s_0)>L_b(s_0)$, contrary to the initial comparison.
 \end{proof}
 
 \begin{corollary}[Exponential depth from complete prime lists]
 \label{core:cor:exact-prime-exponential-depth}
 For fixed $K\ge4$ and $l\ge2$ there is a core operation on $O_K(l)$
 inputs whose complete canonical prime lists have $O_K(l^3)$ posting
-occurrences and width at most six. Every owner schedule for the
-operation has at least $l2^l-1$ slots, so its least completion depth
-is at least $(l2^l-4)/(K+6)$.
+occurrences and width at most four. Every owner schedule for the
+operation has at least $2l2^l-1$ slots, so its least completion depth
+is at least $(2l2^l-4)/(K+6)$.
 \end{corollary}
 \begin{proof}
 Use the rail bounds and the spines from
@@ -205,12 +292,12 @@ $\{c\}$. The union of the spines has exactly the unanimous
 $c$-profile. Apply \cref{core:thm:succinct-profile-cap} with the
 unanimous profile, using an unused owner for every $k_v$.
 The canonical lists before the cap have $O_K(l)$ clauses per head,
-each of width at most five. There are $O_K(l)$ selector inputs,
+each of width at most three. There are $O_K(l)$ selector inputs,
 and the cap unions each guard with at most one new posting at $c$.
 This gives the size and width stated.
 
 Every scheduled realizer yields a bounded rail word of the same
-schedule with unanimous $c$-profile. At the probe for the high zero
+schedule with unanimous $c$-profile. At the probe for the zero sentinel
 rail of the $a$-group, that word cannot give $\{c\}$, and only
 $a,c$ occur in the inputs. It supplies $a$, so
 \cref{core:thm:rail-transition-depth} bounds its schedule from
@@ -322,7 +409,7 @@ that location and the constant-size control and symbol tests suffice.
 Out-of-bounds moves may be sent to rejection. Each nonterminal
 control has two named moves, duplicating a move if needed.
 
-As in \cref{core:cor:width-five-depth}, impose the pair and validity
+As in \cref{core:cor:width-three-depth}, impose the pair and validity
 clauses at each rail head. For the $b$- and $d$-groups, a local rule
 requiring a successor bit gives one clause consisting of the opposite
 $c$-literals for its premises and the required $a$-posting. Terminal
@@ -356,13 +443,14 @@ supplying any accepting strategy as part of the input.
 
 \begin{theorem}[Exponential-time hardness from complete prime lists]
 \label{core:thm:exptime-complete-guards}
-For each fixed $K\ge4$, deciding whether complete canonical prime
+For each fixed $K\ge3$, deciding whether complete canonical prime
 lists describe a core operation is EXPTIME-hard under polynomial-time
 many-one reductions, even with a fixed bound on prime width. The
 reduction produces nonempty outputs and lists agreeing on observer
 overlaps.
 \end{theorem}
 \begin{proof}
+First take $K\ge4$. The three-owner construction is given below.
 Start with the machine game of \cref{core:cor:exptime-bounded-source}.
 Use an entry state and an execution state for each configuration,
 distinguished by one extra bit. An entry state is a disjunction

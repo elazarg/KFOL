@@ -35,6 +35,3685 @@ assignment. The negative queries have polynomial total size, giving a
 reduction from unsatisfiability. Here the number of inputs varies;
 the bounded-arity test below applies even when the owner set varies.
 
+\paragraph{Recognizing a greatest profile completion from primes.}
+Let every input be live. For each owner $r$, choose an observer
+different from $r$ and use its lists to compute an upward family
+$\mathcal W_r$. A coalition $A$ belongs to this family if, for
+every $i\notin A$, the $r$-postings of $A$ hit every prime at
+$i$ on the chosen facet. Observer agreement makes this independent
+of the choice. These are precisely the profiles forced by exact
+realization, by \eqref{core:eq:total-monochromatic-source}.
+
+The operation prescribed by these pure profiles can itself
+be extracted in canonical form. Assume the reconstructed
+candidate has nonempty outputs. Spanning coalitions at two
+distinct owners cannot be disjoint: posting them together
+would force both singletons by antitonicity. Thus define an
+operation to return the prescribed singleton when some
+block spans and to return input union otherwise. It bounds
+the candidate and has the same pure profiles, whether or
+not those profiles are jointly realizable by a core term.
+
+To construct its lists, express $\mathcal W_r$ by the
+monotone clauses $\{i\}\cup G_r$ for all heads and prime
+guards on a facet seeing $r$, where $G_r$ is the set of
+inputs excluded at $r$ by the guard. At a queried head
+$j$, restrict the clauses to $j$ absent and minimize them.
+For each visible owner whose restricted profile can win,
+choose one restricted clause and exclude its postings at
+that owner. The unions of these exclusions over the chosen
+clauses are the canonical prime list. Indeed a mark survives
+exactly when each visible profile fails some clause. The
+products are an inclusion antichain, and their minimal
+transversals meet all clauses of some one owner, so they
+are consistent. This proves canonicity by
+\cref{core:thm:guard-consensus}. The products give polynomial
+size and construction time at fixed $K$, regardless of the
+number of minimal winning coalitions.
+
+The candidate is a core greatest profile completion exactly when
+the families $\mathcal W_r$ satisfy the common-source condition
+and every negative source probe with coloring $d$ has
+$d_r\in\mathcal W_r$ for some visible owner $r$.
+Indeed a spanning block removes every foreign source outside that
+block, by antitonicity. Thus the second test gives equality with
+the operation returning the prescribed singleton on a spanning
+block and union elsewhere. Conversely a greatest completion
+can omit a mark only by such a singleton at the probe, since
+the marked input supplies the observing winner to the union.
+The profile theorem and greatest-completion construction realize
+the operation when the two tests pass.
+In particular the second test can be made by comparing the
+candidate lists with the extracted canonical lists.
+
+Both failures have compact certificates in the complete prime
+lists. For common source, give one spanning coalition per owner
+with empty intersection. For the second test, give a negative
+probe and, for each visible owner $r$, an input outside its block
+with an enabled prime on the pure-$r$ probe. This second
+test also admits a ground-set formulation, which will allow
+constraints on the remaining losses below.
+Choose the negative head and facet, then enumerate one
+outside input and one prime per visible owner, as in the
+certificate. For each $r$, forbid the $r$-posting at the
+chosen input and all $r$-postings in its chosen prime.
+A witnessing loss exists exactly when the remaining posting
+ground meets every prime at the negative head. If it does,
+minimize the ground to a transversal of those primes.
+Canonicity ensures this transversal is consistent by
+\cref{core:thm:guard-consensus}. All the forbidden postings
+remain absent. Thus no satisfiability search is needed once
+the nonspanning witnesses are fixed.
+
+For the common-source test, label each input $i$ by the owners
+that can capture it on a pure posting of all other inputs.
+An input omitted by a spanning coalition must have that
+coalition's owner as a label. If every input has at most one
+label, a common-source failure therefore requires every input
+to have a label, and it exists exactly when for each $r$ the
+complement of the inputs labeled $r$ spans at $r$. These are
+the largest possible coalitions after the forced omissions.
+Prime width one implies this single-label hypothesis: two
+labels would require every prime on a facet seeing both owners
+to contain a posting at each of them. A live input has a prime
+on that facet, so this is impossible at width one. It follows
+that recognition as a greatest profile completion is polynomial
+at prime width one for fixed $K$.
+
+The common-source test alone is coNP-complete already at
+$K=3$ and width two. Take an undirected graph without isolated
+vertices and adjoin a disjoint triangle. At vertex $i$ require
+a loss if all its neighbors are posted at any one owner.
+On a facet the two visible owners each give one loss, and the
+canonical primes choose one posting from each of those losses.
+Their minimal transversals are exactly the two consistent loss
+patterns, so canonicity follows from
+\cref{core:thm:guard-consensus}. The candidate has nonempty
+outputs: at least one vertex of the triangle retains its menu,
+since if all three are captured their menus must be singletons
+and each vertex must differ from its two equal neighbors.
+The pure-$r$ spanning coalitions are precisely the vertex
+covers, since every vertex outside such a coalition needs
+all its neighbors inside. Three vertex covers have empty
+intersection exactly when their independent complements cover
+the graph, which is equivalent to three-colorability. The
+triangle preserves three-colorability, completing the reduction.
+
+Hardness also holds for exact recognition when every loss is
+explained by a singleton outcome. For any fixed $K\ge3$, start
+with a graph for $K$-colorability and adjoin a disjoint triangle.
+Use the vertices as inputs and prescribe the same winning family
+at every owner, namely the vertex covers. Two covers intersect:
+otherwise their independent complements would cover the graph
+and make it bipartite.
+Thus at a valuation at most one owner's singleton block can
+be a vertex cover. Define the candidate to return that atom
+when present and otherwise to return input union. Its singleton
+profiles are exactly the prescribed ones, since an input union
+can be a singleton only at unanimity.
+
+The complete prime lists have polynomial size. At head $i$
+on a facet, a mark survives exactly when each visible owner
+has an edge with no endpoint posted at that owner. Form one
+guard per choice of an edge at every visible owner, taking
+the union of their posting exclusions and omitting postings
+at $i$. To see canonicity, a set hits all these guards exactly
+when it hits the edge exclusions of at least one visible owner
+on every edge. A minimal transversal therefore lies entirely
+at one owner and is consistent. Minimize the guard list by
+inclusion and apply \cref{core:thm:guard-consensus}.
+Its width is at most $2(K-1)$.
+
+By the profile theorem the candidate is core exactly when
+every selection of $K$ vertex covers has nonempty intersection.
+Their independent complements can cover the graph exactly
+when it is $K$-colorable. Thus recognition is coNP-complete
+even for candidates with no losses left over after accounting
+for their singleton outcomes, at width four for $K=3$.
+
+Two vertex-cover profiles also give a direct support
+obstruction at width four, independent of $K$. Let $G$ be a
+nonbipartite graph on $V$. Use its vertex covers as the winning
+coalitions at two distinct owners and use unanimity at every
+other owner. The profile theorem applies: two vertex covers
+intersect since disjoint covers would give a bipartition,
+and every other winning coalition is $V$. Let $C$ be the
+greatest completion of those profiles. At a marked head no
+unanimous owner can capture it; hence the same edge-guard
+calculation uses only the two cover owners and gives width
+at most four.
+
+A set $S\subseteq V$ is the support of a nonempty bounded
+helper below $C$ exactly when $G[S]$ is nonbipartite. For
+necessity, a vertex cover of $G[S]$ extends to a cover of
+$G$ by adding every input outside $S$. On the resulting
+singleton probe at either cover owner, the original bound
+therefore forces that owner's singleton. A helper on $S$
+must have every vertex cover of $G[S]$ as a winning
+coalition at both owners. If $G[S]$ is bipartite its two
+sides are disjoint covers, contrary to common source.
+Conversely, if $G[S]$ is nonbipartite, use its two cover
+profiles and unanimity on $S$ to form the greatest completion
+on $S$. Every cover on $V$ restricts to a cover on $S$, so
+this helper respects the singleton outputs of $C$ and is
+bounded by input union on its other valuations. It uses
+every input in $S$ at the neutral coloring.
+
+Taking $G$ to be any odd cycle forces every bounded helper
+to use all $|V|$ inputs. No owned fold is bounded: for each
+head the other inputs cover the cycle, so that head has
+losses at both cover owners, and a fold cannot realize both.
+Consequently even with arbitrary owned folds available the
+bounded-arity saturation hierarchy needs level $|V|$ on
+these exact width-four operations, for every $K\ge3$.
+The operations have completion depth one, since they are
+greatest completions on the input projections.
+
+The support test extends to every greatest profile completion.
+Let $f_r$ be its singleton profiles and fix a nonempty set $S$.
+On $S$ put $g_r(A)=f_r(A\cup(V\setminus S))$. Every bounded
+helper supported there must have profiles at least $g_r$:
+post the omitted inputs at $r$ when testing that profile.
+Thus the $g_r$ must have common source. Conversely if they
+do, their greatest completion on $S$ is bounded. Whenever
+the original gives a forced singleton, the helper gives that
+same singleton, and elsewhere the original gives full union.
+Moreover this is the greatest bounded helper on $S$: any
+other helper must give each forced singleton and is bounded
+by the union on $S$ elsewhere.
+
+This criterion uses just the singleton-profile clauses read
+from the source primes. In the CNF for $f_r$, keep exactly the
+clauses contained in $S$. They form the CNF for $g_r$. An
+empty common intersection is equivalent to an assignment
+of an omitted owner to each input of $S$ such that no kept
+clause is entirely assigned to its owner. One direction
+chooses one owner omitting each input from the winning
+coalitions; the other takes the complements of the assigned
+sets. Thus $S$ supports a helper exactly when this coloring
+is impossible. Given a proper marked query on $S$, the
+greatest helper supplies its head exactly when, for each
+owner, some kept clause is disjoint from the posted coalition
+of that owner. At a successful probe it takes its union case.
+
+When $S$ supports a helper, its greatest helper has prime
+width no larger than the original. At a head $i\in S$, take
+the clauses for each visible owner with $i$ disallowed, since
+the head is unposted. The primes are the minimal unions of
+one failed clause per owner that can capture $i$. Restriction
+to $S$ deletes precisely those clauses mentioning removed
+inputs, and leaves the other clauses unchanged. An owner
+can capture $i$ on $S$ exactly when it can do so on $V$,
+by testing the full coalition omitting $i$. Therefore the
+new primes are just the original primes using only $S$.
+The same filtering gives the formal source lists before
+checking common source. If some $g_r$ wins at the empty
+coalition, reject the support immediately. Otherwise at
+width at most three the common-source test below applies
+to the restricted profiles and their filtered lists. Thus
+specified support feasibility is polynomial for fixed $K$.
+
+For larger palettes, hardness already holds at width five.
+Reduce 3CNF satisfiability using one input per literal, and
+three further inputs $z_{ab},z_{ac},z_{bc}$ for distinct owners
+$a,b,c$. At $a$ require both incident inputs $z_{ab},z_{ac}$
+and at least one literal input per formula clause and per
+variable pair. At $b$ require $z_{ab},z_{bc}$ and at least
+one input per variable pair. At $c$ require $z_{ac},z_{bc}$
+and all literal inputs. Use unanimity at all other owners.
+These monotone coalition families are pairwise intersecting
+across owners, since each pair of the three displayed owners
+shares its required input. The operation returning the unique
+winning singleton when present and input union otherwise is
+therefore well defined, with exactly these profiles.
+
+For an empty common intersection, assign each input to an
+owner whose winning coalition omits it, and enlarge the
+coalitions to complements of those assigned sets. The three
+inputs $z_{ab},z_{ac},z_{bc}$ must be omitted at $c,b,a$,
+respectively. Each literal input can be omitted only at $a$
+or $b$. Declare a literal selected when it is omitted at $b$.
+The pair clauses at $a$ require at least one selected literal
+per variable, and the pair clauses at $b$ require at most one.
+The formula clauses at $a$ then require that this assignment
+satisfy the formula. Conversely any satisfying assignment
+gives the required omissions and hence an empty intersection.
+
+At a head, omit its input from each coalition CNF and drop
+the owners whose restricted profiles cannot win. The canonical
+prime guards are again the minimized products of failed clauses
+at the visible remaining owners, by the same transversal
+argument as for vertex covers. At a literal head only $a$
+and $b$ can win without it, giving width at most $3+2=5$.
+At each additional head only one owner can win without it,
+giving width at most three. The lists are polynomial in the
+formula and every loss is explained by a singleton outcome.
+
+At width at most three, exact recognition as a greatest profile completion
+is polynomial for fixed $K$. First check that every loss has a
+spanning block, and label inputs by the owners that can omit
+them from spanning coalitions, as above. For an input $i$ with
+two or more labels, at most one label can lack a unique
+minimum spanning coalition omitting $i$.
+To see this, consider the minimized monotone clauses of the
+$r$-profile restricted to omit $i$. For any facet seeing $r$
+and another label of $i$, the primes at $i$ are unions of one
+such clause of postings per visible label. Indeed the mark
+survives exactly when each of those profiles has a failed clause.
+These unions form an antichain, and their minimal hitting sets
+are monochromatic, proving canonicity. Each visible label
+contributes a nonempty clause, since the empty coalition does
+not span. If two labels both have nonsingleton clauses, choose
+those clauses on a facet seeing both to get width at least four.
+Call a label \emph{principal} when its restricted clauses are
+all singletons. Their union gives the minimum $M_{i,r}$.
+
+To test for empty common intersection, assign each input to
+one owner whose spanning coalition will omit it. An input
+with no label makes this impossible, and inputs with one
+label have forced assignments. For every owner guess either
+one representative input with multiple labels assigned there
+at a principal label, or that there is no such input. Require
+the representatives to be distinct and their guesses to respect
+these labels.
+If a representative is $i$ at $r$, the coalition at $r$ must
+contain $M_{i,r}$. Reject a guess if any already assigned
+omission conflicts with this minimum. Each remaining input
+with multiple labels can be assigned to any of its labels
+with a representative whose minimum excludes it. Do this
+whenever possible, since it imposes only the already checked
+minimum there and leaves the other coalitions larger. Every
+input still unassigned must go to its unique nonprincipal
+label at an owner with no representative, or the guess fails.
+For each owner with no representative, test whether the
+complement of its resulting omissions spans.
+These tests are sufficient: the complement of all inputs
+assigned to an owner with a representative omits that
+representative and contains its minimum. They are necessary
+by choosing representatives of any actual assignment.
+There are only polynomially many guesses for fixed $K$.
+
+At width at most three, the same structure gives a bounded
+support for each positive mark, independently of the input
+count. Write $d=4$, the bound on the size of the clauses in
+the profiles read from width-three primes. In the omitted-owner
+coloring, a principal label $r$ of $x$ means that the sets
+omitted at $r$ and containing $x$ are exactly the subsets of
+one maximum $U_{x,r}$ containing $x$. Each input has at most
+one nonprincipal label. The following search either finds an
+omitted-owner coloring or certifies its impossibility on a
+bounded induced set.
+
+At a search node, some owners are committed to a principal
+representative that must be omitted there. Reserve those inputs
+for their committed owners. Every other input belonging to a
+committed maximum can be assigned to a compatible committed
+owner: this adds no further restriction at that owner and
+relaxes any uncommitted owner. Inputs with no such option take
+their unique nonprincipal label at an uncommitted owner if
+they have one. If an input has no such default, branch over
+its principal choices at uncommitted owners and commit the
+chosen owner to that input. Otherwise test the default
+omissions. If they violate a forbidden profile clause at an
+uncommitted owner, some input in that clause must move to a
+principal choice at an uncommitted owner. Branch over those
+choices and commit accordingly. If there is no violation,
+the assignments give a coloring. A branch set with no choices
+is a failure.
+
+Each step commits a new owner, so the depth is at most $K$ and
+the branching is at most $dK$. In a tree with no solution,
+retain each input with no default and all inputs of each
+violated clause used for branching or failure. Every reserved
+representative is among these inputs. This keeps at most
+$d\sum_{j=0}^K(dK)^j$ inputs. The same tree certifies failure
+on the retained set: compatibility with a committed maximum
+is unchanged there, and every recorded violated clause is
+still present. The branch choices still exhaust what any
+coloring respecting the commitments could do. This is an
+induced support with common source.
+
+To supply a specified positive, also keep its head and one
+profile clause per owner disjoint from the query's coalition
+at that owner. Enlarging the retained set preserves common
+source, since any omitted-owner coloring would restrict to
+one on the smaller set. The added clauses ensure that the
+greatest bounded helper on this support supplies the mark.
+Thus the bounded-arity hierarchy is exact on greatest profile
+completions of width at most three at a level depending only
+on $K$. The odd-cycle example shows why this does not extend
+to width four in this class.
+
+It follows that the class of finite unions of width-three
+greatest profile completions is generated under union by
+completions on a bounded number of inputs, with the bound
+depending only on $K$. Indeed apply the marked-support
+construction to each summand. Its bounded helpers can be
+taken to be greatest profile completions, and filtering
+the summand's primes preserves their width. Their union gives
+all the summand's marks and hence the summand itself. The
+converse uses the same bounded completions as summands.
+
+There is consequently a polynomial-size circuit for the
+greatest union of this class below any complete prime budget,
+for fixed $K$. Enumerate the bounded supports and the finite
+tables of width-three greatest profile completions on them.
+For a table to lie below the budget, test each of its positive
+source probes and each compatible observer facet. Allow
+subcolorings of the probe on its support and all postings
+outside its support. This entire box must be positive in
+the budget, which is equivalent to containment of one of
+the budget's canonical primes in its exclusions. Necessity
+holds because the table supplies the mark throughout the
+box. Sufficiency follows by testing every support restriction
+of a full query. Each containment test scans the input lists.
+Take the pointwise union of the successful tables, allowing
+zero for an empty union. This gives the greatest operation
+in the stated class below the budget without constructing
+its canonical primes. Recognizing equality is in coNP: a
+positive query absent from the circuit certifies inequality.
+
+Checking a guard for an explicitly supplied union is already
+coNP-complete, even for the empty guard on one facet and
+summands of width at most three on at most five inputs.
+For a reduction from 3SAT, use a common marked head $h$, one
+input $x_v$ per Boolean variable, and a private input $z_j$
+for each clause. Choose distinct owners $a,b,c$. For clause
+$j$ take a greatest profile completion on $h,z_j$ and its
+at most three variable inputs. At $a$ require $z_j$ and some
+positive literal input in the coalition. At $b$ require
+$z_j$ and some negative literal input. If a sign does not
+occur, use unanimity there. Use unanimity at every other
+owner. All winning coalitions contain $z_j$, so the profile
+theorem makes each summand core.
+
+At an unposted head, active profile clauses consist of the
+selector unit and the set of literal inputs of that sign,
+with the head deleted. If the selector is the head, neither
+active owner can win. A unanimity owner cannot lose an
+unposted head. The prime products of failed clauses therefore
+have width at most the number of literals of the original
+clause, hence at most three. The constant-size tables or
+their canonical lists can be produced directly.
+
+On facet $c$, a clause summand loses $h$ exactly when its
+selector is posted at a sign's owner and at least one of
+that sign's inputs is posted there. The union loses $h$
+exactly when all clause summands do. Any such coloring gives
+a consistent partial truth assignment satisfying every
+clause, by interpreting $a$ as true and $b$ as false. Conversely
+a satisfying assignment permits choosing each private selector
+at the owner of a satisfied literal. Thus the empty guard is
+sufficient exactly when the formula is unsatisfiable. A
+coloring losing the mark certifies failure in polynomial
+time. This is a hardness result for the guard test of a given
+union, even when there is no search for its summands.
+It also gives coNP-hardness of checking whether a projection
+is redundant in a supplied union. Compare the union with its
+sum with the projection at $h$. Unsatisfiability makes the
+mark at $h$ positive on every facet, since any losing coloring
+on any facet would give a satisfying truth assignment. In
+the satisfiable case facet $c$ already distinguishes them.
+
+At width two, in contrast, complete prime lists are closed
+under pointwise union and can be computed in polynomial time
+even when $K$ varies. On a fixed facet a coloring loses in
+the union exactly when it hits every prime of every summand.
+Summands that do not use the head impose no requirement.
+Conjoin these unit or binary clauses with posting consistency.
+Introduce a permission indicator for each posting and require
+that an old posting implies its permission. Eliminate the old
+postings existentially. This gives a 2-CNF in the permissions
+by resolution. It is monotone, so removing tautologies and
+deleting negative literals gives its positive form, as in the
+base elimination argument. Each surviving clause gives a
+guard excluding all its postings, and inclusion minimization
+gives exactly the canonical primes. Equivalently scan guards
+of size zero, one and two by 2SAT, since the projection proves
+that larger primes cannot occur.
+
+For fixed $K$, membership in the class of unions of greatest
+profile completions of width at most two is therefore polynomial
+from complete prime input. Use the bounded-support construction
+to enumerate and test the admissible width-two summands, then
+compute the complete primes of their union by this rule and
+compare the lists. This also recognizes the class when the
+input width is unrestricted, since its members have width at
+most two by the same closure argument.
+
+One owned binary gate on width-two inputs has canonical prime
+width at most five, with a direct polynomial construction.
+For $F\star_r G$ on facet $r$, the source test is just union.
+On a different facet, begin with the prime list of $F+G$.
+A guard for the owned gate must suffice for that union and
+exclude the $r$-singleton tests of both children, with the
+marked head unposted. The failed singleton tests have guards
+given by the children's $r$-profile clauses after disallowing
+the marked head. Those clauses have width at most three by
+the profile construction from source primes.
+
+Any sufficient guard for $F+G$ already prevents at least one
+of the two singleton tests throughout its box. Otherwise both
+tests win on the maximal allowed $r$-coalition, where neither
+child can supply the mark. Thus for each union prime, add one
+failed-profile clause for the other child if needed, and
+minimize the resulting guards. This produces all primes:
+any sufficient exclusion set contains a union prime, which
+already handles one child, and it must also contain a clause
+blocking the remaining child. The sharp example uses distinct
+owners $r,s$, an $s$-fold on $h,u,v$, and a disjoint $r$-fold
+on three other inputs. Join them by $\star_r$. The guard at
+$h$ on a facet seeing both owners excludes both $s$-postings
+and all three $r$-postings.
+
+More generally a single nonempty $r$-fold of $t$ width-two
+children has width at most $2+3(t-1)$, by first taking their
+union and adding failed-profile clauses only at children
+whose test the union prime does not already prevent. The
+same disjoint example with $t-1$ native triples attains this
+bound for $t\ge2$. Even width-one children can require an
+exponentially large output list. Alongside a projection at
+$h$, take $m$ children each a union of two $r$-folds on
+disjoint pairs, all inputs distinct. Each such child is an
+$r$-singleton exactly when at least one member of each of
+its two pairs is posted at $r$. The mark at $h$ survives
+the outer $r$-fold exactly when every such child fails that
+test. Its primes on a foreign facet choose one whole pair
+of exclusions per child, giving $2^m$ primes of width $2m$.
+
+The inverse question also has a polynomial test for a fixed
+child arity bound $b$. Given complete primes for a candidate
+$F$ and a root owner $r$, ask whether $F$ is an $r$-fold of
+core children of arity at most $b$ and width at most two.
+Read the candidate native profile $f_r$ from its primes by
+the pure-coalition test. Retain a child $H$ just when its
+$r$-profile implies $f_r$ and its source marks lie below $F$
+on probes where $f_r$ loses. These are necessary conditions:
+on other probes a realizing fold absorbs at $r$, while on
+nonabsorbing probes it takes the union of its children.
+
+Enumerate the constant-arity tables on all supports of size
+at most $b$. Profile implication is checked on the winning
+coalitions within each support, by monotonicity. For the
+source condition, take each child prime on a facet and each
+clause of the candidate's $r$-profile CNF. Adjoin the
+exclusions making that clause fail, ignoring postings at the
+marked head or hidden by the facet. Some prime of $F$ must
+be contained in the resulting exclusions. This tests an
+entire box at once. The boxes cover all nonabsorbing child
+marks because every losing native test misses some clause.
+
+If there are no retained children, reject. Otherwise one may
+take all of them. Their $r$-fold
+equals $F$ exactly when their native profiles have disjunction
+$f_r$ and their pointwise union covers the source marks of
+$F$. Once the profile equality holds, the admissibility
+conditions give the upper bound on the fold. Every positive
+source probe of $F$ lies outside the native singleton test,
+since a winning pure native coalition already blocks all its
+unposted heads. Thus covering these marks by the union is
+exactly the reverse inclusion. The canonical primes of this
+union are computed by the width-two rule, even if the outer
+fold itself has a large prime list.
+
+The profile equality is also polynomial for fixed $b$.
+The admitted wins are generated by coalitions of size at most
+$b$. Enumerate all candidate minimal wins up to that size and
+test that each appears. To test for a larger minimal win of
+$f_r$, choose $b+1$ inputs $T$ and for each $x\in T$ choose a
+profile clause meeting $T$ only at $x$. Exclude all other
+members of these chosen clauses. If the remaining ground set
+hits every profile clause, it can be minimized to a winning
+coalition still containing $T$, since the chosen clauses force
+their representatives. Conversely a larger minimal win gives
+such private clauses. There are polynomially many choices for
+fixed $b$. This completes the root test without extracting
+any losses of the candidate.
+
+If every child is itself an owned fold, there is a direct
+test even with unbounded child arity. Fix a possible child
+owner $s$. A nonempty support $S$ meets the nonabsorbing
+source conditions exactly when, for every input $i\in S$,
+facet and clause $D$ of $f_r$, some candidate prime at $i$
+is contained in the exclusions of $S$ at $s$ and $D$ at $r$.
+Omit postings hidden on the facet or at the head. This is the
+same box test, since the $s$-fold supplies $i$ precisely when
+none of its other members is posted at $s$.
+
+The test at a surviving input becomes weaker as its support
+grows, so within any allowed set there is a greatest support
+satisfying the source conditions. Find it by deleting inputs
+whose tests fail until stabilization. At $s=r$, first remove
+inputs whose singleton coalition fails $f_r$, since any
+member alone gives the native test of that child. At $s\ne r$,
+the child's native test is unanimity on its support. After
+pruning, reject an empty support and check that the greatest
+support wins $f_r$. If it
+does not, no smaller support can satisfy the native condition.
+
+For a positive source query at $i$, run this test with the
+allowed set omitting the query's $s$-coalition. An admissible
+child supplies the mark exactly when the resulting support
+contains $i$ for some $s$. For a requested native win on
+coalition $A$, use $A$ as the allowed set for every foreign
+child owner. For the native child owner, test whether its
+greatest support in the unrestricted set meets $A$. These
+are polynomial tests from the candidate primes. Requiring
+success at every positive source query and every native win
+is an exact criterion for a two-level fold at the prescribed
+root owner, by the preceding maximal-child argument. A single
+failed query certifies failure, so recognition is in coNP
+without listing the potentially exponential family of child
+supports.
+
+The universal guard test can already be hard for an explicit
+two-level fold with small children. Given a 3CNF formula,
+use two inputs $x_v^+,x_v^-$ per variable, a marked head $h$,
+and distinct owners $a,b,r$. For each variable take an
+$a$-fold and a $b$-fold each on $h,x_v^+,x_v^-$. For each
+formula clause take an $a$-fold on $h$ and the at most three
+inputs representing its literals. Join all these children
+by one $r$-fold. Every child has at most four inputs and
+prime width at most three.
+
+At a probe for $h$, no child can pass the $r$-singleton test:
+it is foreign to the child and would require $h:r$. The root
+thus acts as union on this mark. Losing the mark requires
+both variable tests to absorb at every variable. One input
+of its pair must then be posted at $a$ and the other at $b$.
+Each clause test requires at least one of its literal inputs
+at $a$. Hence a losing coloring gives a satisfying assignment,
+and every satisfying assignment gives such a coloring on
+facet $r$. This proves coNP-completeness of testing the empty
+guard on that facet for the supplied two-level fold. It also
+proves coNP-completeness of checking whether the same children
+have an unchanged pointwise union after adding the projection
+at $h$: the projection is redundant exactly when the formula
+is unsatisfiable. With at most three inputs per child, the
+universal test is polynomial: the child union has width two,
+and the guard must also prevent each child from testing
+singleton at the root owner. This last condition is tested on
+the maximal allowed coalition at that owner. Thus the arity
+threshold for supplied pure-fold children is sharp.
+
+Four-input children can also force exponentially many
+canonical primes in their pointwise union. In the preceding
+construction use variables $X_1,\ldots,X_n$, with unit clauses
+$X_1$ and $\neg X_n$. For each $i<n$, encode the two clauses
+$\neg X_i\lor X_{i+1}\lor z_i$ and
+$\neg X_i\lor X_{i+1}\lor w_i$, where $z_i,w_i$ are fresh
+slack inputs. Here a slack literal means its input is posted
+at $a$ and needs no opposite rail. This uses $O(n)$ children
+of width at most three. A coloring losing $h$ must break
+some implication $X_i\Rightarrow X_{i+1}$, so it must post
+both slack inputs at $a$ for at least one index. Conversely,
+any one such pair permits a loss by making the variables
+true up through its index and false thereafter.
+
+For each index exclude exactly one of its two slack postings.
+The resulting guard is sufficient on facet $r$, and removing
+any exclusion permits the corresponding losing coloring.
+Thus all $2^{n-1}$ choices are canonical primes of width $n-1$.
+The same primes occur at $h$ for the outer $r$-fold, since
+that fold acts as union at this probe. Hence the polynomial
+canonicalization of width-two unions fails at width three
+even for unions of pure owned folds with bounded arity.
+
+Both failures already occur in the union of just two
+operations given by their complete prime lists. Group all
+$a$-children of the constructions into one pointwise union
+and all $b$-children into the other. Each group is one-owner.
+At a head, losing in a group requires hitting the supports
+of all its folds containing the head, with the head removed.
+Those requirements all use the same posting owner, so all
+allowed postings can be made together. The complete primes
+on any visible facet are therefore exactly the inclusion
+minima of the exclusion sets of those supports. The first
+group has width at most three and the second at most two.
+Their lists have polynomial size and can be produced directly.
+Taking the union of these two operations gives the same
+coNP-hard guard test and, for the slack-chain construction,
+the same exponential canonical list. Thus the width threshold
+does not depend on a long list of summands or on a succinct
+presentation of either individual operation.
+
+Recognition of unions of pure folds from complete prime
+lists is coNP-complete, already at width four and source
+depth two, with two prescribed owners $a,b$. For the upper
+bound use only admissible $a$- and $b$-folds. At a positive
+query, for either owner start with the inputs not posted at
+that owner. Delete each input at which some facet has no
+prime contained in the exclusions of this support at the
+owner. The stable support is the greatest bounded fold
+support in that box, since a fold supplies its used head
+throughout exactly that exclusion box. A failed positive
+therefore certifies failure in polynomial time. The same
+upper bound works when all owners are allowed.
+
+The interaction between owners can be localized separately for
+each prime. Fix a head $i$, an observer $k$, and a listed guard $G$
+at that facet. For each allowed fold owner $r\ne k$, let $R_r(i)$
+consist of the controls other than $i$ reachable from $i$ in the
+graph of its usable primes, with edges from heads to controls.
+Here a prime is usable at $r$ if all its exclusions have color
+$r$, including the empty prime on any facet. This reachability
+set can use all facets, even though the probe itself uses only
+facet $k$: a support must be bounded at every facet. Survival of
+$i$ in the deletion test depends only on the $r$-postings in
+$R_r(i)$. In fact the reachable set together with $i$ is closed
+under taking usable controls, so the deletion rounds inside it
+read no status or survival bit outside it.
+
+For each control $j\ne i$, keep the colors $r\ne k$ that are
+allowed by $G$ at $j$ and have $j\in R_r(i)$. Call the set of
+controls with two or more kept colors $B$. To check the whole
+guard, enumerate one kept color at each control of $B$ and
+post every control with exactly one kept color at that color.
+Leave the other controls unposted. Run the deletion test at
+each of these probes, including the constant survival test
+for a fold at $k$ if it is allowed. All enumerated probes
+satisfy the guard. Conversely, any failed probe in the guard
+can first erase postings at colors that were not kept without
+affecting any test. Completing the remaining partial assignment
+as prescribed only adds relevant postings at each color, which
+preserves failure by monotonicity. Thus the guard is covered
+exactly when every enumerated probe survives at some owner.
+With $b=|B|$ the cost per guard is $O((K-1)^b K N)$, where
+$N$ is the total input and prime-list size. Checking every
+listed guard gives exact recognition for this fold fragment.
+The bound uses only collisions within a guard's relevant
+control sets and permits arbitrarily many controls exclusive
+to one owner.
+
+For hardness use the two retained literal inputs per
+variable as before. Let $C_a$ require at least one literal
+input of each variable at $a$, and a literal input at $a$
+from each formula clause. Let $C_b$ require at least one
+literal input of each variable at $b$. At new heads $u,v$
+prescribe the losses $C_a,C_b$ respectively. At one final
+head $g$ prescribe the loss predicate
+\[
+  (u:a\land v:b)\ \lor\ (u:a\land C_b)\ \lor\ (C_a\land v:b).
+\]
+All these predicates give complete prime lists directly.
+At $u,v$ use the clause exclusions on visible facets. At $g$
+block each of the three branches independently. Blocking the
+first branch excludes $u:a$ or $v:b$, which already blocks
+one mixed branch. Blocking the other takes at most three
+additional exclusions. Within a branch its allowed postings
+are consistent, so these tests are exact. Minimize their
+unions to obtain the canonical lists in polynomial time.
+
+In the greatest bounded fold union, all heads other than
+$g$ agree with the budget: the literal inputs are retained,
+and at $u,v$ the corresponding one-owner clause folds give
+exactly the prescribed coefficients. The native closure at
+$a$ captures $g$ exactly on $u:a\lor C_a$, and at $b$ exactly
+on $v:b\lor C_b$. Indeed the projected rows at $g$ give
+just the unit rule from the relevant head and the clause
+condition that already derives that head. At other owners
+the row at $g$ has an empty premise. Thus the greatest fold
+union adds precisely the possible losses from $C_a\land C_b$.
+These are possible exactly when the formula is satisfiable:
+each literal pair must be split between the two owners, and
+the $a$ choices satisfy the formula. In that case leave
+$u,v$ unposted to get a new loss, on a facet seeing both
+owners. Otherwise the original family is exact under the
+fold union. The positive instances even have a representation
+with at most five inputs per fold: at $g$ use the $a$-fold
+on $g,u$ and the inputs of each $C_a$ clause, and the
+corresponding $b$-folds using $g,v$ and the $C_b$ clauses.
+
+There is a direct polynomial characterization for unions of
+folds when every minimal loss is monochromatic. Work on the
+live inputs. Call a head retained if it has no loss. Every
+other head must have losses at just one owner $r$, and no
+minimal loss there can post a head having losses at a
+different owner. Indeed a head with an $r$-loss can occur
+only in $r$-folds: a foreign fold using the head would
+supply its mark on that pure loss. Every control in such an
+$r$-fold is therefore retained or also belongs to $r$.
+A minimal loss cannot depend on an omitted control.
+
+For each owner $r$ use the inputs $V_r$ consisting of its
+heads and the retained inputs. Let $\gamma_r(A)$ add to
+$A$ all heads losing on the pure $r$-posting of $A$.
+Subject to the owner and dependency conditions, the family
+is a union of folds exactly when every $\gamma_r$ is
+idempotent. Retained projections may be included in each
+owner group without changing any mark. A fold union gives a closure: the captured
+set is the intersection of the complements of those fold
+supports that miss $A$. Conversely a closure is realized
+by the folds on complements of its maximal closed sets
+missing individual heads, together with the retained
+projections. The surviving heads on a pure posting are
+exactly the union of the available supports. Since all
+losses at a given head use just its native owner, this
+also gives its exact mark at every mixed query.
+
+The closure test requires no listing of losses. For a
+prime at $h$ on a facet seeing $r$, write $E$ for its
+excluded inputs and put $M=V_r\setminus(E\cup\{h\})$.
+These are the maximal sets on which $h$ is still outside
+$\gamma_r$. Idempotence implies $\gamma_r(M)=M$ at each
+one. Conversely if all these sets are fixed, any head
+outside $\gamma_r(A)$ has such a maximal avoider containing
+$A$. Monotonicity keeps $\gamma_r(A)$ inside it, so a second
+application still omits the head. Thus one polynomial scan
+tests idempotence and the same complements synthesize the
+folds, with support size at most one more than prime width.
+The owner and dependency conditions are read directly from
+the prime lists: test pure full postings to find the loss
+owners and use the occurrence of a posting in a prime to
+detect a minimal loss using it.
+
+For mixed losses, ownerwise projections need not be idempotent
+even for an exact fold union. In general let $\gamma_r(A)$
+adjoin the heads having a loss whose $r$-block is contained
+in $A$, and close this map to $c_r$ by iteration. The budget
+is a union of folds precisely when a proper query loses its head
+whenever every $c_r$ captures it on the corresponding posted
+coalition. Indeed the complement of a closed set is a safe
+fold support, and $V\setminus c_r(p_r)$ is the greatest safe
+support avoiding the query's $r$-postings. Conversely any
+original loss forces every one of these captures. This gives
+the simultaneous criterion using the closed projections.
+
+For a strict closure step, use four inputs $x,y,z,w$ and the
+sum of the $a$-folds on $\{x,z,w\}$ and $\{x,y,z\}$ and the
+$c$-fold on $\{y,z\}$. At $x$ the minimal losses post $z:a$
+or both $y,w$ at $a$. At $w$ they post $x:a$ or $z:a$.
+At $y$ the loss is $x:a,z:c$, and at $z$ it is $x:a,y:c$:
+the alternatives that post the same input at both owners
+are inconsistent. On the set $\{z,w\}$, the first raw
+$a$-projection adds $x$ and the second adds $y$. Thus the
+idempotence test for monochromatic losses cannot be imposed
+on the raw projections of a mixed fold union.
+
+If a presentation has $t$ folds, there are at most $2^t$
+different input incidence patterns in their supports. Inputs
+with the same pattern are interchangeable in the operation
+and in every projected capture map. At each step all missing
+members of one such class are either added together or all
+left out, since the current set is fixed by their permutations.
+Each strict step therefore completes a new class. In this
+case every projected capture map stabilizes within $2^t$
+steps, irrespective of the sizes of the supports.
+
+The number of folds is also a parameter for exact recognition
+from complete prime lists. For a given $t$, test whether the
+family is a union of at most $t$ folds in time
+$f(t,K)N^{O(1)}$, where $N$ is the input list length. Partition
+the inputs by whether their transposition preserves all the
+prime lists, including their head indices. This is an
+equivalence relation, since transpositions with a common
+endpoint generate the third one. A representation by $t$
+folds has at most $2^t$ such classes: inputs of the same
+support incidence pattern are interchangeable. Reject if
+there are more classes.
+
+Guess the owner of each fold and, for each class and each
+of the $2^t$ incidence patterns, the number of inputs of
+that pattern, truncated at $t+1$. Check that the guesses
+can sum to the actual class size. For a saturated count,
+any excess may be put on that pattern. Construct one
+representative assignment of inputs to patterns meeting
+these counts. The guesses and the choice of representative
+do not lose a true representation. At a marked head, a
+loss of a fold union is witnessed by at most $t$ postings,
+one meeting each fold containing that head. Whether such a
+probe loses depends only on the incidence patterns of those
+posted inputs and the head. Any pattern assignment to
+these at most $t+1$ inputs possible in a true representation
+is also possible in the guessed representative with the
+same truncated counts, and conversely. The target is
+invariant under permutations within each class. Thus the
+two agree on all probes of size at most $t$, and hence on
+all probes by the small loss witnesses on both sides.
+
+Verify each representative without expanding its primes.
+For each fold and each head it uses, check that its
+owner exclusion box contains a target prime on every
+facet. This proves the lower inclusion. For the other
+direction, fix a target prime and look for a losing
+coloring avoiding its exclusions. Scan the inputs and
+keep a subset of the folds containing the head as a
+state. Posting the next input at an allowed owner hits
+the corresponding folds whose supports contain it, and
+leaving it unposted hits none. Reaching the full subset
+refutes this guard. There are at most $2^t$ states.
+This verifies equality in parameterized polynomial time
+and returns a representation on success.
+
+The recognition parameter extends to the number $t$ of
+gates in an arbitrary circuit of unbounded-arity owned folds
+and unions. Gates may be shared. Guess their acyclic circuit
+and owners, and distinguish input patterns by which gates
+receive the input directly as a projection. There are at most
+$2^t$ patterns, and again a true representation implies at
+most $2^t$ interchangeability classes in the candidate.
+A projection alone is tested separately. For each class
+guess the counts of the patterns, now truncated at $2(K+1)$,
+and assign the excess arbitrarily.
+
+To see why the larger truncation suffices, fix an observer.
+On its source probes there are $K+1$ menu types: the visible
+singletons, the neutral menu, and the unique marked menu.
+Refine each input class by the guessed patterns. Call these
+refined sets types of inputs. The circuit's value depends only
+on which menus occur in each type, because every direct use
+of a type sees the same set of menus and folds are idempotent.
+First, increasing or decreasing any saturated type counts
+preserves symmetry within each original input class, provided
+it holds before the change. A symmetry violation would be
+witnessed by a swap of two menus in one original class. The
+before and after menu-presence data of the swap depend only
+on the counts truncated at two in every type. Those counts
+can be reproduced at the old type sizes: a saturated type
+has enough space for the prescribed singletons and doubles
+and must have a repeated menu to receive the excess. The
+marked menu is never repeated. The same swap would therefore
+have violated the old symmetry.
+
+Next transfer the excess one input at a time between
+saturated types in the same original class. For any multiset
+of menus on that class, some nonmarked menu occurs at least
+three times, since the two types alone contain at least
+$4(K+1)$ inputs. By symmetry arrange two copies in the donor
+type and one in the recipient, with all other menus placed
+arbitrarily. Move one copy to the recipient. Each type still
+has the same menu-presence data, so the circuit gives the
+same output. Symmetry on both sides of the move extends
+this equality to all placements of the multiset. Hence
+any representative of the truncated counts of a true
+circuit still realizes the candidate.
+
+A representative is verified directly on the prime lists.
+For each head and facet enumerate the menu-presence data
+on all its input types, rejecting patterns that do not fit
+the counts or the unique marked head. Fix a representative
+input for each required menu in a type. Both the circuit
+and the target are invariant under permutations within
+that type, so these choices suffice. For a positive circuit
+pattern, test whether an old target loss can occur in it.
+Allow only the listed atoms in each type, with each chosen
+representative restricted to its own menu's posting or to
+no posting if neutral. This is an exclusion box. A loss
+in the box can be extended to the required pattern by
+posting the designated atoms and filling any forbidden
+neutral holes with an allowed atom. Extension preserves
+loss, so a prime containment test decides whether the
+whole pattern is positive in the target. For a negative
+circuit pattern, scan its target primes. A prime holds in
+the pattern if the fixed representatives respect it and
+every other input has some allowed menu respecting it.
+Presence is already guaranteed by the representatives.
+
+The number of type patterns and circuit guesses is bounded
+by a function of $t,K$; the per-pattern tests scan the
+candidate lists. Thus recognition and synthesis of such
+circuits are fixed-parameter tractable from complete primes.
+This includes the two-level fold case without requiring
+any separate enumeration of its root's winning coalitions.
+
+Full interchangeability alone does not bound the number of
+gates, even at prime width one. In fact a fully symmetric
+live width-one family has just two possibilities. Each facet
+has at most one minimal loss at each head. If present, that
+loss is invariant under all permutations of the other inputs,
+so it posts all of them at one owner. Two different such
+owners would share a foreign facet, which is impossible.
+Symmetry identifies the loss owner across heads. Thus the
+family is either input union or the sum of all pair folds at
+one owner $r$. In the latter family a head survives exactly
+when some other input is not posted at $r$. These descriptions
+also realize the two families.
+
+At any fixed prime width $w\ge1$, fully symmetric live core
+operations of sufficiently large arity are greatest profile
+completions. It suffices that
+\[
+ n-1>\min\{K(w-1),B(w)\},\qquad
+ B(w)=\max_{2\le\ell\le w}
+       \bigl(\ell-1+(w-1)\lfloor w/\ell\rfloor\bigr),
+\]
+where $B(1)=0$.
+Their profiles are cardinality thresholds $\tau_r$ by symmetry.
+Write $m=n-1$ for the controls of a marked probe. Pure postings
+lose the mark exactly when their owner meets its threshold,
+since all unposted inputs are interchangeable.
+
+At a loss, choose any prime orbit on a missing observer's
+facet. There is a prime because the head is live. Its guard
+has at most $w$ distinct positions; a position can be assigned
+to any control whose status it does not exclude. The entire
+orbit fails precisely when these allowed sets have no matching
+covering the positions. In particular $w$ neutral controls
+would permit a match. Thus if $m>K(w-1)$, some posted owner
+has at least $w$ controls in the loss, by counting the visible
+owners and the neutral status.
+
+There is also a palette-independent bound. A deficient set
+of $\ell$ positions has fewer than $\ell$ allowed controls
+in total. Every remaining control is posted at an owner
+excluded at all $\ell$ positions. There are at most
+$\lfloor w/\ell\rfloor$ such owners, since each must occur
+in the guard at every chosen position. If none has $w$
+controls, then
+\[
+ m\le \ell-1+(w-1)\lfloor w/\ell\rfloor.
+\]
+If $m>B(w)$, only deficiencies with $\ell=1$ remain. In
+that case each prime orbit has a position excluding every
+status of the controls. There are no neutral controls, since
+they are allowed at every position. Put $P$ equal to the set
+of posted owners. Every full assignment of the controls from
+$P$ then loses, since the excluding position in each orbit
+still has no allowed control.
+
+If $P$ has two distinct owners $a,b$, consider the $m+1$
+probe histograms with $j$ controls at $a$ and $m-j$ at $b$,
+for $0\le j\le m$. At each probe give the remaining input
+the full menu. Symmetry and loss of its source omit the
+observer. Omission independence
+(\cref{core:prop:omission}) now allows that input to be
+filled arbitrarily. Consecutive histograms can be placed
+compatibly: take $(j+1)$ atomic $a$ inputs and $(m-j)$
+atomic $b$ inputs, and free one $a$ for the first histogram
+or one $b$ for the second. Their outputs therefore agree
+with the same atomic tuple. This alignment can be done
+along the whole chain by keeping the already posted $a$
+inputs and moving the hole to a previously posted $b$
+input at each step. But the two endpoints have outputs $\{a\}$
+and $\{b\}$, by filling the hole with the respective
+posted owner and using idempotence. Hence only a pure loss
+can remain in this case, and it is explained by its threshold.
+
+Suppose a losing probe is below every singleton threshold,
+and choose such an owner $r$. Increase its count to
+$\tau_r-1$ by converting other controls to $r$.
+The probe stays proper and below every threshold. It still
+loses: a matching for any guard after conversion could be
+reproduced before conversion. The other statuses only lost
+positions, and there were already at least $w$ controls
+of color $r$ for the at most $w$ positions a guard needs.
+The head is therefore captured at the new fixing. Changing
+its menu to $\{r\}$ reaches the $r$-threshold and makes the
+output the $r$-singleton, whereas the original probe was
+below that threshold. This contradicts colored-cofactor
+independence. Thus every loss is explained by a singleton
+threshold, which gives the greatest profile completion.
+
+The resulting canonical lists have a direct description.
+Put $\delta_r=n-\tau_r$. On facet $k$, a prime chooses
+$\delta_r$ controls to exclude at each visible owner $r$,
+independently. Each group is necessary by testing pure
+postings at that owner, and together they prevent all
+singleton thresholds. The width is $\sum_{r\ne k}\delta_r$.
+Conversely these lists are realizable when each facet sum
+is at most $w$ and $\sum_r\delta_r<n$: a tuple of winning
+coalitions can then omit fewer than $n$ inputs altogether,
+so the profile theorem applies. In particular at width two
+the arity condition holds for every $n\ge4$.
+
+This gives a fixed-parameter recognition test in $K,w$ for
+fully symmetric candidates at all arities. Below the bound
+the arity itself is bounded in $w$, so the finite core tables
+suffice. Above it, read the thresholds from the pure counts
+and compare the predicted prime orbits with those in the
+input. An orbit is recorded by the multiset of excluded
+owner sets at its used controls. The predicted orbits have
+the required number of exclusions per owner and at most
+$w$ used controls, so their enumeration depends only on
+$K,w$. Symmetry of the lists ensures that one representative
+certifies presence of its entire orbit. This avoids enumerating
+an orbit anew on all $n$ inputs.
+
+The argument also gives a local condition for an arbitrary
+core operation with a large class $C$ of interchangeable
+inputs. Fix a proper exterior coloring $e$ off the class.
+On any facet compatible with $e$, keep the primes at a class
+head whose exterior exclusions are satisfied by $e$, then
+remove those exterior exclusions and minimize. This is the
+complete list for the conditional source predicate. Extend a
+sufficient class guard by excluding all exterior postings not
+in $e$. By antitonicity it is sufficient on that entire box,
+so it contains an original prime. The width does not increase.
+
+Erase the exterior at $e$ as in the block-extension proof.
+The resulting word on $C$, or zero, has exactly those
+conditional bits on each compatible facet. If the residue
+is nonzero, all class inputs are live there by symmetry of
+the neutral probes. For each visible owner its singleton
+profile is a cardinality threshold, read on the pure counts
+of that facet. The large-arity proof above only uses one
+facet at a time: the matching argument, the redistribution,
+and the cofactor contradiction all keep its observer missing.
+It therefore applies to this residue on every compatible
+facet whenever $|C|-1>\min\{K(w-1),B(w)\}$. A conditional
+loss must then be explained by a singleton threshold on the
+class, with the exterior posts held fixed.
+
+In particular one can choose a symmetric greatest profile
+completion on the class that realizes all these compatible
+sections together. An owner visible on some compatible facet
+has the threshold of the erased word, independent of the
+choice of facet. If an owner is visible on none, replace its
+profile by unanimity. This only shrinks its winning family
+and preserves common source, so the profile theorem provides
+the stated completion. Its invisible profile cannot affect
+the sections being matched. A zero conditional section stays
+zero. This yields a necessary guard test for large classes
+without assuming symmetries across different classes.
+
+With a bounded number of interchangeability classes, the
+test need only inspect a bounded number of exterior types.
+For each prime orbit, matching its exterior exclusions
+within a class depends only on that class's status counts
+truncated at $w$. Permutations on the distinct classes act
+independently, so its internal orbit is enabled exactly when
+all these exterior matches exist. Thus for fixed $K,w$ and
+number of classes the conditional lists are obtained from
+finitely many truncated histograms. This makes the necessary
+test fixed-parameter tractable without listing the exterior
+colorings themselves.
+
+These local conditions do not suffice, even if every class
+is arbitrarily large and its conditional sections are only
+zero or union. To see this, start with any complete guard
+family and replace each input by the union of $L\ge2$ copies.
+At a marked copy the union of its own block carries the mark
+independently of the block's other statuses. At a control
+block an owner singleton requires every copy posted at that
+owner. Thus each old prime expands by choosing one copy for
+each of its excluded postings, and the expanded list has
+the same width. These are all the primes: a set of exclusions
+forbids a block's singleton color exactly when it forbids
+that posting at some copy, so sufficiency is tested by the
+collapsed guard. At fixed width the expansion is polynomial
+for polynomially many copies.
+
+The expanded family is core exactly when the original is.
+Substitution proves one direction and identification of all
+copies of each input proves the other. Every copy block lies
+inside one interchangeability class. Even if some classes
+join several blocks, the operation factors through union
+on the entire class. Replacing two menus of an original
+block by their common union preserves the operation. By
+permutation symmetry, this pair replacement holds for every
+pair in its interchangeability class. Repeating it replaces
+all its menus by their union. On a marked probe in the class
+that union is the full menu, regardless of the other class
+statuses, giving a constant conditional source predicate.
+
+Consequently the complete-prime recognition lower bounds
+also hold with arbitrarily large interchangeable classes
+and only zero-or-union conditional sections. For example
+the fixed-width EXPTIME lower bound of
+\cref{core:thm:exptime-complete-guards} transfers for every
+fixed $K\ge3$. The distinction lies in how the classes
+interact, even when their own conditional sections are trivial.
+
+One global condition does admit a finite histogram test.
+From complete primes of width $w$ with $c$ interchangeability
+classes, colored-cofactor independence can be decided in
+$f(K,w,c)N^{O(1)}$ time. Choose a potentially captured input
+$j$ by its class and two nonempty menus for it. At every
+other input record its common menu in the two valuations,
+and a bit saying whether it belongs to the proposed loss
+fixing. Only singleton menus may have this bit set. In
+each class count these menu-and-bit types, truncating
+counts at $w+1$. Enumerate the feasible histograms, whose
+number depends only on the parameters. Each is realized
+by assigning its required counts and distributing excess
+among saturated types. The selected postings must form a
+proper coloring and lose the mark at $j$.
+
+The loss test depends only on counts truncated at $w$:
+each prime orbit fits a coloring precisely when its at
+most $w$ distinct control positions can be matched within
+their classes. The same histogram determines both full
+outputs. For each possible winner $k$, test each class and
+menu type that can supply $k$, and the separate input $j$
+if its menu allows it. Read the source predicate after
+erasing the $k$-postings and excluding this supplier itself.
+This just pools some of the counted types and removes at
+most one counted input, so counts truncated at $w+1$ still
+determine the matching tests truncated at $w$. The two
+outputs differ exactly at a cofactor violation, and the
+representative histogram gives actual witnessing menus.
+
+For acyclic source dependence, observer agreement and nonempty
+outputs, this is an exact core recognition test by
+\cref{core:thm:acyclic-source-guards}.
+Thus with bounded $K,w,c$ the interactions between the
+classes can be checked globally in this case, despite the
+failure of class-local threshold tests alone.
+
+The same symmetry makes the bounded-arity helper saturation
+test fixed-parameter tractable in $K,w,c,m$, where the level
+uses all helpers on at most $m$ inputs, together with
+unrestricted native fold attachments and final folds.
+At a fixed query $p$, group inputs by their interchangeability
+class and their status in $p$. Permutations within these
+groups preserve the current query. Apply clearing steps in
+parallel, so the cleared pattern set stays invariant under
+these permutations. A pattern is now specified by its owner
+and the number of inputs from each group, of total size at
+most $m$. There are only parameter-many pattern orbits to add.
+
+Admissibility of a bounded helper can be tested on histograms.
+Choose its support by group counts, and pin its at most $m$
+inputs. Enumerate a missing observer and the old statuses of
+the pinned inputs, and count the old statuses among the rest
+of each group, truncated at $R=\max(w,m,1)$. An old row is a
+loss exactly when no prime orbit fits its statuses, tested by
+matching as above. It is uncleared exactly when none of the
+stored pattern orbits fits its owner blocks. Those two tests
+need only counts up to $R$, and the pinned statuses give the
+helper's exact source test. Thus we can check that no uncleared
+loss is supplied by the helper and then add all eligible
+patterns of that support type. This enumerates only the
+constant-arity helper tables, not old losses.
+
+For unrestricted native fold attachments, start with all
+groups avoiding the query at the fold's owner. As usual delete each group
+whose head has an uncleared loss with no posting of that
+owner in the current support. The same histogram test checks
+this, pinning just the tested head. All choices are invariant
+within groups, so the final support is the greatest safe one
+and gives all singleton pattern orbits that eligible folds
+can clear. After stabilization, the bounded helpers and these
+greatest safe supports decide whether a mark passes, since a
+final fold can supply a mark only on a support avoiding its
+owner at the query.
+
+Finally it suffices to enumerate target query counts truncated
+at $KR+m+1$ per group. For an old facet there are at most $K$
+old statuses in a group, including neutral. After pinning
+at most $m+1$ inputs, feasibility of the truncated old counts
+is determined by the group size up to $KR+m+1$: below that
+bound the size is exact, and above it a histogram must have
+a saturated bucket that can take any excess. All the other
+tests use only the capped counts or pinned statuses. Thus the
+entire sweep, including the check of every positive target
+mark, has parameter-bounded many cases. In particular it
+recognizes exactness of native fold saturation alone under the same
+width and symmetry parameters. This gives exact core
+recognition on the classes where fold saturation is exact,
+including posting graphs without monochromatic cycles.
+
+Exact counts give a wider test with polynomial time for fixed
+parameters, without a prime-width bound. Use as helpers all
+circuits of at most $t$ owned-fold or union gates, with no
+arity limit and with any attachment owner. In particular at
+$t=1$ this allows arbitrary foreign attachments of folds.
+For a fixed target query retain the groups given by class and
+query status. At each attachment owner record the set of
+coalition count vectors already cleared, rather than listing
+their minimal patterns. A row is cleared if its coalition
+at some owner has a recorded vector. There are at most
+$K(n+1)^{cK}$ entries, and the state is invariant under
+permutations within each group.
+
+Guess a helper circuit and split each group by the incidence
+patterns of direct projection inputs at its gates. There are
+at most $2^t$ patterns per group. Enumerate the exact sizes of
+these parts, including the case of a projection-only helper.
+One representative assignment suffices, since different
+assignments with these sizes are permutations of the groups.
+For admissibility, enumerate an old facet and the status
+counts in the refined groups, designating the head within
+one of them. These counts determine a probe up to symmetries
+of both the helper and the target. Its target sign is read
+from the listed primes, its cleared status from the recorded
+counts, and its helper sign by circuit evaluation. Reject
+the helper if it supplies any uncleared loss.
+
+Test eligibility at the target query. For each eligible
+attachment, enumerate the coalition counts in the refined
+groups on which the helper wins its singleton test. Pool
+these counts in the original groups and record the resulting
+vectors at the attachment owner. This adds exactly the
+effects of all symmetric copies of the helper. Repeat to
+stabilization and check all final helpers by the same refined
+counts. Finally enumerate the target queries themselves by
+their group sizes and the class of the marked head. These
+enumerations give time $f(t,K,c)N^{O(cK^2 2^t)}$ for testing
+every mark of the saturation. Thus the test allows arbitrary
+foreign fold supports at the cost of an exponent depending
+on the symmetry parameters, and does not enumerate either
+loss rows or the named input supports.
+
+The all-source losses admit a description in terms of atomic
+valuations, without assuming symmetry. Fix a posting $p$ omitting
+observer $k$. The following are equivalent:
+\begin{enumerate}
+\item Every unposted source loses on facet $k$.
+\item The atomic extension filling every unposted input with
+$\{k\}$ omits $k$.
+\item Every menu extension of $p$ gives the same output, which
+omits $k$.
+\end{enumerate}
+Indeed the $k$-view makes the unposted inputs neutral in the
+second test, so the source normal form proves the first
+equivalence. Omission independence (\cref{core:prop:omission})
+then allows all inputs containing $k$ to be replaced arbitrarily
+and gives the third test. In particular the proper constant
+cubes of the atomic table lift to constant cofactors on menus:
+if a constant atomic cube omits $k$, every fixed $k$ input may
+also be freed, by applying omission independence at its
+all-$k$ filling.
+
+The output on any such cofactor is a subset of the posted owners,
+by provenance and the freedom to fill from the posted palette.
+The smallest subposting with the same cofactor output need not
+be unique, but its owner set is uniquely recoverable. For a
+posted owner $r$, delete every $r$ posting and rerun the
+all-source test on the same facet. If $r$ is absent from the
+output, omission independence allows this deletion with no
+output change. Conversely if the smaller posting passes the
+test, both cofactors agree on any extension of the original
+posting, and the smaller one cannot output $r$ by provenance.
+Thus the output consists exactly of the owners whose deletion
+fails the test. The test uses only scans of the given primes
+and can recover the output without enumerating minimal losses
+or menu extensions.
+
+In particular a posting minimal under deletion for the
+all-source test is nonempty and its output is precisely its
+posted owner set.
+
+Consequently any two such minimal postings with distinct owner
+sets must conflict at an input. This holds across observer facets:
+if the postings were compatible, a valuation extending both
+would have to return both prescribed outputs, by independence
+of all the unposted inputs in each. The minimal postings in this
+test are exactly the inclusion-minimal consistent hitting sets
+of the following guard family on the chosen facet. For every
+head $i$ and every prime $G$ at $i$, adjoin to $G$ all permitted
+postings at $i$. A posting hits the resulting set exactly when
+it posts the head or disables that prime.
+
+For a fully symmetric operation a minimal loss at one head is
+already minimal for this test: all unposted heads are
+interchangeable, and after any deletion the original head
+survives. Thus if two minimal loss histograms $u,v$ have distinct
+owner sets, they satisfy
+\[
+                  \sum_r\max(u_r,v_r)>n .
+\]
+Otherwise their posted inputs can be aligned to fit in the same
+$n$ inputs, even if the combined posting leaves no free head or
+uses the whole palette. In particular a mixed minimal loss $u$
+and a singleton threshold $\tau_r<n$ must satisfy
+$\tau_r+\sum_{s\ne r}u_s>n$. The pure threshold posting is
+minimal because below threshold a pure posting cannot lose.
+
+A different use of the atomic table is to reconstruct a menu
+output by taking the union of the outputs of all its atomic
+refinements. This reconstruction agrees with a core operation
+exactly under the following condition on its source losses.
+Fix a facet, a head $h$, a control $i\ne h$, and two distinct
+permitted owners $a,b$ at $i$. Suppose two minimal losses at
+$h$ respectively post $i$ at $a$ and $b$, and their other
+postings are compatible. The union of their other postings
+must itself be a loss at $h$.
+
+For necessity, if the union survives, mark $h$ by the
+observer singleton, fix the united exterior postings, and
+give $i$ the menu $\{a,b\}$. Give every other free input the
+neutral menu omitting the observer. The observer survives,
+but disappears when $i$ is split into either of its two
+atoms, since the corresponding minimal loss is present.
+By monotonicity it is then absent in every atomic refinement.
+
+For sufficiency it is enough to split one menu at a time.
+For an output winner $k$, choose a source $h$ supplying it.
+At the source itself choose $\{k\}$. At any other input
+containing $k$, choosing $\{k\}$ preserves its neutral
+status as a control on that facet. At a nonsingleton menu
+omitting $k$, suppose every atomic choice lost the source.
+Each such loss contains a minimal loss using the new
+posting, since the neutral status survived. The minimal
+losses from any two choices have compatible other postings,
+all drawn from the fixed exterior. The condition would make
+that exterior lose already. Thus an atomic choice preserving
+the source exists, and repeated splitting gives an atomic
+refinement retaining $k$. The opposite inclusion follows
+from monotonicity.
+
+A failure of this condition has a certificate of polynomial
+size from the complete prime lists. Give the facet and head,
+the two colors at the split input, and the exterior posting.
+Scan the primes to check survival on the exterior and loss
+after either color is added. These scans suffice because
+minimal losses can be obtained by deleting postings from
+the two losing extensions.
+The union over atomic refinements can itself fail to be core,
+at every $K\ge3$. Start with $x$ and attach $y$ once at each
+owner other than $c$. At $x=\{c\},y=I\setminus\{c\}$, the
+reconstruction omits $c$, since every atomic choice for $y$
+suppresses $x$. At $x=\{a\},y=I\setminus\{a\}$ with
+$a\ne c$, it includes $a$ by choosing $y=\{c\}$.
+These are two neutral source probes for $x$, so the
+reconstruction violates observer agreement.
+
+One atomic table has an exact description of its core
+extensions at every arity. Let $S$ be a nonempty subset of the
+inputs, and suppose the atomic table returns the union of the
+atoms on $S$. Among core operations this is equivalent to
+the following two conditions on the complete prime lists:
+\begin{itemize}
+\item At every head in $S$ the empty guard is prime on every
+facet.
+\item At every head outside $S$, each prime on facet $k$
+excludes all $K-1$ foreign colors at some one input of $S$.
+\end{itemize}
+Indeed monotonicity lifts retention of the atoms on $S$ to
+retention of their full menus, by choosing any given winner
+there in an atomic refinement. This is exactly the first
+condition, by the single-source probes. If a prime at a head
+outside $S$ leaves a foreign choice at each input of $S$,
+make those choices and fill all other inputs with the
+observer singleton. The prime supplies the observer on a
+row where the atomic table omits it. Conversely the two
+conditions supply every winner from $S$ and prevent any
+other winner from appearing on an atomic row.
+
+In the pointwise order the operations with this atomic table
+form an interval within the core. Its least element is
+$U_S$, the union on $S$. Its greatest element returns $U_S$
+when all inputs of $S$ are atomic and the union on all inputs
+otherwise. To prove the upper bound, if all inputs of $S$
+are atomic then every winner outside $U_S$ is blocked at
+every source by the two guard conditions. To realize the
+bound, for each $i\in S$ start with the union of all inputs
+and attach input $i$ once at each owner. This returns input
+$i$ when it is atomic and the full union when it is ambiguous.
+The union of these reset terms gives the stated operation.
+Every core operation between the endpoints shares their
+atomic table. When $S$ is proper the two endpoints first
+differ on valuations with exactly $|S|$ ambiguous inputs:
+give the inputs in $S$ a common ambiguous menu omitting a
+winner and supply that winner outside $S$.
+
+More generally let $1\le d\le |S|$. A complete prime candidate
+agrees with $U_S$ whenever fewer than $d$ inputs are ambiguous
+exactly when it has the empty prime at every head of $S$ and
+each exterior prime excludes all foreign owners at at least
+$d$ distinct inputs of $S$. Call those inputs the full
+exclusion blocks of the prime. For necessity, atomic agreement
+implies retention by monotonicity of the guard reconstruction.
+For any exterior prime on facet $k$, give its full exclusion
+blocks the menu $I\setminus\{k\}$. At each remaining input of
+$S$, choose an allowed foreign atom and put all exterior inputs
+at $\{k\}$. The enabled prime adds $k$ to the result, although
+$U_S$ omits it. This uses exactly one ambiguous input per full
+block. Conversely, to add any winner outside $U_S$ using a
+prime, every one of its full blocks must be ambiguous: none
+can carry the observer and all foreign atoms are excluded.
+In particular the first number of ambiguous inputs at which
+the candidate differs from $U_S$ is exactly the minimum number
+of full blocks over exterior primes, with no difference if
+there are no exterior primes.
+
+For arbitrary pairs of complete prime candidates there is a
+related test using the baseline's surviving sources. To witness
+a winner in $F$ but outside $D$, choose its facet $k$, a head
+$h$, and a prime $G$ of $F$ there. Let $B$ be the inputs at
+which $G$ excludes every foreign owner. Consider postings
+that leave exactly $B\cup\{h\}$ unposted and respect $G$.
+Keep only postings at which $D$ loses at $h$. The least
+ambiguity of a witness through this prime is the minimum,
+over those postings, of the number of inputs in $B$ whose
+source in $D$ survives.
+
+To see this, start with any witness supplying $k$ through
+$G$ and record its foreign atoms. Its baseline loses both
+at $h$ and at every other input carrying $k$. Any unposted
+control that survives in $D$ must therefore be ambiguous.
+Extend the posting at each control outside $B\cup\{h\}$
+to an allowed foreign atom whenever it is still free.
+This preserves $G$ and can only remove baseline source
+bits. Thus the stated minimum is at most the ambiguity of
+the original witness. Conversely, on a minimizing posting
+give the surviving baseline heads in $B$ the ambiguous menu
+$I\setminus\{k\}$, and give every other free input $\{k\}$.
+This keeps all their passive statuses neutral. The prime
+supplies $k$ from $h$ and no baseline source supplies it.
+Taking the minimum over the primes of $F$ gives the directed
+disagreement distance. Taking the smaller result in the
+two directions gives the first ambiguity level at which the
+candidates differ.
+
+In particular, width $w$ on the target side bounds every
+directed noncontainment witness by $\lfloor w/(K-1)\rfloor$
+ambiguous inputs, independently of arity or baseline width.
+Thus valuations through that ambiguity level determine
+all operations of prime width at most $w$. The bound is
+sharp: for $d=\lfloor w/(K-1)\rfloor\ge1$, take the union
+on a set of $d$ inputs and add one exterior source only
+when all $d$ are ambiguous. The full block criterion gives
+width $d(K-1)$ and first disagreement at level $d$. This
+is core by successively resetting the exterior head at
+those inputs and adjoining the resulting term to their union.
+
+The observation bound also recovers individual primes.
+For a proposed guard $G$ on facet $k$ at head $h$, form
+all rows with $\{k\}$ at $h$, the ambiguous menu
+$I\setminus\{k\}$ at its full blocks, and any allowed foreign
+atom at each remaining control. These rows have just one
+source of $k$. Their postings are the maximal patterns
+enabling $G$, so $G$ is sufficient exactly when $k$ appears
+on every one of them. Hence observations through $b$
+ambiguous inputs determine the sufficiency of every guard
+with at most $b$ full blocks. They also determine its
+primality, since deleting any exclusion cannot increase
+the number of full blocks. This statement applies to prime
+lists even when the operation has other primes with more
+than $b$ full blocks.
+
+Retaining just the primes so recovered gives a lower bound
+on every complete guard reconstruction agreeing with the
+observations. If the observations have any representative
+with at most $b$ full blocks in every prime, this lower bound
+is that representative, and it is the least operation
+among all agreeing guard reconstructions. In particular,
+atomic data force every prime without a full block and
+reconstruct the entire operation at width below $K-1$.
+The reconstruction can enumerate the guards in question
+and apply the maximal-pattern test before deleting
+nonprimes; it requires no term search.
+
+The lower bound obtained by retaining these primes can
+agree with all the observations and still fail to be core.
+For any $b\ge0$, take $b+1$ controls and one exterior
+head $h$. Fix an owner $c$. Starting at $h$, attach each
+control once at every owner other than $c$, and then take
+the union with all controls. A control posted at an owner
+other than $c$ erases the head's contribution; when no
+control is posted at such an owner, the head is retained.
+Thus the unique prime at $h$ on facet $k$ excludes each
+posting on the controls at an owner outside $\{c,k\}$.
+For $k=c$ it has $b+1$ full blocks. For $k\ne c$ it has none.
+The truncation removes just the former prime. It agrees
+with the term through $b$ ambiguous inputs: the removed
+prime can add $c$ outside the control union only if every
+control is ambiguous and omits $c$. But the truncation
+violates neutral observer agreement at $h$.
+
+In this example the original term is the least core lift
+of those observations. The retained primes are forced in
+every lift. In a core lift the neutral probe at $h$ must
+also succeed on facet $c$, since the corresponding probe
+succeeds on every other facet. Antitonicity of the source
+predicate makes the full-block guard at $h$ on facet $c$
+sufficient, as it enables only the neutral pattern.
+Consequently every core lift contains the original term.
+
+There is a least observer-agreeing enlargement of any
+family of source predicates on the facets. At a proper
+posting $p$, give every facet on which $p$ is visible the
+disjunction of the original source bits on those facets.
+The result is still antitone: deleting postings can only
+add visible facets, and within each already visible
+facet it can only increase the original bits. Any
+observer-agreeing enlargement must contain every bit
+in the disjunction.
+
+The enlargement has a direct prime-list presentation.
+For each prime $G$ on facet $\ell$ at a head $h$, add
+to facet $k\ne\ell$ the guard obtained by dropping the
+$k$-exclusions of $G$ and adjoining all $\ell$-exclusions
+at controls other than $h$. Keep the original guards as
+well. A transferred guard is enabled exactly when the
+posting is visible on both facets and enables $G$ there.
+Thus one pass yields a sufficient guard presentation.
+The consensus rule then gives its complete prime lists
+if required.
+
+There is also a greatest observer-agreeing restriction.
+At a proper posting $p$, for each owner $\ell$ delete the
+$\ell$-postings and test the original source bit on facet
+$\ell$. Take the conjunction of these $K$ tests. The result
+is antitone and is below all original visible bits. Any
+observer-agreeing restriction supplying $p$ must supply
+each of those subpostings and hence pass every test.
+On facet $k$ a guard presentation of this conjunction
+chooses one prime from each facet $\ell$ and takes their
+union, discarding exclusions at $k$ and, in each chosen
+prime, exclusions at $\ell$. These are precisely the
+postings absent in the corresponding tests. For fixed
+$K$ this presentation is polynomial in the given lists,
+before prime minimization.
+
+Consequently a lower and an upper guard bound admit a
+common observer-agreeing family exactly when the least
+enlargement of the lower bound lies below the upper
+bound. When feasible the least and greatest agreeing
+families are the enlargement of the lower bound and
+the restriction of the upper bound. This tests just the
+compatibility imposed by facets. The feasibility test is
+polynomial on complete prime bounds: each generated lower
+guard must contain some upper prime on its own facet.
+
+Apply this enlargement to the primes recovered through
+$b$ ambiguous inputs. Every core lift of the observations
+contains the enlargement. For a core operation supplying
+the observations, its entire source family is recovered
+by this step exactly when each maximal proper posting
+at which a source survives enables one of the recovered
+primes on some visible facet. Here maximality is taken
+among surviving proper postings at that head, allowing
+comparison across facets. The criterion suffices by
+antitonicity and is necessary by the disjunction formula.
+It is enough to test the maximal enabling patterns of
+the original primes facet by facet. A failure on one
+of those patterns has a polynomial-size certificate:
+the posting and its surviving head, with every recovered
+prime on the visible facets disabled. In the preceding
+example the disjunction restores exactly the removed
+neutral source.
+
+If the recovered primes have width at most two, this
+recovery test is polynomial for fixed $K$, with no width
+bound on the original lists. At each head fix a facet and
+one original prime there. Guess the set of owners used
+by a counterexample posting, omitting the fixed observer,
+and for each used owner choose an input carrying it.
+Forbid all postings outside the guessed palette and all
+postings excluded by the original prime. Insist on the
+chosen witnessing postings. On each facet outside the
+palette, disable each recovered prime by requiring a
+posting from that prime. Together with the clauses
+forbidding two postings at one input, these are 2SAT
+constraints. A satisfying assignment is already a proper
+posting with exactly the guessed palette. Conversely any
+failure of recovery passes one of the tests. Maximizing
+the posting is unnecessary for this search: its original
+prime certifies survival at any size. There are at most
+$2^K n^K$ palette and witness choices per original prime
+on $n$ inputs.
+
+The same test compares with any least observer-agreeing
+enlargement generated by width-two guards, whether or
+not they are complete prime lists. Thus a width-two
+presentation can certify recovery even when transfer and
+consensus produce wider canonical primes on individual facets.
+
+For width three, directed coverage by the least enlargement
+is coNP-complete, already with three owners and a target
+projection, if the supplied guards need not be complete.
+Use owners $a,b,c$ and a head $h$. Encode a 3SAT formula by
+one guard per clause on facet $c$, replacing positive and
+negative literals at an input by its $a$- and $b$-postings.
+Add two unit guards requiring two fresh inputs to be posted
+at $a$ and $b$ respectively in any hitting set. On both
+other facets supply $h$ unconditionally. The enlargement
+can lose at $h$ only on a posting using both $a,b$ and
+omitting $c$. There it loses exactly when the posting
+hits every clause. Such a partial assignment can be
+completed arbitrarily to a satisfying Boolean assignment,
+and any satisfying assignment gives a loss. Therefore the
+projection is covered exactly when the formula is
+unsatisfiable. A posting certifies failure in polynomial
+time.
+
+With three owners and complete supplied facet lists, directed
+coverage is polynomial at arbitrary width. For a target prime
+and a posting using at most one owner, test the maximal
+posting of that owner respecting the prime, and also test
+the empty posting. If the enlargement loses anywhere in
+that palette it loses at the maximal posting, by antitonicity.
+For a posting using two owners exactly one observer facet
+is visible. Enumerate one witnessing input for each used
+owner and fix those postings in both the target prime and
+the supplied observer list. Discard guards contradicted by
+the fixed postings and remove the fixed coordinates from
+the remaining guards. The surviving list is complete after
+minimization: any sufficient guard in the section becomes
+sufficient before fixing by excluding the competing colors
+at the fixed inputs. An input then either has its prescribed
+posting or is neutral, and going neutral only helps.
+Original primality supplies a guard inside these exclusions.
+Consequently coverage within this fixed section holds exactly
+when the shortened target guard contains a shortened supplied
+prime. These tests use polynomial work and exhaust all proper
+postings when $K=3$. At every fixed $K$ the same argument
+handles palettes of size zero, one, or $K-1$, restricting
+the single visible facet to the chosen palette as needed.
+
+For $K\ge4$ the directed coverage problem remains
+coNP-complete when every supplied facet list is canonical
+and the target is core. Take four distinct owners $a,b,c,d$.
+Convert the formula to positive and negative clauses of
+size at most three: replace each variable by a pair of
+new variables for its two literals, make every original
+clause positive in those variables, and force each pair
+to have opposite truth values by a positive and a negative
+binary clause. Use only $a$-postings for the positive
+clauses on facet $c$ and only $b$-postings for the negative
+clauses on facet $d$. Remove supersets within each list.
+Each list is canonical by consensus, since its postings
+never compete. At $h$ put the empty guard on facets $a,b$,
+and give no guards on any further facets. Retain every
+control on all facets. As the target, start at $h$, attach
+each control at every owner outside $\{a,b\}$, and take
+the union with all controls. Its head survives exactly
+on postings using only $a,b$. A target probe on such
+a posting is covered if either $a$ or $b$ is missing.
+When both are used, it is uncovered precisely when
+all positive and negative clauses are hit. Every satisfying
+assignment uses both posted owners, as witnessed by any
+one variable pair. Thus unsatisfiability is again
+equivalent to directed coverage. This separates width two
+from width three even for complete input lists at fixed
+$K\ge4$.
+
+These coverage tests also verify a proposed canonical output
+of the enlargement. First check its consensus completeness.
+It lies above the enlargement exactly when each transferred
+guard contains a proposed prime on its destination facet.
+The opposite containment is directed coverage. In particular
+complete canonical output has polynomial verification at
+$K=3$ even when the output primes are wide.
+
+The canonical output can nevertheless be exponential, even
+for three owners and width-two input. At head $h$ take
+distinct controls $x_i,u_i,v_i$ for $1\le i\le m$. On facet
+$c$ use the guards $\{x_i:a,u_i:a\}$ and
+$\{x_i:a,v_i:a\}$ for every $i$. Use the empty guard on facet
+$b$ and no guards on facet $a$. Each supplied list is complete,
+since it has no competing exclusions and is already an
+antichain. For any larger palette use no guards on the extra
+facets and restrict the argument to postings at $a,b$.
+
+On that two-color domain the enlargement is the original
+list on $c$ together with all postings omitting $b$.
+For each $i$ choose one of $u_i:a,v_i:a$ to exclude.
+Adjoin every $u_i:b,v_i:b$ exclusion to the chosen set.
+This is sufficient: if a posting uses $b$, it does so at
+some $x_i$, and the chosen $a$-exclusion at that index
+enables the corresponding original guard. If it omits
+$b$ it passes the transferred empty guard.
+Each chosen $a$-exclusion is necessary: after deleting
+it, put $b$ at its $x_i$, put $a$ at both $u_i,v_i$,
+and put $a$ at all other $x_j$. Every original guard
+is disabled. Each $b$-exclusion is necessary as well:
+after deleting it, post that control at $b$ and every
+$x_i$ at $a$. Again neither source of coverage applies.
+Thus the resulting $2^m$ guards are distinct primes.
+For a larger palette a full canonical list on $c$ must
+have at least this many entries, since restricting to
+the two allowed colors cannot increase its length.
+
+The enlargement has a compact core realization when it
+retains a nonempty set $S$ of inputs and every exterior
+source predicate depends only on postings in $S$.
+For an original guard on facet $\ell$ at an exterior head,
+drop its exclusions outside $S$ and append all $\ell$-exclusions
+on $S$. On postings restricted to $S$ this tests exactly
+whether facet $\ell$ contributes that guard. Every exterior
+predicate is the disjunction of these tests, by the assumed
+independence. Realize each such guard by starting at its head
+and attaching a control at the owner of each exclusion.
+On a marked probe a forbidden atom erases the mark, and
+without a forbidden atom no attachment erases it. The only
+side contributions come from $S$, which is retained. The
+union of these words and the projections in $S$ realizes the
+enlargement with at most one word per supplied guard.
+In the exponential example, retain all the controls and
+use just the one exterior head. The enlargement then has
+an $O(m)$-gate circuit for fixed $K$, despite its exponential
+prime list: the only long guard comes from the empty guard
+on facet $b$, and the other guards can be shared by first
+joining their width-two spines and then attaching each
+control once at $c$ to the result.
+
+With conditional controls the enlargement need not be core,
+even if each supplied facet is the exact restriction of a
+core term. On inputs $x,y,z$, retain $z$ on every facet.
+On facet $b$ retain $x$ and omit $y$, on facet $a$ retain
+$y$ and omit $x$, and omit both on all other facets.
+These restrictions are projections or unions of projections.
+After enlargement, $x$ survives exactly when no other input
+is posted at $b$, and $y$ exactly when no other input is
+posted at $a$. Take the neutral residual deleting $z$.
+It returns the empty menu at $x=\{a\},y=\{b\}$, since
+each source is blocked by the other. It returns a nonempty
+menu when both surviving inputs are ambiguous, since then
+no posting blocks either. The neutral residual theorem
+excludes this behavior for a core term, although the
+enlargement itself always has a nonempty output by retention
+of $z$.
+
+At three owners there is a complete test when each facet
+supplies just a union of projections. For each input $i$
+let $A_i$ be the set of facets supplying its projection.
+An empty $A_i$ makes the head dead. For a nonempty $A_i$,
+its source is retained if $A_i=I$ or $|A_i|>n-1$, for $n$
+total inputs. Otherwise call $A_i$ effective. The source
+then loses precisely when every owner of $A_i$ is posted
+at another input. If there are no effective palettes, the
+enlargement is the union of the live inputs, and is core
+exactly when that union is nonempty. If there is an
+effective palette, a dead input rules out core realization:
+its posting can change that source's bit, by putting
+one required color there and the rest at distinct inputs.
+A term cannot use an input that is dead on the neutral probes.
+
+For any $K$, distinct effective palettes $A,B$ in a core
+enlargement satisfy $|A\setminus B|\ge2$ and
+$|B\setminus A|\ge2$. Indeed choose two heads $i,j$ with
+palettes $A,B$. Suppose $s\in B\setminus A$ and
+$|A\setminus B|\le1$. Take a neutral residual on $|B|+1$
+inputs including $i,j$. It is core by neutral-source
+elimination, since it still supplies a neutral source.
+In this residual, leave $j$ free, assign $i$ the atom $s$,
+and post the remaining colors of $B$ bijectively at the
+other inputs. The posting is a minimal all-source loss
+on a facet omitting an owner outside $B$: the only free
+head is $j$, and deleting any posting makes it live.
+Its constant output must be $B$ by the all-source loss
+argument above. If $A\subseteq B$, the head $i$ already
+loses its source there. If $A\setminus B=\{r\}$, fill
+$j$ with $\{r\}$, which preserves that constant output
+and makes $i$ lose. In either case the only input that
+can supply $s$ is $i$, contradicting the output $B$.
+Interchanging the heads proves the other inequality,
+and the same argument excludes strict inclusion.
+
+For $K=3$ the inequalities force all effective palettes
+to coincide. This is sufficient whenever every input is
+live. For their common palette $A$, take the union of the
+full-input owned folds at the owners in $A$, and add the
+projections of the retained inputs. Each fold supplies a
+marked head exactly when the controls omit its owner.
+The union therefore has precisely the required losses at
+the effective heads and retains the other heads everywhere.
+This also gives the same sufficiency for a common effective
+palette at any $K$.
+
+If exactly two heads are conditional, with distinct effective
+palettes $A,B$ and no dead inputs, the remaining criterion
+at any $K$ is $n<|A\cup B|$. To see this, use the rule for
+opposite-head minimal losses in
+\cref{core:cor:two-conditional-guard-complexity}. Every such
+loss posts its palette bijectively on distinct controls.
+Removing the two conditional inputs from a pair of losses
+leaves at least $|A\cup B|-2$ colors to place on the $n-2$
+retained inputs. If $n<|A\cup B|$, there is no consistent
+pair to test. Otherwise remove one color of $A\setminus B$
+and one of $B\setminus A$ by assigning them to the opposite
+heads. Place the remaining union of colors on distinct
+retained inputs, sharing positions for common colors.
+This background is proper and misses one required color of
+each head, so both heads survive with the internal inputs free.
+The pair rule forbids this, since the opposite postings differ.
+
+When every head is conditional, a core realization requires
+a common palette, at any $K$. To see this, at each head $j$
+give it the full menu and post its effective palette $A_j$
+bijectively on any $|A_j|$ other inputs. Fill the remaining
+inputs with a fixed proper ambiguous menu containing $A_j$.
+The candidate loses the head and returns a subset of this
+proper menu. Impose these bounds on a term, for all heads and
+all placements of their palettes.
+
+If a bounded term has a singleton win at $r$ on an input
+$j$, singleton-profile absorption
+(\cref{core:lem:singleton-profile-absorption}) forces it to
+return $\{r\}$ on every bounded row at $j$, because it cannot
+retain the full menu there. In particular $r\in A_j$,
+since no other owners appear as atoms on those rows. Any
+other input can be the unique posting at $r$ in such a row,
+so the same term must win $r$ on every singleton input.
+Repeating the argument at all heads gives
+$r\in C=\bigcap_j A_j$. The term is bounded pointwise by
+the full $r$-fold: it returns $\{r\}$ whenever any input
+does, and otherwise its output lies in input union.
+
+Any bounded term atomic on one of the chosen rows has
+such a singleton win, by the unique posting of the output
+owner. A bounded term never atomic on those rows has both
+children bounded there, since its root cannot absorb.
+Descending the term therefore bounds it by the union of
+the full folds at owners in $C$; no projection obeys its
+own loss rows. If $C$ is empty this precludes any term.
+If some $A_j$ strictly contains $C$, post exactly the
+owners in $C$ off $j$ and mark $j$ by an outside observer.
+The candidate supplies the mark, whereas every bounding
+fold loses it. Thus a realization requires all palettes
+to coincide.
+
+These tests bound the arity of every exception to the common
+palette criterion, for arbitrary $K$. If distinct palettes
+occur and the number of conditional heads exceeds the
+largest effective palette size, delete all retained inputs
+by taking the neutral residual. All conditional palettes
+remain effective, so the preceding argument rules it out.
+In a realizable exception the number of conditional heads is
+therefore at most $K-2$, because the two directional
+difference bounds force each palette to omit at least two
+owners. Also, for any distinct pair $A,B$, there must be
+fewer than $|A\cup B|-2$ retained inputs. Otherwise the
+neutral residual on those two heads and $|A\cup B|-2$
+retained controls contradicts the opposite-head criterion.
+There are thus at most $K-3$ retained inputs, and every
+exception has arity at most $2K-5$. For fixed $K$ this gives
+an exact recognition procedure for projection-facet
+enlargements: apply the common-palette criterion, then
+check the finitely many bounded-arity exceptions by the
+core table.
+
+Consequently at four owners the only core case with distinct
+effective palettes has three live inputs: two conditional
+heads with disjoint pairs, and one retained head. The
+opposite-head rule gives its realization. Together with the
+common-palette case this classifies all projection-facet
+enlargements at four owners.
+
+The same propagation gives a test on arbitrary bounded
+samples, with more than one input allowed to post at an
+owner. If a core term wins $r$ on the coalition $A$, then
+on any menu row it either returns $\{r\}$ or contains
+the whole menu of some input in $A$. For a projection
+this is immediate. At an $r$-gate one child wins on
+$A$. If the root is not $\{r\}$, that child is not either
+and its menu contribution survives union. At any other
+gate both children win on $A$. An absorbing child must
+therefore contain an $A$-menu; without absorption the
+union is either $\{r\}$ or contains one such menu.
+This generalizes singleton-profile absorption.
+
+Take a sample of rows $v$ and bounds $B_v$, which may
+be obtained by evaluating a candidate's prime lists.
+Write $R_r(v)$ for the inputs posted at $r$ and
+$E(v)=\{i:v_i\subseteq B_v\}$. For each owner $r$ use
+the nonempty coalitions $R_r(v)$ as vertices. A win at
+vertex $A$ forces output $\{r\}$ on every row $v$ with
+$A\cap E(v)=\varnothing$. Mark $A$ forbidden if one
+of these rows disallows $r$ or has $R_r(v)=\varnothing$.
+Otherwise put an edge to $R_r(v)$ for each such row.
+A winning vertex cannot reach a forbidden vertex,
+and it forces wins at every reachable coalition.
+One can also add edges from a coalition to any sampled
+superset, by monotonicity of the singleton profiles.
+
+For a vertex $A$ reaching no forbidden vertex, let
+$M_{A,r}$ return $\{r\}$ when the $r$-postings contain
+one of the reachable coalitions, and return input union
+otherwise. This is the greatest core operation with
+the forced wins. For realization, take the input union
+on each reachable coalition, fold these unions at $r$,
+and attach the result at $r$ to the full input union.
+For the upper bound, a term with the wins must return
+$\{r\}$ on the stated rows and is always bounded by
+input union elsewhere.
+
+Take the union of the projections fitting the sample
+and of the $M_{A,r}$ for which a sampled row allows
+$\{r\}$ with $R_r(v)=A$. This bounds every fitting term.
+If such a term is atomic on a sample row, it is bounded
+by the corresponding $M_{A,r}$. If it is never atomic
+there, both children at the root satisfy the sample,
+so induction applies. An empty union means no core term
+fits. If the union is nonempty and all its included
+operations fit the sample, it is the greatest fitting
+core operation. The test uses polynomially many graph
+and row operations, and reduces to propagation on inputs
+when every sampled coalition is a singleton.
+
+For the greatest profile completions with only one owner
+$r$ allowed to win below unanimity, fitting a sample and
+a marked query has an exact support test. On a nonempty
+support $S$, such a completion returns $\{r\}$ on an upward
+family of $r$-coalitions in $S$, and input union on $S$
+otherwise. The family contains $S$ and excludes the empty
+coalition. It is realized by folding input unions on its
+minimal winning coalitions at $r$ and attaching the
+result at $r$ to the union on $S$.
+
+Let the negative coalitions be $R_r(v)$ at all bounded rows
+where $r\notin B_v$, together with any explicitly forbidden
+profile wins. Include the empty coalition as negative.
+For a fixed support $S$, a row with some
+$i\in S\setminus E(v)$ forces a win on $R_r(v)\cap S$,
+since input union on $S$ violates the bound there.
+The least possible winning family is the upward closure
+of these forced coalitions, the explicitly required wins
+restricted to $S$, and $S$ itself. It fits exactly when
+none of those generators is contained in any negative
+coalition restricted to $S$.
+
+Start from the full allowed support. If a bounded row's
+forced coalition is contained in a negative coalition
+after restriction to the current support, delete every
+input of $S\setminus E(v)$ for that row. This containment
+survives further restriction, so no fitting subset of
+the current support can retain any of those inputs.
+Continue until no deletion is required. If the support
+becomes empty, or a required win or unanimity conflicts
+with a negative coalition, there is no fitting support:
+these conflicts also survive restriction. Otherwise the
+remaining support is feasible by the least profile
+construction, and contains every feasible support.
+The test uses polynomially many subset comparisons.
+
+For a queried winner $k$ on a menu row $q$, require the
+support to meet the inputs carrying $k$. If $k\ne r$,
+add $R_r(q)$ to the negative coalitions, since absorption
+there would omit $k$. If $k=r$, meeting the carrying
+inputs suffices, both in the union case and in the
+singleton case. Thus the largest surviving support
+decides the query and constructs a fitting completion
+when one exists. This allows the candidate support to
+vary without enumerating subsets.
+
+The one-owner support test can use complete prime bounds
+directly, without building a sample of all losses. Fix
+the owner $r$ and a set of allowed inputs. Consider a
+greatest profile completion on a subset $S$ of those
+inputs, with unanimity at every owner other than $r$.
+At each used head, every loss of the prime bound on a
+foreign observer facet forces a win on its $r$-coalition
+restricted to $S$. A loss on facet $r$ instead forbids
+the head outright, since it cannot be absorbed there.
+
+Take the prescribed negative $r$-coalitions, including
+the empty coalition. For each of them, say $N$, and each
+head $i\in S$, test on every facet whether the bound has
+a prime contained in
+\[
+        \{(j,r): j\in S\setminus(N\cup\{i\})\},
+\]
+with the exclusions erased when $r$ is the observer.
+This asks whether any loss at the head could force a
+win contained in $N$. If a test fails, delete $i$.
+Shrinking $S$ can only shrink the proposed guard, so no
+feasible subset could have retained that head. At the
+fixed point the least required profile is feasible if
+the support is nonempty and no explicitly required win
+or unanimity conflicts with a negative coalition.
+Thus the test finds the greatest feasible support.
+A positive marked query requires its head in that
+support and, on a foreign facet, adds its posted
+$r$-coalition as a negative.
+
+The least profile at the stable support also has a
+polynomial-size circuit directly from the lists. On a
+coalition $A\subseteq S$, a forced win occurs if at some
+used head and foreign facet every bound prime contained
+in the $r$-exclusions on $S$ meets $A$ at owner $r$.
+Indeed that is exactly failure of the guard excluding
+$r$ on $S\setminus A$ at this head. This is a disjunction
+of monotone CNFs, together with the explicitly required
+wins and unanimity. For term synthesis realize its
+nonconstant disjunctions by $r$-folds and conjunctions
+by input union of their arguments: the singleton-$r$
+profile of union is conjunction. Drop identically false
+branches. Finally attach the resulting circuit at $r$
+to the union on $S$ to obtain the required greatest
+profile completion. This gives joint marked and profile
+interpolation below a complete prime bound in polynomial
+time in this one-owner class.
+
+Several owners admit the same kind of test if every
+winning coalition must contain a prescribed nonempty
+set $D$ of inputs. Require $D\subseteq S$. At a marked
+probe, absorption is possible only if all of $D$ is
+posted at one owner, which is then uniquely determined.
+In particular a head in $D$ must be retained; require
+its empty prime on every facet.
+
+For a head outside $D$ and an observer $k$, first test
+absence of absorption. Choose, for each visible owner
+$r$, one input in $D$ and exclude its posting at $r$.
+Each resulting guard must be sufficient in the bound.
+Together these guards cover precisely the patterns
+where no owner has all of $D$. There are at most
+$|D|^{K-1}$ choices. For a visible owner $r$ also
+take the section with every input of $D$ posted at $r$.
+Obtain its complete lists by discarding contradicted
+primes, restricting the remaining primes to the free
+inputs and minimizing. In this section any loss of
+the bound forces a win at $r$.
+
+For each prescribed negative $r$-coalition $N$ containing
+$D$, run the one-owner guard test on this section:
+exclude $r$ on $S\setminus(N\cup\{i\})$ at a head $i$.
+A failed test rules out $i$ in every smaller support.
+Negative coalitions omitting part of $D$ cannot conflict
+with a forced win. Prune to the fixed point, rejecting
+if an input of $D$ disappears. Check the explicitly
+required wins and unanimity against the negatives.
+A required coalition must contain $D$, and its
+restriction must fail containment in every negative
+coalition on the surviving support. A positive mark
+requires its head in the support and adds a negative
+coalition only when its probe posts all of $D$ at an
+owner. The least profiles on the stable support are
+generated by these requirements and the forced wins
+of the sections. They automatically have common source,
+since every generator contains $D$. This proves
+necessity and sufficiency and gives the greatest
+feasible support at fixed $K$ without listing losses.
+
+There is also a polynomial-size term circuit. Compile
+each least profile as in the one-owner test, using the
+section lists and conjoining the test that all of $D$
+is posted at that owner. Let $P$ be the input union
+on $D$. For each owner $r$, take its compiled circuit
+and union with $P$, then attach $P$ once at each owner
+other than $r$. Its $r$-profile is unchanged because
+the desired profile implies the $r$-profile of $P$.
+At any other owner its profile is that of $P$: union
+with $P$ initially bounds it by that profile, and the
+attachment at its own owner makes equality hold.
+Taking the union over these circuits therefore gives
+exactly the desired profiles at all owners. Reset
+the union on $S$ at that result to obtain the greatest
+profile completion with those profiles.
+If only the existence of a common required input is
+specified, run the test for each singleton $D$.
+
+More generally prescribe upper singleton profiles $g_r$
+on the full input set, with common source. For fixed $K$,
+their monotone CNFs and a complete prime bound suffice
+for polynomial-time joint marked and profile
+interpolation by a greatest profile completion. The
+upper profiles need not have a shared required input.
+
+On a proposed support $S$, an owner $r$ can handle a
+loss of the bound only when its posted coalition in
+$S$ wins $g_r$ and is not contained in any prescribed
+negative $r$-coalition. Add the empty coalition to those
+negatives. At each used head $i$, these conditions
+have a monotone CNF in the $r$-postings on $S\setminus\{i\}$:
+restrict the CNF of $g_r$ and add one clause selecting
+an input outside each negative coalition. On a facet,
+omit the invisible owner. A background admitting no
+such owner violates one clause of each visible owner's
+CNF. The corresponding exclusion guard is the union
+of those violated clauses' postings. Check that each
+such guard contains a prime of the bound. There are
+polynomially many choices at fixed $K$. A failed check
+exhibits a loss with no permitted absorber. Shrinking
+$S$ cannot turn a losing $g_r$ test into a win or repair
+containment in a negative coalition, so the head is
+impossible in every smaller support and can be deleted.
+
+Repeat until stable. Reject an empty support, and test
+unanimity and the explicit required wins against the
+upper profiles and the negative coalitions. These tests
+also cannot be repaired by further shrinking. A marked
+positive requires its head in the support and adds
+the query's coalition as a negative at every visible
+owner. The stable support then contains every feasible
+support. Indeed on each loss at a used head there is
+exactly one permitted owner: two distinct eligible
+coalitions would be disjoint winners in the upper
+profiles, contradicting common source. At each owner
+take the upward family generated by its forced
+coalitions and the explicit requirements. These
+families avoid the negatives and stay below $g_r$,
+so inherit common source. Their greatest completion
+fits the bound and supplies the requested marks.
+
+The least profiles also have polynomial-size monotone
+circuits using only the CNFs. To test a forced win at
+$r$ on $A\subseteq S$, work on each foreign facet at
+each used head. Choose one violated clause of the
+permitted-absorber CNF for every visible owner other
+than $r$, and combine their exclusions into a guard
+$G$. Add the exclusions of $r$ on $S\setminus A$,
+omitting the head. If the combined guard is
+insufficient, a loss enables it. All other owners
+are excluded there, so stabilization ensures that
+$r$ is permitted and its coalition is contained in
+$A$. Conversely any loss forcing a win contained in
+$A$ disables every rival owner, and so witnesses one
+of these insufficient guards.
+
+For a fixed $G$, consider just the bound primes that
+are contained in $G$ together with all $r$-exclusions
+on the support other than the head. Each such prime
+must have an $r$-exclusion outside $G$ meeting $A$
+for the combined guard to be insufficient. This is
+a monotone CNF in $A$. Disjoin the tests over choices
+of $G$, heads and facets, and add the explicit wins
+and unanimity. The resulting circuits give a compact
+description of the realizing greatest completion.
+If a core circuit $P$ for the upper profiles on $S$
+is available, compile each desired profile at its
+owner, union it with $P$, and attach $P$ at all other
+owners as in the shared-set case. Union these terms
+and reset the support union at the result. This gives
+a polynomial-size core circuit for the completion.
+If the available circuit has the upper profiles on
+the full input set, substitute the support union for
+every omitted input. On a proper coalition of $S$
+each substituted input has false singleton flag, and
+at $S$ the desired profile already wins. This therefore
+gives the required circuit on $S$.
+In particular, with the minimal upper winning
+coalitions supplied as well, a suitable $P$ has
+polynomial size by the winning-coalition construction
+of \cref{core:thm:profiles}.
+
+If at most two owners can win below unanimity, no upper
+realizer is needed for polynomial-size term synthesis.
+In fact take any two normalized monotone profile circuits
+$f_r,f_s$ on the support $S$, satisfying common source,
+and prescribe unanimity elsewhere. Write
+$f^*(A)=1-f(S\setminus A)$ for Boolean duality.
+Common source gives $f_r\le f_s^*$ and $f_s\le f_r^*$,
+since otherwise disjoint coalitions would win.
+Compile $f_r$ using $r$-gates for disjunction and
+$s$-gates for conjunction. Its $s$-profile is $f_r^*$
+because those gates exchange conjunction and disjunction
+at observer $s$. To use every input, replace the Boolean
+circuit $f_r$ by the equivalent circuit
+$f_r\lor(f_r\land\bigvee_{i\in S}i)$ before compilation.
+The extra syntactic inputs give unanimity at every
+foreign owner, where all gates are conjunction.
+Compile $f_s$ in the reverse roles. Taking the union
+of the two terms intersects their profiles at every
+owner, yielding $f_r\land f_s^*=f_r$ and
+$f_s\land f_r^*=f_s$. Resetting the support union at
+this term yields the greatest completion. The size
+is linear in the two profile circuits and the support
+size for fixed $K$. In particular the CNF-only
+interpolation algorithm gives a polynomial-size core
+circuit whenever all but two upper profiles are
+unanimity.
+
+An upper-profile circuit may also be replaced by a
+term on a smaller support whose profiles dominate the
+given ones. For a subset $D\subseteq S$, set the inputs
+outside $D$ to true in each upper profile CNF. This
+keeps just the clauses contained in $D$. The resulting
+profiles have common source exactly when there is a
+core term on $D$ dominating the original profiles.
+Indeed any such term must win on a coalition in $D$
+whenever the original profile wins with all omitted
+inputs included. Conversely, the restricted profiles
+themselves give such a term by the profile theorem.
+Thus the least support for such a term is the least
+variable set on which the colored clauses still
+certify common source.
+
+In the coloring formulation, give each input the owner
+of a winning coalition from which it is omitted. Each
+clause at owner $r$ then forbids a monochromatic
+$r$-assignment on its inputs. Hence a set of clauses
+whose coloring constraints are already unsatisfiable
+is sufficient for synthesis. If it uses $d$ inputs,
+enumerate the winning coalitions on them and apply
+\cref{core:thm:profiles} to obtain a dominating term
+with $2^{O(Kd)}$ gates. The profile gluing construction
+uses only domination, so this one term suffices to
+compile the desired profiles on the whole support.
+
+If the unsatisfiable set has $m$ clauses, a suitable
+support has at most $m-1$ inputs, even when those clauses
+are wide. Take a maximum matching between the clauses
+and their inputs. A matching saturating every clause
+would give a coloring by assigning each matched input
+an owner other than the owner forbidden by its clause.
+Starting at all unmatched clauses, follow incidence
+edges to inputs and matched edges back to clauses.
+No unmatched input is reached, since that would give
+an augmenting path. The reached clauses are themselves
+unsatisfiable: every unreached clause is matched to
+an unreached input, so a coloring of the reached
+clauses would extend by independently satisfying
+the unreached clauses on those matched inputs.
+There are fewer than $m$ reached inputs, since all of
+them are matched and the matching has size below $m$.
+This gives synthesis with $2^{O(Km)}$ gates from the
+supplied unsatisfiable clause set, without enumerating
+minimal winners on the original input set.
+
+A coloring decision refutation gives a different size
+bound. At a node branch on the owner assigned to one
+input $x$. In the $r$-branch delete $x$ from clauses
+at $r$ and discard all clauses at other owners that
+contain $x$. A branch with an empty clause closes.
+The refutation may discard clauses at a child if the
+remaining clauses still have a refutation, and may
+share identical subproblems in a directed acyclic
+graph. Such a refutation compiles to a term dominating
+the original profiles with a constant number of
+gates per node for fixed $K$.
+
+To see the construction, let $L$ be the owners
+whose branch does not close immediately. For each
+$r\in L$, use the recursively compiled term $T_r$
+on inputs other than $x$. Its $r$-profile dominates
+the parent $r$-profile with $x$ set to false, and
+its other profiles dominate the corresponding
+profiles with $x$ set to true. Discarding clauses
+at a child only increases these bounds. If
+$r\notin L$, an empty $r$-clause in the restriction
+means that the parent $r$-profile cannot win without
+$x$. If $L$ is empty, the projection $x$ dominates
+every parent profile.
+
+Otherwise combine $x$ and the $T_r$ by a fixed term
+in at most $K+1$ arguments. At owner $s\in L$
+give this combining term the two winning generators
+\[
+       \{T_r:r\in L\},\qquad
+       \{x\}\cup\{T_r:r\in L\setminus\{s\}\}.
+\]
+At $s\notin L$ give it only unanimity. These formal
+profiles have common source. If all selected
+generators contain $x$, it is common. Otherwise
+some owner $s\in L$ selected the first generator,
+and no other owner can omit $T_s$. Hence the
+combining term exists by \cref{core:thm:profiles}.
+When the parent profile wins at $s$ without $x$,
+all $T_r$ win at $s$ and the first generator suffices.
+When it wins with $x$, every $T_r$ for $r\ne s$
+wins at $s$, so the second generator suffices,
+or unanimity if $s\notin L$. This proves domination
+inductively and works with shared child circuits.
+The previous profile surgery converts the dominating
+term into a greatest completion of the exact
+profiles with size linear in the refutation and
+the supplied profile circuits, for fixed $K$.
+
+This gives core circuit synthesis from a tree decomposition
+of the upper-profile CNFs' primal graph, whose edges join
+inputs appearing in the same clause. Let the decomposition
+have $t$ bags of width $w$. Assign each clause to a bag
+containing its inputs. Such a bag exists because the bag
+subtrees of the clause's inputs pairwise meet and subtrees
+of a tree have the Helly property.
+
+Root the decomposition. For each bag and each assignment
+on its intersection with the parent bag, test satisfiability
+of the clauses assigned in that subtree. Try every extension
+to the entire bag. An extension succeeds exactly when it
+satisfies the locally assigned clauses and induces a
+satisfiable state at every child. Once the bag is fixed,
+the children's remaining inputs are disjoint by connectedness
+of the bags containing each input. Thus their satisfying
+assignments can be combined, proving the test.
+
+From an unsatisfiable state, branch on the colors of the
+remaining inputs of its bag. Each complete extension either
+closes on a local clause or has an unsatisfiable child.
+In the latter case keep that child's clauses and continue
+with its state. This is a coloring decision refutation:
+each kept clause is a restriction of a clause in the
+current subproblem. For a child, colors of previously fixed
+inputs that occur in its clauses are already recorded in
+the parent intersection, so it is valid to share states
+with the same assignment there. If a bag adds no input,
+pass directly to the unsatisfiable child.
+Across all states of a bag the number of branch prefixes
+is $O_K(K^{w+1})$. The refutation and dominating core
+circuit therefore have size $O_K(tK^{w+1})$ and can be
+constructed in that bound times polynomial work on the
+input. Profile surgery gives a polynomial-size exact
+completion for bounded $w$. This also applies after
+pruning a support in the upper-profile test, by
+intersecting the original bags with the surviving inputs.
+
+There is also a clause-splitting rule. For an $r$-clause
+$C=C_1\cup C_2$, refute both strengthenings obtained by
+replacing $C$ by one of its parts. If $T_1,T_2$ are their
+dominating terms, use $T_1\star_r T_2$. At $r$ the parent
+profile is the disjunction of the two strengthened
+profiles by distributivity. The other profiles are
+unchanged and the gate takes their conjunction. Thus
+this extra refutation step compiles with one gate.
+
+With this rule the synthesis parameter can be incidence
+treewidth, even for wide clauses. Use a rooted binary
+decomposition of the bipartite input--clause graph.
+At each subtree, a state assigns colors to boundary
+inputs (those in the parent intersection) and selects
+which boundary clauses must be satisfied in this subtree.
+Include every clause vertex confined to the subtree.
+For a selected boundary clause use only its inputs in
+the subtree, then simplify at the assigned boundary
+inputs. These restricted clauses are exactly the
+constraints in the state.
+
+Try every coloring of the new inputs of the current
+bag. Remove the clauses satisfied there and delete
+the other fixed literals, closing on an empty clause.
+An unresolved clause vertex in the bag can still have
+inputs in both child subtrees. Split its residual
+clause into the two child parts and try each choice of
+one nonempty part. A clause outside the bag lies in
+just one child and cannot have remaining inputs in
+the other child, by the edge and connectedness
+conditions of the decomposition. After routing the
+split clauses, the two subproblems have disjoint
+remaining inputs and are instances of the child
+states. Hence the state is satisfiable exactly when
+some bag coloring and routing gives two satisfiable
+children (or no remaining constraints at a leaf).
+
+An unsatisfiable root state gives a refutation with
+input-color branches and clause splits. For each
+complete choice of colors and parts, discard the
+satisfiable child, if any, and reuse an unsatisfiable
+child state. Untouched boundary clauses stay excluded
+in descendants where they have not been routed.
+For incidence width $w$ there are at most
+$(K+2)^{w+1}$ states per bag, and all local choices
+and their branch prefixes number $(K+2)^{O(w+1)}$
+per bag. Thus the refutation and its dominating core
+circuit have size $t(K+2)^{O(w+1)}$ on $t$ bags.
+This yields synthesis from CNFs at bounded incidence
+width without enumerating their minimal winning
+coalitions.
+
+In particular one can recognize and synthesize greatest
+profile completions directly at bounded global prime
+incidence treewidth. Use the incidence graph with an
+input vertex and a prime vertex for every listed prime,
+including its head incidence. Choose for each owner $r$
+a different observer by a cyclic permutation of the
+palette. In the profile CNF extraction above, a prime
+on that observer's facet contributes a clause consisting
+of its head and its $r$-exclusions. Because the observer
+assignment is a bijection, each prime vertex contributes
+just one clause. The profile incidence graph is therefore
+a subgraph of the original graph, with no increase in
+treewidth. The incidence synthesis test checks common
+source and provides the profile circuit.
+
+The equality test against the extracted completion can
+also be run on the original bags without forming products
+of profile clauses. Fix a head $i$ and observer $k$.
+Guess a posting of the other inputs omitting $k$. Require
+that every prime at $(k,i)$ is hit, and that for every
+visible owner $r$ some $r$-profile clause is unhit by the
+$r$-postings. This is exactly a negative probe that the
+greatest completion would make positive. A tree
+decomposition table records the posting status of each
+input in the bag, and for each prime in the bag whether
+its loss test or its profile clause has been hit by a
+processed incidence. A vertex serving both roles has
+two bits. At a forgotten prime check any required loss
+test and record an unhit profile clause in a global
+flag for its owner. Join states combine the hit bits
+and owner flags by disjunction. At the root require
+an unhit-clause flag for every visible owner. This
+decides the witness search in time fixed-parameter
+tractable in $K$ and the bag width, given a decomposition.
+
+Check observer agreement before these tests. Work on
+the nonempty live support, rejecting any canonical
+prime mentioning a dead control, since an unused input
+cannot affect a source predicate. Once common source
+is established, the candidate lies
+below the extracted completion by antitonicity on
+each spanning pure block. Thus absence of a missed
+probe proves equality and nonempty outputs. This
+gives recognition and an exact core circuit from
+the same incidence decomposition, with no bound on
+prime width.
+
+The bag calculation also gives fixed-parameter joint
+interpolation under prescribed upper profiles. Use
+the joint incidence graph of the prime bound, the
+upper profile CNFs, and the additional clauses
+testing noncontainment in each negative coalition.
+Include the negatives from marked queries in this
+graph. Given a decomposition, use the equality
+witness table with the permitted-absorber clauses
+in place of extracted profile clauses. For a trial
+support, their incidences outside the support are
+ignored, while those of the bound primes are kept.
+Thus the table finds a loss with no permitted owner
+and marks its head for deletion. Repeat the support
+test until stable, using the same decomposition.
+
+To compute a least required profile on that support,
+fix an owner $r$ and use the table for losses at each
+head and foreign facet, requiring unhit-clause flags
+only for the other visible owners. Parameterize the
+input assignments by the tested coalition $A$:
+at each support input, choosing its $r$-posting
+requires its membership bit in $A$. All other
+posting choices are independent of $A$. Run the
+table as a monotone circuit, using conjunction
+to combine compatible states and disjunction to
+collect their alternatives. Its output tests for
+a loss whose unique permitted absorber is $r$
+and whose $r$-coalition is contained in $A$.
+As before, join these circuits over heads and
+facets and add the required wins and unanimity.
+This avoids enumerating all products of clauses
+even when $K$ is a parameter. For core synthesis
+use the incidence refutation construction on the
+upper CNFs, a subgraph of the same graph, and
+then the profile gluing construction. The resulting
+algorithm is fixed-parameter tractable in $K$ and
+the joint incidence width and outputs a core circuit
+of the same parameterized size bound.
+
+There is also one compact source circuit for the union
+of all completions admissible under these upper profiles
+and prime bounds. Keep any fixed profile requirements,
+and let the marked posting be the query input to the
+circuit. A completion supplies its head exactly when the
+support test succeeds with that head required and with
+the query coalitions added as negatives at the visible
+owners. The union is the greatest operation generated
+by the admissible completions, with empty output if
+there are none.
+
+To make the support test symbolic, use omission bits
+for the trial support and posting bits for the query.
+For the new negative at each owner, add a clause vertex
+adjacent to every input and keep it in every bag.
+This increases the width by at most $K$. For a loss
+witness the bag table now guesses which clauses certify
+that each owner is unavailable. Require each selected
+clause to be unhit. At an incidence assigned a posting
+of the clause's owner, this requires the input's
+omission bit when the clause is static. For a new
+query clause it requires the disjunction of that bit
+and the input's posting bit at the same owner in the
+query. The bound-prime tests remain independent of
+the query. The table thus gives monotone circuits
+for the failure tests on the current support.
+
+Unroll at most $n$ deletion rounds on $n$ inputs:
+an input's next omission bit is its current bit
+or the disjunction of its failed head tests.
+At stabilization the remaining rejection tests are
+also monotone in omissions and query postings.
+Failure of an explicit win in an upper CNF means
+some clause misses the restricted required coalition;
+conflict with a negative means every input of that
+required coalition outside the negative is omitted.
+Use the same tests for unanimity, and check the
+queried head's omission bit. Negating the resulting
+failure circuit by duality gives a monotone source
+circuit in exclusion bits. Its size is fixed-parameter
+tractable in $K$ and the joint incidence width, times
+polynomial in the input size. It describes the whole
+union without constructing any of its canonical prime
+lists or enumerating its possible supports.
+
+The completeness of this union as a representation of
+the prime bound is also decidable at bounded incidence
+width. A missed probe consists of an observer, a head,
+and a consistent proper posting enabling a bound
+prime, with no feasible support for the query.
+Support feasibility can be tested without referring
+to a deletion sequence. Require a subset $S$ containing
+the head, satisfying the explicit profile requirements
+and unanimity. For every head in $S$ and every loss
+of the bound, require some visible owner whose posted
+coalition in $S$ wins its upper profile and is not
+contained in any fixed or query negative coalition.
+This is exactly the stable-support condition: its
+necessity follows from any fitting completion, and its
+sufficiency follows by taking the least forced profiles
+on $S$. Thus a missed probe is an existential
+posting test followed by the negation of this support
+test.
+
+All predicates here are monadic second-order on the
+joint incidence graph. Use one set of inputs for the
+support and at most $K$ sets for each quantified
+posting. Prime hits and profile clause hits use the
+typed incidences. Fixed required coalitions can be
+included as additional labeled incidence vertices.
+For a query negative use containment directly in
+the corresponding query posting set. For fixed $K$
+the quantifier pattern and the number of set variables
+are independent of the number of inputs and clauses.
+The finite bag automaton therefore decides existence
+of a missed probe in fixed-parameter time given a
+decomposition, even if there are exponentially many
+admissible supports. With no width bound and fixed
+$K$, a missed probe is a polynomial certificate of
+inequality, checked by the polynomial support test.
+Thus equality is in coNP. When equality holds and
+the bound has a positive source, the union is nonempty
+and gives a core realization.
+
+No bounded number of common-source upper families
+suffices for this union method on all core operations,
+even at fixed $K$ and prime width two. Fix distinct
+owners $a,b$ and take disjoint pairs $(x_i,y_i)$ for
+$1\le i\le m$. On each pair start at $y_i$ and attach
+$x_i$ at $a$ and then at $b$. This returns the
+$x_i$-singleton when $x_i$ is atomic at either
+owner, and returns $x_i\cup y_i$ otherwise.
+Take the pointwise union over the pairs.
+Each $x_i$ is retained, and the only losses at
+$y_i$ are $x_i:a$ and $x_i:b$ on facets that
+see those postings. Thus the complete prime lists
+have width at most two.
+The global prime incidence graph has treewidth at
+most two: use a bag with both inputs and one prime
+for each prime on a pair.
+
+Any greatest profile completion below this bound
+that uses $y_i$ must win at $a$ on $\{x_i\}$ and
+at $b$ on $\{x_i\}$. For each owner use the pure
+loss at $y_i$ posting only $x_i$ at that owner.
+Union on the completion's support would supply the
+marked head. No other owner has a singleton posting
+that could erase it. Hence that owner must win, which
+also forces $x_i$ into the support. A common-source
+upper family admitting such a completion for one
+pair cannot admit one using $y_j$ of another pair:
+the $a$-win on $\{x_i\}$ and the $b$-win on
+$\{x_j\}$ are disjoint. Covering all neutral marks
+therefore requires at least $m$ upper families.
+Exactly $m$ suffice, since each two-input summand is
+itself a greatest profile completion and can use
+its own profiles, extended to ignore outside
+inputs, as its upper family.
+
+Even allowing arbitrarily many upper families does not
+give every core operation. For distinct owners $a,b$
+consider $(x\star_a y)\star_b z$. At the source $y$
+there is a pure $a$-loss posting only $x$, and a pure
+$b$-loss posting only $z$. By the same argument, any
+greatest profile completion below this term with $y$
+in its support would have to win at $a$ on $\{x\}$
+and at $b$ on $\{z\}$. Common source rules this out.
+The neutral probe at $y$ nevertheless survives in
+the term itself. Hence this operation is not a union
+of greatest profile completions. Three inputs are
+minimal for this obstruction, since the binary
+normal forms of \cref{core:prop:binary} are greatest
+profile completions on their live supports.
+
+The obstruction persists with unanimous singleton profiles
+and no pure losses. Fix a third owner $c$ and take the union
+of $(x\star_a y)\star_b z$ with the full $c$-fold on $x,y,z$.
+At $c$ the first term is unanimous, and at every other
+owner the second term is unanimous, so their union has
+unanimity at every owner. At $y$ there are two minimal
+losses, posting $(x:a,z:c)$ and $(x:c,z:b)$ on their
+respective foreign facets. The first term supplies
+the source with both controls posted at $c$.
+
+Any greatest profile completion below this bound supplying
+that positive must lose at $c$ on the restricted coalition
+of both controls. In the first loss it therefore has to
+win at $a$ on $\{x\}$, and in the second at $b$ on $\{z\}$.
+Those disjoint wins violate common source. Hence the bound
+has no representation as a union of greatest profile
+completions. Its prime width is at most two. The losses at
+$x$ are the corresponding two mixed rows with $y$ in place
+of $x$, and $z$ is retained, since its loss in the first
+term requires both other inputs posted at $b$.
+
+This also gives a direct mixed-loss test. At a queried
+positive, any loss coalition at a foreign owner contained
+in the query's coalition at that owner is unavailable as
+an absorber, even after restricting to any support.
+If each of two losses of the queried head has just one
+remaining absorber and these are at different owners
+on disjoint coalitions, no bounded greatest completion
+can supply the query. This test can fail even when all
+of the pure-loss tests pass.
+
+Suppose every minimal loss posts each owner at most once.
+The greatest union of bounded profile completions then
+has a polynomial-size core presentation computable from
+complete primes. For any mark supplied by a bounded
+completion, keep only unanimity and one absorbing
+singleton win per minimal loss at each used head.
+These profiles still satisfy the bound and preserve
+the mark. If more than one owner has selected
+singleton wins, they must all be on the same input
+by common source.
+
+First consider singleton wins at only one owner $r$.
+Make a dependency arrow from a head to the unique
+$r$-posted input of each of its minimal losses.
+Forbid any head with a loss omitting $r$. For each
+head take its reachable support, including itself.
+If the support contains no forbidden head, its
+full $r$-fold is bounded. On every loss of a used
+head it absorbs at the required posting. Conversely,
+any bounded completion using only the selected
+$r$-wins and supplying that head must include this
+reachable support and win at $r$ on every singleton
+pulled in by an arrow. Its supplied mark therefore
+also survives the fold on the reachable support.
+
+For singleton wins at a common input $j$ across
+owners, $j$ must be retained, since no loss at $j$
+can post it as absorber. To supply another head
+$h$, each loss at $h$ must post $j$. Take the
+two-input term on $j,h$ retaining $j$ and suppressing
+$h$ exactly when $j$ is posted at an owner used on
+$j$ in one of those losses. This is a one-sided
+binary normal form. It is bounded and supplies
+every mark of $h$ attainable in this case, since
+each named singleton win was mandatory. Include
+the retained projections to cover the case with
+no selected singleton wins. The union of these
+folds, binary terms and projections supplies
+exactly the marks of all bounded completions.
+
+The tests require no expansion of the losses.
+The existence of a loss omitting an owner, or
+omitting an input, is tested by insufficiency of
+the guard excluding all its postings. To detect
+a posting in some minimal loss, choose a prime
+containing it and delete all other postings of
+that prime from the ground set. Check whether the
+remaining set hits all primes. The chosen prime
+then forces the posting into any minimal hitting
+subset. The same test for two postings chooses
+a private prime for each, meeting the pair only
+at its own posting, and deletes all their other
+postings. By canonicity the resulting minimal
+hitting set is consistent. Conversely any minimal
+loss containing the indicated postings supplies
+the required private primes. Testing pairs of
+the same owner verifies the hypothesis in polynomial
+time. The construction uses at most one fold
+per head and owner and one binary term per ordered
+pair of inputs.
+
+Equality with this union is polynomial as well.
+At a retained head equality holds by projection.
+At another head $h$, for each owner $r$ only its
+reachable fold at $h$ needs to be tested. Indeed
+every other bounded $r$-fold containing $h$ contains
+that reachable support, so it supplies no additional
+mark at $h$. The remaining summands at $h$ are its
+one-sided binary terms, at most one for each control
+$j$. To test whether a bound prime at $h$ allows
+a loss of the union, give each control the foreign
+colors allowed by that prime. A binary term forces
+its control $j$ to be posted, and restricts its
+colors to those at which the term suppresses $h$.
+If any such control has no allowed color, a loss
+is impossible.
+
+Each reachable fold must have one control in its
+support posted at its owner. Match these owners
+to distinct controls that belong to their respective
+supports and permit their colors. Such a matching
+is necessary for a loss, and sufficient: make the
+matched postings and fill each still unposted
+binary control with any of its allowed colors.
+This disables every summand while enabling the
+bound prime. The matching test includes the case
+of a fold at the observer, which has no eligible
+posting. Applying it at each bound prime decides
+whether any positive is missed. Thus the
+recognition and synthesis use polynomial time
+even when the number of owners varies.
+
+The obstruction applies directly to arbitrary prime
+lists. Fix a head and, for each owner, form the upward
+family of pure coalitions that lose that head on one
+foreign facet. Under observer agreement it is
+independent of that facet. Every completion using
+the head must win on the restriction of every such
+coalition to its support. Thus a selection of pure
+losses at distinct owners with empty intersection
+rules out all such completions simultaneously.
+The loss families are CNFs obtained by projecting
+every prime at the head to its exclusions at the
+posted owner: a pure posting loses precisely when
+it hits all these projections. The common-source
+coloring test applies after adjoining unanimity,
+so the obstruction can be checked at bounded
+prime incidence treewidth without listing losses.
+
+If every minimal loss is monochromatic, these forced
+profiles give an exact support criterion without any
+prescribed upper profiles. For a nonempty proposed
+support $S$, let the least profile at owner $r$ be
+generated by unanimity on $S$ and by the restrictions
+to $S$ of every pure $r$-loss at every head in $S$.
+Any bounded greatest profile completion on $S$ has
+at least these wins. Conversely, if the profiles have
+common source, their greatest completion is bounded:
+at a target loss on a used head, a monochromatic
+subloss forces an absorber, and a loss at an unused
+head needs no test. This is the greatest bounded
+profile completion on $S$, because additional
+singleton wins only make the output smaller. It
+supplies a requested marked head exactly when the
+head is in $S$ and every visible least profile loses
+on the corresponding query coalition.
+
+These predicates give an exact test at bounded
+global prime incidence treewidth for representation
+as a union of greatest profile completions, with no
+upper profile families in the input. The condition
+on losses is itself a test on a proper coloring:
+if every prime at its head is hit, some pure
+owner restriction must still hit every prime on
+that facet. For the support criterion, a coalition
+$A\subseteq S$ wins the forced $r$-profile exactly
+when it equals $S$ or, at some head $i\in S$, the
+guard excluding $r$ on $S\setminus(A\cup\{i\})$
+is insufficient on a foreign facet. Indeed that
+is equivalent to a pure loss whose restriction
+to $S$ lies in $A$. Read insufficiency as absence
+of a contained prime. Common source is then a
+universal test over one winning coalition per owner.
+
+As in the capped case, a missed probe consists of
+a bound positive for which there exists no support
+passing common source and the marked test. All the
+tests are monadic second-order on the original named
+incidences, with a number of set variables bounded
+in $K$. The finite bag automaton decides equality
+with the union in fixed-parameter time in $K$ and
+the width of the supplied decomposition. If the
+union is nonempty, equality certifies a core
+realization in this class.
+
+Mixed losses allow an exact reachability criterion when
+only two owners $r,s$ may win below unanimity. Fix a
+nonempty support $S$, and restrict every prescribed
+coalition to $S$. Include $S$ as a positive and the
+empty coalition as a negative at each owner. A marked
+positive requires its head in $S$ and forbids a win
+on the query coalition at each visible active owner.
+Explicit requirements at the other owners are checked
+against unanimity.
+
+For a prospective $r$-profile $f$, the largest
+compatible $s$-profile respecting its negatives is
+\[
+ q(B)=1\quad\Longleftrightarrow\quad
+  f(S\setminus B)=0\quad\text{and}\quad
+  B\text{ is contained in no negative }s\text{-coalition}.
+\]
+This follows from common source: with all other
+profiles unanimous, every $r$-win must intersect every
+$s$-win. Using the largest $s$-profile only helps
+the upper bound, since it adds absorptions, and is
+safe for the marked positives by the negatives.
+Each required $s$-win $B$ must pass the containment
+test and contributes the $r$-negative $S\setminus B$.
+
+On $2^S$ draw the inclusion arrows. At each loss of
+the prime bound on a used head, let $A,B$ be the
+$r,s$-coalitions in $S$. If $s$ is visible there and
+$B$ passes its containment test, add the arrow
+$S\setminus B\to A$. This is exactly the requirement
+$f(A)\lor q(B)$, with $A=\varnothing$ if $r$ is
+invisible. If $s$ is invisible or fails the test,
+make $A$ an $r$-positive instead. Unanimity owners
+cannot absorb a marked head in the support.
+Thus a completion exists exactly when no $r$-negative
+is reachable from an $r$-positive. If the test passes,
+take the reachable sets as the winning $r$-profile
+and use the displayed $s$-profile. They satisfy the
+losses, the profile requirements and the marked
+positives.
+
+The graph need not be materialized. To test an arrow
+coming from a loss, fix the indicated $r,s$-postings
+on the support and exclude those colors at its
+remaining inputs. For each used head and compatible
+facet test whether this still permits a loss. After
+conditioning on the fixed postings, this is a
+prime-containment test on the complete restricted
+lists. Likewise, to test a forced positive, fix the
+$r$-coalition and either use the invisible-$s$ facet
+or exclude $s$ outside one prescribed negative
+$s$-coalition in the support. Test all such negatives.
+These tests and bounded-length graph reachability
+use polynomial space in the prime lists. One may also
+guess $S$ in polynomial space. Consequently equality
+with the union of all bounded completions having
+only these two active owners is in PSPACE: search
+for a bound positive admitting no such support.
+
+The equality problem is PSPACE-complete, even with
+prime width four, no extra profile requirements,
+and full support required of every summand. Indeed
+the interval-mask construction of
+\cref{core:thm:interval-masks,core:cor:interval-mask-interior}
+expresses the greatest core minorant of a mask as a
+union of full-support completions with dual profiles
+at its two owners and unanimity elsewhere. Each
+summand is bounded by the original mask. Thus on
+these instances the union selected by the support
+test is precisely that greatest core minorant.
+Equality holds exactly when the original mask is
+path-closed. The compact cube masks of
+\cref{core:prop:compact-cube-masks} give the lower
+bound. The same argument proves hardness when
+supports may vary: allowing more summands cannot
+exceed the greatest core minorant and the
+full-support ones already reach it.
+
+Even a positive instance can require exponentially many
+full-support summands of this kind. Take the compact
+cube construction with an incrementing binary clock
+and no reset. A ripple increment and overflow check
+on $d$ bits uses $O(d)$ circuit gates and hence $O(d)$
+cube coordinates in the single-bit simulation. Stop on
+overflow. The graph is acyclic, since every full sweep
+advances the clock, and the execution from clock zero
+has at least $2^d-1$ edges. Its cube mask is therefore
+core and has complete primes of width at most four.
+
+Along any directed path $x_0\to\cdots\to x_M$, a
+bounded full-support completion supplies a nonincreasing
+sequence of $r$-profile bits at $L_{x_i}$, with $r=c$.
+Indeed the mask of edge $x_i\to x_{i+1}$ requires
+absorption at $r$ on $L_{x_i}$ or at $s=b$ outside
+$U_i=L_{x_i}\cup L_{x_{i+1}}$. A win at $r$ on
+$L_{x_{i+1}}$ excludes that $s$-win by common source.
+At the opposite interval $(L_{x_{i+1}},U_i)$ the
+target has a positive mark, since that interval is
+unmasked. To supply it, a completion must lose at
+$r$ on $L_{x_{i+1}}$ and at $s$ outside $U_i$.
+The masked interval then forces a win at $r$ on
+$L_{x_i}$. Thus each summand can cover an opposite
+interval only at its single strict drop along the
+path. Covering the mask requires at least $M$
+full-support summands, even without requiring their
+two profiles to be dual.
+
+The exact summand count on a fixed support has a
+two-copy reachability description for arbitrary
+complete prime bounds. Use two copies $f(A),g(A)$
+of each coalition on the support, for the $r$-profile
+and the Boolean dual of the $s$-profile. Draw
+inclusion arrows in both copies and $f(A)\to g(A)$
+for common source. For a bound loss on a used head
+let $L$ be its restricted $r$-coalition and $U$ the
+complement of its restricted $s$-coalition. Add
+$g(U)\to f(L)$. This requires an $r$-win whenever
+the $s$-profile loses. An invisible active owner
+has the empty posting coalition and cannot absorb.
+Normalization fixes both top vertices to true and
+both bottom vertices to false. Additional profile
+requirements fix individual bits in these copies,
+using duality at $s$. These implications and fixed
+bits characterize bounded completions on the support.
+
+For a positive marked probe with head in the support,
+use the same pair $L\subseteq U$ of restricted
+coalitions. Its request is $g(U)=1,f(L)=0$, which
+excludes both absorptions. First check that each
+requested probe is individually feasible with the
+fixed bits. Then order requests strictly by putting
+$i$ before $j$ when $g(U_i)$ reaches $f(L_j)$.
+There is no self-reachability by individual
+feasibility. Transitivity follows from
+$f(L_j)\to g(U_j)$ by inclusion and the cross-copy
+arrow. A set of requests is jointly feasible exactly
+when it is an antichain. For sufficiency, make true
+precisely the vertices reachable from the requested
+true bits and the fixed true bits. No fixed or
+requested false bit is reached, since any such
+conflict would involve either an individual request
+or a comparable pair. This constructs the two
+profiles of a fitting completion.
+
+Hence the minimum number of summands needed to
+cover those probes is the height of the request
+order. A chain needs one per request, and grouping
+by the length of a longest chain ending at each
+request gives the matching antichain partition.
+For exact equality on full support use all positive
+probes of the bound, rejecting if any is infeasible.
+The tests for loss arrows from the previous
+reachability criterion apply to this graph as well.
+In particular a proposed upper limit on the number
+of summands can be checked in PSPACE by testing
+individual feasibility and searching for a longer
+chain using one request and a counter at a time.
+
+For a path-closed interval mask the loss arrows
+are precisely $g(U)\to f(L)$ at the masked intervals.
+The request set simplifies to all strict unmasked
+intervals, including boundary intervals. To see
+that these also recover both colors, for any
+nonempty proper $A$ the boundary requests
+$(\varnothing,A)$ and $(A,V)$ give $g(A)=1$ and
+$f(A)=0$ in some summands, supplying both colors
+on its atomic row. On a mask $(L,U)$ use the
+first request at $L$ and the second at $U$.
+The mask arrow and inclusion force the two
+opposite singleton outputs in those summands.
+The normalized endpoints need no further tests.
+
+The two-copy criterion also works when all profiles
+other than $r,s$ are specified exactly, even if they
+win below unanimity. Keep the inclusion arrows.
+For each choice of a winning coalition at every
+fixed owner, let $D$ be their intersection. Include
+the common-source arrow $f(A)\to g(U)$ whenever
+\[
+                      A\cap D\subseteq U .
+\]
+Indeed $g(U)=0$ means that $S\setminus U$ wins at
+$s$, so the arrow forbids an empty intersection of
+the resulting rainbow tuple. Conversely all forbidden
+tuples are excluded by these arrows. They include
+the earlier arrows $f(A)\to g(A)$ and all their
+inclusion consequences.
+
+At a bound loss already absorbed by a fixed visible
+profile no arrow is needed. At every other loss
+include the same $g(U)\to f(L)$ arrow as before.
+A marked positive is impossible if some fixed
+foreign profile absorbs there. Otherwise it imposes
+the same request $g(U)=1,f(L)=0$. These constraints
+are exact by common source and the greatest
+completion formula. In particular individually
+feasible requests still have pairwise compatibility,
+and the height of their request order still gives
+the exact summand count with these profiles fixed.
+Transitivity uses just the ordinary arrows from
+$f(L)$ to $g(U)$ for $L\subseteq U$.
+
+Given the fixed profiles as Boolean circuits,
+the new arrows have polynomial-space tests.
+For common source guess the fixed winning
+coalitions and test their intersection. For a
+loss arrow guess its proper posting and evaluate
+the fixed profiles and the bound there. Together
+with the implicit graph search this gives PSPACE
+for joint interpolation and for testing the
+summand count on fixed support. The two unknown
+profiles need not be the only ones that can
+absorb.
+
+More generally there is a binary-clause criterion on a
+fixed support. Use a variable for every possible winning
+generator $(r,A)$, consisting of unanimity, the prescribed
+wins, and the restricted absorbing coalitions of the bound's
+losses. At each loss require at least one visible absorbing
+generator. Forbid a generator contained in a prescribed
+negative coalition, and make the explicit generators
+mandatory. For each rainbow selection of generators with
+empty intersection, forbid simultaneous selection.
+The formula is exact: any fitting completion gives a
+selection, and any satisfying selection gives its profiles
+by upward closure. Common source is tested on generators
+because enlarging their coalitions preserves intersection.
+A positive probe on the support adds only negative unit
+clauses, one for each generator that would absorb it at
+a foreign owner.
+
+Suppose each loss offers at most two absorbers, and every
+rainbow selection of possible generators with empty
+intersection contains a disjoint pair. Then the formula
+is 2SAT, with any number of active owners. For instance
+the intersection hypothesis holds for generators that
+are connected subtrees of one tree: pairwise intersection
+of subtrees implies a common vertex. At $K=3$ the
+two-absorber condition always holds on proper losses.
+With explicit minimal losses the test is polynomial.
+With complete primes it is an implicit implication
+graph: a candidate loss clause is checked by guessing
+a proper loss with the specified absorbing coalitions,
+and a conflict clause by testing disjointness. Possible
+generator membership is tested by the same loss search.
+Thus it gives a polynomial-space test without expanding
+the losses. The intersection hypothesis itself can be
+checked in polynomial space by searching for a violating
+rainbow selection.
+
+Under these binary conditions individually feasible
+marked queries are jointly feasible exactly when every
+pair is feasible. In a satisfiable 2SAT formula, adding
+unit literals fails only if implications from one or
+two of them force contradictory literals. Since each
+query only contributes such units, any failure uses
+at most two queries. Without the binary conditions,
+the general formula still gives a nondeterministic
+exponential-time upper bound from complete primes,
+by enumerating the losses and all rainbow selections
+for fixed $K$. The same upper bound applies to exact
+coverage by the union of all fitting completions,
+even with variable support: enumerate the positive
+probes and guess one support and one satisfying
+selection for each. The number and size of these
+certificates are both singly exponential.
+
+For fixed support, the profile interpolation problem
+in this test is PSPACE-complete. Hardness holds at
+prime width four, with one additional required
+$r$-win and one forbidden $r$-win. To see this, use
+the compact cube masks of \cref{core:prop:compact-cube-masks},
+with $r=c,s=b$ and all inputs in the support.
+Each masked interval $(L,U)$ gives exactly the
+implication $U\to L$: its single free head is marked
+on a foreign facet, with $r$ on $L$ and $s$ outside
+$U$. There are no other losses, and the $s$-coalition
+is nonempty. In addition there are only inclusion
+arrows and the mandatory top and bottom conditions.
+
+Use the single-bit simulation from that proposition
+for a polynomial-space machine started in its
+designated initial configuration. Add an acceptance
+bit, initially zero. Restrict the simulation edges to
+bit zero, and allow a flip to one at the first stage
+with an accepting configuration. The check fixes a
+stage and an accepting control state, so this new
+edge direction uses one subcube. All other edge
+directions still use at most two subcubes. The
+acceptance bit can therefore be set from the start
+exactly when the machine accepts. Reverse all
+simulation edges before making the masks, so that
+an inclusion followed by an interval reversal can
+simulate an edge in its original direction. Reversing
+an enabling subcube simply flips its writing bit,
+and preserves the bound on the number of subcubes.
+The same prime calculation gives complete lists of
+width at most four in polynomial time.
+
+Require the transversal of the starting vertex as an
+$r$-win, and forbid the coalition consisting of all
+rails except the zero rail of the acceptance bit.
+Starting at a transversal, a path of inclusion and
+reversal edges can move among transversals only by
+following simulation edges or staying in place.
+Indeed each reversal starts at a union of two
+adjacent transversals, and those are the only
+transversals included there. The forbidden coalition
+can be reached from the starting transversal exactly
+when some reachable transversal chooses the one
+rail. The mandatory top winning coalition cannot
+reach it, and the bottom losing coalition is never
+reached. Thus the interpolation instance is feasible
+exactly when the designated computation does not
+accept. This proves PSPACE-hardness by closure of
+deterministic polynomial space under complement.
+
+For several owners, sample fitting by greatest profile
+completions has an exact polynomial-size propositional
+criterion at fixed $K$. In addition to a variable selecting
+each support input, use one optional flag for each row $v$
+and each owner $r\in B_v$ with $R_r(v)\ne\varnothing$.
+The flag selects $R_r(v)$ as a winning generator at $r$.
+For each input outside $E(v)$, require that selecting it
+implies at least one flag on $v$. Thus a row where the
+support union violates its bound must have a selected
+absorber. Also include the explicitly required generators
+and the entire input set as mandatory generators, the
+latter at every owner for unanimity on the chosen support.
+
+For each owner list its negative coalitions, including
+the empty coalition and $R_r(v)$ whenever $r\notin B_v$.
+For a generator $A$ at $r$ and a negative coalition $B$,
+require that activating $A$ implies selection of at least
+one input of $A\setminus B$. For every selection of one
+generator per owner, require that activating all those
+generators implies selection of at least one input of
+their intersection. These are clauses in the flags and
+support variables. There are polynomially many at fixed
+$K$, since the number of generators in a selection is $K$.
+For a positive query requiring $k$, require selection of
+an input carrying $k$ and add negative coalitions on that
+query at all owners other than $k$.
+
+For necessity, take the actual support and activate flags
+for singleton outputs at bounded rows. Monotonicity and
+common source give the clauses. Conversely, restrict
+every active generator to the selected support and take
+its upward closure at its owner. The negative clauses
+give proper nonempty profiles and exclude all forbidden
+wins. The intersection clauses give common source, so the
+greatest profile completion exists. On each bounded row
+either its union fits, or a selected flag forces an allowed
+singleton. The query clauses ensure its required winner.
+Thus the certificate consists of the support and just one
+permitted absorption choice at each row requiring it.
+The construction uses no enumeration of term operations.
+
+This sample fitting problem is NP-complete even when the
+support is required to be the full input set and each row
+allows just two singleton owners. For hardness use three
+owners $a,b,c$. First encode a 3SAT instance as a selection
+problem with two labeled options per row, with distinct
+owner labels within each row. Give each variable a Boolean
+row. Give each clause three separate occurrence rows and
+label their falsifying options by $a,b,c$, respectively.
+Forbid the rainbow triple of those falsifying options.
+Link copies of a variable by forbidden pairs enforcing
+equality of truth values. To implement a link between
+different labelings, change one label at a time to the
+third unused label, keeping the other label unchanged.
+The two inconsistent assignments in each step have
+different owner labels, so both can be forbidden as
+rainbow pairs. The six ordered pairs of distinct labels
+are connected by these relabelings. Thus a constant
+number of intermediate rows suffices for each occurrence,
+including negative occurrences. Selecting one option
+per row without any forbidden pair or triple now encodes
+exactly a satisfying assignment.
+
+Realize these constraints as profile coalitions. Use one
+input for each nonempty rainbow set of options from
+distinct rows that contains no forbidden pair or triple.
+For a given row, put that input at the singleton owner of
+its option in the set, if any, and give it the full menu
+otherwise. Use the row's two owner labels as its output
+bound. Add one input with the full menu in every row.
+With full support the union always violates the bound, so
+each row must select one of its two owner profiles.
+The intersection of the coalitions for any rainbow set
+of chosen options is nonempty exactly when it contains
+no forbidden subset: an input indexed by that set proves
+one direction, and any common input indexes a superset
+proving the other. The full-support unanimity generators
+impose no further restrictions. Owners outside $a,b,c$
+have no singleton postings in the sample. Consequently
+the profile theorem realizes exactly the consistent
+selections, which proves hardness for each fixed $K\ge3$.
+The inputs are polynomially many since the option sets
+have size at most three. Membership in NP follows from
+the propositional test.
+The same reduction works with variable support and one
+positive query. On the query give the extra input the
+full menu and give every other input the ambiguous menu
+omitting $k$, for any fixed owner $k$. Request $k$.
+This forces the extra input into the support, so each
+bounded row still requires absorption. Shrinking support
+cannot create an intersection forbidden in the full set.
+In the other direction a full-support completion supplies
+$k$ on the query because every menu there is ambiguous.
+
+With three active owners, any hypergraph of forbidden
+query subsets can occur on full support under a core
+bound. Suppose every edge has at least two vertices,
+so each individual query is feasible. Use one Boolean
+variable $p_i$ per vertex, and forbid the variables
+of any edge from all being true. Convert each edge
+constraint to 3CNF by encoding a binary disjunction
+tree on its negated variables and requiring its root
+true. An assignment to the $p_i$ extends to this
+formula exactly when its true vertices contain no
+edge. Apply the preceding two-option encoding to
+the resulting formula.
+
+Use the inputs indexed by compatible rainbow sets
+of options, as above. Add one distinguished head $h$.
+For each option row, post its two coalitions at their
+distinct owners and prescribe this pattern as a loss
+at $h$. Take the upward closure of these losses
+on proper colorings and retain every other source.
+The single-source completion theorem
+(\cref{core:thm:source-completion}) gives a core
+operation with precisely these bounds. Its coefficients
+therefore have complete canonical prime lists.
+For a full-support greatest profile completion to
+lie below this operation, it must absorb the head
+on each prescribed loss. That is exactly the choice
+of at least one of the two option coalitions on its
+row. Conversely such choices suffice for the bound
+when they have common source, since every further
+loss extends a prescribed one.
+
+For each $p_i$ take the marked query at $h$ with
+only the false option's coalition posted, at its
+owner. Supplying the mark forbids the win at that
+option and therefore forces the true option in the
+corresponding row. No other owner can absorb on
+this pure posting. Thus the simultaneous marked
+queries are feasible exactly when their vertices
+contain no hyperedge. Thus a single large edge
+gives an arbitrarily large minimal incompatible
+set. More generally, the least number of
+full-support completions covering the listed
+queries is the hypergraph's chromatic number.
+Taking ordinary graphs proves NP-hardness of
+covering the queries with three summands, even
+with explicitly listed minimal losses at just
+one conditional source of a core bound. The
+reduction is polynomial in the explicit hypergraph
+size. Membership in NP uses a choice of absorber
+for each loss in each summand and the same
+common-source tests as above. The construction
+uses three owners and unanimity at every other
+owner.
+
+The same encoding with an arbitrary 3CNF, without
+the marked queries, proves NP-completeness of
+full-support completion below an explicitly listed
+minimal-loss bound with only one conditional source.
+Delete redundant loss rows by inclusion to give the
+minimal-loss input in polynomial time. Membership in
+NP uses one absorber per listed loss and a rainbow
+intersection check on the generated profiles.
+
+Even with only two owners allowed to win below unanimity,
+fitting a sample and one positive query is NP-complete when
+the support can vary. In fact each bounded row can have only
+one owner capable of giving an allowed singleton. Use distinct
+owners $r,s,k$. Give each Boolean variable $i$ two literal
+inputs $x_i^+,x_i^-$, and introduce distinct auxiliary inputs
+$p_i,f_i$ for each $i$, a shared input $p$, and an input $z$.
+Every bounded row has bound $\{r,s\}$. Make such a row by
+placing one designated input at the full menu, placing a
+specified coalition at one owner, and giving every remaining
+input the menu $\{r,s\}$. The designated input is outside
+the specified coalition. Selecting that input into the
+support forces an absorbing win on the specified coalition;
+otherwise the input union fits the row.
+
+For each $i$ use two rows:
+\begin{itemize}
+\item the designated input $x_i^+$ forces an $r$-win on
+$\{p_i,f_i\}$;
+\item the designated input $x_i^-$ forces an $s$-win on
+$\{p\}\cup\{p_j:j\ne i\}$.
+\end{itemize}
+For each clause use a row where $z$ forces an $r$-win on the
+set consisting of $p$ and the clause's literal inputs.
+On the positive query give $z$ the full menu, give $p$ and
+all $p_i$ the atom $\{r\}$, and give all other inputs the
+menu $\{r,s\}$. Request $k$. This forces $z$ into the
+support and forbids an $r$-win on the padding coalition
+$\{p\}\cup\{p_i:i\}$. Thus every clause must contain a
+literal in the support. The two coalitions for opposite
+literals of the same variable are disjoint, so common
+source forbids selecting both. The selected literals
+therefore extend to a satisfying assignment.
+
+Conversely choose the true literal of each variable and
+include every auxiliary input in the support. Take the
+upward families generated by the forced wins at $r,s$,
+and unanimity at the other owners. Every common-source
+intersection between a forced $r$- and $s$-coalition
+contains a $p_i$ for different variables or $p$ for a
+clause. Every forced $r$-coalition contains an input
+outside the query padding, namely $f_i$ or a true literal.
+Hence the greatest completion fits the rows and supplies
+$k$ on the query. This is the sharp change from the
+single-owner support test.
+
+With support fixed and only two owners allowed to win
+below unanimity, the sample problem is instead 2SAT.
+Each row whose support union violates its bound gives
+a clause requiring one of its at most two permitted
+absorptions. An option is forbidden if its generator
+is contained in a negative coalition on that support.
+Across the two owners forbid pairs of active generators
+with empty intersection. The mandatory generators are
+handled by fixing their flags; unanimity at every other
+owner contributes the whole support and has no further
+intersection constraint. These are precisely the general
+sample clauses specialized to this case. Positive queries
+are handled by their negative coalitions and the check
+that the fixed support carries the queried winners.
+
+For any fixed support, a nonempty family of fitting
+greatest profile completions has a greatest member
+within that class exactly when every row requiring
+absorption has the same singleton output in all fitting
+completions. Indeed the pointwise order of greatest
+profile completions on one support reverses containment
+of their winning families. The forward implication uses
+the facts that each forced row requires a singleton and
+that distinct singleton outputs are incomparable.
+For the converse, generate the profiles only from
+unanimity, explicitly required wins, and the forced
+singleton choices common to all completions. These
+profiles are contained in every fitting tuple, so inherit
+common source and all negative constraints. They
+fit every row and positive query and give the greatest
+member. In the two-owner case the universal singleton
+choices can be found by testing each alternative in the
+2SAT instance. Therefore both feasibility and existence
+of a greatest fitting completion are polynomial on a
+fixed support in that case.
+
+At width one there is a more direct reconstruction: take
+the union of the outputs of all atomic refinements. Indeed
+an enabled width-one prime excludes at most one color at
+any control. For any winner it supplies, set its head to
+that winner and choose an allowed atom from each control
+menu, which is possible even at ambiguous menus. This
+preserves the prime and the winner. The same argument
+applies at arbitrary width when each prime excludes at
+most one color per control.
+
+In particular, to test for a witness with at most $b$
+ambiguous inputs, choose up to $b$ heads in $B$ to allow to
+survive. Disable every prime of $D$ at $h$ and at the
+remaining heads of $B$. Each such prime is a clause requiring
+at least one of its postings, with unavailable postings
+deleted. At each control use pairwise clauses forbidding
+two distinct postings. A satisfying partial assignment can
+be filled arbitrarily on the remaining controls outside
+$B\cup\{h\}$, since the requirements to hit primes can only
+gain witnesses. Thus if the baseline primes have width at
+most two these are 2SAT instances. Directed comparison
+through any specified ambiguity level then takes time
+polynomial in the lists times an exponential only in the
+number of full blocks in one target prime. Atomic comparison
+in this direction needs just one instance per target prime.
+
+At width at most $d(K-1)$ this gives an exact recognition
+rule for this class. Each exterior prime must consist of
+exactly $d$ full blocks and nothing else. For each head, the
+family of $d$-subsets of $S$ furnishing these primes must be
+the same on every facet. Necessity follows by testing each
+such subset: leave its inputs unposted and post the rest of
+$S$ at an owner visible to both observers. Only that subset's
+prime can be enabled. For sufficiency start with $U_S$.
+For each selected subset and exterior head, start at that head
+and successively reset at the inputs of the subset. Adjoin the
+result by union. If any reset input is atomic, the added term
+returns only menus already in $U_S$. Otherwise it also supplies
+the head. Hence the prescribed prime lists are realized.
+At smaller widths the only operation is $U_S$.
+
+At arbitrary width the greatest core operation with the same
+agreement promise returns the full union when at least $d$
+inputs of $S$ are ambiguous, and $U_S$ otherwise. The full
+block condition proves the bound even when many exterior
+inputs are ambiguous. For realization, take every $d$-subset
+at every exterior head in the preceding construction.
+The greatest operation also has a circuit with
+$O(K|S|d+n)$ choice gates for $n$ total inputs. Begin threshold zero
+at the full union and all positive thresholds at $U_S$.
+When processing the next input $i$ of $S$, replace each
+positive threshold value by its union with the reset of the
+previous threshold value at $i$, using the old values in
+both positions. The first branch retains $U_S$. The second
+can add anything beyond $U_S$ only when $i$ is ambiguous,
+and then adds exactly what the previous threshold supplied.
+After all inputs have been processed, the value at threshold
+$d$ has the required form.
+
+Exact recognition can nevertheless encode the general problem
+inside the same atomic fiber. Take any complete prime instance
+on inputs $V$ with nonempty reconstructed outputs $F$. Introduce
+a disjoint nonempty set $S$ of new inputs, and define
+\[
+ H(v,s)=
+ \begin{cases}
+ U_S(s)\cup F(v),&\text{every input in }S\text{ is ambiguous},\\
+ U_S(s),&\text{otherwise}.
+ \end{cases}
+\]
+The prime lists for $H$ have the empty prime at every new head.
+At each old head append to every old prime on facet $k$ all the
+foreign-$k$ exclusions at each input in $S$. Indeed all these
+exclusions are necessary to prevent a posted new input from
+killing that source, and then the remaining exclusions must be
+sufficient for the old source. Thus the transformation preserves
+completeness and increases width by at most $|S|(K-1)$.
+
+If $F$ is core, start with its term and successively reset at
+each input in $S$, then take the union with $U_S$. A reset at an
+atomic input discards the preceding value; the remaining inputs
+can add only menus already contained in $U_S$. If none is atomic,
+the whole old output is retained. Conversely suppose $H$ is core.
+For each observer $k$, set every input of $S$ to
+$I\setminus\{k\}$ and read whether the result contains $k$.
+This simultaneous neutral residual is precisely $F$, so it is core
+by \cref{core:cor:residual-compiler} and the nonemptiness assumption.
+Thus recognizing $H$ is equivalent to recognizing $F$.
+
+In particular exact recognition from complete prime lists is
+EXPTIME-hard at fixed prime width even with the atomic table of
+a specified projection, by taking $|S|=1$ and applying
+\cref{core:thm:exptime-complete-guards}. More generally, for
+each fixed $h\ge0$ take $|S|=h+1$. The same lower bound holds
+even with a promise of agreement with the explicit core operation
+$U_S$ on every valuation with at most $h$ ambiguous inputs.
+Every candidate in the reduction also has exactly the singleton
+profiles of $U_S$: the two outputs agree unless all new inputs
+are ambiguous, in which case neither is a singleton.
+
+At $d=|S|$ this padding exhausts the entire class. The full
+block condition forces the same blocks on every exterior
+prime. Deleting them yields complete prime lists on
+the exterior inputs. For each facet this follows by fixing
+all inputs of $S$ to neutral status, where sufficiency and
+minimality reduce to the stripped guards. The candidate
+has exactly the displayed form $H$: the padded sources
+supply no extra winner if an input of $S$ is atomic, and
+otherwise their contributions outside $U_S$ are precisely
+those of the stripped lists. The residual elimination and
+reset construction give an exact recognition rule. Empty
+stripped lists give $U_S$ itself. In every other case the
+stripped lists must describe a core operation, including
+nonempty outputs on every valuation. For a nontrivial
+candidate the width drops by exactly $|S|(K-1)$ under
+stripping. Moreover any exterior prime is enabled by the
+row with all $S$ inputs at $I\setminus\{k\}$ and all
+exterior inputs at $\{k\}$. Thus agreement through
+$|S|$ ambiguous inputs already forces $U_S$ on every
+valuation.
+
+There is a complete symmetric classification on three inputs,
+without a width hypothesis. The ordinary cases are greatest
+completions of cardinality thresholds with total deficit at
+most two. The remaining cases have unanimous profiles and
+one residual mixed loss pair $\{a,b\}$: a head loses when its
+two controls are posted at $a,b$ in either order. All these
+operations have prime width at most two.
+
+Indeed a residual mixed loss can only post two distinct
+owners $a,b$. Symmetry gives every orientation and choice
+of head. Both thresholds must be three: a threshold of one
+would explain the loss, and a threshold of two would make
+posting the captured head at that owner change the output.
+Every third owner $c$ must also be unanimous. If a term won
+at $c$ on a proper subset $S$, prune its $c$-gates to one
+winning child on $S$, keeping both children at other gates.
+The pruned term uses only $S$ and still omits all the mixed
+$a,b$ marks. On those probes the $c$-gates had no absorption;
+pruning them can only increase the $a,b$ flags and remove
+marked occurrences. A one-input term cannot omit its own
+mark there. A term using just two inputs would have to win
+at $a$ on one singleton and at $b$ on the other, since the
+third input can carry the unused color on each probe.
+The common-source property forbids those disjoint wins.
+
+Two residual pairs sharing an owner are impossible: on the
+all-atomic triple of their three colors, independence of the
+captured input would force the output to equal both distinct
+pairs. Each pair's captured cofactor is exactly that pair
+by provenance and unanimity. Two disjoint residual pairs
+are also impossible. At the root of a binary term, choose
+one pair omitting the root owner. Both children lose all
+the marks of that pair, since the root takes union there.
+On the other pair the root could absorb only if a child
+won its owner test on a singleton input. Singleton-profile
+absorption would make that child retain the input's mark
+on the disjoint pair, where the owner's atom is absent.
+This contradicts the inherited losses. Both children thus
+omit both pairs, and repeating the argument reaches a
+projection, which is impossible.
+
+To realize the one-pair case, union the full $a$-fold and
+the full $b$-fold. Its profiles are unanimous, and it loses
+at exactly the two prescribed mixed rows at each head.
+Their hitting primes have width two. This also shows that
+the general width-two arity cutoff is sharp.
+
+For symmetric greatest profile completions, the deficit sum
+determines the exact support size needed by a marked witness.
+Put $D=\sum_r\delta_r$. On a support $S$ the restricted
+profiles have thresholds $|S|-\delta_r$, with a nonpositive
+threshold meaning a win even on the empty coalition. The
+support criterion above is therefore exactly $|S|>D$:
+otherwise the omitted sets with those capacities can cover
+$S$, and if $|S|>D$ they cannot. At any positive mark, keep
+its head and, for each owner $r$, choose $\delta_r$ other
+inputs not posted at $r$. These inputs exist because the
+probe is below all thresholds. Enlarge their union to
+$D+1$ inputs if necessary. The greatest bounded helper on
+that support still fails every singleton test at the query,
+so it supplies the mark. Thus $D+1$ is optimal for every
+positive mark. If two owners have positive deficits, no
+owned fold is bounded, because each used head has losses
+at both owners. The helper-arity hierarchy then also needs
+level $D+1$, even with unrestricted fold attachments.
+
+For fixed $K,D$, any nontrivial symmetric greatest profile
+completion has least unbounded-arity gate count
+$\Theta_{K,D}(\log n)$. For the lower bound choose an owner
+$r$ with $\delta_r>0$. In a $t$-gate circuit, an input
+incidence pattern cannot have more than $\delta_r+1$ members.
+Otherwise compare $\delta_r$ and $\delta_r+1$ neutral menus
+within that pattern, setting all other inputs to $\{r\}$.
+Both menu types remain present in the pattern, but the
+native threshold distinguishes the two valuations. Hence
+$n\le(\delta_r+1)2^t$.
+
+For the upper bound let $d=D+1$. Use a fixed small greatest
+completion on $d$ ports with the same deficits, and at
+each port substitute the union of one part of a partition
+of the inputs. Every such substituted term is bounded by
+the original operation. If the latter gives an $r$-singleton,
+there are at most $\delta_r$ non-$r$ inputs, hence at most
+that many parts whose union is not the $r$-singleton.
+The small term then gives the same singleton. Otherwise
+the original gives full union and bounds the substituted
+term by provenance.
+
+At a positive mark choose its at most $d$ witnessing inputs
+as above, including the marked head. If they lie in distinct
+parts, each owner has enough parts failing its singleton
+test, so the small completion acts as union and supplies
+the mark. It suffices to cover every $d$-set by partitions
+that separate its members. A random assignment to $d$
+parts separates any given $d$-set with probability $d!/d^d$,
+so $O_d(\log n)$ partitions suffice by a union bound.
+Discard partitions with an empty part and take the union
+of the corresponding terms. With one active owner this
+is the union of all $d$-element native folds, and for $d=2$
+one can use explicit bipartitions by the bits of the input
+names. Thus even one interchangeability class with bounded
+prime width need not admit bounded gate count.
+
+For greatest profile completions, both constructions extend
+to boundedly many interchangeability classes. Let their
+sizes be $n_j$ and put $a=w+1$, the profile-clause width.
+A profile clause orbit records how many of its inputs
+come from each class. The omitted-owner coloring violates
+such a clause exactly when one owner's omitted counts
+contain its orbit pattern. These comparisons depend only
+on counts truncated at $a$.
+
+Keep $d_j=\min(n_j,Ka+1)$ inputs of each class. Any permitted
+omitted-owner coloring on these inputs would extend to
+the full set: in a truncated class some owner already has
+at least $a$ omissions, so assigning it all the extra inputs
+preserves the truncated counts and cannot violate a new
+clause. Thus common source on the full support implies
+common source on the smaller one. At a positive mark choose
+the head and one failed profile clause per owner before
+choosing the retained inputs. They occupy at most $Ka+1$
+positions in any class and can all be kept. The greatest
+helper on the resulting support supplies the mark exactly
+as in the general support criterion. This gives a bound of
+$c(Ka+1)$ on helper arity at every width when the number
+$c$ of classes is bounded.
+
+The same count argument gives a fixed-parameter recognition
+test for greatest profile completions in $K,w,c$. Read the
+profile clauses from the primes and test common source on
+one support of sizes $d_j$. A coloring there extends as
+above, and any full coloring restricts. Then compare the
+input source predicates with those of the greatest profile
+completion. On each facet the required checks depend only
+on the posted and neutral counts in each class truncated at
+$a$, and on the marked head's class. Prime orbits are tested
+by matching, and profile wins by their clause orbit counts.
+
+For synthesis, use the greatest helper on those $d_j$
+ports and partition class $j$ into $d_j$ nonempty parts.
+Substitute each part union for its port. Any blocked
+singleton test on the resulting ports requires a clause
+pattern of non-$r$ parts, which would also exist among the
+original inputs. Thus a singleton output of the original
+operation still forces the same singleton on the ports;
+otherwise provenance bounds the substituted term by input
+union. At a positive mark, a partition separating the chosen
+witness inputs within each class preserves every failed
+profile clause and retains the mark. It suffices to separate
+every simultaneous choice of $d_j$ inputs per class. Random
+part assignments do this with a positive probability
+depending only on the parameters for each such choice.
+There are at most $n^{\sum_j d_j}$ choices, so a union
+bound again gives $O_{K,w,c}(\log n)$ partitions. Their
+substituted terms form a logarithmic-size gate circuit
+for the whole operation.
+
+For fixed $K\ge4$ the same recognition problem is polynomial
+at width four. Use the principal representatives and process
+assignments to those owners as above. The prime product now
+implies that an input has at most two nonprincipal labels,
+since any three are visible together on some facet. If it has
+two, the restricted clauses at either have width at most two,
+since their widths add on a common facet and each is at least
+two.
+
+After the assignments to owners with principal representatives,
+assign the forced omissions and retain only inputs with two
+remaining choices, both nonprincipal. At each owner with no
+principal representative, guess one of these remaining inputs
+to be omitted there, or guess that none is omitted there.
+Treat the guessed omissions as fixed. For an owner with an
+omitted representative, use its spanning CNF restricted to
+omit that input. It has width at most two by the preceding
+observation. In each clause an input contributes truth exactly
+when assigned somewhere else. On fixed inputs this is a
+constant, and on an input with two choices it is a Boolean
+literal. The constraints are therefore 2SAT. For an owner
+with no representative, forbid assignments there from the
+remaining inputs and check its already fixed coalition.
+Every satisfying assignment yields spanning complements
+with empty intersection, and every such family supplies the
+representatives and a satisfying assignment. Moving omissions
+to owners with principal representatives in the first stage
+only enlarges the coalitions tested in the second stage.
+Thus the two rounds of guessing and the 2SAT tests cost
+polynomial time for fixed $K$.
+
+\paragraph{Detecting repeated postings outside singleton outcomes.}
+The same prime test determines whether a remaining minimal zero
+contains any prescribed bounded set $Q$ of postings, with arbitrary
+additional postings forbidden. As above, choose an outside input
+and an enabled prime for each visible owner's nonspanning witness.
+In addition, for each $q\in Q$ choose a prime at the negative head
+that contains $q$, and forbid all its other postings. Retain only
+choices that leave every member of $Q$ allowed and whose remaining
+ground meets every prime at the head.
+
+Any successful choice yields a minimal transversal in that ground.
+It must contain each $q$, as that is the only available hit of
+its chosen prime. It is consistent by canonicity, and it avoids
+spanning blocks by the nonspanning witnesses. Conversely, a
+remaining minimal zero with $Q$ supplies all these choices,
+since each posting in a minimal transversal is the sole hit on
+some prime. Thus for fixed $K$ and bounded $|Q|$ this test is
+polynomial in the complete lists at any prime width.
+
+In particular, take $Q$ to be two distinct inputs posted at the
+same owner and enumerate the pairs. This tests the hypothesis on
+remaining minimal zeros in \cref{core:cor:ternary-guard-recognition}
+at arbitrary arity without listing those zeros. One can also limit
+the pairs to those containing an input that heads a remaining
+loss, by first finding those heads with $Q=\varnothing$. This
+detects the repeated classes relevant to the branching test in
+\cref{core:thm:repeated-blocker-budgets}.
+
 \begin{corollary}[Joint guard recognition on three inputs]
 \label{core:cor:ternary-guard-recognition}
 For any finite $K\geq3$, consider a nonempty finite input set and

@@ -15,6 +15,8 @@ public import KFOL.Core.FivePointInterpolation
 public import KFOL.Core.SourceCertificates
 public import KFOL.Core.SourceReciprocity
 public import KFOL.Core.LocalNormalForm
+public import KFOL.Core.RightPhaseClosure
+public import KFOL.Core.CodedPostingObstruction
 public import KFOL.Core.ProfileEnvelope
 public import KFOL.Core.ProfileRelations
 public import KFOL.Core.ProfileBounds

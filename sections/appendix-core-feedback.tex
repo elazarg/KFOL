@@ -92,6 +92,127 @@ exclude every head block. Consequently this set spans $U$, contrary
 to independence and the nonempty head union.
 \end{proof}
 
+\paragraph{Least closure tuple forced by feedback.}
+Feedback gives a saturation of arbitrary required pure
+captures. Allow closures with elements captured at the
+empty coalition, and require that such elements be the
+same for every owner. Given any required memberships
+$j\in c_r(A)$, there is a least tuple of extensive,
+monotone, idempotent closures satisfying those memberships,
+the common empty-coalition condition, and (FE).
+
+Indeed order the tuples by inclusion of memberships.
+Coordinatewise intersections preserve closure operators
+and the common empty-coalition condition. They preserve
+(FE) as well: its capture premises at an intersection
+hold in every factor, and the required inclusion
+$c_r(A)\subseteq c_r(A\setminus\bigcup_iX_i)$ then
+passes to the intersection. The constant full closures
+supply one tuple to intersect. Equivalently start with
+the required memberships and repeatedly add those forced
+by extensivity, monotonicity, idempotence, the common
+empty-coalition condition, and (FE). In the feedback step
+add every current member of $c_r(A)$ to
+$c_r(A\setminus\bigcup_iX_i)$. These additions are
+monotone in the current memberships, so saturation
+computes the least tuple.
+
+The saturation takes $2^{O(n)}\operatorname{poly}(K)$
+time on $n$ inputs, even when the owner count varies.
+For fixed $r,A$ put $U=c_r(A)$. For each $s\ne r$ and
+$P\subseteq U$ use only the maximal head block
+$X=(c_s(P)\cap U)\setminus P$. Enlarging a head block
+to this maximum preserves its own covering requirement
+and can only help cover other queries. Thus it suffices
+to prune the list of at most $K2^n$ maximal queries.
+
+Delete a query whenever its $A\cap P$ cannot be covered
+by head blocks of remaining queries at distinct owners
+other than its own. To test covers for owner $s$, process
+each eligible owner in turn, storing the subsets of $A$
+obtainable as unions so far. At an owner either leave a
+stored union unchanged or adjoin $X\cap A$ from one of
+its remaining queries. A query survives precisely when
+one resulting union contains its required set. This
+uses a table of at most $2^n$ subsets, and avoids
+enumerating the tuples of owner choices. The stable
+list is itself a feedback family and contains the
+maximal enlargements of every valid family. Its head
+union is largest, and its update implies all other
+updates for $r,A$ by monotonicity. The number of
+deletions per test and the number of membership additions
+in saturation are both at most $K n2^n$.
+
+For example, take distinct inputs $a,b,c,d$ and owners
+$r,s$. Require $c\in c_r(\{a,b,d\})$ and
+$d\in c_s(\{c\})$. The one-query instance at $r$ with
+$A=\{a,b,d\}$, $P=\{c\}$ and $X=\{d\}$ forces
+$d\in c_r(\{a,b\})$. The initial singleton arrows have
+no nontrivial composable pair, so this requirement
+cannot be obtained by singleton first-color completion.
+
+For a canonical prime upper bound, the required
+memberships are all its pure losses, read at any foreign
+observer. A core minorant's closures on its support
+can be extended to $V$ by making unused inputs captured
+from the empty coalition and ignoring them in every
+premise. The extended closures satisfy (FE): intersect
+all coalitions and head blocks of an instance with the
+support, where capture and the covering conditions still
+hold, and apply ordinary feedback there. Thus the least
+tuple adds only captures forced in every core minorant.
+In particular each empty-coalition capture forces an
+unused input, and each other new membership forces a
+pure loss at every foreign observer. This gives a
+necessary completion of the pure tests even when the
+initial guards involve several owners.
+
+This gives a greatest relaxation of the core minorant
+problem. Use the source-bit order on guard families, and
+allow empty outputs. Require the pure tables to be
+closures with a common empty capture set, to satisfy
+(FE), and to be independent of postings at every
+empty-captured input. Core operations have all these
+properties on the declared input set, including when they
+ignore some inputs.
+
+Given an upper bound, compute the least feedback tuple
+$c$ containing its pure losses. If its common empty
+capture set is $D$, require every other source to survive
+under all extensions of its posting to $D$, and lose
+all heads in $D$. On the original lists this means
+discarding, at the remaining heads, every prime
+mentioning an input in $D$. Recompute the least feedback
+tuple with the resulting pure requirements, retaining
+all earlier capture requirements. Repeat if its empty
+capture set grows. There are at most $|V|+1$ such
+saturations. At the final stage, retain a bit at observer
+$k$ exactly when it survives the projected original
+guards and
+\[
+                  j\notin c_r(p_r)\qquad(r\ne k)
+\]
+for its head $j$ and posting $p$. This operation is the
+greatest family below the bound with the stated
+properties.
+
+Indeed the projection is the greatest bound independent
+of the discarded postings. Each iteration preserves
+every eligible family: its pure tuple contains the least
+feedback tuple, so its unused set contains $D$, and its
+bits obey the projection. The final restriction by $c$
+also preserves it by antitonicity of its guards. The
+constructed family's pure tuple is exactly $c$, since
+$c$ already contains the projected pure losses and
+all the other owners' tests on a pure probe use the
+common empty capture set. A closure with $D$ captured
+from the empty set is unchanged by adding or deleting
+members of $D$ from any premise. The result is therefore
+independent of all the discarded postings and satisfies
+the required feedback law. The construction can keep
+the projected primes and explicit pure closure tables
+without expanding the mixed prime lists.
+
 For closures $d_s$ on a finite set $B$, the \emph{hereditary profile
 test} requires that, for every nonempty $L\subseteq B$, spanning
 coalitions $A_s\subseteq L$ with $L\subseteq d_s(A_s)$ have nonempty

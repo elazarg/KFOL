@@ -262,6 +262,176 @@ For the zero deleted profile this greatest extension is realized by the
 retained fold alone. The bound $D_a^R$ need not itself be a core operation;
 its lower-arity common-minorant problem is retained by the reduction.
 
+For source-loss budgets, the same erasure works without
+assuming a retained upper bound. Let $R$ contain no
+tested loss head. Prescribe any positive and negative
+$a$-profile bits on coalitions disjoint from $R$,
+including at least one positive. Then delete every
+loss that posts an input of $R$ at $a$, and erase
+all $R$-postings from the remaining losses. The
+resulting budget on $W$ has a realizer with the same
+profile bits exactly when the original budget does.
+
+For necessity, the positive bit activates
+\cref{core:lem:owner-face-erasure}. The erased word
+preserves its entire $a$-profile on $W$ and is
+contractive on the face used by every surviving loss.
+For sufficiency attach the $a$-fold of $R$ as in the
+retained-input reduction. It absorbs every deleted
+loss, which necessarily has a foreign observer.
+On a remaining probe the attached inputs omit the
+observed winner, and any absorption can only keep
+the omission. The attached fold is false on every
+queried $a$-coalition, so the required wins and
+losses are unchanged.
+
+For prime lists the reduced budget requires survival
+under every outside posting avoiding $a$ on $R$.
+Discard primes mentioning an allowed outside posting,
+and remove the remaining outside literals from the
+surviving primes before minimizing. A guard on $W$
+is sufficient exactly when it guarantees the original
+bit on that entire face. The deletion may be iterated:
+keep the union of the queried coalitions as anchors
+and delete other inputs that head no surviving loss.
+As the allowed posting ground only shrinks, this gives
+a greatest fixed set independent of deletion order.
+Whether a head still has a loss is tested by checking
+if its allowed ground meets every prime on some
+observer facet. Thus all reductions take polynomial
+time from complete prime lists, for any number
+of signed queries at the same owner.
+
+There is a complementary deletion rule that can
+remove inputs which do head losses. Suppose there are
+positive profile requirements at a set of owners.
+At one required owner $r$, keep only the inputs
+appearing in a required $r$-coalition or posted at $r$
+in a minimal loss. Restrict the profile coalitions to
+the kept inputs, discard losses at deleted heads,
+and erase the deleted postings in all other losses.
+This preserves feasibility for any collection of
+positive requirements. It also preserves feasibility
+with negative tests at $r$, provided no negative tests
+at another owner have to be preserved.
+
+Indeed, every remaining minimal loss avoids $r$ on
+the deleted inputs, and a required $r$-win lies
+entirely in the kept set. Apply
+\cref{core:lem:owner-face-erasure}. It preserves the
+required $r$-wins and is contractive on the remaining
+loss probes. At a foreign owner it dominates the old
+profile with all deleted flags set to one, so a
+required foreign win persists on the restricted
+coalition. An old $r$-loss, when requested, persists
+by equality on the kept set and monotonicity of
+the old profile. Conversely any restricted witness
+lifts by ignoring the deleted inputs, including on
+their loss rows. Projecting minimal losses suffices
+since adding postings preserves a loss.
+
+For canonical prime lists, the inputs posted at $r$
+in some minimal loss are exactly those appearing
+in the lists with an exclusion at $r$. Projection
+now discards every prime mentioning a deleted
+input, since all its postings are unrestricted.
+Repeating the rule over the required owners
+therefore gives polynomial preprocessing. The final
+set for positive requirements is independent of
+the deletion order: restricting the input set can
+only discard primes and restrict the queried
+coalitions, so each owner's kept-set map is
+monotone and every deletion preserves their
+common greatest fixed point. This rule can apply
+even when every input heads a loss.
+
+For signed tests at one owner, the two deletions can
+be interleaved without changing the final reduced
+problem. A headless deletion outside the tested
+coalitions projects over outside postings avoiding
+that owner. A palette deletion projects over all
+postings. Both tests of eligibility persist under a
+deletion of another input: projection cannot create
+a loss at a head whose guard was identically true,
+or introduce a literal at an owner where an input
+did not occur. The queried coalitions only shrink.
+The two projections at distinct inputs commute,
+since their allowed choices are independent at
+each observer. If the same input qualifies for
+both deletions, no minimal loss has it posted at
+the queried owner, so the two projections are
+equal there as well. Thus every pair of alternative
+first deletions has a common continuation. Induct
+on the number of inputs to conclude that every
+maximal sequence gives the same remaining guards
+and restricted queries. A witness lifts in reverse
+order, either by ignoring the deleted input or
+by the fold attachment, according to the deletion.
+
+A separate source mark need not survive this palette
+deletion, even if its head is kept. For distinct
+$a,b,c$, require a positive $a$-bit on $\{x\}$, a
+negative $a$-bit at the empty coalition, the uncolored
+mark at $y$, and a loss at $y$ when $z:b$ is posted.
+The word $x\star_a(y\star_b z)$ meets the requirements.
+Input $z$ occurs in no tested $a$-coalition or
+$a$-posting block, but deleting it by the palette
+rule projects the loss to the uncolored mark itself.
+
+An exact reduction with a mark is available on
+copies of the inputs. Use the winner-on-copies
+construction of \cref{core:lem:winner-on-copies} at
+the marked source probe. Pull back each old profile
+coalition to all copies of its inputs. For every loss,
+pull back its postings and impose the loss at every
+copy of its head. All these old constraints are
+unchanged by relabeling: the profile flag at each
+leaf is the original input flag, and loss of an
+original source means loss of every occurrence
+carrying any of its copies. The extra simultaneous
+positive flags on the tag coalitions enforce exactly
+the mark. Thus a witness with the mark and the
+original signed profile exists exactly when the
+lifted profile requirements and source losses
+have a witness. One can apply the palette deletion
+at the signed owner in this lifted problem, preserving
+its negative tests and all foreign positive tests.
+Identifying the remaining copies recovers an original
+witness. With no negative profile tests, the reduction
+can be iterated over every required owner.
+
+The lifted prime lists have a direct description.
+For each old prime, choose one copy of each input
+mentioned by one of its excluded postings, making
+the choice separately for each posting. Transfer
+the exclusion to that copy and take all such guards
+at every copy of the old head. Indeed a lifted
+loss posts every copy of each of its original
+postings. A guard hits all lifted losses exactly
+when its image hits all the original losses.
+Minimality therefore amounts to a prime image and
+one representative per excluded posting. The
+lifted losses are consistent, so
+\cref{core:thm:guard-consensus} gives completeness.
+The width is unchanged, and a prime of width $d$
+gives at most $K^d$ new primes at each head copy.
+
+One need not expand these choices to perform palette
+deletions. Keep the original lists and the surviving
+copies of each input. Unrestricted projection after
+deleting a copy discards exactly the expanded primes
+choosing that copy. A prime template remains usable
+precisely when every posting in it has a surviving
+copy available, and each available copy occurs in
+an expansion. Thus the palette test and all its
+iterations take polynomial time in the original
+list length and the number of copies, even at
+unbounded prime width. A bit is evaluated by
+finding a template with an available representative
+avoiding the current posting for every exclusion.
+Only the subsequent realizability test on the
+reduced budget needs more than this preprocessing.
+
 \input{sections/appendix-core-profile-branching}
 
 \begin{proposition}[A positive quorum need not glue]
@@ -308,3 +478,886 @@ sources do not (\cref{core:thm:robust-tree-size}). The normal form reduces
 this class to lower-arity core operations. Retained extensions still need
 not glue: \cref{core:cor:prime-obstructions} gives a noncore $F$ for which
 every $F+x_j$ is core, and whose pointwise intersection is $F$.
+
+\paragraph{A normal form for several retained sources.}
+Let $R$ be a set of retained inputs and $W$ the remaining
+inputs. A pattern assigns each input in $R$ an owner or the
+symbol $*$. The box of a pattern permits an ambiguous menu
+at every coordinate, and additionally permits the designated
+atom at each owner coordinate. Then every core operation
+retaining $R$ is a union of the retained projections and
+pieces of the form
+\[
+ (z,w)\longmapsto
+ \bigcup_{j\in R}z_j\ \cup\
+ \begin{cases}
+  g(w),&z\text{ lies in the pattern box},\\
+  \varnothing,&\text{otherwise},
+ \end{cases}
+\]
+with at most one core helper $g$ on $W$ per pattern. An
+empty helper can be omitted.
+
+To prove this, apply \cref{core:thm:retained-source} at one
+retained input $X$. Its baseline $C$ retains every other
+retained input: for any winner $k$ in one of those menus,
+take $X=I\setminus\{k\}$ and use the baseline equation.
+Add all the other retained projections to each atomic
+helper $g_q$, using their union when the helper is absent.
+This changes no output in the normal form, since
+$\{q\}\cup g_q$ already contains those projections.
+The enlarged helpers still lie below $C$. Decompose $C$
+and the enlarged helpers inductively. A baseline piece
+gets the coordinate $*$ at $X$; a piece from $g_q$ gets
+$q$ at $X$. The other retained projections contribute
+only to the retained union. At ambiguous $X$ the added
+pieces from $g_q$ lie below $C$, so this gives equality
+there as well. The projection case needs no helpers, and
+with no retained inputs the operation itself is the helper.
+Conversely a piece is constructed one coordinate at a
+time by the converse of the single-source normal form.
+For a $*$ coordinate use its current piece as baseline
+with no atomic helper; for a $q$ coordinate use it as
+baseline and as the $q$-helper. Include the retained
+projections by union throughout.
+
+The allowable helpers for a candidate with canonical
+guards have independent upper bounds. At observer $k$,
+specialize the guards by posting the pattern's designated
+atoms other than $k$, with all $*$ and $k$ coordinates
+neutral. For an unmasked winner $k$ the retained menus
+cannot equal $\{k\}$, and all other allowed postings are
+subsets of this maximal posting. It is realized by using
+$I\setminus\{k\}$ at the neutral coordinates. Thus the
+specialized $k$-bits are precisely the upper bound on the
+helper's $k$-membership. To compute these bits from the
+primes at each head in $W$, discard guards hit by a fixed
+posting, remove the remaining literals on $R$, and minimize.
+At each pattern take the greatest core minorant of this
+lower-arity bound, with the empty operation allowed.
+The union of the resulting pieces and retained projections
+is the greatest core operation below the candidate among
+those retaining $R$. Equality gives an exact test in this
+class, reducing each of the $(K+1)^{|R|}$ pattern bounds
+to the same remaining input set.
+
+These independent bounds also have a useful order. If $p'$
+fills some of the $*$ coordinates of $p$, its specialized
+posting extends that of $p$ at every observer. Its bound,
+and hence its greatest helper, is contained in that of
+$p$. At a valuation $z$, let $p(z)$ record exactly its
+atomic coordinates. A box contains $z$ precisely when its
+pattern extends $p(z)$. Consequently the greatest bounded
+operation is the retained union plus just the greatest
+helper at $p(z)$. To test equality, at each pattern $p$
+compare its greatest helper with its specialized bound at
+every observer $k$ absent from the atoms of $p$. Those
+are the only observers where a winner can be unmasked on
+that pattern, and each such comparison is necessary by
+taking $I\setminus\{k\}$ at all its $*$ coordinates.
+
+The same cofactor lists recover the original primes
+without enumerating losses. Fix a passive head and
+observer $k$. For each set $D$ of exclusions on $R$,
+form the maximal consistent postings on $R$ that
+avoid $D$. At each retained input choose one of its
+allowed foreign owners, or leave it neutral if none
+is allowed. For every such maximal posting choose
+one prime from its passive cofactor list. Adjoin $D$
+to the union of the chosen primes, and take the
+inclusion minima over all choices and all $D$.
+These are precisely the original primes at the head.
+The retained heads themselves have the empty prime.
+
+In fact every consistent posting on $R$ avoiding
+$D$ extends to one of the maximal postings just
+used. Survival is antitone in postings, so a passive
+guard suffices under $D$ exactly when it suffices in
+each maximal cofactor. By completeness, this is
+equivalent to containing a prime from each of those
+lists. Thus every generated guard suffices and every
+sufficient guard contains a generated one. If a
+cofactor list is empty there is no choice for that
+$D$. At fixed $K$ and fixed $|R|$, this construction
+takes polynomial time in the size of the cofactor
+lists. If these lists have width at most $d$, the
+generated widths are at most
+$|D|+d\prod_{i\in R}\max(1,K-1-|D_i|)$, where $D_i$
+is the set of exclusions at input $i$. For one
+retained input the bound is $\max((K-1)d,K-1+d)$.
+
+For one retained input the passive part $H$ of a
+prime also determines its retained part uniquely.
+First require that $H$ contain a neutral cofactor
+prime. Then $D(H)$ consists exactly of the foreign
+postings whose cofactor lists contain no prime
+inside $H$. The full guard $H\cup D(H)$ is prime
+exactly when deleting any literal from $H$ either
+fails the neutral requirement or strictly enlarges
+$D(H)$. Indeed every sufficient guard with passive
+part $H$ must include $D(H)$ and this choice already
+suffices. Deleting a passive literal can only
+increase the set of forced exclusions. This test
+uses only containment in the cofactor lists.
+
+The bound for each $D$ is sharp even for core
+operations. Fix a passive head $y$ and observer
+$k$, and use the box normal form with one piece per
+maximal allowed posting on $R$. The helper for
+each piece is an $a$-fold of $y$ and $d$ fresh
+passive inputs, for one fixed $a\ne k$, with the
+fresh sets disjoint between pieces. At the
+cofactor of a maximal allowed posting only its
+own helper is active. Its prime at $y$ excludes
+its $d$ fresh inputs at $a$. At arbitrary
+cofactors the passive helpers are unions of
+subfamilies of these folds. Their prime lists
+have width at most $d$: each fold has just one
+guard per live head using only $a$-exclusions
+at a foreign observer, so there are no competing
+postings to resolve. At observer $a$ the live
+heads have empty primes.
+
+Adjoin $D$ to the union of the indicated fold
+primes at $y$. The guard suffices by the cofactor
+test, and every passive literal is needed in its
+own maximal cofactor. Every retained exclusion is
+needed too: posting just that excluded owner at
+its retained input lies outside all the chosen
+boxes and loses $y$ at $k$. Hence the guard is
+prime and attains the bound for that $D$.
+
+For $r=|R|$, the resulting worst-case width is
+$\max(d(K-1)^r,\,d+r(K-1))$. To maximize the
+bound over exclusions, write $b_i=K-1-|D_i|$.
+With the other coordinates fixed the bound is
+affine for $1\le b_i\le K-1$, and $b_i=0$
+dominates $b_i=1$. A maximizer thus uses only
+$0$ and $K-1$. With $m$ coordinates at $K-1$,
+the bound is $d(K-1)^m+(r-m)(K-1)$, a convex
+function of $m$ with its maximum at an endpoint.
+
+Feedback saturation can be used on the pattern bounds
+without first finding their greatest core helpers. The
+specialized facets need not agree. For each owner $r$,
+collect all pure $r$-losses seen by \emph{any} foreign
+observer. A core helper must satisfy their union because
+its pure coefficients agree across all those observers.
+Saturate these captures by closure and
+\cref{core:prop:feedback-elimination}, including the common
+empty capture set. At each comparison this rules out a
+required head whenever the captured heads include it at
+some block of the marked posting, or at the empty
+coalition. The other mixed constraints of the specialized
+bound may still be used.
+
+This conditional test is strictly stronger than global
+feedback saturation. In the retained-$z$ obstruction of
+\S\ref{app:core-additive}, the only nontrivial pure capture
+of the whole candidate is at $a$, with premise
+$C_a\cup\{z\}$ and head $x_a$. This is already a closure
+tuple satisfying (FE). At observing owner $a$ no foreign
+capture is available. At any other observing owner the
+closure is identity, and no nonempty premise of a
+nontrivial query at $a$ can be covered by heads from its
+other foreign owners. But at pattern $z=\{a\}$ the
+specialized pure requirements include
+$x_r\in c_r(C_r)$ for every owner $r$: when $r\ne a$
+use an observer outside $\{a,r\}$, and for $r=a$
+use any foreign observer. Thus every $C_r$ spans $W$.
+In (FE) at observing owner $r$, take $A=C_r$ and one
+query with premise $P_s=C_s$ and head block
+$X_s=\{x_s\}$ for every $s\ne r$. Each $A\cap P_s$
+is covered by the other foreign head blocks. Their
+union is $A$, so feedback forces $c_r(\varnothing)=W$.
+There is no nonempty helper, but the neutral probe
+at a foreign observer still requires an unmasked
+winner from $W$.
+
+The same necessary test applies to any selected set $R$
+of inputs, even if they are not retained in the original
+candidate. For any core minorant $T$, adjoin the
+projections on $R$ by union. This yields a core minorant
+of the candidate with those same projections adjoined.
+Union with these projections leaves every canonical
+source coefficient outside $R$ unchanged, since an
+isolated probe at such a source gives the projections
+no observed winner. Thus the specialized bounds for
+heads outside $R$ can be computed directly from the
+original lists. Any loss inferred there by conditional
+feedback is forced in every original core minorant.
+
+This defines a saturation on arbitrary guard families.
+For every $R$ and pattern on $R$, compute the least
+feedback tuple for its specialized pure losses, taking
+losses from all foreign observers. At any proper posting
+$p$ at head $j\notin R$, use the pattern given by its
+restriction to $R$. Erase the bit if the resulting tuple
+captures $j$ at one of the remaining posting blocks or
+from the empty coalition. Repeat all such restrictions
+to stability. They preserve antitonicity: enlarging $p$
+only adds atoms to the chosen pattern, tightens its
+specialized bound, and enlarges the remaining blocks.
+They preserve observer agreement on proper overlaps:
+the same projected pattern and feedback tuple apply,
+and the omitted observers have empty blocks. The
+restriction is monotone in the whole guard family, so
+iteration gives the greatest subfamily stable under it,
+preserving all core minorants.
+
+For fixed $K$ this takes singly exponential time in the
+arity and polynomial time in the input length. The
+explicit source table has at most $KnK^{n-1}$ entries
+on $n$ inputs, and each changing sweep erases at least
+one entry. There are at most $(K+2)^n$ selections of
+$R$ and its pattern, since each input is outside $R$, a
+star, or an owner. Each test uses the singly exponential
+feedback saturation on its remaining inputs. The
+restriction including $R=\varnothing$ incorporates
+global feedback. The entire saturation can still leave a noncore family
+unchanged. Take the Gray-cycle obstruction of
+\cref{core:cor:prime-obstructions}. Its exceptional loss
+regions post both $b$ and $c$ away from the free head,
+so there are no pure losses. The empty promotion starts
+with identity closures and adds nothing. Every nonempty
+promotion is core by that corollary, so all its
+conditional tests leave the original bits outside the
+promoted inputs unchanged. Thus the whole family is a
+fixed point.
+
+The same example also passes both common-head guard
+tests of \S\ref{app:core-additive}. Its singleton
+profiles are unanimous, so each positive coalition is
+the full input set. The positive-rainbow scan then
+allows no postings. A signed pair at $q$ permits only
+$q$-postings inside the losing coalition, and a head
+outside that coalition survives because there are no
+pure losses. Hence even combining these tests with
+every promotion and with all proper neutral residuals
+misses the obstruction. Its exponential point
+interpolation bound continues to apply to this fixed
+point class.
+
+For two unretained inputs $x,y$ the greatest helper is
+read directly from the specialized guards. Call a head
+retained in the bound if it survives all its probes.
+Record separately any neutral loss at each head and
+the colors of the other input's singleton postings on
+which it loses, taking the union of these colors across
+observer facets. The binary normal forms in
+\cref{core:prop:binary} give the following cases.
+\begin{itemize}
+\item If both heads are retained, take union.
+\item If only $x$ is retained, take the projection $x$
+  when $y$ has a neutral loss. Otherwise take $L_A(x,y)$,
+  where $A$ is the set of loss colors at $y$. The symmetric
+  rule applies when only $y$ is retained.
+\item If neither is retained, a nonempty helper exists
+  exactly when neither has a neutral loss and all the
+  loss colors at both heads are a single common color
+  $r$. The helper is then $x\star_r y$.
+\end{itemize}
+Indeed a binary term using both inputs always supplies
+both at a neutral probe. With only $x$ retained, all
+eligible left forms must designate at least $A$, and no
+right form can be eligible. An eligible owned choice
+requires $A$ to be its single owner and is contained in
+the corresponding left form. With neither head retained,
+only an owned choice can qualify, and each of its two
+heads can lose only at a posting of that owner. This
+argument uses separate observer tests, so the specialized
+bound may have different loss colors on different facets.
+
+Let $m=|W|\geq1$. A failed pattern comparison can be
+preserved by the retained parts of at most
+\[
+ b(K,m)=Km\max_{0\le d\le m-1}\binom{m-1}{d}(K-1)^d
+\]
+original minimal losses. For each observer and head in
+$W$, consider the minimal losses of the specialized bound
+on postings of the other $m-1$ inputs in $W$. They form
+an antichain. A random maximal chain obtained by choosing
+one of the $K-1$ foreign colors uniformly for each input
+and posting the inputs in a uniformly random order hits
+at most one antichain member. It hits any specified
+$d$-posting with probability
+$1/(\binom{m-1}{d}(K-1)^d)$, proving the stated bound
+after summing over observers and heads.
+
+For every such specialized loss, choose an original
+minimal loss contained in its combined posting on $R$
+and $W$. Keep the union of their retained parts. It is
+a subpattern of the original, so no specialized loss
+is introduced. Every chosen loss persists at its own
+observer, so the entire specialized bound stays the
+same. A failed bit at an unmasked observer is still
+unmasked. Thus with explicit minimal losses one can
+enumerate these bounded unions and test their patterns,
+in polynomial time at fixed $K,m$.
+
+The same bound yields at most $b(K,m)+1$ valuations
+ruling out any core term: one unmasked positive winner
+at the failed pattern and one maximal-posting observer
+valuation per specialized minimal loss. Any term agreeing
+at those valuations can be unioned with the retained
+projections without changing its sampled outputs.
+The resulting term's greatest helper at the failed pattern
+must supply the positive winner. It must also satisfy all
+the sampled losses, because the actual patterns used
+for those negative valuations only delete postings of
+their respective observers, and helpers increase when
+postings are deleted. Every specialized loss then holds
+for the helper by antitonicity, a contradiction.
+
+For fixed $K$ and a fixed bound $m\geq2$ on the number of
+unretained inputs, recognition from complete canonical
+primes is coNP-complete. For membership, guess a pattern
+and a failed comparison. Its specialized tables have
+bounded size, so closing the projections under the
+owner gates on the unretained inputs computes the greatest
+helper in bounded time after the tables have been read.
+At prime width at most two the pattern test is
+fixed-parameter tractable in $K,m$. Guess one marked
+positive query on the remaining inputs and a set of
+specialized loss entries. Keep only guesses for which
+no core helper can supply the mark while respecting
+those losses. This depends only on $K,m$ and the guess.
+A failed pattern gives such a guess by taking all its
+losses. Conversely, any pattern realizing the selected
+losses and the positive mark fails, irrespective of
+its other entries.
+
+For each guess, use a Boolean variable for each possible
+retained posting. Pairwise exclusions enforce consistency,
+and unit clauses omit all retained postings at the marked
+observer, so the marked winner is unmasked. For a selected
+loss, require every original prime to be hit. Ignore postings at the observer of that loss and
+substitute the fixed unretained postings of its query.
+Each remaining hitting constraint is a clause of width
+at most two. For the single marked positive, try one
+original prime and require it to stay disjoint from the
+postings. This needs only unit clauses after the same
+substitution. Thus one 2SAT test per prime at the marked
+head detects a pattern for that guess. The number of
+guesses and the bounded-helper test depend only on $K,m$,
+and the number and size of 2SAT instances have a
+polynomial input-length bound with absolute exponent.
+
+There is a width-independent test when few retained
+inputs have competing posting colors. Use the same
+marked-positive and loss guesses, with no width
+restriction. After fixing the prime witnessing the
+positive, substitute the fixed passive postings,
+delete the forbidden retained literals, and keep
+only the hitting clauses still needing a retained
+post. The surviving literals are all positive. If a
+retained input occurs at only one color in these
+clauses, post it at that color. This can only help
+and respects all restrictions from the positive
+prime. For every retained input occurring at several
+colors, try each of its surviving colors. There is
+no need to try a neutral setting, since adding any
+allowed color to a neutral coordinate preserves all
+hitting clauses. A choice works exactly when it
+meets every remaining clause, including the test
+for an empty clause.
+
+Thus if at most $b$ retained inputs have competing
+colors in any of these tests, recognition takes
+$(K-1)^b$ times a function of $K,m$ times a
+polynomial in the listed input length. In particular
+the result applies when all primes at passive heads
+use at most one retained posting color per input,
+even if the widths are unbounded. After posting all
+single-color inputs, discard the clauses they meet
+and split the remaining clauses into components by
+shared inputs. The choices in different components
+are independent, so $b$ can instead be bounded per
+component. The bound also
+localizes to the ancestor sets below. With two
+passive inputs, the loss guesses can be restricted
+to at most two losses by the binary argument below.
+
+Completeness of the input lists improves the branch
+set further. Group the hitting clauses by the
+specialized loss they enforce. Branch on a retained
+input only if distinct groups use different colors
+there, allowing every surviving color of that input.
+In a fixed branch, disallow the other colors at
+those inputs and test that each original prime
+either meets its query's fixed passive pattern or
+has an allowed retained literal. This is sufficient:
+for each loss separately, the allowed ground together
+with its fixed passive postings hits the original
+prime list. By \cref{core:thm:guard-consensus} it
+contains a consistent minimal transversal. Keep
+that transversal's retained part. The retained
+parts from the different losses are jointly
+consistent, since any conflict between groups
+would be at an input already fixed by the branch.
+Their union realizes the losses and avoids the
+positive prime. Conversely a witnessing pattern
+chooses one of the branches, after adding an
+allowed color at any neutral branch input. Such
+addition preserves the positive prime and can
+only help hit the loss lists.
+
+In particular, a single-loss obstruction is
+detected by prime scans at any width, regardless
+of the number of competing colors within its list.
+For two passive inputs, the only branches needed
+are where the two selected loss lists compete.
+
+Even many such inputs can be handled by prime scans.
+Make a bipartite graph between the selected losses
+and the retained inputs where distinct loss groups
+use different colors. Join a loss to an input if its
+remaining clauses mention that input. If this graph
+is a forest, root each tree and pass sets of feasible
+colors up its edges. At an input intersect the color
+sets allowed by its children. At a loss, try each
+color of its parent input, using the child input
+sets as the allowed colors there. Leave all permitted
+colors at inputs outside the graph. Reject a choice
+if a child set is empty or if some hitting clause has
+no allowed literal. At a root loss use the same scan
+without a parent input.
+
+The scan at a loss is exact even with prescribed
+color domains. When every clause meets the allowed
+ground, a minimal transversal of the original prime
+list inside that ground and the fixed passive postings
+is consistent. It picks at most one allowed color
+at every incident input. Where it picks none, choose
+any color from the corresponding nonempty domain.
+The child subtrees are disjoint, so the chosen colors
+extend simultaneously. Across distinct losses, any
+retained conflict could occur only at an input in the
+graph, where the colors have been made common.
+This proves the forest test by induction on the trees.
+Its running time is polynomial in the listed input
+length per loss guess and positive prime, at any prime
+width. More generally, if deleting $b$ input vertices
+makes this graph a forest, conditioning on their
+colors gives the same test in $(K-1)^b$ branches.
+Such a deletion set can be found by repeatedly
+finding a cycle and branching on which of its input
+vertices to delete. With $\ell$ selected losses a
+simple cycle uses at most $\ell$ input vertices,
+so the search has at most $\ell^b$ branches.
+
+The parameter can be localized further. On $W$ draw $j\to i$
+when some prime at $i$ on any facet mentions a posting at $j$,
+and let $A_i$ be the ancestor set of $i$, including $i$.
+A comparison at head $i$ needs helpers only on $A_i$.
+Indeed for a bounded helper on $W$, erase all variables
+outside $A_i$ by the neutral residual compiler. At each
+observer its source coefficients on $A_i$ are the
+original coefficients with the erased inputs neutral.
+Every head in $A_i$ has all its unretained dependencies
+inside $A_i$, so the erased helper still respects the bound
+there. It supplies the original marked source whenever
+that source was supplied, by antitonicity under removing
+postings. In the other direction a bounded helper on
+$A_i$ extends to $W$ by ignoring the other inputs. It
+adds no source outside $A_i$, and constraints on the
+heads inside $A_i$ are unchanged. The argument holds
+after every retained pattern specialization, even when
+the specialized facets disagree.
+
+Consequently the width-two algorithm is fixed-parameter
+tractable in $K$ and the largest ancestor-set size among
+unretained inputs, allowing arbitrarily many unretained
+inputs in total. Run the same loss and single-positive
+test at each head, using only the corresponding
+ancestor set in place of $W$. Likewise the bounded-union
+test with explicit minimal losses is polynomial for fixed
+$K$ and bounded ancestor-set size. Only the primes or
+losses at heads in the selected set enter its comparisons.
+
+The following lower bound uses width three
+and only two unretained inputs.
+
+For hardness use the disjoint transversals construction
+with literal pairs. From a 3CNF instance take one vertex
+per literal. Let the $a$-edges be all variable pairs and
+all clause sets, and let the $b$-edges be just the variable
+pairs. Remove redundant supersets in each edge family.
+Disjoint transversals must split each pair, and the
+$a$-transversal then gives a satisfying truth assignment.
+Conversely a satisfying assignment gives the two
+transversals. Fix distinct owners $a,b,k$. Retain the
+vertex inputs and flags $f_r$ for all $r\ne k$. On the $k$-facet let $x$ lose exactly
+when every flag is posted at its indicated owner, $y$
+is posted at $a$, and the vertices posted at $a$ meet
+every $a$-edge. Let $y$ lose under the same flag condition
+when $x$ is posted at $b$ and the vertices posted at
+$b$ meet every $b$-edge. On every other facet both heads
+survive. These rules agree on facet overlaps, since
+the flag condition uses every color other than $k$.
+They give nonempty outputs by retention. On the
+$k$-facet the primes for $x$ exclude one flag posting,
+exclude $y:a$, or exclude all $a$-postings of one $a$-edge.
+For $y$ use $x:b$ and the $b$-edge postings. These lists
+are complete and minimal because the relevant colors
+can be posted simultaneously and the nonempty edges
+form an antichain.
+
+A pattern failing the flag condition has no losses
+in its specialized bound. In a pattern meeting the
+flag condition, every observer other than $k$ has
+unconditional survival. At $k$, each direction of
+loss is enabled precisely when the corresponding
+color class in the pattern is a transversal. When
+at most one direction is enabled, union or the
+appropriate one-sided binary form realizes all
+unmasked bits on that pattern. When both directions
+are enabled, their loss colors $a,b$ differ, so no
+nonempty binary helper stays below the specialized
+bound. Yet both heads survive at the neutral
+$k$-probe. Such a pattern exists exactly when the
+two disjoint transversals exist, so recognition
+accepts exactly the unsatisfiable instances.
+
+The hardness persists when every proper palette
+restriction and every nonempty proper neutral
+residual is core. Use distinct colors $a,b,c$, with
+flags at every color other than $b,c$. At $x$ use
+the same flag test, a posting $y:b$, and the first
+transversal test, now on $b$-postings. At $y$ use
+the flag test, a posting $x:c$, and the second
+transversal test, on $a$-postings. The two loss
+rules are visible only at $c$ and $b$, respectively.
+As above, each is encoded by singleton flag and
+head-posting primes and the edge primes of width
+at most three. At $x$ require in addition that
+every vertex be posted at $a$ or $b$, adding the
+guard $\{v:a,v:b\}$ for each vertex $v$. Remove
+supersets from the resulting list. Its minimal
+transversals are consistent: $v:a$ occurs only
+in the new guard, so it is redundant in any
+transversal containing $v:b$ too. The lists agree
+on overlaps since each rule uses all colors
+foreign to its observer.
+
+For a retained pattern, the specialized losses
+are the $x$-loss at $y:b$ and the $y$-loss at $x:c$
+when their respective flag and transversal tests
+are met. If just one is enabled, the one-sided
+helper matches every unmasked bit. In fact owners
+other than $b,c$ are masked by the flags, and the
+loss color itself is hidden at its own observer.
+If neither is enabled, union works. If both are
+enabled, their distinct colors forbid a nonempty
+helper. A satisfying assignment gives this latter
+pattern using only the designated flags and
+$a,b$-postings on vertices, so $c$ is unmasked
+and the neutral $c$-mark fails comparison.
+Conversely both tests require disjoint transversals.
+
+Erasing any flag color deletes both loss rules.
+Erasing $b$ or $c$ deletes at least the rule that
+posts the passive input at that color. A remaining
+single rule is core by the same one-sided helper
+argument. Neutral deletion of a vertex deletes
+the $x$-rule by its new guard. Neutral deletion
+of a flag deletes both rules, and deletion of
+either passive head deletes its own rule and
+neutralizes the required passive posting in the
+other. Consequently every proper nonempty
+neutral residual has at most one rule and is core.
+
+With explicit minimal losses, at most two unretained inputs
+instead give a polynomial test. It suffices to check the
+patterns obtained by taking the consistent union of the
+retained parts of at most two listed minimal losses at the
+unretained heads, including the empty union. The pattern
+comparison still uses the full lists. To see why this
+suffices, start from a failed comparison at a pattern $p$,
+and mark an unmasked winning bit at one isolated head in
+$W$ that the greatest helper fails to supply. Select
+specialized losses as follows.
+\begin{itemize}
+\item If only one head is retained in the specialized bound,
+  the missing bit belongs to the other head. Select a
+  neutral loss there if there is one. Otherwise select one
+  loss at the color of the other input on the marked probe.
+  The one-sided helper rule shows that a loss of this color
+  exists and forces the same failure at the marked probe.
+\item If neither head is retained and one has a neutral
+  loss, select that loss and any loss at the other head.
+  If neither has a neutral loss but the colors differ,
+  select one loss at each head with different colors.
+  In both cases these two losses already forbid every
+  nonempty helper.
+\item If neither head is retained and all losses use the
+  same color, select one loss at each head. These still
+  force the same owned choice as the only nonempty helper.
+\end{itemize}
+If both heads are retained, union supplies every bit.
+With one unretained input the only possible helper is
+its projection, so one loss suffices for the same argument.
+
+For each selected specialized loss, take an original
+minimal loss contained in the realizing posting at its
+observer, including the retained postings of $p$ at
+that observer. Take the union of their restrictions to
+$R$ to obtain $p'$. This is consistent because all those
+restrictions lie in $p$. The selected losses still hold
+on $p'$, at the original observers and with the same
+unretained postings. The original marked bit is still
+positive, by antitonicity, and its observer is still
+unmasked. Passing from $p$ to $p'$ cannot introduce
+losses. Thus the selected losses preserve the stated
+binary exclusion in each case. The failed comparison
+is detected at $p'$. This gives a quadratic bound in
+the number of listed losses on the number of patterns
+to test, independently of the number of retained inputs.
+
+Suppose now that all proper palette restrictions are
+core and all nonempty proper neutral residuals are
+union. Every minimal loss must post all inputs other
+than its head, since neutral deletion of an unposted
+input would preserve that loss. Conversely this
+condition implies the neutral-residual promise for
+operations of arity at least two. It is checked by
+scanning each head--observer list for a prime
+supported on each other input separately, allowing
+the empty prime: neutralizing an input drops its
+literals, and the restricted head is retained exactly
+when the resulting list contains the empty prime.
+
+These full losses also determine which rows can
+differ from union. With two or more ambiguous inputs
+every source survives, since every head has some
+other input neutral or unposted at its observer.
+With exactly one ambiguous input only that head
+can lose. On an all-atomic row a repeated color
+always survives: each of its heads sees another
+input of that color as neutral. Thus an empty
+output is possible only on an all-atomic row with
+pairwise distinct owners. At arity greater than $K$
+nonemptiness is automatic, and at fixed $K$ the
+remaining rows can be checked by prime scans.
+
+The singleton profiles require only the pure full
+postings. For owner $a$, no coalition omitting two
+or more inputs wins, as one can give the omitted
+inputs ambiguous menus and obtain union. The full
+coalition wins. A coalition omitting just $i$ wins
+exactly when $i$ loses on the posting of every other
+input at $a$. For necessity give $i$ an ambiguous
+menu containing a foreign winner. For sufficiency,
+when $i$ differs from the $a$-singleton, every
+foreign winner it could supply sees exactly that
+pure posting. Observer agreement ensures that
+the loss is the same at each foreign observer.
+
+Identifying two inputs $u,v$ retains the merged
+input: at a probe for its winner $k$, neither copy
+can be posted at a foreign color, so each copy
+blocks a full loss at the other. At any other head,
+the restricted losses are exactly those full
+losses that post both copies at the same color,
+with their two postings merged. It follows that
+the identification minor is union
+exactly when no loss at a third head posts $u,v$
+at the same color. To test this without listing
+losses, choose a third head, an observer, and a
+foreign color $r$. Keep only $u:r,v:r$ at their
+coordinates and allow all postings elsewhere on
+that facet. This ground contains a loss exactly
+when it hits every listed prime. A minimal
+transversal inside it is consistent and, by the
+full-loss assumption, must post both coordinates.
+Consequently all proper identifications give union
+exactly when every minimal loss is injective in
+its posting colors. At arity greater than $K$ this
+forces the original operation to be union, since
+a full proper loss uses at most $K-1$ colors.
+
+The complete lists of the minor can also be computed
+directly at fixed $K$. The merged input has the empty
+prime. At a third head on the $k$-facet its neutral
+cofactor has the empty prime too. For the atomic
+cofactor at each $r\ne k$, discard original guards
+hit by either $u:r$ or $v:r$, remove the remaining
+literals on $u,v$, and take inclusion minima. The
+cofactor assembly above now gives all quotient primes:
+choose a prime from each allowed atomic cofactor,
+unite the choices, and adjoin the exclusions for the
+other atoms at the merged input. Take inclusion
+minima over these sets. This costs polynomial time
+in the original list length at fixed $K$.
+
+For original prime width $d\ge1$, the new width is
+at most $\max\{d,K-1,(K-1)(d-1)\}$. To see this,
+trace each cofactor choice back to an original guard.
+If any chosen guard already avoids both identified
+inputs, it is sufficient for every cofactor, so any
+prime containing it has width at most $d$. Otherwise
+each selected guard lost at least one literal. With
+$j$ allowed atomic colors the assembled width is
+at most $(K-1-j)+j(d-1)$, whose maximum is at an
+endpoint. The neutral cofactor does not add any
+literals. The bound is also applicable in succession
+to further identifications, because the quotient
+losses still post every input other than their head.
+
+Without the full-loss hypothesis, deciding whether
+the merged input is retained is coNP-complete from
+complete primes of width three, even when the input
+operation is core. At a probe for the merged head,
+the original copies both supply its marked winner.
+For either copy's predicate the other copy is
+neutral at that observer. Thus a loss of the merged
+head is precisely a consistent posting on the
+remaining inputs that loses at both original heads.
+This is a polynomially checkable certificate. At
+width two it can be found by 2SAT: delete the
+other copy's literals from each list, require every
+remaining guard to be hit, and impose pairwise
+consistency of postings. Try each observer.
+
+In fact width two is closed under arbitrary input
+identifications and pointwise union, and complete
+lists for both constructions can be computed in
+polynomial time. For a quotient head, neutralize
+all other copies in each original head's list.
+Rename the remaining postings by their quotient
+inputs. The quotient loses its mark exactly when
+every copy loses it, so each renamed guard is a
+hitting clause. Add the pairwise consistency clauses
+on quotient postings. A union similarly loses only
+when every summand loses, and so adds all their
+hitting clauses. In either case the loss predicate
+is represented by a 2CNF on posting bits.
+
+A sufficient guard is a set of posting exclusions
+whose unit clauses make that 2CNF unsatisfiable.
+Every minimal such set has size at most two.
+Otherwise choose three different exclusions and,
+for each, a satisfying assignment after dropping
+that exclusion alone. The coordinatewise majority
+of the three assignments satisfies the 2CNF:
+if both literals of a clause were false, some
+assignment would falsify both. The majority also
+satisfies every exclusion since each holds in at
+least two assignments, a contradiction. Enumerate
+all guards of size at most two, test their unit
+clauses by 2SAT, and keep the inclusion minima.
+This proves the width claim and gives the complete
+canonical lists, uniformly even if $K$ varies.
+The argument also identifies width at most two
+intrinsically: the consistent loss patterns of
+each coefficient are closed under coordinatewise
+majority of posting bits exactly when its prime
+width is at most two. One direction follows from
+the hitting and consistency clauses. In the other,
+the same three witnesses contradict a prime of
+size at least three, using the assumed closure
+directly on their loss patterns.
+
+For hardness take the two edge families from the
+disjoint-transversal reduction above. At observer
+$k$ the first head loses when all foreign-owner
+flags are posted and the $a$-postings meet every
+first edge. The second head loses under the same
+flag test when the $b$-postings meet every second
+edge. Neither loss depends on the other head, and
+both are invisible on every other observer facet.
+These are the same width-three lists as in that
+reduction with the single passive-head posting test
+omitted. Each head jointly with the retained flags
+and vertices has a single-source core completion
+by \cref{core:thm:source-completion}. Take the
+union of the two completions, each ignoring the
+other head. This is core and has the specified
+lists at both heads. After identification the
+merged head is retained exactly when the edge
+families have no disjoint transversals. Thus
+recovering the empty prime of an identification
+minor already has the claimed complexity.
+
+For any number of unretained inputs, a failed
+comparison has a positive mark and a nonempty set
+of specialized losses excluding every helper for
+that mark (one may use all specialized minimal
+losses). For each select an original minimal loss
+contained in its realizing posting. The selected
+losses cannot all be visible on one observer facet.
+Otherwise erasing that observer's color preserves
+them. Since each posts all retained inputs, the
+comparison pattern already omits that color. At the
+original marked query the positive remains unmasked
+and can only increase under erasure. The same
+obstruction would then occur in a core palette
+restriction. Thus at least two distinct observers
+are needed. The comparison pattern posts every
+retained input and uses only colors outside those
+two observers. Consequently it suffices to test the
+fully posted patterns using at most $K-2$ colors.
+At $K=3$ these are just the three monochromatic
+patterns (or the empty pattern when $R$ is empty).
+Their specialized lists follow by prime scans at any
+width. This is a polynomial-time test at three owners
+for any fixed number of unretained inputs.
+
+For every fixed $K\ge4$ this stronger promise still
+gives coNP-completeness at width three. In the second
+hardness construction choose two distinct flag colors
+$a,d$ outside $\{b,c\}$. Test the first transversal in
+color $d$ and the second in color $a$. At both heads
+require every vertex to be posted at $a$ or $d$, by
+adjoining the two-posting guards and removing
+supersets. For each list the color unused in the edge
+guards occurs only in the vertex's two-posting guard,
+so minimal transversals are again consistent. The
+passive posts $y:b$ and $x:c$ keep the two rules on
+their distinct facets. A satisfying assignment uses
+only flag colors on retained inputs, leaving the
+neutral $c$-mark unmasked. The two loss rules still
+disappear separately under palette erasure, and each
+now posts every input other than its head. Hence
+every proper nonempty neutral residual is union.
+
+The same selection improves the point obstruction to
+three valuations with two unretained inputs. Use the
+marked positive valuation and one maximal-pattern
+observer valuation realizing each selected loss. In
+the one-retained case, a neutral loss rules out every
+term using the lost input. A loss at the marked probe's
+color rules out every binary helper supplying its marked
+head, since that head's coefficient at that posting
+is independent of the foreign observer for a binary
+core term. In the remaining cases the two negative
+valuations alone restrict the helpers as above. The
+retained projections can again be added to any point
+interpolant, so the certificate applies to arbitrary
+core terms.
+
+The three-valuation bound is sharp for every $K\geq3$.
+Use only the retained flags and $x,y$ in the hardness
+construction, with both transversal tests replaced by
+truth. The two loss rules apply only when all flags have
+their designated atoms. At that pattern every owner
+except $k$ is already supplied by the flags, and the
+loss colors $a,b$ exclude all nonempty binary helpers.
+A neutral $k$-probe still supplies $k$, so the candidate
+has no core realizer.
+
+Nevertheless every pair of valuations has a core
+interpolant. Call a loss visible when it changes the
+output relative to full union. A valuation cannot have
+both kinds of visible loss: the loss at $x$ requires
+$y=\{a\}$, so $y$ supplies no $k$, and the loss at $y$
+requires $x=\{b\}$, so $x$ supplies no $k$. If the pair
+exhibits visible losses in opposite directions, the
+retained union matches both outputs, since at each
+all the unmasked $k$-contributions have been lost.
+Otherwise omit the direction with no visible loss on
+the pair. The resulting single-direction operation
+is core by the pattern test: it uses union at patterns
+without the full flag posting, and the corresponding
+one-sided binary helper at the full flag pattern.
+It agrees with the candidate at both valuations.

@@ -44,9 +44,12 @@ Acyclic source dependence admits an exact criterion and an ordered-spine
 construction. To supply a single mark, one pass in source order suffices:
 each loss at a source must post some already active predecessor
 differently from the queried coloring
-(\cref{core:thm:acyclic-source-guards,core:thm:acyclic-marked-source-test}). Checking compatibility on complete prime guards is coNP-complete even for a
-dependency graph of depth two, but takes polynomial time if the underlying
-graph has no triangles or four-cycles
+(\cref{core:thm:acyclic-source-guards,core:thm:acyclic-marked-source-test}).
+The same active inputs give the box coordinates of the greatest
+bounded operation's activation principal.
+Checking compatibility on complete prime guards is coNP-complete even for a
+dependency graph of depth two and primes of width two. It takes polynomial
+time at width one, or if the underlying graph has no triangles or four-cycles
 (\cref{core:thm:complete-acyclic-guard-complexity,core:thm:girth-five-cofactor}).
 Two conditional sources admit a single rule on opposite-head pairs
 of minimal zeros, even when the sources depend on each other.
@@ -75,6 +78,16 @@ retained input. One square with reciprocal edges
 can pass these tests and fail to be core. Acyclic orientations of
 $K_{2,n}$ already give coNP-completeness
 (\cref{core:thm:triangle-free-source-guards,core:thm:star-source-guards,core:thm:girth-five-source-guards,core:thm:conditional-girth-five,core:thm:triangle-free-shared-inputs,core:prop:square-facet-obstruction,core:cor:two-by-n-source-hardness}).
+More generally, facet extensions can be glued using their bounded
+singleton-profile helpers. This can succeed even when no retained
+projection handles a missing owner's postings
+(\cref{core:prop:facet-source-gluing}).
+Erasing owner postings transfers point interpolation with at most two
+adjusted rows per valuation. Cut obstructions on a restricted palette
+transfer without any increase in their number of rows.
+A one-owner restriction is core exactly when its pure closure is
+idempotent. Failure gives a three-valuation obstruction in the
+original candidate, or two valuations when $K\ge4$.
 There is also an intrinsic test when every strongly connected component
 of the source graph has at most two inputs. A cycle may depend on earlier cycles
 in the component order. The only operations enumerated
@@ -109,7 +122,10 @@ owners suffice for their joint singleton tests. For a bounded positive color cla
 components of these overlaps matter for fixed-parameter tractability
 and linear obstruction size: every feasible rainbow or gap already has
 a witness on the directed ancestors of one eligible input
-(\cref{core:thm:component-profile-factorization,core:cor:connected-palette-overlaps}). For disjoint color classes a single closure law on the minimal
+(\cref{core:thm:component-profile-factorization,core:cor:connected-palette-overlaps}).
+Prime-list recognition and synthesis need bounded overlaps only
+within each source's ancestors (\cref{core:thm:compact-overlap-guards}).
+For disjoint color classes a single closure law on the minimal
 zeros suffices: choosing one zero per head and eliminating acyclic
 same-color dependencies forces zeros on the external inputs alone
 (\cref{core:thm:palette-overlap,core:cor:palette-boundary}).
@@ -145,6 +161,12 @@ be activation-equivalent even when tested on every core minorant
 (\cref{core:prop:activation-cofactor-invariance}). Two colorings
 differing in just one input are equivalent exactly when that input
 is captured under their common restriction.
+For any compatible proper colorings, one pass adding captured
+postings computes an exact closure comparison from the prime
+guards, even if the combined coloring uses every owner.
+For arbitrary comparisons, the only owner blocks needing further
+tests are those with a conflicting posting. A single conflict can
+still make an entire monochromatic coalition necessary.
 Equivalence survives common further fixing. At any target coloring,
 delete its live uncolored inputs together and fill the remaining
 holes. Activation then reduces to the source bits of the deleted
@@ -159,6 +181,18 @@ proves sufficiency directly from capture probes and a marked-profile
 transfer argument. When the labels and inputs use two owners, each
 class is a monotone 2-CNF solution set
 (\cref{core:thm:simultaneous-capture-probes,core:thm:graph-activation-kernel}).
+The edgewise kernel test also applies to sums of larger folds on
+an incidence forest when the colorings share a missing owner.
+Complete prime lists recognize such sums in polynomial time and
+recover a representation. The same recognition test applies whenever
+fold supports of different owners meet in at most one input.
+For sums of at most two folds, complete prime lists give a
+polynomial-time recognition test even with unrestricted overlap
+and mixed prime guards.
+Three folds can require a support invisible in every prime list.
+Projected closures generated by single inputs give a separate
+polynomial-time criterion that recovers such hidden supports and
+lists the nonsingleton folds forced in every representation.
 The full graph preorder need not factor edgewise, already on a
 three-vertex one-owner path (\cref{core:prop:graph-order-nonfactorization}).
 For every simple graph sum, the entire activation preorder has a
@@ -173,6 +207,13 @@ reachable operation is the greatest core extension agreeing with the
 baseline wherever all principal factors hold. Above it, one bounded
 helper per owner realizes the principal, in any order
 (\cref{core:lem:atomic-repair,core:thm:principal-box-extension}).
+The principal is also the limit of a descending iteration starting
+from the unrestricted box. Each update uses source losses inside
+the current box and marked queries for bounded helpers. For a
+partial sample of $m$ losses it computes the principal of the
+greatest bounded operation in at most $m+1$ strict rounds, without
+materializing that operation or the coalition tables. Alternating
+edge owners on a path attain the round bound.
 This gives a restriction across colors. Once a principal excludes one
 singleton coloring at an input, it excludes every color incompatible
 with the target there. An extra singleton occurs precisely when some
@@ -319,18 +360,113 @@ singleton profiles while only one permits a specified source mark
 (\cref{core:prop:guard-sequent,core:thm:offer-lattice,core:prop:global-profiles-miss-mark}). There is a polynomial algorithm at
 bounded total width of the coalition orders, even with several repeating
 owners (\cref{core:thm:pointed-guard-cut,core:cor:alternating-transversal}).
+The cut never needs postings absent from the loss budget. For
+explicit losses, caching row subsets gives single-exponential
+recognition at prime width one, and only multiply posted inputs
+need choices when filling a positive guard.
+The same deletion graph uniformly synthesizes the greatest bounded
+operation from the negative rows. Each branch attaches a helper
+with the least native profile for its required singleton win.
+These helpers are computed on the same subbudgets, without
+enumerating losing coalitions, yielding a circuit of
+$2^m(m+1)^K$ times polynomial size for $m$ listed losses.
+In this deletion graph, consistent unions of edge coalitions
+across cuts give the minimal losses, and consensus on the path
+guards gives the canonical primes.
+Every occurrence's full survival predicate is contained in one
+path predicate. For a source never posted in the budget, the
+minimum path cover is its exact occurrence count with union named.
+The individual minima of any set of such sources can be attained
+simultaneously, also for partial marked samples.
+For any sufficient guard, the number of paths and the consensus
+depth are bounded in terms of the competing relevant postings
+allowed by that guard.
+A construction with two common heads makes both bounds sharp
+at a singleton prime: $2^d$ paths and $d$ consensus layers,
+even with the complete minimal-loss budget.
+The example has $4d$ minimal losses and a linear-size realizing
+circuit, while another facet has $2^d$ canonical primes.
+On the singleton prime itself, every realizing word needs
+$2^d$ supplying occurrences of its source. The maximal
+occurrence predicates are explicit, and $2^d$ is also the exact
+count for the whole operation when union is named.
 With one arbitrary loss per head, each posting colors a directed
 edge. An uncolored mark is possible exactly when following these
 edges reaches an unheaded input or a monochromatic cycle: backward
 induction on the input names gives a surviving head whenever every
 owner's edges decrease in its own order. With several losses per
 head the same obstruction uses a choice of one row per head when
-heads with several rows lie on monochromatic cycles of at most one color.
+heads on monochromatic cycles of several colors admit a common loss
+row respecting the separate choices of outgoing cycle edges.
 With one loss per head and no monochromatic cycle, closing the endpoints
 of each edge tests the complete family in polynomial time. Allowing two losses per
 head already makes recognition coNP-complete, even if no two heads
-of the same owner are adjacent. With monochromatic cycles, the
-boundary cuts can miss a forced singleton. On eight inputs they
+of the same owner are adjacent. At three owners this hardness
+also holds for singleton prime guards and no monochromatic cycles.
+Reciprocal singleton losses at one owner can be peeled as fold
+blocks in one-loss monochromatic families. This extends the
+polynomial recognition test to graphs whose monochromatic
+cycles all have this form.
+More generally same-owner edges must be reciprocal, exactly the
+condition for idempotent pure closures in this class. The full
+cofactor law with one loss per head reduces to consistency of
+forced postings, including for mixed loss rows.
+For every $K\ge3$, one loss per head and no monochromatic cycle
+already allow a joint obstruction requiring all $K$ observers:
+every proper subset of their complete views has a common core realizer.
+Duplicating the inputs gives arbitrarily large minimal infeasible
+loss budgets with the same restrictions. Every proper neutral
+residual is core. Coding the copied heads makes all loss regions
+disjoint, giving $(n-1)$-point interpolable examples on $n$ inputs
+at prime width one for every sufficiently large $n$.
+In the absence of monochromatic posting cycles, $n$ points always
+suffice to refute a noncore family, even with unrestricted prime width
+and number of losses per head.
+With cycles, $d+1$ points suffice when there are $d$ distinct
+minimal loss colorings. The signatures of inputs across those
+colorings also give a quotient of bounded arity, computable in
+polynomial time from the prime lists without listing the losses.
+It is the coarsest quotient by block unions and preserves point
+interpolation. A signed version preserves partial marked queries,
+giving fixed-parameter tractability in the number of listed
+colorings.
+For partial negative budgets the greatest operation already
+factors through the loss quotient. The least profiles under
+whole-block demands descend to the same quotient.
+The prime expansion rule also tests quotients by unions and
+owned folds in polynomial time. Successful pair merges compute
+the coarsest such quotient on live inputs, even with different
+operations on different blocks.
+Repeated pair quotients give a canonical decomposition of every
+all-live candidate into read-once blocks and an irreducible quotient.
+This recognizes read-once operations in polynomial time, either
+with named union or with primitive gates alone. Their singleton
+profiles also determine their flattened trees uniquely.
+A prescribed partition into arbitrary blocks can be tested from the
+prime lists in polynomial time. The inner factors are forced by
+neutral restriction, and recognition reduces to them and the quotient
+when the expansion test passes. Recognition of the union-and-fold
+terminal quotients still has the general EXPTIME lower bound.
+For one loss per head, forced additions find the least admissible
+block containing any seed pair, so this decomposition needs no
+prescribed partition. The valid blocks are closed under union and
+difference on overlaps. The blocks that admit no overlap form a
+canonical hierarchy computable in polynomial time.
+At its nodes, a linear order of valid intervals rules out core
+realizability, and complete nodes have explicit union or mask
+realizers. Only quotients with no proper nontrivial block
+need general recognition.
+On core operations, even arbitrary binary core contractions have
+an order-independent terminal quotient and partition. This gives
+polynomial-time recognition of read-once compositions of binary
+core operations.
+With monochromatic cycles, the
+boundary cuts can miss a forced singleton even when the guard
+family obeys colored-cofactor independence. That law itself
+is checkable in polynomial time at prime width one by a
+fixed-face 2SAT test. At width two, checking the whole law
+is coNP-complete even when only one input can violate it. At width three
+even a specified fixing gives coNP-completeness. On eight inputs the cuts
 miss a two-color obstruction even when one word obeys every loss
 and realizes every source mark on single-color postings
 (\cref{core:lem:ranked-posting-survivor,core:thm:monochromatic-head-cut,core:cor:monochromatic-boundary-recognition,core:thm:two-monochromatic-losses,core:prop:monochromatic-cut-obstruction,core:prop:pure-posting-obstruction}).
@@ -339,13 +475,39 @@ monochromatic cycles gives an exact reachability test on arbitrary
 postings. Even with four postings per loss, the first missed mark
 can require all $K-1$ observable colors
 (\cref{core:thm:reciprocal-pair-extension,core:cor:reciprocal-pair-colors}).
-If each color class in a loss is independent in the graph joining
-heads to their postings, a query with no postings takes polynomial
-time. For an arbitrary query, the ordered-path test needs only
+If every pair of differently owned loss classes rules out singleton
+outputs at their common heads, a query with no postings takes
+polynomial time by Horn closure on the inputs. The pair condition
+can be tested directly from canonical primes. For an arbitrary query,
+the ordered-path test needs only
 inputs posted at the queried color and at another color in the losses;
 only those also posted at that color in the positive query enter the
 path alphabet
 (\cref{core:thm:triangle-free-neighborhood-profile,core:cor:triangle-free-marked-paths}).
+When the pair condition fails, the nonprojection helpers can be
+localized to the ancestors of common heads with no blocking row.
+The prime-list algorithm can use these ancestors and the mixed
+postings in positive colorings as its parameters.
+The prime-list test for these paths only asks whether a loss avoids
+specified postings. For complete families under the pair condition,
+its parameter is the number of inputs posted at several owners.
+When that alphabet is empty, the successful fold deletions are
+chains in a closure system on input--owner pairs. The least closed
+set reachable by such a chain above the positive coloring is
+computable directly from canonical primes.
+Under the pair condition, if every effective posting of the positive
+coloring is at a head without losses, fold saturation also computes
+the entire activation principal as an owner box
+(\cref{core:cor:monochromatic-principal-box}).
+In general, a partial saturation splits off its owner box and
+leaves the principal of the greatest operation on the reduced losses.
+Saturation with arbitrary box-supported words also has a unique
+largest support, which can omit inputs on which the greatest bounded
+operation already excludes a singleton coloring.
+For unrestricted losses, each owner can delete all rows with attainable
+profile gaps at once. The greatest common fixed subfamily determines
+which sources survive a given coloring, and one sequence of helpers
+serves all of them.
 For a prescribed depth of greatest profile completions, one instead
 chooses the rows to make atomic at each gate and applies the rainbow
 test to the remaining bounds (\cref{core:thm:layer-interpolation}).
@@ -364,20 +526,37 @@ lists of upper bounds can already force exponential depth, even
 with the predicate of the distinguished source attained exactly
 (\cref{core:thm:compact-depth-upper-bounds}). For bounds encoding
 a state graph, feasibility is reachable acyclicity, and the longest
-reachable path gives the number of slots up to one. A ripple counter
-forces exponential depth with at most five postings per prime, even
+reachable path gives the number of slots up to one. A rotating counter
+forces exponential depth with at most three postings per prime, even
 for a query at an ordinary rail after removing the distinguished input
-(\cref{core:thm:guard-transition-depth,core:cor:width-five-depth,core:thm:rail-transition-depth}).
+(\cref{core:thm:guard-transition-depth,core:cor:width-three-depth,core:thm:rail-transition-depth}).
 The homogeneous rail probes can be combined into a unanimous
 singleton profile. Encoding that profile into the complete target
 gives exponential depth with polynomial-size exact prime lists of
-width six (\cref{core:cor:exact-prime-exponential-depth}).
+width four (\cref{core:cor:exact-prime-exponential-depth}).
+At three owners the two counter groups can be selected in
+separate modes. This gives exponential depth from polynomial-size,
+width-three exact lists, with singly exponential word size.
 Alternating comparisons enforce either successor or both. With
 three owners a single joint $b$-reset can be split by observing a
 $c$-winner that must disappear. Supplying one positive under compact
 upper bounds is EXPTIME-hard already at three owners and bounded
 prime width
 (\cref{core:thm:alternating-rail-transitions,core:thm:three-owner-alternating-bounds}).
+At three owners, strengthening the rail losses and adding early
+resets gives hardness with a prescribed unanimous singleton
+profile. Splitting the tests into three observer modes gives
+hardness for exact recognition as well. The two monochromatic
+selector modes use one-owner closures within rail blocks, and
+the remaining mode uses binary selectors
+(\cref{core:thm:exptime-complete-guards}).
+One selector color per head suffices when heads sharing that
+color never post each other. A three-input example shows that
+the same construction can fail when those postings are allowed.
+The same lower bound applies to locating an intrinsic activation
+box coordinate at an uncolored sink, even for a monochromatic target.
+With explicit losses, the comparison is PSPACE-complete even
+at the empty target and with one posting in the comparison.
 When the losses left by the singleton profiles are acyclic, the
 completion depth is at most quadratic in their dependency height.
 Grouping repairs at each rank gives this bound even for exponentially
@@ -454,6 +633,20 @@ Feedback laws and colored-cofactor independence do not suffice, even
 when every extension by unused owners passes the feedback test and all
 proper nonempty neutral residuals are core
 (\cref{core:thm:identity-stable-feedback}).
+Already a two-input fold feeding a sink admits a three-input
+width-one counterexample to cofactor independence as a recognition
+test. The fold's principal gives a polynomial recognition test for
+all its one-source extensions
+(\cref{core:thm:one-owner-activation-order}).
+Over disjoint binary folds, terminal primes of width two
+give a 2SAT test. Allowing three-input folds makes both
+checking a specified principal and exact recognition
+coNP-complete at that width. Width three already gives
+coNP-complete recognition over binary folds.
+When every terminal loss is monochromatic, global recognition
+over these folds is polynomial for arbitrary block sizes.
+The loss test reads nonemptiness on native blocks, fullness
+on eligible foreign blocks, and individual postings elsewhere.
 After an owned attachment to a greatest profile completion, the principal
 monochromatic activation box is computed by rainbow intersections of
 the baseline's winning coalitions. This gives the terminal obstruction
@@ -647,7 +840,20 @@ terminal test can read the prime guards directly. The number of
 alternating choices can grow with the input. Recognition is
 PSPACE-complete with both canonical presentations supplied, already
 with at most four minimal zeros per head and explicit principal singleton
-profiles (\cref{core:thm:complete-guard-pspace}). For bounded-width
+profiles (\cref{core:thm:complete-guard-pspace}). From primes alone,
+logarithmic vertex covers of the co-occurrence graphs of the
+unforced exclusions suffice to enumerate the losses in polynomial
+time. Singleton primes in particular give at most one loss per
+observer facet (\cref{core:thm:guard-consensus}). A specified
+marked query under singleton-prime upper bounds is already
+PSPACE-complete at three owners with a monochromatic target,
+and at four owners even with the empty target. Unused inputs
+make the losses at a head visible on distinct facets. Exact recognition
+with singleton primes is PSPACE-complete at four or more owners:
+erasing a retained body input protects the tests both at the cap
+owner and away from it. At three owners the same erasure gives
+PSPACE-hardness at prime width two and at most four losses per head.
+For bounded-width
 positive CNFs of losses, selectors and an atomic cap reduce realization
 with a prescribed profile to complete prime-list recognition without
 enumerating losses (\cref{core:thm:succinct-profile-cap}).
@@ -689,6 +895,21 @@ only in the largest component, even with exponentially many cyclic
 coalitions. The greatest witness under a budget of omissions has the
 same bound
 (\cref{core:thm:local-principal-spines,core:cor:shallow-source-witness}).
+If each conditional coefficient is a one-owner trace or an additive
+core operation, these constructions give primitive words of size
+$2^{O_K(n)}$ and completion depth $O(Kn)$, without a bound on component
+size. Complete prime lists also suffice for a polynomial-space test
+when each conditional loss family is implied by its singleton losses
+or by its losses at one owner. The choice can vary with the background.
+Projecting losses onto each owner separately also computes the
+greatest union of one-owner traces below a candidate. This yields
+a guard criterion allowing mixed losses within one component.
+Its deterministic cost is exponential only in the number of inputs
+where different owners' relevant postings compete on a prime guard
+(\cref{core:thm:conditional-component-capture}).
+For overlapping traces the intersection of their activation
+preorders can identify exponentially many colorings that the union
+distinguishes, even when all single-posting comparisons agree.
 With prime guards, a specified positive becomes coNP-complete already
 for disjoint two-cycles feeding one source.
 At arbitrary colors, polynomial space suffices when source components
@@ -702,8 +923,25 @@ offer history for all subsequent profile implications. Deleting ten inputs to br
 cycles already allows PSPACE-hardness
 (\cref{core:thm:component-mark-sweep,core:thm:prime-component-space,core:cor:component-owner-marks,core:cor:component-injective-marks,core:thm:mixed-part-offers,core:thm:cyclic-coalition-space,core:prop:winning-offer-rounds,core:cor:source-feedback-hardness}). With only the prime lists,
 unrestricted recognition takes exponential space and is EXPTIME-hard
-for $K\ge4$, already at bounded prime width
-(\cref{core:thm:exptime-complete-guards}). A family outside the polynomial-space cases above
+for every $K\ge3$, already at bounded prime width
+(\cref{core:thm:exptime-complete-guards}). In particular no fixed
+least-fixed-point sentence on the prime-list incidence structure
+can define realization, even with a supplied order: on a fixed
+finite-arity formula the relations have polynomial size, and
+least-fixed-point iteration takes polynomial time. This would
+contradict the deterministic time hierarchy. The same argument
+applies to a fixed Horn closure on polynomially many tuples
+constructed in polynomial time.
+
+With monochromatic internal postings in each component,
+exact recognition from primes is coNP-complete even for
+arbitrarily large components. A failed positive has a Horn
+derivation whose earlier comparisons can be read from the
+claimed exact guards. A specified marked query under upper
+bounds is PSPACE-complete: the component pass must instead
+recompute those closures, and successive one-owner closures
+can evaluate a quantified formula even at a monochromatic target
+(\cref{core:cor:component-owner-marks}). A family outside the polynomial-space cases above
 must have superpolynomially many distinct coalitions meeting their
 heads' components after the singleton-forced losses are removed.
 Whether the prime covering test can dispense with the auxiliary
@@ -3011,6 +3249,163 @@ family nonempty. Extra owners introduce no additional traces because their
 choices act as union on these inputs.
 \end{proof}
 
+\paragraph{Jointly prescribing the two foreign profiles.}
+In the atomic observer problem, prescribe normalized
+monotone singleton profiles $p_b,p_c$ as well as $h$.
+On $2^V$ put
+\[
+       g(S)=p_c(S),\qquad u(S)=1-p_b(V\setminus S).
+\]
+A common core realizer exists exactly when $g\le u$,
+both functions are constant on every zero interval,
+and every positive $(L,U)$ satisfies
+\[
+          g(L)=0,\qquad u(U)=1,\qquad U\not\preceq_h L.
+\]
+A realizer can additionally have unanimous profiles at
+all owners outside $\{b,c\}$.
+
+For necessity, the expansion into lattice components
+also preserves the $b$- and $c$-singleton flags: treating
+foreign gates as union preserves both flags, and the
+distribution rule preserves the flags as well as the
+observed membership. On the binary $b,c$ assignments
+the two flags of a component are the complementary
+Boolean values. For their union the $c$-singleton
+requires all components to take value one, and the
+$b$-singleton requires all to take value zero.
+Thus $g$ and $u$ are the pointwise infimum and
+supremum of the Boolean components. This yields
+the interval constraints.
+
+For sufficiency use $g$ and $u$ themselves as components.
+They already give the desired infimum and supremum
+for any family of functions between them containing both.
+For each positive interval adjoin the function
+\[
+        S\longmapsto g(S)\lor[U\preceq_h S].
+\]
+It lies between $g$ and $u$, since $u$ is monotone
+along the graph and $u(U)=1$. It respects all zero
+intervals and separates $L,U$. The family now gives
+exactly the required table and profiles. Each function
+is normalized and can be written as a Boolean
+disjunction of nonempty conjunctions, using the
+$b,c$ choices to realize its derivative. If an input
+$x$ is absent from such a component $v$, replace it
+by $v\star_b(v\star_c x)$. This preserves its
+three-atom trace and its $b,c$ flags, by the lattice
+absorption identity on the chain and the Boolean
+flag recursions. After doing this at every missing
+input, each component uses all inputs and only
+$b,c$-gates, giving unanimous profiles at the other
+owners. Union of the components preserves those
+profiles.
+
+The construction also gives the greatest full winner
+table on the three-atom rows compatible with these data.
+It supplies $b$ exactly when $g(U)=0$, and $c$ exactly when
+$u(L)=1$: a Boolean lattice component supplies $b$ when
+its upper endpoint is zero and $c$ when its lower endpoint
+is one. Any realizer has these same memberships after
+erasing owner $a$ and the owners outside $\{a,b,c\}$.
+Erasure is extensive. On rows with $h(L,U)=0$, it
+preserves the whole outcome by the absent-owner erasure
+law in \S\ref{app:core-additive}. Thus on those rows the
+memberships of both foreign winners are forced, even
+when the realizing word uses all owners.
+
+\paragraph{Atomic observer tables on fixed-menu faces.}
+Fix any menus on the inputs outside a set $W$, and give
+the remaining inputs the three atomic choices $b,a,c$
+as before. If any fixed menu contains $a$, adjoin one
+coordinate $z$ to the Boolean cube and put $Z=\{z\}$;
+otherwise put $Z=\varnothing$. A query $(L,U)$ on $W$
+now has endpoints $L$ and $U\cup Z$ in $2^{W\cup Z}$.
+Draw all inclusion edges and add the reversal of each
+zero query. A nonzero table on this face has a core
+realizer exactly when no positive query has a path
+from its upper endpoint to its lower endpoint. The
+identically zero table has a realizer exactly when
+some fixed menu omits $a$.
+
+For necessity, work with four statuses: the atoms
+$b,c$, and a middle status with or without an
+$a$-contribution. Each owner $d\notin\{a,b,c\}$
+has a fixed singleton flag at every subterm, since
+the free inputs never equal $\{d\}$. Its gates thus
+act identically as union or return the constant
+$\{d\}$, an unmarked middle status. An $a$-gate
+is union in the four-status view. Distributing the
+$b,c$ choices over union leaves a union of lattice
+expressions in the free inputs and fixed statuses.
+Use the coordinate $z$ for every marked middle
+constant, since each behaves as the middle element
+of $b<\pv<c$.
+
+Replace the remaining unmarked middle constants
+independently at their occurrences by $b$ or $c$.
+The replacement cannot create an $a$-contribution:
+the $b,c$ singleton flags can only increase, so a
+blocked leaf path cannot open. Conversely, follow
+any surviving marked leaf in an expression. At a
+$b$-gate set the unmarked constants of its sibling
+to $c$, preserving that sibling's $b$-flag, and at a
+$c$-gate use $b$. These sibling subtrees are disjoint
+as occurrences, so the choices keep the path open
+together. Thus the original trace is the union of
+the Boolean derivatives of all resulting lattice
+expressions. Every zero makes both endpoints equal
+in each Boolean component, proving the path condition.
+
+Conversely, for each positive query, take the upset
+reachable from its upper endpoint. Its characteristic
+function is monotone, separates the query endpoints,
+and is constant on all zero intervals. It takes value
+zero at the bottom and one at the top. Express it as
+a disjunction of conjunctions of its minimal true
+sets. Use $b$-choices for conjunction and $c$-choices
+for disjunction, with any fixed input containing $a$
+as the $z$ coordinate when present. This realizes
+the derivative on the face. Union the resulting
+terms over the positives. For the zero table a
+projection onto a fixed menu omitting $a$ suffices.
+If there is no such menu, setting every free input
+to $\{a\}$ makes every input contain $a$, which every
+core term then preserves.
+
+The fixed-face criterion is a monotone reduction on
+complete source lists. At a face, compute its zero
+winner queries by source reconstruction. Whenever
+the resulting graph has a path from the upper to the
+lower endpoint of a query, erase all supplying
+source bits at that query. Such an erasure is forced
+in every core minorant: any core minorant starts
+with at least the given zero queries, and a positive
+one cannot have the return path. Extend each erasure
+to supersets of its posting and to agreeing observer
+facets. Repeat over the faces to stability. The
+updates are monotone and preserve every core
+minorant, so the result is the greatest subfamily
+stable under the face rule. This statement allows
+the zero table as a stable face; a face forced to
+be nonzero by the all-$a$ query can separately
+certify that no core minorant exists.
+
+At fixed $K$ the reduction takes singly exponential
+time in the arity and polynomial time in the
+prime-list input length. There are only exponentially
+many choices of which inputs to fix and their menus,
+the cubes have at most $2^{|V|+1}$ vertices, and
+each changing sweep erases a source-table entry.
+The same reasoning allows this face reduction
+and conditional feedback to be alternated to their
+greatest common fixed point within the same time
+bound. Separate realizability of all the faces
+still allows observer incompatibility: the example
+below has a full core realizer at each observer
+and consequently passes every fixed-face comparison.
+
 \input{sections/appendix-core-pure-interpolation}
 \input{sections/appendix-core-pruning-contexts}
 \input{sections/appendix-core-pruning-modules}
@@ -3056,6 +3451,357 @@ The three prescribed outputs give the premises $012-0$, $021-1$ and
 $120-2$ of the third implication in \eqref{core:eq:ternary-loss-rules}.
 Its conclusion excludes winner $2$ at $012$, contrary to the first output.
 \end{proof}
+
+This three-input example also survives the combined guard
+reductions. Its only loss at $X$ fixes $Y=\{1\}$ and
+$Z=\{2\}$ at observer $0$; the other two losses are
+$X=\{0\},Y=\{2\}$ at head $Z$ for observer $1$, and
+$X=\{1\},Z=\{0\}$ at head $Y$ for observer $2$.
+The three conditions on controllers are pairwise
+incompatible. Under each fixing the operation returns
+the pair of fixed winners regardless of the remaining
+menu. Consequently, if a posted source fails to
+supply its own owner, that is the only nonsurviving
+posting and its entire cofactor is independent of
+its menu. This verifies the surviving-postings
+cofactor law of \S\ref{app:core-additive} on every partial
+coloring. No pure loss occurs.
+
+Adjoining any one of $X,Y,Z$ by union removes its loss.
+The two other losses require different atoms at that
+now-retained input. In a retained-input pattern at most
+one is therefore active. When neither is active, use the
+binary union helper. When one is active, the other
+unretained input's controlling atom specifies a one-sided
+binary helper. The two observers other than the retained
+atom are exactly the controlling atom and the losing
+observer. At the former the helper supplies every possible
+contribution, and at the latter it suppresses precisely
+the required head. Thus the retained-pattern comparison
+of the retained-source normal form realizes each
+single-input promotion. Further promotions preserve
+realizability by union. Global feedback sees only identity
+closures, every nonempty promotion is core, and every
+fixed-menu observer face is already realized by the
+corresponding $T_r$. The example is therefore a common
+fixed point of the face, feedback and cofactor tests,
+while its three joint winner rows remain impossible.
+
+The three-row implication persists with arbitrary fixed
+inputs. More generally, take a finite sample on varying
+inputs and let $J$ be the owners appearing as singleton
+menus among those inputs on every row. If a core
+polynomial supplies at least one winner in $J$ somewhere
+on the sample, there is a constant-free word on the varying
+inputs with the same $J$-membership on every row.
+
+For $r\in J$, the $\star_r$-fold of the varying inputs
+always gives $\{r\}$ on the sample. Split each fixed
+menu into its part in $J$ and its part outside $J$.
+Represent the first part by a union of these folds
+and the second by a fresh fixed-menu variable, omitting
+an empty part. This preserves sampled outputs. Now
+erase each of the remaining fixed-menu variables by
+\cref{core:lem:winner-erasure}. Its menu is disjoint from
+$J$, so erasure preserves every membership in $J$.
+The constant case of the lemma is impossible because
+the sample has a positive $J$-bit. After all erasures
+the term uses only the varying inputs.
+
+Thus the four ternary loss implications apply on
+three-owner permutation faces with any number of
+fixed inputs, even when their menus use other owners.
+If a conclusion failed, its positive queried winner
+would make the erasure argument applicable to the
+premises and conclusion together. Duplicate varying
+columns are also permitted by identification.
+
+An extra column can even vary its menus while keeping
+its $J$-membership and all singleton flags fixed across
+the sample. Replace it by its menu from any one row.
+This preserves every singleton flag at every subterm
+by the flag recursion. It also preserves membership of
+each $r\in J$: at an absorbing gate that membership is
+determined by the gate owner, and otherwise it is the
+union of the two child bits. Thus these columns can be
+treated as fixed menus in the same elimination argument.
+
+The singleton flags matter. With two outside owners
+$d,e$, add a column $D$ having menus $\{d,e\},\{d\},\{d\}$
+on the three rows $012,021,120$. It has empty membership
+in the three sampled owners on every row. Nevertheless
+$Z\star_d D$ returns $\{2,d,e\}$, $\{d\}$, $\{d\}$,
+respectively. This meets the three omission premises
+of the third ternary rule and violates its conclusion.
+Thus varying outside singleton flags can invalidate
+a joint-observer implication even when the additional
+columns never supply any of its observed winners.
+
+There is an exact gluing rule for arbitrary samples
+with outside-only columns. Partition the inputs into
+varying inputs and outside columns, requiring every
+sampled menu of an outside column to be disjoint from
+$J$. No singleton coverage is required of the varying
+inputs. An outside mode $m$ lists the posted blocks
+$E_r(m)$ of the outside columns at all owners $r\notin J$.
+Order modes by componentwise inclusion. A sample can
+prescribe positives and negatives at winners in $J$,
+with different varying-input rows in different modes.
+
+For every positive, at mode $m$, ask for a core word
+on the varying inputs that supplies that positive and
+respects all the negative tests from modes at most
+$m$. Those negative tests retain their original
+varying-input menus. The sample has a common core
+realizer exactly when all these requests are feasible.
+If the sample has no positives, an outside projection
+works whenever there is an outside column; otherwise
+use the original feasibility test on the varying inputs.
+
+For necessity, fix the outside inputs of a sample
+realizer to their menus at the chosen positive.
+When the varying-input menus are held fixed,
+increasing the outside mode leaves all $J$-singleton
+flags unchanged and can only increase the outside
+singleton flags in every subword. A contributing
+occurrence for a winner in $J$ stays contributing
+when the mode is decreased, since no sibling can
+acquire a new foreign absorbing singleton.
+Thus at the fixed mode the word still omits all the
+negative tests from smaller modes, even for rows not
+originally sampled at the fixed mode. Erase each fixed
+menu by \cref{core:lem:winner-erasure}. All are disjoint
+from $J$, so the positive and the omissions persist.
+The positive excludes the constant case at every step.
+
+For sufficiency, take a word for a positive at mode $m$.
+For each outside owner $r$ and each outside input
+$j$ absent from $E_r(m)$, attach that input once at
+an $r$-gate. Such a gate kills all $J$-bits when its
+attached input is $\{r\}$, and otherwise preserves
+them. It cannot restore a $J$-bit already lost because
+the new input is disjoint from $J$. The resulting
+piece therefore contributes only at modes contained
+in $m$, where it respects every prescribed negative.
+Union over all positives.
+
+In particular, for a complete table on a product of
+varying-input rows and outside modes, this reduces to
+antitonicity in the modes and core realizability of
+each nonzero mode table on the varying inputs. Necessity
+at a fixed mode follows by erasure, and antitonicity
+makes its exact realizer respect the negatives at all
+smaller modes.
+
+For samples of canonical source bits, the same gluing
+works with unrestricted posting colors and observers.
+Choose any outside set $R$ containing none of the
+tested heads. The outside mode of a query is its
+posting restricted to $R$, and the varying-input
+query is its restriction to the complement. For each
+positive at mode $m$, ask for a core helper on the
+varying inputs supplying it and omitting all negative
+queries whose outside modes are contained in $m$.
+The original sample is feasible exactly when these
+individual requests are feasible, with the same
+all-negative convention as above.
+
+For necessity, adjoin every outside projection by
+union to a sample realizer. This changes none of
+the tested source bits, since at an isolated source
+probe the outside inputs omit its observed winner.
+All outside inputs are now retained. Use the
+several-input normal form of
+\cref{core:thm:retained-source}, iterated over the
+retained inputs. Its pieces contribute helpers
+exactly on the boxes of their patterns. At the
+positive probe some helper supplies the marked
+bit, and its pattern extends $m$. Every query at
+a smaller outside mode is still inside that box,
+at any of its observers. The helper therefore
+obeys every required omission there.
+
+Conversely, attach outside projections to each
+positive's helper as in the mode construction, now
+using every owner as a possible gate owner. At
+a source probe for observer $k$, none of the
+attached inputs contains $k$. The attachment
+filters exactly the postings outside the chosen
+mode, because it absorbs a contributing helper
+precisely when its input posts at that gate's
+owner. No attachment can restore a lost mark.
+Union over the positives. This proof does not
+require a neutral menu disjoint from all observers,
+nor does it remove any test at an observer that
+appears in another query's outside mode.
+
+For one marked query $(j,p)$ this gives a canonical
+iterated input reduction. Start with all inputs $S=V$.
+Keep $j$ and keep another head $i\in S$ only if some
+original loss at $i$ has its postings outside $S$
+contained in $p$. Delete the other inputs and repeat.
+At each step those inputs head no remaining loss,
+so the source gluing reduction deletes them, keeps
+only the losses compatible with their marked mode,
+and restricts the queries to the new input set.
+The final set is the greatest fixed point of the
+displayed retention rule, since the rule is monotone
+in $S$. Deleting eligible inputs one at a time gives
+the same set.
+
+This computation needs no minimal-loss enumeration.
+For head $i$ and observer $k$, the allowed posting
+ground consists of all foreign postings inside
+$S\setminus\{i\}$ and the postings of $p$ outside $S$
+whose colors differ from $k$. An eligible loss exists
+exactly when this ground meets every prime on the
+facet, by \cref{core:thm:guard-consensus}. Testing all
+heads and facets requires only polynomial work per
+round. At stability specialize the original guards
+at the fixed outside postings of $p$, ignoring the
+observer's own color, to obtain the remaining loss
+budget. The original mark is feasible exactly when
+its restriction is feasible on that set. A witness
+lifts by replaying the attachment gates in reverse
+deletion order, with at most $K$ attachments per
+removed input. For example, at an uncolored mark,
+a chain of losses each posting just the next input
+can disappear from its unheaded end, even though
+all its heads initially belong to the budget.
+
+The tag reduction gives another exact deletion, even
+for a head of a remaining loss. At a marked probe
+$(j,p)$, an input $i\ne j$ can be omitted whenever
+every posting at $i$ in the minimal losses agrees
+with its status at the mark. For neutral $i$ this
+means no loss posts it. Delete its head tests and
+project every other loss by erasing its posting.
+The reduced mark is feasible exactly when the old
+one is; the witness lifts by ignoring $i$.
+
+Indeed $i$ has one tag per owner at which its mark
+menu is not that owner's atom, as in
+\cref{core:lem:winner-on-copies}. At owner $r$ the
+copy tagged $r$ belongs to no required positive
+$r$-coalition of the lifted marking problem. If $i$
+is never posted at $r$ in the loss budget, neither
+is this copy. The palette deletion therefore removes
+it while preserving the other tag-profile wins.
+Under the stated condition this removes every
+copy of $i$, and identification gives a marked
+witness omitting $i$. Such a witness must obey the
+projected losses. Conversely a witness on the
+remaining inputs respects all original losses by
+ignoring $i$.
+
+A third deletion discards inputs outside the marked
+head's ancestor set. Draw $u\to i$ when a current
+canonical prime at $i$ mentions input $u$. If $A$
+is the ancestor set of $j$, every bound in $A$
+is independent of inputs outside $A$. Take the
+neutral residual of a witness on $A$. It obeys the
+bounds at ancestor heads and supplies the mark, since
+removing postings cannot kill its source bit. Conversely
+a witness on $A$ omits every head outside $A$. Thus
+one may discard any nonancestor's head and project
+the other bounds over all postings at that input:
+on either side feasibility reduces to the unchanged
+ancestor problem.
+
+All three deletions give the same final reduced
+problem in any order. For distinct deleted inputs,
+eligibility persists: neither projection introduces
+new literals or a loss at an identically surviving
+head, and dependency paths can only disappear.
+Their two projections commute. If the same input
+qualifies for headless deletion and for the
+matching-posting rule, its literals exclude only
+its marked atom, if any. Projection over all
+postings and specialization at the mark then
+coincide. The only other possible disagreement
+is between headless deletion and nonancestor
+deletion at the same input. In either case the
+lists of the old ancestor set are unchanged and
+its complement can still be discarded by the
+nonancestor rule. The two results therefore have
+a common continuation on that ancestor set.
+Induction on the input count gives a unique final
+set, prime lists and restricted mark. All steps
+are polynomial in the original prime-list length.
+
+When lifting a batch of headless deletions,
+the attachments can be grouped by owner. At
+each owner $r$, use a single $\star_r$-fold of
+the deleted inputs whose marked status is not
+$r$, attached at one $r$-gate to the current
+witness. Associativity gives exactly the same
+filter as the individual attachments. Thus a batch
+costs at most $K$ owned-fold completion layers,
+regardless of the number of inputs removed.
+The other two deletion rules need no extra layers.
+
+The reduced marked test is explicit when each of
+its facets has at most one prime per head, even
+if specialization has made the facets disagree.
+Keep a colored arrow $u\to_r i$ if the singleton
+posting $u:r$ loses $i$ at any foreign observer.
+Declare a head dead if some observer loses it at
+the neutral posting. Remove dead heads, mixed
+strongly connected components of the arrow graph,
+and all their descendants. The mark is feasible
+exactly when its head remains and no path from
+a marked input to the head starts with an arrow
+of that input's marked color.
+
+Indeed an empty list requires a neutral loss;
+a one-prime list requires only singleton losses,
+one per exclusion in the prime. Every core
+minorant must honor such a loss on every foreign
+facet, so synchronizing the facets by taking
+the union of their singleton losses preserves
+feasibility. An unused input forces all its
+singleton-capture descendants unused, hence the
+dead-head deletions. On the rest apply the additive
+first-color completion of
+\cref{core:thm:additive-greatest-minorant}.
+The singleton arrows may first be closed within
+each color, since that closure is necessary for
+every minorant. It changes neither the uncolored
+reachability nor the completed first-color
+arrows. The resulting greatest minorant supplies
+precisely the marked bits stated above. Thus a
+marked query can have a graph certificate and
+explicit witness even when its original lists
+were neither additive nor observer-independent.
+
+A second closed marked test covers nonlinear losses
+at just one owner $r$. This case applies whenever all
+remaining prime literals have color $r$, although the
+facets may still have different lists. Form a closure
+$c$ by imposing $A\to i$ for every pure $r$-loss at
+head $i$ on any facet, including neutral losses.
+The mark at $j,p$ is feasible exactly when
+$j\notin c(p_r)$. The one-owner greatest minorant in
+\cref{core:thm:conditional-component-capture} proves
+this after synchronizing the facets: a core helper
+has the same pure loss at every foreign observer,
+and a neutral loss makes its head unused.
+
+The test evaluates $c(p_r)$ without listing its
+implications. Start at $p_r$ and add any unadded head
+that loses at the current pure posting on some
+foreign observer, or has a neutral loss at any
+observer. Repeat until no more heads can be added.
+The enabled pure losses are read directly from
+the primes, so this computes the closure in at most
+$|V|$ addition rounds. If it reaches $j$, record
+one witnessing loss row per newly added input
+until then. Those rows force the same derivation
+and already exclude the mark. In particular a
+reduced monochromatic budget needs at most one
+loss row per remaining input to obstruct a mark,
+even when its complete minimal-loss list is
+exponentially large.
 
 \subsection{Interval masks and path closure}
 \label{app:core-interval-masks}
@@ -3583,6 +4329,412 @@ add unused ground elements to the Boolean intervals. Incidence and
 the cover property are preserved, and $n=N-O(\log N)$.
 \end{proof}
 
+The exact locality of any noncore interior mask is
+given by its shortest closure witness. Let $d$ be
+the least number of masked reversals in a path from
+$U$ to $L$ for an unmasked interior interval $(L,U)$.
+The smallest noninterpolable sample has size $d+1$.
+For the upper bound, take the $d$ masked rows of
+such a path and the unmasked row, using the atomic
+observer rows from \cref{core:thm:interval-masks}.
+The Boolean components must respect the whole
+path and cannot supply the required winner.
+
+For the lower bound, take any sample of at most
+$d$ valuations and close only the masked intervals
+occurring in the sample. The closed mask gives a
+core operation agreeing on its sampled masked
+intervals. If the sample includes an unmasked
+interval, it supplied fewer than $d$ distinct
+masked reversals. A shortest path in the resulting
+graph can use each reversal at most once, so no
+sampled unmasked interval enters the closure.
+Boundary and degenerate intervals stay unmasked.
+Thus the operation agrees on the entire sample.
+
+For an explicit list of masked intervals, the
+shortest witness and its sample can be found in
+polynomial time in the list length. Make a directed
+graph on listed intervals, with an arc $i\to j$
+when $L_i\subseteq U_j$. A path from $i$ to $j$
+witnesses every strict subinterval of $[L_j,U_i]$,
+provided $L_j\subsetneq U_i$. The converse follows
+from \eqref{core:eq:interval-mask-path}. Thus it
+suffices to find a shortest path whose endpoint
+interval contains an unlisted strict subinterval.
+Count the listed subintervals by a scan. If
+$m=|U_i\setminus L_j|$, there are $3^m-2^m$ strict
+subintervals, since each of the $m$ elements may
+lie in the lower set, only in the upper set, or
+outside both, and equality excludes the middle
+state at every position. The endpoints are both
+interior because the first upper set is proper
+and the last lower set is nonempty.
+
+A mismatched count gives an unlisted interval
+without enumerating the cube. Fix the ternary
+choices one element at a time, always keeping a
+branch with fewer listed subintervals than possible
+strict subintervals. The count on a branch is
+$3^h$ for $h$ unfixed elements if a middle state
+has already been chosen and $3^h-2^h$ otherwise.
+At the end this gives a missing pair. Minimize the
+number of vertices of a path over all eligible
+endpoint pairs by ordinary shortest paths; this
+is the number of masked reversals. Its atomic
+rows and the missing pair give the promised
+minimum-size sample.
+
+For a family supplied by complete canonical prime
+lists and promised to be an interval mask, it
+suffices to use maximal masked intervals. Indeed,
+the mask is closed under strict subintervals: a
+head free in a subinterval was also free in the
+larger interval, and moving to the smaller interval
+only adds $b$- or $c$-postings. Its loss persists
+by antitonicity. Fix an observer outside $b,c$.
+At a head $x$, minimal losses then correspond
+exactly to maximal masked intervals in which $x$
+is free. Their postings fix the lower end to $c$
+and the complement of the upper end to $b$.
+Every maximal masked interval occurs this way at
+one of its free heads. Recover them by taking the
+minimal transversals of those prime lists and
+discarding duplicates.
+
+Replacing each reversal by a containing maximal
+interval preserves all the inclusions in
+\eqref{core:eq:interval-mask-path}. Thus the same
+shortest-witness graph can use just the maximal
+intervals without increasing the path length.
+For reachable endpoints $i,j$ with
+$L_j\subsetneq U_i$, a witness exists exactly when
+$[L_j,U_i]$ itself is unmasked: if it is masked,
+every strict subinterval is masked as well. Check
+this by testing containment in a listed maximal
+interval. In particular for prime width one,
+there is at most one minimal loss per head on the
+chosen facet, so the shortest witness is found in
+polynomial time directly from the primes.
+
+The same graph produces a representation of the
+greatest core minorant by maximal intervals. If
+there are $m$ maximal masked intervals initially,
+form $[L_j,U_i]$ for each reachable pair $i,j$ with
+$L_j\subsetneq U_i$ and retain only the inclusion
+maxima. Their strict subintervals constitute the
+path closure, so at most $m^2$ maximal intervals
+are needed. The construction is polynomial in
+the maximal-interval input size and also in the
+prime-list size when the input has width one.
+
+The quadratic bound is attained even at original
+prime width one. For $m\ge2$, take disjoint sets
+$P=\{p_1,\ldots,p_m\}$ and $Q=\{q_1,\ldots,q_m\}$
+as the ground set, and all strict subintervals of
+$[P\setminus\{p_i\},P\cup\{q_i\}]$ as the mask
+for $i=1,\ldots,m$. The free sets $\{p_i,q_i\}$
+are disjoint, so each head has exactly one maximal
+loss interval on a foreign facet. Its prime list
+consists of the singleton exclusions of that
+loss's postings. Every lower endpoint is contained
+in every upper endpoint, so the reversal graph
+is complete. All $m^2$ pairs
+$[P\setminus\{p_j\},P\cup\{q_i\}]$ occur in its
+closure and none contains another.
+
+For overlapping free sets, the corresponding
+structural test uses two endpoint antichains.
+In each reversal component keep the minimal lower
+ends and maximal upper ends under inclusion. The
+maximal closed intervals in that component are
+exactly the strict comparable pairs between these
+two antichains. Indeed any reachable hull can be
+enlarged to such a pair, and no two distinct such
+pairs contain one another. Hulls of distinct
+components cannot contain one another either:
+containment would supply an arc in each direction
+between their endpoint intervals, merging the
+components. Consequently the input mask is closed
+exactly when in each component every listed lower
+end is minimal, every upper end is maximal, and
+all strict comparable pairs of these ends are
+listed. The last test can compare counts, since
+all the listed pairs are distinct and comparable.
+
+In a closed component, the bipartite graph on
+these lower and upper ends, with an edge for each
+strict comparable pair, is connected. An arc in
+the reversal graph from $(L,U)$ to $(L',U')$
+provides the cross edge $(L,U')$ in this bipartite
+graph. Equality $L=U'$ cannot occur inside a closed
+component, since $L'<U'=L$ would contradict lower
+minimality. Thus reversal paths connect all pairs
+by steps through shared endpoints. Conversely,
+sharing either endpoint gives reversal arcs in
+both directions. This describes the internal
+component structure without requiring disjoint
+free sets or singleton prime clauses.
+
+At width one there is also a geometric test for
+closedness of each reversal component. Regard
+each maximal interval as a cube of subsets, and
+join it to the vertices it shares with other cubes
+in the same component. The resulting incidence
+graph is a forest: a cycle through distinct cubes
+and shared vertices would change a free coordinate
+in each cube, and no other cube can undo that
+change because the free sets are disjoint. The
+mask is closed exactly when, in each component,
+this forest connects its cubes and every meeting
+vertex is the lower endpoint of all incident cubes
+or the upper endpoint of all of them.
+
+For necessity, in a closed mask any Boolean path
+within a component can be subdivided into unit
+steps, all in the same quotient class. Every such
+step is masked, hence belongs to an original cube.
+This connects the cubes through their meetings.
+At a meeting vertex an upward move in one cube
+and a downward move in another would give a
+comparable pair in that class differing in two
+private coordinates. The interval between them
+would be forced but would lie in no input cube.
+Thus every meeting has the stated common extremum.
+
+Conversely, take comparable sets in two cubes of
+one component and follow the unique incidence
+path between their cubes, moving between its
+meeting vertices. Disjointness of free coordinates
+forces every move on this path to be nondecreasing:
+a removed coordinate could never be added back.
+Two consecutive nonzero moves cannot do this at
+a common extremum. Interior moves are nonzero
+because their meeting vertices are distinct; any
+zero moves can only be at the ends. So the two
+sets already lie in one cube. In particular every
+reachable strict endpoint pair in the component
+is already masked, proving closure.
+
+The order between components can nevertheless be
+an arbitrary finite partial order, even for closed
+masks of width one. For each element $i$ use a
+coordinate $p_i$ and a separate free input $x_i$.
+Put $L_i=\{a\}\cup\{p_j:j\le i\}$ and
+$U_i=L_i\cup\{x_i\}$, with $a$ a common input and
+one extra input outside all intervals. The arc
+$i\to j$ occurs exactly when $i\le j$. Each
+component is a single cube, and the free inputs
+are disjoint, giving the claimed width and order.
+
+There is a smaller description of the closed
+predicates that does not form the quadratic list.
+For a candidate endpoint pair with $L_j\subsetneq
+U_i$, the arc $j\to i$ is already present. Thus
+reachability from $i$ to $j$ can contribute a mask
+exactly when $i,j$ lie in one strongly connected
+component. For a probe with $c$-postings $C$ and
+$b$-postings $B$, its interval is in the closure
+exactly when some component $S$ satisfies
+\[
+ \left(\bigvee_{j\in S}[L_j\subseteq C]\right)
+ \land
+ \left(\bigvee_{i\in S}[V\setminus U_i\subseteq B]\right).
+\]
+For a source probe there is at least one free
+input, so any matching pair automatically has
+$L_j\subsetneq U_i$. This expression has size
+linear in the total size of the maximal endpoints,
+with shared subexpressions across heads.
+
+At a given head $x$, only components containing
+an original interval with $x$ free can contribute.
+Otherwise every interval in that component fixes
+$x$, and all fix it to the same color: a directed
+path from an interval fixing it to $c$ to one
+fixing it to $b$ would have a step violating
+$L_i\subseteq U_j$. Either constant color then
+precludes a loss at a probe with $x$ free. In
+particular at original width one there is at most
+one contributing component per head, so its
+closed loss predicate factors as the conjunction
+of one monotone DNF per color, as displayed above.
+
+The greatest core minorant also has a polynomial-size
+primitive term in the maximal-interval presentation.
+Number the components in a topological order
+$1,\ldots,p$, and let $h(A)$ be the largest index of
+a component with a lower endpoint contained in $A$,
+or zero if there is none. This number is monotone
+under inclusions and constant on every masked
+reversal. In fact at the lower and upper endpoints
+of an interval in component $i$ it is exactly $i$:
+any lower endpoint contained in either endpoint
+gives an arc to that interval, and its own lower
+endpoint supplies $i$.
+
+Use $[h(A)\ge i]$ as a Boolean separator for each
+$i\ge1$. Also, for $0\le i\le p$ and $x\in V$, use
+\[
+ [h(A)>i]\ \lor\quad
+ \left([h(A)\ge i]\land[x\in A]\land
+       \bigwedge_{j\text{ in component }i}[A\nsubseteq U_j]\right).
+\]
+Component zero has no intervals, so its last
+conjunction is empty. These are monotone Boolean
+formulas: each threshold on $h$ is a disjunction
+of containment tests on lower endpoints. They
+respect the reversals. On a reversal in component
+$i$ the second disjunct is false at both endpoints,
+since both are contained in its upper endpoint;
+on other components the value depends only on
+their index. All formulas are normalized, since
+the lower ends are nonempty and upper ends proper.
+
+For a strict unmasked interval of the closure,
+if $h(L)<h(U)$ a threshold separates it. Otherwise
+write $i=h(L)=h(U)$ and choose $x\in U\setminus L$.
+If $i>0$ and $U$ were contained in an upper endpoint
+of component $i$, then a lower endpoint there is
+contained in $L$ by $h(L)=i$. The component formula
+would put the interval in the closure. Hence the
+separator for $i,x$ is true at $U$ and false at $L$.
+This constructs at most $p+(p+1)|V|$ separators.
+
+Interpret their OR gates at $c$ and AND gates at
+$b$, giving the dual profiles used in
+\cref{core:thm:interval-masks}. Conjoin the redundant
+disjunction of all inputs before translating, to
+ensure unanimity on the full support at other
+owners. Take the greatest profile completions and
+union them with the disjunction and conjunction
+completions from that proof. This realizes the
+closed mask, with polynomial term size and
+construction time in the explicit maximal intervals
+for fixed $K$. The union can use primitive gates
+by the flat construction of
+\cref{core:cor:source-box-rank}. At original prime
+width one this gives polynomial-time synthesis
+directly from the prime lists, without a bound
+on the width of the component order.
+
+Separator sharing itself has an exact coloring
+criterion. For a closed mask, use the strict
+unmasked intervals as vertices. Join $(L,U)$
+to $(L',U')$ if $U$ reaches $L'$ or $U'$ reaches
+$L$ in the Boolean preorder. A family can share
+one normalized monotone separator respecting the
+mask exactly when it is independent in this graph.
+Necessity is preservation of reachability. For
+sufficiency take the upset generated by all upper
+ends in the family; independence and unmaskedness
+ensure that no lower end is in it. No nonempty
+upper end reaches the empty set, so the resulting
+function is normalized. Consequently the chromatic
+number is exactly the minimum number of such
+Boolean components needed to supply the outside
+winner bits. The conflict relation is the comparability graph of
+the strict order $(L,U)<(L',U')$ defined by reachability
+from $U$ to $L'$. Transitivity uses $L'\preceq U'$,
+and a loop would make the interval masked. Thus
+the chromatic number is its height, by assigning
+each interval the length of a longest chain ending
+there. The disjunction and conjunction completions
+can still be added to supply $b,c$.
+
+Equivalently the optimum is one less than the
+height of the Boolean reachability preorder after
+identifying mutually reachable sets. A conflict
+chain of $d$ intervals gives at least $d$ strict
+steps in this quotient. In the reverse direction,
+connect each consecutive pair in a longest chain
+of quotient classes by a path in the preorder.
+A masked reversal stays within one class, so each
+path has an inclusion step crossing classes.
+Choose one such step on each path. These are
+unmasked intervals and form a conflict chain.
+Thresholds of the quotient rank also give an
+optimal family of separators, though their formulas
+need not be supplied by the explicit compiler.
+
+The order of the polynomial separator bound is
+sharp. Use $2m+q+2$ inputs: a block $W$ of $q$
+inputs, successive marker inputs $z_1,\ldots,z_{2m}$,
+and two more inputs $a,e$. Set
+$A_j=\{a,z_1,\ldots,z_j\}$. The maximal masked
+intervals are $[A_{2i-1},A_{2i-1}\cup W]$ for
+$1\le i\le m$. Their reversal graph has arcs only
+forward in marker order, so their strict
+subintervals already form a closed mask. At each
+even marker prefix $A_{2i}$, add the $q$ inputs of
+$W$ one at a time, giving $q$ unmasked intervals.
+For $i<m$, add the next marker and reverse the
+next maximal masked interval to reset the $W$
+inputs before the next even stage. This is a
+conflict chain with $mq$ unmasked steps. Every
+interval used is interior, since $a$ is present
+and $e$ is absent. For $q$ proportional to $m$,
+the example needs order $m|V|$ separators, matching
+the order of the topological construction.
+
+In particular, all intervals enabling a source
+prime $G$ at $x$ share one separator exactly when
+there is no path from $\{x\}\cup G_b$ to
+$V\setminus(\{x\}\cup G_c)$. These are respectively
+the least possible upper end and the greatest
+possible lower end when the prime is enabled.
+Each is attained, by taking the other endpoint to
+be empty or full respectively, so the condition
+is necessary as well as sufficient. It can fail
+even at width one. On $\{x,p,q\}$ mask the two
+intervals $[\{p\},\{p,x\}]$ and
+$[\{q\},\{p,q\}]$. The reversal graph has an arc
+from the first to the second and no return, so
+the mask is closed. The prime excluding $p:c$
+at $x$ gives endpoints $\{x\}$ and $\{q\}$, and
+the first interval followed by the second gives
+a path between them. Thus this prime's enabled
+intervals cannot all use the same separator.
+
+The interval-mask promise itself is checkable in
+polynomial time. For a fixed pair $b,c$, require
+the empty prime at each head on the $b$- and
+$c$-facets. The other facets must have identical
+lists at each head, using only $b,c$-postings.
+Require the restricted list to contain the empty
+prime when either posting color is set to absent.
+Finally, for each pair of heads $x,y$, require their
+lists to agree when both heads are free. This is
+equality after removing the postings at $y$ from
+the $x$-list and at $x$ from the $y$-list, and
+minimizing both. Each condition is necessary for
+an interval mask. Conversely, define a strict
+interior interval to be masked if its predicate
+at any free head loses. The head comparisons
+make this independent of the choice of free head.
+On any valuation every source of a winner outside
+$b,c$ is free, so all such winners are suppressed
+exactly on the masked intervals. The $b,c$-facets
+retain both colors wherever supplied. The boundary
+tests ensure that the reconstructed operation is
+input union on all other intervals. Thus the given
+lists describe precisely the resulting mask.
+
+At arbitrary width, exact recognition within this
+class is in PSPACE without expanding the lists.
+Guess a path through masked intervals, storing
+only the first and current intervals and a length
+counter up to $3^{|V|}$. An interval is masked
+exactly when the guard at any free head loses on
+the indicated $b,c$-postings, so each step and the
+final unmasked endpoint test use polynomial work.
+A shortest path never repeats a vertex. This is
+a polynomial-space nondeterministic test for
+noncore membership, giving the stated bound by
+closure of deterministic polynomial space under
+complement and its equality with nondeterministic
+polynomial space.
+
 \begin{theorem}[Exponential locality from short prime lists]
 \label{core:thm:compact-prime-locality}
 Fix $K\ge3$. For every $d\ge1$ there is an idempotent operation
@@ -3810,40 +4962,35 @@ bound gives at most $1-1/w$ up to a polynomial factor in $n$.
 The two-input encoding of a bit also gives a direct structural
 criterion in a class where the full prime lists can be exponentially
 shorter than the minimal zeros. Let $G$ be a directed graph on
-$D$-bit strings, $D\ge2$, whose edges are single-bit flips, with at
-most one orientation per unordered edge. Let $L_x$ select one input
-per bit as above. For each edge $x\to y$ mask
-$(L_x,L_x\cup L_y)$.
+$D$-bit strings, $D\ge2$, whose edges are single-bit flips.
+Let $L_x$ select one input per bit as above. For each edge $x\to y$
+mask $(L_x,L_x\cup L_y)$.
 
 \begin{proposition}[Cube masks from prime guards]
 \label{core:prop:compact-cube-masks}
-This mask is core exactly when $G$ is acyclic. At fixed $K\ge3$,
-recognition of interval masks specified only by their complete prime
-guards is PSPACE-complete. Hardness holds for these directed-cube
-masks with at most four literals per prime.
+The closure adds the reverse of every edge internal to a
+strongly connected component of $G$. In particular, when at most
+one orientation per edge is present, the mask is core exactly
+when $G$ is acyclic. At fixed $K\ge3$, recognition of interval
+masks from their complete prime guards is PSPACE-complete.
+Hardness holds for these one-way cube masks with at most four
+literals per prime.
 \end{proposition}
 \begin{proof}
 Each reversal goes from level $D+1$ to level $D$. A path collapsing
 a strict interval must start at the upper endpoint of a listed edge
 and end at a selected transversal of size $D$. Only the two endpoints
-of that edge are transversals below its upper endpoint. In the
-notation of an edge $x\to y$, its reversal leads to $L_x$;
-subsequent inclusion-reversal pairs on transversals can stay put
-or traverse an edge of $G$ backwards. Thus the other interval, at
-$L_y$, is collapsed exactly when $G$ has a path from $y$ back to
-$x$. It is unlisted by the orientation assumption. Apply
-\cref{core:thm:interval-masks}.
-
-For the upper bound on arbitrary promised interval masks, test
-whether $(L,U)$ is masked by evaluating the prime guards on the
-input giving $c$ on $L$, a third winner on $U\setminus L$, and
-$b$ elsewhere. Store one Boolean vertex at a time; an inclusion or
-a permitted reversal is testable in polynomial space. Failure of
-path closure is witnessed by reachability on this graph of $2^{|V|}$
-vertices, which takes polynomial space by the usual midpoint
-recursion. If the interval-mask form itself must be verified,
-stream every menu tuple and compare its prescribed output to the
-mask read from the atomic rows.
+of that edge are transversals below its upper endpoint. For a one-way
+edge $x\to y$, its reversal leads to $L_x$; subsequent
+inclusion-reversal steps can stay put or traverse edges of $G$
+backwards. Thus the opposite interval at $L_y$ is forced exactly
+when $G$ has a path from $y$ back to $x$. If both orientations are
+already present nothing is added there. In the noncore case, the
+fewest reversals in a closure witness therefore equal the length
+of a shortest directed cycle containing a one-way edge. The
+smallest noninterpolable sample has one more valuation, by the
+shortest-witness characterization above. The polynomial-space
+upper bound follows from the prime-list path test above.
 
 For hardness start with a deterministic polynomial-space decider
 on its specified input. Encode one configuration and a binary

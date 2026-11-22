@@ -31,6 +31,50 @@ A resulting leaf must be indexed by $j\in A\setminus B$ and
 contains $k$ on its own designated row, a contradiction.
 \end{proof}
 
+\paragraph{Simultaneous erasure of silent atomic sources.}
+In a proper coloring $q$, call a posting $j:r$ silent
+if the source bit of $j$ at $q^{\widehat r}$ is zero.
+Any set of silent postings can be erased simultaneously
+without changing the activation class. This can remove
+postings even at owners that must remain in the palette.
+
+Induct on a primitive word. A projection ignores all
+silent postings. At a gate owned by $s$, first suppose
+the operation has a winning $s$-profile at $q_s$.
+That profile must still win after the erasure.
+Otherwise apply \cref{core:lem:marked-profile-transfer}
+with the old and new $s$-coalitions and observe $s$.
+For every erased $s$-input $j$, use the sole-source
+probe at $q^{\widehat s}$ with the full ambiguous
+menu at $j$. Its $s$-coalition is empty and every
+foreign coalition avoids $q_s$. Transfer gives a
+nonzero $s$-source bit at one erased input, a
+contradiction. The old and new colorings therefore
+share the winning singleton stratum and are equivalent.
+
+If the gate has no winning $s$-profile at the target,
+every silent posting is silent in both children.
+For a posting at $s$, that owner's output membership
+is disjunctive at the gate on every probe. At any
+other posting owner the sole-source probe preserves
+the old $s$-coalition, on which neither child
+absorbs. The membership test is again disjunctive.
+Apply induction to the two children, with the same
+set of erasures. Their full cofactors at the erased
+coloring equal their original cofactors and hence
+are independent of every erased input. The parent
+cofactor is therefore independent of those inputs
+too. In particular their bits at the erased coloring
+are zero by the sole-source probes. Adding them
+back one at a time gives capture equivalences,
+since further postings cannot restore those bits.
+
+After deleting all silent postings, each remaining
+posting is still live at its own observer by
+antitonicity. This produces a minimum-palette
+representative with all its posted inputs supplying
+their own atoms at their respective source probes.
+
 \begin{theorem}[A simultaneous capture-probe rule]
 \label{core:thm:simultaneous-capture-probes}
 Let $K\geq3$, let $C$ be core on $V$, and let $p,q$ be proper
@@ -178,13 +222,281 @@ $1$ gives $x_i\lor x_j$, and output $0$ fixes both endpoints to $0$;
 a $b$-edge with output $0$ gives $\neg x_i\lor\neg x_j$, and
 output $1$ fixes both endpoints to $1$.
 
+\paragraph{Fold sums on an incidence forest.}
+Replace edges by nonempty hyperedges, each carrying one owner,
+and replace the binary choices by folds at their respective owners.
+Suppose the bipartite incidence graph of inputs and hyperedges is
+a forest. For two colorings omitting a common owner, the kernel
+of this sum is exactly the intersection of the fold kernels.
+The test on a hyperedge is that its owner occurs in both
+restrictions, or the two restrictions agree identically.
+
+The necessity follows by adjoining the sum to each interval
+realizer for a fold. The local test is the one-owner activation
+formula for the closure saturating the whole hyperedge when it
+meets the native block. For sufficiency, consider the hyperedges
+containing a changed input. Each is hit by its owner at both
+endpoints. If it has a common native posting, use that unchanged
+input as an anchor. Otherwise choose an old and a new native
+posting on that hyperedge, and require that the new input change
+before the old one. These precedence arcs have no directed cycle:
+a simple directed cycle would give an incidence cycle, since
+each arc comes from a different hyperedge. Change each input
+directly to its final status in an order satisfying these arcs.
+
+Throughout a change at $j$, every incident hyperedge has a
+native posting at another input. For an anchored edge this is
+the common posting. For an edge with a precedence arc, one of
+the two selected postings is present and is outside $j$, including
+when $j$ is itself one of the endpoints. Thus with $j$ temporarily
+unposted its source predicate in the sum is zero: every incident
+fold absorbs. Removing the old posting and adding the new one
+therefore preserve activation equivalence by
+\cref{core:thm:activation-faithfulness}. All intermediate
+colorings stay in the common facet. An isolated changed input
+has zero source predicate throughout and can be handled in the
+same order. Transitivity proves the kernel formula.
+The argument also applies with incidence cycles if the
+selected precedence arcs can be made acyclic.
+
+\paragraph{Recovering fold sums from prime guards.}
+Call a family of fold supports linear if any two distinct
+nonsingleton supports meet in at most one input, counting
+supports with different owners as distinct. There is an exact
+polynomial-time test, directly on complete prime lists, for a
+candidate to be a nonempty sum of owned folds in which
+supports with different owners meet in at most one input.
+Stricter intersection or incidence checks recognize sums with
+linear supports or with an incidence forest.
+The unrestricted class of fold sums is the trace-union class
+of \cref{core:thm:conditional-component-capture}, since each
+one-owner trace is a sum of folds at its owner.
+
+For every nonempty listed prime at head $i$, require all its
+exclusions to post the same owner $r$. Recover the $r$-fold
+on $\{i\}$ together with the inputs of these exclusions.
+Keep one copy of each recovered labeled support. At each
+head with the empty guard on every facet, also put in its
+projection. Check the desired intersection or incidence
+condition on the recovered nonsingleton supports.
+Compute the proposed sum's prime lists as follows and compare
+them with the input lists. Reject an empty recovered sum.
+
+Indeed, on observer $k$'s facet a fold at $r$ through $i$
+contributes the guard excluding all $r$-postings of its
+other inputs if $r\ne k$, and the empty guard if $r=k$.
+A projection contributes the empty guard on every facet.
+Ignore folds not containing $i$. The hypothesized intersection
+condition gives disjoint input sets for nonempty guards of
+different owners through $i$. Thus there are no competing
+exclusions for consensus. The inclusion-minimal guards
+are exactly the prime list by \cref{core:thm:guard-consensus}.
+
+Consequently each recovered nonsingleton fold occurs in
+every representation satisfying the condition. At a fully
+retained head its recovered projection already supplies
+all the source bits. At any other head $i$ in a fold at
+$r$, choose a facet without the empty guard. Its observer
+differs from $r$, so the guard of the fold is present
+before minimization. Some minimal guard is contained in
+it, necessarily nonempty and again at $r$. The corresponding
+recovered fold supplies every source bit of the original
+fold at $i$, on all facets including the $r$-free facet.
+Thus recovered folds and projections cover every original
+source contribution and lie below the original sum. This
+reconstruction preserves the intersection and incidence
+conditions, since it deletes hyperedges and adds only
+leaves. Hence any representation in the tested class passes.
+Conversely equality of canonical source guards implies
+equality with the recovered operation. The number and
+total size of the recovered supports are bounded by the
+length of the lists, and every check is polynomial in
+that length.
+
+\paragraph{Two folds with unrestricted overlap.}
+Complete prime lists also recognize sums of at most two
+owned folds in polynomial time, with no restriction on
+overlap. In this case retain the same candidate folds from
+nonempty monochromatic primes and the same projections from
+fully retained heads, but try every subfamily of size one
+or two. Mixed primes are allowed in the equality test.
+
+To see completeness, a nonsingleton fold with an input
+exclusive to its support is visible at that head, where
+it gives the only guard on a facet seeing its owner.
+This deals with both folds when the supports are incomparable.
+If $E\subsetneq H$ are their supports, the larger fold has
+an exclusive input. At a shared head the smaller fold at
+$r$ is also visible on a facet seeing both owners.
+For distinct owners, any proper subset of its guard allows
+some $r$-posting in $E$ and an opposing posting in $H\setminus E$,
+so cannot be sufficient. For a common owner the smaller
+guard subsumes the larger. A singleton support instead
+gives a fully retained projection. For equal supports and
+distinct owners, when the common support has at least three
+inputs, each fold guard is prime on a facet seeing both
+owners: removing an exclusion allows a posting of that
+owner, and a different nonhead input can receive the
+other owner. When the common support is a pair, the two
+folds give the union of its projections. Identical folds
+or identical singleton supports need only one summand.
+
+To test equality for a trial, each head has at most two
+raw guards on a facet. Empty guards subsume the others,
+and two guards at the same owner need only inclusion
+minimization. For nonempty guards at distinct owners,
+the minimal sufficient guards are obtained by minimizing
+the two raw guards together with their pairwise
+resolvents. Indeed, if an exclusion set contains neither
+raw guard, it is sufficient precisely when every omitted
+posting of the first guard conflicts with every omitted
+posting of the second. This requires one omitted posting
+on each side, at the same input. The resulting sufficient
+set contains the associated resolvent. Hence the trial
+has polynomially many primes and the equality tests are
+polynomial. Source reconstruction proves soundness.
+
+\paragraph{An indispensable fold can have no prime of its own.}
+For every $m\ge2$, partition $V$ into $m$ pairs and write
+$j^*$ for the mate of $j$. Use one $a$-fold on all of $V$
+and a $b$-fold on each pair, for distinct owners $a,b$.
+At head $j$, the $a$- and $b$-observer facets have the
+empty guard. Every other facet has exactly two primes:
+one excludes $j^*:b$, and the other excludes all
+$a$-postings outside $\{j,j^*\}$. Indeed on this facet the
+raw $a$-guard includes $j^*:a$, which resolves with the
+pair's singleton guard and then becomes redundant.
+In particular the full $a$-fold is absent from the folds
+recovered from monochromatic primes.
+
+Nevertheless every representation as a sum of folds
+contains that full $a$-fold. To see this, the minimal
+losses at $j$ are the patterns posting $j^*$ at $b$ and
+one input outside $\{j,j^*\}$ at $a$. An $a$-fold
+minorant through $j$ must therefore include every input
+outside its pair. Since there is another pair, applying the
+same requirement at an included input of that pair also
+forces $j^*$. Thus the only $a$-fold minorant through
+$j$ has full support. Every $b$-fold minorant through
+$j$ must include $j^*$, and any fold owned by a third
+owner through $j$ violates those losses. Now post just
+$j^*$ at $b$ at a probe for $j$. The sum supplies $j$,
+but none of the bounded $b$-folds supplies it there.
+The full $a$-fold is the only possible supplier in
+a fold representation. At $m=2$ this gives a three-fold
+example where the recovery used for two folds fails,
+even though every listed prime is monochromatic. The
+projected-closure test in
+\cref{core:thm:conditional-component-capture} does recover
+the hidden support: its singleton implications at $a$
+connect every input to every input of a different pair.
+
+\paragraph{Unions of full-support folds.}
+Let $D$ be the union of full folds on $V$ with owners in a set
+$R$, where $m=|R|\ge2$. If $m=K$ or $|V|\le m$, then $D$ is
+the input union: either some fold has no absorbing atom and
+returns the union, or every owner of $R$ occurs as a singleton
+and their union already contains every input menu. Otherwise
+$2\le m<K$ and $|V|\ge m+1$. For proper colorings $p,q$,
+\[
+ p\preceq_D q\quad\Longleftrightarrow\quad
+ \begin{cases}
+ p\subseteq q,&\text{some }r\in R\text{ is absent from }q,\\
+ p_a\ne V\text{ for every owner }a,&\text{every }r\in R
+                                      \text{ occurs in }q.
+ \end{cases}
+\]
+
+Indeed, a target omitting an owner of $R$ has the corresponding
+full fold as a minorant with ordinary subcoloring principal,
+by \cref{core:thm:one-owner-activation-order}. Order reversal
+and antitonicity give equality for $D$. All proper colorings
+using every owner of $R$ are equivalent. Keep one posting per
+owner in $R$ and erase the rest. Each deletion is an equivalence
+by \cref{core:thm:activation-faithfulness}, because all folds
+still absorb away from the erased input. The resulting placements
+of the $m$ different owners are connected by moving one posting
+at a time to a vacancy: add it there, then erase its old copy.
+Both steps are capture equivalences. A spare position also allows
+any two owners to swap in three moves. These intermediate colorings
+use only $R$ and are proper.
+
+For a target in this class, a full block at any owner $a$
+is excluded by the reader from a full fold with owner in
+$R\setminus\{a\}$. By the owner-box property it remains to
+prove that an $a$-block on all but one input passes, for each
+$a$. Take a principal realizer with a single distinguished
+input $X$ by \cref{core:prop:principal-activation-boxes}.
+Identify the inputs in the block in $m$ nonempty groups,
+and leave its excluded input $x$ separate. The realizer is
+still bounded by $D+X$ after identification, with $D$ now
+the union of the full folds on $m+1$ variables.
+
+Choose $c\notin R$, taking $c=a$ when $a\notin R$.
+Take every permutation of the singleton menus for
+$R\cup\{c\}$ on the passive variables, and set $X=R$.
+The upper bound omits $c$ on these rows. No helper at a
+gate owned by $b\in R$ can absorb on such a row. Replacing
+the $c$-atom by the ambiguous menu $R$ preserves its
+$b$-coalition. With $X=\{c\}$ this is a positive owning
+target at observer $c$, where an absorbing helper would
+kill the mark. Since the original prefix starts at the
+ambiguous menu $R$, no gate can absorb at a native owner
+on the negative row. Any $c$ supplied by a helper persists,
+so every helper omits $c$ at all the permutations.
+
+We use the following transmission fact. A term winning at
+owner $b\ne c$ on a singleton coalition $\{j\}$ transmits
+$c$ on any row where $j$ contains $c$ and the term does
+not absorb at $b$. Otherwise descend while preserving the
+positive $b$-profile at $\{j\}$, the negative $b$-profile
+at the row's $b$-coalition, and the omission of $c$. At a
+$b$-gate neither child absorbs and one wins at $\{j\}$.
+At a foreign gate both children win at $\{j\}$, so any
+absorber requires its owner at $j$ by profile intersection.
+Only a $c$-absorber could do so, and it would supply $c$.
+Both children therefore omit $c$, and one is negative at
+the row's $b$-coalition. This descent cannot end at any
+leaf except $j$, which contains $c$.
+
+Suppose an $a$-owned helper wins at $a$ on the $m$ groups
+outside $x$. If $a\in R$, the helper loses at $a$ on
+$\{x\}$ by positivity at the owning target posting $x$
+at $a$ and placing the other native owners once each.
+Take a smallest term with these profile requirements and
+the permutation omissions. At a gate owned by $b\in
+R\setminus\{a\}$, both children win at $a$ outside $x$.
+They cannot absorb on a row with $b$ at $x$, by profile
+intersection. If one absorbs on a row with $b$ at $j\ne x$,
+apply transmission with a permutation putting $b$ at $x$
+and $c$ at $j$. This forces $c$ in that child on a row where
+neither child can absorb, a contradiction. If the gate
+owner is $a\in R$, both children are negative at $a$ on
+$\{x\}$, and the same transmission argument excludes
+absorption on every row. At a $c$-gate absorption contradicts
+omission of $c$ directly, and any other owner is absent.
+Thus omission passes to both children at every gate. The
+disjunction and conjunction rules let us keep a child
+preserving the profile requirements. The resulting leaf
+cannot be $x$ and every other leaf supplies $c$ on some
+permutation. This excludes the helper.
+
+At the monochromatic probe for the co-singleton $a$-block,
+only owner $a$ can supply a passive absorbing singleton.
+Its helpers cannot win on that block, so the distinguished
+mark survives. This gives the claimed principal.
+
 The simple-graph hypothesis matters. Oppositely labelled parallel
 edges on one pair give $D=x+y$. The swapped colorings $(a,b)$ and
 $(b,a)$ agree in both local owner classes, yet
 $D+(X\star_a x)$ separates them.
 
-Call an edge \emph{owned at $q$} when one endpoint has its owner's
-color. For a proper $q$, let $U(q)$ be the least vertex set satisfying:
+For the order formula also allow projections at a specified set $P$,
+adding them to the edge sum $D$. Discard edges with both endpoints
+in $P$, which the projections dominate. Work on the support given
+by $P$ and the remaining endpoints. Call an edge \emph{owned at $q$}
+when one endpoint has its owner's color. For a proper $q$, let
+$U(q)$ be the least vertex set containing $P$ and satisfying:
 \begin{enumerate}
 \item it contains both endpoints of every edge not owned at $q$;
 \item if $ij$ and $jh$ have owner $r$, while $ih$ has a different
@@ -227,7 +539,7 @@ adjoin $v_j$ using guard $v_i$ at owner $r_{ij}$.
 Where $v_i\ne\{r_{ij}\}$, the retained $v_i$ and its incident
 edge already contain $v_j$, and the guard's owner profile vanishes at $q$.
 
-These steps retain exactly $U=U(q)$. Drop edges with both
+Starting with $P$, these steps retain exactly $U=U(q)$. Drop edges with both
 endpoints in $U$, which their retained projections dominate.
 Call the resulting baseline $B$. Every remaining edge is owned
 at $q$, and an edge from $i\in U$ to $j\notin U$ has
@@ -296,6 +608,46 @@ The path length is at most
  \leq (K+1)|V|+(K-1)|E|+2.
 \]
 \end{proof}
+
+\paragraph{The greatest atomic enlargement of a graph sum.}
+The normalized graph sum $B$ in the proof of
+\cref{core:thm:graph-activation-order} is itself the
+greatest atomic enlargement at $q$. Moreover, on the
+complete minimal loss list the deletion test of
+\emph{Deleting rows with explicitly bounded helpers}
+recovers $B$ using just bounded fold helpers.
+
+At an unretained head $j$ of $B$, a minimal loss posts
+every neighbor at its edge owner, with no other postings.
+If this uses the whole palette there is no proper loss
+there. Every proper loss of this minimal form passes the
+principal test. A retained neighbor has the color in $q$
+of its edge to $j$, by the boundary rule for $U(q)$.
+Two posted neighbors outside $U(q)$ cannot form a
+foreign-owned monochromatic edge: that would give a
+two-colored triangle outside $U(q)$, centered at $j$,
+with its opposite edge owned at $q$. There are no losses
+at retained heads. Thus the minimal loss list of $B$
+lies inside the principal and bounds every atomic
+enlargement, by \cref{core:thm:principal-box-extension}.
+Since $B$ is reachable, it is the greatest one.
+
+To see that row deletion recovers it, follow the
+normalization steps in order. Their guards are edge
+folds or projections. At each stage the intermediate
+operation is bounded by the rows it has yet to remove,
+and so is its next guard. Any original loss changed to
+a positive by the next step has a sole-source probe
+where that guard absorbs. The repair owner differs
+from the observer, since otherwise the guard would
+already supply the observed winner. Hence the guard
+has the signed profile needed to delete the row.
+At saturation all such changes have been accounted
+for. The losses of $B$ are precisely the original
+minimal losses at its unretained heads, since the
+normalization only adds projections. They are inside
+the principal and cannot be deleted. Thus the
+surviving budget gives exactly $B$.
 
 \begin{corollary}[Activation below an owning coloring]
 \label{core:thm:graph-owning-activation}

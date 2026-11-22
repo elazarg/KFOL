@@ -18,6 +18,46 @@ universe u v
 variable {Index : Type u} {Role : Type v}
 variable [DecidableEq Role] (owner : Index → Role)
 
+/-- With a joint positive witness available, a failed test at one owner
+extends from that owner's positive demands to all positive demands. -/
+theorem extend_owner_demands [Fintype Role] (R : Set (Index → Bool))
+    (hclosed : ∀ s x y, x ∈ R → y ∈ R → mixedChoice owner s x y ∈ R)
+    (demand : Index → Prop) (j : Index) {p x : Index → Bool}
+    (hp : p ∈ R) (hpass : ∀ i, demand i → p i = true)
+    (hx : x ∈ R) (hlocal : ∀ i, owner i = owner j → demand i → x i = true)
+    (hfail : x j = false) :
+    ∃ y ∈ R, (∀ i, demand i → y i = true) ∧ y j = false := by
+  classical
+  have extend (owners : Finset Role) (howners : owner j ∉ owners) :
+      ∃ y ∈ R, (∀ i, owner i = owner j ∨ owner i ∈ owners → demand i → y i = true) ∧
+        y j = false := by
+    induction owners using Finset.induction_on with
+    | empty =>
+      refine ⟨x, hx, ?_, hfail⟩
+      simpa using hlocal
+    | @insert s rest _ ih =>
+      have hsr : s ≠ owner j := by
+        intro he
+        apply howners
+        simp [he]
+      obtain ⟨y, hy, hyPass, hyFail⟩ :=
+        ih (fun hm => howners (Finset.mem_insert_of_mem hm))
+      refine ⟨mixedChoice owner s y p, hclosed _ _ _ hy hp, ?_, ?_⟩
+      · intro i hi hd
+        by_cases he : owner i = s
+        · simp [mixedChoice, he, hpass i hd]
+        · have hrest : owner i = owner j ∨ owner i ∈ rest := by
+            simpa [Finset.mem_insert, he] using hi
+          simp [mixedChoice, he, hyPass i hrest hd, hpass i hd]
+      · have hrs : owner j ≠ s := Ne.symm hsr
+        simp [mixedChoice, hrs, hyFail]
+  obtain ⟨y, hy, hpasses, hyFail⟩ := extend (Finset.univ.erase (owner j)) (by simp)
+  refine ⟨y, hy, ?_, hyFail⟩
+  intro i hd
+  by_cases he : owner i = owner j
+  · exact hpasses i (Or.inl he) hd
+  · exact hpasses i (Or.inr (by simp [he])) hd
+
 private theorem mixed_and (three : Fin 3 ↪ Role) (x y : Index → Bool) :
     mixedChoice owner (three 2) (mixedChoice owner (three 0) x y)
       (mixedChoice owner (three 1) x y) = fun i => x i && y i := by

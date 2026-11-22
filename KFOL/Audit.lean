@@ -674,6 +674,7 @@ import all KFOL.Core.CompletionGateRestriction
 import all KFOL.Core.LayerInterpolation
 import all KFOL.Core.OwnerFoldClosure
 import all KFOL.Core.SpineThinning
+import all KFOL.Core.RightPhaseClosure
 import all KFOL.Core.CompletionDepthStep
 import all KFOL.Definitions.LayerInterpolation
 import all KFOL.Core.CompletionDepth

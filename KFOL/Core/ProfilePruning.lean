@@ -31,6 +31,81 @@ theorem profile_iff_forall_mem_varFinset_of_ownersIn [DecidableEq Var] (a : Role
     rw [profile_choice, ite_eq_right hr, Bool.and_eq_true, ihs hs, iht ht]
     simp [choiceTerm, FirstOrder.Language.Term.varFinset, Finset.univ_fin2, or_imp, forall_and]
 
+/-- The profile only sees flags at inputs occurring in the word. -/
+theorem profile_congr_on_varFinset [DecidableEq Var] (a : Role)
+    (g : Equational.Term (Equational.CoreSymbol Role) Var) (B C : Var → Bool)
+    (agree : ∀ x ∈ g.varFinset, B x = C x) : profile a B g = profile a C g := by
+  induction g using induction_choice with
+  | var x => exact agree x (by simp [FirstOrder.Language.Term.varFinset])
+  | choice r s t ihs iht =>
+    simp [choiceTerm, FirstOrder.Language.Term.varFinset, Finset.univ_fin2,
+      or_imp, forall_and] at agree
+    rw [profile_choice, profile_choice, ihs agree.1, iht agree.2]
+
+/-- A proper-support word at an owned root has a coatom support and a
+unanimous root-owner profile when the parent profile has no two-hole win. -/
+theorem proper_child_unanimous_of_no_two_hole_win [DecidableEq Var] (a : Role)
+    (s t : Equational.Term (Equational.CoreSymbol Role) Var) {i : Var}
+    (missing : i ∉ s.varFinset)
+    (parent : ∀ (B : Var → Bool) (x y : Var), x ≠ y → B x = false → B y = false →
+      profile a B (choiceTerm a s t) = false) :
+    (∀ x, x ∈ s.varFinset ↔ x ≠ i) ∧
+      ∀ B : Var → Bool, profile a B s = true ↔ ∀ x ∈ s.varFinset, B x = true := by
+  have full (g : Equational.Term (Equational.CoreSymbol Role) Var) :
+      profile a (fun _ => true) g = true := by
+    induction g using induction_choice with
+    | var x => rfl
+    | choice r u v ihu ihv => simp [profile_choice, ihu, ihv]
+  have onlyFull (B : Var → Bool) (win : profile a B s = true) :
+      ∀ x, x ≠ i → B x = true := by
+    intro x different
+    by_contra notTrue
+    let C : Var → Bool := fun y => if y = i then false else B y
+    have eq := profile_congr_on_varFinset a s B C (by
+      intro y member
+      have ne : y ≠ i := fun h => missing (h ▸ member)
+      simp [C, ne])
+    have winC : profile a C s = true := eq ▸ win
+    have falseX : B x = false := Bool.eq_false_iff.mpr notTrue
+    have h := parent C x i different (by simp [C, different, falseX]) (by simp [C])
+    simp [profile_choice, winC] at h
+  constructor
+  · intro x
+    refine ⟨fun member eq => missing (eq ▸ member), fun different => ?_⟩
+    have win : profile a (fun y => decide (y ∈ s.varFinset)) s = true := by
+      rw [profile_congr_on_varFinset a s _ (fun _ => true)
+        (by intro y member; simp [member])]
+      exact full s
+    simpa using onlyFull _ win x different
+  · intro B
+    refine ⟨fun win x member => onlyFull B win x (fun eq => missing (eq ▸ member)), ?_⟩
+    intro all
+    rw [profile_congr_on_varFinset a s B (fun _ => true) all]
+    exact full s
+
+/-- Retention of a foreign winner on rows with two designated ambiguous
+inputs excludes any singleton-profile win with two missing flags. -/
+theorem no_two_hole_win_of_retention (a k : Role) (foreign : k ≠ a)
+    (menu : WinnerSet Role) (notAtom : menu ≠ WinnerSet.singleton a)
+    (g : Equational.Term (Equational.CoreSymbol Role) Var)
+    (retain : ∀ (v : Var → WinnerSet Role) (x y : Var),
+      x ≠ y → v x = menu → v y = menu → k ∈ (g.realize v).val) :
+    ∀ (B : Var → Bool) (x y : Var), x ≠ y → B x = false → B y = false →
+      profile a B g = false := by
+  classical
+  intro B x y different hx hy
+  let v : Var → WinnerSet Role := fun z => if B z then WinnerSet.singleton a else menu
+  have seen : (fun z => decide (v z = WinnerSet.singleton a)) = B := by
+    funext z
+    cases h : B z <;> simp [v, h, notAtom]
+  by_contra fail
+  have win : profile a B g = true := by cases h : profile a B g <;> simp_all
+  have atom : g.realize v = WinnerSet.singleton a := by
+    rw [winnerSet_eq_singleton_iff_profile, seen]
+    exact win
+  have mark := retain v x y different (by simp [v, hx]) (by simp [v, hy])
+  simp [atom, WinnerSet.singleton, foreign] at mark
+
 /-- A positive owner profile on a coalition gives a term using only that coalition,
 without gates of that owner, below the original in that owner's view at every valuation. -/
 theorem exists_view_below_of_profile (a : Role) (A : Var → Bool)

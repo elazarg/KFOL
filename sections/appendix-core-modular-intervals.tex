@@ -127,6 +127,2462 @@ The envelopes concern bounded core operations, rather than just the
 singleton profiles of the baseline. Explicit starting cases below give
 closed tests for disjoint compositions without searching for minorants.
 
+\paragraph{Local changes in a disjoint choice tree.}
+Consider a read-once tree of unions and owned
+choices, with projections at its leaves. For a
+terminal predicate above this baseline, it suffices
+to test comparisons that change one subtree, or
+simultaneously change disjoint subtrees by replacing
+each with a pure posting of the same owner. The
+subtrees in a simultaneous comparison must each
+win that owner at their replacement. Both endpoints
+must be proper.
+
+To prove this, suppose $p$ is losing, $q$ is
+positive, and $p\preceq_C q$. Descend from the
+root until reaching an owned node that absorbs
+at $q$ or a leaf. At an absorbing node with
+owner $r$, record the change from its $p$-block
+to the pure $r$-block of $q$. The two versions of
+$q$ on this subtree are activation-equivalent by
+singleton-fiber constancy. Where descent continues
+through an internal node, comparisons pass to both children:
+for union use the product, and for owned choice
+use the nonabsorbing case of
+\cref{core:thm:disjoint-owned-activation}. At
+a leaf the $p$-posting is a subposting of $q$,
+so keep $p$. The
+recorded subtrees are disjoint. The coloring
+performing all recorded changes is a subposting
+of $q$ and therefore positive.
+
+For nested sets of recorded changes, any two
+proper resulting colorings compare in that
+order. Induct up the tree. On recorded subtrees
+this is their chosen comparison. At an unrecorded
+owned node, each intermediate child remains
+below its original target child. Singleton profile
+bits increase in activation order, since the
+complement of the $r$-profile is the actual
+interval predicate of $C+(X\star_r C)$.
+The node therefore cannot absorb at its owner
+in an intermediate coloring when it did not
+absorb at that owner at $q$. The product case
+of its activation formula then gives both
+the comparison and the bound by the target.
+Union nodes use the product directly.
+
+Choose an owner missing from $p$. Perform
+the recorded changes at other owners individually:
+these steps keep that owner absent. Then perform
+the remaining changes together. The final
+coloring is proper by its containment in $q$.
+Some step goes from loss to positive, proving
+the claimed restriction. This extends the
+single-native-owner grouping for disjoint
+one-owner traces to baselines with nested
+owned choices.
+
+If terminal losses use none of the tree's
+owned gate colors, there is a direct test
+of each explicit minimal loss $T$.
+For each possible missing observer $\ell$,
+mark every owned subtree at $r\ne\ell$
+whose all-$r$ coloring is above the
+restriction of $T$. This local comparison
+uses the product of child profile envelopes
+in the absorbing case. Keep just the
+inclusion-maximal marked subtrees. The
+loss obstructs realization exactly when,
+for some $\ell$, these subtrees cover every
+$T_\ell$-posting and at least one posting of $T$.
+
+For necessity descend from a proper positive
+background above $T$ as before. Any losing
+background can first be thinned to a minimal
+loss under subcoloring. All the recorded
+subtrees are marked for the missing observer
+of the positive background, by singleton-fiber
+equivalence. Their replacements must remove
+all postings of $T$ at that observer and at
+least one loss posting. Maximal marked subtrees
+cover everything they cover.
+
+For sufficiency replace the maximal marked
+subtrees by their all-owned colorings. The
+comparisons lift through the tree. At an
+owned parent whose target does not absorb,
+use the product case. If it absorbs at $r$,
+some child is the $r$-singleton. Every bounded
+minorant $G$ of this child is also the
+$r$-singleton there. For a foreign $s$ the
+child baseline plus $X\star_s G$ has actual
+interval predicate $\neg\Phi_s(G)$.
+Hence the foreign profiles of all such
+minorants also vanish at the corresponding
+source child, by its upward comparison.
+The absorbing formula gives the parent
+comparison. The replaced coloring omits
+$\ell$ and is positive: its postings at
+terminal loss colors form a strict subposting
+of $T$. This gives polynomial recognition
+from explicit minimal losses and the
+read-once tree. The child envelopes are
+evaluated bottom-up by
+\cref{core:thm:disjoint-minorant-profiles},
+starting at projection profile bits.
+
+For arbitrary terminal loss colors, a related
+test works directly on the complete terminal
+prime lists. Fix a positive prime $G$ and its
+observer $k$. A posting is allowed if it omits
+$k$ and is not excluded by $G$. Mark an owned
+node at $r$ if both of the following hold:
+its all-$r$ coloring is above the restriction
+of a proposed losing coloring $T$, and its
+ordinary $r$-profile wins on the set of allowed
+$r$-postings in that node. Then $T$ lies below
+some proper background satisfying $G$ exactly
+when every disallowed posting of $T$ lies under
+a marked node.
+
+Necessity uses the descent to the absorbing
+nodes of a positive background: all leaf
+postings outside the selected subtrees are
+preserved, and each selected subtree passes
+both tests. For sufficiency take the maximal
+marked subtrees and replace their restrictions
+by all their allowed native postings. These
+are singleton-winning, hence equivalent to
+the all-native target. The comparisons lift
+through the rest of the tree as above. The
+result is proper and satisfies $G$, since
+every retained posting is allowed and every
+replacement uses allowed postings.
+
+For a fixed $T$ and $G$, the fewest disjoint
+replacements needed is the number of maximal
+marked subtrees containing a disallowed posting.
+Each such subtree needs a replacement somewhere
+inside it, since no larger eligible subtree
+covers it. Replacing the whole maximal subtree
+attains the bound. Thus scanning the positive
+primes and observers gives a smallest family
+of disjoint subtree changes from an explicit
+loss to a positive background.
+
+This makes the prime criterion explicit without
+enumerating either endpoint. For each positive
+prime and possible loss observer, use variables
+for the losing postings, require consistency
+and omission of that observer, and require
+the postings to hit every prime on its facet.
+The second node test is constant. The first
+is a polynomial-size monotone circuit in the
+absence flags, obtained by negating the
+product tests of the absorbing-node formula.
+For each disallowed posting require either
+its absence or some marked ancestor of its
+input. A satisfying assignment is exactly
+a recognition failure. In particular at
+width one a loss facet prescribes at most one
+minimal loss, and evaluation of the tests
+gives polynomial recognition with arbitrary
+terminal loss colors.
+
+\paragraph{Circuit synthesis from explicit terminal losses.}
+For a read-once baseline $C$ and an explicit list
+of terminal losses, its greatest core interval
+minorant has a polynomial-size circuit. It is
+enough to construct the interval predicate
+\[
+                       q\longmapsto [T\not\preceq_C q]
+\]
+for one loss $T$. Compose the resulting interval
+circuits by substituting the running circuit for
+the distinguished input. An interval circuit retains
+$C$ and filters each winner from that input by its
+source bit, so substitution conjoins their bits.
+The conjunction excludes the activation upset of
+every listed loss and is the greatest allowable
+downset.
+
+At a leaf with input $v$, an empty $T$ gives just
+the baseline projection. A posting $v:s$ gives
+$v+(X\star_s v)$, which supplies the source
+exactly outside that posting. At an internal node
+let $F_i$ be the single-loss circuits for the
+restrictions of $T$ to its two children $C_i$.
+At a union node take $F_1+F_2$, since comparison
+there is a product. At an owned node
+$C=C_1\star_r C_2$, first take
+\[
+                  C+((F_1+F_2)\star_r C).
+\]
+On the nonabsorbing stratum this gives exactly
+the disjunction of the child source predicates:
+$F_1+F_2$ contains $C_1+C_2$, so it cannot
+be the $r$-singleton there. On the absorbing
+stratum the displayed circuit returns $C$.
+This gives exactly the required nonabsorbing
+part of the single-loss predicate.
+
+It remains to supply the absorbing stratum
+if $T$ lies outside its principal downset.
+In that case adjoin the one-source principal
+spine for an all-$r$ query in
+\cref{core:thm:disjoint-owned-activation}.
+It supplies that whole stratum and is safe
+elsewhere: anything in its downset is below
+the all-$r$ query, so cannot be above $T$.
+If $T$ lies inside that principal, the
+absorbing stratum must all lose and no
+summand is needed.
+
+For the principal spines, precompute a
+minorant realizing each owner envelope at
+each subtree. At union nodes combine the
+two matching minorants by choice at the
+envelope owner. At an owned node combine
+them by its own gate. The recursive profile
+identities and the bound by the baseline
+follow from
+\cref{core:thm:disjoint-minorant-profiles}.
+These helper circuits are shared across
+nodes and losses. Each single-loss
+construction adds at most $O(K)$ gates
+per node, and substituting the running
+circuit for repeated distinguished leaves
+uses sharing. No canonical guard expansion
+is needed.
+
+The explicit-loss assumption matters for
+polynomial-time compilation. With complete
+prime lists, the width-two hardness of
+testing a specified principal over disjoint
+folds is exactly hardness of evaluating the
+greatest minorant at the distinguished probe.
+Such folds are read-once baselines. A
+polynomial-time compiler from those prime
+lists to a realizing circuit would therefore
+give a polynomial-time algorithm for a
+coNP-complete problem.
+
+\paragraph{Circuit synthesis across gated block extensions.}
+The single-loss construction also composes across
+an ordered block extension. Let $B$ be the baseline
+on the earlier inputs $J$, and let $h_1,\ldots,h_m$
+be core coefficient operations on the same later
+block $W$. For each $i$ let $P_i$ be an actual
+interval predicate above $B$, given by an interval
+circuit. Form the extension $C$ by taking the union
+of $B$ with these gated coefficients, substituting
+$h_i$ for the distinguished input of the circuit
+for $P_i$. Assume that at each proper $J$-coloring
+the greatest representing coefficient of $C$ is
+an active greatest member, or zero if there are
+none. This is a hypothesis about the greatest
+family in \cref{core:thm:block-source-extension},
+since a smaller representing family may hide
+source bits on observer facets.
+
+For instance, use three owners $r,a,b$ and
+an earlier projection $v$. On later inputs
+$x,y,z$, let $h$ retain $x,y$ and lose $z$
+only at $x:a,y:b$, realized by the union of
+$x,y,z\star_a x,z\star_b y$. Use $h$ always
+and activate the full later union when $v$
+is not the $r$-singleton. At $v:r$, the loss
+of $z$ is visible only at observer $r$,
+which $v$ already supplies. The extension
+is the full union, so its greatest coefficient
+there is larger than the active $h$.
+
+For a single terminal loss $T$, write $L_{D,S}$
+for the predicate $[S\not\preceq_D q]$ on a
+background $q$ for $D$. The exact terminal
+predicate above $C$ is
+\[
+ L_{B,T_J}(q_J)\ \lor\!
+ \bigvee_i \bigl(P_i(q_J)\land
+                        L_{h_i,T_W}(q_W)\bigr).
+\]
+Indeed the coefficient of the extension at
+$q_J$ is the greatest active $h_i$, or zero.
+The comparison formula of
+\cref{core:thm:block-source-extension} first
+tests the earlier comparison and then the
+comparison in that coefficient. If $h_i
+\subseteq h_j$, every interval predicate
+above $h_i$ is also actual above $h_j$, by
+adjoining $h_j$. Hence the failed-comparison
+predicate for $h_i$ is contained in that for
+$h_j$. Taking the disjunction over active
+coefficients therefore gives precisely the
+test for their greatest member. With none
+active the zero coefficient has no failed
+comparison.
+
+To realize the first disjunct, adjoin $C$
+to the single-loss circuit above $B$.
+For disjunct $i$, substitute the single-loss
+interval circuit above $h_i$ into the
+distinguished input of the circuit for $P_i$,
+then adjoin $C$. Its passive output is
+bounded by $C$ because $C$ already includes
+the same gated $h_i$. Its terminal bit is the
+displayed conjunction. Union these circuits.
+Thus single-loss compilers on the earlier
+baseline and the coefficient operations give
+one on the extension, with only additive
+circuit overhead and sharing of the input
+gate circuits. Iterating this construction
+and conjoining the resulting loss filters
+gives polynomial compilation for a supplied
+tree of such extensions with read-once
+starting blocks and polynomial-size gate
+circuits.
+
+One class where this hypothesis is automatic
+consists of coefficients that are unions of
+projections, with an active greatest member at
+each background. At a proper $q_J$ choose a
+missing owner and probe any later input outside
+that member's support as the sole source of
+that owner. The earlier inputs cannot supply
+it, and the represented operation loses the
+mark. Hence the greatest coefficient cannot
+use that input. Every coefficient on the
+remaining support lies below its union of
+projections, which proves equality, including
+the empty case. More generally unions of
+projections need no active greatest member:
+use the union of the active supports in the
+same argument. Its activation comparison is
+subcoloring on that support, so a failed
+comparison is already detected in one of
+the active projection unions. The displayed
+compiler therefore works for this case too.
+
+More generally let $H$ be the union of all
+coefficients with nonzero activation predicates.
+This is the canonical coefficient at the neutral
+background. Every active predicate is positive
+there by antitonicity, and each later source bit
+can be read on its own observer by making the
+earlier menus ambiguous and omitting that winner.
+Thus $D_{\varnothing}=H$ and $D_q\subseteq H$
+for every $q$.
+
+Let $S_q$ be the union of the supports of the
+active coefficients at $q$. The sole-source
+probe at an observer omitted by $q$ excludes
+every input outside $S_q$ from $D_q$. Neutral
+deletion of those inputs therefore gives
+\[
+ \bigcup_{i:P_i(q)=1} h_i
+       \ \subseteq\ D_q
+       \ \subseteq\ \partial_{W\setminus S_q}H.
+\]
+In particular a single gated coefficient is
+always canonical. The same holds for arbitrarily
+many gated coefficients on disjoint later
+supports, since the neutral deletion on the
+right keeps exactly the active operations.
+The activation preorder on their union is the
+product of their individual comparisons, so a
+failure in the coefficient is witnessed on one
+active support. The compiler consequently uses
+the same disjunction formula with arbitrary
+disjoint coefficient operations, without a
+shared observer or an active greatest member.
+This permits nested extensions in which each
+gate activates an entire later core block.
+
+Another sufficient condition is that every
+minimal loss of the active greatest member
+remain a loss on some observer facet after
+erasing that observer from the background.
+More precisely, for each such loss choose
+an omitted owner $s$ for which the active
+union at $q^{\widehat s}$ still loses the
+marked source. The erased background lies
+below $q$ by subcoloring and belongs to its
+activation box. Its earlier inputs can
+omit $s$, so the greatest coefficient at
+$q$ must meet the observed loss. This
+forces equality with the active member.
+In particular, a jointly omitted observer
+always works. For losses with no jointly
+omitted observer, the test allows erasure
+to activate other operations as long as
+they still meet the loss. This pinpoints
+the visibility failure in the three-owner
+example.
+
+\paragraph{Canonical coefficients over retained projections.}
+For an earlier baseline that is the union of
+its projections, observer erasure gives an exact
+test even when the later coefficients overlap.
+Let $h$ be a proposed later core coefficient.
+It is bounded at background $q$ precisely when,
+for each observer $s$ and each proper later
+probe on that facet where $h$ supplies a mark,
+some $h_i$ supplies the same mark and
+$P_i(q^{\widehat s})=1$.
+
+Indeed the earlier activation order is
+subcoloring. At observer $s$ the maximal
+background below $q$ omitting $s$ is
+$q^{\widehat s}$. A failure there directly
+contradicts the coefficient bound, by giving
+the earlier inputs menus omitting the marked
+winner. Conversely a smaller background
+can only give more positives by antitonicity.
+If the earlier union already supplies a
+winner there is no bound to check for that
+winner. The test therefore meets all the
+requirements in the greatest-coefficient
+definition.
+
+When $K$ and the number of later inputs are
+fixed, enumerate the possible later core
+operations $h$. For each, compile the test
+as a conjunction over its marked bits of
+disjunctions of erased gates
+$P_i(q^{\widehat s})$. These erased gates
+are actual interval circuits over the
+earlier union: replace their $s$-owned
+gates by union, which preserves the
+$s$-free facet and makes the predicate
+ignore $s$-postings. Conjunction uses
+terminal substitution, and disjunction
+uses union. Gate each $h$ by its test.
+The resulting active coefficients include
+the greatest coefficient itself, since it
+is a core operation when nonzero, and are
+all bounded by it. This is a canonical
+presentation of the same extension. The
+single-loss compiler then applies, with
+polynomial overhead for fixed later arity
+and palette.
+
+Alternatively, with $m$ supplied coefficients
+and arbitrary later arity there are at most
+$2^{Km}$ local synthesis problems. Specify
+a subset $A_s$ of coefficients for each
+observer $s$. Compute the greatest later
+core operation bounded, on facet $s$, by
+the union of the members of $A_s$. Gate
+this result by the conjunction of
+$P_i(q^{\widehat s})$ for all $i\in A_s$
+and all $s$. Extra active coefficients
+only relax the bounds, so each gated
+result is safe. Choosing the actual
+subset on each erased background attains
+the greatest coefficient. This reduces
+canonicalization to synthesis on the
+later block alone, without enumerating
+earlier backgrounds.
+
+\paragraph{Observer restrictions over read-once baselines.}
+For an actual interval predicate $P$ above
+a baseline $B$, the requirement that $P$
+hold at every $s$-free background below $q$
+is again an interval predicate, since it is
+downward closed in the activation order.
+For read-once $B$ it has a circuit compiler
+when $P$ is specified by explicit losses.
+Compile each loss $T$ separately, using the
+predicate
+\[
+ [\,\text{there is no $s$-free }e
+                 \text{ with }T\preceq_B e\preceq_B q\,].
+\]
+Conjoin the resulting interval filters. The
+original actual predicate excludes exactly
+the activation upsets of its losses, so
+these are precisely the universal observer
+requirements.
+
+At a union node the existence test is a
+product of the child tests. The same holds
+at an owned node with nonabsorbing target
+$q$: any $e$ below $q$ is nonabsorbing at
+that owner by profile monotonicity, and both
+comparisons reduce to their children. If
+the target absorbs at its owner, the answer
+is constant on that singleton fiber. At a
+projection leaf, a loss posting at $s$
+has no $s$-free upper coloring, and all
+other cases give the ordinary single-loss
+test. Thus the clipping construction for
+single losses applies verbatim, with the
+absorbing principal summand included
+precisely when the fiber's existence test
+is false. Its downset is safe because the
+existence test is upward closed.
+
+The constants on the absorbing fibers can
+be found by a finite bottom-up computation
+for each $T$ and $s$. On each subtree record
+the attainable states of an $s$-free coloring:
+its ordinary singleton type, its vector
+of minorant envelope bits, and whether it
+lies above the restriction of $T$. At a
+leaf enumerate its permitted statuses.
+At each internal node combine child
+states using the ordinary profiles and
+\cref{core:thm:disjoint-minorant-profiles}.
+The comparison bit is the product at a
+union or nonabsorbing owned node. At an
+absorbing node it is the constant
+comparison of the restriction of $T$
+with the owning singleton, computed from
+$T$'s child envelopes. Keep states both
+with and without that bit: an absorbing
+node may become comparable even if a child
+was not. To test existence below an
+absorbing target at $r$, look for a
+combination whose resulting comparison
+bit is true and whose two child envelope
+vectors do not both win any foreign
+owner of $r$. This is exactly the absorbing
+formula for the upper comparison.
+All combined colorings remain proper
+because they omit $s$. The number of
+states is $2^{O(K)}$ per node, and the
+resulting interval circuit uses $O(K)$
+gates per node per explicit loss, with
+shared envelope helpers.
+
+The same construction treats a disjunction of
+$m$ interval predicates specified separately by
+loss lists. To falsify the disjunction, choose
+one loss $T_i$ from each list and seek an
+$s$-free interpolant above all the chosen
+losses and below the target. For a fixed
+choice, at a nonabsorbing node the lower
+requirements still pass to both children.
+For the absorbing constants, keep a single
+bit for comparison with all chosen lower
+losses at once. At a nonabsorbing node this
+bit is the conjunction of the two child bits.
+At an absorbing node, precompute whether all
+the chosen losses compare below the owning
+singleton. This is a constant for the tuple
+and node, independent of the child states.
+At a leaf the existential test is just whether
+all nonempty lower postings prescribe the
+same allowed color and the target contains it.
+An empty collection of nonempty postings
+imposes no restriction. The same clipped
+interval circuits therefore compile the
+complement of existence for each choice.
+Conjoin these circuits over the product of
+the loss lists. The dynamic program uses
+$2^{O(K)}$ states per node per tuple,
+independently of the number of lower losses.
+The precomputed comparison constants take
+linear time in the tuple length for each
+node and fixed palette. Compilation is
+polynomial for fixed $K,m$.
+If one list is empty then its predicate is
+identically positive and the disjunction
+already accepts every background.
+
+Common upper bounds admit a subtree
+description in the same order. Choose
+disjoint owned subtrees on which every
+lower coloring compares below the owning
+singleton, and fill each with its owner.
+At every remaining leaf, the nonempty lower
+postings must agree; keep their common
+posting, if any. Keep the resulting coloring
+only if it is proper. These colorings generate
+the common upper set. Indeed the local
+comparisons lift through the tree, as in
+the subtree coverage argument. Conversely
+descend through a common upper background,
+stopping at its absorbing owned nodes.
+Each is an allowed choice. For the other
+leaves keep only the required lower postings.
+Using the original pure native postings
+at the chosen nodes gives a subposting of
+the background, with the same activation
+class as filling those nodes entirely.
+Thus every common upper bound is above
+one of the generated colorings. An observer
+restriction simply forbids the chosen
+owner or required leaf posting from being
+that observer.
+
+A proposed merge of lower colorings can be
+checked in polynomial time even with variable
+palette. In a product domain omitting a common
+observer, test whether every common upper
+coloring of $T_1,\ldots,T_m$ is above another
+coloring $U$. At each subtree record its
+ordinary singleton type and two bits: whether
+the coloring is above all restricted $T_i$,
+and whether it is above the restriction of $U$.
+At each leaf enumerate its permitted statuses.
+At a union or a nonabsorbing owned node,
+each comparison bit is the conjunction of its
+child bits. At an absorbing node both bits
+are constants obtained by comparing the
+respective lower restrictions to the owning
+singleton. The ordinary singleton type of the
+node comes from the child types. Thus there
+are at most $4(K+1)$ states per node, and a
+counterexample has the first bit true and the
+second false. Keeping one realization per
+state also yields a counterexample coloring.
+Without a designated observer, run the test
+once for each missing owner.
+
+In particular, if $U$ is itself a common upper
+coloring in the domain, this decides whether $U$ is a least
+upper coloring in the activation order. For
+compatible lower postings their proper union
+is one such candidate. A sufficient condition
+for this candidate to work is that each owned
+subtree admitting its owning singleton as an
+upper bound of all the lower restrictions also
+admits it for their union. The subtree description
+then transfers the union to every common upper
+coloring. The state test is exact even when
+some of those local conditions fail: higher
+absorptions can make the failing local choice
+irrelevant. Within the tested domain a successful
+merge replaces the entire lower list in interpolation
+and in constructing its observer filter.
+
+One can also find a least common upper coloring,
+or decide that none exists, in polynomial time.
+Order fixed-length binary keys lexicographically.
+At a leaf use the bit indicating whether it is
+posted. At a union concatenate the child keys.
+At an owned node start with its own absorption
+bit and append the child keys if nonabsorbing,
+or an all-zero suffix of the same length if
+absorbing. A strict activation comparison
+strictly increases this key. At an owned node
+the own absorption bit cannot decrease under
+comparison. When both endpoints absorb they
+are equivalent, and when neither absorbs
+the comparison is a child product. At a union
+use the child product directly. At a leaf
+strict comparison requires a new posting.
+These facts prove the claim by induction.
+
+Run the state computation with the singleton
+type and the all-lower comparison bit, keeping
+a smallest key and its witness in each state.
+The key combines by concatenation or is
+constant on an absorbing fiber, so replacing
+a child witness by the smallest in its state
+never hurts the parent's key. Take a smallest
+common upper witness over the permitted missing
+observers. Its key makes it a minimal common
+upper coloring. If a least one exists, it must
+be equivalent to this witness. The two-bit
+test can now verify leastness, yielding either
+the merge or another common upper not above it.
+This works with product-domain restrictions
+as well, with leastness taken among that
+domain's common upper colorings.
+
+Even two gates with one activation-loss
+generator each can have a disjunction
+requiring exponentially many such generators.
+Take $d$ disjoint binary folds at $r$ and
+another owner $a$. Let one lower coloring
+post the left input of every fold at $a$,
+and the other post the right input at $a$.
+Their common upper colorings form exactly
+the loss set of the disjunction of the two
+single-generator filters. On each fold a
+common upper coloring either absorbs at
+$r$ or posts both inputs at $a$: in the
+nonabsorbing case the comparison is
+subcoloring at each input. The two
+singleton fibers are incomparable by
+monotonicity of singleton profiles.
+Each is attainable, since neither lower
+coloring posts a full foreign diagonal.
+The disjoint product therefore has $2^d$
+inequivalent minimal common upper classes.
+Their representative colorings use only
+$r,a$ and are proper. Any list generating
+this loss upset in activation order must
+include a representative of each class,
+whereas the simultaneous lower-bound
+compiler uses only the two original
+generators.
+
+With variable $K$, evaluating an observer restriction
+is coNP-complete even for one loss generator over
+a read-once baseline. Equivalently the existence
+of an observer-free interpolant between two given
+colorings is NP-complete. Use a palette with one
+owner per vertex of a hypergraph, an observer $t$,
+and one unused owner to keep the lower coloring
+proper. The construction will require two
+disjoint sets of selected colors, each meeting every
+edge. These exist exactly when the hypergraph is
+two-colorable, because any vertices outside the two
+sets can be assigned arbitrarily. For hardness of
+that problem, use complementary literal vertices
+joined by an edge for each Boolean variable, and
+one further vertex as a false marker. Each formula
+clause gives an edge consisting of its literals and
+the marker. Each of these edges must meet the color
+opposite the marker, which is precisely clause
+satisfaction.
+
+For an edge with distinct owners $a_1,\ldots,a_j$,
+start its read-once subtree at a binary fold at $a_1$.
+The lower coloring posts only its left input, at $t$.
+An upper coloring omitting $t$ must absorb at $a_1$:
+without absorption the leaf comparison would
+preserve the $t$-posting. The all-$a_1$ coloring
+is such an upper bound, and its envelope has only
+the $a_1$ bit. The lower envelope is empty.
+
+To add option $a_i$, attach by $\star_{a_i}$ a
+disjoint union of fresh projections, one for each
+earlier option. Post those fresh inputs at their
+respective earlier owners in the lower coloring.
+The envelope of the lower coloring on the whole
+subtree remains empty. This holds for the binary
+fold and propagates through each new gate by the
+profile composition rule. Thus an all-$a_i$ target
+is above the lower coloring and has just that
+envelope bit. A target that does not absorb at
+$a_i$ must compare componentwise. Its fresh
+projections still have the prescribed postings,
+so their envelope contains every earlier option.
+The conjunction at each foreign color keeps any
+earlier option supplied by the first child. Also
+each earlier singleton envelope is attainable
+by retaining the prescribed fresh postings and
+using an attaining target on that child. This
+proves the edge-subtree property by induction.
+
+Take two disjoint copies of the union of all
+edge subtrees and combine them at $\star_t$.
+The upper query is the all-$t$ coloring, and
+the interpolant must omit $t$. The lower coloring
+combines the specified restrictions on all
+edge copies and omits the unused owner.
+At a $t$-free interpolant the root comparison
+with the lower coloring passes to the two
+unions and hence to each edge subtree. By
+the absorbing comparison at the upper query,
+the two union envelopes must be disjoint.
+Each meets every edge, by the edge-subtree
+property and the envelope formula for union.
+Conversely two disjoint sets meeting every
+edge allow one singleton envelope choice
+per edge and side; together these give a
+$t$-free interpolant below the query.
+The reduction has polynomial size, and
+the recursive comparisons verify a proposed
+interpolant in polynomial time.
+
+Verifying that a supplied common upper coloring is
+minimal is coNP-complete with variable $K$, even
+for two lower colorings and no domain restrictions.
+Use the same hypergraph construction, with a
+different first step in each edge subtree. For
+distinct options $a_1,a_2$, start with a binary
+fold at $a_2$. One lower coloring posts only its
+left input at $a_1$, and the other posts only its
+right input there. Both envelopes are empty.
+A common upper coloring either absorbs at $a_2$,
+with just that envelope bit, or extends both
+postings and wins $a_1$. Extend to the remaining
+options as above, putting the same fresh postings
+in both lower colorings. Both lower colorings
+now omit $t$, which owns only the final gate.
+They lie below the all-$t$ coloring because
+their child envelopes are empty.
+
+Any strict common upper below the all-$t$
+coloring must be nonabsorbing at the root,
+since the absorbing fiber is one class.
+Erase its $t$-postings. This preserves both
+lower comparisons: below the root there are
+no $t$-gates, so erasure changes no owned
+absorption test, and no lower posting at a
+leaf requires $t$. Erasure also leaves all
+foreign envelope tests at the root unchanged.
+Thus a strict common upper exists exactly
+when there is a $t$-free interpolant, which
+is the hypergraph two-colorability test.
+A strict common upper is a polynomial
+certificate of nonminimality. This separates
+testing minimality of a given upper from
+finding some minimal upper by the key
+algorithm. Every root-to-leaf path in the
+reduction has at most four owned choices,
+since the hypergraph edges have size at
+most four.
+
+For a single lower coloring $T$, the number
+of its postings at the omitted observer
+gives another tractable regime. If there
+are $d$ such postings, any interpolant can
+be thinned in activation order to one that
+changes at most $d$ disjoint subtrees.
+Descend from the interpolant to its
+absorbing owned nodes as above, and keep
+only the selected subtrees containing an
+observer posting of $T$. On the other
+subtrees and leaves restore $T$. Each local
+result stays between its lower and upper
+restrictions, so the comparisons lift
+through the tree. All forbidden postings
+are still removed. Fill each kept subtree
+with its owning color, which gives an
+equivalent local target. Therefore it
+suffices to enumerate an ancestor choice
+for each of the $d$ postings, discard
+overlapping distinct choices, and verify
+the resulting interpolation by the
+recursive comparisons. This takes
+$N^{d+O(1)}$ time with variable palette.
+For $d=0$ just compare $T$ with the
+upper query.
+
+The ancestor search can discard all but
+one choice per permitted owner at each forbidden
+posting. Keep the lowest ancestor owned
+by that color whose owning singleton lies
+above the lower restriction. To justify
+this, suppose an interpolant replaces a
+subtree by its owning color $r$. For each
+forbidden posting it covers, choose the
+lowest eligible $r$-ancestor of that
+input. These choices stay inside the
+original subtree. Keep the maximal choices
+among them, and restore the lower coloring
+everywhere else in the subtree.
+
+The smaller replacements are still above
+the lower coloring by composition. They
+are also below the original all-$r$
+replacement. In an owned subtree the
+comparison to its owning singleton
+requires that its minorant envelope have
+no foreign bit. The original lower
+restriction had no such bit because the
+subtree was eligible. Replacing a descendant
+by an all-$r$ coloring cannot increase any
+foreign envelope bit there: that descendant
+now has only its $r$-bit, and the composition
+rules are monotone in each owner's bits.
+Hence the new coloring still compares
+below the owning singleton. All forbidden
+postings remain covered.
+
+If $b$ is the maximum number of distinct
+eligible ancestor owners at a forbidden
+posting, the search thus takes
+$b^d N^{O(1)}$ time after computing the
+lowest choices. For each tuple keep its
+maximal chosen subtrees before checking
+the resulting coloring. This allows a variable
+palette with bounded $b$ and $d$, even if
+the paths have arbitrarily many repeated
+gates.
+
+In fact there is a $2^d N^{O(1)}$
+algorithm with no bound on $b$ or $K$.
+First check the lower-to-upper comparison.
+Descend through the upper query until its first
+absorbing owned nodes. The interpolation problems
+on those disjoint subtrees are independent by
+the product comparison at the other nodes. At
+an exposed leaf the lower posting itself must
+be allowed. In a subtree with upper absorption
+at $r$, if $r$ is permitted, its all-$r$ coloring
+already works. Otherwise an interpolant must
+omit $r$. In that case every replacement is
+strictly inside one of the two children, and
+the only upper condition is that their foreign
+minorant envelopes be disjoint.
+
+In such a subtree, test every subset of its
+forbidden postings as a possible part to be
+covered at one color. For each part
+and each permitted color $s$, try to cover
+the part by eligible $s$-subtrees in the
+two children that contain no forbidden
+posting outside that part. For each posting
+use its lowest such ancestor, then keep the
+maximal choices. If any posting is uncovered,
+reject this part-color pair. Otherwise compute
+the two child envelope bits at $s$ after those
+replacements. Keep the pair exactly when the
+two bits do not both win. Then process the
+colors one at a time in a subset dynamic
+program. At each color add one feasible part
+disjoint from the already covered postings,
+or skip the color.
+
+This works because replacing an eligible node
+at $s$ changes no envelope bit of a different
+color. Those bits were already zero at that
+node by its eligibility, and are still zero at
+the all-$s$ coloring. Composition then preserves
+them at every higher node. Choices for distinct
+parts are disjoint, since a selected subtree
+contains forbidden postings only of its own
+part. The subset program therefore gives simultaneous
+replacements satisfying each separate color
+test. Unassigned colors retain their original
+bits, which pass by the lower-to-upper
+comparison. Conversely a witness partitions
+the forbidden postings by replacement color.
+Its local choices can be lowered within each
+part as above: the $s$-bit of a region previously
+filled at $s$ can only decrease, and the other
+parts have no effect on it. Hence the witness
+gives a partition into tested parts with
+distinct colors. There are $2^d$ part tests
+per color, and at most $3^d$ disjoint
+subset pairs per color in the dynamic
+program.
+
+The final covering step can use inclusion
+and exclusion to achieve the stated bound.
+For every subset $S$ of the forbidden
+postings and every color $s$, count its
+feasible nonempty parts inside $S$ by
+size, putting the counts into a polynomial
+$f_{s,S}(z)$ with constant term one for a
+skipped color. The counts for all $S$
+follow by subset summation, adding counts
+along one element at a time for each size.
+The coefficient of $z^d$ in
+\[
+  \sum_{S}(-1)^{d-|S|}\prod_s f_{s,S}(z)
+\]
+counts choices that cover every posting and
+whose total size is $d$. These choices are
+exactly disjoint covers. The computation
+uses $2^d$ subsets and polynomial work per
+subset, with all polynomial products
+truncated at degree $d$. The integer
+counts have polynomial bit length.
+
+The same parameter bound holds with a product
+domain of allowed postings on the interpolant,
+provided the domain omits a common observer.
+Neutral status is allowed at every input. Now
+$d$ counts the postings of the lower coloring
+that the domain forbids. A subtree is eligible
+at its owner $r$ only if its allowed native
+postings win its ordinary $r$-profile and
+the lower restriction compares below its
+owning singleton. In a replacement post all
+these allowed native inputs at $r$, leaving
+the rest neutral. The result is equivalent
+to the all-$r$ coloring and has only the
+$r$-bit in its minorant envelope. Conversely
+any absorbing interpolant in the domain
+certifies the first eligibility test by
+ordinary profile monotonicity. The descent
+and the lowering argument therefore apply
+with this new eligibility test, covering the
+disallowed postings in place of the omitted
+color alone.
+
+At an absorbing frontier of the upper query,
+if the allowed native postings can absorb at
+that owner, take that replacement immediately.
+Otherwise no domain interpolant can absorb
+there, so the two-child envelope test remains
+the only upper condition. Each feasible
+part uses only replacements within those
+children. At exposed leaves the lower posting
+must be allowed and below the upper one.
+The subset count and its running time are
+unchanged. In particular the domain may
+consist of the exclusions of a positive
+prime and its observer, with no bound on
+that prime's width.
+
+This also gives a compiler in
+$2^d N^{O(1)}$ time with variable palette.
+For a fixed lower loss and domain, compile the
+predicate asserting no domain interpolant
+below the query. At each owned node evaluate
+its absorbing constant using the domain
+algorithm with that node's all-owned upper
+query. The nonabsorbing product recursion
+and its clipped interval realization are
+unchanged. At a projection leaf there is
+no domain interpolant when its required
+posting is forbidden; otherwise the
+ordinary lower comparison suffices.
+Thus the circuit still uses $O(K)$ gates
+per node, while the construction cost is
+controlled by the number of disallowed
+lower postings. An explicit list of losses
+can be compiled by conjunction as before.
+
+\paragraph{Interpolation with few shared envelope colors.}
+For arbitrary tuples of lower bounds, the
+interpolation algorithm need only track colors
+that can occur on both sides of an absorbing
+upper comparison. Fix a product domain omitting
+an observer, and descend through the upper
+query to its first owned absorptions. At an
+absorbing subtree at $r$, first test whether
+the allowed native postings can realize the
+owning singleton above all the lower
+restrictions. If so, that fiber gives an
+interpolant. To find a nonabsorbing one,
+consider each child separately. Keep its
+domain colorings that lie above all its
+lower restrictions and whose ordinary type
+is different from the $r$-singleton.
+
+For each foreign owner $s$, test whether
+the envelope at $s$ can win on such a
+child coloring. This is a polynomial state
+test: keep the ordinary singleton type,
+the joint lower comparison bit, and only
+the envelope bit at $s$. The per-owner
+composition rules compute that one bit
+independently of the others. Let $L$ be the
+set of foreign owners that pass this test on
+both children. In the absorbing upper formula
+only colors in $L$ can violate disjointness.
+Repeat the state computation on each side
+keeping just the envelope vector on $L$,
+then check for two attainable disjoint
+vectors. This takes $2^{O(|L|)}$ times
+polynomial input size. The absorbing and
+nonabsorbing cases cover the entire local
+interpolation problem. Elsewhere the tree
+uses ordinary product comparisons, so the
+running time depends on the maximum such
+$|L|$ over the absorbing frontier.
+For a fixed tuple, the observer-filter compiler
+can use this algorithm for every absorbing
+constant, by taking the corresponding all-owned
+target. Its construction time is then governed
+by the maximum shared-envelope count in those
+tests, and its circuit size is unchanged.
+
+The same test certifies minimality of a
+supplied common upper. At an absorbing
+subtree a strict comparison must use the
+nonabsorbing case, since the absorbing
+fiber is an equivalence class. At a
+nonabsorbing node or a union, require
+feasible comparisons on both sides and
+a strict one on at least one side. At a
+leaf strictness is ordinary strict
+subcoloring. Thus finding a strictly
+smaller common upper is also fixed-parameter
+tractable in the maximum shared-envelope
+count. For unrestricted proper colorings
+enumerate the omitted observer, and take
+the maximum count over those tests.
+
+Unbounded $m$ is coNP-hard even for evaluating
+one observer restriction of this kind. Use
+three owners $r,a,b$ and, for each Boolean
+variable $v$, a disjoint binary fold at $r$
+on $x_v$ and a private partner. The target
+posts every input at $r$, and the interpolant
+must omit $r$. Below this target each binary
+block must avoid a full foreign diagonal.
+For each clause, give one interval predicate
+with one lower loss per literal: the singleton
+posting $x_v:a$ for a positive literal, or
+$x_v:b$ for a negative literal. At an $r$-free
+interpolant the comparison with such a loss
+requires that very posting, because the
+variable block does not absorb at $r$.
+The disjunction fails precisely when every
+clause has a confirmed literal. Conversely
+a satisfying assignment posts the corresponding
+color at each $x_v$ and leaves all partners
+unposted, so it avoids every full diagonal.
+Thus the observer restriction of the disjunction
+accepts the target exactly for unsatisfiable
+formulas. Each component has at most three
+explicit loss generators, and an interpolant
+and its chosen losses certify failure.
+
+\paragraph{Evaluating many loss lists along a read-once tree.}
+For each interval gate, let its support be the
+union of the posted inputs in its loss generators.
+A list crosses a subtree cut when its support
+meets both sides. Count one bit per crossing
+list and one per distinct local restriction
+of a generator that itself posts on both
+sides. Let $b$ be the largest combined count
+at one cut. The observer restriction of
+the disjunction can be evaluated in
+$2^{O(K+b)}N^{O(1)}$ time, with no bound on the
+number of lists. The same algorithm accepts
+any product domain omitting a common observer.
+
+Seek a domain coloring below the supplied upper
+query that lies above some generator in every
+list. At each subtree keep its ordinary singleton
+type, its envelope vector, and its comparison
+bit with the restricted upper query. These
+data combine by the disjoint comparison and
+profile formulas. Keep an unrestricted table
+with just these states. In a second table enforce
+all lists supported entirely within the subtree.
+For a crossing list record whether some
+generator wholly inside already compares below
+the local coloring. For generators that cross
+individually, record the comparison to their
+local restrictions, sharing a bit for identical
+restrictions. Generators wholly outside need
+no bit. A list with no
+generators makes the sought witness impossible.
+A list containing the empty generator needs
+no test.
+
+At a union or a nonabsorbing owned node use
+the second tables of the children. For a
+generator still crossing, its comparison is
+the conjunction of its partial child bits,
+with true for a child it misses. For a
+generator just becoming contained by meeting
+both children, both partial bits are available
+too. Add these successful comparisons to the
+two child summaries of wholly contained
+generators, using disjunction. This supplies
+the summary for a crossing list and the
+required success test for any list just
+becoming contained. Lists already contained
+in one child were checked there. In particular
+a list of any size with one posting per
+generator uses only one bit at each cut
+it crosses. At an
+absorbing node use the unrestricted child
+tables instead. Every lower comparison
+at this node is then a constant, given by
+the generator's comparison to the owning
+singleton. In particular a list that
+failed on a child may pass here. Use the
+constants to check all contained lists and
+set the crossing bits. Initialize directly
+from permitted statuses at projections.
+
+At the root all lists are contained, and
+an accepted state must pass the upper
+comparison. Induction on the table rules
+gives exactly the desired witnesses. Each
+table has $2^{O(K+b)}$ possible states and
+combining pairs preserves that bound on the
+exponent. This gives a Boolean evaluation
+algorithm for the combined observer gate
+without expanding its loss list.
+
+The shared-envelope reduction removes the
+dependence on the full palette from the
+exponent of this algorithm. Descend through
+the upper query to its first owned
+absorptions, which form disjoint subtrees.
+For each such subtree with owner $r$, let
+$L$ be the foreign colors whose envelopes
+can win on both children in domain colorings
+that meet their contained-list requirements
+and have ordinary type different from $r$.
+Compute each possible envelope bit by running
+the crossing-list tables without an upper
+test and with just that one envelope bit.
+The crossing bits need not be prescribed
+in this preliminary test. Let $a$ be the
+maximum size of the resulting sets $L$.
+
+In the main computation keep just the mask
+on $L$ throughout the two children of each
+frontier subtree. No upper comparisons
+inside these children are needed. At the
+frontier node, an interpolant absorbing at
+$r$ already compares to the upper query.
+Use the unrestricted child tables and
+check the lower-list requirements by the
+owning-singleton constants as before. If
+the interpolant does not absorb at $r$, use
+the restricted child tables and compare
+their masks on $L$. Any foreign conflict
+would occur on a color in $L$, by the
+preliminary test. Above the frontier use
+only ordinary types, crossing bits, and
+the upper comparison bits combined by the
+product rule. Thus the exponential state
+count is $2^{O(a+b)}$, uniformly in $K$.
+The preliminary tests cost $2^{O(b)}$
+times polynomial input size, since they
+track one envelope bit at a time. This
+gives the same combined-gate evaluation
+with the palette represented explicitly
+and no loss-list expansion.
+
+This gives a canonicalization compiler for
+overlapping gated coefficients over a read-once
+earlier baseline, with fixed palette and later
+arity, when the required combined gates are
+supplied by explicit losses. For a fixed
+later source bit visible at $s$, take the
+union of the activation predicates of the
+coefficients supplying it. A proposed later
+core coefficient using that bit is allowed
+only if this combined predicate holds at
+every $s$-free background below $q$. This
+is also sufficient for that bit, since such
+backgrounds exhaust the $s$-requirements
+outside the earlier baseline. Apply the
+observer compiler to each required combined
+predicate and conjoin the resulting filters
+for each proposed coefficient. Enumerating
+the bounded-arity later core operations
+then supplies the greatest coefficient as
+before. One may supply the losses of each
+combined predicate or use the tuple compiler
+if only boundedly many gates contribute to
+it. Disjoining separately supplied gates
+need not preserve
+the size of their loss lists.
+
+\paragraph{Greatest atomic enlargement under disjoint composition.}
+At a union node normalize both children independently.
+At an owned node $C=C_1\star_r C_2$, test the ordinary
+$r$-profile at the query. If it wins, keep the entire
+subtree. If it loses, replace its root by union and
+normalize both children. Leave projections as they are.
+This gives the greatest atomic enlargement of a read-once
+word allowing named union. More generally the leaves can
+be disjoint core blocks with a known greatest enlargement.
+When normalization reaches such a block, use its own
+greatest enlargement.
+
+At a losing owned node the guard $C$ itself permits
+replacing its root by union: the values can differ only
+when $C$ is the $r$-atom. All subsequent enlargements
+of either child lift through the disjoint union. At a
+winning owned node, every minimal loss at a head lies
+entirely in one child block. At a foreign observer the
+mark is lost either by a local loss or by an $r$-win
+in the other child. At observer $r$ only the local
+loss can occur. In both cases minimality rules out
+postings in both blocks. Every one-block loss passes the
+winning-case principal formula of
+\cref{core:thm:disjoint-owned-activation}: each foreign
+profile product has an empty seed in one child, and the
+$r$-block has no condition.
+
+At a winning owned node those protected minimal losses
+bound every enlargement, by
+\cref{core:thm:principal-box-extension}. At a disjoint
+union the principal is the product. For any possible
+enlargement, its neutral restriction to either child
+obeys that child's protected losses: extend each local
+probe by leaving the other block unposted, which stays
+in the product principal. Thus each restriction is below
+the child's greatest enlargement. Any source bit of the
+whole operation is bounded by the corresponding bit of
+its neutral restriction, by antitonicity. So the disjoint
+union of the two greatest enlargements is an upper bound.
+Its reachability gives equality and completes the induction.
+
+In particular the leaf blocks can be graph sums or
+unions of full-support folds. The graph normalization
+already preserves precisely its protected minimal rows.
+For a union of full-support folds, a missing fold owner
+allows enlargement to the input union using that fold's
+guard. If every fold owner is present, every minimal
+loss posts one input per fold owner and passes the
+full-support principal formula. The block is then
+already its greatest enlargement.
+
+For a read-once word, the row deletion test on the
+complete minimal loss list recovers this budget using
+bounded neutral restrictions. Each guard is an original
+subtree, obtained by neutral
+deletion of all variables outside it, since neutral
+deletion through a disjoint choice or union erases the
+other child. At each step that guard is bounded by the
+losses not yet removed. A row changed to a positive has
+a sole-source probe where the guard absorbs, so the row
+is deleted by its signed profile test. Replacing a
+losing root by union only removes cross-block losses:
+at its original root the local minimal losses were
+already minimal, since any cross-block trigger uses a
+nonempty posting in the other block. Rows still lost
+in the normalized word cannot be deleted: any original
+minimal row still lost remains minimal, since the
+operation has only increased, and all such minimal
+rows are inside the principal. The read-once tree,
+when not supplied, can be recovered from canonical
+primes by the pair-quotient test. With the two larger
+leaf types, use the bounded fold witnesses for their
+local steps alongside the neutral subtree guards.
+
+\paragraph{Splitting at a shared source prefix.}
+Partition the inputs into a nonempty shared set $J$ and
+private blocks $W_i$. Suppose every head in $J$ has all
+posting predecessors in $J$, and every head in $W_i$ has
+them in $J\cup W_i$. These conditions are read directly
+from canonical primes. Let $C_i$ be the restriction of
+the source family to $J\cup W_i$ with the other inputs
+unposted. Source reconstruction gives $C=\sum_i C_i$:
+each head has the same bits in its restriction. For a
+nonzero candidate this gives an exact realization test
+by blocks. Any core realizer restricts neutrally to a
+core operation or zero in every block, and conversely
+the union of the nonzero block realizers reconstructs
+the candidate.
+
+Fix a proper target $q$ and write $q_i=q|_{J\cup W_i}$.
+Then a proper $p$ passes the principal of $C$ exactly when
+$p|_{J\cup W_i}\preceq_{C_i}q_i$ for every $i$.
+Moreover, the greatest atomic enlargement of $C$ at $q$
+is the sum of the greatest atomic enlargements of $C_i$
+at their respective targets.
+
+For the comparison, write $B$ for the common neutral
+restriction to $J$. The local budget at $q|_J$ in
+\cref{core:lem:block-source-patterns} keeps precisely
+the rows whose shared background is below $q|_J$ in
+the activation preorder of $B$. Its remaining losses are internal to individual
+$W_i$. The greatest coefficient is the sum of the
+individual coefficients: any bounded witness restricts
+neutrally to a bounded witness in each block, and every
+whole source bit is bounded by its neutral restriction
+by antitonicity. Conversely the disjoint sum satisfies
+the budget. The block activation product now gives the
+claimed comparison, with the common prefix comparison
+appearing in every $C_i$ comparison. If $B=0$, no
+realizing term uses the shared inputs, so this is just
+the disjoint case and zero branches impose no conditions.
+For retained shared projections the prefix comparison
+is ordinary subcoloring.
+
+Each atomic enlargement of a branch lifts through the
+sum, even on the shared inputs: its guard is bounded by
+the sum, and the sum is unchanged wherever the branch
+is unchanged. For the upper bound, extend a proper
+coloring in the principal of $C_i$ by leaving the other
+private blocks unposted. Its shared coloring passes the
+prefix comparison, and each other private block passes
+with its empty coloring. Thus every protected loss of
+$C_i$ bounds the neutral restriction of any enlargement
+of $C$ to $J\cup W_i$. By
+\cref{core:thm:principal-box-extension} this restriction
+lies below the greatest local enlargement. Antitonicity
+again bounds each private source by its local restriction
+and each shared source by any of the local restrictions.
+The sum of the local enlargements is therefore greatest.
+
+\paragraph{Covers by source prefixes.}
+Call a set predecessor-closed if it contains all the
+posting predecessors of each of its heads. Any cover of
+the inputs by predecessor-closed sets gives an exact
+local test. Realizability of a nonzero candidate is
+equivalent to realizability or zero on each member of
+the cover, using neutral restrictions. For a realized
+candidate, its activation comparison is the conjunction
+of the comparisons on the cover members, and its greatest
+atomic enlargement is the union of their greatest
+enlargements.
+
+For two cover members their intersection is a common
+prefix, and the two set differences are the private
+blocks. The shared-prefix rule applies, with ordinary
+disjoint union when the intersection is empty. For more
+members, the union of any initial collection is again
+predecessor-closed, so the two-member rule proves the
+claims by induction. In particular there is a canonical
+cover: take each sink component of the posting graph
+together with all its ancestors. Every component reaches
+some sink. A single sink may still have the entire graph
+as its ancestor scope.
+
+In addition, taking the greatest atomic enlargement
+commutes with neutral restriction to any predecessor-closed
+set $A$. A protected proper comparison on $A$ extends
+to the whole principal by leaving the complement unposted.
+This follows from the block activation product with
+prefix $A$, because the empty coloring passes the
+other factor. Thus the restriction of the global
+enlargement is bounded by the local one. Conversely
+the original restriction is bounded by the original
+operation by source reconstruction. Take its union
+with the full original operation at each step of a local
+enlargement chain. Each local guard is still bounded,
+and the union is unchanged wherever that local step
+is unchanged. This realizes the local enlargement
+inside the global one and proves the opposite inclusion
+after restriction.
+
+In fact each source bit of the global enlargement at a
+head in $A$ depends only on $A$. The lifted local
+enlargement lies below the global one and supplies the
+local bit independently of inputs outside $A$. In the
+other direction, erasing all postings outside $A$ can
+only increase the global bit, and the erased bit is the
+local one by commutation. Thus equality holds at every
+proper probe. Taking $A$ to be the ancestors of a
+single head, including the head, yields its complete
+prime lists in the global enlargement from that local
+calculation. No prime there needs an exclusion outside
+the ancestor set, since the bit is independent of those
+postings.
+
+Consequently the posting graph of the greatest
+enlargement is contained in the reachability graph of
+the original guards. It can split a source component
+but cannot merge two of them, and it preserves every
+predecessor-closed cut of the original graph.
+
+\paragraph{Enlarging a conditional coefficient at its query.}
+Split a core operation $C$ into a predecessor-closed
+prefix $J$ and its complement $W$. Write $B$ for the
+prefix operation and $D_e$ for the greatest conditional
+coefficient on $W$ at prefix coloring $e$. Fix a proper
+target $q$, and write $M$ for the greatest enlargement
+of $C$ there. The prefix of $M$ is the greatest
+enlargement $M_B$ of $B$ at $q|_J$. The coefficient
+of $M$ at that same prefix coloring is the greatest
+enlargement of $D_{q|_J}$ at $q|_W$.
+
+In fact one can read the coefficients of $M$ at all
+prefix colorings. In the minimal list of losses of $C$,
+write a loss at a head in $W$ as $(i,b,t)$ with shared
+background $b$ and internal pattern $t$. At a prefix
+coloring $e$, the coefficient of $M$ is the greatest core
+operation omitting the patterns $t$ of rows satisfying
+\[
+ b\preceq_B q|_J,qquad
+ \Theta_{D_{q|_J},q|_W}(t)=1,qquad
+ b\preceq_{M_B} e .
+\]
+The first two tests select exactly the protected rows
+by the block activation product. Those rows define
+$M$ as their greatest bounded operation. Its prefix
+is $M_B$ by commutation with restriction, so the
+last comparison is the row activation test for the
+enlarged operation's coefficient.
+
+When $e=q|_J$ the first and last tests agree because
+atomic enlargement preserves the principal at the
+target. The unfiltered internal list activated at
+$q|_J$ defines $D_{q|_J}$ as its greatest bounded
+operation. The middle test retains just the rows in
+its own principal, and the partial-budget argument in
+\emph{Descending boxes from a partial loss budget}
+identifies their greatest bounded operation with its
+greatest enlargement. That argument also covers a
+conditional list that does not specify all zeros of
+its greatest coefficient. If the initial prefix is
+zero, discard its unused inputs; a zero coefficient
+has constantly true principal and stays zero on
+enlargement.
+
+\paragraph{Erasing postings on retained projections.}
+If a core operation retains the projections on $U$,
+its source predicates can ignore any specified set
+$F$ of postings on $U$ and still define a core operation.
+Use input union on $U$ as the shared baseline, whose
+activation preorder is subcoloring. In the block
+extension representation, replace its coefficient at
+$e$ by the old coefficient at $e\setminus F$.
+Erasure preserves subcoloring, so the coefficients
+still satisfy the required order. The extension formula
+gives exactly the source predicates with those postings
+erased. If a single erased posting is $u:r$ with
+$u\notin q_r$, the erasure is an atomic enlargement
+at $q$: the values can differ only at valuations with
+$v_u=\{r\}$, and the retained projection is its guard.
+
+Now take $M$ to be the greatest enlargement of an
+arbitrary core $C$ at $q$, and let $U$ consist of its
+retained projections. Then the source predicates of
+$M$ are independent of all postings in
+\[
+           F=\{u:r:u\in U,\ u\notin q_r\}.
+\]
+Indeed each such erasure would be an atomic enlargement
+of $M$, so maximality makes it redundant. If the
+principal of $C$ is the entire set of proper colorings
+that agree with $q$ on all their postings in $U$,
+the source predicates of $M$ are consequently
+$\pi_i^C(p\setminus F)$. The erased coloring lies
+in the principal, where $C$ and $M$ agree on their
+source probes. Thus the static prime deletion rule
+of \emph{Greatest enlargement directly from acyclic
+primes} holds whenever the principal has this form,
+including cyclic source graphs.
+
+\paragraph{Detecting when projection erasure is sufficient.}
+At a fixed target $q$, start with the projections already
+retained by $C$. For every retained input erase all its
+postings that disagree with $q$, and repeat whenever
+another projection becomes retained. The retained heads
+are exactly those with the empty prime on every facet.
+Each round uses just literal deletion and subsumption in
+the prime lists. Its atomic enlargements preserve the
+principal at $q$. There are at most
+as many changing retained sets as inputs.
+
+At stabilization let $U$ be the retained set and leave
+its complement unposted at the background $q|_U$.
+If every head outside $U$ loses its mark there, the
+stabilized operation is already the greatest enlargement.
+In fact, treating input union on $U$ as the baseline,
+its conditional coefficient at $q|_U$ is zero exactly
+when all these marks are absent. A nonzero coefficient
+would supply some mark at the empty internal coloring.
+In the zero case the block activation product gives
+ordinary subcoloring on $U$ with no further conditions.
+The preceding static erasure formula then identifies
+the stabilized operation with the greatest one.
+
+Conversely, a nonzero conditional coefficient has a
+nonconstant principal. Choose an owner at which its
+profile is negative at the target; its reader is positive
+there and excludes the corresponding full monochromatic
+coloring. Extend this excluded coloring by leaving $U$
+unposted. It shows that the principal cannot be described
+by subcoloring on the stabilized set alone. This test
+uses the original primes for the probes at $q|_U$, since
+no posting of that coloring was erased.
+
+For example take distinct retained inputs $x,y$ and a
+disjoint core block $D$, and form
+$x+y+((D\star_r x)\star_s y)$ for distinct $r,s$.
+At a target posting $x:r$ and leaving $y$ unposted,
+erasure drops the blocking posting $y:s$. The private
+sources still all lose at the prefix $x:r$, so this
+is an exact greatest enlargement, including when $D$
+has a cyclic graph.
+
+\paragraph{Lifting enlargements from the unretained block.}
+Let $U$ be any set of projections retained by $C$.
+Erase their incompatible postings at $q$ and call the
+result $C^*$. On the complement let $D$ be the greatest
+conditional coefficient at $q|_U$, and let $N$ be its
+greatest enlargement at the remaining target.
+Then $C^*+N$ is reachable by atomic enlargements of $C$.
+It retains exactly the projections of the full greatest
+enlargement, even if further changes to other source
+bits are possible.
+
+Indeed, the coefficients of $C^*$ are the old coefficients
+at erased backgrounds, each a subcoloring of $q|_U$.
+By the block order they all contain $D$, so $C^*$
+contains $D$ as an operation on the complement.
+Lift a local enlargement chain from $D$ to $N$ by
+taking union with $C^*$ at every step. Each guard is
+still bounded and the two unions agree wherever the
+local step agrees, so the lift is atomic. For zero
+coefficient there are no local steps.
+
+Conversely, if the full greatest enlargement retains a
+private projection, its conditional coefficient at
+$q|_U$ retains it too: there are no loss rows at that
+head, so the projection alone is a local bounded
+witness. By \emph{Enlarging a conditional coefficient at
+its query}, that coefficient is $N$. The lifted union
+therefore retains every projection of the full
+enlargement. This computes the exact set of ordinary
+subcoloring coordinates from the smaller conditional
+problem when $U$ is nonempty.
+
+\paragraph{The enlarged coefficients at all retained backgrounds.}
+In the retained-prefix situation, write $L$ for the full
+principal box of $D$ at the private target, including
+valuations using all owners. For any prefix coloring $e$,
+let $b$ keep just its postings that agree with $q|_U$ and
+let $A=D_b$ be the old coefficient there. The enlarged
+coefficient at $e$ is the greatest core operation on
+the private inputs bounded by $A$ throughout $L$.
+If $D=0$, use the full box and this coefficient is $A$.
+
+Indeed, the protected-row formula retains just the old
+internal budget at $b$ filtered by $L$. To justify the
+pointwise description, take a principal spine $S$
+over $D$. Since $D\subseteq A$, for any core operation $H$
+omitting the filtered budget, $S(A+H)$ still omits the
+entire budget at $b$. On a retained row it gives $A+H$,
+and off the box it gives $D$, which is bounded by $A$.
+Here a proper row can be tested with the full ambiguous
+menu on its head so that the row's coloring is unchanged.
+Greatestness of $A$ then gives $H\subseteq A$ on $L$.
+The converse follows by the same proper loss probes.
+
+In particular, projection erasure alone is exact whenever
+the private principal accepts every proper coloring with
+an unposted input. No private loss row is then filtered
+out. This condition can allow a nonconstant residual
+principal. For example it holds when $D$ is the union
+of distinct-owner full folds on all private inputs
+and the target uses every fold owner. The
+only exclusions of that principal require a full
+monochromatic block, which cannot occur on a
+sole-source loss row.
+
+\paragraph{Prime guards for the protected upper bound.}
+Let $A$ have complete antitone source predicates, and let
+$L$ be an owner box with downward-closed factors. The
+upper bound defined by the losses of $A$ inside $L$
+has a direct prime description. For each owner choose
+a maximal allowed block and let $S$ collect the
+postings in the chosen blocks. The blocks need not be
+disjoint: only their intersections with actual colorings
+are used. On each observer facet and at each head the
+protected upper predicate is
+\[
+                       \bigwedge_S \pi_i^A(p\cap S).
+\]
+Indeed, a loss inside $L$ extends owner by owner to
+such a choice and survives the clipping to its $S$.
+Conversely $p\cap S$ is proper and inside $L$, so
+a zero there is a protected loss below $p$.
+
+For each choice $S$, delete from every original prime
+the exclusions outside $S$. These give the sufficient
+guards of its clipped predicate by the same
+subsumption argument as for static erasure. A guard
+for the displayed conjunction is sufficient exactly
+when it contains one such clipped prime for each
+$S$. Consequently the canonical primes of the
+protected upper bound are the inclusion-minimal
+unions obtained by making those choices. This
+construction uses the factors and the original
+primes directly, without listing minimal loss rows.
+
+Suppose now that $A$ is core, retains the projections
+on a prefix $U$, and every choice $S$ clips only
+postings on $U$. Write $D_e$ for the original greatest
+private coefficient at prefix coloring $e$. The
+greatest core operation under the protected bound
+has coefficient at $e$ equal to the greatest common
+core minorant of the $D_{e\cap S}$, allowing zero.
+
+For a clipped operation its greatest coefficient is
+$D_{e\cap S}$. Indeed, its active loss patterns are
+equivalent to the original ones with background
+contained in $e\cap S$: a clipped loss contains a
+minimal original subloss there, and every original
+row with such a background remains a clipped loss.
+The block source-pattern formula therefore gives
+the same local budget. The coefficientwise common
+minorant rule below proves equality.
+
+This rule gives closed local tests beyond a single
+private source. For additive coefficients, collect
+the singleton colored losses from all the clipped
+coefficients and an empty loss at each head omitted
+by any of them. The disabled vertices and the
+first-color completion of
+\cref{core:thm:conditional-component-capture}
+give the answer. For one-owner traces with the same
+native owner, take the Horn closure of the combined
+native losses, again including those empty losses.
+For a single private source every coefficient is a
+projection or zero, so the local meet is already the
+conjunction and the unions of clipped primes give
+the exact protected family.
+
+\paragraph{Meets of greatest coefficient families.}
+For any common core prefix $B$, the extensions between
+$B$ and $B+U_W$ have coefficientwise greatest common
+minorants. The greatest core operation satisfying the
+conjunction of their source guards still contains $B$,
+which itself satisfies the conjunction. At each
+background its greatest coefficient is bounded by
+the greatest coefficient of each extension, by the
+definition of those coefficients as greatest bounded
+operations. Conversely the local greatest common
+minorants satisfy the antitone block order, so their
+extension is core and lies below every member of the
+family. This proves that it is the greatest common
+minorant. The argument distinguishes conjunction of
+source guards from intersecting the full output
+menus, which can admit a winner supplied by different
+heads in different operations.
+
+Unions may require increasing the pointwise union of
+greatest coefficient families. Fix an owner $r$,
+take a retained prefix with one input for every
+other owner, and let $e$ post each at its assigned
+owner. Split $e$ into two nonempty subcolorings
+$b_1,b_2$. For extension $i$, use the binary $r$-fold
+on two private inputs if the background includes
+$b_i$, and their input union otherwise. These are
+core extensions by the block order. Their stated
+coefficients are greatest, since the singleton
+losses of the $r$-fold are forced by original proper
+rows with background $b_i$. At $e$ the pointwise
+union of their coefficients is still the $r$-fold.
+But a loss of their actual union on a proper source
+probe would require the whole background $e$ and
+a private $r$-posting, using every owner. Hence
+the union operation is input union, whose greatest
+coefficient at $e$ is strictly larger.
+
+\paragraph{Joining coefficients one observer at a time.}
+For extensions over a retained prefix, the correction
+for a union needs only one background per observer.
+At prefix coloring $e$, for each $k$ erase the
+$k$-block to obtain $e^{\widehat k}$. Take the union
+of the individual coefficients at $e^{\widehat k}$,
+and keep its losses on the private facet omitting $k$.
+The greatest coefficient of the full union at $e$
+is the greatest core operation omitting all these
+facet budgets.
+
+In fact, an active full loss with internal pattern $t$
+has background $b\subseteq e$. Pick an observer $k$
+omitted by $(b,t)$. Then $b\subseteq e^{\widehat k}$
+and $(e^{\widehat k},t)$ still omits $k$.
+Antitonicity gives a loss at the latter coloring.
+Its bit is read from the union of the individual
+coefficients there. Conversely any loss read at that
+background is a proper full loss with background
+contained in $e$, and so activates its internal
+constraint. It suffices to use minimal losses on
+each facet, by antitonicity.
+
+In particular, suppose all coefficients are
+one-owner traces at the same native owner $r$ on
+the same live support. For $k\ne r$ their local union
+is again a one-owner trace, and its whole native loss
+budget is visible on facet $k$. Facet $r$ has no
+losses. Thus the corrected coefficient is the greatest
+common core minorant of the local unions at
+$e^{\widehat k}$ for $k\ne r$, computed by the
+combined Horn closure. If $e$ omits a color other
+than $r$, one of these backgrounds is $e$ itself
+and its coefficient is below all the others. In
+that case the pointwise join needs no correction.
+
+\paragraph{Observer visibility in an activation class.}
+For an arbitrary core prefix $B$, suppose the activation
+class of a background $e$ contains, for each observer
+$k$, a representative $b_k$ omitting $k$. Then every
+representing coefficient family of a core extension
+has the same coefficient at $e$. Its private facet
+$k$ is read by specializing the original guards at
+$b_k$: the joint probe with any private coloring on
+that facet stays proper. Thus, given the representatives,
+the complete coefficient primes are the minimal
+specialized guards, without a greatest-minorant step.
+In particular unions take the pointwise union of
+coefficients at such a class.
+
+More precisely, let $R$ be the set of owners omitted
+by at least one representative of the class. Uniqueness
+across all extensions holds exactly when $R=I$ or
+$|W|\le |R|$. In the latter case every private source
+probe leaves a head unposted, so it uses fewer than
+$|R|$ owners and some observer in $R$ is available.
+
+If $R\ne I$ and $|W|>|R|$, take a private operation
+$D$ retaining all but one projection and with one loss
+at that head, posting all owners in $R$ on distinct
+private inputs. The pattern is proper and the operation
+is core by the one-source interval. Use $D$ on the strict upper set of the
+class of $e$ in the prefix activation quotient, and
+input union elsewhere. A second representing family
+uses $D$ also on the class of $e$. Both are antitone
+and hence represent core extensions. They give the
+same full operation: any probe seeing their difference
+would use all owners outside $R$ in the prefix and
+all owners in $R$ in the private block, so would
+not be proper.
+At $e$ the families differ. Thus an unavoidable owner
+permits invisible coefficient data, even for a
+single private head other than retained projections.
+
+\paragraph{Reading the unavoidable palette directly from guards.}
+For every core $C$ and proper coloring $q$, an owner
+$r$ is avoidable in the activation class of $q$ exactly
+when the coloring $q^{\widehat r}$ obtained by erasing
+its whole block is equivalent to $q$. The exact test
+is whether every head $j\in q_r$ loses on the proper
+source probe at $q^{\widehat r}$.
+
+Indeed, if an equivalent representative omits $r$,
+\cref{core:prop:activation-cofactor-invariance} gives
+equality of its full cofactor with that at $q$.
+Evaluate both on the common ambiguous menu
+$I\setminus\{r\}$ on all free inputs. The former
+cannot supply $r$, by provenance. In the latter
+the only possible $r$-sources are the posted heads
+$j\in q_r$, and their source bits are exactly those
+at $q^{\widehat r}$. They must all be zero.
+Conversely, starting at $q^{\widehat r}$, add the
+$r$-postings one at a time. Each restricted source
+bit stays zero by antitonicity, so each step is a
+capture equivalence by
+\cref{core:thm:activation-faithfulness}. This gives
+the claimed representative.
+
+The available observer set $R$ is therefore computable
+directly from canonical primes, with no activation
+comparisons or conditional coefficient computation.
+The test stays valid throughout the class, so deleting
+the blocks of all owners in $R$ successively produces
+one representative omitting all of them simultaneously.
+In particular an activation class has a unique minimum
+palette $I\setminus R$. The representative supported on
+that palette can be obtained by erasure from any member
+of the class. For an extension, all available private
+facets can now be specialized at this single background.
+
+\paragraph{Activation classes factor over source components.}
+Fix a proper target $e$ of a core prefix and use its
+source components in topological order. At component
+$C$ let $D_C$ be the conditional coefficient at the
+earlier restriction of $e$. A proper coloring $b$ is
+activation-equivalent to $e$ exactly when every
+$b|_C$ is equivalent to $e|_C$ above $D_C$.
+The forward implication applies the block product in
+both directions. In the reverse comparison the local
+coefficient is the same, since equivalent backgrounds
+have equal coefficients by the antitone block order.
+Conversely the local equivalences give equivalence
+of the prefixes successively and hence of the whole
+colorings. A zero coefficient contributes no test.
+
+In particular its minimum palette is the union of
+the minimum palettes of these local classes. This
+gives the same palette from local coefficients when
+they are already available.
+
+\paragraph{Capture paths for one-owner conditional components.}
+Suppose the coefficients along a target's source
+components are one-owner traces or zero. Its activation
+class is connected by single-input capture steps.
+Moreover, when both endpoints omit an observer, the
+path can be kept on that observer's facet.
+
+Locally, for a native owner $r$ and closure $c$, the
+class fixes $H=c(e_r)$ and the foreign blocks outside
+$H$. Erase the foreign postings inside $H$: each head
+is captured there by its native seed, which spans $H$.
+Erase postings on ignored inputs as well. Now post
+every input of $H$ at $r$. These additions are capture
+steps because the existing seed already spans $H$.
+This common coloring connects all representatives.
+The native owner is introduced only if $H$ is nonempty,
+in which case it already occurs in both endpoints.
+For a zero coefficient one may use the empty coloring
+as the common point.
+
+For the full path, first erase avoidable owner blocks
+at the two endpoints. Each erasure can be performed by
+single capture steps, and the resulting colorings share
+their minimum palette. Change their components in
+topological order using the local paths. The earlier
+background remains equivalent to the target prefix,
+so the local coefficient remains the same. Every
+local capture step is a full one, by source locality
+and the conditional coefficient formula on proper
+probes. The local moves use only colors of the shared
+proper palette. Restoring the erased endpoint postings
+completes the path. The argument also preserves any
+common omitted observer throughout.
+
+In particular, for a guarded extension with this
+prefix, colored-cofactor independence already forces
+agreement of its private source bits at equivalent
+backgrounds on a common observer facet. Hold the
+private pattern fixed on the capture path. Each old
+input changed by a step is captured by the prefix
+and therefore also by the extension, whose prefix
+source bits agree. Independence preserves the private
+bit at every step. This gives activation-class
+coherence directly from the source cofactor law.
+
+\paragraph{Activation classes of normalized graph sums.}
+For a graph sum, first take its normalized graph at the
+target $e$ as in \cref{core:thm:graph-activation-order}.
+This is its greatest enlargement. The class at $e$
+is unchanged: equivalent targets have the same
+principal and hence the same greatest enlargement,
+which preserves the principal at both targets.
+Conversely enlargement can only shrink the preorder.
+Write $U$ for its retained region. Its activation
+class consists exactly of colorings agreeing with $e$
+on $U$ and owning every remaining edge. Necessity follows
+from the projection readers on $U$ and the edge-fold
+minorants: equivalent colorings agree on each minorant's
+singleton-profile tests. For sufficiency, the normalized
+graph has no unowned edge at either coloring. The same
+triangle centers are seeds, and no propagation leaves
+$U$, since the retained endpoint of a boundary edge
+has the same status as at $e$. Thus both principal
+formulas use $U$ and their edge tests pass in both
+directions.
+
+\paragraph{Canonical guards for a conditional budget.}
+The same facet rule applies to any candidate above a
+retained prefix, before testing whether it is core.
+At each observer $k$, fix the background to
+$e^{\widehat k}$. Keep the original primes on that facet
+that avoid this background and erase their prefix
+exclusions. The inclusion-minimal surviving guards are
+exactly the private primes on that slice. Indeed a
+sufficient private guard lifts to a sufficient full
+guard by forbidding all prefix postings outside
+$e^{\widehat k}$: smaller backgrounds can only help.
+It therefore contains the private part of a surviving
+original prime. The reverse direction follows by
+specialization.
+
+Write $P_i^{(k)}$ for the slice predicate so obtained.
+The complete observer-agreeing upper bound for the
+conditional coefficient has source predicate
+\[
+                   t\longmapsto
+                   \bigwedge_{k\in I}P_i^{(k)}(t^{\widehat k}).
+\]
+In fact there is a loss on facet $k$ contained in
+$t$ exactly when its largest subcoloring on that
+facet, $t^{\widehat k}$, loses on the slice.
+Thus this conjunction has precisely the losses forced
+by the slice budgets, including their upward
+consequences across observers. On a destination
+facet $\ell$, delete the $\ell$-exclusions from each
+slice list, then take inclusion-minimal unions
+choosing one prime per list. The resulting canonical
+lists directly present the complete private upper
+bound. The greatest private coefficient is its
+greatest core minorant. For fixed $K$ the conversion
+is polynomial in the original prime-list length, and
+does not generate the minimal losses.
+
+\paragraph{Recovering budgets from visible facets.}
+For a realized extension over any core prefix, reduce
+the target background to its minimum palette and let
+$R$ be the available observers. The visible slices
+there give the full conditional upper bound exactly
+when each inclusion-minimal private pattern among
+the activated losses omits some owner in $R$.
+Each such private loss is a loss of the
+greatest coefficient. A missing available observer
+makes its joint probe with the reduced background
+proper, so it is recorded by a visible slice there.
+Conversely visible losses are themselves original
+losses at an equivalent, hence active, background.
+Conversely, a hidden minimal private pattern cannot
+contain a smaller visible loss, by minimality, so it
+cannot be generated by the slices. The canonical conversion above is polynomial
+for fixed $K$, even with a nonretained prefix.
+
+In particular this applies if each activated
+minimal loss uses fewer than $|R|$ private posting
+colors. For a union of extensions, an analogous
+criterion is sufficient for the pointwise join
+of the coefficients to be greatest: every minimal
+loss of that local join must omit an available
+owner. Such a loss is then visible at the reduced
+background in the full union and forces the same
+local omission. Hence all losses of the pointwise
+join are enforced. This explains why a hidden
+correction can require many posting colors even
+when the original primes are short.
+
+\paragraph{Hypergraph transversals as conditional primes.}
+The polynomial conversion for a retained prefix does
+not extend even to realized operations above a single
+fold. Take any hypergraph of nonempty edges
+$E_1,\ldots,E_n$ on private flag inputs, with $n\ge2$.
+Fix distinct owners $r,s$ and let the prefix $B$ be the
+full $r$-fold on $j_1,\ldots,j_n$. Use one private
+padding input for each owner in $I\setminus\{r,s\}$
+and one further head $x$. The pattern $T$ posts each
+padding input at its designated owner. All private
+inputs except $x$ are retained. Put
+\[
+ z_i=[j_i\notin b_s],\qquad
+ Q_i(t)=\bigvee_{u\in E_i}[u\notin t_s],\qquad
+ G(b,t)=\bigvee_i\bigl(z_i\wedge Q_i(t)\bigr).
+\]
+The complete guarded family has at $x$ the predicate
+$[T\nsubseteq t]\lor G(b,t)$.
+On the observer facet omitting $r$, its canonical primes
+are the pairs $\{j_i:s,u:s\}$ for $u\in E_i$ and the
+singleton exclusions of the padding postings. Each
+input is tested at only one owner, so the listed
+inclusion-minimal terms are prime. On all other facets
+the predicate is true: either a padding color is
+missing or $s$ is missing. Including the prefix and
+retained projections, the full lists have polynomial
+size in the hypergraph description.
+
+To realize the family, at backgrounds omitting $r$
+use the specified predicate at $x$. At every background
+using $r$, use the same private operation $D$, whose
+predicate at $x$ is
+\[
+                   [T\nsubseteq t]\ \lor\ \bigwedge_i Q_i(t).
+\]
+These coefficients are core by the one-source interval
+above the retained private projections. They satisfy the
+block order: a prefix target omitting $r$ compares by
+subcoloring, while a target using $r$ admits no full
+foreign block. In particular, a permitted background
+omitting $r$ has some $z_i=1$, and its coefficient
+contains $D$. All backgrounds using $r$ have the same
+coefficient $D$.
+
+This extension realizes the claimed full family.
+At a proper probe using $r$ in the prefix, a loss
+of $D$ would require the padding and a full edge posted
+at $s$, using every owner. The specified predicate
+cannot lose either: there is some $z_i=1$, and falsity
+of its $Q_i$ already supplies $s$ in addition to the
+padding and the prefix's $r$.
+
+At any target using $r$, $D$ is the greatest coefficient.
+The prefix background posting all inputs except $j_i$
+at $s$ and leaving $j_i$ unposted belongs to the owning
+principal and makes $G$ exactly $Q_i$. The pattern
+$T\cup(E_i:s)$ combines with it on the facet omitting
+$r$, forcing the corresponding private loss. These
+rows suffice to force all losses of $D$.
+
+The canonical primes at $x$ on that facet are the
+singleton padding exclusions and the minimal
+transversals of the hypergraph, posted at $s$.
+Thus enumerating conditional primes from the original
+lists includes arbitrary minimal transversal
+enumeration. Disjoint two-element edges give $2^n$
+primes, whereas the input lists then have size
+$O_K(n^2)$. The private coefficient still has a
+short word with named union. Start at $x$ and attach,
+at owner $s$, the input union over each edge $E_i$.
+That helper absorbs exactly when every input of
+$E_i$ is at $s$. Adjoin a separate spine for each
+singleton padding exclusion and retain the flag
+projections. The resulting word has size linear
+in the hypergraph description for fixed $K$.
+
+\paragraph{Encoding a whole private loss budget.}
+The same construction can hide an arbitrary listed
+budget on one observer facet of a realized coefficient.
+Let the rows be $(h_l,t_l)$ on inputs $W$, all omitting
+one owner $r$. Take one prefix input $j_l$ per row,
+duplicating a row if necessary to have at least two,
+and use the full $r$-fold as prefix. Choose $s\ne r$,
+and now let the padding $T$ post a fresh input at
+each owner other than $r$. All padding projections
+are retained. For each row let $H_l$ be the private
+operation whose sole minimal loss is $T\cup t_l$
+at head $h_l$, with all other projections retained.
+Such an operation is core by the one-source interval
+above its retained inputs.
+
+At a prefix background omitting $r$, take the union
+of the $H_l$ for which $j_l$ is not posted at $s$.
+For an empty selection take just the padding union.
+At every background using $r$, take the same private
+operation $D$, the greatest common core minorant
+of all $H_l$. The family obeys the block order.
+At a target omitting $r$, subcoloring can only enlarge
+the selection. At a target using $r$, an allowed
+background omitting $r$ cannot have a full $s$-block,
+so at least one $H_l$ is present and bounds $D$.
+
+The resulting full operation has compact canonical
+lists even without computing $D$. On a proper
+probe using $r$ in the prefix, the full padding is
+impossible. There $D$ supplies every private source:
+the extension over the padding projections that
+uses input union on $W$ until the whole pattern
+$T$ is posted, and zero thereafter, lies below all
+$H_l$. Thus on proper probes one may read the
+private source family by the same selector union
+at every background. At a head in $W$ its guards
+have one selector exclusion $[j_l\notin b_s]$, and
+at most one private exclusion from the padded row
+if it is headed there. Resolve any two competing
+private exclusions by consensus. The resulting
+guards have only selector exclusions, and selector
+exclusions never compete. After facet restriction
+and subsumption this gives canonical lists of
+polynomial size, of width at most two at private
+heads. The prefix lists are those of a single fold.
+
+At an owning target, the background with just $j_l$
+unposted and the other selectors at $s$ activates
+the padded row $(h_l,T\cup t_l)$. It is a proper row
+at observer $r$. These rows force the coefficient
+below every $H_l$, so $D$ is greatest. Finally at
+padding background $T$, the coefficient of $D$
+on $W$ is exactly the greatest core operation
+omitting the original rows, or zero. This follows
+either from the coefficientwise common minorant
+rule or from activating the padded rows over
+the retained padding prefix. Hence arbitrary
+one-facet loss budgets occur at two successive
+conditionally fixed blocks of a realized family
+with compact guard lists.
+
+\paragraph{Compact selector codes for succinct facet bounds.}
+A complete prime budget on a single observer facet $r$
+can be encoded with logarithmically many binary prefix
+folds and no increase in the private prime widths above one.
+Use a separate code for each private head under a bound.
+Each prefix fold at $r$ has a code input and a partner.
+A code assigns its inputs at two distinct foreign owners,
+with all partners unposted. At the prefix target post
+all partners at $r$. Every code passes the principal
+there, since no pair is monochromatic at a foreign owner.
+At a background omitting $r$, the principal is ordinary
+subcoloring, so at most one code passes.
+
+For each head $i$ use a private operation $H_i$ retaining
+all other projections and imposing its original facet
+predicate at $i$ when the padding $T$ is complete.
+Before the padding is complete it also retains $i$.
+This is a one-source interval operation. At any prefix
+background take the greatest common core minorant of
+the $H_i$ whose codes pass, using input union if none
+passes. These coefficients obey the block order and
+retain the padding. They supply every private mark
+whenever $T$ is incomplete: the common extension
+using input union up to the completion of $T$ and
+zero on the old inputs thereafter is bounded by all
+$H_i$.
+
+Thus the full operation is realized and has explicit
+canonical guards. At a proper probe with prefix $r$
+present, the full padding is impossible. At an $r$-free
+prefix, a head can lose only when its own code and
+the full padding are present and its original predicate
+loses. The guards at $i$ on facet $r$ are consequently
+the singleton exclusions of its code and padding
+postings and the original facet primes, with subsumption.
+The new singleton exclusions use separate inputs,
+so no new consensus is needed. On every other facet
+the padding is impossible and the guard is empty.
+The prefix itself has width one and logarithmically
+many binary blocks.
+
+At the owning target, each code activates the whole
+padded budget at its head. The greatest coefficient is
+the common minorant of the $H_i$. At padding background
+$T$ this gives exactly the greatest bounded operation
+for the original facet. A single original query omitting
+$r$ can be answered in the first private coefficient
+by adjoining $T$ to the query, which stays proper.
+For a listed budget with one row per head the original
+facet lists have width one, so the entire realized
+encoding has width one as well.
+
+In particular, one-bit conditional queries from the
+compact primes of a realized extension are PSPACE-hard
+for every fixed $K\ge3$, by the listed two-owner
+budgets of \cref{core:thm:two-color-pspace} and the
+listed-budget encoding above. For $K\ge4$ they are
+EXPTIME-hard with bounded prime width and a prefix of
+logarithmically many binary folds. Use the three-owner
+bounds of \cref{core:thm:three-owner-alternating-bounds}
+and choose $r$ outside their three posting colors.
+Their facet at $r$ contains every minimal loss.
+
+\paragraph{Packing all observer budgets into one realized family.}
+An arbitrary compact loss budget can be split into its
+$K$ observer facets, without adding an owner. Apply
+the preceding construction to each facet $r$, keeping
+the common private inputs $W$ and using separate
+selector and padding inputs. Call the resulting
+operations $F_r$, with unused auxiliary inputs ignored.
+Their further restrictions give the greatest
+operations for the respective facets. The greatest
+common core minorant of those operations is exactly
+the answer to the original joint budget.
+
+All the $F_r$ can themselves be recovered as
+coefficients of one realized operation with compact
+primes. Add one retained input $m$. Choose distinct
+owners $u_r$ with $u_r\ne r$ for each $r$, using a
+cyclic permutation of the palette. At background
+$m:u_r$ use $F_r$ and at the empty background use
+input union. The block order gives a core extension.
+Its greatest coefficient at $m:u_r$ really is $F_r$:
+every minimal loss of $F_r$ is still proper when
+combined with this mode posting. A prefix loss is
+a singleton at $r$. A loss at an original private
+head contains the padding omitting $r$, and all
+its postings omit $r$. Unused heads have empty
+losses. All these constraints activate at the
+chosen mode.
+
+On an observer facet the full source predicate at
+each nonmode head is the conjunction over $r$ of
+the original predicate of $F_r$ disjoined with the
+exclusion $[m\ne\{u_r\}]$. The canonical list is
+the inclusion-minimal unions of one sufficient
+guard from each disjunction, omitting exclusions
+of the observer's own posting. There are only $K$
+factors, so the lists are polynomial for fixed $K$.
+Their width at original private heads is bounded
+when the input facet widths are bounded. This packs
+the full synthesis problem into the common minorant
+of $K$ extracted coefficients of a realized family,
+even at three owners.
+
+\paragraph{Hard conditional bits with binary prefix blocks.}
+A single conditional bit is coNP-complete for every fixed
+$K\ge3$ even when the prefix is a disjoint sum of
+binary folds and there is only one private head other
+than retained projections. All prime widths can be at
+most three.
+
+For membership, the activated private upper bound keeps
+all private projections except possibly the one at $x$.
+Its antitone predicate at $x$ is realizable in the interval
+over those projections, so the upper bound is the
+coefficient itself. A negative certificate gives an active
+proper loss whose internal pattern is contained in the
+queried coloring. The prefix comparison uses the product
+of the binary fold comparisons and the loss is tested
+in the original canonical primes.
+
+Take a 3CNF with one pair of prefix inputs per Boolean
+variable, one for each literal. Let $B$ be the disjoint
+sum of the $r$-folds on these pairs, and take a target
+$e$ owning every pair at $r$. Fix $s\ne r$. For each
+clause take the conjunction of the $s$-exclusions of
+its literal inputs, and let $P(b)$ be the disjunction
+of these clause guards at prefix coloring $b$.
+For private inputs use only a head $x$ and retained
+padding, with pattern $T$ posting each owner other
+than $r$ on a separate padding input. At $x$ specify
+the full source predicate $[T\nsubseteq t]\lor P(b)$.
+Its primes are obtained by subsumption from the
+displayed guards, because each input is tested at
+only one owner. The other heads have the guards of
+the prefix folds and padding projections.
+
+This family is realized independently of the truth of
+the formula. At a background $b$ take the private
+one-source coefficient with predicate
+\[
+ [T\nsubseteq t]\ \lor\!
+ \bigwedge_{\substack{a\preceq_B b\ a_r=\varnothing}} P(a).
+\]
+These coefficients satisfy the block order. When $b$
+omits $r$, every local fold has an ordinary subcoloring
+principal, so the conjunction is just $P(b)$.
+When $b$ uses $r$, the full padding cannot occur in
+a proper probe. Thus the representation agrees with
+the specified guards on every proper probe.
+
+At the owning target, a prefix coloring omitting $r$
+passes precisely when no pair is monochromatic at
+a foreign owner. In particular at most one literal
+input per variable can be posted at $s$. Such a
+coloring has $P(a)=0$ exactly when its selected
+literals hit all clauses. It then extends to a
+satisfying Boolean assignment. Conversely a satisfying
+assignment gives a passing coloring by posting one
+literal per variable at $s$. This background and $T$
+combine properly at observer $r$. Thus a satisfying
+assignment forces a loss at the padded private probe
+in the greatest coefficient. For an unsatisfiable
+formula the represented coefficient already supplies
+that probe. The bit at $x$ therefore decides
+unsatisfiability.
+
+\paragraph{Width two with a graph-sum prefix.}
+For primes of width at most two the conditional-bit
+problem is polynomial under a more general promise:
+the prefix is a graph sum, with retained projections
+allowed, and the internal private posting graph is
+acyclic. The graph-sum presentation and private source
+order may be supplied. Thus the width-three hardness
+with binary prefix blocks is sharp.
+
+Use the acyclic marked pass on the activated internal
+budget at prefix target $e$. To check whether a head
+has a blocking active loss, scan each observer facet.
+Use a Boolean variable for each possible posting on
+the prefix or an earlier private input. Impose at most
+one color per input by binary clauses and forbid the
+observer's color. The graph formula in
+\cref{core:thm:graph-activation-order} for the prefix
+comparison contributes unit exclusions on its retained
+region, and binary exclusions of foreign monochromatic
+edges outside that region. On earlier private inputs
+already active in the pass, forbid postings incompatible
+with the requested coloring. Leave later inputs and
+the head unposted. Finally require the row to hit
+each original prime at that head on the chosen facet.
+These are positive clauses of size at most two.
+
+The resulting 2CNF is satisfiable exactly when a
+blocking active row exists on the facet. Any such
+row contains a minimal loss, whose prefix still
+passes by antitonicity of the principal and whose
+private postings still obey the active restrictions.
+Conversely a blocking minimal loss supplies a
+satisfying assignment. The acyclic pass therefore
+computes each bit without listing the activated
+losses or their canonical primes.
+
+\paragraph{Ternary prefix folds at width two.}
+At width two, conditional-bit queries are coNP-complete
+if the prefix can also contain ternary folds. This holds
+for a disjoint sum of binary and ternary folds at one
+owner, with only one private head besides retained
+padding. Membership is the same active-loss certificate
+as for binary folds, using the one-owner comparison on
+each prefix block.
+
+For hardness, give each variable of a 3CNF a binary
+prefix block containing its two truth-value inputs.
+Give each clause a ternary block of fresh inputs, one
+for each literal occurrence. Use owner $r$ throughout
+and take a target owning every block. Fix $s\ne r$.
+Write $a_v$ for the Boolean test that a prefix input
+$v$ is posted at $s$. Define a positive 2CNF in these
+tests. At each variable require the disjunction of
+its two truth-value inputs. At each occurrence require
+the disjunction of its own input and the truth-value
+input that makes its literal true.
+
+Use the disjunction of the guards excluding both
+postings in each of these positive clauses as $P(b)$
+in the padded construction above. Its failure means
+the 2CNF is satisfied. That construction still gives
+a realized operation: at a background omitting $r$,
+each fold's principal is ordinary subcoloring, and at
+a background using $r$ the full padding is invisible
+on proper probes. All private primes have width at
+most two, and the prefix folds also have width at
+most two.
+
+An active background omitting $r$ can post at most
+one truth-value input per variable at $s$, and cannot
+post all three inputs of a clause block at $s$. The
+positive clauses force exactly one truth value per
+variable. Any false literal forces its occurrence
+input to be posted. Thus no clause can have all its
+literals false. Conversely, from a satisfying
+assignment post its chosen truth values and just the
+false-literal occurrences at $s$. This passes the
+prefix principal and satisfies the positive 2CNF.
+It follows that the padded private bit supplies its
+mark exactly when the 3CNF is unsatisfiable.
+
+The variable blocks can also be ternary: add a dummy
+input to each and require its $s$-posting by a unit
+clause in the positive 2CNF. A monochromatic ternary
+block then excludes selecting both truth values as
+before. Width one is polynomial for disjoint folds
+of any size with acyclic private dependencies.
+On each facet the singleton guards force a unique
+candidate minimal loss, if their required postings
+are consistent and no empty guard makes the facet
+positive. Testing that loss's prefix comparison and
+its private compatibility is enough for the acyclic
+pass. The width-two threshold is therefore sharp
+for ternary folds.
+
+\paragraph{The exact width bound for compiling singleton primes.}
+For width-one input lists, the complete private upper
+bound can be compiled even when the private graph has
+cycles. There is at most one minimal full loss at each
+head on each observer facet. Activate these rows using
+the prefix comparison, and retain their private
+projections. There are at most $K$ rows per head.
+On a destination facet, discard projections using
+its omitted owner and take minimal hitting sets of
+the others. These are the canonical primes of the
+private upper bound, of width at most $K$. For fixed
+$K$, this conversion is polynomial given a polynomial
+prefix comparison, since each prime can be found by
+choosing one posting from each of at most $K$ rows.
+
+The width bound is sharp even over a retained prefix
+in a realized family. Choose distinct owners $s,t$,
+retain a prefix input at each owner other than $s$,
+and take the target posting all those inputs at their
+designated owners. Use disjoint private flag sets
+$W_k$ of size $m\ge1$ for $k\in I$ and one head $x$,
+retaining every input except $x$. For each $k\ne s$,
+give $x$ a loss posting $W_k$ at $s$ and all the
+prefix postings except the one at $k$. For $k=s$,
+give it a loss posting $W_s$ at $t$ and all the
+prefix postings. Each row omits
+exactly its designated observer, so the full
+canonical lists have width one. The family is
+realized by the one-source interval over the
+retained inputs, since its predicate is antitone.
+
+All the rows activate at the prefix target.
+Their private projections are the $K$ disjoint
+losses on the flag sets, and the private
+upper bound is itself core by the same one-source
+interval. On any facet omitting neither $s$ nor
+$t$, a prime at $x$ chooses one exclusion from
+each flag set. Thus the compiled list has width
+$K$ and contains $m^K$ primes, from input lists
+of size $O_K(m)$, even with a single nonretained
+private source.
+
+\paragraph{Which loss lists can come from singleton primes.}
+An antichain of proper private losses at each head
+can be the conditional upper bound of a width-one
+guarded candidate exactly when its rows at each head
+can be assigned distinct observers that they omit.
+Necessity follows by choosing an original activated
+representative of each minimal private row. Distinct
+projections need distinct original rows, which cannot
+share an omitted observer at width one. Any observer
+missing from a representative is still missing from
+its projection.
+
+For sufficiency, take a prefix consisting of disjoint
+binary folds at one owner, with enough inputs to
+designate a separate prefix input for every owner.
+Choose a target owning every fold. Pad each assigned
+private row with the designated prefix posting for
+every owner absent from that row other than its
+assigned observer. The full row now omits exactly
+that observer. The padded prefix uses each owner at
+most once, so passes the binary-fold principal.
+The full lists have width one, and activating at the
+chosen target projects precisely the given budget.
+
+With a retained prefix there is one additional
+condition. There must be a common owner $r$ such that
+every private row omitting $r$ is assigned to $r$.
+Indeed choose $r$ missing from the proper prefix
+target. Every active prefix row is a subcoloring of
+it, so any private row omitting $r$ has a representative
+on facet $r$. For the converse, designate retained
+prefix inputs for all owners except $r$ and post them
+at the target. The same padding now requires no
+posting at $r$, because a row assigned another
+observer already uses $r$. This proves the retained
+version. If only one private head has losses, this
+retained-prefix construction is realized by the
+one-source interval above all the other projections.
+
 \begin{proposition}[Minorant envelopes see more than singleton profiles]
 \label{core:prop:minorant-profile-data}
 For every $K\geq3$ there are three-input core operations $T,D$ with

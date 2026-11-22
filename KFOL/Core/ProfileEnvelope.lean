@@ -42,6 +42,110 @@ private theorem unionInputs_mem (three : Fin 3 ↪ Role) (xs : List Var) (base :
       List.mem_cons, exists_eq_or_imp]
     tauto
 
+private theorem eval_suppress_of_no_trigger (roles : List Role)
+    (bound t : Term Role Var) (v : Var → WinnerSet Role)
+    (hle : (t.eval v).val ⊆ (bound.eval v).val)
+    (h : ∀ r ∈ roles, t.eval v ≠ WinnerSet.singleton r) :
+    (Term.suppress roles bound t).eval v = bound.eval v := by
+  classical
+  induction roles with
+  | nil => rfl
+  | cons r rest ih =>
+    have ht := h r (List.mem_cons_self ..)
+    have hb : bound.eval v ≠ WinnerSet.singleton r := by
+      intro he
+      exact ht (WinnerSet.eq_singleton_of_subset _ r (by simpa [he] using hle))
+    simp only [Term.suppress, Term.eval, ih (fun s hs => h s (List.mem_cons_of_mem _ hs)),
+      WinnerSet.choice, ht, hb, or_self, ite_false]
+    exact Subtype.ext (Set.union_eq_left.mpr hle)
+
+/-- Partial singleton profiles mask a core upper envelope only at the listed
+owners. Any bounded operation that respects their winning tests is below the
+mask, and the mask has exactly the witness's singleton tests at those owners. -/
+theorem relative_partial_profile_maximum (roles : List Role)
+    (bound t : Term Role Var) (hb : bound.IsCore) (ht : t.IsCore)
+    (hle : ∀ v, (t.eval v).val ⊆ (bound.eval v).val) :
+    ∃ e : Term Role Var, e.IsCore ∧
+      (∀ v r, r ∈ roles → (e.eval v = WinnerSet.singleton r ↔
+                            t.eval v = WinnerSet.singleton r)) ∧
+      (∀ v, (∀ r ∈ roles, t.eval v ≠ WinnerSet.singleton r) → e.eval v = bound.eval v) ∧
+      ∀ f : (Var → WinnerSet Role) → WinnerSet Role,
+        (∀ v, (f v).val ⊆ (bound.eval v).val) →
+        ((∀ v, (f v).val ⊆ (e.eval v).val) ↔
+          ∀ v r, r ∈ roles → t.eval v = WinnerSet.singleton r → f v = WinnerSet.singleton r) := by
+  classical
+  let e := Term.suppress roles bound t
+  have heCore : e.IsCore := by
+    dsimp [e]
+    induction roles with
+    | nil => exact hb
+    | cons r rest ih => exact ⟨ih, ht⟩
+  have heAtom (v) (r) (hr : r ∈ roles) (h : t.eval v = WinnerSet.singleton r) :
+      e.eval v = WinnerSet.singleton r :=
+    Term.eval_suppress_atom roles bound t v r hr h
+  have heOther (v) (h : ∀ r ∈ roles, t.eval v ≠ WinnerSet.singleton r) :
+      e.eval v = bound.eval v :=
+    eval_suppress_of_no_trigger roles bound t v (hle v) h
+  refine ⟨e, heCore, ?_, heOther, ?_⟩
+  · intro v r hr
+    refine ⟨?_, heAtom v r hr⟩
+    intro h
+    by_cases hex : ∃ s ∈ roles, t.eval v = WinnerSet.singleton s
+    · obtain ⟨s, hs, hts⟩ := hex
+      exact hts.trans ((heAtom v s hs hts).symm.trans h)
+    · have hv : ∀ s ∈ roles, t.eval v ≠ WinnerSet.singleton s :=
+        fun s hs ht' => hex ⟨s, hs, ht'⟩
+      have hbound : bound.eval v = WinnerSet.singleton r := (heOther v hv).symm.trans h
+      exact WinnerSet.eq_singleton_of_subset _ r (by simpa [hbound] using hle v)
+  · intro f hf
+    constructor
+    · intro h v r hr htr
+      exact WinnerSet.eq_singleton_of_subset _ r (by simpa [heAtom v r hr htr] using h v)
+    · intro h v
+      by_cases hex : ∃ r ∈ roles, t.eval v = WinnerSet.singleton r
+      · obtain ⟨r, hr, htr⟩ := hex
+        rw [heAtom v r hr htr, h v r hr htr]
+      · rw [heOther v (fun r hr htr => hex ⟨r, hr, htr⟩)]
+        exact hf v
+
+/-- A greatest witness for positive singleton demands agrees with the
+unrestricted envelope wherever no listed owner is forced to be a singleton. -/
+theorem positive_profile_envelope (roles : List Role) (bound t : Term Role Var)
+    (demand : (Var → WinnerSet Role) → Role → Prop)
+    (hroles : ∀ v r, demand v r → r ∈ roles)
+    (hb : bound.IsCore) (ht : t.IsCore)
+    (hle : ∀ v, (t.eval v).val ⊆ (bound.eval v).val)
+    (hpass : ∀ v r, demand v r → t.eval v = WinnerSet.singleton r)
+    (hgreatest : ∀ w : Term Role Var, w.IsCore →
+      (∀ v, (w.eval v).val ⊆ (bound.eval v).val) →
+      (∀ v r, demand v r → w.eval v = WinnerSet.singleton r) →
+      ∀ v, (w.eval v).val ⊆ (t.eval v).val) :
+    (∀ v r, t.eval v = WinnerSet.singleton r ↔
+      ∀ w : Term Role Var, w.IsCore →
+        (∀ u, (w.eval u).val ⊆ (bound.eval u).val) →
+        (∀ u s, demand u s → w.eval u = WinnerSet.singleton s) →
+        w.eval v = WinnerSet.singleton r) ∧
+    ∀ v, (∀ r ∈ roles, t.eval v ≠ WinnerSet.singleton r) → t.eval v = bound.eval v := by
+  obtain ⟨e, he, hprofiles, hother, hmaximum⟩ :=
+    relative_partial_profile_maximum roles bound t hb ht hle
+  have hmask_le (v) : (e.eval v).val ⊆ (bound.eval v).val := by
+    by_cases hex : ∃ r ∈ roles, t.eval v = WinnerSet.singleton r
+    · obtain ⟨r, hr, htr⟩ := hex
+      rw [(hprofiles v r hr).mpr htr, ← htr]
+      exact hle v
+    · rw [hother v (fun r hr htr => hex ⟨r, hr, htr⟩)]
+  have hmask_pass (v) (r) (hd : demand v r) : e.eval v = WinnerSet.singleton r :=
+    (hprofiles v r (hroles v r hd)).mpr (hpass v r hd)
+  have hmask_eq (v) : e.eval v = t.eval v :=
+    Subtype.ext (Set.Subset.antisymm (hgreatest e he hmask_le hmask_pass v)
+      (((hmaximum t.eval hle).mpr (fun _ _ _ h => h)) v))
+  refine ⟨?_, fun v h => (hmask_eq v).symm.trans (hother v h)⟩
+  intro v r
+  constructor
+  · intro h w hw hwle hwpass
+    exact WinnerSet.eq_singleton_of_subset _ r (by simpa [h] using hgreatest w hw hwle hwpass v)
+  · exact fun h => h t ht hle hpass
+
 /-- In the principal ideal below a core operation, completion of an attained
 profile is right adjoint to taking singleton outputs, ordered by reverse
 inclusion. The competing bounded operation can be arbitrary. -/

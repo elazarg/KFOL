@@ -227,6 +227,1120 @@ posting exactly when this guard is sufficient, equivalently when it
 contains some listed prime. The test must pass on every facet.
 \end{proof}
 
+The greatest bounded core operation can have all the
+transitive dependencies of the source graph. Fix an
+owner $r$ and at each head give one singleton loss
+$u:r$ for each in-neighbor $u$ in a directed graph.
+Posting an ancestor at $r$ captures all the inputs
+along a path to the head. Indeed once a predecessor
+is captured, temporarily posting it at $r$ forces
+the next loss, and its cofactor independence
+allows that temporary posting to be removed.
+Conversely take the union of the $r$-folds on each
+head and its ancestors. Each such fold supplies its
+head exactly when no other ancestor is posted at
+$r$. Any fold whose support contains a source
+also contains that source's ancestors, so it cannot
+add a forbidden mark there. This realizes precisely
+the transitive closure of the losses, even with
+cycles. On a directed path the input primes have
+width one, while the last head of the minorant has
+a prime excluding $r$ at every earlier input on
+each foreign facet.
+
+The number of canonical primes can also grow
+exponentially, with acyclic dependence, one posting
+owner and input prime width at most two. Take
+retained controls as Boolean signals, where the
+signal is true when the control is not posted
+at $r$. For each signal add a source with the
+single loss posting its retained control at $r$.
+For each conjunction gate of a binary monotone
+circuit give its head a singleton loss at each
+child. For each disjunction gate give its head
+one loss posting both children at $r$. Use distinct
+child inputs after simplifying duplicate operands.
+These are canonical lists of width at most two
+by prime consensus. On an observer facet seeing
+$r$, fix all internal controls neutral. The
+activity pass computes the given Boolean circuit,
+since a conjunction requires both children active
+and a disjunction requires one.
+
+Take a circuit computing the conjunction of
+$m$ disjunctions on disjoint pairs of retained signals.
+Its least sufficient exclusion sets in the
+section choose one signal per disjunction, so
+there are $2^m$ section primes. Fixing the internal
+statuses neutral restricts any complete prime
+list by dropping the corresponding exclusions
+and minimizing. This cannot increase the list
+length. Thus the full greatest minorant already
+has at least $2^m$ primes at its output head,
+although the original lists have polynomial size.
+
+Using the fold characterization below, a one-owner bound
+of prime width $w$ with $d$ conditional inputs has output
+prime width at most $wd$, even with cycles.
+At a positive probe take a bounded owned
+fold supplying the marked head and choose one witnessing
+prime at every conditional head in its support. Start at
+the mark and follow the controls of those selected primes.
+The reachable set is still a safe support, since every
+included conditional head keeps its witness. At most $d$
+heads contribute outgoing controls, with at most $w$ per
+head. The reachable support therefore has at most
+$wd+1$ inputs. Its fold supplies the mark on the guard
+excluding its other support members at the fold owner.
+On a foreign facet all marks depend only on those
+postings, so minimizing these sufficient guards gives
+the canonical list. On the owner facet a used source is
+unconditional. This proves the bound. It is attained:
+use a chain of $d$ conditional heads, the first requiring
+$w$ retained controls and each later one requiring its
+predecessor and $w-1$ fresh retained controls. Put a singleton
+loss for each required control. The last head then needs
+to exclude all $wd$ earlier controls.
+
+The dependence of the output exponent on $d$ is also
+necessary. Use $g$ disjoint groups of $m$ retained inputs.
+Give each group one head whose sole loss posts the whole
+group at $r$. Combine the group heads by a binary tree
+of conjunction heads, each with a singleton loss at
+either child. These are width-two lists with
+$d=2g-1$ conditional inputs. When the conditional
+inputs are unposted, the output head survives exactly
+when each group has an input not posted at $r$.
+Its section therefore has $m^g$ canonical primes,
+one exclusion per group. The input size is linear
+in $gm+g$ at fixed $K$, but for each $g$ the output
+list grows at least as $m^g$. In particular there
+is no bound $f(d)N^{O(1)}$ on the size of the
+explicit canonical output lists, even in this
+acyclic one-owner class.
+
+Despite this prime growth, every acyclic bound with
+losses only at one owner $r$ has a linear-size core
+circuit for its greatest minorant, measured in the
+input and prime-list size. First, in any bounded
+word replace the other owners' gates by union.
+On a loss probe with the head's full menu and only
+$r$-postings, no foreign singleton can occur, so
+this replacement preserves every required loss.
+It can only enlarge the word pointwise. Thus the
+greatest minorant is the union of bounded words
+using only $r$-gates and union. Owned choice at
+$r$ distributes over union, so such a word is a
+union of $r$-folds. Each of these is bounded if
+the word is.
+
+An $r$-fold on support $S$ is bounded exactly
+when at each $i\in S$ some prime at $i$ on a
+foreign facet is contained in the $r$-exclusions
+on $S\setminus\{i\}$. This says that every loss
+at a used head hits its fold at an $r$-posting.
+The $r$-facet has no nontrivial losses at that
+head. Use a source order and build a circuit
+$T_i$ for each head $i$. For each prime $G$ at
+$i$ on a foreign facet, form the $r$-fold of
+$x_i$ and the already built $T_j$ with $(j,r)\in G$.
+Skip the prime if any required $T_j$ is absent.
+Take the union of the resulting terms for $T_i$,
+using absence if no prime remains.
+
+Expanding these expressions by distributivity
+produces only bounded folds. The selected prime
+protects $i$, and the child folds protect every
+other included head because their supports only
+grow. Conversely if a bounded fold on $S$ uses
+$i$, choose a prime at $i$ contained in its
+exclusions. Induction supplies a fold inside
+$T_j$ supported in $S$ for each control of
+that prime. Their combined fold inside $T_i$
+contains $i$ and uses only $S$, so it supplies
+any mark at $i$ supplied by the original fold.
+The union of the $T_i$ therefore gives the
+greatest minorant. Sharing each child circuit
+makes the gate count linear in the listed
+exclusions and primes, despite the possible
+exponential expansion into folds or canonical
+guards.
+
+For cyclic one-owner bounds the same reduction to
+bounded folds holds, and a bounded-width prime
+incidence decomposition still gives compact core
+synthesis. Use one foreign facet, since the lists
+agree on pure $r$-postings. A support is allowed
+exactly when every chosen input has a prime all of
+whose controls are chosen. This is a local incidence
+condition after adding a Boolean choice at each prime
+vertex. A chosen prime must have its head and all
+its controls selected, and every selected head
+must have at least one chosen prime.
+
+On a tree decomposition, record which input and
+prime vertices in the bag are selected, and for
+each selected input whether its witness prime
+has been seen. Check the conditions on processed
+incidences, combining witness flags by disjunction
+at joins. Require a witness before forgetting a
+selected input. This recognizes exactly the
+valid support and prime selections.
+
+In addition to its ordinary feasibility bit,
+let a state carry the union of $r$-folds on
+nonempty selected supports in the processed
+part, and a flag for a possible empty support.
+When an input is forgotten and selected, attach
+its projection at $r$. When two processed
+supports combine at a join, take the $r$-choice
+of their terms. An empty support contributes no
+factor, and an infeasible state contributes no
+alternative. Distributivity over union proves
+that these operations collect exactly the folds
+on combined supports. Alternative states are
+combined by union. Thus each transition needs
+only a constant number of gates with sharing.
+For a decomposition of width $w$ and size $t$,
+this builds a circuit of size $t2^{O(w+1)}$
+for the greatest minorant, or reports that there
+is no nonempty support. It does not enumerate
+the safe folds or the minorant's primes.
+
+At prime width one there is a polynomial core circuit
+for cyclic one-owner bounds without any decomposition.
+Draw an arc $i\to j$ for each singleton prime
+$\{(j,r)\}$ at $i$ on a foreign facet. Heads with an
+empty prime are retained. A nonempty support is safe
+exactly when every vertex in it is either retained
+or has an outgoing arc to another vertex of the
+support. Starting at a used head of any safe support,
+follow such arcs within the support until reaching
+a retained vertex or repeating a vertex. The
+resulting path, with its closing cycle if needed,
+has a safe support contained in the original.
+Thus folds on these path and cycle supports suffice
+to supply every mark of every safe fold.
+
+Compile them by path closure. Store $P_{ij}$ as
+the union of folds on paths from $i$ to $j$, beginning
+with single arcs and the zero-length paths at
+each vertex. In the usual intermediate-vertex
+order, at vertex $k$ add $P_{ik}\star_r P_{kj}$
+to $P_{ij}$ whenever both factors exist.
+Distributivity gives folds on the concatenated
+walks, and the recurrence covers every simple
+path. For each $j$ build the union of folds on
+nonempty closed walks at $j$ by taking a first arc
+and a return path. Take all paths ending at retained
+vertices, and all paths followed by these nonempty
+closed walks. Their supports are safe, since each
+visited vertex has either its next arc or retained
+status. They include the needed subfolds from every
+safe support. With sharing the resulting circuit
+uses $O(n^3)$ gates.
+
+The same circuit calculation handles bounded unions
+of owned folds under arbitrary complete prime bounds.
+For a chosen fold owner $r$, keep only primes whose
+exclusions are all at $r$. Require every selected
+input to have a selected witness prime on each
+observer facet. This is exactly the bound test for
+an $r$-fold, including the empty-prime requirement
+on facet $r$. Record a witness flag per facet
+instead of one per selected input. The state and
+circuit bounds become $t2^{O(K(w+1))}$ for each
+fold owner. Union over the owners gives a core
+circuit for the greatest nonempty union of bounded
+owned folds, without listing their supports.
+
+A supplied feedback vertex set gives another synthesis
+bound for the same fold union. For a fixed fold owner
+$r$, draw the dependencies from heads to the controls
+of its usable primes and let $D$ be a feedback vertex
+set of size $b$. For each $A\subseteq D$ compile the
+folds whose support meets $D$ in exactly $A$.
+Provisionally use the projection at each input in
+$A$, and no term at any other input of $D$.
+Outside $D$ process the acyclic dependencies as
+above. At each head and facet take the union
+over usable primes of the folds of the head and
+all their child terms. Fold the facet results
+together, rejecting that head if a facet has
+no result. Thus every expanded support satisfies
+the constraints at its inputs outside $D$, with
+the inputs in $A$ provisionally excused.
+
+After this pass, build a witness term at each
+$j\in A$ from its usable primes by the same rule,
+reading the already built terms on $V\setminus D$
+and the provisional projections on $D$. If any
+such witness is absent, this choice of $A$ has
+no safe support. Otherwise attach the fold of
+all these witnesses to each preliminary term.
+When $A$ is empty there is no attachment.
+Distributivity now gives only safe supports:
+every selected feedback input has its witnessed
+primes, and adding supports preserves the other
+heads' witnesses.
+
+Conversely, let $S$ be any safe support with
+$S\cap D=A$. Choose its supporting primes at
+each used head. The acyclic pass produces, for
+each head in $S$, a fold supported in $S$ that
+contains it. The witness pass at $A$ can likewise
+choose supports within $S$. Thus the final union
+supplies every mark of the fold on $S$. This
+gives a circuit of size $O(2^bN)$ for one fold
+owner with $N$ the input and prime-list size.
+For a one-owner bound it is a circuit for the
+greatest core minorant itself. The parameter
+allows large cyclic components and wide primes.
+
+The enumeration can be confined to individual strongly connected
+components of the usable-prime graph. For each component $C$ choose a
+feedback vertex set $D_C$ of its internal edges, and process components
+with controls before heads. Keep a term at each head whose expanded
+supports are safe and contain that head, and among which every safe
+support containing that head contains at least one. Within $C$ run the preceding
+construction with $D_C$ in place of $D$, reading the stored terms at
+external controls. For a selected feedback head use its witness as its
+preliminary term. Attach all chosen feedback witnesses to each
+preliminary term, then take the union at each head over the choices
+in this component. The external supports are already safe and cannot
+read back into $C$. For completeness, restrict a safe support to the
+selected feedback vertices in $C$ and choose its supporting primes
+there. Each external control has a stored support inside the given
+support by the component induction. The internal passes therefore
+produce a support inside it at each of its heads in $C$. If $N_C$
+counts the heads and usable-prime entries processed in $C$, sharing
+the external terms gives size $O(\sum_C 2^{|D_C|}N_C)$.
+
+A direct prime test for the marks of this fold union needs no feedback
+sets. At a source-$i$ probe for observer $k$, start with every input
+except those posted at $r$ if $k\ne r$, and with every input if $k=r$.
+Repeatedly delete a head if one of its facets has no usable prime
+whose controls are all still present. Every safe subset of the starting
+set survives every deletion, and the final set is itself safe when
+nonempty. An $r$-fold supplies the probe mark precisely when it
+contains $i$ and avoids the excluded postings. Thus the mark belongs
+to the fold union exactly when $i$ survives. In particular a nonempty
+one-owner bound is core exactly when each of its listed prime guards
+passes this test at the maximal coloring of its facet avoiding the
+guard. That coloring sets every coordinate outside the guard to its
+posted status for pure $r$-exclusions, using the pure $r$-posting
+restriction of the facet. All other colors are immaterial to the test
+and to the bound. On the $r$-facet the test is constant. This checks
+all positive marks by antitonicity, and the fold union is already
+below the bound. With a count of surviving primes at each head and
+facet and a reverse incidence list, each test takes $O(N)$ time.
+
+\paragraph{Substitution of captured postings.}
+There is an equivalent closure test on loss
+colorings with a source order. Treat a constraint
+$(h,q)$ as requiring the whole cofactor to be
+independent of input $h$ when $q$ is fixed.
+For proper $q$ this is equivalent on core words
+to loss of the source, by colored-cofactor
+independence and the sole-source probe. Start
+with the original minimal losses and use the
+following rule. If $q$ posts $u:r$ and $(u,t)$
+is another constraint, replace that posting by
+$t$ at head $h$ whenever
+\[
+             (q\setminus\{u:r\})\cup t
+\]
+is consistent. All postings still precede their
+heads. The substituted coloring may use every
+owner: at such an intermediate step the constraint
+means cofactor independence, without an observer.
+
+The rule is sound. On two valuations extending the
+new fixing and differing only at $h$, set $u$ to
+$\{r\}$ in both. The constraint at $u$ preserves
+both outputs, and the modified valuations extend
+$q$, so the constraint at $h$ makes their outputs
+equal. Thus every bounded core word satisfies the
+new constraint.
+
+For completeness fix a proper query $p$ where the
+marked pass leaves $h$ inactive. Select an original
+loss $q$ admitted there, so any posting in $q$
+that mismatches $p$ is at an inactive predecessor.
+Induct in source order to obtain a substituted
+loss contained in $p$ at each such predecessor.
+Replace the mismatching postings in increasing
+order. Each replacement posts only earlier inputs
+as in $p$, so it is consistent with the already
+corrected earlier postings and cannot introduce
+a new mismatch. The final loss at $h$ is contained
+in $p$. Hence the greatest core minorant loses
+exactly on proper extensions of the derived
+constraints. The original candidate is core
+exactly when these constraints add no proper
+losses. A derivation for a missed positive needs
+at most one original row per inactive head and
+quadratically many substitutions, sharing the
+earlier derived rows. The original rows can be
+found by prime scans and transversal minimization.
+
+Allowing all-owner intermediates is essential for
+this single-posting rule. At distinct owners
+$a,b,c$, let $u$ lose on $x:b$, let $v$ lose on
+$y:b$, and let $h$ lose on $u:c,v:c,w:a$. At
+$x:b,y:b,w:a$ both $u,v$ are inactive, so $h$
+must lose. Starting with its row, either possible
+first substitution produces all three colors.
+The second removes the remaining $c$-posting,
+recovering the proper implied loss.
+
+There is a simultaneous rule that also handles
+cycles of different owners. Let $H$ be a set of
+heads, and choose one proper loss at each head
+in $H$. Suppose their postings outside $H$ are
+all contained in one proper coloring $e$ on
+the outside inputs. If the chosen rows have no
+monochromatic cycle inside $H$, then fixing
+$e$ makes the cofactor independent of all the
+inputs in $H$ simultaneously.
+
+Indeed, at the probe for any head in $H$ with
+the outside fixing $e$, the unmarked-background
+lemma would turn a positive witness into a
+nonempty word on $H$ omitting the internal
+parts of all the chosen losses. The ranked
+survivor lemma forbids that word. Thus every
+head in $H$ loses at $e$ and is individually
+inessential there by colored-cofactor
+independence. Changing their menus one at a
+time proves simultaneous independence.
+This rule is complete for proper losses when
+the full posting graph has no monochromatic
+cycle: at a missed positive take the inactive
+heads of the marked pass and one admitted loss
+at each of them. Their outside postings agree
+with the query, and the rule captures the
+queried head on that outside restriction.
+
+Single substitutions alone do not give this
+extension. For distinct owners $a,b$, put the
+loss $y:a$ at $x$ and the loss $x:b$ at $y$.
+Each single substitution would post the head
+itself, giving no source constraint. The joint
+rule instead captures both inputs with no
+outside posting. A retained input may be added
+to keep the candidate nonempty.
+
+The simultaneous rule can use earlier captures
+under the same proper outside fixing $e$. Suppose
+$e$ already makes all inputs in $C$ inessential.
+For a disjoint set $H$, choose one original loss
+per head in $H$, allowing their external postings
+either to belong to $e$ or to use inputs in $C$.
+If their restrictions to $H$ have no monochromatic
+cycle, then $e$ also captures all of $H$.
+Apply the unmarked-background lemma to $C\cup H$,
+including the derived loss at each head of $C$
+with outside fixing $e$ and empty internal row.
+An internal witness cannot use an input in $C$,
+since any used input supplies its all-neutral
+mark. After discarding their postings from the
+chosen rows it would therefore give a word on
+$H$ forbidden by the ranked survivor lemma.
+
+In any simultaneous capture certificate, order
+the strongly connected components of the chosen
+rows on the captured heads, with posting inputs
+before the heads that read them. Apply this
+version of the rule to one component at a time.
+Every posting into an earlier component refers
+to an input already captured under the same $e$.
+The largest simultaneous step is thus bounded
+by the largest component in the chosen rows.
+All derived fixings can stay equal to the proper
+$e$, even where sequential substitution would
+use every owner. For an acyclic cut each step
+uses just one new head; for cyclic cuts only the
+internal cycles require a simultaneous step.
+
+\paragraph{Recognition from two generations of predecessors.}
+For a candidate with acyclic source dependence,
+exact recognition can be checked on a bounded
+neighborhood of each head. Fix a proper posting
+$p$ and head $i$. Among the direct predecessors
+of $i$, keep those whose prescribed coefficients
+at $p$ are positive. Let $D_i(p)$ consist of
+postings at those predecessors that differ from
+their status in $p$. Require that whenever the
+prescribed coefficient at $i$ is positive,
+$D_i(p)$ contain a listed prime on every facet
+after intersecting it with that facet's alphabet.
+
+Necessity follows from the acyclic marked pass:
+for a core candidate its active heads are exactly
+its prescribed positives at $p$. Conversely, the
+local test guarantees that equality in source
+order. When processing $i$, predecessor activation
+is already known to agree with the prescribed bits.
+A prescribed positive then passes. A prescribed
+negative cannot pass, since $D_i(p)$ is disjoint
+from $p$ and a common sufficient guard disjoint
+from $p$ implies survival. Thus all prescribed
+positives have bounded witnesses. Their union
+realizes the candidate.
+
+The test at $i$ reads only its direct predecessors
+and their own predecessors. If the maximum
+indegree is $\Delta$, this involves at most
+$\Delta+\Delta^2$ inputs. Enumerate the proper
+colorings of just those inputs, extending with
+neutral statuses elsewhere. Each local test uses
+prime scans for the prescribed bits and the
+containment checks, with no common-list product.
+This gives fixed-parameter recognition in
+$K,\Delta$. In particular it is polynomial at
+fixed $K$ and simultaneous bounds on prime
+width and minimal-loss size, by the posting
+alphabet bound following \cref{core:thm:guard-consensus}.
+
+\paragraph{Greatest enlargement directly from acyclic primes.}
+Let $C$ be a realized family with a source order and
+fix a proper target $q$. Write $A=J(q)$ for the
+inputs supplying their marks at that target. Its
+principal is ordinary subcoloring on $A$, by the
+singleton component pass. A minimal loss is protected
+exactly when it has no posting $u:r$ with $u\in A$
+and $u\notin q_r$.
+
+Let $F$ be the set of these incompatible postings.
+The upper bound of the protected losses has complete
+source predicates
+\[
+                 \pi_i'(p)=\pi_i^C(p\setminus F).
+\]
+Indeed a zero at the erased coloring contains an original
+minimal loss avoiding $F$, and every such subloss
+persists after erasure. The resulting family keeps all
+projections on $A$: each loss at one of these heads
+has an incompatible active predecessor, by the
+acyclic marked pass at $q$.
+
+This upper bound is itself core. Its source predicates
+remain antitone, agree across observers and have the
+same source order. To verify colored-cofactor independence,
+take a proper fixing $p$ with $\pi_j'(p)=0$. Then $j\notin A$
+and $C$ captures $j$ under $p\setminus F$. Consider two
+valuations extending $p$ and differing only at $j$.
+For any observed winner $k$, if some menu in $A$
+contains $k$, its retained projection supplies $k$
+at both valuations. Otherwise, in each valuation replace
+every forbidden singleton on $A$ by the ambiguous menu
+$I\setminus\{k\}$. No menu in $A$ supplied $k$ before
+or after replacement. The other source probes are exactly
+those of $C$ with the forbidden postings erased. Thus the
+observed output of the candidate equals membership of $k$
+in $C$ on the transformed valuation. The transformed
+valuations extend $p\setminus F$ and still differ only
+at $j$, so those outputs agree. This proves cofactor
+independence. The candidate has nonempty values because
+$A$ contains the first live input in source order.
+\Cref{core:thm:acyclic-source-guards} now gives realizability.
+By the protected-budget theorem it is the greatest atomic
+enlargement.
+
+The canonical primes are obtained on each facet by
+deleting exclusions in $F$ from every original prime,
+then taking inclusion-minimal results. Indeed an arbitrary
+sufficient guard for the new predicate can drop any
+exclusions in $F$: those postings can be erased without
+affecting the bit. A guard $G$ disjoint from $F$ is then
+sufficient exactly if $G\cup F$ is sufficient for the old
+predicate, restricting $F$ to that head and facet.
+The latter must contain an original prime, whose
+surviving exclusions lie in $G$. Conversely each
+transformed original prime is sufficient. Thus the
+output lists do not grow, and the enlargement deletes
+posting edges without introducing any new ones.
+
+On an explicit complete minimal loss list, even
+singleton projection helpers suffice for the row
+deletion rule. In source order, every input in $A$
+has no protected row at its own head: its mark at
+$q$ succeeds, so each row is blocked by an earlier
+active input posting incompatibly. By induction those
+earlier projections are already bounded after their
+rows have been deleted. Each blocks the offending
+row by a signed profile, making the next projection
+bounded in turn. Every unprotected row has just such
+a witness at one of its earlier active postings.
+Protected rows remain throughout, so the process
+gives the exact enlarged budget.
+
+\paragraph{Hardness of least extension over an acyclic prefix.}
+The polynomial least-extension circuit for disjoint
+one-owner traces does not extend to all acyclic prefixes
+unless $\mathrm P=\mathrm{NP}$. Evaluating a specified
+terminal source bit of the least core extension above a
+candidate is NP-complete already with an acyclic core
+prefix of depth one and one terminal prime per facet.
+
+To prove hardness, choose distinct owners $a,b,s$ and
+encode a 3CNF formula. Retain one input per variable,
+with postings at $a,b$ representing the two truth values.
+Use one source per clause, with a loss whenever any of
+its satisfying postings is present. The prefix is core
+by union of the single-source completions over the retained
+variables. Its canonical primes have width at most three,
+one guard per clause head on each facet, after deleting
+invisible postings. The terminal candidate has one
+guard excluding all visible $s$-postings on clause heads.
+Use the query $q$ posting every clause head at $s$ and
+leaving the variables unposted.
+
+The least core extension supplies this mark exactly when
+$q$ compares below some proper positive background $p$.
+In the acyclic prefix the activation comparison is
+subcoloring on the inputs retained at $p$, by the product
+of projection and zero coefficients. No clause head
+can be posted at $s$ in a positive background. Hence all
+clause heads must be lost at $p$ for the comparison to
+hold. The variable postings then satisfy all clauses and
+extend to an assignment. Conversely a satisfying assignment
+gives a proper background using just $a,b$ in which all
+clauses lose and the terminal candidate is positive.
+The comparison holds there. This proves the reduction.
+A guessed background is verifiable in polynomial time
+by reading the live prefix bits in source order and
+testing subcoloring on those inputs, giving membership
+in NP for this acyclic-prefix problem.
+
+Two queried postings already suffice for hardness, even
+with terminal prime width two. Use separate retained inputs
+for the two literals of each variable. The first prefix head
+loses on a transversal of the variable pairs and formula
+clauses, posted at $a$. The second loses on a transversal
+of just the variable pairs, posted at $b$. Their canonical
+lists are the corresponding sets of exclusions, minimized
+on visible facets. They use no competing postings within
+either head's list. The prefix is core by single-source
+completion. Take the terminal prime that forbids the
+$s$-postings of both heads, and query those two postings.
+Both heads must lose in any witnessing positive background,
+so the two transversals use disjoint inputs. Each therefore
+chooses exactly one literal per variable, and the first
+satisfies the formula. Conversely a satisfying assignment
+and its complementary choices give a proper background
+capturing both heads. This realizes the NP lower bound
+with a depth-one prefix of width three and two queried
+postings.
+
+With only one queried posting $u:r$, the problem is
+polynomial for every acyclic prefix and arbitrary prime
+width. Try each terminal prime and observer. If $u:r$
+is allowed, the background consisting of that posting
+works. Otherwise the background must capture $u$.
+The allowed posting ground on the chosen facet contains
+such a loss exactly when it meets every prime at $u$.
+Canonicity ensures a consistent minimal transversal
+inside that ground. Thus the one-posting test needs only
+prime intersections.
+
+For a fixed query $q$ and a potential background facet,
+failure of the activation comparison has a direct guard
+family. For each $u:r$ in $q$, take every prime at $u$ on
+that facet and adjoin the exclusion of $u:r$ when it is
+visible. Such a guard says that $u$ survives in the
+background but its posting fails to match. Their
+disjunction is exactly failure of comparison.
+After canonicalizing this family by consensus, a
+terminal positive prime admits a witnessing background
+if and only if it contains none of these failure primes:
+its allowed ground must hit them all, and canonicity
+supplies a consistent minimal transversal. This gives
+a prime-containment criterion independent of the
+terminal list once the query's comparison is compiled.
+
+The compiled comparison may itself require exponentially
+many primes for two queried postings. Use retained pairs
+$x_i,y_i$, $1\le i\le m$, and two heads. The first head
+loses when the $a$-block meets every pair, while the
+second loses when some $x_i$ is posted at $b$.
+Query one posting at each head, visible together with
+$a,b$ on the background facet, for instance at $a$
+on both heads. Their prefix is core by single-source
+completion and has polynomial-size primes.
+
+For each $i$ choose one exclusion from
+$\{x_i:b,y_i:a\}$ and also exclude both queried
+matching postings. Under these exclusions a background
+cannot capture both heads: a choice $x_i:b$ for the
+second head leaves no $a$-posting to hit pair $i$.
+Deleting any chosen pair exclusion permits capturing
+both heads, using $x_i:b,y_i:a$ at that pair and $a$
+at the other $x_j$. If at least one $x_i:b$ remains
+allowed, either matching exclusion is also essential:
+one head can match and the other can be captured.
+Thus every such choice except the one forbidding
+all $x_i:b$ yields a prime for failure of comparison.
+There are $2^m-1$ of them.
+
+At passive width two, however, a query with $h$ postings
+has a polynomial-size compiled list for fixed $h$. Fix
+the truth values of all visible matching postings of the
+query. For each of the at most $2^h$ assignments, the
+remaining comparison constraints are 2CNF: a queried
+input either matches or has to hit its binary primes.
+Add the pairwise consistency exclusions. As in the unit
+certificate argument below, a set of forbidden postings
+blocks this branch only if at most two of its exclusions
+already block it. Enumerate these small blockers by 2SAT.
+Take the unions of one blocker for each branch and minimize.
+These are exactly the failure primes, since a guard blocks
+comparison precisely when it blocks every branch. In
+particular their width is at most $2^{h+1}$.
+
+For a depth-one prefix the bound improves to $h+2$ and
+the list is computable in fixed-parameter time in $h$.
+Guess only the subset of queried sink postings forbidden
+by the failure guard. Every other visible matching sink
+posting may simply be used, so the guessed subset fixes
+which sinks require capture. Retained inputs of the query
+must match, and the remaining constraints are 2CNF on
+retained postings. Any further exclusions that block this
+instance have a certificate using at most two retained
+postings. For each guessed subset, enumerate those small
+certificates, append the guessed exclusions, and minimize.
+An exclusion at a sink other than its matching posting
+cannot affect this test. This needs at most $2^h$ times
+a polynomial number of 2SAT checks and candidate guards.
+
+The width $h+2$ is attained. Use retained inputs
+$v_0,\ldots,v_h$ and one sink per edge of the chain.
+At edge $i$ use the binary prime $\{v_{i-1}:b,v_i:a\}$
+and query a posting at its sink. Exclude all $h$ matching
+postings and also $v_0:b,v_h:a$. Capture at each sink
+requires hitting its edge prime. The first exclusion
+forces $v_1:a$, which rules out $v_1:b$, and the chain
+forces $v_h:a$ against the last exclusion. Removing
+either endpoint exclusion lets one hit every edge with
+the same color. Removing any matching exclusion lets
+that sink match and breaks the forced chain, so the
+edges before it can be hit at $a$ and the edges after
+it at $b$. Thus the displayed guard is prime on a facet
+seeing $a,b$ and the matching postings, which can all
+be at $a$ on their sinks.
+
+The same chain gives exponentially many primes at passive
+width two when the query size can grow. Put two separate
+sinks with identical edge primes at each step and query
+both. Exclude one of their matching postings at each step,
+together with the two endpoint exclusions. At least one
+sink per edge then requires capture, so the forced chain
+persists. Removing a chosen matching exclusion leaves
+both sinks matching at its step, breaking the chain.
+Thus every one of the $2^h$ choices for a chain of $h$
+steps gives a distinct failure prime, although the query
+has only $2h$ postings and the input lists have linear size.
+
+For general acyclic depth the preceding compilation can
+distinguish queried sinks from other queried inputs. On a
+facet let $s$ count the visible matching postings at sinks
+whose lists have a binary prime, and $b$ count such postings
+at non-sinks. Enumerate the forbidden subset of the $s$
+sink postings, matching every other one. Enumerate truth
+assignments only at the $b$ non-sink postings: all remaining
+matching clauses are already binary or have their matching
+posting invisible. For a fixed sink exclusion set, a
+failure guard needs at most two additional exclusions per
+non-sink assignment, by the same 2CNF projection. Thus the
+output width is at most $s+2^{b+1}$. Compilation enumerates
+$2^s$ sink exclusion sets and, for each, unions of small
+blockers over at most $2^b$ branches. The polynomial
+exponent depends only on $b$, not on the number of queried
+inputs with only singleton or empty primes.
+
+For depth-one prefixes at width two there is also a
+polynomial-size representation of the compiled list by
+labeled implication paths. Fix the query and background
+facet. The vertices are literals of the retained posting
+flags. Consistency and the required retained matches give
+unconditional implication edges. Excluding a retained
+posting adds its negative unit clause, so label the
+corresponding edge by that exclusion. At a queried sink
+the capture clauses are enabled exactly when its matching
+posting is excluded. Give their implication edges that
+label, or leave them unconditional if the posting is
+invisible. An empty enabled clause is an immediate
+failure. If a required retained match is invisible,
+comparison always fails on this facet.
+
+The comparison fails precisely when the enabled edges
+contain paths in both directions between a literal and
+its negation, or an empty clause is enabled. Consequently
+the failure primes are the inclusion-minimal unions of
+labels of such path pairs, together with the minimal
+labels of immediate failures. Indeed a failing guard
+must enable such a witness, and the labels used by the
+witness already suffice for failure. This is a polynomial
+size monotone circuit in the exclusions: compute
+reachability of the enabled edges by a finite transitive
+closure and test for opposite paths. It works even
+when the explicit canonical list is exponential.
+
+The same graph representation, with the roles of query and
+background restrictions exchanged, compiles the least core
+extension at depth one and passive width two. Fix a terminal
+prime and background facet. Its forbidden postings give
+unconditional units. A retained posting in the variable
+query enables the unit requiring its match, or immediate
+failure if forbidden. A sink posting in the query enables
+its capture clauses exactly when the match is forbidden.
+Thus labeled implication reachability computes failure
+as a monotone circuit in the query's presence flags.
+Dualize the circuit to compute success in absence flags
+and disjoin over the terminal branches. The result has
+polynomial size in the complete lists.
+
+The canonical output of that circuit can express arbitrary
+hypergraph transversals, even with one terminal prime.
+Take a hypergraph with nonempty edges and no isolated
+vertices. Draw one directed path from $u$ to $v$ for
+each edge, with the edge's vertices as successive labels.
+Use distinct intermediate path vertices, and make all
+path vertices retained inputs. Use one sink per hypergraph
+vertex. For each path edge $x\to y$ labeled by that
+vertex, the sink has the binary prime $\{x:b,y:a\}$.
+Within one sink's list there are no competing postings:
+a label occurs only once on each path, and shared path
+endpoints always use the same colors. Thus minimizing
+these lists gives canonical primes. The prefix is core
+by the single-source completions.
+
+The terminal prime excludes $u:b$, $v:a$ and every
+sink's $a$-posting. Restrict queries to $a$-postings on
+sinks, leaving retained inputs neutral. A witnessing
+background must capture each queried sink, so it must
+hit the primes of every selected path edge. If these
+edges give a full path, the exclusion of $u:b$ forces
+an $a$-posting forward along the path, contradicting
+the exclusion of $v:a$. If there is no full path,
+post vertices reachable from $u$ at $a$ and all other
+path vertices at $b$. Every selected edge has a hit,
+and this is a proper witnessing background enabling
+the terminal prime. Hence a queried set loses exactly
+when it contains a hyperedge. Its restricted canonical
+primes are precisely the minimal transversals. In
+particular $m$ disjoint pairs give $2^m$ primes, and
+the full canonical output cannot be smaller than
+that of the restriction.
+
+More generally this subclass has an exact labeled-reachability
+representation. For each terminal branch, its failure
+graph above tests reachability in both directions between
+a literal and its negation. Take two copies in series for
+each literal, then put these path tests and any immediate
+failures in parallel. This represents failure of that
+branch by a single reachability question. Put the branch
+graphs in series, since all branches must fail for the
+least extension to omit the mark. Edges are unconditional
+or enabled by one query posting, and the resulting graph
+has polynomial size.
+
+Conversely, any finite directed graph with labeled edges
+and designated endpoints can be represented in this way
+on a restricted query domain. Split each vertex $v$ into
+retained inputs $v^-,v^+$. For an edge from $u$ to $v$
+with label $j$, put the prime $\{u^+:b,v^-:a\}$ at
+the sink for label $j$. Use one further sink with primes
+$\{v^-:b,v^+:a\}$ for all vertices, and always post this
+sink at $a$ in the queries. It implements the links between
+the split copies. The terminal guard excludes matching
+all sink postings and excludes the false posting at the
+start's minus copy and the true posting at the end's plus
+copy. Allow queried $a$-postings at exactly the desired
+label sinks, with retained inputs unposted.
+
+The split ensures canonicity: in an edge sink's list
+all plus copies use $b$ and all minus copies use $a$,
+while the link sink does the reverse. Thus a list
+never uses competing postings at one input. The
+implications for captured sinks are exactly the enabled
+graph edges and the split links. If a path exists,
+truth propagates from the start to the excluded end;
+if none exists, set just the reachable split vertices
+to true. This yields a proper witnessing background
+using $a,b$. Hence absence of a path is exactly
+positivity in the restricted least extension.
+
+On this restricted domain, the primes are precisely the
+inclusion-minimal label sets whose deletion disconnects
+the endpoints. All unexcluded labels can be queried
+together, so a guard suffices exactly when deleting its
+labels removes every path. When each label appears on
+only one edge, a minimum-weight sufficient guard is
+therefore a minimum directed cut, with the label weights
+as capacities. Any fixed unconditionally enabled edges
+may be given capacity greater than the total weight of
+all labels.
+
+With repeated labels, finding even a minimum-cardinality
+guard is NP-hard. For each edge of an undirected graph
+make a separate two-edge directed path between the
+endpoints, labeled by the edge's two vertices. The
+only way to block all paths is to hit each undirected
+edge by a chosen vertex. Thus a minimum guard is
+exactly a minimum vertex cover. The reachability
+embedding gives this lower bound on a restricted
+least extension with passive width two and one
+terminal prime.
+
+At depth one the width-three lower bound is sharp for
+the prefix, regardless of the widths of the terminal
+primes. Choose an observer facet and a terminal prime
+that the unknown positive background must enable.
+Use variables for its postings, forbid the observer's
+and the prime's postings, and impose binary consistency
+exclusions. For every $u:r$ in the queried coloring
+$q$, the comparison requires either the same posting
+in the background or a loss at $u$ there. For each
+prime $G$ at $u$ on the chosen facet this gives the clause
+\[
+              x_{u,r}\ \lor\!\bigvee_{a\in G} x_a ,
+\]
+with forbidden variables interpreted as false.
+These clauses, together with the terminal exclusions,
+are equivalent to the activation comparison.
+
+At depth one every nonretained input is a sink in the
+prefix. If its matching posting is allowed, set it
+there: this cannot affect any other prefix source
+and still enables the terminal prime. If it is
+forbidden, only the hitting clauses remain. At a
+retained input the empty guard simply requires the
+matching posting. Thus at prefix width two all the
+remaining constraints are 2SAT, proving polynomial
+time after enumeration of the terminal primes.
+
+At arbitrary acyclic depth and prefix width two,
+the only possible ternary clauses come from queried
+postings that are allowed and whose heads have a
+binary prime on the chosen facet. Fixing their
+matching bits leaves a 2SAT instance. In particular
+one may make the sink choices first as above and
+branch only on the remaining such heads. This gives
+a fixed-parameter test in their number for each
+terminal prime.
+
+Deciding whether a proposed guard is sufficient for this
+least extension is $\Pi_2^{\mathrm P}$-complete for every
+fixed $K\ge3$, even for the depth-one construction above.
+Membership follows by universally choosing a proper coloring
+on the guard's facet that enables it, then existentially
+choosing a positive background above it in the activation
+preorder. Both comparisons are polynomial given the two
+colorings.
+
+For hardness use a quantified 3CNF formula with universal
+variables $U$ and existential variables $V$. Build the
+same clause heads, and use $s=a$ in the terminal prime,
+which constrains clause heads only. On a facet whose
+observer is distinct from $a,b$, take the guard which
+allows only $a,b$ postings at the retained inputs of $U$,
+only $a$-postings at the clause heads, and no postings
+at the retained inputs of $V$. Thus an enabling coloring
+can specify a partial universal assignment and a subset
+of the clauses. Its comparison below a terminal-positive
+background requires every specified assignment to agree
+there, because the variable inputs are retained. It also
+requires each specified clause head to lose there, since
+the terminal prime forbids its matching posting at $s$.
+These requirements are equivalent to a satisfying
+completion of the partial assignment for the specified
+clauses: every proper witness supplies compatible literal
+postings, and an assignment gives a proper background
+using just $a,b$.
+
+If the quantified formula is true, every enabling coloring
+has such a completion. If it is false, use a failing full
+universal assignment and post every clause head at $s$.
+This coloring is proper on the chosen facet and enables
+the guard, but has no witnessing background. Thus guard
+sufficiency captures exactly the quantified formula.
+
+At depth one and passive prime width two, guard
+sufficiency is coNP-complete. The preceding 2SAT test
+gives membership: guess an enabling coloring and check
+that its mark fails. Hardness already holds when both passive
+and terminal primes are singletons. Given a 3CNF formula,
+retain its variable inputs with truth postings at $a,b$.
+Use one head per clause, with one singleton prime per
+posting that falsifies a literal of the clause. Thus the
+head loses exactly when all literals are falsified.
+Discard tautological clauses and repeated literals so
+these postings are consistent. The prefix is a union
+of single-source completions. At the terminal head use
+one singleton prime per clause head, excluding its
+$a$-posting. These lists are canonical. On the queried
+facet allow only truth postings on retained inputs and
+$a$-postings on clause heads.
+
+For a full assignment with all clause heads posted at
+$a$ in the query, a witnessing background must agree on
+the retained inputs. Terminal positivity requires at
+least one clause head not to match its $a$-posting.
+That head must be captured for comparison, so the clause
+is false. Conversely a falsified clause allows such a
+background: post the assignment and match the other
+queried heads. This uses just $a,b$ and enables the
+clause's terminal prime. If the formula is unsatisfiable,
+complete any partial queried assignment and use a false
+clause in the same way. If it is satisfiable, the full
+satisfying assignment with all clause heads posted gives
+a counterexample. Thus the proposed guard is sufficient
+exactly for unsatisfiable formulas.
+
+There is a polynomial sufficiency test at depth one
+and passive width two when the number of terminal primes
+is bounded and the proposed guard permits at most one
+posting at each nonretained input. For the universal
+query take all these permitted nonretained postings:
+this maximizes the requirement, since enlarging the
+query can only destroy positivity. Their choices are
+consistent and visible on the guard's facet. Leave the
+retained postings free.
+
+Each terminal prime on its own observer facet now gives
+one fixed 2SAT instance for the positive background,
+using the depth-one construction above. A concrete
+retained query just adds unit requirements that its
+postings match. If these units make an instance
+unsatisfiable, at most two of them already do so.
+Indeed the projection of a 2CNF onto the variables
+of the units is again 2CNF, by eliminating other
+variables with binary resolution. An assignment
+setting all the units violates a clause of size at
+most two in that projection. An already unsatisfiable
+instance needs no units.
+
+Enumerate these empty, singleton and pair certificates
+for each terminal prime, using the retained postings
+allowed by the proposed guard. A counterexample exists
+exactly when one certificate per prime can be chosen
+with their union consistent. That union is itself an
+allowed retained query and defeats every positive
+background. Conversely every failing query supplies
+such certificates. The search is polynomial for a
+bounded number of primes. In particular, under the
+one-prime-per-facet and nonretained-posting restrictions
+of the quantified reduction above, the jump from
+passive width two to three already gives the
+$\Pi_2^{\mathrm P}$ lower bound.
+
+The same test permits several postings at a sink when
+one of them dominates the others. Index the branches
+by terminal prime and observer. Associate to an allowed
+sink posting the set of branches forbidding that matching
+posting in the positive background. Within a branch
+the sink requires loss exactly when its queried posting
+is forbidden. The unposted choice has the empty set
+of branches. Matching an allowed posting uses no
+retained input and affects no other prefix source.
+Thus a posting whose set of branches contains every
+other possible set can always be chosen for the
+counterexample search. If there is no such posting,
+retain only choices with inclusion-maximal sets.
+
+Enumerate choices only at the sinks without a dominating
+posting, then apply the retained-unit test. If there
+are $b$ such sinks and $m$ terminal branches, the
+search costs at most $K^b$ times a polynomial of degree
+depending on $m$. In particular any failing guard at
+passive width two has a counterexample with at most
+$2m$ retained postings, regardless of how many choices
+are allowed at its sinks: keep the sink choices and
+retain just the union of the branch certificates.
+
+The retained-posting bound can be attained for distinct
+effective branches. Use $m$ disjoint retained pairs $u_i,v_i$
+and a sink $h_i$ with binary prime $\{u_i:b,v_i:b\}$ for
+each pair. Give the terminal head the singleton primes
+excluding $h_i:a$ for each $i$. On a facet seeing $a,b$,
+allow only $a$-postings at all inputs. A potential failure
+may post all sinks. The branch forbidding $h_i:a$ then
+fails exactly when both inputs of pair $i$ are posted
+at $a$ in the query. With either missing, the witnessing
+background can post it at $b$ and capture $h_i$.
+To defeat every branch the query therefore needs all
+$2m$ retained postings. The other observer facets add
+no new witnessing background when these postings are
+all present.
+
+Two terminal guards before canonicalization already suffice
+for coNP-hardness with competing sink postings, even at
+passive width two and depth one. Reduce 3CNF satisfiability
+to failure of guard sufficiency. Use two directed networks
+whose edges are indexed by literal occurrences. In the first,
+put the clauses in series, with parallel edges for the
+occurrences in each clause. In the second, put the variables
+in series, with two parallel paths per variable, one listing
+its positive occurrences and one its negative occurrences.
+Assume each variable occurs in both signs, adding tautological
+clauses if necessary.
+
+Use retained inputs for network vertices, with Boolean
+postings $a$ for true and $b$ for false. For each vertex
+use a sink whose sole prime requires one of these two
+postings to hit it. For each occurrence use another sink
+with two primes, one for its edge in each network.
+Each edge $u\to v$ gives the binary prime of the
+postings $u:b$ and $v:a$, so capture imposes the implication
+$u\Rightarrow v$. These two primes use disjoint inputs
+at an occurrence sink, since the networks are disjoint.
+The lists are canonical by transversal duality, and the
+prefix is core by the single-source completions.
+
+Both terminal guards forbid matching the vertex sinks'
+$a$-postings. The first also forbids occurrence sinks
+posted at $a$, and requires the first network's start
+true and its end false by excluding their opposite
+postings. The second does the same for occurrence
+postings at $b$ and the second network's endpoints.
+On the query facet allow no retained postings, only
+$a$ at vertex sinks, and either $a$ or $b$ at occurrence
+sinks. We can include every vertex sink in a potential
+counterexample by monotonicity. Then every witnessing
+background must give each vertex a Boolean value.
+For each terminal branch the captured occurrence sinks
+impose their edges in both networks, but only one
+network has fixed endpoints. The other is satisfiable
+by a constant assignment. Thus a branch fails exactly
+when its selected edges give a path from start to end.
+
+Failure of the first branch requires at least one
+$a$-occurrence per clause. Failure of the second requires,
+for each variable, a polarity whose occurrences are
+all posted at $b$. The $a$-occurrences then certify a
+consistent satisfying assignment. Conversely assign
+$a$ to the true occurrences and $b$ to the false ones
+under a satisfying assignment; both paths are present.
+The witnessing backgrounds, when they exist, need only
+$a,b$, so properness adds no restriction.
+
+The two terminal guards have polynomial canonical
+completion. On facets seeing both $a,b$, add their
+resolvent at each occurrence sink, then minimize.
+Each resolvent contains both branch endpoint restrictions,
+and both exclusions at every other occurrence sink.
+A further resolution with an original guard contains
+that original guard, while a resolution of two such
+resolvents contains one of them. Hence the list is
+closed under consensus after minimization. On facets
+hiding either owner the original restricted guards
+have no competing exclusions. This produces polynomial
+canonical input lists and proves coNP-hardness with
+only two guards needed to describe terminal positivity
+before consensus.
+
 \paragraph{Complexity for complete guard families.}
 Here every source bit is specified. The lists of prime sufficient guards
 and of minimal zeros can both be short even when deciding realization
@@ -295,6 +1409,109 @@ inessential under the fixing. No retained input has a zero, so these
 are all the cofactor conditions. The acyclic characterization gives
 a common core word.
 \end{proof}
+
+\paragraph{Cofactor testing with bounded owner blocks.}
+Suppose every minimal loss posts at most $d$ inputs at any
+one owner. With the losses given explicitly, colored-cofactor
+independence is polynomial to check for fixed $d$, even when
+the number of owners varies. With complete prime lists alone
+it is polynomial for fixed $d$ and $K$, by first listing the
+minimal losses: each has at most $d(K-1)$ postings, and
+checking a proposed loss and its one-post deletions suffices.
+In particular the acyclic source characterization gives
+polynomial recognition for singleton owner blocks.
+
+To check a cofactor violation, choose the captured head $h$,
+one of its minimal losses $T$ as the proper fixing, the
+observed winner $k$, and a supplier $s$ on the second side.
+Every violation has such a choice, since a proper fixing
+suppressing $h$ contains a minimal loss. The first menu at
+$h$ can be made $k$-free: if it contained $k$, replacing it
+by $I\setminus\{k\}$ preserves all its foreign-$k$ singleton
+postings and removes any contribution to $k$ from $h$.
+Likewise make every menu outside the fixing other than
+$h,s$ omit $k$, preserving its foreign-$k$ singleton postings.
+This leaves at most $d+1$ possible suppliers on the first
+side: the inputs fixed to $\{k\}$ by $T$, and $s$ if $s\ne h$.
+The second menu at $h$ is unrestricted apart from the test.
+
+For each of these possible first-side suppliers, require
+a $k$-facet minimal loss there. On the second side require
+the menu at $s$ to contain $k$ and a listed $k$-prime at $s$
+to be enabled. These requirements and the fixing are all
+restrictions on individual menus. Check them together,
+enumerating the two menu classes at $h$ among the owner
+singletons and the ambiguous menus with or without $k$.
+All other inputs can use the same classes; they specify every
+foreign-$k$ posting and whether an input carries $k$.
+Feasible domains give a violation, and the replacements
+above turn any violation into one found by the test.
+The enumeration has polynomial size because it chooses
+at most $d+1$ first-side losses. If only the explicit losses
+are supplied, the second-side positive can instead be tested
+at the least allowed foreign-$k$ coloring: after imposing
+the other restrictions, every domain either forces a
+single posting or permits a menu with no foreign-$k$
+posting. The first-side restrictions, other than at $h$,
+only fix postings, forbid $k$, or require $k$ at the
+supplier. Thus nonempty domains have this property and
+antitonicity makes the least coloring sufficient for the
+positive test.
+
+At bounded prime width the owner-block test is
+fixed-parameter tractable in the owner count $K$,
+the block bound $d$, and the prime width $b$.
+It needs neither a rank-height bound nor a graph
+decomposition. To list the minimal losses of one
+facet, start with no postings and branch on a
+literal of any unhit prime, rejecting inconsistent
+choices. Stop at a hitting set, and keep it only
+if minimal. Under the block bound each minimal
+loss is reached by a branch of length at most
+$d(K-1)$, since one can choose from that loss
+at each step. Truncate at that depth. The
+number of branches per list depends only on
+$K,d,b$.
+
+For the cofactor test make all the choices above
+except the first-side losses. This leaves at most
+$d+1$ lists from which one must choose a loss,
+with the chosen postings mutually compatible
+and consistent with the unary menu restrictions.
+The affected input's two menus have already
+been chosen, so filter that coordinate directly.
+Any successful selection mentions at most
+$L=(d+1)d(K-1)$ other inputs.
+
+There is a small deterministic family of
+menu-class assignments that agrees with any
+assignment on at most $L$ inputs. Give the
+inputs distinct binary indices. On a set of
+at most $L$ such indices, at most $L-1$ bit
+positions distinguish them: repeatedly split
+a nonsingleton class on a bit where it differs.
+Enumerate these position sets, and for each
+assign a menu class to each resulting bit
+pattern. The number of position sets is at
+most $(1+\lceil\log_2 n\rceil)^L$, bounded by
+a function of $L$ times a fixed polynomial
+in $n$. The assignments to bit patterns add
+a factor depending only on $L,K$.
+
+For each assignment test whether each required
+head has some permitted loss whose postings
+agree with it wherever that loss specifies a
+menu class. The choices then agree with each
+other. Inputs not mentioned in those losses
+can use any of their permitted menus, regardless
+of the assignment used to find the losses.
+Conversely a feasible selection is found by an
+assignment agreeing on its at most $L$ inputs.
+This replaces the input-length exponent from
+jointly enumerating the first-side losses.
+The result checks cofactor independence in
+general and decides core recognition for
+acyclic source dependence.
 
 \begin{theorem}[Cofactor testing on source graphs of girth at least five]
 \label{core:thm:girth-five-cofactor}

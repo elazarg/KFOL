@@ -1,3 +1,253 @@
+\paragraph{Several absorbing owners with bounded projections.}
+For bounds $t(w^h)\subseteq U_h$, write
+$P_h=\{i:w_i^h\subseteq U_h\}$ and $E_r^h=\{i:w_i^h=\{r\}\}$.
+Suppose
+$E_r^h\subseteq\bigcap_k P_k$ whenever $r\in U_h$.
+Thus every input that can supply an allowed atom at one row
+is bounded at every row. With this hypothesis, simultaneous
+feasibility of either query has a direct common-input test.
+
+For one requested winning coalition $A_s$ at each owner $s\in J$,
+put $D=\bigcap_{s\in J}A_s$ and
+$D_r=\bigcap_{s\in J\setminus\{r\}}A_s$, with the whole input
+set as the empty intersection. The criterion is
+\[
+ D\ \cap\!
+ \bigcap_{h:\ \forall r\in U_h,\ E_r^h\cap D_r=\varnothing}
+ P_h\ne\varnothing.
+\]
+For a signed pair at $q$, use $D=A\setminus B$ and
+intersect $D$ with $P_h$ for exactly the rows where
+neither of the following holds:
+\[
+ q\in U_h\ \text{and}\ E_q^h\setminus B\ne\varnothing,
+ \qquad
+ E_r^h\cap A\ne\varnothing\ \text{for some }r\in U_h\setminus\{q\}.
+\]
+
+Necessity holds for arbitrary bounds. Follow one child meeting the whole query at
+each gate. The positive rainbow passes to such a child
+because only the gate owner's test is disjunctive. For a
+signed pair exactly one of the two requirements can require
+a choice of child. The resulting leaf lies in $D$.
+If a row first ceases to be bounded along this path at
+an $r$-gate, its sibling must be an allowed $r$-atom at
+that row. For a rainbow the sibling also wins all foreign
+requests, so the common-source condition gives an input
+in $E_r^h\cap D_r$. For a signed pair at $r$ the sibling
+loses $B$, giving an input in $E_r^h\setminus B$ by
+monotonicity. For a signed pair at a different owner
+the sibling wins $A$, giving an input in $E_r^h\cap A$
+by the common-source condition. This proves both common-input
+conditions.
+
+For sufficiency it is enough that, for the query in question,
+each row having an eligible absorber has one whose projection
+is bounded at every row. Start with a projection in the displayed
+intersection for the chosen query. For each row where
+that projection is unbounded, attach a projection from the
+corresponding eligible absorbing set at its owner gate.
+This preserves the query by the singleton-profile recursion
+and makes the output bounded at that row. Each attached
+projection is bounded on every row by hypothesis, so
+all previously established bounds persist. This yields one
+witness with at most one attachment per row. The top bits
+and the same two query forms again characterize the full
+profile tables, by \cref{core:thm:profile-relations}.
+
+For a single bound the hypothesis always holds. The test then
+asks for a projection in $D\cap P_1$, or for $D$ to be nonempty
+and the row to have an eligible absorber. In the latter case
+one owned choice on two projections witnesses the query.
+
+\paragraph{Greatest bounded operation under profile demands.}
+Fix any source bound admitting a nonempty bounded
+word, and let $G$ be its greatest core minorant.
+Prescribe jointly feasible positive singleton tests
+at some owners. Their bounded witnesses are closed
+under union because a positive singleton test is
+preserved by union of two winning words. Let $P$
+be the union of all such witnesses. At each owner
+its profile records exactly the tests forced by the
+demands and the bound.
+
+For a fixed owner $r$, the forced tests depend only
+on the positive demands at $r$. Indeed, take any
+bounded word passing those demands but failing the
+test in question. Starting from it, attach a joint
+positive witness once at each other demanded owner
+$s$, using $\star_s$. Each attachment restores the
+positive tests at $s$ by disjunction and preserves
+all previously satisfied tests at other owners by
+conjunction. At $r$ the failed test stays false.
+The resulting word is bounded and meets all the
+positive demands. This proves the ownerwise rule
+even for an owner with no positive demand.
+
+The greatest word under the positive demands has
+the value rule
+\[
+ H(v)=
+ \begin{cases}
+   \{r\},&\text{a forced test at a demanded owner $r$
+                  wins on its atomic block of $v$},\\
+   G(v),&\text{no such test wins}.
+ \end{cases}
+\]
+The winning owner is unique because its singleton
+is the value of $P$. To obtain this rule, start at
+$G$ and attach $P$ once at each demanded owner.
+Where $P$ has a singleton at a demanded owner,
+its attachment absorbs, and every later attachment
+preserves it. Elsewhere no attachment changes $G(v)$,
+since $P(v)\subseteq G(v)$ and does not supply a
+triggering singleton. This operation is bounded and
+passes the demands. It is greatest because any
+witness is below $G$ and must give the forced
+singletons. In particular it equals $P$.
+
+Additional negative singleton demands are feasible
+precisely when this greatest word passes them.
+A negative at $r$ cannot hold in a word below a
+value $\{r\}$, and the greatest word itself
+witnesses feasibility if it passes every negative.
+Thus feasible negative demands leave the greatest
+word unchanged. For jointly attainable complete
+profiles, take all their positive and negative
+tests. The forced profiles at the prescribed owners
+are exactly the prescribed ones, giving the same
+value rule with the specified profiles in place
+of the forced tests.
+
+On a sole-source probe, the source guard for $H$
+is the guard predicate for $G$ conjoined with
+failure of the prescribed singleton tests on the
+passive posting blocks. The marked head has a
+full menu in this probe, so it adds no atomic
+posting. In particular, if the profiles are
+attainable, a desired source mark is feasible with
+them exactly when it is feasible without them
+and every prescribed test loses at the probe.
+This applies to multiple positive marks using the
+same $H$. For a direct prime-list rule, fix a head $i$ and
+observer $k$. For each prescribed owner $r\ne k$,
+keep its minimal winning coalitions that omit $i$.
+The discarded coalitions cannot be fully posted
+on a probe at $i$. Take the minimal transversals
+of the kept coalitions, as exclusions at $r$.
+If no coalition remains, the empty transversal
+gives the unconditional guard. These are precisely
+the primes that keep the $r$-test losing, since
+every posting of a kept coalition is permitted
+on the facet and its exclusions must hit it.
+The primes of $H$ on this facet are the
+inclusion-minimal unions of one prime of $G$
+and one such transversal at each prescribed
+visible owner. A sufficient guard for the
+conjunction must be sufficient for each factor
+on the same facet and therefore contain a prime
+from each. Conversely every listed union
+suffices, which proves canonicity.
+
+This transformation includes arbitrary hypergraph
+transversal enumeration even for an unrestricted
+bound equal to full union, whose primes are empty
+guards. Prescribe one owner $r$ and use the
+nonempty edges of an arbitrary nonempty
+hypergraph, minimized by containment, as its
+minimal winning coalitions. The profile is
+attainable by taking a foreign owned fold on
+each edge and combining the folds at $r$.
+Add a fresh head outside all edges. On any
+foreign facet at that head, the masked primes
+are exactly the hypergraph's minimal transversals
+as $r$-exclusions. In particular $m$ disjoint
+two-element winners give $2^m$ primes there.
+Thus small minimal-winning lists alone do not
+bound the size of the canonical masked lists.
+
+Verifying a proposed complete masked list on one
+facet is polynomial-time many-one equivalent to
+hypergraph duality, the decision whether a proposed
+list contains exactly the minimal transversals of
+a given hypergraph. The full-union example gives
+one direction. For the other, collect the
+visible minimal winners as hyperedges of
+postings. A set of exclusions is sufficient
+exactly when it hits all these edges and
+contains a prime of $G$. Check every proposed
+prime for sufficiency and test that removing
+any one exclusion destroys sufficiency.
+
+For completeness, fix a prime $g$ of $G$ and
+test guards containing $g$. Drop the mask
+edges already hit by $g$. From every proposed
+prime delete its exclusions in $g$, and
+minimize the resulting list by containment.
+It describes exactly the residual exclusions
+that already contain a proposed prime after
+adjoining $g$. Every residual list member
+hits every remaining mask edge, because
+the original proposed prime did and the
+remaining edges avoid $g$. Thus this list
+covers all sufficient extensions of $g$ if
+and only if it is the minimal-transversal
+list of the remaining edges. This gives one
+duality instance per prime $g$, using only the
+supplied lists.
+
+Combine all these instances into a single one.
+Index their monotone CNFs and proposed DNFs by
+$j$, and introduce a fresh selector $t_j$ per
+instance. Add $t_j$ to every clause of CNF $j$,
+and require $t_i\lor t_j$ for each distinct pair
+of selectors. On the DNF side include the term
+containing all selectors. For each term of DNF
+$j$, include that term with every selector
+except $t_j$ adjoined. If all selectors are
+true both formulas hold. If just $t_j$ is
+false, the two formulas restrict to instance
+$j$. With at least two false selectors both
+formulas fail. Thus the combined formulas are
+equivalent exactly when all residual instances
+have complete lists. Minimize the combined DNF
+by containment. If a remaining term is not a
+minimal transversal of the combined clauses,
+equivalence already fails and one can return
+a fixed negative duality instance. Otherwise
+the combined clauses and minimized DNF are
+the requested hypergraph and proposed dual.
+A facet with no prime of $G$ has an empty
+masked list and can be checked separately.
+
+\paragraph{Restricting the owners in a bounded query.}
+For any collection of upper bounds, retain the owners
+$s$ for which some row has $s\in U_h$ and $E_s^h\ne\varnothing$,
+with $E_s^h=\{j:w_j^h=\{s\}\}$. If a positive rainbow or a
+same-owner positive/negative pair has a witness, it has one
+using gates of the retained owners alone.
+
+To see this, prune each gate of an omitted owner to one child.
+At a row where a subterm was bounded, such a gate cannot absorb:
+an allowed singleton at its owner would have to originate in a
+singleton input at that owner. Thus both children are bounded
+at those rows. At a retained gate, any child originally
+absorbing at a bounded row stays absorbing, since replacing
+omitted gates by either child can only increase the singleton
+profiles of retained owners. At all other bounded rows both
+children were bounded. These facts let the induction pass
+the requisite bounds to each child.
+
+The query itself can be passed down at the same time. For
+a rainbow, at a deleted gate select the child winning its
+owner's request if one was made. Both children win the other
+requests. For a same-owner signed pair, select a positive
+child at a gate of the queried owner and a negative child
+at any other gate. The opposite requirement holds in both
+children. At retained gates distribute the requests using
+the profile disjunction and conjunction, and keep both
+children. This preserves the query through the pruning.
+
 \paragraph{Simultaneous bounds with one permitted atomic absorber.}
 Arbitrarily many non-atomic bounds have a closed joint test when the
 allowed atomic absorptions have one common owner. The bounds themselves
@@ -67,27 +317,9 @@ union of the selected inputs. Complementing $S$ gives exactly the Horn
 rules above. Thus $G(D)$ is the greatest safe fold support contained
 in $D$.
 
-For the two query forms it suffices to consider such folds. Start from
-any simultaneous witness, retain every $r$-owned gate, and prune each
-foreign-owned gate to one child. The $r$-profile can only increase:
-foreign gates combine its bits by conjunction. At any row where an
-original subword respects the bound, a foreign-owned root cannot
-absorb: that would produce an allowed foreign singleton, contradicting
-\eqref{core:eq:single-absorber-budget}. Both children are therefore
-bounded there. At an $r$-root, an existing $r$-absorbing child stays
-absorbing because its $r$-profile increases; otherwise both children
-are bounded. Induction applies to each child's bounded rows and
-preserves every original budget simultaneously.
-
-The pruning choices also retain the requested profile information.
-For a positive rainbow, at a deleted gate choose a child meeting its
-owner's request; all other owners' requests already hold in both
-children. At a retained gate distribute the requests according to
-its profile disjunction/conjunction. For a positive/negative pair at
-owner $q$, a deleted $q$-gate has a positive child and both children
-negative on $B$; any other deleted gate has a negative child and both
-positive on $A$. Retained gates again pass the appropriate requirements
-to their children. These inductions leave only $r$-gates, hence a fold.
+The owner restriction above leaves only $r$-gates in a
+witness to either query. Associativity and idempotence at
+$r$ reduce this witness to a fold.
 
 Such a fold has owner-$r$ profile $[S\cap A\ne\varnothing]$ and every
 foreign profile $[S\subseteq A]$. Its support conditions give exactly
@@ -121,3 +353,24 @@ $\{x,y\}$ has $z$ in its complement; closure forces first $y$ and
 then $x$ into the complement. Thus $G(\{x,y\})=\varnothing$, and
 the joint rainbow test fails. The theorem uses one closure of all
 budgets, rather than a conjunction of separate one-row tests.
+
+For a fixed rainbow or signed pair, write the test as
+$G(D)\cap M\ne\varnothing$. Failure needs at most $|D|$ rows.
+Start the Horn derivation at $V\setminus D$ and record one row
+for each newly added input until the closure contains $M$.
+Keep just the recorded rows. In their original order the same
+rules still derive those inputs, so the query still fails.
+In particular, any full profile incompatible with the bounds
+is ruled out by one query with at most $|V|$ rows, or by a
+top-bit violation alone.
+
+The row bound is sharp even for the empty rainbow. Take $n$
+inputs and $n$ rows, each with allowed set $\{a,b\}$. At row
+$j$ put $w_j^j=\{c\}$ and, if $j>1$, put
+$w_{j-1}^j=\{a\}$. Give every other entry the value $\{a,b\}$.
+The rules are $\varnothing\to\{1\}$ and
+$\{j-1\}\to\{j\}$ for $2\le j\le n$. They force the
+whole input set. If row $j$ is removed, the $a$-fold on
+$\{j,\ldots,n\}$ meets every remaining bound. At earlier rows
+all selected inputs are bounded, and at later rows the fold
+absorbs to $\{a\}$.

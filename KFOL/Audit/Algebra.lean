@@ -55,6 +55,7 @@ import all KFOL.Core.EdgeSupportPruning
 import all KFOL.Core.NonrectangularPruning
 import all KFOL.Core.RainbowWinnerLift
 import all KFOL.Core.MonochromaticHeadCuts
+import all KFOL.Core.CodedPostingObstruction
 import all KFOL.Core.MonochromaticCutObstruction
 import all KFOL.Core.SinglePostingObstruction
 import all KFOL.Core.PurePostingPaths
@@ -71,6 +72,7 @@ import all KFOL.Core.LayerInterpolation
 import all KFOL.Core.GuardConsensus
 import all KFOL.Core.OwnerFoldClosure
 import all KFOL.Core.SpineThinning
+import all KFOL.Core.RightPhaseClosure
 import all KFOL.Core.IntervalMinorant
 meta import Lean.Elab.Command
 

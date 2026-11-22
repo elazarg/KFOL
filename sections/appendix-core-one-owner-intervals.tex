@@ -228,6 +228,1301 @@ holds automatically for each coloring's foreign blocks, because its
 own $r$-block spans $H$ and is disjoint from them.
 \end{proof}
 
+\paragraph{Forbidden sets of one-owner principals.}
+The full principal in \cref{core:thm:one-owner-activation-order}
+can be computed directly from the base primes. On a facet
+seeing $r$, take a prime at $x$ and let $E$ be its set of
+excluded inputs. The set $V\setminus(E\cup\{x\})$ is a maximal
+closed set missing $x$. Indeed sufficiency says its closure
+misses $x$, and minimality of the exclusions makes it maximal,
+so it is itself closed. Conversely every maximal closed set
+missing $x$ gives such a prime. Let $\mathcal M$ be the list of
+these closed sets over all heads. Every closed set is the
+intersection of members of $\mathcal M$ containing it, since
+each missing input can be separated by a maximal closed set.
+
+For a query $p$ obtain $H=c(p_r)$ by testing the native
+posting against the base primes at each unposted head.
+Besides the unit restrictions of the principal, the forbidden
+posting sets at each foreign owner $s$ are exactly the
+inclusion-minimal nonempty sets $H\setminus M$ for
+$M\in\mathcal M$. In fact $c(H\setminus q_s)$ is proper in
+$H$ exactly when some maximal avoiding closed set contains
+$H\setminus q_s$ but misses an input of $H$. Equivalently
+$q_s$ contains a nonempty $H\setminus M$. This gives the full
+principal by scanning and minimizing a list of size bounded
+by the number of original primes.
+
+The minimal forbidden sets are also the differences between
+$H$ and the maximal proper closed subsets of $H$. Therefore
+all principals are 2-CNF exactly when every cover in the
+closure lattice adds at most two inputs. A forbidden set of
+size at least three precludes even a different 2-CNF encoding
+on the same posting indicators restricted to proper colorings:
+post that set at a foreign owner, and consider three allowed
+subsets each omitting a different one of its inputs. Their
+coordinatewise majority is the forbidden set, whereas every
+2-CNF relation is closed under majority. Conversely the
+displayed forbidden-set formula is 2-CNF when all differences
+have size at most two. In particular width-$w$ base primes
+give principal clauses of size at most $w+1$, because each
+$M$ omits its prime's head and the prime exclusions. Width one
+thus always gives a 2-CNF principal for base elimination, and
+the $w+1$ clause bound is attained by a fold on $w+1$ inputs.
+
+The largest cover difference can be computed without listing
+the closure lattice. For each $M\in\mathcal M$ maximal missing
+an input $x$, its unique upper cover is $M^+=c(M\cup\{x\})$:
+every strict closed extension already contains $x$. It can
+equivalently be computed by intersecting the members of
+$\mathcal M$ strictly containing $M$, with $V$ as the empty
+intersection. The largest difference over all covers is
+exactly $\max_{M\in\mathcal M}|M^+\setminus M|$.
+
+Indeed let $A\prec H$ be any cover and choose $x\in H\setminus A$.
+Extend $A$ to a maximal closed set $M$ missing $x$. It misses
+every $y\in H\setminus A$, because $c(A\cup\{y\})=H$ would
+otherwise force $x$ into $M$. Meanwhile $M^+$ contains $H$,
+since $c(A\cup\{x\})=H$. Thus $H\setminus A$ is contained in
+$M^+\setminus M$. The reverse bound holds because each scanned
+pair is itself a cover. Scanning these sets from the primes
+therefore computes the maximal principal clause size in
+polynomial time and gives a query witnessing it by posting
+$M^+$ at $r$.
+
+The same maximum controls the arity of folds needed to
+eliminate this base from any outside loss budget. Let $b$
+bound the cover differences and put $H=c(p_r)$ at the query.
+Instead of using one native fold on $V\setminus H$, choose a
+saturated chain of closed sets from $H$ to $V$ and take its
+differences from the top down. At a step from $H_j$ to
+$H_{j-1}$, all surviving native rows use only premises in
+$H_j$. A surviving row at a head of $H_j\setminus H_{j-1}$
+must meet that difference, because $H_{j-1}$ is closed.
+The fold on the difference is therefore admissible and can
+attach at $r$, since the seed lies in $H$. These folds perform
+the native clearings and make projections outside $H$ safe.
+For a failed foreign test, use either such a projection or
+the fold on the complement of a maximal proper closed subset
+of $H$. The latter is contained in the offending foreign
+coalition and meets the native seed. Thus every base
+attachment can use at most $b$ inputs.
+
+This arity is necessary in the worst outside extension, even
+if the small helpers are arbitrary core operations. Let
+$A\prec H$ have difference $S=H\setminus A$ of size $b$. Add
+a single outside head $h$ losing on $S$ posted at a foreign
+owner $s$, and query it with $H$ posted at $r$. The mark is
+feasible because the foreign complement test fails. The pure
+$r$-rows with premises and heads in $H$ can never be cleared
+at this query by an eligible attachment, since their native
+coalitions are contained in the query's $r$-coalition.
+
+Any helper meeting these rows and winning at $s$ on $S$ must
+use all of $S$. Starting from a term for it, prune each gate
+other than $r$ to one child winning that same $s$-test, and
+keep both children at $r$-gates. The resulting $r$-fold uses
+only inputs of $S$. It still omits the pure $r$-rows: the
+pruned gates have no foreign absorptions on those probes,
+and pruning can only increase the $r$-singleton flags and
+remove marked occurrences. Its support must be all of $S$,
+since the complement of a proper nonempty subset of $S$
+is not closed in $H$, by the cover. No smaller helper can
+therefore clear the outside loss. Also none can supply $h$
+directly: a shortest such word on the same support would
+have to be singleton on one of the retained losses, or one
+of its children could replace it. The native singleton tests
+are ineligible at the query, leaving the same $s$-test on
+$S$. This proves the sharp bound for elimination by helpers.
+
+\paragraph{The graph of singleton-prime one-owner traces.}
+On a live support, suppose all losses use just owner
+$r$ and every head with a loss has exactly one minimal
+native premise $A_j$. The family is core exactly when
+dependencies between two heads with losses are reciprocal:
+if $i\in A_j$ and $A_i$ exists, then $j\in A_i$.
+Inputs without losses can occur in premises without
+a reciprocal requirement.
+
+For necessity use the pure-owner closure of a core
+operation. If $i\in A_j$ and $j\notin A_i$, start
+from $(A_j\setminus\{i\})\cup A_i$. It contains
+neither $i$ nor $j$, yet derives both in succession.
+It therefore must contain the unique minimal premise
+$A_j$, a contradiction. Conversely put
+\[
+ c(E)=E\cup\{j:A_j\text{ exists and }A_j\subseteq E\}.
+\]
+This is idempotent: a head still absent after the step
+has a missing prerequisite. That prerequisite either
+has no rule or requires the absent head in return,
+so it too stays absent. The closure is loopless since
+all heads are live. Its one-owner trace has exactly
+the prescribed guards. Thus the singleton-prime
+recognition test in this class is just reciprocity
+on the headed inputs.
+
+\paragraph{Smallest representatives of one-owner activation classes.}
+For a target $q$ of a one-owner trace, put $H=c(q_r)$
+on the live support. A smallest equivalent coloring keeps
+the foreign blocks outside $H$, erases those inside it,
+and uses a minimum set of native postings generating $H$
+under $c$. This follows directly from the kernel formula.
+It also gives a smallest representative among subcolorings
+of $q$ when the generators are restricted to $q_r$.
+
+At width one, the native generators are described
+exactly by vertex covers. Every head in $H$ whose
+premise is absent or is not contained in $H$ must
+be selected. On the remaining heads use the
+undirected graph of reciprocal premises. A seed
+containing the forced heads generates $H$ exactly
+when its remaining part covers this graph: each
+unseeded head must have all its neighbors seeded
+in the one-step closure. In particular minimal
+generators consist of the forced heads and the
+minimal vertex covers.
+
+Deciding whether the class has a representative with at
+most a given number of postings is NP-complete even with
+canonical prime width one and an all-native target.
+Reduce minimum vertex cover on a graph without isolated
+vertices. Use one input per vertex and put
+$c(A)=A\cup\{j:N(j)\subseteq A\}$, where $N(j)$ is its
+neighbor set. These are exactly the reciprocal
+premises above.
+At the all-$r$ target, an equivalent coloring must
+generate the whole graph from its native seed. This
+happens exactly when its complement is independent,
+so the minimum number of postings is the vertex cover
+number.
+
+The only loss at head $j$ posts all its neighbors at
+$r$. On a facet admitting $r$, the canonical primes
+are their single exclusions. On the facet omitting $r$
+the guard is empty. The reduction thus supplies the
+canonical prime lists in polynomial size. For membership
+the closure of a guessed seed is read by source tests at
+the other heads. Hardness also holds when the
+representative must be a subcoloring of the target.
+
+\paragraph{Greatest atomic enlargement of a one-owner trace.}
+For a one-owner trace with native owner $r$ and closure $c$
+on its live support $V$, put $H=c(q_r)$. The greatest atomic
+enlargement is the trace of the restriction of $c$ to $H$,
+in disjoint union with the projections on $V\setminus H$.
+An empty $H$ leaves just the input union.
+
+Indeed, every minimal loss is a native coalition $A$ at
+some head $j\notin A$ with $j\in c(A)$. Its coloring
+passes the principal of \cref{core:thm:one-owner-activation-order}
+exactly when $A\subseteq H$. By closedness then $j\in H$.
+Conversely all minimal losses of the restricted trace
+on $H$ are of this form. Thus the displayed disjoint
+union is core and has exactly the upper bound given by
+the protected losses. It is the greatest enlargement
+by \cref{core:thm:principal-box-extension}. Its closure
+on the whole support is $E\mapsto E\cup c(E\cap H)$.
+
+\paragraph{Intervals over a single fold.}
+Let $C$ be the $r$-fold of all inputs of a nonempty set
+$V$. For an antitone predicate $P$ on proper colorings,
+the extension $F_P$ of the activation theorem is core
+exactly in the following two cases:
+\begin{itemize}
+\item $P$ vanishes whenever the $r$-block is nonempty.
+\item Its only losses are some of the full foreign
+diagonals $V:s$, with $s\ne r$.
+\end{itemize}
+Indeed the native closure sends any nonempty set to $V$.
+The principal of a target with empty $r$-block is ordinary
+subcoloring. The principal of any target with a nonempty
+$r$-block contains precisely the colorings other than
+the full foreign diagonals. Thus a positive of the second
+kind forces $P$ to be positive off those diagonals, and
+either displayed case is closed under the preorder.
+
+This is a polynomial prime-list test even when the
+number of owners varies. For the first case test the
+one-input $r$-postings. For the second, evaluate $P$ on
+the full foreign diagonals. On each facet the diagonals
+that lose and are visible there give disjoint posting
+sets. If there are $d$ such sets, the required prime
+list consists of all choices of one posting per set.
+Check that every entry is such a choice and that there
+are exactly $|V|^d$ entries. The count can be compared
+in binary without generating the choices.
+
+Cofactor independence alone does not suffice even on two
+passive inputs. Take $C=x\star_r y$ and give the new
+source $z$ just one loss, at $x:s,y:t$ for distinct
+$s,t\ne r$. The passive sources have their fold losses.
+If $x$ or $y$ is captured, the other is fixed at $r$,
+so changing the captured menu cannot activate the mixed
+loss of $z$. If $z$ is captured, the passive output
+already contains both $s$ and $t$, and every other
+contribution from $z$ is suppressed. Thus all the
+cofactor laws hold. Nevertheless $P$ is positive at
+$x:r$ and loses at a coloring in its principal. The
+candidate is noncore, with singleton primes and a
+monochromatic two-input component feeding a sink.
+
+\paragraph{Terminal primes over disjoint folds.}
+Let $C$ be a disjoint union of owned folds, with potentially
+different native owners for its blocks. The activation product
+in \cref{core:thm:block-source-extension} applies to this
+union, with a constant coefficient on each successive block.
+There is a direct Boolean test for a terminal predicate $P$
+over $C$, using its facet primes without generating the losses.
+
+A failure consists of $p\preceq_C q$ with $p$ losing and
+$q$ positive. Enumerate an observer $k$ of $q$ and a prime
+$G$ enabled there. For a block $B$ with native owner $r$,
+put
+\[
+ A_B=\{(v,s):v\in B,\ s\notin\{k,r\},\ (v,s)\notin G\}.
+\]
+If $q$ has no native posting on $B$, then $p|_B$ must be
+contained in $A_B$, and $q|_B=p|_B$ is a sufficient choice.
+The alternative of a native posting is available exactly
+when $r\ne k$ and some $(v,r)$ in this block is allowed by
+$G$. A single such posting then suffices, and admits every
+$p|_B$ except the full foreign diagonals, by the fold
+principal above.
+
+Consequently, if the native alternative is unavailable,
+restrict $p|_B$ to $A_B$ by unit exclusions. If it is available,
+forbid precisely the full foreign diagonals of $B$ that
+are not contained in $A_B$. Each such exclusion is a
+clause of negated posting variables of size $|B|$. These
+block conditions are exact: their local choices for $q$
+combine to a consistent coloring omitting $k$ that enables
+$G$.
+
+To complete the test enumerate an observer $\ell$ for $p$,
+exclude its color, and impose pairwise inconsistency
+clauses for distinct colors of the same input. Require $p$
+to hit every prime on its $\ell$-facet, so that it is a
+loss. There is a failing comparison exactly when one of
+these Boolean instances is satisfiable. The test gives a
+polynomial certificate of failure. It is polynomial-time
+at width two when every fold has size at most two, since
+the instances are then 2SAT. It is also polynomial-time
+with singleton primes and arbitrary fold sizes: a facet
+loss then forces one known set of postings, and the other
+clauses test just upper restrictions on that set. For one
+explicit terminal loss $T$, use $p=T$ and the same local
+tests, since every losing coloring is above $T$.
+
+At terminal prime width two, this comparison
+test reduces to a polynomial list of multicolored
+clique instances with at most one part per fold
+of size greater than two, even when $K$ varies.
+For a fixed choice of the two observers and
+positive prime, put all loss clauses, consistency
+clauses, unit restrictions, and small-fold
+conditions in a base 2CNF. Each remaining fold
+only forbids some full foreign diagonals.
+Choose one fixed input of that fold and specify
+its status in the losing coloring, either one
+posting or no posting. This uses unit clauses.
+All forbidden diagonals except possibly the
+one at the specified color are then excluded.
+If that color's diagonal is forbidden, also
+choose a second input of the fold that does
+not post that color. The resulting conjunctions
+of units cover precisely the allowed local
+colorings and give one part for the fold.
+
+Reject an inconsistent base, discard choices
+infeasible with the base, and
+join choices in distinct parts when their
+units are jointly feasible with the base.
+Pairwise feasibility is sufficient because
+unsatisfiability of a satisfiable 2CNF under
+unit assumptions is witnessed by at most two
+of those assumptions. A clique meeting each
+part therefore gives a failed comparison, and
+every failed comparison selects a clique.
+The number of parts is independent of the
+number of forbidden colors. If there are $d$
+large folds and their sizes are at most $b$,
+enumeration takes $(1+Kb)^{O(d)}$ times
+polynomial input size.
+
+When the terminal losses use no native owner of the
+folds, the comparison can be read just from each minimal
+loss $T$. A nonempty block restriction $T|_B$ can be
+replaced by one native posting at $B$ exactly when it
+is not a full foreign diagonal. Exact recognition fails
+if and only if some minimal loss admits a nonempty
+collection of such replacements whose result is proper.
+
+In fact each replacement is an upward activation
+comparison. The resulting coloring is positive because
+its foreign postings form a strict subposting of $T$
+and its native postings play no role in the terminal
+losses. Conversely, if $T$ compares below a positive
+proper background, every block without a native posting
+in that background retains the restriction of $T$.
+Every other block passes the diagonal test. Keep one
+native posting on each such block meeting $T$, and
+restrict the other blocks to $T$. This is a proper
+subposting of the background. At least one nonempty
+restriction must have been replaced, since otherwise
+the background contains $T$.
+
+To check a given loss, enumerate the missing observer
+$\ell$ of a proposed result. Every block posting $\ell$
+in $T$ must admit a replacement and have native owner
+different from $\ell$. If there is no such block to
+replace, look for any nonempty replaceable restriction
+with native owner different from $\ell$. Thus the test
+is polynomial from explicit minimal losses, including
+when the losses use every nonnative color.
+
+In particular, if some owner is neither native nor used
+by the losses, the condition is that every minimal loss
+be a union of full monochromatic block diagonals. The
+same condition is exact if there are at least two native
+owners: changing one block leaves another native owner
+absent. The terminal predicate then reads only which
+folds take a singleton at each hidden owner. For each
+terminal prime on a facet seeing all hidden colors, attach
+the fold of the block of each excluded posting by that
+posting's owner, starting at the terminal source. The
+union of these spines with the baseline realizes the
+candidate, by evaluating each prime on the union of
+the full diagonals. Each used fold is already below the
+baseline, and the spines supply exactly the required
+terminal marks. This yields a polynomial circuit.
+
+The full-diagonal condition in this case can also
+be checked in polynomial time from complete primes,
+at arbitrary width. For a partial block, require a
+posting at one input and forbid all postings at a
+second input of the block. For a mixed block, require
+two differently colored postings there. For each
+required posting guess a private prime, containing
+it and hit by no other posting of the proposed
+minimal loss. Exclude all other postings of those
+primes. A minimal loss exists with the imposed
+requirements exactly when the remaining allowed
+postings hit every prime. Indeed there is then a
+minimal loss inside the allowed set, and the
+private primes force the required postings to
+remain. Conversely an offending minimal loss
+provides those private primes. There are at most
+two choices of a private prime per test.
+
+If all folds have the same native owner $r$ and
+every minimal terminal loss uses every other
+owner, the loss-only test has a simpler form.
+Failure is equivalent to a losing coloring
+containing no full diagonal at some fixed
+foreign owner $s$. Indeed, the only way a
+replacement can give a proper coloring is
+to eliminate a foreign color. This is possible
+exactly when every block posting that color
+is replaceable. One may start with any losing
+coloring avoiding the diagonal and thin it to
+a minimal loss; saturation ensures that $s$
+still occurs, and thinning creates no diagonal.
+
+This special case already gives a reverse
+reduction from multicolored clique with one
+large fold per vertex class.
+If a class has fewer than three vertices,
+duplicate a vertex with the same neighbors
+in all other classes to reach size three.
+Use a fold on the vertices of each class and
+choose a hidden color $s$. Require the terminal
+loss to post at least one endpoint at $s$
+for each nonedge between classes, and require
+one $s$-posting in a fresh binary fold.
+Require one fixed posting at each other
+hidden owner, on its own singleton block.
+These loss clauses give complete terminal
+primes after subsumption, since only one color
+is requested at each input. They have width
+at most two, and every loss uses all hidden
+colors. The singleton anchors prevent a
+diagonal-free loss at every owner other than
+$s$. A loss with no full $s$-diagonal leaves
+at least one vertex unposted in each class,
+and any two remaining vertices in distinct
+classes are adjacent. Conversely a
+multicolored clique gives such a loss by
+posting all the other vertices and one of
+the binary-fold inputs. Thus the number
+of large folds preserves the number of
+clique parts in this reduction.
+
+In particular, using the three literal occurrences
+of each 3CNF clause as a class and joining
+noncontradictory occurrences gives hardness
+with only triple folds and singleton anchors.
+Replace the extra binary fold by a triple and
+require a fixed $s$-posting at one of its inputs.
+The other two can stay unposted. This version
+has width two even at the passive heads.
+
+The block-size bound for the 2SAT test is sharp for testing
+even a single specified positive coloring. At width two and
+fold size at most three it is coNP-complete to decide whether
+the whole principal of that coloring is positive. Use a 3CNF
+with one two-input fold block for each Boolean variable and
+one three-input fold block for each clause. All folds have
+owner $c$. Choose $q$ with a single native posting in each
+block. The terminal primes use only $b$-postings, for
+$b\ne c$, so $q$ is positive.
+
+In a variable block put one prime requiring its loss to post
+at least one of its two inputs at $b$. A coloring below $q$
+cannot post both at $b$, so this chooses a Boolean value.
+In each clause block give one input to each literal. For each
+such input $u$, use the two-posting prime consisting of $u:b$
+and the $b$-posting for the value making that literal true
+in its variable block. Thus a false literal forces its clause
+input to be posted at $b$. A loss in the principal cannot
+post a whole clause block at $b$, so at least one literal
+must be true. Conversely a satisfying assignment gives a loss
+in the principal by posting the chosen variable inputs and
+the false clause inputs at $b$. These are proper colorings,
+and the prime lists are canonical after subsumption, since
+they use one color per input. This proves hardness for the
+test at $q$.
+
+The same reduction makes exact recognition coNP-complete
+at width two when folds have size at most three. Add a
+retained input $u_s$ for each owner $s\notin\{b,c\}$.
+These are singleton blocks. Add the singleton prime
+$\{u_s:s\}$ for each of them, so every terminal loss
+requires these fixed postings as well as the old Boolean
+clauses. The primes still have width at most two,
+including those of the passive folds.
+
+Suppose a loss $p$ lies below a positive $q$. The anchor
+postings of $p$ must all remain in $q$ by the singleton
+block comparisons. Some old fold must have a native
+$c$-posting in $q$. Otherwise every old block comparison
+is ordinary inclusion, which would keep the loss.
+Properness of $q$ now forces $b$ to be absent. Hence no
+old block of $p$ can be a full $b$-diagonal: that would
+force the same diagonal in $q$. The Boolean clauses
+therefore give a satisfying assignment as above.
+Conversely, take the loss encoding a satisfying
+assignment and include the anchors. A $q$ using those
+anchors and one native $c$-posting in each old fold is
+proper and positive, and its principal contains the
+loss. This is an exact recognition obstruction. The
+Boolean test above gives the coNP upper bound.
+
+For binary folds at width three, omit the clause blocks
+and give each SAT clause its own terminal prime on the
+satisfying value postings in the variable blocks. Retain
+the variable-pair primes and the anchors. The same
+argument makes a failing comparison equivalent to a
+satisfying assignment. Thus the polynomial cases for
+bounded fold size and bounded prime width are singleton
+primes, singleton folds, and width two on binary folds.
+Singleton folds give the retained-input union and hence
+every antitone terminal predicate. The two reductions
+give coNP-completeness on the other parameter ranges.
+
+\paragraph{Eliminating positive backgrounds over disjoint traces.}
+The positive background can also be eliminated directly
+when each passive block $C$ is a one-owner trace at $r_C$
+with threshold $t_C$: its closure sends sets of size at
+least $t_C$ to $C$ and leaves smaller sets unchanged.
+Here $1\le t_C\le |C|$. Fix a terminal prime $G$ and its
+observer $k$. On each block let $A_C$ be all postings
+that are visible at $k$ and avoid $G$. A local loss
+pattern $q_C$ compares below some local positive
+background avoiding $G$ exactly when either
+\begin{enumerate}
+\item all postings of $q_C$ lie in $A_C$; or
+\item $A_C$ contains at least $t_C$ native postings and,
+for every foreign owner $s$, the $s$-block of $q_C$
+has size at most $|C|-t_C$.
+\end{enumerate}
+For the first case take the background to be $q_C$ itself.
+For the second, post just $t_C$ allowed native inputs.
+To prove necessity, if the background's native closure
+is proper, it is exactly its native block and no foreign
+posting of $q_C$ can enter it. The activation formula then
+requires ordinary subcoloring. If that closure is full,
+the background has at least $t_C$ native postings and
+each foreign block of $q_C$ must leave a spanning
+complement. These are exactly the stated conditions.
+
+Consequently a failure is just one proper loss whose
+local patterns pass these tests for a common positive
+prime and observer. The chosen local backgrounds combine
+to a positive proper background because each avoids the
+same observer and prime. Conversely a failed comparison
+has a positive prime, and its loss passes every local
+test. This is an exact prime criterion for arbitrary
+thresholds, with no search over the positive backgrounds.
+One can enumerate the loss's observer and use hitting
+clauses for its primes, posting consistency, and the
+displayed local alternatives to check for a failure.
+The loss itself is a polynomial certificate.
+
+At terminal prime width two, threshold traces with
+uniformly bounded thresholds also admit the reduction
+to multicolored clique, with at most one part per
+block larger than two. The local subcoloring
+alternative gives one conjunction of units. For the
+spanning alternative on a block of threshold $t$,
+at least $t$ allowed native postings must exist,
+and every foreign color must have at least $t$
+inputs not posted at that color. These simultaneous
+complement conditions have a polynomial list of
+unit conjunctions when $t$ is bounded, uniformly
+in the palette size.
+
+If the block has fewer than $2t-1$ inputs,
+enumerate all its statuses and keep the assignments
+satisfying the complement conditions. Otherwise
+fix $2t-1$ of its inputs and enumerate their statuses.
+At most one foreign color can have fewer than $t$
+nonmatches among them: any such color must occupy
+at least $t$ of the fixed inputs. For the exceptional
+color, if any, choose the remaining nonmatches it
+needs among the other inputs and impose their
+individual exclusions at that color. Every local
+solution selects one of these conjunctions and
+every conjunction ensures the complement conditions.
+The number of choices at a block of size $m$ is
+bounded by $(K+1)^{2t-1}(m+1)^t$ plus the
+subcoloring alternative. Blocks of size at most two
+are folds or identity traces, so their constraints
+can be kept in the base 2CNF. Pairwise consistency
+of the remaining unit conjunctions then gives the
+same clique test as for folds.
+
+For an arbitrary one-owner closure $c$ the same elimination
+has a descending fixed-point test. Write $A_s$ for the
+allowed inputs at owner $s$ on the block and let $r$ be
+its native owner. Start at $H=c(A_r)$ and repeatedly
+replace $H$ by
+\[
+ c(H\cap A_r)\ \cap\!
+ \bigcap_{s\ne r} c(H\setminus q_s).
+\]
+On closed sets this update is decreasing and monotone.
+Its greatest fixed point is the largest closed $H$
+that can be generated by allowed native postings and
+still be generated after removing each foreign block.
+A local comparison is possible exactly when this
+fixed point contains $q_r$ and every $q_s\setminus A_s$.
+Necessity follows from the activation formula: the
+native closure of any witnessing background is itself
+a fixed point and so lies in the computed one.
+For sufficiency take $p_r=H\cap A_r$ and
+$p_s=q_s\setminus H$ at foreign owners. These postings
+are consistent and allowed. The fixed-point equalities
+verify the activation formula. There are at most $|C|$
+strict decreases, so for arbitrary disjoint one-owner
+traces with efficiently evaluable closures a proposed
+loss and positive prime can be tested without guessing
+the local backgrounds or even their native closures.
+
+\paragraph{Single-owner changes of a terminal background.}
+For arbitrary disjoint one-owner traces, the
+activation test of a terminal predicate can be
+restricted to comparisons that change blocks
+of one native owner at a time. Here the
+colorings on unchanged blocks must agree;
+within the changed blocks use the full
+one-owner activation comparison. Both ends
+of each comparison must be proper.
+
+Indeed, suppose a losing $p$ lies below a
+positive $q$, and choose an owner $m$ omitted
+by $p$. In each block use the native postings
+of $q$ together with the foreign postings of
+$p$ outside the native closure of $q$. This
+local coloring is above the block of $p$ by
+the activation formula. It is a subposting
+of the block of $q$, so the assembled coloring
+is proper and positive by antitonicity.
+Starting at $p$, make these replacements
+one block at a time on blocks with native
+owner other than $m$. None can introduce
+$m$: its foreign postings come from $p$.
+Then replace all remaining blocks, whose
+native owner is $m$, together. The last
+endpoint is proper by construction. Each
+step is an upward activation comparison,
+so some step goes from loss to positive.
+This proves the restriction. In particular,
+if each native owner occurs in just one
+block, single-block comparisons suffice.
+
+There is no uniform bound on the number of
+blocks that must change together, even at
+$K=3$ and prime width one. Take $d$ disjoint
+binary folds at $r$ and one terminal loss
+$T$ posting the two inputs of each fold at
+the other two owners $a,b$, respectively.
+The terminal primes on the $r$-facet are the
+singleton exclusions of the postings of
+$T$, and the passive fold primes have width
+one. The only losing background is $T$.
+If a proper positive background above $T$
+has no native posting, it must contain $T$,
+a contradiction. With an $r$-posting it
+must omit $a$ or $b$, so no block can stay
+unchanged. Conversely replacing every block
+by a native singleton gives a proper positive
+background above $T$, since no block of $T$
+is a full diagonal. The smallest failed
+comparison therefore changes exactly $d$
+blocks.
+
+This sharpens the width-two clique reduction.
+Enumerate the native owner of the changing
+blocks along with the two observers and the
+positive prime. On all other blocks the
+comparison is equality, so impose only the
+unit exclusions that keep the common postings
+visible and within the positive guard. The
+same 2CNF and local conjunction constructions
+now use at most as many clique parts as
+there are large folds of the chosen owner.
+For bounded thresholds or bounded generators
+the analogous bound counts only the relevant
+blocks of that owner. The reverse clique
+reduction already uses a single native owner,
+so the bound retains its parameter dependence
+even on that special case.
+
+Equivalence within any one coloring has a
+canonical representative as well. In each
+block fill its native closure with native
+postings, and erase foreign postings in that
+closure. This adds no new color, and the
+activation formula gives comparisons both
+ways: each original foreign complement
+contains the original native generating set.
+Thus a terminal bit is constant on these
+representatives in every realizer. Distinct
+representatives are inequivalent, because the
+local closed sets and the foreign postings
+outside them determine the equivalence class.
+
+\paragraph{Minimal losses over disjoint traces.}
+Suppose the terminal losses use none of the
+native owners. Then exact recognition reduces
+to a test on each explicit minimal loss $T$,
+without choosing a positive prime. For each
+observer $\ell$, compute a closed set $H_B$
+in each block $B$. Set $H_B=\varnothing$ if
+its native owner $r_B$ is $\ell$. Otherwise
+start at $B$ and descend by
+\[
+ H\longmapsto\bigcap_{s\ne r_B}
+ c_B(H\setminus T_s)
+\]
+to its greatest fixed point. Let $H_*$ be the
+union of the resulting sets. The loss obstructs
+realization exactly when some $\ell$ has
+$T_\ell\subseteq H_*$ and at least one posted
+input of $T$ in $H_*$.
+
+In fact take the positive background to post
+each $H_B$ at its native owner and keep $T$ on
+the complement of $H_*$. The first condition
+ensures that this background omits $\ell$.
+Its hidden postings are a strict subposting
+of $T$ by the second condition, so it is
+positive by minimality. The fixed-point
+equalities make $T$ compare below it on
+each block. Conversely, if $T$ compares
+below a proper positive background, take
+its missing observer $\ell$ and the native
+closures of that background on all blocks.
+These are fixed points of the update, or
+empty when the native owner is omitted.
+Their union must contain $T_\ell$, since
+postings outside the native closures are
+preserved in the comparison. It must meet
+the support of $T$, since otherwise the
+background contains the whole loss.
+Maximality of the computed fixed points
+then gives both conditions.
+
+This directly generalizes the replacement
+test for disjoint folds. It takes polynomial
+time in the explicit loss list and the
+baseline prime lists, since closure calls
+are native-facet evaluations and there are
+at most $|B|$ strict decreases per block.
+When there is an owner absent from all
+native owners and from $T$, it suffices to
+use that observer: no block is disabled and
+the requirement on $T_\ell$ is empty.
+
+The fixed points also give the minimum
+number of changed blocks for an explicit
+loss. For a feasible observer $\ell$ with
+$T_\ell\ne\varnothing$, this number is
+exactly the number of blocks posting
+$\ell$ in $T$. Each must change to omit
+$\ell$, and using the fixed-point
+replacement just on those blocks is
+enough to remove a posting and reach a
+proper positive background. If $T_\ell$
+is empty, one block whose fixed point
+meets the support of $T$ suffices.
+Minimize over feasible observers to
+obtain the smallest failed comparison
+starting at $T$. This also gives the
+global minimum by scanning the minimal
+losses. Given any failed comparison,
+thin its losing endpoint to a minimal
+loss, and thin the positive endpoint
+to the same postings on all unchanged
+blocks. Antitonicity keeps it positive,
+and the block comparisons on the changed
+blocks persist by transitivity.
+
+With just one foreign color $s$ in a block's
+loss, the iteration stops at $c_B(B\setminus T_s)$
+after one update, since its complement of $T_s$
+still contains $B\setminus T_s$. With mixed
+postings it can require $|B|$ strict decreases
+even without a restriction on native postings.
+For the upward closure on a chain, let $T$
+post the odd and even positions at two distinct
+foreign owners. Each update deletes just the
+first remaining position: its own foreign
+complement starts at the next position, and
+the other complement still spans the entire
+remaining suffix.
+
+The clique reduction also applies to arbitrary
+closures when every spanning subset of a closed
+set contains a generator of size at most a
+fixed $t$.
+Enumerate candidate closed sets $H$ by closing
+all subsets of size at most $t$, and discard
+those failing $c(H\cap A_r)=H$. For a retained
+$H$, the requirements on the native postings
+of the loss and on its foreign postings outside
+$H$ are unit exclusions. It remains to ensure
+$c(H\setminus q_s)=H$ for every foreign $s$.
+Choose a generator $D$ of $H$ of size at most
+$t$ and enumerate its statuses in the loss.
+For any foreign owner absent from $D$, this
+generator already supplies the required
+complement. For each foreign color occurring
+in $D$, choose another generator of size at
+most $t$ and forbid all of its postings at that
+color. Whenever the complement spans, the
+generator bound makes such a choice available
+inside the complement. Hence every solution
+selects one listed conjunction. Conversely each listed
+conjunction certifies every complement. The
+number of choices per block is at most
+$(K+1)^t(|C|+1)^{O(t^2)}$.
+Thus for fixed $t$ and terminal width two,
+the base 2CNF and at most one part per block
+again suffice.
+
+For additive $c$, the fixed point has a direct graph form.
+Collapse the preorder $u\to v$ when $v\in c(\{u\})$ to
+its strongly connected components. Keep a component as a
+seed if it meets $A_r$ and is contained in none of the
+foreign blocks $q_s$. The fixed point is the upward
+closure of all these seed components. Indeed a closed
+set is an upper set of components, and generating it
+requires hitting each minimal component. Thus all
+minimal components of any fixed point must be seeds.
+Conversely the upper set generated by the seeds has
+seed components as all its minimal components. It can
+be generated from its allowed native inputs and from
+each of its foreign complements, as required. This
+proves the graph formula with no iteration.
+
+The descending iteration itself can take one strict
+decrease per input even for additive closures. On a
+chain $1\to 2\to\cdots\to n$, take $A_r$ and one
+foreign block both to be the odd inputs, with all
+other foreign blocks empty. The current set is a
+suffix. If its first input is odd, the foreign
+complement drops that input; if it is even, the
+native restriction drops it. Each step removes
+exactly one input, until the set is empty.
+
+In particular the local comparison has a polynomial-size
+monotone circuit in the absence flags of $q$. Compute
+each closure by its native prime tests: a head belongs
+to the closure if it is in the seed or the seed hits all
+its primes on a facet seeing the native owner. Unroll
+the descending iteration for $|C|$ rounds. The operation
+$H\setminus q_s$ just conjoins each membership in $H$
+with the corresponding absence flag. The final
+containment tests use disjunctions of absence and
+membership in $H$. Thus an exact recognition test can
+choose the positive prime and the two observer facets,
+then impose the terminal loss hitting clauses,
+consistency of $q$, and these local circuits together.
+No list of minimal losses or positive backgrounds is
+needed, and no closed sets are guessed.
+
+The local comparison itself need not have compact
+canonical primes. Partition a block $C$ into $m$ pairs
+and use the loopless closure that spans $C$ exactly
+when the seed meets each pair, leaving other seeds
+unchanged. Its one-owner trace has polynomial-size
+lists: at each head the native primes are the pairs
+with that head's posting deleted. Fix the target
+coloring posting all of $C$ at the native owner $r$,
+and restrict source comparisons to one foreign owner
+$s$. By \cref{core:thm:one-owner-activation-order},
+a foreign block compares below the target exactly
+when its complement meets each pair. Its canonical
+guards must therefore choose one exclusion from
+each pair, giving $2^m$ primes. This is already a
+restriction of the full comparison, so the full
+canonical list cannot be smaller.
+
+\paragraph{Least core extension from terminal primes.}
+These local circuits construct the least core extension
+above an arbitrary candidate in the terminal interval over
+disjoint one-owner traces. Its positive predicate is the
+downward closure in the activation preorder of the candidate's
+positive colorings. For each candidate prime $G$ on a facet,
+conjoin the local circuits asking whether the queried
+coloring compares below a background enabling $G$ on that
+facet. Then disjoin over all listed primes and facets.
+The local witnesses combine into a proper background
+because they avoid the same observer and prime. Conversely
+every positive background enables a listed prime and supplies
+all the local witnesses for its disjunct. Thus the resulting
+monotone circuit supplies exactly that downward closure.
+Its size and construction time are polynomial in the complete
+prime lists. No monochromatic hypothesis is used.
+
+The least extension and greatest minorant have different
+evaluation costs on this interval. A marked bit of the least
+extension is obtained by evaluating this circuit. A marked
+bit of the greatest minorant can already be coNP-hard over
+binary folds, by the width-three loss activation reduction
+above. The circuit construction therefore does not require
+deciding whether an activated loss exists below the query.
+
+\paragraph{Monochromatic terminal losses over disjoint folds.}
+If every minimal terminal loss is monochromatic, exact
+recognition over disjoint folds has a polynomial test on
+the primes, with no restriction on fold sizes or prime
+width. For each owner $s$ write $L_s(S)$ for the loss
+test at the pure $s$-posting of $S$. Call a block with
+native owner $r\ne s$ eligible for deletion if some
+one-input posting $(v,r)$ in that block is positive for
+$P$. The criterion is that each $L_s$ depend only on
+the following bits of $S$:
+\begin{itemize}
+\item whether $S$ meets each block with native owner $s$;
+\item whether $S$ contains each eligible foreign block;
+\item individual membership in each remaining block.
+\end{itemize}
+
+For necessity, a pure $s$-loss with a nonempty intersection
+with a native $s$-block lies below the coloring that
+replaces that intersection by any one native posting.
+Thus the identity of the retained input is immaterial.
+On an eligible foreign block, replace a proper subset
+of its $s$-postings by a positive native singleton.
+The original coloring again lies below the replacement.
+The replacement is proper, using at most two colors.
+It can lose only by its surviving $s$-postings:
+the other color occurs at just the chosen singleton,
+which is positive. Thus deleting an incomplete eligible
+block preserves the $s$-loss. Replacing one block at a
+time and using monotonicity gives the asserted dependence.
+
+Conversely take $p\preceq_C q$ with $p$ losing. Some
+monochromatic loss at $s$ lies in $p$. A nonempty
+native $s$-block of this loss forces a nonempty such
+block of $q$. A full foreign $s$-block must be preserved
+in $q$, since it forbids activating the native alternative
+there. In an ineligible foreign block, any native posting
+would make $q$ lose already. If $q$ is positive, that
+block must therefore retain every $s$-posting of $p$.
+The displayed bits can only increase, so their loss
+test also forces $q$ to lose. This proves the criterion.
+An empty loss simply makes the terminal source unused.
+
+For the prime-list test restrict to pure $s$-postings
+by deleting the other postings from a facet that sees
+$s$, then minimize. In the resulting prime list each
+native block must occur whole or not at all. Each
+eligible foreign block may occur at most once per
+prime, and the list must be closed under replacing that
+posting by any other member of its block. There is no
+condition on individual bits in the remaining blocks.
+Indeed expanding a positive CNF on the displayed bits
+puts the entire native block into each clause using
+its nonemptiness bit, and gives all choices of one
+member of each block whose fullness bit is used.
+Expansion of an antichain of abstract clauses stays
+an antichain. Conversely the indicated substitutions
+give exactly this expansion after identifying each
+block with its bit. All the checks take polynomial
+time. If needed, the monochromatic-loss hypothesis
+itself can be tested by the private-hit test with two
+postings of different colors on an observer facet.
+
+In particular the instances used above for hardness of
+the specified-principal test have a polynomial global
+recognition test, since all of their losses are at $b$.
+
+\paragraph{Monochromatic terminal losses over general traces.}
+For disjoint one-owner traces, monochromatic terminal
+losses admit a test involving one block at a time.
+For each owner $s$, let $P_s$ be the terminal predicate
+restricted to pure $s$-postings, and write $L_s$ for
+its loss family. The following conditions are exact.
+\begin{enumerate}
+\item On a block $C$ native at $s$, the intersection of
+every maximal positive pure-$s$ coalition with $C$ is
+closed under the block's closure.
+\item On a block $C$ native at $r\ne s$, let $H\subseteq C$
+be closed and positive for the terminal when posted
+alone at $r$. If $S\in L_s$ and $c(H\setminus S)=H$,
+then $S\setminus H\in L_s$.
+\end{enumerate}
+
+For the first condition, a pure coalition compares
+equivalently to the one obtained by closing it on a
+native block. Maximality of a positive coalition forces
+it to be unchanged. Conversely the stated closure of
+maximal positives makes every positive invariant under
+that block closure. For the second condition, replace
+the $s$-postings in $H$ by native $r$-postings of $H$.
+The original $S$ compares below this mixed coloring
+by the activation formula. It is proper, since it
+uses only $s,r$. Any resulting loss either lies in
+$S\setminus H$ at $s$ or lies in $H$ at $r$. Positivity
+of the latter excludes it.
+
+For sufficiency take a loss comparing below a proper
+background $q$ that is positive. Keep one monochromatic
+subloss, say at $s$. In a native $s$ block it lies
+inside the closure of $q_s$, so the first condition
+permits replacing it there by the $s$-seed of $q$.
+In a foreign block with native owner $r$, put
+$H=c(q_r\cap C)$. Posting this $H$ alone at $r$
+is positive by antitonicity and the first condition
+at $r$. The activation formula gives
+$c(H\setminus S)=H$, so the second condition removes
+the part of the loss in $H$. Its remaining postings
+outside $H$ already agree with $q_s$. Applying these
+replacements separately yields a pure loss contained
+in $q$, a contradiction.
+
+These tests are fixed-parameter tractable in the largest
+block size, with no bound on terminal prime width.
+Compute the canonical lists on pure facets by restricting
+the exclusions and minimizing. Complements of primes
+are the maximal positive pure coalitions, so the first
+condition is direct. For the second, enumerate $H$ and
+$S\cap C$ within the block and choose a pure-$s$ prime
+$G$ certifying positivity after removal of $H$. Require
+$(S\cap C)\setminus H$ to avoid $G$. Outside $C$ one
+can then use all $s$-postings allowed by $G$ to test
+whether $S$ can be a loss: this maximal extension must
+hit every pure-$s$ prime. Testing closedness, positivity
+and the generation equation uses only the native closure
+and the original guards. Thus the only subset enumeration
+is within one block at a time.
+
+The block-size bound is unnecessary for additive closures,
+and more generally can be replaced by a bound on the
+number of seed inputs needed for each derived input.
+Suppose $c(E)$ is the union of $c(A)$ over $A\subseteq E$
+of size at most $d$. It suffices in the second condition
+to test closed sets $H=c(A)$ with $|A|\le d$. Indeed
+for a general $H$ with $c(H\setminus S)=H$, express
+$H$ as the union of these small-seed closures with
+$A\subseteq H\setminus S$. Each is positive at the
+native owner because it is contained in $H$. Remove
+them one by one from $S$. Each still has its seed
+outside the shrinking loss, so the restricted test
+preserves the loss at each step.
+
+For a tested $H=c(A)$ and a pure-$s$ prime $G$,
+one can check the removal condition without enumerating
+$S\cap C$. If $H\setminus S$ generates $H$, each
+member of $A$ is derived from at most $d$ inputs
+of $H\setminus S$. Their union $B$ generates $H$
+and has size at most $d^2$. Enumerate such sets
+$B\subseteq H$, and take the largest possible $S$:
+include $H\setminus B$ and all postings outside
+$H$ that avoid $G$. This coalition avoids $G$ after
+removal of $H$, has $c(H\setminus S)=H$, and is a
+counterexample exactly when it hits every pure-$s$
+prime. Any counterexample with that seed is contained
+in the tested coalition, so the maximal extension is
+exact. This is polynomial for fixed $d$. For additive
+closures $d=1$, so only singleton-generated closed
+sets and singleton seeds are needed, with no bound on
+the sizes of the blocks or the primes.
+The seed bound is equivalent to every minimal native
+loss having size at most $d$. It can itself be tested
+in polynomial time for fixed $d$ by choosing $d+1$
+postings and a private prime for each of them, as in
+the bounded-posting tests.
+
+Without a seed bound, recognition in this class is
+coNP-complete already over one passive trace. Given a
+3CNF formula, put its two literal inputs per variable
+in a single block $C$ at native owner $r$. Define $c(E)$
+to be $C$ if $E$ meets every variable pair and every
+formula clause, and $E$ otherwise. This is a loopless
+closure. Its source primes on facets seeing $r$ are the
+pairs and clauses with the queried head's posting deleted,
+minimized by inclusion. They are canonical because all
+postings use one owner, and their width is at most three.
+At the terminal head, use just the variable-pair primes at
+a different owner $s$, of width two. Facets hiding the
+relevant owner have the empty prime. Thus the candidate
+has polynomial-size complete lists and its terminal losses
+are monochromatic.
+
+Every proper closed $H$ is unchanged by $c$, and
+$c(H\setminus S)=H$ then implies $S\cap H=\varnothing$.
+The only potentially failing removal test is therefore
+at $H=C$, which is positive when posted at $r$. It
+fails exactly when some $s$-loss $S$ has a spanning
+complement: $S$ meets every variable pair and its
+complement meets every pair and every formula clause.
+Thus its complement chooses exactly one literal per
+variable and satisfies the formula. Conversely a
+satisfying assignment gives precisely such a witness.
+The native conditions are automatic, since the terminal
+has no native losses. This proves coNP-hardness, and a
+failed removal test has a polynomial certificate.
+
+If both the passive and terminal primes have width at
+most two, the removal test is polynomial without a seed
+or block-size bound. First check the native conditions
+above. For a foreign block $C$
+native at $r$, choose a pure-$s$ prime $G$ certifying
+positivity after removal, and guess $Q=S\cap G$,
+using input indices for the pure postings. Require
+$Q\subseteq C$. Also choose a native terminal prime
+certifying positivity on a seed $T\subseteq C$
+posted at $r$ alone. Use separate variables for $S$
+and $T$. Require $S$ to hit every pure-$s$ prime and
+to have exactly the guessed intersection with $G$.
+Forbid the native prime's exclusions in $T$, and
+enforce $S\cap T=\varnothing$. For every head in
+$Q$, require $T$ to hit every native passive prime at
+that head, which is exactly its capture by $c(T)$.
+
+These constraints are sufficient: set $H=c(T)$,
+which is positive at $r$ by the native condition.
+Its complement relative to $S$ contains $T$ and
+still generates $H$. Also $Q\subseteq H$, so removing
+$H$ makes $G$ enabled. Conversely a failing removal
+test supplies $T=H\setminus S$ and $Q=S\cap G$.
+This $T$ is positive, generates $H$, and is disjoint
+from $S$, so all the chosen constraints hold.
+
+All constraints in this case are 2SAT, and the choice
+of $Q$ has at most four possibilities for a fixed $G$.
+Thus the coNP lower bound above is sharp for the maximum
+prime width in this class. It also holds with passive
+width two and terminal width three, by moving the formula
+clauses to the terminal lists in that reduction and keeping
+the variable pairs on both sides.
+
+\paragraph{Mixed losses in the greatest minorant.}
+A monochromatic terminal budget need not have a greatest
+core minorant with monochromatic terminal losses. Take
+two disjoint binary folds, native at distinct owners
+$a,b$, and choose one input from each. At the terminal
+head prescribe just the loss posting both chosen inputs
+at a third owner $c$.
+
+In the activation preorder of a binary fold, the chosen
+input's $c$-posting compares below a background exactly
+when that posting is present or some native posting is
+present. With no native posting the comparison is
+subcoloring. With a native posting the native closure
+is full and the single foreign posting leaves a
+spanning complement. The product criterion therefore
+says that the greatest core minorant loses the terminal
+source exactly when both blocks meet their respective
+local condition. In particular it loses at a coloring
+with one native posting per block, yet retains the
+terminal source on each of that coloring's one-owner
+restrictions. This makes the joint native coloring a
+minimal mixed loss.
+
+For each block separately enforce its local condition
+as a terminal loss, ignoring the other block's statuses.
+These two extensions are core by the one-owner interval
+criterion and the disjoint product. Each has only
+monochromatic terminal losses and lies below the given
+candidate. Their union is the greatest core minorant
+just computed. Any core minorant above both must equal
+that union, and hence has a mixed terminal loss. Thus
+restricting to monochromatic terminal losses destroys
+greatestness even with two binary folds.
+
+\paragraph{Least monochromatic extension for prescribed positives.}
+Over a fixed disjoint union of one-owner traces, the core
+extensions with monochromatic terminal losses are closed
+under pointwise intersection. They therefore have a least
+extension satisfying any specified set of positive terminal
+probes, since the union of the baseline and the terminal
+input satisfies every positive probe.
+
+For a direct test, introduce a Boolean $L_s(S)$ meaning
+that the pure $s$-posting of $S$ loses at the terminal
+head. Impose upward closure at each owner and agreement
+of the empty coalition across owners. On native blocks
+identify each pure loss bit with the bit obtained by
+closing its block. On a foreign block with native owner
+$r$, use the implications from the removal test above:
+\[
+ L_s(S)\ \Longrightarrow\ L_r(H)\ \lor\ L_s(S\setminus H)
+ \qquad
+ \bigl(H\text{ closed},\ c(H\setminus S)=H\bigr).
+\]
+These are exactly the native and foreign conditions for
+core realizability. On a proper coloring the terminal
+loses exactly when one of its pure blocks loses.
+
+Every structural clause has at most one negative literal,
+so the loss bits of two solutions can be unioned and still
+satisfy them. Their corresponding terminal operations
+intersect. One can compute the largest loss family with
+prescribed positive probes by starting with all bits true
+and clearing the bits of every pure block of a prescribed
+positive. Thereafter clear the antecedent of any implication
+whose consequents have all been cleared. Each clearing is
+forced in every solution, and the fixed point satisfies
+all the implications, so it is the largest allowed loss
+family. This constructs the least monochromatic extension.
+Any additional requested losses, even on mixed colorings,
+are feasible exactly when present in that extension, since
+each such demand is a disjunction of pure loss bits. The
+saturation runs in polynomial time in the explicit coalition
+and implication tables.
+
+For explicitly listed positive probes there is also a
+polynomial membership test that does not build those
+tables. Use the pure blocks of the listed probes as
+positive seeds at their respective owners. If there are
+no probes, the least extension just ignores the terminal
+input. Otherwise the empty coalition is positive at all
+owners, by properness and observer agreement.
+
+On a block $C$ native at $r$, the closed coalitions
+positive at $r$ when posted alone are exactly the
+closed subsets of $c(A\cap C)$ for the original pure-$r$
+seeds $A$. Indeed native closure can enlarge those
+seeds on $C$, while foreign removal implications,
+read in the direction of deriving positives, add inputs
+only on blocks native at other owners. Neither those
+implications nor downward closure can enlarge the
+native record on $C$. Conversely each such closed
+subset is obtained by closure and restriction of a seed.
+
+To query a pure-$s$ coalition $S$, leave its native
+blocks unchanged. On each foreign block repeatedly
+remove $S\cap H$ for any closed native-positive $H$
+with $c(H\setminus S)=H$. For a given native seed
+$A\cap C$, start with $H=c(A\cap C)$ and iterate
+$H\mapsto c(H\setminus S)$. This finds the largest
+eligible closed set below that seed's closure. The
+update is monotone and decreasing on closed sets,
+so the removal needs no subset enumeration.
+
+After no more removals are possible, the query is positive
+exactly when the surviving foreign postings are contained
+in one original pure-$s$ seed and every native block of
+the query is contained in the closure of that same seed
+on the block. The removals can be reversed using the
+foreign implications. For the converse, the residue after
+exhaustive removals is monotone in the starting coalition:
+each removal map is monotone and decreasing, since shrinking
+the coalition preserves eligibility of that removal. The
+residue is their greatest common fixed point below the start.
+If a forward implication adds postings inside an eligible
+$H$, removing all of $H$ from its result gives a subset of
+its antecedent at the same owner. Thus the residue cannot
+grow in a forward addition or under downward closure.
+Native enlargements affect only the native blocks, whose
+closures stay the same. By induction along a derivation of
+a pure positive, the final bounds therefore hold for one
+original seed. There are at most linearly many strict
+removals, with polynomial closure work per seed and block.
+This gives a polynomial test for each subsequent probe.
+
+The same construction takes complete canonical prime lists
+as input. Restrict the terminal lists to pure postings
+and use the complements of those primes as seeds.
+These give all maximal pure positives in polynomial
+size. A monochromatic extension above the candidate
+must preserve those positives. Conversely preserving
+them preserves every candidate positive, even if the
+candidate itself has mixed losses: antitonicity makes
+all pure blocks of a positive coloring positive, and
+in the extension this suffices for the whole coloring.
+Thus the algorithm constructs the least monochromatic
+extension above an arbitrary candidate on the interval.
+
+It can be compiled into a polynomial-size monotone
+circuit in posting-absence flags. The descending
+closure computations use monotone gates as in the
+comparison test. If $H$ is removed from a foreign
+block, its residue's absence flags are the old ones
+disjoined with membership in $H$. Unroll at most
+one strict-removal round per input, applying all seed
+tests in parallel in each round. The final containment
+tests against seed closures use conjunctions of
+absence flags and disjunction over seeds.
+
+For an additive foreign block the removals need only
+one round. A native-positive closed set generated by
+its complement in $S$ is a union of upward closures
+of components not contained in $S$. Thus it suffices
+to remove the upward closure of every such component
+whose upward closure is native-positive. Removing
+these sets can free a new component from $S$ only
+if the new component is already in one of the removed
+upward closures. Its own upward closure is then
+already removed, so further rounds change nothing.
+
+Even binary folds can make the canonical output exponentially
+larger than the circuit. Take $d$ disjoint binary folds at
+the same native owner $r$. Let the terminal candidate be
+positive exactly on the subcolorings of the coloring that
+posts one chosen member of each fold at $r$. It has one
+prime per facet: exclude all postings not in that coloring.
+The pure-$r$ seed of the least extension closes to the
+full passive set, whereas at each foreign owner $s$ the
+only original seed is empty. In the removal test a foreign
+block can be cleared exactly when it is not a full
+$s$-diagonal: a single omitted member then generates the
+whole fold. Thus the least extension is positive on a pure
+$s$-coloring exactly when no fold is fully posted there.
+Its pure-$s$ canonical primes choose one exclusion from
+each fold, giving $2^d$ primes. Restricting a canonical
+list to pure $s$ only deletes exclusions and minimizes,
+so the full output needs at least as many primes. The
+input lists have polynomial size and the blocks are
+additive, so even the one-round case can have exponential
+canonical output.
+
 \paragraph{The terminal interface over several owners.}
 The functional-independence part has a closed form for any
 source-separable core baseline $C$, with owner closures $(c_t)_t$.

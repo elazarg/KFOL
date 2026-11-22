@@ -185,6 +185,133 @@ predicates. Equivalently, it is the downset lattice of the preorder
 Elementary coloring steps already recover every source guard of the
 baseline from this preorder.
 
+\paragraph{Testing activation from a loss budget.}
+Let $D$ be the greatest core operation omitting a given loss budget
+on $V$, or zero when there is none. For proper colorings $p,q$ on
+$V$, add a fresh input $z$. Keep the old losses with $z$ uncolored,
+add the single loss $(z,q)$, and ask for the positive $(z,p)$.
+Then
+\[
+ q\preceq_D p
+ \quad\Longleftrightarrow\quad
+ \text{the new positive has no witness under the augmented budget}.
+\]
+The principal of zero is taken to be constantly true.
+
+For a word $T$ omitting the old losses on the extended support,
+its neutral residue $\partial_zT$ is core or zero by
+\cref{core:thm:neutral-elimination}. It omits the old losses:
+on the probe for their marked winner, $z$ is the ambiguous
+menu omitting that winner. Hence $\partial_zT\subseteq D$,
+and the neutral-residue bound gives $T\subseteq D+z$.
+If $D$ is nonzero, $D+T$ is an interval operation above $D$
+with exactly the same $z$-predicate as $T$. Omitting $(z,q)$
+and supplying $(z,p)$ therefore gives an interval predicate
+separating $q$ from the principal at $p$. Conversely any such
+interval operation omits the augmented losses and supplies the
+positive. If $D=0$, neutral elimination implies that an
+old-bounded word can use only $z$, so it cannot satisfy both
+requirements.
+
+If several losses $(z,q)$ are imposed at the fresh head, the
+positive is feasible exactly when every such $q$ lies outside
+the principal of $D$ at $p$. The principal itself is a realizable
+interval predicate, so one witness serves all these losses
+together. In the zero case the projection onto $z$ works
+exactly when there are no losses at its head.
+
+For canonical prime input the old lists are unchanged. At the
+fresh head, on a facet containing $q$, the primes are the
+single-posting exclusions of the postings of $q$. On a facet
+whose observer occurs in $q$, there is no loss and the only
+prime is the empty guard. Thus this is a marked-query reduction
+on the lists themselves. It introduces a sink in the posting
+graph, so the comparison is polynomial on acyclic prime data
+by \cref{core:thm:acyclic-marked-source-test}; it also preserves
+the maximum size of a source component, up to the new singleton.
+By \cref{core:thm:component-profile-factorization}, only the
+old ancestors of the posted inputs of $q$, including those
+inputs, need to be kept. In particular, to find all one-input
+postings excluded by the principal at $p$, test each at the
+fresh head with just one new posting. Each such test increases
+the number of mixed inputs in the relevant ancestor palette
+by at most one. The exact box coordinates in
+\cref{core:thm:principal-face-factor} are the inputs at which
+one of these tests gives an exclusion.
+
+For an acyclic budget, the same reduction gives the whole
+principal as a box. Use the active set $A(p)$ of the old inputs
+in the acyclic pass. Adding the sink leaves that set unchanged,
+and the single sink loss can be removed exactly when some
+posting $u:r$ in $q$ has $u\in A(p)$ and $u\notin p_r$.
+Equivalently,
+\[
+ q\preceq_D p\quad\Longleftrightarrow\quad
+                    q|_{A(p)}\subseteq p|_{A(p)} .
+\]
+The pass computes this box without constructing $D$.
+
+At bounded source component size, membership in the principal
+is in NP by the fresh-source reduction and
+\cref{core:thm:prime-component-space}. It is NP-complete already
+for a comparison with a singleton coloring. In general, let
+$h$ be an uncolored sink at the target $p$, with a nonzero
+greatest bounded operation on the other inputs. The full
+greatest bounded operation is an extension of this earlier
+operation by the sink, as in
+\cref{core:thm:component-mark-sweep}. At the background of $p$
+the coefficient on $h$ is its projection exactly when the
+$h$-mark is feasible, and zero otherwise. By the activation
+product, a one-input coloring posting $h$ is admitted precisely
+in the zero case: its earlier background is empty, and the
+projection principal at the uncolored target excludes the
+posting. Apply this to the two-cycle construction of
+\cref{core:thm:prime-component-space}, whose marked query
+fails exactly for satisfiable formulas.
+
+For every fixed $K\ge3$, singleton membership is EXPTIME-hard
+even with bounded prime width and a monochromatic target.
+In \cref{core:thm:three-owner-alternating-bounds} the queried
+input $X$ is a sink with just the seed loss at its head.
+The target posts the rails at one owner and leaves $X$
+uncolored. Adjoin an isolated input with no losses if needed
+to ensure a nonzero earlier bounded operation. This does
+not change feasibility at $X$, by ancestor factorization.
+The singleton comparison at $X$ is admitted exactly when
+the marked query fails. Deterministic exponential time is
+closed under complement, so the hardness of that query
+gives the claimed hardness of membership. In particular
+testing whether a specified sink lies in the intrinsic
+box factor is EXPTIME-hard under the same restrictions.
+
+With the minimal losses explicitly listed, membership in an
+activation principal is PSPACE-complete for every fixed $K\ge3$.
+This holds even for the uncolored target and a singleton
+comparison, with at most four minimal losses per head and with
+the canonical primes also supplied. The upper bound is the
+fresh-source reduction and the alternating cut on explicitly
+listed rows in \cref{core:thm:pointed-guard-cut}.
+
+For hardness use the budget $Z$ on $W$ at the start of the proof
+of \cref{core:thm:complete-guard-pspace}, before adding
+selectors. Existence of a nonzero safe word is PSPACE-hard
+there. Add a sink $h$ whose only loss posts all of $W$ at one
+owner $a$. The uncolored mark at $h$ is feasible exactly when
+a safe word on $W$ exists. If $G$ is safe on $W$, the word
+$h\star_a G$ omits the new loss by unanimity, omits the old
+losses, and passes the $h$-mark at the empty coloring. Conversely
+a bounded witness using only $h$ would violate the new loss.
+Its neutral residue after erasing $h$ is therefore a nonzero
+safe word on $W$. An isolated input may be added to guarantee
+a nonzero earlier operation without affecting this argument,
+since it is outside the ancestors of $h$. As above, comparing
+a singleton at $h$ to the uncolored target returns the
+complement of feasibility, which is also PSPACE-hard.
+Each original head has at most four rows, and the new head
+has just one. On each facet the canonical primes are minimal
+transversals of at most four rows and therefore have size at
+most four. They can be listed in polynomial time.
+
 \begin{theorem}[Activation faithfully determines the baseline]
 \label{core:thm:activation-faithfulness}
 Let $K\geq3$ and let $C$ be core on a finite nonempty support $V$.
@@ -304,6 +431,54 @@ only by coloring or uncoloring one input whose source guard vanishes
 at the common fixing of the other inputs. Every such edge is an
 activation equivalence by the preceding theorem.
 
+\paragraph{Exact comparisons on a common coloring face.}
+Let $p,q$ be proper colorings that agree on every input
+posted by both. Their union may use every owner. The complete
+source guards of any core $C$ give the exact comparison
+\[
+ p\preceq_Cq
+ \quad\Longleftrightarrow\quad
+ P_j^C(q|_{V\setminus\{j\}})=0
+ \quad\text{for every input posted in $p$ but not in $q$}.
+\]
+Indeed, if such a $j$ is live at $q$, the reader $Q_j$
+of \cref{core:thm:activation-faithfulness} is one at $q$
+and zero at $p$. For the converse take any interval
+realizer $F$ positive at $q$. Its passive source bits
+are those of $C$. By colored-cofactor independence, its
+full cofactor at $q$ is independent of each input
+posted only in $p$. Fixing all of those inputs therefore
+leaves that cofactor unchanged. In particular the full
+cofactor at $p\cup q$ still depends on the distinguished
+input. It is a further fixing of the cofactor at $p$,
+which must also depend on the distinguished input.
+Since $p$ is proper, this gives positivity at $p$ by
+\cref{core:cor:colored-cofactor-dependence}. The intermediate
+cofactor uses ordinary menus even when $p\cup q$ has
+no missing observer. When the union is proper, equivalence
+also has a path through the union by capture edges.
+
+For any fixed coloring $t$, define $c_t(q)$ on its
+subcolorings by adding every posting of $t$ whose input
+is unposted and inessential in the full cofactor $C_q$.
+This is an ordinary closure operator. Further fixing
+preserves inessentiality, so it is monotone, and fixing
+all the added inputs leaves $C_q$ unchanged, so it is
+idempotent. At proper $q$ it is computed directly by the
+source guard tests, even when its value has the full palette.
+The activation preorder among proper subcolorings is
+\[
+                 p\preceq_Cq
+              \quad\Longleftrightarrow\quad
+                 c_t(p)\subseteq c_t(q).
+\]
+To see this, the criterion first gives $p\subseteq c_t(q)$,
+and monotonicity and idempotence give the stated formula.
+If $t$ is proper, the resulting quotient on the entire
+face is the lattice of $c_t$-closed sets. All comparisons
+between proper subcolorings require only direct prime-guard
+queries, irrespective of source cycles.
+
 Principal downsets have more structure than those of an arbitrary
 preorder.
 
@@ -349,6 +524,40 @@ on monochromatic colorings, proving the displayed equivalence and
 the join assertion. If $q\not\preceq_Cp$, this one-occurrence
 principal predicate is positive at $p$ and zero at $q$.
 \end{proof}
+
+\paragraph{Reducing a comparison to its conflicting owner blocks.}
+For arbitrary proper colorings $p,q$, first check whether
+every input posted only in $p$ is captured at $q$. A live
+input there refutes $p\preceq_Cq$ by the source reader.
+After this check, any owner block of $p$ that agrees with
+$q$ on their shared inputs immediately passes: its
+comparison with $q$ is a compatible comparison.
+By \cref{core:prop:principal-activation-boxes}, the
+remaining tests are exactly $p^{(r)}\preceq_Cq$ for
+owners $r$ with at least one posting conflicting with $q$.
+If filling the holes of $q$ with the postings exclusive
+to $p$ leaves a proper coloring $q'$, then $q'\sim_Cq$.
+The remaining comparisons can use this target, in which
+every input posted in $p$ is now posted.
+
+There is also a direct guard test when all the conflicting
+inputs are jointly captured. Remove their postings from
+$q$ to obtain $q_0$. If each removed input is captured at
+$q_0$, then $q_0\sim_Cq$. Since $p$ is compatible with
+$q_0$, the initial reader checks suffice in this case:
+the removed inputs already pass, and the reader values
+at the other holes are preserved by equivalence. This
+uses one simultaneous deletion and a compatible comparison.
+
+A single conflicting input can still make the remaining
+test depend on an arbitrarily large coalition. Take the
+$a$-fold of $n\ge2$ inputs and let $q$ post only the first
+at $a$. Its other inputs are captured. For $b\ne a$,
+every proper subset of the full $b$-block lies below $q$,
+but the full block does not, by the one-owner activation
+formula of \cref{core:thm:one-owner-activation-order}.
+Even though only the first input conflicts with $q$, no
+smaller $b$-coalition witnesses the failed comparison.
 
 \paragraph{Enlarging the baseline.}
 Fix a proper $q$. Call $C\longrightarrow_q D$ an \emph{atomic
@@ -474,6 +683,184 @@ fold stays below $M$ and takes the disjunction of their $r$-profiles.
 Starting at $X$, these gates in any order remain below $M+X$ and
 give precisely the factors in the formula.
 \end{proof}
+
+\paragraph{Computing the principal by descending owner boxes.}
+The principal-box extension theorem gives a fixed-point
+formula that starts from source guards and does not need
+the principal as an input. Fix $q$ and start with all owner
+factors identically one. At a box $B$ containing $q$, let
+$M_B$ be the greatest core minorant of the bounds given by
+the following losses: at each proper coloring in $B$,
+impose the zero source bits of $C$ at its unposted heads.
+For each owner $r$, replace its factor by its intersection
+with
+\[
+ A\longmapsto
+ \bigwedge_{\substack{H\text{ core},\ H\subseteq M_B\
+                       \Phi_r(H)(q_r)=0}}
+                   \neg\Phi_r(H)(A).
+\]
+These updates preserve $q$. Iterate until all factors
+stop changing. The resulting box is exactly the principal
+$\Theta_{C,q}$, and there are at most $K2^{|V|}$ strict
+rounds.
+
+Indeed the loss bounds defining $M_B$ are equivalent
+to containment in $C$ at every valuation satisfying
+the full box, even if its singleton coloring uses every
+owner. For the implication from the loss bounds, erase
+the observed winner's block and use source decomposition
+as in the proof of \cref{core:thm:principal-box-extension}.
+For the converse use the sole-source probe for a
+missing observer. In particular $C\subseteq M_B$.
+Let $L$ be the true principal box and $M_L$ its greatest
+extension. If $B$ contains $L$, then $M_B\subseteq M_L$,
+so the factor formula for $L$ shows the update still
+contains $L$.
+
+At a stable box $B$, every atomic enlargement reachable
+from $C$ lies below $M_B$. Induct on the enlargement
+chain. If its current operation is below $M_B$, then
+its guard $H$ is below $M_B$ and avoids its gate's atom
+at $q$. Stability excludes every valuation where $H$
+is that atom. Thus the next operation agrees with the
+current one on the full box, and remains below $M_B$.
+The greatest reachable enlargement is $M_L$ by the
+same theorem. Consequently $M_B=M_L$, and stability
+now puts $B$ inside $L$ by the factor formula. The round
+bound counts deletions from the $K$ Boolean tables on
+coalitions. Each loss query in this construction uses
+the original canonical primes and the current factors.
+The helper test itself is a source-mark test. On a pure
+$r$-coloring of $A$, use full menus at the unposted
+inputs. A helper is the $r$ atom exactly when every
+unposted head loses its source bit there. Thus to delete
+$A$ from the $r$ factor, add these losses at $A$ to the
+current budget and ask whether some head outside $q_r$
+can supply its mark at the pure $r$-coloring of $q_r$.
+Such a mark is exactly failure of the $r$-singleton
+profile at $q_r$.
+
+\paragraph{Descending boxes from a partial loss budget.}
+The iteration also works when only a loss sample is given
+and the target baseline $D$ is its greatest bounded core
+operation. If $D=0$, use the constantly true principal.
+Otherwise at each box retain just those sample rows
+whose colorings satisfy its factors, and compute helpers
+against that retained sample.
+
+For the true principal box $L$ of $D$, the greatest
+operation omitting the retained rows is exactly the
+greatest core operation below $D$ on the full box.
+One direction follows by testing the retained source
+probes. For the other direction take a core $H$
+omitting the retained losses. Choose a principal
+one-source interval spine $S$ above $D$. Outside the
+full box some marked-path helper absorbs, so the
+cofactor is constantly $D$. Inside the box no
+helper absorbs, so the cofactor is union with $D$.
+The core operation $S(D+H)$ therefore omits the entire
+original sample, and agrees with $D+H$ throughout the
+box. By maximality it lies below $D$, proving the
+desired bound on $H$. The invariant and the argument
+with stable boxes now apply as before: any atomic
+enlargement of $D$ is still bounded by the retained
+rows if the triggering singleton stratum is outside
+the stable box.
+
+For a listed sample of $m$ losses there are at most
+$m+1$ strict rounds. A strict round keeping the same
+retained rows leaves the helper constraints unchanged,
+so its next update is already stable. The masks being
+intersected only decrease as the retained rows are
+removed. Thus after each round it is enough to store
+the retained rows and evaluate the latest masks on
+demand by marked tests. In particular the procedure
+can compute any requested principal comparison without
+storing a table indexed by all coalitions.
+
+The $m+1$ bound is attained for every $m\ge1$.
+Take a path $v_0,\ldots,v_m$ with edge $v_iv_{i+1}$
+labeled $r_i$, alternating between two owners $a,b$.
+Post $v_j$ at $r_{j-1}$ in $q$ for $j\ge1$, and
+post $v_0$ at the other owner than $r_0$.
+At each $v_j$ for $j\ge1$ list one loss, posting every
+neighbor at its edge owner. There is no loss at $v_0$.
+This is also the complete minimal loss list of the
+sum of the edge folds and the projection $v_0$:
+at each other head, all incident folds must absorb
+to lose its source.
+
+While the row at $v_j$ is retained, its successor
+posting (if present) always passes, since it agrees
+with $q$. Its predecessor posting $v_{j-1}:r_{j-1}$
+is rejected in the next update precisely when the
+row at $v_{j-1}$ is already absent. In that case the
+predecessor projection is a bounded helper and its
+owner profile is zero at $q_{r_{j-1}}$. If the row is
+present, use its sole-source probe with a third owner
+as the marked winner. At that probe the $r_{j-1}$
+coalition consists only of $v_j$, which belongs to
+$q_{r_{j-1}}$. All foreign coalitions avoid $v_{j-1}$.
+By \cref{core:lem:marked-profile-transfer}, a helper
+positive on the singleton $\{v_{j-1}\}$ at $r_{j-1}$
+and negative at $q_{r_{j-1}}$ would supply the forbidden
+mark. There is no such helper. The row at $v_j$ has
+at most one posting per owner, so these singleton
+tests account for the whole row.
+
+Consequently the first $m$ rounds drop one row each,
+in path order. At the start of round $m$, the last
+head still has its row, so it admits its singleton
+posting at the other owner than $q_{v_m}$ through that
+round. The same marked-profile-transfer test applies
+with an empty coalition at that other owner on its
+loss probe. After the last row is dropped, the
+projection at $v_m$ excludes this posting, giving
+one more strict round.
+
+\paragraph{Deleting rows with explicitly bounded helpers.}
+For a verified core $C$ given by its canonical primes
+and an explicit loss list defining its upper bound, the
+sample iteration admits a polynomial partial substitute
+for the general helper test. Retain a row until some
+bounded fold or bounded neutral restriction of $C$
+has a profile positive on one of its owner blocks and
+negative on the target's block at that owner. Here
+bounded means omitting the currently retained rows,
+not necessarily the whole original sample.
+
+Each row deletion is sound. Initially every row that
+passes the true principal is retained. If that remains
+the case, a helper bounded by the retained rows agrees
+with the true principal's loss constraints, so it lies
+below the greatest atomic enlargement by
+\cref{core:thm:principal-box-extension}. Its signed
+profile therefore excludes the row being deleted.
+Induction shows no row inside the true principal is
+ever deleted. At a fixed point the same helper tests
+can exclude a requested comparison.
+
+The tests are polynomial for the explicit input.
+For folds, use the closed-complement formulas with
+just the remaining rows. For neutral restrictions, use
+the greatest retained-set test in \emph{Using bounded
+neutral restrictions as guards}. Its boundedness step
+now checks the listed surviving rows individually:
+erase their postings at discarded inputs and read the
+result in the original primes. Failure remains
+persistent as the retained set shrinks. There are at
+most as many strict rounds as rows. One can delete
+individual losses while leaving other losses at the
+same head; projection enlargement alone only deletes
+all losses at a head together.
+
+If every surviving row is a subcoloring of the target,
+the resulting loss list is exact for the greatest
+atomic enlargement. Such rows belong to the true
+principal by antitonicity, and every deleted row is
+outside it by the preceding argument. One may then
+use any exact coefficient test on the surviving list.
 
 \begin{corollary}[Singleton colors and refinements]
 \label{core:cor:singleton-color-refinement}
@@ -874,8 +1261,6 @@ both such that $p\cup e,q\cup e$ are proper, then
 \[
  p\cup e\sim_Cq\cup e.
 \]
-If $p,q$ themselves are compatible and their union is proper, they
-are activation-equivalent exactly when a path of capture edges joins them.
 \end{theorem}
 \begin{proof}
 Suppose first $D\ne0$. Neutral deletion sends every $F\in\mathcal I(C)$ into
@@ -933,13 +1318,19 @@ only $j$, so $C$ is its projection and the assertion is immediate.
 Iterate over the inputs fixed by $e$; all intermediate colorings
 are proper as subcolorings of the two proper final ones.
 
-For the last assertion put $u=p\cup q$. Common fixing makes $u$
-equivalent to both $p$ and $q$. Every intermediate point on an
-ordinary addition chain from either point to $u$ lies between
-equivalent endpoints in the activation preorder. Each step is
-therefore an equivalence, hence a capture edge by faithfulness.
-The converse holds for every capture path.
 \end{proof}
+
+For a one-way comparison with $j$ free at both endpoints, the
+same argument preserves order if $j$ is live at the target:
+the live-source reduction gives the comparison above $D$,
+and every fixed-color section is a predicate above $D$.
+If $j$ is captured at both endpoints, the two fixings are
+capture equivalences, again preserving order. The remaining
+case can fail. For $C=x\star_a y$ and $b\ne a$, the
+coloring $p=(b,\circ)$ lies below $q=(a,\circ)$.
+Here $y$ is live at $p$ and captured at $q$.
+Fixing $y$ at $b$ gives $(b,b)$ and $(a,b)$, separated
+by the predicate of $C+(X\star_b C)$.
 
 \input{sections/appendix-core-block-activation}
 
@@ -1203,11 +1594,867 @@ are used by the $\theta_r$ spines. The lower bound is the general
 occurrence-box bound.
 \end{proof}
 
+The singleton profiles themselves have short CNFs read directly
+from the primes of any core operation. Fix $r$ and choose a
+facet seeing $r$. For every head $i$ and every prime there, put
+$\{i\}\cup E_r$ on a list, where $E_r$ is the set of inputs
+whose $r$-posting that prime excludes. Minimize the list by
+inclusion. Its sets are exactly the complements of the maximal
+losing $r$-coalitions. Indeed a pure $r$-coalition loses its
+singleton test exactly when some unposted head supplies its
+mark. This is witnessed by a prime avoiding the coalition.
+Equivalently the coalition is disjoint from at least one of
+the listed sets. Thus the $r$-profile is the conjunction of
+the clauses requiring a hit on these sets, each of size at
+most one more than the original prime width.
+
+For a greatest profile completion this computes its activation
+principals as well. At an unowned query the principal is the
+box of subcolorings: that box has zero on every owned class
+and is the least antitone predicate taking the query. When
+owner $r$ wins, the principal is $\theta_r$ by the theorem.
+Its minimal forbidden coalitions at every foreign owner are
+exactly the minimized sets just computed, since $f_r(W\setminus
+E_s)$ requires the complement of $E_s$ to hit each clause.
+Every owner is attained by its unanimous query. Consequently
+all principals are 2-CNF exactly when all those minimized
+sets have size at most two. A larger minimal forbidden set
+also obstructs any alternative 2-CNF description on proper
+colorings, by the majority of three proper subsets each
+missing a different posting at one foreign owner. This gives
+a polynomial scan of the complete primes for the applicability
+of 2-CNF base elimination in this class.
+
+The same construction gives a primitive occurrence bound.
+Write $a$ for the number of owners with $\lambda_r=1$.
+At most $b(P)+a$ occurrences suffice if $a<K$, and
+at most $b(P)+K+1$ suffice if $a=K$.
+
+For $P_0$, start with a primitive spine for each box
+in the truncated cover and attach $C$ at all owners.
+On an ambiguous baseline, these attachments retain
+$C=U$ by two-owner restoration and preserve the box.
+On a singleton baseline, its own stage absorbs and
+all later stages leave that singleton unchanged.
+Hence the completed spines realize the truncated
+boxes in the interval. They can be combined by a
+fold at any owner: when $C$ is that owner's singleton
+every spine gives $C$, and otherwise containing $C$
+prevents that singleton. An empty cover uses $C$.
+
+For $\theta_r$, keep the primitive spine from the
+proof and attach $C$ at every foreign owner, omitting
+the named union with $C$. There are at least two such
+owners, so these attachments supply the lower bound
+by \eqref{core:eq:two-owner-restoration}. At $C=\{r\}$
+each helper is $\{r\}$, so the final value is
+$C\cup X$. Foreign singleton values absorb at their
+own stages. In the ambiguous case the upper bound
+holds because $C=U$. Thus the same source predicate
+is realized with one primitive occurrence.
+
+The final combination works for any passive baseline
+$C$. Given a finite family of primitive interval terms,
+their pointwise union needs no repeated component if
+their union is inactive at some owner $t$: fold all
+terms at $t$. Each contains $C$, so this takes union
+unless $C=\{t\}$, where all terms have value $C$.
+
+If the union is active at every owner, choose distinct
+$s,t$ and components $A_s,A_t$ active on their respective
+singleton classes. Such a component is active on the
+whole class by \cref{core:thm:source-interval}. Fold
+all components at $t$, obtaining $T$. Let $R$ be
+$A_s\star_u A_t$
+at a third owner $u$, or just their common component
+if they coincide. This is their union whenever
+$C\ne\{u\}$. Now $T\star_s R$ gives the full union,
+with at most two duplicated components.
+At $C=\{s\}$ both arguments give $C\cup X$. At
+$C=\{t\}$ the second does so. Elsewhere the output
+is the union of the two arguments, and $T$ is already
+exact. For the greatest-profile construction take
+$A_s$ and $A_t$ to be the $\theta_s$ and $\theta_t$
+components. The latter may be omitted from $T$:
+$R$ contains it off the third singleton class, and
+it is inactive on that class anyway. Thus only
+$\theta_s$ is duplicated there.
+
+In particular, suppose $m>0$ primitive one-source
+spines bounded by an interval operation cover its
+distinguished source. Each spine can be completed
+by attaching $C$ at two distinct owners. The result
+lies in the interval and retains the spine's box
+except on the two selected singleton classes.
+By \cref{core:lem:linear-profile-inheritance}, a spine
+already loses on every singleton class of a path
+owner. For a spine with at least two path owners,
+restore at two of them and the box is unchanged.
+With just one path owner, restore two copies at that
+owner and a different foreign owner in each copy.
+The extra losses do not overlap on the original
+box. If a spine has no path gate it is $X$ alone,
+so the target is $C\cup X$, realized with two
+occurrences by $(X\star_r C)\star_t(X\star_s C)$
+at distinct owners $r,s,t$.
+Otherwise merge spines that have the same sole path
+owner $r$ before completing them. By associativity
+at $r$, each is $X\star_r H_i$ for a passive fold
+$H_i$. In fact $H_i\subseteq C$: if it had a winner
+$k$ outside $C$, evaluate $X$ at a singleton of an
+owner other than $k$ and $r$. The output contains
+$H_i$, contradicting the bound $C\cup X$. Replace
+these spines by $X\star_r(\bigcup_i H_i)$, using
+primitive passive union. This is still bounded by
+$C\cup X$. Its $r$-absorption condition is the
+conjunction of those of the original helpers,
+so its box is the union of their boxes.
+
+There is now at most one single-owner spine per
+owner. Thus the primitive realization uses at most
+$m+\min(m,K)+2$ occurrences. If the target is inactive
+at $t$, any single-owner spine must have owner $t$:
+a spine with no $t$-gate retains its source on the
+all-$t$ diagonal. In this case at most $m+1$
+occurrences suffice, since the final fold at $t$
+requires no repeated component.
+Such covers exist for every interval operation by
+\cref{core:cor:interval-linear-cover}.
+
+In particular, an interval operation with positive
+predicate $P$ and a one-spine cover has primitive
+occurrence minimum one or two. The minimum is one
+exactly when that box has at least two nontrivial
+owner factors. Every path owner makes its factor
+nontrivial by idempotence on the uniform passive
+diagonal, and a nontrivial factor requires a path
+gate of that owner. Thus when the box has fewer
+than two nontrivial factors, any hypothetical
+one-occurrence word has an empty path or uses only
+one path owner $r$. The empty path gives $X$ alone;
+the one-owner path gives $\{r\}$ at $X=\{r\}$.
+Either violates baseline retention on a passive
+diagonal at a different owner. The restoration
+constructions give the matching upper bounds.
+
 The explicit preorder has the unowned colorings ordered by componentwise
 inclusion, together with one point for each owner $r$. An unowned
 coloring $E$ lies below the owner point $r$ exactly when
 $\theta_r(E)=1$. Collapse $T_r$ to that owner point; the theorem says
 that realizable source predicates are exactly the downsets of this order.
+
+\paragraph{Extremal terminal extensions from profile clauses.}
+For a greatest-profile baseline, the closed compatibility
+test gives both extremal extensions of an arbitrary terminal
+candidate $P$. The least core extension above it is
+\[
+ P^+=P\ \lor\!\bigvee_{r:\,P\cap T_r\ne\varnothing}\theta_r,
+\]
+and the greatest core minorant is
+\[
+ P^-=P\ \land\!\bigwedge_{r:\,\theta_r\not\leq P}\neg T_r.
+\]
+Enabling any point of an owner class forces its whole box,
+and that box enables no other owner class. In the minorant,
+a class can be retained exactly when its required box is
+already positive throughout. Deleting the other classes
+preserves antitonicity since each $T_r$ is an upset.
+This verifies the formulas and extremality.
+
+Read $f_r$ as a monotone CNF from the baseline's primes:
+on a facet seeing $r$, each prime $G$ at input $i$ gives
+the clause $\{i\}\cup G_r$, with $G_r$ the input indices
+of its $r$-postings. To decide whether $P$ meets $T_r$, try each
+terminal prime on a facet seeing $r$ and test $f_r$ on
+the largest pure-$r$ block avoiding that prime. Any
+witnessing coloring can be restricted to its pure-$r$
+block. Thus $P^+$ has a polynomial-size monotone circuit
+computable directly from the two prime lists.
+
+To test $\theta_r\leq P$, look for a loss on some facet
+that also satisfies $\theta_r$. Impose hitting clauses
+for the terminal primes and consistency of postings.
+For every $s\ne r$ and clause $Q$ of $f_r$, forbid posting
+all of $Q$ at $s$, as $f_r(W\setminus E_s)$ requires.
+These constraints are exact. They are 2SAT if the
+terminal primes and the profile clauses have width at
+most two. In this case both extremal extensions have
+polynomial-size circuits computable in polynomial time.
+
+The width bound for evaluating the minorant is sharp.
+Use two retained literal inputs per variable and a baseline
+whose $r$ profile requires a hit on every variable pair;
+every other owner's profile is unanimity. These profiles
+are admissible and their greatest completion is core.
+At the terminal use pure-$s$ primes, $s\ne r$, for the
+variable pairs and the clauses of a 3CNF formula. A
+terminal loss in $\theta_r$ must hit every pair and clause
+while omitting one member of each pair. This is exactly
+a satisfying assignment. The bit of $P^-$ at a pure-$r$
+spanning coalition is therefore coNP-complete, at profile
+clause width two and terminal width three. The reverse
+width split also gives hardness: keep the variable pairs
+on both sides, but place the formula clauses in $f_r$.
+Then the complement of the terminal loss encodes the
+satisfying assignment.
+
+The unary least extension can also be compiled as a core
+term of polynomial size over the baseline $C$. To realize
+$P$ off the owner classes, take one marked spine per
+terminal prime. For a prime on a facet, add all the
+observer's passive postings to its exclusions. Attach
+the fold of the excluded inputs at each owner using
+that owner's gate, as in the single-source completion.
+The added exclusions restrict this spine to its facet.
+Union the spines with passive union, then apply the
+restoring stages of the profile interval theorem using
+$C$. This retains exactly the unowned part of $P$.
+
+For an enabled $\theta_r$, its helper at $s\ne r$ can
+be built directly from the CNF clauses of $f_r$: take
+the $s$-fold of their $r$-folds. Its $r$-profile is the
+conjunction of the clause disjunctions, namely $f_r$.
+Its $s$-profile is their dual, a disjunction of the
+clause conjunctions. These are precisely the two
+profiles used by the marked spine and restoring stages
+in the proof of the profile interval theorem. Thus the
+helper and spine sizes are polynomial in the input
+lists, with polynomially many occurrences of $C$ as
+a subterm.
+
+If at most two owners have profiles other than unanimity,
+the baseline itself can also be compiled in polynomial
+size from its profile clauses. Name those owners $r,s$,
+using an arbitrary unanimity owner if necessary. Form the
+helper above for $f_r$ at $r,s$, and its counterpart for
+$f_s$ at $s,r$. Append the redundant clause $W$ to
+each CNF so both helpers use the entire passive input
+set. The helpers have profile pairs
+$(f_r,f_r^*)$ and $(f_s^*,f_s)$ at $r,s$, where
+$f^*(A)=1-f(W\setminus A)$, and unanimity at all
+other owners. Common source gives $f_s\le f_r^*$
+and $f_r\le f_s^*$. Thus their union has exactly
+the prescribed profiles, since union conjoins the
+singleton bits at each owner. Apply the greatest-profile
+completion construction to this union to obtain $C$.
+Combining with the terminal spines gives a polynomial-size
+core term for the unary least extension directly from
+the lists, without a supplied baseline term.
+
+The same compiler can use explicit minimal winning
+coalitions at all owners except two, whose profiles are
+given by CNFs. At each owner with a coalition list,
+make an outer fold ranging over its listed minimal
+winners and the full set $W$. For a tuple of these
+choices let $H$ be their intersection. Common source
+ensures $H\ne\varnothing$. On that leaf use the
+two-owner compiler on $H$, restricting the two CNFs
+by setting the inputs outside $H$ to true. The restricted
+profiles are cross-intersecting: a disjoint pair of
+winners on $H$ would give two original wins by adjoining
+$W\setminus H$, contradicting common source for the
+chosen tuple. They lose on the empty coalition by the
+same condition using the full coalition at the other
+owner. Append the redundant clause $H$ to use every
+input of the leaf.
+
+At either CNF owner, an original winning coalition
+remains winning on every leaf restriction. A losing
+coalition fails at the leaf where all outer choices
+are $W$. The outer folds are universal at this owner,
+so its profile is exact. At a list owner, a winning
+coalition contains a listed choice and can choose it,
+after which every leaf uses only inputs within it.
+For a losing coalition let all other list owners
+choose $W$. Each resulting leaf is unanimous at the
+queried owner on its chosen winning coalition, which
+cannot be contained in the losing one. This again
+gives the exact profile. Taking the greatest profile
+completion finishes the construction. Its size is
+polynomial in the CNF sizes and $|W|$, times the product
+of the list sizes with one extra choice per list owner.
+For fixed $K$, composing this baseline with the terminal
+spines therefore gives a polynomial-size term for the
+unary least extension in the combined input size, even
+if both CNF profiles have exponentially many minimal
+winners.
+
+With profile clauses of width at most two, the compiler
+can verify its common-source hypothesis in polynomial
+time for fixed $K$. For each outer tuple, test whether
+$H$ can be partitioned into winners for the two
+restricted profiles. Disjoint winners extend to such
+a partition by monotonicity. Use one Boolean variable
+per input of $H$ to choose its side. The first profile
+gives positive clauses and the second negative clauses,
+so this test is 2SAT. Any satisfying partition lifts to
+a violation of common source by adjoining $W\setminus H$
+to both winners. Conversely, in a violation we may
+shrink the list owners' winners to minimal winners and
+restrict the remaining two winners to their intersection
+$H$, where they are disjoint. The same test detects an
+empty $H$, on which both restricted profiles are true.
+At width three, common-source recognition is
+coNP-complete even with only two CNF owners and
+unanimity elsewhere. Reduce from unsatisfiability of
+a 3CNF. Take one input per literal, and at both CNF
+owners place the pair of opposite literals of each
+variable as a clause. At the first owner also place
+the formula clauses. A partition into winners puts
+exactly one literal of each variable on the first
+side, so it exists exactly when the formula is
+satisfiable.
+
+For unrestricted profile lists in CNF form, even width
+two already gives coNP-complete common-source recognition
+for each fixed $K\ge3$. A certificate of failure assigns
+each input an owner whose winning coalition omits it.
+Equivalently, partition $W$ into omission sets such that
+no set contains a whole clause of its owner's profile.
+For hardness, at every owner use the same clauses,
+one pair per edge of a graph with at least one edge.
+The omission assignments are exactly the proper
+$K$-colorings of the graph. Thus CNF recognition of
+singleton profiles is already coNP-complete at width two,
+by the singleton-profile theorem.
+
+The relevant restriction at width two is the number of
+possible omission owners per input. Delete owner $r$
+from the list at $x$ whenever $\{x\}$ is a clause of
+$f_r$. If some list is empty, every tuple of winning
+coalitions has $x$ in its intersection. Otherwise, when
+each list has at most two owners, represent each choice
+by a Boolean literal, using a constant for a forced
+choice. Each binary clause $\{x,y\}$ of $f_r$ then
+forbids one pair of choices, namely assigning both
+$x$ and $y$ to $r$. Thus compatibility holds exactly
+when the resulting 2SAT instance is unsatisfiable.
+After substituting constants, a false clause suffices,
+or the implication graph must contain a literal and its
+negation in one strongly connected component. This
+criterion permits arbitrarily many distinct pairs of
+owners across the inputs. If $b$ inputs still allow at
+least three owners, try their at most $K^b$ assignments
+and apply the same criterion to each residual instance.
+The lists and implications can be read from the profile
+clauses induced by the source primes above.
+
+\paragraph{Refining a term's singleton profiles.}
+Let $f_r$ be the desired CNF profiles and let $t$ have
+profiles $g_r\ge f_r$ at every owner. Then the $f_r$
+have a term of size polynomial in the CNF length,
+$|W|$, and the size of $t$. For each input $x$, first
+compile the profiles $[x\in A]\land f_r(A)$ as follows.
+For a clause $Q$ at owner $r$,
+start with the $r$-fold of the inputs of $Q$. Fold its
+result with $x$ at each foreign owner in turn. At $r$
+the resulting profile requires $x$ and a hit on $Q$.
+At a foreign owner $s$, earlier folds conjoin with $x$,
+its own fold disjoins with $x$, and later folds conjoin
+with $x$. Since $K\ge3$, at least one foreign fold
+other than $s$ conjoins with $x$ there. Thus the resulting
+profile at $s$ requires exactly
+$x$. Union the resulting terms over all clauses at all
+owners. The profile conjunction at each owner gives
+its prescribed CNF conjoined with $x$. Include a
+redundant full-set clause at each owner so that the
+construction covers empty conjunctions and uses all
+inputs.
+
+The same construction takes monotone formulas or
+circuits for $f_r$. Apply the anchored clause
+construction to each individual variable. Translate
+AND gates by union and OR gates by an $r$-fold, which
+both preserve the profile $[x\in A]$ at each foreign
+owner. Constants can be simplified away before
+translation: under compatibility the whole function
+is true on $W$ and false on the empty set. Conjoin
+a redundant full-set clause if all inputs must occur.
+The translated gate count is linear in the monotone
+gate count for fixed $K$.
+
+Now replace every occurrence of $x$ in $t$ by this
+term. At a fixed owner $r$ and query $A$, a winning
+$f_r(A)$ leaves the Boolean profile inputs of $t$
+unchanged, and $g_r(A)=1$. A losing $f_r(A)$ sets all
+those inputs to zero, so $t$'s profile is zero. This
+gives exactly the desired profiles. In particular a
+term for any compatible family of sub-CNFs, formed
+by deleting clauses from the given profiles, suffices
+to construct the full profiles with polynomial overhead.
+
+For example, suppose $H\subseteq W$ meets the
+intersection of every tuple of winning coalitions, one
+per owner. Set the inputs outside $H$ to true to obtain
+the projected profiles. They have common source on
+$H$ by hypothesis and dominate the original profiles
+when read on $W$. Apply the coalition construction of
+\cref{core:thm:profiles} to the projected profiles,
+folding over their minimal winners and $H$ at each
+owner. The resulting $t$ has at most $2^{K|H|}$ leaves,
+each of size at most $|H|$. Substitution then compiles
+the original profiles with polynomial overhead per
+leaf. The hypothesis on $H$ can be checked by
+enumerating the same tuples. Greatest-profile
+completion gives the baseline for the unary
+least-extension compiler.
+
+Even with binary clauses, the smallest such $H$ can be
+all of $W$. Use the same graph clauses at every owner
+and take the graph obtained by joining an odd cycle to
+a clique of size $K-2$. Its chromatic number is $K+1$,
+and deleting any vertex makes it $K$-colorable. Setting
+the inputs outside $H$ to true retains exactly the
+edges of the induced graph on $H$. The omission test
+therefore finds a tuple avoiding $H$ for every proper
+$H$, while $W$ meets every joint intersection.
+
+\paragraph{Compiling profiles with weighted omission bounds.}
+Suppose the inputs have nonnegative integer weights with
+total $M>0$, and every winner for $f_r$ omits weight at
+most $b_r$, where $\sum_r b_r<M$. The weighted budget
+profiles themselves have a term of size $M^{O(K\log M)}$
+for $M\ge2$, or a single variable if $M=1$. First expand
+each input into as many indexed copies as its weight.
+Construct a term on the copies by induction on their
+number. At a block of $n$ copies first treat budgets
+with sum $n-1$. Split
+the copies into two halves of sizes $n_1,n_2$. Each
+owner $r$ has a fold over all budget splits
+$b_{r,1}+b_{r,2}=b_r$ into nonnegative integers.
+After all choices, some half $j$ satisfies
+$\sum_r b_{r,j}<n_j$. Retain that half and recurse on
+its budgets. A singleton half with budget sum zero
+returns its variable. For a winning test at owner $r$,
+that owner's split can cover its actual omissions in
+both halves. Its query still meets the budget in the
+retained half regardless of the other choices, so the
+term wins at $r$ by induction. For a losing query,
+write $c_j$ for its omissions in half $j$. The other
+owners have total budget $n-1-b_r\ge n-c_1-c_2$.
+They can split their budgets so that their sum in each
+half is at least $n_j-c_j$. These choices can be fixed
+before $r$ moves. Whichever half is retained must then
+have $b_{r,j}<c_j$, and the recursive term loses at $r$.
+
+For a budget vector of sum less than $n-1$, take the
+union of two terms for vectors of sum $n-1$, assigning
+all the slack to a different owner in each term. Each
+larger vector accepts every original winner. For any
+$r$, one of the vectors leaves $b_r$ unchanged, so its
+term rejects every original loss at $r$. This proves
+exactness and completes the induction, including the
+possibly unsaturated recursive calls. Identifying the
+copies of each input gives the weighted profiles.
+Each level branches into at most $2(M+1)^K$ choices.
+With sharing there are $O(M(M+1)^{2K})$ gates, since
+each block has at most $(M+1)^K$ budget vectors, and
+each saturated vector uses at most $(M+1)^K$ tuples.
+These budget profiles dominate $f_r$, so the preceding
+substitution compiles the exact CNF profiles from them.
+
+This applies to the graph above with an odd cycle of
+length $2m+1$. Give each cycle vertex weight one and
+each clique vertex weight $m$. An omission set is
+independent. It either lies in the cycle and has at
+most $m$ vertices or consists of a single clique vertex.
+Thus every owner can use budget $m$, and the total
+weight is $Km+1$. For fixed $K$ the construction gives
+quasipolynomial terms and polynomial circuits for these
+profiles despite the need to keep every input in $H$.
+
+For indivisible inputs the exact condition is that the
+inputs cannot be partitioned among owners with total
+weight at most $b_r$ in each owner's part. Such a
+partition gives omissions with empty common source.
+Conversely, omissions covering all inputs can be
+shrunk to a partition. The condition can hold even
+when the budgets sum to the total weight: three inputs
+of weight two and budgets $3,3,0$ cannot be partitioned
+within those budgets.
+
+There is a direct compiler for every infeasible
+partition instance. Work with the original inputs
+as leaves of the balanced split, and keep the same
+folds over budget splits. Select a half whose
+partition instance is infeasible. At least one is
+infeasible because feasible partitions of both
+halves would combine to solve the parent instance.
+At an infeasible singleton every owner's budget is
+below the weight of its input, so return that input.
+As before, the queried owner can split its budget
+to cover its actual omissions, proving domination
+of the desired profiles. For fixed $K$, the partition
+tests and the resulting core circuit take polynomial
+size in $|W|+M$: there are at most $(M+1)^K$ budget
+vectors at each block, with budgets capped at $M$.
+
+To obtain exact thresholds, use the preceding
+refinement with monotone threshold circuits. At a
+block and budget $b$, compute an OR over the splits
+of $b$ of the conjunctions of the two half tests.
+At a singleton the test is the input or a constant.
+This uses polynomial size with sharing, and unfolds
+to a quasipolynomial-size formula along the balanced
+split. Thus the exact indivisible threshold profiles
+have polynomial-size core circuits and quasipolynomial
+core terms in $|W|+M$ for fixed $K$.
+
+\paragraph{Compiling profiles along a partition of the inputs.}
+Fix a binary partition tree of $W$ whose leaves are
+single inputs. Count a profile clause at its own owner,
+and say it crosses a block if it meets both the block
+and its complement in $W$. If at most $c$ clauses cross
+any block, compatibility can be decided and a core
+circuit for the profiles constructed in
+$2^{O(c)}\operatorname{poly}(L+|W|+K)$ time and size,
+where $L$ is the total clause length. A tree of depth
+$d$ gives a term of size $2^{O(cd)}\operatorname{poly}(L+|W|+K)$.
+
+A state at a block includes all original clauses
+contained in it, and some of the crossing clauses
+restricted to the block, preserving their owners.
+At a split, assign each active clause meeting both
+children to one of them and restrict it to that child.
+Clauses meeting only one child go to that child.
+The parent has a tuple of winning coalitions with
+empty intersection exactly when, for some assignment
+of clauses to sides, both children have such tuples.
+In one direction, any winning coalition hits each
+of its clauses on at least one side, which can be
+chosen for that clause. In the other direction,
+take the union of the two child coalitions at each
+owner. Each clause is hit on its assigned side and
+the joint intersection is still empty. A singleton
+block is compatible exactly when every owner has
+a clause there. This gives the bottom-up test.
+
+At a compatible state, let each owner fold over
+the side assignments for its own active clauses.
+For every resulting tuple, recurse into a compatible
+child, which exists by the test. A query winning at
+owner $r$ can choose a side where it hits each of
+its clauses. Its restriction to the retained child
+therefore wins there regardless of the choices made
+at the other folds. At a compatible singleton return
+its variable. Inductively the resulting term dominates
+the profiles of its state. At the root, refine this
+term to the original CNFs by the leaf substitution
+above.
+
+Each block has at most $2^c$ states, and each split
+has at most $2^{2c}$ assignment tuples, since a clause
+offered a choice crosses a child block. Sharing by
+state gives the circuit bound. Unfolding the choices
+over at most $d$ splits and refining each variable
+occurrence gives the term bound.
+
+\paragraph{Finding a common input by communication.}
+These constructions can be expressed as a search
+problem on the profiles. Each owner privately holds
+one winning coalition. A deterministic protocol must
+name an input belonging to every coalition. In the
+protocol tree each internal node asks one owner to
+send a bit as a function of its own coalition and the
+transcript, and each leaf names an input. The minimum
+leaf count of such a protocol equals the minimum
+variable-occurrence count of a term whose profiles
+dominate the given ones.
+
+Given a term, maintain the condition that its current
+subterm wins at each owner's query. At an owner gate,
+that owner chooses a winning child, and every other
+owner wins at both children. At a union gate take a
+fixed child, since all owners win at both. The variable
+reached is in every coalition. This uses no more leaves
+than the term.
+
+Conversely, discard unreachable protocol nodes and
+replace owner messages by that owner's gates. Fix a
+winning coalition for owner $r$. At its gates follow
+the protocol on that coalition, allowing either child
+at every foreign gate. At each retained transcript
+the set of private tuples producing it is a product
+of per-owner sets, since each bit tests only one
+owner given the transcript. The $r$-coordinate of
+this product continues to contain the fixed coalition:
+an $r$-message is chosen accordingly, and a foreign
+message leaves that coordinate unchanged. Every leaf
+reached is therefore correct for a tuple containing
+that coalition, and its input belongs to the coalition.
+This proves profile domination with one variable
+occurrence per reachable leaf. The same translation
+preserves depth up to deletion of fixed choices.
+For CNF profiles, the refinement above converts the
+result to an exact term with polynomial overhead.
+
+With two prescribed profiles $f_r,f_s$ and unanimity
+elsewhere, the minimum size of a dominating term is
+exactly the minimum monotone formula size of a
+separator $h$ with $f_r\le h\le f_s^*$. Indeed, take
+$h$ to be the $r$-profile of any dominating term.
+If $h(A)=1$ and $f_s^*(A)=0$, the term would win at
+$r$ on $A$ and at $s$ on $W\setminus A$, violating
+common source with $W$ at the other owners. Evaluating
+the term at $r$ gives a monotone formula for $h$ with
+the same variable occurrences. Conversely, take a
+formula for any such $h$ and interpret its OR gates
+at $r$ and its AND gates at $s$. The resulting
+profiles are $h$ at $r$, $h^*$ at $s$, and unanimity
+on its support at every other owner. This proves the
+equality for formula and protocol leaves, and the
+same gate translation proves it for binary circuit
+gate counts. In particular a dual pair forces the
+separator to equal $f_r$.
+
+For exact realization the formula sizes of the two
+prescribed functions themselves govern the cost.
+Let $L_r,L_s$ be their minimum monotone formula leaf
+counts. Any exact term has at least $\max(L_r,L_s)$
+leaves by evaluation at the two owners. For an upper
+bound, apply the gate translation to formulas for
+$f_r$ and $f_s$, with their respective owners as the
+OR gates. Conjoin a redundant disjunction of $W$ to
+each formula to use every input. The translated
+profiles at $r,s$ are respectively $(f_r,f_r^*)$ and
+$(f_s^*,f_s)$. Their union gives $(f_r,f_s)$ by
+compatibility, and unanimity elsewhere, with at most
+$L_r+L_s+2|W|$ leaves. This is the two-owner compiler
+with arbitrary monotone formulas in place of CNFs.
+
+Fixing winning coalitions at the other owners gives
+separator bounds for an arbitrary compatible profile
+family. For a tuple $(B_t)_{t\ne r,s}$ of their minimal
+winners let $H=\bigcap_{t\ne r,s}B_t$. Write $\ell(H)$
+for the minimum separator leaf count for the two
+profiles on $H$ obtained by setting $W\setminus H$
+to true. Then the minimum leaf count of a dominating
+term lies between $\max\ell(H)$ and $\sum\ell(H)$,
+where the sum is over tuples and the maximum is over
+their resulting intersections.
+
+For the lower bound, start with any dominating term.
+At each gate of a fixed owner $t$, keep a child winning
+at that owner's coalition $B_t$. Other fixed owners
+win at both children. Both children are also winning
+at all fixed owners at union gates and at $r$- and
+$s$-gates, where the gates are retained. Inductively
+this pruning uses only inputs in $H$: every surviving
+leaf wins at every fixed coalition. It preserves every
+winning query of $r$ and $s$ because the removed
+gates conjoin at both of those owners. Thus it
+dominates both projected profiles on $H$, proving
+the bound by the two-owner separator equality.
+
+More precisely, if $m_x$ counts the occurrences of
+$x$ in the term, pruning proves
+$\sum_{x\in H}m_x\ge\ell(H)$ for every $H$. Thus any
+nonnegative weights $\lambda_H$ with
+$\sum_{H\ni x}\lambda_H\le1$ for each input give the
+leaf lower bound $\sum_H\lambda_H\ell(H)$. The same
+inequalities can be combined across different choices
+of the two remaining owners. In particular, disjoint
+intersections contribute additively.
+
+For the upper bound use an outer fold over the minimal
+winners of each fixed owner. At each tuple use a
+minimum separator term on its intersection $H$. A
+winning query at a fixed owner can choose a minimal
+winner inside the query, and every resulting separator
+term then has support inside that winner. A winning
+query at either remaining owner wins on every leaf
+restriction by monotonicity and the separator bound.
+This proves domination and the sum bound; exact CNF
+realization follows by the refinement construction.
+
+The additive bound is attained by a family of
+independent dual pairs. Partition $W$ into nonempty
+blocks $H_i$, and put a nonconstant monotone function
+$u_i$ on each block. Owner $r$ requires every $u_i$ and
+owner $s$ requires every $u_i^*$, evaluated on the
+respective blocks. A third owner wins exactly when
+its coalition contains some whole block, and the
+remaining owners have unanimity. Fixing a minimal
+winner at the third owner gives one of the disjoint
+$H_i$. On it the separator must equal $u_i$, since
+the other blocks are set to true. The profiles are
+compatible by the dual-pair condition on that block.
+Consequently the minimum dominating leaf count is
+exactly the sum of the minimum formula leaf counts
+of the $u_i$, by disjointness and the outer-fold
+upper bound.
+
+The canonical output can nevertheless be exponential
+at profile clause width two and terminal width one.
+Use a baseline whose $r$-profile requires hitting each
+of $m$ disjoint input pairs, with unanimity profiles
+elsewhere. The terminal candidate has the one exclusion
+of $x:s$ for one member $x$ of the first pair and a
+foreign owner $s$. It enables $T_r$, so the least
+extension adds $\theta_r$. It does not enable $T_s$,
+and the other unanimity boxes add nothing on a nonempty
+pure-$s$ coloring. On that restriction the extension
+is positive exactly when $x$ is not posted or no pair
+is fully posted. Besides the singleton guard at $x$,
+the primes choose the other member of the first pair
+and one member of every other pair. This gives
+$2^{m-1}$ further primes from polynomial-size input.
+
+\paragraph{A bounded block over a greatest-profile baseline.}
+The owner classes also give a compact greatest minorant for
+a candidate in the block interval $C\subseteq F\subseteq C+U_W$,
+with $W$ the new inputs. At an unowned background $e$ the
+active loss rows are those whose background parts are
+subcolorings of $e$. Let $D_e^{\subseteq}$ be the coefficient
+for these rows, whether or not $e$ is owned. At an owned
+background in $T_r$, the active rows are instead those
+whose background satisfies $\theta_r$. Write $D_r$ for
+their coefficient, which is shared by the whole class.
+These statements follow from the explicit preorder and
+\cref{core:lem:block-source-patterns}.
+
+For fixed $K$ and $|W|$, the bits of $D_e^{\subseteq}$ have
+polynomial-size monotone circuits in the exclusions at $e$.
+Test each possible internal core coefficient against each
+of its positive probes: an activated loss below such a
+probe must be excluded on every original facet. These
+tests are conjunctions of the candidate's prime disjunctions,
+with the internal postings fixed and invisible exclusions
+erased. Disjoin over the coefficients supplying the queried
+mark. For $D_r$, test activation at each prospective internal
+zero by the terminal hitting clauses and the $\theta_r$
+constraints of the preceding paragraph. This is 2SAT
+when the candidate primes and the baseline profile clauses
+have width at most two. The resulting finite internal
+table determines $D_r$.
+
+Since every subcoloring of $e\in T_r$ satisfies $\theta_r$,
+$D_r\subseteq D_e^{\subseteq}$ there. The greatest minorant's
+source bit on the new block is therefore the bit of
+$D_e^{\subseteq}$ conjoined, for every owner $r$, with
+the disjunction of $\neg T_r(e)$ and the corresponding
+bit of $D_r$. All factors are monotone in exclusions.
+Thus in the width-two case complete prime lists yield a
+polynomial-size circuit for the greatest minorant, allowing
+arbitrary internal dependencies in the bounded new block.
+
+There need not be a least core extension above a block
+candidate, already for two new inputs. For any nonempty
+core baseline $C$, take the two core extensions
+$C+(x\star_a y)$ and $C+(x\star_b y)$ for distinct owners
+$a,b$. Use their pointwise intersection as the candidate.
+It contains $C$ and its new source lists are canonical:
+each of $x,y$ loses whenever the other is posted at $a$
+or $b$, with one prime excluding both visible postings.
+Indeed for any observing winner, each factor preserves
+that winner from both sources except when it returns its
+own atom, in which case just the compatible source can
+provide it. The intersection has exactly the displayed
+source bits. In particular the coefficient of the
+candidate on the two inputs is empty at $(\{a\},\{b\})$
+and retains both sources on the unposted probe.
+
+At the unposted baseline background these same losses
+bound the internal coefficient, because their background
+parts are empty. No nonzero core coefficient can obey
+them: it would have an empty value at the crossed atoms.
+The zero coefficient cannot supply either requested mark
+at the unposted probe. Thus the candidate is not core.
+A least core extension above it would have to lie below
+both displayed extensions and therefore equal their
+intersection. This proves failure of leastness even at
+prime width two, with a projection as baseline if desired.
+For one new input the activation downset closure always
+gives a least extension.
+
+\paragraph{Testing whether a least block extension exists.}
+For any core baseline and any candidate lower bound in the
+block interval, consider a proper background $q$. Collect
+in $R_q$ the internal positive probes required by the
+candidate at some proper joint probe with background
+$p$ satisfying $q\preceq_C p$. These are exactly the
+requirements on a possible coefficient at $q$. Necessity
+is antitonicity of the coefficient family. Conversely
+any core coefficient satisfying $R_q$ can be used at
+$q$: use it throughout the upper cone of $q$, and use
+internal union elsewhere. This is an antitone family
+and supplies every required positive. Allow zero as
+a coefficient when the demands permit it.
+
+In fact the requirements $R_q$ are exactly the source bits
+shared by every admissible coefficient. For each head the
+requirements are downward closed in its internal coloring.
+If a probe at $i$ with coloring $t$ is absent from $R_q$,
+take the single-source completion that retains every other
+internal input and loses at $i$ just on extensions of $t$.
+It satisfies $R_q$ and omits the chosen bit. With one internal
+input the same argument uses the zero coefficient. Thus there
+is no need to enumerate internal coefficients to compute the
+common bits.
+
+Define $M$ by the background baseline and the bits $R_q$
+on proper joint probes. This is the sourcewise intersection
+of all core upper extensions, by the realization of each local
+choice above. A least upper extension exists exactly when
+$M$ is core. In particular, for a retained-union baseline
+the preorder is subcoloring and $M$ is just the original
+candidate, by antitonicity and reflexivity. In this case a
+least extension exists exactly when the candidate is already
+core, for arbitrary block size.
+
+For a greatest-profile baseline, $M$ has a polynomial-size
+circuit from canonical primes, without a bound on the new
+block size. At a proper joint probe $(q,t)$ the ordinary
+subcoloring contribution to $R_q(t)$ is just positivity of
+the candidate there. For the owned alternatives use
+$	heta_r(q)$ and test whether some background in $T_r$
+makes the mark at $t$ positive. For each candidate prime
+on a facet seeing $r$, test $f_r$ on the largest pure-$r$
+background that the prime permits. If it wins, that prime
+adds the internal test that $t$ avoid the facet's observer
+and the prime's internal exclusions. These tests disjoin
+over the eligible primes and facets. Antitonicity permits
+using the pure-$r$ background instead of an arbitrary
+witness in $T_r$. Thus each owner contributes a polynomial
+guard circuit, and taking the union of the contributions
+computes $M$.
+
+For fixed $K$ and new block size, existence is in coNP even
+at arbitrary prime width. A failure certificate gives a
+proper positive probe of $M$ and enough activated losses
+of $M$ at its background to forbid the marked internal bit.
+Verify them by the circuit and the explicit profile preorder,
+and check the bounded internal table. The block criterion
+needs at most one original loss per distinct activated
+internal loss. Hardness already holds at width three with
+two new heads and a retained-union baseline, by the
+two-head mixed-component construction in emph{One internal
+posting per activated row} and the equivalence with exact
+recognition just proved.
+
+If the candidate primes and baseline profile clauses have
+width at most two, the existence test is polynomial for
+fixed $K$ and new block size. Enumerate an internal
+obstruction, consisting of a positive bit and internal
+losses that exclude it. For its positive bit at background
+$q$, choose either a candidate prime enabling it or an
+eligible owner requiring $\theta_r(q)$. For each original
+loss witness of $M$ with background $b$, require a negative
+candidate bit on its proper facet and require
+$\theta_r(b)=0$ at every eligible owner for that internal
+probe. Each latter zero can be witnessed by one foreign
+owner and one profile clause whose postings are all
+present. To activate the loss require either $b\subseteq q$
+or $q\in T_r$ and $\theta_r(b)=1$ for a chosen $r$.
+Containment is valid even if $q$ is owned, and these
+alternatives exhaust the preorder. The resulting clauses
+are consistency exclusions, units, posting implications
+for containment, and width-two hitting or avoidance
+clauses. For fixed $K$ and block size, the internal data
+and number of prime and profile witnesses are bounded.
+Their enumeration is polynomial, and each instance is 2SAT.
+Thus the circuit need not be expanded into canonical
+primes to test whether it describes a core operation.
 
 For $C=x\star_a y$, the criterion reduces to constancy on the colorings
 with $x=a$ or $y=a$, and the rule that value one there forces value one
