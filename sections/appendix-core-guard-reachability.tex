@@ -1860,51 +1860,63 @@ conditions hold:
 \begin{itemize}
 \item For distinct $j,u,v$, edges $j\xrightarrow{r}u$
 and $u\xrightarrow{s}v$ imply $j\xrightarrow{s}v$.
-\item For every input $i$, the edges whose sources
-are reachable from $i$ either all have one owner or
-all have the same target.
+\item All internal edges of each nontrivial strongly
+connected component have one owner.
 \end{itemize}
-The graph can be read directly from the common
-primes: at each head the single common prime is the
-set of its singleton losses, possibly empty.
+At each head the single common prime is the set of
+its singleton losses, possibly empty.
 
 The first condition is the cofactor rule above.
-For the second, choose a term realizing the candidate.
-Every input is used, since the empty coloring supplies
-its mark. More generally even a bounded term using
-$i$ must use every input reachable from $i$: if it
-uses the source of a singleton loss and omits its
-target, all used inputs are full on that loss, which
-supplies the forbidden mark. On each singleton loss
-whose source is used, the term must return the
-singleton at the posted target. This requires a win
-in its owner profile on the singleton coalition
-consisting of that target. Wins at distinct owners
-must intersect by \cref{core:thm:profiles}. Thus in
-the reachable cone, edges at distinct owners have
-the same target. If two owners occur, comparison
-with one of those two edges forces every edge to
-have that target.
+It implies that any two vertices of a strongly
+connected component have arcs in both directions.
+A pair of reciprocal arcs with different owners
+is impossible in a core candidate. Keep just their
+two loss rows. In the ranked survivor argument of
+\cref{core:lem:ranked-posting-survivor}, rank the two
+inputs below all other inputs at every owner, and
+order them to strictly decrease along the one edge
+at each of the two owners. A term that uses either
+input has its selected leaf in the pair and supplies
+the mark on the corresponding loss row. An exact
+term uses both inputs because both have neutral
+marks. Consequently each reciprocal pair has just
+one owner. In a component of at least three vertices,
+the shortcut condition on each triangle forces its
+three pair owners to agree. This proves necessity.
 
-For sufficiency, consider a positive probe at $i$.
-With no edges in its cone, use its projection.
-With one owner $r$ on all cone edges, take the
-$r$-fold on the entire reachable set. Every loss
-headed there posts another member of the fold at
-$r$, so the fold respects the budget. Each other
-reachable input is the target of an $r$-edge from
-$i$, by the first condition along a simple path.
-Therefore a positive probe at $i$ posts none of the
-fold inputs at $r$, and the fold supplies the mark.
-In the remaining case all cone edges end at one
-input $v$. The cone consists of $i,v$, and $v$ has
-no loss. Starting with $x_i$, attach the mask
-controlled by $x_v$ at each owner of an edge
-from $i$ to $v$. Each mask enforces the loss at
-its owner, and on the other losses the controlled
-term already omits $i$. At a positive probe no mask
-absorbs the mark. This gives a bounded word at
-each positive, and their union is the candidate.
+For sufficiency, fix a positive probe at $i$ and take
+the set reachable from $i$. Every edge in that set
+disagrees with the probe. For an edge $j\xrightarrow{r}v$
+with $v\ne i$, this follows from the corresponding
+edge out of $i$: if $j\ne i$, first obtain an edge
+from $i$ to $j$ by shortening a simple path, then
+use the shortcut condition. Edges entering $i$
+disagree because $i$ is unposted.
+
+Process the components of the reachable set from
+sinks to sources by safe fold saturation. When
+processing a component, rows posting a successor
+component have already been removed. For a
+nontrivial component take the fold on its vertices
+at its internal owner. Every remaining row there
+posts inside the support at that owner, and the
+probe posts none of the support at that owner,
+since every vertex has an internal incoming edge.
+This deletes the internal losses. A singleton
+component has no internal losses and is already
+unheaded. In either case each vertex now supplies
+an eligible singleton support for deleting rows
+that post it from an earlier component. No row
+at a reachable head posts an unreachable target.
+Thus the procedure makes $i$ available and the
+recorded folds supply its mark. Union over positives
+proves exact realization.
+
+Different owners may enter a single head's set of
+outgoing edges. For instance, two retained inputs
+$u,v$ can suppress $i$ by $u{:}a$ and $v{:}b$
+respectively. Both singleton masks are available
+in the sink-to-source construction.
 
 Even with monochromatic cycles, the same calculation
 certifies any head made available. For a head left
