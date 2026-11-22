@@ -2245,6 +2245,33 @@ proper coloring. Its joint source pattern is constant on
 each box, and the box's unposted unavailable inputs can
 all be captured together by the cut at the retained postings.
 
+\paragraph{Singleton profiles of ranked operations.}
+Every singleton profile of a ranked operation is principal.
+To see this, an $r$-coalition $U$ wins exactly when every live input
+outside $U$ has zero source bit at the pure posting $U:r$.
+On a pure posting the posted menus can contribute only $r$.
+The bits of the unposted inputs are read on any facet seeing $r$,
+so their absence is equivalent to an $r$-singleton output.
+
+Suppose both $U$ and $W$ win at $r$. At the coloring
+$(U\cup W):r$, every input outside $U\cap W$ is unavailable.
+Indeed, a live input outside either winning coalition loses
+there and still loses after adding postings, with its own
+posting erased. An ignored input is always unavailable.
+All the postings in the symmetric difference are therefore
+on unavailable inputs. Erasing them stays in the same
+availability box. Every input outside $U\cap W$ remains
+unavailable, proving that $U\cap W$ wins. This closure under
+intersection gives a unique minimal winner.
+
+Unions of ranked operations also have principal singleton profiles.
+On a common input set, a coalition wins for a union exactly when
+it wins for each summand, since all their outputs are nonempty.
+An intersection of principal upward families is principal, with
+generator the union of the individual generators. This argument
+also applies to any union of operations whose singleton profiles
+are principal, including summands on different supports.
+
 This description also forces certain rows in every
 such presentation of an exact operation. Suppose a
 minimal loss $q$ at $i$ leaves all other source bits
@@ -2274,6 +2301,20 @@ Symmetrically at $x:r$ only $y$ loses. Thus both
 reciprocal $r$-rows are forced in any purported
 presentation without monochromatic cycles. They
 already form a monochromatic two-cycle.
+
+The same term cannot be a union of ranked operations.
+A bounded summand supplying $x$ at the empty coloring
+must depend on $y$: it loses $x$ at $y:r$. Thus both
+$x$ and $y$ are live in the summand, and both reciprocal
+singleton losses of the target hold there as well.
+In the summand's availability calculation at $\{x,y\}:r$,
+neither $x$ nor $y$ is
+available, by the two losses read with their heads
+unposted. Erasing both postings would preserve
+availability at the empty coloring, contradicting
+liveness. Hence even the union of all ranked
+operations below this term misses the neutral
+mark at $x$.
 
 The availability boxes give a stronger obstruction than
 the forced-singleton-row test. Suppose a nonempty set $S$
@@ -5455,27 +5496,24 @@ works for larger palettes with wider clauses for choosing the
 owner at each anchor.
 
 \paragraph{When the union is itself a greatest completion.}
-If a greatest profile completion is a union of greatest completions
-with principal profiles at a specified owner $r$, its own $r$-profile
-is principal. Suppose instead that it has distinct minimal winning
-coalitions $A,B$ at $r$. Choose $i\in A\setminus B$ and post
-$A\setminus\{i\}$ at $r$. This is a positive probe at $i$ on any
-facet seeing $r$: the coalition is losing by minimality of $A$.
+Among greatest profile completions, the unions of ranked operations
+are exactly the ranked completions. The forward direction follows
+from principality of the profiles of a union of ranked operations
+and the criterion for ranked greatest completions above. The
+reverse direction takes the completion as a single summand.
+The same class is obtained using only principal completions
+as summands.
 
-A summand supplying that mark must support $i$. Since the target
-loses $i$ at $B$, the summand's sole $r$-generator $D$ is contained
-in $B$. Since the summand supplies the mark, $D$ is not contained
-in $A\setminus\{i\}$. As $i\notin D$, there is a member
-$j\in D\setminus A$. The summand supports $j$, but the target loses
-$j$ at $A$. This requires $D\subseteq A$, a contradiction. Thus
-each summand with a principal $r$-profile misses the same positive
-probe, regardless of its support and its profiles at other owners.
-
-In particular, among greatest profile completions the unions of
-principal completions are exactly the ranked completions. The
-forward direction applies the probe argument at every owner.
-The reverse direction uses the ranked characterization above and
-takes the completion as a single summand.
+There is a common missed mark even when the summands are allowed
+to be arbitrary core operations below the target with a principal
+profile at just one specified owner $r$. If the target has two
+distinct minimal winners $A,B$ at $r$, take $i\in A\setminus B$.
+Every bounded summand wins at $A$ and $B$, since wherever the
+target returns $\{r\}$ so must every nonempty subvalue. Thus a
+summand with a principal $r$-profile wins at $A\cap B$ and hence
+at $A\setminus\{i\}$. It misses the probe at $i$ on this latter
+coalition, which the target supplies by minimality of $A$ and
+maximality of the completion.
 
 \paragraph{Several generators per owner.}
 More generally, suppose the profiles of a greatest completion
