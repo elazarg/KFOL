@@ -1093,6 +1093,48 @@ circuits shared. If the largest component has
 size $b$ and the visible prime input has size $N$,
 the resulting circuit has size $O(2^b N)$.
 
+Given a directed feedback vertex set $F$, one may
+instead obtain size $O(2^{|F|}N)$. Fix a choice
+$S\subseteq F$ for the support on $F$. Process the
+acyclic part in dependency order. At each head
+outside $F$, discard primes that post any member of
+$F\setminus S$. Compile the other primes as in the
+acyclic construction, using a projection for each
+required member of $S$ and an earlier circuit for
+each required input outside $F$. Include the bare
+fold on $S$ in each branch if $S$ is nonempty.
+Every resulting summand is safe at heads outside
+$F$, and its intersection with $F$ is exactly $S$.
+The losses at $S$ have yet to be enforced.
+
+For each $j\in S$, take the union of branches
+formed from its primes that avoid $F\setminus S$.
+Each branch folds the bare $S$-fold with the
+constructed circuits for the prime's inputs
+outside $F$. Fold these unions together over
+$j\in S$. If any of them is absent, discard this
+choice of $S$. Otherwise this last circuit is
+safe everywhere and supplies the marks in $S$
+at probes it avoids. Fold it with each constructed
+outside-head circuit to enforce the losses at
+$S$ there as well. For $S=\varnothing$ the
+outside-head circuits already suffice.
+
+For completeness, take any safe fold support
+avoiding a probe and choose its intersection with
+$F$ as $S$. The acyclic recursion supplies a
+summand for each of its outside heads at that
+probe, because each such head has a guard in the
+support. The same guards at heads in $S$ supply
+the final enforcement circuit. The constructed
+terms therefore supply all marks of the safe
+fold. Each choice uses only linear work on the
+prime lists and shares the final enforcement
+circuit across all outside heads. One can also
+apply this construction within each component,
+using the previously built predecessor circuits
+for its exterior postings.
+
 This test compiles directly from canonical primes into a
 polynomial-size monotone circuit shared by all colorings.
 Let $U$ mark the postings in the union of the fold supports
