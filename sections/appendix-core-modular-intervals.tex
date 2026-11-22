@@ -2977,41 +2977,50 @@ are therefore all zero. All transports agree on the old
 winners and the proper old-palette source bits, so this
 word gives the pointwise least transport.
 
-Other old operations can have no least transport. Choose
-distinct owners $a,b,r$, heads $x,y,z$, and a retained
-anchor $w_s$ for each owner $s\ne r$. Let the old operation
-have the sole loss $(z,\{x{:}b\})$, with all other heads
-retained, using single-source completion. Consider two
-additional full-palette losses:
-\[
-\begin{array}{c|l}
-x & y{:}r,\quad w_s{:}s\ (s\ne r),\\
-y & z{:}r,\quad x{:}a,\quad w_s{:}s\ (s\ne r,a).
-\end{array}
-\]
-Each additional loss individually admits a transport of
-the old operation. To see this, use the injective
-reachability test on the enlarged palette. Either full
-row alone cannot block a proper old query, since all its
-tails would need query seeds at every old owner.
-Keeping the $x$ row with the old $z$ row would still
-need outside seeds at all owners: $y$ at $r$ and all
-the anchors. Keeping the $y$ row with the old $z$ row
-would need the unheaded input $x$ seeded at both $a$
-and $b$. Thus no old positive is lost in either case.
-Union witnesses for the old positives, erasing fresh-owner
-gates, to obtain the two transports.
+Other old operations can have incompatible full losses
+of arbitrarily large minimal cardinality. Choose distinct
+owners $a,b,r$, inputs $x_0,\ldots,x_{m-1},z$ with $m\ge2$,
+and a retained anchor $w_s$ for each $s\ne r$. Put $x_m=z$.
+Let the old operation have the sole loss $(z,\{x_0{:}b\})$,
+with all other heads retained. For each $i<m-1$ add a full
+loss at $x_i$ posting $x_{i+1}{:}r$ and every $w_s{:}s$.
+At $x_{m-1}$ add the same kind of row with $z{:}r$,
+replacing $w_a{:}a$ by $x_0{:}a$.
 
-Together the three rows block the proper query at $x$
-posting just the anchors. At $r$ the old $z$ row seeds
-$z$, which reaches $y$ and then $x$. At $a$ and $b$
-the anchors reach $x$, which supplies the remaining
-tails at those owners. Every other tail is seeded by its
-anchor. The reachability test therefore forces an old
-loss at $x$, contrary to retention. No transport can
-lie below both of the two transports, since it would
-inherit both full losses. In particular restriction
-from the enlarged core fails to preserve meets.
+All these additional losses cannot hold in one transport.
+On the enlarged palette use the injective reachability test
+at $x_0$ with just the anchors posted. The old $z$ row
+seeds $z$ at $r$, and the full rows reach all $x_i$ in
+reverse chain order at that owner. At $a,b$ the anchors
+reach $x_0$, supplying the tails at $x_0$ needed by the
+last full row and old $z$ row. All other tails are already
+seeded. This forces a loss at $x_0$ on a proper old
+coloring, contrary to retention.
+
+Conversely, any blocking subset for a proper old positive
+that includes a full row must contain every full row.
+If it contains a row before the last, all anchors must
+be query seeds, so the proper query omits $r$. Each
+successive $r$-tail must then be headed in the subset,
+forcing the chain down to the last row and $z$. Those
+two rows require $x_0$ at both $a$ and $b$, so $x_0$
+must be headed rather than seeded. Its row forces the
+entire chain. If the subset contains only the last full
+row, then $x_0$ is unheaded and must be seeded at $a$,
+alongside the anchors for all owners other than $r,a$.
+Again $r$ is omitted. This forces the old $z$ row and
+the conflicting seed at $b$, which is impossible.
+Thus every proper subbudget leaves all old positives
+feasible. Union their witnesses and erase fresh-owner
+gates to obtain a transport obeying that subbudget.
+
+In particular, at $m=2$ the two transports satisfying one
+additional loss each have no common lower transport of
+the same old operation. Thus a least transport need not
+exist, and restriction from the enlarged core fails to
+preserve meets. For arbitrary $m$, feasibility of every
+bounded-size subfamily cannot guarantee joint feasibility,
+even with just one old proper loss.
 
 There is a full description when one distinguished source
 $x$ can vary and every passive input is retained. Every
