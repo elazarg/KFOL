@@ -2695,86 +2695,66 @@ v&zu&xy,xz,yz,u
 \]
 None consists of the three edges of a four-vertex path.
 
-Weighted thresholds with at most two distinct positive
-weights always have core envelopes. Write $W>w$ for the
-weights of the heavy and light inputs. Express the
-threshold as a disjunction over its coordinatewise
-minimal winning count pairs $(a,d)$: require at least
-$a$ heavy inputs and at least $d$ light inputs, omitting
-a zero threshold. Each such conjunction has a core
-envelope by disjoint composition. Combine them by
-$b$-gates.
+A nonconstant Boolean profile invariant under permutations
+within two input blocks always has a core envelope.
+This includes weighted thresholds with two weight levels
+and profiles that have no weighted quota on the blocks.
 
-At a nonconstant visible Boolean restriction, every
-free heavy input is essential in the whole threshold.
-Indeed, if a lighter input is pivotal on a coalition,
-a heavy input outside that coalition can replace it
-in the winning extension. A heavy input inside the
-coalition can instead be removed and replaced by the
-lighter one, still losing, before adding the heavy
-input back. Thus any pivotal input gives a heavy pivot
-whenever a free heavy input exists.
+For any number of exchangeable blocks, write the function
+as a disjunction over its coordinatewise minimal winning
+count vectors $a$. Each disjunct requires a threshold
+$a_s$ in each block $s$, omitting a zero threshold.
+Its envelope is core by disjoint composition. Combine
+the disjuncts by $b$-gates to realize the two dual profiles.
+As in the join construction, this gives the envelope
+exactly when every essential variable of a disjunct
+at a nonconstant visible restriction is essential in the
+whole restricted function. Necessity can be tested by
+giving that variable the unique third-owner mark.
 
-For a disjunct still depending on free light inputs,
-let $H,L$ be the numbers of fixed true heavy and light
-inputs. Then $L<d$. Set exactly $\max(a-H,0)$ free
-heavy inputs true and initially no free light inputs.
-If $H\le a$, the weight is $aW+Lw$, below quota by
-minimality of $(a,d)$. If $H>a$, only the fixed true
-inputs have been counted, so the weight is again below
-quota since the restriction is nonconstant. Adding
-$d-L$ free light inputs wins by the disjunct, which
-is feasible because it still depends on these inputs.
-There is therefore a light pivot in the whole
-restriction. Permuting free inputs of equal weight
-gives a pivot at every free light input. No disjunct
-has an extra pivot at a nonconstant restriction, and
-constant restrictions are handled by the two exact
-profiles. The fold consequently realizes the envelope.
+With two blocks, consider a feasible disjunct $(a,d)$
+still depending on free inputs of the first block.
+Let $(H,L)$ count the fixed true inputs, so $H<a$.
+Set no free input in the first block true, and just
+enough in the second to reach $\max(L,d)$. If $L\le d$,
+the resulting count $(H,d)$ loses by minimality of
+$(a,d)$. If $L>d$, this is the fixed true count and
+loses since the whole restriction is nonconstant.
+Adding $a-H$ inputs from the first block then wins.
+Thus the whole restriction has a first-block pivot,
+and by symmetry every free input of that block is
+essential. Interchange the blocks for the other case.
+The disjunction therefore has no extra pivots.
+For example, on two blocks of four inputs one may
+use the minimal count pairs $(0,4),(2,2),(4,0)$.
+No weighted quota on the two blocks gives this
+profile: the two extreme winners would also make
+$(1,3)$ and $(3,1)$ win.
 
-For any number of weight classes, the count construction
-itself has an exact test. Let $w_s$ be the weight in class $s$,
-$Q$ the quota, $T_s$ the number fixed true, and $F_s$ the
-number free. Put $Q'=Q-\sum_s w_sT_s$. Consider just
-nonconstant restrictions, with
-$0<Q'\le\sum_s w_sF_s$. For each minimal winning count
-vector $a$, its residual conjunction requires
-$d_s=\max(0,a_s-T_s)$ inputs of each class. Discard it
-if some $d_s>F_s$. For every remaining vector and every
-class $s$ with $d_s>0$, require a vector of counts $u$
-satisfying
-\[
- 0\le u_j\le F_j,\qquad u_s<F_s,\qquad
- Q'-w_s\le\sum_jw_ju_j<Q'.
-\]
-This is the exact pivot test for a free input in class $s$.
-Its necessity for the construction follows by giving
-that input a unique third-owner mark at the restriction:
-the residual conjunction supplies the mark, so the
-constructed fold will supply it, whereas the desired
-envelope does so only if the displayed pivot exists.
-Sufficiency follows from the absence of extra pivots
-and the exact profiles on constant restrictions.
+For more blocks the exact test consists of scanning the
+fixed true counts $T$ and free counts $F$. At a
+nonconstant restriction a disjunct has residual counts
+$d_s=\max(0,a_s-T_s)$ and is feasible if $d_s\le F_s$
+for every $s$. For each feasible disjunct and each
+$s$ with $d_s>0$, require a count vector $u$ with
+$0\le u\le F$, $u_s<F_s$, for which $T+u$ loses and
+$T+u+e_s$ wins. At fixed block count all these boxes
+have polynomial size in the number of inputs. For
+weights $w_s$ and residual quota $Q'$ the two tests
+are just $Q'-w_s\le\sum_j w_ju_j<Q'$.
+Every disjunction of conjunctions of block thresholds
+representing the profile must include each minimal
+winning count vector, because a disjunct winning there
+cannot require strictly less. Additional disjuncts
+therefore cannot repair failure of this construction.
 
-At a fixed number of classes, all count vectors in
-this test range over boxes with side lengths at most the
-number of inputs. This checks the construction in
-polynomial time for integer weights in binary.
-Furthermore any disjunction of conjunctions of
-class thresholds that represents the weighted profile
-must include each minimal winning count vector: the
-conjunction winning there has requirements bounded
-by that vector, and cannot require strictly less.
-Consequently additional conjunctions cannot repair a
-failed test for this construction.
-
-The test can fail even when the envelope is core.
-For weights $2,1,3$ on $x,y,z$, respectively, and quota
-four, the Boolean function is $(x\vee y)\wedge z$.
-Its disjoint-block envelope is core, but the count
-construction includes the conjunction $yz$. Fix $x$
-true and leave $y,z$ free. That conjunction still
-depends on $y$, whereas the restricted function is $z$.
+The test can fail for a partition even if the envelope
+is core. With singleton blocks and weights $2,1,3$
+on $x,y,z$ at quota four, the profile is
+$(x\vee y)\wedge z$. Fix $x$ true. The disjunct $yz$
+still depends on $y$, whereas the restricted profile is
+$z$. Grouping the interchangeable inputs $x,y$ instead
+gives a disjoint-block realization.
 
 Even a weighted threshold can have an unrealizable envelope.
 Give $x,y,z,u,v$ weights $1,1,2,2,3$ and use quota five.
