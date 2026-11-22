@@ -179,34 +179,56 @@ realizes the reconstructed operation, which equals the pointwise
 intersection. With one headed input use
 \cref{core:thm:source-completion}, and with none use the full union.
 
-Three heads already defeat sufficiency. On $x,y,z$ choose distinct
-owners $a,b$ and prescribe one minimal loss per head:
-\[
- (x,\{y{:}a,z{:}b\}),\qquad
- (y,\{z{:}a,x{:}b\}),\qquad
- (z,\{x{:}a,y{:}b\}).
-\]
-After erasing the two heads of any pair, the losses disagree at
-the third input. Hence the stronger pair test holds, and the
-intersection agrees with source reconstruction. Its values are
-nonempty: at any tuple at most one of the three loss patterns can
-match the singleton postings, leaving the other inputs retained.
-Yet the reconstructed coefficient of $x$ is positive at
-$p=\{y{:}b,z{:}a\}$, which no bounded core term can supply.
-Indeed the owner graphs in \cref{core:thm:injective-blockers},
-using all three rows, are oppositely oriented directed triangles.
-The $a$-graph is reached from $z$ and the $b$-graph from $y$,
-so every tail belongs to its owner's reachable set.
-The marked head $x$ occurs among the losses, and the reachability
-test fails. The construction works for every $K\ge3$.
-In fact the lattice meet adds exactly the reversed pattern at
-each head. For any two-row subset the omitted head is a tail at
-both owners, and no edge of that subset reaches it. It cannot
-be seeded at both owners in a coloring, so no two-row subset
-blocks a positive. A one-row subset blocks only its stated loss.
-The full three-row subset blocks exactly when both owner
-graphs are seeded, which requires the two passive inputs to
-be posted at $a,b$ in either order.
+The pair test can miss an implication that requires every head.
+Take $3\le n\le K$ inputs and choose a palette of $n-1$ owners.
+At each head prescribe one loss posting all other inputs, once at
+each selected owner. Require also that each input is posted at
+distinct owners in its appearances across the other heads' rows.
+Any two rows then disagree at a third input, so the stronger pair
+test holds. At most one row can match any tuple, so the pointwise
+intersection has nonempty values and agrees with reconstruction.
+
+For each selected owner the posting edges form a permutation of
+the inputs, oriented from the posted input to the row head.
+If every such permutation is a single cycle, the core meet
+adds every bijective posting of the passive inputs at the selected
+owners as a loss at each head. If some permutation has multiple
+cycles, the pointwise intersection is core as it stands.
+
+Indeed apply \cref{core:thm:injective-blockers} to a query at a head.
+A one-row subset can only force its stated loss. For a proper
+subset of at least two rows, an omitted head is a tail at different
+owners in those rows. No edge in the subset reaches that head,
+and it cannot be seeded by the query at both owners. Thus the
+subset forces no new loss. In the full subset there are no
+missing-color seeds at the selected owners, and reachability
+requires a query seed in each cycle at each selected owner.
+There are only $n-1$ passive inputs and hence at most one seed
+per owner if all selected owners have seeds. This proves both
+cases and shows that each new loss requires the entire list.
+Neutral marks survive, so the meet is nonzero.
+
+For example, number the inputs modulo $n$ and at head $i$ post
+$i+d$ at owner $a_d$ for $1\le d<n$. The permutation at owner $a_d$
+is a single cycle exactly when $d$ is relatively prime to $n$.
+Thus for prime $n$ the $n$ rows force all $(n-1)!$ permutations
+at each head, while for composite $n$ the original rows are
+already complete. At $n=3$ this gives the two oppositely
+oriented triangles and adds exactly the reversed posting at
+each head, for every $K\ge3$.
+
+On a facet whose observer is outside the selected palette, this
+closure changes $m=n-1$ one-literal primes at each head into
+$\binom{2m}{m+1}$ primes. After closure a sufficient guard must
+exclude all perfect matchings between the passive inputs and
+the selected owners. Hall's condition says its exclusions must
+contain a rectangle $A\times B$ with $|A|+|B|=m+1$.
+Each such rectangle is minimal: restoring any of its edges
+allows a matching using that edge, matching the remaining
+inputs of $A$ outside $B$ and the remaining owners of $B$
+outside $A$. Thus the rectangles are exactly the primes,
+and their count follows by choosing $m+1$ elements from the
+two disjoint sides.
 
 Neutral restriction to a subset of inputs is left adjoint to adjoining
 the union of the remaining inputs. Indeed, for disjoint sets $V,W$,
