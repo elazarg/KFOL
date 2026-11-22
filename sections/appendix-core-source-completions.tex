@@ -450,6 +450,39 @@ injective budget of the specified excess. Together with closure
 and matching, this gives recognition from prime lists alone in
 time $f(K,t)$ times a polynomial in the input length and arity.
 
+Injectivity of the minimal losses can itself be checked in
+polynomial time directly from canonical primes, even with no
+excess bound and with $K$ varying. On one facet, choose two
+postings at the same owner on distinct inputs. A minimal
+transversal containing both exists exactly when they have
+private guards that can coexist. Specifically, guess two guards
+whose intersections with the chosen pair are its two distinct
+singletons. Remove
+all other postings in these two guards from the ground set.
+If the remaining set hits every guard, shrink it to a minimal
+transversal. The private guards force both chosen postings
+to survive. Canonicity makes that transversal consistent
+by \cref{core:thm:guard-consensus}. Conversely, any minimal
+loss containing both postings has such private guards and
+is contained in the remaining ground set for that choice.
+Trying all pairs of postings and private guards detects
+every repeated owner. More generally, for any fixed $d$,
+trying $d+1$ postings at one owner and their private guards
+checks the bound of $d$ postings per owner.
+
+It follows that complete-family recognition within the
+injective class is in coNP even for varying $K$. The class
+check above and facet canonicity are polynomial. To check
+observer agreement, compare the lists for each observer
+pair after deleting the newly hidden postings and discarding
+supersets. For a valid family with a positive bit, a
+nonrealizability certificate consists of a positive coloring
+and a blocking subset of at most $nK$ injective rows, using
+the certificate bound after \cref{core:thm:injective-blockers}.
+Each selected row is checked against the prime lists, and
+the certificate is verified by graph reachability. This
+certificate needs no enumeration of the minimal losses.
+
 The guard implication problem for the core meet is coNP-complete
 without the excess bound, even at fixed $K\ge3$, for acyclic
 injective rows and a queried empty guard. For membership, guess
