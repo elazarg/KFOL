@@ -3271,45 +3271,42 @@ face. A visible single loss has a local realization by
 the single-source construction. Thus all the one-owner
 face tests pass despite the global obstruction.
 
-For infinitely many palettes the same failure holds even
-if every proper subset of owners may vary. Take $n=K+1$
-prime, index the inputs modulo $n$, and at head $i$ give
-one full loss posting $i+d$ at owner $a_d$ for
-$1\le d<n$. On a face fixing any one owner's block,
-at most one row can be visible: each row uses that
-owner exactly once, at an input different for every
-head. A face with more fixed owners can only further
-restrict visibility. On each such face the full input
-union or a single-source completion therefore realizes
-the prescribed data.
+For every $K\ge3$ there are transport data for which
+all faces with a proper subset of varying owners pass.
+Except at $K=3,5$, take $n=K+1$ and decompose the
+complete directed graph into $K$ directed Hamilton
+cycles, one per owner. For odd $n$ use both orientations
+of an undirected Hamilton decomposition of the complete
+graph, and for even $n\ge8$ use Tillson's decomposition
+\cite{Hilton1984Hamiltonian,Tillson1980Hamiltonian}.
+At each head impose one full loss, posting its predecessor
+on each cycle at that cycle's owner.
 
-Globally these rows are incompatible with the other
-full bits all positive. Each owner graph is a directed
-cycle, since $n$ is prime. On the enlarged palette every
-full permutation query has a seed in each owner cycle,
-so the full row set blocks every query at every head by
-\cref{core:thm:injective-blockers}. This forces losses
-beyond the listed ones. Consequently even checking
-every proper owner-subset face separately does not
-characterize these transport data.
+On a face fixing any one owner's block, at most one
+row can be visible: each row posts that owner exactly
+once, at a distinct input, and no other input can
+carry that owner without conflicting with the row or
+posting its head. A face with more fixed owners only
+restricts visibility further. On each such face full
+input union or a single-source completion realizes the
+prescribed data. Globally declare all other full bits
+positive. The full row set blocks every full permutation
+query by \cref{core:thm:injective-blockers}, because each
+owner cycle has a query seed. Thus the global data fail.
 
-The construction also works when $n=K+2$ is an odd
-prime, in particular at $K=3$. Use the shifts
-$1,\ldots,K$, leaving the shift $\mu=K+1$ unposted
-in each loss. To see that fixing any owner still leaves
-at most one visible row, suppose two rows at $i,j$
-both survive fixing the block at $a_d$. That block
-must contain both $i+d$ and $j+d$. In the row at $j$,
-the additional input $i+d$ cannot be its head and
-cannot be required at a different owner, so its shift
-must be the unique unposted shift $\mu$. Likewise
-$j+d$ must be unposted in the row at $i$. Hence
-$d+i-j=d+j-i=\mu$ modulo $n$, impossible for distinct
-$i,j$ at odd $n$. The owner graphs are still cycles,
-so the same reachability argument forces every full
-query to lose, including full queries beyond the listed
-rows. Thus at three owners even all two-owner faces
-can pass separately.
+At $K=3,5$, take instead the odd prime $n=K+2$ and use
+the cyclic shifts $1,\ldots,K$ as owner permutations,
+leaving the shift $\mu=K+1$ unposted in each loss.
+Suppose rows at $i,j$ both survive fixing owner $a_d$.
+Its fixed block must contain both $i+d$ and $j+d$.
+In the row at $j$, the additional input $i+d$ cannot
+be the head or be posted at another owner, so its
+shift must be $\mu$. Likewise $j+d$ must be unposted
+in the row at $i$. Hence $d+i-j=d+j-i=\mu$ modulo
+$n$, impossible for distinct $i,j$ at odd $n$. The
+owner graphs are still cycles, so every proper
+owner-subset face passes and the full row set again
+forces additional full losses.
 
 For a head $x$ with a winning singleton coalition
 $\Phi_r(C)(\{x\})=1$ at some old owner $r$, the cofactor
