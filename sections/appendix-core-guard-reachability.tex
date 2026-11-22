@@ -1970,6 +1970,46 @@ unheaded input, and the queried head is mandatory.
 This is uniform in the palette, and single exponential
 in the decomposition width at fixed $K$.
 
+The charge formula also handles mixed cycles if the
+budget has no monochromatic cycle. In addition to the
+chosen set, specify a total order of its inputs, starting
+with the queried head. Charge from just the arrows whose
+tails occur earlier in this order. Any actual derivation
+gives such an order and pays at least these charges. In
+the other direction replay the chosen order and pay the
+charges, which suffices for each successive addition.
+This prevents a cycle of selected inputs from justifying
+its own activation.
+
+The bag states can enforce this order by storing its
+restriction to the chosen inputs in the bag. At an
+introduced arrow count its owner only if the bag order
+puts its tail first. At a join, the two orders on the
+subtrees can be merged whenever they agree on the bag:
+interleave their intervals between consecutive common
+vertices. No arrow joins the two interiors, so both
+child charge summaries remain valid. Introducing and
+forgetting vertices adds or deletes their positions in
+the bag order. Force the queried head first whenever
+present, or retain it in every bag at a cost of one in
+the width. The number of extra states per bag is at
+most $(w+2)!$, giving time
+$(K+2)^{O(w+1)}2^{O(w\log(w+2))}N^{O(1)}$.
+The ranked survivor result makes this an exact guard
+optimization for the original mixed-cycle budget.
+
+If a feedback vertex set of size $f$ in the underlying
+directed arrow graph is supplied, there is another
+order encoding. Guess the chosen feedback vertices
+and their order. At each other chosen input store the
+interval between those vertices in which it activates.
+Within an interval use a fixed topological order of the
+graph with the feedback set removed. This preserves
+every predecessor used by a successful derivation.
+The same bag recurrence now uses interval labels in
+place of permutations, with time
+$2^{O(f\log(f+2))}((K+2)(f+1))^{O(w+1)}N^{O(1)}$.
+
 For an acyclic budget with several rows per head,
 the full bounded source predicate is the conjunction
 of the predicates obtained by keeping exactly one
