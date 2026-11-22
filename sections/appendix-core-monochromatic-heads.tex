@@ -1522,6 +1522,47 @@ the root cannot clear $x$. Thus three leaves
 are insufficient even allowing single-owner
 masks and union as binary gates.
 
+With singleton owner blocks, the minimum number
+of distinct inputs in a marked witness can be
+computed exactly. In the probe's disagreement
+graph, minimize the number of vertices in a path
+from its head $i$ to an unheaded input, or in
+a path followed by a selected monochromatic
+cycle. For the second case the path ends where
+it first enters the cycle. Write $d(i,v)$ for
+the shortest path length and $c_r(v)$ for the
+length of a shortest $r$-cycle through $v$,
+taking infinity for missing witnesses. The
+minimum is
+\[
+ \min\left\{
+   \min_{v\ \mathrm{unheaded}}\bigl(d(i,v)+1\bigr),
+   \min_{v,\ r\in J}\bigl(d(i,v)+c_r(v)\bigr)
+ \right\}.
+\]
+Shortest paths and cycles give the displayed
+bound. If a minimizing path meets its chosen
+cycle earlier than its endpoint, truncate it
+at that first meeting. Conversely any path
+and cycle meeting only at their endpoint
+have at least the stated minimum size.
+
+For the lower bound on witnesses, restrict any
+bounded term to its own input set. Project the
+loss rows at those heads to that set: the term
+ignores the erased inputs, so it still respects
+the projected rows. The single-row and
+singleton-block hypotheses persist. Exact
+saturation in this restricted budget gives
+a path or a path and cycle using only inputs
+of the term. For the upper bound, the walk
+construction realizes a minimizing support.
+It uses that many leaves for a path and at
+most one extra for a path and cycle. Thus the
+minimum support size is polynomial to compute,
+and estimates the optimal leaf count to within
+one in these generators.
+
 This test compiles directly from canonical primes into a
 polynomial-size monotone circuit shared by all colorings.
 Let $U$ mark the postings in the union of the fold supports
