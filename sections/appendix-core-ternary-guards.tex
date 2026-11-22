@@ -2427,35 +2427,37 @@ If these profiles are attained below $B$, the relative
 profile maximum of \cref{core:prop:relative-profile-maximum}
 is therefore this formal operation.
 
-The equality $F=B\cap P$ has a prime comparison that
-does not need the canonical lists of the intersection.
-At one head and facet choose a prime $D$ of $B$.
-At each visible profile label $r$ choose a restricted
-profile clause $Q_r$, read as exclusions at $r$.
-For other owners take an empty set. Equality requires
-every such union $D\cup\bigcup_r Q_r$ to contain a
-prime of $F$. Indeed these unions are a sufficient-guard
-list for the intersection, and $F$ is already below
-both factors. Failure of equality is therefore an
-assignment of one clause per label that avoids enabling
-every prime of $F$. There is one constraint per prime
-$H$ of $F$: forbid the assignment when, at each owner
-used by $H$, the corresponding fragment of $H$ is
-contained in that of $D\cup Q_r$.
+Equality $F=B\cap P$ can be checked in polynomial
+time, uniformly in prime width and palette. Work
+at one head and facet. For each prime $D$ of $B$,
+restrict attention to guards containing $D$. If $G$
+is the remaining set of exclusions, the guard $D\cup G$
+is sufficient for $F$ exactly when $G$ contains a
+member of the minimized list
+\[
+                   \min_{\subseteq}\{H\setminus D:H\text{ a prime of }F\}.
+\]
+For $P$, remove $D$ from each clause in each owner
+list and minimize each list independently. The
+minimal unions of one member per list are still
+exactly a product: the remaining owner alphabets
+are disjoint, so distinct choices differ and none
+dominates another.
 
-If all primes of $F$ use postings at only one owner,
-each constraint is unary, so equality takes polynomial
-time uniformly in width and palette. An empty prime
-certifies equality at its facet immediately. More
-generally, join owners appearing together in a prime
-of $F$ at the tested head and facet. Given a width-$w$
-tree decomposition of this owner graph, each constraint
-lies in one bag. Enumerate clause choices in each bag
-and match them on bag intersections. This gives a test
-in $N^{w+O(1)}$ time for lists of total size $N$.
-This checks equality with the formal formula. Exact
-realization as a relative completion also requires
-attaining the extracted profiles under $B$.
+Compare the size of this product with the length
+of the restricted $F$ list, capping the count as
+soon as it exceeds that length. If the counts
+agree, enumerate just that many products and
+compare the lists. This checks equality for all
+guards containing $D$. Every sufficient guard of
+$B$ contains some $D$, while $F$ is already below
+$B$. Thus equality on all these restrictions is
+equivalent to the required relative equality on
+the facet. Repeating the check over the supplied
+primes of $B$ is polynomial in the total list
+length. Exact realization as a relative completion
+also requires attaining the extracted profiles under
+$B$.
 
 For the greatest profile completions with only one owner
 $r$ allowed to win below unanimity, fitting a sample and
