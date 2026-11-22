@@ -1378,17 +1378,20 @@ matrix construction has size $O(|V|^3\log(2|V|))$.
 The arrows and unheaded inputs are read directly
 from one visible prime list at each head.
 
-For the same single-row budgets, the greatest
-mask-only operation has a different walk circuit.
-Write $L_a(x_v,W)$ for the mask controlled by
-$x_v$ at $a$. A walk starts with its first
-projection and attaches the subsequent vertices
-as mask controllers in walk order. Retain only
+For budgets with at most one loss per head, the
+greatest mask-only operation has a walk circuit
+even with several posting owners per row. Label
+each posting edge by its owner. Write $L_r(x_v,W)$
+for the mask controlled by $x_v$ at $r$. A walk
+starts with its first projection and attaches
+each subsequent vertex as a mask controller at
+the owner of the edge used to reach it. Retain only
 complete walks ending at an unheaded input.
 Such a word is bounded even if the walk repeats
 vertices. For a headed input, the controller
 immediately following its last occurrence is
-posted at $a$ on that head's loss. This removes
+posted at the corresponding edge owner on that
+head's loss. This removes
 its last contribution, and no later step
 restores it.
 
@@ -1396,7 +1399,7 @@ For each endpoint $v$ start $T_0(v)=x_v$ and
 set
 \[
  T_{d+1}(v)=T_d(v)+
-       \sum_{u\to v} L_a(x_v,T_d(u)),
+       \sum_{u\xrightarrow{r}v} L_r(x_v,T_d(u)),
 \]
 where $+$ is menu union. A mask with a fixed
 controller distributes over union of its
@@ -1416,11 +1419,15 @@ deletion step, and conversely replaying the
 path in reverse to obtain the deletions.
 A simple such path has at most $|V|-1$ edges.
 Its walk word supplies the initial mark since
-none of its controllers posts $a$ at the probe.
+each controller disagrees with its edge's
+posting at the probe.
 Thus the circuit gives the greatest mask-only
 operation. If the posting graph has $m$ edges,
 its size is $O(|V|(m+|V|))$ with shared
-subcircuits.
+subcircuits. For a nonempty row, each visible
+facet lists its postings as singleton exclusions,
+so the labeled edges are again read directly
+from the canonical primes.
 
 This test compiles directly from canonical primes into a
 polynomial-size monotone circuit shared by all colorings.
