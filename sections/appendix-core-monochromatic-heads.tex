@@ -7486,43 +7486,57 @@ For instance with baseline $B=x$ and prescribed loss $x{:}a$,
 the greatest extension loses only at $x{:}a$, while the earlier
 construction also loses at $x{:}r$.
 
-Guard implication for this greatest extension is polynomial
-without expanding that presentation. Fix a proposed guard and
-an observer, and let $U_s$ be the inputs whose postings at $s$
-are permitted by both. Start with the full live support and
-iterate the contracting map on closed sets
-\[
- H\longmapsto c(H\cap U_r)\ \cap\!
-                 \bigcap_{s\ne r}c(H\setminus b_s)
-\]
-to its greatest fixed point $H_*$. The map is monotone and
-each step stays closed. There are at most as many strict steps
-as live inputs. There is a coloring satisfying the guard
-and above $b$ in the activation order exactly when
-\[
-        b_r\cup \bigcup_{s\ne r}(b_s\setminus U_s)
-                     \subseteq H_* .
-\]
+The descending fixed-point test in
+\emph{Eliminating positive backgrounds over disjoint traces}
+checks a proposed guard against a prescribed loss in polynomial
+time. Testing every prime against every explicit minimal loss
+decides a one-source extension over the trace: any violation
+of downward closure has a positive prime and a minimal loss
+below the losing coloring by subcoloring.
 
-Indeed, for any such coloring $p$, its $H=c(p_r)$ is a fixed
-point: its native seed lies in $U_r$, and every foreign
-spanning condition holds. The native and exterior conditions
-of the activation order give the displayed inclusion with $H$
-in place of $H_*$. Conversely, take $p_r=H_*\cap U_r$ and
-$p_s=b_s\setminus H_*$ at each foreign owner. These postings
-are consistent and permitted by the displayed inclusion.
-The fixed-point equations give $c(p_r)=H_*$ and every
-required spanning condition, so this is a losing coloring
-on the chosen facet.
+There is also a prime-only test at width two when few passive
+inputs can be derived from others. Let
+$D=\{x:x\in c(V\setminus\{x\})\}$ on the live support.
+For each proposed positive prime at observer $k$, let $U_s$
+be the inputs it permits to be posted at owner $s$ on that
+facet. Guess an observer for a losing coloring $b$, and, for
+each input in $D$, its posting in $b$ and whether it belongs
+to a prospective set $H$. Use Boolean variables for all
+remaining postings and memberships.
 
-The closure evaluations use only the native primes. In
-particular, a proposed one-source extension over the trace
-is recognizable in polynomial time from its canonical primes
-and explicit minimal losses: test each listed guard against
-each minimal loss by this fixed-point calculation. Any
-violation of downward closure in the activation order has
-a positive prime and a minimal loss below its losing
-coloring by subcoloring, so these tests are exhaustive.
+The conditions for a counterexample are that $b$ hit every
+prime on its facet, have consistent postings, and satisfy
+\[
+ b_r\cup\bigcup_{s\ne r}(b_s\setminus U_s)\subseteq H,
+ \qquad
+ H\subseteq c(H\cap U_r),\qquad
+ H\subseteq c(H\setminus b_s)\quad(s\ne r).
+\]
+These conditions do not require $H$ to be closed. In fact
+$H'=c(H)$ satisfies both fixed-point equalities: the
+corresponding seeds inside $H$ already generate $H'$.
+The guard is then violated by the coloring with native block
+$H'\cap U_r$ and foreign blocks $b_s\setminus H'$.
+Conversely any violating comparison gives a closed $H$
+satisfying the displayed conditions.
+
+For $x\notin D$, membership in any closure is equivalent
+to membership in its seed. The two spanning conditions
+therefore reduce at such an input to binary implications
+from its membership in $H$. At each $x\in D$ with guessed
+membership in $H$, seed membership at $x$ is already fixed
+for each spanning test. If $x$ is outside the seed, require
+the seed to hit every native prime at $x$. A posting contributes
+to a seed by a conjunction of at most two literals: membership
+in $H$ and, when removing a foreign block, absence of the
+corresponding foreign posting. A prime of width at most two
+therefore gives an OR of at most two conjunctions, which
+distributes into binary clauses. The other conditions are
+already binary clauses or units, including the loss test
+on the terminal width-two primes. Thus every guess is tested
+by $2$SAT. This gives a prime-only recognition bound of
+$(2(K+1))^{|D|}$ times polynomial time when both native
+and terminal prime widths are at most two.
 
 For a strict example let $B$ be the union of the native
 folds on the edges of the four-cycle $x,y,z,v,x$.
