@@ -2542,6 +2542,32 @@ consistent with the current coalition and leaving that
 variable free. For each minimal winner $A$, let $h_A$
 have as winners all coalitions reachable from $A$.
 
+The dropping rule has a local test on the minimal winning sets.
+For a winning coalition $D$ and $i\in D$, the step to
+$D\setminus\{i\}$ is allowed exactly when there is a maximal
+losing coalition $L$ inside $D\setminus\{i\}$ with
+$f(L\cup\{i\})=0$. Indeed, from a witnessing restriction
+fix all inputs outside $D$ to false. The restriction is
+still nonconstant, since its lower endpoint loses and
+$D$ wins. Extend its fixed true inputs to a maximal
+losing $L$ inside $D\setminus\{i\}$. The original
+inessentiality shows that $L\cup\{i\}$ still loses.
+Conversely, fix $L$ true and the outside of $D$ false.
+The two assignments $L$ and $L\cup\{i\}$ both lose,
+while adding any other free variable to either wins
+by maximality of $L$. Thus $i$ is inessential and the
+restriction remains nonconstant.
+
+This test uses only the minimal winning sets contained
+in $D$: the candidates $L$ are the maximal subsets of
+$D\setminus\{i\}$ containing none of those sets, and the
+last test asks whether adding $i$ creates one. For a graph
+edge function, it says that the induced graph on
+$D\setminus\{i\}$ has a maximal independent set avoiding
+all neighbors of $i$. Thus the reachability construction
+can use minimal winners and local maximal losers in
+place of enumerating the possible partial fixings.
+
 At a root $b$-gate realizing the envelope, both child
 profiles at $b$ must be closed under these steps, by the
 one-bound argument above. If even one $h_A$ is all of $f$,
