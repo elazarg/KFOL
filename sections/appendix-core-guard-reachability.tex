@@ -1353,16 +1353,22 @@ cached pair takes polynomial work once its children are known.
 \end{proof}
 
 \paragraph{Localizing the remaining loss budget.}
-At a task $(S,a)$, initially put $U=V$. For $r$ in the
-domain of $a$ let
+At a task $(S,a)$, initially put $U=V$. Treat an
+absent entry $a_r$ as empty and let
 \[
   Q_r(U)=a_r\ \cup\
       \bigcup_{\substack{(j,t)\in S\\ j\in U}}t_r .
 \]
-Repeatedly replace $U$ by its intersection with all
-$Q_r(U)$. At stabilization one may discard every row
-whose head is outside $U$, with no change in feasibility.
-The restriction applies to both choices after an offer.
+Repeatedly retain only inputs $v\in U$ that belong to
+$Q_r(U)$ for every retained owner $r$ and satisfy one
+of the following conditions:
+\begin{itemize}
+\item The assignment is empty and $v=i$.
+\item There is an owner $s$ with $v\in Q_s(U)\setminus p_s$.
+\end{itemize}
+At stabilization one may discard every row whose head
+is outside $U$, with no change in feasibility. The
+restriction applies to both choices after an offer.
 
 For one step, work on the current budget of rows headed
 in $U$. Let $U'$ be the smaller input set. Any word
@@ -1372,24 +1378,46 @@ restricted budget, using only blocks from remaining
 rows. At each leaf, the assignment still contains
 every initially retained owner. Its coalition at $r$
 is either $a_r$ or a block from a remaining row and
-therefore lies in $Q_r(U)$. A fitting projection
-belongs to all these coalitions. It cannot be at any
-head in $U\setminus U'$. Thus its projection tests
+therefore lies in $Q_r(U)$. The same containment
+holds for any owners added along the branch.
+If the leaf assignment is empty, its projection is
+at $i$. With one owner, the projection must avoid
+that owner's probe block. With at least two owners,
+it lies in all their final coalitions and must avoid
+at least one of their probe blocks since $p$ posts
+each input at most once. Thus in every case the
+projection avoids heads in $U\setminus U'$. Its tests
 also pass on the additional rows, if those rows are
 carried down the same tree with the usual deletions.
 The two-child construction then gives the same witness
 on the old budget. Iterate this restriction to the
-fixed point. When the assignment starts empty, the
-intersection makes no restriction until an owner is
-retained.
+fixed point. At the root, a head other than $i$ can
+survive only if some remaining row posts that input
+at an owner that disagrees with the probe.
 
 After restriction, later saved offers cannot enlarge the
-scope. For an already retained owner the new entry
-is contained in the old $Q_r(U)$, and any new owner
-only adds an intersection. Thus a branch can forget
-these heads permanently. This gives a localized form
-of the cut even when several owners still have to be
-retained at one task.
+scope. All updated entries are contained in their old
+$Q_r(U)$, so the sets $Q_r(U)$ can only shrink, and
+new owners add intersection requirements. The
+exception for $i$ is available only while the
+assignment is empty. Thus a branch can forget
+discarded heads permanently.
+
+At the root one may also restrict to heads reachable
+from $i$ by disagreeing postings. Draw an arrow
+$j\to v$ if a row at $j$ posts $v$ at an owner $s$
+with $v\notin p_s$. Take the set $R$ reachable from
+$i$ and keep only rows headed in $R$. Every offer in
+the restricted tree uses a block from those rows.
+Any terminal projection other than $i$ must disagree
+with at least one probe block, by the same single-
+and multi-owner eligibility tests. Its input therefore
+lies at the end of an arrow from a retained head and
+belongs to $R$. The tree also passes on the omitted
+rows. More generally, at a task with retained owners
+the same argument uses reachability from the union
+of the sets $a_r\setminus p_r$ in place of reachability
+from $i$.
 
 \paragraph{Pointed cuts with selected fold owners.}
 The same cut decides interpolation in the clone generated
