@@ -1008,6 +1008,28 @@ the tested facet and the lists used to certify
 its lost controls. The positive prime is used
 only for unary restrictions.
 
+The same test can use wider lists when their long
+primes repeatedly use a small set of postings. For
+a choice of $i,k,\ell$, take the primes at $i$ on
+facet $\ell$ together with the facet-$k$ primes of
+its nonretained controls. Let $t$ bound the minimum
+number of posting flags whose deletion leaves at
+most two flags in every prime of this collection,
+uniformly over the choices. Then acyclic recognition
+takes $2^b3^tN^{O(1)}$ time at arbitrary width.
+To find such a flag set, choose three remaining
+flags in any prime that still has more than two.
+Every valid set must include some flag of the triple,
+so branch on that flag. Iterative deepening finds
+a minimum set in $3^tN^{O(1)}$ time. Use this set
+for all $2^b$ guesses at the chosen head and facets.
+In each resulting formula try all truth assignments
+to its flags and simplify. Every remaining prime
+clause is binary or shorter, and the consistency
+and positivity tests were already of that form.
+Thus wider primes only affect the exponential
+part through the flags needed to shorten them.
+
 \paragraph{Greatest enlargement directly from acyclic primes.}
 Let $C$ be a realized family with a source order and
 fix a proper target $q$. Write $A=J(q)$ for the
