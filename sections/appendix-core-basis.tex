@@ -2568,6 +2568,33 @@ all neighbors of $i$. Thus the reachability construction
 can use minimal winners and local maximal losers in
 place of enumerating the possible partial fixings.
 
+With both $f$ and its dual given by their minimal winners,
+a single dropping test takes polynomial time in the lists.
+The global maximal losers are complements of the dual
+minimal winners. Intersect these losers with $D\setminus\{i\}$
+and keep the inclusion-maximal intersections. Those are
+exactly the local maximal losers, since every losing set
+extends to a global maximal loser. Test whether one still
+loses after adding $i$.
+
+With only the minimal winners of $f$ given, the same test
+is NP-complete even for a graph edge function and $D=V$.
+A maximal independent set avoiding the neighbors of $i$
+is a polynomial certificate. For hardness, from a Boolean
+satisfiability instance make two adjacent literal vertices
+per variable and an additional vertex per clause. Join
+each clause vertex to its satisfying literal vertices,
+and join $i$ to all clause vertices and no other vertices.
+A maximal independent set of the graph with $i$ deleted
+that avoids its neighbors uses only literal vertices.
+It must choose exactly one literal per variable to dominate
+the variable pairs. It must also meet each clause's
+literal neighbors to dominate that clause vertex. These
+conditions are exactly satisfaction of the formula,
+and any satisfying assignment supplies such an independent set.
+The input edge list is the minimal-winner list, since
+all graph edges are distinct two-element sets.
+
 At a root $b$-gate realizing the envelope, both child
 profiles at $b$ must be closed under these steps, by the
 one-bound argument above. If even one $h_A$ is all of $f$,
