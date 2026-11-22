@@ -2604,6 +2604,56 @@ such a loss, and can be minimized. This proves the
 reduction on complete canonical lists, with only
 binary union blocks and one loss head.
 
+The simultaneous loss test is polynomial at bounded
+guard--block incidence width and fixed $K$. For a
+query at an outside head, discard the common guards
+already hit by its exterior postings. Make a
+bipartite graph between remaining guards and blocks,
+joining a guard to a block if it contains postings
+there. At each block the choices are tuples of
+profile blockers for its forbidden statuses, as in
+the single-block test. A chosen tuple hits a
+neighboring guard when some posting of that guard
+on the block is allowed.
+
+The query loses precisely when one can choose a
+tuple per block so that every guard is hit. Indeed
+the union of the allowed grounds and the exterior
+postings then contains a minimal original loss.
+Conversely a contributing loss supplies a blocker
+tuple on each block. For a tree decomposition of
+the incidence graph, keep each present block's
+choice and one bit per present guard recording
+whether a processed incidence hits it. Processing
+an edge updates the bit, joins take its disjunction
+and agree on block choices, and forgetting a guard
+requires a hit. This gives time
+$(2D)^{O(w+1)}$ times polynomial work, for width
+$w$ and at most $D$ choices per block. At fixed $K$,
+$D$ is polynomial in the input list sizes.
+
+For blocks of bounded arity $b$, one can use the
+actual internal patterns that avoid the forbidden
+statuses as choices instead. There are at most
+$(K+1)^b$ per block. The same test then gives time
+$(K+1)^{O(b(w+1))}$ times polynomial work for a
+supplied decomposition. Hitting all common guards
+still suffices even if the union of these patterns
+uses all owners, since it contains a proper
+minimal loss.
+
+One can instead use the original facet lists
+separately. For each possible observer of the
+original loss, remove postings at that owner from
+the allowed exterior and block patterns, and use
+only its facet guards for the incidence graph.
+A contributing original loss is visible on at
+least one such facet. Thus it suffices that one
+of these tests succeeds. The width bound then
+uses the largest width of the facet incidence
+graphs and avoids forming common lists, even
+when $K$ varies.
+
 Outside invariance for this general block is also a
 prime grouping test. For each owner $s$, call an
 inclusion-minimal set $H\subseteq C$ that prevents the
