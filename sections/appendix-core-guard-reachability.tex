@@ -2382,9 +2382,7 @@ the prescribed positive heads at every proper
 coloring, with each head's own posting ignored in
 its prescribed coefficient. A failing coloring is
 a polynomially checkable certificate against fixed
-orders. Thus existence of a presentation in this
-class lies in $\Sigma_2^{\mathrm P}$ from complete
-canonical primes, with no loss expansion.
+orders, with no loss expansion.
 
 If the candidate is already known to be core, there
 is a simpler equivalent local check at each coloring.
@@ -2441,6 +2439,51 @@ Try forbidding each flag of $q$ in turn and use
 the prime-hit test for an allowed loss. This tests
 membership in the recovered budget even when the
 whole budget has not been listed.
+
+In fact recognition from the primes alone is in coNP.
+Use the relation $t\preceq q$ defined by
+$t|_{J(q)}\subseteq q$ on proper colorings, and the
+same rule for retaining canonical losses. Require the
+following conditions.
+\begin{enumerate}
+\item If $t\preceq q$, then $J(q)\subseteq J(t)$.
+\item Every posting of a minimal loss $q$ is at an
+input of $J(q)$.
+\item The retained rows have no monochromatic cycle.
+\item No proper coloring $p$ has a blocking set $U$
+meeting $J(p)$, with one retained row per head in
+$U$ whose postings outside $U$ are contained in $p$.
+\end{enumerate}
+Necessity follows from replay, erasure on unavailable
+inputs, and the exact recovered presentation. For
+sufficiency the first condition makes the relation
+transitive, and the second makes equivalence of
+minimal loss colorings imply equality. At any
+prescribed lost head under $p$, choose a minimal
+loss $q\subseteq p$. A retained loss $t\preceq q$
+exists by finite descent at that head. Transitivity
+gives $t\preceq p$, so no head outside $J(p)$ can
+be the first such head added by projection deletion.
+If any prescribed positive is still unavailable,
+the unavailable set and one unhit row per head
+give the forbidden blocking set. Thus availability
+equals $J$ everywhere, and the third condition
+makes this the greatest bounded operation.
+
+Each violation has a polynomial certificate. The
+first uses two proper colorings. For the second,
+test loss and all single deletions directly from
+the primes. For the third give a cycle with a
+retained row witnessing each edge, and for the
+fourth give the stated cut and rows. Membership
+of each row in the retained budget uses the
+allowed-alphabet test above. This gives coNP
+membership without constructing the budget.
+The problem is coNP-complete for each fixed
+$K\geq3$: on acyclic candidates it is equivalent
+to ordinary core recognition, since the canonical
+loss graph itself has no monochromatic cycle.
+Apply \cref{core:thm:complete-acyclic-guard-complexity}.
 
 Such a presentation preserves directed reachability
 on the input names. Take its rows to be canonical
