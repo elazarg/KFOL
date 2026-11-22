@@ -2841,6 +2841,60 @@ equals the product of the block-list cardinalities.
 This suffices because distinct choices of blocks give
 distinct unions.
 
+Even complete candidates of this factored form can be
+hard to recognize. At three owners, realization of
+greatest-profile-form candidates is coNP-complete at
+prime width four, with only monochromatic minimal losses.
+For this assertion the input is promised to give a
+nonempty candidate that takes the singleton prescribed
+by its profiles when one wins, and the full union
+otherwise. Membership follows from
+\cref{core:thm:profiles}: failure has a tuple of winning
+coalitions with empty intersection. Their profile bits
+can be read from the supplied primes.
+
+For hardness, take a graph and at each of the three
+owners require its winning coalition to meet every
+edge. Add a fresh input $u_{rs}$ for each unordered
+owner pair $\{r,s\}$, and require its membership in
+the winning coalitions of $r$ and $s$ by singleton
+clauses. The clauses at each owner have width at most
+two. Each pair of winning coalitions intersects at
+its shared input, so on any menu tuple at most one
+owner wins its singleton test. Define the candidate
+to return that singleton when present, and the full
+union otherwise. It is nonempty, and it has exactly
+the declared profiles: on a pure profile probe the
+other two posting blocks are empty and their tests
+lose. Its source predicates have the stated product
+form because a unique observed mark is omitted
+exactly when a visible profile wins.
+
+The pair inputs do not affect the existence of a
+tuple with empty intersection. Each $u_{rs}$ can be
+left out by the third owner. On graph vertices,
+an empty intersection means each vertex can be
+assigned an owner whose coalition omits it.
+No edge can have both endpoints assigned that owner.
+Conversely a proper three-coloring gives winning
+coalitions by taking complements of the assigned
+sets, with the pair inputs added as prescribed.
+Thus the common-source condition fails exactly for
+three-colorable graphs.
+
+The complete canonical prime lists are computed
+directly: at source $i$ delete $i$ from each profile
+clause and minimize the resulting exclusion sets
+at its owner, then take the product at the two
+visible owners. The pure losses and factorization
+argument above apply without assuming realizability.
+This gives polynomial-size lists of width at most
+four. When the profiles are realizable, their
+greatest completion is core by
+\cref{core:prop:profile-maximum}; when they are not,
+the candidate cannot be core. This proves hardness
+on the promised class.
+
 This gives the minimum number of primitive gate owners
 of any exact core operation from its prime lists.
 A projection needs zero, and a nontrivial single-owner
