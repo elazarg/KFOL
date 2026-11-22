@@ -1602,6 +1602,55 @@ all required neutral marks. Thus the optimum
 support size is the number of elements plus the
 minimum cover size, even with no owned folds.
 
+For a common probe in the mask-only single-row
+case, the joint support problem is tractable
+with the number of required marks as parameter.
+Keep the disagreeing graph, reverse its edges,
+and add a new root with edges to the unheaded
+inputs. A support is feasible exactly when
+its required heads are reachable from that
+root within the support, by the mask walk
+criterion on the restricted budget. This
+is a vertex-weighted directed Steiner tree
+problem with the required heads as terminals.
+Every connecting subgraph has an arborescence
+on a subset of its vertices, obtained by
+retaining one predecessor on a shortest
+root path to each reached vertex and pruning
+unneeded branches.
+
+To compute the optimum, split each original
+vertex into an entrance and exit joined by
+an edge of cost one. Replace the other edges
+by zero-cost edges from exits to entrances,
+using the new root directly as a source.
+The terminals are the exits of the required
+heads. The arborescence cost is then its
+original support size. For each subset $A$
+of terminals store the cheapest tree rooted
+at each possible vertex spanning $A$. For a
+singleton these values are shortest path
+distances. For a larger $A$, at each vertex
+take the minimum sum of the costs for two
+nonempty parts partitioning $A$. Then apply
+a shortest path closure to allow a path from
+the actual root to this split vertex. An
+optimal tree can be pruned to reach a first
+branch or a terminal before the split. At
+a terminal use its zero-cost singleton tree
+as one part. Conversely joining any two
+candidate trees and the path gives a
+connecting subgraph of no greater cost,
+which can be pruned to a tree. This proves
+the recurrence.
+
+With $t\ge1$ required marks the subset splits
+take $O(3^t|V|)$ work and there are $2^t$
+shortest path closures. Reading back the
+paths gives a minimum support and, by
+unioning the corresponding walk words, a
+mask witness on that support.
+
 This test compiles directly from canonical primes into a
 polynomial-size monotone circuit shared by all colorings.
 Let $U$ mark the postings in the union of the fold supports
