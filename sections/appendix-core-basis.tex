@@ -2895,6 +2895,48 @@ greatest completion is core by
 the candidate cannot be core. This proves hardness
 on the promised class.
 
+Width four is sharp at three owners for these factored
+candidates. At prime width at most three, common-source
+failure can be decided in polynomial time for fixed $K$.
+Write the profile clauses as the minimal sets $B_r$ that
+every winning coalition at $r$ must meet. An omission
+assignment chooses one owner for every input so that
+no owner's omission set contains one of its clauses.
+
+For a proposed omission of $i$ at $r$, delete $i$ from
+the $r$-clauses and minimize. An empty clause forbids
+that assignment. Otherwise the maximum remaining clause
+size is the width of the $r$-factor at source $i$, and
+is at least one. Call the allowed assignment unary if
+that width is one. Each input has at most one allowed
+nonunary assignment: two factors of width at least
+two would give a prime of width at least four on a
+facet seeing both owners.
+
+Enumerate for each owner either no seed or one input
+assigned there by a unary choice, with distinct seeds
+for distinct owners. With a seed at $r$, fixing it in
+the omission set makes all remaining constraints at
+$r$ unary. For every unseeded owner disallow unary
+assignments to it in this branch. Assign each remaining
+input to an available seeded owner if there is one
+consistent with its unary exclusions. Otherwise it
+must use its unique possible unseeded nonunary choice,
+or the branch fails. Check the original clauses on
+the resulting unseeded omission sets.
+
+This greedy choice is complete for a fixed set of seeds:
+moving any input to an available seeded owner does not
+constrain other inputs there and only removes it from
+an unseeded omission set, which cannot cause a violation.
+Every feasible omission assignment is covered by a
+branch, since one can pick a seed at each owner that
+receives a unary choice. The enumeration costs at most
+$(|V|+1)^K$ branches and each uses only the profile
+clause lists recovered from the primes. The absence of
+a feasible assignment is exactly core realizability
+of a candidate in the greatest-profile form.
+
 This gives the minimum number of primitive gate owners
 of any exact core operation from its prime lists.
 A projection needs zero, and a nontrivial single-owner
