@@ -2536,12 +2536,41 @@ give a lower bound on the maximum width even in
 this case, since minimizing a product never removes
 any of its flags outside $D$.
 
+There is a direct attainment test when the new profiles
+are supported on retained inputs. Suppose $B$ retains
+the projections on a nonempty set $W$. At selected
+owners prescribe profiles depending only on $W$, and
+at the other owners keep the profiles of $B$. Assume
+the prescribed profiles are monotone, win on $W$ and
+have common source on $W$. Put unanimity at the
+unselected owners on $W$ and realize this family by
+a term $T$ on $W$. Its values are in the union of
+those inputs, so $T\subseteq B$.
+
+At every owner the profile of $T$ dominates that of
+$B$ as a Boolean function: if $B$ is singleton at that
+owner, all retained inputs are posted there. Starting
+with $B$, attach $T$ once at every selected owner,
+using its owned gate. Before its own attachment an
+owner keeps the profile of $B$ under conjunction with
+that of $T$. Its own gate takes disjunction and switches
+to the profile of $T$, which later conjunctions preserve.
+Unselected owners keep the profile of $B$ throughout.
+The term stays below $B$ since every gate returns either
+a child singleton or the union of its children. Thus
+the profiles are attained, and resetting $B$ at this term
+gives their relative maximum. Common source on $W$ is
+also necessary for the prescribed profiles: any choice
+of their winning coalitions on $W$ with empty intersection
+could be joined with full coalitions at unselected owners.
+
 In general, counting the distinct primes on one facet
 is \#P-complete under polynomial-time Turing reductions,
 even when all relative products are canonical. Membership
 follows by guessing a guard and testing sufficiency and
 all its single deletions. For hardness take a 3CNF on $n$
-variables with no repeated variable within a clause.
+variables with at least one clause and no repeated
+variable within a clause.
 Use one owner per variable and an additional observer
 $k$. Include a head $h$, a common input $z$, and $t$
 distinct private inputs for each truth value of each
@@ -2565,6 +2594,14 @@ consistent. Retain all heads other than $h$.
 This is an exact acyclic core bound: its loss
 postings are on retained inputs, which supply
 their posted colors independently of $h$.
+Its $k$-profile is unanimity, because when all passive
+inputs are posted at $k$, no variable-owner posting
+can activate a loss at $h$. The prescribed variable
+profiles depend only on retained inputs and have
+common source there. The attainment construction
+therefore realizes them under $B$ while preserving
+its $k$-profile. In particular $B\cap P$ is a core
+relative completion on these instances.
 
 At the marked facet, fixing a prime of $B$ supplies
 one complete factor for every owner it uses. Hence
@@ -2582,8 +2619,8 @@ positive values of $t$ recover this coefficient
 by interpolation. Each supplied prime list of $B$
 has polynomial size, since a clause has at most
 three variables, and $P$ is supplied by its profile
-clauses. This establishes hardness for the formal
-intersection of two core operations.
+clauses. Thus counting remains hard for realizable
+relative completions under an acyclic core bound.
 
 For the greatest profile completions with only one owner
 $r$ allowed to win below unanimity, fitting a sample and
