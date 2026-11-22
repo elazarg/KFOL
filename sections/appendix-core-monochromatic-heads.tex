@@ -54,42 +54,62 @@ Conversely a fold on a selected cycle omits all rows,
 and restricting to the names used by a witness gives
 the shortest-cycle bound on its leaf count.
 
-With at most one loss at each head, marked feasibility
-at the neutral probe is polynomial for every selection
-of fold owners. Maintain the rows still required.
-Delete any row hit by an unheaded projection, which
-means it posts that input at some owner. In the reverse
-construction attach that projection as controller of
-the mask at the posting owner. Also delete all rows
-hit by a fold on a selected monochromatic cycle of
-remaining heads, attaching the fold by its owned
-choice in reverse. Both attachments preserve the
-neutral mark, and the new controller or fold already
-omits every remaining required row. Continue until
-the queried head is unheaded or neither deletion is
-possible.
+Fixed-background erasure preserves the selected-fold clone.
+Apply the residue construction of
+\cref{core:thm:completion-erasure} to its binary generators,
+which are greatest profile completions. With one surviving
+child the residual gate is a projection. With two surviving
+children, a foreign profile remains unanimity after the
+construction fills inactive profiles with unanimity.
+At the gate's own owner, an owned choice can keep its
+disjunctive profile only if both child masks permit that
+owner. If just one does, the residual gate is the mask
+controlled by that child, and if neither does it is union.
+For an original mask, the only possible absorbing port
+remains its controller. Thus the residual word uses no
+new owned choice. This construction preserves free source
+bits, including their formal reading when a fixing uses
+every owner.
 
-In the first case start the reverse construction from
-the queried projection. In the second, every remaining
-row posts only remaining heads, since otherwise an
-unheaded projection could delete it. If a witness
-existed, erase its leaves outside those heads, whose
-menus are neutral on the retained rows. This gives a
-word over the same generators: a gate with one remaining
-child is replaced by that child. The result on any
-retained row is contained in the original output.
-Inductively the only possible absorber of the original
-gate was a retained child, since the erased-only
-subtrees had ambiguous output. A retained absorber
-stays that singleton after erasure. In all other cases
-the original gate gives the union, which bounds the
-pruned result. The marked input has a surviving leaf,
-so the pruned word is nonempty. It would omit every
-remaining row, although there is no selected cycle.
-The survivor result excludes this. Each successful
-step deletes a row and uses only graph reachability,
-giving polynomial time and a witness with at most
-$1+m|V|$ leaves for $m$ input rows.
+It follows that the background restriction in
+\cref{core:lem:unmarked-background} also works inside a
+selected-fold clone. The downward direction is erasure:
+a loss whose exterior part agrees with the positive is
+still lost after fixing the rest of that background.
+For the converse, each omitted exterior row has a posting
+at a background input that disagrees with the positive.
+Attach that input's projection as a mask controller at
+the posting owner. The controller absorbs on the row and
+does not absorb at the positive. Its input is outside
+the negative heads, so it cannot introduce a forbidden
+mark on the rows already enforced.
+
+With at most one loss at each head, suppose the positive
+probe $p$ posts no vertex of a selected $r$-cycle at $r$.
+This includes all neutral probes. Feasibility is equivalent
+to the absence of a set $H$ containing the queried head
+such that every head in $H$ has a row, its exterior
+postings agree with $p$, and its internal graph has no
+monochromatic cycle at a selected owner. Indeed restrict
+to these rows and erase the matching exterior background.
+The projected budget has one row per input of $H$, so
+the selected-color survivor result forbids any witness.
+
+To find a witness or such a cut, maintain the rows still
+required. Delete any row posting an unheaded input at an
+owner where that input disagrees with $p$. In the reverse
+construction attach the projection as controller of that
+owner's mask. Also delete all rows hit by a fold on a
+selected monochromatic cycle of remaining heads, attaching
+that fold by its owned choice in reverse. The hypothesis
+ensures the fold does not absorb at $p$. Each new controller
+or fold omits all required rows, and both attachments
+preserve the mark. If the queried head becomes unheaded,
+start the reverse construction with its projection.
+Otherwise stabilization gives the cut: exterior postings
+agree, and no selected cycle remains. Each step deletes
+a row and uses only graph reachability, giving polynomial
+time and at most $1+m|V|$ leaves for $m$ input rows.
 
 For comparison, if all losses at a head use a single designated owner
 $c(j)$, there is a direct extraction even with several losses there.
