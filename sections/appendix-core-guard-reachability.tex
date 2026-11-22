@@ -760,6 +760,47 @@ $c_d\leq n\min(K,n)+d c_{d-1}$, and the
 displayed bound follows, including the
 unbranched case.
 
+At a branching step it suffices to try inclusion-maximal
+eligible repeated blocks separately at each owner. A
+successful branch for a block $C$ supplies a witness
+for the original sample that also wins the demand on
+$C$: the demand itself enforces every dropped row.
+The same witness wins the demand on any larger block
+of that owner, so the branch for the larger block
+succeeds as well.
+
+This gives smaller failure certificates when the
+eligible blocks are nested. In the scaffold above,
+also keep one row exhibiting each maximal eligible
+block. The scaffold preserves the heads and the
+reachable sets, so no fold deletion becomes possible.
+Preserving the maximal blocks prevents a smaller
+block from becoming a new maximal branch in the
+retained sample. For each retained maximal branch
+keep a failure certificate for one failed primitive
+continuation. Its rows are all contained in that
+branch's reduced sample, and the continuation's
+demands and seed sets are determined by the test
+and its chosen block. Thus the same induction proves
+failure of the retained sample while branching only
+over maximal blocks.
+
+In particular, if all relevant repeated blocks have
+one owner and form an inclusion chain, the certificate
+has at most $(d+1)(n\min(K,n)+1)$ rows, even for
+unbounded chain length $d$. Every recursive step
+has at most one maximal branch and removes its
+block permanently. The failure certificate can
+record this single path, each time providing the
+scaffold and the failed continuation. A verifier
+checks fold stability, the absence of an eligible
+projection, maximality of the displayed block and
+the failed continuation at each step. All are
+polynomial checks on the retained rows. Therefore
+the bound gives polynomial certificates without
+requiring the full branching algorithm to run in
+polynomial time.
+
 For a sample also prescribing positive
 singleton profiles, the obstruction
 needs only $d+2n+2$ of those demands.
