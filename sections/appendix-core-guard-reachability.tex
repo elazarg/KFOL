@@ -10281,3 +10281,48 @@ of incomparable blocks. In all tests, if a
 background has been fixed, restrict the exterior
 ground to that background and count only internal
 postings when measuring the tails.
+
+The same symbolic test handles a fixed number $b$
+of exceptions at the repeated owner. First, to
+exclude a specified block exactly during a row
+search, require either an omitted posting from
+that block or a present posting outside it at the
+same owner. Guess one such distinction for each
+excluded block. Omitted postings restrict the
+ground, and present ones are pinned with private
+primes. This costs polynomial time for fixed $b$,
+including when another bounded number of postings
+are pinned by the seed or edge test.
+
+To find the exception list, use the incomparable
+pair test on the rows whose blocks have not been
+excluded. A successful ground and its private
+primes yield an actual row by shrinking the
+ground to a minimal transversal. All the pinned
+postings survive, so the returned blocks are
+incomparable. At least one of them must be an
+exception. Branch on which block to exclude and
+continue to depth $b$. An empty incomparability
+test certifies that the remaining repeated
+blocks form a chain. If no branch gives a chain,
+there is no exception list of the requested size.
+
+With such a list fixed, keep the smallest chain
+block forbidden by branch deletions and all the
+exceptional blocks forbidden by them. These
+containment exclusions are checked by choosing
+one missing posting from each. To find the
+largest remaining chain block, additionally
+exclude the exceptions exactly and take the
+union of pair-supported postings as before.
+To test if an exception $E$ still occurs, exclude
+all other exceptions exactly and restrict the
+internal owner block to lie in $E$. The
+remaining repeated blocks form a chain, since
+they are chain blocks contained in $E$ and
+possibly $E$ itself. Its largest block equals
+$E$ precisely when $E$ occurs. These tests give
+all maximal eligible choices. Together with
+the bound on the explicit branching tree, they
+give polynomial marked interpolation from
+complete primes for fixed $b$.
