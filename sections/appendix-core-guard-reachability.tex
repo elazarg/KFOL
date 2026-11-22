@@ -1498,6 +1498,49 @@ at most $d$ nontrivial factors, each at most $m+1$. Each
 cached pair takes polynomial work once its children are known.
 \end{proof}
 
+When each owner's nonempty blocks form a chain,
+the same test runs from complete prime lists, with
+no expansion into loss rows. A missing chain condition
+at an owner is witnessed by two rows with incomparable
+blocks: choose a distinguishing posting in each,
+force it by a private prime, and forbid the other
+row's distinguishing posting. The two row searches
+are independent. Thus the chain condition can be
+checked in polynomial time.
+
+For one owner, the union of its postings that can
+occur in some loss is its largest block, because the
+blocks are nested. Find the union by the single-posting
+private-prime tests. To find the next smaller block,
+exclude rows containing the largest by trying each
+of its postings as an omission in the ground. Repeat
+with the block just found: excluding its supersets
+also excludes all blocks previously found. This
+lists at most $n$ blocks per owner.
+
+The cached remaining budget is specified by the
+smallest deleted block at each owner, or no deletion
+there. To search it, guess one omitted posting from
+each specified block, and use the resulting ground
+for the ordinary prime-hit or private-prime test.
+On each facet also exclude its hidden owner. For
+an offered block $A$, restrict its owner to $A$
+and take the union of the postings there that
+occur in remaining rows. That union equals $A$
+exactly when $A$ occurs, again by nesting. This
+determines which offers and projections can be
+used in the recurrence. There are at most
+$(n+1)^{2K}$ pairs of remaining budgets and
+assignments, and at most $n^K$ omission choices
+per search. Thus the marked test is polynomial
+at fixed $K$, even when many owners repeat.
+The same searches work on a fixed background
+projection, restricting outside postings to the
+background and measuring blocks only on internal
+inputs. In this version the original lists can
+have exponentially many minimal losses, since
+their retained parts need not be nested.
+
 \paragraph{Localizing the remaining loss budget.}
 At a task $(S,a)$, initially put $U=V$. Treat an
 absent entry $a_r$ as empty and let
