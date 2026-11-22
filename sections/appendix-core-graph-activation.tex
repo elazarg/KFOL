@@ -470,6 +470,73 @@ That palette has at most two owners, even when the fold
 sum itself uses all three. The same alternating argument
 therefore handles each switch.
 
+\paragraph{Complexity of least representatives for fold sums.}
+For sums with two fold owners whose differently owned supports
+meet in at most one input, deciding whether a specified proper
+activation class has a least representative is coNP-complete
+at every fixed $K\ge3$. This holds for folds of size at most
+three and from their complete canonical prime lists. For
+membership, a class lacks a least representative exactly
+when the intersection of all representatives fails to own
+one of the class's owned folds. Certify this with the fold
+and one representative omitting each of its owner postings.
+The fold-by-fold kernel formula verifies the representatives.
+
+For hardness interpret postings at $r$ as true and at $s$
+as false. An owned $r$-fold requires at least one true
+input, and an owned $s$-fold at least one false input.
+From a 3CNF formula, use one input for each literal,
+and add switch inputs $z,w,u,v$. Use the following folds:
+\begin{itemize}
+\item At $r$, use $\{z\}$ together with the literal inputs
+of each clause of size at most two. For a three-literal clause
+$a,b,c$, add two private inputs $d,e$ and use the supports
+$\{z,a,d\}$ and $\{e,b,c\}$. Also use $\{u,w\}$ and
+$\{v,z\}$.
+\item At $s$, use each opposite-literal pair, each pair
+$\{w,l\}$ with $l$ an original literal input, each private
+pair $\{d,e\}$, and the two pairs $\{z,u\}$ and $\{w,v\}$.
+\end{itemize}
+Remove tautological clauses so a clause support never
+contains both literals of one variable. Differently owned
+supports intersect in at most one input, and all supports
+have size at most three.
+
+Take the representative with $z,w$ and each private $e$
+true, and all other inputs false. It owns every fold.
+Every representative of
+its class still owns every fold. Any status other than
+$r,s$ can be assigned either Boolean value without affecting
+existing ownership, so it suffices first to analyze Boolean
+assignments. The switch folds force $z=w$: if $z$ is true
+then $u$ is false and $w$ is true, and the reverse follows
+through $v$. When both are true, the negative pairs with
+$w$ force every original literal false, and the switch pairs
+force $u,v$ false. Each second clause support then forces
+its $e$ true, and each private pair forces $d$ false.
+This is exactly the given representative.
+When both are false, the positive switch pairs force
+$u,v$ true. The clause folds then require at least one
+true literal in each clause. For a split clause, if all
+three literals are false, its two supports require both
+$d,e$ true, against the private pair. If $a$ is true one
+can choose only $e$ true, and if $b$ or $c$ is true one can
+choose only $d$ true. The opposite-literal pairs forbid
+choosing opposite literals. Such a selection exists exactly
+when the formula is satisfiable.
+
+If the formula is unsatisfiable, the Boolean representative
+is unique. A representative with any other status would
+have two Boolean completions, so the entire class is a
+singleton. If the formula is satisfiable, the fold
+$\{v,z\}$ at $r$ is owned only through $z$ in the given
+representative and only through $v$ in the other one.
+Their intersection fails to own it, preventing a least
+representative. The canonical primes can be computed
+by taking the guards from the incident folds on each facet
+and minimizing, as in the next paragraph. Thus the reduction
+also gives width at most two in the prime representation.
+
 \paragraph{Recovering fold sums from prime guards.}
 Call a family of fold supports linear if any two distinct
 nonsingleton supports meet in at most one input, counting
