@@ -2242,56 +2242,52 @@ singleton. Maximality forces the profiles to agree, and
 \cref{core:thm:read-once-minimum} makes the minorant equal to
 the read-once operation.
 
-There are also atoms with no primitive read-once representation,
-already on three inputs. For distinct owners $b,c$ consider
-\[
- T=((x\star_b y)\star_c z)\star_b(y\star_c x).
-\]
-The $b$-profile is
-$((x\vee y)\wedge z)\vee(x\wedge y)$ and the $c$-profile is
-$((x\wedge y)\vee z)\wedge(x\vee y)$, where the input letters
-denote membership in the tested coalition. Both are majority.
-In fact $T$ returns the corresponding singleton when at least
-two inputs are singleton $b$ or singleton $c$, and returns the
-full input union otherwise. To check the union case, the final
-$b$-gate cannot absorb, by its majority profile. If the left
-$c$-gate absorbs, $z$ is singleton $c$ and neither $x$ nor $y$
-is singleton $c$, so the right child contributes both of their
-menus. Otherwise the left child contributes $z$ and the value
-of $x\star_b y$. This and the right child together contain both
-$x$ and $y$: if both inner gates absorb, $x,y$ are the two
-different absorbing singletons, and if either does not, that
-gate takes their union.
+There are also atoms with no primitive read-once representation.
+Fix distinct owners $b,c$ and $1\le q\le n$, and set $t=n+1-q$.
+The complementary threshold operation returns singleton $b$ if
+at least $q$ inputs are singleton $b$, returns singleton $c$ if
+at least $t$ are singleton $c$, and otherwise returns the full
+input union. Both thresholds cannot hold together.
 
-Every core operation retaining the two majority profiles
-contains this threshold operation. On a majority probe the
-profile forces the specified singleton. At any other valuation,
-consider a winner $k$ in input $i$. To certify it in
-$\mathcal R_\phi$, choose winning pairs $A_b,A_c$ containing
-$i$ with distinct partners, and use the full input set for
-every other owner. If $c\ne k$, choose $A_b$ to avoid the
-singleton $c$ inputs; if $b\ne k$, choose $A_c$ to avoid the
-singleton $b$ inputs. Neither prohibition excludes $i$.
-Each can rule out at most one partner, and the two prohibited
-sets are disjoint, so distinct partners exist. The coalitions
-intersect exactly in $i$. At any rival other than $b,c$, the
-intersection of the other coalitions is still $\{i\}$, which
-cannot be a rival singleton. Thus the displayed definition
-of $\mathcal R_\phi$ certifies every winner of the union.
-By the one-bound argument in the proof of
-\cref{core:thm:read-once-minimum}, each such winner is forced.
-Every nonempty minorant of $T$ retains its majority tests,
-so $T$ is an atom.
+Every core operation retaining the two threshold profiles
+contains this operation. At a threshold valuation the
+corresponding singleton is forced. Otherwise take a winner $k$
+in input $i$. To certify it in $\mathcal R_\phi$, partition the
+other inputs into two parts of sizes $q-1$ and $t-1$ and adjoin
+$i$ to both, giving $A_b,A_c$. Put every singleton $b$ input
+other than $i$ in the first part and every singleton $c$ input
+other than $i$ in the second. This is possible since the
+thresholds fail and the singleton blocks are disjoint.
+Use the full input set for the remaining owners. These winning
+coalitions intersect in $\{i\}$. The rival exclusions hold at
+$b,c$ by the partition and at all other owners because input
+$i$ carries $k$. The one-bound argument in
+\cref{core:thm:read-once-minimum} therefore forces $k$.
 
-A read-once tree on one input misses a majority test on the
-other pair. With two inputs, winning on each pair requires
-disjunction on the two used inputs at both $b$ and $c$, which
-no primitive gate provides. With all three inputs, the root
-separates a singleton input from the other two. At an owner
-different from the root's owner its profile is conjunction,
-requiring that singleton input. The majority test at that
-owner wins on the other two. Thus the root would have to be
-owned by both $b$ and $c$.
+For realizability, express the Boolean $q$-threshold by an OR
+of ANDs on the $q$-element sets and replace OR by $\star_b$ and
+AND by $\star_c$. Its $b$-profile is the $q$-threshold and
+its $c$-profile is the dual Boolean function, the $t$-threshold.
+Thus it contains all the just-forced winners. At threshold
+valuations it gives the specified singleton, and elsewhere
+it cannot exceed the full union of inputs. This realizes the
+operation, and the same forcing argument shows that it is
+an atom. Its canonical primes at a head independently require
+$n-q$ exclusions at $b$ and $q-1$ at $c$, among the other
+inputs, omitting the requirement for a hidden owner. These
+are the minimal hitting sets of the two families of pure
+threshold losses.
+
+For $1<q<n$ the atom has no primitive read-once representation.
+A read-once realization would use every input and express
+the $b$-threshold by a read-once Boolean formula. An OR at
+its root would split the variables into two nonempty parts.
+A $q$-set meeting both parts would lose in each child,
+since each child must lose on coalitions of size less than $q$
+within its part. An AND root is ruled out by the same argument
+on the dual threshold. At $n=3$, $q=t=2$, one expression
+for the atom is
+$((x\star_b y)\star_c z)\star_b(y\star_c x)$.
 
 \begin{lemma}[A mandatory linear source]\label{core:lem:mandatory-linear-source}
 Suppose a choice/union word $T$ uses $j$ at most once, and for some
