@@ -2150,44 +2150,71 @@ the other's entire budget and hence is bounded by the
 other greatest operation. Conversely equality implies
 all those losses. For a subbudget only the removed rows
 need testing. Consequently one availability calculation
-tests the redundancy of a row. Greedy removal gives an
-inclusion-minimal equivalent subbudget in one pass:
-once a removed row would allow a mark, further weakening
-cannot take that mark away. The minimum-size equivalent
-subbudget decision problem is in NP by the same check.
+tests the redundancy of a row.
 
-The comparison can be optimized over subbudgets of a
-listed budget. At fixed palette and incidence width,
-this finds a minimum number of rows, or minimum total
-row cost, among all equivalent subbudgets. Keep a bit
-at each row for whether it is retained in the trial
-budget. In the blocking table, a row can be chosen
-as a blocker only if retained. For the equivalence
-test choose one original row and one observer missing
-from it. Store which bag rows are marked and count
-marked rows off the bag up to two. Check the query
-coloring against the chosen row's incidence edges:
-post at the indicated owners and leave all other
-inputs unposted. An input needs just a bit tracking
-whether a marked row posts it. Along the head edge
-of the marked row require its head in the blocking
-set. At the root a counterexample has exactly one
-marked row, a valid choice of observer and coloring,
-and an empty blocking-certificate set.
+There is also a polynomial algorithm for a minimum
+equivalent subbudget, without a width bound. Fix the
+full budget and write $A(q)$ for its stable available
+set. For proper colorings define
+\[
+             t\preceq q \quad\Longleftrightarrow\quad
+             t|_{A(q)}\subseteq q .
+\]
+A row at coloring $t$ is unhit at $q$ exactly when
+$t\preceq q$. In this case every addition at $q$ can
+be replayed at $t$: each mismatch on an available
+input at $q$ is still a mismatch at $t$. Hence
+$A(q)\subseteq A(t)$. This proves transitivity, since
+$s\preceq t$ and $t\preceq q$ give
+$s|_{A(q)}\subseteq t|_{A(q)}\subseteq q$.
+The relation is reflexive as well.
 
-For a fixed row selection on a subtree, keep the set
-of all these comparison states obtainable by varying
-the marked row and its probe. As with guard optimization,
-propagate the set deterministically for each retained
-row choice, and keep the least cost for each resulting
-set and boundary choice. At the root reject a set
-containing a counterexample. There are
-$2^{(K+2)^{O(w+1)}}$ individual comparison states
-and thus at most $2^{2^{(K+2)^{O(w+1)}}}$ sets to keep.
-The remaining work is polynomial in the supplied
-budget and decomposition. This optimizes a presenting
-subbudget without enumerating the canonical family,
-which may be exponentially larger than the input.
+At each head retain one row from each minimal
+equivalence class of this preorder on its listed
+rows. This is necessary: at an original row $q$
+an equivalent subbudget must leave some retained
+row $t$ at that head unhit, so $t\preceq q$.
+It is sufficient because at any proper coloring
+$q$, each unavailable head already has some original
+unhit row $s$. A retained row $t\preceq s$ then
+satisfies $t\preceq q$ and prevents a first addition
+outside $A(q)$. Removing rows can only add available
+inputs, so the availability sets are unchanged.
+Compute $A$ at each listed row and compare the rows
+at each head to obtain the minimal classes. Choosing
+the cheapest representative in each gives minimum
+total nonnegative row cost among equivalent subbudgets.
+
+The minimum row count is also optimal among all
+presentations of this operation without monochromatic
+cycles on the same input names, even with rows outside
+the original list. At a minimal original class $q$,
+any equivalent presentation must have an unhit row
+$t\preceq q$ at that head. Since the original
+operation loses at $t$, some original row $s$ there
+has $s\preceq t$. Minimality gives $s$ equivalent
+to $q$, so $t$ lies in that same class in the preorder
+on proper colorings. Distinct classes at one head
+therefore require distinct presenting rows.
+
+There is a canonical minimum presentation if rows
+are allowed to be shortened. In each minimal class
+replace its representative $q$ by $q|_{A(q)}$.
+Erasing the unavailable postings leaves $A(q)$
+unchanged, so this is an equivalent row coloring.
+Equivalent colorings have the same available set
+and the same restriction to it, by the replay
+argument in both directions. Thus the shortened
+row is independent of the representative. It is a
+canonical minimal loss: any proper subrow that was
+still a loss would belong to the same minimal class
+and would have to keep precisely those postings.
+The shortened rows still present the operation by
+the unhit-row test, and being subrows of the chosen
+presentation they introduce no monochromatic cycles.
+Since every equivalent presentation must represent
+each minimal class, this is its unique minimum
+presentation using canonical minimal losses.
 
 In this class the stable availability set also gives a
 partition of the full-palette colorings into boxes. Write
