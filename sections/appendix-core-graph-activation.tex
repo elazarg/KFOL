@@ -390,17 +390,16 @@ other incident folds must already absorb. Sufficiency is
 the same independent choice of postings in the forest.
 
 \paragraph{Fold kernels with cyclic incidence.}
-For linear fold supports, the precedence argument can also
-handle cycles of switches. For the chosen old and new
-native postings, form the precedence digraph as before.
-Suppose that whenever the arc of a fold lies inside a
-strongly connected component of this digraph, the only
-vertices of that fold in the component are the two
-endpoints of its arc. Then the local kernel test remains
-sufficient. In particular it is exact for linear supports
-such that deleting any hyperedge node from the incidence
-graph leaves at most two of its incident vertices in
-each connected component.
+Suppose differently owned supports meet in at most one
+input. The precedence argument can handle cycles of
+switches. Form the precedence digraph from the chosen
+old and new native postings as before. Whenever the arc
+of a fold lies inside a strongly connected component,
+require every vertex of that fold in the component to
+carry the fold's owner at one of the two endpoints of the
+comparison. Then the local kernel test remains sufficient.
+This holds, for example, when only the two endpoints of
+the arc belong to the component.
 
 Process the strongly connected components in precedence
 order, changing each component simultaneously. A fold with
@@ -414,22 +413,25 @@ these kinds has an unchanged native posting different
 from $j$.
 
 For a fold with an arc internal to the current component,
-the only possible changed heads of that fold are its chosen
-endpoints. In the capture probe for an endpoint leaving
-the fold's owner, use the other endpoint's new native
-posting. For one entering that owner, use the other
-endpoint's old native posting. These are exactly the
+every changed head in it enters or leaves the fold's owner.
+In the capture probe for a head leaving that owner, use
+the chosen new native posting. For one entering that
+owner, use the chosen old native posting. Neither choice
+posts the head itself. These are exactly the
 allowed postings in the simultaneous capture-probe rule
 of \cref{core:thm:simultaneous-capture-probes}. Use the
-unchanged anchors for the other folds. Linearity ensures
-that distinct incident folds cannot prescribe different
-postings on the same other input. Every incident fold
+unchanged anchors for the other folds. The intersection
+condition ensures that differently owned incident folds
+cannot prescribe competing postings on the same other
+input. Every incident fold
 absorbs on the resulting probe, so the rule proves
 equivalence across this component's entire switch.
 The erasure of noncommon owners used for forests also
 applies here, so the proof works across observer facets.
 
-To verify the incidence condition suffices, consider an
+One sufficient incidence condition is that deleting any
+hyperedge node leaves at most two of its incident vertices
+in each connected component. To see this, consider an
 arc internal to a strongly connected component. It lies
 on a directed cycle. Removing this arc leaves its
 component connected in the underlying undirected graph,
@@ -440,7 +442,33 @@ precedence component lie in one connected component
 after deleting the first fold's node. By hypothesis at
 most two vertices of that fold can belong to it. This
 includes the case where all hyperedges on incidence cycles
-are binary, with arbitrary linear folds outside the cycles.
+are binary.
+
+A second sufficient condition is that the folds on each
+simple incidence cycle use at most two owners. Every
+directed precedence cycle gives a simple incidence cycle.
+At each vertex on it the incoming arc's label is the old
+status and the outgoing arc's label the new status.
+The cycle therefore alternates its two labels. Two
+directed cycles meeting at a vertex use the same pair,
+because they see the same two statuses there. Every arc
+inside a nontrivial strongly connected component lies on
+a directed cycle, and these cycles are connected through
+shared vertices. Thus one pair of owners governs the
+whole switch. Every changed vertex in an internally
+switching fold enters or leaves its owner, as required
+by the capture-probe argument. In particular the exact
+kernel formula holds for sums with two fold owners and
+arbitrary same-owner overlap, provided differently owned
+supports meet in at most one input.
+
+It also holds at $K=3$ with any fold labels under that
+intersection condition. For a given comparison, every
+fold through a changed input is owned in both colorings,
+so all precedence arcs use labels in their common palette.
+That palette has at most two owners, even when the fold
+sum itself uses all three. The same alternating argument
+therefore handles each switch.
 
 \paragraph{Recovering fold sums from prime guards.}
 Call a family of fold supports linear if any two distinct
