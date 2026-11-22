@@ -1706,6 +1706,66 @@ the trees and final partition take
 $3^{O(t)}$ times polynomial work for $t$
 required marks.
 
+In contrast, minimum joint support is NP-complete
+for just two marks at distinct probes. This already
+holds in the mask clone with a fixed three-owner
+palette and singleton blocks in every single-row
+budget. Membership follows by guessing the support
+and testing reachability separately at the two
+probes.
+
+For hardness, take a 3-CNF and make one shared
+input for each literal occurrence. Build two
+directed graphs on these inputs and separate
+private inputs. The first graph has one stage
+per variable, with two tracks between its entry
+and the next entry. A track visits the occurrence
+inputs whose literals it makes true. Pad the two
+tracks with private inputs to have equal positive
+lengths, and start each track with a private input.
+This graph uses $a$ on every edge except the
+first edge of one track at each split, which
+uses $c$. Thus each target has just one incoming
+label, and every shared target has label $a$.
+A path from its first entry
+to its end chooses an assignment and always
+uses the same number $L$ of inputs.
+
+The second graph has one stage per clause. From
+its entry use a private binary choice tree of
+depth two with three leaves, labeling the two
+edges of a split by $b,c$. Each leaf goes to
+its corresponding occurrence input and that
+input goes to the next clause entry, both
+edges labeled $b$. Thus every shared target
+has label $b$, and every target has just one
+incoming label in this graph. The edges of both
+graphs give the single loss rows, with both end
+inputs unheaded. At shared heads the outgoing
+labels are $a,b$, and private heads have at most
+one outgoing edge per owner.
+
+At the first probe, queried at the first variable
+entry, post each target of the clause graph at
+its incoming owner in that graph. This disables
+all clause edges and preserves all variable edges,
+since shared targets have different labels.
+At the second probe, queried at the first clause
+entry, do the reverse. Both probes are proper
+and leave their queried heads unposted. Thus a
+joint support must contain an assignment path and
+a clause path. If there are $q$ clauses, the
+clause path uses $3q+1$ private inputs, counting
+its entries and end and two choice-tree inputs
+per clause. These are disjoint from the
+assignment graph. A support of size at most
+$L+3q+1$ therefore
+exists exactly when every occurrence selected
+by the clause path also lies on the assignment
+path. This is precisely satisfiability. The
+union of the two mask path words witnesses
+the bound for a satisfying assignment.
+
 This test compiles directly from canonical primes into a
 polynomial-size monotone circuit shared by all colorings.
 Let $U$ mark the postings in the union of the fold supports
