@@ -2733,29 +2733,49 @@ means that the parent $r$-profile cannot win without
 $x$. If $L$ is empty, the projection $x$ dominates
 every parent profile.
 
-Otherwise combine $x$ and the $T_r$ by a fixed term
-in at most $K+1$ arguments. At owner $s\in L$
-give this combining term the two winning generators
-\[
-       \{T_r:r\in L\},\qquad
-       \{x\}\cup\{T_r:r\in L\setminus\{s\}\}.
-\]
-At $s\notin L$ give it only unanimity. These formal
-profiles have common source. If all selected
-generators contain $x$, it is common. Otherwise
-some owner $s\in L$ selected the first generator,
-and no other owner can omit $T_s$. Hence the
-combining term exists by \cref{core:thm:profiles}.
-When the parent profile wins at $s$ without $x$,
-all $T_r$ win at $s$ and the first generator suffices.
-When it wins with $x$, every $T_r$ for $r\ne s$
-wins at $s$, so the second generator suffices,
-or unanimity if $s\notin L$. This proves domination
-inductively and works with shared child circuits.
-The previous profile surgery converts the dominating
+Otherwise start with $x$ and attach each $T_r$ once
+by $\star_r$, in any order. At owner $s$, every
+attachment other than its own takes conjunction.
+On a parent win containing $x$, all those other
+children are true at $s$, so they preserve the
+initial true bit and the $s$-attachment cannot
+turn it off. On a parent win omitting $x$, the
+$s$-branch is open and all children are true at
+$s$. Its attachment then switches the bit on.
+This proves domination and uses one gate per
+open branch, also when child circuits are shared.
+The profile surgery converts the dominating
 term into a greatest completion of the exact
-profiles with size linear in the refutation and
-the supplied profile circuits, for fixed $K$.
+profiles, with polynomial size uniformly in the
+palette. Compile each profile CNF using its own
+gates for disjunction and some other owner's
+gates for conjunction. The surgery adds at most
+$O(K^2)$ attachments and uses the same dominating
+circuit throughout.
+
+In particular, width-two greatest profile completions
+have polynomial-size core circuits uniformly in $K$.
+For $K\ge4$, first branch on the inputs with a single
+omission label, following their forced choices.
+All other branches close on the corresponding
+singleton clauses. If no empty clause has appeared,
+the remaining two-label inputs give the unsatisfiable
+2CNF of the width-two test. Choose a variable lying
+in an implication component with its opposite and
+branch on its two labels. In each branch follow a
+simple implication path to its opposite. To follow an
+implication, branch on the next input: a choice
+contradicting the implication closes on the reduced
+profile clause, and the forced choice continues.
+Colors outside the two labels close on their
+singleton clauses. If an already assigned input is
+forced to its other label, the same reduced clause
+closes the current branch. This produces $O(|V|)$
+nonterminal nodes, each with at most two open
+branches. The construction above gives a dominating
+circuit of linear size before the profile surgery.
+For $K=3$, the bounded-support synthesis already
+gives polynomial size and construction time.
 
 This gives core circuit synthesis from a tree decomposition
 of the upper-profile CNFs' primal graph, whose edges join
