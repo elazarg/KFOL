@@ -2322,6 +2322,52 @@ of both parts for each original prime and compare
 the number of primes to the product of the two
 restricted list sizes.
 
+For an all-live candidate, the least set containing
+a given seed and satisfying the inside factorization
+can also be constructed directly. Start at the seed
+and apply the following implications until stable:
+\begin{itemize}
+\item For a head already included, if a minimal loss
+posts an included input, include every input it posts.
+\item For two included heads $i,j$, if a minimal loss
+at $i$ avoids $j$ and supplies the mark at $j$, include
+every input it posts.
+\end{itemize}
+For the first implication, the inside factorization
+requires every minimal loss to lie entirely inside
+or entirely outside. For the second, an exterior
+loss would have to be shared by both heads. Hence
+every set with the inside factorization obeys these
+rules. Conversely the first rule separates internal
+and exterior losses, and the second makes the
+exterior loss predicates identical at all included
+heads. An exterior minimal loss that distinguished
+two such heads would have a nonempty posting set,
+since the candidate is all-live, and would force
+an exterior input inside. The stable set therefore
+has the required factorization and is least.
+
+There is no need to expand the minimal losses.
+For the first rule compute, at each head, which
+pairs of postings co-occur in some minimal loss.
+On each facet choose a private prime for each
+required posting, forbid the other literals of
+those private primes, and test whether the
+remaining ground hits all primes of the head.
+A hitting subset minimized in that ground must
+contain the required postings, and conversely any
+minimal loss containing them has such private
+primes. For the second rule use the same test
+for one required posting at $i$, additionally
+forbidding all postings of $j$ and the literals
+in one chosen prime at $j$ on the same facet.
+This tests exactly whether the posting occurs in
+a minimal loss at $i$ that supplies $j$. The two
+rules thus have polynomially many consequences
+computable in polynomial time on the facet lists.
+Any valid contraction containing the seed must
+contain the resulting closure.
+
 For fixed palette and bounded block arity this gives
 a polynomial search for all contractions of that
 arity. Enumerate the input subsets and read the
