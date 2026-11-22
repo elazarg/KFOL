@@ -349,7 +349,9 @@ polynomial sufficient test for applicability with prime input
 without constructing the reduced prime lists.
 
 Fold saturation is exact on arbitrary queries if every owner
-block of every loss has size at most one. This permits mixed
+block of every loss has size at most one. In a selected-fold
+clone use folds only at selected owners and allow unheaded
+projections as mask controllers at every owner. This permits mixed
 losses, cyclic postings at the query, and arbitrary dependencies
 between the row choices at a shared head. To see this, let a
 bounded word $W$ win at $r$ on some singleton coalition. Set
@@ -359,14 +361,18 @@ $\{r\}$, since the marked input must otherwise be retained.
 Hence the row's $r$-block is a singleton in $S$. The $r$-fold
 of $S$ is therefore bounded, and every coalition where it
 wins is also won by $W$.
+If $r$ is unselected, the $r$-profile of $W$ is principal,
+so $S$ is a singleton. Its input must be unheaded, since a
+loss at that input cannot post the input itself. Its
+projection is thus an eligible mask controller.
 
-Apply the usual fold saturation at $p$. If the mark is
+Apply this saturation at $p$. If the mark is
 possible at stabilization, a shortest bounded witness is a
 projection or is singleton on some remaining loss. In the
 latter case its singleton coalition has size one, so the
-preceding fold is bounded and wins there. Because the word
+preceding fold or projection is bounded and wins there. Because the word
 supplies the mark, its profile at $r$ is false on $p_r$.
-The fold also loses on $p_r$, contradicting stabilization.
+The attachment therefore loses on $p_r$, contradicting stabilization.
 Thus feasibility is exactly the removal of all losses at the
 queried head. Each witness uses at most $1+K|V|^2$ leaves.
 
@@ -384,8 +390,10 @@ $S$, singleton-profile absorption forces the
 witness to be singleton at $r$ on that loss.
 Its $r$-block therefore cannot be contained in
 $p_r$, and by the weakened assumption is a singleton
-in $S$. Thus the fold on $S$ is safe and passes
-$p$, contradicting saturation. As before the mark
+in $S$. Thus the fold on $S$ is safe and passes $p$.
+At an unselected owner it is again an unheaded
+projection. Either attachment contradicts stabilization.
+As before the mark
 is feasible exactly when its head is unheaded at
 stabilization.
 
@@ -2618,6 +2626,24 @@ postings give a proper failed query enabling the prime.
 In particular with at most one loss per head this is
 a polynomial test even with monochromatic cycles and
 variable $K$.
+
+For selected-fold recognition with one loss per head and
+singleton owner blocks, the same boundary closure and
+matching test just retains cycles at selected owners.
+At a proper probe an unheaded projection seed is
+possible at any owner, but only a selected cycle
+avoiding its probe block supplies a fold seed.
+Any such cycle meeting the blocked set must lie
+entirely inside it: if it leaves, the first exterior
+posting agrees with the probe and blocks the cycle.
+Inside the set, the functional posting graph at a
+selected owner has disjoint directed cycles. A
+matching must post one vertex of each such cycle at
+its owner, with the same prime and observer exclusions
+as above. Cycles in the least boundary closure persist
+in larger sets. Thus the test remains polynomial and
+exact, without a restriction on where the probe posts
+the selected cycle vertices.
 
 For arbitrary singleton blocks the only enumeration is
 over the row subsets at multi-loss heads. For each of
