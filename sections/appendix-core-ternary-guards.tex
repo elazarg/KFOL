@@ -2564,6 +2564,42 @@ also necessary for the prescribed profiles: any choice
 of their winning coalitions on $W$ with empty intersection
 could be joined with full coalitions at unselected owners.
 
+For any core bound $B$, the rainbow and same-owner
+tests for prescribed profile bits also give a direct
+circuit construction. Add the full coalition to each
+owner's list of required wins. Suppose witnesses below
+$B$ are supplied for every tuple choosing one win per
+owner, and for every pair consisting of a required win
+and a required loss at one owner. These are precisely
+the feasibility tests from \cref{core:thm:profile-relations}.
+
+First fold the tuple witnesses along one owner coordinate
+at a time, using that owner's gates. The fold supplies
+all wins in the folded coordinate and preserves the fixed
+wins in the others. Subsequent folds preserve the already
+supplied wins by conjunction. This gives one term $T$
+supplying all requested wins. For each owner $r$ and
+each requested loss there, fold its paired witnesses at
+$r$ over the required wins. This supplies all those wins
+and keeps the requested loss. Take their union over the
+requested losses to obtain $L_r$, which meets all of
+$r$'s bits. Owners with no requested loss need no $L_r$.
+
+For each $L_r$, start with $L_r+T$ and attach $T$ once
+at each owner other than $r$. At $r$ the required wins
+and losses are preserved by conjunction. At every other
+owner its own attachment restores the profile of $T$,
+and the other gates preserve that restored profile.
+Union these terms with $T$. Every requested win survives
+this union's conjunction on profile bits, and each loss
+has its corresponding $r$-term to enforce it. All gates
+stay below $B$. The construction uses a number of gates
+linear in the number of supplied witnesses plus $O(K^2)$,
+with sharing of $T$. For a complete profile prescription
+it is enough to supply just the minimal winning and
+maximal losing coalitions. A final reset of $B$ gives
+the relative maximum when the exact profiles are desired.
+
 In general, counting the distinct primes on one facet
 is \#P-complete under polynomial-time Turing reductions,
 even when all relative products are canonical. Membership
