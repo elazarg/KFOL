@@ -2691,32 +2691,43 @@ projections, saturation therefore finds every minimal table.
 The code checks that the path antichain is exactly the
 five displayed tables.
 
-These five words need not be assumed atomic in the full
-core. The relevant map erases every gate outside $b,c$
-by replacing it with union. On source probes this is
-equivalent to erasing the postings at the other owners:
-the remaining singleton tests read just $b,c$, and an
-erased gate cannot absorb when its postings are absent.
-The map is therefore a well-defined extensive,
-order-preserving retraction onto operations using only
-$b,c$ and named union. Extensivity follows from
-antitonicity of source predicates, and order preservation
-from comparison on the probes with only $b,c$ postings.
+Atoms for a restricted set of gate owners remain atoms in
+the full core. Allow named union in the restricted language.
+Erasing gates outside the chosen set, by replacing them
+with union, is an extensive order-preserving retraction.
+On source probes it is equivalent to erasing postings at
+those owners: the remaining singleton tests read the same
+flags, and an erased gate cannot absorb without its owner
+posted. Extensivity follows from antitonicity, and order
+preservation from comparison on the restricted probes.
 
-For a nonempty full-core minorant of one of the five
-words, the erasure still lies below that word and retains
-the dual profiles. A primitive summand of the erasure
-has the same profiles, and two-owner minimality forces
-it to equal the displayed word. Thus the entire erasure
-equals that word. In particular a strict minorant would
-have to lose an additional mark on a coloring using a
-foreign posting. Distinct displayed words have no common
-nonempty full-core minorant, because its erasure would
-have to equal both. Any full-core atom of the path
-profile whose minimal losses use only $b,c$ must be
-among the five: its own erasure preserves those losses,
-so the atom equals its erasure, and atomicity then
-forces a primitive two-owner summand to equal it.
+For a word $G$, its erasure is the union of all words
+obtained by choosing one child at each erased gate,
+including named union. This follows by distributing the
+retained gates over union. Conversely at each valuation
+one of these prunings has value contained in $G$ there.
+At a discarded gate retain its absorbing child if it
+absorbs, and either child otherwise. Keep both children
+at every retained gate and use monotonicity under menu
+inclusion to preserve the containment upward.
+
+Now let $T$ be an atom of the restricted operations.
+If a nonempty full-core $G$ lies below $T$, its erasure
+lies below $T$ too. Every pruning lies below the erasure,
+so by restricted atomicity all prunings equal $T$.
+The valuation-by-valuation containment therefore gives
+$T\subseteq G$, proving full-core atomicity.
+
+In particular the five displayed path words are full-core
+atoms. Any restricted-language minorant retains the two
+positive profiles, which fix both exact profiles by
+duality. A primitive summand has the same profiles
+and lies below the word, so two-owner minimality forces
+equality. This proves the restricted atomicity needed
+above. Conversely any path-profile atom whose minimal
+losses use only $b,c$ is fixed by erasure: its erasure
+preserves those losses and cannot exceed the original
+operation. It is then one of the displayed minima.
 
 On the essential input set of $f$, the two dual profiles
 already determine a maximal complete profile class.
@@ -2753,14 +2764,6 @@ the OR of the upper endpoints, exactly the extrema
 from choosing either child. Equality of the endpoints
 at the root is the asserted test.
 
-For each menu valuation, some native pruning has value
-contained in the original word. At a foreign absorbing
-gate select its absorbing child; at a nonabsorbing
-foreign gate or a union select either child. At native
-gates keep both and use monotonicity under menu inclusion
-to pass the containment upward. This gives a local
-choice, which can depend on the valuation.
-
 If a word with dual profiles on their full essential
 support has a foreign root, both its children already
 have the two exact profiles, by the pruning test.
@@ -2791,7 +2794,7 @@ and only $b,c$ postings. The other blocks are singleton
 $c$ and their attachments cannot contribute that observer.
 These probes test all losses of the two block realizations.
 This would give a common nonempty minorant of the
-original two choices, contradicting their incompatibility. Choosing an atom below each of the $5^m$
+original two choices, contradicting their distinct atomicity. Choosing an atom below each of the $5^m$
 terms gives that many distinct atoms in one complete
 profile class on $4m$ inputs.
 
