@@ -310,8 +310,8 @@ and use fewer than $K$ owners after including its own label.
 Replace edges by nonempty hyperedges, each carrying one owner,
 and replace the binary choices by folds at their respective owners.
 Suppose the bipartite incidence graph of inputs and hyperedges is
-a forest. For two colorings omitting a common owner, the kernel
-of this sum is exactly the intersection of the fold kernels.
+a forest. The kernel of this sum is exactly the intersection
+of the fold kernels, including across observer facets.
 The test on a hyperedge is that its owner occurs in both
 restrictions, or the two restrictions agree identically.
 
@@ -342,6 +342,52 @@ has zero source predicate throughout and can be handled in the
 same order. Transitivity proves the kernel formula.
 The argument also applies with incidence cycles if the
 selected precedence arcs can be made acyclic.
+
+To remove the common-facet restriction, take two colorings
+passing the local test. Erase in each the postings whose
+owners are absent from the other coloring. Such a posting
+is at a changed input, so every incident fold is owned
+at both endpoints. In particular none of its incident
+folds has the erased posting's owner. Each therefore
+still absorbs the changed input through another vertex,
+making the erasure a capture equivalence. The local
+test still holds after these erasures, and the resulting
+colorings use only the intersection of the two palettes.
+Apply the common-facet argument there.
+
+For an incidence forest, the least-representative property
+on all proper posting faces is also equivalent to the
+property for all full activation classes, at every palette.
+If a class has no least representative, intersect the
+postings of all its representatives. By the kernel formula,
+the intersection must fail to own a hyperedge that the class
+owns. There are at least two vertices $x,y$ in this edge
+that carry its owner in some representative but not in
+every one. All hyperedges incident to either vertex are
+owned throughout the class, since an unowned edge would
+fix that vertex's status. None of the incident hyperedges
+can be a singleton.
+
+Leave the central hyperedge unposted. In every other
+hyperedge incident to $x$ or $y$, post one other vertex at
+its owner. The incidence forest makes the chosen vertices
+distinct and outside the central hyperedge. All the used
+owners, including the central one, occur in every
+representative, so this gives a proper face. Both heads
+are live through the central fold, but posting either at
+that fold's owner captures the other. This is a facial
+anti-exchange failure. Conversely a least representative
+in the full class lies in every posting face containing
+one of its representatives.
+
+The proof gives a local test without enumerating classes:
+try each pair of vertices in a nonsingleton hyperedge.
+It witnesses failure exactly when neither has an incident
+singleton fold and their incident owners omit at least
+one owner of the palette. Necessity follows because a
+mutual-capture pair must share a fold and all their
+other incident folds must already absorb. Sufficiency is
+the same independent choice of postings in the forest.
 
 \paragraph{Recovering fold sums from prime guards.}
 Call a family of fold supports linear if any two distinct
