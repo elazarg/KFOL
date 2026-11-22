@@ -261,27 +261,29 @@ subtrees. Thus any scope has at least
 $\sum_{j=0}^h(Kd)^j$ inputs. This generalizes
 the one-head cross-facet arity example.
 
-For exact targets, consider a layered monotone circuit
-in which each gate is a conjunction of at most
-$(K-1)d$ nonempty disjunctions of controls from the
-preceding layer, with up to $Kd$ allowed in the first
-gate layer. It has an exact acyclic core
-realization of prime width at most $d$ with the
-same gate values on every trial scope.
+For exact targets, consider an acyclic monotone circuit
+in which each gate is a conjunction of nonempty disjunctions.
+Within each disjunction require the controls to be pairwise
+incomparable by dependency reachability. Each gate may have
+$(K-1)d$ disjunctions and up to $d$ additional disjunctions
+whose controls are all circuit inputs. The circuit has an
+exact acyclic core realization of prime width at most $d$
+with the same gate values on every trial scope.
 
 Choose distinct owners $a,b,c$. Use one input per
 gate or circuit input, and one retained anchor for
 each owner other than $b$. Choose a proper query
 posting all ordinary passive inputs at $a$ and
 every anchor at its own owner. At each gate assign
-its disjunctions to the $K-1$ observers other than
-$a$, at most $d$ per observer. In the first gate
-layer also use observer $a$, since its controls have
-no strict descendants to post at $a$. For a disjunction
+its first $(K-1)d$ disjunctions to the $K-1$ observers
+other than $a$, at most $d$ per observer. Assign the
+additional disjunctions to observer $a$, since their
+controls have no strict descendants to post at $a$. For a disjunction
 assigned to observer $k$, give one loss posting
 all its controls at $b$ if $k\ne b$, or at $c$
 if $k=b$. Post all strict descendants of those
-controls at $a$. Finally post the anchors whose
+controls at $a$. Incomparability keeps these postings
+disjoint from the controls of the row. Finally post the anchors whose
 owners are still absent, except for $k$. Every
 loss uses precisely the owners other than $k$,
 so it is visible on that facet alone. Each prime
@@ -305,8 +307,20 @@ the only mismatching postings in each loss
 are its controls. The scoped ordered test
 therefore activates a gate in the scope exactly
 when every disjunction has an active control.
-Layer-zero inputs activate exactly when included
+Circuit inputs activate exactly when included
 in the scope.
+
+In particular, layered circuits meet the incomparability
+condition. An arbitrary acyclic circuit with at most
+$(K-1)d$ disjunctions per gate can also meet it after adding
+a private identity gate for each distinct dependency into a
+gate. Two such identities feeding the same gate are incomparable
+because their only outgoing edges lead to that gate. A trial
+scope on the original names gives the same activation on those
+names when extended by all the identities. At fixed $d$ the
+canonical prime lists are polynomial in the circuit size:
+on each facet enumerate a choice of one posting per visible
+loss and retain the inclusion-minimal sets of exclusions.
 
 In particular, take a conjunction tree of height
 $h\geq1$ with branching $(K-1)d$ above the first
