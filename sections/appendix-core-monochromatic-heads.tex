@@ -8387,6 +8387,45 @@ winning in the larger loss by monotonicity. Thus for mandatory
 postings, a proposed bounded-support controller can be
 certified without the search for private primes.
 
+The same scan gives a direct formula for restricting a whole
+budget to a proposed witness support $S$. At a head $i\in S$,
+project every original loss to $S$ and retain the resulting
+negative requirement. For each original facet $k$, filter
+its prime list to the primes whose postings all lie in $S$.
+Then a proper coloring $p$ on $S$ is positive in the projected
+budget at $i$ precisely when
+\[
+  \bigwedge_{k\in I}\;
+  \bigvee_{\substack{G\in\Gamma_{k,i}\\
+                    \operatorname{supp}(G)\subseteq S}}
+  [\,G\cap p=\varnothing\,].
+\]
+Indeed, on original facet $k$ allow all postings outside $S$
+and only those in $p$ inside $S$, omitting the hidden color.
+A projected loss contained in $p$ exists from that facet
+exactly when this allowed set hits all the original primes.
+A minimal transversal of the allowed set is proper and
+gives the required loss. A prime missed by the allowed set
+must be wholly inside $S$ and disjoint from $p$.
+Thus restriction keeps only internal guards on each original
+facet and takes the conjunction across facets, including those
+that did not contain the original positive probe.
+
+This restricted budget preserves exactly the witnesses using
+only $S$. Such a word omits any original loss if and only if
+it omits the loss projected to its own input set: the word ignores
+the removed inputs, and an observer missing from the original
+coloring is still missing after restriction. Observer independence
+of the source predicates gives the same projected loss requirement
+even if a different missing observer is chosen there.
+The marked query restricts by the same argument. In particular,
+a given support can be tested in time $f(K,|S|)$ times a
+polynomial in the prime-list length. Evaluate the displayed
+formula on the finitely many local colorings, then decide the
+local marked task by finite closure on $S$. This searches all
+terms on the support, including terms with repeated inputs,
+without projecting or enumerating individual minimal losses.
+
 A controller can also rely on the initial projection to absorb
 its contribution on another head's loss. Keep the two singleton
 requirements at its posting $j{:}r$, and still require its
