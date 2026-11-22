@@ -1651,6 +1651,61 @@ paths gives a minimum support and, by
 unioning the corresponding walk words, a
 mask witness on that support.
 
+The parameter bound extends to selected folds for
+single-row budgets with singleton owner blocks.
+In any feasible support, choose a maximal collection
+of vertex-disjoint selected monochromatic cycles
+in its disagreement graph. Use these cycles and the
+unheaded inputs as destinations. Every required
+head can reach one of them: a cycle outside the
+collection intersects a chosen cycle by maximality.
+At vertices outside the destinations choose a
+successor decreasing the distance to them, and
+on each chosen cycle keep its own successor edges.
+After pruning unused vertices this partitions the
+support into disjoint pieces, each sending its
+required heads to one sink or one cycle.
+
+For each nonempty subset of required heads compute
+the cheapest piece. A sink piece uses the preceding
+Steiner recurrence with the artificial root.
+For a cycle piece try each selected-owner edge
+$u\xrightarrow{r}v$ as the closing edge. In the
+reversed graph find a tree rooted at $u$ reaching
+the required heads and also $v$, with the path to
+$v$ restricted to $r$-edges. The vertex-splitting
+edges are allowed at every owner. Adding the
+closing edge back gives a monochromatic cycle
+and a feasible piece. Conversely breaking an
+edge of a cycle in a piece gives such a rooted
+tree.
+
+This constrained tree uses the same subset
+recurrence with one extra terminal, namely $v$
+with its path restriction. In a shortest path
+closure for a subset containing this terminal,
+allow only $r$-edges on the prefix before the
+split. The child containing the extra terminal
+retains its restriction, and the other child
+uses ordinary edges. This recurrence is exact:
+an optimal tree splits in this way, and a
+candidate union of paths and branches can be
+pruned to a tree while keeping its distinguished
+$r$-path, by adding other reachable vertices
+to that path one at a time.
+
+Finally minimize the sum of piece costs over
+partitions of the required heads. The disjoint
+decomposition of an optimal support bounds this
+sum above by its size. Conversely a union of
+computed pieces is feasible and uses at most
+the summed cost, even if those pieces overlap.
+Thus the optimum is exact. The edge choices
+are polynomially many, and subset splits for
+the trees and final partition take
+$3^{O(t)}$ times polynomial work for $t$
+required marks.
+
 This test compiles directly from canonical primes into a
 polynomial-size monotone circuit shared by all colorings.
 Let $U$ mark the postings in the union of the fold supports
