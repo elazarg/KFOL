@@ -435,6 +435,65 @@ the number of position guesses depends only
 on the budget. Pad smaller clique sizes and
 take the disjoint union over guesses.
 
+The hardness already holds at prime width one
+by separating the two conjunctive losses across
+observer facets. Use three owners $a,b,c$.
+A conjunction head has a row selecting its first
+predecessor at $b$ and a row selecting its second
+at $c$. A disjunction head uses a single row
+posting all its alternatives at $b$. In every
+row post all strict descendants of its selected
+predecessors at $a$. Also post a shared retained
+anchor at $a$, and one retained anchor at each
+owner outside $\{a,b,c\}$. Thus each row is
+visible only at the observer hiding the unused
+one of $b,c$. Each head has at most one row
+on any facet, giving width one.
+
+Use layers as before. Fixing a loss at a
+conditional input disables every row that
+reads it, since those rows post its strict
+descendants at $a$ and the fixed loss
+requires one at $b$ or $c$. The anchors
+supply all their colors independently.
+Each selected predecessor retains its
+posted mismatch color: all its own
+predecessors are fixed at $a$, so none of
+its losses applies. Thus the acyclic
+cofactor criterion still gives an exact
+core operation. At the query posting the
+anchors as specified and all ordinary
+passive inputs at $a$, activation is
+exactly the indicated conjunction or
+disjunction on the supplied predecessors.
+
+For the Clique reduction, give every
+cross-class edge its own conjunction
+head over the two endpoint inputs.
+For each class pair use a disjunction
+head over its edge heads, with one row
+of arbitrary length. Combine the pair
+heads by a full binary conjunction tree of depth
+$\lceil\log_2\binom{\ell}{2}\rceil$. Use each pair
+head at least once among the leaves and repeat
+references to fill the remaining leaf slots,
+keeping every gate's predecessors in the same
+layer. A conjunction with two identical inputs
+uses just one loss row.
+Every witness uses the aggregation heads,
+the pair heads, at least one edge head
+per pair, and at least one vertex per
+class. Set the budget to the sum of these
+lower bounds. A clique gives equality.
+Conversely equality forces exactly one
+vertex per class and an edge between the
+chosen vertices of each pair. The budget
+depends only on $\ell$, and the anchors
+are never needed as mismatching controls.
+This gives the same parameterized
+equivalence at width one, using the
+reverse reduction above.
+
 The greatest bounded core operation can have all the
 transitive dependencies of the source graph. Fix an
 owner $r$ and at each head give one singleton loss
