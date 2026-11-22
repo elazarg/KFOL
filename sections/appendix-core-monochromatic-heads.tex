@@ -7601,6 +7601,50 @@ and its only facet hides $r$. With no native postings
 available on that facet, the replacement rule reduces to
 ordinary subcoloring, which preserves the losses.
 
+Indeed cross-facet comparisons give coNP-hardness even at
+native and terminal width two under this dependency condition.
+Reduce unsatisfiability of a $3$CNF on at least one variable.
+Choose distinct owners $r,k,s$, and use two underivable
+inputs for the literals of each variable. Add a derivable
+input $u_v$ per variable, derived from either literal input
+of its pair, and a derivable input $x_j$ per clause, derived
+from either of the clause's last two literal inputs.
+These rules define a loopless native closure at $r$, with no
+dependence between derivable inputs. The native prime at
+each such input excludes the one or two postings that
+derive it. Use also an underivable anchor $z_t$ for every
+owner $t\notin\{r,k\}$.
+
+At the terminal source specify the following hitting clauses
+for losses: the singleton postings $u_v{:}k$ and $z_t{:}t$,
+each variable pair's two postings at $s$, and, for each
+clause, the pair consisting of $x_j{:}k$ and the $s$-posting
+of the complement of its first literal. Restrict to facets
+by discarding invisible postings from the clauses and
+minimize the resulting lists of exclusions. Every input
+uses at most one owner in these lists, so they are canonical.
+
+Every losing coloring uses all owners except $r$, so no
+comparison on its own facet can turn it positive. In a
+failing cross-facet comparison the positive coloring must
+post at $r$ and must keep the anchors, which forces it to
+omit $k$. By the replacement rule it derives every $u_v$
+and every $x_j$ posted by the loss. Thus its native seed
+meets each variable pair, disjointly from the loss's
+$s$-postings. These two blocks choose complementary literals
+for each variable. Each clause either has its first literal
+confirmed by the complementary $s$-posting or has one of
+its last two literals in the seed to derive $x_j$.
+Conversely, a satisfying assignment gives these complementary
+blocks. In the loss post all $u_v$ at $k$, and post $x_j$
+there whenever the first literal does not satisfy the clause.
+In the positive coloring replace these postings by the
+native seed, retaining the anchors and the $s$-block.
+All changed heads are derived, and positivity follows
+because $k$ is absent. This proves the claimed hardness
+for every fixed $K\ge3$; a failed comparison gives the
+matching coNP upper bound.
+
 More generally, fix a query $p$ and put $H=c(p_r)$. Its
 activation principal on an observer facet is given by
 independent permissions at the inputs exactly when $H$
