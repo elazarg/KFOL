@@ -7404,6 +7404,32 @@ its endpoints can have different foreign postings in one
 minimal loss. The private-prime test below checks each
 such pair in polynomial time.
 
+For a strict example, choose distinct owners $r,a,b$ and put
+\[
+ H_x=(x\star_r y)+(x\star_r v),\qquad
+ H_z=(z\star_r y)+(z\star_r v),\qquad B=H_x+H_z.
+\]
+Add a fresh input $w$ and take the core word
+\[
+ B+((w\star_a x)\star_r H_x)
+   +((w\star_b z)\star_r H_z).
+\]
+The $x$ branch adds only winners from $w$ to $B$: if $H_x$
+is atomic at $r$ the branch returns $H_x$, and otherwise
+$H_x$ contains the menu of $x$. The branch adds the menu of
+$w$ except when $x$ is $a$-atomic or $H_x$ is $r$-atomic.
+The latter happens exactly when $x$ is $r$-atomic or both
+$y,v$ are $r$-atomic. The same calculation applies to the
+$z$ branch. Thus the original four heads keep their
+coefficients from $B$, whose native dependency graph is a
+four-cycle: a head loses exactly when both neighbors are
+posted at $r$. The minimal losses at $w$ are
+$\{y{:}r,v{:}r\}$ and the four pairs
+$\{x{:}s,z{:}t\}$ with $s\in\{a,r\}$ and $t\in\{b,r\}$.
+In particular the loss $\{x{:}a,z{:}b\}$ uses two foreign
+owners in the same strongly connected component, at
+nonadjacent inputs. All losses pass the adjacency condition.
+
 For a closed set $H$ in a native coefficient, the separate
 spanning tests imply the joint test for every consistent
 choice of foreign blocks exactly when $H$ has a unique
