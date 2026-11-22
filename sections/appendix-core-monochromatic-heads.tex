@@ -7486,6 +7486,44 @@ For instance with baseline $B=x$ and prescribed loss $x{:}a$,
 the greatest extension loses only at $x{:}a$, while the earlier
 construction also loses at $x{:}r$.
 
+Guard implication for this greatest extension is polynomial
+without expanding that presentation. Fix a proposed guard and
+an observer, and let $U_s$ be the inputs whose postings at $s$
+are permitted by both. Start with the full live support and
+iterate the contracting map on closed sets
+\[
+ H\longmapsto c(H\cap U_r)\ \cap\!
+                 \bigcap_{s\ne r}c(H\setminus b_s)
+\]
+to its greatest fixed point $H_*$. The map is monotone and
+each step stays closed. There are at most as many strict steps
+as live inputs. There is a coloring satisfying the guard
+and above $b$ in the activation order exactly when
+\[
+        b_r\cup \bigcup_{s\ne r}(b_s\setminus U_s)
+                     \subseteq H_* .
+\]
+
+Indeed, for any such coloring $p$, its $H=c(p_r)$ is a fixed
+point: its native seed lies in $U_r$, and every foreign
+spanning condition holds. The native and exterior conditions
+of the activation order give the displayed inclusion with $H$
+in place of $H_*$. Conversely, take $p_r=H_*\cap U_r$ and
+$p_s=b_s\setminus H_*$ at each foreign owner. These postings
+are consistent and permitted by the displayed inclusion.
+The fixed-point equations give $c(p_r)=H_*$ and every
+required spanning condition, so this is a losing coloring
+on the chosen facet.
+
+The closure evaluations use only the native primes. In
+particular, a proposed one-source extension over the trace
+is recognizable in polynomial time from its canonical primes
+and explicit minimal losses: test each listed guard against
+each minimal loss by this fixed-point calculation. Any
+violation of downward closure in the activation order has
+a positive prime and a minimal loss below its losing
+coloring by subcoloring, so these tests are exhaustive.
+
 For a strict example let $B$ be the union of the native
 folds on the edges of the four-cycle $x,y,z,v,x$.
 Each head's sole loss posts both neighbors at $r$.
