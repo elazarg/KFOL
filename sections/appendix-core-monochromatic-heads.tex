@@ -8426,6 +8426,37 @@ local marked task by finite closure on $S$. This searches all
 terms on the support, including terms with repeated inputs,
 without projecting or enumerating individual minimal losses.
 
+The support formula also gives a bounded search for the
+minimum support of a marked witness. Suppose the support size
+is limited to $b$ and each head on each facet lists at most
+$a$ primes. The search takes $f(K,b,a)$ times a polynomial in
+the prime-list length, without reconstructing the original losses.
+
+Start with the queried head in $S$, and test the marked task
+on $S$ by the projected budget. If it fails, take all the local
+negative rows, or any subcollection still refuting the mark.
+For each such row at $j$ with coloring $p$, select one original
+facet witnessing its loss in the displayed formula. Branch on
+the primes of that facet disjoint from $p$, adding a selected
+prime's entire support to $S$. Discard branches exceeding $b$.
+Each of these additions enlarges $S$, since no such prime
+was internal before the branch.
+
+To see completeness, let $T\supseteq S$ support a witness.
+View the local negative colorings as rows on $T$ by leaving
+$T\setminus S$ unposted. They cannot all still be losses of
+the projected budget on $T$. Otherwise the erasure lemma
+\cref{core:lem:unmarked-background} would preserve all of them
+while giving a word on $S$ supplying the mark: their empty
+outside postings agree with every positive background.
+For a row that ceases to be a loss, the facet previously
+witnessing it must now have an enabled prime wholly in $T$.
+That prime is among the branches. Induction therefore keeps
+some branch inside any target support until it finds a witness.
+With at most $b(K+1)^{b-1}$ local negative rows at a node,
+the branching is bounded in the stated parameters and the
+depth is at most $b-1$.
+
 A controller can also rely on the initial projection to absorb
 its contribution on another head's loss. Keep the two singleton
 requirements at its posting $j{:}r$, and still require its
