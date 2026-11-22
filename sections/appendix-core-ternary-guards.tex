@@ -445,6 +445,47 @@ the candidate's canonical primes in polynomial time.
 The same common-source test applies to any specified
 trial support using the filtered clauses above.
 
+Width three is coNP-complete when the palette is
+part of the input, even when every label is principal.
+Reduce 3CNF unsatisfiability. Delete tautological
+clauses and repeated literals, so each clause contains
+a variable at most once. Make an input for each
+clause and an owner $r_x$ for each variable $x$.
+At $r_x$ require every input not mentioning $x$ and
+one input from each pair of clauses that mention $x$
+with opposite signs. Thus a clause input can be
+omitted at $r_x$ exactly when it mentions $x$. The
+inputs omitted there must all use the same sign.
+
+Add three anchor inputs and three private owners.
+Each anchor can be omitted only at its private owner,
+whose profile requires every other input. All variable
+owners require all three anchors. Any two owners share
+a mandatory anchor, so the formal greatest completion
+has nonempty values and the prescribed profiles. An
+empty common intersection is equivalent to assigning
+each clause input to a variable it mentions without
+using both signs at any variable. The anchors take
+their private owners. A satisfying truth assignment
+gives such a choice by selecting one true literal per
+clause, and a choice fixes consistent truth values
+that satisfy the formula.
+
+At a clause head, restrict a labeled variable's
+profile by deleting the head. The pairs with its
+opposite-sign occurrences become singleton clauses.
+They absorb every remaining pair, and the other
+requirements were already singletons. The anchor
+labels are principal as well. Thus each head has
+at most three labels and the canonical prime products
+have width at most three and polynomial total size.
+The family has every loss explained by a singleton,
+so recognition is exactly the common-source test.
+For membership in coNP at width three, the formal
+width and list comparison work as above with at most
+three factors. A choice of one omitted owner per
+input certifies failure of common source.
+
 At width at most three, the same structure gives a bounded
 support for each positive mark, independently of the input
 count. Write $d=4$, the bound on the size of the clauses in
