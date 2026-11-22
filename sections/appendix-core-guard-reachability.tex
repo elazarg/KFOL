@@ -1784,7 +1784,7 @@ Posting those boundary inputs prevents every
 eligible path from reaching an unheaded input.
 Acyclicity makes the path test exact.
 
-Finding a minimum-cost sufficient guard is NP-hard
+Deciding whether a sufficient guard fits a size bound is NP-complete
 even for acyclic one-row budgets and three owners.
 Fix a facet omitting $k$, with $a,b$ the other owners,
 and use the backward arrows of the Horn test above.
@@ -1795,22 +1795,45 @@ for its elements. Thus reaching a set needs its
 $a$-exclusion, and reaching it adds all its elements
 without any exclusion.
 
-Use the element inputs as the leaves of a binary
-tree of conjunctions. For each conjunction, put an
-arrow from its left child to the conjunction input
-at $a$ and one from its right child at $b$. Make
-the root the only unheaded input. Each head's
-outgoing arrows in this description are its single
-loss row. They give proper rows and an acyclic graph.
-Give each set's $a$-exclusion cost one and every
-other exclusion cost $d+1$. Within budget, a
-conjunction is reached exactly when both children
-are reached: the two arrows then conflict on its
-required posting. The guard suffices exactly when
-the root is reached, equivalently when the selected
-sets cover the elements. Membership in NP follows
-from the Horn test. With one fixed posting owner
-per input, minimum cost instead follows from a
+Use the element inputs as leaves of a binary tree
+of conjunctions. Implement each conjunction by a
+triangle of private inputs with $d+1$ bottom inputs,
+then $d$ in the next layer, down to one output.
+Each input above the bottom receives arrows from
+the corresponding adjacent pair in the layer below,
+at owners $a,b$ respectively. Each bottom input
+receives arrows from the two conjunction operands
+at $a,b$. Make the final tree output the only
+unheaded input. All outgoing arrows at a head
+form its one proper row, and the graph is acyclic.
+
+If both operands are reached, the entire triangle
+is reached by conflicting postings, with no additional
+exclusions. If at most one operand is reached, a
+derivation of the output needs at least $d+1$ distinct
+exclusions inside the triangle. Trace a derivation
+backwards one layer at a time. A reached node either
+uses its own exclusion and one predecessor, or uses
+both predecessors. If a frontier of $s$ nodes uses
+$t$ exclusions, the next frontier has at least
+$s-t+1$ nodes. When there is a node with no exclusion,
+the adjacent predecessor pairs of the $s-t$ such nodes
+have union of size at least $s-t+1$. When every node
+uses an exclusion, there is at least one predecessor.
+Starting at the one output and summing through the
+$d$ layers shows that the bottom frontier size plus
+the exclusions used above it is at least $d+1$.
+Every reached bottom node needs its own exclusion
+when only one operand is available. With neither
+operand available no node in the triangle is reached.
+
+Thus within budget each triangle acts exactly as a
+conjunction. The guard suffices exactly when the final
+output is reached, equivalently when the selected sets
+cover the elements. The construction is polynomial
+since the budget can be capped at the number of sets.
+Membership in NP follows from the Horn test. With one
+fixed posting owner per input, minimum cost follows from a
 shortest eligible path, charging each visible
 exclusion on its simple path once.
 
