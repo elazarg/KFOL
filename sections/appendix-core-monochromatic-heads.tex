@@ -8356,6 +8356,47 @@ same-owner reciprocal two-input fold now has a certificate:
 the controller is the other projection, and its only
 forbidden contribution is absorbed by the initial projection.
 
+For a fixed list of controllers and explicit losses, there is also
+an exact order condition. On each loss probe, call an attachment
+unconditionally absorbing if its controller is singleton at its
+gate owner. Call it mark-carrying if its controller supplies the
+forbidden mark of this probe. Consider just the suffix after the
+last unconditionally absorbing attachment, or the entire order
+if there is none. The starting value for the suffix is that last
+gate's singleton, or the initial projection if there was no such
+gate. The following conditions are necessary and sufficient:
+\begin{itemize}
+\item If the starting value is nonsingleton, it and every
+controller in the suffix must omit the mark.
+\item If the starting value is singleton $r$, every mark-carrying
+attachment in the suffix must have gate owner $r$ and precede
+every suffix attachment at a different owner whose controller
+is not singleton $r$.
+\end{itemize}
+Indeed an unconditional absorption erases every preceding mark.
+In its absence a nonsingleton running value can only combine by
+union. A running singleton $r$ persists at every $r$-gate and
+at any other gate with singleton $r$ controller. The first
+remaining gate breaks that singleton and no later gate can
+restore it within the suffix. Marks therefore survive exactly
+when one is present initially in a nonsingleton suffix, or one
+is supplied after the singleton ceases to protect it, including
+at the gate that breaks it.
+
+For example, an ordering constraint from the acyclic certificate
+can be violated on a loss if a later absorption erases the
+resulting mark. The exact conditions can be written using only
+relative-order literals: for each loss, branch on which
+unconditionally absorbing attachment comes last, require it to
+follow the others, and impose the indicated precedence or
+omission conditions on attachments after it. With no such
+attachment use the entire order. This gives a polynomial-size
+ordering formula in the explicit rows and the fixed controllers.
+It tests the entire sequential construction from the initial
+projection without tracking intermediate menus or imposing
+independent boundedness. The positive probe still uses the same
+nonabsorption tests for the selected controllers.
+
 For a complete directed graph on at least two vertices, the
 extension is therefore realizable exactly when an owner is
 repeated or all $K$ owners occur. A repeated owner gives the
