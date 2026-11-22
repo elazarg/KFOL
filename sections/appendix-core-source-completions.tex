@@ -303,6 +303,28 @@ This is a consistent coloring that disables as many edges as
 possible. It supplies the mark only if a path or cycle witness
 uses exclusively automatic or explicitly excluded postings.
 
+In the common-incoming-owner case this also recognizes exact
+guard families directly. For each head $i$ and observer $k$,
+retain the arrows entering $i$ and all arrows labeled $k$.
+For an unheaded input or a row posting at $k$, its only prime
+on that facet is empty: test for a path to an unheaded input
+or to a monochromatic cycle using just those retained arrows.
+For any other row, test each of its singleton primes in turn
+by also retaining the arrows entering the input excluded by that
+prime. The family is realized, allowing formal zero, exactly
+when every test succeeds.
+
+Indeed the arrows used in each test are precisely those that
+survive the maximal posting of passive inputs at their incoming
+owners subject to the prime. The prime is supplied everywhere
+on its facet exactly when it is supplied there, by antitonicity
+in those postings. All prescribed losses already hold in the
+core meet, so testing the primes checks the opposite inclusion.
+This takes a graph search and monochromatic cycle check per
+listed prime, without constructing the primes of the meet.
+For ordinary core realizability also require a nonempty prime
+list at some head and observer.
+
 This yields exponential prime growth under taking the core meet
 even with two posting owners and one row per head. Start with a
 head $i$ and then $d$ layers of two inputs each, labeled $a,b$.
