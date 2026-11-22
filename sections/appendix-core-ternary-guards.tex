@@ -2638,6 +2638,47 @@ by the augmented budget. Thus the test gives a polynomial
 construction as well as recognition, including when the
 augmented graph has directed cycles using several owners.
 
+The same test works when the required winning families
+are supplied by monotone CNFs $f_r$, without enumerating
+their minimal winning coalitions. At a head $i$ and a
+query $p$, let $M_r$ be the available inputs whose
+postings at $r$ would disagree with $p$. All the new
+$r$-rows have a mismatch exactly when
+\[
+                  f_r(V\setminus(M_r\cup\{i\}))=0.
+\]
+Indeed the set in this test is the largest possible
+coalition of an unhit row at $i$. It is enough to
+use the minimal winning coalitions as rows. Those
+already lost by the old bound do not affect the
+test once the old prime requirements pass, since
+each such row contains an old loss.
+
+The graph of the nonredundant new rows is also
+available in polynomial time. To test $u:r\to i$,
+seek a minimal winning coalition omitting $i$ and
+containing $u$ for which the old bound supplies $i$.
+Choose an old prime on any facet seeing $r$ and
+forbid its $r$-exclusions. Choose a CNF clause
+containing $u$ and forbid its other inputs, so $u$
+is its only permitted hit. All clauses must meet
+the remaining alphabet, which excludes $i$ as well.
+If they do, minimizing that alphabet gives a
+coalition retaining $u$ and enabling the old prime.
+Conversely every minimum coalition containing $u$
+has such a private clause and every positive old
+probe enables some prime. This recovers exactly the
+arrows needed for the monochromatic cycle check.
+
+To prescribe $f_r$ exactly, add the profile loss
+on the complement of each of its clauses. Every
+losing coalition is a subset of one of those
+complements, so the tests suffice by monotonicity.
+Thus both existence and synthesis for exact profile
+CNFs and marked source queries are polynomial under
+the same graph hypothesis, even when the supplied
+profiles have exponentially many minimal wins.
+
 In general, counting the distinct primes on one facet
 is \#P-complete under polynomial-time Turing reductions,
 even when all relative products are canonical. Membership
