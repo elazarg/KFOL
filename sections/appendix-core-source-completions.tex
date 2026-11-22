@@ -1487,43 +1487,55 @@ monotone circuit of size $O((K+1)N)$ for
 each headed source.
 
 The circuits can be exponentially smaller than
-the completed canonical lists even at three owners
-and two headed inputs. Use distinct owners $a,r,k$,
-headed inputs $x,y$, and $m$ disjoint retained pairs.
-Let $B$ mean that some pair has neither member
-posted at $a$, and let $A$ mean that no retained
-input is posted at $r$. Prescribe the source
-predicate at $x$ to be $B$ or absence of $y{:}a$,
-and at $y$ to be $A$. The input lists have linear
-total size: the pair guards and the singleton
-exclusion at $x$, one guard at $y$, and empty
-guards where the observer hides the relevant color.
-These are canonical since the postings at each
-head use only one owner.
+the completed canonical lists even at three owners,
+two headed inputs and input prime width three.
+Use distinct owners $a,r,k$ and headed inputs
+$x,y$. Given a $3$CNF, introduce two retained
+literal ports per variable. Let $B$ mean that the
+ports posted at $a$ fail to meet some variable
+pair or some clause. Let $A$ mean that the ports
+posted at $r$ fail to meet some variable pair.
+Prescribe $B$ or absence of $y{:}a$ at $x$, and
+$A$ at $y$. At $x$ the proposed guards exclude
+all the $a$-postings of a pair or clause, or
+exclude $y{:}a$. At $y$ each guard excludes
+both $r$-postings of a pair. These lists become
+canonical after inclusion minimization since
+the postings at each head use only one owner.
+A facet hiding that owner has the empty guard.
 
 On the observer-$k$ facet at $x$, leave $y$
-unposted. When $B$ holds on the retained
-background, projection $x$ supplies the mark.
-Otherwise its activated internal losses consist
-just of $y{:}a$. Then the only possible supplier
-is the $a$-fold, available precisely when $A$
-holds: if $A$ fails, $y$ has an activated empty
-loss, while if $A$ holds it has no activated
-loss. Thus the completed coefficient on this
-section is $B\lor A$.
+unposted. When $B$ holds, projection $x$
+supplies the mark. Otherwise its activated
+internal loss is $y{:}a$, so only the $a$-fold
+can supply it. The fold fits exactly when $A$
+holds, since otherwise $y$ has an activated
+empty loss. Thus the completed bit is $B\lor A$.
+A losing coloring must post exactly one port
+of every pair at $a$ and the other at $r$.
+Its $a$-ports then encode exactly a model of
+the formula.
 
-For each retained pair, choose one member and
-exclude both its $a$- and $r$-postings. These
-$2^m$ guards are all prime on the section by the
-facet-restoration example in the consensus
-appendix, with $A$ the test that the coloring
-omits $r$. Every prime of the restricted
-predicate must be the restriction of some full
-prime: extend the restricted guard by all
-foreign postings of the fixed unposted input,
-then take a minimal sufficient subguard.
-Hence the full canonical list of the greatest
-bounded operation has at least $2^m$ entries.
+Choose as the formula a linear-size $3$CNF
+encoding a fan-in-two Boolean circuit for
+$\bigvee_{j=1}^m (u_j\land v_j)$, with a variable
+per gate, clauses for its truth table, and an
+asserted output. For each $j$ choose one of
+$u_j,v_j$ and exclude the $a$-posting of its
+positive literal port. Each resulting guard
+suffices on the section because these exclusions
+make the formula unsatisfiable. Deleting any
+exclusion permits both inputs of that pair to
+be true, extending to a satisfying assignment
+and hence a losing coloring. This gives $2^m$
+distinct restricted primes. Each is the
+restriction of a full prime: extend it by
+excluding all foreign postings of $y$ and
+take a minimal sufficient subguard. The
+restricted guard's own minimality ensures
+that its retained exclusions survive.
+Thus linear-size width-three input lists can
+produce at least $2^m$ canonical primes.
 
 The same argument permits arbitrary-width primes if each prime
 contains at most two retained postings at inputs that occur at
