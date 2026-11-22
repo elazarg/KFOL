@@ -8276,6 +8276,48 @@ transversal duality gives a proper loss. Together with the
 singleton-prime tests for mandatory postings, this gives a
 polynomial check without enumerating minimal losses.
 
+For a fixed support bound, one can test for any controller of
+this kind, allowing words beyond the reciprocal-pair constructions.
+Fix $K$ and $b$. For a posting $j{:}r$ at head $i$ on one facet,
+look for a controller on at most $b$ inputs avoiding $i$ that
+omits every loss at its own inputs, is singleton $r$ on every
+loss of the given facet at $i$ containing $j{:}r$, and can be
+singleton $r$ only when $j$ is. The last property needs just
+one singleton test: give every support input except $j$ the
+singleton $r$. The coalition for this assignment must lose,
+since the singleton predicate is monotone in its coalition.
+
+To check either loss requirement, enumerate the restrictions
+of loss colorings to the controller's support. For every proposed
+restriction let $A$ be the postings it requires and $U$ the
+postings it forbids. For the test at $i$, also require $j{:}r$.
+If $A$ and $U$ meet, discard the restriction. Otherwise a
+minimal loss extending it exists precisely when one can choose
+a prime $G_a$ for each $a\in A$ such that
+\[
+ G_a\cap A=\{a\},
+ \qquad
+ U\ \cup\ \bigcup_{a\in A}(G_a\setminus\{a\})
+ \quad\text{contains no listed prime}.
+\]
+A minimal loss has a private prime for each of its postings.
+Conversely the complement of the displayed union is a
+transversal containing $A$, and every minimization retains
+$A$ by the chosen private primes. This proves the test,
+including $A=\varnothing$. For each realizable restriction
+evaluate the controller at the projected loss probe to check the
+relevant mark or singleton requirement.
+
+There are only constantly many term operations on a fixed
+$b$-element support at fixed $K$, obtainable by finite closure
+of the projections. The support search, the restriction tests
+with $|A|\le b+1$, and the prime scans therefore take polynomial
+time in the input length for fixed $K,b$. If every posting of
+each prime passes, the same successive-attachment proof gives
+realizability. This tests the entire class of controllers with
+the stated support bound and isolates the global loss constraints
+from their local term operations.
+
 For a complete directed graph on at least two vertices, the
 extension is therefore realizable exactly when an owner is
 repeated or all $K$ owners occur. A repeated owner gives the
