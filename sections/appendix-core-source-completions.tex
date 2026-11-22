@@ -1385,6 +1385,54 @@ is checkable from the primes by testing for two
 same-owner postings on distinct internal inputs
 with private primes in a minimal loss.
 
+The palette parameter in the finite internal test
+can instead count only owners occurring in postings
+of headed inputs. Let $A$ be that set, read from
+the prime lists, and put $q=|A|$. At width two,
+recognition is fixed-parameter tractable in $h,q$,
+with no injectivity assumption and no bound on
+the palette used by the retained inputs.
+
+All activated internal loss rows use only $A$.
+Replace gates outside $A$ by derived union.
+On their loss probes the replaced gates cannot
+absorb, so this preserves all omissions. For
+a positive query it can only increase output:
+the tests of owners in $A$ are unchanged, and
+union keeps both outputs at a replaced gate.
+The resulting word ignores non-$A$ postings in
+its source predicates. Consequently feasibility
+at an arbitrary internal coloring is equivalent
+to feasibility after dropping its non-$A$
+postings. If a prescribed positive fails, the
+smaller coloring is still prescribed positive
+and still fails. To tabulate these tests use
+$A$ and, if available, one outside observer,
+padding to at least three owners. Every row
+uses only $A$, and its source bit in a word
+using only $A$ and union is the same on both
+palettes. Enumerate the finite obstructions
+over this smaller palette with gate owners
+restricted to $A$ and union.
+
+In the background $2$SAT test one still uses
+the original lists. Enumerate the original
+observer of the positive and one extra owner
+outside $A$ to forbid in the retained
+background, or no such extra owner. For each
+negative internal row choose its observer
+from $A$ or from this one extra owner. This
+is complete: if an actual background omits
+any owner outside $A$, that same owner is
+absent from every internal row and can test
+every activated original loss. If it omits
+none, all activating losses have observers
+in $A$. Soundness follows from the same
+facet tests with the extra owner's postings
+forbidden. Only the two outer observer choices
+and the size of the $2$SAT instances depend
+polynomially on the original palette.
+
 The same argument permits arbitrary-width primes if each prime
 contains at most two retained postings at inputs that occur at
 multiple owners in the lists. Set every allowed posting at
