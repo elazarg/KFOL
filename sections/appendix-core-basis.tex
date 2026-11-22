@@ -2289,6 +2289,58 @@ on the dual threshold. At $n=3$, $q=t=2$, one expression
 for the atom is
 $((x\star_b y)\star_c z)\star_b(y\star_c x)$.
 
+More generally, let $f$ be any nonconstant monotone Boolean
+function on the input names. The operation that absorbs at $b$
+on the $f$-test, absorbs at $c$ on the dual test
+$f^\vee(A)=1-f(V\setminus A)$, and otherwise takes the full
+input union is core. Among these operations the atoms are
+exactly those with symmetric $f$, namely the complementary
+thresholds.
+
+For realizability, start with any AND/OR formula for $f$,
+interpreting its gates as $\star_c,\star_b$. Its two profiles
+are $f$ and $f^\vee$. For each input $u$, replace the current
+word $Q$ by $Q\star_b(Q\star_c u)$. If $Q$ is singleton $b$
+or $c$, the value is unchanged. Otherwise the new value is
+the union of $Q$ and $u$: an inner absorption can only return
+$u=\{c\}$, and the outer gate cannot yield singleton $b$ by
+absorption. Iterating gives the stated operation.
+
+If $f$ is not symmetric, some coalitions of equal size have
+different values. A sequence of single exchanges between them
+gives two adjacent coalitions of different values. Write them
+$A\cup\{x\}$ and $A\cup\{y\}$ with $x,y\notin A$.
+Fix the other inputs to Boolean values according to $A$.
+By monotonicity the resulting two-input Boolean function is
+a projection, say $x$. We can realize $f$ by a formula that,
+on the corresponding menu fixing, uses only $x$ and the
+fixed inputs in its output. For a fixed variable $z$,
+write $f_0,f_1$ for its Boolean cofactors. When $z$ is fixed
+true use
+\[
+ f=f_1\wedge(z\vee f_0);
+\]
+when fixed false use $f=f_0\vee(z\wedge f_1)$.
+In the first case the $b$-gate at $z=\{b\}$ discards the
+unselected branch; in the second the $c$-gate at $z=\{c\}$
+does so. Recurse only on the selected cofactor and use any
+formula for the other one. If that other cofactor is constant,
+simplify the displayed expression in Boolean logic before
+interpreting it. The selected cofactor is always nonconstant,
+since the final restriction is a projection, so no term
+constant is needed. At the bottom use the projection $x$.
+
+On the fixed menus take $x=\{b,c\}$ and give $y$ a singleton
+at a third owner. The two absorbing profiles both lose,
+because the final Boolean restriction is $x$ and $x$ is
+neither singleton. The specialized expression omits the
+third owner, while the full-union operation supplies it.
+At every valuation the expression is bounded by that
+operation, since its two profiles agree and its winners
+come from the inputs. Hence the full-union operation is
+not an atom. This establishes the converse to the threshold
+construction within the stated class.
+
 \begin{lemma}[A mandatory linear source]\label{core:lem:mandatory-linear-source}
 Suppose a choice/union word $T$ uses $j$ at most once, and for some
 $A\subseteq V\setminus\{j\}$ and owner $r$,
