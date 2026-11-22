@@ -1057,6 +1057,42 @@ in its width, with all earlier circuits shared.
 The total size is linear in the input and its
 one visible facet's prime lists.
 
+The construction extends to cyclic components with
+an exponential cost only in their largest size.
+Process strongly connected components in dependency
+order. In the current component $C$, consider each
+nonempty subset $S\subseteq C$. Let $F_S$ be its
+bare $a$-fold. For each $i\in S$, keep the primes at
+$i$ whose internal postings all belong to $S$ and
+whose exterior postings have available earlier
+circuits $H_v$. For each such prime, fold $F_S$
+with those exterior circuits, using $F_S$ alone
+when there are none. Union these branches at $i$.
+If any $i\in S$ has no branch, discard $S$.
+Otherwise fold the resulting circuits at all
+$i\in S$ together at $a$. Call this circuit $W_S$.
+Set $H_i$ to the union of $W_S$ over surviving
+subsets containing $i$.
+
+Every fold summand of $W_S$ has internal support
+exactly $S$. At earlier heads its support is a
+union of safe supports, and at each $i\in S$ it
+contains a complete guard from the chosen branch
+there. Hence it is safe. Conversely take a safe
+support supplying a mark at $i\in C$ and choose
+its intersection $S$ with $C$. At each $j\in S$
+the support contains a guard at $j$. All its
+exterior postings have earlier circuits with
+summands avoiding the probe's $a$-postings, by
+induction. Taking these branches supplies the
+mark in $W_S$. Thus the union of the $H_i$ again
+gives the greatest bounded operation. Each subset
+uses work linear in the component's inputs and
+guard lists, with $F_S$, $W_S$, and all predecessor
+circuits shared. If the largest component has
+size $b$ and the visible prime input has size $N$,
+the resulting circuit has size $O(2^b N)$.
+
 This test compiles directly from canonical primes into a
 polynomial-size monotone circuit shared by all colorings.
 Let $U$ mark the postings in the union of the fold supports
