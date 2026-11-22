@@ -1852,6 +1852,60 @@ For the sparse cycle with $n\ge3$ it forces exactly
 the extra singleton losses on the cycle inputs that
 are present in the exact example above.
 
+There is a graph characterization when every minimal
+loss is a single posting. Draw $j\xrightarrow{r}v$
+for the loss $v{:}r$ at $j$. An observer-agreeing
+candidate of this form is core exactly when both
+conditions hold:
+\begin{itemize}
+\item For distinct $j,u,v$, edges $j\xrightarrow{r}u$
+and $u\xrightarrow{s}v$ imply $j\xrightarrow{s}v$.
+\item For every input $i$, the edges whose sources
+are reachable from $i$ either all have one owner or
+all have the same target.
+\end{itemize}
+The graph can be read directly from the common
+primes: at each head the single common prime is the
+set of its singleton losses, possibly empty.
+
+The first condition is the cofactor rule above.
+For the second, choose a term realizing the candidate.
+Every input is used, since the empty coloring supplies
+its mark. More generally even a bounded term using
+$i$ must use every input reachable from $i$: if it
+uses the source of a singleton loss and omits its
+target, all used inputs are full on that loss, which
+supplies the forbidden mark. On each singleton loss
+whose source is used, the term must return the
+singleton at the posted target. This requires a win
+in its owner profile on the singleton coalition
+consisting of that target. Wins at distinct owners
+must intersect by \cref{core:thm:profiles}. Thus in
+the reachable cone, edges at distinct owners have
+the same target. If two owners occur, comparison
+with one of those two edges forces every edge to
+have that target.
+
+For sufficiency, consider a positive probe at $i$.
+With no edges in its cone, use its projection.
+With one owner $r$ on all cone edges, take the
+$r$-fold on the entire reachable set. Every loss
+headed there posts another member of the fold at
+$r$, so the fold respects the budget. Each other
+reachable input is the target of an $r$-edge from
+$i$, by the first condition along a simple path.
+Therefore a positive probe at $i$ posts none of the
+fold inputs at $r$, and the fold supplies the mark.
+In the remaining case all cone edges end at one
+input $v$. The cone consists of $i,v$, and $v$ has
+no loss. Starting with $x_i$, attach the mask
+controlled by $x_v$ at each owner of an edge
+from $i$ to $v$. Each mask enforces the loss at
+its owner, and on the other losses the controlled
+term already omits $i$. At a positive probe no mask
+absorbs the mark. This gives a bounded word at
+each positive, and their union is the candidate.
+
 Even with monochromatic cycles, the same calculation
 certifies any head made available. For a head left
 unavailable, a sufficient blocking certificate
