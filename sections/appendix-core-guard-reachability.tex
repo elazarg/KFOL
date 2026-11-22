@@ -1563,6 +1563,39 @@ inputs. Width one recovers the multi-owner chain
 case: each largest remaining block is just the union
 of its possible postings.
 
+There is a related row reconstruction test when the
+palette varies. Suppose each owner order has width
+at most $w$ and each projected loss uses at most
+$c$ owners. Recover the individual blocks as above.
+For a head and a proposed tuple of at most $c$
+nonempty blocks, restrict the internal ground to
+their union. To test exact occurrence, try pinning
+at most $w$ postings from each proposed block.
+Require a row satisfying the pins and no such row
+omitting any posting of the tuple. If the tuple
+occurs, the pins exist: for each owner choose one
+missing posting from the greatest strict subset in
+each of its chains of blocks within the restricted
+ground at that head. Choose no pins for an empty
+block. The chosen pins together eliminate every
+strictly smaller tuple while preserving the desired
+one. Conversely, if the row test succeeds, the
+remaining row has exactly the proposed tuple.
+
+There are at most $1+nKw$ block choices for each
+of the $c$ places. The tests use at most $cw$
+private primes at once, so the whole projected
+loss family can be listed in polynomial time for
+fixed $c,w$, without bounding the sum of the owner
+widths. The bound on the number of colors per
+row is itself checkable by trying to force one
+posting at each of $c+1$ distinct owners. Applying
+the explicit-row test after reconstruction gives
+polynomial-space marked interpolation, and hence
+recognition if these bounds hold at every prescribed
+positive probe. This admits arbitrarily many active
+owners and exponentially many original losses.
+
 \paragraph{Localizing the remaining loss budget.}
 At a task $(S,a)$, initially put $U=V$. Treat an
 absent entry $a_r$ as empty and let
