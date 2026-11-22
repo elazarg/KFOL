@@ -4904,10 +4904,52 @@ and the observer. These proper colorings enable the
 prime. Every positive probe, after dropping irrelevant
 postings, lies below one of these choices on its facet.
 By antitonicity of the greatest bounded operation,
-it suffices to test the filled colorings. Together
-with the nonzero test this decides exact recognition
-in time $2^m(m+1)^K(K-1)^d$ times a polynomial in the
-input length. In particular at prime width one the
+it suffices to test the filled colorings. The choices
+can also be made during the probe-dependent reachability
+search. Use the labeled graph with an arrow
+$j\xrightarrow{r}v$ when $v:r$ occurs in a prime at
+$j$ on any facet. A posting occurs in some minimal
+loss at $j$ exactly when it occurs in such a prime.
+Indeed a minimal hitting set gives a private prime
+for each of its postings. Conversely, given a prime
+containing the posting, remove the other postings
+of that prime from the facet ground. The remaining
+ground hits every prime by inclusion minimality,
+and any minimal hitting subset contains the
+specified posting.
+
+Start with the queried input reached and unposted.
+When processing a reached head, choose a permitted
+relevant owner at each as yet unset target of its
+arrows, or leave the target unposted if none is
+permitted. Follow precisely the arrows whose
+postings disagree with those choices. Continue
+until all reached heads have been processed and
+leave unset inputs unposted. The resulting probe
+can be tested with just the losses headed in its
+reached set, by localization of the pointed cut.
+
+For completeness, take any failed positive enabling
+the prime, dropping irrelevant postings first.
+Follow the search with choices extending that
+coloring wherever a target is encountered. Extend
+the failed coloring by those choices and keep all
+its other postings. The extension still enables
+the prime and fails by antitonicity. It has the same
+reachability set as the search probe, because the
+two agree on every target of a reached head. Their
+localized loss budgets are identical and every
+posting in that budget concerns a target on which
+they agree. The two probes therefore have the same
+answer, so the search finds a failed positive.
+
+Let $d_*$ be the largest number of branching decisions on
+a search path, and $m_*$ the largest number of rows headed
+in a reached set at a leaf. The time for these probe tests is
+$2^{m_*}(m_*+1)^K(K-1)^{d_*}$ times a polynomial in the
+input length. Taking $m_*\le m$ and $d_*\le d$ and including
+the nonzero test gives time $2^m(m+1)^K(K-1)^d$ for exact
+recognition, up to polynomial factors. In particular at prime width one the
 loss rows can be read directly and $m\le Kn$, giving
 a $2^{O_K(n)}$ time bound even with cycles.
 
