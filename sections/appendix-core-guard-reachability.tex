@@ -5909,6 +5909,41 @@ incompatibility tuple for its replacement. All other owners
 miss the probe whenever their replacement exists. A failed
 union always provides such a certificate.
 
+For three owners this union recognition is coNP-complete.
+Take the hypergraph above on a set $U$, requiring at least
+one edge and at least two vertices per edge. Add a fresh
+input $d$, set $M=U\cup\{d\}$, and add $a,b$ as before.
+At owner $r$ require all of $M$ and at least one of $a,b$.
+At $s$ require $a,b,d$ and a hitting set of the hypergraph
+on $U$. At $t$ allow either all of $M$ or both $a,b$
+together with a hitting set on $U$.
+These profiles have common source in every rainbow tuple:
+if the $t$-coalition contains $M$, the tuple shares $d$,
+and otherwise it shares whichever of $a,b$ the $r$-coalition
+contains. For the prime-list construction, distribute the
+disjunction between the two positive CNFs at $t$. Its
+clauses are pairwise unions of clauses from the two CNFs,
+so the size remains polynomial and the preceding
+facet construction applies.
+
+Here $M_r=M$, $M_s=\{a,b,d\}$ and $M_t=\varnothing$.
+No vertex of $U$ is mandatory in a hitting set because
+every edge has at least two vertices. The two alternatives
+at $t$ also exclude any other mandatory input.
+Owner $s$ is viable by the same two-case rainbow
+argument, which uses only $a,b,d$ from its coalition.
+Owner $t$ is never viable. Owner $r$ is viable exactly
+when the hypergraph has no bichromatic two-coloring:
+an $s$-coalition and a $t$-coalition can have disjoint parts
+in $M$ only by choosing the hitting-set alternative at
+$t$ and using disjoint hitting sets on $U$.
+If $r$ is viable, its mandatory set meets $M_s$ in $d$,
+so the two replacements recover the target by the criterion.
+If $r$ is not viable, only $s$ remains. Its mandatory set
+is proper and losing, since the hypergraph has an edge.
+Its replacement alone misses a positive mark. This is the
+claimed reduction.
+
 \paragraph{Several generators per owner.}
 More generally, suppose the profiles of a greatest completion
 have $m_r$ minimal winning coalitions at owner $r$. Every positive
