@@ -2685,6 +2685,66 @@ therefore misses this mark unless $r$ is selected. The
 argument applies separately to all three edge owners,
 even though every proper posting face satisfies anti-exchange.
 
+Exact realization can have incomparable minimal owner selections.
+Use four distinct owners $a,b,c,d$ and the one-loss candidate
+\[
+\begin{array}{c|l}
+x &y:a,\ z:b,\ w:d\\
+y &x:a,\ z:c,\ w:b\\
+z &x:b,\ w:d,\ y:c\\
+w &y:b,\ z:d,\ x:a
+\end{array}
+\]
+The minimal realizing selections are
+$\{a,b,c\}$, $\{a,b,d\}$ and $\{b,c,d\}$, at any palette
+containing those owners. To prove sufficiency, any failure
+at a positive probe has a blocked set with an internal
+edge. Every pair of heads demands two different postings
+at some outside input, by the table, and every triple
+does so at the sole outside input. Thus the blocked set
+must be all four inputs. The monochromatic cycles are
+$xy$ at $a$, $xz$ and $yw$ at $b$, $yz$ at $c$, and
+$zw$ at $d$. Each claimed selection has four cycles,
+which cannot all be hit by probe postings on the three
+inputs other than the queried head. The matching criterion
+therefore gives exact realization.
+
+For necessity the following probes at $x$ hit every
+cycle of the indicated selection and are positive:
+\[
+\begin{array}{c|cccc}
+\text{selection} & x&y&z&w\\ \hline
+\{a,c,d\} & \circ&a&c&d\\
+\{a,b\}   & \circ&a&b&b\\
+\{b,c\}   & \circ&c&b&b\\
+\{b,d\}   & \circ&b&b&d
+\end{array}
+\]
+Here $\circ$ is unposted. With no unheaded inputs and
+no safe selected cycle, these marks cannot be supplied.
+The listed failures cover every selection missing $b$
+or selecting fewer than two of $a,c,d$.
+
+Thus minimizing fold owners for exact realization is
+NP-complete when the palette varies, even for known core
+candidates with one loss per head and singleton owner
+blocks. Membership follows by guessing the selection
+and applying the polynomial matching test. For hardness
+reduce from vertex cover on graphs with at least one edge.
+Give each graph vertex its own
+owner, and take two additional owners $b,d$. For each
+edge take a disjoint copy of the four-input candidate,
+using its endpoint owners as $a,c$. Add a disjoint binary
+$d$-fold to require $d$. The resulting disjoint union is
+core since all owners suffice in every block. Its guard
+lists are polynomial: each head has one explicit row
+and hence singleton primes on the facets seeing it.
+All blocks must be realized, since neutral restriction
+to a block preserves the selected-fold clone by
+background erasure. Conversely the block realizers
+can be unioned. The required owners are therefore
+$b,d$ together with a vertex cover, giving the reduction.
+
 For arbitrary singleton blocks the only enumeration is
 over the row subsets at multi-loss heads. For each of
 those heads choose any subset, including the empty set;
