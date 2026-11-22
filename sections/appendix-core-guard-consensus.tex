@@ -98,29 +98,41 @@ minimal transversal, which can be joined with $Q$.
 This gives polynomial time at fixed $|R|$ without
 expanding either prime or loss families.
 
-For variable $|R|$, guard sufficiency after restoration
-is coNP-complete even for single-source predicates
-whose original guards use just one posting owner $a$.
-For hardness use two passive inputs per Boolean
-variable, one per literal, and one restored owner
-$r_j$ per variable $j$. The guard under test excludes
-every $r_j$-posting except those on its two inputs.
-At an observer outside $R\cup\{a\}$, use the old
-guard family consisting of the sets of literal inputs
-of the clauses of a $3$CNF, each posted at $a$.
-Keep only inclusion minima. This is a canonical list
-since its postings never compete. To give a loss after
-restoration and enable the proposed guard, a coloring
-must post at least one literal input per variable at
-its restored owner and hit every clause guard at $a$.
-Hence the literal inputs at $a$ are consistent and
-hit every clause, so extend to a model. Conversely,
-post each true literal at $a$ and each false literal
-at the restored owner for its variable. This gives
-the required loss. A losing coloring is a polynomial
-certificate, giving the upper bound. Both predicates
-are realized with every passive input retained by
-the single-source theorem.
+For original guards of width at most two, finding
+a counterexample is equivalent by polynomial reductions
+to multicolored clique, with one part per restored
+owner. For each $r\in R$, its part consists of the
+$r$-postings outside $D$. Join choices from distinct
+parts unless they post the same input. For every old
+guard $G$, the chosen postings must leave some member
+of $G\setminus D$ in the remaining ground. If this
+difference is empty, no counterexample exists. For
+one member, discard every vertex competing with it.
+For two members, discard every vertex competing with
+both and every edge whose endpoints together compete
+with both. These deletions enforce exactly the ground
+test, because at most two choices can witness the
+failure of a width-two guard. A clique with one vertex
+per part therefore gives precisely an admissible $Q$.
+
+Conversely, take a graph with vertex parts indexed by
+$R$ and one passive input per vertex. The proposed
+guard excludes restored-owner postings outside their
+own parts. At an observer outside $R\cup\{a\}$, use as
+old guards the pairs of $a$-postings on vertices from
+distinct parts that are nonadjacent. These guards are
+canonical because they are an antichain and their
+postings never compete. A choice of one representative
+per part erases its own $a$-posting from the ground.
+The ground hits every old guard exactly when no two
+representatives form a nonedge, which is the required
+clique. The old predicate and its restoration are both
+realizable with every passive input retained by the
+single-source theorem. Hence counterexample existence
+is NP-complete and is $\mathrm W[1]$-complete with
+parameter $|R|$, already with one posting owner in
+the old guards and width at most two. Guard sufficiency
+is therefore coNP-complete when $|R|$ varies.
 
 \paragraph{Bounded prime width and bounded loss size.}
 Suppose a complete observer list has prime width
