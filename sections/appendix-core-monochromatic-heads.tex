@@ -1563,6 +1563,46 @@ minimum support size is polynomial to compute,
 and estimates the optimal leaf count to within
 one in these generators.
 
+Allowing two losses per head makes minimum support
+NP-complete already for a single marked probe.
+This holds with an acyclic posting graph, singleton
+owner blocks, prime width one, and three owners.
+Membership follows by guessing the support and using
+projection deletion on its restricted acyclic budget.
+The ranked survivor argument makes that test exact
+even for the full core.
+
+Reduce from vertex cover on a graph with at least
+one edge. Use one retained input per graph vertex
+and a headed input per graph edge. Its sole loss
+posts the two endpoints at $a,c$, respectively.
+Make the edge heads the leaves of a binary tree
+of additional heads. At each internal head with
+children $u,v$, prescribe the two losses
+\[
+          (u{:}a,z{:}b),\qquad (v{:}c,z{:}b),
+\]
+using one new retained input $z$. Query the root
+at the probe posting only $z{:}b$. The dependency
+graph is acyclic. The two rows at an internal
+head lie on distinct observer facets, and each
+facet sees at most one row at any head. Hence
+the complete canonical lists have width one.
+
+At the probe the posting at $z$ agrees and can
+never clear a row. Each internal head therefore
+needs both children to become available, while
+each edge head needs at least one endpoint.
+This remains true on a restricted support,
+whether it includes $z$ or erases that posting.
+Consequently a witness at the root must use all
+tree heads and vertex inputs forming a cover.
+Conversely a cover together with those heads
+admits projection deletion from the retained
+vertex inputs up to the root, so masks suffice.
+With $m$ edges the minimum support size is
+$2m-1$ plus the minimum vertex cover size.
+
 Minimum support for several required marks is
 NP-complete, even at one neutral background for
 an exact pure-owner candidate whose posting graph
