@@ -2418,6 +2418,44 @@ acyclic witnesses also show that allowing mixed cycles in the
 summands gives the same union class as requiring an acyclic
 graph at every summand.
 
+\paragraph{Canonical primes of the ranked envelope.}
+The same test gives a guard presentation for the greatest union
+of bounded ranked operations, with all bits zero if there are no
+such operations. At a queried head $i$, take any sequence of
+distinct heads ending at $i$, and at each head choose a common
+prime using only earlier heads in the sequence. Form the union of
+the chosen exclusions and delete postings at the observer. Use
+every resulting guard. No guard includes a posting of $i$, which
+is last. An enabled guard replays the sequence in the forward test.
+Conversely, when that test reaches $i$, choose one enabled common
+prime at each addition through $i$. Their union gives an enabled
+guard of the prescribed form. Closing these lists under consensus
+and taking inclusion minima therefore gives exactly the envelope's
+canonical primes by \cref{core:thm:guard-consensus}.
+
+Consensus can be necessary even for an acyclic core candidate.
+With three distinct owners $r,s,t$, take the acyclic budget on
+$z,x,y,i$ with no row at $z$, singleton rows $z:r$ at $x$ and
+$z:s$ at $y$, and the row $\{x:t,y:t\}$ at $i$.
+Its greatest operation has exactly the following canonical losses
+at $i$:
+\[
+ \{x:t,y:t\},\qquad \{z:r,y:t\},\qquad \{z:s,x:t\}.
+\]
+Indeed $z$ is always available, $x$ is unavailable exactly at
+$z:r$ and $y$ exactly at $z:s$. The row at $i$ can remain unhit
+only when each of its postings either agrees or is on an
+unavailable input, yielding precisely the three minimal cases.
+At the observer $t$ none of the three losses can occur, so the
+canonical prime is empty. Yet every common prime at $i$ must hit
+the first loss and hence use $x$ or $y$. Every derivation of $x$
+or $y$ excludes $z:r$ or $z:s$, respectively, and both exclusions
+are visible at $t$. Thus no individual derivation gives the
+empty guard there. In fact the common primes
+$\{x:t,z:r\}$ and $\{y:t,z:s\}$ give the guards
+$\{z:r\}$ and $\{z:s\}$ by using $x$ and $y$ respectively.
+Their consensus gives the empty guard.
+
 \paragraph{Ranked witnesses under one-owner bounds.}
 Suppose every canonical loss of a candidate posts only at one
 owner $r$. To test for a ranked operation below it supplying a
