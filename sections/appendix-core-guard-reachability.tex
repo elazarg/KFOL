@@ -2774,6 +2774,41 @@ minorant, on the quotient inputs, requires
 $2^{\Omega(m^{1/4})}$ gates even in a core
 circuit.
 
+For one loss head with pure-$r$ losses and all
+other inputs retained, this simulation has a
+converse. Take a monotone circuit for the head's
+positive predicate on the $r$-exclusion bits.
+At an exclusion bit for input $x$, use
+$h\star_r x$. Use the owned $r$-gate for
+conjunction and a fixed foreign gate for
+disjunction. At every probe for $h$, the compiled
+subcircuit returns $\{r\}$ when its Boolean value
+is false and contains the head menu when that
+value is true. This holds at the inputs. An
+$r$-gate absorbs exactly when some child is
+false. At a foreign gate neither child is a
+singleton of its owner, so it takes union.
+It therefore carries the head menu exactly when
+at least one child is true. The argument works
+even when the background posts several owners,
+since only the $r$-exclusion bits are used.
+
+Union the compiled output with the retained
+projections. The result supplies every retained
+mark and precisely the required marks at $h$.
+Constants may be simplified in the Boolean
+circuit first. For a constant true predicate use
+$h$ itself, and for constant false use only the
+retained projections. Thus a Boolean circuit of
+size $L$ gives a core circuit of size $O(L+|V|)$,
+counting projection nodes as well as gates.
+Conversely the pure-slice simulation above gives
+a Boolean circuit of size linear in any core
+circuit realizing the operation. This identifies
+the synthesis complexity of this single-head
+class with monotone Boolean circuit complexity,
+up to the retained projections.
+
 The 2-SAT formulation also gives a canonical prime
 list for an exterior slice with all quotient block
 statuses fixed. Leave the permitted exterior
