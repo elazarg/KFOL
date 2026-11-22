@@ -5100,6 +5100,41 @@ budget. The common guard lists at retained heads are
 the inclusion-minimal transversals of its losses, so
 they too are independent of elimination order.
 
+Between reachability steps, the unheaded and
+empty-loss eliminations can be read as a propagation
+rule on the original common lists of that stage.
+Maintain two disjoint sets of exterior postings,
+$E$ for allowed postings and $B$ for forbidden
+postings. Initially both are empty. At each surviving
+head $j$ use the following tests on its common list:
+\begin{itemize}
+\item If some guard is contained in $B$, then $j$
+has no remaining loss. Fix $j$ to the probe by
+putting its probe posting, if any, into $E$ and all
+its other postings into $B$.
+\item If every guard meets $E$, then $j$ has an
+empty loss. Delete $j$ by putting all its postings
+into $E$.
+\end{itemize}
+Keep the queried input instead of deleting it. The
+first test there supplies its projection, and the
+second certifies failure.
+
+Indeed, after deleting the indicated inputs each guard
+meeting $E$ disappears, and every other guard loses
+its literals in $B$. A guard becomes empty exactly
+in the first case, and the list becomes empty exactly
+in the second. The tests are disjoint since $E$ and
+$B$ are disjoint. Both are monotone under the posting
+updates. This permits a queue implementation linear
+in the size of the common lists and the posting
+ground: for each guard count the literals not yet in
+$B$ and record whether it meets $E$; for each head
+count guards not yet meeting $E$. Each literal of
+each guard is notified at most once. The reduced lists
+need only be formed after this propagation stops,
+before searching for further unreachable inputs.
+
 In particular, at fixed $K$, complete recognition from
 canonical primes is in coNP when the final reduced
 input count at every probe is bounded by a constant.
