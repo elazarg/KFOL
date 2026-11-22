@@ -6392,6 +6392,48 @@ component gives a polynomial-time computation on
 the canonical lists, even with unbounded components
 and exponentially many admitted losses.
 
+Larger internal owner blocks can be allowed when the
+residual graph of each local saturation has a suitable
+component structure. At the empty query every local head
+with no residual row has recorded its posting at every
+owner: its singleton support is safe and eligible. Thus
+the residual rows post only at other residual heads.
+Take the strongly connected components of this residual
+local graph. It suffices that each component either has
+no monochromatic cycle internally or has at most one
+internal posting per owner in every residual row.
+The choice can vary across residual components.
+
+Process these components with controls before heads.
+Earlier components already proved dead can be ignored,
+so at the next component keep just the restrictions of
+its rows to itself. When there is no monochromatic
+cycle, one restricted row per head gives a ranked
+survivor cut with empty boundary. In the singleton-block
+case, any nonempty local safe fold would also be safe
+in the original local residual budget. It would hit a
+row at a head in its support, contrary to stability.
+Exact singleton-block saturation therefore gives zero
+on the component. Ancestor-set factorization justifies
+these local zero tests as soon as the earlier dead
+components have been dropped. Inductively all residual
+heads are dead and the row-free heads give the exact
+live support to pass onward in the original graph.
+
+The test is polynomial directly from primes. To check
+whether an allowed minimal loss contains a specified
+posting, choose its private prime, exclude the other
+flags of that prime from the allowed alphabet and test
+whether every prime is still hit. This gives the residual
+arrows. The singleton-block test uses two specified
+postings of the same owner and one private prime per
+posting, scanning pairs only inside a residual component.
+All tests retain the exterior restrictions and recorded
+flags from the local fold calculation. Thus the same
+procedure can certify the uncolored coefficient even if
+the original graph has large owner blocks and
+monochromatic cycles in the same source component.
+
 \paragraph{Per-head sparsification for one-owner components.}
 Suppose each component's internal postings use just
 one owner and their blocks have size at most $a\ge1$.
