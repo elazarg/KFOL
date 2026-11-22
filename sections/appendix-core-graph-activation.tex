@@ -222,6 +222,68 @@ $1$ gives $x_i\lor x_j$, and output $0$ fixes both endpoints to $0$;
 a $b$-edge with output $0$ gives $\neg x_i\lor\neg x_j$, and
 output $1$ fixes both endpoints to $1$.
 
+\paragraph{Capture paths within a graph activation class.}
+For two equivalent proper colorings of a simple graph sum,
+there is a polynomial test for connection by elementary
+capture edges. When connected, they have a shortest path
+that edits each differing posting exactly once.
+
+Use the posting variables of the graph kernel test:
+an owned edge requires the disjunction of its two owner
+postings, an unowned edge fixes its endpoints, and
+competing postings are forbidden by binary clauses.
+These clauses describe the class when restricted to proper
+colorings. For endpoints on a common facet, consider the
+variables changing truth values. A clause satisfied by an
+unchanging literal needs no ordering constraint. Any
+remaining binary clause that can be violated during a
+switch has one literal true only at the old endpoint and
+one true only at the new endpoint. Put a precedence arc
+from the variable setting the new literal true to the
+variable setting the old literal false.
+
+If the precedence graph is acyclic, flip the differing
+posting variables once in topological order. This keeps
+every clause true and stays on the common facet. Each flip
+connects equivalent colorings at one posting, hence is a
+capture edge by \cref{core:thm:activation-faithfulness}.
+If there is a directed cycle, the corresponding binary
+clauses force the cycle variables' indicators of agreement
+with the final endpoint to be equal in every representative:
+each clause requires the preceding flip whenever the
+following flip has occurred. No single variable change
+can start that cycle, even if other variables are changed
+temporarily or the observer facet is changed. This rules
+out any elementary path.
+
+For endpoints on different facets first erase, in each,
+postings whose owners are absent from the other. At such
+a changed input every incident edge is owned at both
+endpoints, so its owner differs from the erased posting.
+Another input therefore supplies the owner on each incident
+edge, making each erasure a capture edge. The resulting
+pair uses a common palette. Apply the preceding test and
+restore the final endpoint's erased postings in reverse
+order. The preliminary and final steps use only flags
+differing between the original endpoints and disjoint
+from the middle edits. Every path must edit those flags
+at least once, so the constructed path is shortest.
+
+The same digraph measures simultaneous changes. If steps
+may edit several postings while staying in the activation
+class, the least possible maximum number of edits in a
+step is the size of the largest strongly connected
+component, with single-posting erasures and restorations
+costing one. Process the components in topological order
+and flip each component at once for the upper bound.
+For the lower bound, the implications on a nontrivial
+component force all its progress indicators to agree
+in every representative. They must change together in
+some step, irrespective of intermediate detours. For
+identical endpoints no edits are required. If the
+normalization alone changes the endpoints, its
+single-posting steps give the bound of one.
+
 \paragraph{Least representatives of graph activation classes.}
 For a simple graph sum and a given proper target $p$, one can
 decide in polynomial time whether its entire activation class
