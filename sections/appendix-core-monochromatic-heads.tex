@@ -2803,6 +2803,40 @@ background erasure. Conversely the block realizers
 can be unioned. The required owners are therefore
 $b,d$ together with a vertex cover, giving the reduction.
 
+For a properly edge-colored complete graph on $n\ge3$
+inputs, suppose each vertex misses some palette owner.
+Take the union of its binary edge folds. A selection
+realizes this candidate exactly if its spanning subgraph
+has a component with more edges than vertices, or has
+no tree component. Isolated vertices count as trees.
+
+Indeed, a blocked set at a missed positive probe has
+at least two vertices. Any outside vertex would receive
+different posting demands from two vertices in the set.
+Thus the blocked set must be the whole graph. The selected
+monochromatic cycles are precisely the reciprocal pairs
+on selected edges. A probe hitting them assigns each
+edge to a distinct endpoint, with the queried vertex
+unavailable. A component with more edges than vertices
+prevents such an assignment at every query, and a
+component containing the queried vertex needs strictly
+fewer edges than vertices. In the absence of a tree
+component this is impossible.
+
+Conversely, suppose each component has at most as many
+edges as vertices and some component is a tree. Query
+at a vertex of degree at most one in that tree. Root
+it at the query and root any other trees arbitrarily.
+Assign each tree edge to its child. In a unicyclic
+component assign each cycle edge to its next vertex in
+cyclic order and each off-cycle edge to its child away
+from the cycle. Post assigned vertices at the labels of
+their edges. Some label is unselected because the whole
+complete graph has no tree component, so the probe is
+proper. It is positive because an edge at the queried
+vertex is unselected, and it hits every selected cycle.
+All inputs have heads, so saturation misses this mark.
+
 More generally, exact owner selection realizes any monotone
 CNF with nonempty clauses, after adjoining two mandatory
 owners. For a clause on $m\ge3$ distinct owners, take
@@ -2822,25 +2856,11 @@ the binary folds at their edge labels. At each vertex its
 only minimal loss posts each neighbor at the corresponding
 edge label. This row is proper and has singleton owner blocks.
 
-Any blocked set at a missed positive probe has at least
-two vertices. If an outside vertex existed, its edge labels
-to any two vertices in the set would demand distinct postings
-at that input. Thus the blocked set is the whole graph.
-Each owner class is a matching, so its monochromatic cycles
-are exactly the reciprocal pairs on its edges. Selecting
-both mandatory owners contributes $n-1$ cycles. Selecting
-any clause owner contributes at least one more cycle, and
-the cycles cannot be matched to the $n-1$ inputs available
-for postings at the probe. The matching criterion gives
-exact realization.
-
-With only the mandatory owners selected among the labels
-of this block, query at any vertex and post every other
-vertex at the label of its parent edge in the mandatory
-path rooted at the queried vertex. The probe hits all
-selected cycles and is positive since the queried vertex
-has an incident edge with a clause label. There are no
-unheaded seeds or safe selected cycles, so this mark is missed.
+With both mandatory owners selected, the selected graph
+is connected and contains their spanning path. It is a
+tree when no clause owner is selected. Selecting any clause
+owner adds an edge and eliminates the tree component.
+The graph criterion gives precisely the clause condition.
 
 For a two-owner clause, use the four-input example with
 $b,d$ mandatory and $a,c$ as the clause owners. For a
@@ -2864,27 +2884,39 @@ the triples of owners. Use the same complete graph with
 $n=K$ and assign all $K$ residue labels to owners.
 The boundary argument again forces the whole graph at
 any missed positive probe. Three owners contribute
-$3(K-1)/2$ reciprocal cycles, more than the $K-1$
-available postings, so every triple suffices.
+$3(K-1)/2>K$ edges, so some component has more edges
+than vertices and every triple suffices.
 
 For any pair of owners, the two matchings together form
 one path and disjoint even cycles. Each label has a unique
 unmatched vertex, and these vertices are distinct since
 $2$ is invertible modulo $K$. They are the two endpoints
-of the path. Choose the queried vertex on the path and post
-the other path vertices at the labels of their parent edges.
-On each even cycle, orient the cycle consistently and
-post each vertex at the label of its outgoing edge.
-This hits every reciprocal cycle of the pair. The probe
-is proper and positive because the queried vertex has
-neighbors at labels outside the pair. With all heads present
-and no safe selected cycle, the pair misses that mark.
+of the path, which is a tree component alongside unicyclic
+components. The graph criterion therefore excludes every pair.
 Consequently the exact owner condition is cardinality at
 least three. Every monotone CNF expressing it contains
 all $\binom K2$ clauses complementary to pairs. A clause
 falsified at a given pair must contain every owner outside
 the pair, since adding any one of them makes a realizing
 selection, and it contains neither owner of the pair.
+
+For even $K\ge4$, take the complete graph on $K$ vertices
+and split one class of a perfect-matching edge coloring
+into two nonempty classes. Such a coloring comes from the
+residue coloring on $K-1$ vertices by adding one vertex
+and joining it to each label's unique unmatched vertex
+with that label. The resulting $K$ owners include $K-2$
+full matchings and two parts of the remaining matching.
+The exact owner condition is to select two full matchings,
+or one full matching and both parts. Either choice gives
+a spanning union of disjoint cycles, and supersets also
+realize the candidate. Each other choice is contained in
+either the split matching alone or the union of a full
+matching and one part. Both subgraphs have degree at most
+two and fewer than $K$ edges, so they have a tree component
+and no component with more edges than vertices. These
+$2K-3$ maximal failing pairs give the clauses of the exact
+owner condition by taking their complements.
 
 For arbitrary singleton blocks the only enumeration is
 over the row subsets at multi-loss heads. For each of
