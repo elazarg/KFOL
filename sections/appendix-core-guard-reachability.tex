@@ -6329,7 +6329,7 @@ enumerate the generators and their rainbow tuples.
 
 With canonical prime lists this prescribed-support test is
 coNP-complete, even on core candidates with only two headed
-inputs and prime width at most four, at every fixed $K\ge3$.
+inputs and prime width at most three, at every fixed $K\ge3$.
 A failure certificate gives either a generator enabled at
 the probe or a rainbow tuple with empty intersection.
 Each nonunanimity entry can be accompanied by a loss whose
@@ -6339,7 +6339,14 @@ a minimal loss at the same owner, whose projection only
 shrinks the proposed generator.
 
 For hardness use the hypergraph two-coloring reduction above,
-whose edges have size at most four. Retain an input per vertex,
+with edges of size at most three. To reduce an edge
+$\{x,y,z,w\}$ of size four, introduce fresh vertices $u,v$
+and replace it by $\{x,y,u\}$, $\{z,w,v\}$ and $\{u,v\}$.
+If $x,y$ agree they force the opposite color at $u$, and
+if $z,w$ agree they force the opposite color at $v$.
+These constraints admit opposite colors at $u,v$ exactly
+when the four original vertices are not monochromatic.
+Retain an input per vertex,
 and use two additional heads $i,j$ at distinct loss owners
 $r,s$. At $i$ on any facet seeing $r$, list the hyperedges as
 prime exclusions posted at $r$. On the remaining facet use
@@ -6361,6 +6368,21 @@ can be made bichromatic. All other owners have only
 unanimity. Thus the support test recognizes the complement
 of the coloring problem even though the input family is core.
 
+With at most two loss owners, width two instead gives a
+polynomial prescribed-support test. A generator winning at
+the probe can be detected by restricting the allowed native
+postings to the probe block inside $H$ and allowing all native
+postings outside $H$. For a rainbow failure, first exclude
+empty projected generators by the same test with an empty
+block. Then only a disjoint pair of projected generators
+at the two loss owners can violate compatibility. For each
+pair of heads, use separate posting variables for their two
+pure losses. On a facet seeing the respective owner, require
+each prime to be hit by a native posting, using clauses of
+width at most two. For each input in $H$ forbid selecting it
+in both losses. This is $2$SAT, and any solution can be
+minimized to genuine losses without restoring intersection.
+
 \paragraph{Choosing the support for pure losses.}
 If a greatest completion on some support supplies a mark under
 pure losses, there is one that also contains every unheaded input.
@@ -6378,7 +6400,7 @@ recognition of unions of greatest completions in coNP under the
 same bounded-head and pure-loss promises.
 
 Hardness persists even with two headed inputs and width at most
-five. Modify the preceding reduction by adding one retained input
+four. Modify the preceding reduction by adding one retained input
 $z$. Keep the $r$-losses at $i$ on vertex hitting sets, and add the
 $r$-loss posting $\{j,z\}$. At $j$ require every $s$-loss to post
 $z$ in addition to its vertex hitting set. Query $i$ with only $z$
@@ -6420,6 +6442,33 @@ least profiles, with only the $s$-profile below unanimity.
 Each retained control is supplied by its projection. These
 witnesses cover the whole candidate. In the incompatible case
 the forced-support probe already fails.
+
+Width three suffices with three headed inputs. Keep the
+prescribed-support reduction with heads $i,j$ and vertex set
+$U$. At a new head $h$ use two losses at a third owner $t$,
+posting $U\cup\{i\}$ and $U\cup\{j\}$, respectively.
+The primes at $h$ are singleton exclusions of a vertex
+posting at $t$, and the pair excluding both $i:t$ and $j:t$.
+Now query $h$ with exactly $U$ posted at $t$. Every support
+must include both $i$ and $j$, since excluding either makes
+one $t$-generator a subset of the posted block. Include all
+vertices by the enlargement argument. The $t$-generators now
+contain $U$, so they introduce no new compatibility condition
+on the two hitting sets chosen at $r,s$. All generators lose
+at the probe, and the test again decides non-two-colorability.
+
+This candidate is core by the acyclic cofactor criterion.
+A loss at $i$ or $j$ posts a retained vertex at its native
+owner, disabling the two $t$-losses at $h$. A loss at $h$
+posts all vertices, so a retained input supplies $t$.
+Exact union recognition has the same hardness: in the
+compatible case full support supplies every positive at $h$
+when $U$ is posted at $t$, because the other owners have
+no posted vertices. Otherwise omit both $i,j$ and the
+sole nonunanimity generator $U$ at $t$ loses at the probe.
+At positive marks at $i$ or $j$ retain just the queried
+head and all vertices; those witnesses have a single
+nonunanimous profile. Projections supply the vertex marks.
 
 \paragraph{Complexity with unrestricted losses.}
 The constraints give a nondeterministic exponential-time upper
