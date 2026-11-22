@@ -820,6 +820,58 @@ which are ranked, owned folds, which are one-owner traces,
 and asymmetric masks, whose loss arrows all point from the
 controlled input to the controller and hence are acyclic.
 
+\paragraph{Fold unions with pure losses.}
+If every minimal loss is pure, unions of owned folds
+can be recognized and synthesized in polynomial time
+from canonical primes, with any number of loss owners.
+Ignore heads with identically zero sources. Retain an
+unheaded input by its projection. At any remaining head
+$i$, all its losses must have one common owner $r$.
+Every canonical prime $G$ at $i$ on a facet seeing $r$
+then forces the $r$-fold on $G\cup\{i\}$, erasing owner
+labels in $G$. Test each forced fold for boundedness and
+take their union with the unheaded projections when the
+tests pass.
+
+Indeed a fold covering a live headed input must use the
+owner of every loss there: at a pure loss of a different
+owner it would still supply the queried mark. A head
+with losses at different owners therefore cannot occur
+in a bounded fold. For a head with native owner $r$, the
+prime $G$ permits the maximal pure block
+$V\setminus(G\cup\{i\})$. Any bounded fold supplying this
+probe must use only $G\cup\{i\}$, and its own native prime
+must contain a candidate prime at $i$. Minimality of $G$
+forces equality of the supports. Thus each distinct fold
+listed by this rule must occur in every representation.
+Conversely the listed folds, whenever bounded, supply
+all the primes at headed inputs and the projections
+supply the rest. Require a nonempty union.
+
+The owners occurring in losses can be read by testing
+pure postings of all passive inputs, once per owner.
+Under the pure-loss promise a loss owner occurs exactly
+when that posting loses. To check a forced fold, compare
+its sole guard at each supported head and facet with the
+candidate list there. This is polynomial in the supplied
+prime lists and also verifies boundedness at any
+unheaded or discarded inputs appearing in the support.
+
+The pure-loss promise can itself be checked in polynomial
+time on canonical lists. On each facet try two postings
+$a,b$ at distinct owners and one private prime for each.
+Keep $a,b$ allowed and forbid all other postings in their
+respective private primes, rejecting inconsistent choices
+of these requirements. Test whether the remaining allowed
+set hits every prime. If so, minimize it to a transversal:
+private primes force retention of both postings, and
+canonicality makes the minimal transversal consistent.
+Conversely a mixed minimal loss has two such postings
+with private primes, and witnesses success of an allowed-set
+test. Thus precisely the lists with a mixed minimal loss
+fail the purity check.
+
+\paragraph{Fold unions with mixed losses.}
 Fold-union recognition is coNP-complete from complete
 prime lists of width at most four, even with just one
 conditional head. In particular the hardness instances
