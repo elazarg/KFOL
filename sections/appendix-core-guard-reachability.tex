@@ -2251,14 +2251,51 @@ as in the fold case. The new head's list is obtained
 from any block head by forbidding all internal
 postings, since $B$ uses every input. Thus the prime
 size bound survives this general contraction as well.
-For blocks of bounded arity one can test both
-conditions by enumerating the block's posting patterns
-on each facet and comparing the restricted exterior
-prime lists. At an inside head compare to
-$\lambda_k$ on patterns supplying the local mark and
-to the empty list on the other patterns. At an
-outside head compare to the diagonal representative
-of the block's singleton status.
+
+Outside invariance for this general block is also a
+prime grouping test. For each owner $s$, call an
+inclusion-minimal set $H\subseteq C$ that prevents the
+$s$-singleton by excluding all $s$-postings on $H$
+a blocker of the $s$-profile. Equivalently the
+profile loses on $C\setminus H$. These blockers are
+read directly from the block guards. Choose any
+observer $k\ne s$, and for every block head $i$ and
+prime $G$ on that facet take
+\[
+        \{i\}\cup\{v:v{:}s\in G\}.
+\]
+The inclusion minima of these sets are exactly the
+blockers. Indeed when precisely the inputs outside
+$H$ are posted at $s$, the only possible singleton
+is $s$. Its absence means that some unposted head
+$i\in H$ supplies a mark. This is equivalent to a
+prime at $i$ whose $s$-exclusions all lie in $H$.
+All its other exclusions hold automatically.
+
+At an outside head, the portion of a prime on
+$C$ at each visible owner $s$ must be empty or be
+an $s$-blocker. Group primes by the exterior
+exclusions and the set $A$ of owners they block.
+The group size must equal the product of the
+numbers of blockers at the owners in $A$.
+These conditions are necessary because the possible
+statuses under a guard are the unposted status
+and exactly the singletons it does not block.
+To witness a singleton, post all its allowed inputs
+at that owner and leave the others unposted. Thus
+under outside invariance any nonminimal exclusions
+can be removed, and replacing a blocker by any
+other one at the same owner preserves sufficiency
+and minimality. Conversely, the product count
+ensures that a group contains all blocker
+combinations. A coloring avoids producing a given
+singleton exactly when its unposted-at-that-owner
+inputs contain a blocker, by monotonicity of the
+profile. The union of the group's prime boxes
+therefore gives precisely its exterior guard with
+all statuses in $A$ excluded. This proves invariance.
+The test is polynomial in the original and block
+prime lists, with no bound on block arity or palette.
 
 The block operation itself is forced whenever the
 candidate supplies every block input at the neutral
