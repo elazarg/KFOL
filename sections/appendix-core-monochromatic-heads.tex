@@ -2803,39 +2803,79 @@ background erasure. Conversely the block realizers
 can be unioned. The required owners are therefore
 $b,d$ together with a vertex cover, giving the reduction.
 
-For a properly edge-colored complete graph on $n\ge3$
-inputs, suppose each vertex misses some palette owner.
-Take the union of its binary edge folds. A selection
-realizes this candidate exactly if its spanning subgraph
-has a component with more edges than vertices, or has
-no tree component. Isolated vertices count as trees.
+For a properly edge-colored simple graph, suppose each
+vertex misses some palette owner. Take the union of its
+binary edge folds and fix a selection of owners. The
+loss row at a nonisolated vertex records the labels on
+its incident edges. The following component criterion
+eliminates prime-box matching in this class.
 
-Indeed, a blocked set at a missed positive probe has
-at least two vertices. Any outside vertex would receive
-different posting demands from two vertices in the set.
-Thus the blocked set must be the whole graph. The selected
-monochromatic cycles are precisely the reciprocal pairs
-on selected edges. A probe hitting them assigns each
-edge to a distinct endpoint, with the queried vertex
-unavailable. A component with more edges than vertices
-prevents such an assignment at every query, and a
-component containing the queried vertex needs strictly
-fewer edges than vertices. In the absence of a tree
-component this is impossible.
+For each ordered edge $ij$ at an unselected owner and
+each missing probe owner $k$, start $H$ at ${i,j}$.
+Repeatedly add outside vertices having two neighbors
+in $H$ or joined to $H$ by a $k$-edge. Write $D$ for
+the spanning subgraph on the resulting $H$ consisting
+of its internal edges at selected owners. The selection
+fails exact realization if and only if some such choice
+has all three properties:
+\begin{itemize}
+\item $D$ has no edge at $k$.
+\item Each component of $D$ has at most as many edges as vertices.
+\item The component of $i$ in $D$ is a tree, possibly isolated.
+\end{itemize}
 
-Conversely, suppose each component has at most as many
-edges as vertices and some component is a tree. Query
-at a vertex of degree at most one in that tree. Root
-it at the query and root any other trees arbitrarily.
-Assign each tree edge to its child. In a unicyclic
-component assign each cycle edge to its next vertex in
-cyclic order and each off-cycle edge to its child away
-from the cycle. Post assigned vertices at the labels of
-their edges. Some label is unselected because the whole
-complete graph has no tree component, so the probe is
-proper. It is positive because an edge at the queried
-vertex is unselected, and it hits every selected cycle.
-All inputs have heads, so saturation misses this mark.
+To see necessity, take the blocked set of a missed
+positive query at $i$ and a missing owner $k$ at that
+probe. Every boundary edge demands its label at its
+outside endpoint. Two neighbors inside would demand
+distinct labels, and no boundary edge can demand $k$.
+The selected monochromatic cycles are precisely the
+reciprocal pairs on edges, so each selected internal
+edge needs a distinct posted endpoint. The query
+vertex is unavailable. A disagreeing posting in the
+row of $i$ therefore gives an unselected edge $ij$
+inside the blocked set. The forced set $H$ lies within
+that set. Restricting the edge-to-endpoint assignment
+to $D$ gives the three properties by counting within
+each component.
+
+Conversely those properties give an assignment of
+each edge of $D$ to a distinct endpoint other than
+$i$. Root its tree at $i$ and root each other tree
+arbitrarily, assigning every edge to its child.
+In each unicyclic component assign every cycle edge
+to its next vertex in cyclic order and assign the
+remaining edges to children away from the cycle.
+Post the assigned vertices at the corresponding
+labels and post each boundary endpoint outside $H$
+at its unique required label. These postings omit $k$,
+and the row at $i$ disagrees at $j$ because the edge
+label of $ij$ is unselected and $j$ is inside $H$.
+Every vertex in $H$ has a row, since it lies on the
+initial edge or was forced by an incident edge.
+There is no unheaded seed in $H$, and every selected
+cycle meeting $H$ is hit by a boundary or internal
+posting. The singleton-block saturation test
+therefore misses this positive.
+
+An edge lying in no triangle forces its owner in every
+realizing selection. If that owner is unselected, use it
+as $k$ and start at the edge. Neither endpoint has a
+second edge at $k$, and no common neighbor is available
+to enlarge $H$. Then $D$ consists of two isolated vertices.
+In particular, for triangle-free graphs the least realizing
+selection is exactly the set of owners appearing on edges.
+
+For a complete graph on at least three vertices, the
+closure is always the whole graph. An owner selection
+then realizes the candidate exactly if its spanning
+subgraph has a component with more edges than vertices
+or has no tree component. In the complementary case,
+choose $i$ of degree at most one in a tree component
+and take an unselected incident edge $ij$. An
+unselected label exists because the complete graph
+has no tree component. Use any unselected label as $k$
+in the criterion.
 
 More generally, exact owner selection realizes any monotone
 CNF with nonempty clauses, after adjoining two mandatory
