@@ -2043,6 +2043,50 @@ no monochromatic cycle: the ranked survivor lemma
 makes projection deletion exact, even when the
 graph has cycles using several owners.
 
+For several rows per head, a bounded incidence width
+also suffices to optimize guards. Use the graph with
+one vertex per input and one per listed row. A row
+is joined to its head and to every posted input,
+with the posting owner on the corresponding edge.
+Assume the posting graph has no monochromatic cycle.
+On a fixed observer facet a guard fails exactly when
+there is a set $U$ containing the queried head and
+a choice of blocking rows covering $U$. Each chosen
+row has its head in $U$, and its exterior postings
+agree with a coloring outside $U$ that respects the
+guard and omits the observer. Such rows prevent a
+first availability addition inside $U$. Conversely,
+if projection deletion fails, its unavailable set
+has such rows under the counterexample coloring.
+
+For a fixed guard, test this certificate on a tree
+decomposition. At input vertices store membership in
+$U$, the exterior status, and a bit saying whether a
+chosen row for this head has been encountered. At row
+vertices store whether the row is chosen. Process
+the typed edges locally: a chosen row requires its
+head in $U$, and any exterior input it posts must
+match the edge's owner. At each input forbid statuses
+excluded by the guard. At forgetting, check coverage
+of each input in $U$. This uses $(K+2)^{O(w+1)}$
+boundary states at width $w$.
+
+To optimize the guard, keep its chosen flags on the
+bag and the set of all feasible certificate states
+for the guarded subinstance. For each such table
+entry store the least cost on forgotten inputs.
+For fixed flags the set of feasible states is updated
+deterministically: introduce and forget by extension
+and projection, and join by compatible pairs of child
+states. When choosing guard flags, keep alternatives
+as different entries until their state sets coincide.
+Charge a flag when its input is forgotten. At the
+root require the empty certificate set. This gives
+an exact minimum-cost guard in
+$2^{(K+2)^{O(w+1)}}N^{O(1)}$ time from a supplied
+decomposition, for explicitly listed rows of total
+size $N$.
+
 In this class the stable availability set also gives a
 partition of the full-palette colorings into boxes. Write
 $A(p)$ for the available inputs at a consistent coloring
