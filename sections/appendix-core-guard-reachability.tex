@@ -2633,6 +2633,39 @@ are given and have size at most two. At prime width
 three, the preceding reduction from 3-SAT gives
 NP-completeness already for binary union blocks.
 
+At width two, enlarging the blocks from binary to
+ternary already makes the loss test NP-complete.
+Take a 3-CNF with three literal occurrences per
+clause. Use one binary union block for each variable,
+with its two ports representing its two literals.
+Use one ternary union block per clause, with a port
+for each literal occurrence. At a single outside
+head put a guard on each variable pair. For each
+clause occurrence put a guard consisting of its
+occurrence port and its literal port in the
+corresponding variable block. Use one posting
+owner $r$ throughout these guards, taking the
+inclusion minima on the facets showing $r$ and
+the empty guard on the remaining facet. Retain
+all block inputs. The original candidate is core
+by the same single-head construction.
+
+Test the completely unposted quotient probe at the
+outside head. A contributing loss must choose
+exactly one literal port per variable, since it
+hits the pair guard and must leave the variable
+block ambiguous. When a clause literal is false
+under that choice, the corresponding occurrence
+port is forced by its guard. The ternary block
+can stay ambiguous exactly when some literal is
+true, since then its occurrence port may be left
+unposted. Thus the test succeeds exactly for
+satisfiable inputs. If only ternary blocks are
+desired, pad each variable pair with a third
+port and add a unit guard requiring that port
+in the loss. Ambiguity still permits only one
+of the other two ports.
+
 The 2-SAT formulation also gives a canonical prime
 list for an exterior slice with all quotient block
 statuses fixed. Leave the permitted exterior
