@@ -2669,6 +2669,45 @@ the failing probe yields a matching for them. This expresses
 the necessary fold owners entirely in terms of the canonical
 guard boxes and the cycle graphs.
 
+The guard test reduces to component counts whenever each
+permitted input lies on at most two of the selected cycles
+in a box. Use the selected cycles as vertices of a
+multigraph. An input permitted on two cycles gives an
+edge between them, and an input permitted on one cycle
+gives an edge incident only to that vertex. Ignore other
+inputs. The box requires a fold seed exactly when some
+connected component has fewer edges than vertices,
+counting the one-ended edges as well.
+
+Indeed, hitting each cycle with a distinct input assigns
+each vertex a distinct incident edge. This requires at
+least as many edges as vertices in each component. For
+sufficiency, take a spanning tree of the ordinary edges.
+If there is a one-ended edge, assign it to its vertex and
+assign the tree edges to their children away from that
+vertex. Otherwise there is an ordinary edge outside the
+tree. Together with the tree it forms a single cycle
+(possibly two parallel edges). Assign its edges around
+the cycle and the remaining tree edges to children away
+from it. These assignments cover every vertex.
+
+In particular this gives a component criterion directly
+on the canonical prime boxes for all one-loss candidates
+with singleton owner blocks at $K=3$. A selected cycle
+at the missing owner settles the box immediately, since
+it has no permitted vertex. Otherwise at most two owners
+contribute cycles, and within each owner the cycles are
+disjoint. Thus each permitted input contributes at most
+two incidences. This count also applies when the two
+selected owners have cycles of different lengths or
+their cycles overlap at multiple inputs.
+For complete recognition with several losses per head at
+$K=3$, the same count replaces matching for each fixed
+choice of allowed rows. Use the required sink components
+as vertices in place of cycles. A required component at
+the missing owner has no permissible input, and the
+components at each visible owner are still disjoint.
+
 Neutral owner requirements can be much weaker than this
 exact test. In the three-colored triangle, any one of its
 three edge owners supplies every neutral mark, by the
