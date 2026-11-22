@@ -10234,3 +10234,50 @@ Each node uses polynomial work on the listed
 rows. This gives polynomial-time marked
 interpolation for fixed $b$ without bounding
 the length of the chain.
+
+For a single chain, the flag algorithm also runs
+directly on complete prime lists without expanding
+the losses. It works after projecting to a block
+containing all negative heads, with the retained
+ground fixed by the query as in the background
+restriction. In each recursive test store the allowed
+posting ground and, if any chain branch has occurred,
+the smallest block it has forbidden. A fold deletion
+only restricts the ground. The branch deletions forbid
+containment of their chosen blocks; because the
+blocks are nested, the smallest forbidden block
+subsumes every earlier restriction. To search the
+current rows, try omitting one posting from that
+block and search the resulting ground.
+
+In each such ground, the ordinary prime-hit and
+private-prime tests recover the heads, empty tails,
+and singleton edges for the fold rules. At the
+repeated owner, a head is also a seed if some row
+there has two distinct internal postings at that
+owner. Test this by pinning both postings with
+private primes. To recover the largest remaining
+repeated block, collect every internal posting at
+that owner that can occur in a row with another
+posting at the same owner. This union is the largest
+block since the remaining repeated blocks form a
+finite chain. The same pair tests find the union
+using only polynomially many scans. Thus all
+operations of the polynomial flag algorithm can
+be performed symbolically, even with variable
+$K$ and arbitrary prime width.
+
+The chain hypothesis itself is checkable on the
+initial projected budget. Test for a repeated
+pair at each owner. If repetitions occur at only
+one owner, a violation of nesting consists of two
+repeated rows with a posting in each that is absent
+from the other. Guess those two distinguishing
+postings and one further posting per repeated
+row. Use independent private-prime tests for the
+two rows, forbidding the opposite distinguishing
+posting in each. This detects exactly the presence
+of incomparable blocks. In all tests, if a
+background has been fixed, restrict the exterior
+ground to that background and count only internal
+postings when measuring the tails.
