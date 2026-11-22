@@ -2485,8 +2485,90 @@ to ordinary core recognition, since the canonical
 loss graph itself has no monochromatic cycle.
 Apply \cref{core:thm:complete-acyclic-guard-complexity}.
 
-Such a presentation preserves directed reachability
-on the input names. Take its rows to be canonical
+\paragraph{Ranked quotients of disjoint folds.}
+The prime test extends to compositions of a ranked
+quotient with owned folds on disjoint input blocks.
+Here a ranked quotient is a core operation admitting
+a loss presentation without monochromatic cycles.
+Each input of the quotient is replaced by one fold
+on its block, with an independently chosen owner.
+Singleton blocks are projections.
+
+For a specified partition, recover the quotient by
+identifying the inputs within each block. Folds
+are idempotent, so this diagonal recovers the only
+possible quotient. Its prime list at a block $B$ and
+observer $k$ is obtained from the lists at all members
+of $B$: erase flags on $B$, identify remaining input
+names within each block, and minimize the union of
+the resulting guards. Indeed every member of the
+queried block can supply the mark, and the other
+members of that block are neutral on their respective
+source tests. Diagonal postings on the other blocks
+are exactly the identified flags. Source reconstruction
+therefore also holds for this diagonal operation.
+
+To check the composition formula, lift these quotient
+primes back to the original names. At a source $i$
+in $B$ with fold owner $r_B\ne k$, include the
+exclusion of $r_B$ at every other member of $B$;
+if $r_B=k$ this requirement is empty. This keeps
+the mark through its own fold. For an exclusion of
+$s$ at another block $C$, if $s=r_C$ exclude $s$
+at every member of $C$. If $s\ne r_C$, choose one
+member and exclude $s$ there. These rules are exact:
+the fold is singleton at its owner if some member
+posts that owner, and singleton at a foreign owner
+only if all its members post there. Every block
+posting not excluded by these rules can be realized
+independently, and neutral block status is always
+possible. Thus a sufficient guard must keep the
+local mark and enable one quotient prime.
+
+The lifted products are canonical. Distinct quotient
+exclusions use disjoint posting alphabets indexed by
+block and owner, and each lifted exclusion contributes
+a nonempty set. Thus containment between lifted guards
+requires containment of their quotient primes. Within
+one product the choices are all incomparable. Count
+the products for each quotient prime, and compare
+their sum with the supplied list length at $i,k$.
+If the lengths agree, enumerate just that many
+products and compare the lists. This verifies the
+composition in polynomial time without an intermediate
+expansion. The prime-only ranked test applies to
+the recovered quotient.
+
+On live inputs the partition and its nonsingleton
+fold owners are forced. Within a fold block at $r$,
+each pair has reciprocal singleton losses at $r$,
+and no such pair at another owner. Across blocks,
+a singleton posting at $r$ either leaves its block
+neutral or makes it singleton at $r$. If it causes
+a foreign block's source to lose, the corresponding
+quotient singleton loss must hold. Reciprocal losses
+at $r$ across blocks would therefore give a
+monochromatic singleton cycle in the quotient,
+which the availability boxes rule out. Hence the
+reciprocal singleton pairs determine exactly the
+nonsingleton blocks and their colors. Read them from
+the primes and reject unless they are disjoint
+complete graphs with one owner each. Inputs with no
+pair form singleton blocks. Unused inputs can first
+be discarded after checking their inessentiality
+by absence of all their flags in other prime lists.
+
+This gives coNP recognition of the class without a
+supplied partition. It is coNP-hard at each fixed
+$K\ge3$ by acyclic recognition, where there are no
+reciprocal pairs and only the quotient test is needed.
+The class strictly includes ranked operations:
+even a two-input owned fold has reciprocal singleton
+losses that preclude a ranked presentation on its
+original inputs.
+
+A presentation without monochromatic cycles preserves
+directed reachability on the input names. Take its rows to be canonical
 candidate losses, as above. Their posting graph is a
 subgraph of the candidate graph. Conversely the
 availability bit at a head can read the status of an
