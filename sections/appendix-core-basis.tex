@@ -2987,9 +2987,10 @@ winning pairs $xy,zu$ would together have at least twice
 the quota, while the two disjoint losing pairs $xz,yu$
 cover the same inputs with strictly less weight.
 
-The root test certifies eight classes of five-input
+On five inputs, there are exactly eight classes of
 restriction-minimal obstructions up to relabeling and
-duality. The representatives below list their minimal
+duality. Every other failure restricts to the four-vertex
+path. The representatives below list their minimal
 winners, using juxtaposition for a set of input names:
 \[
 \begin{array}{l}
@@ -3006,14 +3007,22 @@ yzu,\ xzv,\ yzv,\ uv
 The finite computation in \path{scripts/check_pivot_obstructions.py}
 enumerates antichains of nonempty subsets of the five inputs:
 at each subset it may omit it, or include it and remove all
-comparable subsets from the remaining choices. It discards
-profiles with an inessential input or a path restriction,
-and tests both root owners by the local maximal-loser rule.
-It identifies relabelings and duals and returns exactly
-the displayed classes. The four-input classification makes
-each failure minimal. This enumerates the obstructions
-certified by the root test; profiles that pass that test
-are not decided by the computation.
+comparable subsets from the remaining choices. It certifies
+failure by either a path restriction or, for essential
+five-input profiles, the obstruction at both roots.
+The four-input classification makes each of the eight
+displayed failures minimal.
+
+For realization, start with projections. For each profile
+$f$, collect all already realized profiles $h\leq f$ closed
+under its dropping rules. If their disjunction is $f$, the
+root construction realizes its envelope; add both $f$ and
+its dual to the collection. Iterate to stability. This
+certifies 4075 labeled nonconstant profiles, while the
+obstruction tests certify 3504. The code checks that the
+sets are disjoint and exhaust the 7579 nonconstant profiles,
+including those with inessential inputs. Thus on five inputs
+the constructive and obstructive tests suffice together.
 
 \begin{lemma}[A mandatory linear source]\label{core:lem:mandatory-linear-source}
 Suppose a choice/union word $T$ uses $j$ at most once, and for some
