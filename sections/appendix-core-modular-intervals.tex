@@ -3022,6 +3022,43 @@ preserve meets. For arbitrary $m$, feasibility of every
 bounded-size subfamily cannot guarantee joint feasibility,
 even with just one old proper loss.
 
+Deciding whether a list of injective full losses is
+compatible with an old operation having just one proper
+loss is coNP-complete. For the upper bound, a failure
+has a proper old positive that the combined rows block.
+Guess that query and use injective reachability; if none
+fails, union the witnesses for all old positives and
+erase fresh-owner gates as above.
+
+For hardness, modify the preceding chain to have an
+initial head $x_0$, one head per clause of a $3$CNF,
+and a last full-row head before $z$. Keep the initial
+and last full rows and the old loss at $z$ as above.
+At each clause head give one alternative row per literal.
+It posts the next head at $r$ and gives the same
+non-$r$ anchor postings, except that a positive literal
+at variable $v$ replaces the $a$-anchor by $v{:}a$,
+and a negative literal replaces the $b$-anchor by $v{:}b$.
+The variable inputs are retained.
+
+Any blocking subset for an old positive contains a
+full row. If it contains an initial or clause row,
+its unheaded tails force seeds at every owner except
+$r$, so the proper query has no $r$-seed. The $r$-tails
+then force the remaining chain through the last row
+and $z$. Their conflicting $a,b$ tails at $x_0$ force
+the initial row, and hence all clause heads. A subset
+using only the last full row is impossible by the same
+conflicting-seed argument as before. Each chosen clause
+row requires a retained variable posted with its literal's
+truth value, so consistency supplies a satisfying assignment.
+Conversely a model chooses one such row per clause and
+seeds the variables and anchors on the proper query at
+$x_0$. The entire selected chain blocks that query by
+the same reachability argument. Thus compatibility is
+equivalent to unsatisfiability. All rows remain injective
+and the reduction works for every fixed $K\ge3$.
+
 There is a full description when one distinguished source
 $x$ can vary and every passive input is retained. Every
 antitone extension of its old predicate from proper to
