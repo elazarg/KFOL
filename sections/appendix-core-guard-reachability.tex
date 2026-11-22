@@ -5938,7 +5938,8 @@ incompatibility tuple for its replacement. All other owners
 miss the probe whenever their replacement exists. A failed
 union always provides such a certificate.
 
-For three owners this union recognition is coNP-complete.
+This union recognition is coNP-complete for every fixed
+$K\ge3$. First take three owners.
 Take the hypergraph above on a set $U$, requiring at least
 one edge and at least two vertices per edge. Add a fresh
 input $d$, set $M=U\cup\{d\}$, and add $a,b$ as before.
@@ -5972,6 +5973,43 @@ If $r$ is not viable, only $s$ remains. Its mandatory set
 is proper and losing, since the hypergraph has an edge.
 Its replacement alone misses a positive mark. This is the
 claimed reduction.
+
+For a larger palette keep the three profiles on the original
+inputs and add a private block $B_u$ of size $K$ for each
+additional owner $u$. At $r,s$ require all new blocks in
+addition to the original tests. At $t$ require at least
+$K-1$ inputs of each new block in addition to its original
+test. At a new owner $u$ require either all original inputs
+or all of $B_u$, and at least $K-1$ inputs of every other
+new block.
+
+If some new owner takes its whole private block, the other
+owners omit at most one input each there, so the rainbow
+tuple has a common input in that block. This argument also
+works with the principal replacement at $r$ or $s$, since
+their mandatory sets include every new block. If no new
+owner takes its whole block, every new owner includes all
+original inputs, and common source reduces to the three-owner
+test. Thus the enlarged target is compatible, and $s$ is
+still viable. An incompatibility witness for the original
+$r$ replacement extends by letting every new owner take
+all original inputs and omit its own block. This removes
+every new block from the common intersection. Hence $r$
+is viable exactly as before.
+
+The mandatory sets at $t$ and all new owners are empty:
+the all-but-one thresholds force no individual input, and
+the two alternatives at a new owner have disjoint required
+sets. Thus no extra replacement is viable. At $r,s$ the
+mandatory sets gain all the new blocks and still intersect,
+and the $s$ mandatory set remains proper and losing.
+The same union criterion therefore gives the reduction.
+Each all-but-one threshold is a positive CNF with one
+clause per pair of block inputs. The two unanimity
+alternatives at a new owner give one clause per pair
+consisting of an original input and a private-block input.
+Thus the canonical prime lists remain polynomial in size
+for every fixed palette.
 
 \paragraph{Several generators per owner.}
 More generally, suppose the profiles of a greatest completion
