@@ -8319,6 +8319,42 @@ realizability. This tests the entire class of controllers with
 the stated support bound and isolates the global loss constraints
 from their local term operations.
 
+When the prescribed support varies, deciding whether a minimal
+loss contains a specified set of postings is NP-complete even
+at prime width two, with one headed input and one posting owner.
+This holds for families already known to be realizable.
+Membership follows by guessing the loss and checking that it
+hits every prime, with a private prime at every posting.
+
+Reduce from graph three-colorability. Use a required posting
+$a_v$ for each vertex $v$ and a posting $t_{v,c}$ for each
+choice of vertex color $c\in\{1,2,3\}$. These are different
+inputs posted at one owner $r$; the graph colors are choice
+indices, not posting owners. At a fresh head prescribe the
+two-element primes
+\[
+ \{a_v,t_{v,c}\}\quad(v,c),\qquad
+ \{t_{v,c},t_{w,c}\}\quad(vw\text{ an edge},\ c\in\{1,2,3\}).
+\]
+The requested restriction posts every $a_v$. In a minimal
+loss containing all of them, each $a_v$ needs a private prime
+and thus some absent token $t_{v,c}$. Choose one absent token
+per vertex. No edge can have both endpoint tokens of the same
+color absent, by the second kind of prime, so the choices
+color the graph. Conversely a coloring allows one to omit its
+chosen tokens and take all remaining postings. This hits all
+primes, and minimization retains each $a_v$ by its private
+prime against the omitted token.
+
+The displayed primes are distinct and incomparable, and all
+postings have the same owner, so they are canonical on every
+facet exposing $r$. The facet hiding $r$ has the empty
+exclusion as its sole prime. To realize the family, for each
+displayed prime mask the head's projection with its two
+retained inputs at $r$, and take the union over these words
+and all retained projections. Thus the hardness comes from
+projecting the minimal losses, even for a simple core family.
+
 A controller can also rely on the initial projection to absorb
 its contribution on another head's loss. Keep the two singleton
 requirements at its posting $j{:}r$, and still require its
