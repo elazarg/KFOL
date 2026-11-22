@@ -7404,31 +7404,42 @@ its endpoints can have different foreign postings in one
 minimal loss. The private-prime test below checks each
 such pair in polynomial time.
 
-For a strict example, choose distinct owners $r,a,b$ and put
+A construction realizes mixed-foreign losses over any
+one-owner trace $B$. Write $B$ as a union of native $r$-folds
+on its live support, and let $H_x$ be the union of the folds
+containing $x$. Choose a nonempty set $J$ of inputs and a
+foreign owner $a_x$ at each $x\in J$. With a fresh input $w$,
+take the term
 \[
- H_x=(x\star_r y)+(x\star_r v),\qquad
- H_z=(z\star_r y)+(z\star_r v),\qquad B=H_x+H_z.
+ B+\sum_{x\in J}((w\star_{a_x}x)\star_r H_x).
 \]
-Add a fresh input $w$ and take the core word
-\[
- B+((w\star_a x)\star_r H_x)
-   +((w\star_b z)\star_r H_z).
-\]
-The $x$ branch adds only winners from $w$ to $B$: if $H_x$
-is atomic at $r$ the branch returns $H_x$, and otherwise
-$H_x$ contains the menu of $x$. The branch adds the menu of
-$w$ except when $x$ is $a$-atomic or $H_x$ is $r$-atomic.
-The latter happens exactly when $x$ is $r$-atomic or both
-$y,v$ are $r$-atomic. The same calculation applies to the
-$z$ branch. Thus the original four heads keep their
-coefficients from $B$, whose native dependency graph is a
-four-cycle: a head loses exactly when both neighbors are
-posted at $r$. The minimal losses at $w$ are
+If $H_x$ is $r$-atomic, its branch returns $H_x$.
+Otherwise one of its folds does not absorb at $r$, so $H_x$
+contains the menu of $x$. The branch then adds the menu
+of $w$ to the baseline whenever $x$ is not $a_x$-atomic.
+Thus the term preserves all the original coefficients.
+For a coloring with native block $A$, its source at $w$
+loses exactly when every $x\in J$ is posted at $a_x$
+or belongs to $c(A)$, the native closure of $B$.
+Indeed $H_x$ is $r$-atomic exactly when $A$ meets
+every fold support containing $x$, which is the test for
+$x\in c(A)$. In particular the proper coloring posting
+exactly the selected controls at their foreign owners
+is a minimal loss, since $c(\varnothing)=\varnothing$
+on the live support.
+
+For a strict example let $B$ be the union of the native
+folds on the edges of the four-cycle $x,y,z,v,x$.
+Each head's sole loss posts both neighbors at $r$.
+Choose $J=\{x,z\}$ and distinct foreign owners $a,b$
+respectively. The new head has the minimal loss
 $\{y{:}r,v{:}r\}$ and the four pairs
 $\{x{:}s,z{:}t\}$ with $s\in\{a,r\}$ and $t\in\{b,r\}$.
-In particular the loss $\{x{:}a,z{:}b\}$ uses two foreign
-owners in the same strongly connected component, at
-nonadjacent inputs. All losses pass the adjacency condition.
+The pair $\{x{:}a,z{:}b\}$ uses two foreign owners within
+the same component, at nonadjacent inputs. All losses
+pass the adjacency condition. Choosing adjacent controls
+instead also gives a core word, with a loss that fails
+that sufficient graph condition.
 
 For a closed set $H$ in a native coefficient, the separate
 spanning tests imply the joint test for every consistent
