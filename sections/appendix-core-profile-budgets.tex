@@ -390,6 +390,40 @@ does not need to enumerate original losses
 or require the quotient itself to have small
 prime width.
 
+If all quotient heads except one are retained,
+the width-two test also synthesizes the quotient
+bound by a polynomial-size core circuit. For each
+choice of original head, observer and carrier prime,
+keep the corresponding $2$SAT formula symbolic.
+A prohibited quotient posting enables its negative
+clauses exactly when that posting is absent on
+the query. All other clauses are unconditional.
+Thus each implication edge is unconditional or
+is enabled by one quotient posting absence.
+
+Use the implication-path filters for partition
+quotients described in the block-activation
+appendix. A labeled edge tests absence by
+attaching the corresponding retained projection
+at its owner. Union incoming paths at each vertex,
+unrolling to the number of literals, to compute
+reachability filters by a circuit. For each literal
+compose the filters in the two opposite directions
+to its negation and union over literals. This
+tests unsatisfiability of the enabled constraints.
+An enabled empty clause gives an additional
+immediate unsatisfiability test. Compose the
+unsatisfiability filters across the carrier
+choices. A head mark survives exactly when no
+projected loss is contained in the query.
+Applying this filter to the head projection and
+adjoining the retained projections gives the
+greatest quotient, or zero if no projection
+can be used. The argument only uses the
+substituted singleton profiles and carrier
+primes, so it also handles overlapping
+substitutions.
+
 The projected prime width can be unbounded
 even in this polynomial case. Fix owner $a$
 and use retained pairs $t_j,f_j$ for $1\le j\le m$.
