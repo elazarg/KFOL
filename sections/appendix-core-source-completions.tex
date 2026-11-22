@@ -325,6 +325,51 @@ listed prime, without constructing the primes of the meet.
 For ordinary core realizability also require a nonempty prime
 list at some head and observer.
 
+For arbitrary incoming owners, a closure and a matching test
+decide whether a guard admits a losing coloring. Fix the queried
+head $i$, observer $k$, and guard $G$. A posting is permitted
+if its input is not $i$, its owner is not $k$, and $G$ does
+not exclude it. Start a set $S$ with $i$ and close it under
+these implications:
+\begin{itemize}
+\item If an arrow starts in $S$ and its target posting is
+forbidden, put its target in $S$.
+\item If arrows of different owners start in $S$ and have
+the same target, put that target in $S$.
+\end{itemize}
+There is a losing coloring satisfying $G$ exactly when every
+vertex in the least such $S$ has a row and its internal
+monochromatic cycles can be matched to distinct vertices.
+A cycle may be matched only to one of its vertices where
+its owner is a permitted posting.
+
+To prove this, consider any row subset witnessing a loss by
+\cref{core:thm:injective-blockers}. A tail outside the subset
+must be seeded at every owner required by an arrow from the
+subset. This forces both closure implications, so the subset
+contains $S$. Each monochromatic cycle inside $S$ must receive
+a seed at one of its own vertices: at that owner each cycle
+vertex has just one incoming edge in the theorem's reversed
+graph, from its predecessor on the cycle. Distinct cycles
+of one owner are disjoint since the posting arrows at that
+owner are functional. Cycles of different owners cannot use
+the same seed since a vertex has at most one posting. This
+gives the necessary matching.
+
+Conversely, post the outside targets of arrows from $S$ at
+their required owners. Closure ensures their required postings
+are permitted and agree. Post the matched vertices inside $S$
+at their matched owners, leaving every other input unposted.
+In each owner graph, following posting arrows from a head of
+$S$ either reaches a seeded outside target, ends at a head
+without that owner, or reaches an internal cycle with a seed.
+Reversing the paths gives reachability of all tails from the
+seeds required by the theorem. Thus the rows of $S$ force
+the queried loss on this coloring. In particular, polynomial
+recognition from the original prime lists extends to arbitrary
+incoming owners by applying this test to each listed prime:
+the family is exact precisely when none admits a losing coloring.
+
 This yields exponential prime growth under taking the core meet
 even with two posting owners and one row per head. Start with a
 head $i$ and then $d$ layers of two inputs each, labeled $a,b$.
