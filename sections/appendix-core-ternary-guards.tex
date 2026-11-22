@@ -2536,6 +2536,55 @@ give a lower bound on the maximum width even in
 this case, since minimizing a product never removes
 any of its flags outside $D$.
 
+In general, counting the distinct primes on one facet
+is \#P-complete under polynomial-time Turing reductions,
+even when all relative products are canonical. Membership
+follows by guessing a guard and testing sufficiency and
+all its single deletions. For hardness take a 3CNF on $n$
+variables with no repeated variable within a clause.
+Use one owner per variable and an additional observer
+$k$. Include a head $h$, a common input $z$, and $t$
+distinct private inputs for each truth value of each
+variable. In the profiles of $P$, a variable owner
+requires $z$ and all its own private inputs. Other
+owners require unanimity. These profiles have common
+source at $z$ and their greatest completion is core.
+
+At $h$ on facet $k$, a prime of $P$ chooses one
+singleton exclusion per variable owner, either $z$
+or one of the $2t$ truth-value inputs. For $B$ give
+$h$ the prime guards that specify a falsifying
+assignment for any formula clause, choosing one
+private posting at the corresponding truth value
+for each of its variables. Include every choice
+of the $t$ copies. Obtain the lists on other facets
+by deleting exclusions at the missing owner and
+minimizing. Each private input is excluded only at
+its variable owner, so all the minimal losses are
+consistent. Retain all heads other than $h$.
+This is an exact acyclic core bound: its loss
+postings are on retained inputs, which supply
+their posted colors independently of $h$.
+
+At the marked facet, fixing a prime of $B$ supplies
+one complete factor for every owner it uses. Hence
+every relative product chooses exactly one flag
+per owner and is canonical. The distinct outputs
+are precisely the choices that falsify a clause
+using only recorded truth values. Choosing $z$
+at an owner leaves that variable unassigned. The
+count is a polynomial in $t$ of degree at most $n$:
+each partial assignment falsifying a clause contributes
+$t^s$ if it assigns $s$ variables. Its leading
+coefficient in degree $n$ counts the unsatisfying
+total assignments. Evaluations at $n+1$ distinct
+positive values of $t$ recover this coefficient
+by interpolation. Each supplied prime list of $B$
+has polynomial size, since a clause has at most
+three variables, and $P$ is supplied by its profile
+clauses. This establishes hardness for the formal
+intersection of two core operations.
+
 For the greatest profile completions with only one owner
 $r$ allowed to win below unanimity, fitting a sample and
 a marked query has an exact support test. On a nonempty
