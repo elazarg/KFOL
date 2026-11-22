@@ -85,6 +85,20 @@ The profile theorem and greatest-completion construction realize
 the operation when the two tests pass.
 In particular the second test can be made by comparing the
 candidate lists with the extracted canonical lists.
+This comparison is polynomial even with a variable palette
+and arbitrary width. At each head and facet the number of
+formal primes is the product of the sizes of the restricted
+lists at its visible labels. The empty product gives one
+empty prime. Distinct choices cannot coincide or dominate
+one another, since the owner alphabets are disjoint and
+each list is an antichain. Multiply the list sizes, stopping
+if the product exceeds the number of supplied primes at
+that head and facet. A count mismatch rules out equality.
+Otherwise enumerate at most the supplied number of primes
+and compare the two lists. The common-source test is thus
+the only possible superpolynomial part of greatest-profile
+recognition on complete canonical data. In particular
+recognition lies in coNP uniformly in the palette and width.
 
 Both failures have compact certificates in the complete prime
 lists. For common source, give one spanning coalition per owner
@@ -432,18 +446,20 @@ clauses on the Boolean choices. A satisfying assignment
 gives empty common intersection, and every empty common
 intersection gives such an assignment.
 
-The check that all losses are explained by singleton
-profiles is also uniform here. Compute the restricted
-minimized clauses of each profile at each head. The
-maximum width of the formal completion on a facet is
-the sum of the maximum clause sizes at its visible
-labels, by the product description. If the sum exceeds
-two anywhere, the formal completion cannot equal the
-candidate. Otherwise each product involves at most two
-nontrivial lists, so it can be explicitly compared with
-the candidate's canonical primes in polynomial time.
 The same common-source test applies to any specified
-trial support using the filtered clauses above.
+trial support using the filtered clauses above. More
+generally, the two-label 2SAT test applies at arbitrary
+prime width when, after fixing single-label inputs,
+each remaining input has at most two labels and each
+remaining forbidden clause involves at most two inputs.
+In forming the reduced clauses, discard a clause as
+soon as one of its inputs cannot omit its owner, and
+erase any input forced to omit that owner. This
+criterion and the list comparison above give uniform
+polynomial recognition in this wider class. An empty
+clause or an input with no label certifies common
+source directly. The implication-refutation synthesis
+below also applies with these hypotheses.
 
 For $K\ge4$ this also gives a linear bound on the
 support needed by any width-two greatest completion.
@@ -530,10 +546,7 @@ at most three labels and the canonical prime products
 have width at most three and polynomial total size.
 The family has every loss explained by a singleton,
 so recognition is exactly the common-source test.
-For membership in coNP at width three, the formal
-width and list comparison work as above with at most
-three factors. A choice of one omitted owner per
-input certifies failure of common source.
+The uniform coNP upper bound above applies.
 
 At width at most three, the same structure gives a bounded
 support for each positive mark, independently of the input
