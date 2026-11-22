@@ -2155,6 +2155,41 @@ $2^{(K+2)^{O(w+1)}}N^{O(1)}$ time at joint incidence
 width $w$. In particular a row's redundancy can be
 checked without computing either canonical list.
 
+The comparison can be optimized over subbudgets of a
+listed budget. At fixed palette and incidence width,
+this finds a minimum number of rows, or minimum total
+row cost, among all equivalent subbudgets. Keep a bit
+at each row for whether it is retained in the trial
+budget. In the blocking table for that budget, a row
+can be chosen as a blocker only if retained. The full
+budget's table still has access to every row.
+
+To impose equality simultaneously at every head and
+facet, let a comparison state include the observer
+and one marked input. Store the mark flags on the bag
+and count marks off the bag, capping the count at two.
+The compared coloring leaves every marked input
+unposted. Both blocking tables require the marked
+input in their unavailable set. At the root a state
+is a counterexample precisely when it has one mark
+and exactly one of its blocking sets is nonempty.
+This reads the same complete family of source tests
+as the separate comparison at each head and facet.
+
+For a fixed row selection on a subtree, keep the set
+of all these comparison states obtainable by varying
+the coloring and its mark. As with guard optimization,
+propagate the set deterministically for each retained
+row choice, and keep the least cost for each resulting
+set and boundary choice. At the root reject a set
+containing a counterexample. There are
+$2^{(K+2)^{O(w+1)}}$ individual comparison states
+and thus at most $2^{2^{(K+2)^{O(w+1)}}}$ sets to keep.
+The remaining work is polynomial in the supplied
+budget and decomposition. This optimizes a presenting
+subbudget without enumerating the canonical family,
+which may be exponentially larger than the input.
+
 In this class the stable availability set also gives a
 partition of the full-palette colorings into boxes. Write
 $A(p)$ for the available inputs at a consistent coloring
