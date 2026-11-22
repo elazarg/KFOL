@@ -905,6 +905,48 @@ a coNP recognition test, since a missed
 positive can be checked against all the
 bounded folds in polynomial time.
 
+Unions of folds of support size three also have
+canonical prime width at most two, for every
+palette. At a head and observer, the loss test
+without guard exclusions is a fixed $2$CNF.
+The candidate guard only adds absence units.
+If the fixed formula is unsatisfiable the
+empty guard suffices. Otherwise an inconsistent
+set of added units has an inconsistent subset
+of size at most two: propagate the unit literals
+in the fixed implication graph. If the closure
+is consistent it extends to a satisfying
+assignment, since every remaining unit
+requirement has already been propagated.
+A conflict therefore comes from one or two
+of the added units reaching opposite literals.
+Thus every prime is empty, unary or binary,
+and all canonical lists can be constructed
+by testing those guards.
+
+At support size four the prime width can be
+arbitrarily large. Use the two-owner literal
+construction for redundancy above, without
+the designated projection. Encode the
+disjunction of $m$ Boolean variables by
+clauses of width at most three using a chain
+of auxiliary variables:
+\[
+ (x_1\lor y_1),\quad
+ (\neg y_{j-1}\lor x_j\lor y_j)\ (1<j<m),\quad
+ (\neg y_{m-1}\lor x_m).
+\]
+There is an extension to the auxiliary
+variables exactly when some $x_j$ is true.
+On a facet seeing both posting owners, exclude
+the $a$-posting of the positive literal input
+of every $x_j$. A losing coloring would be a
+satisfying assignment with every $x_j$ false,
+which is impossible. Removing any exclusion
+permits that variable to be true and gives
+a losing coloring. Thus these $m$ exclusions
+are a canonical prime of the fold union.
+
 If a presentation has $t$ folds, there are at most $2^t$
 different input incidence patterns in their supports. Inputs
 with the same pattern are interchangeable in the operation
