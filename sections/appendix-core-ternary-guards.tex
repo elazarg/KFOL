@@ -445,6 +445,55 @@ the candidate's canonical primes in polynomial time.
 The same common-source test applies to any specified
 trial support using the filtered clauses above.
 
+For $K\ge4$ this also gives a linear bound on the
+support needed by any width-two greatest completion.
+If an input has no label, it is a support by itself.
+If the inputs fixed to one owner contain a clause of
+that owner, this is already an infeasible support of
+size at most three. Otherwise consider the two-label
+inputs at one owner. Two of them can be omitted
+together exactly when their principal maxima agree.
+Indeed, if $u,v$ can be omitted together, the maximum
+for $u$ contains $v$ and hence is contained in the
+maximum for $v$, and conversely. Thus the two-label
+inputs at each owner split into classes, and at most
+one class may be used there. A class is unavailable
+if its maximum excludes any of the inputs fixed to
+that owner. One such fixed input certifies each
+unavailable choice. If both choices at a head are
+unavailable, these certificates and the head give
+an infeasible support of size at most three.
+
+Give each available class a Boolean variable, impose
+negative binary clauses between different classes at
+each owner, and impose a positive clause for each
+two-label input requiring one of its available classes.
+This formula is satisfiable exactly when the omitted
+owners can be assigned. If it is unsatisfiable, take
+shortest implication paths from some literal to its
+opposite and back. A path alternates positive-clause
+steps with negative-clause steps. At any owner it has
+at most two negative steps. In fact, if
+$p_i\to\neg q_i$ precedes $p_j\to\neg q_j$ at the
+same owner, shortestness requires $p_i=q_j$, since
+otherwise there is a direct edge. Three such steps
+would force the middle step to have $p_i=q_i$,
+which is impossible. Thus the two paths use at most
+$4K+2$ positive-clause steps in total.
+
+Keep the input for each such positive clause and,
+for a unit clause, one fixed input certifying that
+its other choice is unavailable. Different classes
+at the same owner still cannot both be used on this
+support: any two chosen inputs in distinct classes
+violate an original clause on their pair. The two
+paths therefore still certify infeasibility on the
+induced support. This bounds the helper support by
+$8K+4$. Adding the head and the at most two controls
+of an enabled prime supplies any specified positive,
+since primes supported on the retained inputs persist
+in the greatest bounded helper there.
+
 Width three is coNP-complete when the palette is
 part of the input, even when every label is principal.
 Reduce 3CNF unsatisfiability. Delete tautological
