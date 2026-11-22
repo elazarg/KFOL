@@ -121,20 +121,58 @@ The support of every word omitting these losses contains a nonempty
 set $S$ of inputs of one designated owner $r$ whose $\star_r$-fold
 also omits them. In particular every inclusion-minimal feasible
 support has a read-once realizer of this form.
+If the word belongs to a selected-fold clone, the extracted
+fold can be taken at a selected owner, or there is an
+unheaded projection in its support.
 \end{lemma}
 \begin{proof}
 Write $H_r=\{j:c(j)=r\}$. Some $r$ has
 $\Phi_r(V\setminus H_r)=0$, since otherwise the positive coalitions
 $V\setminus H_r$ would have empty intersection, contrary to
 \cref{core:thm:profiles}. Keep both children of each $r$-gate and
-one child losing this test at every foreign gate. The resulting
-$r$-fold has all its leaves in $H_r$. Test a pure $r$-row with the
-full menu at its head: the source bit is independent of the other
+one child losing this test at every foreign gate. At a mask of
+owner $r$ keep just its controller, which determines the
+$r$-profile. The resulting $r$-fold has all its leaves in $H_r$.
+Test a pure $r$-row with the full menu at its head: the source
+bit is independent of the other
 winners in that menu by source decomposition. Every foreign gate
-then acts by union, and $\star_r$ is monotone, so this pruning
-preserves omission there. On a foreign row its head is
+then acts by union, every $r$-mask contains the controller's
+output, and $\star_r$ is monotone, so this pruning preserves
+omission there. On a foreign row its head is
 absent from the fold. Idempotence removes repeated inputs.
+If $r$ is unselected, no owned choice survives the pruning
+and the result is a projection. It cannot omit a loss at
+its own head, so its input is unheaded.
 \end{proof}
+
+Consequently the selected-fold deletion test extends to
+arbitrarily many losses per head when each head has a
+single native loss owner. Keep the same condition on the
+probe and the selected cycles. Delete rows using unheaded
+projections as above. At a selected owner $r$ start with
+the inputs not posted at $r$ at the probe and remove a head
+if some remaining loss at that head has no $r$-posting
+in the current support. The stable set gives the largest
+safe $r$-fold support avoiding the probe's $r$-block.
+When its fold hits a row, delete all rows it hits and
+attach it in reverse as before.
+
+If the queried head still has a row at stabilization,
+every exterior posting agrees with the probe. Erase that
+exterior from a putative witness. The projected losses
+remain pure at each head, and every remaining head has
+a loss. The extraction lemma gives a safe fold at a
+selected owner $r$ with support in the remaining heads.
+Choose one posting from its support in each loss at each
+of its heads. A sink strongly connected component in
+the resulting graph is still a safe fold support, since
+none of those chosen arrows leaves it. Every vertex in
+it lies on an $r$-cycle and thus avoids the probe's
+$r$-block. It would hit a remaining row, contradicting
+stabilization. This proves exactness. The allowed-posting
+tests and the record of deleted rows below implement the
+same procedure directly from canonical primes in polynomial
+time, without enumerating the losses.
 
 \begin{theorem}[A cut with one loss per head]
 \label{core:thm:monochromatic-head-cut}
