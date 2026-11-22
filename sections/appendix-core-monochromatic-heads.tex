@@ -8041,6 +8041,37 @@ probe. The union of the resulting words realizes the induced family.
 An edge closure always has some positive, since it contains an
 internal edge and that edge disagrees at the empty coloring.
 
+There is a uniform size bound for this reduction, independent of
+the ambient palette. If all closures omitting an owner have size
+at most $m$, recognition takes polynomial time in the prime-list
+length times $2^{O(m\log(m+1))}$.
+
+For an induced family on $t\le m$ vertices with native palette $P$,
+the preceding argument lets us use only native postings at the
+positive probe and only native gates and union in its witness.
+There are at most $t(|P|+1)^{t-1}$ positive probes to test.
+For one of them, quotient the values of a word on the $t$ loss probes
+by three states per probe: singleton at that loss's owner,
+nonsingleton carrying the mark, or nonsingleton missing the mark.
+On the positive probe keep the singleton owner in $P$ or one
+of the two nonsingleton states. These states suffice even when
+an observer outside $P$ is used: the inputs are either native
+singletons or nonsingletons, and a union of nonempty menus can
+be singleton only if both menus are that singleton. At a native
+gate an absorbing singleton clears the mark, and otherwise
+the output bit is the OR of the input bits.
+
+Close the projection signatures under the resulting coordinatewise
+gates and union. At most $3^t(|P|+2)$ signatures occur, and processing
+each pair once generates the whole closure. A signature witnesses
+the positive exactly when its last coordinate carries the mark
+and none of its loss coordinates does. The witnesses for all
+positives combine by union. Computing the graph and its edge
+closures adds only polynomial work in the input size. This same
+signature bound uses $3^d$ in place of $3^t$ for an explicit list
+of $d$ monochromatic losses, even with several losses at one head,
+provided the loss owners lie in a proper palette.
+
 This gives a local characterization when every endpoint closure
 has at most three vertices, with no symmetry assumption.
 Ignore closures using all $K$ owners. Each remaining closure
