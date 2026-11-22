@@ -1889,6 +1889,41 @@ true member, so every satisfying assignment has a
 unique encoding of weight equal to the number of
 original variables.
 
+Counting all primes at one head and facet is also
+\#P-complete under polynomial-time Turing reductions
+on these budgets. Keep the queried head and replace
+every other input by $t$ copies. At each copy of a head
+use a copy of its original row, replacing each posting
+by postings at the same owner on all copies of its
+input. Unheaded inputs have unheaded copies. This
+preserves acyclicity and the one-row restriction.
+
+Fix a facet and project a guard to the original flags
+by recording a flag if it is excluded at any copy.
+For a coloring of the copies, assign an original
+input the owner at which all its copies are posted,
+or leave it unposted if there is no such owner.
+An original backward arrow is eligible exactly when
+some corresponding arrow to a copy is eligible.
+Every copy of its tail has the same outgoing row,
+so paths to unheaded inputs lift and descend. The
+collapsed coloring enables the projected guard.
+Conversely a coloring enabling the projected guard
+lifts by giving all copies the original status.
+Thus a guard suffices exactly when its projection does.
+
+Each original prime of size $s$ therefore gives $t^s$
+primes, choosing one copy for each excluded flag.
+These are all the primes: a repeated copy of a flag
+or a nonminimal projected guard would allow a deletion.
+The total count in the copied budget is a polynomial
+in $t$ whose coefficient of degree $s$ counts the
+original primes of size $s$. The degree is bounded
+by the original number of flags, so polynomially
+many counts on polynomial-size copied budgets recover
+the bounded-size count by interpolation. The Horn
+prime test gives membership in \#P.
+
 With one fixed posting owner per input, minimum cost follows from a
 shortest eligible path, charging each visible
 exclusion on its simple path once.
