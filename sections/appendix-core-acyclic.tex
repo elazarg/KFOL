@@ -261,45 +261,60 @@ subtrees. Thus any scope has at least
 $\sum_{j=0}^h(Kd)^j$ inputs. This generalizes
 the one-head cross-facet arity example.
 
-Exact acyclic core operations can also require
-witness arity exponential in height at fixed prime
-width. Use a full $d$-ary tree of height $h$,
-with one input per vertex, and distinct owners
-$a,b$. At each nonleaf $v$ give one loss per
-child $u$. The row posts $u$ at $b$ and all its
-strict descendants at $a$. The rows of a head
-have disjoint supports. On any observer facet
-the primes choose one posting from each visible
-row, so their width is at most $d$.
+For exact targets, consider a layered monotone circuit
+in which each gate is a conjunction of at most
+$(K-1)d$ nonempty disjunctions of controls from the
+preceding layer. It has an exact acyclic core
+realization of prime width at most $d$ with the
+same gate values on every trial scope.
 
-The family passes the acyclic cofactor test.
-Fix a loss at $v$ with selected child $u$.
-Any other head's row reading $v$ also reads
-$u$ and requires it at $a$: the row reads an
-entire descendant subtree, with only its own
-root posted at $b$. It is disabled by the
-fixing $u:b$. At $v$ itself the fixed loss
-omits every color absent from its postings.
-The color $b$ is supplied by $u$, since no
-loss is visible on the $b$-facet. If the row
-posts $a$, its strict descendants are all
-posted at $a$ and cannot face an active loss
-requiring one of their children at $b$.
-Thus its posted colors already occur
-independently of $v$. The leaves are
-retained, ensuring nonemptiness, and the
-acyclic criterion realizes the operation.
+Choose distinct owners $a,b,c$. Use one input per
+gate or circuit input, and one retained anchor for
+each owner other than $b$. Choose a proper query
+posting all ordinary passive inputs at $a$ and
+every anchor at its own owner. At each gate assign
+its disjunctions to the $K-1$ observers other than
+$a$, at most $d$ per observer. For a disjunction
+assigned to observer $k$, give one loss posting
+all its controls at $b$ if $k\ne b$, or at $c$
+if $k=b$. Post all strict descendants of those
+controls at $a$. Finally post the anchors whose
+owners are still absent, except for $k$. Every
+loss uses precisely the owners other than $k$,
+so it is visible on that facet alone. Each prime
+is a minimal hitting set of at most $d$ visible
+losses, giving the width bound.
 
-Query the root with every other input posted
-at $a$ on a facet seeing both colors.
-The only mismatch in a row is its direct
-child at $b$. By the scoped ordered test,
-the root needs every child active, and each
-child needs every child of its own active.
-Thus all $\sum_{j=0}^h d^j$ inputs are needed.
-At $d=1$ this gives unbounded arity at prime
-width one, and at $d=2$ it gives exponential
-arity in the height at prime width two.
+To check the cofactor law, fix a loss at a gate.
+Every other loss reading that gate also posts
+all of its strict descendants at $a$, so it
+conflicts with the fixed loss at a control
+posted at $b$ or $c$. This applies whether the
+other row reads the gate as a control or as a
+descendant. The fixed row's own posted colors
+are supplied independently of the captured
+gate. Anchors are retained, and every posted
+ordinary input has all its own controls fixed
+at $a$, which disables its losses. The retained
+anchors ensure nonemptiness, so the acyclic
+criterion realizes the candidate. At the query
+the only mismatching postings in each loss
+are its controls. The scoped ordered test
+therefore activates a gate in the scope exactly
+when every disjunction has an active control.
+Layer-zero inputs activate exactly when included
+in the scope.
+
+In particular a full conjunction tree of height
+$h$ with branching $(K-1)d$ gives an exact
+prime-width-$d$ target requiring
+$\sum_{j=0}^h((K-1)d)^j$ inputs in a scope for
+the root. At each internal head the $d$ control
+exclusions on each used facet form a prime, since
+each hits just its own loss. Every child is mandatory, and the
+anchors never need to be included. This gives
+exponential witness arity at width one for
+every $K\geq3$.
 
 There is a uniform padding construction for any
 layered acyclic bound whose losses use only $b$,
@@ -319,9 +334,8 @@ $u$'s strict descendants at $a$. A loss at
 $u$ has a nonempty $b$-block among those
 descendants, so fixing it disables the row
 that reads $u$. The posted colors of the
-fixed row are independently supplied,
-as in the tree case: $b$ is retained on
-its own facet, and every $a$-posted input
+fixed row are independently supplied because
+$b$ is retained on its own facet and every $a$-posted input
 has all its descendants at $a$. Thus the
 colored cofactor law holds. The lowest
 layer is retained, so the reconstructed
@@ -359,10 +373,9 @@ Every head has at most two losses, and any input
 shared by the two rows at an internal head is
 posted at $a$ in both. The canonical primes on
 each facet are the minimal hitting sets of its
-visible rows, of width at most two. The same
-cofactor proof as for the private tree works:
-every row that reads a conditional head also
-posts all inputs below it at $a$, so fixing a
+visible rows, of width at most two. The padding cofactor
+argument applies because every row that reads a conditional
+head also posts all inputs below it at $a$, so fixing a
 loss there conflicts at a required $b$-posting.
 On the fixed row the $b$-posted inputs retain
 $b$. Every $a$-posted input has all its descendants
@@ -435,38 +448,7 @@ the number of position guesses depends only
 on the budget. Pad smaller clique sizes and
 take the disjoint union over guesses.
 
-The hardness already holds at prime width one
-by separating the two conjunctive losses across
-observer facets. Use three owners $a,b,c$.
-A conjunction head has a row selecting its first
-predecessor at $b$ and a row selecting its second
-at $c$. A disjunction head uses a single row
-posting all its alternatives at $b$. In every
-row post all strict descendants of its selected
-predecessors at $a$. Also post a shared retained
-anchor at $a$, and one retained anchor at each
-owner outside $\{a,b,c\}$. Thus each row is
-visible only at the observer hiding the unused
-one of $b,c$. Each head has at most one row
-on any facet, giving width one.
-
-Use layers as before. Fixing a loss at a
-conditional input disables every row that
-reads it, since those rows post its strict
-descendants at $a$ and the fixed loss
-requires one at $b$ or $c$. The anchors
-supply all their colors independently.
-Each selected predecessor retains its
-posted mismatch color: all its own
-predecessors are fixed at $a$, so none of
-its losses applies. Thus the acyclic
-cofactor criterion still gives an exact
-core operation. At the query posting the
-anchors as specified and all ordinary
-passive inputs at $a$, activation is
-exactly the indicated conjunction or
-disjunction on the supplied predecessors.
-
+The parameterized hardness already holds at prime width one.
 For the Clique reduction, give every
 cross-class edge its own conjunction
 head over the two endpoint inputs.
