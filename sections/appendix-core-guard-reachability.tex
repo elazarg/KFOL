@@ -6467,6 +6467,65 @@ recognition of exact unions there. With width-one primes
 the loss lists required for the same tests can be recovered
 in polynomial time.
 
+With explicit minimal losses, choosing the support for a
+marked witness is NP-complete for pure losses at every fixed
+$K\ge3$, even for an acyclic core candidate. Membership uses
+the polynomial support formula. For hardness take a CNF with
+at least two variables, nonempty clauses and redundant clauses
+removed. Use a queried head $i$ and headed inputs $P_x,N_x$
+for the two literals of each variable $x$. The unheaded
+controls are $c_{xy}$ for ordered pairs of distinct variables.
+Let $C$ be their set, and take three distinct owners $r,s,t$.
+
+At $i$ impose an $r$-loss posting all of $C$ and the
+literal heads of each clause. At $P_x$ put the sole $s$-loss
+on $\{c_{xy}:y\ne x\}$, and at $N_y$ put the sole $t$-loss
+on $\{c_{xy}:x\ne y\}$. Query $i$ at $C:r$.
+This is positive because every clause is nonempty. Include
+all controls in the support. An $r$-generator stays losing
+at the probe exactly when its clause has a selected literal.
+The $s,t$ generators are automatically losing there and
+meet an $r$-generator wherever they meet each other, because
+the latter contains all controls. A selected pair $P_x,N_y$
+has compatible generators exactly when $x\ne y$, in which
+case they share $c_{xy}$. Thus support choices amount to
+selecting at least one literal per clause and never selecting
+opposite literals. This is equivalent to satisfiability.
+
+The loss lists are polynomial and minimal. The source graph
+is acyclic, and the cofactor test holds: each loss at a literal
+head fixes a nonempty subset of $C$ at a foreign owner, so
+no loss at $i$ can then use that head. The fixed controls
+supply the loss owner at every capture, and no loss uses $i$.
+Hence the candidate is core by
+\cref{core:thm:acyclic-source-guards}.
+
+The same hardness holds with just two loss owners. Use
+clauses of size at most three, merge $r$ with $s$, and add
+a fresh unheaded input $z$ to every loss at a positive
+literal head. Keep $z$ unposted at the probe. For every
+clause loss include the additional rows obtained by
+replacing any nonempty subset of its positive literal heads
+by $z$, keeping all of $C$. They are automatically losing
+generators at the probe, and they intersect every negative
+literal's generator in $C$. Thus they impose no new
+support condition. The old positive-literal generators
+still lose at the probe because they now contain $z$,
+and $z$ does not change their intersections with negative
+generators.
+
+Minimize the enlarged list at $i$. Original clause rows
+cannot be removed by the new rows, since only the latter
+contain $z$. Each clause adds at most seven rows.
+The candidate remains core: when a
+positive literal is captured, $z$ is fixed at the merged
+owner. Every root loss using that head then has a replacement
+row omitting it, so its posting cannot affect the cofactor.
+A negative capture still disables all root losses by fixing
+some control at the other owner. The fixed controls supply
+the capture owners as before, giving the acyclic cofactor
+law.
+
 Hardness persists even with two headed inputs and width at most
 four. Modify the preceding reduction by adding one retained input
 $z$. Keep the $r$-losses at $i$ on vertex hitting sets, and add the
