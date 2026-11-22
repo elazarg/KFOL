@@ -2493,29 +2493,42 @@ outputs, including the first output and the
 termination check, with storage polynomial in the
 input and the primes discovered so far.
 
-In a separated case the products are themselves the
-canonical list, with no minimization or duplicate
-storage needed. At a head and facet let $L$ be the
-union of all posting flags in the profile lists.
-Suppose the sets $D\setminus L$, for the different
-primes $D$ of $B$, are distinct and incomparable.
-Then a product guard $D\cup Q$ contains no other
-prime of $B$: the flags of $Q$ lie in $L$, so a
-contained prime would have its outside part contained
-in $D\setminus L$. Consequently every flag of $D$
-is needed for the upper bound. Every flag of $Q$
-is needed for the profile tests, by relative
-minimality. Thus $D\cup Q$ is already prime, and
-different choices of $D$ give disjoint product lists.
-This criterion is polynomial to check and allows $D$
-to share flags with any number of the profile lists.
+The products are already the canonical list, with no
+duplicates, exactly when each product guard $D\cup Q$
+contains only its own prime $D$ of $B$. If this holds,
+every flag of $D$ is needed for the upper bound and
+every flag of $Q$ is needed for the profile tests.
+Conversely if another bound prime $D'$ is contained
+in the guard, a relative product at $D'$ gives a
+sufficient guard contained in it. This is either a
+strict subguard or a duplicate product. To test the
+condition, for each pair $D,D'$ ask whether some
+relative product at $D$ contains $D'\setminus D$.
+Each owner list can be scanned independently for a
+member containing the required flags at that owner.
+In particular the condition holds if the sets
+$D\setminus L$ are distinct and incomparable, where
+$L$ is the union of the flags in the profile lists.
 
-In this case the exact number of primes is the sum,
+Canonicity alone is also polynomial to test. Only a
+flag $f$ of $D$ can be removed from $D\cup Q$. For
+each such $f$ and each bound prime $D'$ missing $f$,
+ask whether some $Q$ contains $D'\setminus D$ and
+still passes the profile tests after $f$ is erased.
+Only the profile at the owner of $f$ can fail the
+second requirement. In that owner's scan also require
+that the chosen member, together with the remaining
+flags of $D$, contain an original profile clause.
+Thus a nonminimal product can be found by polynomial
+scans without enumerating the products.
+
+When the products are canonical and distinct, the exact number of primes is the sum,
 over $D$, of the products of the relative list sizes.
 The exact maximum width is the maximum over $D$ of
 $|D|$ plus the sum of the relative maximum clause
-sizes. Both quantities are computable without
-enumeration. For a general bound $B$, the same sum
+sizes. The width formula also holds with duplicates.
+Both quantities are computable without enumeration.
+For a general bound $B$, the same sum
 of products is an upper bound on the output count and
 at most $b$ times that count, by the multiplicity
 argument above. The relative maximum clause sums
