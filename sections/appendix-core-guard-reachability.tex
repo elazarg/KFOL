@@ -1928,6 +1928,48 @@ With one fixed posting owner per input, minimum cost follows from a
 shortest eligible path, charging each visible
 exclusion on its simple path once.
 
+More generally, a prime for a one-row Horn test never
+excludes two owners at the same input. An exclusion
+at $v$ can only justify the first addition of $v$ in
+the backward closure. If that step needs an exclusion,
+keep just the one used by its chosen incoming arrow.
+Replay the closure with these chosen exclusions.
+Any others are redundant. This argument also applies
+to mixed directed cycles when projection deletion is
+exact.
+
+For acyclic one-row budgets, the minimum guard cost is
+an optimization on sets of reached inputs. Use the
+backward arrows as above. Choose a set containing the
+queried head and some unheaded input. At each chosen
+input other than the queried head, consider the owners
+of arrows arriving from chosen inputs. Forbid an empty
+set of owners. Charge zero if the set contains the
+observer or two distinct owners, and otherwise charge
+the cost of excluding the sole owner at this input.
+The minimum sum equals the minimum guard cost. From a
+guard, take its closure and charge at most what the guard
+paid. Conversely, pay the indicated charges on a chosen
+set and process it in topological order. Every chosen
+input then has its required predecessor or conflicting
+pair already reached. The unheaded input proves that
+the guard suffices.
+
+With a width-$w$ tree decomposition of the undirected
+arrow graph this gives a minimum-cost guard in
+$(K+2)^{O(w+1)}N^{O(1)}$ time for input size $N$.
+For each bag vertex keep whether it is chosen and a
+summary of its incoming owners seen so far: empty,
+one visible owner, or enough for zero cost. Introduce
+each arrow while its endpoints are in the bag and
+add its owner to the summary when both are chosen.
+Join summaries by taking their union, capped at the
+zero-cost case. On forgetting a chosen vertex apply
+its test and charge. A further bit records a chosen
+unheaded input, and the queried head is mandatory.
+This is uniform in the palette, and single exponential
+in the decomposition width at fixed $K$.
+
 For an acyclic budget with several rows per head,
 the full bounded source predicate is the conjunction
 of the predicates obtained by keeping exactly one
