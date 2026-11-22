@@ -7538,37 +7538,49 @@ by $2$SAT. This gives a prime-only recognition bound of
 $(2(K+1))^{|D|}$ times polynomial time when both native
 and terminal prime widths are at most two.
 
-Increasing the native width to three makes recognition
-coNP-complete even with $|D|=1$ and terminal width two.
-Given a $3$CNF, use two passive inputs per variable, one for
-each literal, and one extra passive input $x$. The native
-closure adds $x$ exactly when the seed meets every variable
-pair and every clause, and adds no other input.
-This loopless closure defines a one-owner trace at $r$.
-The native primes at $x$ are the variable pairs and clauses
-at $r$, minimized by inclusion. The other passive sources
-are retained. At the new source use the singleton prime
-excluding $x{:}s$ and the pair primes excluding both
-$s$-postings of each variable pair, with $s\ne r$.
-On the facet omitting $s$ use the empty guard. Thus a
-minimal terminal loss posts $x$ and one literal per variable
+The two width bounds are sharp even with $|D|=1$.
+Given a $3$CNF, split its clauses into two groups. Use two
+passive inputs per variable, one for each literal, and one
+extra passive input $x$. The native closure at $r$ adds
+$x$ exactly when the seed meets every variable pair and
+every clause of the first group, and adds no other input.
+This loopless closure defines a one-owner trace. The native
+primes at $x$ are the variable pairs and first-group
+clauses at $r$, minimized by inclusion. The other passive
+sources are retained.
+
+At the terminal source choose $s\ne r$. On facets seeing
+$s$, use the singleton prime excluding $x{:}s$, the pair
+primes excluding both $s$-postings of each variable pair,
+and for each second-group clause a prime excluding the
+$s$-postings at the inputs for its complementary literals.
+Minimize by inclusion. On the facet omitting $s$ use the
+empty guard. Each minimal terminal loss is pure at $s$,
+posts $x$, and hits all the indicated pairs and clause sets.
+
+Suppose such a loss $b$ lies below a positive coloring $p$.
+All its literal inputs must still be posted at $s$ in $p$:
+these inputs cannot be derived, so separate spanning forbids
+them from entering $H=c(p_r)$. Positivity then requires that
+$x$ cease to be posted at $s$, which forces $x\in H$.
+But $c(H\setminus b_s)$ has to derive $x$. Its seed omits
+$x$ and has to meet every variable pair, so $b_s$ selects
+exactly one literal per variable and the seed contains their
+complements. Those complementary literals satisfy the first
+group by the native closure condition and the second group
+by the terminal loss condition. Conversely, post a satisfying
+assignment's literals at $r$ and their complements at $s$,
+leaving $x$ unposted. This proper positive coloring lies
+above the loss posting $x$ and the complementary literals
 at $s$.
 
-If such a loss lies below a positive coloring $p$, all its
-literal inputs must still be posted at $s$ in $p$: these
-inputs cannot be derived, so the separate spanning condition
-prevents them from entering $H=c(p_r)$. Positivity then
-requires that $x$ cease to be posted at $s$, which forces
-$x\in H$. But $c(H\setminus b_s)$ still has to derive $x$.
-Its seed omits $x$ and the chosen literal of each variable.
-To meet every pair and every clause it must therefore contain
-the complementary literals, which form a satisfying assignment.
-Conversely, given a satisfying assignment, post its literals
-at $r$ and the complementary literals at $s$, leaving $x$
-unposted. This proper positive coloring lies above the loss
-posting $x$ and the complementary literals at $s$.
-Thus unsatisfiability is equivalent to recognition, and a
-failed activation comparison gives a polynomial certificate.
+Putting all formula clauses in the first group proves
+coNP-hardness at native width three and terminal width two.
+Putting them in the second proves it at native width two
+and terminal width three. Both reductions have exactly one
+derivable passive input and work for every fixed $K\ge3$.
+A failed activation comparison gives a polynomial certificate
+in either case.
 
 For a strict example let $B$ be the union of the native
 folds on the edges of the four-cycle $x,y,z,v,x$.
