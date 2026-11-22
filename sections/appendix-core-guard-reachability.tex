@@ -1017,6 +1017,63 @@ row search on a permissible history, even
 though a different strategy can avoid that
 history.
 
+For unrestricted prime width, the row search on a
+specified facet is $\mathrm W[3]$-complete in $b+q$.
+Use the same choice groups for omitted postings and
+private primes. Give each option a Boolean selection
+variable. Impose pairwise exclusions within each
+group and ask for weight equal to the number of
+groups, so exactly one option per group is chosen.
+For every prime, disjoin over its allowed postings
+the conjunction of negated variables for all options
+omitting that posting. This is a conjunction of
+disjunctions of conjunctions of negative literals,
+the weighted antimonotone satisfiability presentation
+of $\mathrm W[3]$ \cite{KanjXia2011Normalized}.
+
+For hardness, start with such a formula and required
+weight $q$. Use one required posting $p_i$ for each
+of $q$ choice slots. Use a distinct posting for each
+term of each disjunction and make the set of term
+postings of one disjunction a prime. For each
+variable $v$ and pair of slots $i,j$, add a
+two-posting prime with one new posting for each
+of those slots. A private-prime option for $p_i$
+selecting $v$ contains $p_i$, a fresh posting unique
+to this option, every term posting whose term
+contains $\neg v$, and the slot-$i$ posting of each
+two-posting prime for $v$ involving $i$. Choosing
+it therefore omits precisely those term and slot
+postings, along with its unique posting.
+
+Hitting each term prime requires at least one term
+to survive every selected variable. Hitting each
+two-posting prime prevents two slots from selecting
+the same variable. Thus the pinned loss exists
+exactly when the original formula has a satisfying
+assignment of weight $q$. All postings use one
+owner on distinct inputs. The base primes are
+disjoint, and the unique postings distinguish the
+options. Omit an option if it contains a base
+prime, since its selection would miss that prime
+regardless of the other choices. The remaining
+lists are canonical and the construction needs
+no forbidden blocks.
+
+When $q=0$, unrestricted widths still give
+$\mathrm W[1]$-completeness in $b$. Each option
+then omits just one posting. To miss a prime
+after the initial ground restriction requires
+at most $b$ available postings there. For each
+such prime enumerate the assignments of its
+postings to distinct option groups, forbidding the
+joint selection of those options by one negative
+clause. There are at most $b^b$ assignments per
+prime. With the same group constraints and weight
+$b$, this is weighted antimonotone CNF, which is
+$\mathrm W[1]$-complete \cite{KanjXia2011Normalized}.
+The width-two lower bound already uses $q=0$.
+
 With a supplied global prime incidence decomposition,
 the same parameter $d$ gives fixed-parameter exact
 recognition, jointly with $K$ and the decomposition
