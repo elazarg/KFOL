@@ -2717,6 +2717,54 @@ positive witnesses come from the recorded folds. The
 tests allow monochromatic cycles in the original graph
 and do not expand the minimal wins of the profile CNFs.
 
+When the augmented graph has no monochromatic cycle,
+the greatest bounded word, if nonzero, has principal
+profiles. In fact for each owner $r$ run projection
+deletion at the all-$r$ coloring $p$. Write $S_r$ for
+its available set. The availability box argument
+permits erasing the postings outside $S_r$ without
+changing the available set. Thus at $S_r:r$ every
+mark outside $S_r$ loses, so the greatest word wins
+that coalition. Conversely a coalition omitting any
+$i\in S_r$ still has a positive mark at $i$ by
+antitonicity, since $i$ was positive with every other
+input posted at $r$. It cannot be winning. Therefore
+the profile consists exactly of the supersets of $S_r$.
+
+This allows exact profiles supplied by monotone circuits
+instead of CNFs. The availability update still uses
+one evaluation of each profile on the allowable
+coalition. A supplied graph containing all added arrows
+certifies the no-monochromatic-cycle condition, for
+example by including all syntactic circuit inputs that
+can post to each head. Compare the desired profile to
+the computed principal one by testing a win at $S_r$
+and a loss at $V\setminus\{i\}$ for each $i\in S_r$.
+These tests characterize equality by monotonicity.
+The greatest word already satisfies the desired wins,
+and any excess win is forced in every bounded word,
+so this is an exact attainment test under the graph
+hypothesis without listing losing coalitions.
+
+The exact arrow test for CNFs does not extend in
+polynomial time to general monotone circuits unless
+P equals NP. Even with an input-union bound and one
+profile, deciding if a specified input $u$ occurs in
+some minimal winning coalition is NP-complete. For
+a 3CNF use two positive rail variables per Boolean
+variable. Let $A$ require at least one rail per
+variable and at least one satisfying rail per clause,
+and let $C$ require both rails of some variable.
+The monotone profile $f=(u\land A)\lor C$ uses $u$
+in a minimal winner exactly when some assignment to
+the rails satisfies $A$ but fails $C$. This is
+equivalent to satisfiability of the original formula.
+A coalition and its single deletions certify minimal
+winning in polynomial time. At a fresh head outside
+the rails and $u$, this is exactly the added-arrow
+question. The one prescribed profile is itself
+attainable under input union.
+
 In general, counting the distinct primes on one facet
 is \#P-complete under polynomial-time Turing reductions,
 even when all relative products are canonical. Membership
