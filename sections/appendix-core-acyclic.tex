@@ -339,6 +339,60 @@ polynomial certificate by the ordered test.
 The reduction has logarithmic dependency height
 and works at each fixed $K\ge3$.
 
+At fixed $K$ and prime width two, the unrestricted
+scope problem on exact acyclic targets is also
+equivalent to Clique under parameterized reductions,
+with scope size as parameter. For hardness use a
+graph with $\ell\ge2$ vertex classes and seek a
+clique meeting every class. Make retained inputs
+for its vertices and one head for each class pair.
+At that head use the $b$-exclusions of the endpoints
+of every cross-class edge as its primes on a facet
+seeing $b$. On the $b$-facet use the empty guard.
+A pair with no edges can be rejected immediately.
+All its losses are pure $b$-postings of vertex
+inputs, and every loss is nonempty.
+
+Combine the pair heads by the same padded binary
+tree. At an internal head the descendants posted
+at $a$ include every vertex used by its selected
+child's subtree. For a capture at a pair head,
+some such vertex is fixed at $b$, so every
+ancestor row reading the pair head is disabled.
+The other cofactor tests are unchanged. This
+is therefore an exact acyclic family with
+canonical prime width two. At the all-$a$
+query all aggregation and pair heads are
+mandatory. Allow exactly $\ell$ more inputs.
+Each class must supply a vertex, and the pair
+heads require the two chosen vertices from
+their classes to be adjacent. Thus the scope
+exists exactly for a multicolored clique.
+Its budget depends only on $\ell$.
+
+For the reverse reduction, guess the number
+$t$ of used inputs within the scope budget
+and list them in source order, ending at the
+requested head. For each position guess how
+many inputs its enabled prime on each facet
+uses and the earlier positions of those
+inputs, in the fixed order of the names in
+that prime. There are at most two per facet.
+For each guess make a $t$-partite graph.
+A vertex is a choice of a head and one enabled
+prime per facet of the guessed sizes, with
+the last head fixed. Join choices in different
+positions when their heads are distinct and
+every reference between the positions names
+the chosen input. A $t$-clique is exactly a
+support proof by the ordered pass. Conversely
+a feasible scope has such a proof after
+discarding unused inputs. At fixed $K$ the
+local prime products are polynomial, and
+the number of position guesses depends only
+on the budget. Pad smaller clique sizes and
+take the disjoint union over guesses.
+
 The greatest bounded core operation can have all the
 transitive dependencies of the source graph. Fix an
 owner $r$ and at each head give one singleton loss
