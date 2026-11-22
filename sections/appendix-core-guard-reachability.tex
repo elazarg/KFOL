@@ -5837,6 +5837,47 @@ output of $F$ is the full union. This proves boundedness.
 Every eligible minorant agrees with its singleton outcomes,
 and is bounded by its full union on every other valuation.
 
+Testing compatibility of such a replacement is coNP-complete
+from canonical prime lists at every fixed $K\ge3$, even for a
+single specified principal owner and a promised greatest
+completion. For membership, compute the $M_r$ by the pure
+tests above. An incompatible tuple consists of one winning
+coalition per unchanged owner whose intersection misses the
+required common set. The same pure tests verify this certificate.
+
+For hardness, take a hypergraph on a nonempty set $M$, with
+nonempty edges, and add two inputs $a,b$. At owner $r$ require
+all of $M$ and at least one of $a,b$ to win. At two distinct
+foreign owners $s,t$, require both $a,b$ and at least one member
+of every hyperedge. All other owners require unanimity.
+The profiles are compatible because every rainbow tuple shares
+at least one of $a,b$. The mandatory set at $r$ is $M$.
+Replacing its profile by the principal generator $M$ is
+incompatible exactly when the foreign profiles can win with
+disjoint parts on $M$. Such parts are disjoint hitting sets,
+which exist exactly when the hypergraph admits a two-coloring
+in which every edge has both colors. This coloring problem
+is NP-hard directly from 3SAT: make one edge for each pair of
+opposite literals and, for every clause, make an edge from its
+literals and one common fresh vertex. The color opposite that
+vertex denotes truth, and bichromaticity of the clause edge
+requires a true literal.
+
+The reduction produces complete canonical prime lists in
+polynomial time. Each profile is given above by a positive CNF
+for its winning coalitions. At head $i$, set the variable of $i$
+to false in each such CNF. Its inclusion-minimal clauses are
+the pure exclusions that prevent a win at that owner. An empty
+clause gives unconditional prevention. In a facet, losses at
+$i$ are exactly the wins at visible owners on coalitions
+omitting $i$. To prevent all of them, take one pure exclusion
+clause at each visible owner and union those clauses.
+These are precisely the facet primes: testing pure postings
+forces a sufficient guard to contain one clause at each
+visible owner, and these clauses suffice jointly because
+the losses are pure. There are at most $K-1$ lists in the
+product, so its size is polynomial at fixed $K$.
+
 This gives an exact test for representing $F$ as a union of
 operations each principal at some owner, with that owner
 allowed to vary. Call $r$ viable if the replacement for
@@ -5860,6 +5901,13 @@ Conversely, under the three conditions, post just the
 $M_r$ at their viable owners and query any remaining input.
 These coalitions are losing in $F$, while every replacement
 absorbs. This yields the missing mark.
+
+Recognition of these varying-owner unions on a promised greatest
+completion is in coNP from canonical primes. Give a positive
+probe and, for each owner $r$ with $M_r\nsubseteq p_r$, an
+incompatibility tuple for its replacement. All other owners
+miss the probe whenever their replacement exists. A failed
+union always provides such a certificate.
 
 \paragraph{Several generators per owner.}
 More generally, suppose the profiles of a greatest completion
