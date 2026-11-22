@@ -1846,6 +1846,54 @@ proper coloring. Its joint source pattern is constant on
 each box, and the box's unposted unavailable inputs can
 all be captured together by the cut at the retained postings.
 
+This gives a component criterion directly in terms of
+the prescribed source bits. For a proper coloring $p$,
+write $J(p)$ for the heads whose prescribed coefficient
+is positive, ignoring each head's own posting in its
+test. A nonempty candidate is exact if and only if there
+is no proper $p$ and nonempty set $H$ in a single source
+component with $H\cap J(p)\ne\varnothing$ such that the
+following holds. At each head in $H$, some facet has no
+prime supported entirely on mismatching postings at
+inputs in $J(p)\setminus H$.
+
+Indeed $A(p)\subseteq J(p)$, since a prescribed loss
+contained in $p$ cannot be hit by mismatches. A set $H$
+as above prevents a first addition from $H$ to $A(p)$,
+so its positive head cannot be realized. Conversely,
+at a failed query take $J(p)\setminus A(p)$ and choose
+one loss at each of its heads with no mismatch on $A(p)$.
+Draw the dependencies of the chosen losses on mismatching
+inputs in $J(p)\setminus A(p)$, directed from heads to
+controls. Take a sink strongly connected component $H$
+of this graph. Its losses have no mismatch on
+$J(p)\setminus H$: a mismatch there would either be
+on $A(p)$ or give an edge leaving $H$. This is the
+required certificate. In a source order $H$ is a
+singleton and the condition reduces to the two-generation
+test.
+
+At prime width two this criterion can be checked by
+2SAT after guessing the exceptional heads and controls.
+Let $w$ bound the source component sizes and $b$ bound
+the number of nonretained external controls appearing
+in primes at heads of any one component. Guess $H$ and
+a failed facet per member of $H$. Choose one marked
+member, its positive prime and the starting observer
+$k$. Guess a set of lost external controls and also
+guess which inputs of the component outside $H$ are
+lost. Certify each guessed loss by requiring a hit in
+every prime on its starting facet $k$. On each failed
+facet require a hit in every prime that uses neither
+a member of $H$ nor a guessed lost control. Posting
+consistency, exclusion of $k$, and the positive prime
+complete the 2CNF instance. A solution is a component
+certificate even if it leaves some losses unguessed.
+Every component certificate is detected by guessing
+all of its lost controls. This gives recognition in
+$(2K+2)^w2^bN^{O(1)}$ time without a bound on the
+number of retained controls.
+
 With monochromatic cycles, one-row selections can
 miss a joint obstruction even at the empty query.
 Take distinct owners $a,b$ and the singleton rows
