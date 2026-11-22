@@ -2367,6 +2367,57 @@ Conversely if that graph is acyclic its own rows
 are an allowed presentation. The graph is read
 from prime occurrences without listing the losses.
 
+\paragraph{Ranked witnesses from canonical primes.}
+For a candidate with canonical observer lists agreeing on overlaps,
+fix a proper probe coloring $p$. At an available set $D$, form the
+set of disagreeing postings
+\[
+ M_p(D)=\{(u,s):u\in D,\ s\ne p(u)\},
+\]
+where an unposted input disagrees with every owner. Start with
+$D=\varnothing$ and add a head $j$ whenever every canonical loss
+at $j$ meets $M_p(D)$. Equivalently $M_p(D)$ contains a common prime
+at $j$, or contains one prime from each observer list at $j$
+by \cref{core:cor:common-prime-list}. The process computes
+exactly the heads supplied at $p$ by some bounded ranked operation.
+Moreover every supplied head has a witness with an acyclic
+dependency graph across all owners.
+
+For sufficiency record the addition order. At each added head
+shorten every candidate loss to its postings in the disagreeing
+set at the time of addition. These shortened rows mention
+only earlier heads and are nonempty. On the support of the
+added heads the resulting budget has an acyclic graph, and its
+greatest operation respects the candidate losses. All other
+heads are ignored. At $p$ each shortened row has a disagreeing
+posting on an earlier head, so projection deletion adds the
+whole support in the recorded order.
+
+For necessity run the availability calculation for a bounded
+ranked witness at $p$. Suppose it has already added a set $E$
+and next adds $j$. A candidate loss $q$ at $j$ avoiding $M_p(E)$
+could have only postings agreeing with $p$ on $E$. Any posting
+in a presenting row that disagreed with $p$ on $E$ would
+therefore still disagree with $q$. Replay the witness's additions
+through $j$ at $q$, using the same earlier disagreeing postings
+for each retained row. This would make $j$ available at a
+candidate loss, contrary to boundedness. Thus $j$ is eligible
+in the prime process once that process has added $E$.
+Induction shows that every head available in the witness
+belongs to the least fixed point.
+
+The test takes polynomial time per probe from the facet lists.
+A compatible canonical family with some positive bit is a union
+of ranked operations exactly when all its positive probes pass.
+Consequently recognition of such unions is in coNP. Hardness
+at every fixed $K\ge3$ follows from
+\cref{core:thm:complete-acyclic-guard-complexity}: a realizable
+acyclic candidate is itself ranked, and a union of ranked
+operations is core. The
+acyclic witnesses also show that allowing mixed cycles in the
+summands gives the same union class as requiring an acyclic
+graph at every summand.
+
 \paragraph{Ranked witnesses under one-owner bounds.}
 Suppose every canonical loss of a candidate posts only at one
 owner $r$. To test for a ranked operation below it supplying a
@@ -2374,28 +2425,11 @@ given mark at coloring $p$, start with $D=\varnothing$.
 Repeatedly add an input $j\notin D\cup p_r$ whose candidate
 source is positive at the pure posting $(V\setminus(D\cup
 \{j\})):r$. The mark is supplied by a bounded ranked operation
-exactly when its head enters $D$. The test depends only on $p_r$,
-which is empty on the facet omitting $r$.
-
-For sufficiency use the selected inputs as the support. For each
-selected head shorten every candidate loss to its postings on
-the previously selected inputs. The eligibility test ensures
-that every shortened row is nonempty. The resulting budget is
-acyclic in the selection order. Its greatest operation obeys the
-original losses at each supported head, and ignores all other
-heads. At the marked probe there are no $r$ postings on the
-support, so all selected inputs become available in order:
-each shortened row has an earlier disagreeing posting. This
-produces a bounded ranked witness.
-
-For necessity take $S=V\setminus(D\cup p_r)$ at termination.
-At $(p_r\cup S):r$ every member of $S$ is unavailable in any
-bounded ranked operation, by the failed eligibility tests with
-the respective heads unposted. Erase the postings on $S$.
-The resulting coloring $p_r:r$ remains in the same availability
-box, so no member of $S$ contributes there. Adding the
-foreign postings of the marked probe cannot restore a source.
-Thus every head left in $S$ lacks a bounded ranked witness.
+exactly when its head enters $D$. In the general process,
+inputs in $p_r$ supply no disagreements with any loss. They
+can therefore be skipped when testing an unposted head.
+The test depends only on $p_r$, which is empty on the facet
+omitting $r$.
 
 Each step uses only a source evaluation on a pure posting,
 which is direct from canonical primes on a facet seeing $r$.
