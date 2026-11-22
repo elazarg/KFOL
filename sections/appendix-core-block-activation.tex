@@ -6464,6 +6464,50 @@ preserves each support in turn. The row choices can be
 recovered by shrinking the allowed alphabets used in
 the corresponding prime-hit tests.
 
+These uncolored support computations can also simplify
+a colored query. First saturate its budget by folds
+eligible at the queried coloring $p$. Reversing the
+attachments shows that feasibility on the residual
+budget is equivalent to feasibility on the original
+one. If the mark still heads a row, let $U$ be the
+set of heads with residual rows. A residual posting
+outside $U$ must match $p$: otherwise the singleton
+support at its input would be an eligible safe fold.
+The unmarked-background lemma now restricts the
+entire remaining task to $U$, stripping the exterior
+postings and keeping the query $p|_U$.
+
+On this restricted budget compute the live support
+$L$ at the empty query, whenever the preceding
+component tests certify it. Every bounded word uses
+only inputs in $L$, since each used input supplies
+its all-neutral source mark. A colored mark outside
+$L$ is therefore impossible. For a mark inside $L$,
+drop all rows headed outside $L$ and erase the
+postings outside $L$ from all other rows and from
+the positive query. This preserves feasibility in
+both directions: a bounded word on the restricted
+names is insensitive to the erased statuses, and
+cannot emit a mark at a discarded head. In
+particular, if the uncolored calculation returns
+zero, it settles the colored failure even when no
+ranked cut on the colored residual graph is available.
+
+The reductions may be repeated with the new colored
+budget. Each repetition that removes a name decreases
+the arity, and any folds removed along the way can
+be reattached in reverse order. There is no need to
+enumerate projected rows. Keep the original rows
+implicitly, intersect their allowed posting alphabets
+when forbidding a flag, and treat erased coordinates
+as unrestricted in later scans. At each stage only
+the surviving heads are tested. The private-prime
+tests recover the graph of projections of the
+admitted original minimal rows, so redundant rows
+can be left in that graph. This gives polynomial
+preprocessing on the prime lists when the uncolored
+support tests succeed at the stages used.
+
 \paragraph{Per-head sparsification for one-owner components.}
 Suppose each component's internal postings use just
 one owner and their blocks have size at most $a\ge1$.
