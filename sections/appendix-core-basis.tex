@@ -2897,7 +2897,7 @@ on the promised class.
 
 Width four is sharp at three owners for these factored
 candidates. At prime width at most three, common-source
-failure can be decided in polynomial time for fixed $K$.
+failure is fixed-parameter tractable in $K$.
 Write the profile clauses as the minimal sets $B_r$ that
 every winning coalition at $r$ must meet. An omission
 assignment chooses one owner for every input so that
@@ -2913,29 +2913,44 @@ nonunary assignment: two factors of width at least
 two would give a prime of width at least four on a
 facet seeing both owners.
 
-Enumerate for each owner either no seed or one input
-assigned there by a unary choice, with distinct seeds
-for distinct owners. With a seed at $r$, fixing it in
-the omission set makes all remaining constraints at
-$r$ unary. For every unseeded owner disallow unary
-assignments to it in this branch. Assign each remaining
-input to an available seeded owner if there is one
-consistent with its unary exclusions. Otherwise it
-must use its unique possible unseeded nonunary choice,
-or the branch fails. Check the original clauses on
-the resulting unseeded omission sets.
+Start with no seeds. A seed is a distinct input assigned
+by a unary choice at its owner. Once an owner has a seed,
+its other constraints are unary. Assign each remaining
+input to an available seeded owner if it is compatible
+with that owner's exclusions. Otherwise provisionally
+assign it to its unique allowed nonunary owner if that
+owner is unseeded.
 
-This greedy choice is complete for a fixed set of seeds:
-moving any input to an available seeded owner does not
-constrain other inputs there and only removes it from
-an unseeded omission set, which cannot cause a violation.
-Every feasible omission assignment is covered by a
-branch, since one can pick a seed at each owner that
-receives a unary choice. The enumeration costs at most
-$(|V|+1)^K$ branches and each uses only the profile
-clause lists recovered from the primes. The absence of
-a feasible assignment is exactly core realizability
-of a candidate in the greatest-profile form.
+If an input has no tentative assignment, branch on
+assigning it to an unseeded owner by a unary choice,
+making that input the seed there. If an unseeded omission
+set contains a whole clause, branch on moving a member
+of that clause to an unseeded owner by a unary choice.
+Again use that input as the new seed. If neither failure
+occurs, the tentative assignment is feasible.
+
+To see completeness, suppose a feasible assignment
+extends the current seeds. An input with no tentative
+assignment must use a unary choice at an unseeded
+owner. For a violated clause in an unseeded omission
+set, some member must leave that owner in the feasible
+assignment. It has no available seeded choice and its
+only nonunary choice was the tentative one, so a branch
+can seed its actual owner. Thus some branch preserves
+any feasible continuation.
+
+Every clause that can be violated has size at most four.
+Deleting one of its members leaves a minimal clause,
+since a subsuming projected clause would have been a
+subset of the original clause. The projected width is
+at most three. Also each input has at most four
+permitted owners, since a facet sees all but one of
+its positive-width factors. Thus each node has at most
+sixteen branches, and the depth is at most $K$.
+All local work uses the recovered profile clause lists,
+giving $16^{O(K)}$ times polynomial work in the primes.
+The absence of a feasible assignment is equivalent to
+realizability in the greatest-profile form.
 
 With a variable number of owners, the sharp boundary
 for the same class is between widths two and three.
