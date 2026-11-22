@@ -222,6 +222,54 @@ $1$ gives $x_i\lor x_j$, and output $0$ fixes both endpoints to $0$;
 a $b$-edge with output $0$ gives $\neg x_i\lor\neg x_j$, and
 output $1$ fixes both endpoints to $1$.
 
+\paragraph{Least representatives of graph activation classes.}
+For a simple graph sum and a given proper target $p$, one can
+decide in polynomial time whether its entire activation class
+has a least representative, and construct it when it exists.
+On each observer facet use a Boolean variable for every
+visible posting. At each input forbid pairs of competing
+postings. For each edge $uv$ at owner $r$ that is owned at
+$p$, require $u:r$ or $v:r$. For each edge unowned at $p$,
+fix both endpoint statuses to those in $p$, including the
+unposted statuses. An invisible required posting makes that
+facet infeasible. These are $2$SAT constraints and their
+solutions are exactly the proper representatives on the
+facet, by \cref{core:thm:graph-activation-kernel}. Taking
+all facets allows different missing observers.
+
+Intersect the postings of all representatives. Only postings
+in $p$ can survive. For each such posting, check whether any
+facet instance admits a solution with that posting absent,
+using one extra unit clause where it is visible. Delete it
+from the intersection if such a solution exists. The
+intersection is itself proper because it is a subposting of
+$p$. It is the least representative exactly when it still
+owns every edge owned at $p$. The unowned edges retain their
+fixed endpoint statuses automatically. If an owned edge has
+lost both of its owner postings, the omission tests supply
+representatives missing them, using $p$ itself for a posting
+already absent there. Their intersection no longer
+owns that edge, and no representative can lie below both.
+Thus the algorithm also identifies an edge witnessing failure.
+
+Least representatives on every proper posting face do not
+ensure a least representative in the full class. For $K\ge4$,
+take a triangle whose three edges have distinct owners. In the
+two cyclic orientations post each vertex at its outgoing
+edge's owner. Both colorings are proper and own every edge,
+so they are equivalent. They disagree at every vertex, and
+their common subposting is empty, which owns no edge.
+
+Nevertheless there is no mutual-capture pair in a proper
+posting face. Posting one head can capture another only
+through their common edge, so both postings of a mutual pair
+would have to use that edge's owner. For each head to lose
+after the other is posted, the third vertex would have to
+absorb its other incident edge. Those two edges have distinct
+owners, which would require conflicting postings on that
+third vertex. The face anti-exchange criterion therefore
+holds on every proper face.
+
 \paragraph{Fold sums on an incidence forest.}
 Replace edges by nonempty hyperedges, each carrying one owner,
 and replace the binary choices by folds at their respective owners.
