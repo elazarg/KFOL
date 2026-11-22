@@ -389,6 +389,59 @@ mutual-capture pair must share a fold and all their
 other incident folds must already absorb. Sufficiency is
 the same independent choice of postings in the forest.
 
+\paragraph{Fold kernels with cyclic incidence.}
+For linear fold supports, the precedence argument can also
+handle cycles of switches. For the chosen old and new
+native postings, form the precedence digraph as before.
+Suppose that whenever the arc of a fold lies inside a
+strongly connected component of this digraph, the only
+vertices of that fold in the component are the two
+endpoints of its arc. Then the local kernel test remains
+sufficient. In particular it is exact for linear supports
+such that deleting any hyperedge node from the incidence
+graph leaves at most two of its incident vertices in
+each connected component.
+
+Process the strongly connected components in precedence
+order, changing each component simultaneously. A fold with
+a common native posting keeps that anchor. A fold with a
+precedence arc crossing components has one of its chosen
+native postings unchanged during each component's switch:
+its new posting is installed before its old one is removed.
+The same holds in a component containing neither endpoint.
+Thus for any changed head $j$, every incident fold of
+these kinds has an unchanged native posting different
+from $j$.
+
+For a fold with an arc internal to the current component,
+the only possible changed heads of that fold are its chosen
+endpoints. In the capture probe for an endpoint leaving
+the fold's owner, use the other endpoint's new native
+posting. For one entering that owner, use the other
+endpoint's old native posting. These are exactly the
+allowed postings in the simultaneous capture-probe rule
+of \cref{core:thm:simultaneous-capture-probes}. Use the
+unchanged anchors for the other folds. Linearity ensures
+that distinct incident folds cannot prescribe different
+postings on the same other input. Every incident fold
+absorbs on the resulting probe, so the rule proves
+equivalence across this component's entire switch.
+The erasure of noncommon owners used for forests also
+applies here, so the proof works across observer facets.
+
+To verify the incidence condition suffices, consider an
+arc internal to a strongly connected component. It lies
+on a directed cycle. Removing this arc leaves its
+component connected in the underlying undirected graph,
+since the rest of that cycle connects its endpoints.
+Each other arc passes through a different hyperedge node
+in the incidence graph. Thus all vertices of the
+precedence component lie in one connected component
+after deleting the first fold's node. By hypothesis at
+most two vertices of that fold can belong to it. This
+includes the case where all hyperedges on incidence cycles
+are binary, with arbitrary linear folds outside the cycles.
+
 \paragraph{Recovering fold sums from prime guards.}
 Call a family of fold supports linear if any two distinct
 nonsingleton supports meet in at most one input, counting
