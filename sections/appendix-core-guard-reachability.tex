@@ -2400,6 +2400,48 @@ check is necessary as well. This uses only the
 candidate's bits and its owner orders once the
 candidate's realizability is known.
 
+With both canonical presentations supplied, there is
+no need to guess the orders. Read the prescribed set
+$J(q)$ at every listed minimal loss $q$. Reject if
+any of its postings is on a head outside $J(q)$:
+erasing that posting would preserve availability in
+a ranked presentation and contradict minimality.
+At each head retain the losses $q$ for which no
+distinct minimal loss $t$ at that head satisfies
+$t|_{J(q)}\subseteq q$.
+
+If a presentation exists, $J$ is its availability
+function, and the comparison is exactly the row
+preorder above. Two equivalent canonical losses
+coincide, since their surviving sets agree and all
+their postings survive. Thus the retained rows must
+be the unique minimum canonical presentation. Check
+that their graph has no monochromatic cycle and
+compare their availability with the candidate.
+Passing these tests is sufficient by exactness of
+projection deletion. A failed comparison has a
+proper coloring as a certificate, so recognition
+from both canonical presentations is in coNP.
+
+If the candidate is known to be core, the comparison
+only needs the listed minimal losses. The candidate
+obeys every retained row. If the resulting greatest
+operation omits every candidate loss, it is also
+bounded by the candidate, proving equality. Hence
+the entire test in this case is polynomial in the
+two lists.
+
+For a specified minimal loss $q$, its retention
+test can also be run from the primes alone. Allow
+any flag on an input outside $J(q)$, and only the
+flags of $q$ on $J(q)$. A competing minimal loss is
+contained in this alphabet and omits at least one
+flag of $q$, since minimal losses are incomparable.
+Try forbidding each flag of $q$ in turn and use
+the prime-hit test for an allowed loss. This tests
+membership in the recovered budget even when the
+whole budget has not been listed.
+
 Such a presentation preserves directed reachability
 on the input names. Take its rows to be canonical
 candidate losses, as above. Their posting graph is a
