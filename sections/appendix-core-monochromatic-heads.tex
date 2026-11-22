@@ -8222,6 +8222,60 @@ Every proper loss is visible on at least one facet, so these
 tests recover both the possible postings and those mandatory
 across the whole loss family.
 
+For mixed rows at headed inputs, reciprocal pairs can instead
+supply controllers that are already bounded on every head other
+than the queried head $i$. The following test works facet by
+facet. Call a posting $j{:}r$ usable at $i$ in any of these cases:
+\begin{itemize}
+\item $j$ is retained, so use its projection.
+\item $j$ belongs to a reciprocal pair of owner $s\ne r$,
+whose two arrows are mandatory on all losses at its members.
+The pair avoids $i$, and whenever a loss on the facet at $i$
+posts $j{:}r$, it posts both pair members at $r$.
+Use the pair fold at $s$.
+\item A pair with the same mandatory reciprocity avoids $i,j$.
+For some $s\ne r$, every loss at $j$ posts both members at $s$.
+Whenever a loss on the facet at $i$ posts $j{:}r$, it also posts
+both members at $r$. Use $j\star_s B$ with $B$ the pair fold at
+its own owner.
+\end{itemize}
+Each controller is bounded: the pair fold clears its member
+losses, and in the last case it absorbs at $s$ on each loss
+at $j$. It is singleton $r$ on a row at $i$ covered by its
+posting, and can return singleton $r$ at a positive only if
+$j$ is itself singleton $r$. In the last case this follows
+because the gate from $j$ has owner $s\ne r$.
+
+A sufficient condition on the canonical lists is that each
+prime on each facet consist entirely of usable postings there.
+In fact, at a positive choose one enabled prime and attach
+its controllers successively by the gate at each posting's
+owner, starting from $i$. Every loss on that facet meets the
+prime, so some gate absorbs on it. For full boundedness, use
+the same test on \emph{all} facets and select an enabled prime
+on each of them, after deleting the hidden postings from the
+query. Positivity on these restrictions follows by
+antitonicity and overlap agreement. Attach all the selected
+controllers. Their absorption checks on the original positive
+all fail. On every loss at $i$ some selected gate absorbs,
+and no later controller can restore $i$, since all controllers
+avoid $i$. At every other loss neither the initial projection
+nor any controller supplies the forbidden mark. Union over
+the positives thus realizes the complete family.
+
+The conditional posting tests in this criterion require only
+prime lists. On one facet, a minimal loss containing posting
+$p$ and omitting $q\ne p$ exists exactly when some prime $G$
+contains $p$ and no prime is contained in
+$(G\setminus\{p\})\cup\{q\}$. Indeed, to keep $p$ in a minimal
+transversal it must be the unique hit on some $G$. Conversely,
+if the displayed criterion holds, the complement of the
+displayed set hits every prime and meets $G$ only at $p$.
+Minimizing preserves $p$ and omits $q$, and the facet
+transversal duality gives a proper loss. Together with the
+singleton-prime tests for mandatory postings, this gives a
+polynomial check without enumerating minimal losses.
+
 For a complete directed graph on at least two vertices, the
 extension is therefore realizable exactly when an owner is
 repeated or all $K$ owners occur. A repeated owner gives the
