@@ -2251,20 +2251,47 @@ The $b$-profile is
 $((x\vee y)\wedge z)\vee(x\wedge y)$ and the $c$-profile is
 $((x\wedge y)\vee z)\wedge(x\vee y)$, where the input letters
 denote membership in the tested coalition. Both are majority.
-Every nonempty minorant must retain both majority profiles.
-A read-once minorant cannot use fewer than three inputs, since
-its $b$-test on the pair excluding any used input would fail
-if it used only one input, or would force its $b$-profile to
-be disjunction on its two inputs. In the two-input case the
-same argument forces disjunction at $c$, which a single
-primitive gate cannot provide. With all three inputs, the
-root separates a singleton input from the other two. At an
-owner different from the root's owner its profile is a
-conjunction requiring that singleton input. The majority
-test at that owner wins on the other two. Thus the root
-would have to be owned by both $b$ and $c$. The finite
-nonempty downset of $T$ contains an atom, and by this argument
-none of its atoms has a primitive read-once representation.
+In fact $T$ returns the corresponding singleton when at least
+two inputs are singleton $b$ or singleton $c$, and returns the
+full input union otherwise. To check the union case, the final
+$b$-gate cannot absorb, by its majority profile. If the left
+$c$-gate absorbs, $z$ is singleton $c$ and neither $x$ nor $y$
+is singleton $c$, so the right child contributes both of their
+menus. Otherwise the left child contributes $z$ and the value
+of $x\star_b y$. This and the right child together contain both
+$x$ and $y$: if both inner gates absorb, $x,y$ are the two
+different absorbing singletons, and if either does not, that
+gate takes their union.
+
+Every core operation retaining the two majority profiles
+contains this threshold operation. On a majority probe the
+profile forces the specified singleton. At any other valuation,
+consider a winner $k$ in input $i$. To certify it in
+$\mathcal R_\phi$, choose winning pairs $A_b,A_c$ containing
+$i$ with distinct partners, and use the full input set for
+every other owner. If $c\ne k$, choose $A_b$ to avoid the
+singleton $c$ inputs; if $b\ne k$, choose $A_c$ to avoid the
+singleton $b$ inputs. Neither prohibition excludes $i$.
+Each can rule out at most one partner, and the two prohibited
+sets are disjoint, so distinct partners exist. The coalitions
+intersect exactly in $i$. At any rival other than $b,c$, the
+intersection of the other coalitions is still $\{i\}$, which
+cannot be a rival singleton. Thus the displayed definition
+of $\mathcal R_\phi$ certifies every winner of the union.
+By the one-bound argument in the proof of
+\cref{core:thm:read-once-minimum}, each such winner is forced.
+Every nonempty minorant of $T$ retains its majority tests,
+so $T$ is an atom.
+
+A read-once tree on one input misses a majority test on the
+other pair. With two inputs, winning on each pair requires
+disjunction on the two used inputs at both $b$ and $c$, which
+no primitive gate provides. With all three inputs, the root
+separates a singleton input from the other two. At an owner
+different from the root's owner its profile is conjunction,
+requiring that singleton input. The majority test at that
+owner wins on the other two. Thus the root would have to be
+owned by both $b$ and $c$.
 
 \begin{lemma}[A mandatory linear source]\label{core:lem:mandatory-linear-source}
 Suppose a choice/union word $T$ uses $j$ at most once, and for some
