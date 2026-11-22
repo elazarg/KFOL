@@ -406,34 +406,38 @@ closure and matching tests per guard. This applies to checking
 exactness directly from the original primes when the loss
 budget is also given.
 
-At fixed $K$ the loss budget can also be recovered from the
-canonical primes, with a check that the assumed class applies.
-At each head enumerate the proper colorings with at most one
-posting per owner. There are $O_K(n^{K-1})$ on $n$ inputs.
-Read each bit on a facet omitting an owner of the coloring,
-and keep the zero colorings whose immediate subcolorings are
-all positive. Every injective minimal loss is found this way,
-since each subcoloring of an injective coloring is still injective.
-Stop if these rows already exceed the allowed excess $t$.
+The loss budget can also be recovered from the canonical primes
+with $K$ counted as a parameter. On a facet, a sufficient guard
+must hit each visible minimal loss with an exclusion: otherwise
+that loss itself satisfies the guard. Conversely a guard hitting
+all visible minimal losses excludes their upward closure.
+Thus if the excess is at most $t$, every prime has width at
+most $t+1$, since there are at most $t+1$ losses at a head and
+a minimal hitting set uses at most one witness per loss.
+Reject wider primes when testing for membership in this class.
 
-To check that no other minimal loss is needed, reconstruct the
-prime lists of the recovered rows and compare with the given
-lists. On a facet use only the rows omitting its observer.
-A sufficient guard must hit each such row with an exclusion:
-otherwise the row itself satisfies the guard. Conversely a
-guard hitting all the rows excludes their entire upward closure.
-Thus one can generate the canonical primes by choosing one
-exclusion from each visible row and minimizing the resulting
-sets. With no visible row this gives the empty guard, and a
-visible empty row gives no guard. At a head there are at most
-$t+1$ rows, each of size at most $K-1$, so the number of
-choices is at most $(K-1)^{t+1}$. Equality of the lists certifies
-that the recovered rows describe the whole family, including
-agreement across observers. Inequality rules out a complete
-injective loss budget of the specified excess. Together with
-closure and matching this gives recognition from primes alone
-in time $f_K(t)$ times a polynomial in the input length and
-arity, for each fixed $K$.
+At each head and observer start from the empty coloring. If the
+current coloring satisfies a prime, branch on the postings excluded
+by that prime, adding one consistent posting at an unused owner.
+A zero needs to hit this prime, so every injective minimal loss
+extending the current coloring extends some branch.
+Stop at a zero and record it if all its immediate subcolorings
+are positive. Every injective minimal loss is found: along a
+branch contained in it, no proper subcoloring can be zero.
+The tree has depth at most $K-1$ and branching at most $t+1$.
+Unite the recovered rows across facets and check the total excess.
+
+To certify that the recovered rows describe the whole family,
+reconstruct their canonical prime lists and compare with the input.
+On each facet choose one exclusion from each row omitting its
+observer, and minimize the resulting sets. With no visible row
+this gives the empty guard, and a visible empty row gives no
+guard. There are at most $(K-1)^{t+1}$ choices per list.
+Equality certifies completeness of the recovered rows and
+agreement across observers. A discrepancy rules out a complete
+injective budget of the specified excess. Together with closure
+and matching, this gives recognition from prime lists alone in
+time $f(K,t)$ times a polynomial in the input length and arity.
 
 This yields exponential prime growth under taking the core meet
 even with two posting owners and one row per head. Start with a
