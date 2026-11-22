@@ -212,6 +212,68 @@ the head and the $r$-postings in the current set erased. A loss
 there is equivalent to a minimal loss meeting the removal rule.
 \end{proof}
 
+\paragraph{Reachability and the choice of fold owners.}
+With one loss per head, the deletion test can be run as
+one reachability calculation for a fixed probe $p$.
+Draw an arrow from a head to every posted input of its
+row whose status disagrees with $p$. Use all unheaded
+inputs as seeds. For a selected owner $r$, also seed the
+vertices on $r$-cycles in the subgraph induced by inputs
+not posted at $r$ at the probe. The test succeeds exactly
+when the queried head reaches a seed. This gives exact
+feasibility whenever the probe meets the hypotheses of
+\cref{core:thm:monochromatic-head-cut}, in particular
+at every neutral probe.
+
+Indeed a safe cycle at any later stage already exists
+in the initial graph and can be used first. Its fold
+deletes each row at a cycle vertex. A row deleted
+elsewhere by that fold has an arrow to the cycle,
+since the cycle avoids the probe block at its owner.
+Thereafter all deletions by unheaded projections
+propagate precisely along the disagreement arrows.
+Conversely each such path can be replayed starting
+from its seed, using masks to remove the corresponding
+rows in reverse order along the path. Thus for one
+mark a single fold owner always suffices whenever
+the deletion test succeeds and no projection seed
+is reachable.
+
+Choosing a common owner set for several neutral marks
+is NP-complete when the palette varies, even with one
+loss per head. For each mark not reaching a projection
+seed, list the owners with a reachable cycle. A common
+selection must meet every such list, and that suffices,
+since the individual witnesses can be unioned. For
+hardness reduce from set cover. For each set use its
+own owner and a private two-cycle at that owner,
+whose two heads each have the singleton loss posting
+the other. For each element add a marked head with
+one row posting a designated vertex of every set
+cycle covering that element, at the set's owner.
+A spare owner makes all rows proper. The reachable
+cycles of an element are exactly the sets containing
+it. Thus the minimum number of selected owners
+equals the minimum cover size.
+
+The owner-selection problem is also NP-complete for one
+neutral mark when just one head may have several losses
+and that head lies on no posting cycle. Membership uses
+the cut theorem, since row amalgamation is automatic on
+all cycle heads. For hardness use one common
+marked head for all element rows in the reduction.
+No row posts that head.
+For necessity keep any one of its rows together with
+the cycle rows and apply the one-loss reachability test.
+Its owner list must be hit. Conversely attach the
+selected cycle folds to the marked projection, at
+their respective owners. Each fold obeys every cycle
+row, and the selected folds together absorb every
+element row. All of them take union at the neutral
+probe, preserving the mark. This realizes precisely the
+selections covering all elements.
+
+\paragraph{The row-amalgamation test from primes.}
 The row hypothesis has a direct dual form. At a fixed
 head let $E_r$ be its outgoing postings on cycles of
 owner $r$. A common prime is a minimal set of postings
