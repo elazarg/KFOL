@@ -1989,6 +1989,43 @@ the size of the graph and apply directly to common
 prime lists in this class, where a head has either one
 common prime or an empty list.
 
+The singleton graph can also simplify a budget with
+larger losses. At each head with a nonempty common
+prime list, intersect its guards to find exactly the
+postings that are singleton losses. A head with an
+empty list is forbidden. Apply the graph closure and
+deletions above to these singleton constraints. Every
+bounded term obeys those constraints regardless of the
+larger losses, so it must ignore the deleted inputs and
+respect all singleton losses in the closure.
+
+Keep the larger losses by projecting every loss at
+each surviving head to the surviving inputs. This
+projection is necessary and sufficient on terms using
+only those inputs, since evaluation ignores all deleted
+inputs. In the common lists discard guards meeting the
+set of all postings on deleted inputs. Intersect the
+remaining guards with the surviving posting ground.
+As for the local reduction, an internal set contains
+a projected loss exactly when its union with the
+exterior posting set hits every original common guard.
+To enforce the shortcut losses at a surviving head,
+adjoin their singleton postings to each of its guards
+and remove redundant supersets. Indeed an internal
+set is positive precisely if it avoids all those
+postings and enables an old projected guard.
+
+Repeat when inputs were deleted, since projecting
+larger losses may expose new singleton or empty losses.
+Each repetition deletes at least one input. When none
+is deleted, shortcut closure alone cannot produce any
+singleton losses beyond the ones just adjoined: adding
+singleton losses generates only their own upsets.
+The process is polynomial on common prime lists,
+whose lengths never increase. Its output has exactly
+the original bounded terms, viewed on the surviving
+inputs. The reduction uses no chosen positive probe.
+
 Even with monochromatic cycles, the same calculation
 certifies any head made available. For a head left
 unavailable, a sufficient blocking certificate
