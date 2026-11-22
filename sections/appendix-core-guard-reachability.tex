@@ -2034,6 +2034,47 @@ nonposting literals. On singleton-block budgets
 this is exactly the greatest realizable formal
 completion.
 
+The saturation state also localizes the query statuses
+that must be kept. Let $D$ be the final recorded set at
+$q$ and let $S_r$ be the greatest safe $r$-support in
+the residual budget with no query restriction. If $p$
+agrees with $q$ on the tests $[q_x=r]$ for $x\in S_r$,
+for every $r$, then saturation at $p$ records the same
+set $D$. Indeed, every saved $r$-support used at $q$
+is in $S_r$, since deleting rows only makes it safer.
+It remains eligible at $p$, so the recorded set at $p$
+contains $D$. At $D$, every safe support is in its
+corresponding $S_r$. The agreed statuses therefore
+make exactly the same safe supports eligible at $p$
+and $q$, so $D$ is stable at $p$ as well. Leastness
+gives the reverse inclusion. The resulting cells
+partition the colorings: if two cells intersect then
+they have the same state $D$, hence the same sets
+$S_r$ and the same fixed posting flags. This works
+also with rows that have nonsingleton owner blocks.
+
+For arbitrary blocks, a stable state can be certified
+exact at a marked query by applying a ranked cut to
+its residual rows. Let $U$ be the heads still having
+rows. Every residual posting at a head outside $U$
+agrees with the query. Otherwise a singleton support
+at that head would be safe and eligible for the
+posting's owner, and would have deleted the row.
+Thus if the internal posting graph of the residual
+rows has no monochromatic cycle, choose one residual
+row per head of $U$ and apply the ranked survivor cut
+at the query restricted to the complement of $U$.
+It rules out all remaining heads at once, while the
+recorded folds realize all others. The same argument
+works for a smaller cut containing just the mark,
+as long as its selected residual rows agree with the
+query outside that cut and admit owner ranks inside.
+These ranks can be checked from the primes by the
+allowed-alphabet test, additionally forbidding all
+recorded postings. Hence monochromatic cycles in
+the original budget can be discharged by folds
+before the rank test is applied.
+
 A feasible query in that class also has a short
 primitive witness. Keep only the sequential folds
 that record a new posting. When saturation leaves
