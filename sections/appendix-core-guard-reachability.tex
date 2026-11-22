@@ -2087,6 +2087,46 @@ $2^{(K+2)^{O(w+1)}}N^{O(1)}$ time from a supplied
 decomposition, for explicitly listed rows of total
 size $N$.
 
+The same decomposition can count the primes by size.
+For a fixed guard let $S_0$ be the set of feasible
+blocking-certificate boundary states as above. Also
+store a set $S_1$ of such sets: it contains the state
+set obtained after deleting each single selected flag
+on a forgotten input. Apply the guard restriction at
+an input only when it is forgotten. Then for its
+chosen flags, update $S_0$ normally, propagate each
+old member of $S_1$ normally, and add the variants
+obtained by applying the forget operation to the old
+$S_0$ with one of those flags omitted. At a join,
+combine one child's altered state set with the other
+child's unaltered set, in either direction. This tracks
+exactly one deleted flag, and collapsing repeated
+state sets does not affect the test.
+
+At the root accept exactly when $S_0$ is empty and
+every member of $S_1$ is nonempty. The first condition
+says the guard suffices and the second says that every
+single deletion fails, which is minimality by
+monotonicity. Each complete guard determines one
+summary, so counting guards does not count different
+blocking witnesses multiple times. Store polynomials
+in a size variable, multiplying by its appropriate
+power on each flag choice, multiplying child counts
+at joins and adding counts for alternative choices.
+Their degree and coefficient bit lengths are
+polynomial in the input length. This counts the primes
+of all sizes in $2^{2^{(K+2)^{O(w+1)}}}N^{O(1)}$ time.
+
+The count also supports enumeration with delay
+polynomial in $N$ for fixed $K,w$. Traverse the
+binary choices of guard flags, checking extension
+counts by fixing the chosen prefix in the same
+tables. Skip any prefix with zero count. Between
+two outputs only polynomially many such prefix
+checks are needed, and the space is polynomial in
+$N$ for fixed parameters. No rows beyond the
+supplied budget are listed in this computation.
+
 In this class the stable availability set also gives a
 partition of the full-palette colorings into boxes. Write
 $A(p)$ for the available inputs at a consistent coloring
