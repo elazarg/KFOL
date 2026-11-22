@@ -2383,15 +2383,28 @@ exactly the heads supplied at $p$ by some bounded ranked operation.
 Moreover every supplied head has a witness with an acyclic
 dependency graph across all owners.
 
-For sufficiency record the addition order. At each added head
-shorten every candidate loss to its postings in the disagreeing
-set at the time of addition. These shortened rows mention
-only earlier heads and are nonempty. On the support of the
-added heads the resulting budget has an acyclic graph, and its
-greatest operation respects the candidate losses. All other
-heads are ignored. At $p$ each shortened row has a disagreeing
-posting on an earlier head, so projection deletion adds the
-whole support in the recorded order.
+For sufficiency record the addition order and choose one common
+prime at each added head, using only disagreements on earlier
+heads. At that head impose one singleton loss row for each
+posting in the chosen prime. This budget is acyclic on the
+selected support. Every candidate loss at a supported head
+contains a posting from its chosen prime, so respecting the
+singleton rows respects the candidate losses. All other
+heads are ignored. At $p$ each row has a disagreeing posting
+on an earlier head, so projection deletion adds the whole
+support in the recorded order.
+
+The budget has at most $K\binom{|V|}{2}$ rows and can be
+constructed directly from the facet lists by choosing one
+enabled prime per facet and taking their union. Its own
+canonical guards are also compact. For a supported head,
+collect all postings on arrows reachable by following rows
+from that head to their controls. Every singleton row requires
+its one control to be available and to disagree with that
+posting. Induction in the recorded order therefore says that
+the head is available exactly when every collected posting
+disagrees. The unique prime on a facet consists of those
+postings with visible owners. An ignored head has no prime.
 
 For necessity run the availability calculation for a bounded
 ranked witness at $p$. Suppose it has already added a set $E$
@@ -2414,9 +2427,9 @@ at every fixed $K\ge3$ follows from
 \cref{core:thm:complete-acyclic-guard-complexity}: a realizable
 acyclic candidate is itself ranked, and a union of ranked
 operations is core. The
-acyclic witnesses also show that allowing mixed cycles in the
-summands gives the same union class as requiring an acyclic
-graph at every summand.
+acyclic singleton-row witnesses also show that allowing
+arbitrary ranked summands gives the same union class as using
+only acyclic summands with one prime per live head and facet.
 
 \paragraph{Canonical primes of the ranked envelope.}
 The same test gives a guard presentation for the greatest union
@@ -2523,6 +2536,17 @@ choice is connected through the consecutive layers. Hence
 the envelope has exactly $2^m$ primes at $i$ on every facet
 seeing $r$, even though the original candidate has linear
 total prime-list size at fixed $K$.
+
+Any representation of this envelope using the acyclic
+singleton-row summands needs at least $2^m$ summands.
+On pure $r$ postings a summand has at most one sufficient
+prime at $i$, obtained by keeping just its $r$ exclusions.
+If it supplies $i$ on the maximal pure posting allowed by
+a minimal path guard, its own exclusions there must be
+contained in that path guard. Since it lies below the
+envelope, those exclusions must themselves contain a
+minimal path guard, so equality is forced. One summand
+therefore cannot supply two of these maximal probes.
 
 \paragraph{When the path envelope is ranked.}
 In the same one-loss class, assume there is an unheaded input.
