@@ -2553,6 +2553,11 @@ in the prime process once that process has added $E$.
 Induction shows that every head available in the witness
 belongs to the least fixed point.
 
+For an explicit omission budget the same proof uses its rows
+directly. At an eligible head choose a disagreeing posting
+from each row and impose the corresponding singleton losses.
+The replay proof needs only the original omissions.
+
 The test takes polynomial time per probe from the facet lists.
 A compatible canonical family with some positive bit is a union
 of ranked operations exactly when all its positive probes pass.
@@ -2564,6 +2569,51 @@ operations is core. The
 acyclic singleton-row witnesses also show that allowing
 arbitrary ranked summands gives the same union class as using
 only acyclic summands with one prime per live head and facet.
+
+\paragraph{Ranked envelopes of source extensions.}
+Let a candidate extend a realized prefix $B$ by a block $W$,
+with the old source bits independent of $W$. Suppose $B$ is
+a union of ranked operations. At a proper background $e$,
+form the internal budget on $W$ by retaining an original
+loss $(b,t)$ at a head in $W$ exactly when
+$b\preceq_B e$, then using its internal part $t$.
+This is the ordinary conditional budget of
+\cref{core:lem:block-source-patterns}. The ranked envelope
+of the full candidate has old source bits $B$. At every
+proper joint probe $(e,d)$, its new source bits are exactly
+those of the ranked envelope of the internal budget at $d$.
+Zero envelopes give all-zero bits.
+
+To prove this run the forward prime test on $(e,d)$.
+The old heads can be processed first: their eligibility
+does not use any new head, so this only advances otherwise
+independent additions. Their final set is $J_B(e)$
+because $B$ is a union of ranked operations. The exterior
+part $b$ of a new loss is already hit by a disagreement
+exactly when $b|_{J_B(e)}\not\subseteq e$. Otherwise
+$b\preceq_B e$ by the cross-facet activation formula
+above. Thus after the old pass the remaining tests are
+precisely the forward tests on the projected rows $t$.
+Redundant projected rows have no effect: meeting a
+contained row also meets every row containing it.
+Equality on the proper probes gives the envelope formula
+by source reconstruction.
+
+In particular, unions of ranked operations are closed
+under any core interval extension by one source. The
+ordinary conditional coefficient on one input is a
+projection or zero, so its ranked envelope agrees with it.
+The same holds for a block extension if the dependency
+graph restricted to its new heads has no monochromatic
+cycle. Projecting activated rows cannot introduce such
+a cycle, so every nonzero conditional coefficient is
+ranked by projection deletion. Hence with a ranked-union
+prefix and this condition on the new block, core
+realizability of a candidate extension is equivalent
+to passing the forward prime test at every positive
+probe. This gives a coNP test on the promised form even
+when the prefix itself has cyclic canonical dependencies
+and lacks a single ranked presentation.
 
 \paragraph{Canonical primes of the ranked envelope.}
 The same test gives a guard presentation for the greatest union
