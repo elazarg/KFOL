@@ -2680,6 +2680,52 @@ The number of slices is then bounded, so these
 full lists can also be constructed in polynomial
 time.
 
+With unboundedly many binary blocks, the full lists
+can be exponential even at width two. Use a layered
+directed graph with a source $s$, a sink $t$, and
+$n$ intervening layers of two vertices each. Put
+all possible edges from each layer to the next.
+For each vertex $v$, retain two input ports
+$u_v,w_v$ and use their menu union as a block.
+At the sole loss head $h$, the guards on facets
+showing $r$ consist of the pairs
+\[
+ \{u_v{:}r,w_v{:}r\},\qquad
+ \{w_v{:}r,u_{v'}{:}r\}\quad(v\to v'),
+\]
+and the two units $\{u_s{:}r\},\{w_t{:}r\}$.
+Keep the inclusion minima and use the empty guard
+on the facet omitting $r$. The original width-two
+candidate is core by the single-source construction
+above and has only linearly many primes.
+
+In the quotient loss test, a block whose quotient
+input is not posted at $r$ must contribute exactly
+one of its two postings. At such a vertex, choosing
+$u_v$ is a true Boolean value and choosing $w_v$
+is a false value. The edge guards between these
+vertices require the corresponding implications,
+with $s$ true and $t$ false whenever they have
+such Boolean values. A block posted at $r$ can
+contribute both postings, satisfying every guard
+incident with that vertex. Thus a loss exists
+exactly when the vertices whose blocks are not
+posted at $r$ have no directed path from $s$ to
+$t$. In the absence of a path, make just the
+vertices reachable from the active source true,
+and choose both postings at each block posted at
+$r$. This satisfies all guards.
+
+The minimal quotient losses therefore post either
+endpoint block alone at $r$, or both blocks in
+one intervening layer at $r$. On a facet showing
+$r$, each prime excludes both endpoint postings
+and chooses one exclusion per intervening layer.
+There are $2^n$ such primes. This budget itself
+is core by the single-source construction, so
+the same list growth occurs for the greatest
+minorant.
+
 The simultaneous loss test is polynomial at bounded
 guard--block incidence width and fixed $K$. For a
 query at an outside head, discard the common guards
