@@ -1784,6 +1784,36 @@ Posting those boundary inputs prevents every
 eligible path from reaching an unheaded input.
 Acyclicity makes the path test exact.
 
+Finding a minimum-cost sufficient guard is NP-hard
+even for acyclic one-row budgets and three owners.
+Fix a facet omitting $k$, with $a,b$ the other owners,
+and use the backward arrows of the Horn test above.
+From a Set Cover instance with budget $d$, put one
+arrow from the queried head to each set input, at
+$a$. From a set input put arrows at $k$ to the inputs
+for its elements. Thus reaching a set needs its
+$a$-exclusion, and reaching it adds all its elements
+without any exclusion.
+
+Use the element inputs as the leaves of a binary
+tree of conjunctions. For each conjunction, put an
+arrow from its left child to the conjunction input
+at $a$ and one from its right child at $b$. Make
+the root the only unheaded input. Each head's
+outgoing arrows in this description are its single
+loss row. They give proper rows and an acyclic graph.
+Give each set's $a$-exclusion cost one and every
+other exclusion cost $d+1$. Within budget, a
+conjunction is reached exactly when both children
+are reached: the two arrows then conflict on its
+required posting. The guard suffices exactly when
+the root is reached, equivalently when the selected
+sets cover the elements. Membership in NP follows
+from the Horn test. With one fixed posting owner
+per input, minimum cost instead follows from a
+shortest eligible path, charging each visible
+exclusion on its simple path once.
+
 For an acyclic budget with several rows per head,
 the full bounded source predicate is the conjunction
 of the predicates obtained by keeping exactly one
