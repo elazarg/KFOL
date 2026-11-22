@@ -439,6 +439,38 @@ injective budget of the specified excess. Together with closure
 and matching, this gives recognition from prime lists alone in
 time $f(K,t)$ times a polynomial in the input length and arity.
 
+The guard implication problem for the core meet is coNP-complete
+without the excess bound, even at fixed $K\ge3$, for acyclic
+injective rows and a queried empty guard. For membership, guess
+a losing coloring on the facet and run the polynomial fixed-query
+test in \cref{core:thm:injective-blockers}. To prove hardness,
+take a $3$CNF with at least two nonempty clauses. Use a head $h_j$
+per clause and a retained input per Boolean variable. At $h_j$
+give one row per literal of clause $j$. It posts that literal's
+variable at $a$ for a positive literal or $b$ for a negative one.
+Unless $j$ is the last clause, the same row posts $h_{j+1}$ at
+$c$, where $a,b,c$ are distinct. Query the empty guard at $h_1$
+on the facet omitting $c$.
+
+Any obstruction to that guard contains a row at $h_1$. Its
+$c$-tail cannot be posted at $c$ in the query, so there must be a
+row at $h_2$, and inductively at every clause. The variable
+tails of those rows have no rows themselves, so they must be
+posted at the corresponding owners. These consistent postings
+confirm a literal in every clause. Conversely, given a model,
+post its truth values at $a,b$ and select a confirmed row per
+clause. The $a,b$ tails are all query seeds. At $c$ the last
+row seeds its head, and the reversed edges reach every earlier
+head, so these rows force the mark to be lost. Thus the queried
+guard holds in the meet exactly for unsatisfiable formulas.
+The input also has polynomial-size canonical prime lists: on
+each facet the visible rows at a clause share the same optional
+$c$-posting, and their other postings are single literals.
+Their minimal hitting sets are the common posting alone, if
+present, or the set of all the visible literal postings.
+The queried empty guard is itself a prime of the prescribed
+family, since all rows at $h_1$ use $c$.
+
 This yields exponential prime growth under taking the core meet
 even with two posting owners and one row per head. Start with a
 head $i$ and then $d$ layers of two inputs each, labeled $a,b$.
