@@ -2064,3 +2064,68 @@ remaining graph. This gives a bound of
 $(K+2)^b$ times polynomial work for cofactor
 testing directly from the prime lists, and hence
 for recognition with acyclic source dependence.
+
+Treewidth two of the grouped incidence graphs already
+allows coNP-hardness. Use three owners $a,b,k$, with
+retained inputs $u_j,v_j$ for the two literals of
+each variable, and retained flags $f_a,f_b$. Use two
+further inputs $h,t$. At $h$ prescribe a loss when
+$t{:}k$ is posted and at least one of $u_j{:}a,v_j{:}a$
+is posted for every $j$. At $t$ prescribe a loss when
+both flags are posted at their respective owners and
+the literal inputs at $b$ meet every clause of a
+$3$CNF. Supply the canonical guards directly: on a
+facet seeing the required colors these are the singleton
+exclusions of the mandatory postings and the literal
+pair or clause exclusions, respectively. Remove any
+supersets. Each list is canonical by consensus, since
+its postings do not compete. On a facet omitting a
+required owner, the empty guard suffices. The
+dependence is acyclic and the retained inputs ensure
+nonempty outputs.
+
+A fixing suppressing $t$ cannot give a cofactor
+violation. The flags already supply $a,b$, and the
+coefficient at $h$ ignores $t$ on the $k$-facet.
+Under a fixing suppressing $h$, only $k$ can be
+affected by changing its menu. A retained literal
+input already supplies $a$ (take at least one
+variable), and the fixing suppresses $h$'s
+contribution on the $b$-facet.
+On the $k$-facet, $h$ can supply $k$, so independence
+fails exactly when $t$ and the retained inputs do
+not supply $k$. In such a valuation the $b$-postings
+hit every clause and cannot include both literals of
+any variable, since one of the pair is fixed at $a$.
+They extend to a model. Conversely, post the false
+literal of every variable at $a$, the true literal
+at $b$, and both flags at their owners. With $t{:}k$,
+this fixes a loss at $h$ and suppresses every other
+source of $k$. Vary the menu at $h$ to introduce $k$.
+The acyclic characterization now gives realizability
+exactly for unsatisfiable formulas.
+
+In every grouped local incidence graph, only the
+constraints belonging to $h,t$ can have scopes of
+size greater than one. Retained heads contribute
+at most a unary constraint or a constant. A tree
+decomposition puts the two nonunary constraint
+vertices in a common bag and attaches one bag
+containing both and each input, with unary
+constraints attached separately. Thus all the
+local graphs have treewidth at most two.
+
+A complementary width test splits the constraints
+into their individual prime clauses. Each capture
+clause is a disjunction of posting tests, one per
+member of a prime. Each nonsupply clause also allows
+the menu of its head to omit $k$. These are clauses
+of unary menu tests. Given a width-$w$ tree
+decomposition of this clause--input incidence graph,
+store the menu classes of bag inputs and, for each
+bag clause, whether some processed incident input
+satisfies it. Process each incidence once, combine
+the flags by disjunction at joins, and require a
+true flag when forgetting a clause. Thus the test
+takes $(K+2)^{O(w+1)}$ times polynomial work, even
+when individual clauses have unbounded size.
