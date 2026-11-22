@@ -1429,6 +1429,63 @@ facet lists its postings as singleton exclusions,
 so the labeled edges are again read directly
 from the canonical primes.
 
+One can add the owned folds at a selected set of
+owners to this circuit. Fix a probe and keep only
+its disagreeing posting edges. The fold-saturation
+marks for a single-row budget are exactly the heads
+that can reach an unheaded input or a monochromatic
+cycle at a selected owner in this graph.
+
+An unheaded input supplies its projection, and a
+selected cycle's fold is safe on the original budget
+and avoids its owner's probe block. Singleton
+controllers then propagate availability backwards
+along the disagreeing edges. Conversely, consider
+a safe fold at $r$ in a saturation round. For
+each vertex of its support still having a row,
+that row posts a successor within the support
+at $r$. Following these successors stays in the
+disagreement graph because the fold avoids the
+probe's $r$-block. It reaches an already available
+vertex or repeats a vertex on a monochromatic
+$r$-cycle. Any row deleted by the fold has a
+disagreeing $r$-edge into this support, giving
+the claimed path.
+
+To synthesize these marks uniformly, for each
+selected owner $r$ construct $C_r(j)$ as the union
+of the $r$-folds on nonempty monochromatic closed
+walks based at $j$, using the bounded-length
+matrix construction above on just the $r$-edges.
+The resulting walks include every simple cycle.
+Keep the mask walk circuits at unheaded endpoints
+as before and add, for each available $C_r(j)$,
+the term
+\[
+                 T_{|V|-1}(j)\star_r C_r(j).
+\]
+In its distributive expansion, the mask walk
+already respects the losses at all heads except
+possibly its final head $j$. The cycle fold
+respects its own losses, and is singleton $r$
+on the row at $j$, clearing the final head.
+Thus the terms are bounded. They supply every
+mark reaching a selected cycle along a simple
+disagreeing path, since the mask walk supplies
+the mark and the chosen cycle fold does not
+absorb it. Conversely a supplied mark comes
+either from such a cycle or from a suffix of
+the mask walk that survives its later masks
+and ends at that cycle.
+
+The total circuit size is
+$O(|J||V|^3\log(2|V|)+|V|(m+|V|))$ for selected
+owners $J$. This synthesizes the fold-saturation
+operation for every single-row budget. When
+each owner block of a row is singleton, saturation
+is exact, so it gives the greatest operation
+in the selected-fold clone.
+
 This test compiles directly from canonical primes into a
 polynomial-size monotone circuit shared by all colorings.
 Let $U$ mark the postings in the union of the fold supports
