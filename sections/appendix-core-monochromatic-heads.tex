@@ -1018,6 +1018,45 @@ posting $A$ at $r$ and all other inputs at $a$, an
 $r$-winner in the candidate must then come from a
 fold supported in $A$.
 
+For a pure-$a$ budget with an acyclic posting graph,
+this gives a polynomial-size core circuit for its
+greatest bounded operation directly from the
+canonical primes. Use one visible facet, since all
+losses use only $a$. Process heads in dependency
+order, with all postings directed to earlier
+inputs. At each head $i$ form a circuit $H_i$ by
+taking, for every prime $G$ at $i$, the $a$-fold
+of $x_i$ and the already constructed $H_v$ for
+$v{:}a\in G$, then unioning the results. An empty
+guard contributes $x_i$. Omit a branch if any
+required $H_v$ is absent, and leave $H_i$ absent
+if no branch remains.
+
+By distributivity, each $H_i$ is a union of
+$a$-folds whose supports contain $i$. Inductively
+the earlier fold supports are safe for the
+budget. Their union with $i$ remains safe at
+each earlier head, and it hits every loss at $i$
+because $G$ is a guard. This proves boundedness.
+Conversely, if a safe support contains $i$ and
+avoids the probe's $a$-postings, its postings
+other than $i$ meet every loss at $i$ and hence
+contain a prime. For each posting in that prime,
+the same safe support supplies the corresponding
+earlier head at its probe, which has the same
+$a$-postings. By induction a summand of its
+$H_v$ avoids these postings. Combining those
+summands in the branch for $G$ supplies $i$.
+
+Unioning the existing $H_i$ gives the greatest
+bounded operation, since every bounded mark has
+a safe fold witness in a pure-owner budget. If
+no $H_i$ exists, the bounded family is empty.
+Each prime uses only a linear number of gates
+in its width, with all earlier circuits shared.
+The total size is linear in the input and its
+one visible facet's prime lists.
+
 This test compiles directly from canonical primes into a
 polynomial-size monotone circuit shared by all colorings.
 Let $U$ mark the postings in the union of the fold supports
