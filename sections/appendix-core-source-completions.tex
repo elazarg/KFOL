@@ -1537,7 +1537,40 @@ that its retained exclusions survive.
 Thus linear-size width-three input lists can
 produce at least $2^m$ canonical primes.
 
-The same argument permits arbitrary-width primes if each prime
+This construction also characterizes the complexity
+of recognizing an individual output prime from
+complete width-three input lists. On the full
+observer-$k$ facet the completed $x$-bit is
+$B\lor(A\land[y{:}a\text{ absent}])$.
+Consequently the guard excluding $y{:}a$ suffices
+exactly when the formula is unsatisfiable.
+Sufficiency is coNP-complete, since a counterexample
+coloring can be checked by the two-head circuit.
+
+Primality is $\mathrm{DP}$-complete already for a
+proposed guard of size two. For hardness start with
+formulas $F,G$ with disjoint variables and use a new
+selector $e$. Encode the circuit
+$(\neg e\land F)\lor(e\land G)$ with gate truth-table
+clauses and a positive output unit. Use a separate
+output variable, so every clause has at least one
+literal other than positive $e$. Test the guard
+excluding $y{:}a$ and the $a$-posting of the positive
+port of $e$. It suffices exactly when $F$ is
+unsatisfiable, since the enabled losing colorings
+encode models with $e$ false. Dropping the exclusion
+on $e$ allows a losing coloring exactly when $F$ or
+$G$ has a model. Dropping the exclusion on $y{:}a$
+always allows one: post $y$ and every retained port
+except the forbidden port at $a$. This hits the
+variable pairs and all clauses, so $B$ is false.
+The guard is therefore prime exactly when $F$ is
+unsatisfiable and $G$ is satisfiable. For membership,
+sufficiency gives the coNP test, and a losing
+coloring for each single-exclusion deletion
+certifies minimality in NP.
+
+The width-two recognition test also permits arbitrary-width primes if each prime
 contains at most two retained postings at inputs that occur at
 multiple owners in the lists. Set every allowed posting at
 a retained input with only one available owner: this cannot
