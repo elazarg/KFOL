@@ -1433,6 +1433,59 @@ forbidden. Only the two outer observer choices
 and the size of the $2$SAT instances depend
 polynomially on the original palette.
 
+The same palette reduction gives succinct source
+circuits for the greatest bounded operation, with
+no restriction on prime width. On a query split
+into retained postings $e$ and internal postings
+$d$, enumerate the local term operations on the
+reduced palette with gate owners in $A$ and union.
+For each such operation, test that it supplies the
+internal mark at $d$ and respects every activated
+loss. For the second test, for each of its positive
+internal rows $(j,t)$ and each original observer
+facet, allow the retained postings of $e$ and
+the internal postings of $t$, excluding the
+observer's color. The operation respects the
+budget precisely when every such ground fails
+to hit some prime. If a ground hits them all,
+it contains a minimal original loss whose
+internal part survives in that operation by
+antitonicity. Conversely a forbidden mark at
+an activated loss gives one of these positive
+rows and grounds.
+
+Each ground test is monotone in the query's
+retained exclusions, since a prime misses the
+ground when all its available postings are
+excluded. The internal mark test is likewise
+monotone in the internal exclusions and can
+be tabulated on the reduced palette. Disjoin
+over the local terms. By the block test this
+computes each coefficient of the greatest
+bounded operation in circuit size and
+construction time $f(h,q)N^{O(1)}$, where $N$
+is the original list length. No enumeration
+of retained backgrounds or original losses
+is required.
+
+For two headed inputs the formula is uniform
+even without bounding $q$. At head $x$ try
+projection $x$ and the folds $x\star_r y$,
+where $y$ is the other head. Union need not
+be tried, because it supplies an $x$-mark
+only when the projection already respects
+all losses at $x$. For the projection, forbid
+any activated loss at $x$. For the $r$-fold,
+forbid any activated loss at either head not
+posting the other at $r$, and require that
+$d$ does not post $y{:}r$. The ground test
+checks each prohibition in one scan of the
+original primes: allow all internal postings
+for the projection, or all except the other
+head at $r$ for the fold. This gives a
+monotone circuit of size $O((K+1)N)$ for
+each headed source.
+
 The same argument permits arbitrary-width primes if each prime
 contains at most two retained postings at inputs that occur at
 multiple owners in the lists. Set every allowed posting at
