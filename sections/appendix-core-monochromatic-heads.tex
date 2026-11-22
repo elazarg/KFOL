@@ -7997,35 +7997,36 @@ terminal is available. The starting edge still makes its head
 positive because its target is unposted.
 \end{proof}
 
-The closure test also gives two prime-side tests without a
-global restriction on incoming edges. A closure with fewer
-than $K$ owners and no monochromatic cycle still refutes
-realizability: the coloring in the converse proof uses no
-incoming-edge hypothesis.
+For arbitrary incoming edges, one can characterize the reach
+of the open-pair and monochromatic-cycle constructions exactly.
+Together these constructions cover all prescribed marks if and only if
+every original edge either has an endpoint closure using all $K$
+owners or belongs to a reciprocal pair of one owner.
 
-For a sufficient condition, fix an original edge $i	o j$,
-write $D$ for its endpoint closure, and consider each owner
-$k$ absent from $D$. In the original graph delete all vertices
-of owner $k$. For each $vin D$ other than $i$, temporarily
-delete the edges entering $v$ at $c_v$. Keep $v$ in a list
-if $i$ can no longer reach both $j$ and $v$. Put $i$ in
-the list as well. Require a monochromatic cycle induced by
-the listed vertices for every edge and every such $k$.
-These tests use only the original posting graph, whose edges
-are the singleton exclusions on the visible facets.
+For sufficiency, suppose a prescribed mark at $i$ reaches no open
+pair. All reached pairs are closed, so the reachable set omits
+the observer's owner. Some edge $i\to j$ is kept, and its closure
+lies in the reachable set. The edge therefore belongs to a
+reciprocal pair at $c_i=c_j$. Both original inputs of that pair
+are unposted at this owner: $i$ is the query head and the edge
+to $j$ is kept. Their original fold supplies the mark.
 
-Indeed, at a missed positive at $i$ with missing observer $k$,
-the reachable set contains some outgoing edge $i	o j$ and
-its closure $D$. All reachable pairs are closed, so no
-reachable vertex has owner $k$. If a listed vertex $v
-e i$
-were posted at $c_v$, the kept paths to $j$ and $v$ would
-survive the two deletions in its test, a contradiction.
-The source $i$ is already unposted. The required cycle
-therefore consists of kept edges and supplies a terminal,
-contradicting the missed positive. The reachability and
-cycle tests are polynomial and specialize to the preceding
-criterion when cycle vertices have only native incoming edges.
+For necessity, let $i\to j$ be an edge without such reciprocity
+whose endpoint closure $D$ omits an owner. Post each private
+input of $D$ at its native owner and each outside successor at
+its unique boundary color. In $D$ post each original input
+at its native owner except $i$, and also leave $j$ unposted if
+$c_j=c_i$. This coloring still uses only owners of $D$. It keeps
+$i\to j$, so the mark at $i$ is prescribed positive, but every
+kept path stays in $D$ and every reached pair is closed.
+A kept monochromatic cycle could use only vertices unposted at
+their native owner, and the only possible pair of these is
+$i,j$. The reverse edge at that owner is absent. Thus these
+constructions miss the mark. If $D$ has no original monochromatic
+cycle, the restricted ranked-survivor argument also rules out
+every full-core witness. Otherwise
+\cref{core:thm:reciprocal-pair-extension} reduces this probe to
+the original losses on $D$.
 
 \begin{corollary}[A sharp number of posting colors]
 \label{core:cor:reciprocal-pair-colors}
