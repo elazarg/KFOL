@@ -7959,21 +7959,43 @@ remaining input and no such cycle either.
 \Cref{core:lem:ranked-posting-survivor} then rules out that witness.
 \end{proof}
 
-When the original graph has no monochromatic cycle, the theorem also
-tests the complete family in polynomial time. Start from the endpoints
-of each original edge and repeatedly insert every vertex reached in
-one step from two included vertices of different owners. The family
-is realizable exactly when each resulting set uses all $K$ owners.
-Indeed, at a missed positive all reachable pairs are closed, so all
-their owners occur in the proper coloring. The reachable set contains
-an edge, since the queried pair is closed and the mark is prescribed
-positive. It contains each forced insertion, since a vertex outside
-it is posted at the color of every incoming edge from inside.
-Conversely, if the closure of an edge $i\to j$ misses an owner,
-post each included $u_l$ at $c_l$ and each outside successor at its
-unique boundary color. Leave the included original inputs unposted.
-The mark at $h_i$ is prescribed positive because of $j$, but cannot
-reach an open pair.
+\begin{corollary}[Recognition with monochromatic cycles]
+Suppose every vertex of an original monochromatic cycle of owner
+$r$ receives only original edges of owner $r$. For each original
+edge, close its endpoints by inserting each vertex reached from two
+included vertices at different owners. The enlarged family is
+realizable exactly when each such closure either uses all $K$ owners
+or contains an original monochromatic cycle.
+\end{corollary}
+\begin{proof}
+Under the incoming-edge condition, every reachable vertex on an
+original $r$-cycle is unposted at $r$: either it is the unposted
+query head or the last edge of a disagreement path enters it at
+$r$. Thus every monochromatic cycle induced by the reachable set
+is a cycle of kept edges. Its fold omits the original losses at
+all its inputs and supplies a terminal for a disagreement path.
+If no original monochromatic cycle is induced, and all reachable
+pairs are closed, the restriction argument of
+\cref{core:thm:reciprocal-pair-extension} rules out the mark.
+So the two possible terminals are an open pair and an original
+monochromatic cycle in the reachable set.
+
+At a missed positive the set of reachable vertices uses fewer than
+$K$ owners because its pairs are closed. The query head is unposted,
+so its closed pair has its private input posted at the native owner.
+Its positive mark therefore requires a kept original edge out of
+the head. Any vertex outside the reachable set must be posted at
+the color of every edge entering it from that set. This proves
+closure under the insertion rule.
+It induces no monochromatic cycle, so the closure of that edge
+fails both tests. Conversely take a closure failing both tests.
+Post its private inputs at their native owners and its outside
+successors at their unique boundary colors. This uses only owners
+of included vertices. From the starting head, every kept path
+stays in the closure; every reached pair is closed and no cycle
+terminal is available. The starting edge still makes its head
+positive because its target is unposted.
+\end{proof}
 
 \begin{corollary}[A sharp number of posting colors]
 \label{core:cor:reciprocal-pair-colors}
