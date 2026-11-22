@@ -2067,16 +2067,39 @@ candidate can have this presentation only when its
 whole graph is acyclic: any cycle in the selected
 subgraph would violate an owner order.
 
-Mixed cycles do occur in the represented operation.
-At distinct owners $a,b$, use retained inputs $z,w$
-and just two rows, $\{y:a,z:a\}$ at $x$ and
-$\{x:b,w:b\}$ at $y$. At the query $z:a$, with $w$
-unposted, $y$ is available through $w$. Thus adding
-$y:a$ changes $x$ from available to unavailable.
-Symmetrically at $w:b$ adding $x:b$ changes $y$.
-The greatest bounded operation therefore has a
-two-cycle in its canonical graph, even though the
-presenting graph has no monochromatic cycle.
+Even monochromatic cycles can appear in the canonical
+graph of the represented operation. Begin with a simple
+directed cycle whose arrows use two owners, both present.
+For each arrow $u\to_r v$ put one row at $v$ posting
+$u:r$ and $z_v:r$, with a private retained input $z_v$.
+The presenting graph has no monochromatic cycle, so the
+availability calculation gives its greatest bounded
+core operation.
+
+Every nonempty proper segment of the cycle gives a
+canonical loss at its final head. Post its first
+predecessor at the color of the first edge and post
+each anchor in the segment at the color of its edge.
+These postings use at most two owners, hence are
+proper. The first head of the segment is blocked by
+the two matching postings. Each subsequent head is
+then blocked by its matching anchor and unavailable
+predecessor. If the initial posting is removed, its
+input is available through its own anchor, which
+lies outside the segment, and activation runs to
+the final head. If any anchor posting in the
+segment is removed, that head activates and the
+rest of the segment follows. Thus the loss is
+minimal.
+
+In particular, take the tails of successive arrows of
+one owner $r$ in the original cycle, assuming there
+are at least two. Each such tail has a canonical
+$r$-arrow to the next one, using the intervening
+segment. This gives a monochromatic cycle in the
+canonical graph. The example shows that selecting
+a presenting subbudget can eliminate monochromatic
+cycles that are unavoidable in the complete lists.
 
 This gives a component criterion directly in terms of
 the prescribed source bits. For a proper coloring $p$,
