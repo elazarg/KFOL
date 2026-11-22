@@ -53,8 +53,8 @@ $r$-postings and $C_u$ for the postings competing with
 $u{:}r$ at input $u$. A guard $D$ suffices after restoration
 if and only if
 \[
- \forall,u{:}r\in B\setminus D\quad
- \exists G\in\Gamma:quad G\subseteq D\cup C_u .
+ \forall\,u{:}r\in B\setminus D\quad
+ \exists G\in\Gamma\quad G\subseteq D\cup C_u .
 \]
 Indeed a counterexample must enable $D$, hit every old
 guard, and post some $u{:}r$ outside $D$. For a fixed such
@@ -85,6 +85,42 @@ $2^m$ guards are prime. Restoration is antitone and
 agrees across observers, so the changed single-source
 predicate is likewise realizable with the passive sources
 retained.
+
+For restoration at a set $R$ of owners, a loss must
+post every owner in $R$. On a facet omitting none of
+them, the same test quantifies a consistent set $Q$
+of one posting per owner in $R$, disjoint from $D$.
+Replace $C_u$ by all postings competing with some
+posting in $Q$. A counterexample enables $D$ and
+contains $Q$ exactly when the remaining ground hits
+every old guard. Indeed it then contains a consistent
+minimal transversal, which can be joined with $Q$.
+This gives polynomial time at fixed $|R|$ without
+expanding either prime or loss families.
+
+For variable $|R|$, guard sufficiency after restoration
+is coNP-complete even for single-source predicates
+whose original guards use just one posting owner $a$.
+For hardness use two passive inputs per Boolean
+variable, one per literal, and one restored owner
+$r_j$ per variable $j$. The guard under test excludes
+every $r_j$-posting except those on its two inputs.
+At an observer outside $R\cup\{a\}$, use the old
+guard family consisting of the sets of literal inputs
+of the clauses of a $3$CNF, each posted at $a$.
+Keep only inclusion minima. This is a canonical list
+since its postings never compete. To give a loss after
+restoration and enable the proposed guard, a coloring
+must post at least one literal input per variable at
+its restored owner and hit every clause guard at $a$.
+Hence the literal inputs at $a$ are consistent and
+hit every clause, so extend to a model. Conversely,
+post each true literal at $a$ and each false literal
+at the restored owner for its variable. This gives
+the required loss. A losing coloring is a polynomial
+certificate, giving the upper bound. Both predicates
+are realized with every passive input retained by
+the single-source theorem.
 
 \paragraph{Bounded prime width and bounded loss size.}
 Suppose a complete observer list has prime width
