@@ -1645,10 +1645,10 @@ The inputs read at $a$ or $c$ in a single row are pairwise
 incomparable in this graph: a binary or option row reads
 just one, and a class-pair row reads options at the same
 level. Hence there is no conflict within a padded row.
-The padding keeps each row on its original observer facet
-weakly: a row at a class-pair head may now use both $a,b$,
-and a two-row head still has one row with colors $a,b$ and
-the other with $b,c$. Thus prime width remains one.
+Padding can only remove observer facets from a class-pair
+row. A two-row head still has one row using $a,b$ and the
+other using $b,c$, so at three owners no facet exposes both.
+Thus prime width remains one.
 
 After fixing any loss at a head $j$, every row at another
 head that reads $j$ is disabled. Such a row posts all
@@ -1670,6 +1670,41 @@ The disagreement conditions and the budget
 $3\binom{\ell}{2}-1+\ell$ are exactly as before. This
 preserves the reduction with an exact candidate, at the
 cost of allowing larger owner blocks.
+
+A palette extension transfers this reduction to every fixed
+$K\ge3$. More generally, to add owners to any prime budget,
+give each new owner $r$ a retained input $d_r$ and append
+all postings $d_r{:}r$ to every original loss. Append the
+same postings to the marked query. On an original observer
+facet, add the corresponding singleton guards to the original
+lists and minimize. On a new observer facet every head is
+unconditional, because the facet hides a mandatory posting.
+This preserves any positive bound on prime width.
+
+If the original budget is exact, so is the extended one.
+Interpret its realizing word using the original gates in the
+larger algebra. Its source predicates on the old inputs ignore
+the new singleton colors: a word using only old owners sees
+them as neutral for absorption. Union this word with the
+projection at every $d_r$ and, for each original input $i$ and new
+owner $r$, its projection masked by $d_r$ at $r$. The
+additional words supply $i$ whenever some new posting is
+absent, and the old word gives exactly the original source
+predicate when all new postings are present.
+
+The minimum witness support for the lifted query is the
+same as for the old one. An old witness ignores the $d_r$
+and still works. Conversely, in any lifted witness, erase
+the $d_r$ using \cref{core:lem:unmarked-background}: their
+postings in every negative row agree with the new background
+of the positive. Use just the old inputs that occur in the
+witness, projecting the old loss rows to them. The resulting
+word may use new owners, but their gates act as union on
+these projected loss probes and the projected positive since
+none has a new singleton input. Replacing those gates by
+union gives an old-palette witness on the same old inputs.
+Thus the width-one exact Clique reduction applies at every
+fixed palette size.
 
 Minimum support for several required marks is
 NP-complete, even at one neutral background for
