@@ -2020,3 +2020,47 @@ the clause inputs on one side and all other inputs on the other.
 Two clause inputs share both the final head and a flag as neighbors.
 The reduction may ensure two clauses by adding fresh unit clauses.
 \end{proof}
+
+The neighbor-domain proof extends to a local incidence
+forest, even when the undirected source graph has
+triangles or four-cycles. Fix the enumerated data
+$h,k,\ell,s$, the menu classes at $h$, and the enabled
+prime at $s$ as in the proof. Make one constraint
+for capture of $h$ on the $\ell$-facet and one for
+first-side nonsupply of $k$ at each neighbor $j$.
+The capture scope consists of the actual controls of
+$h$. The nonsupply scope consists of $j$ and its
+actual controls, excluding $h$, whose menu is fixed.
+Join each constraint to the inputs in its scope.
+
+Each constraint can be tested for feasibility on
+arbitrary product domains of menu classes. For
+capture, use the prime hitting test in the proof.
+For nonsupply, first check that all domains are
+nonempty. If $j$ can omit $k$, that choice suffices.
+Otherwise require a zero at $j$ on the $k$-facet,
+using the known first-side class at $h$ and the
+same product-domain test. The menu at $j$ itself
+does not enter its source coefficient.
+
+If the incidence graph is a forest, propagate
+allowed menu classes from leaves to roots. At an
+input intersect the sets passed by its descendant
+constraints with its domain. At a constraint, test
+each class of the parent input by fixing that class
+and using the descendant domains in its product
+test. Distinct descendant subtrees share only the
+input being conditioned on, so a surviving class
+has simultaneous witnesses in every subtree.
+At a root constraint, test the resulting product
+directly. All components must be feasible.
+
+More generally, for each $h$ a supplied set of at
+most $b$ input vertices breaking all cycles of its
+local incidence graph suffices. Enumerate their
+classes, pass their fixed values into the
+constraints, and apply the forest test to the
+remaining graph. This gives a bound of
+$(K+2)^b$ times polynomial work for cofactor
+testing directly from the prime lists, and hence
+for recognition with acyclic source dependence.
