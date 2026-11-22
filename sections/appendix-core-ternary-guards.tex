@@ -2459,6 +2459,40 @@ length. Exact realization as a relative completion
 also requires attaining the extracted profiles under
 $B$.
 
+The same products yield polynomial-delay enumeration
+of the canonical primes of $B\cap P$ from the primes
+of $B$ and the profile clauses. At one head and facet
+with $b>0$ primes of $B$, enumerate the minimized
+products separately for each such prime $D$. For each
+product $Q$ minimize $D\cup Q$ by deleting flags
+while it remains sufficient for both factors. Each
+deletion test is a scan for a prime of $B$ and a
+clause from each profile list. This yields a canonical
+prime $H$ of the intersection.
+
+Within one $D$, distinct products yield distinct
+primes, regardless of the minimization order.
+Indeed $H\setminus D\subseteq Q$, and $D\cup H$ is
+sufficient for $P$, so the relative minimality of
+$Q$ gives $H\setminus D=Q$. Conversely every canonical
+prime $H$ of the intersection contains some prime $D$
+of $B$. A relative product contained in $H\setminus D$
+then gives a sufficient guard contained in $H$,
+so minimality recovers $H$. Thus every output occurs
+at least once and at most $b$ times.
+
+Use a trie on the posting flags to detect duplicates
+and a queue of new primes. Process up to $b$ products
+before each output, or until the products end. After
+$j$ complete blocks at least $j$ distinct primes have
+been discovered, so the queue supplies the next
+output whenever a block completes. After exhaustion
+drain the queue. A facet with no prime of $B$ has
+no output. This gives polynomial time between
+outputs, including the first output and the
+termination check, with storage polynomial in the
+input and the primes discovered so far.
+
 For the greatest profile completions with only one owner
 $r$ allowed to win below unanimity, fitting a sample and
 a marked query has an exact support test. On a nonempty
