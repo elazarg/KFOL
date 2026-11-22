@@ -2750,7 +2750,41 @@ comparison is polynomial, using the arbitrary-factor
 formula below. Together with the terminal test this
 gives coNP recognition from primes.
 
-Uniform thresholds give core operations outside this class at every
+\paragraph{Ranked greatest profile completions.}
+A greatest profile completion on its live inputs is ranked exactly
+when each owner has just one minimal winning coalition. Indeed, its
+canonical losses at head $i$ are the minimal winning coalitions
+omitting $i$, posted at their respective owners. A winning coalition
+forces an atom, and with no winning coalition the completion takes
+the whole union.
+
+At such a loss coloring $q$, the available set is precisely the
+posted coalition. A canonical row preceding $q$ must agree at every
+input of that coalition. At the same head this requires its postings
+to contain $q$, which by minimality makes the two rows equal. Thus
+if a ranked presentation exists, it retains every canonical loss.
+Two distinct minimal winning coalitions $A,B$ at one owner are
+incomparable. Choose $i\in A\setminus B$ and $j\in B\setminus A$.
+The loss $B$ at $i$ and the loss $A$ at $j$ give a monochromatic
+two-cycle. Conversely, when each owner has a unique minimal winning
+coalition, the edges at that owner all go from outside its coalition
+to inside. The canonical budget then has no monochromatic cycle
+and presents the completion: the completion itself obeys the
+budget, and every bounded core operation obeying it lies below the
+completion by source reconstruction.
+
+On a promised greatest completion the criterion can be tested
+directly from the primes. For any owner $r$, a coalition $U$ wins
+exactly when posting $U$ at $r$ loses all heads outside $U$.
+Evaluate this condition from the prime lists on any facet seeing
+$r$. An input $i$ belongs to every winning coalition exactly
+when the test fails on $V\setminus\{i\}$. Test the set of these
+mandatory inputs itself. It wins exactly when the profile has
+a unique minimal winner. This takes at most $K(|V|+1)$ coalition
+tests.
+
+Uniform thresholds give core operations outside the class recognized
+by the terminal ranked test at every
 arity $n\ge3$. Fix an owner $r$ and $2\le k\le n-1$.
 Take the union of the $r$-folds on all $(n-k+1)$-element
 subsets of the inputs. If at least $k$ inputs are the $r$ singleton,
@@ -2759,13 +2793,10 @@ every input other than an $r$ singleton belongs to a fold containing
 no $r$ singleton, and every $r$ singleton contributes $r$ through a
 fold containing it. In this case the result is the union of all menus.
 
-For a head $i$, the canonical losses post exactly $k$ other inputs
-at $r$. At such a loss coloring $q$, the available set consists of
-the $k$ posted inputs. Any row at $i$ preceding $q$ must post all
-of these inputs, since omitting one gives a mismatch there. Thus
-every canonical loss would be retained in the minimum ranked
-presentation. Their graph is the full directed graph at $r$, so
-no ranked presentation exists. At $k=n-1$ there is just one loss
+This is the greatest completion with threshold $k$ at $r$ and
+unanimity at every other owner. Its $r$-profile has several minimal
+winners, so the completion has no ranked presentation.
+At $k=n-1$ there is just one loss
 per head, and the prime guards have width one: on a facet exposing
 $r$, each prime forbids a single other input from posting at $r$,
 and on the remaining facet the empty guard suffices.
