@@ -2613,67 +2613,70 @@ probe. This gives a coNP test on the promised form even
 when the prefix itself has cyclic canonical dependencies
 and lacks a single ranked presentation.
 
-\paragraph{Ranked envelopes under binary substitutions.}
-The ranked envelope commutes with substituting named union
-or an asymmetric mask at an input of a source candidate.
-To see this, fix a proper probe on the enlarged input set.
-In the quotient probe, the block is posted at $r$ exactly
-when the inner operation is the $r$ singleton. This depends
-only on the original postings, and gives a proper coloring.
-Use the canonical loss lift for the substitution, described
-below. The forward test can use all lifted rows, including
-redundant ones.
+\paragraph{Ranked envelopes under disjoint substitutions.}
+Suppose an outer source candidate has core inner factors $H_j$
+on disjoint nonempty blocks $B_j$. Fix a proper probe $p$ on
+the enlarged inputs, and let $D_j$ be the available set in the
+ranked envelope of $H_j$ at the block probe $p|_{B_j}$.
+For each block define the set of owners
+\[
+ S_j=\bigl\{r:\Phi_r(H_j)(B_j\setminus(D_j\setminus p_r))=1\bigr\}.
+\]
+Run the outer forward test, treating an available block $j$
+as disagreeing with a posting at $r$ exactly when $r\notin S_j$.
+A block that has not entered provides no disagreements.
+The available inputs of the whole envelope are exactly the
+union of the sets $D_j$ over the blocks that enter.
 
-For a union pair, each external loss posting the block at
-$r$ posts both members at $r$. The two members have exactly
-the same losses, namely the outer rows at the block head.
-Add both members together as soon as those rows are hit.
-The available pair then hits a lifted external row exactly
-when its aggregate status disagrees with the row's block
-posting. Before either member is available, it contributes
-no disagreement. Thus the forward process collapses to
-the quotient process.
+Indeed, in the loss lift, an exterior posting at $r$ on a block
+is replaced by one of its minimal winning $r$-coalitions posted
+at $r$. There is one lifted row per combination of these choices.
+There are also the inner losses at each head. The exterior rows
+are the same at every head of a given block and use only other
+blocks. Until all those rows are hit, no member can enter. Once
+they are hit, exhaust the local forward test, adding exactly
+$D_j$. This batch order gives the least fixed point, since all
+additions are monotone. On an entered block a lifted posting
+at $r$ can avoid every disagreement exactly when there is a
+winning coalition contained in $B_j\setminus(D_j\setminus p_r)$,
+which is the displayed test for $S_j$. An outer row has all
+its lifts hit exactly when some one of its postings has every
+lift hit: if no posting does, choose an unhit lift separately
+on each block. This proves the formula, including the case
+$D_j=\varnothing$, when $S_j$ is the whole palette.
 
-For a mask $L_A(x,y)$ with nonempty $A$, the controlling
-head $x$ has just the exterior losses at the block head.
-The controlled head $y$ also has the local losses $x:r$
-for $r\in A$. It cannot be added before $x$, and when $x$
-enters, $y$ can enter exactly if $x$ is not posted at an
-owner in $A$. If $x$ is posted at some $r\in A$, the
-available controller alone hits every lifted block posting
-at a different owner and agrees with the posting at $r$,
-as does the mask's singleton. Otherwise both members are
-available. A lifted posting at an owner in $A$ tests just
-the controller, and a lifted posting at any other owner
-tests both members. In either case a disagreement is found
-exactly when the aggregate status disagrees. The same
-quotient process therefore applies, with the local mark
-at $y$ removed precisely on native absorbing probes.
-This is the source lift of the quotient's ranked envelope.
+If each inner factor is a ranked union, the set $S_j$ is
+exactly the set of its winning owners at the probe. One
+direction follows by taking a winning coalition inside $p_r$.
+For the other, a winning coalition $A$ avoiding disagreement
+on $D_j$ gives $A:r\preceq_{H_j}p|_{B_j}$ by the activation
+formula for ranked unions. The negative $r$-profile is an
+actual interval predicate, realized by
+$H_j+(X\star_r H_j)$. So it cannot be positive at the block
+probe and zero at $A:r$. This proves the other direction.
+Consequently the outer test uses the genuine aggregate
+coloring and the ranked envelope commutes with substituting
+ranked unions on disjoint inputs.
 
-Substitution of an owned fold on a nonsingleton block has
-a different formula. No member enters the forward process:
-each has a local singleton loss on another member at the
-fold's owner, so there can be no first addition. At all
-other heads, discard postings of that block from the
-outer losses before applying the forward test. In fact
-lifting a row at the fold block only changes which of its
-members are posted, and no such posting ever helps the
-forward test. Thus the envelope on the remaining heads is
-the ranked envelope of the projected outer loss budget.
-This projection imposes every loss with the folded input
-left unconstrained. Several disjoint fold blocks can be
-projected out together, while unions and masks on the
-remaining blocks commute with the envelope as above.
+In particular, if all outer inputs are live, the substituted
+candidate is a ranked union exactly when its outer candidate
+and every inner factor are ranked unions. For necessity,
+probe a block with all exterior inputs unposted. Every
+inner positive then supplies the corresponding source of
+the substitution by liveness of the outer input. The general
+formula shows that such a positive must already belong to
+$D_j$, so each inner factor is a ranked union. Commutation
+and diagonal recovery then give the same conclusion for the
+outer candidate. Sufficiency follows from commutation.
 
-Consequently a union or mask substitution is a ranked
-union exactly when its outer candidate is one: sufficiency
-is commutation, and necessity follows by the diagonal that
-recovers the outer operation from the substitution.
-In contrast, a live nonsingleton owned-fold block prevents
-ranked-union realizability, since the envelope loses every
-mark on that block. The commuting substitutions can be
-iterated along disjoint read-once trees.
+Named union and asymmetric masks are ranked, giving the
+commuting binary substitutions. An owned fold on a
+nonsingleton block instead has empty local available set
+at every probe: its reciprocal singleton losses forbid a
+first addition. Its set $S_j$ is therefore the whole palette.
+The outer test can remove its postings from every loss,
+and the envelope ignores the entire folded block. This
+also applies to several disjoint folded blocks.
 
 \paragraph{Canonical primes of the ranked envelope.}
 The same test gives a guard presentation for the greatest union
