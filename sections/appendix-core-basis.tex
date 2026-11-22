@@ -2862,6 +2862,34 @@ one-owner lower bound, while gate erasure gives its
 least one-owner upper bound. Both evaluations use
 the same canonical input lists.
 
+The greatest bounded union of single-owner operations is
+the union of the one-owner minorants computed above. In
+particular equality with this union tests whether the
+candidate can be built as a union of single-owner folds.
+The test is polynomial on disjoint posting palettes, and
+takes $(K+1)^d$ times polynomial work when just $d$ inputs
+can be posted at several owners. The palettes here are
+the postings used anywhere in the canonical lists.
+
+For each source and observer facet take each listed prime
+$H$ in turn. Enumerate the statuses of the $d$ shared
+inputs consistent with avoiding $H$, leaving the source
+unposted. At every other passive input use its sole
+relevant posting if allowed on the facet and outside $H$.
+This is a proper coloring and still enables the prime.
+It is the largest coloring enabling $H$ at the chosen
+shared-input statuses, after ignoring irrelevant postings.
+Every candidate positive lies below one of these colorings:
+it enables some prime, and any postings outside the
+palettes are irrelevant to the candidate and to each
+one-owner minorant. By antitonicity, the union supplies
+every candidate positive exactly when it supplies all
+the enumerated ones. Each such test uses the one-owner
+closure scans. This gives a direct criterion from the
+primes even when the candidate has mixed losses. If the
+candidate is nonempty and the test succeeds, the union
+of the resulting folds realizes it.
+
 There is also a pruning test for dual profiles in an
 arbitrary word. At every gate outside $b,c$ (including
 named union), select one child and discard the other.
