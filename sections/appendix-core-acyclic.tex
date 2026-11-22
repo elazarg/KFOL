@@ -264,7 +264,8 @@ the one-head cross-facet arity example.
 For exact targets, consider a layered monotone circuit
 in which each gate is a conjunction of at most
 $(K-1)d$ nonempty disjunctions of controls from the
-preceding layer. It has an exact acyclic core
+preceding layer, with up to $Kd$ allowed in the first
+gate layer. It has an exact acyclic core
 realization of prime width at most $d$ with the
 same gate values on every trial scope.
 
@@ -274,7 +275,9 @@ each owner other than $b$. Choose a proper query
 posting all ordinary passive inputs at $a$ and
 every anchor at its own owner. At each gate assign
 its disjunctions to the $K-1$ observers other than
-$a$, at most $d$ per observer. For a disjunction
+$a$, at most $d$ per observer. In the first gate
+layer also use observer $a$, since its controls have
+no strict descendants to post at $a$. For a disjunction
 assigned to observer $k$, give one loss posting
 all its controls at $b$ if $k\ne b$, or at $c$
 if $k=b$. Post all strict descendants of those
@@ -305,16 +308,19 @@ when every disjunction has an active control.
 Layer-zero inputs activate exactly when included
 in the scope.
 
-In particular a full conjunction tree of height
-$h$ with branching $(K-1)d$ gives an exact
-prime-width-$d$ target requiring
-$\sum_{j=0}^h((K-1)d)^j$ inputs in a scope for
-the root. At each internal head the $d$ control
+In particular, take a conjunction tree of height
+$h\geq1$ with branching $(K-1)d$ above the first
+gate layer and $Kd$ in that layer. The exact
+prime-width-$d$ target requires
+\[
+\sum_{j=0}^{h-1}((K-1)d)^j + Kd((K-1)d)^{h-1}
+\]
+inputs in a scope for the root. At each internal head the $d$ control
 exclusions on each used facet form a prime, since
-each hits just its own loss. Every child is mandatory, and the
-anchors never need to be included. This gives
-exponential witness arity at width one for
-every $K\geq3$.
+each hits just its own loss. Every child is mandatory,
+and the anchors never need to be included. This attains
+the general bound at height one and gives exponential
+witness arity at width one for every $K\geq3$.
 
 There is a uniform padding construction for any
 layered acyclic bound whose losses use only $b$,
