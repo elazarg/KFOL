@@ -7374,6 +7374,36 @@ distinct foreign owner, leaving the native owner absent
 and taking $K\ge w+2$. Every proper subfamily of these blocks
 can be avoided, while the full family leaves no seed.
 
+There is a condition on the original dependency graph that
+makes the joint check automatic. Keep the single native owner
+for all internal postings in each component. In each minimal
+loss, require any two foreign-posted inputs joined by an
+internal dependency edge to be posted at the same foreign
+owner. This permits different foreign owners on sets separated
+in the induced graph on the foreign-posted inputs.
+Under this condition, colored-cofactor independence still
+characterizes core realizability.
+
+Indeed, at an earlier component in the prefix induction the
+conditional coefficient has exactly the candidate source
+predicates there with the earlier background fixed. Any
+dependency of that coefficient is therefore an internal
+dependency of the candidate. If joint spanning fails, use
+the set $\{x\}\cup(G\cap H)$ from the native prime test.
+Every input in $G\cap H$ has a dependency edge to $x$ in
+the conditional coefficient. Since every member of the set
+is foreign-posted, the graph condition puts the whole set
+in the same foreign block as $x$. That block alone destroys
+spanning, contradicting the individual spanning condition
+of the activation order. This supplies the representative
+needed in each step of the cofactor proof.
+
+The graph condition can be tested directly on canonical
+primes. For every internal dependency edge, test whether
+its endpoints can have different foreign postings in one
+minimal loss. The private-prime test below checks each
+such pair in polynomial time.
+
 For a closed set $H$ in a native coefficient, the separate
 spanning tests imply the joint test for every consistent
 choice of foreign blocks exactly when $H$ has a unique
@@ -7475,8 +7505,9 @@ transversal retains both chosen postings. Conversely any
 loss containing the pair has such private primes. Canonicity
 ensures the transversal is a proper coloring on the facet.
 Thus each component's native owner can be certified or ruled
-out by polynomially many checks. Liveness is checked at the
-neutral source probes.
+out by polynomially many checks. Restricting the pairs to
+adjacent inputs tests the weaker dependency condition above.
+Liveness is checked at the neutral source probes.
 
 Within this class the width-two cofactor test gives polynomial
 recognition with explicit minimal losses, even for unbounded
