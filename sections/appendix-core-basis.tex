@@ -2954,11 +2954,14 @@ contradictory choices at the same variable. Such
 an assignment exists exactly when the formula is
 satisfiable.
 
-Add one input $d_r$ per owner, required by unit clauses
-at every owner other than $r$. Each can be omitted at
-its own owner, so the assignment test is unchanged.
-Any two owners' winning coalitions now intersect, since
-they both require $d_s$ for any third owner $s$.
+Add three dummy owners with one input $d_r$ each.
+Require $d_r$ at every owner other than its own dummy
+owner, and require every clause input at every dummy
+owner. The dummy owners have no pair constraints.
+The marker $d_r$ can only be omitted at its own owner,
+so the assignment test is unchanged. Any two owners'
+winning coalitions now intersect, since both require
+the marker of a third dummy owner.
 The resulting greatest-profile-form candidate is
 therefore nonempty and has the intended profiles.
 At the source of a clause input, only its at most
@@ -2969,7 +2972,7 @@ turns every pair incident to it into a singleton.
 Those singletons subsume every other opposite-sign
 pair, so the projected factor has width one.
 At a source $d_r$ only the $r$-factor can have
-positive width, and it has width at most two.
+positive width, and it is unary.
 The prime product therefore has width at most three
 and polynomial size despite the variable palette.
 This gives coNP-hardness, with membership as above.
@@ -2992,6 +2995,38 @@ input was then binary before substitution. The
 remaining problem is 2-SAT, with any constant
 violations checked directly. This proves polynomial
 recognition at width two for variable $K$.
+
+There is an exact list interpretation when every permitted
+omission is unary after discarding clauses containing
+inputs that cannot be omitted at that owner. For an
+owner $r$, let $D_r$ be its permitted input set. In the
+remaining profile clauses, no clause has size three or
+more: deleting any member of such a clause would leave
+a minimal clause of size at least two. There are no
+singleton clauses on $D_r$ either, by permission.
+View the remaining pairs as edges on $D_r$.
+The unary condition at every vertex says there is
+no induced edge with an isolated third vertex.
+Indeed such an edge would survive deletion of the
+isolated vertex without a subsuming singleton.
+Thus the complement has no induced three-vertex path,
+so its connected components are cliques. The original
+graph is complete multipartite.
+
+Consequently each owner may omit inputs from at most
+one part of its own partition. Common-source failure
+is equivalent to choosing at most one part per owner
+so that the chosen parts cover all inputs. Conversely
+any such cover gives an omission assignment by
+assigning each input to one part covering it.
+If each input permits at most two owners, this is
+2-SAT: use one Boolean variable per part, impose
+pairwise exclusions within each owner, and require
+each input to be covered by one of its at most two
+parts. The variable-palette hardness construction
+above has all omissions unary and uses at most three
+owner choices per input, so three choices already
+suffice for coNP-completeness in this class.
 
 This gives the minimum number of primitive gate owners
 of any exact core operation from its prime lists.
