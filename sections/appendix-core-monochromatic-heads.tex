@@ -1378,6 +1378,50 @@ matrix construction has size $O(|V|^3\log(2|V|))$.
 The arrows and unheaded inputs are read directly
 from one visible prime list at each head.
 
+For the same single-row budgets, the greatest
+mask-only operation has a different walk circuit.
+Write $L_a(x_v,W)$ for the mask controlled by
+$x_v$ at $a$. A walk starts with its first
+projection and attaches the subsequent vertices
+as mask controllers in walk order. Retain only
+complete walks ending at an unheaded input.
+Such a word is bounded even if the walk repeats
+vertices. For a headed input, the controller
+immediately following its last occurrence is
+posted at $a$ on that head's loss. This removes
+its last contribution, and no later step
+restores it.
+
+For each endpoint $v$ start $T_0(v)=x_v$ and
+set
+\[
+ T_{d+1}(v)=T_d(v)+
+       \sum_{u\to v} L_a(x_v,T_d(u)),
+\]
+where $+$ is menu union. A mask with a fixed
+controller distributes over union of its
+controlled words. Thus $T_d(v)$ is exactly
+the union of the walk words ending at $v$
+with at most $d$ edges. After $|V|-1$ rounds
+union the circuits at unheaded endpoints.
+If no such endpoint exists, the mask-only
+bounded family is empty.
+
+For completeness, projection deletion at a
+probe supplies a headed input exactly when
+it has a path to an unheaded input following
+postings that disagree with the probe. This
+follows by tracing the successor used at each
+deletion step, and conversely replaying the
+path in reverse to obtain the deletions.
+A simple such path has at most $|V|-1$ edges.
+Its walk word supplies the initial mark since
+none of its controllers posts $a$ at the probe.
+Thus the circuit gives the greatest mask-only
+operation. If the posting graph has $m$ edges,
+its size is $O(|V|(m+|V|))$ with shared
+subcircuits.
+
 This test compiles directly from canonical primes into a
 polynomial-size monotone circuit shared by all colorings.
 Let $U$ mark the postings in the union of the fold supports
