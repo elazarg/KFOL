@@ -6425,6 +6425,48 @@ in coNP. Giving the failed positive probe as well puts exact
 recognition of unions of greatest completions in coNP under the
 same bounded-head and pure-loss promises.
 
+The possible supports also have a direct Boolean description.
+Write $x_v$ for membership in the support, and require $x_i$
+for the marked head and $x_u$ for every unheaded input $u$.
+For each pure loss $(j,A,r)$, with posted set $A$ at owner $r$,
+impose
+\[
+ x_j\quad\Longrightarrow\quad \bigvee_{v\in A\setminus p_r}x_v .
+\]
+For every selection of at most one loss per owner, with
+heads $j_r$ and posted sets $A_r$, impose
+\[
+ \bigwedge_r x_{j_r}\quad\Longrightarrow\quad
+     \bigvee_{v\in\bigcap_r A_r}x_v .
+\]
+The second formula ranges over nonempty selections. An owner
+omitted from a selection supplies the unanimity generator
+on the support and has no effect on the intersection. The
+first formula says that every forced generator loses at the
+probe. The second says exactly that every active rainbow
+tuple of projected generators intersects on the support.
+Unanimity itself loses at the probe because $i$ is unposted.
+Thus the satisfying assignments are precisely the supports
+containing all unheaded inputs that admit a completion
+witness. For explicit losses the formula has polynomial
+size at fixed $K$.
+
+In particular, if each consequent either contains an unheaded
+input or has at most one input, the test reduces to a Horn
+closure. Drop the automatically true implications, start with
+the required inputs, and add a consequent's sole input
+whenever its premises are present. Reject if any implication
+with empty consequent has all premises present. This computes
+the least witness support containing the unheaded inputs when
+one exists. The condition is met for every probe whenever
+each loss contains at most one headed control. Both its
+difference with a probe block and any rainbow intersection
+can then contain at most one headed input. This yields polynomial marked
+testing from explicit losses in the stated class and coNP
+recognition of exact unions there. With width-one primes
+the loss lists required for the same tests can be recovered
+in polynomial time.
+
 Hardness persists even with two headed inputs and width at most
 four. Modify the preceding reduction by adding one retained input
 $z$. Keep the $r$-losses at $i$ on vertex hitting sets, and add the
