@@ -972,6 +972,42 @@ fixed $K$ and simultaneous bounds on prime
 width and minimal-loss size, by the posting
 alphabet bound following \cref{core:thm:guard-consensus}.
 
+At prime width two, the ordinary indegree may be
+unbounded. Let $b$ be the maximum number of
+nonretained controls occurring in the primes of
+a single head on a single facet. For acyclic
+dependence, recognition then takes $2^bN^{O(1)}$
+time for complete lists of length $N$, uniformly
+in the palette.
+
+To find a failed local test, choose its head $i$,
+a starting observer $k$, one positive prime at
+$i$ on facet $k$, and a facet $\ell$ where
+$D_i(p)$ contains no prime. Guess a set $B$ of
+nonretained controls on facet $\ell$ to certify
+as lost. Introduce Boolean posting flags for $p$,
+enforce at most one per input, and forbid color
+$k$ and all postings at $i$. Also forbid the
+exclusions of the chosen positive prime.
+For each $u\in B$, require a hit in every prime
+of $u$ on facet $k$, certifying that $u$ loses
+at $p$. For each prime of $i$ on facet $\ell$
+with no control in $B$, require a hit by $p$.
+Every requirement is a clause of length at most
+two, including the consistency clauses.
+
+A satisfying assignment gives a failed test.
+Every prime on facet $\ell$ either includes a
+lost control or contains a posting matching $p$.
+Conversely, at a failed test choose all the lost
+controls on that facet as $B$. Once primes using
+those controls have been removed, each remaining
+prime must contain a matching posting. Thus the
+2SAT search is exact. The width bound applies to
+the tested facet and the lists used to certify
+its lost controls. The positive prime is used
+only for unary restrictions.
+
 \paragraph{Greatest enlargement directly from acyclic primes.}
 Let $C$ be a realized family with a source order and
 fix a proper target $q$. Write $A=J(q)$ for the
