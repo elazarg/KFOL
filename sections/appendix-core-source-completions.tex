@@ -112,42 +112,44 @@ leaves no nonempty common minorant. With one input the lattice
 has only the projection and formal zero, so zero is its
 only meet-irreducible.
 
-\paragraph{When the pointwise intersection gives the prescribed guards.}
-Take a nonempty family of single-loss factors $M_{x,E}$ and let $P$ be their
-pointwise intersection. On each canonical probe it has exactly the
-prescribed coefficient, which is zero if and only if some listed loss
-at that head is contained in the probe coloring. Let $Q$ be the
-operation reconstructed from those coefficients, allowing empty values.
-Then $Q\subseteq P$, and equality holds exactly when there is no pair
-of listed losses $(x,E),(y,D)$ with the following properties:
-\begin{itemize}
-\item $x\ne y$, and neither loss posts the other head.
-\item $E$ and $D$ agree wherever both post, and their union omits
-an owner.
-\end{itemize}
+\paragraph{When a pointwise intersection admits source reconstruction.}
+Fix a nonempty family of core operations, allowing formal zero.
+At a proper coloring $E$ of the inputs, let $S_F(E)$ be the set of
+unposted heads with positive coefficient in factor $F$.
+The pointwise intersection admits source reconstruction exactly when,
+for every $E$, one factor has
+\[
+ S_F(E)=\bigcap_G S_G(E).
+\]
+In particular, for two factors their sets of available heads must
+be nested at each coloring. Pairwise nesting suffices for any finite
+family, since a finite chain has a least member.
 
-To see this, fix a queried winner $k$ and let $H$ be the inputs
-containing $k$. If $H$ is empty, neither operation supplies $k$.
-If $H$ is a singleton, its unique head supplies $k$ in $P$ exactly
-when it does so in $Q$. If $|H|\ge2$, every factor retains some
-input containing $k$, so $P$ supplies it. Failure in $Q$ requires
-each head in $H$ to be lost. Pick two of those heads and their
-witnessing losses. Neither loss can post another head of $H$,
-since such postings would be at a foreign owner, and both losses
-come from the same tuple's foreign coloring. This gives the pair
-in the test.
-Conversely, from such a pair choose an omitted owner $k$, give both
-heads an ambiguous menu containing $k$, assign the joint postings
-their singleton menus, and give every other input $I\setminus\{k\}$.
-Only the two heads contain $k$, and both are lost in $Q$.
-Hence $k$ witnesses strict inclusion.
+Indeed choose an owner $k$ missing from $E$. The inputs containing
+$k$ may be any subset $H$ of the unposted heads: give its elements
+ambiguous menus containing $k$ and the others $I\setminus\{k\}$.
+The factors' values all contain $k$ exactly when $H$ hits every
+$S_F(E)$. On the canonical probes a single head supplies $k$, so
+the intersection has coefficient set $S=\bigcap_F S_F(E)$ among the
+unposted heads. Reconstruction would require $H\cap S\ne\varnothing$.
+These tests agree for all $H$ if some factor has set $S$.
+Otherwise the complement of $S$ among the unposted heads hits every
+factor and misses $S$. Every ordinary valuation at a queried
+winner has this form at the level of foreign postings and inputs
+containing the winner, so the tests give the claimed equivalence.
 
-In particular, for a realizable guard family the pair test decides
-whether its single-loss meet is pointwise. A pair as above also
-certifies that $P$ fails source reconstruction and so is outside
-the core with formal zero. In the absence of such a pair the
-pointwise intersection has exactly the reconstructed values,
-which must still pass core realizability.
+For single-loss factors $M_{x,E}$, the available set is the entire
+unposted set with at most one head removed. The least-set condition
+therefore fails exactly when two listed losses $(x,E),(y,D)$ satisfy
+all of the following: $x\ne y$, neither loss posts the other head,
+the postings agree wherever both post, and their union omits an
+owner. Such a pair can be tested on the union coloring, and every
+failure at a coloring gives a pair by choosing two removed heads.
+On probes the factor intersection has precisely the prescribed losses,
+including their extensions. For a realizable family this test decides
+whether its single-loss meet is pointwise. In general, passing the test
+establishes agreement with the reconstructed operation, whose core
+realizability is a further condition.
 
 Neutral restriction to a subset of inputs is left adjoint to adjoining
 the union of the remaining inputs. Indeed, for disjoint sets $V,W$,
