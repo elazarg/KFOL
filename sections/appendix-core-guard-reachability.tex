@@ -2367,6 +2367,54 @@ Conversely if that graph is acyclic its own rows
 are an allowed presentation. The graph is read
 from prime occurrences without listing the losses.
 
+\paragraph{Ranked witnesses under one-owner bounds.}
+Suppose every canonical loss of a candidate posts only at one
+owner $r$. To test for a ranked operation below it supplying a
+given mark at coloring $p$, start with $D=\varnothing$.
+Repeatedly add an input $j\notin D\cup p_r$ whose candidate
+source is positive at the pure posting $(V\setminus(D\cup
+\{j\})):r$. The mark is supplied by a bounded ranked operation
+exactly when its head enters $D$. The test depends only on $p_r$,
+which is empty on the facet omitting $r$.
+
+For sufficiency use the selected inputs as the support. For each
+selected head shorten every candidate loss to its postings on
+the previously selected inputs. The eligibility test ensures
+that every shortened row is nonempty. The resulting budget is
+acyclic in the selection order. Its greatest operation obeys the
+original losses at each supported head, and ignores all other
+heads. At the marked probe there are no $r$ postings on the
+support, so all selected inputs become available in order:
+each shortened row has an earlier disagreeing posting. This
+produces a bounded ranked witness.
+
+For necessity take $S=V\setminus(D\cup p_r)$ at termination.
+At $(p_r\cup S):r$ every member of $S$ is unavailable in any
+bounded ranked operation, by the failed eligibility tests with
+the respective heads unposted. Erase the postings on $S$.
+The resulting coloring $p_r:r$ remains in the same availability
+box, so no member of $S$ contributes there. Adding the
+foreign postings of the marked probe cannot restore a source.
+Thus every head left in $S$ lacks a bounded ranked witness.
+
+Each step uses only a source evaluation on a pure posting,
+which is direct from canonical primes on a facet seeing $r$.
+Eligibility is monotone in $D$, so any order of additions
+gives the same result. Equivalently, erase the common owner
+from the prime guards and activate a head outside $p_r$ as
+soon as one of its guards is contained in $D$.
+
+This recognizes unions of ranked operations in polynomial time
+from canonical primes in this class, requiring at least one
+positive bit. At a head $i$ each prime
+$G$ certifies positivity on the entire downset of the native
+block $V\setminus(G\cup\{i\})$. Run the test just at this
+maximal block for each listed prime. The deletion process for
+any smaller block can replay those additions, so passing these
+tests supplies every prescribed positive, including on the
+facet omitting $r$. The union of the constructed witnesses
+then has exactly the prescribed source bits.
+
 The availability box obstruction can also be tested
 at a fixed proper background, instead of the empty
 coloring. On inputs outside the background that
