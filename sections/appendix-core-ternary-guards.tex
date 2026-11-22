@@ -2679,6 +2679,44 @@ CNFs and marked source queries are polynomial under
 the same graph hypothesis, even when the supplied
 profiles have exponentially many minimal wins.
 
+The monochromatic-cycle condition can instead be tested
+on the residual budget at each query after ordinary fold
+saturation. For a proposed safe support, forbid recorded
+postings and the fold owner's postings on that support.
+An original row in the remaining alphabet is detected by
+the prime-hit test. An added row at $s$ is detected by
+evaluating $f_s$ on the allowed $s$-inputs other than the
+head. This test can include the old-bound-redundant rows:
+each of these contains an original loss, which must still
+be present if that added row survives. Thus the compact
+CNF representation implements every fold pruning step
+in polynomial time.
+
+At a stable state let $U$ be the heads still having
+rows. Every surviving posting at a head outside $U$
+agrees with the query, since otherwise an eligible
+singleton fold would have deleted its row. If the
+residual graph on $U$ has no monochromatic cycle,
+the ranked cut rules out its heads simultaneously.
+The graph is read by the private-prime and private-clause
+tests with the recorded flags forbidden, retaining the
+old positivity test only for the added rows. The absence
+of repeated postings at an owner inside each residual
+row gives another sufficient condition: project out the
+matched exterior by the unmarked-background lemma.
+The restricted budget is still fold-stable, since a safe
+fold on $U$ would have been safe before that projection.
+Exact singleton-block saturation then rules out the
+remaining marks. The latter condition can be tested by
+requiring two internal postings at the same owner and
+choosing a private prime or clause for each.
+
+Consequently the joint profile test can use either
+residual condition at each of its probes. All returned
+positive witnesses come from the recorded folds. The
+tests allow monochromatic cycles in the original graph
+and do not expand the minimal wins of the profile CNFs.
+
 In general, counting the distinct primes on one facet
 is \#P-complete under polynomial-time Turing reductions,
 even when all relative products are canonical. Membership
