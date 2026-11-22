@@ -1788,15 +1788,16 @@ Deciding whether a sufficient guard fits a size bound is NP-complete
 even for acyclic one-row budgets and three owners.
 Fix a facet omitting $k$, with $a,b$ the other owners,
 and use the backward arrows of the Horn test above.
-From a Set Cover instance with budget $d$, put one
-arrow from the queried head to each set input, at
-$a$. From a set input put arrows at $k$ to the inputs
-for its elements. Thus reaching a set needs its
-$a$-exclusion, and reaching it adds all its elements
-without any exclusion.
+Take a monotone circuit of binary conjunctions and
+disjunctions and a weight bound $d$. Put one arrow
+from the queried head to each circuit input at $a$.
+Reaching that input then costs one exclusion. At a
+disjunction put arrows from both operands at $k$,
+so either operand reaches the output for free.
+Discard gates unused by the circuit output and
+identify gates with repeated operands.
 
-Use the element inputs as leaves of a binary tree
-of conjunctions. Implement each conjunction by a
+Implement each conjunction by a
 triangle of private inputs with $d+1$ bottom inputs,
 then $d$ in the next layer, down to one output.
 Each input above the bottom receives arrows from
@@ -1828,12 +1829,37 @@ when only one operand is available. With neither
 operand available no node in the triangle is reached.
 
 Thus within budget each triangle acts exactly as a
-conjunction. The guard suffices exactly when the final
-output is reached, equivalently when the selected sets
-cover the elements. The construction is polynomial
-since the budget can be capped at the number of sets.
-Membership in NP follows from the Horn test. With one
-fixed posting owner per input, minimum cost follows from a
+conjunction. The guard suffices exactly when the
+circuit output is reached on the selected inputs.
+Conversely every selection of at most $d$ circuit inputs
+giving a true output yields a guard with only those
+input exclusions. The construction has polynomial size
+since $d$ can be capped at the number of circuit inputs.
+Set Cover is the case where each disjunction selects
+a set covering one element and all elements are required.
+Membership in NP follows from the Horn test.
+
+In fact the size-bounded guard problem is W[P]-complete
+with parameter $d$. To reduce weight-$d$ Boolean
+circuit satisfiability to the monotone version above,
+use $d$ slots, each containing one choice bit for every
+original variable. Require some bit in each slot. At
+weight at most $d$ this means exactly one choice per
+slot. Require distinct choices for every pair of slots
+by a disjunction over all pairs of unequal variables.
+A variable is true if a slot chooses it, and false if
+each slot chooses a different variable. Both tests are
+monotone in the slot bits on valid selections. Computing
+both polarities of each Boolean gate now gives a
+monotone circuit of polynomial size for the original
+output together with the slot conditions. The guard
+construction preserves $d$. Conversely, unroll the
+Horn test into a polynomial-size Boolean circuit on its
+exclusion flags, and add $d$ unused bits to turn the
+size bound into an exact weight test. This proves the
+matching parameterized upper bound.
+
+With one fixed posting owner per input, minimum cost follows from a
 shortest eligible path, charging each visible
 exclusion on its simple path once.
 
