@@ -5030,10 +5030,44 @@ Thus the transformed list gives the reduced budget
 even when the union of the internal and exterior
 postings is outside all observer facets.
 
+The reduction can be iterated. After each projection,
+read the new arcs from the reduced common guards and
+recompute reachability. Any nonqueried input with no
+remaining loss can again be fixed to its probe value
+using \cref{core:lem:unmarked-background}. A different
+rule applies when a head has an empty loss. No bounded
+term can use that input, since at the all-full valuation
+every input mentioned by a term supplies its mark.
+Delete the input, drop the losses at its own head,
+and project \emph{all} other losses, regardless of their
+postings at the deleted input. This projection uses
+the same guard transformation with $E$ equal to all
+postings at that input. Although $E$ need not be a
+coloring, the common-guard argument still applies.
+A bounded term ignores the deleted input, so each
+projected loss imposes exactly the original test
+on that term.
+
+At any stage an empty loss at the queried head decides
+failure, while absence of losses there supplies its
+projection. Otherwise repeat the reductions until the
+variable set stops shrinking. There are at most $|V|$
+strict reductions. The number of guards cannot grow
+after the common lists are formed, since each step
+only deletes or restricts guards. All remaining
+inputs are reachable in the current disagreement graph
+and each has a nonempty collection of nonempty losses.
+This can be much smaller than the first reached set.
+For example, at the empty probe use a directed cycle
+of losses, each also posting an extra unheaded input.
+The whole cycle is reachable initially. Fixing the
+extra input to its unposted value removes every loss,
+and the queried projection suffices.
+
 In particular, at fixed $K$, complete recognition from
-canonical primes is in coNP when the number of reached
-loss heads at every probe is bounded by a constant.
-Given a failed positive, compute $H$ and decide the
+canonical primes is in coNP when the final reduced
+input count at every probe is bounded by a constant.
+Given a failed positive, perform the reductions and decide the
 finite marked problem there, whose size depends only
 on $K$ and $|H|$. The presence of a positive bit
 and agreement on observer overlaps can be checked
