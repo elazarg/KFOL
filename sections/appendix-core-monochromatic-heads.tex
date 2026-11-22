@@ -84,33 +84,6 @@ does not absorb at the positive. Its input is outside
 the negative heads, so it cannot introduce a forbidden
 mark on the rows already enforced.
 
-With at most one loss at each head, suppose the positive
-probe $p$ posts no vertex of a selected $r$-cycle at $r$.
-This includes all neutral probes. Feasibility is equivalent
-to the absence of a set $H$ containing the queried head
-such that every head in $H$ has a row, its exterior
-postings agree with $p$, and its internal graph has no
-monochromatic cycle at a selected owner. Indeed restrict
-to these rows and erase the matching exterior background.
-The projected budget has one row per input of $H$, so
-the selected-color survivor result forbids any witness.
-
-To find a witness or such a cut, maintain the rows still
-required. Delete any row posting an unheaded input at an
-owner where that input disagrees with $p$. In the reverse
-construction attach the projection as controller of that
-owner's mask. Also delete all rows hit by a fold on a
-selected monochromatic cycle of remaining heads, attaching
-that fold by its owned choice in reverse. The hypothesis
-ensures the fold does not absorb at $p$. Each new controller
-or fold omits all required rows, and both attachments
-preserve the mark. If the queried head becomes unheaded,
-start the reverse construction with its projection.
-Otherwise stabilization gives the cut: exterior postings
-agree, and no selected cycle remains. Each step deletes
-a row and uses only graph reachability, giving polynomial
-time and at most $1+m|V|$ leaves for $m$ input rows.
-
 For comparison, if all losses at a head use a single designated owner
 $c(j)$, there is a direct extraction even with several losses there.
 Assign any owner to inputs without losses.
@@ -145,39 +118,12 @@ and the result is a projection. It cannot omit a loss at
 its own head, so its input is unheaded.
 \end{proof}
 
-Consequently the selected-fold deletion test extends to
-arbitrarily many losses per head when each head has a
-single native loss owner. Keep the same condition on the
-probe and the selected cycles. Delete rows using unheaded
-projections as above. At a selected owner $r$ start with
-the inputs not posted at $r$ at the probe and remove a head
-if some remaining loss at that head has no $r$-posting
-in the current support. The stable set gives the largest
-safe $r$-fold support avoiding the probe's $r$-block.
-When its fold hits a row, delete all rows it hits and
-attach it in reverse as before.
-
-If the queried head still has a row at stabilization,
-every exterior posting agrees with the probe. Erase that
-exterior from a putative witness. The projected losses
-remain pure at each head, and every remaining head has
-a loss. The extraction lemma gives a safe fold at a
-selected owner $r$ with support in the remaining heads.
-Choose one posting from its support in each loss at each
-of its heads. A sink strongly connected component in
-the resulting graph is still a safe fold support, since
-none of those chosen arrows leaves it. Every vertex in
-it lies on an $r$-cycle and thus avoids the probe's
-$r$-block. It would hit a remaining row, contradicting
-stabilization. This proves exactness. The allowed-posting
-tests and the record of deleted rows below implement the
-same procedure directly from canonical primes in polynomial
-time, without enumerating the losses.
-
-\begin{theorem}[A cut with one loss per head]
+\begin{theorem}[A cut for selected fold owners]
 \label{core:thm:monochromatic-head-cut}
-At each head belonging to monochromatic cycles of several colors,
-write $E_r$ for its outgoing postings on cycles of color $r$.
+Fix a set $J$ of selected fold owners, taking $J=I$ for the
+whole core. At each head belonging to selected monochromatic
+cycles, write $E_r$ for its outgoing postings on cycles of
+owner $r\in J$.
 Suppose that for every choice of one loss $t^{(r)}$ at the head
 per such color there is a loss $t$ at the head satisfying
 \[
@@ -185,18 +131,18 @@ per such color there is a loss $t$ at the head satisfying
    t\cap E_r\subseteq t^{(r)}\cap E_r\quad\text{for each }r .
 \]
 For a positive query $(i,p)$, start with the vertices on $r$-cycles
-for each $r$. Remove any head having a loss contained in $p$ whose
+for each $r\in J$. Remove any head having a loss contained in $p$ whose
 $r$-block misses the current set, until no such removal remains.
-Suppose the resulting set is disjoint from $p_r$ for each $r$.
-This holds in particular if $p$ posts no vertex of an $r$-cycle
+Suppose the resulting set is disjoint from $p_r$ for each $r\in J$.
+This holds in particular if $p$ posts no vertex of a selected $r$-cycle
 at $r$. The row hypothesis is automatic when each head has one
 loss, or all its losses use only its designated owner.
-The query is impossible exactly when one
+The query is impossible in the selected-fold clone exactly when one
 can choose a set $H\ni i$ and one loss $(j,t^j)$ at each $j\in H$
 such that
 \[
  t^j_r\setminus H\subseteq p_r\quad(j\in H,\ r\in I),\qquad
- \text{the chosen rows on $H$ have no monochromatic cycle}.
+ \text{the chosen rows on $H$ have no selected monochromatic cycle}.
 \]
 The query is decidable in polynomial time from either the tails or
 the canonical prime guards. A possible query has a witness with at
@@ -204,12 +150,14 @@ most $1+K|V|^2$ leaves.
 \end{theorem}
 \begin{proof}
 For the obstruction direction restrict to the chosen rows.
-By \cref{core:lem:unmarked-background}, a witness would give a word
-on $H$ omitting every restricted loss, contrary to
-\cref{core:lem:ranked-posting-survivor}. This direction requires
-neither hypothesis.
+The selected-fold background erasure above would give a word on $H$
+omitting every restricted loss, contrary to the selected-color
+survivor result. This direction requires neither hypothesis.
 
-For the converse, on the remaining rows take the greatest support
+For the converse, delete any row posting an unheaded input at an
+owner where that input disagrees with $p$. Its projection controls
+a mask at that owner in the reverse witness construction. Also,
+at each selected owner take the greatest support
 $S_r\subseteq V\setminus p_r$ of a safe $r$-fold, allowing empty
 support. Start with $V\setminus p_r$ and remove an input whenever
 one of its rows has no $r$-posting in the current set. A fold must
@@ -217,16 +165,17 @@ absorb whenever it uses the marked head, so this computes $S_r$.
 Delete the rows with an $r$-posting in $S_r$. The fold omits all
 remaining marks and cannot absorb at the positive. Attaching it by
 $\star_r$ therefore lifts any witness after deletion to one before
-deletion. Repeat over the owners. If $i$ no longer heads a row,
+deletion. Repeat both deletions to stabilization. If $i$ no longer heads a row,
 its projection succeeds.
 
 At stabilization let $H$ be the remaining heads, with $i\in H$.
 Every tail posting outside $H$ agrees with $p$, since its unheaded
-projection could otherwise have deleted the row. For each $r$ start
+projection could otherwise have deleted the row. For each $r\in J$ start
 with the heads on $r$-cycles in the remaining graph restricted to $H$.
 Iteratively remove any head having a remaining row whose $r$-postings
-miss the current set. Any loss contained in $p$ survives every fold
-deletion, since the fold at $s$ avoids $p_s$. Thus the resulting set
+miss the current set. Any loss contained in $p$ survives every
+deletion, since each attachment avoids its absorbing postings at
+$p$. Thus the resulting set
 lies in the set obtained by the preliminary removal using only such
 losses, by induction on those preliminary removals. In particular it
 is disjoint from $p_r$. If a nonempty set remains, choose one $r$-posting
@@ -243,20 +192,21 @@ the chosen restrictions. It survives because its postings lie
 in the union of surviving rows, each of which avoids the same
 deleted postings.
 At other heads use their one removing row if specified, and any
-remaining row otherwise. An $r$-cycle would consist entirely of
+remaining row otherwise. A selected $r$-cycle would consist entirely of
 heads from the $r$-search. Each edge on that cycle belongs to its
 head's imposed coordinate, so it leads to an earlier removal.
 This proves the required acyclicity.
 
 To implement deletion, record $U_r$, the union of the fold supports
-used at $r$. A row remains when its $s$-postings miss $U_s$ for
+and singleton controller supports used at $r$. A row remains when
+its $s$-postings miss $U_s$ for
 every $s$. In the support test, further exclude the $r$-postings
 on the current candidate $S_r$. A head can remain in $S_r$ exactly
 when no zero survives these exclusions. Scan the listed rows, or
 on each observer facet test whether the allowed box is positive by
 containment of a listed prime in its set of exclusions. Each strict
 increase of a register adds an input-owner pair. At most $K|V|$
-folds, each with at most $|V|$ leaves, and a final projection suffice.
+attachments, each with at most $|V|$ leaves, and a final projection suffice.
 For the preliminary removal, test the loss predicate at $p$ with
 the head and the $r$-postings in the current set erased. A loss
 there is equivalent to a minimal loss meeting the removal rule.
