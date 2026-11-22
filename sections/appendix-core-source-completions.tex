@@ -479,6 +479,24 @@ injective budget of the specified excess. Together with closure
 and matching, this gives recognition from prime lists alone in
 time $f(K,t)$ times a polynomial in the input length and arity.
 
+Unbounded background blocks require a different recovery step.
+With excess at most $t$, on each facet maintain a list of the
+minimal losses already found. To find a new one, choose one
+posting to exclude from each known loss. If the remaining
+ground set hits every prime, shrink it to a minimal transversal.
+Canonicity makes this a consistent loss, and it is new since it
+omits a posting from every known loss. Conversely any new
+minimal loss omits some posting from each known one and hence
+is contained in the remaining ground set for some choice.
+An empty known loss precludes any new one. Stop when no choice
+succeeds or the count exceeds $t+1$. Unite the facet results
+and check the total excess. Facet canonicity and agreement
+can be checked separately by consensus and restriction.
+This takes $N^{t+O(1)}$ time for input length $N$ even when $K$
+varies, and gives a polynomial recognition test from primes
+for fixed excess and arbitrary background blocks, using the
+closure and matching test above.
+
 Injectivity of the minimal losses can itself be checked in
 polynomial time directly from canonical primes, even with no
 excess bound and with $K$ varying. On one facet, choose two
@@ -511,6 +529,14 @@ the certificate bound after \cref{core:thm:injective-blockers}.
 Each selected row is checked against the prime lists, and
 the certificate is verified by graph reachability. This
 certificate needs no enumeration of the minimal losses.
+The private-guard check also detects repeats restricted to headed
+inputs: a head is retained exactly when its list on every facet
+contains the empty guard. Thus the same coNP upper bound applies
+when only the headed part of each loss is injective. Verify the
+guessed original losses, check their background postings against
+the queried coloring, and apply reachability after erasing those
+postings. The reduced obstruction bound again gives at most
+$nK$ original rows in the certificate.
 
 The guard implication problem for the core meet is coNP-complete
 without the excess bound, even at fixed $K\ge3$, for acyclic
