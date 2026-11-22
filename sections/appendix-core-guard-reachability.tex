@@ -2105,35 +2105,45 @@ any component input is posted at $r$, a foreign
 owner $s$ if every component input is posted at $s$,
 and unposted otherwise.
 
-This condition has a polynomial test on the canonical
-facet lists at fixed $K$. For an outside head and
-observer $k$, compare each status class to its diagonal
-representative, where every component input has that
-status. Cover the class of status $r$ by one box for
-each component input fixed at $r$, omitting this class
-if $k=r$. A foreign singleton status is just its diagonal
-box. For the unposted status, forbid every internal
-$r$-posting and, for each visible foreign owner $s$,
-choose one component input where $s$ is forbidden.
-The resulting boxes cover exactly the ambiguous-fold
-class. There are at most $|C|^{K-1}$ choices.
+The outside condition can be tested directly on each
+canonical facet list. A prime must either exclude all
+native postings in $C$ or exclude none. At each foreign
+owner it can exclude at most one posting in $C$.
+Group primes by their exterior exclusions, native
+exclusion flag, and set $A$ of excluded foreign owners.
+Each group must have exactly $|C|^{|A|}$ distinct primes.
 
-Each box fixes some postings and forbids others. To
-restrict a canonical list to a box, discard guards
-meeting the fixed postings, erase literals that cannot
-be posted, and keep the inclusion minima. In the
-remaining ground an internal coloring loses precisely
-when it and the fixed postings together hit every
-original guard. The surviving restrictions are therefore
-canonical by transversal duality. For comparison,
-restrict the list for the diagonal representative in
-the same way, then regard it on the box ground with
-the remaining component inputs unused. Its guards
-stay canonical there because any exterior valuation
-can be tested with the remaining inputs unposted.
-Equality of the two lists is exactly agreement on the
-box. Testing all boxes, heads and observers gives the
-claimed bound without listing losses.
+To prove necessity, consider any original guard.
+Among the statuses possible under its exclusions, the
+native singleton is unavailable exactly when all native
+postings are excluded. A visible foreign singleton is
+unavailable exactly when at least one posting at that
+owner is excluded. The unposted status is always
+possible. These choices of component statuses are
+independent of the exterior. Under the outside
+condition, therefore, the guard remains sufficient
+after dropping partial native exclusions and keeping
+just one exclusion per foreign owner. A prime already
+has this form. Changing the representative input at
+any foreign owner retains sufficiency and minimality:
+a strict subset would permit an additional fold status,
+and sufficient subsets can be transferred back to
+subsets of the original prime using the same
+representatives there. Thus all $|C|^{|A|}$ variants
+occur.
+
+For sufficiency, take the union of the prime boxes in
+one group. Its exterior and native exclusions are
+fixed. At each foreign owner in $A$ the union permits
+exactly the colorings with at least one component
+input not posted at that owner. The choices of those
+inputs are independent across owners, since every
+combination of exclusions is present in the group.
+Consequently each group describes a predicate of the
+exterior and fold status, as does the union over the
+groups. Counting groups and comparing their sizes is
+polynomial in the facet list sizes even when $K$ varies.
+The counts $|C|^{|A|}$ have polynomial bit length.
 
 Under this condition, form a quotient by identifying
 all inputs of $C$ to a single variable $z$. Its source
