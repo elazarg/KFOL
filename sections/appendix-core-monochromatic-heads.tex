@@ -1135,6 +1135,62 @@ apply this construction within each component,
 using the previously built predecessor circuits
 for its exterior postings.
 
+There is also a synthesis bound from a tree
+decomposition of the incidence graph of the visible
+prime lists for a pure-$a$ budget. Use one vertex
+per input and one per prime, joining a prime to
+its head and to each input it excludes. Distinguish
+the head edges from the exclusion edges. For a
+support, mark its inputs, and choose primes so
+that each marked input has a chosen prime at
+its head. A chosen prime requires its head and
+every input it excludes to be marked. These
+conditions hold for some prime choices exactly
+when the support is safe: a marked head's losses
+are hit precisely when the support contains a
+prime there.
+
+Use a table on the decomposition. On a bag store
+the marks of its input vertices, the choices at
+its prime vertices, and one bit per input recording
+whether a processed head edge has a chosen prime.
+At exclusion edges check that a chosen prime's
+input is marked. At head edges check the same
+condition and record the chosen-prime bit. At
+joins agree on the mark and choice bits and take
+the disjunction of the recorded bits. Forgetting
+a marked input requires its recorded bit to be
+true. These checks enforce exactly the support
+conditions.
+
+Instead of storing feasibility, store a shared
+expression for the family of supports below a
+table entry. Alternative partial assignments give
+union, and joins combine supports by set union.
+An input contributes its projection when it is
+forgotten with its mark set. Represent each
+nonempty support by its $a$-fold. Then alternative
+families use menu union and pairwise unions of
+supports use the owned $a$-gate by distributivity.
+Handle the empty support by a separate flag in
+each entry, so it contributes the identity for
+joining supports without requiring an empty-menu
+constant. Discard it at the root. The resulting
+core circuit is the union of all safe folds and
+therefore the greatest bounded operation whenever
+the family is nonempty.
+
+For a supplied decomposition of width $w$ the
+number of states and pairs of join states per bag
+is $2^{O(w)}$. Each transition needs a constant
+number of gates or a union over its allowed
+states, with table expressions shared. On a
+standard decomposition with one edge-processing
+step per incidence this gives size and construction
+time $2^{O(w+1)}$ times a polynomial in the visible
+prime input and decomposition sizes, even for
+large strongly connected components.
+
 This test compiles directly from canonical primes into a
 polynomial-size monotone circuit shared by all colorings.
 Let $U$ mark the postings in the union of the fold supports
