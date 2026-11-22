@@ -8179,39 +8179,48 @@ pair for each cross-owner edge. In the extension, edges whose
 closures use all $K$ owners need no such pair: at a positive
 with no open pair, the reachable set omits the observer.
 
-The common-pair argument also allows several loss rows per head.
-Suppose every input heads losses, all rows at $i$ post only at
-$c_i$, and a pair $z,w$ of one owner occurs in every tail
-outside the pair. At each member of the pair require the other
-member in every tail. Finally, if a row at $i$ posts $j$ of
-the same owner, require every row at $j$ to post $i$.
-Then the complete family is realizable.
+The common-pair argument also allows several loss rows per head
+and mixed postings at retained inputs. Give each headed input $i$
+a designated owner $c_i$ and require every posting at another
+headed input in any row at $i$ to have color $c_i$. A pair $z,w$
+of one owner occurs in every headed tail outside the pair, and
+at each member require the other member in every tail. Finally,
+if a row at $i$ posts a headed $j$ of the same designated owner,
+require every row at $j$ to post $i$. Then the complete family is
+realizable. The retained inputs may be posted at any colors.
 
-At a prescribed positive at $i$, each loss row there has a
-disagreeing input $j$. Choose one such input for each row.
-For a same-owner $j$ use $B_j=j$; for a foreign $j$ use the
-corresponding controller from the common-pair construction.
-On the selected row at $i$, $B_j$ is singleton $c_i$, since
-all its inputs are posted there. At the positive no $B_j$ is
-singleton $c_i$, by the path from the disagreeing input.
-Fold $i$ and all the controllers together at $c_i$. On any
-row at $i$, its selected controller absorbs, and on the
-positive the mark survives the whole fold. On a row at a
-different head, each controller either omits that head's mark
-or relies on $i$ being singleton $c_i$. The latter occurs
-for the projection at a same-owner $j$, or for the other
-member of the pair when $i$ belongs to it. The hypotheses
-make the required posting mandatory in both cases, so the
-whole fold omits that loss too. Union over the positives
-gives a single realizing word.
+At a prescribed positive at a headed $i$, choose one disagreeing
+posting for each row there. For a headed controller $j$ of the
+same owner use $B_j=j$; for a foreign headed controller use the
+corresponding word from the common-pair construction. On the
+selected row at $i$, $B_j$ is singleton $c_i$, since all its
+inputs are posted there. At the positive no $B_j$ is singleton
+$c_i$, by the path from the disagreeing input.
+Fold $i$ and these controllers together at $c_i$. Each row at $i$
+with a headed controller is cleared, and the positive mark survives.
+On a row at a different head, each such controller either omits
+that head's mark or relies on $i$ being singleton $c_i$.
+The latter occurs for the projection at a same-owner $j$, or for
+the other member of the pair when $i$ belongs to it.
+The required posting is mandatory in both cases.
 
-The conditions can be checked directly on the canonical primes.
-On a facet exposing the row owner, a posting occurs in some
+For every remaining row at $i$, with chosen retained posting
+$j{:}r$, wrap the fold in the mask $L_r(x_j,-)$.
+This clears the mark on that row and keeps it at the positive
+because that posting disagrees. A mask cannot introduce a
+constrained mark: the controller is retained and the mask can
+only replace its argument by the absorbing singleton.
+Projections at retained inputs already supply their marks.
+Union over the positives gives a single realizing word.
+
+All hypotheses can be tested by scanning the canonical primes.
+On each observer facet with losses, a posting occurs in some
 minimal loss exactly when it occurs in some prime, by the
 prime--loss transversal duality. It occurs in every minimal
-loss exactly when its singleton is a prime. In this class
-each facet exposing the row owner sees all of that head's
-minimal losses, so the checks require only scans of the lists.
+loss on that facet exactly when its singleton is a prime.
+Every proper loss is visible on at least one facet, so these
+tests recover both the possible postings and those mandatory
+across the whole loss family.
 
 For a complete directed graph on at least two vertices, the
 extension is therefore realizable exactly when an owner is
