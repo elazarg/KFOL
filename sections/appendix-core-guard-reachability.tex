@@ -2154,30 +2154,38 @@ when the quotient is core: identification is a term
 substitution in one direction, and substituting the
 fold is a term substitution in the other.
 
-The quotient's canonical lists can also be constructed
-in polynomial time at fixed $K$. At the quotient
-head $z$, take the shared exterior list and restrict
-it to the observer facet. At an outside head on
-facet $k$, compute the diagonal slices as above, one
-list for each status of $z$ in
-$\{\circ\}\cup(I\setminus\{k\})$. For each subset
-$A\subseteq I\setminus\{k\}$ of exclusions at $z$,
-take unions of one exterior guard from each slice
-whose status is allowed by $A$, always including
-the unposted slice. Adjoin the postings $z{:}r$
-for $r\in A$ as exclusions to each union and keep
-the inclusion minima over all choices.
+The quotient's canonical lists are obtained by literal
+identification and minimization, without an increase in
+size. At the quotient head $z$, take the exterior
+list of any head in $C$ on the same facet. At an outside
+head, replace each literal $v{:}s$ with $v\in C$ by
+$z{:}s$, keeping the other literals and the inclusion
+minima. Each identified guard is sufficient, since on
+diagonal colorings its exclusions imply all the
+exclusions of the original guard.
 
-Indeed a quotient guard splits into its exterior
-part and its exclusions at $z$. It is sufficient
-exactly when the exterior part is sufficient on
-every allowed slice. This is equivalent to containing
-one listed guard from each of those slices. Thus
-the unions generate all sufficient quotient guards,
-even when identifying component inputs creates
-new primes by consistency. The number of statuses
-is at most $K$, so the construction uses polynomial
-work in the input list sizes for fixed $K$.
+Conversely, lift a quotient prime to a sufficient
+original guard as follows. Keep the exterior
+exclusions. For an exclusion of $z{:}r$ at the native
+owner, exclude every $v{:}r$ with $v\in C$. For an
+exclusion of $z{:}s$ at a foreign owner, exclude
+$v{:}s$ at any one member of $C$. These exclusions
+ensure that the fold avoids all statuses excluded by
+the quotient prime. Therefore the lifted guard is
+sufficient by the outside status condition. It contains
+an original prime. Identifying the literals of that
+prime gives a sufficient quotient guard contained in
+the given quotient prime, hence gives the quotient
+prime itself. This proves the formula and bounds the
+number of guards and literal occurrences by those in
+the original lists.
+
+For fixed $K$, one can consequently repeat the
+contractions in polynomial time, recomputing the
+singleton graph and testing its components after each
+step. Each valid contraction strictly reduces arity,
+never increases the size of the prime lists, and
+preserves exact core realizability.
 
 Core operations can violate the outside status
 condition. At distinct owners $r,s$ take
