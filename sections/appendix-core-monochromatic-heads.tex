@@ -8496,43 +8496,51 @@ budgets also reduces to Clique with the support bound as
 parameter. Together with the width-one acyclic reduction
 above, this gives equivalence under parameterized reductions.
 
-For each $t\le b$, enumerate term operations on $t$ abstract
-slots, identifying the slot for the marked head, and guess
-the restriction of the query coloring to those slots.
-Discard operations missing that abstract mark. The number of
-these choices depends only on $K,b$. For each remaining
-choice, build a multipartite graph of partial injections
-from slots to input names.
+The compatibility certificate can be given entirely in terms
+of primes. For a term operation on $S$, let $H$ be one of its
+canonical guards at $i$ on local observer facet $\ell$.
+The operation respects the projected budget exactly when,
+for each such $H$ and every original facet $k$, there exists
+an original prime $G\in\Gamma_{k,i}$ wholly supported on $S$
+such that
+\[
+  G\setminus\{j{:}\ell:j\in S\}\ \subseteq\ H .
+\]
+Indeed, such a $G$ is enabled whenever $H$ is enabled on the
+local facet. Conversely, if no such $G$ exists, allow all
+postings outside $S$ on facet $k$, and inside $S$ allow only
+postings outside $H$ at colors other than $\ell$.
+This hits every original prime on facet $k$, including those
+with a posting outside $S$. A proper minimal transversal
+then projects to a local loss on facet $\ell$ avoiding $H$.
+The proposed operation supplies that mark by its guard $H$.
+Thus guard containment, with the local hidden color removed,
+checks every supplied mark without enumerating its positive
+colorings.
+
+For the reduction, enumerate term operations on $t\le b$
+abstract slots and guess the restriction of the query coloring
+to those slots. Identify the slot for the marked head and
+discard operations missing the abstract query. Each remaining
+choice gives a multipartite graph of partial injections:
 \begin{itemize}
-\item For each slot, one part selects its input name,
-consistent with the guessed query coloring and with the
-fixed queried head.
-\item For each abstract source mark supplied by the operation
-and each original observer facet, one part selects a prime
-at that source's assigned input and assigns its support to
-slots. The partial injection records the source slot and
-those support slots. Retain a choice only if the prime
-avoids the abstract coloring of the mark.
+\item For each slot, one part selects an input name consistent
+with the guessed query and the fixed marked head.
+\item For each abstract prime $H$ and original facet $k$, one
+part selects $G$ at the assigned head and places its support
+in slots. Retain only placements satisfying the containment
+test on the abstract slots.
 \end{itemize}
 Join vertices in different parts exactly when their partial
-injections have an injective union. Each prime can be placed
-in only a function of $b$ many ways since its support must
-fit inside the slots. The number of parts depends only on
-$K,b$, since the abstract operation has finitely many source
-marks on $t$ slots.
-
-A clique meeting every part assigns the slots consistently
-and witnesses the projected-budget formula for every mark
-of the abstract operation. Its instantiated term therefore
-omits the full budget's losses and supplies the query.
-Conversely any witness on at most $b$ inputs gives an
-abstract operation, its query coloring and, by that formula,
-a guard choice in each part. These choices form a clique.
-The finitely many alternative graphs can be combined into
-one Clique instance: pad each with universally adjacent
-vertices to use the same requested clique size, and take
-their disjoint union. The requested size depends only on the
-parameter, and construction time is a function of $K,b$
+injections have an injective union. A clique meeting every
+part assigns the slots consistently and certifies every
+required guard containment. Conversely a bounded witness
+gives such a clique. The number of parts and the placements
+per prime are bounded by functions of $K,b$. Combine the
+alternative graphs into one Clique instance by padding each
+to the same requested clique size with universally adjacent
+vertices and taking their disjoint union. This gives a
+parameterized reduction running in a function of $K,b$
 times a polynomial in the prime-list length.
 
 A controller can also rely on the initial projection to absorb
