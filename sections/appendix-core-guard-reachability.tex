@@ -2613,6 +2613,68 @@ probe. This gives a coNP test on the promised form even
 when the prefix itself has cyclic canonical dependencies
 and lacks a single ranked presentation.
 
+\paragraph{Ranked envelopes under binary substitutions.}
+The ranked envelope commutes with substituting named union
+or an asymmetric mask at an input of a source candidate.
+To see this, fix a proper probe on the enlarged input set.
+In the quotient probe, the block is posted at $r$ exactly
+when the inner operation is the $r$ singleton. This depends
+only on the original postings, and gives a proper coloring.
+Use the canonical loss lift for the substitution, described
+below. The forward test can use all lifted rows, including
+redundant ones.
+
+For a union pair, each external loss posting the block at
+$r$ posts both members at $r$. The two members have exactly
+the same losses, namely the outer rows at the block head.
+Add both members together as soon as those rows are hit.
+The available pair then hits a lifted external row exactly
+when its aggregate status disagrees with the row's block
+posting. Before either member is available, it contributes
+no disagreement. Thus the forward process collapses to
+the quotient process.
+
+For a mask $L_A(x,y)$ with nonempty $A$, the controlling
+head $x$ has just the exterior losses at the block head.
+The controlled head $y$ also has the local losses $x:r$
+for $r\in A$. It cannot be added before $x$, and when $x$
+enters, $y$ can enter exactly if $x$ is not posted at an
+owner in $A$. If $x$ is posted at some $r\in A$, the
+available controller alone hits every lifted block posting
+at a different owner and agrees with the posting at $r$,
+as does the mask's singleton. Otherwise both members are
+available. A lifted posting at an owner in $A$ tests just
+the controller, and a lifted posting at any other owner
+tests both members. In either case a disagreement is found
+exactly when the aggregate status disagrees. The same
+quotient process therefore applies, with the local mark
+at $y$ removed precisely on native absorbing probes.
+This is the source lift of the quotient's ranked envelope.
+
+Substitution of an owned fold on a nonsingleton block has
+a different formula. No member enters the forward process:
+each has a local singleton loss on another member at the
+fold's owner, so there can be no first addition. At all
+other heads, discard postings of that block from the
+outer losses before applying the forward test. In fact
+lifting a row at the fold block only changes which of its
+members are posted, and no such posting ever helps the
+forward test. Thus the envelope on the remaining heads is
+the ranked envelope of the projected outer loss budget.
+This projection imposes every loss with the folded input
+left unconstrained. Several disjoint fold blocks can be
+projected out together, while unions and masks on the
+remaining blocks commute with the envelope as above.
+
+Consequently a union or mask substitution is a ranked
+union exactly when its outer candidate is one: sufficiency
+is commutation, and necessity follows by the diagonal that
+recovers the outer operation from the substitution.
+In contrast, a live nonsingleton owned-fold block prevents
+ranked-union realizability, since the envelope loses every
+mark on that block. The commuting substitutions can be
+iterated along disjoint read-once trees.
+
 \paragraph{Canonical primes of the ranked envelope.}
 The same test gives a guard presentation for the greatest union
 of bounded ranked operations, with all bits zero if there are no
