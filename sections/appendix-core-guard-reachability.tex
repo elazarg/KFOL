@@ -2524,6 +2524,60 @@ the envelope has exactly $2^m$ primes at $i$ on every facet
 seeing $r$, even though the original candidate has linear
 total prime-list size at fixed $K$.
 
+\paragraph{When the path envelope is ranked.}
+In the same one-loss class, assume there is an unheaded input.
+One can decide whether the ranked envelope is itself ranked
+without listing its path primes. Keep an arrow $v\to u$ of
+the loss graph precisely when $u$ can reach an unheaded input
+after deleting $v$ and every out-neighbor of $v$ other than
+$u$. A path of length zero is allowed. The envelope is ranked
+exactly when this retained graph is acyclic.
+
+To see this, the minimal path guards are exactly the vertex
+sets, excluding the initial head, of paths with no forward
+shortcut and no intermediate unheaded input. A forward
+shortcut or earlier endpoint permits a proper subset. If
+neither exists, any route using only the path's vertices
+must visit them all in order on its first passage, since
+no arrow can skip a vertex in the forward direction.
+The reachability test above holds exactly when $v\to u$
+starts one of these paths. In the forward direction,
+prepend $v$ to a shortest path from $u$ in the remaining
+graph. It has no forward shortcut, including from $v$.
+In the reverse direction the entire suffix avoids all
+the deleted vertices.
+
+The canonical dependency graph of the envelope contains
+each retained arrow. Every other canonical dependency
+from $v$ to an input in one of its path primes is a directed
+path of retained arrows, since every suffix is again a
+minimal path. Thus the two graphs have the same directed
+reachability. The envelope is an exact one-owner trace,
+so the canonical acyclicity criterion above proves the
+claim. There is one ordinary reachability test per
+original arrow.
+
+In the acyclic case the retained arrows also give a compact
+presentation. Use one row per live headed input, posting
+its retained out-neighbors at $r$, and ignore inputs with
+no path to an unheaded input. The availability calculation
+for this budget is the path test in the retained graph.
+Every successful original path contains a minimal one,
+whose arrows were all retained. Conversely every retained
+path uses original arrows. The two graphs therefore give
+the same path predicates, and the retained acyclic
+presentation realizes the envelope.
+
+In the layered example all minimal paths go toward $z$ one
+layer at a time, so the envelope is ranked despite its
+exponential prime list. In a chordless five-cycle with
+vertices $z,a,b,c,d$ in order and sole unheaded input $z$,
+the paths $b,c,d,z$ and $c,b,a,z$ retain both $b\to c$
+and $c\to b$. This envelope is a union of ranked operations
+with no single ranked presentation. The five-cycle candidate
+itself is core by the same union of edge folds and the
+projection $z$.
+
 The availability box obstruction can also be tested
 at a fixed proper background, instead of the empty
 coloring. On inputs outside the background that
