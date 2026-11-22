@@ -227,6 +227,40 @@ posting exactly when this guard is sufficient, equivalently when it
 contains some listed prime. The test must pass on every facet.
 \end{proof}
 
+The ordered test gives a sharp arity bound for
+individual positive witnesses. Suppose the dependency
+graph has height $h$, measured in edges, and each
+prime uses at most $d$ inputs. For an active head,
+choose one enabled prime per observer supported on
+earlier active inputs. Repeat for all inputs used
+by those primes. The resulting support has size
+at most $\sum_{j=0}^h(Kd)^j$. To see sufficiency,
+restrict the ordered pass to this support. All the
+chosen guards still have active predecessors, so
+the marked head still activates. Consequently the
+greatest bounded operation is a union of summands
+of this arity.
+
+This is sharp for acyclic bounds. Build a rooted
+tree of height $h$ with private descendants at
+every head. At each internal head, for each
+observer make $d$ loss rows, each posting one
+fresh child at every other owner. Use disjoint
+child sets for the rows and attach the same
+construction below every child. Leaves are
+retained. Each row is visible only at its
+own observer, and its facet primes choose one
+posting from each of the $d$ rows. Thus their
+width is $d$. At the empty query every head
+activates in source order. In any witnessing
+scope for the root, its activation must choose
+at least one active child from each of its
+$Kd$ disjoint rows. The same demand recurs
+below each selected child, on disjoint
+subtrees. Thus any scope has at least
+$\sum_{j=0}^h(Kd)^j$ inputs. This generalizes
+the one-head cross-facet arity example.
+
 The greatest bounded core operation can have all the
 transitive dependencies of the source graph. Fix an
 owner $r$ and at each head give one singleton loss
