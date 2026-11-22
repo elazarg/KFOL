@@ -8207,9 +8207,10 @@ The required posting is mandatory in both cases.
 For every remaining row at $i$, with chosen retained posting
 $j{:}r$, wrap the fold in the mask $L_r(x_j,-)$.
 This clears the mark on that row and keeps it at the positive
-because that posting disagrees. A mask cannot introduce a
-constrained mark: the controller is retained and the mask can
-only replace its argument by the absorbing singleton.
+because that posting disagrees. A mask here cannot introduce a
+constrained mark: on a loss probe the retained controller does
+not carry the observed winner, so neither absorption nor union
+with that controller adds the mark.
 Projections at retained inputs already supply their marks.
 Union over the positives gives a single realizing word.
 
@@ -8317,6 +8318,43 @@ each prime passes, the same successive-attachment proof gives
 realizability. This tests the entire class of controllers with
 the stated support bound and isolates the global loss constraints
 from their local term operations.
+
+A controller can also rely on the initial projection to absorb
+its contribution on another head's loss. Keep the two singleton
+requirements at its posting $j{:}r$, and still require its
+support to avoid the queried head $i$. Relax independent
+boundedness as follows: on every loss at another head where
+the controller supplies a forbidden mark, the loss must post
+$i{:}r$. The order of attachment can then be certified by
+a directed graph on the chosen controllers.
+
+Write $B$ for a controller attached at $r$ and $C$ for one
+attached at $s\ne r$. Require $B$ before $C$ if some loss
+at another head has a forbidden mark from $B$ and gives
+$C$ a value other than singleton $r$. If this precedence
+graph is acyclic, use any topological order.
+Indeed, on a loss where any controller supplies a forbidden
+mark, all such controllers have the same gate owner $r$:
+each requires the same initial projection to be singleton
+at its owner. Before the last such controller, every
+controller attached at $r$ preserves the current singleton
+$r$, and every earlier controller at another owner has
+value singleton $r$ by the precedence constraints.
+Thus all controllers supplying the mark are absorbed.
+Later attachments cannot add a forbidden mark. The argument
+at the queried head and on the positive is unchanged.
+
+For bounded supports the additional tests use the same
+projection of minimal losses onto a bounded set of inputs,
+now the supports of two controllers and $i$. A uniform
+sufficient test is to choose one controller per facet
+posting in advance and require acyclicity for the full
+precedence graph at each head. Any choices of enabled primes
+then select an induced subgraph, so their controllers can
+always be attached in a valid order. In particular the
+same-owner reciprocal two-input fold now has a certificate:
+the controller is the other projection, and its only
+forbidden contribution is absorbed by the initial projection.
 
 For a complete directed graph on at least two vertices, the
 extension is therefore realizable exactly when an owner is
