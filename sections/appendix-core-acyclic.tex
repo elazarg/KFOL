@@ -301,6 +301,44 @@ At $d=1$ this gives unbounded arity at prime
 width one, and at $d=2$ it gives exponential
 arity in the height at prime width two.
 
+The same padding makes minimum witness scope
+NP-complete for known exact acyclic core targets,
+without restricting which inputs may be used.
+Reduce from Vertex Cover. Use retained inputs
+for vertices and a head for each edge, whose
+sole loss posts its two endpoints at $b$.
+Combine the edge heads by a balanced binary
+tree. At an internal head use one loss for each
+child, posting that child at $b$ and all inputs
+reachable below it at $a$. Reachability includes
+the vertex inputs below any edge heads.
+
+Every head has at most two losses, and any input
+shared by the two rows at an internal head is
+posted at $a$ in both. The canonical primes on
+each facet are the minimal hitting sets of its
+visible rows, of width at most two. The same
+cofactor proof as for the private tree works:
+every row that reads a conditional head also
+posts all inputs below it at $a$, so fixing a
+loss there conflicts at a required $b$-posting.
+On the fixed row the $b$-posted inputs retain
+$b$. Every $a$-posted input has all its descendants
+posted at $a$, so it retains $a$. Thus the family
+is core by the acyclic criterion, even though
+vertex inputs can be shared among edge heads.
+
+At the query posting all passive inputs at $a$,
+each internal head needs both children, and each
+edge head needs one of its endpoints. The minimum
+scope is the number of aggregation and edge
+heads plus the vertex-cover number. Conversely
+a vertex cover and those heads activate the
+root in source order. A proposed scope is a
+polynomial certificate by the ordered test.
+The reduction has logarithmic dependency height
+and works at each fixed $K\ge3$.
+
 The greatest bounded core operation can have all the
 transitive dependencies of the source graph. Fix an
 owner $r$ and at each head give one singleton loss
