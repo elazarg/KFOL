@@ -3248,30 +3248,28 @@ exists exactly when none of these tests finds a loss.
 
 The same path mechanism gives coNP-hardness of
 exact recognition from Boolean circuits for the complete
-source predicates, already at three owners. Use the
+source predicates, already at three owners and with an
+acyclic loss budget. Use the
 clause graph for a $3$CNF with initial vertex $x$ and
 terminal $t$, with one unlabeled edge out of $x$.
 The row for $u\to v$ posts $v{:}r$ and only the literal
-label if present. Keep the row at $t$ posting
-$z{:}r,x{:}a$ and the row at $z$ posting $x{:}b$.
+label if present. Give $t$ the empty loss.
 All rows are proper and injective. Let $H$ be the
 greatest core operation obeying them, which exists
 by union since an extra retained projection obeys them.
 
 At a query at $x$ omitting $r$, a blocking subset
 must contain the row at $x$. Its $r$-tail must be
-reached from the only possible $r$-seed, the head $z$
-of the row posting $x{:}b$. The reverse path out of
-$z$ starts at the row for $t$ and follows reversed
-graph edges, giving a path from $x$ to $t$. Literal
+reached from the only possible $r$-seed, the head $t$
+of the empty row. Reversing the reachability path
+gives a path from $x$ to $t$. Literal
 inputs are unheaded, so each label on the path must
 be seeded in the query and the labels are consistent.
 Conversely, a consistent path gives such a blocking
-subset at the query seeding its labels. At $r$ the row
-at $z$ reaches the path in reverse. At $a,b$ the
-unlabeled initial row seeds $x$, supplying the tails
-of the rows at $t,z$. All literal tails are seeded
-by the query. Thus $H$ loses some $r$-omitting bit
+subset at the query seeding its labels. At $r$ the
+empty row seeds the path in reverse, and all the
+other tails are seeded by the query.
+Thus $H$ loses some $r$-omitting bit
 at $x$ exactly when the formula is satisfiable.
 
 Now keep all bits of $H$ except that every bit at
@@ -3280,9 +3278,9 @@ change is on a downset of the proper colorings, so
 the complete predicates remain antitone. They agree
 across observers and the retained projection ensures
 nonempty reconstructed outputs. Polynomial-size
-circuits compute the bits by unrolling the polynomial
-deletion test of \cref{core:thm:injective-blockers}
-and testing the restored facet at $x$.
+monotone circuits in the exclusion bits compute the
+candidate, by disjoining the bounded predicate with
+the test that all $r$-postings are excluded at $x$.
 Every original row remains a loss, since the sole
 row headed at $x$ posts $r$. Any realizer therefore
 lies below $H$. The exact candidate is realizable
@@ -3339,8 +3337,8 @@ On the observer-$b$ facet at $x$, post $q$ at $r$
 and allow each $u_j,v_j$ to be unposted or posted
 at $a$. Keep all other inputs unposted. The only
 possible $r$-seeds are now $q$ and, if its row is
-included, $z$. A blocking subset cannot reach the
-tail of the initial edge from $z$, since the suffix
+included, $t$. A blocking subset cannot reach the
+tail of the initial edge from $t$, since the suffix
 would require both labels at $d$. Reaching it from
 $q$ requires the two labels of a branch. Conversely
 if both are posted, the initial row and those two
