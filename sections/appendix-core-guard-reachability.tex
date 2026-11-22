@@ -4943,6 +4943,35 @@ posting in that budget concerns a target on which
 they agree. The two probes therefore have the same
 answer, so the search finds a failed positive.
 
+Before branching, one can alternate scope restriction
+with forced postings. Keep a set $R$ of possible reached
+heads, initially all inputs, and keep the choices already
+fixed, including the unposted query. For an unset input,
+consider only permitted labels on arrows from heads in
+$R$. If there is one such label, fix it. If there is none,
+fix the input as unposted. To update $R$, take reachability
+from the query using only arrows from $R$ whose posting is
+not already guaranteed to agree with a fixed choice.
+Repeat until neither the scope nor the choices change.
+
+For every probe respecting the fixed choices, actual
+reachability is contained in $R$. This holds initially
+and is preserved by the reachability update. Hence in
+testing those probes one may keep only rows headed in
+$R$. A posting at an unset input that occurs in none of
+those rows can be erased without changing the answer on
+that budget. This erasure preserves the prime and all
+fixed choices. When a sole permitted relevant label
+exists, filling it then preserves any failure by
+antitonicity. If none exists, the erased probe already
+has the required unposted value. Thus no round loses
+the existence of a failed positive. Conversely every
+failed probe extending the fixed choices is a failure
+for the original box. The procedure takes polynomial
+time on the prime graph. If it leaves no competing
+target in the reached scope, just one probe suffices
+for that box.
+
 Let $d_*$ be the largest number of branching decisions on
 a search path, and $m_*$ the largest number of rows headed
 in a reached set at a leaf. The time for these probe tests is
