@@ -1843,6 +1843,30 @@ postings per owner, the test from primes alone takes
 $n^{d+O(1)}$ time times a polynomial in input length,
 even when $K$ varies.
 
+There is a complementary bound that does not restrict block sizes.
+Let $B$ be Boolean rather than enumerated. A variable $B_u$
+requires $u$ to have no foreign-$k$ posting, using binary clauses.
+Only inputs occurring at color $k$ in a listed $\ell$-prime of
+$h$ need such variables: any other $k$-posting can be dropped from
+the fixing without changing its zero bit. In the fixing test, a
+$k$-posting is now represented by $B_u$. For the first side,
+suppress the selected supplier, if present there, unconditionally.
+At every other potential supplier $u$, require its primes to be
+hit conditionally on $B_u$.
+
+An empty or singleton prime at $u$ gives a conditional clause
+of size at most two. Only a width-two prime can give a ternary
+clause, consisting of its two posting literals and $\neg B_u$.
+Consequently it suffices to guess $B_u$ at the inputs whose
+$k$-facet lists have a width-two prime, among those occurring
+at $k$ in the $\ell$-primes of $h$. If there are at most $q$
+such inputs for each $(h,k,\ell)$, cofactor testing and hence
+acyclic recognition take $2^q$ times polynomial time from the
+primes alone. In particular the test is polynomial when every
+potential fixed-$k$ supplier in the fixing has only unary or
+empty primes at observer $k$. Block sizes and palette size
+may both be unbounded.
+
 At bounded prime width the owner-block test is
 fixed-parameter tractable in the owner count $K$,
 the block bound $d$, and the prime width $b$.
