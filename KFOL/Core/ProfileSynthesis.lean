@@ -248,6 +248,43 @@ theorem winnerSet_eq_singleton_iff_profile
 
 attribute [local instance] Equational.coreStructure
 
+/-- A positive singleton requirement transfers through substitution to the
+inputs whose substituted terms win on the original coalition. -/
+theorem substituted_profile_demand [Nontrivial Role] {Port : Type w}
+    (r : Role) (A : Var → Bool)
+    (g : Port → Equational.Term (Equational.CoreSymbol Role) Var)
+    (t : Equational.Term (Equational.CoreSymbol Role) Port) :
+    profile r (fun j => profile r A (g j)) t = true ↔
+      ∀ v : Var → WinnerSet Role,
+        (∀ i, A i = true → v i = WinnerSet.singleton r) →
+        t.realize (fun j => (g j).realize v) = WinnerSet.singleton r := by
+  classical
+  constructor
+  · intro h v hv
+    apply (winnerSet_eq_singleton_iff_profile t r _).mpr
+    apply profile_mono r _ _ _ t h
+    intro j hj
+    apply decide_eq_true
+    apply (winnerSet_eq_singleton_iff_profile (g j) r v).mpr
+    exact profile_mono r _ _ (fun i hi => decide_eq_true (hv i hi)) (g j) hj
+  · intro h
+    obtain ⟨s, hsr⟩ := exists_ne r
+    let v (i : Var) : WinnerSet Role :=
+      if A i then WinnerSet.singleton r else WinnerSet.singleton s
+    have hv (i : Var) (hi : A i = true) : v i = WinnerSet.singleton r := by
+      simp [v, hi]
+    have ha : (fun i => decide (v i = WinnerSet.singleton r)) = A := by
+      funext i
+      cases hi : A i <;> simp [v, hi, hsr]
+    have hg : (fun j => decide ((g j).realize v = WinnerSet.singleton r)) =
+        fun j => profile r A (g j) := by
+      funext j
+      apply Bool.eq_iff_iff.mpr
+      rw [decide_eq_true_eq, winnerSet_eq_singleton_iff_profile, ha]
+    have ht := (winnerSet_eq_singleton_iff_profile t r _).mp (h v hv)
+    rw [hg] at ht
+    exact ht
+
 omit [DecidableEq Role] in
 private theorem realize_subset_input_union
     (t : Equational.Term (Equational.CoreSymbol Role) Var) (v : Var → WinnerSet Role) :
