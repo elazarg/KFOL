@@ -935,35 +935,39 @@ the preceding algorithm then give the stated
 running time, even for arbitrarily large owner
 classes.
 
-At prime width two, the row search with $b$
-forbidden blocks and $q$ required postings has an
-exact reduction to multicolored clique with at
-most $b+q$ parts. Start with a $2$CNF requiring
-all primes to be hit, enforcing consistency and
-fixing the ground and the required postings.
-For every forbidden block add a clause requiring
-one of its postings to be absent. For each
-required posting without a singleton private
-prime add a clause requiring some neighbor in a
-two-posting prime to be absent. The latter clauses
-guarantee that the required postings survive
-minimization to a loss. Conversely a qualifying
-minimal loss satisfies all the clauses.
+At any fixed prime width $w$, the row search with
+$b$ forbidden blocks and $q$ required postings
+reduces to multicolored clique. Make one choice
+for each forbidden block, specifying a posting to
+omit, and one choice for each required posting,
+specifying its private prime. A private-prime
+choice omits every other posting of that prime.
+Discard choices omitting a required posting and
+remove the already forbidden postings from the
+ground. The joint choices succeed exactly when
+the remaining ground hits every prime: a minimal
+transversal then preserves the pinned postings
+by privacy. Conversely a qualifying minimal
+loss supplies all these choices.
 
-Reject an unsatisfiable base formula. Otherwise,
-choose one literal from each added clause. These
-unit assumptions are jointly consistent with the
-base $2$CNF exactly when every individual and
-pair of assumptions is consistent with it. Indeed
-eliminating the other variables by resolution
-projects a $2$CNF to another $2$CNF, so an
-inconsistent assignment already falsifies a
-clause on at most two assumed variables. Make
-one vertex for each individually feasible choice
-from a clause, joining choices from distinct
-clauses when their pair is feasible. A clique
-meeting every part gives exactly a qualifying
-row.
+A failed hit involves at most $w$ choices,
+since the missed prime has at most $w$ postings
+and each still needing an omission has one
+choice that provides it. Consequently joint
+feasibility is decided by agreement on all
+subsets of at most $w$ choice indices. For each
+such subset create a part whose vertices are
+the assignments of choices to that subset
+that do not miss any prime. Join vertices of
+different parts when they agree on every shared
+index. One vertex per part gives a consistent
+global assignment, and the tests on its
+subsets guarantee all prime hits. Reject a
+ground already missing a prime before making
+the graph. The number of parts depends only on
+$b+q,w$, and construction is polynomial at
+fixed $w$. For $w=2$ it suffices to use one
+part per choice index and test pairs directly.
 
 Conversely multicolored clique reduces to the
 row search even with $q=0$ and just one posting
@@ -979,7 +983,11 @@ meet every part. Such an independent set can
 be extended to a maximal one, whose complement
 is a minimal loss satisfying the restrictions.
 Thus this row search is $\mathrm W[1]$-complete
-in $b+q$, even with a fixed palette.
+in $b+q$ at every fixed width bound $w\ge2$,
+even with a fixed palette.
+At width one there is at most one minimal loss
+per facet, so it can be checked directly against
+all the restrictions.
 
 The forbidden blocks can be required to arise
 from legal, feasible offers in a common history.
