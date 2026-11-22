@@ -457,6 +457,62 @@ complete quotients from the indecomposable greatest
 profile completions. The odd-cycle examples can
 occur as the latter quotients without an arity bound.
 
+The tree also gives recognition and circuit synthesis
+parameterized by the largest indecomposable quotient.
+Start with normalized monotone profiles, without
+assuming common source. The block tests and the
+strong-block construction only use Boolean clauses
+and remain applicable. At each node compute the
+restricted profiles with local unanimity and identify
+its child blocks to get the quotient profiles. These
+CNFs can be computed directly from the original lists
+so their sizes stay polynomial. Check the Boolean
+factor identities at all nodes. For a realizable
+family they hold by the block theorem, so a failed
+identity rejects the candidate.
+
+Common source passes to every factor. For a diagonal
+outer profile, disjoint winning coalitions of blocks
+would lift to original wins with empty intersection.
+For an inner profile, keep the wins on proper subsets
+of that block and replace the unanimity wins by the
+full original coalition. An empty intersection in
+the block would again give one in the original. The
+converse follows by composing core realizers of the
+factors through the checked identities. Thus only
+the quotient profiles at the nodes need to be tested.
+
+At a complete quotient use the three forms above.
+At a quotient of arity $b$, tabulate at each owner
+the subsets that can be omitted from a winning
+coalition. A failure of common source is a partition
+of the inputs into one such subset per owner,
+allowing empty parts. The subsets can be made
+disjoint by assigning any multiply omitted input
+to just one owner, because wins are monotone.
+Tabulate the unions achieved after each owner,
+adding a disjoint permitted subset at the next
+owner. This takes $O(K3^b)$ subset operations and
+tests whether the whole input set is reached.
+
+For synthesis, share the coalition-choice construction
+of \cref{core:thm:profiles} by indexing a state by
+the next owner and the intersection of the choices
+so far. A choice replaces this intersection by its
+intersection with the selected winning coalition.
+There are at most $K2^b$ states and $2^b$ choices per
+state. After the last choice return the union on the
+surviving inputs. Common source makes every reached
+terminal union nonempty. A reset gives the greatest
+completion on that quotient. Compose the node
+circuits along the tree, sharing each child output.
+If $w$ is the maximum arity of the noncomplete
+quotients, this gives time and circuit size
+$4^{O(w)}N^{O(1)}$, uniformly in the palette, with
+$N$ the profile-list length. The earlier test for
+singleton explanation extends the recognition bound
+to candidates supplied by canonical source primes.
+
 For these equal vertex-cover profiles there is an exact
 width dichotomy. At a head $j$, the profile clauses
 after setting $j$ absent are the singletons at its
