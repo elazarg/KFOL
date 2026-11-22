@@ -2732,6 +2732,50 @@ has an extra pivot at a nonconstant restriction, and
 constant restrictions are handled by the two exact
 profiles. The fold consequently realizes the envelope.
 
+For any number of weight classes, the count construction
+itself has an exact test. Let $w_s$ be the weight in class $s$,
+$Q$ the quota, $T_s$ the number fixed true, and $F_s$ the
+number free. Put $Q'=Q-\sum_s w_sT_s$. Consider just
+nonconstant restrictions, with
+$0<Q'\le\sum_s w_sF_s$. For each minimal winning count
+vector $a$, its residual conjunction requires
+$d_s=\max(0,a_s-T_s)$ inputs of each class. Discard it
+if some $d_s>F_s$. For every remaining vector and every
+class $s$ with $d_s>0$, require a vector of counts $u$
+satisfying
+\[
+ 0\le u_j\le F_j,\qquad u_s<F_s,\qquad
+ Q'-w_s\le\sum_jw_ju_j<Q'.
+\]
+This is the exact pivot test for a free input in class $s$.
+Its necessity for the construction follows by giving
+that input a unique third-owner mark at the restriction:
+the residual conjunction supplies the mark, so the
+constructed fold will supply it, whereas the desired
+envelope does so only if the displayed pivot exists.
+Sufficiency follows from the absence of extra pivots
+and the exact profiles on constant restrictions.
+
+At a fixed number of classes, all count vectors in
+this test range over boxes with side lengths at most the
+number of inputs. This checks the construction in
+polynomial time for integer weights in binary.
+Furthermore any disjunction of conjunctions of
+class thresholds that represents the weighted profile
+must include each minimal winning count vector: the
+conjunction winning there has requirements bounded
+by that vector, and cannot require strictly less.
+Consequently additional conjunctions cannot repair a
+failed test for this construction.
+
+The test can fail even when the envelope is core.
+For weights $2,1,3$ on $x,y,z$, respectively, and quota
+four, the Boolean function is $(x\vee y)\wedge z$.
+Its disjoint-block envelope is core, but the count
+construction includes the conjunction $yz$. Fix $x$
+true and leave $y,z$ free. That conjunction still
+depends on $y$, whereas the restricted function is $z$.
+
 Even a weighted threshold can have an unrealizable envelope.
 Give $x,y,z,u,v$ weights $1,1,2,2,3$ and use quota five.
 The total weight is nine, so the function is self-dual.
