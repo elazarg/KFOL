@@ -370,6 +370,42 @@ recognition from the original prime lists extends to arbitrary
 incoming owners by applying this test to each listed prime:
 the family is exact precisely when none admits a losing coloring.
 
+The same guard test extends to several injective rows per head
+with a cost exponential only in the number of excess rows.
+For each head with multiple rows, guess exactly which of its
+rows belong to the obstruction, allowing the empty choice.
+Start $S$ with the queried head and all the heads with nonempty
+guesses. Apply the same two closure implications to the chosen
+rows and to the unique row at each singly headed input in $S$.
+Reject the guess if a forced input has no selected or selectable
+row. Every obstruction with this guess contains the resulting
+$S$, and uses exactly the same rows there.
+
+For each owner now draw the reversed posting graph on $S$,
+with arrows pointing from posted inputs to heads. Seed a head
+if one of its rows omits that owner or if it has an incoming
+arrow from outside $S$. Every such outside tail can be posted
+as closure prescribes. Match each source strongly connected
+component without a seed to a distinct permitted vertex of
+that component at its owner. This replaces the cycle matching
+when several rows give several incoming edges to a head.
+At one owner the components are disjoint, and between owners
+the matching enforces consistency. In any larger obstruction
+with the same guess, none of these unseeded source components
+can gain an incoming edge or a missing-owner seed: both depend
+only on the rows at their own heads. Consequently the matching
+is necessary. It is sufficient because it makes every vertex
+reachable from a seed at every owner, so all internal tails
+are reached and all outside tails are seeded by their postings.
+The selected rows on $S$ therefore witness a loss.
+
+If the budget has $t$ rows beyond one per headed input,
+the multiply headed inputs have at most $2t$ rows altogether.
+Testing all guesses takes at most $4^t$ polynomial-time
+closure and matching tests per guard. This applies to checking
+exactness directly from the original primes when the loss
+budget is also given.
+
 This yields exponential prime growth under taking the core meet
 even with two posting owners and one row per head. Start with a
 head $i$ and then $d$ layers of two inputs each, labeled $a,b$.
