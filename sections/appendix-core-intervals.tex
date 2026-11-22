@@ -614,6 +614,36 @@ keeping just its $s$-block. All lists in the reduction have
 polynomial size and one observer distinct from $r,s$
 already suffices.
 
+For a general native trace, its dependency components
+localize these forbidden blocks. Fix $H=c(p_r)$ and put
+the strongly connected components $C_1,\ldots,C_t$ of the
+native source graph in dependency order. Set $H_j=H\cap C_j$
+and $H_{<j}=\bigcup_{i<j}H_i$. The minimal generators of
+$H$ are exactly the unions of independently chosen minimal
+sets $S_j\subseteq H_j$ with
+\[
+                  H_j\subseteq c(H_{<j}\cup S_j).
+\]
+Indeed, if $S$ spans $H$, then in component $j$ all later
+seed postings can be erased without affecting its bits.
+Adding all of $H_{<j}$ proves the local condition for
+$S_j=S\cap H_j$. Conversely these local conditions build
+$H$ in component order, since every earlier $H_i$ is
+already derived. Componentwise minimization therefore gives
+exactly the minimal global generators.
+
+As a result a minimal foreign block that destroys spanning
+by deletion from $H$ is contained in one $H_j$: spanning
+fails precisely when some local generator test fails.
+Foreign postings outside $H$ still give only singleton
+exterior restrictions. Thus if each native component has
+at most two inputs, the pointwise loss test with terminal
+prime width two is $2$SAT, even with dependencies between
+the components. The forbidden blocks can be found by
+testing deletions of size one and two using the native
+prime lists. Acyclic native dependence gives only singleton
+restrictions at every query.
+
 \paragraph{Reducing a comparison to its conflicting owner blocks.}
 For arbitrary proper colorings $p,q$, first check whether
 every input posted only in $p$ is captured at $q$. A live
