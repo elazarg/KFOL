@@ -1603,6 +1603,40 @@ vertex inputs up to the root, so masks suffice.
 With $m$ edges the minimum support size is
 $2m-1$ plus the minimum vertex cover size.
 
+The same width-one class admits a parameterized reduction
+from Clique, with witness support size as the parameter.
+Use a graph with $\ell\ge2$ vertex classes and ask for a clique
+meeting each class once. This version follows from ordinary
+Clique by making one copy of the vertex set per class and
+retaining edges between copies of adjacent vertices in
+different classes.
+
+Use a retained input per vertex and an option head for each
+cross-class edge. Give an option with endpoints $u,v$ the
+two rows $(u{:}a,z{:}b)$ and $(v{:}c,z{:}b)$, so it needs
+both endpoints at the query posting only $z{:}b$.
+For each class pair use a head with one row posting all its
+options at $a$. It needs at least one option. Combine the
+$t=\binom{\ell}{2}$ class-pair heads by the binary tree of
+two-row heads above, and query the root. An empty class pair
+can be rejected before constructing the budget. The graph
+is acyclic, and each head has at most one loss visible on
+each observer facet, so all canonical primes still have
+width one. The single row at a class-pair head can have a
+large owner block, but its list consists just of singleton
+exclusions.
+
+The projected acyclic test forces all $2t-1$ tree and
+class-pair heads, at least $t$ options, and at least $\ell$
+vertex inputs. With budget $3t-1+\ell$ it must use exactly
+one option per class pair and one vertex per class.
+The chosen options certify all edges among the chosen
+vertices. Conversely a clique gives a support of that size,
+and projection deletion gives a witness. The agreeing $z$
+need not be used. This shows that bounding prime width alone
+does not provide the list-length parameter of the
+support-branching test, even on acyclic budgets.
+
 Minimum support for several required marks is
 NP-complete, even at one neutral background for
 an exact pure-owner candidate whose posting graph
