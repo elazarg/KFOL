@@ -479,6 +479,42 @@ face is the lattice of $c_t$-closed sets. All comparisons
 between proper subcolorings require only direct prime-guard
 queries, irrespective of source cycles.
 
+\paragraph{Unique minimal representatives on posting faces.}
+Within the subpostings of a proper coloring $t$, each activation
+class has a least representative exactly when $c_t$ satisfies
+anti-exchange. Its minimal representatives are the minimal
+generators of the corresponding closed set, so this is the
+unique-generator condition for closures. The prime-pair test
+in the monochromatic-heads appendix applies directly. Restrict
+the source primes to the postings of $t$ and minimize, since
+every flag outside $t$ is absent on this face.
+
+At width at most two one can test this condition simultaneously
+on every proper posting face in polynomial time. A failure is
+a proper background $B$ leaving distinct inputs $x,y$ unposted
+and live, together with a posting $a$ at $x$ and $b$ at $y$,
+such that adding $a$ captures $y$ and adding $b$ captures $x$.
+Such a background can be replaced by its closure inside
+$B\cup\{a,b\}$, where it is already closed because $x,y$ are
+live. Conversely an anti-exchange failure in a face has this
+form by the capture definition of its closure.
+
+Enumerate the missing observer, the two postings $a,b$, and
+a positive prime at each head. Both postings must be visible
+at the chosen observer. The prime at $x$ must contain $b$,
+and the prime at $y$ must contain $a$, since otherwise each
+would remain enabled after the proposed capture. Use Boolean
+variables for background postings, forbid both heads and
+the chosen primes there, and forbid pairs of competing
+postings. To capture $x$ after adding $b$, require each
+prime at $x$ that misses $b$ to be hit by the background.
+Use the symmetric clauses for $y$ and $a$. All clauses
+have width at most two, so a successful $2$SAT instance
+is exactly a failure. For unrestricted width, the displayed
+background and the two postings still give a polynomial
+certificate. These tests concern least representatives
+within proper faces, where all postings are compatible.
+
 Principal downsets have more structure than those of an arbitrary
 preorder.
 
