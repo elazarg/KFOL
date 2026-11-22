@@ -1191,6 +1191,48 @@ time $2^{O(w+1)}$ times a polynomial in the visible
 prime input and decomposition sizes, even for
 large strongly connected components.
 
+If each head has at most one pure-$a$ loss, a
+polynomial circuit is available without a width
+bound. Draw an arrow for each posting in its
+row. A support is safe exactly when each of its
+headed inputs has an outgoing arrow inside the
+support; an empty loss permits no such arrow.
+Starting at any member of a safe support, follow
+these arrows until either reaching an unheaded
+input or repeating a vertex. Thus every safe
+fold mark has a smaller witness supported on a
+walk to an unheaded input or a walk followed
+by a nonempty closed walk at its end.
+
+Build a matrix of core circuits whose entry
+$P_d(i,j)$ is the union of the folds on walks
+from $i$ to $j$ of length at most $2^d$. A
+zero-length walk gives the projection at $i$,
+and a one-edge walk gives the fold on its
+endpoints. To double the length bound, take
+the union over intermediate vertices $v$ of
+$P_d(i,v)\star_a P_d(v,j)$, omitting absent
+entries. By distributivity this represents
+concatenation of walks, with repeated
+vertices removed by idempotence. After
+$\lceil\log_2 |V|\rceil$ doublings all needed
+paths are included.
+
+At each vertex $j$ form a closed-walk circuit
+by choosing an outgoing edge $j\to v$ and
+folding its endpoints with the final entry from
+$v$ to $j$. Attach this circuit to each walk
+ending at $j$. Also keep the walks ending at
+unheaded inputs directly. Every resulting
+summand is safe since every headed member
+has a successor in its walk support. Conversely
+the walks found by following a safe support
+are among these summands, so their union
+gives the greatest bounded operation. The
+matrix construction has size $O(|V|^3\log(2|V|))$.
+The arrows and unheaded inputs are read directly
+from one visible prime list at each head.
+
 This test compiles directly from canonical primes into a
 polynomial-size monotone circuit shared by all colorings.
 Let $U$ mark the postings in the union of the fold supports
