@@ -261,42 +261,45 @@ subtrees. Thus any scope has at least
 $\sum_{j=0}^h(Kd)^j$ inputs. This generalizes
 the one-head cross-facet arity example.
 
-Even exact acyclic core operations of prime width
-one can require unbounded summand arity. Use inputs
-$x_0,\ldots,x_h$, with $x_0$ retained and distinct
-owners $a,b$. The sole minimal loss at $x_j$ for
-$j\ge1$ posts $x_{j-1}$ at $b$ and all earlier
-inputs at $a$. Each facet has at most one loss
-at a head, so all primes have width at most one.
+Exact acyclic core operations can also require
+witness arity exponential in height at fixed prime
+width. Use a full $d$-ary tree of height $h$,
+with one input per vertex, and distinct owners
+$a,b$. At each nonleaf $v$ give one loss per
+child $u$. The row posts $u$ at $b$ and all its
+strict descendants at $a$. The rows of a head
+have disjoint supports. On any observer facet
+the primes choose one posting from each visible
+row, so their width is at most $d$.
 
-These lists pass the exact acyclic cofactor test.
-Fix a loss at $x_i$. At every later head $x_j$
-whose loss reads $x_i$, its row requires
-$x_{i-1}$ at $a$, while the fixed loss requires
-that input at $b$. Hence the later loss is
-disabled throughout the cofactor. Earlier heads
-never read $x_i$. At the fixed head the row
+The family passes the acyclic cofactor test.
+Fix a loss at $v$ with selected child $u$.
+Any other head's row reading $v$ also reads
+$u$ and requires it at $a$: the row reads an
+entire descendant subtree, with only its own
+root posted at $b$. It is disabled by the
+fixing $u:b$. At $v$ itself the fixed loss
 omits every color absent from its postings.
-The posted colors are supplied independently
-of $x_i$: every source retains $b$, since all
-losses post $b$, and any row posting $a$ includes
-$x_0:a$ at the retained input. This gives the
-required independence.
-The candidate is nonempty because it retains
-$x_0$, so the acyclic characterization realizes
-it.
+The color $b$ is supplied by $u$, since no
+loss is visible on the $b$-facet. If the row
+posts $a$, its strict descendants are all
+posted at $a$ and cannot face an active loss
+requiring one of their children at $b$.
+Thus its posted colors already occur
+independently of $v$. The leaves are
+retained, ensuring nonemptiness, and the
+acyclic criterion realizes the operation.
 
-Now query $x_h$ with all predecessors posted
-at $a$, on a facet seeing both colors.
-The only mismatching posting in the loss at
-$x_j$ is its immediate predecessor at $b$.
-Thus the scoped activation pass for $x_h$
-needs $x_{h-1}$, which needs $x_{h-2}$, and so
-on through $x_0$. All inputs are necessary
-in any bounded summand supplying this mark.
-This shows that the height dependence cannot
-be eliminated even when the input lists are
-already those of a core operation.
+Query the root with every other input posted
+at $a$ on a facet seeing both colors.
+The only mismatch in a row is its direct
+child at $b$. By the scoped ordered test,
+the root needs every child active, and each
+child needs every child of its own active.
+Thus all $\sum_{j=0}^h d^j$ inputs are needed.
+At $d=1$ this gives unbounded arity at prime
+width one, and at $d=2$ it gives exponential
+arity in the height at prime width two.
 
 The greatest bounded core operation can have all the
 transitive dependencies of the source graph. Fix an
