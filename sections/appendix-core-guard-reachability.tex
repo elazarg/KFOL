@@ -2001,6 +2001,45 @@ check is necessary as well. This uses only the
 candidate's bits and its owner orders once the
 candidate's realizability is known.
 
+Such a presentation preserves directed reachability
+on the input names. Take its rows to be canonical
+candidate losses, as above. Their posting graph is a
+subgraph of the candidate graph. Conversely the
+availability bit at a head can read the status of an
+input only along a directed path in the presentation.
+This follows by induction on the rounds of the
+availability update. Each posting in a canonical
+minimal loss is an essential dependency: erasing it
+from that loss changes the bit. So every candidate
+arrow is a reachability pair of the presentation.
+The two graphs have the same reachability and the
+same strongly connected components.
+
+In particular every vertex of a nontrivial candidate
+component must lie on a simple directed cycle using
+more than one owner in the candidate graph. A directed
+edge whose removal disconnects its component in the
+directed sense must also be retained with some owner.
+If such compulsory edges have unique owners and form
+a monochromatic cycle, they obstruct the presentation.
+The compulsory-edge test uses only graph reachability
+after deletion of each edge. Also, if every simple
+cycle in the candidate graph is monochromatic, the
+candidate can have this presentation only when its
+whole graph is acyclic: any cycle in the selected
+subgraph would violate an owner order.
+
+Mixed cycles do occur in the represented operation.
+At distinct owners $a,b$, use retained inputs $z,w$
+and just two rows, $\{y:a,z:a\}$ at $x$ and
+$\{x:b,w:b\}$ at $y$. At the query $z:a$, with $w$
+unposted, $y$ is available through $w$. Thus adding
+$y:a$ changes $x$ from available to unavailable.
+Symmetrically at $w:b$ adding $x:b$ changes $y$.
+The greatest bounded operation therefore has a
+two-cycle in its canonical graph, even though the
+presenting graph has no monochromatic cycle.
+
 This gives a component criterion directly in terms of
 the prescribed source bits. For a proper coloring $p$,
 write $J(p)$ for the heads whose prescribed coefficient
