@@ -2890,6 +2890,33 @@ primes even when the candidate has mixed losses. If the
 candidate is nonempty and the test succeeds, the union
 of the resulting folds realizes it.
 
+The overlap bound can be measured locally at each source.
+For owner $r$, draw an arrow from $j$ to every input used
+in a prime at $j$ whose postings all have color $r$, on
+any original facet. Let $W_{i,r}$ consist of the inputs
+reachable from $i$ along these arrows, with $i$ itself
+included. The projected loss tests at heads in $W_{i,r}$
+read only inputs in this set. Induction on the closure
+iterations shows that the one-owner minorant's mark
+at $i$ depends only on the initial $r$-block inside
+$W_{i,r}$.
+
+For the comparison at $i$ on an observer facet $k$,
+retain a posting $j{:}r$ only if $r\ne k$, $j\ne i$,
+and $j\in W_{i,r}$. Take a prime $H$ as before,
+enumerate statuses only at inputs having several of these
+retained postings, then fill the remaining permitted
+postings. Any positive enabling $H$ can be restricted
+to this ground before extension: erasure preserves
+the guard and does not affect the minorant's mark.
+Thus the same test uses $(K+1)^d$ times polynomial work
+with $d$ the largest overlap count on a single source
+and facet, rather than on the whole budget.
+For example, different heads may read the same retained
+inputs at different owners, yet each head whose losses
+are pure at its own owner can be tested without any
+overlap enumeration at that head.
+
 There is also a pruning test for dual profiles in an
 arbitrary word. At every gate outside $b,c$ (including
 named union), select one child and discard the other.
