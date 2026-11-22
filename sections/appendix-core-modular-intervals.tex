@@ -3161,7 +3161,36 @@ Conversely, a model chooses such a path. Thus
 compatibility is equivalent to unsatisfiability, for
 every fixed $K\ge3$.
 
-The hardness needs only two full rows per head.
+The construction also represents a Boolean circuit
+on selected losses without expanding its minimal
+conflicts. Let $F(X,Y)$ be a $3$CNF and designate one
+optional row for each variable in $X$. Prefix the
+clause path with one stage for each $v\in X$.
+At that stage the edge labeled $v{:}b$ is fixed and
+the edge labeled $v{:}a$ is optional. Thus the chosen
+stage edges record a truth assignment whose true
+$X$-variables must be selected. Clause edges are
+fixed. There is a consistent path exactly when $F$
+has a model whose true $X$-variables are among the
+selected ones: a path gives such a model by extending
+its labels arbitrarily, and a model chooses its stage
+edges and one true literal per clause.
+
+In particular, encode a Boolean circuit with an
+asserted output by including its gate values in $Y$
+and imposing the local truth table at each gate of
+fan-in at most two with clauses of width at most
+three. When the circuit computes a monotone Boolean
+function of $X$, some subset of the selected inputs
+makes it true exactly when the selection itself does.
+Therefore the incompatible selections are precisely
+the true inputs of the monotone function, with a
+number of rows linear in the circuit size and the
+number of inputs. For example, the conjunction of
+$m$ disjunctions on disjoint pairs has $2^m$ minimal
+incompatible selections in a budget of linear size.
+
+Both constructions need only two full rows per head.
 For a three-literal clause keep its first literal row
 at the clause head and give that head a second row
 posting a fresh auxiliary at $r$ and all the non-$r$
