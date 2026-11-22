@@ -3246,45 +3246,53 @@ domains. The old primes are just singletons or empty
 because the old operation has one loss. A transport
 exists exactly when none of these tests finds a loss.
 
-These obstructions also transfer to exact recognition
-when the input presents each source predicate by a
-Boolean circuit. Start with the old operation with one
-proper loss and a budget of injective full rows as above.
-Use a common retained input, adding one if necessary.
-In the enlarged palette let $H$ be the greatest core
-operation obeying both the old loss and the full rows.
-It exists by union, since the retained projection is
-available. A positive of $H$ is precisely a query that
-passes the polynomial injective reachability test.
+The same path mechanism gives coNP-hardness of
+exact recognition from Boolean circuits for the complete
+source predicates, already at three owners. Use the
+clause graph for a $3$CNF with initial vertex $x$ and
+terminal $t$, with one unlabeled edge out of $x$.
+The row for $u\to v$ posts $v{:}r$ and only the literal
+label if present. Keep the row at $t$ posting
+$z{:}r,x{:}a$ and the row at $z$ posting $x{:}b$.
+All rows are proper and injective. Let $H$ be the
+greatest core operation obeying them, which exists
+by union since an extra retained projection obeys them.
 
-Define a complete candidate by stripping any fresh-owner
-postings from its query. On a proper old coloring use
-the old operation's bit. On a full old coloring use
-$H$'s bit. These predicates agree across observers. They
-are antitone: the only mixed comparison has a proper
-old subcoloring of a full old coloring, and $H$ obeys the
-old loss and its upper cone. The retained projection
-guarantees nonempty reconstructed outputs. All candidate
-bits can be computed by polynomial-size circuits:
-for the full case use the reachability deletion test
-of \cref{core:thm:injective-blockers}, unrolled for at
-most the number of rows.
+At a query at $x$ omitting $r$, a blocking subset
+must contain the row at $x$. Its $r$-tail must be
+reached from the only possible $r$-seed, the head $z$
+of the row posting $x{:}b$. The reverse path out of
+$z$ starts at the row for $t$ and follows reversed
+graph edges, giving a path from $x$ to $t$. Literal
+inputs are unheaded, so each label on the path must
+be seeded in the query and the labels are consistent.
+Conversely, a consistent path gives such a blocking
+subset at the query seeding its labels. At $r$ the row
+at $z$ reaches the path in reverse. At $a,b$ the
+unlabeled initial row seeds $x$, supplying the tails
+of the rows at $t,z$. All literal tails are seeded
+by the query. Thus $H$ loses some $r$-omitting bit
+at $x$ exactly when the formula is satisfiable.
 
-If the budget is compatible, $H$ agrees with the old
-operation on proper old colorings. Indeed it contains
-a transport and lies below the old operation on
-restriction. Erasing its fresh-owner gates preserves
-its bits on colorings containing only old postings.
-The resulting word ignores fresh-owner postings in
-its source predicates, so realizes the entire candidate.
-Conversely a realizer must agree with the old operation
-on restriction and obey the full rows. Erasing its
-fresh-owner gates yields the required transport.
-Thus exact recognition is coNP-hard for these
-circuit-presented candidates with $K+1$ owners, for
-each $K\ge3$. This reduction uses circuits for source
-predicates, which need not give short explicit lists
-of their canonical primes.
+Now keep all bits of $H$ except that every bit at
+$x$ on a coloring omitting $r$ is set to one. This
+change is on a downset of the proper colorings, so
+the complete predicates remain antitone. They agree
+across observers and the retained projection ensures
+nonempty reconstructed outputs. Polynomial-size
+circuits compute the bits by unrolling the polynomial
+deletion test of \cref{core:thm:injective-blockers}
+and testing the restored facet at $x$.
+Every original row remains a loss, since the sole
+row headed at $x$ posts $r$. Any realizer therefore
+lies below $H$. The exact candidate is realizable
+precisely when the restoration changed no bit,
+equivalently when the formula is unsatisfiable.
+The reduction works on any palette containing
+$a,b,r$ and allows at most two rows per head using
+the clause branching described above. Circuit
+presentation here specifies the predicates
+without listing their canonical primes.
 
 There is a full description when one distinguished source
 $x$ can vary and every passive input is retained. Every
