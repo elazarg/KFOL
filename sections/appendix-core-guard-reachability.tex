@@ -1845,8 +1845,9 @@ circuit satisfiability to the monotone version above,
 use $d$ slots, each containing one choice bit for every
 original variable. Require some bit in each slot. At
 weight at most $d$ this means exactly one choice per
-slot. Require distinct choices for every pair of slots
-by a disjunction over all pairs of unequal variables.
+slot. Require the variable indices chosen in consecutive
+slots to increase, by a disjunction over ordered pairs
+of distinct indices.
 A variable is true if a slot chooses it, and false if
 each slot chooses a different variable. Both tests are
 monotone in the slot bits on valid selections. Computing
@@ -1858,6 +1859,35 @@ Horn test into a polynomial-size Boolean circuit on its
 exclusion flags, and add $d$ unused bits to turn the
 size bound into an exact weight test. This proves the
 matching parameterized upper bound.
+
+The reduction also preserves counts. Any sufficient
+guard of size at most $d$ in a compiled budget remains
+sufficient after deleting all exclusions except the
+chosen circuit input flags, by the triangle simulation.
+A prime of that size therefore uses only input flags,
+and its selected inputs are inclusion-minimal among
+the satisfying selections. Under the slot conditions
+every satisfying selection within budget has exactly
+$d$ flags and is inclusion-minimal. The increasing
+slot order gives exactly one such prime per weight-$d$
+assignment of the original Boolean circuit.
+
+Conversely a Boolean circuit can test whether a guard
+is prime by testing its sufficiency and the failure of
+every selected flag's single deletion. To count guards
+of size at most $d$ via an exact weight-$d$ count, add
+$d$ bits constrained to form a prefix of ones. Each
+guard then has a unique padding. This gives parsimonious
+parameter-preserving reductions in both directions
+between counting bounded-size primes and counting
+weight-$d$ circuit assignments. In particular the
+unparameterized count is \#P-complete even under the
+same acyclic one-row restriction. To see ordinary
+hardness, replace every unrestricted circuit variable
+by a pair of bits constrained to have exactly one
+true member, so every satisfying assignment has a
+unique encoding of weight equal to the number of
+original variables.
 
 With one fixed posting owner per input, minimum cost follows from a
 shortest eligible path, charging each visible
