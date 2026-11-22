@@ -255,6 +255,38 @@ seeing both colors, each head initially has two one-literal
 primes. After closure each of the two primes excludes every
 posting at one of the colors, and has width $n-1$.
 
+The reachability test has a direct graph form for any budget
+with at most one row at each head and at most one posting per
+owner in each row. For a query $(i,p)$, draw one arrow from each
+head to each posted input, labeled by its owner. Delete an arrow
+of owner $r$ if its target lies in $p_r$.
+The greatest bounded operation loses the query exactly when
+every vertex reachable from $i$ is a head and the reachable
+subgraph has no monochromatic directed cycle.
+
+Indeed, for a subset of rows to block the query in
+\cref{core:thm:injective-blockers}, it must contain the row at $i$.
+Every surviving arrow out of one of its heads must lead to another
+of its heads: an outside tail is reachable in the theorem's reversed
+graph only if it is seeded. Thus the subset must contain the entire
+reachable set. Moreover a reachable monochromatic cycle would have
+no seed on that cycle. In the reversed graph each of its vertices
+has exactly one incoming edge at that owner, coming from inside the
+cycle. Hence its tails cannot be reached, and no subset blocks the query.
+
+Conversely, if the stated condition holds, use the rows of the
+reachable set. At each owner, follow the posting arrows from a head.
+The path stays in the set until it meets a deleted arrow or ends
+at a head with no posting at that owner, since an infinite path
+would give a monochromatic cycle. The target of the deleted arrow
+is a query seed, and a head without a posting is a seed by the
+missing-color rule. Reversing the path witnesses reachability
+of the original tail from a seed, including when its own arrow
+was deleted immediately. Thus every row meets the reachability
+condition for an obstruction. The reachable set is consequently
+the unique least subset that forces the loss, whenever the query
+is lost.
+
 Neutral restriction to a subset of inputs is left adjoint to adjoining
 the union of the remaining inputs. Indeed, for disjoint sets $V,W$,
 let $\rho$ make the inputs in $W$ neutral, using
