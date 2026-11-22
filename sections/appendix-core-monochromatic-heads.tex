@@ -5754,13 +5754,15 @@ in the seven-row proof as an obstruction that none
 of these individual reductions detects.
 
 \paragraph{An exact guard test with one owner per component.}
-Suppose every input is live. Require each minimal loss to
-use at most one owner within any one strongly connected
-component. Also require all postings internal to a component
-to use a common owner there, across all losses at its heads.
+Suppose every input is live and all postings internal to each
+strongly connected component use one common native owner there.
+For a component without internal postings, choose any native
+owner. In every minimal loss, require the postings in each
+component to use at most one foreign owner besides its native
+owner.
 Colored-cofactor independence is then necessary and sufficient
-for core realizability. A loss can use several owners by
-posting at different owners in separate components.
+for core realizability. A single loss can post both its native
+owner and a foreign owner within a component.
 
 In the special case where each headed input $i$ has one
 loss owner $r_i$ and each component has at most one head
@@ -5855,14 +5857,15 @@ coefficient at the earlier prefix of $e$. We can reach
 an equivalent $e'$ in which each posting of $b$ either
 already agrees or is unposted and captured. On an
 earlier one-owner coefficient with native owner $s$,
-let $r$ be the sole posting owner of $b$ on that component
-$C$, skipping components where it has no postings.
-Put $H=c(e_s|_C)$ on its live support. If $s=r$,
-the compared block lies in $H$: erase foreign postings
-there and keep the native seed. If $s\ne r$, comparison
-requires agreement outside $H$ and $c(H\setminus b_r)=H$.
-Use $H\setminus b_r$ as the native seed and erase foreign
-postings inside $H$. In either case the remaining
+put $H=c(e_s|_C)$ on its live support and let $T$ be the
+union of the foreign blocks of $b$ inside $H$. The
+one-owner activation order requires $b_s$ to lie in $H$
+on the live support and the foreign postings outside $H$
+to agree with $e$. It also gives $c(H\setminus T)=H$,
+since at most one foreign owner occurs. Use
+$H\setminus T$ as the native seed and erase foreign
+postings inside $H$. This seed includes every native
+posting of $b$ on the live support. The remaining
 unmatched inputs are unposted in $H$ or ignored, hence
 captured. These changes follow the local capture paths
 of \emph{Capture paths for one-owner conditional components}
@@ -5903,6 +5906,18 @@ exact source equality, so block extension realizes
 the enlarged prefix. The induction proves the
 criterion without requiring the activated Horn budget
 to be closed in one step.
+
+The exact local condition for this representative construction
+is the joint spanning test $c(H\setminus T)=H$, even with
+several foreign owners. It is sufficient by the construction.
+It is necessary for such a representative because its native
+seed must avoid every foreign posting of $b$ and still span
+$H$. Hence the cofactor proof also works whenever all activated
+rows pass this joint test in the realized prefixes. Individual
+spanning tests for each foreign owner need not imply the joint
+one. For the two-input fold and mixed sink loss in the
+one-owner interval appendix, both foreign singleton blocks
+can be avoided separately, but their union leaves no seed.
 
 For example, put the $r$-fold on $x,y$ in the controlled
 slot of the mask $L_{\{s\}}$, with controller $z$ and
