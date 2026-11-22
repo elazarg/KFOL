@@ -301,6 +301,48 @@ At $d=1$ this gives unbounded arity at prime
 width one, and at $d=2$ it gives exponential
 arity in the height at prime width two.
 
+There is a uniform padding construction for any
+layered acyclic bound whose losses use only $b$,
+with no empty loss. Here each head reads only
+the preceding layer. For each head $v$, let
+$D_v$ consist of all strict descendants of
+its possible controls, following dependencies
+from heads to inputs. Add postings at $a\ne b$
+on $D_v$ to every loss of $v$. These inputs
+are strictly below the preceding layer,
+so the added postings cannot conflict with
+the original $b$-block.
+
+The padded candidate is core. Any row reading
+a conditional input $u$ also posts all of
+$u$'s strict descendants at $a$. A loss at
+$u$ has a nonempty $b$-block among those
+descendants, so fixing it disables the row
+that reads $u$. The posted colors of the
+fixed row are independently supplied,
+as in the tree case: $b$ is retained on
+its own facet, and every $a$-posted input
+has all its descendants at $a$. Thus the
+colored cofactor law holds. The lowest
+layer is retained, so the reconstructed
+candidate is nonempty.
+
+The transformation is polynomial on canonical
+primes. On a facet seeing both owners, add
+the singleton exclusions of the padding
+postings to the old prime list and minimize.
+If the facet hides a color present in every
+padded row, the head is unconditional there.
+Hence maximum prime width is preserved
+when it is positive, even if the old bound
+has exponentially many losses. For every
+trial scope the ordered activation at the
+all-$a$ query of the exact target is identical
+to that at the empty query of the original
+bound: only the original $b$-postings can
+mismatch. This transfers scope constraints
+without adding inputs.
+
 The same padding makes minimum witness scope
 NP-complete for known exact acyclic core targets,
 without restricting which inputs may be used.
