@@ -7538,6 +7538,38 @@ by $2$SAT. This gives a prime-only recognition bound of
 $(2(K+1))^{|D|}$ times polynomial time when both native
 and terminal prime widths are at most two.
 
+Increasing the native width to three makes recognition
+coNP-complete even with $|D|=1$ and terminal width two.
+Given a $3$CNF, use two passive inputs per variable, one for
+each literal, and one extra passive input $x$. The native
+closure adds $x$ exactly when the seed meets every variable
+pair and every clause, and adds no other input.
+This loopless closure defines a one-owner trace at $r$.
+The native primes at $x$ are the variable pairs and clauses
+at $r$, minimized by inclusion. The other passive sources
+are retained. At the new source use the singleton prime
+excluding $x{:}s$ and the pair primes excluding both
+$s$-postings of each variable pair, with $s\ne r$.
+On the facet omitting $s$ use the empty guard. Thus a
+minimal terminal loss posts $x$ and one literal per variable
+at $s$.
+
+If such a loss lies below a positive coloring $p$, all its
+literal inputs must still be posted at $s$ in $p$: these
+inputs cannot be derived, so the separate spanning condition
+prevents them from entering $H=c(p_r)$. Positivity then
+requires that $x$ cease to be posted at $s$, which forces
+$x\in H$. But $c(H\setminus b_s)$ still has to derive $x$.
+Its seed omits $x$ and the chosen literal of each variable.
+To meet every pair and every clause it must therefore contain
+the complementary literals, which form a satisfying assignment.
+Conversely, given a satisfying assignment, post its literals
+at $r$ and the complementary literals at $s$, leaving $x$
+unposted. This proper positive coloring lies above the loss
+posting $x$ and the complementary literals at $s$.
+Thus unsatisfiability is equivalent to recognition, and a
+failed activation comparison gives a polynomial certificate.
+
 For a strict example let $B$ be the union of the native
 folds on the edges of the four-cycle $x,y,z,v,x$.
 Each head's sole loss posts both neighbors at $r$.
