@@ -2702,8 +2702,40 @@ At $K=3$ this comparison is still missing from the least
 preorder containing compatible comparisons and closed under
 monochromatic joins. Thus even interleaving the join rule
 with compatible steps cannot recover the full activation
-preorder. Here the stronger claim is a finite calculation
-recorded in the verification appendix.
+preorder. To see this, consider the predicate excluding
+colorings that post both $x,z$ at $b$ or all of $u,x,z$ at
+$c$. It is closed under monochromatic joins because each
+forbidden block has a single owner. It is also downward
+closed under compatible comparisons for $C$.
+
+In fact, if the lower coloring has a forbidden block,
+the upper coloring must retain its posting of $z$.
+Otherwise $z$ would have to be captured there, which
+requires $T$ to be $a$-atomic and hence $x,v$ to be posted
+at $a$. That conflicts with the lower posting of $x$.
+When $z$ is posted at $b$, an unposted $x$ can be captured
+only if $u$ is posted at $a$ and $v$ at $c$: the sole-source
+mark from $x$ otherwise passes one child of $T$, and no
+$b$-absorption erases it because neither child can be the
+$b$ singleton with that mark or with the passive input $x$
+unposted. The required three postings use every owner,
+so this capture is unavailable. Thus the upper coloring
+keeps the entire first forbidden block.
+
+When $z$ is posted at $c$ and the lower coloring posts
+$u,x$ at $c$, an unposted $x$ cannot be captured since
+$u$ is unposted or at $c$, so the left child passes its
+mark. The right child cannot trigger a $b$-absorption
+that erases that mark, since it can return $b$ only
+when $x$ itself is the $b$ mark. With $x$ now posted
+at $c$, an unposted $u$
+passes the left child and the right child returns $c$,
+so neither outer gate erases the mark at $u$.
+The upper coloring therefore keeps the second forbidden
+block as well. This proves downward closure. The predicate
+contains the all-$a$ coloring and excludes the tested lower
+coloring, so the two rules cannot generate its comparison.
+The verification appendix records an independent finite check.
 
 Identification can create new envelope bits even from a read-once tree.
 In general, if $\pi:V\to W$ relabels inputs and $C^\pi$ is the resulting
