@@ -1352,6 +1352,45 @@ at most $d$ nontrivial factors, each at most $m+1$. Each
 cached pair takes polynomial work once its children are known.
 \end{proof}
 
+\paragraph{Localizing the remaining loss budget.}
+At a task $(S,a)$, initially put $U=V$. For $r$ in the
+domain of $a$ let
+\[
+  Q_r(U)=a_r\ \cup\
+      \bigcup_{\substack{(j,t)\in S\\ j\in U}}t_r .
+\]
+Repeatedly replace $U$ by its intersection with all
+$Q_r(U)$. At stabilization one may discard every row
+whose head is outside $U$, with no change in feasibility.
+The restriction applies to both choices after an offer.
+
+For one step, work on the current budget of rows headed
+in $U$. Let $U'$ be the smaller input set. Any word
+meeting the old budget also meets the restricted budget.
+Conversely take a successful offer tree for the
+restricted budget, using only blocks from remaining
+rows. At each leaf, the assignment still contains
+every initially retained owner. Its coalition at $r$
+is either $a_r$ or a block from a remaining row and
+therefore lies in $Q_r(U)$. A fitting projection
+belongs to all these coalitions. It cannot be at any
+head in $U\setminus U'$. Thus its projection tests
+also pass on the additional rows, if those rows are
+carried down the same tree with the usual deletions.
+The two-child construction then gives the same witness
+on the old budget. Iterate this restriction to the
+fixed point. When the assignment starts empty, the
+intersection makes no restriction until an owner is
+retained.
+
+After restriction, later saved offers cannot enlarge the
+scope. For an already retained owner the new entry
+is contained in the old $Q_r(U)$, and any new owner
+only adds an intersection. Thus a branch can forget
+these heads permanently. This gives a localized form
+of the cut even when several owners still have to be
+retained at one task.
+
 \paragraph{Pointed cuts with selected fold owners.}
 The same cut decides interpolation in the clone generated
 by the masks and the owned choices at a specified set of
@@ -1404,6 +1443,12 @@ Therefore the old positive test and the offered test
 imply the intersection test. This proves the recursion,
 and the minimal-infeasible-subfamily argument gives the
 corresponding cut with this modified update.
+
+The loss-budget localization also holds in this cut.
+For a retained owner outside $J$, use $Q_r(U)=a_r$
+throughout, since every later update only intersects
+that entry. The projection at each leaf still belongs
+to all the corresponding $Q_r(U)$.
 
 The depth-first space bound remains polynomial in the
 listed budget. If the owner coalition orders have total
