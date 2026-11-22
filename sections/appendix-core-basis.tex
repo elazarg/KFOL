@@ -2666,6 +2666,42 @@ has minimal winning sets $xz,yz,yw$, another four-vertex
 path, so the same argument applies. A projection cannot
 have the path profile. This excludes all realizations.
 
+For the path profile, the five minimal two-owner words are
+represented by the following Boolean formulas:
+\[
+\begin{gathered}
+ (zw\vee y)(z\vee x),\qquad
+ (z\vee xy)(w\vee y),\qquad
+ (z\vee xy)(zw\vee y),\\
+ y(z\vee x)\vee zw,\qquad z(w\vee y)\vee xy .
+\end{gathered}
+\]
+The finite check in \path{scripts/check_path_profile_atoms.py}
+computes the antichains of source tables by Boolean profile.
+Its coordinates are the free sources surviving on each
+partial assignment. At a gate take the union of the two
+tables, then clear all coordinates of restrictions on
+which the result's Boolean profile is constant.
+This is exactly the simplification rule. Keep only
+inclusion-minimal tables at each profile: replacing a child
+by a smaller table of the same profile can only shrink the
+resulting table. A gate with the same profile as a child
+can be discarded for the same reason. Starting from the
+projections, saturation therefore finds every minimal table.
+The code checks that the path antichain is exactly the
+five displayed tables.
+
+Each is also a full-core atom. A nonempty core minorant
+retains the dual profiles and can have its foreign gates
+replaced by union without violating the word's two-owner
+loss budget. A primitive summand is still a minorant
+with the profiles, hence has the same table by minimality.
+Thus the original minorant equals the word by inclusion.
+Conversely any path-profile atom whose minimal losses use
+only $b,c$ has a primitive two-owner representation by
+the same erasure and union argument, so it is among these
+five.
+
 On the essential input set of $f$, the two dual profiles
 already determine a maximal complete profile class.
 A new positive at either owner would contradict the
@@ -2683,41 +2719,27 @@ and the pointwise attainment result would make it
 equal to the envelope.
 
 The number of atoms in one complete profile class can
-grow exponentially. Start with the four-input path
-profile and choose two distinct minimal realizations
-among terms using only $\star_b,\star_c$. There must
-be at least two, by the same pointwise argument,
-since the attainment terms in the bound theorem use
-only these gates. These two realizations have no
-common nonempty core minorant, even with other gates
-allowed. Their losses use only $b,c$, so a proposed
-minorant could have its foreign gates replaced by
-union without violating either budget or changing the
-two profiles. Any primitive summand would still have
-the profiles and be a common two-gate minorant,
-contrary to the choice of the two realizations.
-
-On $m$ disjoint copies of the path's input set, choose
-one of these realizations per copy and combine them
-by $\star_b$. The $2^m$ resulting terms share the dual
-profiles of the disjunction of the block profiles.
-Any two different choices differ on some block.
-A common nonempty minorant could again be made a
-two-gate word. Fix all inputs outside the differing
-block at singleton $c$ and simplify its Boolean
-constants as in restriction inheritance. The simplified
-word has the two exact path profiles there. Its value
-is contained in that of the fixed minorant, so it
-omits every mark that the two block realizations omit
-on probes with a third observer and only $b,c$ postings.
-Indeed the other blocks are singleton $c$ and their
-attachments cannot contribute that observer. These
-probes test all losses of the two block realizations.
+grow exponentially. On $m$ disjoint copies of the path's
+input set, choose one of the five realizations per copy
+and combine them by $\star_b$. The $5^m$ resulting terms
+share the dual profiles of the disjunction of the block
+profiles. Any two different choices differ on some block.
+A common nonempty minorant could be made a two-gate word
+by foreign-gate erasure and taking a primitive summand.
+Fix all inputs outside the differing block at singleton
+$c$ and simplify its Boolean constants as in restriction
+inheritance. The simplified word has the two exact path
+profiles there. Its value is contained in that of the
+fixed minorant, so it omits every mark that the two
+block realizations omit on probes with a third observer
+and only $b,c$ postings. The other blocks are singleton
+$c$ and their attachments cannot contribute that observer.
+These probes test all losses of the two block realizations.
 This would give a common nonempty minorant of the
-original two choices, a contradiction. Choosing an
-atom below each of the $2^m$ terms now gives distinct
-atoms in a single complete profile class on $4m$
-inputs.
+original two choices, contradicting their distinct
+atomicity. Choosing an atom below each of the $5^m$
+terms gives that many distinct atoms in one complete
+profile class on $4m$ inputs.
 
 The root argument gives a general obstruction and a sufficient
 decomposition test. On the winning coalitions of $f$, allow
