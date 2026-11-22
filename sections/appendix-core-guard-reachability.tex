@@ -1498,48 +1498,70 @@ at most $d$ nontrivial factors, each at most $m+1$. Each
 cached pair takes polynomial work once its children are known.
 \end{proof}
 
-When each owner's nonempty blocks form a chain,
-the same test runs from complete prime lists, with
-no expansion into loss rows. A missing chain condition
-at an owner is witnessed by two rows with incomparable
-blocks: choose a distinguishing posting in each,
-force it by a private prime, and forbid the other
-row's distinguishing posting. The two row searches
-are independent. Thus the chain condition can be
-checked in polynomial time.
+The same recurrence works from complete prime lists
+when the sum $W$ of the owner widths is bounded.
+The row searches below use the following basic test.
+To force a bounded set of postings in a minimal loss,
+choose a private prime for each and forbid every other
+posting in its private prime. The resulting allowed
+ground must hit every prime on that facet. A minimal
+transversal in the ground retains all the forced
+postings. Conversely any witnessing minimal loss
+supplies the private primes.
 
-For one owner, the union of its postings that can
-occur in some loss is its largest block, because the
-blocks are nested. Find the union by the single-posting
-private-prime tests. To find the next smaller block,
-exclude rows containing the largest by trying each
-of its postings as an omission in the ground. Repeat
-with the block just found: excluding its supersets
-also excludes all blocks previously found. This
-lists at most $n$ blocks per owner.
+Fix an owner with width at most $w$, and consider
+its nonempty blocks. They can be recovered without
+enumerating the losses. For each set of at most $w$
+postings at that owner to omit, compute the union of
+that owner's remaining blocks by the single-posting
+test. Every actual nonempty block $A$ occurs among
+the unions. Indeed, partition the block order into
+$w$ chains. In each chain having a block not contained
+in $A$, take its first such block and omit one of its
+postings outside $A$. This removes all blocks not
+contained in $A$ and preserves $A$, making the union
+exactly $A$. The algorithm does not need the partition.
 
-The cached remaining budget is specified by the
-smallest deleted block at each owner, or no deletion
-there. To search it, guess one omitted posting from
-each specified block, and use the resulting ground
-for the ordinary prime-hit or private-prime test.
-On each facet also exclude its hidden owner. For
-an offered block $A$, restrict its owner to $A$
-and take the union of the postings there that
-occur in remaining rows. That union equals $A$
-exactly when $A$ occurs, again by nesting. This
-determines which offers and projections can be
-used in the recurrence. There are at most
-$(n+1)^{2K}$ pairs of remaining budgets and
-assignments, and at most $n^K$ omission choices
-per search. Thus the marked test is polynomial
-at fixed $K$, even when many owners repeat.
-The same searches work on a fixed background
-projection, restricting outside postings to the
+To discard spurious unions and later test whether an
+offer $A$ occurs in a reduced budget, restrict that
+owner's ground to $A$. Enumerate sets of at most $w$
+postings of $A$ to force. Accept if some set allows a
+row but forbids every row missing any posting in $A$.
+The latter test tries each missing posting separately.
+If $A$ occurs, such a forcing set exists: partition its
+strict subsets that occur, including the empty block
+if present, into at most $w$ chains. In each chain choose one posting
+missing from its greatest member. A row containing
+all the chosen postings cannot have a strict subset
+of $A$ as its block. If $A$ does not occur, every
+remaining row misses some posting and the test
+rejects. These tests also apply to a subfamily of
+rows since restricting a poset does not increase its
+width.
+
+Store the deletion history at each owner by its
+inclusion-minimal offered blocks. To search the
+remaining rows, choose one omitted posting per such
+block, impose all these omissions in the ground,
+and apply the prime tests on each facet. Combine with
+the preceding offer test to run the cached recurrence
+and the projection checks. There are at most $nw$
+distinct blocks at an owner, by the chain partition,
+and at most $W$ stored blocks in the history.
+The time is polynomial for fixed $W$, even if the
+full loss lists are exponential. A claimed width bound
+$w$ is also checkable at fixed $w$: guess $w+1$
+rows' pairwise distinguishing postings, then use
+independent private-prime tests with the corresponding
+required and forbidden postings in each row.
+An antichain exists exactly when such tests succeed.
+
+All searches work after projection at a fixed
+background by restricting the exterior ground to that
 background and measuring blocks only on internal
-inputs. In this version the original lists can
-have exponentially many minimal losses, since
-their retained parts need not be nested.
+inputs. Width one recovers the multi-owner chain
+case: each largest remaining block is just the union
+of its possible postings.
 
 \paragraph{Localizing the remaining loss budget.}
 At a task $(S,a)$, initially put $U=V$. Treat an
