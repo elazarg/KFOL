@@ -6400,8 +6400,10 @@ owner: its singleton support is safe and eligible. Thus
 the residual rows post only at other residual heads.
 Take the strongly connected components of this residual
 local graph. It suffices that each component either has
-no monochromatic cycle internally or has at most one
-internal posting per owner in every residual row.
+no monochromatic cycle internally, has at most one
+internal posting per owner in every residual row, or
+satisfies the pair condition on its internal row blocks
+from \cref{core:thm:triangle-free-neighborhood-profile}.
 The choice can vary across residual components.
 
 Process these components with controls before heads.
@@ -6409,12 +6411,13 @@ Earlier components already proved dead can be ignored,
 so at the next component keep just the restrictions of
 its rows to itself. When there is no monochromatic
 cycle, one restricted row per head gives a ranked
-survivor cut with empty boundary. In the singleton-block
-case, any nonempty local safe fold would also be safe
+survivor cut with empty boundary. In the other two
+cases, any nonempty local safe fold would also be safe
 in the original local residual budget. It would hit a
 row at a head in its support, contrary to stability.
-Exact singleton-block saturation therefore gives zero
-on the component. Ancestor-set factorization justifies
+Fold saturation is exact there by the singleton-block
+test or by the pair condition with empty query blocks.
+It therefore gives zero on the component. Ancestor-set factorization justifies
 these local zero tests as soon as the earlier dead
 components have been dropped. Inductively all residual
 heads are dead and the row-free heads give the exact
@@ -6428,11 +6431,38 @@ whether every prime is still hit. This gives the residual
 arrows. The singleton-block test uses two specified
 postings of the same owner and one private prime per
 posting, scanning pairs only inside a residual component.
+For the pair condition use the same tests on the at most
+two required internal postings in each of the three rows
+of a violation.
 All tests retain the exterior restrictions and recorded
 flags from the local fold calculation. Thus the same
 procedure can certify the uncolored coefficient even if
 the original graph has large owner blocks and
 monochromatic cycles in the same source component.
+
+Whenever this procedure succeeds for the whole budget,
+at most $K$ original losses per head suffice to preserve
+the entire uncolored live support. At each original
+component consider just its final admitted residual rows.
+For every owner rerun safe-support pruning there from
+the whole component. Keep one original row for each
+head removed by that pruning. The selected rows replay
+all removals, and every row-free head stays row-free.
+In fact the final safe support at every owner consists
+just of the row-free heads, since otherwise a residual
+row would be hit by a safe fold at its own head.
+The selected budget is therefore already stable at the
+empty query. Its residual components inherit the
+applicable tests: deleting rows or restricting them to
+a smaller component preserves each of the three
+conditions. Consequently it has the same local live
+support. Keep the selected original rows in the full
+budget, with their exterior postings intact. In original
+component order the earlier supports agree, so all
+selected rows are still admitted and the local argument
+preserves each support in turn. The row choices can be
+recovered by shrinking the allowed alphabets used in
+the corresponding prime-hit tests.
 
 \paragraph{Per-head sparsification for one-owner components.}
 Suppose each component's internal postings use just
