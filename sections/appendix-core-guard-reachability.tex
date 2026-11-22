@@ -2365,8 +2365,8 @@ no single ranked presentation. The set $J(p)$ itself
 is computed directly from the union's canonical primes,
 without recovering a ranked decomposition.
 
-The same union argument permits one-owner trace summands
-whose closed sets have unique minimal spanning sets.
+One-owner traces whose closed sets have unique minimal
+spanning sets are ranked unions by the criterion below.
 For such a trace let $H=c(p_r)$ and let $S$ be its unique
 minimal spanning set. The positive-source set is
 $(V\setminus H)\cup S$ on its live support $V$.
@@ -2375,9 +2375,7 @@ when its posting is erased, since otherwise the remaining
 seed would still span $H$. At all other inputs of $H$,
 erasing their own posting leaves the seed spanning.
 The one-owner activation formula is then exactly the
-posting restriction on $(V\setminus H)\cup S$, even
-across facets. Thus these traces obey the same class
-and order formulas used in the union proof.
+posting restriction on $(V\setminus H)\cup S$.
 
 \paragraph{Singleton profiles of ranked operations.}
 Every singleton profile of a ranked operation is principal.
@@ -2684,6 +2682,51 @@ tests supplies every prescribed positive, including on the
 facet omitting $r$. The union of the constructed witnesses
 then has exactly the prescribed source bits.
 
+\paragraph{Anti-exchange and ranked unions of one-owner traces.}
+A one-owner trace is a union of ranked operations exactly
+when its closure has unique minimal generators, equivalently
+when it satisfies anti-exchange. To see this, run the deletion
+test for the native block $p_r$. Starting from all live inputs,
+the remaining set stays closed: a head $j$ can be deleted
+from the current closed set $S$ exactly when
+$j\notin c(S\setminus\{j\})$, and then $S\setminus\{j\}$
+is closed. Every remaining set contains $H=c(p_r)$ since
+no input of $p_r$ can be deleted.
+
+If minimal generators are unique and $S$ strictly contains
+$H$, the unique minimal generator of $S$ contains some
+$j\notin H$. Otherwise $H$ would span $S$. No seed for $S$
+omits that $j$, so it is eligible for deletion. The process
+therefore reaches $H$, making every source mark outside it
+available as required. Conversely, if anti-exchange fails,
+take a closed $A$ and distinct $x,y$ outside $A$ with
+$x\in c(A\cup\{y\})$ and $y\in c(A\cup\{x\})$.
+At the pure probe $A:r$, no deletion order can remove
+the first of $x,y$, since the remaining set without that
+input still contains $A$ and the other input. Both marks
+are positive in the trace and neither has a ranked witness.
+
+The prime-pair anti-exchange test therefore recognizes this
+subclass without running the per-prime forward tests.
+It strictly extends single ranked presentations. For
+example the native Horn rules
+$\{a,x\}\to y$, $\{b,y\}\to x$, and $\{a,b\}\to x$
+give a closure with unique generators. Neither $a$ nor $b$
+can be derived. If both are present they force $x,y$;
+if only one is present there is only one direction of
+capture between $x,y$; and if neither is present there
+is no capture. In each case the closed set has a unique
+minimal seed. Yet the canonical losses have arrows in
+both directions between $x$ and $y$, ruling out a single
+ranked presentation by the one-owner acyclicity criterion.
+
+Together with the source-extension formula, this shows
+that a core operation built through source components with
+one-owner anti-exchange coefficients, or zero coefficients,
+is a ranked union. At each component the ordinary
+conditional coefficient already equals its ranked envelope,
+so induction supplies every prescribed source bit.
+
 \paragraph{Exponential prime growth at width one.}
 With at most one nonempty loss per headed input, all at the
 same owner $r$, put an arrow from each head to each member
@@ -2795,21 +2838,10 @@ If the combined coloring stays proper, a nonempty
 remaining set contradicts invariance under erasing
 its captured postings. Even these tests at all pure
 backgrounds do not detect every one-owner cycle.
-For example, use the loopless Horn closure with rules
-\[
-             \{a,x\}\to y,\qquad
-             \{b,y\}\to x,\qquad
-             \{a,b\}\to x
-\]
-at a single owner, realized by the one-owner trace
-construction. The first two rules are minimal losses
-and give a directed two-cycle. Since $a,b$ are retained,
-a nonempty peeled obstruction would have to be the pair
-$x,y$, both positive at its background. Capturing $x$
-with $y$ requires $b$, and capturing $y$ with $x$
-requires $a$. But their joint background already
-captures both. Thus the canonical graph criterion is
-strictly stronger than the pure-background tests here.
+The four-input anti-exchange trace above has a directed
+two-cycle, but it passes the tests at all pure backgrounds:
+the deletion process reaches the closure of each such
+background, leaving no additional positive heads.
 
 There is an exact test for the existence of such
 a presentation on the original input names. Guess
