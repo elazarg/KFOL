@@ -2559,30 +2559,72 @@ All its loss postings use $b,c$, so these probes suffice.
 Its two exact profiles force the reverse inclusion by
 the pointwise minimum property. This proves inheritance.
 
-In particular, for the Boolean function that wins when a
-coalition contains an edge of a graph, an induced
-four-vertex path obstructs envelope realizability: set all
-vertices outside the path to false. For triangle-free
-graphs this is also sufficient to detect every failure.
-A connected triangle-free graph without an induced
-four-vertex path is either isolated or complete bipartite.
-Indeed, fix a vertex $v$ with a neighbor. Every nonneighbor
-has distance two, since any shortest path of length at
-least three begins with an induced four-vertex path.
-Such a nonneighbor must meet every neighbor of $v$:
-otherwise its edge to one neighbor and the two edges
-from those neighbors to $v$ give the forbidden path.
-The neighbors are independent by triangle-freeness, and
-the nonneighbors are independent because they share those
-neighbors. This gives the bipartition.
+For a graph with an edge, let its Boolean function win
+when a coalition contains an edge. Its envelope is core
+exactly when the graph contains no induced four-vertex path.
+Necessity follows by setting all vertices outside such a path
+to false. For sufficiency, the graph decomposition uses
+disjoint union and complete join (adding all edges between
+two disjoint graphs). Disjoint union of edge functions is OR
+on disjoint blocks, already covered by the composition rule.
 
-The edge function of a complete bipartite component is
-the AND of the ORs on its two parts. The edge function of
-the graph is the OR of the functions of the nontrivial
-components, on disjoint supports. Isolated vertices are
-inessential. The composition theorem therefore realizes
-the envelope whenever there is an edge and all nontrivial
-components are complete bipartite.
+For a complete join with parts $X,Y$, write the edge function
+as
+\[
+ f=f_X\vee f_Y\vee
+        \bigl((\textstyle\bigvee X)\wedge(\textstyle\bigvee Y)\bigr).
+\]
+Use the envelopes of $f_X,f_Y$ when nonconstant and the
+disjoint-block envelope of the last disjunct. Combine them
+at $b$-gates. The resulting term has the exact dual profiles
+of $f$. To see it gives the envelope, consider the visible
+Boolean restriction for any observer. If the restricted
+$f$ is constant, the corresponding visible owner absorbs.
+Otherwise, the roots joining the disjuncts do not erase
+any mark: if $b$ is visible no child is singleton $b$,
+and if it is hidden absorption at $b$ preserves the observed
+winner. It suffices to check that no disjunct has an
+essential variable that the whole restriction makes inessential.
+
+If neither part has a fixed true input and both have free
+inputs, any free input is pivotal: set just one free input
+in the opposite part true and all other free inputs false
+before adding it. If only one part has free inputs, only
+that part's edge function can contribute a pivot.
+If both parts have a fixed true input, the restriction is
+constant true. Finally suppose exactly $X$ has a fixed
+true input. The cross term then becomes OR on the free
+inputs in $Y$, making $f_Y$ redundant. Every one of those
+free inputs is essential unless $f_X$ is constant true,
+already excluded. On $X$ only $f_X$ can contribute an
+essential input, and all its essential inputs stay
+essential since the other disjuncts can be set false.
+This proves the required inclusion of pivot sets and hence
+realizability of the join envelope.
+
+For completeness, every connected graph with at least two
+vertices and no induced four-vertex path is a complete
+join of smaller graphs. Fix a vertex $v$, write $N$ for its
+neighbors and $D$ for its other vertices. If $D$ is empty,
+$v$ itself gives a join part. Otherwise each $x\in N$
+is complete or anticomplete to each connected component
+of the graph on $D$: a change of adjacency along an edge
+$uw$ of a component would give the induced path $v,x,u,w$.
+Record the components to which each $x$ is complete.
+Two neighbors with different records must be adjacent,
+since a vertex in a component seen by just one gives an
+induced path through $v$ if they are nonadjacent.
+Their records cannot be incomparable: take vertices in
+two components seen by just one neighbor each, and use
+the edge between the neighbors to obtain an induced path.
+The records are thus nested. Every component of $D$ is
+seen by some neighbor since the graph is connected, so a
+largest record contains them all. The neighbors with that
+record form a nonempty join part, adjacent to $v$, to all
+of $D$, and to all other neighbors. This proves the
+decomposition. Induction under union and join, starting
+with single vertices and omitting identically false edge
+functions, gives the claimed characterization.
 
 \begin{lemma}[A mandatory linear source]\label{core:lem:mandatory-linear-source}
 Suppose a choice/union word $T$ uses $j$ at most once, and for some
