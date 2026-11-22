@@ -1867,6 +1867,31 @@ potential fixed-$k$ supplier in the fixing has only unary or
 empty primes at observer $k$. Block sizes and palette size
 may both be unbounded.
 
+The same formulas yield two further tests without a supplier
+count bound. First, take the three variables of each ternary
+clause as a triple, after simplifying the fixed menu and
+facet literals. If these triples have a hitting set of size
+$b$, assigning its variables leaves a $2$SAT instance.
+A hitting set can be found by branching on the three
+variables of any unhit triple to depth $b$. Thus the test
+takes $6^b$ times polynomial time, with $b$ the largest
+minimum hitting-set size over the formulas tested. The
+hitting set can use posting variables shared across many
+suppliers as well as the variables $B_u$.
+
+Second, some formulas are Horn after reversing selected
+Boolean variables, even when they have no small such hitting
+set. To test this, introduce one reversal bit per variable.
+For each pair of literals in the same clause, forbid the
+reversal choices that would make both literals positive.
+These binary constraints are satisfiable exactly when a
+renaming makes every clause Horn. In that case forward
+chaining from the positive units solves the renamed formula:
+fire each implication whose premises hold and reject if a
+negative clause is thereby violated. Both tests apply directly
+to the formulas from canonical primes and require no list of
+minimal losses.
+
 At bounded prime width the owner-block test is
 fixed-parameter tractable in the owner count $K$,
 the block bound $d$, and the prime width $b$.
