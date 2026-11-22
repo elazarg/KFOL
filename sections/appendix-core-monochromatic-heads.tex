@@ -2803,6 +2803,61 @@ background erasure. Conversely the block realizers
 can be unioned. The required owners are therefore
 $b,d$ together with a vertex cover, giving the reduction.
 
+More generally, exact owner selection realizes any monotone
+CNF with nonempty clauses, after adjoining two mandatory
+owners. For a clause on $m\ge3$ distinct owners, take
+$n=m+2$ if $m$ is odd and $n=m+1$ if $m$ is even.
+Use a complete graph on the residues modulo $n$, with
+edge $ij$ initially labeled by $i+j$ modulo $n$.
+Use labels $0,1$ for the mandatory owners. Their edges
+form a spanning path. Indeed, each label is a matching
+of size $(n-1)/2$, and the union is connected since its
+components are closed under both $i\mapsto-i$ and
+$i\mapsto1-i$, whose composition is translation by one.
+The remaining matchings supply the clause labels.
+When $m$ is even, split one of these matchings into
+two nonempty parts to obtain $m$ labels.
+Incident edges have distinct labels. Use the union of
+the binary folds at their edge labels. At each vertex its
+only minimal loss posts each neighbor at the corresponding
+edge label. This row is proper and has singleton owner blocks.
+
+Any blocked set at a missed positive probe has at least
+two vertices. If an outside vertex existed, its edge labels
+to any two vertices in the set would demand distinct postings
+at that input. Thus the blocked set is the whole graph.
+Each owner class is a matching, so its monochromatic cycles
+are exactly the reciprocal pairs on its edges. Selecting
+both mandatory owners contributes $n-1$ cycles. Selecting
+any clause owner contributes at least one more cycle, and
+the cycles cannot be matched to the $n-1$ inputs available
+for postings at the probe. The matching criterion gives
+exact realization.
+
+With only the mandatory owners selected among the labels
+of this block, query at any vertex and post every other
+vertex at the label of its parent edge in the mandatory
+path rooted at the queried vertex. The probe hits all
+selected cycles and is positive since the queried vertex
+has an incident edge with a clause label. There are no
+unheaded seeds or safe selected cycles, so this mark is missed.
+
+For a two-owner clause, use the four-input example with
+$b,d$ mandatory and $a,c$ as the clause owners. For a
+one-owner clause, use a single binary fold. Take a disjoint
+union of the clause blocks and a standalone binary fold
+for each mandatory owner. Mandatory owners can be reused
+across blocks. Neutral restriction and union again give
+the exact realizing selections. The construction has
+polynomial size in the input CNF. In particular, after
+fixing mandatory owners as selected, a single clause on
+$m$ optional owners needs width $m$ in any monotone CNF
+on those variables. A clause falsified by the empty
+selection must hold at every singleton selection and
+therefore contain all $m$ owners.
+For $K\ge4$ this gives width $K-2$ with $K$ owners,
+using the four-input example when $K=4$.
+
 For arbitrary singleton blocks the only enumeration is
 over the row subsets at multi-loss heads. For each of
 those heads choose any subset, including the empty set;
