@@ -2727,6 +2727,53 @@ is a ranked union. At each component the ordinary
 conditional coefficient already equals its ranked envelope,
 so induction supplies every prescribed source bit.
 
+\paragraph{The anti-exchange closure of the ranked envelope.}
+For an arbitrary one-owner trace with closure $c$, call a
+closed set reachable if it can be obtained from $V$ by
+deleting one input at a time while keeping each set closed.
+The reachable sets are exactly the closed sets of the least
+anti-exchange closure $d$ extending $c$ pointwise, allowing
+$d(\varnothing)$ to be nonempty. The ranked envelope is
+its one-owner trace after discarding the inputs in
+$d(\varnothing)$, or zero if none survive.
+
+To prove this, replay a deletion path to a reachable set
+$B$, starting at another reachable set $A$. Skip deletions
+of inputs already missing. Every remaining deletion is
+legal because the smaller current set lies inside the
+corresponding set of the original path. If deleting
+$j$ keeps the larger set closed, monotonicity of $c$
+prevents $j$ from being derived after deleting it from
+the smaller set either. The replay ends at $A\cap B$.
+Thus reachable sets are closed under intersection, contain
+$V$, and define a closure $d$. The same replay gives a
+single-deletion chain from any reachable set to any
+reachable subset.
+
+This chain property implies anti-exchange for $d$.
+If a closed $A$ and two outside inputs $x,y$ violate it,
+put $H=d(A\cup\{x\})=d(A\cup\{y\})$. A deletion chain
+from $H$ to $A$ has to remove one of $x,y$ first.
+The remaining closed set still contains $A$ and the
+other input, so it must contain both, a contradiction.
+Moreover every $d$-closed set is $c$-closed, so $c\le d$.
+For any anti-exchange closure $e\ge c$, each $e$-closed
+set can be reached by single $e$-closed deletions from $V$
+by peeling an element of the unique minimal generator
+outside the target. Such a chain is also $c$-closed,
+so every $e$-closed set is reachable and $d\le e$.
+
+At a probe with native block $P$, the ranked deletion
+test stops at the smallest reachable set containing $P$.
+Indeed its terminal set is reachable and contains $P$.
+Replay from it toward any reachable set containing $P$.
+No replay step would remove $P$, so termination forces
+the terminal set to be contained in that other set.
+It is therefore $d(P)$. The envelope's positive sources
+are the inputs outside this closure, as claimed. Equivalently
+the envelope is the union of the native folds on complements
+of all proper reachable sets.
+
 \paragraph{Exponential prime growth at width one.}
 With at most one nonempty loss per headed input, all at the
 same owner $r$, put an arrow from each head to each member
