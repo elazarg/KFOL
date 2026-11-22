@@ -1282,9 +1282,11 @@ collection contains a pair $(T,a[r:=A])$ with $T\subseteq S_{r,A}$.
 \end{enumerate}
 For the sample decision problem let $m=|Z|$, and let $W$ be the sum, over
 owners, of the widths of their inclusion orders on the distinct
-nonempty coalitions occurring in $Z$. Feasibility is decidable in
-polynomial space, and in time $(m+1)^{2W}$ times a polynomial in the
-explicit input size. In particular, at fixed $K$, arbitrarily many
+nonempty coalitions occurring in $Z$. Let $d$ be the largest
+number of owners whose coalitions in $Z$ contain a common input.
+Feasibility is decidable in polynomial space, and in time
+$(m+1)^{W+d}$ times a polynomial in the explicit input size.
+In particular, at fixed $K$, arbitrarily many
 rows and arbitrarily many repeated coalitions at every owner are allowed
 in polynomial time if each owner's coalitions form a chain.
 \end{theorem}
@@ -1336,9 +1338,18 @@ budget and an assignment. At an owner $r$ the coalitions used for
 deletion generate an upset in the poset of the original coalitions.
 Its minimal elements form an antichain of size at most the width $w_r$,
 so there are at most $(m+1)^{w_r}$ choices. These upsets determine the
-remaining rows. Each active owner also has at most $m+1$ possible
-assignment entries, counting absence, and there are at most $W$ active
-owners. Each pair takes polynomial work once its children are known.
+remaining rows.
+
+Only assignments with $L(a)\ne\varnothing$ are worth caching.
+A successful continuation must reach a fitting projection
+even along the branch declining every offer, where the assignment
+stays fixed. Apply the same test to the saved child before trying
+an offer. For each input $v$, let $c_{r,v}$ count the distinct
+$r$-blocks in $Z$ containing $v$. Each eligible assignment is
+counted at one of its eligible inputs in the bound
+$\sum_v\prod_r(1+c_{r,v})$. The product for a given input has
+at most $d$ nontrivial factors, each at most $m+1$. Each
+cached pair takes polynomial work once its children are known.
 \end{proof}
 
 \paragraph{Pointed cuts with selected fold owners.}
