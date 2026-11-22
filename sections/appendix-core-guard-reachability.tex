@@ -1341,6 +1341,68 @@ assignment entries, counting absence, and there are at most $W$ active
 owners. Each pair takes polynomial work once its children are known.
 \end{proof}
 
+\paragraph{Pointed cuts with selected fold owners.}
+The same cut decides interpolation in the clone generated
+by the masks and the owned choices at a specified set of
+owners $J$. Keep the same projection test and the same
+deletion $S_{r,A}$ for an offer $(r,A)$. The two smaller
+tests still use the old task and an updated task. At an
+owner in $J$ update by replacement, as before. At an owner
+outside $J$, insert $A$ if there is no old entry and
+otherwise update by intersection:
+\[
+                  a_r\longmapsto a_r\cap A .
+\]
+An empty required coalition makes the task infeasible.
+All other interpretations of the task are unchanged.
+
+For soundness, at owners in $J$ use the owned choice
+as in the preceding proof. At an owner outside $J$ use
+the singleton mask at $r$ with the updated-task witness
+as controller and the old-task witness as controlled
+input. The controller absorbs on the deleted rows.
+On the remaining rows both witnesses already omit the
+required marks. At the mark itself the controller loses
+at $r$, as required by the new single-entry task, so
+the controlled witness supplies it. An $r$-profile of
+this mask is exactly the controller's $r$-profile. The
+intersection update therefore ensures any old $r$-win
+as well as the offered win. If the old task includes a
+loss at $r$, the updated single-entry task retains it.
+At any foreign owner the mask profile is conjunctive,
+so both required wins pass and the old witness supplies
+any required loss.
+
+Conversely, take a shortest witness over the selected
+generators. If it is a projection, the old test applies.
+If it has no singleton on any remaining row, its root
+takes union there and both children obey the budget.
+One child retains the task: for a mark use a supplying
+child; for a signed profile use the controller at a
+mask of that owner, and otherwise use the same
+conjunctive or disjunctive descent as before. For several
+positive profiles, foreign wins pass to both and the
+root's owner win, if required, passes to at least one.
+This contradicts shortestness.
+
+Hence the witness wins at some owner $r$ on a row block
+$A$, and itself meets both smaller tests on $S_{r,A}$.
+At an owner outside $J$ its profile is principal by
+native specialization in the selected-fold clone.
+Therefore the old positive test and the offered test
+imply the intersection test. This proves the recursion,
+and the minimal-infeasible-subfamily argument gives the
+corresponding cut with this modified update.
+
+The depth-first space bound remains polynomial in the
+listed budget. If the owner coalition orders have total
+width $W$, the intersection registers have at most
+$(m+1)^W$ joint choices: discard any coalition containing
+another one in the same intersection, leaving an
+antichain at each owner. The same cache bound up to
+constant factors in the exponent gives time
+$(m+1)^{O(W)}$ times a polynomial in the input size.
+
 \paragraph{Relevant postings and a single-exponential bound.}
 For an arbitrary listed budget, the marked answer depends
 on the positive coloring only through postings that occur
