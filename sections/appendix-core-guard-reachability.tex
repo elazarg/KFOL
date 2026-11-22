@@ -6424,6 +6424,15 @@ for each of those subsets, so the unrestricted-support test is
 in coNP. Giving the failed positive probe as well puts exact
 recognition of unions of greatest completions in coNP under the
 same bounded-head and pure-loss promises.
+Without a bound on headed inputs, guessing the support and
+using the prescribed-support certificate puts the marked
+problem in $\Sigma_2^{\mathrm P}$ from canonical primes.
+Exact union recognition is in $\Pi_3^{\mathrm P}$ by
+quantifying over positive probes first. With explicit losses,
+or with width two and at most two loss owners, the support
+check is polynomial, giving NP and $\Pi_2^{\mathrm P}$,
+respectively for the marked and exact problems in those
+representations.
 
 The possible supports also have a direct Boolean description.
 Write $x_v$ for membership in the support, and require $x_i$
@@ -6466,6 +6475,60 @@ testing from explicit losses in the stated class and coNP
 recognition of exact unions there. With width-one primes
 the loss lists required for the same tests can be recovered
 in polynomial time.
+
+With a single loss owner $r$, the possible supports of a
+fixed positive probe have a unique largest member whenever
+any exist. Start by excluding no inputs. Exclude $j$ as soon
+as it has an $r$-loss all of whose postings lie on already
+excluded inputs or on the probe block $p_r$. Repeat to a
+fixed point. If $i$ is excluded there is no witness. Otherwise
+the complement of the excluded set is the largest witness
+support. Indeed, an excluded head cannot belong to any
+witness, by induction on the exclusions: its projected
+generator would win at the probe. The remaining support
+passes every loss test by termination, and there is no
+rainbow constraint beyond nonemptiness of each generator,
+which is already enforced by the probe test.
+
+Each exclusion is a test for a pure loss within an allowed
+posting set. It takes polynomial time from canonical
+primes, by checking whether this set hits every prime on
+a facet seeing $r$. The only relevant probe statuses are
+the $r$-postings. A witness for a larger native block also
+works for every smaller block, so for exact union
+recognition it suffices to run the test at the maximal
+block $V\setminus(G\cup\{i\})$ allowed by each native
+prime $G$ at head $i$. Thus both marked and exact tests
+are polynomial with a single loss owner, giving a sharp
+owner threshold for the explicit-loss marked problem.
+
+The test also gives an explicit fold representation. From
+any passing support $H$, discard $p_r$ and fold the remaining
+inputs at $r$. Each loss at a remaining head posts some
+remaining input, since its projected generator on $H$ did
+not win at the probe. The fold therefore respects all losses
+and supplies the mark. At a maximal positive block
+$V\setminus(G\cup\{i\})$, the fold support is contained
+in $G\cup\{i\}$. If the witness exists, equality is forced:
+the fold's source guard at $i$ is its support minus $i$,
+and a strict subset of $G$ cannot suffice for the candidate.
+
+Equivalently, the exact test is that every prime $G$ at
+$i$, with owner labels erased, has the following property:
+for each $j\in G\cup\{i\}$, the set
+$(G\cup\{i\})\setminus\{j\}$ contains a prime at $j$.
+This is precisely the condition that the $r$-fold on
+$G\cup\{i\}$ lie below the candidate, by testing its
+sole guard at each supported head. In a positive instance,
+the union of these folds, one per listed native prime,
+realizes the family. Require at least one prime so that
+the union is nonempty.
+This is also a test for core realizability in the single-owner
+class. The one-owner closure argument of
+\cref{core:thm:conditional-component-capture} bounds every core
+minorant by the trace of the closure of the given losses.
+That trace is itself bounded and is a union of $r$-folds.
+Thus a core candidate equals this trace and passes the prime test.
 
 With explicit minimal losses, choosing the support for a
 marked witness is NP-complete for pure losses at every fixed
