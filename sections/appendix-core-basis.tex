@@ -2937,6 +2937,62 @@ clause lists recovered from the primes. The absence of
 a feasible assignment is exactly core realizability
 of a candidate in the greatest-profile form.
 
+With a variable number of owners, the sharp boundary
+for the same class is between widths two and three.
+For hardness at width three, use one owner per variable
+of a three-literal satisfiability instance and one
+input per clause. Use at least three owners, adding
+unused variables if necessary. Remove tautological
+clauses and repeated literals. At owner $r$, require
+every input for a clause not mentioning $r$ by a unit
+profile clause. Among the clauses mentioning $r$,
+require a winning coalition to meet every pair of
+clause inputs in which $r$ occurs with opposite signs.
+An omission assignment then chooses one literal
+in each clause, and the pair conditions prevent
+contradictory choices at the same variable. Such
+an assignment exists exactly when the formula is
+satisfiable.
+
+Add one input $d_r$ per owner, required by unit clauses
+at every owner other than $r$. Each can be omitted at
+its own owner, so the assignment test is unchanged.
+Any two owners' winning coalitions now intersect, since
+they both require $d_s$ for any third owner $s$.
+The resulting greatest-profile-form candidate is
+therefore nonempty and has the intended profiles.
+At the source of a clause input, only its at most
+three permitted omission owners have nonempty
+exclusions after projecting the clauses. At such an
+owner, deleting the source from the profile clauses
+turns every pair incident to it into a singleton.
+Those singletons subsume every other opposite-sign
+pair, so the projected factor has width one.
+At a source $d_r$ only the $r$-factor can have
+positive width, and it has width at most two.
+The prime product therefore has width at most three
+and polynomial size despite the variable palette.
+This gives coNP-hardness, with membership as above.
+
+For the width-two upper bound, use the fixed-palette
+test when $K=3$. When $K\ge4$, at most two omission
+owners are allowed at each input: three allowed
+factors would be visible on some facet and give width
+at least three. At an input with two choices, both
+factors have width one by the same argument. A minimal
+profile clause of size at least three cannot involve
+such a flexible input at an allowed owner. In fact its
+projection after deleting that input would still be
+minimal, since a subsuming projected clause would
+have been a subset of the original clause.
+Discard clauses containing an input that cannot be
+assigned their owner and fix all forced assignments.
+Every surviving constraint involving a flexible
+input was then binary before substitution. The
+remaining problem is 2-SAT, with any constant
+violations checked directly. This proves polynomial
+recognition at width two for variable $K$.
+
 This gives the minimum number of primitive gate owners
 of any exact core operation from its prime lists.
 A projection needs zero, and a nontrivial single-owner
