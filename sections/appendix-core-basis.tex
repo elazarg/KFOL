@@ -2917,6 +2917,43 @@ inputs at different owners, yet each head whose losses
 are pure at its own owner can be tested without any
 overlap enumeration at that head.
 
+There is also a bounded-incidence-width test for the union
+of single-owner folds. Use the typed incidence structure
+of inputs, owners, posting vertices, facet lists and guards.
+The same monadic second-order sentence works with a variable
+number of owners. It searches for a source $i$, an observer
+$k$, and a set of postings forming a proper coloring that
+leaves $i$ unposted and hides $k$. Require an enabled guard
+at $i$ on that facet, then require capture by every one-owner
+closure.
+
+For a chosen owner $r$ and an input set $X$, the projected
+loss at $j$ is a first-order test with parameter $X$.
+Some facet list at $j$ must lack a guard all of whose
+postings have owner $r$ and whose inputs avoid $X$.
+This is the negation of the owner-projection formula.
+Say $X$ is closed if every head passing that loss test
+belongs to $X$. The mark at $i$ fails in the $r$-minorant
+precisely when every closed input set containing the
+chosen $r$-postings also contains $i$. This is just one
+set quantifier inside the quantification over owners.
+A witness to the sentence is therefore exactly a positive
+missed by the union of the minorants.
+
+Given an incidence tree decomposition of width $t$,
+the sentence yields a fixed-parameter test in $t$.
+One can use the annotated-bag construction of
+\cref{core:thm:no-cmso-incidence}: record membership
+annotations for sets in occupied slots, use singleton
+sets for individuals, and implement quantifiers by
+projection and determinization. At a join of the tree
+decomposition, the two annotations on the shared slots
+must agree. This gives fixed finite transition tables
+for a given width and a bottom-up pass on the supplied
+decomposition. The bound depends on incidence width
+even if arbitrarily many inputs admit postings at
+multiple owners.
+
 There is also a pruning test for dual profiles in an
 arbitrary word. At every gate outside $b,c$ (including
 named union), select one child and discard the other.
