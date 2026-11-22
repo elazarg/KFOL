@@ -2666,6 +2666,43 @@ port and add a unit guard requiring that port
 in the loss. Ambiguity still permits only one
 of the other two ports.
 
+The same construction gives a representation of
+arbitrary monotone circuits on an exterior slice
+of a width-two minorant budget. Take a fan-in-two
+monotone Boolean circuit with inputs $X_i$ and
+one output. Use two literal ports in a variable
+block for each input or gate value. Write the
+gate equations and the requirement of a true
+output as clauses with at most three literals.
+Encode them by the occurrence-port construction,
+repeating literals to fill a ternary clause
+block when needed. For each circuit input add an
+exterior port $e_i$ and the guard consisting of
+$e_i$ and the false-literal port for $X_i$. As
+before every guard uses postings only at $r$,
+has width at most two, and all ports are retained
+apart from the sole loss head.
+
+On the quotient slice where every block is
+unposted, a loss assigns all circuit variables
+consistently, obeys the gate equations, and has
+true output. An input $X_i$ can be true only
+if $e_i$ is posted at $r$, by the added guard.
+Conversely any true-output assignment obeying
+those input permissions gives a contributing
+loss. Monotonicity makes such an assignment
+possible exactly when the circuit is true on
+the set of permitted inputs itself.
+
+The original core candidate uses only linearly
+many guards and ports in the circuit size.
+The quotient budget still has just one loss
+head and all its losses use only $r$, so it is
+core by the single-source construction. Thus
+even the greatest core minorant can have an
+arbitrary monotone circuit as its exterior loss
+predicate on this slice.
+
 The 2-SAT formulation also gives a canonical prime
 list for an exterior slice with all quotient block
 statuses fixed. Leave the permitted exterior
