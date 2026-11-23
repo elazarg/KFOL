@@ -12971,6 +12971,43 @@ some control at the other owner. The fixed controls supply
 the capture owners as before, giving the acyclic cofactor
 law.
 
+With several heads, two posting owners also suffice
+for NP-completeness at an empty positive probe.
+Use the same literal heads and controls $C$ as
+above, and two owners $r,t$. Keep only the original
+clause rows at $i$, all at $r$, posting $C$ and the
+clause's literal heads. At $P_x$ place an $r$-loss
+on $\{c_{xy}:y\ne x\}\cup\{z\}$, where $z$ is a
+fresh retained input. At $N_y$ place a $t$-loss on
+$\{c_{xy}:x\ne y\}$. Add one $t$-loss at $i$ posting
+all literal heads and $z$. This last generator
+replaces the positive probe restriction by a
+required intersection.
+
+Indeed, the support can include all retained
+controls and $z$, as this adds no loss requirements
+and preserves all intersections. Every $r$-generator
+from a clause meets the new $t$-generator exactly
+when the support selects a literal of the clause.
+It meets each selected negative-head generator in
+$C$. Every selected positive-head generator meets
+the new $t$-generator at $z$, and meets the generator
+of a selected $N_y$ exactly when $x\ne y$.
+Thus two-owner compatibility holds exactly when
+the selected literal heads hit every clause and
+never include opposite literals. All generators
+are then nonempty and lose at the empty probe.
+Conversely any depth-one witness has to absorb
+the rows at the retained heads, and because every
+row is pure it must use their indicated owners.
+Their coalitions therefore obey exactly these
+necessary intersections. This is a polynomial
+reduction from satisfiability with explicit pure
+losses and an acyclic posting graph. Membership
+uses the polynomial test for a guessed support
+above. The separate one-head case is polynomial
+for two owners by \cref{core:prop:common-head-depth-one}.
+
 Hardness persists even with two headed inputs and width at most
 four. Modify the preceding reduction by adding one retained input
 $z$. Keep the $r$-losses at $i$ on vertex hitting sets, and add the
@@ -13431,83 +13468,6 @@ per owner. At fixed $K$ each selected root has only
 polynomially many child requirements in the listed
 budget size, even though finding the root's selection
 may require searching many possibilities.
-
-For listed rows and fixed palette and depth, this
-recurrence gives certificates of polynomial size:
-guess the absorbed rows at each node and include
-a witness for each of its polynomially many child
-requirements. Already depth one is NP-complete at
-three owners, even for losses at a single head, an
-empty positive probe, and just two posting colors
-per row.
-
-Reduce graph three-colorability to choosing binary
-options with forbidden rainbow tuples. Index the
-three owners cyclically by $c\in\{0,1,2\}$. At each
-vertex $v$ use a Boolean choice $X_{v,c}$ for each
-color, labeling its false option by owner $c$ and
-its true option by $c+1$. Forbid the triple of
-false options at a vertex, which is a rainbow.
-Introduce a copy $Y_{v,c}$ with false option
-labeled $c$ and true option labeled $c+2$.
-Enforce equality with $X_{v,c}$ by forbidding the
-two mismatching pairs, each of distinct owners.
-For each edge $uv$ and color $c$, forbid choosing
-both $X_{u,c}$ and $Y_{v,c}$ true, taking either
-orientation of the edge. The two true options
-have different owners. These conditions hold
-exactly for assignments in which every vertex
-has some true color and adjacent vertices have
-no true color in common. Choosing one true color
-per vertex gives a proper coloring, and a proper
-coloring gives an assignment by using just its
-chosen colors.
-
-Use a negative row at the marked head for each
-Boolean choice, with the two owner coalitions
-representing its options. To construct the
-coalitions, make a passive input for every nonempty
-tuple of options from different choices and
-different owners that contains no forbidden tuple.
-Put that input in each option of its tuple at
-the corresponding owner. There are at most three
-members of a tuple, so this is polynomial. A
-passive input is posted at most once per row,
-and each option is nonempty by its singleton
-tuple. The intersection of any rainbow selection
-of options from distinct rows is nonempty exactly
-when it contains no forbidden tuple.
-
-A depth-one witness can be taken to be a single
-greatest completion on projections, since a free
-union supplies the mark from one summand omitting
-all negatives. Each row must be absorbed at one
-of its two owners, and the selected coalitions
-must pass the rainbow condition even before
-restricting them to the witness support. Thus
-the absorbed rows give a valid binary selection.
-Conversely use such a selection as the generators
-of the three profiles on full support, together
-with unanimity at each owner. The rainbow test
-gives compatible profiles, and every generator
-is nonempty, so the greatest completion supplies
-the empty positive while enforcing the losses.
-
-In contrast, for losses at one head using at most
-two posting owners in the entire budget, depth
-one is decidable by $2$-SAT. A witness's selected
-coalitions can be enlarged to the full row tails
-and its support enlarged to the full input set.
-Intersections persist, and each selected coalition
-still escapes the corresponding positive block
-because its original restriction did. Discard
-options contained in that block. Each row must
-select one of at most two remaining options, and
-only pairs of options at different owners can
-have empty rainbow intersection. Forbid those
-pairs by binary clauses. Any satisfying choice
-generates a greatest completion on full support
-with the required mark and omissions.
 
 The recurrence shows that disagreeing reachable support
 preserves minimum completion depth for arbitrary rows.
