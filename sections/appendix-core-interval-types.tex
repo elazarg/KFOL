@@ -137,6 +137,66 @@ owners. If the circuit predicate already
 implies the restoring filters, this realizes
 it unchanged.
 
+\paragraph{Recovering shared filters from interval circuits.}
+For a greatest profile completion $C$, this circuit
+description is also necessary, with only a
+palette-dependent size overhead. More precisely,
+a primitive circuit of size $s$ in $\mathcal I(C)$
+gives a union of the restored filter circuits
+above, one per active owner set, of total size
+$O(3^K s)$ at fixed palette.
+
+Compute the neutral residual of every subcircuit
+once, sharing the results. The neutral compiler
+in \cref{core:lem:neutral-marked-linearization}
+uses a constant number of gates per original gate.
+For each edge from a marked-path child to its
+parent at owner $r$, use the sibling's residual
+as the $r$-helper when its deleted $r$-profile
+is nonzero. Otherwise make the edge an identity
+with no owner tag. Exactly these helpers occur
+in the linearized spine of any unfolded path.
+The nonzero decision uses the top coalition
+with the marked input unavailable, so it is one
+Boolean profile evaluation and does not require
+enumerating valuations.
+
+Fix a final active set $R$. Keep a signal at
+each circuit node and subset $T\subseteq R$,
+representing the disjunction of path predicates
+that have used exactly $T$ so far. A tagged
+edge applies its filter and adds its owner to
+$T$; an identity edge keeps $T$. Initialize at
+the marked projections with the empty set and
+read the output state $R$. Discard states and
+edges that cannot occur on any path to this
+output state. This is ordinary reachability
+in the labelled graph of states. Every used
+helper then lies on some full path with owner
+set $R$. Its linearized spine is bounded by
+$C\cup X$, so it inherits all inactive
+profiles by
+\cref{core:lem:linear-profile-inheritance}.
+As $C$ is a greatest profile completion, it
+also bounds every passive helper at its
+ambiguous valuations.
+
+The same inheritance lemma makes the restoring
+filters redundant for each path with final set
+$R$, hence for their disjunction. Compile this
+state circuit with one restoring suffix, then
+take the union over $R$. The compiled predicates
+contain exactly the original source paths, so
+source reconstruction in the interval gives the
+original operation. The passive residuals are
+shared, and the sum of the state counts per
+original node is $\sum_{R\subseteq I}2^{|R|}
+=3^K$. The baseline itself is the neutral
+residual at the original root and can also be
+shared. This proves the size bound even when
+unfolding the original circuit would introduce
+exponentially many marked paths.
+
 The profile parameters are independent once the active set is fixed.
 For $J\subseteq I$, put
 \[
