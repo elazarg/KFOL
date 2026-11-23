@@ -2771,6 +2771,52 @@ without any loss expansion. In particular a failing
 positive probe still certifies nonrealizability
 in polynomial time from the prime lists.
 
+\paragraph{Shared path synthesis for acyclic single-row budgets.}
+When each head has at most one loss row, the acyclic
+availability computation also gives a polynomial-size
+core circuit for the greatest minorant. This allows
+arbitrary owners and repeated postings within a row.
+
+Draw one labelled edge $j\xrightarrow{r}u$ for each
+posting $u{:}r$ on the row at $j$. At a query, the
+availability rule for a headed input requires one
+disagreeing posting at an available control.
+Hence a mark is feasible exactly when there
+is a path from its head to an unheaded input
+on which every edge disagrees with the query.
+An empty loss has no outgoing edges and gives
+no successful path.
+
+For such a path, start at its initial head and
+attach the projection of each successive input
+at the traversed edge's owner. The resulting
+spine is bounded on the original budget: for
+every used head with a loss, its selected
+outgoing posting absorbs at its row, after
+that head's only occurrence. There are no
+repeated vertices by acyclicity, and the
+terminal input has no loss. At the initial
+head this spine supplies exactly the probes
+with which its path disagrees. Thus the union
+of all these spines gives the greatest minorant
+by the availability test and source reconstruction.
+
+For each possible initial head, compute the
+union of all path prefixes ending at each
+vertex, in dependency order. Start with the
+initial projection. Along $v\xrightarrow{r}u$
+attach $x_u$ to the prefix union at $v$ by
+$\star_r$ and join it into the prefix union
+at $u$. Distributivity over the marked
+argument preserves all path prefixes without
+duplicating them. Take only the unions at
+unheaded endpoints as final outputs. With
+$n$ inputs and $e$ postings in the rows this
+uses $O(n(n+e))$ gates with sharing, allowing
+formal zero when there is no endpoint.
+Singleton prime lists supply the rows
+directly on their visible facets.
+
 Acyclicity of the disagreeing arrows at a probe does
 not suffice for projection deletion. Take three heads
 $h,x,z$, with respective sole losses
