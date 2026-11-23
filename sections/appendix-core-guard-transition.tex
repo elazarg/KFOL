@@ -75,6 +75,69 @@ choices by the successor map. This form can
 describe an obstruction without listing all
 loss rows along the cycle.
 
+\paragraph{Inclusion and ranks of reset tests.}
+The reset model also has constraints within each
+owner. A test $(r,A)$ with $A\subseteq p_r$ cannot
+occur, and $A\subseteq B$ implies
+$L(r,A)\le L(r,B)$, treating absence as $-\infty$.
+These constraints and the comparison inequalities
+have a canonical rank test. Start with $W_0$ empty.
+Place $(r,A)$ in $W_{d+1}$ when $A\not\subseteq p_r$
+and every comparison of every $(r,B)$ with
+$A\subseteq B$ has a candidate later reset in $W_d$.
+The sets increase and each is upward closed at
+its owner.
+
+In an actual path with at most $d$ attachments,
+a test whose last reset is at position $\ell$
+belongs to $W_{d-\ell+1}$. Indeed all its supersets
+have a last reset at or after $\ell$, and every
+one of their comparisons has a strictly later
+reset. Backwards induction proves the bound.
+In particular a loss at the marked head requires
+some candidate with rank at most $d$, where rank
+means the first stage at which a test enters.
+
+Conversely let $M$ be the largest finite entry
+rank, or zero if there is none. Give a test of
+rank $h$ the position
+$M+1-h$ and leave the other tests absent.
+The upward closure at each stage gives the
+inclusion inequalities. Each comparison of a
+present test has a candidate of smaller entry
+rank and hence a later position. A seed loss
+has a reset exactly when it has a candidate
+in the union of the stages. Thus this computation
+decides the abstract rank constraints exactly,
+including all seed losses at the marked head.
+
+Attainable words impose further conditions.
+On inputs $x,y,z$ with distinct owners $a,b,c$,
+give $y$ the loss $(x{:}a,z{:}c)$, give $x$ the
+two losses $z{:}b$ and $z{:}c$, and give $z$ the
+loss $(x{:}c,y{:}a)$. Query $y$ with
+$p_c=\{x\}$ and $p_b=\{z\}$. The abstract
+constraints admit just the $c$-tests containing
+$z$, all at position one. None has any
+comparison, because every loss at $z$ needs
+$x{:}c$ and hence is invisible at observer
+$c$. The sole seed loss has $c:\{z\}$ as a
+candidate.
+
+Yet the mark is infeasible. On bounded words,
+the row implication at $z$ forces the $c$-test
+on $\{z\}$ to imply that on $\{x\}$. The
+$x$-row posting $z{:}c$ makes the $a$-test
+on $\{x\}$ impossible, and the $y$-row makes
+the $a$-test on $\{y\}$ imply it. These
+implications, together with the two query
+seeds, cover every candidate absorption on
+the budget. No row can be deleted by an
+exact owner step, and the marked head stays
+headed. The reset comparisons alone do not
+see the implication at $z$, which uses the
+same owner's posting in its premise.
+
 \paragraph{State transitions and bounded guard width.}
 Let $G$ be a directed graph on a subset of the bit strings of length
 $m$, with a designated start state $s_0$. As above, use two groups
