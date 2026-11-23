@@ -2503,6 +2503,50 @@ and each remains nonempty since $K\ge3$. Every
 projected prime on that facet must take exactly
 one posting from each row, so has width $Kw$.
 
+Singleton losses give a complementary lower bound on
+the support. If a bounded word uses a head $j$ with
+a singleton loss $v:s$, then it must use $v$:
+otherwise the loss probe at $j$ has the uncolored
+source behavior of the word and supplies its mark.
+Thus a word supplying $i$ uses every input reachable
+from $i$ along singleton-loss arrows. These arrows
+are read by testing singleton postings against the
+prime lists. In particular if every loss is singleton,
+each feasible probe at $i$ has exactly this least
+witness support, since the full posting cone also
+bounds the support from above.
+
+For arbitrary losses, one can test whether the lower
+bound fits the disagreeing reachability bound on
+\emph{every} positive probe, without enumerating probes.
+Fix the head $i$, facet $k$ and one prime $G$ there.
+Start a set $U$ at $\{i\}$. For each $v\notin U$,
+look at the owners labeling arrows from $U$ to $v$
+in the full posting graph. Adjoin $v$ if two such
+owners differ or if one such owner is unavailable
+at $v$ because it is $k$ or its posting lies in $G$.
+Iterate until stable.
+
+Every probe enabling $G$ reaches the resulting $U$.
+At each adjunction no allowed posting at $v$ can agree
+with all the incoming arrows from already reachable
+inputs. Conversely $U$ itself is attainable. At each
+outside input that has an incoming arrow from $U$,
+post its unique required owner, which is available
+by stability. Leave all other inputs unposted.
+This is a proper coloring on facet $k$ enabling $G$,
+and no disagreeing arrow leaves $U$. The reachable
+set is therefore exactly $U$.
+
+It follows that every positive probe has a disagreeing
+reachable set containing its singleton-loss cone if
+and only if these closures contain the cone for every
+prime. A failure gives an explicit infeasible positive.
+The test takes polynomial time in the complete lists,
+also with variable palette. It compares the two support
+bounds and leaves the remaining joint loss constraints
+to be checked within the reachable set.
+
 There is a uniform consequence using all posting
 arrows, independently of the positive probe. For
 each source component of this graph, take the set
