@@ -1,29 +1,12 @@
-PYTHON ?= python3
 LAKE ?= lake
-LATEXMK ?= latexmk
-ZIP ?= zip
-LATEX = $(LATEXMK) -pdf -interaction=nonstopmode -halt-on-error -outdir=build
 
-PAPER_SOURCES := main.tex tr.tex references.bib $(wildcard sections/*.tex)
-.PHONY: all paper overleaf check check-lean clean
+.PHONY: all paper check check-lean clean
 
 all: paper
 
-# main.tex and tr.tex read each other's numbering from committed snapshots,
-# sections/labels-main.tex and sections/labels-tr.tex, so either one builds alone.
-# Numbers in one document do not depend on the other, so one export settles both.
-paper: | build
-	$(LATEX) main.tex
-	$(LATEX) tr.tex
-	$(PYTHON) scripts/export_labels.py
-	$(LATEX) main.tex
-	$(LATEX) tr.tex
-
-overleaf: build/overleaf.zip
-
-build/overleaf.zip: paper
-	rm -f $@
-	$(ZIP) -q $@ $(PAPER_SOURCES)
+# The paper sources and their build are in overleaf/, a separate repository.
+paper:
+	$(MAKE) -C overleaf paper
 
 check: check-lean
 
@@ -32,8 +15,5 @@ check: check-lean
 check-lean:
 	$(LAKE) build Paper Report
 
-build:
-	mkdir -p $@
-
 clean:
-	rm -rf build
+	$(MAKE) -C overleaf clean

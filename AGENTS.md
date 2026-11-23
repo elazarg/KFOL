@@ -2,7 +2,8 @@
 
 Before using mixed open-game composition, read the known-source refutation
 in README and the technical report's "Finite obstructions to the proposed
-mixed open-game category" appendix in sections/appendix-open-games.tex.
+mixed open-game category" appendix in
+overleaf/sections/appendix-open-games.tex.
 
 Ghani--Kupke--Lambert--Nordvall Forsberg (arXiv:2009.06831v1), Definitions
 11--12, do not satisfy the claimed unit law or canonical associativity.
@@ -10,9 +11,11 @@ The pinned GameTheory v1 proofs also refute the convex-closing repairs.
 Do not cite those category laws as established composition results.
 This is a scoped refutation, not a general impossibility for mixed games.
 
-Keep the layout of one paper (main.tex) with its technical report (tr.tex).
-After a change that renumbers anything in either, run make paper and commit
-the label snapshots it updates. Do not modify ../GameTheory.
+The paper sources are in overleaf/, the Overleaf project's own git repository;
+it is not tracked here, so commit paper changes there. Keep the layout of one
+paper (overleaf/main.tex) with its technical report (overleaf/tr.tex). After a
+change that renumbers anything in either, run make paper and commit the label
+snapshots it updates in the overleaf repository. Do not modify ../GameTheory.
 
 # Adding results to the paper
 
@@ -26,7 +29,9 @@ When a result settles a question, drop the material that only served attempts
 on it; git history keeps it. The core basis appendix was cut this way after the
 nonfinite-basis theorem. The full exploration (candidate bases, absorber and
 unit reductions, upper-clone criteria) is in sections/appendix-core-basis.tex
-at commit 5a59ec0. Bring an item back only if a current result needs it.
+at commit 5a59ec0 of this repository, which held the paper sources at its root
+before they moved to overleaf/. Bring an item back only if a current result
+needs it.
 
 Evidence (Lean modules, checks, counts) goes in the verification appendix, not
 next to the proof, unless the computation is itself the proof. State a limit

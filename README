@@ -1,22 +1,29 @@
 Rational Owned Choice: Finite Algebras of Multiplayer Games
 
-The paper is main.tex; its technical report is tr.tex. The mathematical audit
-entrypoints are root Paper.lean (90 main-paper and cited results) and
-Report.lean (156 further report statements and proof ingredients). Every theorem
-repeats its complete proposition and has a single named library theorem as its
-proof. The scope is the entire main paper and the report material its claims
-need, rather than every result in the technical report.
+The paper is overleaf/main.tex; its technical report is overleaf/tr.tex. The
+mathematical audit entrypoints are root Paper.lean (90 main-paper and cited
+results) and Report.lean (156 further report statements and proof ingredients).
+Every theorem repeats its complete proposition and has a single named library
+theorem as its proof. The scope is the entire main paper and the report material
+its claims need, rather than every result in the technical report.
+
+The paper sources are in the Overleaf project, checked out at overleaf/. It is a
+separate git repository and is not tracked here. Their history before the move
+is in this repository's log, up to commit 0c98c5c, where they are at the root
+(main.tex, tr.tex, references.bib, sections/).
 
 Core term-operation classifications
 
-The current technical report collects the core results in sections/appendix-core.tex
-and its included appendices. The extended classifications from the November
-characterization work are indexed by the appendix overview in the archived
-sections/appendix-core-basis.tex at commit fdc69235aeac90c138b34be1aca271fd525c9dc5.
-In that revision, sections/appendix-core-guard-reachability.tex contains the
-two-input observer-cover classification and three-input recognition test
-(search for “two-input cover” and “Three-input observer covers”). Its
-sections/appendix-verification.tex records the verification status.
+The current technical report collects the core results in
+overleaf/sections/appendix-core.tex and its included appendices. The extended
+classifications from the November characterization work are indexed by the
+appendix overview in the archived sections/appendix-core-basis.tex at commit
+fdc69235aeac90c138b34be1aca271fd525c9dc5 of this repository. In that revision,
+sections/appendix-core-guard-reachability.tex contains the two-input
+observer-cover classification and three-input recognition test (search for
+“two-input cover” and “Three-input observer covers”). Its
+sections/appendix-verification.tex records the verification status. Run these
+in this repository, not in overleaf/:
 
     git show fdc6923:sections/appendix-core-basis.tex
     git show fdc6923:sections/appendix-core-guard-reachability.tex
@@ -42,20 +49,18 @@ To build the manuscripts with TeX Live and latexmk:
 
     make paper
 
-The PDFs are build/main.pdf and build/tr.pdf. Each document reads the other's
-numbering from committed sections/labels-main.tex and sections/labels-tr.tex,
-so either builds alone. make paper refreshes these snapshots; commit them after
-changes that renumber results. To prepare a source-only Overleaf upload:
+This runs the build in overleaf/, which has its own Makefile. The PDFs are
+overleaf/build/main.pdf and overleaf/build/tr.pdf. Each document reads the
+other's numbering from committed overleaf/sections/labels-main.tex and
+overleaf/sections/labels-tr.tex, so either builds alone. make paper refreshes
+these snapshots; commit them in the overleaf repository after changes that
+renumber results. On Overleaf, select either main.tex or tr.tex as the main
+document and compile with pdfLaTeX. make clean removes overleaf/build/; Lake's
+compiled artifacts are under .lake/.
 
-    make overleaf
-
-Upload build/overleaf.zip and select either main.tex or tr.tex with pdfLaTeX.
-make clean removes build/; Lake's compiled artifacts are under .lake/.
-
-The full repository can also be synchronized with Overleaf through GitHub.
-Only Lean/TeX sources, the bibliography, build tools, dependency pins, license
-and repository instructions are tracked. The .gitignore allowlist keeps local
-notes, auxiliary checks and verification exports out of synchronization.
+Only Lean sources, build tools, dependency pins, license and repository
+instructions are tracked here. The .gitignore allowlist keeps local notes,
+auxiliary checks and verification exports out of the repository.
 
 Artifact and review entry points
 
@@ -70,8 +75,9 @@ Artifact and review entry points
     KFOL/Rounds/      Sealed-round and sequential-equilibrium semantics
     KFOL/Audit.lean   All-source, transitive axiom audit
     tests/            Lean statement, semantics and machine regressions
-    main.tex, tr.tex  Main paper and technical report
-    sections/         Manuscript sections and committed label snapshots
+    overleaf/         Paper sources, in a separate repository: main.tex and
+                      tr.tex (main paper and technical report), sections/
+                      (manuscript sections and committed label snapshots)
 
 Read the mathematical vocabulary first in KFOL/Definitions/PaperAlgebra.lean,
 PaperGames.lean and Complexity.lean, then follow their underlying definitions.
@@ -107,7 +113,7 @@ source's circle notation) and associativity in Theorem 15. Convex closing does
 not repair associativity. Do not use those laws as established mixed-game
 composition results.
 
-The self-contained argument is in sections/appendix-open-games.tex,
+The self-contained argument is in overleaf/sections/appendix-open-games.tex,
 "Finite obstructions to the proposed mixed open-game category". The external
 Lean proofs are pinned to GameTheory v1-final, revision
 02898a2d8b918f9b106a683420ca78c99867560e:
