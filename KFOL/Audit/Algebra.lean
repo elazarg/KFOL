@@ -32,6 +32,9 @@ import all KFOL.Core.ProfileBudgets.Profiles
 import all KFOL.Core.BichainSwitch
 import all KFOL.Core.BichainCubeCuts
 import all KFOL.Core.BichainQuantified
+import all KFOL.Core.BichainRecognition
+import all KFOL.Core.QuantifiedRecognition
+import all KFOL.Definitions.QuantifiedRecognition
 import all KFOL.Core.CompletionDepthChain
 import all KFOL.Core.CompletionSuspension
 import all KFOL.Core.AddressedGuards

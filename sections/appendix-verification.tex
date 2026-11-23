@@ -1,6 +1,6 @@
 \section{Verification details}\label{app:verification}
 
-The paper's results are kernel-checked in Lean~4.35.0 with mathlib. \texttt{Paper.lean} restates, in the namespace \texttt{KFOL.Paper}, every theorem of the main text and the clauses of the report results that it cites: $87$ statements, listed by result in \cref{tab:status}. \texttt{Report.lean} restates $152$ further report results in the namespace \texttt{KFOL.Report} (\cref{tab:report}). Each proof is a single library theorem, and each file ends with a check that no declaration in its namespace uses an axiom beyond \texttt{propext}, \texttt{Classical.choice}, and \texttt{Quot.sound}; a separate audit covers the whole library. Nothing is admitted, and no theorem from the literature enters as a hypothesis. Where a written proof cites one, as for the reset basis and the minimum one-owner generator \cite{FreeseEtAl2002}, owned choice with union \cite{HardingRomanowska2017}, the atomic clone \cite{Szendrei2012}, and colored-graph decomposition \cite{Gurvich2009}, the Lean proof is direct.
+The paper's results are kernel-checked in Lean~4.35.0 with mathlib. \texttt{Paper.lean} restates, in the namespace \texttt{KFOL.Paper}, every theorem of the main text and the clauses of the report results that it cites: $88$ statements, listed by result in \cref{tab:status}. \texttt{Report.lean} restates $153$ further report results in the namespace \texttt{KFOL.Report} (\cref{tab:report}). Each proof is a single library theorem, and each file ends with a check that no declaration in its namespace uses an axiom beyond \texttt{propext}, \texttt{Classical.choice}, and \texttt{Quot.sound}; a separate audit covers the whole library. Nothing is admitted, and no theorem from the literature enters as a hypothesis. Where a written proof cites one, as for the reset basis and the minimum one-owner generator \cite{FreeseEtAl2002}, owned choice with union \cite{HardingRomanowska2017}, the atomic clone \cite{Szendrei2012}, and colored-graph decomposition \cite{Gurvich2009}, the Lean proof is direct.
 
 The vocabulary of the statements is in \path{KFOL/Definitions/PaperAlgebra.lean}, \path{PaperGames.lean}, and \path{Complexity.lean}, which build on the other files of \path{KFOL/Definitions}. The auxiliary reading guides, definition indexes, and independent Python checks cited in this report are archived at repository commit \texttt{2099f25}; their paths refer to that revision.
 
@@ -68,7 +68,7 @@ The library also proves the contracts of the implementation, such as codecs, des
 
 {\small
 \begin{longtable}{>{\raggedright\arraybackslash}p{0.30\linewidth}>{\raggedright\arraybackslash}p{0.64\linewidth}}
-\caption{The $87$ mathematical statements in \texttt{Paper.lean}, grouped by result.}\label{tab:status}\\
+\caption{The $88$ mathematical statements in \texttt{Paper.lean}, grouped by result.}\label{tab:status}\\
 \toprule
 Result & Statements\\
 \midrule
@@ -107,6 +107,8 @@ Recursive source-guard recognition (\cref{core:cor:guard-peeling})
  & \path{core_guard_peeling}\\
 No finite relational characterization (\cref{core:thm:not-finitely-related})
  & \path{core_not_finitely_related}, \path{core_no_finite_relation_basis}\\
+Quantified formulas as recognition (\cref{core:thm:quantified-recognition})
+ & \path{core_quantified_recognition}\\
 Common source and atomic obstructions (\cref{gen:thm:source})
  & \path{common_source}, \path{atomic_repeated_triples}, \path{no_atomic_if_then_else}\\
 Atomic clone and determinacy (\cref{gen:thm:S2,gen:cor:determinacy})
@@ -157,7 +159,7 @@ Value-dependent execution (\cref{dep:thm:dynamic-execution})
 
 {\small
 \begin{longtable}{>{\raggedright\arraybackslash}p{0.34\linewidth}>{\raggedright\arraybackslash}p{0.60\linewidth}}
-\caption{The $152$ audited statements in \texttt{Report.lean}, followed by remaining report evidence.}\label{tab:report}\\
+\caption{The $153$ audited statements in \texttt{Report.lean}, followed by remaining report evidence.}\label{tab:report}\\
 \toprule
 Result & Audited statements or other evidence\\
 \midrule
@@ -583,9 +585,10 @@ Essential-context coloring and exact source repetition in canonical extensions
 (\cref{core:prop:essential-context-coloring,core:thm:canonical-source-repetition})
  & Written proofs, uniform in $K\geq3$ and allowing all core choices and union.\\
 Quantified formulas as cuts (\cref{core:thm:quantified-cube-cuts})
- & \path{quantified_cube_cuts}. The corresponding row interpolation
- theorem for three-role core terms is
- \path{quantified_finite_core_interpolation}.\\
+ & \path{quantified_cube_cuts}\\
+Rows as one operation (\cref{core:thm:row-recognition})
+ & \path{row_recognition}. The losses in \cref{core:prop:row-losses} have a
+ written proof and a finite check.\\
 Two-color source interpolation (\cref{core:thm:two-repeater-hardness,core:thm:two-color-pspace,core:prop:budget-dependent-cuts,core:prop:prime-profile-hardness})
  & Written reductions from CNF unsatisfiability and quantified Boolean
  truth, with path-length bounds for the restricted endpoint problems.
@@ -1494,40 +1497,50 @@ The independent standard-library program
 recursion with unpruned finite core closures, including the six-row
 obstruction; its recognizer never calls the closure oracle.
 
-Five programs in \path{checks/characterization/} test the Boolean
-core of \cref{core:thm:two-color-pspace} independently of its proof.
+Seven programs in \path{checks/characterization/} test the reductions
+of \cref{core:thm:two-color-pspace,core:thm:quantified-recognition}
+independently of their proofs.
 \path{bichain.py} generates, for a budget of marked cubes on at most
 four inputs, every pair of a Boolean function and its row values that a
 pure formula attains, and so lists the safe functions exactly.
 \path{recursion.py} compares the endpoint recursion for $P(S,A,B)$ with
 this list on $505$ random budgets of at most seven rows and all
 $52{,}480$ pairs of endpoints; they agree on all of them, $23{,}154$
-separable. \path{qbf_reduction.py} builds the rectangle instance of a
-prenex formula and evaluates the recursion with memoization. On $3{,}900$
-random formulas with at most five variables and five clauses of one or
-two literals, $1{,}473$ of them true, the game value equals the truth
-value. On $360$ random budgets on three or four inputs, closure under
-cuts with full-budget premises adds an invalid pair on $15$ and omits a
-valid pair on none; \cref{core:prop:budget-dependent-cuts} is one of the
-$15$. \path{qbf_relay.py} runs the same comparison for the rows of
-\cref{core:thm:quantified-cube-cuts} on $2{,}100$ random formulas,
-including empty clauses and empty matrices. Its Lean proof is in
-\path{KFOL/Core/BichainQuantified.lean}: the formula, its rows and the
-truth predicate are defined there, a false formula is given an explicit
-cut, and a cut for a true formula is refuted by the invariant on released
-resources. Together with the cut theorem this gives the term statement in
-\path{Report.lean}. In \path{KFOL/Core/BichainCoreBridge.lean}, the
-observer translation gives one pure word that preserves every endpoint and
-omission of a three-role core word, also after restriction to a positive
-coalition. The bound in \path{KFOL/Core/BichainFiniteLabels.lean} folds
-coordinates above stage $n+2$ onto representatives with the same row and
-endpoint values. The selector construction and canonical-list size bound
-for complete recognition still use the written reduction in
-\cref{core:thm:complete-guard-pspace}.
-\path{profile_primes.py} enumerates all sufficient guards for
-$150$ random hypergraphs on three or four vertices and confirms the
-prime lists and the emptiness criterion of
+separable. \path{qbf_reduction.py} builds the restricted rectangle
+instance of a prenex formula and evaluates the recursion with
+memoization. On $3{,}900$ random formulas with at most five variables and
+five clauses of one or two literals, $1{,}473$ of them true, the game
+value equals the truth value. \path{qbf_chain.py} runs the same
+comparison for the rows of \cref{core:thm:quantified-cube-cuts} on
+$2{,}000$ random formulas, including empty prefixes, empty clauses and
+empty matrices. On $360$ random budgets on three or four inputs, closure
+under cuts with full-budget premises adds an invalid pair on $15$ and
+omits a valid pair on none; \cref{core:prop:budget-dependent-cuts} is one
+of the $15$. \path{lift_check.py} builds the baseline of
+\cref{core:thm:row-recognition} for $500$ random families of rows with
+three or four owners. For every pure separator found it checks, on
+sampled valuations, that the core word lies below the baseline and that
+capping the baseline by the word gives the operation; it also checks the
+baseline on every row and endpoint code. \path{lift_losses.py} computes
+the minimal losses of the operation from all source probes at three
+owners, for $74$ families on at most seven inputs, and finds exactly the
+list of \cref{core:prop:row-losses}. \path{profile_primes.py} enumerates
+all sufficient guards for $150$ random hypergraphs on three or four
+vertices and confirms the prime lists and the emptiness criterion of
 \cref{core:prop:prime-profile-hardness}.
+
+The definitions behind \cref{core:thm:quantified-recognition} are in
+\path{KFOL/Definitions/QuantifiedRecognition.lean}: the formula and its
+truth, the rows on a finite coordinate type, the baseline term, and the
+capped operation. \path{KFOL/Core/BichainQuantified.lean} gives a false
+formula an explicit cut and refutes a cut for a true formula by the
+invariant on released resources. \path{KFOL/Core/BichainRecognition.lean}
+proves \cref{core:thm:row-recognition} for an arbitrary finite family of
+rows and any role type with three distinct roles; it contains both
+translations between pure bichain terms and core terms.
+\path{KFOL/Core/QuantifiedRecognition.lean} combines the two. Polynomial
+size of the canonical lists and PSPACE-completeness of quantified truth
+are not formalized.
 
 The closed hypergraph vocabulary is defined in
 \path{KFOL/Definitions/CoreHypergraphs.lean}: indexed clutters, support,

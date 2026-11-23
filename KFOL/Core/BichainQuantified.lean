@@ -1,6 +1,7 @@
 module
 
 public import KFOL.Core.BichainCubeCuts
+public import KFOL.Definitions.QuantifiedRecognition
 public import Mathlib.Logic.Function.Basic
 public import Mathlib.Data.List.GetD
 
@@ -10,163 +11,158 @@ A prenex formula with a clausal matrix is true exactly when its marked rows
 admit no cut, and hence exactly when a pure term omits every mark and
 separates the two starting endpoints. Left and right vertices carry the
 rows; a label lies on a rectangle of left and right vertices. Each stage has
-two branch rows on the left and one relay row on the right.
+two branch rows on the left and one relay row on the right. The clauses are
+offered one at a time, so every label is marked by at most two rows.
 -/
 
 @[expose] public section
 namespace KFOL.Bichain.Quantified
 
-/-- Variables are the stages `1, …, n`. Stage `i` is existential when `ex i`
-holds. A literal `(i, s)` says that variable `i` has value `s`. -/
-structure Formula where
-  n : ℕ
-  ex : ℕ → Bool
-  cls : List (List (ℕ × Bool))
-
-/-- Input coordinates of the rows. -/
-inductive Lab where
-  | ch (i : ℕ) (s : Bool)
-  | rl (i : ℕ)
-  | perm (i : ℕ) (s : Bool)
-  | lit (i : ℕ) (s : Bool)
-  | kap
-  deriving DecidableEq
-
-/-- Branch and clause vertices are on the left, relays and literal resources
-on the right. The vertices `br 0 s` and `relay 0` are the starting endpoints. -/
-inductive Vtx where
-  | br (i : ℕ) (s : Bool)
-  | relay (i : ℕ)
-  | res (i : ℕ) (s : Bool)
-  | cl (c : ℕ)
-  deriving DecidableEq
-
 variable (F : Formula)
 
-/-- Every literal names one of the `n` variables. -/
-def Formula.WF : Prop := ∀ C ∈ F.cls, ∀ l ∈ C, 1 ≤ l.1 ∧ l.1 ≤ F.n
-
-/-- Truth of the last `k` quantifiers and the matrix after stage `i`. -/
-def sat : ℕ → ℕ → (ℕ → Bool) → Prop
-  | 0, _, α => ∀ C ∈ F.cls, ∃ l ∈ C, α l.1 = l.2
-  | k + 1, i, α =>
-    if F.ex (i + 1) then ∃ s, sat k (i + 1) (Function.update α (i + 1) s)
-    else ∀ s, sat k (i + 1) (Function.update α (i + 1) s)
-
-/-- The labels whose rectangle contains a left vertex. -/
-def inI : Vtx → Lab → Bool
-  | .br i _, .ch j _ => j == i + 1
-  | .br i _, .rl j => j == i
-  | .br i s, .perm j t => j == i && t == s
-  | .br i _, .kap => i == F.n
-  | .cl c, .lit j t => decide ((j, t) ∈ F.cls.getD c [])
-  | _, _ => false
-
-/-- The labels whose rectangle contains a right vertex. -/
-def inJ : Vtx → Lab → Bool
-  | .relay k, .ch j t => j == k + 1 && decide (j ≤ F.n) && (t || F.ex j)
-  | .relay k, .rl j => j == k + 1
-  | .relay k, .lit _ _ => k == F.n
-  | .relay k, .kap => k == F.n
-  | .res i s, .perm j t => j == i && t == s
-  | _, _ => false
-
-/-- The coordinate marked by a row. -/
-def mark : Vtx → Lab
-  | .br i s => .ch i (if F.ex i then s else true)
-  | .relay i => .rl i
-  | .res i s => .lit i s
-  | .cl _ => .kap
-
-/-- A left row is true on its labels and free elsewhere; a right row is false
-on its labels and free elsewhere. -/
-def rows (z : Vtx) (e : Lab) : Value :=
-  if mark F z = e then .possible else if inI F z e then .c
-  else if inJ F z e then .b else .neutral
-
-/-- Separation of a left vertex from a right vertex. -/
-def cell (a b : Vtx) : CubeQuery Lab :=
-  .separate (fun e => inI F a e) (fun e => !inJ F b e)
-
-/-- The rows of the instance. -/
-def IsRow : Vtx → Prop
-  | .br j _ => 1 ≤ j ∧ j ≤ F.n
-  | .relay j => 1 ≤ j ∧ j ≤ F.n
-  | .res j _ => 1 ≤ j ∧ j ≤ F.n
-  | .cl c => c < F.cls.length
-
-/-- The finite budget of all rows. -/
-def allRows : Finset Vtx :=
-  ((Finset.range F.n).image fun i => Vtx.br (i + 1) true) ∪
-  ((Finset.range F.n).image fun i => Vtx.br (i + 1) false) ∪
-  ((Finset.range F.n).image fun i => Vtx.relay (i + 1)) ∪
-  ((Finset.range F.n).image fun i => Vtx.res (i + 1) true) ∪
-  ((Finset.range F.n).image fun i => Vtx.res (i + 1) false) ∪
-  ((Finset.range F.cls.length).image Vtx.cl)
-
 theorem mem_allRows (z : Vtx) : z ∈ allRows F ↔ IsRow F z := by
+  rw [allRows, Finset.mem_filter, and_iff_right_iff_imp]
+  intro h
   cases z with
   | br j s =>
-    simp only [allRows, IsRow]
-    constructor
-    · intro h
-      simp at h
-      rcases h with ⟨a, ha, rfl, -⟩ | ⟨a, ha, rfl, -⟩ <;> omega
-    · intro h
-      cases s <;> simp <;> exact ⟨j - 1, by omega, by omega⟩
+    have hj : j < F.n + F.cls.length + 1 := by
+      rcases h with h | h <;> omega
+    cases s <;> simp [vertices, hj]
   | relay j =>
-    simp only [allRows, IsRow]
-    constructor
-    · intro h
-      simp at h
-      obtain ⟨a, ha, rfl⟩ := h
-      omega
-    · intro h
-      simp
-      exact ⟨j - 1, by omega, by omega⟩
+    have hj : j < F.n + F.cls.length + 1 := by
+      obtain ⟨-, h | h⟩ := h <;> omega
+    simp [vertices, hj]
   | res j s =>
-    simp only [allRows, IsRow]
-    constructor
-    · intro h
-      simp at h
-      rcases h with ⟨a, ha, rfl, -⟩ | ⟨a, ha, rfl, -⟩ <;> omega
-    · intro h
-      cases s <;> simp <;> exact ⟨j - 1, by omega, by omega⟩
-  | cl c => simp [allRows, IsRow]
+    have hj : j < F.n + F.cls.length + 1 := by
+      obtain ⟨-, h⟩ := h
+      omega
+    cases s <;> simp [vertices, hj]
+  | cl c =>
+    have hc : c < F.n + F.cls.length + 1 := by
+      have : c < F.cls.length := h
+      omega
+    simp [vertices, hc]
+
+theorem mem_labels_of_isLab {e : Lab} (h : IsLab F e) : e ∈ labels F := by
+  rw [labels, Finset.mem_filter]
+  refine ⟨?_, h⟩
+  cases e with
+  | ch j s =>
+    have hj : j < F.n + F.cls.length + 1 := by
+      obtain ⟨-, h⟩ := h
+      omega
+    cases s <;> simp [coordinates, hj]
+  | rl j =>
+    have hj : j < F.n + F.cls.length + 1 := by
+      obtain ⟨-, h | h⟩ := h <;> omega
+    simp [coordinates, hj]
+  | perm j s =>
+    have hj : j < F.n + F.cls.length + 1 := by
+      obtain ⟨-, h⟩ := h
+      omega
+    cases s <;> simp [coordinates, hj]
+  | lit j s =>
+    have hj : j < F.n + F.cls.length + 1 := by
+      obtain ⟨-, h⟩ := h
+      omega
+    cases s <;> simp [coordinates, hj]
+  | kap c =>
+    have hc : c < F.n + F.cls.length + 1 := by
+      rcases h with h | h <;> omega
+    simp [coordinates, hc]
 
 theorem inI_mark (z : Vtx) : inI F z (mark F z) = false := by
-  cases z <;> simp [inI, mark]
+  cases z with
+  | br i s =>
+    simp only [mark]
+    split_ifs <;> simp [inI]
+    omega
+  | relay i => simp [inI]
+  | res i s => simp [inI]
+  | cl c => simp [inI, mark]
 
 theorem inJ_mark (z : Vtx) : inJ F z (mark F z) = false := by
-  cases z <;> simp [inJ, mark]
+  cases z with
+  | br i s => simp [inJ]
+  | relay i => simp [inJ, mark]
+  | res i s => simp [inJ, mark]
+  | cl c => simp [inJ]
 
 theorem inJ_of_inI {z : Vtx} {e : Lab} (h : inI F z e = true) : inJ F z e = false := by
   cases z <;> cases e <;> simp_all [inI, inJ]
 
-theorem rows_possible (z : Vtx) (e : Lab) : rows F z e = .possible ↔ mark F z = e := by
+theorem mark_eq_ch {z : Vtx} {j : ℕ} {s : Bool} (h : mark F z = .ch j s) :
+    ∃ s', z = .br j s' ∧ j ≤ F.n ∧ (if F.ex j then s' else true) = s := by
+  cases z with
+  | br i t =>
+    simp only [mark] at h
+    split_ifs at h with hi hex <;> injection h with h1 h2
+    · subst h1; exact ⟨t, rfl, hi, by simpa [hex] using h2⟩
+    · subst h1; exact ⟨t, rfl, hi, by simpa [hex] using h2⟩
+  | relay i => simp [mark] at h
+  | res i t => simp [mark] at h
+  | cl c => simp [mark] at h
+
+theorem mark_eq_rl {z : Vtx} {j : ℕ} (h : mark F z = .rl j) : z = .relay j := by
+  cases z with
+  | br i t => simp only [mark] at h; split_ifs at h
+  | relay i => simp [mark] at h; rw [h]
+  | res i t => simp [mark] at h
+  | cl c => simp [mark] at h
+
+theorem mark_eq_lit {z : Vtx} {j : ℕ} {t : Bool} (h : mark F z = .lit j t) : z = .res j t := by
+  cases z with
+  | br i t => simp only [mark] at h; split_ifs at h
+  | relay i => simp [mark] at h
+  | res i s => simp [mark] at h; rw [h.1, h.2]
+  | cl c => simp [mark] at h
+
+theorem mark_eq_kap {z : Vtx} {c : ℕ} (h : mark F z = .kap c) :
+    z = .cl c ∨ ∃ t, z = .br (F.n + c + 1) t := by
+  cases z with
+  | br i t =>
+    simp only [mark] at h
+    split_ifs at h with hi
+    injection h with h
+    right
+    exact ⟨t, by congr 1; omega⟩
+  | relay i => simp [mark] at h
+  | res i t => simp [mark] at h
+  | cl c' => simp [mark] at h; left; rw [h]
+
+/-- No row marks a permanent label. -/
+theorem mark_ne_perm (z : Vtx) (j : ℕ) (t : Bool) : mark F z ≠ .perm j t := by
+  cases z with
+  | br i s => simp only [mark]; split_ifs <;> simp
+  | relay i => simp [mark]
+  | res i s => simp [mark]
+  | cl c => simp [mark]
+
+theorem rows_possible (z : Vtx) (e : FLab F) : rows F z e = .possible ↔ mark F z = e.val := by
   unfold rows
   split_ifs <;> simp_all
 
-theorem cubeLower_rows (z : Vtx) : cubeLower (rows F z) = fun e => inI F z e := by
+theorem cubeLower_rows (z : Vtx) : cubeLower (rows F z) = fun e => inI F z e.val := by
   funext e
   unfold cubeLower rows
-  by_cases hm : mark F z = e
-  · subst hm; simp [inI_mark]
-  · cases h1 : inI F z e <;> cases h2 : inJ F z e <;> simp [hm]
+  by_cases hm : mark F z = e.val
+  · rw [← hm]; simp [inI_mark]
+  · cases h1 : inI F z e.val <;> cases h2 : inJ F z e.val <;> simp [hm]
 
-theorem cubeUpper_rows (z : Vtx) : cubeUpper (rows F z) = fun e => !inJ F z e := by
+theorem cubeUpper_rows (z : Vtx) : cubeUpper (rows F z) = fun e => !inJ F z e.val := by
   funext e
   unfold cubeUpper rows
-  by_cases hm : mark F z = e
-  · subst hm; simp [inJ_mark]
-  · cases h1 : inI F z e
-    · cases h2 : inJ F z e <;> simp [hm]
+  by_cases hm : mark F z = e.val
+  · rw [← hm]; simp [inJ_mark]
+  · cases h1 : inI F z e.val
+    · cases h2 : inJ F z e.val <;> simp [hm]
     · simp [hm, inJ_of_inI F h1]
 
 /-- A cut at a cell selects rows whose marks cover the labels on the cell and
 which can each replace the endpoint on either side. -/
 theorem cut_intro {budget sel : Finset Vtx} {a b : Vtx} (hsub : sel ⊆ budget)
-    (hcov : ∀ e, inI F a e = true → inJ F b e = true → ∃ z ∈ sel, mark F z = e)
+    (hcov : ∀ e : FLab F, inI F a e.val = true → inJ F b e.val = true →
+      ∃ z ∈ sel, mark F z = e.val)
     (hl : ∀ z ∈ sel, CubeCut (rows F) (sel.erase z) (cell F z b))
     (hr : ∀ z ∈ sel, CubeCut (rows F) (sel.erase z) (cell F a z)) :
     CubeCut (rows F) budget (cell F a b) := by
@@ -187,7 +183,8 @@ theorem cut_intro {budget sel : Finset Vtx} {a b : Vtx} (hsub : sel ⊆ budget)
 theorem cut_inv {budget : Finset Vtx} {a b : Vtx}
     (h : CubeCut (rows F) budget (cell F a b)) :
     ∃ sel : Finset Vtx, sel ⊆ budget ∧
-      (∀ e, inI F a e = true → inJ F b e = true → ∃ z ∈ sel, mark F z = e) ∧
+      (∀ e : FLab F, inI F a e.val = true → inJ F b e.val = true →
+        ∃ z ∈ sel, mark F z = e.val) ∧
       (∀ z ∈ sel, CubeCut (rows F) (sel.erase z) (cell F z b)) ∧
       (∀ z ∈ sel, CubeCut (rows F) (sel.erase z) (cell F a z)) := by
   generalize hq : cell F a b = q at h
@@ -209,27 +206,28 @@ theorem cut_inv {budget : Finset Vtx} {a b : Vtx}
 
 /-- A cell with no label has the empty cut. -/
 theorem cut_empty {budget : Finset Vtx} {a b : Vtx}
-    (h : ∀ e, inI F a e = true → inJ F b e = true → False) :
+    (h : ∀ e : Lab, inI F a e = true → inJ F b e = true → False) :
     CubeCut (rows F) budget (cell F a b) :=
-  cut_intro F (Finset.empty_subset _) (fun e h1 h2 => (h e h1 h2).elim)
+  cut_intro F (Finset.empty_subset _) (fun e h1 h2 => (h e.val h1 h2).elim)
     (by simp) (by simp)
-
-/-- No row marks a permanent label. -/
-theorem mark_ne_perm (z : Vtx) (j : ℕ) (t : Bool) : mark F z ≠ .perm j t := by
-  cases z <;> simp [mark]
 
 /-- The rows that the cutting side still needs after stage `i`. -/
 def Keep (i : ℕ) (α : ℕ → Bool) : Vtx → Prop
-  | .br j _ => i < j ∧ j ≤ F.n
-  | .relay j => i < j ∧ j ≤ F.n
-  | .res j s => 1 ≤ j ∧ j ≤ F.n ∧ (j ≤ i → α j ≠ s)
-  | .cl c => c < F.cls.length
+  | .br j t => i < j ∧ IsRow F (.br j t)
+  | .relay j => i < j ∧ IsRow F (.relay j)
+  | .res j s => IsRow F (.res j s) ∧ (j ≤ i → α j ≠ s)
+  | .cl c => IsRow F (.cl c)
 
-/-- Resources of true literals have been released, and clause rows are real. -/
+/-- The rows needed from clause `c` on to reach and test the false clause `c₀`. -/
+def KeepC (c c₀ : ℕ) (α : ℕ → Bool) : Vtx → Prop
+  | .br j t => F.n + c < j ∧ j ≤ F.n + c₀ ∧ t = true
+  | .relay j => F.n + c < j ∧ j ≤ F.n + c₀
+  | .res j t => 1 ≤ j ∧ j ≤ F.n ∧ α j ≠ t
+  | .cl c' => c' = c₀
+
+/-- Resources of true literals have been released, and only rows remain. -/
 def Inv (i : ℕ) (α : ℕ → Bool) (budget : Finset Vtx) : Prop :=
-  (∀ j s, 1 ≤ j → j ≤ i → α j = s → Vtx.res j s ∉ budget) ∧
-  ∀ c, Vtx.cl c ∈ budget → c < F.cls.length
-
+  (∀ j s, 1 ≤ j → j ≤ i → α j = s → Vtx.res j s ∉ budget) ∧ ∀ z ∈ budget, IsRow F z
 
 theorem keep_step {i : ℕ} {α : ℕ → Bool} {s : Bool} {z : Vtx}
     (h : Keep F (i + 1) (Function.update α (i + 1) s) z) : Keep F i α z := by
@@ -237,8 +235,8 @@ theorem keep_step {i : ℕ} {α : ℕ → Bool} {s : Bool} {z : Vtx}
   | br j t => exact ⟨by have := h.1; omega, h.2⟩
   | relay j => exact ⟨by have := h.1; omega, h.2⟩
   | res j t =>
-    refine ⟨h.1, h.2.1, fun hj => ?_⟩
-    have h3 := h.2.2 (by omega)
+    refine ⟨h.1, fun hj => ?_⟩
+    have h3 := h.2 (by omega)
     rwa [Function.update_of_ne (by omega)] at h3
   | cl c => exact h
 
@@ -254,6 +252,291 @@ theorem keep_ne {i : ℕ} {α : ℕ → Bool} {z : Vtx} (h : Keep F (i + 1) α z
   | res j t => exact ⟨by simp, by simp⟩
   | cl c => exact ⟨by simp, by simp⟩
 
+theorem keepC_step {c c₀ : ℕ} {α : ℕ → Bool} {z : Vtx} (h : KeepC F (c + 1) c₀ α z) :
+    KeepC F c c₀ α z ∧ z ≠ .relay (F.n + c + 1) ∧ z ≠ .br (F.n + c + 1) true := by
+  cases z with
+  | br j t =>
+    have := h.1
+    exact ⟨⟨by omega, h.2⟩, by simp, fun hs => by injection hs; omega⟩
+  | relay j =>
+    have := h.1
+    exact ⟨⟨by omega, h.2⟩, fun hs => by injection hs; omega, by simp⟩
+  | res j t => exact ⟨h, by simp, by simp⟩
+  | cl c' => exact ⟨h, by simp, by simp⟩
+
+theorem keep_of_keepC {c₀ : ℕ} (hc₀ : c₀ < F.cls.length) {α : ℕ → Bool} {z : Vtx}
+    (h : KeepC F 0 c₀ α z) : Keep F F.n α z := by
+  cases z with
+  | br j t =>
+    obtain ⟨h1, h2, h3⟩ := h
+    exact ⟨by omega, Or.inr ⟨by omega, by omega, h3⟩⟩
+  | relay j =>
+    obtain ⟨h1, h2⟩ := h
+    exact ⟨by omega, by omega, Or.inr (by omega)⟩
+  | res j t =>
+    obtain ⟨h1, h2, h3⟩ := h
+    exact ⟨⟨h1, h2⟩, fun _ => h3⟩
+  | cl c' =>
+    have h' : c' = c₀ := h
+    subst h'
+    exact hc₀
+
+theorem mark_continue (c : ℕ) : mark F (.br (F.n + c + 1) true) = .kap c := by
+  simp only [mark]
+  split_ifs with h
+  · omega
+  · congr 1
+    omega
+
+/-- The literals of a false clause are covered by their resources. -/
+theorem cut_lit {c₀ : ℕ} (hc₀ : c₀ < F.cls.length) (k : ℕ) {budget : Finset Vtx}
+    (hres : ∀ l ∈ F.cls[c₀], Vtx.res l.1 l.2 ∈ budget) :
+    CubeCut (rows F) budget (cell F (.cl c₀) (.relay k)) := by
+  classical
+  refine cut_intro F (sel := budget.filter fun z => ∃ j t, z = Vtx.res j t)
+    (Finset.filter_subset _ _) ?_ ?_ ?_
+  · rintro ⟨e, he⟩ h1 h2
+    cases e with
+    | lit j t =>
+      change decide ((j, t) ∈ F.cls.getD c₀ []) = true at h1
+      rw [List.getD_eq_getElem F.cls [] hc₀] at h1
+      exact ⟨.res j t, Finset.mem_filter.2 ⟨hres _ (of_decide_eq_true h1), j, t, rfl⟩, rfl⟩
+    | ch j t => simp [inI] at h1
+    | rl j => simp [inI] at h1
+    | perm j t => simp [inI] at h1
+    | kap c => simp [inI] at h1
+  · intro z hz
+    obtain ⟨-, j, t, rfl⟩ := Finset.mem_filter.1 hz
+    exact cut_empty F fun e h1 _ => by cases e <;> simp [inI] at h1
+  · intro z hz
+    obtain ⟨-, j, t, rfl⟩ := Finset.mem_filter.1 hz
+    exact cut_empty F fun e h1 h2 => by cases e <;> simp [inI, inJ] at h1 h2
+
+/-- From clause `c` the cutting side walks to a false clause `c₀` and tests it. -/
+theorem cut_clause (α : ℕ → Bool) {c₀ : ℕ} (hc₀ : c₀ < F.cls.length)
+    (hfalse : ∀ l ∈ F.cls[c₀], α l.1 ≠ l.2)
+    (hwfc : ∀ l ∈ F.cls[c₀], 1 ≤ l.1 ∧ l.1 ≤ F.n) :
+    ∀ (d c : ℕ) (s : Bool), c + d = c₀ → (c = 0 → s = α F.n) →
+    ∀ budget : Finset Vtx, (∀ z, KeepC F c c₀ α z → z ∈ budget) →
+      CubeCut (rows F) budget (cell F (.br (F.n + c) s) (.relay (F.n + c))) := by
+  intro d
+  induction d with
+  | zero =>
+    intro c s hc hs budget hb
+    classical
+    have hcc : c₀ = c := by omega
+    let sel := budget.filter fun z => KeepC F c c₀ α z
+    have hmem : ∀ z, z ∈ sel ↔ z ∈ budget ∧ KeepC F c c₀ α z := fun z => Finset.mem_filter
+    have hresk : ∀ l ∈ F.cls[c₀], KeepC F c c₀ α (.res l.1 l.2) := fun l hl =>
+      ⟨(hwfc l hl).1, (hwfc l hl).2, hfalse l hl⟩
+    refine cut_intro F (sel := sel) (Finset.filter_subset _ _) ?_ ?_ ?_
+    · rintro ⟨e, he⟩ h1 h2
+      cases e with
+      | kap c' =>
+        simp [inI] at h1
+        have h3 : c' = c₀ := by omega
+        subst h3
+        exact ⟨.cl c', (hmem _).2 ⟨hb _ rfl, rfl⟩, rfl⟩
+      | ch j t => simp [inI, inJ] at h1 h2; omega
+      | rl j => simp [inI, inJ] at h1 h2; omega
+      | perm j t => simp [inJ] at h2
+      | lit j t => simp [inI] at h1
+    · intro z hz
+      obtain ⟨hzb, hk⟩ := (hmem z).1 hz
+      cases z with
+      | br j t => exact absurd hk.1 (by have := hk.2.1; omega)
+      | relay j => exact absurd hk.1 (by have := hk.2; omega)
+      | res j t => exact cut_empty F fun e h1 _ => by cases e <;> simp [inI] at h1
+      | cl c' =>
+        have h3 : c' = c₀ := hk
+        subst h3
+        refine cut_lit F hc₀ _ fun l hl => ?_
+        rw [Finset.mem_erase, hmem]
+        exact ⟨by simp, hb _ (hresk l hl), hresk l hl⟩
+    · intro z hz
+      obtain ⟨hzb, hk⟩ := (hmem z).1 hz
+      cases z with
+      | br j t => exact absurd hk.1 (by have := hk.2.1; omega)
+      | relay j => exact absurd hk.1 (by have := hk.2; omega)
+      | res j t =>
+        refine cut_empty F fun e h1 h2 => ?_
+        cases e <;> simp [inI, inJ] at h1 h2
+        obtain ⟨rfl, rfl⟩ := h1
+        obtain ⟨rfl, rfl⟩ := h2
+        obtain ⟨hk1, hk2, hk3⟩ := hk
+        have hc0 : c = 0 := by omega
+        subst hc0
+        exact hk3 (hs rfl).symm
+      | cl c' => exact cut_empty F fun e _ h2 => by cases e <;> simp [inJ] at h2
+  | succ d ih =>
+    intro c s hc hs budget hb
+    classical
+    let sel := budget.filter fun z => KeepC F c c₀ α z
+    have hmem : ∀ z, z ∈ sel ↔ z ∈ budget ∧ KeepC F c c₀ α z := fun z => Finset.mem_filter
+    have hresk : ∀ c', ∀ l ∈ F.cls[c₀], KeepC F c' c₀ α (.res l.1 l.2) := fun _ l hl =>
+      ⟨(hwfc l hl).1, (hwfc l hl).2, hfalse l hl⟩
+    refine cut_intro F (sel := sel) (Finset.filter_subset _ _) ?_ ?_ ?_
+    · rintro ⟨e, he⟩ h1 h2
+      cases e with
+      | kap c' =>
+        simp [inI] at h1
+        have h3 : c' = c := by omega
+        subst h3
+        have hk : KeepC F c' c₀ α (.br (F.n + c' + 1) true) := ⟨by omega, by omega, rfl⟩
+        exact ⟨.br (F.n + c' + 1) true, (hmem _).2 ⟨hb _ hk, hk⟩, mark_continue F c'⟩
+      | ch j t => simp [inI, inJ] at h1 h2; omega
+      | rl j => simp [inI, inJ] at h1 h2; omega
+      | perm j t => simp [inJ] at h2
+      | lit j t => simp [inI] at h1
+    · intro z hz
+      obtain ⟨hzb, hk⟩ := (hmem z).1 hz
+      cases z with
+      | br j t =>
+        obtain ⟨hk1, hk2, rfl⟩ := hk
+        by_cases hj : j = F.n + c + 1
+        · subst hj
+          let sel2 := (sel.erase (.br (F.n + c + 1) true)).filter fun z' =>
+            KeepC F (c + 1) c₀ α z' ∨ z' = Vtx.relay (F.n + c + 1)
+          have hmem2 : ∀ z', z' ∈ sel2 ↔ (z' ≠ .br (F.n + c + 1) true ∧ z' ∈ sel) ∧
+              (KeepC F (c + 1) c₀ α z' ∨ z' = Vtx.relay (F.n + c + 1)) :=
+            fun z' => Finset.mem_filter.trans (and_congr Finset.mem_erase Iff.rfl)
+          have hin2 : ∀ z', KeepC F (c + 1) c₀ α z' → z' ∈ sel2 := fun z' hk' => by
+            have h := keepC_step F hk'
+            exact (hmem2 _).2 ⟨⟨h.2.2, (hmem _).2 ⟨hb _ h.1, h.1⟩⟩, Or.inl hk'⟩
+          refine cut_intro F (sel := sel2) (Finset.filter_subset _ _) ?_ ?_ ?_
+          · rintro ⟨e, he⟩ h1 h2
+            cases e with
+            | rl j' =>
+              simp [inI, inJ] at h1 h2
+              subst h1
+              have hk : KeepC F c c₀ α (.relay (F.n + c + 1)) := ⟨by omega, by omega⟩
+              exact ⟨.relay (F.n + c + 1), (hmem2 _).2 ⟨⟨by simp, (hmem _).2 ⟨hb _ hk, hk⟩⟩,
+                Or.inr rfl⟩, rfl⟩
+            | ch j' t => simp [inI, inJ] at h1 h2; omega
+            | perm j' t => simp [inJ] at h2
+            | lit j' t => simp [inI] at h1
+            | kap c' => simp [inI, inJ] at h1 h2; omega
+          · intro z' hz'
+            obtain ⟨-, hk2'⟩ := (hmem2 z').1 hz'
+            cases z' with
+            | br j' t =>
+              rcases hk2' with hk2' | hk2'
+              · refine cut_empty F fun e h1 h2 => ?_
+                have := hk2'.1
+                cases e <;> simp [inI, inJ] at h1 h2 <;> omega
+              · cases hk2'
+            | relay j' => exact cut_empty F fun e h1 _ => by cases e <;> simp [inI] at h1
+            | res j' t => exact cut_empty F fun e h1 _ => by cases e <;> simp [inI] at h1
+            | cl c' =>
+              rcases hk2' with hk2' | hk2'
+              · have h3 : c' = c₀ := hk2'
+                subst h3
+                refine cut_lit F hc₀ _ fun l hl => ?_
+                exact Finset.mem_erase.2 ⟨by simp, hin2 _ (hresk _ l hl)⟩
+              · cases hk2'
+          · intro z' hz'
+            obtain ⟨-, hk2'⟩ := (hmem2 z').1 hz'
+            cases z' with
+            | br j' t => exact cut_empty F fun e _ h2 => by cases e <;> simp [inJ] at h2
+            | relay j' =>
+              by_cases hj' : j' = F.n + c + 1
+              · subst hj'
+                exact ih (c + 1) true (by omega) (by omega) (sel2.erase (.relay (F.n + c + 1)))
+                  fun z'' hk'' => Finset.mem_erase.2 ⟨(keepC_step F hk'').2.1, hin2 _ hk''⟩
+              · refine cut_empty F fun e h1 h2 => ?_
+                rcases hk2' with hk2' | hk2'
+                · have := hk2'.1
+                  cases e <;> simp [inI, inJ] at h1 h2 <;> omega
+                · injection hk2' with h
+                  exact hj' h
+            | res j' t =>
+              rcases hk2' with hk2' | hk2'
+              · refine cut_empty F fun e h1 h2 => ?_
+                have := hk2'.2.1
+                cases e <;> simp [inI, inJ] at h1 h2
+                omega
+              · cases hk2'
+            | cl c' => exact cut_empty F fun e _ h2 => by cases e <;> simp [inJ] at h2
+        · refine cut_empty F fun e h1 h2 => ?_
+          cases e <;> simp [inI, inJ] at h1 h2 <;> omega
+      | relay j => exact cut_empty F fun e h1 _ => by cases e <;> simp [inI] at h1
+      | res j t => exact cut_empty F fun e h1 _ => by cases e <;> simp [inI] at h1
+      | cl c' =>
+        have h3 : c' = c₀ := hk
+        subst h3
+        refine cut_lit F hc₀ _ fun l hl => ?_
+        rw [Finset.mem_erase, hmem]
+        exact ⟨by simp, hb _ (hresk _ l hl), hresk _ l hl⟩
+    · intro z hz
+      obtain ⟨hzb, hk⟩ := (hmem z).1 hz
+      cases z with
+      | br j t => exact cut_empty F fun e _ h2 => by cases e <;> simp [inJ] at h2
+      | relay j =>
+        refine cut_empty F fun e h1 h2 => ?_
+        have := hk.1
+        cases e <;> simp [inI, inJ] at h1 h2 <;> omega
+      | res j t =>
+        refine cut_empty F fun e h1 h2 => ?_
+        cases e <;> simp [inI, inJ] at h1 h2
+        obtain ⟨rfl, rfl⟩ := h1
+        obtain ⟨rfl, rfl⟩ := h2
+        obtain ⟨hk1, hk2, hk3⟩ := hk
+        have hc0 : c = 0 := by omega
+        subst hc0
+        exact hk3 (hs rfl).symm
+      | cl c' => exact cut_empty F fun e _ h2 => by cases e <;> simp [inJ] at h2
+
+/-- A satisfied matrix leaves no cut in the clause chain. -/
+theorem not_cut_clause (hwf : F.WF) (α : ℕ → Bool) (hmat : Matrix F α) :
+    ∀ (d c : ℕ) (s : Bool), F.cls.length ≤ c + d → (c < F.cls.length ∨ c = 0) →
+    ∀ budget : Finset Vtx, Inv F F.n α budget →
+      ¬ CubeCut (rows F) budget (cell F (.br (F.n + c) s) (.relay (F.n + c))) := by
+  have test : ∀ (c : ℕ) (sel : Finset Vtx), (∀ z ∈ sel, IsRow F z) →
+      (∀ j t, 1 ≤ j → j ≤ F.n → α j = t → Vtx.res j t ∉ sel) → .cl c ∈ sel → ∀ k,
+      ¬ CubeCut (rows F) (sel.erase (.cl c)) (cell F (.cl c) (.relay (F.n + k))) := by
+    intro c sel hrow hres hz k hcut
+    have hcm : c < F.cls.length := hrow _ hz
+    obtain ⟨l, hlC, hval⟩ := hmat _ (List.getElem_mem hcm)
+    obtain ⟨sel2, hsub2, hcov2, -, -⟩ := cut_inv F hcut
+    have hw := hwf _ (List.getElem_mem hcm) _ hlC
+    have h1 : inI F (.cl c) (.lit l.1 l.2) = true := by
+      change decide ((l.1, l.2) ∈ F.cls.getD c []) = true
+      rw [List.getD_eq_getElem F.cls [] hcm]
+      exact decide_eq_true hlC
+    obtain ⟨z', hz', hm'⟩ := hcov2 ⟨.lit l.1 l.2, mem_labels_of_isLab F hw⟩ h1 (by simp [inJ])
+    rw [mark_eq_lit F hm'] at hz'
+    exact hres l.1 l.2 hw.1 hw.2 hval (Finset.mem_of_mem_erase (hsub2 hz'))
+  intro d
+  induction d with
+  | zero =>
+    intro c s hd hc budget hinv hcut
+    obtain ⟨sel, hsub, hcov, hl, -⟩ := cut_inv F hcut
+    obtain ⟨z, hz, hm⟩ := hcov ⟨.kap c, mem_labels_of_isLab F hc⟩ (by simp [inI]) (by simp [inJ])
+    rcases mark_eq_kap F hm with rfl | ⟨t, rfl⟩
+    · exact test c sel (fun z hz => hinv.2 z (hsub hz))
+        (fun j t h1 h2 hv hmem => hinv.1 j t h1 h2 hv (hsub hmem)) hz c (hl _ hz)
+    · have hrow : IsRow F (.br (F.n + c + 1) t) := hinv.2 _ (hsub hz)
+      rcases hrow with h | h <;> omega
+  | succ d ih =>
+    intro c s hd hc budget hinv hcut
+    obtain ⟨sel, hsub, hcov, hl, -⟩ := cut_inv F hcut
+    obtain ⟨z, hz, hm⟩ := hcov ⟨.kap c, mem_labels_of_isLab F hc⟩ (by simp [inI]) (by simp [inJ])
+    rcases mark_eq_kap F hm with rfl | ⟨t, rfl⟩
+    · exact test c sel (fun z hz => hinv.2 z (hsub hz))
+        (fun j t h1 h2 hv hmem => hinv.1 j t h1 h2 hv (hsub hmem)) hz c (hl _ hz)
+    · have hrow : IsRow F (.br (F.n + c + 1) t) := hinv.2 _ (hsub hz)
+      have hc1 : c + 1 < F.cls.length := by rcases hrow with h | h <;> omega
+      obtain ⟨sel2, hsub2, hcov2, -, hr2⟩ := cut_inv F (hl _ hz)
+      obtain ⟨z2, hz2, hm2⟩ := hcov2
+        ⟨.rl (F.n + c + 1), mem_labels_of_isLab F ⟨by omega, Or.inr (by omega)⟩⟩
+        (by simp [inI]) (by simp [inJ])
+      rw [mark_eq_rl F hm2] at hz2
+      have hbudget : ∀ z', z' ∈ sel2.erase (.relay (F.n + c + 1)) → z' ∈ budget := fun z' h =>
+        hsub (Finset.mem_of_mem_erase (hsub2 (Finset.mem_of_mem_erase h)))
+      exact ih (c + 1) t (by omega) (Or.inl hc1) (sel2.erase (.relay (F.n + c + 1)))
+        ⟨fun j t' h1 h2 hv hmem => hinv.1 j t' h1 h2 hv (hbudget _ hmem),
+          fun z' hz' => hinv.2 z' (hbudget _ hz')⟩ (hr2 _ hz2)
+
 /-- A false formula has a cut: the cutting side keeps one falsifying branch
 at each universal stage and one false clause at the end. -/
 theorem cut_of_not_sat (hwf : F.WF) : ∀ (k i : ℕ) (α : ℕ → Bool), i + k = F.n →
@@ -263,81 +546,14 @@ theorem cut_of_not_sat (hwf : F.WF) : ∀ (k i : ℕ) (α : ℕ → Bool), i + k
   induction k with
   | zero =>
     intro i α hi hns budget hb
-    classical
     have hin : i = F.n := by omega
-    rw [sat] at hns
+    subst hin
+    rw [sat, Matrix] at hns
     push Not at hns
     obtain ⟨C, hC, hfalse⟩ := hns
-    obtain ⟨c, hc, rfl⟩ := List.getElem_of_mem hC
-    have hget : F.cls.getD c [] = F.cls[c] := List.getD_eq_getElem F.cls [] hc
-    let sel := budget.filter fun z => Keep F i α z ∧ ∀ c', z = Vtx.cl c' → c' = c
-    have hmem : ∀ z, z ∈ sel ↔
-        z ∈ budget ∧ Keep F i α z ∧ ∀ c', z = Vtx.cl c' → c' = c := fun z => Finset.mem_filter
-    refine cut_intro F (sel := sel) (Finset.filter_subset _ _) ?_ ?_ ?_
-    · intro e h1 h2
-      cases e with
-      | kap =>
-        refine ⟨.cl c, (hmem _).2 ⟨hb _ hc, hc, fun c' h => ?_⟩, rfl⟩
-        injection h with h
-        exact h.symm
-      | ch j t => simp [inI, inJ] at h1 h2; omega
-      | rl j => simp [inI, inJ] at h1 h2; omega
-      | perm j t => simp [inJ] at h2
-      | lit j t => simp [inI] at h1
-    · intro z hz
-      obtain ⟨hzb, hkeep, hcl⟩ := (hmem z).1 hz
-      cases z with
-      | br j s => exact absurd hkeep.1 (by have := hkeep.2; omega)
-      | relay j => exact absurd hkeep.1 (by have := hkeep.2; omega)
-      | res j s => exact cut_empty F fun e h1 _ => by cases e <;> simp [inI] at h1
-      | cl c' =>
-        obtain rfl := hcl c' rfl
-        refine cut_intro F (sel := sel.erase (.cl c')) (Finset.Subset.refl _) ?_ ?_ ?_
-        · intro e h1 h2
-          cases e with
-          | lit j t =>
-            change decide ((j, t) ∈ F.cls.getD c' []) = true at h1
-            have hjt : (j, t) ∈ F.cls[c'] := by
-              rw [← hget]
-              exact of_decide_eq_true h1
-            have hw := hwf _ (List.getElem_mem hc) _ hjt
-            refine ⟨.res j t, ?_, rfl⟩
-            rw [Finset.mem_erase, hmem]
-            exact ⟨by simp, hb _ ⟨hw.1, hw.2, fun _ => hfalse _ hjt⟩,
-              ⟨hw.1, hw.2, fun _ => hfalse _ hjt⟩, fun c'' h => by cases h⟩
-          | ch j t => simp [inI] at h1
-          | rl j => simp [inI] at h1
-          | perm j t => simp [inI] at h1
-          | kap => simp [inI] at h1
-        · intro z' hz'
-          rw [Finset.mem_erase, hmem] at hz'
-          obtain ⟨hne, -, hkeep', hcl'⟩ := hz'
-          cases z' with
-          | br j s => exact absurd hkeep'.1 (by have := hkeep'.2; omega)
-          | relay j => exact absurd hkeep'.1 (by have := hkeep'.2; omega)
-          | res j s => exact cut_empty F fun e h1 _ => by cases e <;> simp [inI] at h1
-          | cl c'' => exact absurd (by rw [hcl' c'' rfl]) hne
-        · intro z' hz'
-          rw [Finset.mem_erase, hmem] at hz'
-          obtain ⟨hne, -, hkeep', hcl'⟩ := hz'
-          cases z' with
-          | br j s => exact absurd hkeep'.1 (by have := hkeep'.2; omega)
-          | relay j => exact absurd hkeep'.1 (by have := hkeep'.2; omega)
-          | res j s =>
-            exact cut_empty F fun e h1 h2 => by cases e <;> simp [inI, inJ] at h1 h2
-          | cl c'' => exact absurd (by rw [hcl' c'' rfl]) hne
-    · intro z hz
-      obtain ⟨hzb, hkeep, hcl⟩ := (hmem z).1 hz
-      cases z with
-      | br j s => exact absurd hkeep.1 (by have := hkeep.2; omega)
-      | relay j => exact absurd hkeep.1 (by have := hkeep.2; omega)
-      | res j s =>
-        refine cut_empty F fun e h1 h2 => ?_
-        cases e <;> simp [inI, inJ] at h1 h2
-        obtain ⟨rfl, rfl⟩ := h1
-        obtain ⟨rfl, rfl⟩ := h2
-        exact hkeep.2.2 le_rfl rfl
-      | cl c' => exact cut_empty F fun e _ h2 => by cases e <;> simp [inJ] at h2
+    obtain ⟨c₀, hc₀, rfl⟩ := List.getElem_of_mem hC
+    exact cut_clause F α hc₀ hfalse (fun l hl => hwf _ (List.getElem_mem hc₀) l hl) c₀ 0
+      (α F.n) (by omega) (fun _ => rfl) budget fun z hk => hb z (keep_of_keepC F hc₀ hk)
   | succ k ih =>
     intro i α hi hns budget hb
     classical
@@ -345,8 +561,11 @@ theorem cut_of_not_sat (hwf : F.WF) : ∀ (k i : ℕ) (α : ℕ → Bool), i + k
     let sel := budget.filter fun z => Keep F i α z ∧ ∀ s, z = Vtx.br (i + 1) s → good s
     have hmem : ∀ z, z ∈ sel ↔
         z ∈ budget ∧ Keep F i α z ∧ ∀ s, z = Vtx.br (i + 1) s → good s := fun z => Finset.mem_filter
+    have hbr : ∀ t, Keep F i α (.br (i + 1) t) := fun t =>
+      ⟨by omega, Or.inl ⟨by omega, by omega⟩⟩
+    have hrelay : Keep F i α (.relay (i + 1)) := ⟨by omega, by omega, Or.inl (by omega)⟩
     refine cut_intro F (sel := sel) (Finset.filter_subset _ _) ?_ ?_ ?_
-    · intro e h1 h2
+    · rintro ⟨e, he⟩ h1 h2
       cases e with
       | ch j t =>
         simp [inI, inJ] at h1 h2
@@ -355,9 +574,8 @@ theorem cut_of_not_sat (hwf : F.WF) : ∀ (k i : ℕ) (α : ℕ → Bool), i + k
         · rw [sat] at hns
           simp only [hex, ↓reduceIte] at hns
           have hall : ∀ s, good s := fun s hs => hns ⟨s, hs⟩
-          refine ⟨.br (i + 1) t, (hmem _).2 ⟨hb _ ⟨by omega, by omega⟩,
-            ⟨by omega, by omega⟩, fun s _ => hall s⟩, ?_⟩
-          simp [mark, hex]
+          refine ⟨.br (i + 1) t, (hmem _).2 ⟨hb _ (hbr t), hbr t, fun s _ => hall s⟩, ?_⟩
+          simp [mark, hex, h2.1]
         · rw [sat] at hns
           simp only [hex] at hns
           obtain ⟨s₀, hs₀⟩ := not_forall.mp hns
@@ -365,41 +583,39 @@ theorem cut_of_not_sat (hwf : F.WF) : ∀ (k i : ℕ) (α : ℕ → Bool), i + k
             rcases h2.2 with h | h
             · exact h
             · exact absurd h hex
-          refine ⟨.br (i + 1) s₀, (hmem _).2 ⟨hb _ ⟨by omega, by omega⟩,
-            ⟨by omega, by omega⟩, fun s h => ?_⟩, ?_⟩
+          refine ⟨.br (i + 1) s₀, (hmem _).2 ⟨hb _ (hbr s₀), hbr s₀, fun s h => ?_⟩, ?_⟩
           · injection h with _ h
             subst h
             exact hs₀
-          · simp [mark, hex, ht]
+          · simp [mark, hex, ht, h2.1]
       | rl j => simp [inI, inJ] at h1 h2; omega
       | perm j t => simp [inJ] at h2
       | lit j t => simp [inI] at h1
-      | kap => simp [inI] at h1; omega
+      | kap c => simp [inI, inJ] at h1 h2; omega
     · intro z hz
-      obtain ⟨hzb, hkeep, hbr⟩ := (hmem z).1 hz
+      obtain ⟨hzb, hkeep, hgood⟩ := (hmem z).1 hz
       cases z with
       | br j s =>
         by_cases hj : j = i + 1
         · subst hj
-          have hg : good s := hbr s rfl
+          have hg : good s := hgood s rfl
           let sel2 := (sel.erase (.br (i + 1) s)).filter fun z' =>
             Keep F (i + 1) (Function.update α (i + 1) s) z' ∨ z' = Vtx.relay (i + 1)
           have hmem2 : ∀ z', z' ∈ sel2 ↔ (z' ≠ .br (i + 1) s ∧ z' ∈ sel) ∧
               (Keep F (i + 1) (Function.update α (i + 1) s) z' ∨ z' = Vtx.relay (i + 1)) :=
             fun z' => Finset.mem_filter.trans (and_congr Finset.mem_erase Iff.rfl)
           refine cut_intro F (sel := sel2) (Finset.filter_subset _ _) ?_ ?_ ?_
-          · intro e h1 h2
+          · rintro ⟨e, he⟩ h1 h2
             cases e with
             | rl j' =>
               simp [inI, inJ] at h1 h2
               subst h1
               exact ⟨.relay (i + 1), (hmem2 _).2 ⟨⟨by simp, (hmem _).2
-                ⟨hb _ ⟨by omega, by omega⟩, ⟨by omega, by omega⟩, fun s' h => by cases h⟩⟩,
-                Or.inr rfl⟩, rfl⟩
+                ⟨hb _ hrelay, hrelay, fun s' h => by cases h⟩⟩, Or.inr rfl⟩, rfl⟩
             | ch j' t => simp [inI, inJ] at h1 h2; omega
             | perm j' t => simp [inJ] at h2
             | lit j' t => simp [inI] at h1
-            | kap => simp [inI, inJ] at h1 h2; omega
+            | kap c => simp [inI, inJ] at h1 h2; omega
           · intro z' hz'
             obtain ⟨-, hk2⟩ := (hmem2 z').1 hz'
             cases z' with
@@ -441,7 +657,7 @@ theorem cut_of_not_sat (hwf : F.WF) : ∀ (k i : ℕ) (α : ℕ → Bool), i + k
                 cases e <;> simp [inI, inJ] at h1 h2
                 obtain ⟨rfl, rfl⟩ := h1
                 obtain ⟨rfl, rfl⟩ := h2
-                exact hk2.2.2 le_rfl (Function.update_self ..)
+                exact hk2.2 le_rfl (Function.update_self ..)
               · cases hk2
             | cl c => exact cut_empty F fun e _ h2 => by cases e <;> simp [inJ] at h2
         · refine cut_empty F fun e h1 h2 => ?_
@@ -454,7 +670,7 @@ theorem cut_of_not_sat (hwf : F.WF) : ∀ (k i : ℕ) (α : ℕ → Bool), i + k
         cases e <;> simp [inI, inJ] at h1 h2
         omega
     · intro z hz
-      obtain ⟨hzb, hkeep, hbr⟩ := (hmem z).1 hz
+      obtain ⟨hzb, hkeep, hgood⟩ := (hmem z).1 hz
       cases z with
       | br j s => exact cut_empty F fun e _ h2 => by cases e <;> simp [inJ] at h2
       | relay j =>
@@ -466,7 +682,7 @@ theorem cut_of_not_sat (hwf : F.WF) : ∀ (k i : ℕ) (α : ℕ → Bool), i + k
         cases e <;> simp [inI, inJ] at h1 h2
         obtain ⟨rfl, rfl⟩ := h1
         obtain ⟨rfl, rfl⟩ := h2
-        exact hkeep.2.2 le_rfl rfl
+        exact hkeep.2 le_rfl rfl
       | cl c => exact cut_empty F fun e _ h2 => by cases e <;> simp [inJ] at h2
 
 /-- A true formula has no cut: every cut must offer the chosen branch, then
@@ -479,33 +695,10 @@ theorem not_cut_of_sat (hwf : F.WF) : ∀ (k i : ℕ) (α : ℕ → Bool), i + k
   | zero =>
     intro i α hi hs budget hinv hcut
     have hin : i = F.n := by omega
+    subst hin
     rw [sat] at hs
-    obtain ⟨sel, hsub, hcov, hl, -⟩ := cut_inv F hcut
-    obtain ⟨z, hz, hm⟩ := hcov .kap (by simp [inI, hin]) (by simp [inJ, hin])
-    cases z with
-    | cl c =>
-      have hc : c < F.cls.length := hinv.2 c (hsub hz)
-      obtain ⟨l, hlC, hval⟩ := hs _ (List.getElem_mem hc)
-      obtain ⟨sel2, hsub2, hcov2, -, -⟩ := cut_inv F (hl _ hz)
-      have h1 : inI F (.cl c) (.lit l.1 l.2) = true := by
-        change decide ((l.1, l.2) ∈ F.cls.getD c []) = true
-        rw [List.getD_eq_getElem F.cls [] hc]
-        exact decide_eq_true hlC
-      obtain ⟨z', hz', hm'⟩ := hcov2 (.lit l.1 l.2) h1 (by simp [inJ, hin])
-      cases z' with
-      | res j t =>
-        injection hm' with hj ht
-        subst hj
-        subst ht
-        have hw := hwf _ (List.getElem_mem hc) _ hlC
-        exact hinv.1 l.1 l.2 hw.1 (by omega) hval
-          (hsub (Finset.mem_of_mem_erase (hsub2 hz')))
-      | br j t => simp [mark] at hm'
-      | relay j => simp [mark] at hm'
-      | cl c' => simp [mark] at hm'
-    | br j t => simp [mark] at hm
-    | relay j => simp [mark] at hm
-    | res j t => simp [mark] at hm
+    exact not_cut_clause F hwf α hs F.cls.length 0 (α F.n) (by omega) (Or.inr rfl) budget
+      hinv hcut
   | succ k ih =>
     intro i α hi hs budget hinv hcut
     have hlab : ∃ s, inJ F (.relay i) (.ch (i + 1) s) = true ∧
@@ -522,44 +715,37 @@ theorem not_cut_of_sat (hwf : F.WF) : ∀ (k i : ℕ) (α : ℕ → Bool), i + k
         exact ⟨true, by simp [inJ]; omega, fun s' _ => hs s'⟩
     obtain ⟨s, hJ, hnext⟩ := hlab
     obtain ⟨sel, hsub, hcov, hl, -⟩ := cut_inv F hcut
-    obtain ⟨z, hz, hm⟩ := hcov (.ch (i + 1) s) (by simp [inI]) hJ
-    cases z with
-    | br j s' =>
-      injection hm with hj hs'
-      subst hj
-      have hsat := hnext s' hs'
-      obtain ⟨sel2, hsub2, hcov2, -, hr2⟩ := cut_inv F (hl _ hz)
-      have hres : Vtx.res (i + 1) s' ∉ sel2 := by
-        intro hmem
-        obtain ⟨sel3, -, hcov3, -, -⟩ := cut_inv F (hr2 _ hmem)
-        obtain ⟨z3, -, hm3⟩ := hcov3 (.perm (i + 1) s') (by simp [inI]) (by simp [inJ])
-        exact mark_ne_perm F z3 _ _ hm3
-      obtain ⟨z2, hz2, hm2⟩ := hcov2 (.rl (i + 1)) (by simp [inI]) (by simp [inJ])
-      cases z2 with
-      | relay j2 =>
-        injection hm2 with hj2
-        subst hj2
-        have hcut' := hr2 _ hz2
-        have hbudget : ∀ z', z' ∈ sel2.erase (.relay (i + 1)) → z' ∈ budget := fun z' h =>
-          hsub (Finset.mem_of_mem_erase (hsub2 (Finset.mem_of_mem_erase h)))
-        refine ih (i + 1) (Function.update α (i + 1) s') (by omega) hsat
-          (sel2.erase (.relay (i + 1))) ⟨fun j t hj1 hj2 hval hmem => ?_,
-            fun c hc => hinv.2 c (hbudget _ hc)⟩ ?_
-        · by_cases hji : j = i + 1
-          · subst hji
-            rw [Function.update_self] at hval
-            subst hval
-            exact hres (Finset.mem_of_mem_erase hmem)
-          · rw [Function.update_of_ne hji] at hval
-            exact hinv.1 j t hj1 (by omega) hval (hbudget _ hmem)
-        · rw [Function.update_self]
-          exact hcut'
-      | br j2 t2 => simp [mark] at hm2
-      | res j2 t2 => simp [mark] at hm2
-      | cl c2 => simp [mark] at hm2
-    | relay j => simp [mark] at hm
-    | res j t => simp [mark] at hm
-    | cl c => simp [mark] at hm
+    obtain ⟨z, hz, hm⟩ := hcov
+      ⟨.ch (i + 1) s, mem_labels_of_isLab F ⟨by omega, by omega⟩⟩ (by simp [inI]) hJ
+    obtain ⟨s', rfl, -, hs'⟩ := mark_eq_ch F hm
+    have hsat := hnext s' hs'
+    obtain ⟨sel2, hsub2, hcov2, -, hr2⟩ := cut_inv F (hl _ hz)
+    have hres : Vtx.res (i + 1) s' ∉ sel2 := by
+      intro hmem
+      obtain ⟨sel3, -, hcov3, -, -⟩ := cut_inv F (hr2 _ hmem)
+      obtain ⟨z3, -, hm3⟩ := hcov3
+        ⟨.perm (i + 1) s', mem_labels_of_isLab F ⟨by omega, by omega⟩⟩
+        (by simp [inI]) (by simp [inJ])
+      exact mark_ne_perm F z3 _ _ hm3
+    obtain ⟨z2, hz2, hm2⟩ := hcov2
+      ⟨.rl (i + 1), mem_labels_of_isLab F ⟨by omega, Or.inl (by omega)⟩⟩
+      (by simp [inI]) (by simp [inJ])
+    rw [mark_eq_rl F hm2] at hz2
+    have hcut' := hr2 _ hz2
+    have hbudget : ∀ z', z' ∈ sel2.erase (.relay (i + 1)) → z' ∈ budget := fun z' h =>
+      hsub (Finset.mem_of_mem_erase (hsub2 (Finset.mem_of_mem_erase h)))
+    refine ih (i + 1) (Function.update α (i + 1) s') (by omega) hsat
+      (sel2.erase (.relay (i + 1))) ⟨fun j t hj1 hj2 hval hmem => ?_,
+        fun z' hz' => hinv.2 z' (hbudget _ hz')⟩ ?_
+    · by_cases hji : j = i + 1
+      · subst hji
+        rw [Function.update_self] at hval
+        subst hval
+        exact hres (Finset.mem_of_mem_erase hmem)
+      · rw [Function.update_of_ne hji] at hval
+        exact hinv.1 j t hj1 (by omega) hval (hbudget _ hmem)
+    · rw [Function.update_self]
+      exact hcut'
 
 /-- The formula is false exactly when its rows admit a cut at the start. -/
 theorem cut_iff_not_sat (hwf : F.WF) (α : ℕ → Bool) :
@@ -567,21 +753,21 @@ theorem cut_iff_not_sat (hwf : F.WF) (α : ℕ → Bool) :
   constructor
   · intro hcut hs
     refine not_cut_of_sat F hwf F.n 0 α (by omega) hs (allRows F) ⟨fun j t hj1 hj2 => ?_,
-      fun c hc => (mem_allRows F _).1 hc⟩ hcut
+      fun z hz => (mem_allRows F z).1 hz⟩ hcut
     omega
   · intro hns
     refine cut_of_not_sat F hwf F.n 0 α (by omega) hns (allRows F) fun z hz => ?_
     rw [mem_allRows]
     cases z with
-    | br j s => exact ⟨hz.1, hz.2⟩
-    | relay j => exact ⟨hz.1, hz.2⟩
-    | res j s => exact ⟨hz.1, hz.2.1⟩
+    | br j s => exact hz.2
+    | relay j => exact hz.2
+    | res j s => exact hz.1
     | cl c => exact hz
 
 /-- Truth of a quantified formula is the existence of a pure term that omits
 every mark of its rows and separates the two starting endpoints. -/
 theorem sat_iff_separator (hwf : F.WF) (α : ℕ → Bool) :
-    sat F F.n 0 α ↔ ∃ t : Term Lab, t.IsPure ∧
+    sat F F.n 0 α ↔ ∃ t : Term (FLab F), t.IsPure ∧
       (∀ z ∈ allRows F, t.eval (rows F z) ≠ .possible) ∧
       (cell F (.br 0 (α 0)) (.relay 0)).Holds t := by
   rw [← not_iff_not, ← cut_iff_not_sat F hwf α, cubeCut_iff]

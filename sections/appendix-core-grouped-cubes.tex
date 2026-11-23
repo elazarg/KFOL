@@ -489,10 +489,11 @@ when $Z$ has a cut at the initial cell.
 \label{core:thm:quantified-cube-cuts}
 Let $\Psi=Q_1x_1\cdots Q_nx_n\,\bigwedge_{c<m}C_c$ be a prenex formula
 whose clauses $C_c$ are sets of literals $x_i=s$. Use left vertices
-$\beta_i^s$ for $1\le i\le n$ and both truth values $s$, and $\gamma_c$
-for $c<m$. Use right vertices $\rho_i$ for $1\le i\le n$ and $\sigma_i^s$
-for every literal. Let $\beta_0$ and $\rho_0$ be the initial vertices, and
-write $B_i=\{\beta_i^0,\beta_i^1\}$ with $B_0=\{\beta_0\}$. The labels are
+$\beta_i^s$ for $1\le i\le n$ and both truth values $s$, a vertex
+$\gamma_c$ for each clause, and $\beta_{n+c}$ for $1\le c<m$. Use right
+vertices $\rho_i$ for $1\le i<n+\max(m,1)$ and $\sigma_i^s$ for every
+literal. Let $\beta_0$ and $\rho_0$ be the initial vertices, and write
+$B_i$ for the set of left vertices with index $i$. The labels are
 \[
 \begin{array}{lll}
  \text{label}&\text{rectangle}&\text{marked by}\\\hline
@@ -500,34 +501,41 @@ write $B_i=\{\beta_i^0,\beta_i^1\}$ with $B_0=\{\beta_0\}$. The labels are
  e_i\ (Q_i=\forall)&B_{i-1}\times\{\rho_{i-1}\}&\beta_i^0\text{ and }\beta_i^1\\
  r_i&B_i\times\{\rho_{i-1}\}&\rho_i\\
  \pi_i^s&\{\beta_i^s\}\times\{\sigma_i^s\}&\text{no row}\\
- \lambda_i^s&\{\gamma_c:(x_i=s)\in C_c\}\times\{\rho_n\}&\sigma_i^s\\
- \kappa&B_n\times\{\rho_n\}&\text{every }\gamma_c .
+ \lambda_i^s&\{\gamma_c:(x_i=s)\in C_c\}\times\{\rho_k:k\ge n\}&\sigma_i^s\\
+ \kappa_c&B_{n+c}\times\{\rho_{n+c}\}&\gamma_c\text{ and }\beta_{n+c+1},
 \end{array}
 \]
-For these $5n+m$ rows on at most $7n+1$ coordinates, $P(Z,X,Y)$ holds if
-and only if $\Psi$ is true.
+with $e$ and $\pi$ for $1\le i\le n$, $r_i$ for every row $\rho_i$, and
+$\kappa_c$ for $c<\max(m,1)$. Every label is marked by at most two rows.
+For these rows, $P(Z,X,Y)$ holds if and only if $\Psi$ is true.
 \end{theorem}
 \begin{proof}
 For an assignment $\alpha$ to $x_1,\ldots,x_i$, its cell is
 $(\beta_i^{\alpha_i},\rho_i)$. The labels on it are those of stage $i+1$
-if $i<n$, and $\kappa$ if $i=n$. We show that a cut at the initial cell
-exists exactly when $\Psi$ is false.
+if $i<n$, and $\kappa_0$ if $i=n$. The cell of clause $c\ge1$ is
+$(\beta_{n+c},\rho_{n+c})$, with the label $\kappa_c$. We show that a cut
+at the initial cell exists exactly when $\Psi$ is false.
 
 Suppose first that the remaining formula is false at $\alpha$. Select the
-rows of all later stages, every $\gamma_c$, and every $\sigma_j^s$ with
-$x_j$ unassigned or $\alpha_j\ne s$. At a universal stage $i+1$ keep only
-a branch $\beta_{i+1}^s$ whose extension is still false, and at $i=n$ keep
-only one $\gamma_c$ with $C_c$ false. The marks cover the cell. Rectangles
-join consecutive stages only, and $\pi_j^s$ lies on the cell of
-$\beta_j^s$ and its own resource. So a selected row other than a branch of
-stage $i+1$, or than $\gamma_c$ when $i=n$, leads to a cell without labels.
-A branch $\beta_{i+1}^s$ leads to $(\beta_{i+1}^s,\rho_i)$, whose only
-label $r_{i+1}$ is marked by $\rho_{i+1}$. Drop $\sigma_{i+1}^s$ there. The
+rows of all later stages and clauses and every $\sigma_j^s$ with $x_j$
+unassigned or $\alpha_j\ne s$. At a universal stage $i+1$ keep only a
+branch $\beta_{i+1}^s$ whose extension is still false. The marks cover the
+cell. Rectangles join consecutive stages only, and $\pi_j^s$ lies on the
+cell of $\beta_j^s$ and its own resource. So a selected row other than a
+branch of stage $i+1$ leads to a cell without labels. A branch
+$\beta_{i+1}^s$ leads to $(\beta_{i+1}^s,\rho_i)$, whose only label
+$r_{i+1}$ is marked by $\rho_{i+1}$. Drop $\sigma_{i+1}^s$ there. The
 other rows again lead to cells without labels, and $\rho_{i+1}$ leads to
-the cell of the extended assignment, where the selected rows contain those
-required. At $(\gamma_c,\rho_n)$ the labels are $\lambda_j^s$ for the
-literals of $C_c$. These are false, so their resources are selected, and
-each leads to a cell without labels. Induction on $n-i$ gives a cut.
+the cell of the extended assignment. At $i=n$ fix a false clause
+$C_{c_0}$. At the cell of a clause $c\le c_0$ select $\gamma_{c_0}$, the
+rows $\beta_{n+c'}$ and $\rho_{n+c'}$ with $c<c'\le c_0$, and the
+resources of the false literals. The mark of $\beta_{n+c+1}$ covers
+$\kappa_c$ when $c<c_0$, and leads through $r_{n+c+1}$ to the cell of
+clause $c+1$. The mark of $\gamma_{c_0}$ covers $\kappa_{c_0}$. At every
+cell $(\gamma_{c_0},\rho_k)$ the labels are $\lambda_j^s$ for the literals
+of $C_{c_0}$. These are false, so their resources are selected, and each
+leads to a cell without labels. Induction on $c_0-c$ and then on $n-i$
+gives a cut.
 
 Conversely suppose that the remaining formula is true at $\alpha$, and that
 a set of rows containing no $\sigma_j^s$ with $\alpha_j=s$ has a cut at the
@@ -538,27 +546,136 @@ $(\beta_{i+1}^s,\rho_i)$. It cannot select $\sigma_{i+1}^s$, because
 $\pi_{i+1}^s$ on the cell $(\beta_{i+1}^s,\sigma_{i+1}^s)$ is unmarked. It
 selects $\rho_{i+1}$ to cover $r_{i+1}$, which gives a cut at the cell of
 the extended assignment on rows containing no resource of a true literal.
-For $i=n$ the label $\kappa$ is covered by some $\gamma_c$. The clause
-$C_c$ has a true literal, whose label on $(\gamma_c,\rho_n)$ could only be
-covered by its absent resource. Induction on $n-i$ gives a contradiction.
-The empty assignment and all rows satisfy the hypothesis.
+At the cell of a clause $c$ the label $\kappa_c$ is covered by $\gamma_c$
+or by $\beta_{n+c+1}$. In the first case $C_c$ has a true literal, whose
+label on $(\gamma_c,\rho_{n+c})$ could only be covered by its absent
+resource. In the second case $r_{n+c+1}$ is covered by $\rho_{n+c+1}$,
+which gives a cut at the cell of clause $c+1$. There is no row
+$\beta_{n+m}$, and for $m=0$ no row marks $\kappa_0$. Induction gives a
+contradiction. The empty assignment and all rows satisfy the hypothesis.
 \end{proof}
 
-The same rows give an interpolation problem for core terms on three
-owners $a,b,c$. Represent the four bichain values by $\{b\}$,
-$\{c\}$, $\{a\}$ and $\{b,c\}$ for $b,c$, possible and neutral,
-respectively. Require the term to give the prescribed singleton at
-each endpoint and to omit $a$ on every marked row. The $a$-view sends
-the three owned choices to meet, join and observer union. In the
-information order induced by union, discarding either branch of a
-union decreases the value, and meet and join are monotone. A single
-pure word obtained this way still satisfies all demands because the
-two endpoints are minimal and a value below an unmarked value is
-unmarked. Conversely, interpret the pure word using the $b$- and
-$c$-choices. The row instance is finite: any stage index above $n+2$
-can be replaced by $n+2$ within its label family, since this preserves
-every row and endpoint coordinate.
+\paragraph{Rows as one operation.}
+A family of marked rows with two endpoints is turned into a single
+operation as follows. Fix distinct owners $a,b,c$, and read the bichain
+values $b$, $c$, $\pv$ and $\nv$ as the winner sets $\{b\}$, $\{c\}$,
+$\{a\}$ and $\{b,c\}$. Let $Z$ be a finite set of at least two rows on a
+finite set $V$ of coordinates, with any number of marks in a row, and let
+$X,Y\subseteq V$. The inputs are a \emph{selector} $u_z$ for every row,
+the coordinates, and one padding input, which is $b$ in every row and
+lies outside $X$ and $Y$. Write $V'$ for the coordinates with the padding
+input. The \emph{code} of a row $z$ has $u_z$ at $\{b\}$ and all other
+selectors at $\{c\}$. The codes of the two endpoints have all selectors at
+$\{c\}$ and all at $\{b\}$, respectively. For a term $y$, let $y^{b}$ be
+$y$ with every selector attached by $\star_b$, let $y^{c}$ be the same
+with $\star_c$, and let
+$y^{z}$ be $y\star_cu_z$ with every other selector attached by $\star_b$.
+The \emph{baseline} $C$ is the union of the following terms, for all
+selectors $u,u',u''$ with $u\ne u'$ and all $x,i\in V'$:
+\begin{itemize}
+\item every selector, $(x\star_bu)\star_cu$, and
+$((x\star_cu)\star_cu')\star_bu''$;
+\item $x^{b}$ if $x\in X$, and $(x\star_ci)^{b}$ if $x\notin X$ and $i\in X$;
+\item $x^{c}$ if $x\notin Y$, and $(x\star_bi)^{c}$ if $x\in Y$ and $i\notin Y$;
+\item $x^{z}$ if $x$ is not marked in $z$, and $(x\star_ri)^{z}$ if $x$ is
+marked in $z$ and $i$ has the value $r\in\{b,c\}$ there.
+\end{itemize}
+The operation $F$ of the rows returns $\{a\}$ when every input in $V'$ is
+$\{a\}$, and the value of $C$ otherwise.
 
+\begin{theorem}[Rows as one operation]
+\label{core:thm:row-recognition}
+For every $K\ge3$, the operation $F$ is a core term operation if and only
+if some pure formula omits $\pv$ on every row of $Z$, is true at $X$ and
+is false at $Y$.
+\end{theorem}
+\begin{proof}
+Let $p$ be such a formula and put
+$p'=p\vee\bigl(s\wedge\bigwedge_{x\in V'}x\bigr)$ for the padding input
+$s$. On the rows and endpoints $s$ is $b$, so $p'$ has the values of $p$
+there. Read joins as $\star_c$ and meets as $\star_b$ to obtain a core word
+$g$. For an observer $k\notin\{b,c\}$, abstract a winner set to $\pv$ if
+it contains $k$, to $b$ or $c$ if it is that atom, and to $\nv$ otherwise.
+By induction on $p'$, if its value on the abstracted inputs is $b$ or $c$
+then $g$ returns that atom, and if it is not $\pv$ then $g$ omits $k$. The
+word $g$ has no gate of $a$ and uses every input in $V'$, so it returns
+$\{a\}$ exactly when they are all $\{a\}$. Hence $C\star_ag=F$ once
+$g\subseteq C$ at every valuation.
+
+Let $k\in g$, so $k$ lies in some input $x\in V'$. If a selector is
+neither $\{b\}$ nor $\{c\}$, the second term of the first item contains
+$x$. If two selectors are $\{b\}$ and a third is $\{c\}$, the last term of
+that item does. Three cases remain. If all selectors are $\{c\}$, either
+all of $X$ is $\{c\}$, and then $g=\{c\}$ because pure formulas are
+monotone in the inputs at $c$; or some $i\in X$ is not, and the second
+item contains $x$. All selectors at $\{b\}$ is dual. If exactly $u_z$ is
+$\{b\}$ and the rest are $\{c\}$, then $b,c\in C$, so let
+$k\notin\{b,c\}$. The last item contains $x$ unless $x$ is marked in $z$
+and every input fixed in $z$ has its value there. It contains another
+input holding $k$ unless every such input is marked in $z$. In the
+remaining case the abstraction of the valuation lies below the row $z$ in
+the order with $b,c$ below $\nv$ below $\pv$. Meet and join are monotone
+in this order, and $p'$ is not $\pv$ on the row, so $g$ omits $k$, a
+contradiction.
+
+Conversely let a core term $T$ realize $F$. It returns $\{a\}$ when the
+inputs in $V'$ are $\{a\}$ and the selectors are not. At each gate of $a$
+keep a child that still does, and at every other gate keep both. The
+result $T'$ uses only inputs in $V'$, and in the view of $a$ it lies
+below $T$ at every valuation. On the code of a row with the row's values,
+every term of $C$ omits $a$: the terms of the last item for that row do
+so by construction, and every other term is reset to $\{b\}$ or $\{c\}$
+by a selector. On the two endpoint codes $C$ is $\{c\}$ and $\{b\}$. So
+$T'$ omits $a$ on every row and has these two values at the endpoints. No
+input of these valuations is an atom outside $\{a,b,c\}$, so no subterm
+is. Replace the gates of $b$ and $c$ by meet and join and every other
+gate by its left child. By induction the resulting pure formula is $b$
+or $c$ where $T'$ is that atom and is not $\pv$ where $T'$ omits $a$.
+Deleting the padding input, which is $b$ throughout, leaves the required
+formula.
+\end{proof}
+
+\begin{corollary}[Quantified formulas as recognition]
+\label{core:thm:quantified-recognition}
+For every $K\ge3$ and every prenex formula $\Psi$ with a clausal matrix,
+let $F_\Psi$ be the operation of the rows of
+\cref{core:thm:quantified-cube-cuts} with two rows without marks added.
+Then $\Psi$ is true if and only if $F_\Psi$ is a core term operation.
+\end{corollary}
+\begin{proof}
+A pure formula is $\nv$ on a row without marks or fixed inputs. Combine
+\cref{core:thm:quantified-cube-cuts,core:thm:row-recognition}.
+\end{proof}
+
+\begin{proposition}[Losses of the operation of rows]
+\label{core:prop:row-losses}
+At a selector, the only minimal loss of $F$ posts every input of $V'$ at
+$a$. At an input $x\in V'$ the minimal losses are the code of each row
+marking $x$ with the fixed inputs of that row at their atoms; the first
+endpoint code with $X$ at $c$, if $x\notin X$; and the second endpoint
+code with the inputs outside $Y$ at $b$, if $x\in Y$. Each is a loss for
+the observers whose atom it does not post. If every coordinate is marked
+by at most $d$ rows, each source has at most $d+2$ minimal losses, and
+both canonical lists of $F$ have size polynomial in $|Z|+|V|$ for fixed
+$d$ and $K$.
+\end{proposition}
+\begin{proof}
+A selector is a term of $C$, so it supplies its winners unless the cap
+applies. For $x\in V'$, the proof of \cref{core:thm:row-recognition}
+shows that $C$ contains $x$ at every valuation of the selectors that is
+not a code, and on a code unless the stated postings are all present.
+When they are, every term containing $x$ is reset by a selector or by a
+posted input. A code posts both $b$ and $c$ unless it is an endpoint
+code, which gives the observers. On each observer facet the prime guards
+are the minimal sets of postings meeting every listed loss, of which
+there are at most $(|Z|+|V|+1)^{d+2}$.
+\end{proof}
+
+By \cref{core:thm:quantified-cube-cuts} one may take $d=2$. Truth of
+quantified Boolean formulas is PSPACE-complete
+\cite[Theorem~4.3]{StockmeyerMeyer1973}, so recognition of core term
+operations from both canonical lists is PSPACE-hard for every fixed
+$K\ge3$.
 
 \begin{theorem}[Two-color interpolation is PSPACE-complete]
 \label{core:thm:two-color-pspace}

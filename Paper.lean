@@ -6,6 +6,7 @@ public import KFOL.Results.Games
 public import KFOL.Core.AtomicBasis.Basis
 public import KFOL.Core.SourcePeeling
 public import KFOL.Core.FiniteRelationObstruction
+public import KFOL.Core.QuantifiedRecognition
 public import KFOL.DependentSchedule.Results
 public import KFOL.Strategic.CoalitionMaps
 public import KFOL.Audit.Namespace
@@ -455,6 +456,15 @@ theorem core_not_finitely_related {Role : Type u} [Fintype Role]
       Core.LocallyInterpolable m f ∧
         ¬∃ t : Term Role (Fin (m+3)), t.IsCore ∧ ∀ v, t.eval v = f v :=
   Core.Crown.exists_local_obstruction three m
+
+/-- `core:thm:quantified-recognition`: a prenex formula is true exactly when its
+operation is a core term operation. -/
+theorem core_quantified_recognition {Role : Type u} (three : Fin 3 ↪ Role)
+    (F : Bichain.Quantified.Formula) (hwf : F.WF) (α : ℕ → Bool) :
+    Bichain.Quantified.sat F F.n 0 α ↔
+      ∃ t : Term Role (Bichain.Quantified.Input F), t.IsCore ∧
+        ∀ v, t.eval v = Bichain.Quantified.operation three F α v :=
+  Bichain.Quantified.sat_iff_operation three F α hwf
 
 /-- No finite family of core-invariant relations defines exactly the core operations. -/
 theorem core_no_finite_relation_basis {Role : Type u} [Fintype Role]
