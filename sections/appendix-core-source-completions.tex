@@ -74,6 +74,67 @@ completion is below $F_P$. Finally any core operation retaining $W$
 must already contain $U$; the same argument forces it to equal $F_P$.
 \end{proof}
 
+\paragraph{Compiling mixed-owner guard formulas.}
+For the single-source completion, a positive guard
+given by a monotone Boolean formula in exclusions
+has a core circuit of linear size in the formula
+and the arity. This also holds for circuits in
+which at every conjunction one operand subcircuit
+is private to that operand: none of its internal
+gates or its result is used elsewhere outside that
+subcircuit and the given conjunction. Literal
+inputs may be shared.
+
+For a Boolean predicate $P$ of the atomic
+exclusions on $w$, let $F_P(X,w)$ denote its
+completion with the passive union $U(w)$.
+The identities
+\[
+ F_{P\lor Q}=F_P+F_Q,\qquad
+ F_{P\land Q}(X,w)=F_P(F_Q(X,w),w)
+\]
+hold on every valuation. Indeed the first is
+pointwise union. For the second, if $P$ fails
+the outer map returns $U$, and if it holds
+the outer map adjoins $U$ to the inner value,
+which already contains it. There is no issue
+when all owners occur, since then $U$ is the
+full palette. A single exclusion of $j{:}r$
+has circuit $U+(X\star_r x_j)$: at $x_j=\{r\}$
+it returns $U$, and otherwise it returns
+$U\cup X$, even if $X=\{r\}$. Constants are
+$U$ and $U+X$.
+
+For a formula, compile the two operands with
+separate designated marker ports. At a conjunction
+connect the inner operand to the outer port.
+This needs only one copy of the inner circuit
+regardless of how often the outer circuit uses
+that port. At a disjunction use one common port
+and take union. Share the passive union globally.
+
+For the stated circuit extension, treat the
+private operand of a conjunction as the outer
+map and the other operand as the inner map.
+Remove the private component from the enclosing
+compilation and compile it with its marker port
+fed by the translated inner operand, recursively
+doing the same at its conjunctions. Gates that
+remain in one component use one common marker
+port, so shared disjunction operands are built
+only once in that component. The private
+components have no internal gate shared with
+the rest of their enclosing component. Each
+original gate is therefore translated in one
+component only. Shared literal inputs may need
+a separate constant-size translation per
+component and occurrence, which is linear in
+the number of wires. The identities give the
+claimed circuit bound. In particular a
+monotone path computation with conjunctions by
+single exclusions admits this compilation even
+with unrestricted sharing of its path states.
+
 \paragraph{Meet-irreducibles of the full core.}
 Fix at least two inputs and order the core operations, with formal
 zero adjoined, by pointwise inclusion. This is a finite lattice since
