@@ -227,6 +227,85 @@ posting exactly when this guard is sufficient, equivalently when it
 contains some listed prime. The test must pass on every facet.
 \end{proof}
 
+\paragraph{Signed tests on acyclic budgets.}
+The ordered pass has a sufficient version for
+$\Phi_k(A)=1,\ \Phi_k(B)=0$. A posting $u{:}r$
+is allowed as a helper if $u\notin B$ when $r=k$,
+or $u\in A$ when $r\ne k$. In source order declare
+a head active if every row there contains an
+allowed posting at an earlier active input.
+If some active input is in $A\setminus B$, start
+from its projection and attach the allowed active
+projections in decreasing input order, as in
+\cref{core:thm:acyclic-marked-source-test}.
+The same absorption proof applies to each row,
+and each attachment preserves the two signs.
+
+An obstruction in the other direction can use
+separate proper colorings for different heads.
+For every $j\in A\setminus B$ give a proper
+coloring $p^j$ leaving $j$ unposted, with
+$p^j_k\subseteq B$ and $p^j_s\cap A=\varnothing$
+at every other owner. If the ordinary acyclic
+pass makes $j$ inactive at $p^j$, every bounded
+word omits its mark there. Each probe may use its own missing observer:
+the descent proof of
+\cref{core:lem:marked-profile-transfer} only uses
+omission of that row's marked winner, so it
+works with different winners on different rows.
+It excludes the signed test. In particular, the
+obstruction applies when the rows chosen to
+witness inactivity in the signed pass have
+compatible active postings whose union is
+proper. Fix that union. Inactive heads remain
+inactive by induction, since the active
+postings in their selected rows agree with
+the fixing. Both tests can use canonical
+prime lists directly: the activation query
+checks whether the allowed active postings
+form a sufficient guard on each facet.
+
+The signed pass alone is not necessary, even on
+three inputs with one loss per headed input.
+Use the source order $x,y,z$, with the loss
+$x{:}s$ at $y$ and the loss $(x{:}k,y{:}k)$ at $z$,
+where $s\ne k$. Take $A=\{z\}$ and $B=\{x\}$.
+Only $x$ is active in the signed pass, but
+$z\star_k(y\star_s x)$ is a bounded witness.
+Its inner gate masks the $y$-loss and wins the
+$k$-test on the entire tail of the $z$-loss.
+It wins at $A$ and loses at $B$. The two rows
+ask for competing colors at $x$, and treating
+their postings as independent allowed helpers
+loses the nesting used by this witness.
+
+The proper-coloring obstruction can also miss
+a failure. On the same source order, take distinct
+owners $a,b,k$, the loss $x{:}b$ at $y$, and the
+loss $(x{:}a,y{:}b)$ at $z$. Set $A=\{y,z\}$ and
+$B=\{y\}$. For each allowed proper coloring at $z$,
+$x$ is active. To make $z$ inactive one would need
+$x{:}a$ and also inactivity of $y$, since $y{:}b$
+is not allowed in the fixing. But inactivity of
+$y$ requires $x{:}b$ instead.
+
+Nevertheless the signed test fails. A word winning
+$k$ on $A$ cannot absorb on the $y$-row or at $a$
+on the $z$-row, since that would require a foreign
+win on $\{x\}$, disjoint from $A$. To absorb at $b$
+on the $z$-row it must win $b$ on $\{y\}$.
+The two required wins at $k$ and $b$ cannot be
+met even under the $y$-row alone: on that row
+the output cannot be an atom, so a shortest
+word for the two wins descends to a projection
+in $A\cap\{y\}$, which violates the row.
+Thus a signed witness could absorb on neither
+row. Descent preserving the two signs would
+reach projection $z$, which violates its loss.
+The incompatibility here is between winning
+demands, even though there is no admissible
+proper fixing that makes $z$ inactive.
+
 The ordered test gives a sharp arity bound for
 individual positive witnesses. Suppose the dependency
 graph has height $h$, measured in edges, and each
