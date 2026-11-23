@@ -3132,17 +3132,26 @@ exactly when the graph is not $3$-colorable.
 Membership follows from the acyclic positive
 probe certificate.
 
-Width two is polynomial for a broader depth-two
-class with one exceptional head. Keep the assumption
-that each control has one loss on retained inputs,
-but allow those losses to use arbitrary proper
-colorings. Allow the exceptional head to read both
-retained inputs and controls, with arbitrary owners
-in its own losses. The passive restriction is still
-core by the independent single-source completions.
+\paragraph{Binary recognition when direct controls are independent.}
+Consider an acyclic width-two family in which
+every input read by another head has at most one
+minimal loss on each observer facet. Also suppose
+that among the direct controls of any head there
+is no dependence edge. Both conditions are visible
+in the prime lists: width one gives the per-facet
+loss condition, and controls are the inputs read
+in the heads' lists. The family admits polynomial-time
+complete recognition. This includes the depth-two
+class above with one exceptional head and
+single-loss controls on retained inputs, and also
+layered budgets of arbitrary depth satisfying
+the per-facet condition.
 
-It suffices to test two substitutions at the
-exceptional head on each observer facet $k$.
+Process heads in source order, with controls first.
+When testing a head $h$, the earlier restrictions
+have passed, so availability agrees with their
+prescribed source bits. It suffices to test two
+substitutions at $h$ on each observer facet $k$.
 \begin{enumerate}
 \item In a loss visible at $k$, replace one control
 posting by that control's loss row visible at $k$.
@@ -3152,23 +3161,24 @@ loss rows visible at $k$.
 \end{enumerate}
 In both tests the result must be consistent and
 visible at $k$. Reject if it enables a prime at
-the exceptional head. Each rejected substitution
+the tested head. Each rejected substitution
 is a genuine failure of the availability test:
 every original posting either remains present or
 belongs to a captured control.
 
 Conversely, fix a failed required mark at the
-exceptional head. The acyclic availability test
+tested head. The acyclic availability test
 gives an original loss row $T$ whose mismatches
 with the probe are all at unavailable controls.
-Every such control has its unique row posted
-on retained inputs at that probe. First replace
+Every such control has its unique row on
+facet $k$ posted at that probe. First replace
 all $k$-postings of $T$ by those rows, since
 the probe has no $k$-postings. This yields a
-consistent row visible at $k$: substitutions
-post only at retained inputs, where the original
-requirements and all inserted rows agree with
-the probe. Unless this first step already
+consistent row visible at $k$: by independence
+the inserted rows post outside $h$'s direct
+controls, and all of them agree with the probe.
+In particular their postings cannot conflict
+with any original postings of $T$. Unless this first step already
 fails the second test, the resulting row is
 a prescribed loss. Now replace the remaining
 mismatching control postings one at a time
@@ -3191,9 +3201,11 @@ to hit every prime on the original facet.
 Binary conflict clauses ensure consistency of the
 original and transformed sets, since each chosen
 posting has a fixed image. All these conditions
-are $2$-SAT at prime width two. Thus the
-width-three hardness above is sharp within this
-broader class as well.
+are $2$-SAT at prime width two. Once each
+prefix passes, the acyclic greatest minorant
+agrees with the prescribed operation there.
+The width-three hardness above holds even
+within this broader class.
 
 Acyclicity of the disagreeing arrows at a probe does
 not suffice for projection deletion. Take three heads
