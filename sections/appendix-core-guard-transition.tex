@@ -262,43 +262,68 @@ restrictions: the union of the remaining required
 sets is an allowed comparison whenever no such
 pair occurs.
 
-At width two no bound on the size of a minimal
-conflicting coalition is possible. In fact any
-finite hypergraph with nonempty edges can be
-represented, with the simultaneous-loss
-coalitions exactly its independent sets.
-For an edge $\{j_1,\ldots,j_q\}$ with $q\ge2$,
-use fresh controls $u_1,\ldots,u_{q-1}$ and two
-posting owners $a,b$ distinct from the observer.
-Require the following clauses at its successive
-heads, using $a$ as true and $b$ as false:
-\[
- u_1{:}a,\qquad
- u_{i-1}{:}b\ \lor\ u_i{:}a\quad(1<i<q),\qquad
- u_{q-1}{:}b.
-\]
-If all heads are selected, the clauses force
-true along the chain and false at its last
-input. If head $j_i$ is missing, post the
-controls before $i$ true and the rest false,
-which satisfies all selected clauses of this
-edge. Use disjoint controls for distinct
-edges, and make singleton-edge heads never
-lose, ignoring edges already containing such
-a head. Hence any coalition avoiding full
-edges has a simultaneous proper comparison.
+At width two, the entire comparison conflict
+predicate on a fixed ground is a reachability
+test in a polynomial-size labelled graph.
+Take the posting implication graph of the
+$2$-SAT instance, with each clause belonging
+to head $j$ enabled when $j\in A$. The unit
+clauses forbidding postings at inputs in $A$
+carry the same head labels. Ground and
+consistency clauses are always enabled.
+Infeasibility is mutual reachability between
+a literal and its complement. This is one
+reachability predicate: for each literal use
+two copies of the implication graph in
+series, to test the path to its complement
+and back, and take their disjunction by
+putting the tests in parallel. Empty guards
+can be included as direct failure edges.
 
-The guards at a head use at most one posting
-owner per control, so minimization on each
-facet gives canonical lists. The description
-is linear in the incidence size at fixed
-palette. The underlying source family can
-itself be core: retain the controls, realize
-each designated head's predicate by a
-one-source completion on that head and
-the controls, and take their union. Thus
-higher-order comparison conflicts arise
-even for realizable one-layer families.
+Conversely let a directed graph have a start
+and target, with edges either always enabled
+or enabled by membership of a label $j$ in
+$A$. Use one retained control per vertex,
+with postings at $a,b$ representing true
+and false. At head $j$ require, for each
+edge $u\to v$ labelled $j$, the hit clause
+$(u{:}b)\lor(v{:}a)$. At a fresh head,
+included in every comparison, require the
+start true, target false, and the clauses
+of always enabled edges. A consistent hit
+of these clauses extends to a total Boolean
+assignment, because adding an assignment
+to an unposted control cannot break a hit.
+The implications are satisfiable exactly
+when the target is unreachable from the
+start under the enabled edges.
+
+The guards can be made canonical on each
+facet by the consensus rule of
+\cref{core:thm:guard-consensus}. Resolving
+two binary guards with competing postings
+again gives width at most two and preserves
+their loss predicate on consistent
+colorings. Saturating and minimizing takes
+polynomial time, as there are only
+quadratically many guards of that width.
+Use the same predicate on all facets,
+hiding their missing postings. The
+resulting family can itself be core:
+retain the controls, realize each head on
+those controls by a one-source completion,
+and take the union.
+
+In particular, put one path in parallel for
+each edge of a hypergraph, with its successive
+labels the members of that edge. The comparison
+coalitions are exactly the independent sets
+of the hypergraph, apart from the fixed fresh
+head. Hence even realizable one-layer
+families at binary width have minimal
+comparison conflicts of arbitrary size,
+while a labelled reachability graph can
+encode all such conflicts without listing them.
 
 \paragraph{Reset obstructions for helper tests.}
 The rank obstruction can also certify the
