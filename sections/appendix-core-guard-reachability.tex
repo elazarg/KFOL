@@ -2591,76 +2591,84 @@ The same union need not give the greatest minorant
 of a noncore candidate: the latter can have new
 prime guards requiring larger supports.
 
-For an acyclic graph of singleton losses the entire
-minorant has a direct formula. Write $i\to v$ with
-label $r$ when $v:r$ loses at $i$. At $i$, impose
+For singleton-loss budgets the entire minorant has a
+graph formula. Write $i\to v$ with label $r$ when
+$v:r$ loses at $i$. Delete as sources all heads that
+reach a strongly connected component with two distinct
+internal labels. At every remaining head $i$, impose
 the singleton loss $v:r$ for every edge $u\to v$
-with label $r$ whose tail $u$ is reachable from $i$,
-including $u=i$. These propagated losses are
-necessary by repeated colored-cofactor substitution
-along the path and its final edge. Acyclicity ensures
-that the final input $v$ is distinct from every
-earlier input on the path.
+with label $r$ whose tail is reachable from $i$,
+excluding $v=i$.
 
-For sufficiency, start a word at $i$. Visit the other
-reachable inputs in topological order, with edges
-pointing from earlier to later inputs. For each
-visited input $v$, attach its projection by $\star_r$
-once for each label $r$ on an incoming edge from
-the reachable set. Every used head $u$ is then
-bounded: for its loss $v:r$, at least one matching
-attachment of $v$ comes after all occurrences of
-$u$ and absorbs on that loss. No later projection
-can restore the lost source. At the initial head
-$i$ these attachments lose its mark exactly on
-the propagated singleton postings. The union of
-the words for all initial heads therefore gives
-the greatest minorant. This construction is
-polynomial from canonical primes when all losses
-are singleton, since one can test every singleton
-posting and use graph reachability.
-
-For arbitrary singleton-loss graphs, a head whose
-reachable set meets a strongly connected component
-with two distinct internal labels has no bounded
-witness. To see this, retain only the internal
-edges of that component as negative rows. For each
-owner $r$, some head has an outgoing edge with a
-different label, and is a seed in the reachability
+To see why the deleted heads are impossible, retain
+the internal edges of one such component as negative
+rows. At each owner $r$ a head with an outgoing edge
+of another color is a seed in the reachability
 obstruction of \cref{core:thm:injective-blockers}.
-In fact every component vertex belongs to $D_r$:
-take a forward path to such a seed and stop at the
-first seed, so every edge of the resulting path
-is labeled $r$ and can be traversed backward in
-$D_r$. All internal rows are therefore covered,
-and no head in the component can supply its
-neutral mark. A bounded word using such a head
-would supply its neutral mark, and any word using
-a predecessor must use the head by the singleton
-support bound.
+Every vertex belongs to $D_r$ on the empty probe:
+take a forward path to a seed and stop at the first
+seed, so preceding edges are all labeled $r$ and
+can be traversed backward. All internal rows are
+covered. No head in the component can supply its
+neutral mark, and any bounded word using a predecessor
+would have to use that head by the singleton support
+bound.
 
-Conversely, a head whose reachable components
-are all internally monochromatic has a witness
-on the empty probe. Process the condensation of
-its reachable graph in topological order. Start
-with the projection of the head or, if its
-component is nonsingleton, the fold of that
-component at its internal owner. At each later
-component attach the projections at the labels
-of all incoming edges from earlier components.
-If the component is nonsingleton, then attach
-its native fold at its internal owner. Incoming
-attachments suppress the losses headed earlier,
-and the final fold supplies the internal losses:
-on any internal singleton loss probe it absorbs
-at the native owner, suppressing the mark of the
-other vertex. These operations do not reintroduce
-earlier sources. Every gate transmits the mark
-of the initial head on the empty probe. Thus
-the strongly connected components give an exact
-test for which heads can ever occur in a
-bounded word, even when the acyclic formula for
-all positive probes does not apply.
+For a remaining head $i$, suppose a reachable edge
+$u\to v$ has label $r$ and $v\ne i$. If a path from
+$i$ to $u$ avoids $v$, repeated colored-cofactor
+substitution along the path transfers the loss
+$v:r$ to $i$. Otherwise $v$ lies before $u$ on a
+path, so this edge is internal to a nonsingleton
+component. The component is monochromatic at $r$.
+Take a simple path from $i$ to that component,
+continue to $v$ if necessary, and retain a
+monochromatic cycle through $v$. Equivalently,
+take a simple path from $i$ to the cycle and stop
+at its first vertex on it. On the positive probe
+posting $v:r$, the cycle is reached backward from
+$v$ at owner $r$, and all its heads are seeds at
+every other owner. Along the entering path, at a
+given owner, each edge of another color makes its
+head a seed, and each edge of that owner can be
+traversed backward. Thus every retained head
+belongs to every $D_s$. The same obstruction
+forces the loss $v:r$ at $i$ in this case too.
+
+For sufficiency, process the condensation of the
+graph reachable from $i$ in topological order.
+Start with the projection of $i$, or with the
+fold of its nonsingleton component at its internal
+owner. At each later component attach projections
+at every input and label appearing on an incoming
+edge from an earlier component, using $\star_r$
+for a posting of color $r$. If the component is
+nonsingleton, then attach its native fold by
+$\star_r$ at its internal owner. An incoming
+attachment suppresses every applicable loss
+headed in an earlier component, and no later
+attachment reintroduces those sources. The final
+fold at a nonsingleton component enforces each
+internal loss: a native posting at one vertex
+makes the fold singleton and suppresses the
+mark of the other vertex. These words are
+therefore bounded.
+
+At the initial head its mark survives precisely
+when the probe avoids the stated propagated
+postings. In its own fold only other native
+postings suppress the mark. At a later component
+the relevant postings are exactly the incoming
+ones and all internal native postings, since
+every vertex of a nonsingleton component has
+an internal incoming edge. The gates transmit
+the mark whenever none of these postings is
+present. Thus the union of the words over
+remaining heads is the greatest minorant, or
+formal zero if none remain. Singleton-posting
+tests, strongly connected components and
+reachability compute its prime lists in
+polynomial time from canonical primes.
 
 The gap is unbounded even at width one. Take inputs
 $x_0,\ldots,x_d$, and let $r_1,\ldots,r_d$ alternate
@@ -2674,7 +2682,7 @@ Alternation then stops the closure at the next arrow.
 All original prime supports have at most three inputs.
 
 Every bounded word supplying $x_0$ uses all $d+1$
-inputs by singleton-loss reachability. The acyclic
+inputs by singleton-loss reachability. The graph
 formula gives the greatest minorant by propagating
 all downstream singleton losses at each head. It
 supplies $x_0$ on the empty probe, and on a facet
