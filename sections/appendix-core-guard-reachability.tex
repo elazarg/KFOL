@@ -9215,17 +9215,38 @@ owners and never changes the losing coalition.
 At the terminal budget the signed projection test
 gives the answer.
 
-If $d$ is the number of distinct nonempty $k$-tails
-in the original budget, the recursion takes
-$2^{O(d\log(d+1))}$ times polynomial work and
-nonemptiness queries. Exhaust all foreign deletions
-using the oracle before trying a $k$-offer.
-Each successful $k$-step removes its offered tail
-from the current list, so there are at most $d+1$
-phases trying at most $d$ tails each. Each recursive
-call removes at least its offered tail and cannot
-increase the number of other $k$-tails, giving depth
-at most $d$. Foreign tails need no parameter bound.
+For a bound on this recursion, first saturate all
+foreign deletions with the nonemptiness oracle.
+If no projection fits, try a current $k$-tail $D$.
+The two required continuations are the gaps on
+$S_{k,D}$ with winning coalitions $A$ and $D$,
+respectively, both retaining the losing coalition
+$B$. This is sufficient by attachment. For
+necessity, a shortest witness after foreign
+saturation either is a projection or absorbs on
+some row. Any absorption at a foreign owner
+would already have deleted its row. If the witness
+absorbs at $k$, it certifies both continuations on
+the same smaller budget. A word that absorbs on
+no row can descend to a child retaining the gap.
+
+Let the $d$ distinct nonempty original $k$-tails be
+covered by $w$ chains of inclusion, with each tail
+assigned to one chain. A history never repeats an
+offer, since it deletes every row containing its
+tail. Within one chain a history uses its chosen
+tails in strictly decreasing order: a later superset
+would already have been deleted. Thus there are at
+most $2^d$ choices of the offered subset, at most
+$w^d$ interleavings of their chains, and at most
+$2^d$ choices of which continuation to follow.
+Taking the foreign saturation deterministically,
+each such history specifies at most one state.
+The resulting bound is $(4\max\{w,1\})^d$ times
+polynomial work and nonemptiness queries. In
+particular a chain of $k$-tails costs at most
+$4^d$ times polynomial work. No bound on the
+foreign tails enters the count.
 
 For a monochromatic source query with only $p_k=B$
 nonempty, the same distinction applies throughout
