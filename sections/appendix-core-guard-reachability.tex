@@ -11039,6 +11039,47 @@ same availability calculation. The latter
 is invisible on every facet, so the proper
 budget is again exactly realized.
 
+With monochromatic cycles the sharp arity drops
+to $K+1$, even for singleton-block budgets.
+Use owners $a,b,c$ and inputs $h,x,y,z$.
+For each additional owner $d$, use one more
+input $w_d$. Give $h,y,z$ the respective rows
+\[
+ \{y:b,z:a\}\cup\{w_d:d\mid d\notin\{a,b,c\}\},
+ \qquad \{h:b,z:c\},\qquad \{x:a,y:c\}.
+\]
+The remaining heads are row-free. At a probe
+of $y$, the $b$-fold on $h,y$ supplies it if
+$h:b$ is absent, and the $c$-fold on $y,z$
+supplies it if $z:c$ is absent. At a probe of
+$z$, use the row-free input $x$ if $x:a$ is
+absent, or the $c$-fold on $y,z$ if $y:c$ is
+absent. Thus those heads have just their
+listed losses.
+
+At $h$, any disagreeing $w_d:d$ clears its
+row, as does the $b$-fold on $h,y$ when
+$y:b$ is absent. If all these postings agree
+and $z:a$ agrees, there is the listed loss.
+Otherwise $z:a$ disagrees. If $x:a$ is absent,
+record it and then $z:a$. If $z:c$ is
+absent, the $c$-fold on $y,z$ clears the
+row at $z$ and makes $z:a$ available.
+The only remaining case is the full probe
+$x:a,y:b,z:c,(w_d:d)_d$. There the row-free
+inputs hit no row, and none of the three
+headed inputs can join a safe support:
+the $b$-cycle requires the ineligible
+$y:b$, the $c$-cycle requires the
+ineligible $z:c$, and every other block
+is empty or agrees with the probe.
+Thus exact saturation fails there. The
+case analysis shows that the proper budget
+is realized exactly and that this full
+probe is a minimal hidden loss. Its $K+1$
+inputs attain the bound forced by a full
+probe and its marked head.
+
 Although the facet lists can omit full-palette
 losses, feeding them back into saturation restores
 the same full-palette output. In fact the original
