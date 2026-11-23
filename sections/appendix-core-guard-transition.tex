@@ -332,6 +332,89 @@ reach a projection, and every projection
 violates its row. All these loss lists
 have singleton primes on each facet.
 
+paragraph{Singleton primes at a monochromatic query.}
+With singleton primes the smallest comparison also suffices
+at a colored query. Now a path of union images stops as soon
+as its coalition is contained in the corresponding query block.
+The stopping condition takes precedence over illegality.
+A test is excluded exactly when no path reaches an illegal
+coalition before stopping. Indeed, the set of states from
+which no such path exists is closed under the smallest
+comparisons at all nonstopping states. Conversely, such a
+path rules out exclusion by backward induction along it.
+
+\begin{theorem}[Monochromatic singleton reset obstructions]
+\label{core:thm:singleton-reset-pspace}
+For every fixed $K\ge3$, detecting an ordinary reset
+obstruction for a marked query is PSPACE-complete with
+singleton primes, even when the query posts only one owner
+and each head has at most one loss row.
+\end{theorem}
+\begin{proof}
+A path to illegality can be shortened to at most $K2^n$
+steps on $n$ inputs. Store its current coalition and a
+step counter, guessing the next owner and computing its
+union image. Nondeterministic polynomial space equals
+polynomial space, which is also closed under complement.
+Check the resulting exclusion predicate on each candidate
+of each minimal seed loss. A larger seed cannot certify
+an obstruction when its minimal seed has a surviving
+candidate, by downward closure of exclusion.
+
+Reduce from intersection emptiness for a nonempty list
+of complete deterministic finite automata
+\cite{Kozen1977}. The alphabet can be taken to be binary
+by encoding symbols in uniform-length bit strings and
+rejecting malformed encodings. Use three owners $r,a,b$.
+Make disjoint copies of every automaton state in the
+phases below, each phase assigned a single owner.
+Each copy is a head with one loss row, posting its
+outgoing neighbors at their phase owners. The row for
+the marked head posts the initial state of each automaton
+in the reading phase. A separate head $z$ assigned to
+$r$ has no loss row. A single loss row gives singleton
+primes on each facet where it is visible.
+
+The following table specifies the outgoing postings.
+A state is preserved unless a bit update is indicated.
+Write $m$ for the number of automata.
+\[
+\begin{array}{lll}
+\text{Phase} & \text{Owner} & \text{Destination phases}\\
+\hline
+\text{Read} & r & \text{Bit},\ \text{Start check}\\
+\text{Bit} & a & \text{Read (update by 0)},\ \text{Return (update by 1)}\\
+\text{Return} & b & \text{Read}\\
+\text{Start check} & b & \text{Check }1\\
+\text{Check }i & r & \text{Advance }i\\
+\text{Advance }i & a & \text{Check }i+1\ (i<m),\quad z\ (i=m)
+\end{array}
+\]
+The query posts at $r$ every head in each phase
+$\text{Check }i$ except the copies of accepting states
+of automaton $i$. Include an unused input posted at $r$
+so the query block is nonempty. All remaining inputs
+are unposted.
+
+The marked head has a single seed candidate containing the
+initial states. At every reachable phase the coalition
+contains exactly one current state per automaton, until
+it reaches $\{z\}$. Each row omits the current owner,
+each destination is in a different phase, and the
+outgoing neighbors of any one owner comprise precisely
+its union image. Thus the smallest comparisons are legal
+until $\{z\}$. Paths through the reading phases read
+arbitrary binary words. On entering $\text{Check }i$,
+the coalition is contained in the query block exactly
+when automaton $i$ rejects the word read so far. The
+illegal coalition $\{z\}$ is outside the query block
+and is reached before stopping exactly when some word
+passes every check. Hence the sole seed certifies an
+ordinary obstruction exactly when the intersection is
+empty. The construction is polynomial and uses only
+the three designated owners.
+\end{proof}
+
 At width two, the entire comparison conflict
 predicate on a fixed ground is a reachability
 test in a polynomial-size labelled graph.
