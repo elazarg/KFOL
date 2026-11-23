@@ -294,18 +294,73 @@ including those for which adding the winning
 profile as pure rows creates a cycle.
 
 The pruning argument also localizes an individual
-helper on a cyclic budget. Use the predecessor
-closure of the offered tail $t_s$, including its
-inputs, in place of the strict prefix. All rows
-headed there have their postings there, and a
-helper winning $s:t_s$ also wins on this larger
-coalition, so the same pruning applies. Conversely
-a helper on this set ignores all heads outside it.
-Thus the helper test is exact on just these
-ancestors. In the acyclic pass this can replace
-the full strict prefix by a smaller one; in a
-cycle the localized helper test may include the
-head of the offered row itself.
+helper on a cyclic budget, using only the posting
+edges at the helper's owner. For an offer $s:D$,
+first discard all rows with $D\subseteq t_s$, since
+any helper winning the offer already omits these
+marks. In the remaining budget take the ancestors
+$U$ of $D$ along $s$-posting edges alone, including
+$D$ itself. Keep rows headed in $U$ and project
+their postings to $U$. The helper test on this
+projected budget is exact.
+
+Indeed a helper winning $s:D$ wins $s:U$ and can
+be pruned to $U$. For a retained row headed
+there, its $s$-tail lies in $U$ by construction,
+which is the only tail containment needed when
+discarding an $s$-branch. The same profile
+preservation and row-omission argument applies
+even if other owners post outside $U$. After
+pruning those exterior postings do not affect
+the word. Conversely a helper for the projected
+budget ignores every head outside $U$ and
+absorbs on the rows discarded for the offer.
+Thus it is bounded on the full budget. In the
+acyclic pass $U$ lies strictly before the head;
+in a cyclic budget it may include the head but
+can be much smaller than the full source component.
+
+For a single offer the graph after this deletion
+can be read directly from canonical primes.
+To find an $s$-edge $u\to j$, try an omitted
+posting of $D$ and a private prime for the pin
+$u{:}s$. Forbid the omitted posting and the other
+members of the private prime, and test whether
+the remaining ground hits every prime on that
+facet. Shrinking to a minimal loss preserves the
+pin and the required omission. Conversely every
+remaining minimal loss containing the pin has
+some such omission and private prime. These scans
+compute $U$ without enumerating the losses.
+
+For listed losses this gives an exact Horn test
+throughout marked owner deletion if every original
+offer $s:D$ has a pure projected budget on its
+localized set $U$. The hypothesis need be checked
+only on the original list after the offer's own
+deletions. Later deletions can only shrink the
+ancestor set and remove rows, so they preserve
+purity. At a mark query $p$, the helper for
+$s:D$ must win that offer and lose at $p_s$.
+If $c$ is the Horn closure of its pure projected
+budget, the native-profile criterion gives
+feasibility precisely when
+\[
+                 D\not\subseteq c(p_s\cap U).
+\]
+Indeed the additional winning demand derives
+the whole support as soon as a closure contains
+$D$, and has no effect on any other closure.
+Thus each owner deletion takes polynomial work,
+as does reaching stability and reading all
+marks at the query. The original dependence
+graph need not be acyclic or pure on its source
+components. For example an even directed cycle
+with one singleton row per head and alternating
+edge owners has singleton localized sets:
+each offered input has no incoming edge
+at its offer owner. The full graph stays one
+mixed component.
 
 The ordered pass has a sufficient version for
 $\Phi_k(A)=1,\ \Phi_k(B)=0$. A posting $u{:}r$
