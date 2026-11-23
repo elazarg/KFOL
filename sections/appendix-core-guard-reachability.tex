@@ -13437,56 +13437,77 @@ recurrence gives certificates of polynomial size:
 guess the absorbed rows at each node and include
 a witness for each of its polynomially many child
 requirements. Already depth one is NP-complete at
-three owners, even for losses at a single head and
-an empty positive probe.
+three owners, even for losses at a single head, an
+empty positive probe, and just two posting colors
+per row.
 
-For hardness, start with graph three-colorability.
-Use Boolean variables $X_{v,c}$ for vertices $v$
-and colors $c$, one positive triple per vertex
-requiring a color, and negative binary clauses
-forbidding equal colors across an edge. These
-clauses are satisfiable exactly for a three-colorable
-graph, since one can choose any true color at each
-vertex. Use one negative row per clause, all headed
-at the marked source $i$. Label the three positive
-options at a vertex with distinct owners according
-to their colors. The two negative options of an
-edge clause concern the same color; label them by
-the two other owners. Thus opposite occurrences
-of a variable have different labels.
+Reduce graph three-colorability to choosing binary
+options with forbidden rainbow tuples. Index the
+three owners cyclically by $c\in\{0,1,2\}$. At each
+vertex $v$ use a Boolean choice $X_{v,c}$ for each
+color, labeling its false option by owner $c$ and
+its true option by $c+1$. Forbid the triple of
+false options at a vertex, which is a rainbow.
+Introduce a copy $Y_{v,c}$ with false option
+labeled $c$ and true option labeled $c+2$.
+Enforce equality with $X_{v,c}$ by forbidding the
+two mismatching pairs, each of distinct owners.
+For each edge $uv$ and color $c$, forbid choosing
+both $X_{u,c}$ and $Y_{v,c}$ true, taking either
+orientation of the edge. The two true options
+have different owners. These conditions hold
+exactly for assignments in which every vertex
+has some true color and adjacent vertices have
+no true color in common. Choosing one true color
+per vertex gives a proper coloring, and a proper
+coloring gives an assignment by using just its
+chosen colors.
 
-For every tuple of options from distinct clauses
-and distinct owners whose literals are consistent,
-including each singleton option, create a passive
-input. Put that input in the posting coalition
-of each option in its tuple, using that option's
-owner. A passive input occurs at most once in any
-row, since the tuple contains at most one option
-per clause. There are only polynomially many
-tuples at three owners. The intersection of
-any selected options of distinct owners and
-clauses is nonempty exactly when their literals
-are consistent.
+Use a negative row at the marked head for each
+Boolean choice, with the two owner coalitions
+representing its options. To construct the
+coalitions, make a passive input for every nonempty
+tuple of options from different choices and
+different owners that contains no forbidden tuple.
+Put that input in each option of its tuple at
+the corresponding owner. There are at most three
+members of a tuple, so this is polynomial. A
+passive input is posted at most once per row,
+and each option is nonempty by its singleton
+tuple. The intersection of any rainbow selection
+of options from distinct rows is nonempty exactly
+when it contains no forbidden tuple.
 
 A depth-one witness can be taken to be a single
 greatest completion on projections, since a free
 union supplies the mark from one summand omitting
-all negatives. Each row must be absorbed at some
-owner, and the chosen coalitions, even before
-restricting to the witness support, must pass the
-rainbow intersection condition. Therefore the
-chosen literals cannot contain opposites: opposite
-options have distinct owners and empty intersection.
-They give a satisfying assignment. Conversely
-choose one true literal in every clause. The
-resulting coalitions meet in each rainbow
-selection, so generate compatible singleton
-profiles on the full support together with
-unanimity. No winning generator is empty. The
-greatest completion enforces every row and
-supplies the mark on the empty probe. This proves
-hardness, and the fixed-depth certificate gives
-membership in NP.
+all negatives. Each row must be absorbed at one
+of its two owners, and the selected coalitions
+must pass the rainbow condition even before
+restricting them to the witness support. Thus
+the absorbed rows give a valid binary selection.
+Conversely use such a selection as the generators
+of the three profiles on full support, together
+with unanimity at each owner. The rainbow test
+gives compatible profiles, and every generator
+is nonempty, so the greatest completion supplies
+the empty positive while enforcing the losses.
+
+In contrast, for losses at one head using at most
+two posting owners in the entire budget, depth
+one is decidable by $2$-SAT. A witness's selected
+coalitions can be enlarged to the full row tails
+and its support enlarged to the full input set.
+Intersections persist, and each selected coalition
+still escapes the corresponding positive block
+because its original restriction did. Discard
+options contained in that block. Each row must
+select one of at most two remaining options, and
+only pairs of options at different owners can
+have empty rainbow intersection. Forbid those
+pairs by binary clauses. Any satisfying choice
+generates a greatest completion on full support
+with the required mark and omissions.
 
 The recurrence shows that disagreeing reachable support
 preserves minimum completion depth for arbitrary rows.
