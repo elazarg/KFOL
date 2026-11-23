@@ -10046,6 +10046,54 @@ were already recorded. Each such support is either
 a row-free singleton or has the strong connectivity
 property just proved.
 
+One inclusion-minimal support can be found from the
+primes in polynomial time. Start with the greatest
+eligible support, using the allowed-alphabet test
+above. For each input still in the support, forbid
+it and recompute the greatest support within the
+remaining inputs. Keep the smaller support when
+it is nonempty. Once an input cannot be omitted,
+shrinking the allowed set further cannot make its
+omission possible. A single scan therefore yields
+an inclusion-minimal support.
+
+Deciding whether a nonempty eligible safe support
+has cardinality at most a given bound is NP-complete
+even at an empty probe, with three owners and
+prime width one. Reduce from vertex
+cover in a graph with edges $e_1,\ldots,e_m$,
+where $m\ge1$. Use a root $h$, one head $d_j$
+for each edge, and one input for each vertex.
+All postings use one owner $r$. At $h$ give
+the singleton loss $d_1:r$. At $d_j$ give a
+singleton loss at $d_{j+1}$, using $h$ as the
+successor for $d_m$, and the two-posting loss
+$\{u:r,v:r\}$ for the endpoints of $e_j$.
+Each vertex input has the singleton loss $h:r$.
+Any nonempty safe support contains $h$ and
+all the edge heads by the singleton constraints.
+Its vertex inputs form a vertex cover by the
+remaining rows, and any cover gives such a
+support. A bound $b$ on the cover size thus
+becomes a bound $m+1+b$ on the support size.
+To obtain width one, add a posting at owner $s$
+to the successor row at each $d_j$, and a
+posting at owner $t$ to its endpoint row, where
+$r,s,t$ are distinct. Use fresh inputs for the
+padding postings and give each an empty loss.
+No safe support can use a padding input. Thus
+the $r$-support test is unchanged and there
+is no safe support at another owner. Every
+facet sees at most one row at each head, so
+the complete prime lists consist only of
+singleton exclusions, with empty lists at
+the dummy heads and the empty prime on facets
+seeing no row. A support is checked in polynomial
+time by the same alphabet test, giving membership
+in NP.
+Taking disjoint edges gives $2^m$ inclusion-minimal
+supports in these polynomial-size lists.
+
 The component computation has a single-update
 form when all internal disagreement arrows of a
 component have one label $r$. After the downstream
