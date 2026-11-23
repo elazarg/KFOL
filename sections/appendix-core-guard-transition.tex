@@ -354,6 +354,50 @@ by the refinement rule. When the allowed families
 are principal, each candidate therefore needs just
 one trial per auxiliary owner.
 
+\paragraph{Several auxiliary owners with fixed allowed blocks.}
+For a fixed set $E$ and fixed principal bounds on the
+replacement blocks, there is a direct posting formula
+at singleton prime width. Use a Boolean variable for
+each posting of the auxiliary coloring. Forbid competing
+postings, unavailable postings at owners outside $E$,
+and every posting of a member of $T$ outside
+$\{b\}\cup E$. Whenever a head is posted at an owner
+in $E$, require all postings of its unique loss row
+there, or forbid the head posting if no such loss exists.
+All these constraints have width at most two.
+If $B$ is the allowed $b$-block, impose a clause
+requiring an $E$-posting at each member of $T\setminus B$.
+No coverage clauses are needed at $T\cap B$: post at
+$b$ any still unposted member after solving the formula.
+These additions are allowed and trigger no auxiliary
+loss requirements. Conversely any feasible auxiliary
+coloring satisfies the formula. For at most two
+auxiliary owners this gives a $2$-SAT test.
+
+For three auxiliary owners the fixed-block search
+is NP-complete, already at five owners. Reduce graph
+$3$-coloring, using $T$ as the vertex set and one
+auxiliary owner per color. Exclude all vertices from
+the allowed $b$-block. At each vertex head and color
+$c$, give one loss row on its $c$-facet as follows.
+For each incident edge $e$ use a fresh input indexed
+by $(e,c)$, shared by the two endpoint rows for $c$.
+Post it at $b$ at one endpoint and at the fifth owner
+$d$ at the other. Add dedicated inputs in each row
+posted at all owners other than $c$. These dedicated
+heads have empty losses, including when posted at
+auxiliary owners. The padding makes each vertex row
+visible on exactly its intended facet, so the primes
+are singleton. The allowed blocks at $b,d$ contain
+all padding and edge inputs. The vertices must be
+posted at auxiliary owners. Two adjacent vertices
+with the same owner require competing postings at
+their shared edge input. A proper coloring instead
+has consistent requirements, with all other auxiliary
+loss tests satisfied by the empty losses. This proves
+hardness, and the posting formula gives membership
+in NP.
+
 \paragraph{Singleton primes at the uncolored query.}
 With singleton prime lists, ordinary reset
 obstruction detection at the uncolored query
