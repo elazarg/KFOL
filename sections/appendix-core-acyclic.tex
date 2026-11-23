@@ -362,6 +362,69 @@ each offered input has no incoming edge
 at its offer owner. The full graph stays one
 mixed component.
 
+There is also a symbolic version at prime width
+two. Fix $K$. Suppose every original owner tail
+has at most two postings, and after each original
+offer's own deletions its localized budget is
+pure at that owner or has at most two inputs.
+These hypotheses can be checked and all marked
+queries decided in polynomial time from complete
+prime lists.
+
+Store each successful offer as a forbidden block
+in the remaining rows. On a facet, use the
+original prime hit clauses, posting consistency
+and one negative clause per forbidden block.
+All clauses have width at most two. Ground
+restrictions add only units. To find a retained
+minimal row with a specified posting, also pin
+it using a private prime and forbid the other
+members of that prime. Satisfying posting sets
+can be shrunk to minimal original losses, since
+omission of a forbidden block persists and the
+pin is protected. The same test with no pin
+finds whether a head survives.
+
+Enumerate the original nonempty tails of size
+at most two. For each owner and candidate tail,
+forbid other postings at that owner and use a
+private prime for each pinned member. A search
+with three same-owner pins detects a tail wider
+than two. These scans produce exactly the
+required offer list or detect failure of the
+width hypothesis. For a candidate offer, add
+its forbidden block temporarily and use the
+edge searches to find its localized set.
+The same pin searches check for foreign
+postings internal to that set. Checking on
+the original list suffices, because subsequent
+deletions shrink both the set and its projected
+budget.
+
+In a pure scope, compute each closure step
+with a unit ground restriction on the local
+owner's tail. In a scope of at most two inputs,
+try the finite core operations on that support.
+A proposed helper violates a retained row
+exactly when some positive local source pattern
+contains the projection of such a row. For
+each of its positive patterns, this is just a
+ground restriction on the allowed internal
+postings. Thus these checks require no enumeration
+of original losses either. Keep an offer if its
+localized helper fits these bounds, wins the
+offer and loses on the query's owner block.
+
+There are only polynomially many candidates
+and each successful candidate need be kept
+once. At stabilization an absorbing helper
+on any surviving row would authorize that
+row's owner tail, which is in the candidate
+list. Thus the terminal head test of
+\emph{Owner deletions for arbitrary losses}
+is exact. The full posting graph may have
+unbounded strongly connected components.
+
 The ordered pass has a sufficient version for
 $\Phi_k(A)=1,\ \Phi_k(B)=0$. A posting $u{:}r$
 is allowed as a helper if $u\notin B$ when $r=k$,
