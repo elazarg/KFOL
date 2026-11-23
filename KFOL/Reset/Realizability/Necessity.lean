@@ -20,7 +20,7 @@ variable {Var : Type v} [DecidableEq Var]
 theorem constructible_of_feasible (t : Term Var) {A : Finset Var}
     (hA : A ∈ t.antimatroid.feasible) : t.guardTable.Constructible A := by
   induction hn : A.card using Nat.strong_induction_on generalizing A with
-  | h n ih =>
+  | ind n ih =>
     by_cases he : A = ∅
     · subst A
       exact .empty

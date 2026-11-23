@@ -35,7 +35,7 @@ theorem exists_term [Finite Vertex] (G : Graph Role Vertex)
         (t.eval v = WinnerSet.singleton k ↔ G.Blocks A label v k) ∧
         (k ∈ (t.eval v).val ↔ G.Wins A label v k) := by
     induction n using Nat.strong_induction_on with
-    | h n ih =>
+    | ind n ih =>
       intro A hn hA
       by_cases hsingle : A.Subsingleton
       · obtain ⟨x, rfl⟩ := Set.exists_eq_singleton_iff_nonempty_subsingleton.mpr

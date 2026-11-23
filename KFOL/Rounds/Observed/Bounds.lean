@@ -45,7 +45,7 @@ theorem bind_winner_coordinate_mono {Index : Type v} (law : PMF Index)
     ((law.bind p) who).toReal ≤ ((law.bind q) who).toReal := by
   apply (ENNReal.toReal_le_toReal (PMF.apply_ne_top _ _) (PMF.apply_ne_top _ _)).mpr
   simp only [PMF.bind_apply]
-  apply ENNReal.tsum_le_tsum
+  apply tsum_le_tsum
   intro a
   exact mul_le_mul_right ((ENNReal.toReal_le_toReal
     (PMF.apply_ne_top _ _) (PMF.apply_ne_top _ _)).mp (h a)) _

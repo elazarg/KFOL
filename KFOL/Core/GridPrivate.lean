@@ -144,7 +144,7 @@ theorem exists_private_profile {r s : ℕ} (three : Fin 3 ↪ Role) (c : Coordin
     | some v =>
       rcases v with ⟨k,l⟩ | (k | l)
       all_goals simp [rawValue, privateProfile, cell, row, col]
-      all_goals split_ifs <;> simp_all
+      split_ifs <;> simp_all
 
 /-- Below the lower tuple, the entire third atom is absent. This holds
 for all core terms and all roles, with no bound on syntax or variable reuse. -/

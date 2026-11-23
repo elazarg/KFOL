@@ -37,7 +37,7 @@ theorem reachable_position (game : Game Role) (p : Position game) :
   have h : ∀ d : ℕ, ∀ p : Position game, p.depth = d → game.execution.Reachable p := by
     intro d
     induction d using Nat.strong_induction_on with
-    | h d ih =>
+    | ind d ih =>
       intro p hd
       rcases p.root_or_append with he | ⟨q,a,hv,ha,he⟩
       · subst p

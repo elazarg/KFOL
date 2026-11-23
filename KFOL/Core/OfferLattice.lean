@@ -255,7 +255,7 @@ noncomputable def canonicalPresentation [Fintype L] {c : MeetIrred L → Role} (
       let m : MeetIrred L := ⟨a.val, hi a.property⟩
       (c m, ⟨{m}, Set.singleton_nonempty _⟩)
     have he (a : s) : canonicalCut c (offer a) = a.val := by
-      simp [canonicalCut, offer]
+      simp [canonicalCut, offer, Finset.filter_eq']
     refine ⟨s.attach.image offer, ?_⟩
     rw [Finset.inf_image]
     calc

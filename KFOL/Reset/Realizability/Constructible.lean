@@ -123,7 +123,7 @@ theorem all_constructible_iff_local (G : GuardTable Var)
         (∃ j, A ∈ G.guards j) → G.Constructible A from this _ A rfl ⟨j, hA⟩
     intro n
     induction n using Nat.strong_induction_on with
-    | h n ih =>
+    | ind n ih =>
       rintro A hcard ⟨j, hA⟩
       have hp : ∀ k : A, ∃ B ∈ G.guards k.val, B ⊆ A :=
         fun k => h j A hA k.val k.property

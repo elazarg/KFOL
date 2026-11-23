@@ -12,13 +12,12 @@ namespace KFOL.Strategic
 universe u
 
 private theorem exists_outside {α : Type u} (r : α) (A : Set α) (hne : A.Nonempty)
-    (ha : A ≠ {r}) : ∃ i, A i ∧ i ≠ r := by
+    (ha : A ≠ {r}) : ∃ i, i ∈ A ∧ i ≠ r := by
   classical
   by_contra h
   push Not at h
   apply ha
-  funext i
-  apply propext
+  ext i
   constructor
   · intro hi
     exact h i hi
@@ -122,8 +121,7 @@ theorem possibleWinners_ne {α : Type u} (g : Tree α) : (possibleWinners g).Non
   exact ⟨winner p, p, hp, rfl⟩
 
 theorem possibleWinners_leaf {α : Type u} (r : α) : possibleWinners (.leaf r) = {r} := by
-  funext i
-  apply propext
+  ext i
   constructor
   · rintro ⟨p, _, h⟩
     cases p
@@ -133,7 +131,7 @@ theorem possibleWinners_leaf {α : Type u} (r : α) : possibleWinners (.leaf r) 
 
 theorem winner_of_singleton {α : Type u} {g : Tree α} (r : α)
     (he : possibleWinners g = {r}) (p : Profile g) (hp : IsSubgamePerfect p) : winner p = r := by
-  have hm : possibleWinners g (winner p) := ⟨p, hp, rfl⟩
+  have hm : winner p ∈ possibleWinners g := ⟨p, hp, rfl⟩
   rw [he] at hm
   exact hm
 
@@ -150,8 +148,7 @@ theorem possibleWinners_node {α : Type u} (r : α) (left right : Tree α) :
   by_cases h : possibleWinners left = {r} ∨ possibleWinners right = {r}
   · rw [show (if possibleWinners left = {r} ∨ possibleWinners right = {r} then {r}
       else possibleWinners left ∪ possibleWinners right) = {r} from by simp [h]]
-    funext i
-    apply propext
+    ext i
     constructor
     · rintro ⟨profile, hp, hw⟩
       cases profile with
@@ -179,8 +176,7 @@ theorem possibleWinners_node {α : Type u} (r : α) (left right : Tree α) :
         (possibleWinners left ∪ possibleWinners right) from by simp [h]]
     have hl : possibleWinners left ≠ {r} := fun e => h (Or.inl e)
     have hr : possibleWinners right ≠ {r} := fun e => h (Or.inr e)
-    funext i
-    apply propext
+    ext i
     constructor
     · rintro ⟨profile, hp, hw⟩
       cases profile with

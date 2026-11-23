@@ -1,6 +1,6 @@
 \section{Verification details}\label{app:verification}
 
-The paper's results are kernel-checked in Lean~4.35.0 with mathlib. \texttt{Paper.lean} restates, in the namespace \texttt{KFOL.Paper}, every theorem of the main text and the clauses of the report results that it cites: $89$ statements, listed by result in \cref{tab:status}. \texttt{Report.lean} restates $156$ further report results in the namespace \texttt{KFOL.Report} (\cref{tab:report}). Each proof is a single library theorem, and each file ends with a check that no declaration in its namespace uses an axiom beyond \texttt{propext}, \texttt{Classical.choice}, and \texttt{Quot.sound}; a separate audit covers the whole library. Nothing is admitted, and no theorem from the literature enters as a hypothesis. Where a written proof cites one, as for the reset basis and the minimum one-owner generator \cite{FreeseEtAl2002}, owned choice with union \cite{HardingRomanowska2017}, the atomic clone \cite{Szendrei2012}, and colored-graph decomposition \cite{Gurvich2009}, the Lean proof is direct.
+The paper's results are kernel-checked in Lean~4.36.0 with mathlib. \texttt{Paper.lean} restates, in the namespace \texttt{KFOL.Paper}, every theorem of the main text and the clauses of the report results that it cites: $90$ statements, listed by result in \cref{tab:status}. \texttt{Report.lean} restates $156$ further report results in the namespace \texttt{KFOL.Report} (\cref{tab:report}). Each proof is a single library theorem, and each file ends with a check that no declaration in its namespace uses an axiom beyond \texttt{propext}, \texttt{Classical.choice}, and \texttt{Quot.sound}; a separate audit covers the whole library. Nothing is admitted, and no theorem from the literature enters as a hypothesis. Where a written proof cites one, as for the reset basis and the minimum one-owner generator \cite{FreeseEtAl2002}, owned choice with union \cite{HardingRomanowska2017}, the atomic clone \cite{Szendrei2012}, and colored-graph decomposition \cite{Gurvich2009}, the Lean proof is direct.
 
 The vocabulary of the statements is in \path{KFOL/Definitions/PaperAlgebra.lean}, \path{PaperGames.lean}, and \path{Complexity.lean}, which build on the other files of \path{KFOL/Definitions}. The auxiliary reading guides, definition indexes, and independent Python checks cited in this report are archived at repository commit \texttt{2099f25}; their paths refer to that revision.
 
@@ -68,7 +68,7 @@ The library also proves the contracts of the implementation, such as codecs, des
 
 {\small
 \begin{longtable}{>{\raggedright\arraybackslash}p{0.30\linewidth}>{\raggedright\arraybackslash}p{0.64\linewidth}}
-\caption{The $89$ mathematical statements in \texttt{Paper.lean}, grouped by result.}\label{tab:status}\\
+\caption{The $90$ mathematical statements in \texttt{Paper.lean}, grouped by result.}\label{tab:status}\\
 \toprule
 Result & Statements\\
 \midrule
@@ -110,7 +110,7 @@ No finite relational characterization (\cref{core:thm:not-finitely-related})
 Quantified formulas as recognition (\cref{core:thm:quantified-recognition})
  & \path{core_quantified_recognition}\\
 Reduction to recognition from the normal form (\cref{core:thm:recognition-reduction})
- & \path{core_recognition_reduction}\\
+ & \path{core_recognition_reduction}, \path{core_recognition_pspace_hard}\\
 Common source and atomic obstructions (\cref{gen:thm:source})
  & \path{common_source}, \path{atomic_repeated_triples}, \path{no_atomic_if_then_else}\\
 Atomic clone and determinacy (\cref{gen:thm:S2,gen:cor:determinacy})
@@ -1558,15 +1558,14 @@ correctness is proved against the definitions above.
 \path{KFOL/Complexity/RecognitionHardness.lean} proves that a
 deterministic multitape Turing machine computes it in polynomial time,
 with variables, input names and owners written in binary. The instances
-and the two languages are defined in
-\path{KFOL/Definitions/RecognitionProblem.lean}. The source language
-\path{prenexTruth} is the set \path{TQBFCNF} of the complexity library
-with its encoding. That library proves this set PSPACE-hard
-(\path{Cslib.Complexity.TQBFCNF_pspaceHard}) in modules that require
-Lean~4.36 and are not compiled here. PSPACE-hardness of recognition is
-therefore stated in Lean relative to that theorem
-(\path{coreNormalForms_pspaceHard}) and is not among the statements of
-\texttt{Paper.lean}.
+and the language of normal forms are defined in
+\path{KFOL/Definitions/RecognitionProblem.lean}. The source language is
+\path{Cslib.Complexity.TQBFCNF} of the complexity library, which proves
+it PSPACE-hard from Savitch's formula on the configurations of a
+polynomial-space machine (\path{TQBFCNF_pspaceHard}). Composing the two
+gives \path{core_recognition_pspace_hard}: for every $K\ge3$, every
+problem in PSPACE reduces in polynomial time to recognition of core term
+operations from their prime guards.
 
 The closed hypergraph vocabulary is defined in
 \path{KFOL/Definitions/CoreHypergraphs.lean}: indexed clutters, support,

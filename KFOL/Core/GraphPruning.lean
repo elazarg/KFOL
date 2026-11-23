@@ -504,7 +504,7 @@ theorem exists_compatible_of_shedding [Finite V] (G : SimpleGraph V) (edge : ∃
 compatibility holds exactly when its shedding vertices form a vertex cover. -/
 theorem exists_compatible_iff_shedding [Finite V] (G : SimpleGraph V)
     (square : NoInducedFourCycle G) (edge : ∃ u v, G.Adj u v) :
-    (∃ t : CoreTerm Bool V, Compatible G t) ↔ G.IsVertexCover (Shedding G) := by
+    (∃ t : CoreTerm Bool V, Compatible G t) ↔ G.IsVertexCover {x | Shedding G x} := by
   constructor
   · rintro ⟨t,ht⟩ u v uv
     exact shedding_of_compatible square ht uv

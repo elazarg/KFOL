@@ -193,7 +193,7 @@ theorem exists_checked_order {R : (Row → WinnerSet Role) → Prop}
   classical
   generalize hn : (C.head \ S).card = n
   induction n using Nat.strong_induction_on generalizing S with
-  | h n ih =>
+  | ind n ih =>
     by_cases ht : supports F ⟨C.premise, S⟩ = true
     · exact ⟨[], ht⟩
     obtain ⟨i, hi, hiS, hir, hb⟩ :=

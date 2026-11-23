@@ -649,9 +649,15 @@ theorem core_extraction_polynomial :
 formulas reduces in polynomial time to recognition of core term operations
 from their prime guards. -/
 theorem core_recognition_reduction {K : ℕ} (three : Fin 3 ↪ Fin K) :
-    Cslib.Complexity.PolyTimeReducible prenexEncoding guardListEncoding prenexTruth
-      (coreNormalForms three) :=
-  Recognition.Lists.prenexTruth_reducible three
+    Cslib.Complexity.PolyTimeReducible Cslib.Complexity.encPrenexCNF guardListEncoding
+      Cslib.Complexity.TQBFCNF (coreNormalForms three) :=
+  Recognition.Lists.TQBFCNF_reducible three
+
+/-- Recognition of core term operations from their prime guards is hard for
+polynomial space. -/
+theorem core_recognition_pspace_hard {K : ℕ} (three : Fin 3 ↪ Fin K) :
+    Cslib.Complexity.PSPACEHard guardListEncoding (coreNormalForms three) :=
+  Recognition.Lists.coreNormalForms_pspaceHard three
 
 /-! ## Completely disclosed sealed rounds -/
 section Rounds

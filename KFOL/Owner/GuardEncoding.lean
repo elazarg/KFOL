@@ -11,6 +11,10 @@ of sparse variable names and every repeated root prerequisite. -/
 
 @[expose] public section
 
+/- The size bounds hold for every finite enumeration of the operations, so the
+enumeration is an assumption instead of a fixed global instance. -/
+set_option linter.concreteInstances false
+
 namespace KFOL.Owner
 
 universe u v

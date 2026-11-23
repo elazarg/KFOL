@@ -17,7 +17,7 @@ variable {Role : Type u}
 /-- All source menus are finite, including the inactive terminal option. -/
 instance finite_choiceAt (game : Game Role) (history : game.execution.History) (i : Role) :
     Finite (ChoiceAt game.toFOSG history i) := by
-  apply Set.finite_coe_iff.mpr
+  refine Set.Finite.to_subtype (s := {c | LegalOption game.toFOSG.execution history.state i c}) ?_
   apply ((Set.finite_Iic (history.state.current.size i)).image some).insert none |>.subset
   intro c hc
   cases c with

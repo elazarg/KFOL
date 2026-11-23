@@ -274,8 +274,8 @@ theorem instanceOf_poly (K c0 c1 c2 : ℕ) {n : γ → ℕ} {cls : γ → List (
 @[fun_prop]
 theorem roundVars_poly {ps : γ → List (ℕ × ℕ)}
     (hps : ComputableInPolyTime ps encIn (encList (encPair encNat encNat))) :
-    ComputableInPolyTime (fun x => roundVars (ps x)) encIn (encList encNat) := by
-  unfold roundVars
+    ComputableInPolyTime (fun x => QBF.roundVars (ps x)) encIn (encList encNat) := by
+  unfold QBF.roundVars
   fun_prop
 
 @[fun_prop]
@@ -335,8 +335,8 @@ theorem rebin_poly : ComputableInPolyTime rebin eGuardU guardListEncoding := by
 /-- **The reduction is polynomial-time**, from instances with variables in
 binary to instances with names and owners in binary. -/
 theorem reduce_poly (K c0 c1 c2 : ℕ) :
-    ComputableInPolyTime (fun x => rebin (reduce0 K c0 c1 c2 x)) prenexEncoding
-      guardListEncoding :=
+    ComputableInPolyTime (fun x => rebin (reduce0 K c0 c1 c2 x))
+      Cslib.Complexity.encPrenexCNF guardListEncoding :=
   rebin_poly.comp (reduce0_poly K c0 c1 c2)
 
 end KFOL.Recognition.Lists
@@ -354,17 +354,16 @@ def reduce {K : ℕ} (three : Fin 3 ↪ Fin K) (x : List (ℕ × ℕ) × CNF ℕ
 machine maps, in polynomial time, every list of rounds and matrix to a list
 of guards that is the normal form of a core term operation exactly when the
 formula is closed and true. -/
-theorem prenexTruth_reducible {K : ℕ} (three : Fin 3 ↪ Fin K) :
-    Cslib.Complexity.PolyTimeReducible prenexEncoding guardListEncoding prenexTruth
-      (coreNormalForms three) :=
+theorem TQBFCNF_reducible {K : ℕ} (three : Fin 3 ↪ Fin K) :
+    Cslib.Complexity.PolyTimeReducible Cslib.Complexity.encPrenexCNF guardListEncoding
+      Cslib.Complexity.TQBFCNF (coreNormalForms three) :=
   ⟨reduce three, reduce_poly K _ _ _, fun x => by
     rw [reduce, rebin_eq]
     exact (reduce0_mem_iff three x).symm⟩
 
-/-- Recognition is as hard as prenex truth for polynomial space. -/
-theorem coreNormalForms_pspaceHard {K : ℕ} (three : Fin 3 ↪ Fin K)
-    (h : Cslib.Complexity.PSPACEHard prenexEncoding prenexTruth) :
+/-- **Recognition from the normal form is hard for polynomial space.** -/
+theorem coreNormalForms_pspaceHard {K : ℕ} (three : Fin 3 ↪ Fin K) :
     Cslib.Complexity.PSPACEHard guardListEncoding (coreNormalForms three) :=
-  h.trans (prenexTruth_reducible three)
+  Cslib.Complexity.TQBFCNF_pspaceHard.trans (TQBFCNF_reducible three)
 
 end KFOL.Recognition.Lists

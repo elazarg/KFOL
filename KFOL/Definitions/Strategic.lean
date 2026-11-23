@@ -52,7 +52,7 @@ def IsSubgamePerfect {α : Type u} {g : Tree α} (p : Profile g) : Prop :=
 
 
 def possibleWinners {α : Type u} (g : Tree α) : Set α :=
-  fun i => ∃ p : Profile g, IsSubgamePerfect p ∧ winner p = i
+  {i | ∃ p : Profile g, IsSubgamePerfect p ∧ winner p = i}
 
 
 namespace Profile

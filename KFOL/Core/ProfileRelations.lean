@@ -114,7 +114,8 @@ private theorem rainbow_choice {S : Finset Index} (hr : Rainbow owner S)
     exact hp.1
 
 /-- Every theory in the restricted vocabulary is preserved by all mixed gates. -/
-theorem Theory.models_choiceClosed (T : Theory owner) : ChoiceClosed owner T.Models := by
+theorem Theory.models_choiceClosed (T : Theory owner) :
+    ChoiceClosed owner {x | T.Models x} := by
   intro r x y hx hy
   refine ⟨?_,?_,?_⟩
   · intro i hi

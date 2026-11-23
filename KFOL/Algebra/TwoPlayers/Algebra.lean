@@ -82,7 +82,7 @@ theorem choice_top (e : Fin 2 ≃ Role) (i j : Fin 3) :
   all_goals simp_all [value,WinnerSet.choice,WinnerSet.singleton_inj]
   all_goals apply Subtype.ext
   all_goals ext r
-  all_goals simp [WinnerSet.union,Set.union_comm]
+  all_goals simp [WinnerSet.union]
 
 /-- The bottom player's owned choice is minimum on the truth chain. -/
 theorem choice_bottom (e : Fin 2 ≃ Role) (i j : Fin 3) :
@@ -95,7 +95,7 @@ theorem choice_bottom (e : Fin 2 ≃ Role) (i j : Fin 3) :
   all_goals simp_all [value,WinnerSet.choice,WinnerSet.singleton_inj]
   all_goals apply Subtype.ext
   all_goals ext r
-  all_goals simp [WinnerSet.union,Set.union_comm]
+  all_goals simp [WinnerSet.union]
 
 /-- Exchanging the two roles reverses the truth chain and fixes ambiguity. -/
 theorem rename_swap (e : Fin 2 ≃ Role) (i : Fin 3) :

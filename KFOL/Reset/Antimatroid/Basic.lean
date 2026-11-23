@@ -17,7 +17,7 @@ variable {Var : Type v} [DecidableEq Var]
 theorem root_mem_of_nonempty (F : RootedAntimatroid Var) {A : Finset Var}
     (hA : A ∈ F.feasible) (hne : A.Nonempty) : F.root ∈ A := by
   induction hn : A.card using Nat.strong_induction_on generalizing A with
-  | h n ih =>
+  | ind n ih =>
     obtain ⟨a, ha, herase⟩ := F.accessible A hA hne
     by_cases he : A.erase a = ∅
     · have hsingle : A = {a} := by
@@ -117,7 +117,7 @@ theorem remove_from_union (F : RootedAntimatroid Var) {A C : Finset Var}
     (hA : A ∈ F.feasible) (hne : ¬A ⊆ C) :
     ∃ a ∈ A, a ∉ C ∧ ∃ A' ∈ F.feasible, A' ∪ C = (A ∪ C).erase a := by
   induction hn : A.card using Nat.strong_induction_on generalizing A with
-  | h n ih =>
+  | ind n ih =>
     have han : A.Nonempty := by
       by_contra hempty
       exact hne (by simpa only [Finset.not_nonempty_iff_eq_empty.mp hempty] using

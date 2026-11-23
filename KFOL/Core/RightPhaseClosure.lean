@@ -100,7 +100,7 @@ theorem effective_subset_of_activation
     obtain ⟨y, hyscratch⟩ := hscratch
     let closed := close right scratch enabledRight enabledScratch targetNative
     change close right scratch enabledRight enabledScratch (closed \ sourceForeign) = closed at hspans
-    rw [close_eq_self (fun h => (h (hpair hxpair)).2 hxsource)
+    rw [close_eq_self (seed := closed \ sourceForeign) (fun h => (h (hpair hxpair)).2 hxsource)
       (fun h => (h hyscratch).2 (hs.1 hyscratch))] at hspans
     have hsub : sourceForeign ⊆ targetForeign := by
       intro z hz

@@ -129,7 +129,7 @@ private theorem eventual_zero {S : Type u} (next : S → S) (rank : S → ℕ)
     (decreases : ∀ x, rank x ≠ 0 → rank (next x) < rank x) (x : S) :
     ∃ n, rank (next^[n] x) = 0 := by
   induction h : rank x using Nat.strong_induction_on generalizing x with
-  | h n ih =>
+  | ind n ih =>
     by_cases zero : rank x = 0
     · exact ⟨0, zero⟩
     · obtain ⟨k, hk⟩ := ih (rank (next x)) (by simpa only [← h] using decreases x zero)

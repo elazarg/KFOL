@@ -85,7 +85,7 @@ private theorem admissible_orders {D : Diagram Row Role} (hd : D.Admissible) :
       ∃ order, checkSteps (clauses D) C r S order = true := by
     generalize hn : (C.head \ S).card = n
     induction n using Nat.strong_induction_on generalizing S with
-    | h n ih =>
+    | ind n ih =>
       by_cases he : S = C.head
       · subst S
         refine ⟨[],(supports_iff hd.1 C).mpr ?_⟩

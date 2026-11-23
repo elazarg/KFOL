@@ -78,7 +78,7 @@ theorem exists_order (F : RootedAntimatroid Var) {A : Finset Var}
     (hA : A ∈ F.feasible) (hne : A.Nonempty) :
     ∃ xs : List Var, F.FeasibleOrder xs ∧ insert F.root xs.toFinset = A := by
   induction hn : A.card using Nat.strong_induction_on generalizing A with
-  | h n ih =>
+  | ind n ih =>
     obtain ⟨a, ha, he⟩ := F.accessible A hA hne
     by_cases hempty : A.erase a = ∅
     · have har : a = F.root := by

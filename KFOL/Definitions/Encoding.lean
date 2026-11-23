@@ -307,7 +307,7 @@ mutual
         let (children, rest) ← parseChildren fuel operation.1 body
         return (.func operation.2 (fun i => children.getD i.val (.var 0)), rest)
   termination_by fuel _ => (fuel, 0)
-  decreasing_by all_goals simp_wf; omega
+  decreasing_by simp_wf; omega
 
   /-- Parse exactly the arity obtained from the fixed operation alphabet. -/
   noncomputable def parseChildren : ℕ → ℕ → List Bool →
@@ -410,7 +410,7 @@ mutual
         let (children,rest) ← parseChildren fuel operation.1 body
         return (.func operation.2 (fun i => children.getD i.val (.var 0)),rest)
   termination_by fuel _ => (fuel,0)
-  decreasing_by all_goals simp_wf; omega
+  decreasing_by simp_wf; omega
 
   /-- Every decoded operation has arity at most two. -/
   def parseChildren : ℕ → ℕ → List Bool → Option (List Raw × List Bool)

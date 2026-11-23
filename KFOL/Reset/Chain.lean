@@ -58,7 +58,7 @@ theorem reset_chainValue (three : Fin 3 ↪ Role) (i j : Fin 3) :
     | (rw [WinnerSet.reset_of_ambiguous _ _ ((ambiguous_chainValue three _).mpr (by decide))]
        apply Subtype.ext
        ext r
-       simp [chainValue, WinnerSet.union, WinnerSet.singleton, or_comm, or_left_comm, or_assoc])
+       simp [chainValue, WinnerSet.union, WinnerSet.singleton, or_comm, or_left_comm])
 
 namespace Term
 

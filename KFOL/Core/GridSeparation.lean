@@ -41,7 +41,7 @@ theorem fRow_no_atom_on_first {r s : ℕ} (three : Fin 3 ↪ Role)
   have hi := p.property
   cases a <;> cases z <;>
     simp [rawValue, fMarker, cell, row, col, fBlock, hi, Ne.symm hi]
-  all_goals split_ifs <;> simp
+  split_ifs <;> simp
 
 omit [DecidableEq Role] in
 theorem gRow_no_atom_on_first {r s : ℕ} (three : Fin 3 ↪ Role)
@@ -52,7 +52,7 @@ theorem gRow_no_atom_on_first {r s : ℕ} (three : Fin 3 ↪ Role)
   have hi := p.property
   cases a <;> cases z <;>
     simp [rawValue, gMarker, cell, row, col, gBlock, hi, Ne.symm hi]
-  all_goals split_ifs <;> simp
+  split_ifs <;> simp
 
 /-- Different f-profiles force an upper marker at one of the explicitly
 included F-rows. The generators may be reused arbitrarily in the term. -/

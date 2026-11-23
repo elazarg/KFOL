@@ -82,7 +82,8 @@ theorem pairCondition_iff (b : Row → Budget Role Var) (r : Role)
       obtain ⟨j,hj,hja⟩ := by simpa only [ite_true] using (hp r A).mp (hsp ha)
       simpa only [PairCondition,ite_true] using
         (show ∃ k ∈ greatestSupport b r {k | B k = false}, A k = true from
-          ⟨j,safeSupport_le_greatest b r hSafe hSB hj,hja⟩)
+          ⟨j,safeSupport_le_greatest b r (D := {k | B k = false}) hSafe
+            (fun j hj => hSB j (Finset.mem_coe.1 hj)) hj,hja⟩)
     · have hSA : (S : Set Var) ⊆ {j | A j = true} := by
         simpa only [ite_eq_right hqr,Set.subset_def,Finset.mem_coe,Set.mem_ofPred_eq] using
           (hp q A).mp (hsp ha)

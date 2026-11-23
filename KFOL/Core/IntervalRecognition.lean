@@ -243,7 +243,7 @@ theorem exists_saturation_term [Fintype Role] [Nonempty Var]
 theorem Saturated.inter {selected other : Set (Finset Var × Finset Var)}
     (hs : Saturated selected) (ho : Saturated other) : Saturated (selected ∩ other) := by
   intro L U hI hr
-  exact ⟨hs L U hI (reach_mono (fun _ h => h.1) hr),
-    ho L U hI (reach_mono (fun _ h => h.2) hr)⟩
+  exact ⟨hs L U hI (reach_mono Set.inter_subset_left hr),
+    ho L U hI (reach_mono Set.inter_subset_right hr)⟩
 
 end KFOL.Core.Intervals

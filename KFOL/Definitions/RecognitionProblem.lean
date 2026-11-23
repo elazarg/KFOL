@@ -1,16 +1,15 @@
 module
 
 public import KFOL.Definitions.CoreNormalForm
-public import Complexity.Computability.Complexity.Problems.TQBF
-public import Complexity.Computability.Complexity.Problems.SAT
-public import Complexity.Computability.Complexity.Classes.Space
+public import Complexity.Computability.Complexity.Classes.Space.TQBF.Prenex
 
 /-! # Recognition of core term operations from their normal forms
 
 An instance lists the names of finitely many inputs and a family of guards.
 It is a yes-instance when the guards are exactly the prime guards of a core
-term operation on inputs with those names. The source problem is truth of
-closed prenex formulas with a matrix in conjunctive normal form.
+term operation on inputs with those names. The source problem of the
+reduction is truth of closed prenex formulas with a matrix in conjunctive
+normal form, `Cslib.Complexity.TQBFCNF`.
 -/
 
 @[expose] public section
@@ -46,19 +45,5 @@ def coreNormalForms {K : ℕ} (three : Fin 3 ↪ Fin K) : Set GuardList :=
   {x | ∃ (Var : Type) (_ : Fintype Var) (name : Var ↪ ℕ) (t : Term (Fin K) Var),
     (∀ a, a ∈ x.1 ↔ ∃ j, name j = a) ∧ t.IsCore ∧
       Presents name x.2 (Core.Sources.normalForm three (fun v => t.eval v))}
-
-/-- The formula `∃ x₁, ∀ y₁, ⋯, ∃ xₙ, ∀ yₙ, ψ` of a list of rounds `(xᵢ, yᵢ)`
-and a matrix `ψ` in conjunctive normal form. -/
-def prenexFormula (ps : List (ℕ × ℕ)) (ψ : CNF ℕ) : QBF ℕ :=
-  ps.foldr (fun p φ => .ex p.1 (.all p.2 φ)) (QBF.ofCNF ψ)
-
-/-- Rounds and matrix with variables written in binary. -/
-abbrev prenexEncoding : List (ℕ × ℕ) × CNF ℕ ↪ List Bool :=
-  encPair (encList (encPair encNat encNat)) Cslib.Complexity.encCNF
-
-/-- The true closed prenex formulas. This is the set `Cslib.Complexity.TQBFCNF`
-with its encoding `Cslib.Complexity.encPrenexCNF`. -/
-def prenexTruth : Set (List (ℕ × ℕ) × CNF ℕ) :=
-  {x | prenexFormula x.1 x.2 ∈ Cslib.Complexity.TQBF}
 
 end KFOL.Problems

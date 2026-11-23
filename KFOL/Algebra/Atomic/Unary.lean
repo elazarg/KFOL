@@ -49,7 +49,7 @@ theorem atomic_realization_unary [Finite Role] (i : Var) (h : Role → Role) :
       ∃ t : Term Role Var, t.AtomicRealizes (fun v => h (v i)) := by
     intro n
     induction n using Nat.strong_induction_on with
-    | h n ih =>
+    | ind n ih =>
       intro h hn
       by_cases hinj : Function.Injective h
       · let p : Equiv.Perm Role := Equiv.ofBijective h
