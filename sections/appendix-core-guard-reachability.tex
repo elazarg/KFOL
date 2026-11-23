@@ -2817,6 +2817,66 @@ formal zero when there is no endpoint.
 Singleton prime lists supply the rows
 directly on their visible facets.
 
+\paragraph{Shared repairs at multiply headed inputs.}
+The path circuit extends to acyclic budgets with
+several explicitly listed rows per head. Write $m_j$
+for the row count at $j$. Greatest-minorant synthesis
+has size and time bounded by a polynomial in the
+explicit budget times
+\[
+                    \prod_{j:m_j>1}(m_j+1).
+\]
+The pending rows of multiply headed inputs are the
+only additional information needed for sharing.
+
+For a marked head, start at its projection and
+schedule a repair of that head. A repair processes
+its rows in a fixed order. For each row choose
+one posting $u{:}r$, append the projection $u$
+at $r$, and repair $u$ before resuming the next
+row. A head without rows returns immediately.
+An empty loss has no legal choice. All nested
+repairs terminate because their controls descend
+in the source order.
+
+Every completed sequence is bounded. On a loss
+at a used head, consider the last occurrence of
+its projection. The repair scheduled for that
+occurrence supplies an absorbing posting later
+in the sequence, and no new copy of the head is
+introduced after that absorber. At a sole-source
+probe this enforces the required loss. Conversely
+if a given mark is feasible, the acyclic availability
+test provides at each required row a disagreeing
+posting at an available control. Choosing these
+postings recursively gives a completed sequence
+whose attachments all disagree with the probe.
+Its initial mark therefore survives. It follows
+that the union of the completed sequences over
+the possible starting heads is the greatest
+minorant.
+
+For sharing, keep the current head and next row,
+together with the suspended repairs. A call made
+at the last row needs no return frame for its
+caller; hence each suspended frame belongs to a
+multiply headed input and records just its next
+row. Acyclicity orders the frames and prevents
+repetition of a head in the stack. The displayed
+product bounds all possible stacks. The state
+graph is acyclic as well: a choice advances the
+current head's row counter or finishes it before
+introducing a lower-priority control, so a
+lexicographic ordering by source priority
+strictly advances, taking an absent frame as
+finished. Returns merely resume an existing
+pending row. For each starting head, pass the
+union of partial spines along each transition
+and join at each state, using distributivity.
+Take the unions only at completed states.
+The number of states and transitions gives the
+stated bound, without enumerating the spines.
+
 Acyclicity of the disagreeing arrows at a probe does
 not suffice for projection deletion. Take three heads
 $h,x,z$, with respective sole losses
