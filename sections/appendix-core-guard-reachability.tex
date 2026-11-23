@@ -13359,6 +13359,79 @@ finite unions take the maximum depth of their arguments. On negatives
 using each color at most once, the least depth needed for a positive
 query has the following description.
 
+For arbitrary loss rows there is a depth recurrence
+on marked and profile tasks. A task requires the word
+to omit a budget $S$, win specified singleton tests,
+and either supply one marked source, lose one specified
+singleton test, or have no additional requirement.
+In the marked case use losing tests at $p_r$ for all
+owners as requirements on the root profiles. The mark
+itself remains a separate requirement. The recursion
+below only uses marked tasks with no specified wins,
+rainbow tasks with at most one win per owner, and tasks
+with one losing test and at most one win at its owner.
+
+At depth zero test projections. A free union can
+be discarded at the root: every child meets the
+omissions and the winning requirements, and a child
+can be chosen that supplies the marked source or
+loses the one required test, when applicable. For a
+completion root choose some rows of $S$ to absorb
+and choose one owner $r$ per chosen row $(j,t)$.
+Keep the other rows as the budget for every child.
+Let $\mathcal A_r$ be the coalitions $t_r$ of these
+chosen rows together with the inherited winning
+coalitions at $r$. Let $\mathcal B_r$ consist of the
+inherited losing tests at $r$, including the probe
+tests in a marked task. A root of depth at most $d$
+exists for this choice precisely when the following
+tasks on the kept budget all have witnesses at
+depth at most $d-1$:
+\begin{itemize}
+\item for each choice of one coalition from each of
+any subset of the $\mathcal A_r$, with at most one
+per owner, a child winning all the chosen tests;
+\item for each $B\in\mathcal B_r$, a child losing
+$r:B$, and for each $A\in\mathcal A_r$ a child both
+winning $r:A$ and losing $r:B$;
+\item in the marked case, a child supplying the mark.
+\end{itemize}
+The empty choice in the first item asks for a bounded
+child with no profile requirements.
+
+For necessity choose the rows on which an actual
+root is singleton, labeling them by its output.
+At the other rows its output is ambiguous and is
+the union of its child menus, so all children
+omit those rows. For each $A\in\mathcal A_r$, the
+set of children winning $r:A$ is a winning coalition
+for the root's $r$-profile. The root profiles have
+a common child for every rainbow selection, giving
+the first item. For $B\in\mathcal B_r$, its set of
+winning children loses at the root. It cannot be
+the full child set or contain the winning child
+set for any $A\in\mathcal A_r$, proving the second
+item. If the root supplies the mark, it is ambiguous
+on that probe and some child supplies it.
+
+For sufficiency take all the indicated children.
+At each owner generate the root profile by the full
+child set and by the sets of children winning
+$r:A$ for $A\in\mathcal A_r$. The first item gives
+common source, and the second keeps each required
+losing child set from containing a generator.
+Thus there is a greatest completion with these
+profiles. It absorbs every selected row, respects
+all other rows by the children's omissions, and
+meets all inherited profile demands. In a marked
+task it is ambiguous on the positive probe and
+transmits the chosen child's mark. This proves the
+recurrence without limiting the number of postings
+per owner. At fixed $K$ each selected root has only
+polynomially many child requirements in the listed
+budget size, even though finding the root's selection
+may require searching many possibilities.
+
 \begin{theorem}[Minimum completion depth]\label{core:thm:completion-depth}
 Suppose $|t_r|\le1$ on every negative. Starting at $S=Z$, the minimum
 depth for $(i,p)$ is the minimum number of moves needed to reach
