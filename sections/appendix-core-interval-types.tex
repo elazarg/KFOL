@@ -80,6 +80,63 @@ added $r$-filters are redundant. The marked type is therefore actual.
 If $R=\varnothing$, use $S=X$ and the same restoration argument.
 \end{proof}
 
+\paragraph{Shared filters with a common restoring suffix.}
+The restoring phase can be shared by an entire
+guard circuit. Fix a passive core baseline $C$
+and a set of owners $R$. Supply passive core
+helpers $H$ tagged by owners in $R$. Require
+every helper to equal $C$ wherever $C$ is an
+atom at an owner outside $R$, and to lie below
+$C$ wherever $C$ is ambiguous. At atoms owned
+by $R$ the helpers may be unbounded.
+
+On exclusion bits, use a circuit that starts
+with the true signal, joins signals by
+disjunction, and filters a signal by
+$\neg\Phi_r(H)(E_r)$ for a tagged helper
+$(r,H)$. Compile a join by union and a filter
+by attaching $H$ at owner $r$. The true signal
+is $X$. If a false signal occurs, compile it
+as $C$, which supplies no distinguished source.
+At the output, attach $C$ once at every owner
+in $R$ and then adjoin it by union. If $P$ is
+the circuit's predicate before the restoring
+phase, the compiled interval operation has
+distinguished predicate
+\[
+             P(E)\land\bigwedge_{r\in R}\neg\Phi_r(C)(E_r).
+\]
+
+Indeed on each sole-source probe only $X$
+can supply the mark. A tagged attachment has
+exactly its specified filter there, and the
+restoring gates apply the displayed additional
+filters. For the interval bound, wherever $C$
+is ambiguous, all helpers lie below it and
+every intermediate gate stays below $C\cup X$.
+At an inactive atom every helper is that atom,
+so the same containment holds. At an active
+atom the corresponding restoring gate forces
+that atom, regardless of the intermediate
+value, and the rest of the restoring phase
+preserves it. The final union supplies the
+lower bound $C$ in all cases. Each join and
+filter uses a constant number of core gates,
+and the helpers and restoring copies of $C$
+can be shared throughout.
+
+For a greatest profile completion, the bound
+at ambiguous valuations holds automatically
+by provenance. The other helper condition
+then just says that each helper inherits the
+baseline's positive singleton tests at the
+inactive owners. In particular a single
+restoring suffix suffices for all paths of a
+shared mask circuit with the same inactive
+owners. If the circuit predicate already
+implies the restoring filters, this realizes
+it unchanged.
+
 The profile parameters are independent once the active set is fixed.
 For $J\subseteq I$, put
 \[
