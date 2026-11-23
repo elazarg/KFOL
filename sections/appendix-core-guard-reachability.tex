@@ -2479,6 +2479,37 @@ path inspects at most the number of arrows.
 Depth-first traversal therefore spends
 polynomial work between successive boxes.
 
+Each box has a least probe: keep just the
+postings whose flags are true and leave every
+other input unposted. This probe still belongs
+to the box, including after intersection with
+an exclusion guard. If the box fails, its
+least probe is therefore a loss. Conversely
+every failed probe contains the least probe
+of its failed box. Inclusion-minimizing these
+least probes over the full facet gives exactly
+the minimal losses of the greatest bounded
+predicate there. Equivalently a guard fails
+exactly when it is disjoint from the least
+probe of some failed box.
+
+There is an additional restriction on a minimal
+loss $p$ of that predicate. For its disagreement
+reach $R$, each exterior posting of $p$ must
+block an arrow from $R$. Otherwise it is not
+fixed by the box and can be removed. Each
+interior posting must occur in a minimal loss
+of the budget projected to $R$. Indeed, removing
+an interior posting leaves $R$ unchanged: the
+only additional disagreement arrows end at
+an input already in $R$. If the removed
+posting occurs in no minimal projected row,
+the pointed cut on $R$ gives the same failure
+after its removal, contrary to minimality.
+Thus the interior posting test can use the
+minimized projection, even though the exterior
+boundary test uses the original graph.
+
 For complete prime input the reachability graph can
 be read directly from the lists: a posting occurs
 in a minimal loss exactly when it occurs in a prime
