@@ -248,6 +248,67 @@ by \cref{core:thm:guard-transition-depth}. This applies also
 when some bits encode auxiliary registers, provided they are
 counted among the state bits.
 
+Deterministic binary transitions have a short
+cycle somewhere in their valid state set. Let a
+2-CNF graph define a total deterministic update
+on a nonempty set of $m$-bit states, with successors
+in the same set. The valid set is closed under
+coordinatewise majority, and the update preserves
+it, because taking majority of three graph edges
+preserves every binary clause.
+
+Each output bit is a constant or a signed copy
+on the valid set. For a nonconstant bit choose two
+valid inputs $x,y$ giving opposite outputs with
+minimum Hamming distance. If a third input gives
+the same output as $x$, its majority with $x,y$
+still gives that output. It must agree with $x$ at
+every coordinate where $x,y$ differ, since otherwise
+the majority would give an opposite-output pair
+with $y$ at smaller distance. The analogous
+argument holds for the other output. Any differing
+coordinate therefore determines the output bit,
+possibly with reversal.
+
+Extend the signed copies and constants to the
+whole cube. The dependency graph of these updates
+feeds from directed cycles and constants. After at
+most $m$ steps, any period divides twice the least
+common multiple of the lengths of the directed
+cycles. Indeed, one complete turn around a cycle
+either copies or reverses each bit. In particular
+the power-of-two part of any period is at most
+$2m$. The entire period is
+$2^{O(\sqrt{m\log(m+1)})}$: lengths at most $t$
+contribute $\log\operatorname{lcm}(1,\ldots,t)=O(t)$,
+and there are at most $m/t$ longer cycles, each
+contributing at most $\log m$. For the first bound
+the quotient of the least common multiples up to
+$t$ and up to $\lceil t/2\rceil$ divides
+$\binom{t}{\lfloor t/2\rfloor}$, by the prime powers
+in that interval. Iterating halves gives the bound;
+take $t$ of order $\sqrt{m\log(m+1)}$.
+
+Now take any cycle of valid states of length
+$L=Pq$, with $q$ odd and $P$ a power of two.
+At each time take the majority of the $q$ runs
+shifted by multiples of $P$. Each resulting edge
+is still valid: an odd majority preserves every
+binary clause, since two sets each of more than
+half the voters must intersect. Shifting the
+result by $P$ permutes the runs being combined.
+It therefore gives a valid closed walk of length
+at most $P\le2m$, and hence a cycle that short.
+The argument also applies to alternating
+deterministic 2-CNF maps between two valid
+register sets: their composite is again a
+deterministic 2-CNF relation by elimination,
+and a short cycle of the composite lifts to
+at most twice that length. Thus long reachable
+cycles are possible for these binary transitions,
+but a construction requiring every valid cycle
+to be long needs a different transition mechanism.
+
 The quadratic finite-path bound is attained in order of growth.
 Take two rings of Boolean registers with consecutive lengths
 and shift each ring by one position per step. The copy rules
