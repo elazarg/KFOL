@@ -21,6 +21,7 @@ public import KFOL.Core.ProfileEnvelope
 public import KFOL.Core.ProfileRelations
 public import KFOL.Core.ProfileBounds
 public import KFOL.Core.WholeInputs
+public import KFOL.Core.ReachableGuardScope
 public import KFOL.Core.ProfileQueries
 public import KFOL.Core.ProfileCompletion
 public import KFOL.Core.ProfilePointObstruction
