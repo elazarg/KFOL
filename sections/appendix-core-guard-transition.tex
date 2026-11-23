@@ -1972,13 +1972,13 @@ is computed from the input configuration. Apply
 \end{proof}
 
 The alternating rails also give circuit lower bounds
-for unrestricted greatest core minorants. Add a fifth
-owner $e$ and retained control inputs $z_\lambda$.
+for unrestricted greatest core minorants. Use retained
+control inputs $z_\lambda$ at the rival owner $b$.
 Allow a terminal state to request a control $\lambda$:
 its $a$-group loss now requires the posting
-$z_\lambda:e$. In the positive probe keep all rails
+$z_\lambda:b$. In the positive probe keep all rails
 posted at $c$, and independently post any of the
-controls at $e$. Interpret a request as accepting
+controls at $b$. Interpret a request as accepting
 exactly when its control is unposted.
 
 The equivalence in \cref{core:thm:alternating-rail-transitions}
@@ -1989,11 +1989,14 @@ query blocks. If the control is posted in the positive
 probe, that reset is unavailable and the request
 cannot occur as a winning terminal. The other
 comparisons post no controls and force the same
-strictly later successors as before. Conversely
+strictly later successors as before. The existing
+$b$-attachments in the witness use only rails,
+so the additional probe postings at $b$ do not
+activate them. Conversely
 take the decreasing-height witness for winning
 states, treating available requests as accepting.
 After all rail attachments, attach the projections
-of their requested controls by $\star_e$. These
+of their requested controls by $\star_b$. These
 attachments suppress the new terminal losses and
 preserve the mark because none of the selected
 controls is posted in the positive. Their own
@@ -2008,14 +2011,26 @@ the edge. This is a finite-tree game with polynomial
 space addresses and bounded-scope machine transitions,
 implemented by ordinary tape scans as in the hardness
 proof above. The transition rules are independent of
-the edge inputs. The terminal edge index can be kept
-in a binary register. On unique addresses, replace the
-accepting-state prohibition by clauses guarded by the
-request code and edge index, requiring the posting of
-the corresponding control at $e$. There are at most
-$\binom m2$ indices and each such clause has
-$O(\log m)$ literals. The existing validity and
-transition clauses stay unchanged. Each posting
+the edge inputs. Reserve one tape position per edge.
+After determining the queried pair, the machine
+moves its tape head to that position and enters
+the request control state. It can do this using
+a counter on its work tape and ordinary scans,
+with polynomial space. Thus the requested edge
+is identified by the descent of the nonincreasing
+head flags already used for transition coding.
+
+At each reserved position add a clause guarded
+by the request control code and the two head flags
+identifying that position, requiring the corresponding
+control posting at $b$. A request with its head
+outside the reserved positions is rejecting: none
+of these additional clauses is active. At a unique
+address the request loss is therefore exactly the
+one used in the reset proof. Each new clause has
+constant width, and there are only $\binom m2$
+of them. The existing validity and transition
+clauses stay unchanged. Each posting
 variable has a fixed owner at a given head, including
 the new controls, so facet restriction and minimization
 give canonical lists of polynomial total size.
@@ -2038,8 +2053,8 @@ the rail flags and the mark at the head are fixed.
 Consequently the monotone clique bound of
 \cite[Theorem~3.9]{AlonBoppana1987} forces a
 superpolynomial shared core circuit for the
-unrestricted greatest minorant. This uses five
-owners and logarithmic prime width, without
+unrestricted greatest minorant. This uses four
+owners and bounded prime width, without
 imposing any completion-depth restriction.
 
 \paragraph{Exact reset certificates on alternating rails.}
