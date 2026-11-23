@@ -333,89 +333,88 @@ remaining minimal loss containing the pin has
 some such omission and private prime. These scans
 compute $U$ without enumerating the losses.
 
-For listed losses this gives an exact Horn test
-throughout marked owner deletion if every original
-offer $s:D$ has a pure projected budget on its
-localized set $U$. The hypothesis need be checked
-only on the original list after the offer's own
-deletions. Later deletions can only shrink the
-ancestor set and remove rows, so they preserve
-purity. At a mark query $p$, the helper for
-$s:D$ must win that offer and lose at $p_s$.
-If $c$ is the Horn closure of its pure projected
-budget, the native-profile criterion gives
-feasibility precisely when
+Pure localized budgets make ordinary safe-fold
+saturation exact. Let $C_s$ be the Horn closure
+of $p_s$ under all current rules $t_s\to j$.
+For an offer $s:D$, remove its covered rows and
+form its localized set $U$ as above. If the
+projected budget there is pure, the native-profile
+criterion tests its helper by
 \[
-                 D\not\subseteq c(p_s\cap U).
+             D\not\subseteq c(p_s\cap U),
 \]
-Indeed the additional winning demand derives
-the whole support as soon as a closure contains
-$D$, and has no effect on any other closure.
-Thus each owner deletion takes polynomial work,
-as does reaching stability and reading all
-marks at the query. The original dependence
-graph need not be acyclic or pure on its source
-components. For example an even directed cycle
-with one singleton row per head and alternating
-edge owners has singleton localized sets:
-each offered input has no incoming edge
-at its offer owner. The full graph stays one
-mixed component.
+where $c$ is Horn closure in the projected budget.
+The additional winning demand derives the whole
+support as soon as the closure contains $D$, and
+does not affect any other closure.
 
-Pure localized budgets allow a symbolic test even
-at unrestricted prime width. Suppose every original
-offer has a pure localized budget after its own
-deletions, with no size restriction on its tail or
-its scope. If $s:D$ can remove a row at query
-$p$, the closure test provides some
-$u\in D\setminus c(p_s\cap U)$. On that same
-projected budget one can instead require the
-singleton win $s:\{u\}$ and still lose at $p_s$,
-by the native-profile criterion. This helper
-absorbs on every row removed for $D$, so it is
-bounded on the original current budget. Its
-singleton offer can remove the same row.
+For each $u\in D$, the removed rules all contain
+$u$ in their premises, so none can affect whether
+$u$ is derived from $p_s$: the first derivation
+of $u$ cannot use a rule already requiring it.
+The retained Horn closure restricted to $U$
+agrees with $c$, because $U$ is predecessor-closed
+at $s$. Thus the displayed test is just
+$D\not\subseteq C_s$. When it succeeds, the
+$s$-fold on $V\setminus C_s$ already gives an
+eligible helper. It loses at $p_s$, absorbs on
+every row whose $s$-tail meets that complement,
+and cannot supply a marked head on any other
+row, by the Horn implications.
 
-The singleton's own localized set is contained
-in $U$: its deletion removes at least the rows
-removed by $D$, and its ancestor search starts
-from just $u$. Its projected budget is therefore
-pure as well. It suffices to test all singleton
-offers with pure localized budgets, even if some
-of those singleton tails never occur as whole
-tails. Every accepted offer removes only rows
-outside the true terminal budget. Conversely at
-a stable budget any removable row would admit
-one of these singleton offers by the preceding
-argument. Thus stability gives the exact marked
-answer.
+If every original offer has a pure projected
+budget after its own deletions, the condition
+persists on every retained subbudget, since
+deletions only shrink the localized sets and
+remove rows. Consequently the exact owner map
+at each step deletes precisely the rows whose
+tail is not contained in $C_s$. This is the
+ordinary safe-fold map. Its common fixed point
+therefore gives all marked answers and exactly
+the protected rows of the activation principal.
+On canonical prime lists, the ground searches
+of the guard-reachability appendix compute the
+Horn closures and their successive restrictions,
+with arbitrary prime width and palette size.
+In particular no helper search for individual
+offers is needed to run this test.
 
-On complete prime lists, store the successful
-singletons as forbidden postings in a shared
-ground. Each edge search for the next singleton
-adds only another forbidden posting and, for an
-edge pin, a private-prime restriction. Purity
-checks use the same searches for foreign edges
-inside the localized set. A Horn closure step
-restricts the internal tail to the current reached
-set and asks for a row at its head. All of these
-are ground tests against the original primes.
-There are at most $K|V|$ successful singleton
-offers, so the test is polynomial in the prime
-lists even with a variable palette.
+A checkable sufficient hypothesis is that for
+each owner $s$, every posting edge with both
+ends among the inputs ever posted at $s$
+itself has owner $s$. Each $s$-scope stays
+within those inputs, so its projection is pure.
+The condition is read directly from the prime
+exclusions. For instance, an even directed
+cycle with alternating edge owners satisfies
+it and is one mixed source component. More
+generally, a successful safe-fold mark is
+sound on arbitrary budgets, and failure is
+conclusive if at the terminal budget every
+removable row would have a feasible offer in
+a pure localized scope.
 
-For a checkable sufficient hypothesis, let $X_s$
-be the inputs ever posted at $s$. If every
-posting edge with both ends in $X_s$ has owner $s$,
-each $s$-scope is pure: it starts within $X_s$
-and traces only edges whose origins are in $X_s$.
-The original posting graph, and hence this
-condition, is read just from the unions of the
-prime exclusions. A successful mark still has a
-witness on arbitrary canonical, observer-agreeing
-lists. Failure is conclusive if at the terminal
-budget every removable row would have a feasible
-offer in a pure localized scope.
+The same ground computation gives a shared
+monotone circuit for all query colorings. Use
+one bit per allowed posting in the current
+ground. At a Horn step for owner $s$ at a head,
+a given prime is hit if some posting in it
+is currently allowed and, for an $s$-posting,
+its input has been reached. Conjoin these
+hits on a facet and disjoin over facets to
+obtain the rule firing bit. Close from the
+query seeds by at most $|V|$ additions per
+owner. Then intersect the ground at each
+owner with its reached set. Iterate for at
+most $K|V|$ strict ground changes. All these
+updates are monotone in the query posting
+bits. At the end the same prime-hit test
+without the reachability restrictions reads
+the surviving heads. Dualizing this circuit
+on exclusion bits reads the greatest bounded
+source predicates under the purity hypothesis.
+This gives the whole minorant in polynomial
+circuit size, without listing its primes.
 
 There is also a symbolic version at prime width
 two. Fix $K$. Suppose every original owner tail
