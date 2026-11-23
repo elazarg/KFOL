@@ -9238,6 +9238,86 @@ implication is not vacuous. It is the joint loss
 row, rather than capture on the two pure probes,
 that enforces the implication.
 
+The same example rules out representing mixed
+implication by inclusion after a closure on inputs.
+Take $B=\{y,z\}$ in the budget with the mixed row.
+Both $\{x\}$ and $\{z\}$ imply $B$. Their union
+does not: $x\star_s z$ omits the row, wins the
+$k$-test on $\{x,z\}$ and loses it on $B$.
+Both antecedents can win and $B$ is not forced.
+For any ordinary closure $c$, containment
+$c(A_i)\subseteq c(B)$ for both $i$ would imply
+$c(A_1\cup A_2)\subseteq c(B)$, since $c(B)$ is
+closed. Thus the obstruction is a failure of the
+closure order itself.
+
+There is a direct description at a fixed consequent
+$B$ when rows post only unheaded inputs. Write $W$
+for the unheaded inputs and $H$ for the heads. If
+$A\cap W=C$, implication requires $C\subseteq B$,
+as a projection at any other unheaded input would
+separate the tests. For each $C\subseteq B\cap W$,
+let $F(C)$ be the set of heads with some row
+having $k$-tail contained in $B$ and all foreign
+tails disjoint from $C$. The largest antecedent
+with that unheaded part is exactly
+\[
+                     C\cup(H\cap B)\cup F(C).
+\]
+Every other antecedent with that unheaded part
+is obtained by deleting some of its heads.
+This follows from the displayed blocking-row
+criterion because foreign tails never post a head.
+
+Equivalently, the antecedents form the independent
+sets of an explicit hypergraph. Include a singleton
+edge for each unheaded input outside $B$. For each
+head $j\notin B$, use the common prime list of
+\cref{core:cor:common-prime-list}. Each prime $G$
+with no $k$-posting from $B$ contributes the edge
+consisting of $j$ and the inputs of its foreign
+postings. Such an edge is contained in $A$ exactly
+when this prime misses the allowed ground for a
+blocking row at $j\in A\setminus B$. Therefore
+absence of a contained edge is equivalent to
+implication. At fixed $K$ this representation
+is polynomial in the facet lists.
+
+Conversely any hypergraph whose edges consist of
+one head and a set of unheaded inputs can be read
+this way. Add a fresh retained $y$ and let $B$ be
+all the designated unheaded inputs together with $y$.
+For each head $j$, use the common prime
+$\{y{:}k\}$ and, for each edge $\{j\}\cup E$,
+the prime $\{u{:}s:u\in E\}$ at one fixed $s\ne k$.
+Require hitting these guards, removing redundant
+supersets. On any facet omitting a needed owner
+the source is always positive. The losses are
+proper transversals and the other inputs are retained.
+The one-source completion theorem realizes
+each head independently, and union realizes
+the whole family. An empty $E$ instead yields
+a retained projection, which supplies precisely
+the required singleton edge at that input.
+
+Even this one-layer case has exponentially many
+inclusion-maximal antecedents for a single $B$,
+with linear-size prime lists at fixed $K$.
+Retain $y$ and $u_i,v_i$ for $1\le i\le m$.
+At each head $x_i$ put two rows,
+$(y{:}k,u_i{:}s)$ and $(y{:}k,v_i{:}s)$,
+where $s\ne k$. Take $B$ to be the entire retained
+set. An antecedent implies $B$ exactly when it does
+not contain all of any triple $\{x_i,u_i,v_i\}$.
+The maximal ones contain $y$ and choose two
+members of each triple, giving $3^m$ antecedents.
+All can win by projection $y$. On each facet
+seeing both owners the primes at $x_i$ are just
+$\{y{:}k\}$ and $\{u_i{:}s,v_i{:}s\}$; the other
+facets have the empty guard. Thus storing maximal
+antecedents can require exponential expansion
+even though membership is a direct prime test.
+
 \paragraph{Reduction to monochromatic source queries.}
 On explicitly listed loss budgets, monochromatic
 source queries suffice for arbitrary marked queries
