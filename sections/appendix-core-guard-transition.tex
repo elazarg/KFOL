@@ -513,6 +513,8 @@ For every fixed $K\ge3$, detecting an ordinary reset
 obstruction for a marked query is PSPACE-complete with
 singleton primes, even when the query posts only one owner
 and each head has at most one loss row.
+With the same restrictions, detection remains
+PSPACE-hard with both comparison and seed refinements.
 \end{theorem}
 \begin{proof}
 A path to illegality can be shortened to at most $K2^n$
@@ -577,6 +579,44 @@ passes every check. Hence the sole seed certifies an
 ordinary obstruction exactly when the intersection is
 empty. The construction is polynomial and uses only
 the three designated owners.
+
+For hardness with refinements, add a fresh inert input
+$e_s$ for every palette owner $s$, with an empty loss at
+each such head. Pad the loss row of each phase head of
+owner $s$ by posting $e_t$ at every $t\ne s$. Add $e_r$
+to the query block at $r$. Leave the marked head's row
+and the head $z$ as before. A phase head's loss is now
+visible precisely on the facet of its own phase owner.
+In the ordinary search, each padded transition either
+preserves the original successor with one inert input
+added, or goes to a singleton inert input, which has
+an empty comparison. Inert inputs contribute no posts.
+The stopping tests on genuine phase coalitions are
+unchanged, since the possible added $r$-input is already
+posted in the query. Hence an empty intersection still
+gives an ordinary obstruction.
+
+For a common accepted word, follow its path to the
+illegal coalition. Work backward along that path,
+showing finite rank for the coalition of genuine inputs
+at each phase, without the inert input. At the end the
+test on $\{z\}$ has no comparison. At an earlier step,
+every comparison includes the padded rows of the
+genuine heads and thus the prescribed successor
+at its owner. Any refinement of that successor tail
+must keep all its genuine inputs in its original
+owner's block. Moving one to another owner would
+require an auxiliary loss invisible on that facet.
+This also holds for $z$, which has no loss at all.
+Every refined comparison therefore has a candidate
+containing the next genuine coalition. It has finite
+rank by induction and upward closure, and it cannot
+be discarded as a query subcoalition. The initial
+coalition thus has finite rank. A seed refinement,
+including repeated replacements, must retain that
+same coalition in its original owner block by the
+same visibility argument. No seed certifies an
+obstruction. This proves the refined lower bound.
 \end{proof}
 
 At width two, the entire comparison conflict
