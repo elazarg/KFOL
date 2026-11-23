@@ -240,6 +240,46 @@ affect the test, since repeated loss constraints are
 idempotent. Combine with the root-split recursion
 for an exact bounded-word test at this row count.
 
+\paragraph{Recovering small packed budgets from primes.}
+For fixed $K$, the packed-row algorithm can start from
+canonical prime lists of unrestricted width. Given a row
+budget $m$, it either finds a packing with at most $m$
+rows and decides marked feasibility, or reports that
+the losses do not admit such a packing. Its time is
+single exponential in $m$ times a polynomial in the
+prime input size.
+
+At a head and observer let $\Gamma$ denote the prime
+list and $L$ the losses already recovered. By
+\cref{core:thm:guard-consensus}, all minimal
+transversals of $\Gamma$ are consistent, hence are
+exactly the minimal losses. To find the next loss,
+enumerate minimal transversals of $L$ until one,
+say $G$, is absent from $\Gamma$. Every member of
+$\Gamma$ hits $L$, so minimality of $G$ implies it
+contains no member of $\Gamma$. Its complement
+therefore hits $\Gamma$. Greedy deletion yields a
+minimal loss there, different from all of $L$ since
+$G$ hits $L$. If the enumeration exhausts without
+such a $G$, every transversal of $L$ contains a
+member of $\Gamma$. Together with the reverse
+implication this gives $\operatorname{Tr}(L)=\Gamma$
+and proves recovery is complete.
+
+Only the first $|\Gamma|+1$ outputs, or exhaustion,
+are needed in each enumeration. Makino's incremental
+dualization algorithm, with the exponential dependence
+on the number of terms in its proof, gives time
+$2^{O(|L|)}$ times a polynomial in the explicit input
+and this output limit \cite{Makino2003FewTerms}.
+As soon as there are more than $Km$ distinct
+observer--posting groups across the heads, no packing
+of size $m$ is possible. In particular, no individual
+list needs more than $Km+1$ losses. Otherwise grouping
+and the packing test above finish the reduction to
+explicit rows. This extracts small exact budgets
+even when the prime clauses themselves are wide.
+
 \paragraph{Fixed palette and few explicit bounds.}
 For fixed $K$ and $m$, feasibility under $m$ explicit
 output bounds is polynomial-time even with arbitrarily
