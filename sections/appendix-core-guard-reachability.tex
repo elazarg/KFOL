@@ -13432,6 +13432,62 @@ polynomially many child requirements in the listed
 budget size, even though finding the root's selection
 may require searching many possibilities.
 
+For listed rows and fixed palette and depth, this
+recurrence gives certificates of polynomial size:
+guess the absorbed rows at each node and include
+a witness for each of its polynomially many child
+requirements. Already depth one is NP-complete at
+three owners, even for losses at a single head and
+an empty positive probe.
+
+For hardness, start with graph three-colorability.
+Use Boolean variables $X_{v,c}$ for vertices $v$
+and colors $c$, one positive triple per vertex
+requiring a color, and negative binary clauses
+forbidding equal colors across an edge. These
+clauses are satisfiable exactly for a three-colorable
+graph, since one can choose any true color at each
+vertex. Use one negative row per clause, all headed
+at the marked source $i$. Label the three positive
+options at a vertex with distinct owners according
+to their colors. The two negative options of an
+edge clause concern the same color; label them by
+the two other owners. Thus opposite occurrences
+of a variable have different labels.
+
+For every tuple of options from distinct clauses
+and distinct owners whose literals are consistent,
+including each singleton option, create a passive
+input. Put that input in the posting coalition
+of each option in its tuple, using that option's
+owner. A passive input occurs at most once in any
+row, since the tuple contains at most one option
+per clause. There are only polynomially many
+tuples at three owners. The intersection of
+any selected options of distinct owners and
+clauses is nonempty exactly when their literals
+are consistent.
+
+A depth-one witness can be taken to be a single
+greatest completion on projections, since a free
+union supplies the mark from one summand omitting
+all negatives. Each row must be absorbed at some
+owner, and the chosen coalitions, even before
+restricting to the witness support, must pass the
+rainbow intersection condition. Therefore the
+chosen literals cannot contain opposites: opposite
+options have distinct owners and empty intersection.
+They give a satisfying assignment. Conversely
+choose one true literal in every clause. The
+resulting coalitions meet in each rainbow
+selection, so generate compatible singleton
+profiles on the full support together with
+unanimity. No winning generator is empty. The
+greatest completion enforces every row and
+supplies the mark on the empty probe. This proves
+hardness, and the fixed-depth certificate gives
+membership in NP.
+
 The recurrence shows that disagreeing reachable support
 preserves minimum completion depth for arbitrary rows.
 Fix the original positive $(i,p)$ and its reachable set
