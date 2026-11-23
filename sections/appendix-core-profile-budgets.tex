@@ -141,19 +141,52 @@ and can only be released or become infeasible.
 Consequently $\ell$ positive winner requirements
 increase the depth bound to $2m+d+2\ell$.
 
-For explicitly listed rows and signs this gives a
-polynomial-space recognition procedure. At a
-nonleaf guess the gate and both children's values
-at all listed valuations, including the profile
-probes for the signs. Check their combination
-and recurse on each exact child vector in turn
-with the depth counter decreased. A leaf is checked
-by projection. The depth bound governs the original
-instance; the recursive calls simply test realizability
-at the remaining depth. This argument bounds depth
-by the number of explicit constraints even when the
-number of inputs or owners varies. A succinct prime
-budget may describe exponentially many such rows.
+The bound counts explicit constraints even when the number
+of inputs or owners varies. A succinct prime budget may
+describe exponentially many such rows.
+
+\paragraph{Splitting explicit constraints at the root.}
+There is an exact finite recursion on residual constraints
+with no need to enumerate child output tables. For each
+possible root owner $r$, split each requirement between
+its two children independently.
+\begin{enumerate}
+\item For an output bound $U$, require both children to
+stay below $U$, or, if $r\in U$, give one child the
+bound $\{r\}$ and leave the other unrestricted.
+\item For a signed singleton test, use the OR or AND
+recursion at that gate. A disjunctive requirement is
+given to one child and a conjunctive requirement to both.
+\item For a required winner $k$, give one child the
+winner requirement. If $r\ne k$, give the other child
+the requirement to omit the $r$-atom at that valuation.
+\end{enumerate}
+The first split separates absorption from union. In the
+third, the child retaining $k$ already cannot be a foreign
+$r$-atom. Thus the listed splits are sufficient and every
+satisfying gate admits one of them. A leaf is accepted
+exactly when one projection satisfies all residual
+constraints. A positive $r$-atom constraint at a valuation
+is just an upper bound by $\{r\}$, since values are
+nonempty. Its negation is a negative singleton test.
+
+Each original bound slot can hold its original constraint,
+one of at most $K$ singleton bounds, or no constraint.
+A sign can be kept or released. A winner slot can hold
+its original requirement, a negative singleton test at
+one of the other owners on that row, or no constraint.
+Along a child edge, constraints keep their slot or move
+from an original bound or winner requirement to one of
+its new forms, and then may be released. A split with a
+child state identical to its parent is unnecessary for
+feasibility, because a witness for that child already
+witnesses the parent state. The remaining splits can be
+tested by a table ordered by the residual stages.
+Its size is at most $(K+2)^{m+\ell}2^d$, and each
+state has at most $K3^m2^{d+\ell}$ split trials.
+This yields polynomial space by recursive search,
+or time $(O(K))^{m+\ell}O(1)^d$ times a polynomial
+in the explicitly supplied input using the table.
 
 \paragraph{Fixed palette and few explicit bounds.}
 For fixed $K$ and $m$, feasibility under $m$ explicit
@@ -183,9 +216,9 @@ per owner suffices because the full coalitions pad any
 smaller selection.
 
 Every subquery so far uses at most $K$ signs and
-$m$ rows, hence has a witness of constant depth.
-Input choices at the leaves and gate labels can
-therefore be enumerated in polynomial time. To check
+$m$ rows. The residual table decides each in time
+exponential in $m$ times a polynomial in the input,
+with degree depending only on the fixed palette. To check
 positive winners, use the greatest bounded word under
 the signed requests, described below. At a requested
 valuation, test whether any demanded owner's singleton
