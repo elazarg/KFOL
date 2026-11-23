@@ -4425,45 +4425,66 @@ reciprocal colored graph on the
 conditional heads with one-sided
 dependencies on unconditional inputs.
 
-In the absence of unconditional heads, this
-gives an exact graph description of the core
-operations admitting two-input observer
-covers. After discarding inessential inputs,
-they are the named unions of owned choices
-on the edges of triangle-free, properly
-edge-colored graphs, with a common set of
-fewer than $K$ incident colors at each
-vertex of a connected component and
-no isolated vertices.
+The loss normal form admits a two-input observer
+cover exactly under the following conditions.
+\begin{enumerate}
+\item If a conditional head has a multi-owner
+neighbor, it has no other neighbor.
+\item At every other conditional head, the
+singleton labels of its neighbors are distinct.
+\item Across a reciprocal conditional edge, the
+two ends have the same incident color set.
+For any common neighbor outside that edge,
+the labels from its two ends to that neighbor
+agree.
+\end{enumerate}
 
-Indeed, the binary loss normal form now
-gives a reciprocal single-label graph, and
-each vertex has a single proper loss.
-On facet $k$, if it has an incident edge
-at $k$, its empty prime requires a scope
-containing every neighbor at that owner.
-A two-input scope forces at most one,
-which proves proper edge coloring.
-For an edge at $r$, the scope for the
-empty prime at one end on facet $r$
-must be that edge. A common neighbor
-would receive two different exterior
-labels by proper edge coloring there,
-so no triangle is possible.
+For the first condition, an exterior multi-owner
+neighbor receives conflicting labels, so it must
+be in any admissible piece at the head. If there
+is another neighbor, take a facet omitting an
+owner of the multi-owner neighbor. An empty prime
+there forces another input via a singleton edge
+of that owner. If there is no empty prime, the
+guard at the other neighbor requires that other
+input as well. Either way two inputs cannot
+suffice. Conversely a lone multi-owner neighbor
+is unconditional by the binary loss normal form,
+so the pair has no outgoing arrows.
 
-If one end of an edge has an incident
-color $k$ that the other lacks, the
-second end has a visible loss on facet
-$k$. Its prime excluding the first
-end forces a scope on the pair, but
-the first end's $k$-edge then leaves
-that scope. This is impossible on
-facet $k$. Hence adjacent vertices use
-the same colors, and their loss is
-proper only when that set is smaller
-than the palette. Conversely the
-edge construction above gives a
-two-input cover on each such component.
+With singleton labels, facet $k$ forces every
+$k$-neighbor into a piece for the empty prime,
+so there can be at most one. A reciprocal edge
+at $r$ must itself be a piece on facet $r$,
+which forces the agreement condition at common
+exterior neighbors. If an edge joins two
+conditional ends with different incident color
+sets, take a facet omitting a color present
+at just one end. At the other end the prime
+for this edge requires the pair as a piece,
+but the omitted-color edge leaves the pair.
+This proves necessity of the third condition.
+
+Conversely an unconditional head can use its
+singleton piece. At a conditional head with
+singleton labels, use its omitted-owner edge
+if one exists, and otherwise use the edge of
+the excluded posting for each prime. No
+omitted label leaves the chosen pair: its
+neighbor is unconditional or has the same
+incident colors. Exterior arrows at any
+common neighbor agree by the third condition.
+Together with the lone multi-owner pairs,
+these pieces cover all primes.
+
+When all essential heads are conditional,
+the last condition forbids triangles, since
+distinct labels must meet at a common
+conditional neighbor. Thus in that case
+the graphs are exactly the triangle-free,
+properly edge-colored graphs with no
+isolated vertices and a shared set of
+fewer than $K$ colors per component.
 
 For the union operation, the least extensions at
 all heads are also attained simultaneously. For
