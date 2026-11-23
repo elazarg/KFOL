@@ -4425,6 +4425,54 @@ unavailable head. The earlier lower bound
 with two injective rows per head already
 applies to this larger acyclic class.
 
+\paragraph{Hardness at prime width one.}
+The whole-guard problem is
+coNP-complete already at three owners, prime
+width one, and at most two postings per loss
+row. The budget is acyclic and the queried
+guard is empty. Membership follows by guessing
+a failed probe and running projection deletion.
+
+For hardness, fix owners $a,b,c$ and work on
+facet $a$. Use a row-free input $x$ for each
+Boolean variable and interpret $x:b$ and $x:c$
+as its two values. At maximal probes each
+variable has one of these values. A literal
+head with the sole loss $x:b$ is available
+precisely when $x:b$ is absent, and $x:c$
+gives the opposite literal on maximal probes.
+Build a binary circuit that returns true
+when at least one clause of a CNF formula
+is falsified. It uses only conjunctions and
+disjunctions of the literal signals.
+
+For a disjunction of two earlier signals, give
+its head a single row posting both signal
+inputs at $a$. Projection deletion makes the
+head available if either signal is available.
+For a conjunction, give its head two rows,
+each with one of the signal inputs posted
+at $a$. Pad one row with a fresh $b$-posting
+and the other with a fresh $c$-posting, using
+a fresh head with an empty loss for each
+padding input. The padding inputs are never
+available, so the two rows require both
+signals. They are visible on different
+facets, so every head has at most one row
+per facet. A final relay with one $a$-posting
+at the circuit output has the empty guard as
+its input prime on facet $a$.
+
+All these dependencies are acyclic. The two
+literal signals implement complementation on
+maximal probes, and the internal $a$-postings
+always disagree, so the relay passes on all
+maximal probes exactly when the formula is
+unsatisfiable. Antitonicity extends this to all
+probes. The complete width-one lists are
+obtained directly from the sole visible row
+at each head and facet.
+
 \paragraph{One succinct exceptional head is hard for guard checking.}
 With canonical primes in place of explicit losses,
 guard implication is coNP-complete even for acyclic
