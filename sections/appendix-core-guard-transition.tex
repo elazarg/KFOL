@@ -364,6 +364,83 @@ below. Apply \cref{core:thm:completion-fold-schedule} to get the
 completion-depth lower bound.
 \end{proof}
 
+\paragraph{Exponential loss obstructions for exact recognition.}
+For every fixed $K\ge4$ there are nonrealizable
+complete canonical prime families on $O_K(l)$
+inputs with polynomial-size lists of width at
+most five, such that every sample of fewer than
+$l2^l$ losses is omitted by a core operation
+supplying \emph{all} the family's positive bits.
+
+Use the unsplit rotating counter with no halt
+restriction. Every valid state reaches stage zero
+with carry one after at most one sweep. Those
+states lie on the same modulo counter cycle,
+which has $l2^l$ states. Thus deleting any edge
+of that cycle makes the entire state graph
+acyclic, including states not reached from the
+designated start. The unsplit update uses at
+most three predecessor bits per next bit.
+The state clauses from
+\cref{core:cor:width-three-depth} therefore have
+width at most four. Use the rail budget of
+\cref{core:thm:rail-transition-depth}, with its
+additional rival-pair clauses and no input $X$.
+
+There is no bounded word with unanimous
+$c$-profile on all rails. Such a word would
+supply $a$ on the probe with the zero sentinel
+rail of the $a$-group at $a$ and all others
+at $c$: the only possible winners are $a,c$,
+and the proper subset of $c$-atoms rules out
+the $c$-atom. The reset-order argument of
+\cref{core:thm:rail-transition-depth} along
+the cycle would force a strictly later reset
+when returning to the same address. Conversely,
+any sample of fewer than $l2^l$ rail losses
+misses a cycle edge, by the unique-address
+argument of \emph{Exponential obstructions in a
+loss sample}. Use the sufficient rail spines
+for the reduced, now acyclic graph. They use
+all valid addresses and include the invalid
+address resets as before. The sampled rows
+still satisfy the rival-pair condition and,
+at their unique addresses, the retained
+transition conditions. Doubled addresses
+carry no mark from the address helpers.
+The union of the spines starting at every
+rail is therefore bounded by the sample.
+Its $c$-profile is unanimous: each spine
+can be the $c$-atom only if its starting
+rail is the $c$-atom, and the union must
+have that atom from every spine.
+
+Apply \cref{core:thm:succinct-profile-cap} to
+these rail bounds and the unanimous profile.
+Write $C$ for the coded baseline and $F$ for
+the capped candidate there. The cap adds at
+most one posting to each prime. The full
+candidate fails realizability by the absence
+of a bounded unanimous word on the rails.
+
+Now sample any fewer than $l2^l$ proper losses
+of $F$. Rows where the cap is active will be
+omitted by any word $C\star_c g$ with unanimous
+$c$-profile for $g$. Each other sampled row
+is a coded loss of $C$ and has a rail head,
+since $C$ retains every selector. Project it
+to the rails. This is an original rail loss
+by the code conditions. There are fewer than
+$l2^l$ resulting rows, so use the bounded
+unanimous word $g$ just constructed for them.
+On an uncapped sampled row both $C$ and $g$
+omit the mark. On capped rows $C\star_c g$
+equals the cap atom. At every valuation
+outside the cap the word contains $C$, so
+it supplies every positive bit of $F$.
+This proves the stated obstruction for
+the complete family.
+
 \paragraph{Alternating state transitions.}
 Use four distinct owners $a,b,d,c$ and three groups of rail pairs,
 whose address coalitions are $A_s,B_s,D_s$. A finite state game has
