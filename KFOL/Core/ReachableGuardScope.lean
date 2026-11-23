@@ -60,6 +60,30 @@ theorem leastScope_subset_reach {edge : V → R → V → Prop} {allowed : V →
     leastScope edge allowed head ⊆ Reach edge head probe :=
   fun _ hv => hv _ (reach_closed hlegal)
 
+/-- Directly excluded head arrows can be accounted for entirely by seeding
+their destinations. The original menus then suffice for testing closure. -/
+theorem closed_with_exclusions_iff {edge : V → R → V → Prop}
+    {allowed excluded : V → R → Prop} {head : V} {scope : Set V}
+    (hdirect : ∀ v r, excluded v r → edge head r v) :
+    Closed edge (fun v r => allowed v r ∧ ¬ excluded v r) head scope ↔
+      Closed edge allowed head scope ∧ (∀ v r, excluded v r → v ∈ scope) := by
+  classical
+  constructor
+  · intro h
+    refine ⟨⟨h.1, ?_⟩, ?_⟩
+    · intro v hv
+      obtain ⟨posting, hlegal, hagree⟩ := h.2 v hv
+      exact ⟨posting, fun r hr => (hlegal r hr).1, hagree⟩
+    · intro v r hex
+      by_contra hv
+      obtain ⟨posting, hlegal, hagree⟩ := h.2 v hv
+      exact (hlegal r (hagree head h.1 r (hdirect v r hex))).2 hex
+  · rintro ⟨h, hseed⟩
+    refine ⟨h.1, ?_⟩
+    intro v hv
+    obtain ⟨posting, hlegal, hagree⟩ := h.2 v hv
+    exact ⟨posting, fun r hr => ⟨hlegal r hr, fun hex => hv (hseed v r hex)⟩, hagree⟩
+
 /-- Every legal interior assignment extends to a probe that stays in a closed scope. -/
 theorem Closed.extend {edge : V → R → V → Prop} {allowed : V → R → Prop}
     {head : V} {scope : Set V} (hscope : Closed edge allowed head scope)
