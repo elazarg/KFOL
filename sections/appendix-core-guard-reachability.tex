@@ -13008,11 +13008,11 @@ uses the polynomial test for a guessed support
 above. The separate one-head case is polynomial
 for two owners by \cref{core:prop:common-head-depth-one}.
 
-For two posting owners the depth-one test is
-polynomial when the explicitly listed loss rows
-have bounded size $b$, even with arbitrary heads
-and a nonempty positive coloring. The following
-small-family argument handles the unknown support.
+The depth-one test is polynomial at fixed palette
+size and fixed maximum size $b$ of an explicitly
+listed loss row, even with arbitrary heads and a
+nonempty positive coloring. The following small
+families handle the unknown support.
 
 Any family $\mathcal F$ of nonempty sets of size
 at most $b$ has a subfamily $\mathcal T$ with at
@@ -13029,44 +13029,61 @@ itself until it hits the whole original family;
 it cannot end at a missed retained set. This
 proves the bound and the claimed equivalence.
 
-Guess such a family $\mathcal T$ on the input
-ground, treating it as a representative of the
-$r$-generators of a prospective witness. Require
-its inputs in the support. Enumerate the
-inclusion-minimal hitting sets of $\mathcal T$
-of size at most $b$, all of which lie in its
-union. For an owner-$r$ option at a loss, require
-its tail restricted to the support to meet each
-of these small hitting sets. For an owner-$t$
-option, require its restricted tail to meet
-every set in $\mathcal T$. At either owner
-also require the restricted tail to escape the
-positive probe's posting at that owner.
+Guess such a family $\mathcal T_r$ on the input
+ground for each posting owner $r$, intended to
+represent its selected generators. Require the
+inputs of the guessed families in the support
+and check that every nonempty rainbow selection
+of their members has nonempty intersection.
+For an option at $r$, require its tail restricted
+to the prospective support to meet every
+inclusion-minimal hitting set of $\mathcal T_r$
+of size at most $b$. All these hitting sets lie
+in the union of the guessed family. Also require
+the restricted tail to escape the positive
+probe's posting at $r$.
 
-These are upward requirements on the support.
+These option conditions are upward in the support.
 Starting with all inputs, repeatedly delete a
 head with a row admitting no option. The stable
 set is the greatest support meeting the option
 conditions, since no valid smaller support can
 contain a deleted head. Accept the guess if the
 stable set contains the marked head and the
-required inputs of $\mathcal T$. Choose one
-option per retained row. Each chosen $t$-tail
-hits $\mathcal T$ and has size at most $b$,
-so it contains a small minimal hitting set
-met by every chosen $r$-tail. Thus all chosen
-generators have the cross-intersections needed
-for a greatest completion, and they lose on
-the positive. Conversely, from a witness take
-its chosen $r$-tails restricted to its support
-as $\mathcal F$ and guess their representative
-$\mathcal T$. All its chosen $t$-tails hit this
-family, and each chosen $r$-tail meets every
-small hitting set of $\mathcal T$, by the
-representative property. Its support survives
-the deletions. The enumeration is polynomial
-for fixed $b$; the family size and the number
-of inputs it uses are bounded in $b$ alone.
+inputs of the guessed families.
+
+To see soundness, choose an admissible option
+per retained row. If a rainbow tuple of chosen
+tails has empty intersection, it has at least
+two members because every tail escapes its probe
+posting. Replace its tail at one owner $r$ by
+a member of $\mathcal T_r$ preserving emptiness.
+Indeed, the intersection of the other members
+has size at most $b$ and misses the chosen tail.
+It cannot hit $\mathcal T_r$, since it would
+then contain a small minimal hitting set that
+the chosen tail was required to meet. So some
+member of $\mathcal T_r$ misses that intersection
+and can replace the chosen tail. Iterating
+produces a rainbow tuple from the guessed
+families with empty intersection, contrary to
+the initial check. Consequently the selected
+tails and unanimity generate compatible
+profiles losing on the positive, and their
+greatest completion witnesses it.
+
+Conversely, from a witness choose one absorbing
+option per row at its retained heads. At each
+owner use the selected tails restricted to
+its support as $\mathcal F$ and guess a
+representative $\mathcal T_r$. The guessed
+families pass the rainbow test, and each
+selected tail meets every small hitting set
+of its representative because those hitting
+sets also hit $\mathcal F$. Its support
+therefore survives the deletions. The enumeration
+is polynomial for fixed $K,b$, since each family
+uses a bounded number of inputs.
 
 Hardness persists even with two headed inputs and width at most
 four. Modify the preceding reduction by adding one retained input
