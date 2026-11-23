@@ -603,6 +603,44 @@ Thus the full strengthening takes $2^b$ times
 polynomial work, with no bound on prime width
 or on the number of seeds in acyclic parts.
 
+A cyclic component allows a smaller search when
+its internal loss patterns are empty or singleton
+postings at $s$. Fix the allowed exterior ground
+from the preceding components. Retain the rows
+whose exterior postings it admits. An empty
+internal tail can start capture at its head.
+A singleton internal tail gives an edge, along
+which either a seed or a capture can trigger
+the next capture. In the graph of these enabled
+edges, process the strongly connected components
+in order.
+
+If such a component is reached by an empty tail
+or by an edge from an already available input,
+leave all its inputs unseeded. All are then
+captured by reachability, giving the largest
+possible ground. If it is unreached and contains
+no seed candidate, it adds nothing. Otherwise
+it suffices to consider exactly one seed from
+its candidates. That seed reaches every other
+input, which is then captured. This dominates
+any choice of several seeds containing that
+one, since the other seeds are replaced by
+captures. It also dominates using no seed,
+which starts no derivation there.
+
+Thus for each fixed exterior ground the search
+branches only over individual seeds in the
+unreached components of this enabled graph.
+In particular a single unrestricted-size
+component with unconditional singleton
+internal rules takes at most one run per
+seed candidate, or a single run if already
+reached. Edges and empty internal tails can
+be tested directly on prime lists using the
+exterior ground restrictions and, for an edge,
+one pinned posting.
+
 There is also a symbolic version at prime width
 two. Fix $K$. Suppose every original owner tail
 has at most two postings, and after each original
