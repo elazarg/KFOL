@@ -557,6 +557,84 @@ trial. In particular, the number of competing
 inputs may be unbounded globally if it is bounded
 on each ancestor scope.
 
+\paragraph{Exact recognition for singleton loss rows.}
+Suppose every input has a positive neutral source bit
+and every minimal loss consists of one posting. Draw
+$h\xrightarrow{r}u$ for the loss at $h$ posting $u$
+at $r$. There is a core realization exactly when:
+\begin{enumerate}
+\item if $h\xrightarrow{r}v$ and $v\xrightarrow{s}u$
+with $h\ne u$, then $h\xrightarrow{s}u$;
+\item all internal edges of each nonsingleton strongly
+connected component have one common owner.
+\end{enumerate}
+The two tests use only the labelled graph. The
+singleton losses are directly readable from
+canonical primes: each singleton loss forces its
+posting into every prime on a facet seeing it.
+
+For necessity of the first condition, capture $v$
+by fixing $u$ at $s$. On a facet omitting an owner
+different from $r,s$, the mark at $h$ must give
+the same result with $v$ neutral or at $r$, by
+colored-cofactor independence
+(\cref{core:cor:colored-cofactor-dependence}).
+At $v{:}r$ it loses, so it already loses at the
+sole posting $u{:}s$. For the second condition,
+take all rows internal to a component with
+mixed labels. For every owner $r$, there is a
+non-$r$ edge. In the component each head can
+follow edges to a head of a non-$r$ edge.
+Stop at the first such edge: its head is a seed
+at $r$, and the preceding $r$-edges, reversed in
+the blocker graph, reach back to the starting
+head. Thus every internal tail is reached at
+every owner even on the uncolored query.
+The injective blocker test rules out every
+neutral mark in this component, a contradiction.
+
+For sufficiency the first condition makes each
+nonsingleton component a complete directed graph
+at its common owner. For each head $h$, start
+a spine with $h$ if its component is a singleton,
+and otherwise with the native owned fold of
+its whole component. Process the strict
+ancestor controls of $h$ by component, in
+an order putting a head's component before
+the components it reads. For each such
+component and every edge $h\xrightarrow{s}u$
+into it, attach the projection $u$ at $s$.
+If the component is nonsingleton, finish
+its stage by attaching its native fold at
+its common owner. Every member of this
+component has a native-owner edge from $h$
+by transitivity, so the final fold introduces
+no extra loss at $h$.
+
+The spine supplies $h$ exactly outside its
+listed losses: the initial fold accounts
+for internal edges, and every later
+attachment tests just a listed posting or
+the disjunction of native postings in a
+component. It also obeys the rows at any
+other input $v$ it uses. A loss of $v$
+controlled within its component is enforced
+by the final native fold there, or by the
+initial fold when this is the starting
+component. A loss controlled at another
+component is enforced by the later
+attachment on the controlling posting,
+which is also an edge from $h$ by
+transitivity. After the relevant absorber
+no further copy of $v$ is introduced. These
+checks test each row at its sole-source
+probe; heads outside the spine contribute
+nothing. The union of the spines is
+therefore bounded and supplies every
+prescribed source mark. This gives a
+polynomial-size core circuit and an exact
+recognition test.
+
 \paragraph{When a color repeats.}
 The same graphs eliminate all rows with singleton color classes even
 when a witness must win specified coalitions. This bounds the remaining
