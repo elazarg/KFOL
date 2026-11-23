@@ -362,6 +362,61 @@ each offered input has no incoming edge
 at its offer owner. The full graph stays one
 mixed component.
 
+Pure localized budgets allow a symbolic test even
+at unrestricted prime width. Suppose every original
+offer has a pure localized budget after its own
+deletions, with no size restriction on its tail or
+its scope. If $s:D$ can remove a row at query
+$p$, the closure test provides some
+$u\in D\setminus c(p_s\cap U)$. On that same
+projected budget one can instead require the
+singleton win $s:\{u\}$ and still lose at $p_s$,
+by the native-profile criterion. This helper
+absorbs on every row removed for $D$, so it is
+bounded on the original current budget. Its
+singleton offer can remove the same row.
+
+The singleton's own localized set is contained
+in $U$: its deletion removes at least the rows
+removed by $D$, and its ancestor search starts
+from just $u$. Its projected budget is therefore
+pure as well. It suffices to test all singleton
+offers with pure localized budgets, even if some
+of those singleton tails never occur as whole
+tails. Every accepted offer removes only rows
+outside the true terminal budget. Conversely at
+a stable budget any removable row would admit
+one of these singleton offers by the preceding
+argument. Thus stability gives the exact marked
+answer.
+
+On complete prime lists, store the successful
+singletons as forbidden postings in a shared
+ground. Each edge search for the next singleton
+adds only another forbidden posting and, for an
+edge pin, a private-prime restriction. Purity
+checks use the same searches for foreign edges
+inside the localized set. A Horn closure step
+restricts the internal tail to the current reached
+set and asks for a row at its head. All of these
+are ground tests against the original primes.
+There are at most $K|V|$ successful singleton
+offers, so the test is polynomial in the prime
+lists even with a variable palette.
+
+For a checkable sufficient hypothesis, let $X_s$
+be the inputs ever posted at $s$. If every
+posting edge with both ends in $X_s$ has owner $s$,
+each $s$-scope is pure: it starts within $X_s$
+and traces only edges whose origins are in $X_s$.
+The original posting graph, and hence this
+condition, is read just from the unions of the
+prime exclusions. A successful mark still has a
+witness on arbitrary canonical, observer-agreeing
+lists. Failure is conclusive if at the terminal
+budget every removable row would have a feasible
+offer in a pure localized scope.
+
 There is also a symbolic version at prime width
 two. Fix $K$. Suppose every original owner tail
 has at most two postings, and after each original
