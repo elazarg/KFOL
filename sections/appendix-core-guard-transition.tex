@@ -381,6 +381,70 @@ Thus already the second iteration can
 combine polynomial-size comparison relations
 into an NP-hard search.
 
+\paragraph{Ordinary reset obstructions on acyclic budgets.}
+The second-stage reduction also gives hardness
+at stabilization. Add an empty loss to every
+control used by its reachability instance.
+Every test supported on those controls is
+permanently absent, since the empty coloring
+is a comparison with no later candidate.
+The simultaneous-loss test at $s$ on $q$ and
+the literal heads is unchanged: adding losses
+at the controls changes none of their head
+predicates. Whenever this comparison exists,
+its needed postings use only permanently
+absent tests. Thus its first-stage absence
+persists forever. If there is no comparison,
+neither rule can make the test absent.
+
+The final comparison at $r:A$ therefore
+certifies permanent absence exactly for
+satisfiable formulas. It still has two
+candidate owners, so the two-comparison
+rule cannot change that conclusion. Add a
+fresh marked head with sole loss posting
+all of $A$ at $r$. At the uncolored query
+this seed requires $r:A$. If that test is
+not absent, no larger tail at the same owner
+is absent either, so supersets of the loss
+give no other seed obstruction. This gives
+NP-hardness of reset obstruction detection
+on width-two acyclic budgets of height
+three, with or without two-comparison rules.
+
+For ordinary comparisons there is a matching
+NP upper bound at any fixed source height.
+In a comparison witnessing absence of $r:A$,
+keep one supported loss at each head in $A$
+and erase postings not used by any of them.
+The comparison still loses at all those heads.
+All its tails have only shrunk, so the candidate
+tests are still absent by downward closure.
+In the source graph each retained posting
+comes from a strict predecessor of one of
+the tested heads. Hence the maximum source
+level of a candidate strictly decreases.
+Starting at sources of level zero, their
+absence is settled after one iteration,
+and induction settles tests of maximum
+level $h$ after at most $h+1$ iterations.
+
+Equivalently an ordinary certificate chooses
+a comparison at each node and certifies
+all its candidate tests recursively, stopping
+at tests already excluded by the query blocks
+or at comparisons with no candidates.
+The depth is bounded by the source height
+and branching by the palette. This gives
+polynomial certificates at fixed height
+and a polynomial-space search at arbitrary
+acyclic height, with comparisons checked
+directly from primes. In particular ordinary
+obstruction detection at height three is
+NP-complete under the restrictions above.
+This is complexity of the obstruction rule,
+not of marked feasibility on acyclic budgets.
+
 \paragraph{Reset obstructions for helper tests.}
 The rank obstruction can also certify the
 repeated-tail implications needed at a safe-fold
