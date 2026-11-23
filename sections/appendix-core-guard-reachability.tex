@@ -13121,6 +13121,59 @@ positive because the union is constant-free.
 The circuit itself computes the bounded envelope
 even on inputs admitting no nonzero witness.
 
+Even one posting owner and row size two allow
+arbitrary monotone circuit computation in this
+envelope. For a binary monotone circuit, use one
+input per signal. Its Boolean inputs have no losses.
+At an AND gate put a singleton loss for each
+predecessor signal at a common owner $r$; at an
+OR gate put one loss posting both predecessors
+at $r$. A unary identity has one singleton loss.
+All canonical input lists have width at most
+two and total size linear in the circuit at
+fixed palette, by transversal duality on the
+single posting color.
+
+At a probe, a depth-one witness can be chosen
+as an $r$-fold on a support avoiding the
+$r$-postings of the probe. In fact choose a
+greatest completion witnessing the mark. Every
+row headed in its support has to be absorbed
+at $r$, so the restricted tail wins at $r$
+and cannot lie entirely among the probe
+postings. Remove those posted inputs from
+the support. Every remaining head still has
+a supported input in each loss tail. The
+$r$-fold on that support therefore respects
+all rows and supplies the positive. Conversely
+any such support gives a witness by the fold.
+The greatest legal support is computed in
+signal order: a signal is eligible if its own
+$r$-posting is absent, and its predecessors
+must all survive at an AND or at least one
+must survive at an OR.
+
+On the slice where all gate signals are
+unposted, the envelope at the output gate
+therefore computes the circuit on the
+Boolean input posting absences. One may
+add an identity gate above that gate, so
+the tested source is always positive in
+the original budget. This gives
+$\mathrm P$-completeness of depth-one
+feasibility under logspace reductions
+already for acyclic pure budgets of row
+size two, from monotone circuit value
+\cite{Goldschlager1977}. It also gives
+exponential canonical prime lists in
+the envelope: use a conjunction of $m$
+disjunctions on disjoint pairs of Boolean
+inputs. Each of its $2^m$ minimal sufficient
+sets on the slice needs a distinct full
+prime, since restricting the full primes
+by erasing the fixed gate exclusions and
+minimizing yields the slice primes.
+
 Hardness persists even with two headed inputs and width at most
 four. Modify the preceding reduction by adding one retained input
 $z$. Keep the $r$-losses at $i$ on vertex hitting sets, and add the
