@@ -3271,6 +3271,63 @@ of read inputs having multiple visible rows.
 The width-three hardness above holds even
 with the per-facet uniqueness condition.
 
+\paragraph{Acyclic recognition with bounded loss size.}
+The local tests give polynomial-time complete
+recognition for acyclic families with a fixed
+bound $b$ on the number of postings in each
+minimal loss, even with unrestricted prime width
+and variable palette. This uses the size bound
+on the supplied family, not on its greatest
+minorant.
+
+It suffices to apply each substitution to a
+minimal row at the current head and to use
+minimal replacement rows. For a single
+replacement outside the original minimal row,
+the original minimum remains present and the
+result is already a loss. Otherwise the move
+on the original minimum, with minimal
+replacements, gives a subcoloring of the
+result. The same argument applies to the
+hidden-owner batch, using only the hidden
+postings of the original minimum. Thus any
+failed test has this minimal form.
+
+Enumerate the minimal rows on each facet by
+testing posting sets of size at most $b$ against
+the primes. The size promise itself can be
+checked in polynomial time for fixed $b$:
+try to force $b+1$ distinct postings into
+one minimal transversal, with a private prime
+for each, as in the width search after
+\cref{core:thm:pointed-guard-cut}. On the
+recovered rows, a substitution tries at most
+$b$ replacement choices in depth, each from
+one control's list, and checks the resulting
+coloring against the primes. This is polynomial
+for fixed $b$, since the earlier heads have
+already passed recognition and require no
+new lists. In contrast, the guard implication
+problem for an arbitrary greatest minorant
+is coNP-hard even for acyclic budgets with
+at most two postings per row, by the
+clause-chain construction in the single-source
+completion appendix.
+
+If prime width is bounded by $d$ as well,
+this recognition algorithm is fixed-parameter
+tractable in $(b,d)$. The bound on the
+posting alphabet of a canonical facet with
+both widths bounded, in the guard consensus
+appendix, gives a parameter-bounded number
+of candidate rows per head and facet. For
+each original row and target observer the
+test reads at most $b$ such lists on that
+observer facet. Thus choosing all replacement
+rows costs a function of $(b,d)$, with
+only polynomial overhead for the number
+of heads and observers.
+
 Acyclicity of the disagreeing arrows at a probe does
 not suffice for projection deletion. Take three heads
 $h,x,z$, with respective sole losses
