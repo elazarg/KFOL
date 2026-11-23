@@ -1570,6 +1570,45 @@ algorithm uses the original lists in both cases,
 even if those hypotheses hold only after
 minimization.
 
+At prime width two one can also obtain a sound
+negative test without assuming injectivity.
+First apply safe-fold saturation. If it stalls,
+keep just the rows in the residual budget whose
+projected parts are injective. Infeasibility
+for that smaller budget implies infeasibility
+for the residual budget and hence for the
+original query.
+
+The injective subbudget can be tested without
+listing its rows. For each original facet,
+require all primes to be hit in the currently
+allowed ground, impose posting consistency,
+and forbid two internal postings at the same
+owner. These are all clauses of width at most
+two. A solution shrinks to a minimal original
+loss with injective projection. To search for
+an empty tail restrict the ground further.
+To find a singleton edge also pin its posting
+with one private prime, trying the choices in
+turn. This preserves the pin when shrinking.
+Thus $2$SAT gives all head, seed and edge
+tests for singleton-tail deletion on this
+subbudget, even with a variable palette.
+
+The combined test certifies a positive by a
+fold spine or a negative by an injective
+obstruction, and otherwise leaves the query
+undecided. It decides every query whose
+minimized residual budget is injective:
+each minimal projected row has an original
+witness with the same injective projection,
+so the subbudget then imposes all residual
+constraints. Repetitions in the initial
+minimized budget are allowed if safe-fold
+saturation clears them. The negative test
+can also succeed when repetitions remain,
+since it needs only a blocking subfamily.
+
 Here the passage back from projected witnesses can
 also be made directly. Let $J$ be the retained
 background outside $H$. Given a witness $T$ on $H$
