@@ -653,12 +653,6 @@ theorem core_recognition_reduction {K : ℕ} (three : Fin 3 ↪ Fin K) :
       (coreNormalForms three) :=
   Recognition.Lists.prenexTruth_reducible three
 
-/-- Recognition is hard for polynomial space as soon as prenex truth is. -/
-theorem core_recognition_pspace_hard {K : ℕ} (three : Fin 3 ↪ Fin K)
-    (prenex : Cslib.Complexity.PSPACEHard prenexEncoding prenexTruth) :
-    Cslib.Complexity.PSPACEHard guardListEncoding (coreNormalForms three) :=
-  Recognition.Lists.coreNormalForms_pspaceHard three prenex
-
 /-! ## Completely disclosed sealed rounds -/
 section Rounds
 open Rounds.Game

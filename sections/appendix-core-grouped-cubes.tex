@@ -649,32 +649,63 @@ A pure formula is $\nv$ on a row without marks or fixed inputs. Combine
 
 \begin{proposition}[Losses of the operation of rows]
 \label{core:prop:row-losses}
-At a selector, the only minimal loss of $F$ posts every input of $V'$ at
-$a$. At an input $x\in V'$ the minimal losses are the code of each row
-marking $x$ with the fixed inputs of that row at their atoms; the first
-endpoint code with $X$ at $c$, if $x\notin X$; and the second endpoint
-code with the inputs outside $Y$ at $b$, if $x\in Y$. Each is a loss for
-the observers whose atom it does not post. If every coordinate is marked
-by at most $d$ rows, each source has at most $d+2$ minimal losses, and
-both canonical lists of $F$ have size polynomial in $|Z|+|V|$ for fixed
-$d$ and $K$.
+Let $X$ be nonempty. A winner of $F$ is always supplied by an input
+holding it, and an input fails to supply an observer exactly on the
+following \emph{losses}, each of them for the observers whose atom it
+does not post. At a selector, the only loss posts every input of $V'$ at
+$a$. At an input $x\in V'$ the losses are the code of each row marking
+$x$ with the fixed inputs of that row at their atoms; the first endpoint
+code with $X$ at $c$, if $x\notin X$; and the second endpoint code with
+the inputs outside $Y$ at $b$, if $x\in Y$. Hence the prime guards of $F$
+at a source are the minimal sets of postings that contain a posting of
+each of its losses against the observer, and they determine $F$. If every
+coordinate is marked by at most $d$ rows, each input has at most $d+2$
+losses and each prime guard has at most $d+2$ postings.
 \end{proposition}
 \begin{proof}
 A selector is a term of $C$, so it supplies its winners unless the cap
 applies. For $x\in V'$, the proof of \cref{core:thm:row-recognition}
-shows that $C$ contains $x$ at every valuation of the selectors that is
-not a code, and on a code unless the stated postings are all present.
-When they are, every term containing $x$ is reset by a selector or by a
-posted input. A code posts both $b$ and $c$ unless it is an endpoint
-code, which gives the observers. On each observer facet the prime guards
-are the minimal sets of postings meeting every listed loss, of which
-there are at most $(|Z|+|V|+1)^{d+2}$.
+shows that $C$ contains the winners of $x$ at every valuation of the
+selectors that is not a code, and on a code unless the stated postings
+are all present. When they are, $C$ is $\{c\}$ on the first endpoint code
+and $\{b\}$ on the second. On the code of a row $z$ every term of $C$ is
+reset to $\{b\}$ or $\{c\}$ by a selector or by a posted input, or is an
+input that $z$ does not mark, and such an input has no posted loss. So
+every winner of $C$ has a source without a posted loss. When every input
+of $V'$ is $\{a\}$, the padding input supplies $a$: no row marks it, and
+its only other loss needs $X$ at $c$. A guard is sufficient exactly when
+no loss against its observer avoids all its postings, and a minimal such
+guard keeps one posting for each loss.
 \end{proof}
 
-By \cref{core:thm:quantified-cube-cuts} one may take $d=2$. Truth of
-quantified Boolean formulas is PSPACE-complete
+\begin{theorem}[Recognition from the normal form]
+\label{core:thm:recognition-reduction}
+For every $K\ge3$, truth of closed formulas
+$\exists x_1\forall y_1\cdots\exists x_n\forall y_n\,\psi$ with $\psi$ in
+conjunctive normal form reduces in polynomial time to recognition of core
+term operations from their prime guards. The reduction maps $\Psi$ to the
+inputs and the prime guards of $F_\Psi$, and some core term has these
+prime guards exactly when $\Psi$ is true.
+\end{theorem}
+\begin{proof}
+Number the quantifiers in order and read every variable of the matrix at
+its innermost quantifier. In the rows of
+\cref{core:thm:quantified-cube-cuts} every coordinate is marked by at
+most two rows, so by \cref{core:prop:row-losses} every input of $F_\Psi$
+has at most four losses, each written directly from the rows. The prime
+guards at a source are the minimal sets among the choices of one posting
+from each loss against the observer, of which there are at most $N^4$ for
+$N$ postings. A core term with the prime guards of $F_\Psi$ realizes
+$F_\Psi$, since prime guards determine a core term operation
+(\cref{core:thm:source-guards}) and determine $F_\Psi$. Hence such a term
+exists exactly when $\Psi$ is true (\cref{core:thm:quantified-recognition}).
+A formula with a free variable is sent to the prime guards of a fixed
+false formula.
+\end{proof}
+
+Truth of these formulas is PSPACE-complete
 \cite[Theorem~4.3]{StockmeyerMeyer1973}, so recognition of core term
-operations from both canonical lists is PSPACE-hard for every fixed
+operations from their prime guards is PSPACE-hard for every fixed
 $K\ge3$.
 
 \begin{theorem}[Two-color interpolation is PSPACE-complete]
