@@ -510,6 +510,52 @@ $x$ and then $y$, using the foreign posting on
 the now irrelevant $x$. The refined maps retain
 every row, and certify failure at $z$.
 
+Capture certified at a smaller pure fixing carries
+to a larger one, even though the propagation pass
+itself can lose a derivation: a foreign posting on
+a captured input becomes unavailable if the input
+is instead seeded at $s$. For a given $B$, one can
+therefore strengthen the necessary bound by adding
+the captures at any $E\subseteq B$. Every such
+derivation is sound at $B$ by restriction of the
+cofactor. Testing all subfixings missing at most
+a fixed number of seeds still takes polynomial
+time.
+
+The full strengthening, asking whether a head is
+captured by propagation for \emph{some} $E\subseteq B$,
+is NP-complete even at prime width two. Membership
+guesses $E$ and runs the propagation pass. For
+hardness use 3CNF satisfiability and distinct
+owners $s,r$. For each variable put two controls
+$x_i,y_i$ in $B$, with mutual singleton losses at
+$s$. Seeding exactly one makes the other captured.
+Seeding both leaves no captured control in the
+pair, and seeding neither starts neither derivation.
+Thus at most one of the two can be used as a
+captured control, with the two choices representing
+the two literal signs.
+
+For each clause make an OR of its literal
+controls by intermediate heads with at most two
+singleton losses each. On a literal edge post its
+control at $r$, so that only a captured, unseeded
+control can trigger the row. On an intermediate
+edge post its head at $s$; that head is outside
+$B$, so this again requires capture. To form an
+AND of the clauses, use one final head $h$ with a
+single loss posting all clause heads at $s$. Give
+one further sink the loss $h{:}s$ so that $h$ too
+belongs to $X_s$. All inputs relevant to the
+derivations are now in $X_s$. The head $h$ is
+captured exactly when every clause has a selected
+literal. Since no variable contributes both signs,
+this is equivalent to satisfiability. Each OR
+head has at most two singleton losses, and a
+single loss gives only singleton exclusions on
+the facets where it is visible. Thus all the
+canonical prime lists have width at most two.
+
 There is also a symbolic version at prime width
 two. Fix $K$. Suppose every original owner tail
 has at most two postings, and after each original
