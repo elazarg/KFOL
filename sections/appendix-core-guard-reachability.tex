@@ -2629,6 +2629,29 @@ scope contains $F(T)$ and hence $F(P)=P$. So no
 sequence of closed-scope reductions can go below
 $P$.
 
+The closure on each intermediate ground can be
+computed from the original prime lists. At a
+retained head and output facet $l$, use the
+projected facet product above. To test whether a
+posting $p$ occurs in a minimal product, choose
+one reduced prime from each factor and form
+their union $D$. Require $p\in D$ and require that
+$D\setminus\{p\}$ contain no reduced prime from
+at least one factor. In this case $D$ is sufficient
+and any minimal sufficient subset of $D$ keeps
+$p$. Conversely a minimal product containing $p$
+is such a union and fails the deletion test.
+The posting gives an arrow exactly when this
+test succeeds on some output facet, by the
+prime and loss incidence equivalence. Thus one
+can compute just the arrows by enumerating
+tuples and testing deletions against the factors,
+without storing their minimized product or
+enumerating any losses. At fixed $K$ this takes
+polynomial time in the original prime lists,
+even over all scope iterations and all input
+primes.
+
 The number of strict reductions can grow linearly
 even with three owners and loss rows of size at
 most two. Choose distinct owners $k,r,t$ and inputs
@@ -2654,6 +2677,15 @@ and the losses at $d_{h+1},\ldots,d_m$ are
 unchanged. Only $b_h$ is omitted from the next
 scope. Thus the procedure makes $m+1$ strict
 reductions before reaching the seeded ground.
+
+The first scope can also be arbitrarily large
+with a terminal scope of size three. Use just
+$i,a,d_1$ as seeds, the loss $\{a:r,b_0:t\}$ at
+$d_1$, and any number of losses $\{a:r,b_j:k\}$
+at that same head for distinct $b_j$, $j\ge1$.
+The first step again removes only $b_0$. The
+resulting singleton loss subsumes all the
+$k$-rows, so the next step removes every $b_j$.
 
 The closure also describes when several heads can
 share a scope under the same posting restrictions.
@@ -2709,16 +2741,21 @@ gives that arrow can only be subsumed after
 removing $b_0$ from the first prime's budget.
 
 The single-head reduction gives one local
-guard test per original prime. It is fixed-parameter
-tractable in $K$ and the largest size of $U_G$,
-even when the full posting graph has large reachable
-sets. For example one may enumerate the local proper
-colorings, construct their projected budget by the
-polynomial probe test above, and apply the pointed
-cut on the local ground. The number of local
-colorings and the size of each resulting cut
-instance are bounded by functions of the two
-parameters. The same argument constructs bounded
+guard test per original prime. At fixed $K$,
+exact recognition is fixed-parameter tractable
+in the largest terminal scope, which can be
+smaller than even the first least reachable scope.
+After the polynomial scope computation, enumerate
+the local proper colorings, construct their
+projected budget by the polynomial probe test above,
+and apply the pointed cut on the local ground.
+The number of local colorings and the size of
+each resulting cut instance are bounded by
+functions of $K$ and the terminal scope size.
+Using only the first scope gives a uniform
+fixed-parameter bound in $K$ and its size, since
+the first scope requires only the original
+posting graph. Both procedures construct bounded
 witnesses guard by guard.
 
 In particular, if the candidate is core it is the
