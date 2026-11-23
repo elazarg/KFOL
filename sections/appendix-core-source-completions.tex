@@ -743,6 +743,53 @@ at $a,b$, as before. All rows remain injective and acyclic.
 Because each head now has at most two rows, its canonical
 prime guards have width at most two.
 
+The number of multiply headed inputs alone does not
+give a fixed-parameter bound for guard implication
+unless $\mathrm{FPT}=\mathrm{W[1]}$. Existence of a
+counterexample to the empty guard is $\mathrm{W[1]}$-hard
+in this parameter, even for acyclic injective rows with
+at most two postings in every row. Reduce from Clique
+parameterized by its requested size $h$
+\cite[Corollary~3.2]{DowneyFellows1995Clique}.
+
+Make $h$ ordered choice heads, with one possible row
+per vertex of the graph at each choice head. Its row
+posts at $c$ the start of a private chain for that
+vertex at that position. Every chain leads to the
+next choice head, or terminates at the final position.
+For each incompatible pair of vertex choices at two
+different positions, introduce one retained input
+shared by those two chains. Incompatibility means
+equality of the vertices or absence of their edge.
+The chain at the earlier position requires this
+input at $a$, and the chain at the later position
+requires it at $b$. Here $a,b,c$ are distinct.
+Give each chain head a single row requiring its
+next head at $c$ if there is one, and at most
+one such retained posting. Use enough chain
+heads to require every incident incompatible pair.
+Only the $h$ choice heads can have multiple rows.
+
+Query the empty guard at the first choice head
+on the facet omitting $c$. Any blocker must
+select a row there, and because $c$ cannot be
+posted on the probe, it must include that row's
+entire chain and a choice at the next position.
+Every required retained input must be posted
+on the probe at the specified owner. Thus any
+one selected vertex per position forms a clique,
+since incompatible selections require competing
+postings. Conversely a clique gives compatible
+postings and selects a chain at every position.
+These rows form a blocker by reachability in
+source order, as for the clause-chain reduction.
+The construction has polynomial size, also in
+canonical primes: the rows at a choice head
+are singleton losses at $c$, and every other
+head has at most one row. This lower bound
+applies to guard implication, including with
+the budget supplied as canonical primes.
+
 This yields exponential prime growth under taking the core meet
 even with two posting owners and one row per head. Start with a
 head $i$ and then $d$ layers of two inputs each, labeled $a,b$.
