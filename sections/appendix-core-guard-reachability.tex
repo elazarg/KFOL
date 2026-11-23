@@ -9919,6 +9919,57 @@ nonposting literals. On singleton-block budgets
 this is exactly the greatest realizable formal
 completion.
 
+There is also a simultaneous certificate for the
+postings recorded by saturation. Assign a positive
+integer stage to each posting that is to be
+recorded and leave all others unassigned. An
+assigned posting $x:r$ must disagree with the
+query. If its stage is $j$, require each original
+loss at $x$ to contain either a posting of stage
+strictly less than $j$, or an $r$-posting of
+stage $j$. This is a prime-list condition: the
+two sets of postings together must contain a
+prime at $x$ on each original facet.
+
+Every stage assignment satisfying these tests is
+sound. Process the stages in order and, at a
+stage $j$, fold at each owner $r$ on the inputs
+whose $r$-postings have that stage. All rows hit
+at earlier stages have already been deleted, so
+the same-stage witnesses make each fold safe.
+Conversely assign each posting its first
+recording round in a sequential saturation.
+At that round the other members of the safe
+support were either recorded earlier or are
+recorded in the same round. This gives exactly
+the stated tests. After dropping rounds without
+new postings, at most $K|V|$ stages suffice.
+Thus one can certify that saturation supplies a
+mark by requiring, in addition, that the assigned
+postings contain a prime of the marked head on
+each facet. The certificate permits ties only
+within an owner when a row needs support at
+its own stage.
+
+Equivalently, take any set of disagreeing postings
+and, for each of its members $x:r$, choose one
+prime at head $x$ on every facet, using only
+postings in the set. Draw arrows from $x:r$ to the
+postings in its chosen primes. A sequence can
+record exactly this set if and only if the choices
+can be made
+so that every strongly connected component has
+a single owner. In a stage certificate, arrows
+go to earlier stages or stay at the same stage
+and owner, so a component cannot mix owners.
+Conversely, order the components with all
+destinations before their sources and give each
+component its own stage. Each chosen prime then
+satisfies the stage test. Thus the monochromatic
+component condition is imposed on selected prime
+witnesses on posting vertices, rather than on all
+arrows of the input graph.
+
 Fold saturation commutes with restriction to a
 disagreement-closed ground at a fixed query. Let
 $S$ contain the queried head and suppose that every
