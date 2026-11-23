@@ -416,6 +416,51 @@ source predicates under the purity hypothesis.
 This gives the whole minorant in polynomial
 circuit size, without listing its primes.
 
+A second Horn pass gives a bound in the opposite
+direction on arbitrary budgets. Fix $X_s$ to be
+the inputs ever posted at $s$ in the original
+budget. On a retained subbudget, form a pure
+budget on $X_s$ by keeping just the rows headed
+there whose foreign postings avoid $X_s$, then
+projecting onto $X_s$. Let $L_s$ be its Horn
+closure from $p_s\cap X_s$.
+
+Every feasible offer $s:D$ at the mark query
+satisfies $D\not\subseteq L_s$. Indeed its helper
+wins on $X_s$ since $D\subseteq X_s$. At $s$
+it can prune to $X_s$: every $s$-tail was already
+contained there. The pruned word still wins $D$
+and loses on $p_s$, and satisfies the selected
+pure budget. Its native-profile test requires
+the stated failure of containment.
+
+Thus retaining only the rows with $t_s\subseteq L_s$
+may delete too much, whereas retaining only those
+with $t_s\subseteq C_s$ by safe folds may delete too
+little. Both maps are monotone and decreasing:
+the sets $X_s$ are fixed and adding rows can only
+add Horn implications. Iterate each family to its
+greatest common fixed point. Every common fixed
+subfamily of the more permissive deletion maps is
+also fixed by the exact owner maps, and every
+exact fixed subfamily is fixed by the safe folds.
+Therefore the three terminal row sets are nested,
+with the exact one between the two Horn results.
+A head surviving the more permissive deletion
+cannot supply a mark. A head disappearing under
+safe folds can, and agreement at a head decides
+its mark exactly.
+
+Both passes read prime lists without expanding
+the losses. In the new closure, a row search at
+a head in $X_s$ additionally forbids foreign
+postings inside $X_s$. These are fixed ground
+restrictions, so the same monotone circuit
+construction applies. Thus there are polynomial
+circuits giving lower and upper bounds on all
+source bits of the greatest bounded operation,
+even when no purity promise holds.
+
 There is also a symbolic version at prime width
 two. Fix $K$. Suppose every original owner tail
 has at most two postings, and after each original
