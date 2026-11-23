@@ -12969,6 +12969,31 @@ each guard is notified at most once. The reduced lists
 need only be formed after this propagation stops,
 before searching for further unreachable inputs.
 
+The propagation need not construct the common
+prime product. On the original facet lists, a
+surviving head has an empty projected loss exactly
+when on some original facet every guard meets $E$.
+It has no remaining loss exactly when on every
+original facet some guard is contained in $B$.
+These are the same tests: a common guard is a
+union of one guard from every facet. To hit
+all such unions, $E$ must hit one whole factor;
+to contain a union, $B$ must contain a choice
+from each factor. These conditions are preserved
+by inclusion minimization of the product.
+
+Thus the queue can keep counts per head and
+facet and one aggregate count for each head.
+Each changed literal updates its own facet's
+tests, and only a change in a facet's verdict
+updates the corresponding aggregate. Empty
+facet lists count as hit by $E$ and have no
+guard contained in $B$, as required. This
+implements unheaded and empty-loss propagation
+in linear time in the original facet incidences
+and posting ground, even when the palette
+varies and the common prime product is large.
+
 In particular, at fixed $K$, complete recognition from
 canonical primes is in coNP when the final reduced
 input count at every probe is bounded by a constant.
