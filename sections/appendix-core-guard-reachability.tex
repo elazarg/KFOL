@@ -2874,6 +2874,38 @@ minimum vertex-cover size. Already the
 unposted probe gives the lower bound for
 any witness supplying the whole guard.
 
+The same construction encodes arbitrary hypergraph
+transversals. Use one edge head per nonempty
+hyperedge and give its endpoint row all the vertex
+postings of that hyperedge at $a$, with the same
+padding as above. The prime lists still have width
+one and size polynomial in the incidence lists.
+The inclusion-minimal supports for the empty
+guard are exactly the fixed set of marked and
+edge heads together with the inclusion-minimal
+transversals of the hypergraph. This is a
+bijection: the fixed heads are necessary, padding
+inputs cannot be used, and a set of remaining
+vertices suffices precisely when it hits every
+hyperedge. Therefore an enumeration algorithm with
+polynomial delay for these witness supports would
+give one for minimal hypergraph transversals.
+
+In contrast, finding one inclusion-minimal support
+for a marked probe in an acyclic budget takes
+polynomial time from the prime lists. Test
+feasibility on an allowed ground by projection
+deletion, checking for an unhit projected row
+by allowing all exterior postings in the original
+facet tests. Starting on the full ground, try
+omitting each input once and keep a deletion if
+the marked probe remains feasible. Feasibility
+on an allowed ground is monotone under enlarging
+that ground, since a bounded witness lifts by
+ignoring the extra inputs. Thus a failed deletion
+cannot become possible later, and the final
+ground is an inclusion-minimal support.
+
 For complete prime input the reachability graph can
 be read directly from the lists: a posting occurs
 in a minimal loss exactly when it occurs in a prime
