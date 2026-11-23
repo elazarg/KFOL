@@ -9136,23 +9136,55 @@ projection, but this does not affect its result:
 $Y$ is in no old row or eligible projection,
 and reachability on old inputs is unchanged.
 
-Thus each owner factor has a polynomial-size
-monotone circuit in exclusion bits for explicit
-rows or symbolic prime-ground searches.
-Unroll the singleton-tail signed deletion on
-$S_p$, starting at $p_r$ for the signed owner
-and at the complement of $A$ for the other
-owners. Enlarging $A$ shrinks those latter
-seed sets and enlarges the eligible projection
-set $A\setminus p_r$. The reachability and
-allowed-ground computations are monotone in
-the seeds and retained postings, so dualizing
-them gives a monotone circuit for signed
-feasibility in the membership bits of $A$.
-Complement and dualize to get the principal
-factor. The same construction works on an
-implicit minimized injective budget by the
-redundant-edge argument.
+The signed test on this residual has a direct
+graph criterion. For the signed owner $r$, its
+seed set remains $p_r$. At every foreign owner
+$s$ the seeds change from $p_s$ to $V\setminus A$,
+with the empty-tail seeds retained in both tests.
+If an unheaded input lies in $A\setminus p_r$,
+its projection gives the signed witness. Otherwise,
+if every $p_s$ is still reached at its foreign
+owner, all old reached sets remain reachable.
+No row can be deleted, and the signed test fails
+because the budget is injective and no projection
+fits.
+
+Conversely, if $v\in p_s$ is no longer reached at
+a foreign owner $s$, then $v\in A\setminus p_r$.
+The complement of the new reachable set is a
+safe $s$-fold support. It clears every row headed
+at $v$: such a row must have an $s$-tail, and that
+tail cannot have been reached. After this deletion
+projection $v$ supplies the signed test, and
+reattaching the fold preserves it. Thus the signed
+test succeeds precisely in the unheaded-input
+case or the lost-seed case.
+
+For each foreign owner $s$ and $v\in p_s$, discard
+$v$ if it is reached from an empty-tail seed in
+the $s$-graph of $S_p$. Otherwise let $L_s(v)$
+be the set of all vertices with an $s$-path to
+$v$, including $v$. Losing $v$ as a seed is
+equivalent to $L_s(v)\subseteq A$, since the
+other seeds are exactly $V\setminus A$. The
+minimal forbidden blocks of owner $r$ are
+therefore the inclusion minima of
+\[
+ \bigl\{\{v\}:v\notin p_r,\ v\notin h(S_p)\bigr\}
+ \ \cup\!
+ \bigcup_{s\ne r}
+ \bigl\{L_s(v):v\in p_s\text{ and no empty-tail
+ seed reaches }v\bigr\}.
+\]
+This has at most $|V|+\sum_{s\ne r}|p_s|$
+entries before minimization, giving an explicit
+principal and a polynomial test for binary
+exclusions. On an implicit minimized-injective
+budget the extra edges of the original-ground
+searches enter empty-tail seeds. They cannot
+affect any ancestor set counted in this formula,
+because its target is unreachable from those
+seeds.
 
 At input prime width two, a different symbolic
 sweep avoids the support-size exponent when the
@@ -9180,14 +9212,10 @@ and edges. They apply to the minimized budget by
 the same redundant-edge argument.
 
 For the current component, compute the principal's
-binary exclusions by testing all proper colorings
-with one or two postings. Each comparison adds
-one explicit fresh-source row, handled by the
-symbolic repeated-block test above. The false
-comparisons give exactly the forbidden singletons
-and pairs needed under the hypothesis. Pass these
-clauses forward instead of listing the principal's
-admitted colorings. This gives a polynomial-time
+forbidden blocks by the residual ancestor formula.
+Under the hypothesis they are singletons and pairs.
+Pass these clauses forward instead of listing the
+principal's admitted colorings. This gives a polynomial-time
 marked test directly from primes, with neither
 the palette nor the component sizes bounded.
 The binary-component sweep is one instance, but
@@ -9333,6 +9361,13 @@ transversal, or certify that none exists.
 More generally this cost is polynomial when
 the number of distinct nonredundant facet
 factors is bounded, even at variable $K$.
+Once injectivity is verified, the residual
+ancestor formula checks the binary condition
+in polynomial time as well. Thus at fixed $K$
+the two sweep hypotheses are jointly decidable
+in polynomial time at a specified query: stop
+at the first failure, or pass the exact clauses
+from each successful component to the next.
 
 The coNP bound is sharp with a variable palette,
 even on realizable width-two lists. Start with the
