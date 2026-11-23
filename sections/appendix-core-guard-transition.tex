@@ -1,3 +1,80 @@
+\paragraph{Reset-order obstructions from source guards.}
+Fix a marked query $(i,p)$ and a budget of losses.
+A reset test is a pair $(r,A)$ with owner $r$ and
+nonempty coalition $A$. For such a test, choose a
+coloring $t$ omitting $r$ and unposted on $A$, such
+that the budget loses at $(j,t)$ for every $j\in A$.
+Associate to this comparison all the tests
+\[
+                    (s,t_s)\qquad\text{with }t_s\not\subseteq p_s .
+\]
+All of them have owner different from $r$. They
+are the only candidate later resets at this
+comparison.
+
+To see the order constraint, follow a path from
+an occurrence supplying the marked winner at
+$p$. On that path, each sibling loses its
+singleton test at its gate owner on the query
+block. Otherwise it would erase the marked
+winner. Let $L(r,A)$ be the last sibling reset
+at owner $r$ passing the singleton test on $A$,
+when one exists. Evaluate at the comparison
+with $A$ posted at $r$, the other postings
+given by $t$, and all unposted menus omitting
+$r$. The only possible sources of $r$ belong
+to $A$, and their losses at observer $r$ force
+the result to omit $r$. If $L(r,A)$ exists it
+installs $r$ at that point on the path. Erasing
+it requires a later sibling reset at another
+owner, since an incoming menu still containing
+$r$ cannot itself be that owner's atom. The
+later reset uses a test in the displayed set:
+every other tail is contained in the query
+block and hence cannot activate its sibling.
+
+A family $\mathcal B$ of reset tests therefore
+cannot occur on the marked path if each of its
+members has a comparison all of whose candidate
+later resets are in $\mathcal B$. A latest
+occurring member would force a still later
+member. To disprove the marked query, it suffices
+to give a loss at $i$ all of whose candidate
+resets belong to $\mathcal B$. At its sole-source
+probe the path starts with the marked winner,
+and a sibling must erase it somewhere. This
+forces an occurrence in the excluded family.
+
+There is a greatest such family: the union of
+any collection of them has the same property.
+Starting with all tests, remove any test having
+no comparison whose candidate later resets
+all remain. At stabilization this gives the
+greatest family, by monotonicity. Enumerating
+coalitions and comparison colorings takes
+single exponential time at fixed palette.
+This decides whether an obstruction of this
+form exists, also when no short circuit
+description has been supplied.
+
+The family and the comparison choices may be
+given by circuits. To check a proposed circuit
+certificate, universally check each represented
+test: verify that the comparison is proper,
+omits its specified owner, leaves its coalition
+unposted, satisfies the losses there on that
+owner's facet, and sends every candidate later
+reset to the represented family. Each local
+test reads the original prime lists directly.
+A bad comparison has a polynomial-size address,
+so validity of the circuit certificate is a
+coNP test. The state-transition obstruction
+below is one such certificate, with its reachable
+cycle represented by addresses and its comparison
+choices by the successor map. This form can
+describe an obstruction without listing all
+loss rows along the cycle.
+
 \paragraph{State transitions and bounded guard width.}
 Let $G$ be a directed graph on a subset of the bit strings of length
 $m$, with a designated start state $s_0$. As above, use two groups
