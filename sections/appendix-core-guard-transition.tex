@@ -131,6 +131,65 @@ The state transition theorem gives the required number of slots;
 \cref{core:thm:completion-fold-schedule} yields the depth bound.
 \end{proof}
 
+\paragraph{Exponential obstructions in a loss sample.}
+The same construction gives infeasible marked
+queries for which no small subset of original
+loss rows certifies failure. Drop the halt
+restriction from the rotating counter in the
+proof of \cref{core:cor:width-three-depth}, using
+the displayed update also at overflow. Each
+sweep now increments the data modulo $2^l$
+and resets the carry. The initial register pair
+$(A_0,f(A_0))$ returns to itself after
+$2l2^l$ split updates: every two updates apply
+one ordinary counter step and restore the form
+$(A,f(A))$. The $l2^l$ such pairs before the
+return are distinct. The flags distinguish
+the rotation stage; at a fixed stage, the
+data is a rotation of the original data
+with its processed low bits incremented
+modulo their range, a bijection.
+The deterministic graph reachable from the
+initial pair is therefore a cycle with at least
+$l2^l$ vertices. The prime clauses are unchanged
+except for omission of the halt restriction, so
+the lists are canonical with width at most
+three and $O_K(l^2)$ posting occurrences.
+The distinguished positive fails by
+\cref{core:thm:guard-transition-depth}.
+
+Consider any sample of full-budget losses. A
+$b$-group row whose pairs each have exactly
+one $c$-posting has a unique address $s$ and
+can witness only the transition out of $s$.
+Keep an edge of the counter graph only if the
+sample contains such a row at its address.
+If the sample has fewer than $l2^l$ rows, it
+misses at least one edge of the reachable
+cycle. The reduced graph has an acyclic
+reachable part. Use the sufficient construction
+of \cref{core:thm:guard-transition-depth} for
+that graph, retaining the original valid
+addresses and the seed at $X$.
+
+This word respects every sampled row. At a
+unique address any sampled $b$-row has its
+edge in the reduced graph, and $a$-rows have
+the same requirements as before. A row with
+two $c$-postings in a pair of its own group
+supplies no marked winner from that group's
+helpers: every address fold of the group
+contains a $c$-atom at that pair, so its
+output is the $c$-atom. The word also
+respects the seed loss and supplies the
+positive. This argument uses any proper
+loss rows, including supersets of minimal
+ones. Thus for every fixed $K\ge3$ there are
+polynomial-size prime bounds on $O_K(l)$
+inputs with an infeasible mark requiring
+exponentially many original rows to witness
+infeasibility by a subbudget.
+
 \paragraph{Binary clauses in a state transition.}
 The state-transition construction has polynomial depth if the
 valid states and the edge relation on unique addresses are
