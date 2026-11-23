@@ -9127,13 +9127,43 @@ If the disjunction fails, each signed closure contains
 its original query closure. Every old tail lay in
 that closure at saturation. Thus no first safe fold
 deletes any row, and no projection satisfies the signed
-test. Genuine repeated-block witnesses can go further.
-For the budget of $x\star_a(y\star_b z)$ in
-the discussion preceding
-\cref{core:thm:repeated-blocker-budgets}, the uncolored
-query has all three heads after saturation. The disjunction excludes nothing, but
-the word wins the $a$-test on $\{x\}$ and loses it on
-the empty coalition.
+test. The full Horn closures, even with all possible seeds,
+do not determine the principal. Take distinct owners
+$a,b,c$ and the two words
+\[
+ T=x\star_a(y\star_b z),\qquad
+ T'=x\star_b(y\star_c z).
+\]
+The loss lists are the three-input example preceding
+\cref{core:thm:repeated-blocker-budgets} and its owner
+renaming. For $T$, at $a$ the empty tails derive $y,z$,
+which together derive $x$. At any other owner there is
+an empty tail at each head. Thus both words have the
+same Horn closures at every owner: each closure
+derives the full triple from the empty seed.
+They also have the same uncolored posting graph and
+the same support. Every row survives safe folds and
+the Horn disjunction at every query, since all
+inputs are heads and every closure is already full.
+
+At the target $p=(x{:}a)$, the extension by $y{:}a$
+is admitted for $T$ and forbidden for $T'$.
+Fixing $x=\{a\}$ makes $T$ constant, while the
+cofactor of $T'$ still depends on $y$. Its loss list
+at $y$ has the two singleton losses $x{:}b$ and
+$z{:}c$, so $y$ is live at $p$. The compatible
+comparison criterion in \cref{core:thm:activation-faithfulness}
+gives the different answers.
+
+With $m$ disjoint triples, union one of these two
+words on each triple and post all the $x$ inputs
+at $a$ in the target. Their complete loss lists are
+the disjoint unions of the local lists. All $2^m$
+operations have the same heads, Horn closures and
+uncolored posting graph. Extending the target by
+$y{:}a$ on the chosen triple tests just that $y$
+coordinate's dependence, so these extensions
+distinguish their $2^m$ principals.
 
 More generally, any further exclusion requires a
 repeated-block branch on an old row in the
@@ -9197,7 +9227,7 @@ These deletions preserve the exact principal, even when
 the test misses some exclusions. Let $D$ be the greatest
 coefficient of the starting budget and $M$ its greatest
 atomic enlargement at $p$. The partial-budget formula
-of emph{Descending boxes from a partial loss budget}
+of \emph{Descending boxes from a partial loss budget}
 identifies $M$ as the greatest coefficient of the rows
 whose colorings are in the principal of $D$. Each old
 safe fold certifies an exclusion of the tail of every
@@ -9211,16 +9241,15 @@ principal is an owner box, so neither step deletes a
 protected row. Inductively the new coefficient lies
 between $D$ and $M$, which have the same principal.
 The interval monotonicity used in
-cref{core:lem:atomic-repair} gives that same principal
+\cref{core:lem:atomic-repair} gives that same principal
 for the new coefficient. It also agrees with $D$ at
 the query because $M$ does.
 
 For example let $u,v,x$ be distinct inputs, with rows
 at $u,v$ posting the other input at $s$, and one row
-at $x$ posting both $u,v$ at $r
-e s$. Query with
+at $x$ posting both $u,v$ at $r\ne s$. Query with
 $u,v$ posted at $s$. All rows survive ordinary safe-fold
-saturation. But $H_s(Vsetminus{u,v})={x}$, so the
+saturation. But $H_s(V\setminus\{u,v\})=\{x\}$, so the
 $r$-tail of the row at $x$ is excluded. The new deletion
 step leaves only singleton tails. Thus an injective
 residual can suffice for exactness even when ordinary
