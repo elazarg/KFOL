@@ -572,8 +572,9 @@ The reduction supplies complete prime lists and works for
 every fixed $K\ge3$. Hence the upper bound is sharp already
 for one repeated class in the whole family.
 
-For acyclic injective budgets with at most one row per
-head, guard implication for the core meet is polynomial.
+For injective budgets with at most one row per head,
+guard implication for the core meet is polynomial,
+including in the presence of cycles.
 Fix the query head $i$, observer, and guard. A posting
 is allowed if it can occur on that facet with the guard
 enabled, so in particular no posting at $i$ is allowed.
@@ -586,24 +587,42 @@ For each pair of rows at $j,j'$ posting the same $u$
 at different owners, impose
 $e_j\land e_{j'}\Rightarrow e_u$.
 
-This Horn system is satisfiable exactly when some
-probe enabling the guard has no bounded witness.
-Indeed, a blocking subfamily on a probe must
-contain the row at $i$. Each tail must be reachable
-in the corresponding owner's graph, so it is either
-headed in the subfamily or posted at that owner
-on the probe. The latter postings must be allowed
-and consistent, giving the Horn implications.
-Conversely, from a Horn solution take its selected
-rows and post their required tails outside the
-selected heads. The implications make these
-postings allowed and consistent. At each owner,
-every selected head is now reachable: traverse
-the source order, using an empty tail as a seed
-and a nonempty tail either as an external posting
-or as an already reached head. Thus all selected
-tails are reachable and the chosen rows form a
-blocker by \cref{core:thm:injective-blockers}.
+Every blocking subfamily on an enabled probe must
+satisfy the Horn system: it contains the row at $i$,
+and each reachable tail is either headed in the
+subfamily or posted at its required owner on the
+probe. The latter postings must be allowed and
+consistent. If the system is satisfiable, let $H$
+be the heads in its least solution. Post their
+required tails outside $H$ at the required owners.
+The implications make this coloring consistent and
+allowed.
+
+For each owner $r$, draw the $r$-edges of the selected
+rows. Every head has at most one incoming $r$-edge.
+Outside the directed cycles, reachability follows
+by tracing predecessors to a selected empty-tail
+row, an externally posted tail, or a cycle.
+Each directed cycle still needs a seed: one of its
+vertices must be posted at $r$, since no edge enters
+it from outside. Use bipartite matching to assign
+distinct vertices to the cycles across all owners,
+allowing a vertex only when its posting at that
+cycle's owner is allowed. These seeds lie in $H$
+and cannot conflict with the external postings.
+If the matching covers all cycles, every head is
+reachable at every owner, so the chosen rows form
+a blocker by \cref{core:thm:injective-blockers}.
+
+If no such matching exists, enlarging $H$ cannot
+help. Any blocking subfamily contains the least
+Horn solution, and every existing cycle remains a
+cycle with no external incoming edge because each
+head still uses its unique row. Its seeds would
+give a matching for the original cycles. Thus the
+least solution and matching give an exact search
+for an enabled probe with no bounded witness.
+For acyclic budgets the matching is vacuous.
 
 Consequently one can check every prime for this
 class in polynomial time, giving complete-family
