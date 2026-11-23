@@ -135,6 +135,65 @@ monotone path computation with conjunctions by
 single exclusions admits this compilation even
 with unrestricted sharing of its path states.
 
+\paragraph{Circuits with single-owner conjunction factors.}
+There is a size-equivalent Boolean model for
+single-source completions at fixed palette.
+Its inputs are exclusion bits. It permits
+arbitrary disjunctions and conjunctions in
+which one operand is a monotone circuit using
+only one owner's exclusions. The single-owner
+circuits themselves may freely use both Boolean
+operations and share their gates. This model
+computes the common source predicate on proper
+colorings. A core circuit supplies such a model
+with linear overhead at fixed palette, and any
+such model for $P$ yields a core circuit for
+$F_P$ with linear overhead.
+
+For the first direction keep at each core gate
+$g$ the survival bit $M_g$ of the source and,
+for each owner $r$, the bit $A_{g,r}$ that $g$
+is not the $r$-atom, calculated with the marked
+input's $r$-atom flag set to false. The latter
+bits are single-owner circuits: at a passive
+input read its $r$-exclusion, at the marked
+input use one, and at a gate take conjunction
+if its owner is $r$ and disjunction otherwise.
+At an $s$-gate with children $g_1,g_2$, use
+\[
+ M_g=(M_{g_1}\lor M_{g_2})\land A_{g_1,s}\land A_{g_2,s}.
+\]
+On any observer facet other than $s$ the flags
+are the actual foreign atom failures on the
+probe. On the $s$-facet they are both one
+because the $s$-posting block is empty, and
+the rule correctly reduces to disjunction.
+Thus the same circuit works across all facets.
+
+Conversely, for a nonconstant single-owner
+factor $Q$ at $r$, compile its monotone dual
+on the $r$-posting bits as a passive core
+circuit $H$. Use $\star_r$ for disjunction and
+a foreign gate for conjunction, so the
+$r$-singleton profile of $H$ is exactly that
+dual. Constants can be simplified before
+compiling the factor. At a conjunction of a
+marked circuit $T$ with $Q$, use $T\star_r H$.
+On a foreign observer's probe it retains the
+mark exactly when $T$ does and $H$ fails the
+$r$-atom test. On the $r$-facet $Q$ is true
+because all $r$-exclusions are present, and
+the gate preserves the mark. Disjunction uses
+union, with constants represented by the
+marked input and the passive union. A
+single-owner factor used as a marked circuit
+on its own can filter the marked projection
+in the same way. The final union with the
+passive inputs yields $F_P$. Both the marked
+subcircuits and the passive dual computations
+can be shared without changing their marker
+inputs, giving the size bound.
+
 \paragraph{Meet-irreducibles of the full core.}
 Fix at least two inputs and order the core operations, with formal
 zero adjoined, by pointwise inclusion. This is a finite lattice since
