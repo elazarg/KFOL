@@ -9187,6 +9187,60 @@ at most one pure row per head. The reduction
 uses arbitrary original losses; it imposes no
 monochromatic restriction on the negatives.
 
+\paragraph{One losing coalition throughout the signed recursion.}
+Fix an owner $k$ and a losing coalition $B$ for its
+profile. All gaps $\Phi_k(A)=1,\ \Phi_k(B)=0$ can
+use one recursion that keeps $k,B$ fixed. Its only
+other oracle is existence of a nonempty bounded
+term, or equivalently feasibility of some uncolored
+source mark.
+
+For the signed owner deletions, test a potential
+offer $s:D$ on $S_{s,D}$, obtained by dropping the
+rows whose $s$-tails contain $D$. This is equivalent
+to testing on $S$ together with the required win
+$\Phi_s(D)=1$: any word winning that test already
+omits each dropped mark, since it is the $s$-atom
+on those rows. For $s\ne k$, the helper also needs
+$\Phi_k(A)=1$. The two wins are pure losses by
+\emph{Profile demands as source constraints}, so
+this case uses only the nonemptiness oracle. For
+$s=k$, the helper test on $S_{k,D}$ is the gap
+with $D$ in place of $A$ and the same losing
+coalition $B$. When testing an offer found in a
+current row, $S_{k,D}$ is strictly smaller. Empty
+offers cannot absorb. The recursion is therefore
+well-founded. It makes no signed calls at other
+owners and never changes the losing coalition.
+At the terminal budget the signed projection test
+gives the answer.
+
+If $d$ is the number of distinct nonempty $k$-tails
+in the original budget, the recursion takes
+$2^{O(d\log(d+1))}$ times polynomial work and
+nonemptiness queries. Exhaust all foreign deletions
+using the oracle before trying a $k$-offer.
+Each successful $k$-step removes its offered tail
+from the current list, so there are at most $d+1$
+phases trying at most $d$ tails each. Each recursive
+call removes at least its offered tail and cannot
+increase the number of other $k$-tails, giving depth
+at most $d$. Foreign tails need no parameter bound.
+
+For a monochromatic source query with only $p_k=B$
+nonempty, the same distinction applies throughout
+owner deletion. A step at a foreign owner needs
+only to absorb on its chosen tail, and hence uses
+nonemptiness after compiling that one required
+win. Only the steps at $k$ need the signed recursion
+with losing coalition $B$. For an uncolored source
+query all steps instead use the nonemptiness oracle.
+Consequently, for listed losses, uncolored marked
+feasibility and existence of a nonempty bounded
+term are polynomial-time Turing equivalent. The
+reverse reduction just tests every head at the
+uncolored query.
+
 \paragraph{A common theory of singleton tests.}
 For arbitrary negative rows one can compute all positive queries from
 a common theory. Choose a finite set of bits $d_{r,A}$, with owner $r$
