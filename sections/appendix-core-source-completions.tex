@@ -759,10 +759,56 @@ Unroll least closure for at most one round per head.
 A posting restriction contributes a rule with the
 forbidden-posting bit as an extra positive premise;
 the conflict rules are fixed. Sufficiency is activation
-of any head with no row. For cyclic budgets already
-at four owners there need not be such a polynomial-size
-monotone circuit, although guard implication still takes
-polynomial time by matching.
+of any head with no row.
+
+At three owners the monotone circuit extends to
+cyclic one-row budgets. Precompute the cycles of
+each owner's graph on all headed inputs. A cycle
+is selected exactly when every one of its heads
+is in the least Horn solution, a monotone test.
+A selected observer cycle immediately makes the
+guard sufficient, since that cycle cannot be seeded.
+For other owners, use a fixed matching instance with
+one left vertex per possible cycle. Give it the
+usual seed incidences and one private dummy resource.
+Forbid the dummy precisely when the cycle is
+selected. Requiring a matching of all left vertices
+is equivalent to matching the selected cycles: each
+unselected one can take its own dummy. Each real
+resource is incident to at most two left vertices,
+one per nonobserver owner. Every forbidden-incidence
+bit is either constant, an exclusion bit, or the
+monotone selection bit of a cycle.
+
+When each resource has degree at most two, matching
+failure has a polynomial monotone circuit in these
+forbidden-incidence bits. Repeatedly apply this rule:
+if all incidences of a left vertex except one are
+forbidden, forbid the remaining incidence's resource
+at all other left vertices. Record failure if any
+left vertex loses all its incidences. The rule uses
+only positive premises about forbidden incidences.
+It is sound because any matching must use that
+resource at the left vertex, unless the left vertex
+already has no option. At stabilization without
+failure, assign each singleton left vertex its
+unique resource. These assignments are disjoint
+and the remaining left vertices do not use those
+resources. Every remaining left vertex has at
+least two incidences, so double counting edges
+gives Hall's condition: any set of left vertices
+has at least twice its size in incidences and
+each right resource accounts for at most two.
+Thus the residual graph has a matching. Unrolling
+the rules for at most the number of incidences
+gives the asserted circuit. A guard is sufficient
+if the Horn test fails, an observer cycle is
+selected, or this matching circuit reports failure.
+
+At four owners cyclic budgets need not admit
+polynomial-size monotone circuits, although
+guard implication still takes polynomial time by
+matching.
 
 Start with bipartite perfect matching on $m$ left and $m$
 right vertices. Replace each right vertex by $m$ ports
