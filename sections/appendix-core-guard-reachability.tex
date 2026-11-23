@@ -13008,6 +13008,66 @@ uses the polynomial test for a guessed support
 above. The separate one-head case is polynomial
 for two owners by \cref{core:prop:common-head-depth-one}.
 
+For two posting owners the depth-one test is
+polynomial when the explicitly listed loss rows
+have bounded size $b$, even with arbitrary heads
+and a nonempty positive coloring. The following
+small-family argument handles the unknown support.
+
+Any family $\mathcal F$ of nonempty sets of size
+at most $b$ has a subfamily $\mathcal T$ with at
+most $1+b+\cdots+b^b$ members having the same
+hitting sets of size at most $b$. Starting with
+an empty partial hitting set, choose a set of
+$\mathcal F$ not yet hit, retain it, and branch
+on adding each of its elements. Stop if every
+set is hit or if the partial set already has
+size $b$, retaining a missed set in the latter
+case when there is one. A small hitting set of
+the retained family can follow a branch inside
+itself until it hits the whole original family;
+it cannot end at a missed retained set. This
+proves the bound and the claimed equivalence.
+
+Guess such a family $\mathcal T$ on the input
+ground, treating it as a representative of the
+$r$-generators of a prospective witness. Require
+its inputs in the support. Enumerate the
+inclusion-minimal hitting sets of $\mathcal T$
+of size at most $b$, all of which lie in its
+union. For an owner-$r$ option at a loss, require
+its tail restricted to the support to meet each
+of these small hitting sets. For an owner-$t$
+option, require its restricted tail to meet
+every set in $\mathcal T$. At either owner
+also require the restricted tail to escape the
+positive probe's posting at that owner.
+
+These are upward requirements on the support.
+Starting with all inputs, repeatedly delete a
+head with a row admitting no option. The stable
+set is the greatest support meeting the option
+conditions, since no valid smaller support can
+contain a deleted head. Accept the guess if the
+stable set contains the marked head and the
+required inputs of $\mathcal T$. Choose one
+option per retained row. Each chosen $t$-tail
+hits $\mathcal T$ and has size at most $b$,
+so it contains a small minimal hitting set
+met by every chosen $r$-tail. Thus all chosen
+generators have the cross-intersections needed
+for a greatest completion, and they lose on
+the positive. Conversely, from a witness take
+its chosen $r$-tails restricted to its support
+as $\mathcal F$ and guess their representative
+$\mathcal T$. All its chosen $t$-tails hit this
+family, and each chosen $r$-tail meets every
+small hitting set of $\mathcal T$, by the
+representative property. Its support survives
+the deletions. The enumeration is polynomial
+for fixed $b$; the family size and the number
+of inputs it uses are bounded in $b$ alone.
+
 Hardness persists even with two headed inputs and width at most
 four. Modify the preceding reduction by adding one retained input
 $z$. Keep the $r$-losses at $i$ on vertex hitting sets, and add the
