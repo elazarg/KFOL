@@ -9296,6 +9296,85 @@ decrease either mass. Thus if every head has fewer
 than $2^{K-2}$ rows, the counted $K-2$-owner projections
 uniquely determine its full minimal loss list.
 
+At the threshold, the ambiguity has a specific form.
+If two different lists each have $2^{K-2}$ rows
+and the same counted projections, the smallest
+nonzero projection in the preceding proof has
+$d=K-1$. Equality in the mass bound forces
+exactly two nonzero slices in each induction step,
+and those slices are pointwise negatives of one
+another. Starting at the one-coordinate case,
+the projected difference is therefore an alternating
+sign array on a binary cube, with entries $\pm1$.
+There is no cancellation in this projection, so
+each cube vertex lifts to exactly one row of the
+appropriate list.
+
+Write $f$ for the tail at the remaining owner on
+each lifted vertex. On a square of the cube, hold
+all other cube coordinates fixed and read the
+counted projection retaining those fixed coordinates
+and the remaining owner. This projection retains
+$K-2$ owners. Hence the multisets of $f$ on the
+two diagonals of the square agree. If $f$ differs
+across an edge in direction $i$, the square
+condition forces the opposite edge of each square
+through that edge to have the same two values in
+direction $i$, in the same order. Following such
+squares propagates those values to every edge in
+direction $i$. Thus $f$ is constant or depends
+only on that one coordinate. Conversely any two
+such parity halves of proper antichains have the
+same counted projections: each projection to
+$K-2$ owners leaves at least one cube coordinate
+undetermined, and flipping it preserves the
+projected row while reversing parity.
+
+Recovery below this bound can be performed directly
+on the counted projection tables. More generally,
+suppose the tables at a head record projections
+onto every $s$-element owner set, where $s\ge1$.
+Find a cell of count one in a projection onto
+$s-1$ owners, obtained by summing a supplied table
+over its other coordinate. For each omitted owner
+inspect the supplied table adding that owner to
+the chosen $s-1$. Exactly one of its cells extends
+the count-one cell. Its remaining coordinate gives
+that owner's tail in the unique underlying row.
+Combine these coordinates, record the row, and
+subtract its projected contribution in every
+table.
+
+Whenever the current list has fewer than $2^s$
+distinct rows, such a cell exists. Starting with
+the entire list, choose a coordinate on which the
+rows differ and keep a smallest nonempty class of
+its values. This reduces the number of remaining
+rows by at least half. Repeat until one remains.
+Fewer than $2^s$ starting rows require at most
+$s-1$ chosen coordinates. Extend them arbitrarily
+to $s-1$ coordinates if necessary. The resulting
+projected row has count one. Induction gives full
+recovery below the bound. One need not find these
+coordinate choices by examining the unknown rows:
+scan the nonzero entries of the derived
+$(s-1)$-owner tables for a count of one.
+
+Each removal turns at least one nonzero cell of a
+derived table into zero. Those cells never return,
+so the entire procedure takes polynomial time in
+the explicit counted tables, also with binary
+counts. Above the bound it still recovers every
+row obtainable by these removals. In fact its
+residual is the greatest subfamily whose
+$(s-1)$-owner projections have no count-one cell.
+Such subfamilies are closed under union: every
+nonempty cell of a union already has two rows in at
+least one of its subfamilies. No deletion can
+remove a member of one of them, and the terminal
+subfamily has the required property. The residual
+therefore does not depend on the removal order.
+
 This threshold is sharp for these projections.
 Every proper row omits an owner and hence occurs
 in its entirety in at least one projection to
