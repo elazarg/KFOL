@@ -2825,6 +2825,58 @@ fixing with $J$ posted uses every owner. A complete
 prime family must therefore lose at every $B$ obtained
 by such a substitution.
 
+For an explicitly listed mixed budget, the singleton
+graph formula makes these erasures a polynomial
+preprocessing step. Keep the singleton and empty
+losses as constraints. Compute the greatest bound
+from the singleton graph, treating heads with an
+empty loss, and all their singleton predecessors,
+as dead as well. The latter deletion is necessary
+by the singleton support bound; removing those heads
+from the singleton problem leaves no outgoing edge
+to them from a surviving head. Every word bounded
+by the full budget is independent of the dead
+inputs and obeys the propagated singleton losses.
+
+For any remaining loss row or fixed positive probe,
+first erase postings of dead inputs. On its posted
+inputs draw an arrow $u\to v$ when the retained
+singleton constraints force $u$ to lose under
+$v$'s posted color. Each such arrow permits erasing
+$u$ while $v$ remains fixed. Retain one arbitrary
+vertex of each sink strongly connected component
+of this graph and erase every other posting. To
+realize this by single erasures, use a path from
+each removed vertex to a retained vertex and erase
+in decreasing order of distance to the retained set.
+Every erased input has a successor still fixed.
+Conversely, the last posting in a sink component
+cannot be erased using these arrows. Thus this
+leaves the minimum number of postings attainable
+by these singleton erasures. The choice of
+representatives can change the remaining colors
+but cannot change any bounded cofactor's output.
+
+For a negative row, the shortened row is equivalent
+to the original in the presence of the retained
+constraints. Indeed at each step the remaining
+fixing ignores the erased input, so a loss at the
+head holds with or without that posting. If a row
+shortens to a singleton or the empty row, add it to
+the retained constraints and repeat the graph
+calculation. One can keep each mixed row in a
+separate slot and only shorten it, so the number
+of strict row-shortening steps is bounded by the
+original number of postings. The inferred singleton
+and empty constraints have at most $K|V|^2+|V|$
+distinct rows. This gives a polynomial reduction
+on listed budgets, preserving all bounded words
+and hence the greatest minorant. For example, a
+loss at $h$ fixing both $y:s$ and $z:r$ shortens
+to the singleton $z:r$ when $y$ loses under that
+posting, and the new singleton can then propagate
+to any head captured by $h$.
+
 \paragraph{Substitution through the full palette.}
 For a word, a consistent background need not be proper
 to test whether it blocks every occurrence of an unposted
