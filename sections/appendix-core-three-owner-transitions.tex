@@ -257,15 +257,68 @@ $y\le x$, which by monotonicity is equivalent
 to accepting $x$. This gives a monotone
 projection onto the marked bit, whereas
 the two-control construction reads both
-polarities. Conversely a rail game with these local rules
-and polynomial address length has only exponentially
-many
-states, and its available requests and
+polarities. A rail game with these local rules and
+polynomial address length has only exponentially
+many states. Its available requests and
 successors can be enumerated and solved
 in exponential time. Thus these fixed
 budget slices already capture the full
 alternating-space computation without
 encoding the input into the prime lists.
+
+The terminal requests also preserve exactness of
+the strengthened reset obstruction on these slices.
+Include the primary tests of losing states and the
+rival tests specified in the alternating-rail
+certificate. At an unavailable request the terminal
+comparison has no later candidate, since its only
+foreign reset is disabled by the probe. At an
+available request the state is winning and no
+primary test for it is needed in the excluded
+family. The other closure conditions are unchanged.
+Thus varying the probe alone gives EXPTIME-complete
+obstruction evaluation for a polynomial-time
+generated family of bounded-width budgets: use
+the construction above for an EXPTIME-complete
+language, and take the complement when testing
+for an obstruction.
+
+There is also an exact description of minimal
+control supports on any such slice. Let $E$ be
+the set of available controls and let $f(E)$
+be the winning bit. If a bounded word supplies
+the mark and uses the set $S$ of control inputs,
+post at $b$ every available control outside $S$.
+This changes no input used by the word, so the
+new probe still supplies the mark. Hence
+$f(E\cap S)=1$. Conversely for any
+inclusion-minimal winning $T\subseteq E$,
+the rail witness for $T$ uses only requested
+controls from $T$. It must request every
+member of $T$, by minimality. Changing other
+controls back to their menus at $E$ leaves
+the witness unchanged. Consequently the
+inclusion-minimal control supports of witnesses
+at $E$ are exactly the minimal winning
+subsets of $E$. For clique these are precisely
+the edge sets of its cliques of the prescribed
+size.
+
+These minimal sets also lower-bound the number
+of canonical primes of the unrestricted
+minorant at the marked head. Restrict a full
+prime formula to the slice by fixing every
+posting flag except the control flags at $b$.
+Discard disabled guards and erase exclusions
+already met, then minimize. The resulting
+monotone terms are precisely the minterms of
+$f$, since the remaining control flags can
+vary independently. Each such term comes from
+a distinct full prime. Thus the clique slice
+has at least $\binom{m}{s}$ full primes at
+the marked head on its observer facet, with
+complete bounded-width input lists still
+polynomial in $m$.
 
 \paragraph{Prescribing unanimity at three owners.}
 For every fixed $K\ge3$, it is EXPTIME-hard to ask for a word
