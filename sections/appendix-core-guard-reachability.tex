@@ -7083,30 +7083,45 @@ facet. Thus we may guess an original loss head and
 facet and one imaged guard on that same facet at a
 copy of the quotient head.
 
-Require a consistent hitting set of the original
-head's primes, omitting native siblings as above.
-For each exclusion in the guessed image, require
-its quotient atom to be absent from the projected row.
-If the excluded owner is native to its block, this
-forbids each posting at that owner by a unit clause.
-Otherwise it forbids the all-input posting at the
-excluded owner by one negative clause. All these
-restrictions survive shrinking the hitting set to a
-minimal original loss. Conversely, a projected loss
-violated by $Q_d$ has an enabled image on the original
-facet and satisfies the corresponding test.
+For each such choice, start with the original facet
+ground and delete native sibling postings at the loss
+head. For each exclusion in the image whose owner is
+native to its block, delete every posting there at
+that owner. For every other exclusion, choose one
+member of its block and delete that member's posting
+at the excluded owner. Such a choice keeps the
+projected row from posting the excluded atom: at a
+foreign or union owner the atom requires the entire
+block to be posted there.
 
-At prime width two there are at most two all-input
-clauses, even for arbitrarily large blocks. Guess one
-missing posting per such clause and replace the clause
-by the corresponding negative unit. With $n$ original
-inputs there are at most $n^2$ choices per guessed image,
-and the remaining formula is $2$-SAT. This gives a
-polynomial normalization test for prescribed partitions
-of arbitrary block sizes. The fixed quotient probe
-above can impose all-input constraints in arbitrarily
-many blocks, so its hardness at block size three still
-applies. The native sibling loss conditions are tested
+There is a normalization violation exactly when some
+choice leaves a ground meeting every original prime
+of the chosen loss head and facet. Indeed, such a
+ground contains a minimal transversal, which is
+consistent by the consensus theorem
+(\cref{core:thm:guard-consensus}). It therefore gives
+a proper original loss, and its projection enables the
+guessed image. Conversely, take any violated projected
+loss and an image it enables on the original facet.
+For every foreign or union exclusion in that image,
+choose a missing posting of the original loss. The
+remaining ground still contains the loss and hence
+meets every original prime.
+
+Each trial just checks intersections with the original
+prime list. The number of trials per image is the
+product of the block sizes over its foreign or union
+exclusions. This gives a polynomial normalization
+test for any fixed prime width, with arbitrary block
+sizes. It is also polynomial at unbounded prime width
+if the number of foreign or union exclusions on
+nonsingleton blocks in each image is bounded. In
+particular this holds at fixed $K$ for a partition with
+a bounded number of nonsingleton blocks. The fixed
+quotient probe above can impose whole-block constraints
+in arbitrarily many blocks even at prime width two,
+so its hardness at block size three still applies.
+The native sibling loss conditions are tested
 directly at singleton postings. When they also hold,
 the diagonal quotient computes the unrestricted
 greatest minorant by the normalization theorem,
