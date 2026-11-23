@@ -805,6 +805,27 @@ gives the asserted circuit. A guard is sufficient
 if the Horn test fails, an observer cycle is
 selected, or this matching circuit reports failure.
 
+More generally let $b$ count the real resources that
+can seed three or more possible nonobserver cycles.
+The guard test has a monotone circuit of size at
+most $K^b$ times a polynomial in the budget size.
+To see this, first express matching success on the
+fixed augmented graph in its allowed-incidence bits.
+For each of the $b$ resources, choose one incident
+left vertex to match or leave the resource unused.
+Omit choices that match the same left vertex twice.
+Require the chosen incidences to be allowed, and
+remove the chosen left vertices and all $b$ resources.
+The residual right degrees are at most two, so the
+dual of the preceding propagation circuit tests its
+matching success monotonically in the allowed bits.
+Take the disjunction of the branches. Dualizing the
+whole circuit now tests matching failure monotonically
+in the forbidden bits. Substituting the Horn outputs
+for the dummy-resource bits gives the claimed guard
+circuit. The bound is independent of how many ordinary
+resources and cycles are present.
+
 At four owners cyclic budgets need not admit
 polynomial-size monotone circuits, although
 guard implication still takes polynomial time by
@@ -925,6 +946,28 @@ loss recovery in \emph{Recovering small packed budgets
 from primes} applies to each list with the same
 parameter bound, and the singleton lists require
 only a polynomial scan.
+
+The monotone circuit bounds also apply within each
+fixed guess of the multiply headed rows. In each
+owner's graph on all possible heads, precompute the
+source strongly connected components without
+empty-tail seeds. A component is relevant exactly
+when all its heads are selected. Indeed an unseeded
+source component in the selected subgraph cannot
+have an incoming edge from an unselected head:
+that tail would already have been posted externally,
+giving a seed. It is therefore a source component
+of the full possible graph as well. Conversely each
+such full component that is selected needs a seed.
+In building the full graph include any possible
+external tail as a vertex, discarding components
+containing a vertex with no selectable row. The
+same private dummy resources encode unselected
+components. Their incidences have the same degree
+bound because components at one owner are disjoint.
+A guard is sufficient exactly when every guess
+fails, so conjunction combines the monotone
+circuits for the individual guesses.
 
 The guard implication problem for the core meet is coNP-complete
 without the excess bound, even at fixed $K\ge3$, for acyclic
