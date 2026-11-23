@@ -355,35 +355,59 @@ coNP bound.
 Reduce $3$CNF unsatisfiability. Use a head $h$,
 two literal inputs $L,\bar L$ per variable, and
 one input $g$ per clause. Give each literal $L$
-the implication $\{\bar L,h\}\to L$. For every
-variable put $\{L,\bar L\}\to h$. For a clause
-with literals $L_1,L_2,L_3$ put
-$\{L_2,L_3\}\to g$ and $\{L_1,g\}\to h$.
-Use at least two variables. All premises have
-size two and omit their heads.
+the implication $\{\bar L,h\}\to L$. Make $h$
+the root of a binary tree with one leaf per
+variable or clause. At each internal vertex
+use two singleton implications, one from
+each child to its parent. At a variable leaf
+use the premise $\{L,\bar L\}$. At a clause
+leaf with literals $L_1,L_2,L_3$ use the
+premise $\{L_1,g\}$, and at $g$ use
+$\{L_2,L_3\}$. Use at least two variables.
+All premises have size at most two and omit
+their heads.
 
 Each opposite-literal pair is a minimal
 forbidden block. A nonempty block with
 closed complement that omits $h$ must
 contain such a pair: any literal forces its
-opposite, and any clause input forces a
-literal. A block containing $h$ must meet
-every variable pair, so cannot have size
+opposite, and any auxiliary input forces
+either a literal or a descendant leading to
+one. A block containing $h$ contains the
+entire tree and must meet every variable pair,
+so cannot have size
 two. If it avoids opposite pairs, its
 literals give a consistent assignment and
 must satisfy each clause, either through
 $L_1$ or through $g$ and one of $L_2,L_3$.
 Conversely a model gives such a block by
-taking $h$, its true literals, and the
+taking the tree vertices, its true literals, and the
 clause inputs whose first literal is false.
 Minimizing this block cannot introduce an
 opposite pair and therefore still gives a
 forbidden block of size greater than two.
 Thus the principal is binary exactly when
-the formula is unsatisfiable. This hardness
-uses the generating implications as input;
-the complete base primes can reveal the
-cover differences directly as above.
+the formula is unsatisfiable.
+
+The generating loss budget itself has short
+complete width-two prime lists. At each tree
+parent its two singleton losses give one
+two-posting guard, and at each other head its
+one loss gives only singleton guards. All
+postings use the native owner, so these are
+canonical, with the empty guard on the facet
+hiding that owner. The greatest core minorant
+of this budget is the trace of the generated
+closure. Thus binary activation of that
+minorant is coNP-complete from complete
+width-two lists for the original budget, at
+any fixed $K\ge3$. The closure scans still work
+from these lists: a head is added exactly when
+its native probe at the current seed loses.
+When the complete primes
+of the minorant itself are supplied, the
+cover differences can be read directly as
+above.
 
 The same maximum controls the arity of folds needed to
 eliminate this base from any outside loss budget. Let $b$
