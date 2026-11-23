@@ -3132,86 +3132,87 @@ exactly when the graph is not $3$-colorable.
 Membership follows from the acyclic positive
 probe certificate.
 
-\paragraph{Binary recognition with one loss per control facet.}
-Consider an acyclic width-two family in which
-every input read by another head has at most one
-minimal loss on each observer facet. This is
-visible directly in the prime lists, where
-every such head must have width at most one.
-The family admits polynomial-time complete
-recognition. It can have arbitrary depth and
-arbitrary edges between the controls of a head.
-
-Process heads in source order, with controls first.
-When testing a head $h$, the earlier restrictions
-have passed, so availability agrees with their
-prescribed source bits. Two controls of $h$
-that are both unavailable on a probe cannot
-read one another in their triggered rows.
-Indeed if $u$'s unique visible loss posts $v$,
-the loss at $v$ does not post $u$ by acyclicity.
-In the sole-source probe at $u$ the $v$-loss
-still holds and captures $v$. Changing $v$
-to neutral must therefore preserve the loss
-at $u$, contradicting its unique required row.
-It suffices to test two
-substitutions at $h$ on each observer facet $k$.
+\paragraph{Two substitution tests for acyclic recognition.}
+An arbitrary acyclic canonical family can be tested
+head by head in source order, with controls first.
+When testing $h$, assume the earlier restrictions
+have passed, so their availability agrees with
+their prescribed source bits. On each observer
+facet $k$, require that the following two moves
+preserve losses at $h$ whenever their result is
+consistent:
 \begin{enumerate}
 \item In a loss visible at $k$, replace one control
-posting by that control's loss row visible at $k$.
+posting by a loss of that control visible at $k$.
 \item In a loss from any facet, replace all
-$k$-postings by the corresponding controls'
-loss rows visible at $k$.
+$k$-postings by losses of the corresponding
+controls visible at $k$.
 \end{enumerate}
-In both tests the result must be consistent and
-visible at $k$. Reject if it enables a prime at
-the tested head. Each rejected substitution
-is a genuine failure of the availability test:
-every original posting either remains present or
-belongs to a captured control.
+Every result is visible at $k$. A rejected move
+gives a failed required mark: in the availability
+test, the postings of the original loss either
+remain present or belong to unavailable controls.
 
-Conversely, fix a failed required mark at the
-tested head. The acyclic availability test
-gives an original loss row $T$ whose mismatches
-with the probe are all at unavailable controls.
-Every such control has its unique row on
-facet $k$ posted at that probe. First replace
-all $k$-postings of $T$ by those rows, since
-the probe has no $k$-postings. This yields a
-consistent row visible at $k$. All inserted rows
-agree with the probe, and every original posting
-that disagrees there is at an unavailable control.
-No inserted row reads such a control, by the
-preceding capture argument. Thus no inserted
-posting conflicts with an original one. Unless
-this first step already
-fails the second test, the resulting row is
-a prescribed loss. Now replace the remaining
-mismatching control postings one at a time
-on that facet. The same consistency argument
-applies. Eventually the row is contained in
-the probe and hence is positive, so some
-single replacement fails the first test.
-This proves completeness of the two tests.
+Conversely, fix a failed required mark at $h$.
+The acyclic availability test gives an original
+loss row $T$ whose mismatches with the probe are
+all at unavailable controls. On the probe erase
+the postings of all unavailable controls of $h$
+in source order, with their controls first.
+Each of these inputs stays unavailable throughout.
+Indeed, an erased input $v$ cannot affect a
+control earlier than $v$. For a later control
+$u$, consider its sole-source probe before
+erasing $v$. The loss at $v$ still holds there,
+since it does not read $u$ by source order.
+Thus it captures $v$, and cofactor independence
+preserves the loss at $u$ under the erasure.
+Erasing a control's own posting does not change
+its own source test either.
 
-For either test guess the original facet and a
-prime enabled at the result. In the first test
-also guess the control posting being replaced and
-require its inclusion. Associate to every possible
-original posting its transformed set: either the
-same singleton or the unique control row as
-specified by the substitution. Forbid unavailable
-transformations, and any transformed set meeting
-the guessed prime. Require the original postings
-to hit every prime on the original facet.
-Binary conflict clauses ensure consistency of the
-original and transformed sets, since each chosen
-posting has a fixed image. All these conditions
-are $2$-SAT at prime width two. Once each
-prefix passes, the acyclic greatest minorant
-agrees with the prescribed operation there.
+Consequently every substituted control has a
+loss visible at $k$ contained in the erased
+probe, with no postings at unavailable controls
+of $h$. Choose one such row for each mismatch.
+First replace all $k$-postings of $T$ by those
+rows. The result is consistent: every inserted
+posting agrees with the probe and avoids the
+controls with mismatching original postings.
+If the resulting row is positive, the second
+test fails. Otherwise replace the remaining
+mismatching postings one at a time, using the
+same compatibility. The last row is contained
+in the original positive probe, so one of
+these replacements fails the first test.
+This proves the two tests are complete,
+without requiring a row on a full-palette
+intermediate coloring.
+
+At prime width two, the tests are polynomial
+when every read input has at most one loss
+per facet, with no depth or independence
+condition. Guess the original facet and a
+prime enabled at the result. In the first
+test guess the posting being replaced and
+require it to be chosen. Each possible
+original posting has a fixed image: its
+own singleton, or its control's visible
+loss row under the substitution. Forbid
+unavailable images and images meeting the
+guessed prime. Require the chosen original
+postings to hit every prime on the original
+facet. Binary conflict clauses ensure the
+consistency of both colorings, since every
+chosen posting has a fixed image. These
+constraints give a $2$-SAT test.
+With explicitly listed alternatives at
+read inputs, one may first guess a visible
+row for each control that can be substituted
+and use the same test. In particular the
+test stays polynomial with a fixed number
+of read inputs having multiple visible rows.
 The width-three hardness above holds even
-within this broader class.
+with the per-facet uniqueness condition.
 
 Acyclicity of the disagreeing arrows at a probe does
 not suffice for projection deletion. Take three heads
