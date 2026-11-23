@@ -4326,6 +4326,51 @@ head's singleton loss requires precisely
 that input for a witness. The input prime
 at that head therefore fails on the piece.
 
+When an observer-specific cover uses at most two
+inputs per piece, exact recognition has a direct
+binary test. Take the union of all bounded
+projections, binary owned choices, and binary
+masks. A projection at $x$ is bounded exactly
+when its source is unconditional. The $r$-choice
+on $x,y$ is bounded exactly when every loss at
+$x$ contains $y:r$ and every loss at $y$ contains
+$x:r$. A mask controlled by $x$ with owner set
+$A$ is bounded exactly when $x$ is unconditional
+and every loss at its dependent head $y$ posts
+$x$ at an owner in $A$. If such a mask exists,
+retain just the mask with the smallest such
+$A$, the set of owners used to post $x$ in
+the losses at $y$. Union on a pair is already
+accounted for by the two projections.
+
+These tests read the original primes: an
+alphabet hits every loss exactly when on
+each facet it contains a listed prime.
+At a conditional head, the resulting
+sufficient guards use just one neighbor
+each. For each neighbor retain only one:
+two choices at different owners cannot
+both be bounded, since a loss would have
+to post the neighbor twice. If a choice
+and a mask are both bounded, the mask's
+minimal owner set is the choice's singleton.
+The retained guards on each facet are
+therefore already canonical after removing
+supersets: guards for distinct neighbors
+cannot resolve, and a guard resolved with
+itself yields itself.
+
+The candidate passes exactly when this
+computed union supplies every input prime.
+Sufficiency follows from boundedness, with
+a positive required. For necessity the
+two-input cover supplies each prime by
+bounded terms on its piece. Their binary
+normal forms are among the tested functions
+by \cref{core:prop:binary}. The test is
+polynomial in the input lists, also when
+the owner count varies.
+
 For the union operation, the least extensions at
 all heads are also attained simultaneously. For
 each owner $r$, form its owned fold over all
