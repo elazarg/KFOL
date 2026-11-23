@@ -2928,6 +2928,57 @@ chains of simultaneously suspended heads; summing
 the products of frame counts over such chains
 bounds the state count as well.
 
+\paragraph{Scanning a dependency frontier.}
+A different schedule gives compact synthesis when an
+acyclic budget has a narrow frontier, even with many
+multiply headed inputs. Order the heads before the
+controls they read. At a cut of this order keep the
+future headed inputs read by some already processed
+head. Let $b$ be the largest size of such a frontier
+in the supplied order. From the canonical prime lists,
+a greatest-minorant circuit can be constructed in time
+and size $2^b$ times a polynomial in the input size.
+
+For a marked query start at its head's projection and
+process the remaining heads in the supplied order,
+starting at the marked head. A head is used when it
+is the starting projection or a previous attachment
+has introduced it. On reaching a used head, choose
+one prime per observer facet and append its literal
+projections at their owners. Leave their own repairs
+until their positions are reached. Skip an unused
+head. Unheaded inputs need no repair. There is no
+legal choice on a facet without primes.
+
+Every used head's occurrences precede its repair
+stage: later heads do not read it. Every loss there
+is hit by a selected prime on a facet seeing it,
+so an attachment in that stage absorbs the head's
+last possible contribution on the corresponding
+sole-source probe. Thus completed schedules respect
+the budget. If a mark is feasible, the acyclic
+availability formula chooses primes with only
+disagreeing literals at available heads. Every later
+used head is then available, so these choices extend
+to a complete schedule preserving the initial mark.
+Their union is the greatest minorant.
+
+At a cut, remember only which members of its frontier
+have been used. Between cuts, a selected literal
+adds its input to the used set if that input is
+headed. All such targets belong to the next frontier.
+The old frontier, apart from the current head, is
+also contained in the next one. Thus the bit state
+never needs more than $b$ future inputs plus the
+current head. Ordinary stage indices record the
+facet, selected prime and next literal. These
+indices have polynomially many choices. For each
+starting head, pass the union of partial spines
+through the stage graph and join equal states.
+Distributivity over the marked argument validates
+sharing, and only completed schedules enter the
+output union. The claimed bound follows.
+
 Acyclicity of the disagreeing arrows at a probe does
 not suffice for projection deletion. Take three heads
 $h,x,z$, with respective sole losses
