@@ -214,6 +214,56 @@ are consistent precisely for a clique. Conversely
 a clique gives a joint probe on the third
 facet, so the intersection fails there.
 
+At width two, failure is already $\mathrm{W[2]}$-hard
+in the number of completions. Reduce from Dominating
+Set of size at most $q$
+\cite{DowneyFellows1995Basic}, viewing each vertex
+as a choice of its closed neighborhood. Use $q$
+positions from which to choose neighborhoods and
+one extra position for fixed endpoint conditions.
+Each position has its own retained flag and its own
+singleton sink set containing that flag.
+
+For each ground vertex $v$, introduce retained
+inputs $x_{v,0},\ldots,x_{v,q}$. Posting an input
+at $a$ stands for true and posting it at $b$ stands
+for false. The fixed endpoint head has singleton
+primes forcing a loss to post every start at $a$
+and every end at $b$, and to post its position flag
+at $a$. For each choice of a neighborhood at
+position $t$, create a head with the singleton
+prime for its flag at $a$. For every ground vertex
+$v$ missed by that neighborhood, also give this
+head the prime
+\[
+                 \{x_{v,t-1}{:}b,\ x_{v,t}{:}a\}.
+\]
+In a loss this clause requires the implication
+from layer $t-1$ to layer $t$. Within a head no
+input is required at two owners, because each
+choice uses only its two consecutive layers,
+with different roles. Thus these are canonical
+prime lists after minimizing and removing hidden
+postings on each facet. All choices read only
+retained inputs, so the candidate is core by the
+union of its single-source completions.
+
+A counterexample chooses a losing head per position
+to be revived by its flag erasure. The endpoint
+head forces a facet seeing both $a$ and $b$.
+The joint loss constraints are satisfiable exactly
+when each vertex is covered by a chosen neighborhood.
+Indeed, an uncovered vertex has an unbroken
+implication path from its true start to its false
+end. If it is covered, a missing implication
+allows the truth value to change along its path.
+A consistent partial posting can always be
+completed to a Boolean choice on the layer inputs
+without invalidating a loss. This shows the
+equivalence, with $q+1$ completions. Repeated
+neighborhood choices allow padding a smaller
+dominating set.
+
 Width three already makes equality coNP-complete
 for two completions, even for a core operation and
 two singleton sets. Use two distinct posting owners
