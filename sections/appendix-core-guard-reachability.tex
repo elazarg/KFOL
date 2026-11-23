@@ -7007,6 +7007,77 @@ acyclic, the proper loss closure and repair synthesis
 apply there, even for an original cyclic budget
 that fails the exact fold-lift test.
 
+\paragraph{Projecting losses through arbitrary core blocks.}
+The same projection works for any prescribed disjoint
+core operations. For an original minimal loss $(i,t)$,
+take its sole-source probe. Discard the row if the
+inner operation at the head block loses the mark.
+Otherwise project the row to that block and post every
+other block at the owner of its inner singleton, if
+any. These statuses depend only on $t$: survival reads
+the restriction of $t$ to the head block, and exterior
+singletons read the inner singleton profiles on the
+posted coalitions. Each posted quotient color occurs
+in $t$, so the projection is proper and visible on
+the same facet.
+
+A bounded lift must omit these projected losses,
+since on the original probe the surviving block is
+the only source of the mark. Conversely, suppose a
+lift supplies $k$ at a valuation where the original
+budget omits it. Some block supplies $k$ to the outer
+operation, and some live inner source $i$ in that
+block supplies $k$ to the inner operation. The
+foreign postings at $i$ contain an original minimal
+loss $t$. Shrinking to $t$ preserves its inner
+source by antitonicity, so the row is retained.
+Each exterior singleton recorded by projection
+persists at the current valuation by monotonicity
+of its singleton profile in the corresponding
+atomic flags. The outer source therefore loses
+on the current valuation if it obeys the projected
+row, a contradiction. This proves the quotient
+bound for all bounded lifts.
+
+Together with one-sided normalization this also
+extends the direct normalization test. The diagonal
+images of the original primes still describe the
+diagonal quotient, since every block operation is
+idempotent. To find a violation, choose an original
+head and facet and one image at a copy of its
+quotient head on the same facet. Choose a prime
+of the inner head source on that facet and delete
+its exclusions from the original posting ground,
+so the mark survives projection. For each exterior
+exclusion $C:r$ of the image, choose one clause of
+the inner $r$-singleton profile on $C$ and delete
+all its $r$-postings. Here the profile is in positive
+conjunctive normal form on the $r$-atomic flags,
+whose clauses can be read from the inner prime
+lists as in the disjoint substitution test below.
+
+A violation exists exactly when some such ground
+meets every original prime at the selected head
+and facet. In one direction consensus supplies a
+consistent minimal transversal in the ground.
+Its projection survives at the head and leaves the
+chosen image enabled by falsifying the selected
+profile clauses. In the other direction a violated
+projected loss has a surviving inner prime and
+falsifies a profile clause for each excluded quotient
+atom. Choosing them leaves the original loss in
+the ground. At fixed width of the original primes
+this takes polynomial time in the supplied complete
+original and inner prime lists, with no bound on
+inner prime width or block size. The inner-loss
+assumption for the minorant formula can be tested
+separately: at each head and facet restrict the
+original predicate to neutral exterior postings by
+erasing the exterior exclusions. Each resulting
+guard must contain an inner prime, precisely the
+condition that an enabled original guard implies
+an enabled inner one.
+
 \paragraph{Reading the projected loss from canonical primes.}
 For each original head in the queried quotient
 block, and each original observer facet, ask for
