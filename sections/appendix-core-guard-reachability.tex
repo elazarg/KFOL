@@ -2591,31 +2591,45 @@ The same union need not give the greatest minorant
 of a noncore candidate: the latter can have new
 prime guards requiring larger supports.
 
-For example, use a head $h$ and, for each owner $r$,
-distinct inputs $y_r,x_r$. Prescribe singleton losses
-$y_r:r$ at $h$ and $x_r:r$ at $y_r$. The $x_r$ are
-retained. On facet $k$, the sole prime at $h$ excludes
-$y_r:r$ for every $r\ne k$. Its least reachable set
-contains all $y_r$ and only $x_k$ among the $x_r$:
-the first arrows either are excluded or use the hidden
-color, whereas the second arrows can agree with the
-probe except at the hidden color. Every bounded word
-using $h$ must use all $x_r$ by singleton-loss
-reachability. Least supports at other heads omit $h$
-entirely. As a result the union of all these local
-minorants never supplies $h$.
+The gap is unbounded even at width one. Take inputs
+$x_0,\ldots,x_d$, and let $r_1,\ldots,r_d$ alternate
+between two owners. The sole loss at $x_i$, for $i<d$,
+is the singleton posting $x_{i+1}:r_{i+1}$; $x_d$ is
+retained. For any prime at $x_i$, the least reachable
+set contains $x_{i+1}$, since its posting is either
+excluded by the prime or hidden on the facet. It can
+extend to $x_{i+2}$ only when the next owner is hidden.
+Alternation then stops the closure at the next arrow.
+All original prime supports have at most three inputs.
 
-Nevertheless $h$ is feasible on the empty probe.
-Start from $h$ and attach, for each owner $r$, the
-helper $y_r\star_r x_r$ by $\star_r$. The helper
-omits the forbidden mark of $y_r$ under $x_r:r$.
-The attachment suppresses the marked source at $h$
-under $y_r:r$, and later attachments cannot restore
-it because they do not use $h$. All these gates act
-by union on the empty probe and preserve its mark.
-Thus a decomposition using the candidate's prime
-supports is exact for recognition but can miss part
-of its greatest minorant.
+Every bounded word supplying $x_0$ uses all $d+1$
+inputs by singleton-loss reachability. Moreover the
+greatest minorant loses at $x_i$ under every later
+singleton posting $x_j:r_j$, $j>i$. This follows
+by repeated singleton-loss substitution using
+colored-cofactor independence: fixing $x_j:r_j$
+makes the cofactor ignore $x_{j-1}$, which may
+then be set to its prescribed posting to transfer
+the preceding loss. For the reverse inclusion, use
+the union over $i$ of the suffix words
+\[
+ (((x_i\star_{r_{i+1}} x_{i+1})\star_{r_{i+2}}x_{i+2})
+       \cdots)\star_{r_d}x_d ,
+\]
+with the last suffix interpreted as $x_d$. Each suffix
+is bounded: the next sibling at its native atom
+suppresses the forbidden mark at each head it uses,
+and later attachments cannot restore that mark.
+At the first head of a suffix its mark survives
+exactly when no later sibling is its native atom,
+since each gate otherwise transmits the marked
+child. Thus the union supplies every bit allowed
+by the propagated losses and is the greatest
+minorant. It supplies $x_0$ on the empty probe,
+and on a facet omitting neither alternating owner
+its sole prime at $x_0$ has width $d$. Therefore
+bounded original prime supports can coexist with
+unbounded minorant prime width and witness support.
 
 There is a uniform consequence using all posting
 arrows, independently of the positive probe. For
