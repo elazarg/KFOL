@@ -9092,6 +9092,68 @@ This gives the same bound with $c$ replaced by the
 sum of these support sizes, or by its upper bound
 from the original component sizes.
 
+For an injective local budget, all the monochromatic
+activation comparisons at a query share one residual
+budget. Let $D$ be the greatest local coefficient
+and let $p$ be its query. Run singleton-tail
+deletion on the old losses with initial seeds $p_r$
+at each owner and keep the terminal budget $S_p$.
+For any owner $r$ and any coalition $A$, the pure
+$r$-posting of $A$ is forbidden by the principal
+exactly when the signed test
+\[
+      \Phi_r(A)=1,\qquad \Phi_r(p_r)=0
+\]
+is feasible on $S_p$.
+
+Indeed the fresh-source comparison adds only a
+loss at $Y$ with $r$-tail $A$, and queries $Y$ at
+$p$. A signed witness for $S_p$, attached to $Y$
+at $r$, supplies the query and omits the fresh
+loss. Attach the recorded old folds in reverse
+order. They restore every earlier old loss and
+cannot reintroduce the fresh mark on its loss,
+since their supports use only old inputs.
+
+Conversely, restrict a fresh-source witness to
+the terminal old budget and the fresh loss. In
+singleton-tail reachability the fresh row can
+add seeds or edges into $Y$, but none of the
+rows posts $Y$. It therefore cannot change the
+reachable sets on the old inputs, and no fold
+deletion of an old row is available. If a fold
+can clear the fresh loss, it must do so at $r$.
+Its old support wins on $A$ and loses on $p_r$,
+giving the signed witness. Otherwise no fold
+deletion or projection succeeds. The only
+possible repeated-block branch is on $A$ in
+the fresh row. It drops that row and requires
+the signed test on $S_p$, by
+\cref{core:thm:repeated-blocker-budgets}. A
+singleton or empty $A$ gives no such branch.
+The signed test may allow $Y$ as an extra
+projection, but this does not affect its result:
+$Y$ is in no old row or eligible projection,
+and reachability on old inputs is unchanged.
+
+Thus each owner factor has a polynomial-size
+monotone circuit in exclusion bits for explicit
+rows or symbolic prime-ground searches.
+Unroll the singleton-tail signed deletion on
+$S_p$, starting at $p_r$ for the signed owner
+and at the complement of $A$ for the other
+owners. Enlarging $A$ shrinks those latter
+seed sets and enlarges the eligible projection
+set $A\setminus p_r$. The reachability and
+allowed-ground computations are monotone in
+the seeds and retained postings, so dualizing
+them gives a monotone circuit for signed
+feasibility in the membership bits of $A$.
+Complement and dualize to get the principal
+factor. The same construction works on an
+implicit minimized injective budget by the
+redundant-edge argument.
+
 At input prime width two, a different symbolic
 sweep avoids the support-size exponent when the
 activation principals needed at the query have
