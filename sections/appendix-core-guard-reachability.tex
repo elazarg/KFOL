@@ -9919,6 +9919,71 @@ nonposting literals. On singleton-block budgets
 this is exactly the greatest realizable formal
 completion.
 
+Fold saturation commutes with restriction to a
+disagreement-closed ground at a fixed query. Let
+$S$ contain the queried head and suppose that every
+arrow leaving $S$ agrees with the query. Project
+the budget and the query to $S$. At every round,
+the recorded postings on $S$ are exactly those
+recorded in the projected computation.
+
+Indeed, a posting recorded by a safe fold always
+disagrees with the query. At a head in $S$, no
+exterior posting can therefore delete a row, or
+serve as its required posting in a safe support.
+The residual rows at retained heads are precisely
+the restrictions of the original residual rows,
+up to minimization. It is enough to test safety on
+minimal rows: a posting hitting a subrow hits its
+superrow, and deleting rows hit by recorded
+postings cannot leave a superrow of a deleted
+subrow. In particular, restricting a full safe
+support to $S$ gives a local safe support.
+Conversely a local safe support is safe globally:
+only its own heads need to pass the row test, and
+each of their original residual rows projects to
+a row containing a minimal local row. The greatest
+safe supports thus agree on $S$, and induction
+applies to every owner update.
+
+Consequently on any such ground one can perform
+fold saturation before or after projection and
+obtain the same residual budget there. This
+applies to the disagreement reach of a probe and
+to the exterior extension used in localizing a
+prime. The remaining tests retain the grouping of
+postings within each surviving row.
+
+More generally, the saturation can be factored over
+the strongly connected components of the
+disagreement graph, using arrows from heads to
+their postings. Run the safe fold updates with
+supports confined to one component at a time,
+processing destinations before sources. A fold
+cannot delete a row at an already processed head:
+such an effect would require a disagreement arrow
+from that head to the current component.
+
+To prove completeness for saturation, consider
+any full safe support at the end of the component
+pass. Visit the components that meet it in the
+same order. Within the first one, its intersection
+is safe on the residual rows, since any required
+posting is a disagreement in the full support.
+For each later component, a residual row cannot
+use a required posting from an earlier component:
+the earlier intersection was safe, so saturation
+there already recorded those postings. Thus the
+intersection with the later component is also safe
+on the final residual rows. Its rows and safety
+tests were the same when that component finished,
+because nothing later can delete them. All
+postings of the full support were therefore
+already recorded. The component pass is stable
+under every owner update and, since all its own
+updates were safe, returns the ordinary
+saturation.
+
 The saturation state also localizes the query statuses
 that must be kept. Let $D$ be the final recorded set at
 $q$ and let $S_r$ be the greatest safe $r$-support in
