@@ -2829,6 +2829,51 @@ their use. Thus the terminal scope can
 overestimate the minimum witness support
 even for a prime and binary loss rows.
 
+For an acyclic posting graph, the inclusion-minimal
+supports for one marked probe are exactly the
+minimal sets containing the head in which every
+row at a retained head has a disagreeing posting
+at a retained input. Such a set suffices by
+projection deletion in reverse dependency order.
+Conversely, project to the support of a witness
+and run the exact acyclic projection-deletion
+test there. Keep only the available inputs.
+They include the marked head, and every row at
+an available head has a disagreeing posting at
+an earlier available input. Minimality of the
+witness support forces this set to be the whole
+support.
+
+Finding a smallest support is NP-hard even on
+an acyclic budget with three owners and prime
+width one, for the empty guard on one facet.
+Reduce vertex cover with edges $e_1,\ldots,e_m$,
+$m\ge1$. Use a marked head $h$, edge heads
+$d_1,\ldots,d_m$ and one row-free input per
+vertex. Put the loss $d_1:a$ at $h$.
+At each $d_j$ put the endpoint row
+$\{u:a,v:a\}$ for $e_j=\{u,v\}$, and for $j<m$
+also put the successor row $\{d_{j+1}:a\}$.
+Pad each endpoint row with a fresh $b$-posting
+and each successor row with a fresh $c$-posting,
+giving each padding input an empty loss.
+The graph stays acyclic and each facet sees
+at most one loss per head, so the complete
+prime lists have width one.
+
+On facet $a$, the $a$-postings always disagree.
+The padding heads cannot be available. Thus
+the support test forces $h$ and all edge
+heads and requires a vertex cover among the
+retained vertex inputs. Conversely any cover
+gives a fixed projection-deletion sequence
+on every probe of this facet, supplying the
+empty guard on exactly those inputs. The
+minimum support size is $m+1$ plus the
+minimum vertex-cover size. Already the
+unposted probe gives the lower bound for
+any witness supplying the whole guard.
+
 For complete prime input the reachability graph can
 be read directly from the lists: a posting occurs
 in a minimal loss exactly when it occurs in a prime
