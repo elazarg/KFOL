@@ -115,6 +115,46 @@ test tracks bounds on a single accumulating word.
 The corresponding question for arbitrary terms
 also allows a nonprojection helper at each gate.
 
+\paragraph{Depth for explicit rows.}
+The reverse calculation also bounds the depth of a
+shortest unrestricted witness. Fix a root-to-leaf
+path and use the value of each entire sibling in
+place of the attached projection's value. The same
+preimage table applies. A shortest witness has no
+attachment along this path that leaves all residual
+constraints unchanged: replacing that gate by its
+path child would preserve the constraints at the
+root and strictly reduce the tree. Thus the depth
+bound $2m+d$ holds for arbitrary core trees with the
+same $m$ upper bounds and $d$ signed tests.
+
+Positive winner requirements at explicit valuations
+can be included as well. For a requirement to retain
+$k$, an attachment whose sibling is the gate owner's
+atom makes the preimage either unrestricted or
+infeasible. For any other sibling value $v$, the
+preimage is unchanged if $k\notin v$. When $k\in v$
+it is unrestricted at a $k$-gate and forbids just the
+$r$-atom at a foreign $r$-gate. This last constraint
+is a negative singleton test at the row's $r$-block
+and can only be released or become infeasible.
+Consequently $\ell$ positive winner requirements
+increase the depth bound to $2m+d+2\ell$.
+
+For explicitly listed rows and signs this gives a
+polynomial-space recognition procedure. At a
+nonleaf guess the gate and both children's values
+at all listed valuations, including the profile
+probes for the signs. Check their combination
+and recurse on each exact child vector in turn
+with the depth counter decreased. A leaf is checked
+by projection. The depth bound governs the original
+instance; the recursive calls simply test realizability
+at the remaining depth. This argument bounds depth
+by the number of explicit constraints even when the
+number of inputs or owners varies. A succinct prime
+budget may describe exponentially many such rows.
+
 \paragraph{Greatest bounded operation under profile demands.}
 Fix any source bound admitting a nonempty bounded
 word, and let $G$ be its greatest core minorant.
