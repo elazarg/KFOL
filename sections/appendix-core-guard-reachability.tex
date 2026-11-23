@@ -2925,6 +2925,58 @@ the new losing posting. Thus this strengthened
 budget still has complete explicit prime lists,
 with no increase in the number of guards.
 
+The ground test works at an arbitrary specified proper
+fixing $q$. Start its set of captured inputs empty,
+or seed it by any already proved losses under $q$.
+Repeatedly add a head outside $q$ whenever the ground
+test succeeds using the current captured set. This is
+the least closure under repeated substitutions of
+original losses while $q$ stays fixed. It is independent
+of the order of insertions by monotonicity, and at most
+$|V|$ new heads enter. In particular the work per fixing
+is polynomial regardless of its size. The original
+minimal loss used in an inference need not fit within
+the size of the fixing, and a witness for it can be
+recovered by minimizing its allowed ground to a
+transversal.
+
+At a fixed size bound $d$, enumerate all proper fixings
+of size at most $d$. Seed their closures with all
+previously inferred losses whose fixings they extend.
+Also use the singleton graph bound as an initial source
+of capture at every fixing, recomputing it when new
+singleton losses are found. The latter bound is exact
+for the singleton subproblem at every proper probe,
+so its lost heads give sound seeds even when the probe
+has several postings. Iterate these rules to stability.
+There are at most
+\[
+ |V|\sum_{j=0}^{d}\binom{|V|}{j}K^j
+\]
+possible additional loss facts. The entire calculation
+therefore takes polynomial time for fixed $d$, and a
+new loss is a directly checkable obstruction using
+only the original canonical lists and the inferred
+small fixings.
+
+Increasing the size bound cannot remove the need for
+joint profile constraints. For example, take three
+heads, each with one full loss that posts the other
+two inputs at that head's designated owner, with
+distinct owners at the three heads. The only proper
+fixings that directly capture an input already fix
+both other inputs, and there are no singleton losses.
+Consequently no new loss is inferred at any size:
+once a head is captured there is no other unposted
+input at which to use it. But the budget forces
+each complementary pair to win its designated
+singleton test. The three pairs have no common
+source, so no bounded word exists. Indeed on each
+such pure probe only the remaining source could
+supply a foreign winner, and the full loss forbids
+it. This obstruction needs a joint comparison of
+the three owner profiles.
+
 \paragraph{Substitution through the full palette.}
 For a word, a consistent background need not be proper
 to test whether it blocks every occurrence of an unposted
