@@ -633,6 +633,53 @@ the cases of no loss or an empty loss. The count
 of rows in this result is per head, across all
 facets.
 
+The same test extends to a fixed choice of rows at all
+multiply headed inputs. Guess a subset of the rows at
+each such head, possibly empty, and fix its Boolean
+variable accordingly. Run the Horn construction using
+only the guessed rows at these heads and every unique
+row at the other heads. In the least solution, replace
+directed cycles in the matching step by source strongly
+connected components of each owner's selected graph
+that have no seed. An empty-tail row or an external
+posting already seeds any component containing it.
+Every remaining source component needs an allowed
+posting on one of its selected heads. As before, a
+matching supplies these postings, and all other
+components are reached from source components.
+No larger solution within the guess can remove one
+of these obligations: all incoming edges and all
+empty-tail rows at its previously selected heads
+are already fixed. An unseeded source component
+therefore cannot gain an incoming edge or an
+empty-tail seed.
+
+Only guesses of at most $K$ rows per multiply headed
+input are needed. In a blocker every head is reachable
+at every owner. At each owner take shortest paths
+from the seeds, and at each head not already posted
+there retain a row witnessing its empty-tail seed
+or its last path edge. These choices preserve all
+the reachabilities by induction on distance. Every
+head is unposted at some owner, so at least one of its
+rows is retained. Because the head set stays the same,
+each tail of every retained row is still reachable
+at its owner. Thus these choices again give a blocker.
+
+With $h$ multiply headed inputs and $M$ explicit loss
+rows, guard implication and complete recognition take
+$M^{O(Kh)}$ times a polynomial in the input size.
+More precisely the branching factor is the product,
+over the multiply headed inputs, of the counts of
+subsets of size at most $K$ of their row lists. This
+gives fixed-parameter time in the total number of
+rows at those inputs. For the latter parameter one
+can also start from canonical primes: the incremental
+loss recovery in \emph{Recovering small packed budgets
+from primes} applies to each list with the same
+parameter bound, and the singleton lists require
+only a polynomial scan.
+
 The guard implication problem for the core meet is coNP-complete
 without the excess bound, even at fixed $K\ge3$, for acyclic
 injective rows and a queried empty guard. For membership, guess
