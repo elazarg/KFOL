@@ -694,6 +694,51 @@ be tested directly on prime lists using the
 exterior ground restrictions and, for an edge,
 one pinned posting.
 
+\paragraph{Small obstructions from capture derivations.}
+An infeasible mark certified by these passes has a
+small subbudget witnessing its failure. Suppose
+the marked head survives either the more permissive
+capture pass or a safe-fold fixed point with all
+repeated tails certified by capture. Keep one row
+at that head. For each owner, also keep one firing
+row for every input added by its capture derivation
+in the final budget. The selected subbudget
+preserves those derivations: the set $X_s$ is
+still the one from the original budget, and every
+rule used by a derivation is still present.
+
+For the more permissive fixed point all retained
+tails already lie in the corresponding capture
+bounds. Thus after this shrinking the selected
+rows still satisfy those bounds and the subbudget
+is itself an exact fixed point. For the safe-fold
+case, the selected capture rows already give
+Horn derivations of the captured inputs: every
+$s$-tail is contained in the seeds and previously
+captured inputs. Extend these derivations to the
+full Horn reached sets, using one firing row per
+additional input. Every selected row then has
+its tails inside the preserved reached sets, so
+the subbudget is safe-fold stable, and its repeated
+tails still pass the capture test. The singleton
+implication argument makes it exact as well.
+Both cases use at most $1+K|V|$ rows when each
+capture derivation uses just the query fixing.
+
+If captures are certified using subfixings, retain
+one chosen subfixing and its derivation for each
+certified input. There are at most $K|V|$ such
+choices, each with at most $|V|$ firing rows.
+The same proof now uses at most
+$1+K|V|+K|V|^2$ rows and needs no search over
+subfixings to verify them. In either case verify
+the rows as original losses directly from the
+prime lists, then check the displayed derivations
+and fixed-point conditions on the selected rows
+only. A witness for the full budget would fit
+this subbudget, so verification is sound without
+any promise about the original number of losses.
+
 There is also a symbolic version at prime width
 two. Fix $K$. Suppose every original owner tail
 has at most two postings, and after each original
