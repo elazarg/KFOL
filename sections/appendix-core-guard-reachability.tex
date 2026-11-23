@@ -13432,6 +13432,60 @@ polynomially many child requirements in the listed
 budget size, even though finding the root's selection
 may require searching many possibilities.
 
+The recurrence shows that disagreeing reachable support
+preserves minimum completion depth for arbitrary rows.
+Fix the original positive $(i,p)$ and its reachable set
+$R$. Restrict attention to budgets headed in $R$.
+Every coalition $A$ from such a row at owner $r$
+satisfies $A\setminus R\subseteq p_r$. The same will
+hold for all inherited winning tests at that owner.
+
+In a marked task the marked child itself loses all
+the probe tests, so separate losing-only children
+are unnecessary. A rainbow choice of one winning
+coalition is also unnecessary: if there are winning
+generators at two or more owners, extend the choice
+to two owners; if only one owner has generators,
+use the corresponding child winning that coalition
+and losing at $p_r$. For a rainbow task with at least
+two inherited owners the first argument always
+applies. For a gap task with a win and a loss at
+owner $r$, the inherited win guarantees a same-owner
+generator, and the corresponding gap child handles
+the losing-only requirement. If there is only one
+owner with generators it must be $r$, and its gap
+children handle the single choices as well. The
+empty rainbow choice is automatic in each case
+because another requirement already supplies a child.
+
+Thus the recursion for an initial marked task
+can use just marked children, gaps with a win
+$r:A$ and loss $r:p_r$, and rainbows with at least
+two distinct winning owners. All inherited wins
+come from the original rows headed in $R$. A
+projection witnessing a gap belongs to $A\setminus
+p_r$, hence to $R$. A projection witnessing a
+rainbow belongs to every selected coalition, so
+outside $R$ it would belong to two different
+$p_r$, which is impossible. A marked projection
+is $i$. These are the base cases of localization.
+
+Inductively choose the absorbed rows and their
+owners from any depth witness on the original
+ground for the retained budget. Apply the
+localized recursion to its child requirements,
+projecting all row postings and profile coalitions
+to $R$. The projected requirements have witnesses
+one layer lower by induction. Combining them by
+the sufficiency argument gives the same task on
+$R$ without increasing depth. For the original
+marked task, rows headed outside $R$ are then
+automatically omitted and the projected rows
+imply the original ones. Conversely every local
+depth witness lifts unchanged. Hence the two
+minimum depths agree, with no injectivity
+assumption on the loss rows.
+
 \begin{theorem}[Minimum completion depth]\label{core:thm:completion-depth}
 Suppose $|t_r|\le1$ on every negative. Starting at $S=Z$, the minimum
 depth for $(i,p)$ is the minimum number of moves needed to reach
@@ -13480,45 +13534,6 @@ each fits the remaining rows. If there were no singleton outputs one
 can pass to that child without a move. Descent gives a schedule of
 length at most the expression's depth.
 \end{proof}
-
-For these injective loss rows the disagreeing reachable
-support preserves the minimum completion depth.
-Let $R$ be the reachable set for $(i,p)$ and project
-the loss budget to $R$. It suffices to project any
-successful schedule in \cref{core:thm:completion-depth}
-without increasing its length.
-
-At a remaining original budget $S$, the projected
-$r$-reached set is contained in $D_r(S;p)\cap R$.
-Indeed if projection erases a nonempty $r$-tail at a
-retained head, that tail was outside $R$ and hence
-agreed with $p_r$. It was already reached at $r$,
-so its head, now a projected seed, was already
-reached as well. Original empty-tail seeds and
-retained edges also preserve this containment.
-Consequently every retained row deleted by an
-original owner move is deleted by the projected
-owner move: its tail was outside $D_r(S;p)$, so
-it disagreed with $p$ and belonged to $R$.
-If projected moves have already deleted additional
-rows, their reached sets only shrink, preserving
-the comparison.
-
-For a head-free input move, every deleted row
-headed in $R$ posts the chosen input disagreeingly,
-so that input belongs to $R$ if any such row remains.
-It is still head-free after projection and all
-these rows can be deleted by the same move.
-Skip moves with no effect. This shows inductively
-that the projected schedule leaves no more than
-the projection of the original remaining budget.
-It succeeds by the same terminal head test.
-Conversely a depth-bounded expression on $R$
-lifts unchanged by ignoring the other inputs.
-Thus the minimum depth is attained on $R$,
-and a prescribed schedule can be localized
-without changing the owners of its retained
-owner moves.
 
 \begin{corollary}[Sharp depth and shortest common supersequences]
 \label{core:cor:completion-depth-hierarchy}
