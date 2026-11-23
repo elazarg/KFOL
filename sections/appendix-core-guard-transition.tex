@@ -365,10 +365,10 @@ completion-depth lower bound.
 \end{proof}
 
 \paragraph{Exponential loss obstructions for exact recognition.}
-For every fixed $K\ge4$ there are nonrealizable
+For every fixed $K\ge3$ there are nonrealizable
 complete canonical prime families on $O_K(l)$
 inputs with polynomial-size lists of width at
-most five, such that every sample of fewer than
+most four, such that every sample of fewer than
 $l2^l$ losses is omitted by a core operation
 supplying \emph{all} the family's positive bits.
 
@@ -415,13 +415,34 @@ can be the $c$-atom only if its starting
 rail is the $c$-atom, and the union must
 have that atom from every spine.
 
-Apply \cref{core:thm:succinct-profile-cap} to
-these rail bounds and the unanimous profile.
-Write $C$ for the coded baseline and $F$ for
-the capped candidate there. The cap adds at
-most one posting to each prime. The full
-candidate fails realizability by the absence
-of a bounded unanimous word on the rails.
+Use the two rail modes from
+\cref{core:par:three-owner-exact-depth}, with
+no seed mode because there is no $X$. This
+coding works unchanged for larger palettes:
+other selector colors activate no code.
+All heads of a rail group use the same address
+and transition formula with the head posting
+set to false. At a fixed selector coloring,
+at most one rail group is conditional. Its
+enabled heads have the same masked monotone
+loss test on that group's $c$-postings, at
+each outside background. Adding those heads
+when the test holds gives a one-owner closure.
+The outside inputs and then the selectors
+are retained, so block extension gives a
+core coded baseline $C$.
+
+Cap $C$ to $\{c\}$ at unanimity on the rails,
+giving $F$. Unanimous $c$ on the rails meets
+no coded rail loss, since each needs a complete
+rival address at $a$ or $b$. The cap cannot
+fire on a rail source probe, where that rail
+is unposted. It therefore adds only the
+selector losses with singleton primes, and
+the rail clauses retain width four under the
+one-color masks. A full realizer would prune
+to a bounded unanimous rail word as in the
+cap proof, so $F$ is nonrealizable.
 
 Now sample any fewer than $l2^l$ proper losses
 of $F$. Rows where the cap is active will be
