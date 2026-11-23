@@ -2813,6 +2813,73 @@ This gives an owner-elimination test without
 expanding loss lists, even for budgets with cycles
 or repeated colors.
 
+A different elimination criterion permits incomparable
+coalitions. An owner $r$ is dispensable if every
+$r$-tail has size at most one and the graph of
+$r$-postings, directed from head to posted input,
+is acyclic. Other owners' tails and dependencies
+are unrestricted. All owners satisfying this
+condition can be excluded simultaneously.
+
+To prove it, keep pointed tasks with no register at
+the owners being removed. Use induction on the
+remaining budget, starting from any witness in the
+original selected clone. If a projection works, keep
+it. Otherwise a shortest witness is singleton on
+some row, by the usual pointed descent. If its owner
+is not being removed, use the two smaller tasks and
+combine their reduced witnesses by the same gate.
+Neither task introduces a register at a removed
+owner.
+
+Suppose instead the shortest witness is singleton
+at a removed owner $r$. Its test wins on the row's
+$r$-tail, which must be a singleton $\{v\}$. Let
+$U$ be the inputs whose singleton $r$-tests this
+witness wins. For each $u\in U$, every remaining
+row headed there must be singleton at $r$ in the
+witness. Indeed singleton-profile absorption says
+that otherwise the output contains the whole menu
+of $u$, including the row's forbidden mark.
+Consequently each such row has a singleton
+$r$-tail at another input of $U$.
+
+Follow these arrows from $v$ until reaching an
+input $w$ with no remaining row at its head.
+Acyclicity forces such an endpoint. At least
+one row posts $w$ at $r$: it is either the
+starting row when $w=v$, or the last path edge.
+The projection at $w$ is bounded on the whole
+current budget. It also wins every inherited
+test at a different owner because every such
+coalition must intersect the winning singleton
+$\{w\}$ by common source. For a marked task,
+$w\notin p_r$ because the original witness
+loses the $r$-test on the probe.
+
+Delete all rows posting $w$ at $r$ and apply
+induction to the same task there. Attach the
+projection $w$ by a mask at $r$ to its witness.
+It absorbs the deleted rows and already obeys
+all other rows. At each inherited owner the
+mask's singleton test is conjunctive, so it
+keeps the required wins and any loss of the
+controlled child. For the marked task the
+controller cannot erase the mark at the probe.
+This implements the step without an $r$-fold
+or an $r$-register. The induction also handles
+any other removed owner when encountered.
+
+The hypotheses can be checked in polynomial
+time from canonical primes. The posting graph
+reads directly from prime occurrences. A row
+with two postings at $r$ is detected by pinning
+both with private primes and testing whether
+the allowed ground hits every prime, as in
+the co-occurrence test. Thus the criterion
+gives an independent elimination test even
+when the whole dependency graph has cycles.
+
 The localization also preserves the selected-owner
 restriction on the support of a witness. On a branch,
 a retained register is contained in an original
