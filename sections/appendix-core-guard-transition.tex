@@ -309,6 +309,67 @@ cycles are possible for these binary transitions,
 but a construction requiring every valid cycle
 to be long needs a different transition mechanism.
 
+Nondeterministic binary transitions also have
+short global cycles. If a 2-CNF edge relation
+on $m\ge1$ bits has a cycle, it has one of length
+at most the least power of two $P$ with $P\ge2m$.
+One can find a closed walk of length $P$ by
+solving the 2-CNF instance for $P$ successive
+states with the last edge wrapping to the first.
+
+To prove the bound, take the implication graph
+on the $2m$ literal types, retaining the time
+shift $-1,0,1$ of each edge. Its lift for a
+period of $Q$ uses positions modulo $Q$.
+The periodic instance fails the 2-SAT test
+when a literal and its complement at one
+position are mutually reachable. Their types
+must then lie in one base strongly connected
+component. Fix a path from the literal to its
+complement of weight $a$ and a return path of
+weight $b$, taking the first path simple.
+Write $d$ for the gcd of the weights of closed
+walks at the first literal, or zero if all
+weights are zero.
+
+Modulo $Q$, the weights of the closed walks
+form a subgroup, since a submonoid of a finite
+group is a subgroup. This subgroup consists
+of multiples of $\gcd(d,Q)$. The path weights
+to the complement form its coset with
+representative $a$: prepend closed walks for
+one inclusion, and append the fixed return
+path for the other. If the coset contains
+zero then $a$ is in the subgroup. Since
+$a+b$ is also in it, $b$ is in it and the
+fixed return path can be followed by closed
+walks of total weight $-b$ modulo $Q$.
+Thus a contradiction at a common position
+occurs exactly when $\gcd(d,Q)$ divides $a$.
+
+We have $|a|<2m$. If $d>0$, some simple
+directed cycle in the component has nonzero
+weight, since closed walks decompose into
+such cycles. Its weight is divisible by $d$:
+insert it in a closed walk reached from the
+first literal and compare with the same walk
+without it. Hence $d\le2m$. For every
+power-of-two $Q\ge2m$, the contradiction
+condition is therefore independent of $Q$.
+For $d=0$ it just asks whether $a=0$.
+If the transition graph has a cycle at all,
+odd majority of its shifted copies as above
+gives a power-of-two period, which can be
+repeated to a power of two at least $2m$.
+The periodic instance at $P$ is consequently
+satisfiable. This argument concerns existence
+somewhere in the state graph; a designated
+initial state can still force a longer cycle.
+For $m$ a power of two, a ring of $m$ copy
+updates with one inversion has least period
+$2m$ on every state: $m$ steps complement
+all bits, and $2m$ steps restore them.
+
 The quadratic finite-path bound is attained in order of growth.
 Take two rings of Boolean registers with consecutive lengths
 and shift each ring by one position per step. The copy rules
