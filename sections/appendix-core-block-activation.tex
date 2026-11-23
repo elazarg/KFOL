@@ -9092,79 +9092,93 @@ This gives the same bound with $c$ replaced by the
 sum of these support sizes, or by its upper bound
 from the original component sizes.
 
-All monochromatic activation comparisons at a query
-can use the same safe-fold residual. Let $D$ be the
-greatest local coefficient and let $p$ be its query.
-Saturate the old losses by safe folds, using the Horn
-closures seeded by $p_r$ at each owner, and minimize
-the terminal rows at each head to obtain $S_p$.
-Suppose the rows of $S_p$ are injective. The original
-budget may have repeated postings at an owner.
-At the query the marked inputs are exactly the inputs
-with no head in $S_p$: their projections lift by the
-recorded folds, and a remaining head admits neither a
-safe fold nor a repeated-block branch.
-For any owner $r$ and any coalition $A$, the pure
-$r$-posting of $A$ is forbidden by the principal
-exactly when the signed test
+Even with repeated tails, one shared residual gives
+a Horn test certifying monochromatic exclusions. Write
+$S_p$ for the minimal rows remaining after safe-fold
+saturation at $p$. For an owner $s$, let $H_s(B)$ be
+the Horn closure of $B$ under the rules $t_s\to j$ for
+$(j,t)\in S_p$. For a proposed posting $r:A$, the
+following disjunction certifies exclusion:
 \[
-      \Phi_r(A)=1,\qquad \Phi_r(p_r)=0
+ (A\setminus p_r)\setminus h(S_p)\ne\varnothing
+ \quad\text{or}\quad
+ p_s\not\subseteq H_s(V\setminus A)\text{ for some }s\ne r .
 \]
-is feasible on $S_p$.
+In the first case projection at an unheaded input
+wins the $r$-test on $A$ and loses it on $p_r$.
+In the second case choose $v\in p_s\setminus H_s(V\setminus A)$.
+Then $v\in A\setminus p_r$. The $s$-fold on
+$V\setminus H_s(V\setminus A)\subseteq A$ clears
+every row at $v$: a row there with a tail inside
+the closure would derive $v$. Attach the fold to
+projection $v$. It preserves the win on $A$ and
+the loss on $p_r$. In both cases the resulting
+word separates the two $r$-tests under the residual
+budget. Attach it at $r$ to a fresh projection
+$Y$, then restore the old folds in reverse order.
+This supplies $Y$ at $p$ and omits it when $A$
+is posted at $r$.
 
-Indeed the fresh-source comparison adds only a
-loss at $Y$ with $r$-tail $A$, and queries $Y$ at
-$p$. A signed witness for $S_p$, attached to $Y$
-at $r$, supplies the query and omits the fresh
-loss. Attach the recorded old folds in reverse
-order. They restore every earlier old loss and
-cannot reintroduce the fresh mark on its loss,
-since their supports use only old inputs.
+The disjunction is exact for signed witnesses built
+from a projection by safe-fold attachments on the
+residual. In fact the signed seed at $r$ is $p_r$,
+and at every other owner $s$ it is $V\setminus A$.
+If the disjunction fails, each signed closure contains
+its original query closure. Every old tail lay in
+that closure at saturation. Thus no first safe fold
+deletes any row, and no projection satisfies the signed
+test. Genuine repeated-block witnesses can go further.
+For the budget of $x\star_a(y\star_b z)$ in
+the discussion preceding
+\cref{core:thm:repeated-blocker-budgets}, the uncolored
+query has all three heads after saturation. The disjunction excludes nothing, but
+the word wins the $a$-test on $\{x\}$ and loses it on
+the empty coalition.
 
-Conversely, restrict a fresh-source witness to
-the terminal old budget and the fresh loss. In
-singleton-tail reachability the fresh row can
-add seeds or edges into $Y$, but none of the
-rows posts $Y$. It therefore cannot change the
-reachable sets on the old inputs, and no fold
-deletion of an old row is available. If a fold
-can clear the fresh loss, it must do so at $r$.
-Its old support wins on $A$ and loses on $p_r$,
-giving the signed witness. Otherwise no fold
-deletion or projection succeeds. The only
-possible repeated-block branch is on $A$ in
-the fresh row. It drops that row and requires
-the signed test on $S_p$, by
-\cref{core:thm:repeated-blocker-budgets}. A
-singleton or empty $A$ gives no such branch.
-The signed test may allow $Y$ as an extra
-projection, but this does not affect its result:
-$Y$ is in no old row or eligible projection,
-and reachability on old inputs is unchanged.
+More generally, any further exclusion requires a
+repeated-block branch on an old row in the
+fresh-source test or one of its signed subtests.
+When the Horn disjunction fails, $A\subseteq H_r(p_r)$:
+each head belongs to this closure by saturation, and
+any unheaded member of $A$ already lies in $p_r$.
+On adding the fresh loss, the closure therefore
+derives $Y$ at $r$, and the empty tails derive it
+at every other owner. No old tail changes its
+reachability, so safe folds cannot start the fresh
+test. The singleton-tail deletion rule also stalls,
+since its reached sets contain the Horn closures.
+The fresh loss blocks projection $Y$.
+A branch on only the fresh tail would require the
+signed test on $S_p$. The fresh input is in no
+old row or winning coalition $A$, so it changes
+neither the old closures nor the eligible projections.
+Failure of the disjunction then forces a branch on
+an old row.
 
-The signed test on this residual has a direct
-graph criterion. For the signed owner $r$, its
-seed set remains $p_r$. At every foreign owner
-$s$ the seeds change from $p_s$ to $V\setminus A$,
-with the empty-tail seeds retained in both tests.
-If an unheaded input lies in $A\setminus p_r$,
-its projection gives the signed witness. Otherwise,
-if every $p_s$ is still reached at its foreign
-owner, all old reached sets remain reachable.
-No row can be deleted, and the signed test fails
-because the budget is injective and no projection
-fits.
+The Horn tests can represent exponentially many minimal
+exclusions, even when they are exact. Take one native owner
+$s$ and inputs $x,u_1,v_1,\ldots,u_d,v_d$. Use the native
+rules $\{u_i,v_i\}\to x$ and $\{x\}\to u_i,v_i$ for
+$1\le i\le d$, and query with all inputs posted at $s$.
+The empty closure is empty, so the greatest coefficient
+is the one-owner trace on all these inputs. At a foreign
+owner $r$, \cref{core:thm:one-owner-activation-order}
+admits the block $A$ precisely when $H_s(V\setminus A)=V$.
+This holds if $x$ is still seeded or some pair
+$\{u_i,v_i\}$ is entirely seeded. Thus the minimal
+forbidden blocks contain $x$ and one member of each
+pair. There are $2^d$ of them from $3d$ listed rules.
 
-Conversely, if $v\in p_s$ is no longer reached at
-a foreign owner $s$, then $v\in A\setminus p_r$.
-The complement of the new reachable set is a
-safe $s$-fold support. It clears every row headed
-at $v$: such a row must have an $s$-tail, and that
-tail cannot have been reached. After this deletion
-projection $v$ supplies the signed test, and
-reattaching the fold preserves it. Thus the signed
-test succeeds precisely in the unheaded-input
-case or the lost-seed case.
+The Horn disjunction gives the whole monochromatic
+principal if $S_p$ is injective, since no repeated
+old tail can branch. This condition permits repeated
+tails before saturation. At the query the marked
+inputs are exactly those with no head in $S_p$:
+their projections lift by the recorded folds, and
+a remaining head admits neither a safe fold nor a
+repeated-block branch. In this residual Horn closure
+is graph reachability, giving an explicit list of
+minimal exclusions.
 
 For each foreign owner $s$ and $v\in p_s$, discard
 $v$ if it is reached from an empty-tail seed in
