@@ -654,11 +654,10 @@ owners $a,b,c$. Given a binary monotone circuit,
 one can construct an acyclic injective loss
 budget with at most one row per head and at
 most two postings per row. On the facet omitting
-$c$, there is a fixed guard part $G_0$ and one
-optional exclusion per circuit input such that
-the resulting guard is sufficient in the core
-meet exactly when the corresponding circuit
-assignment is true.
+$c$, choose one permitted exclusion per circuit
+input. A guard chosen solely from these postings
+is sufficient in the core meet exactly when the
+corresponding circuit assignment is true.
 
 To construct the budget, use the least Horn
 solution above, interpreting a selected head
@@ -677,18 +676,23 @@ To distribute a signal to its wire relays,
 use a private chain. The signal's row posts
 the first chain head at $c$. Each chain head
 posts its successor, if any, at $c$ and the
-corresponding wire relay at $a$. Include the
-relay's $a$-posting in $G_0$, so it too is
-unavailable. The row of the wire relay then
-makes its single posting to the destination
-gate as prescribed above. This realizes all
-fan-outs with two postings per row.
+corresponding wire relay at $a$. A permanently
+active tester row also posts the relay at $b$.
+Neither posting is forbidden on the chosen
+exclusion ground. Their conflict activates the
+relay exactly when the chain head is active.
+The relay's row then makes its single posting
+to the destination gate as prescribed above.
+This realizes all fan-outs with two postings
+per row.
 
 Start the Horn closure at the queried head,
-which begins a chain with one head per circuit
-input. Each chain row posts its successor,
-if any, at $c$, and its corresponding input
-signal at $a$. The optional exclusion of this
+which begins a chain of testers. Each tester
+posts its successor, if any, at $c$, so every
+tester is active. Use one tester per relay
+for the $b$-posting just described, and one
+per circuit input that posts its input signal
+at $a$. The optional exclusion of this
 $a$-posting activates that signal exactly when
 the input bit is one. Use a head with no row
 for the circuit output target, treating a bare
@@ -706,16 +710,15 @@ the queried guard. The construction has size
 linear in the circuit wiring, and singleton
 prime lists encode its rows directly.
 
-In particular inclusion-minimal sets of
-optional exclusions making $G_0$ sufficient
-correspond exactly to the minimal true
-assignments of the monotone circuit. This
-description concerns extensions of a fixed
-guard part, with no claim that the fixed
-exclusions are themselves necessary.
+In particular the prime guards contained in
+the chosen exclusion ground are exactly the
+minimal true assignments of the circuit.
+Minimality agrees on the ground and on the
+full facet, since every subset of a guard on
+the ground stays on that ground.
 
-Checking a proposed list of all minimal optional
-extensions is coNP-complete in this class. Each
+Checking a proposed list of all primes on
+that ground is coNP-complete in this class. Each
 listed extension can be tested for sufficiency
 and minimality in polynomial time. If the listed
 extensions are valid but incomplete, a sufficient
@@ -736,7 +739,7 @@ and satisfies the CNF. Thus the proposed list
 of just the variable pairs is complete exactly
 when the CNF is unsatisfiable. Apply the circuit
 construction to transfer the list and its test
-to the guard extensions.
+to the specified exclusion ground.
 
 The same test extends to a fixed choice of rows at all
 multiply headed inputs. Guess a subset of the rows at
