@@ -646,6 +646,74 @@ the cases of no loss or an empty loss. The count
 of rows in this result is per head, across all
 facets.
 
+\paragraph{Monotone computation in guard exclusions.}
+The polynomial one-row test can still describe
+arbitrary monotone Boolean circuits as functions
+of the queried exclusions. Fix three distinct
+owners $a,b,c$. Given a binary monotone circuit,
+one can construct an acyclic injective loss
+budget with at most one row per head and at
+most two postings per row. On the facet omitting
+$c$, there is a fixed guard part $G_0$ and one
+optional exclusion per circuit input such that
+the resulting guard is sufficient in the core
+meet exactly when the corresponding circuit
+assignment is true.
+
+To construct the budget, use the least Horn
+solution above, interpreting a selected head
+as an active signal. A row posting a target
+at $c$ forces the target to activate whenever
+the row's head does, since $c$ is unavailable.
+For an OR gate, give each incoming wire a
+private relay whose row posts the gate target
+at $c$. For an AND gate, the two wire relays
+post the target at $a$ and $b$, respectively.
+Both postings are allowed there. The conflicting
+pair of rows activates the target exactly when
+both relays are active.
+
+To distribute a signal to its wire relays,
+use a private chain. The signal's row posts
+the first chain head at $c$. Each chain head
+posts its successor, if any, at $c$ and the
+corresponding wire relay at $a$. Include the
+relay's $a$-posting in $G_0$, so it too is
+unavailable. The row of the wire relay then
+makes its single posting to the destination
+gate as prescribed above. This realizes all
+fan-outs with two postings per row.
+
+Start the Horn closure at the queried head,
+which begins a chain with one head per circuit
+input. Each chain row posts its successor,
+if any, at $c$, and its corresponding input
+signal at $a$. The optional exclusion of this
+$a$-posting activates that signal exactly when
+the input bit is one. Use a head with no row
+for the circuit output target, treating a bare
+output input as an input signal with no row.
+All other terminal heads can have an empty
+loss. The posting dependencies are acyclic
+because each activation goes forward in the
+laid-out circuit. At each target the only
+activation conditions are its specified wire
+rules or its optional exclusion. Induction
+in this order makes the Horn system
+inconsistent exactly when the output target
+activates, which is exactly sufficiency of
+the queried guard. The construction has size
+linear in the circuit wiring, and singleton
+prime lists encode its rows directly.
+
+In particular inclusion-minimal sets of
+optional exclusions making $G_0$ sufficient
+correspond exactly to the minimal true
+assignments of the monotone circuit. This
+description concerns extensions of a fixed
+guard part, with no claim that the fixed
+exclusions are themselves necessary.
+
 The same test extends to a fixed choice of rows at all
 multiply headed inputs. Guess a subset of the rows at
 each such head, possibly empty, and fix its Boolean
