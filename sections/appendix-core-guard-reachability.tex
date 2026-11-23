@@ -4483,6 +4483,56 @@ unavailable head. The earlier lower bound
 with two injective rows per head already
 applies to this larger acyclic class.
 
+\paragraph{Circuit representation at one output head.}
+The acyclic availability circuit also has a
+converse on a single observer facet. Any
+monotone Boolean circuit in the nonposting
+literals of visible owners can be represented
+at one head of an acyclic three-owner budget
+of prime width one and binary loss rows.
+The representation is linear in the circuit
+size after replacing gates by binary ones.
+It is independent of the probe statuses of
+the auxiliary inputs.
+
+On facet $a$, use a row-free input $x$ for
+each probe coordinate. Give the signal for
+$[q_x\ne r]$ the sole loss $x:r$, where
+$r\in\{b,c\}$. Realize a binary disjunction
+by one row posting both arguments at $a$.
+Realize a binary conjunction by two rows,
+one per argument at $a$, adding a fresh
+padding posting at $b$ to the first row
+and at $c$ to the second. Each padding
+input has an empty loss. These two rows
+are visible on different facets, and the
+padding inputs cannot be available. The
+internal $a$-postings disagree on every
+probe of the facet. Constants use a
+row-free input or one with an empty loss.
+An $a$-relay marks the circuit output.
+Projection deletion in dependency order
+therefore evaluates the given circuit.
+
+The representation also preserves input
+availability under support restrictions.
+If every auxiliary input is retained but
+some probe coordinates are removed, the
+signal for $[q_x\ne r]$ becomes the
+conjunction of this flag and the bit that
+$x$ was retained. The projected loss is
+empty when $x$ is omitted. Thus the
+construction can represent the same circuit
+jointly in probe flags and the availability
+of its coordinate inputs. In the other
+direction, the acyclic availability circuit
+gives a polynomial-size monotone circuit
+in these flags and support bits for any
+acyclic budget given by complete primes.
+For the support bits, conjoin the
+availability equation at each head with
+the bit saying that head is retained.
+
 \paragraph{Hardness at prime width one.}
 The whole-guard problem is
 coNP-complete already at three owners, prime
@@ -4504,21 +4554,8 @@ when at least one clause of a CNF formula
 is falsified. It uses only conjunctions and
 disjunctions of the literal signals.
 
-For a disjunction of two earlier signals, give
-its head a single row posting both signal
-inputs at $a$. Projection deletion makes the
-head available if either signal is available.
-For a conjunction, give its head two rows,
-each with one of the signal inputs posted
-at $a$. Pad one row with a fresh $b$-posting
-and the other with a fresh $c$-posting, using
-a fresh head with an empty loss for each
-padding input. The padding inputs are never
-available, so the two rows require both
-signals. They are visible on different
-facets, so every head has at most one row
-per facet. A final relay with one $a$-posting
-at the circuit output has the empty guard as
+Apply the circuit representation above.
+The final relay has the empty guard as
 its input prime on facet $a$.
 
 All these dependencies are acyclic. The two
