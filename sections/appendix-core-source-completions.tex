@@ -572,6 +572,68 @@ The reduction supplies complete prime lists and works for
 every fixed $K\ge3$. Hence the upper bound is sharp already
 for one repeated class in the whole family.
 
+\paragraph{Compiling meet losses directly from primes.}
+At fixed palette, a canonical prime budget that is
+injective on headed inputs gives polynomial-size
+monotone circuits for the source losses of its core
+meet. The circuit inputs are the postings of the
+queried probe. No enumeration of the original
+minimal losses is needed, even with repeated
+unheaded postings and many rows at one head.
+
+Fix a query head and observer. Use $H$ consisting
+of that head and all loss heads, and separate the
+query's exterior and interior postings as in
+\cref{core:lem:unmarked-background}. If the query
+head has no loss, its projection is already a
+bounded witness. Otherwise the size of the
+interior of each loss is at most $K-1$, so enumerate
+all proper injective interior rows $(j,t)$ on $H$.
+They are only potential rows. To enable a potential
+row, try every observer $s$ omitted by $t$. Scan
+the canonical primes at $(s,j)$ on the union of $t$
+and the exterior query postings visible to $s$.
+Enable the row if that posting hits all primes
+on at least one such facet. This is a monotone
+AND--OR test in the exterior posting bits.
+
+For a consistent probe this activation gives
+exactly the required reduced budget, up to
+redundant rows. Indeed every original minimal
+loss enabled by the exterior query has its true
+interior row in the enumeration, witnessed by
+an observer omitted from that loss. Conversely
+a hit of all primes gives a minimal loss whose
+exterior part is supported by the query and whose
+interior part is contained in $t$. Adding the
+larger row is redundant by antitonicity.
+
+Start from the enabled rows and perform the
+injective blocker deletion test in parallel.
+At each owner compute reachability from the
+interior query postings and the active empty-tail
+heads using only active row edges. Keep an active
+row at the next stage exactly when every tail
+is reachable at its owner. Each reachability
+calculation unrolls to a monotone circuit in
+the active-row and posting bits. The simultaneous
+deletions preserve every blocker, and at stability
+the remaining rows themselves have every tail
+reachable. Loss at the queried source is therefore
+equivalent to a remaining row at its head. The
+number of deletion stages is at most the number
+of potential rows, which is polynomial at fixed
+palette.
+
+The result gives a compact monotone extension of
+loss on consistent postings. Guard sufficiency
+instead quantifies over every consistent probe
+avoiding the exclusions. The cyclic examples
+below separate those two representations: their
+source loss circuits are polynomial, while their
+guard sufficiency circuits can require much
+larger monotone size.
+
 For budgets with at most one row per head and
 injective postings on the headed inputs, guard
 implication for the core meet is polynomial,
