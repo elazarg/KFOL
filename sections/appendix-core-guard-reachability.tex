@@ -3132,14 +3132,68 @@ exactly when the graph is not $3$-colorable.
 Membership follows from the acyclic positive
 probe certificate.
 
-For the same form at width two, complete
-recognition is polynomial. Use one Boolean
-variable per chosen control, a clause for
-each exceptional prime, and a negative
-binary clause for each conflict between
-two control rows. This $2$-SAT instance is
-satisfiable exactly when the exceptional
-head fails the complete-family test.
+Width two is polynomial for a broader depth-two
+class with one exceptional head. Keep the assumption
+that each control has one loss on retained inputs,
+but allow those losses to use arbitrary proper
+colorings. Allow the exceptional head to read both
+retained inputs and controls, with arbitrary owners
+in its own losses. The passive restriction is still
+core by the independent single-source completions.
+
+It suffices to test two substitutions at the
+exceptional head on each observer facet $k$.
+\begin{enumerate}
+\item In a loss visible at $k$, replace one control
+posting by that control's loss row visible at $k$.
+\item In a loss from any facet, replace all
+$k$-postings by the corresponding controls'
+loss rows visible at $k$.
+\end{enumerate}
+In both tests the result must be consistent and
+visible at $k$. Reject if it enables a prime at
+the exceptional head. Each rejected substitution
+is a genuine failure of the availability test:
+every original posting either remains present or
+belongs to a captured control.
+
+Conversely, fix a failed required mark at the
+exceptional head. The acyclic availability test
+gives an original loss row $T$ whose mismatches
+with the probe are all at unavailable controls.
+Every such control has its unique row posted
+on retained inputs at that probe. First replace
+all $k$-postings of $T$ by those rows, since
+the probe has no $k$-postings. This yields a
+consistent row visible at $k$: substitutions
+post only at retained inputs, where the original
+requirements and all inserted rows agree with
+the probe. Unless this first step already
+fails the second test, the resulting row is
+a prescribed loss. Now replace the remaining
+mismatching control postings one at a time
+on that facet. The same consistency argument
+applies. Eventually the row is contained in
+the probe and hence is positive, so some
+single replacement fails the first test.
+This proves completeness of the two tests.
+
+For either test guess the original facet and a
+prime enabled at the result. In the first test
+also guess the control posting being replaced and
+require its inclusion. Associate to every possible
+original posting its transformed set: either the
+same singleton or the unique control row as
+specified by the substitution. Forbid unavailable
+transformations, and any transformed set meeting
+the guessed prime. Require the original postings
+to hit every prime on the original facet.
+Binary conflict clauses ensure consistency of the
+original and transformed sets, since each chosen
+posting has a fixed image. All these conditions
+are $2$-SAT at prime width two. Thus the
+width-three hardness above is sharp within this
+broader class as well.
 
 Acyclicity of the disagreeing arrows at a probe does
 not suffice for projection deletion. Take three heads
