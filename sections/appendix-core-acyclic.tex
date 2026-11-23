@@ -556,6 +556,53 @@ single loss gives only singleton exclusions on
 the facets where it is visible. Thus all the
 canonical prime lists have width at most two.
 
+For an acyclic projected budget, one subfixing
+achieves all captures obtainable by this search.
+Process the inputs in source order. If an input
+can already be captured using the allowed
+postings at its predecessors, leave it unseeded
+and allow all its postings. Otherwise seed it
+when it belongs to $B$, allowing its $s$-posting,
+and leave it neutral otherwise. This defines a
+subfixing and its propagated capture set. Its
+allowed ground contains the ground obtained
+from any other subfixing. Inductively the earlier
+ground is larger. If any other choice captures the
+current input, the same row fires in the larger
+ground, so the greedy choice captures it too.
+If no row fires, the only possible contribution
+is its seed posting, which the greedy choice
+includes whenever permitted.
+
+More generally let $b$ count the vertices of $B$
+in cyclic source components of the projected
+budget. Enumerate the seed choices just at those
+vertices. Process the components in source order.
+In a cyclic component, with its seeds fixed,
+compute the least capture closure using the
+already allowed postings on its predecessors.
+This closure is monotone in those exterior
+postings, so it dominates the closure from any
+other subfixing with the same cyclic seed choices
+and a smaller exterior ground. At singleton
+components use the greedy rule above. Taking
+the union of capture sets over the $2^b$ runs
+gives exactly the full strengthening. Only
+cyclic components in the posting ancestors of
+a queried head are needed for that head. For a
+head outside $B$, a seed candidate that is never
+posted at a foreign owner in those ancestors
+can be seeded outright. Any derivation that
+used its capture needs only its $s$-posting,
+which the seed supplies from the start.
+
+The dependence graph can be formed by pin
+searches in the prime lists, and the closure
+passes use the same ground tests as before.
+Thus the full strengthening takes $2^b$ times
+polynomial work, with no bound on prime width
+or on the number of seeds in acyclic parts.
+
 There is also a symbolic version at prime width
 two. Fix $K$. Suppose every original owner tail
 has at most two postings, and after each original
