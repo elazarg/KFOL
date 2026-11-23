@@ -188,6 +188,58 @@ This yields polynomial space by recursive search,
 or time $(O(K))^{m+\ell}O(1)^d$ times a polynomial
 in the explicitly supplied input using the table.
 
+\paragraph{Packing source losses into explicit bounds.}
+Group explicitly supplied minimal source losses with
+the same observer $k$ and passive posting $t$ into
+one set $A$ of losing heads. Source reconstruction
+says that one valuation $v$ enforces the whole group
+by omitting $k$ if its passive $k$-pattern is $t$
+and the inputs containing $k$ are exactly $A$.
+Such a valuation always exists: use the prescribed
+atoms, and on each unposted input use
+$I\setminus\{k\}$ with $k$ added just on $A$.
+
+One bound can pack several such groups, at most one
+per observer. Write $E$ for their set of observers,
+with group $(t_k,A_k)$ at $k$. The following
+conditions decide exactly when one valuation has
+the required passive patterns and source sets.
+\begin{itemize}
+\item For each owner seen by an observer, all observing
+groups prescribe the same atomic block for that owner.
+These prescribed blocks must be pairwise disjoint.
+\item At an input in an atomic block of owner $r$,
+its set of memberships among the $A_k$ must be
+$\{r\}\cap E$.
+\item If $|E|\ge2$, every owner has a prescribed atomic
+block. At an input outside their union, the set of
+its observed memberships together with $I\setminus E$
+must have size at least two.
+\end{itemize}
+Indeed with two or more observers each atomic block
+is forced by a foreign observer. Outside the blocks,
+the menu must be ambiguous and have precisely the
+specified observed memberships. Adding all unobserved
+owners attains the largest such menu and gives the
+last test. The one-observer construction above covers
+the remaining case. For a passing packing, the
+single bound $v\mapsto I\setminus E$ is equivalent
+to all its source losses, since each omitted observer
+tests exactly the corresponding group's sources.
+
+Thus the relevant row count for explicit feasibility
+can be the number of packed groups of colorings,
+independent of how many heads share each coloring.
+For fixed $K$, a packing of size at most $m$ can be
+found or ruled out in time exponential in $m$ times
+a polynomial in the explicit loss lists. More than
+$Km$ groups rule it out immediately. Otherwise
+enumerate the compatible subsets of the groups and
+use a subset table for their covers. Overlaps do not
+affect the test, since repeated loss constraints are
+idempotent. Combine with the root-split recursion
+for an exact bounded-word test at this row count.
+
 \paragraph{Fixed palette and few explicit bounds.}
 For fixed $K$ and $m$, feasibility under $m$ explicit
 output bounds is polynomial-time even with arbitrarily
