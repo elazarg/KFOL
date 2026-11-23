@@ -290,6 +290,63 @@ that verifier by a polynomial Boolean circuit
 whose weighted inputs choose one option for
 each of those guesses.
 
+More precisely the width-two problem is equivalent,
+under parameterized reductions, to weighted directed
+nonreachability with literal-labelled arcs. Its input
+is a directed graph with start and end vertices and
+arcs labelled by Boolean literals or constants. Ask
+whether exactly $q$ variables can be made true so
+that the enabled arcs contain no path from start
+to end. The preceding construction already handles
+any such graph: only the reduction from formulas
+uses the series--parallel restriction. Constant true
+arcs can put their port clauses in a fourth fixed
+head; false arcs can be dropped. This gives the
+reduction to sink intersections with parameter at
+most $q+4$, even for core candidates.
+
+For the reverse reduction, make one Boolean
+selector for every option $(k,A,j,G)$ in the
+width-two test: observer $k$, completion set $A$,
+revived head $j$, and prime $G$ enabled after
+erasure. Use weight $|\mathcal A|$. Put in the
+graph a separate two-arc path from start to end
+for each pair of selectors in the same part $A$,
+or with different observers, labelled by those
+two selectors. Nonreachability then implies
+one choice per part at a common observer.
+Skip options that require losing at a head
+with an empty guard.
+
+Form the implication graph for posting
+consistency and the width-two requirements.
+Its consistency arcs are fixed. Label
+each additional implication arc by the
+selector of the option requiring it.
+Parallel arcs allow the same constraint to
+be required by several options. Include the
+unit constraints excluding the observer,
+blanking the selected heads and enabling
+their primes after erasure. The enabled
+implications for a permitted selection are
+exactly its joint $2$-SAT instance.
+
+Detect inconsistency by separate branches
+between the global start and end. For
+each posting variable $x$ take two fresh
+copies of the labelled implication graph.
+Enter the first at $x$, connect $\neg x$
+of the first to $\neg x$ of the second,
+and leave the second at $x$. The connecting
+arcs are fixed. A path through the branch
+exists exactly when $x$ and $\neg x$ reach
+one another. Thus nonreachability excludes
+every contradiction and exactly verifies a
+counterexample to sink intersection equality.
+This reduction needs only positive selector
+labels, so the equivalence also holds for
+that restricted nonreachability problem.
+
 Width three already makes equality coNP-complete
 for two completions, even for a core operation and
 two singleton sets. Use two distinct posting owners
