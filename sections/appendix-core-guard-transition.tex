@@ -379,6 +379,78 @@ obtained by propagating equalities between
 valuations. The ternary example already fails it
 on the initial table.
 
+\paragraph{Propagating signed singleton information.}
+The current table also determines signed profile
+constraints. At the probe for a singleton test
+$r:A$, a bound equal to $\{r\}$ forces that test,
+and a bound omitting $r$ forbids it. At any
+valuation $w$ and bound $U=U(w)$, the following
+test decides whether one can respect just this
+bound and all currently known profile signs,
+while retaining a requested $k$ at $w$.
+
+For each owner start with the positive coalitions
+and the full coalition, and close them under the
+one-bound implication preorder
+$\preceq_r^{w,U}$ of
+\cref{core:thm:bounded-profiles}.
+Add to the forbidden tests $r:E_r(w)$ for every
+$r\ne k$. Reject if a positive closure meets a
+forbidden test, or a rainbow of closed positive
+coalitions fails the one-bound test
+(\cref{core:thm:one-bound-profiles}).
+Also require a whole input containing $k$ and
+contained in $U$. These conditions are necessary.
+If they pass, the closures, taken as exact
+positive profiles, satisfy every clause of
+\cref{core:thm:bounded-profiles}. Take a realizer
+below $U$ at $w$. If it lacks $k$ there, it is
+ambiguous by the new forbidden tests. Reset it
+with the eligible input, as in
+\cref{core:thm:one-point-completion}. This
+preserves all profiles and adds $k$ within $U$,
+proving sufficiency for the local test.
+
+Delete $k$ whenever this local test fails and
+alternate with omission and provenance until
+stabilization. Each deletion preserves every
+bounded term. At fixed palette there are
+single exponentially many coalitions, subsets
+of the palette, valuations and rainbows, so
+explicit implementation takes single exponential
+time. The test uses negative profile information
+as well as forced winners, and enforces the bound
+at $w$ even when all forced positive coalitions
+have a common input.
+
+This strengthened propagation still has a limit
+at five inputs. Use the operation $R$ of
+\cref{core:thm:five-local-profile}. Its interpolants
+can all be taken with the complete profiles of $R$,
+by resetting the interpolants of $F$ against $g$
+as in that proof. Its sole-source bits agree across
+facets and are antitone, since each comparison or
+agreement of two such bits has a common interpolant.
+They reconstruct $R$: a positive probe implies
+presence at the valuation by two-point interpolation.
+For the converse, if a winner occurs at at most
+four inputs, interpolate its sole-source probes
+together with the valuation. If it occurs at all
+five, interpolate just the five probes. Their
+common term has the winner at the valuation by
+nonempty whole-input provenance, so at least
+one probe is positive by source reconstruction.
+Thus the canonical prime bounds give exactly $R$
+as the initial table. Its provenance and omission
+laws follow from one- and two-point interpolation.
+At every valuation the profile-preserving
+interpolant realizes each of its winners under
+the local bound. Hence propagation leaves the
+entire table $R$, although $R$ has no core
+realization. In particular the obstruction still
+requires comparisons involving more than one
+output bound.
+
 \paragraph{Computing the excluded coalitions by comparisons.}
 A single comparison determines all its admissible
 antecedents. For an observer-$r$ coloring $t$,
