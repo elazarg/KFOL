@@ -10004,6 +10004,48 @@ deletion, even though a bounded witness may still
 use a fold that is not safe on its own, as in the
 paired-loss example above.
 
+The residual rows give an exact refinement of this
+cycle condition. After projection deletion, safe
+folds make a further deletion exactly when there
+are an owner $r$ and a nonempty set $B$ of
+unavailable inputs, all disagreeing with $r$, such
+that every residual row at every head in $B$ has
+an $r$-posting in $B$. Such a set is an eligible
+safe support and deletes the rows at its own heads.
+Conversely, if a first fold deletes any residual
+row, its support must contain an unavailable input
+and can be restricted to unavailable inputs:
+no residual row contains an eligible posting at an
+available input.
+
+For an inclusion-minimal such $B$, choose one
+witnessing $r$-posting in $B$ per row at each of its
+heads. Every selection gives a strongly connected
+graph on $B$. In fact, the heads in any sink
+strongly connected component satisfy every row
+using the selected postings within that component.
+Minimality forces the component to be all of $B$.
+This distinguishes a cycle in the posting graph
+from a set whose cycles account for every row.
+When each headed input has just one residual row,
+each selection is a single directed cycle, since
+every vertex then has exactly one selected successor.
+
+More generally, one may run saturation with only
+inclusion-minimal nonempty eligible safe supports.
+Whenever a full support would add an unrecorded
+posting, choose an inclusion-minimal safe subset
+of it. Record that subset and remove it from the
+support. Any surviving row at a remaining member
+still has a witnessing posting in the reduced
+support, since a witness in the recorded subset
+would already have deleted the row. Repeating
+can therefore simulate the full update by minimal
+supports, skipping a recording when its postings
+were already recorded. Each such support is either
+a row-free singleton or has the strong connectivity
+property just proved.
+
 The component computation has a single-update
 form when all internal disagreement arrows of a
 component have one label $r$. After the downstream
