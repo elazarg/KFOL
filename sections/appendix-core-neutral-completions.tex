@@ -157,6 +157,56 @@ still win. The equality therefore holds exactly
 when the CNF is unsatisfiable, with, in the
 hardness instances, three literals per set.
 
+For a fixed number of completions, prime width two
+instead gives a polynomial test. Guess the observer,
+and for each chosen set $A$ guess a head $j_A$ revived
+by erasing $A$ and a prime there enabled after erasure.
+Forbid postings at all guessed heads and every
+posting of their selected primes outside the
+corresponding sets $A$. On that common ground
+require hitting every prime at each guessed head.
+Use the usual clauses forbidding two owners on
+one input. This is $2$-SAT at width two. A
+solution is exactly a counterexample with the
+guessed revived heads, and there are polynomially
+many guesses for a fixed number of completions.
+
+Width three already makes equality coNP-complete
+for two completions, even for a core operation and
+two singleton sets. Use two distinct posting owners
+$a,b$, literal inputs for a $3$CNF, and two fresh
+retained flags $d,e$. At a head $h$, use one
+prime per clause consisting of the $a$-postings
+of its literals, and the singleton prime $d{:}a$.
+At a different head $g$, use the pair of
+$b$-postings of the two literals of each variable
+as a prime, and the singleton prime $e{:}b$.
+Each list is pure at its owner and unconditional
+on the facet omitting that owner. Minimize
+clauses by containment. Every other input is
+retained, and neither head reads the other.
+The union of the two single-source completions
+on their common retained inputs realizes the
+candidate.
+
+Take the two sink sets to be $\{d\}$ and $\{e\}$.
+Erasing $d$ can revive only $h$, and always
+revives it if it was losing. Symmetrically erasing
+$e$ revives exactly $g$ when it was losing.
+Therefore the intersection fails exactly when
+both heads can lose on one facet. The loss at
+$h$ requires selecting at least one literal
+per clause at $a$, while the loss at $g$
+requires one literal per variable pair at $b$.
+Consistency prevents selecting both literals of
+a variable at $a$. Hence joint loss is equivalent
+to satisfiability, with the flags posted at their
+required owners. A facet omitting a third owner
+sees both requirements. With one completion,
+equality just tests whether its inputs already
+are sinks. Together the results separate the
+number of completions from the prime width.
+
 \paragraph{Removing a source whose path has one owner.}
 There is a direct prime-list test for adjoining a
 distinguished input by a path that uses only owner $r$.
