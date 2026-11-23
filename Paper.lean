@@ -7,6 +7,7 @@ public import KFOL.Core.AtomicBasis.Basis
 public import KFOL.Core.SourcePeeling
 public import KFOL.Core.FiniteRelationObstruction
 public import KFOL.Core.QuantifiedRecognition
+public import KFOL.Complexity.RecognitionHardness
 public import KFOL.DependentSchedule.Results
 public import KFOL.Strategic.CoalitionMaps
 public import KFOL.Audit.Namespace
@@ -643,6 +644,20 @@ theorem core_extraction_polynomial :
         ((extract (termCode K term)).isSome = true ↔ term.Idempotent) ∧
         ∀ word, extract (termCode K term) = some word → CoreExtractionOutput K term word :=
   Results.Complexity.core_extraction_polynomial
+
+/-- `core:thm:recognition-reduction`: on Turing machines, truth of closed prenex
+formulas reduces in polynomial time to recognition of core term operations
+from their prime guards. -/
+theorem core_recognition_reduction {K : ℕ} (three : Fin 3 ↪ Fin K) :
+    Cslib.Complexity.PolyTimeReducible prenexEncoding guardListEncoding prenexTruth
+      (coreNormalForms three) :=
+  Recognition.Lists.prenexTruth_reducible three
+
+/-- Recognition is hard for polynomial space as soon as prenex truth is. -/
+theorem core_recognition_pspace_hard {K : ℕ} (three : Fin 3 ↪ Fin K)
+    (prenex : Cslib.Complexity.PSPACEHard prenexEncoding prenexTruth) :
+    Cslib.Complexity.PSPACEHard guardListEncoding (coreNormalForms three) :=
+  Recognition.Lists.coreNormalForms_pspaceHard three prenex
 
 /-! ## Completely disclosed sealed rounds -/
 section Rounds

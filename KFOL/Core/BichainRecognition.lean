@@ -794,25 +794,22 @@ theorem Kz_sub [Fintype Z] [DecidableEq Z] (v : Inp Z W → WinnerSet Role) (T :
 variable [Fintype Z] [DecidableEq Z] [Nontrivial Z] [Fintype W]
   (rows : Z → W → Bichain.Value) (X Y : W → Bool) (z₀ : Z)
 
-/-- On the code of a row, the baseline omits the first owner. -/
-theorem baseline_row (z : Z) :
-    three 0 ∉ ((baseline three rows X Y z₀).eval (vRow three rows z)).val := by
-  have h01 : three 0 ≠ three 1 := three.injective.ne (by decide)
-  have h02 : three 0 ≠ three 2 := three.injective.ne (by decide)
-  let T : Set Role := {k | k ≠ three 0}
-  have hb : three 1 ∈ T := h01.symm
-  have hc : three 2 ∈ T := h02.symm
-  have hz : vRow three rows z (.inl z) = singleton (three 1) := by simp [vRow]
-  have hnz : ∀ u : Z, u ≠ z → vRow three rows z (.inl u) = singleton (three 2) :=
-    fun u hu => by simp [vRow, hu]
-  have hsel : ∀ u : Z, (vRow three rows z (.inl u)).val ⊆ T := by
+/-- On the code of a row with the fixed inputs at their atoms, the baseline
+stays inside any set containing the two atoms and the unmarked inputs. -/
+theorem baseline_sub_row (z : Z) (v : Inp Z W → WinnerSet Role) (T : Set Role)
+    (hb : three 1 ∈ T) (hc : three 2 ∈ T)
+    (hz : v (.inl z) = singleton (three 1))
+    (hnz : ∀ u : Z, u ≠ z → v (.inl u) = singleton (three 2))
+    (hfb : ∀ x, rowP rows z x = .b → v (.inr x) = singleton (three 1))
+    (hfc : ∀ x, rowP rows z x = .c → v (.inr x) = singleton (three 2))
+    (hfree : ∀ x, rowP rows z x ≠ .possible → (v (.inr x)).val ⊆ T) :
+    ((baseline three rows X Y z₀).eval v).val ⊆ T := by
+  have hsel : ∀ u : Z, (v (.inl u)).val ⊆ T := by
     intro u
     by_cases hu : u = z
     · rw [hu, hz]; exact sing_sub hb
     · rw [hnz u hu]; exact sing_sub hc
   obtain ⟨u', hu'⟩ := exists_ne z
-  suffices h : ((baseline three rows X Y z₀).eval (vRow three rows z)).val ⊆ T from
-    fun hk => h hk rfl
   intro k hk
   rcases (mem_baseline three rows X Y z₀ _ k).1 hk with
     ⟨u, h⟩ | ⟨p, h⟩ | ⟨p, h⟩ | ⟨p, h⟩ | ⟨p, h⟩ | ⟨p, h⟩ | h
@@ -825,7 +822,7 @@ theorem baseline_row (z : Z) :
     by_cases hp : p.1 = z
     · exact Or.inr (hnz _ fun h2 => hne (hp.trans h2.symm))
     · exact Or.inl (hnz _ hp)
-  · have key : ∀ y, ((KX three y).eval (vRow three rows z)).val ⊆ T := fun y => by
+  · have key : ∀ y, ((KX three y).eval v).val ⊆ T := fun y => by
       rw [KX_absorb three _ y ⟨z, hz⟩]; exact sing_sub hb
     revert h
     unfold kxT
@@ -833,7 +830,7 @@ theorem baseline_row (z : Z) :
     · exact key _ h
     · exact key _ h
     · exact hsel z₀ h
-  · have key : ∀ y, ((KY three y).eval (vRow three rows z)).val ⊆ T := fun y => by
+  · have key : ∀ y, ((KY three y).eval v).val ⊆ T := fun y => by
       rw [KY_absorb three _ y ⟨u', hnz u' hu'⟩]; exact sing_sub hc
     revert h
     unfold kyT
@@ -842,142 +839,159 @@ theorem baseline_row (z : Z) :
     · exact key _ h
     · exact hsel z₀ h
   · obtain ⟨z', x, i⟩ := p
-    have habs : ∀ y, z' ≠ z → ((Kz three z' y).eval (vRow three rows z)).val ⊆ T :=
+    have habs : ∀ y, z' ≠ z → ((Kz three z' y).eval v).val ⊆ T :=
       fun y hne => by
         rw [Kz_absorb three _ z' y ⟨z, Ne.symm hne, hz⟩]; exact sing_sub hb
-    have hown : ∀ y : Term Role (Inp Z W), (y.eval (vRow three rows z)).val ⊆ T →
-        ((Kz three z y).eval (vRow three rows z)).val ⊆ T :=
+    have hown : ∀ y : Term Role (Inp Z W), (y.eval v).val ⊆ T →
+        ((Kz three z y).eval v).val ⊆ T :=
       fun y hy => Kz_sub three _ T z y (choice_sub hy (hsel z)) hsel
     simp only [kzT] at h
     split_ifs at h with h1 h2 h3
     · by_cases hz' : z' = z
       · subst hz'
-        refine hown (.var (.inr x)) (fun k' hk' hk0 => conv_omits three h1 ?_) h
-        rw [← hk0]
-        exact hk'
+        exact hown (.var (.inr x)) (hfree x h1) h
       · exact habs _ hz' h
     · by_cases hz' : z' = z
       · subst hz'
         refine hown _ ?_ h
-        change (choice (three 1) _ (conv three (rowP rows z' i))).val ⊆ T
-        rw [h2]
-        change (choice (three 1) _ (singleton (three 1))).val ⊆ T
-        rw [choice_right_owner]
+        change (choice (three 1) _ (v (.inr i))).val ⊆ T
+        rw [hfb i h2, choice_right_owner]
         exact sing_sub hb
       · exact habs _ hz' h
     · by_cases hz' : z' = z
       · subst hz'
         refine hown _ ?_ h
-        change (choice (three 2) _ (conv three (rowP rows z' i))).val ⊆ T
-        rw [h3]
-        change (choice (three 2) _ (singleton (three 2))).val ⊆ T
-        rw [choice_right_owner]
+        change (choice (three 2) _ (v (.inr i))).val ⊆ T
+        rw [hfc i h3, choice_right_owner]
         exact sing_sub hc
       · exact habs _ hz' h
     · exact hsel z₀ h
   · exact hsel z₀ h
 
+/-- On the code of a row, the baseline omits the first owner. -/
+theorem baseline_row (z : Z) :
+    three 0 ∉ ((baseline three rows X Y z₀).eval (vRow three rows z)).val := by
+  have h01 : three 0 ≠ three 1 := three.injective.ne (by decide)
+  have h02 : three 0 ≠ three 2 := three.injective.ne (by decide)
+  have h := baseline_sub_row three rows X Y z₀ z (vRow three rows z) {k | k ≠ three 0}
+    h01.symm h02.symm (by simp [vRow]) (fun u hu => by simp [vRow, hu])
+    (fun x hx => by simp [vRow, hx, conv]) (fun x hx => by simp [vRow, hx, conv])
+    (fun x hx k hk hk0 => conv_omits three hx (hk0 ▸ hk))
+  exact fun hk => h hk rfl
+
 omit [Nontrivial Z] in
-/-- On the code of the first endpoint, the baseline is the third owner alone. -/
-theorem baseline_X :
-    (baseline three rows X Y z₀).eval (vEnd three (three 2) X) = singleton (three 2) := by
-  apply eq_singleton_of_subset
-  have hsel : ∀ u : Z, (vEnd three (three 2) X (.inl u : Inp Z W)).val ⊆ {three 2} :=
-    fun _ => Set.Subset.rfl
+/-- With every selector and the first endpoint at the third owner, the
+baseline is that owner alone. -/
+theorem baseline_sub_X (v : Inp Z W → WinnerSet Role)
+    (hsel : ∀ u : Z, v (.inl u) = singleton (three 2))
+    (hX : ∀ x : Option W, endP X x = true → v (.inr x) = singleton (three 2)) :
+    ((baseline three rows X Y z₀).eval v).val ⊆ {three 2} := by
+  have hsel' : ∀ u : Z, (v (.inl u)).val ⊆ {three 2} := fun u => by
+    rw [hsel u]; exact Set.Subset.rfl
   intro k hk
   rcases (mem_baseline three rows X Y z₀ _ k).1 hk with
     ⟨u, h⟩ | ⟨p, h⟩ | ⟨p, h⟩ | ⟨p, h⟩ | ⟨p, h⟩ | ⟨p, h⟩ | h
-  · exact h
-  · exact qT_sub three _ {three 2} p (Or.inl ⟨rfl, Set.mem_singleton _⟩) h
-  · exact u2T_sub three _ {three 2} p hsel
-      (fun _ => Or.inl ⟨Or.inl rfl, Set.mem_singleton _⟩) h
+  · exact hsel' u h
+  · exact qT_sub three _ {three 2} p (Or.inl ⟨hsel _, Set.mem_singleton _⟩) h
+  · exact u2T_sub three _ {three 2} p hsel'
+      (fun _ => Or.inl ⟨Or.inl (hsel _), Set.mem_singleton _⟩) h
   · obtain ⟨x, i⟩ := p
     simp only [kxT] at h
     split_ifs at h with h1 h2
-    · refine KX_sub three _ _ _ ?_ hsel h
-      change (vEnd three (three 2) X (.inr x : Inp Z W)).val ⊆ _
-      simp [vEnd, h1]
-    · refine KX_sub three _ _ _ ?_ hsel h
-      have hi : vEnd three (three 2) X (.inr i : Inp Z W) = WinnerSet.singleton (three 2) := by
-        simp [vEnd, h2]
-      change (choice (three 2) _ (vEnd three (three 2) X (.inr i : Inp Z W))).val ⊆ _
-      rw [hi, choice_right_owner]
+    · refine KX_sub three _ _ _ ?_ hsel' h
+      change (v (.inr x)).val ⊆ _
+      rw [hX x h1]
       exact Set.Subset.rfl
-    · exact h
-  · have key : ∀ y, ((KY three y).eval (vEnd three (three 2) X : Inp Z W → _)).val ⊆
-        {three 2} := fun y => by
-      rw [KY_absorb three _ y ⟨z₀, rfl⟩]
+    · refine KX_sub three _ _ _ ?_ hsel' h
+      change (choice (three 2) _ (v (.inr i))).val ⊆ _
+      rw [hX i h2, choice_right_owner]
+      exact Set.Subset.rfl
+    · exact hsel' z₀ h
+  · have key : ∀ y, ((KY three y).eval v).val ⊆ {three 2} := fun y => by
+      rw [KY_absorb three _ y ⟨z₀, hsel z₀⟩]
       exact Set.Subset.rfl
     revert h
     unfold kyT
     split_ifs <;> intro h
     · exact key _ h
     · exact key _ h
-    · exact h
+    · exact hsel' z₀ h
   · obtain ⟨z', x, i⟩ := p
-    have key : ∀ y, ((Kz three z' y).eval (vEnd three (three 2) X : Inp Z W → _)).val ⊆
-        {three 2} := fun y => by
-      refine Kz_sub three _ _ z' y ?_ hsel
-      change (choice (three 2) _ (WinnerSet.singleton (three 2))).val ⊆ _
-      rw [choice_right_owner]
+    have key : ∀ y, ((Kz three z' y).eval v).val ⊆ {three 2} := fun y => by
+      refine Kz_sub three _ _ z' y ?_ hsel'
+      rw [hsel z', choice_right_owner]
       exact Set.Subset.rfl
     simp only [kzT] at h
     split_ifs at h
     · exact key _ h
     · exact key _ h
     · exact key _ h
-    · exact h
-  · exact h
+    · exact hsel' z₀ h
+  · exact hsel' z₀ h
 
-/-- On the code of the second endpoint, the baseline is the second owner alone. -/
-theorem baseline_Y :
-    (baseline three rows X Y z₀).eval (vEnd three (three 1) Y) = singleton (three 1) := by
+omit [Nontrivial Z] in
+/-- On the code of the first endpoint, the baseline is the third owner alone. -/
+theorem baseline_X :
+    (baseline three rows X Y z₀).eval (vEnd three (three 2) X) = singleton (three 2) := by
   apply eq_singleton_of_subset
-  have hsel : ∀ u : Z, (vEnd three (three 1) Y (.inl u : Inp Z W)).val ⊆ {three 1} :=
-    fun _ => Set.Subset.rfl
+  exact baseline_sub_X three rows X Y z₀ (vEnd three (three 2) X) (fun _ => rfl)
+    (fun x hx => by simp [vEnd, hx])
+
+/-- With every selector and the complement of the second endpoint at the
+second owner, the baseline is that owner alone. -/
+theorem baseline_sub_Y (v : Inp Z W → WinnerSet Role)
+    (hsel : ∀ u : Z, v (.inl u) = singleton (three 1))
+    (hY : ∀ x : Option W, endP Y x = false → v (.inr x) = singleton (three 1)) :
+    ((baseline three rows X Y z₀).eval v).val ⊆ {three 1} := by
+  have hsel' : ∀ u : Z, (v (.inl u)).val ⊆ {three 1} := fun u => by
+    rw [hsel u]; exact Set.Subset.rfl
   intro k hk
   rcases (mem_baseline three rows X Y z₀ _ k).1 hk with
     ⟨u, h⟩ | ⟨p, h⟩ | ⟨p, h⟩ | ⟨p, h⟩ | ⟨p, h⟩ | ⟨p, h⟩ | h
-  · exact h
-  · exact qT_sub three _ {three 1} p (Or.inr ⟨rfl, Set.mem_singleton _⟩) h
-  · exact u2T_sub three _ {three 1} p hsel
-      (fun _ => Or.inr ⟨rfl, Set.mem_singleton _⟩) h
-  · have key : ∀ y, ((KX three y).eval (vEnd three (three 1) Y : Inp Z W → _)).val ⊆
-        {three 1} := fun y => by
-      rw [KX_absorb three _ y ⟨z₀, rfl⟩]
+  · exact hsel' u h
+  · exact qT_sub three _ {three 1} p (Or.inr ⟨hsel _, Set.mem_singleton _⟩) h
+  · exact u2T_sub three _ {three 1} p hsel'
+      (fun _ => Or.inr ⟨hsel _, Set.mem_singleton _⟩) h
+  · have key : ∀ y, ((KX three y).eval v).val ⊆ {three 1} := fun y => by
+      rw [KX_absorb three _ y ⟨z₀, hsel z₀⟩]
       exact Set.Subset.rfl
     revert h
     unfold kxT
     split_ifs <;> intro h
     · exact key _ h
     · exact key _ h
-    · exact h
+    · exact hsel' z₀ h
   · obtain ⟨x, i⟩ := p
     simp only [kyT] at h
     split_ifs at h with h1 h2
-    · refine KY_sub three _ _ _ ?_ hsel h
-      change (vEnd three (three 1) Y (.inr x : Inp Z W)).val ⊆ _
-      simp [vEnd, h1]
-    · refine KY_sub three _ _ _ ?_ hsel h
-      have hi : vEnd three (three 1) Y (.inr i : Inp Z W) = WinnerSet.singleton (three 1) := by
-        simp [vEnd, h2]
-      change (choice (three 1) _ (vEnd three (three 1) Y (.inr i : Inp Z W))).val ⊆ _
-      rw [hi, choice_right_owner]
+    · refine KY_sub three _ _ _ ?_ hsel' h
+      change (v (.inr x)).val ⊆ _
+      rw [hY x h1]
       exact Set.Subset.rfl
-    · exact h
+    · refine KY_sub three _ _ _ ?_ hsel' h
+      change (choice (three 1) _ (v (.inr i))).val ⊆ _
+      rw [hY i h2, choice_right_owner]
+      exact Set.Subset.rfl
+    · exact hsel' z₀ h
   · obtain ⟨z', x, i⟩ := p
     obtain ⟨u', hu'⟩ := exists_ne z'
-    have key : ∀ y, ((Kz three z' y).eval (vEnd three (three 1) Y : Inp Z W → _)).val ⊆
-        {three 1} := fun y => by
-      rw [Kz_absorb three _ z' y ⟨u', hu', rfl⟩]
+    have key : ∀ y, ((Kz three z' y).eval v).val ⊆ {three 1} := fun y => by
+      rw [Kz_absorb three _ z' y ⟨u', hu', hsel u'⟩]
       exact Set.Subset.rfl
     simp only [kzT] at h
     split_ifs at h
     · exact key _ h
     · exact key _ h
     · exact key _ h
-    · exact h
-  · exact h
+    · exact hsel' z₀ h
+  · exact hsel' z₀ h
+
+/-- On the code of the second endpoint, the baseline is the second owner alone. -/
+theorem baseline_Y :
+    (baseline three rows X Y z₀).eval (vEnd three (three 1) Y) = singleton (three 1) := by
+  apply eq_singleton_of_subset
+  exact baseline_sub_Y three rows X Y z₀ (vEnd three (three 1) Y) (fun _ => rfl)
+    (fun x hx => by simp [vEnd, hx])
 
 end Coded
 

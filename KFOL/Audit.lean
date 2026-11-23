@@ -669,6 +669,15 @@ import all KFOL.Core.BichainQuantified
 import all KFOL.Core.BichainRecognition
 import all KFOL.Core.QuantifiedRecognition
 import all KFOL.Definitions.QuantifiedRecognition
+import all KFOL.Definitions.CoreLosses
+import all KFOL.Definitions.RecognitionProblem
+import all KFOL.Core.SourceLosses
+import all KFOL.Core.RowLosses
+import all KFOL.Reductions.GuardLists
+import all KFOL.Reductions.RowLists
+import all KFOL.Reductions.QuantifiedLists
+import all KFOL.Reductions.PrenexReduction
+import all KFOL.Complexity.RecognitionHardness
 import all KFOL.Core.CompletionDepthChain
 import all KFOL.Core.CompletionSuspension
 import all KFOL.Core.AddressedGuards

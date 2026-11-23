@@ -358,6 +358,49 @@ theorem row_recognition {Role : Type u} (three : Fin 3 ↪ Role) {Z W : Type w} 
         p.eval (fun j => Bichain.Value.ofBool (Y j)) = .b :=
   Recognition.recognition_iff three rows X Y z₀
 
+/-- `core:prop:row-losses`: the capped baseline is supplied by its inputs, each input
+fails exactly on its listed losses, and an input has at most two losses besides
+those of the rows marking it. -/
+theorem row_losses {Role : Type u} (three : Fin 3 ↪ Role) {Z W : Type w} [Fintype Z]
+    [DecidableEq Z] [Nontrivial Z] [Fintype W] (rows : Z → W → Bichain.Value)
+    (X Y : W → Bool) (z₀ : Z) (hX : ∃ j, X j = true) :
+    Core.Sources.LossSystem (Recognition.target three rows X Y z₀)
+      (Recognition.losses three rows X Y) ∧
+    ∀ j, (Recognition.losses three rows X Y j).length ≤ 2 + match j with
+      | .inl _ => 0
+      | .inr x => (Finset.univ.filter fun z : Z => Recognition.rowP rows z x = .possible).card :=
+  ⟨Recognition.target_lossSystem three rows X Y z₀ hX,
+    Recognition.length_losses_le three rows X Y⟩
+
+/-- Losses determine the normal form: the prime guards are the minimal sets of
+postings meeting every loss, they reconstruct the operation, and a prime guard
+has at most one posting for each loss. The operation need not be a term operation. -/
+theorem losses_prime_guards {Role : Type u} [Fintype Role] {Var : Type v} [Fintype Var]
+    (three : Fin 3 ↪ Role) (f : (Var → WinnerSet Role) → WinnerSet Role)
+    (zeros : Var → List (List (Var × Role))) (h : Core.Sources.LossSystem f zeros) :
+    (∀ k j (g : Core.Sources.Guard k j), g ∈ Core.Sources.normalForm three f k j ↔
+      Minimal (Core.Sources.MeetsAll (zeros j)) g) ∧
+    (∀ v, Core.Sources.meaning (Core.Sources.normalForm three f) v = (f v).val) ∧
+    ∀ k j (g : Core.Sources.Guard k j), g ∈ Core.Sources.normalForm three f k j →
+      g.card ≤ (zeros j).length :=
+  ⟨h.mem_normalForm_iff three, h.meaning_normalForm three, fun k j g hg =>
+    Core.Sources.card_le_of_minimal_meetsAll _ g ((h.mem_normalForm_iff three k j g).1 hg)⟩
+
+/-- `core:thm:quantified-recognition` on normal forms: a prenex formula is true exactly
+when some core term has the prime guards of its operation, and these guards have at
+most four postings each. -/
+theorem quantified_normal_form {Role : Type u} [Fintype Role] (three : Fin 3 ↪ Role)
+    (F : Bichain.Quantified.Formula) (hwf : F.WF) (α : ℕ → Bool) :
+    (Bichain.Quantified.sat F F.n 0 α ↔
+      ∃ t : Term Role (Bichain.Quantified.Input F), t.IsCore ∧
+        Core.Sources.normalForm three (fun v => t.eval v) =
+          Core.Sources.normalForm three (Bichain.Quantified.operation three F α)) ∧
+    ∀ k j (g : Core.Sources.Guard k j),
+      g ∈ Core.Sources.normalForm three (Bichain.Quantified.operation three F α) k j →
+        g.card ≤ 4 :=
+  ⟨Bichain.Quantified.sat_iff_normalForm three F α hwf,
+    Bichain.Quantified.card_prime_guard_le three F α⟩
+
 /-- `core:thm:bichain-fiber`: existence in the Boolean projection fiber. -/
 theorem bichain_projection_fiber {Var : Type v} (t : Bichain.Term (Option Var))
     (ht : t.IsPure) :
