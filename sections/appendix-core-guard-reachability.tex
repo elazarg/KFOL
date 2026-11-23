@@ -2877,6 +2877,57 @@ Take the unions only at completed states.
 The number of states and transitions gives the
 stated bound, without enumerating the spines.
 
+\paragraph{Shared repairs directly from canonical primes.}
+A repair need not visit the minimal losses individually.
+At a head, process its observer facets in order.
+On each facet choose one canonical prime and process
+its literals in order, appending and repairing their
+inputs just as for a chosen posting above. An empty
+prime finishes that facet without an attachment.
+A facet without primes has no legal choice.
+
+A completed repair still enforces every original
+loss at its head: choose a facet seeing the loss,
+and the selected prime there hits it. At that
+posting's attachment the source is absorbed.
+The last occurrence argument protects the other
+heads introduced during nested repairs. Conversely
+the acyclic availability formula supplies on each
+facet a prime whose literals all disagree at
+available controls, so a feasible mark can choose
+only disagreeing attachments in the entire repair.
+Thus this prime-based schedule has the same greatest
+minorant as the explicit-row schedule.
+
+For a head with at most one loss, use the earlier
+single-row repair instead. Its row can be recovered
+by scanning the visible facets: a list of singleton
+primes specifies their union as the unique loss,
+an empty prime gives no loss on the facet, and
+an absent list gives an empty loss. Compare the
+distinct proper rows thus recovered. If a facet
+contains a prime of width at least two, the head
+cannot have only one loss. Consequently this choice
+of repair mode requires no general loss enumeration.
+
+At a multiply headed input the pending frame now
+stores a facet, a chosen prime and its next literal,
+or just the next facet if no prime is chosen yet.
+If $L_j$ is the number of such positions plus one
+for absence, the stack bound is $\prod_{j:m_j>1}L_j$.
+The state graph is still acyclic: a step advances
+in the head's facet and literal schedule before
+inserting a lower-priority repair. The entire
+construction takes this product times a polynomial
+in the prime-list input. In particular, for a fixed
+number of multiply headed inputs it gives polynomial
+core synthesis directly from primes, even if those
+heads have exponentially many minimal losses.
+More generally the product is needed only along
+chains of simultaneously suspended heads; summing
+the products of frame counts over such chains
+bounds the state count as well.
+
 Acyclicity of the disagreeing arrows at a probe does
 not suffice for projection deletion. Take three heads
 $h,x,z$, with respective sole losses
