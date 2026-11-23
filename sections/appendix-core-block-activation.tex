@@ -9092,12 +9092,18 @@ This gives the same bound with $c$ replaced by the
 sum of these support sizes, or by its upper bound
 from the original component sizes.
 
-For an injective local budget, all the monochromatic
-activation comparisons at a query share one residual
-budget. Let $D$ be the greatest local coefficient
-and let $p$ be its query. Run singleton-tail
-deletion on the old losses with initial seeds $p_r$
-at each owner and keep the terminal budget $S_p$.
+All monochromatic activation comparisons at a query
+can use the same safe-fold residual. Let $D$ be the
+greatest local coefficient and let $p$ be its query.
+Saturate the old losses by safe folds, using the Horn
+closures seeded by $p_r$ at each owner, and minimize
+the terminal rows at each head to obtain $S_p$.
+Suppose the rows of $S_p$ are injective. The original
+budget may have repeated postings at an owner.
+At the query the marked inputs are exactly the inputs
+with no head in $S_p$: their projections lift by the
+recorded folds, and a remaining head admits neither a
+safe fold nor a repeated-block branch.
 For any owner $r$ and any coalition $A$, the pure
 $r$-posting of $A$ is forbidden by the principal
 exactly when the signed test
@@ -9206,8 +9212,9 @@ redundancies between different owners and singletons.
 
 These graphs give an obstruction size independent
 of the palette. At a fixed query, suppose each
-component's minimal activated internal losses are
-injective. In each terminal budget $S_p$ on a
+component's minimal activated internal losses that
+remain after safe-fold saturation are injective.
+In each terminal budget $S_p$ on a
 component $C$, keep the reachability scaffold of
 \cref{core:cor:input-guard-cuts}: one row per head
 and the rows needed to preserve all reachable
@@ -9244,7 +9251,7 @@ selected rows against the lists and run the
 explicit injective component test on them.
 This is sound because a witness for the full
 budget would fit the selected rows. It is
-complete under minimized activated injectivity,
+complete under injectivity of the minimized residuals,
 without bounding the number of projected rows.
 
 At small palettes a second choice of certificate
@@ -9277,8 +9284,8 @@ activation principals needed at the query have
 binary exclusions. Here this means that a proper
 local coloring is admitted exactly when it avoids
 some specified forbidden singleton postings and
-pairs of postings. Assume again that the minimal
-activated internal losses are injective.
+pairs of postings. Assume that the minimal internal
+rows remaining after safe-fold saturation are injective.
 
 Represent every earlier principal by its unit and
 binary negative clauses. To search for an activated
@@ -9293,8 +9300,15 @@ original minimal loss: all exterior clauses
 forbid postings or pairs and hence hold on
 subsets, and a pin survives by privacy. Thus the
 searches recover exactly the needed heads, seeds
-and edges. They apply to the minimized budget by
-the same redundant-edge argument.
+and edges. First saturate by safe folds. Each Horn
+closure step asks for a row with its entire tail at
+one owner in the reached set, which adds only unit
+restrictions. In the residual ground the same
+searches recover the graphs of the minimized
+budget up to edges entering empty-tail seeds.
+Such edges affect neither the marked bits nor
+the ancestor formula, which discards every target
+reachable from an empty-tail seed.
 
 For the current component, compute the principal's
 forbidden blocks by the residual ancestor formula.
@@ -9325,10 +9339,11 @@ adds unit restrictions. Hence the same renaming
 works for each scan, which can use Horn forward
 chaining.
 
-When the minimal activated internal budgets
-are injective, these searches compute the
-residual graphs and the exact ancestor clauses
-to pass to the next component. This gives a
+Use these scans for safe-fold saturation and
+residual graph construction as in the binary
+sweep. If the minimal residual rows are injective,
+the ancestor formula gives the exact clauses for
+the next component. This gives a
 checkable satisfiability condition at each
 stage, even when some of the ancestor blocks
 are large. More generally, if a supplied set
