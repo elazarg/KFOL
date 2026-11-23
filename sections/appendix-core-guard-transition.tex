@@ -262,6 +262,76 @@ restrictions: the union of the remaining required
 sets is an allowed comparison whenever no such
 pair occurs.
 
+\paragraph{Singleton primes at the uncolored query.}
+With singleton prime lists, ordinary reset
+obstruction detection at the uncolored query
+takes polynomial time, even with cycles.
+For each observer $r$ and head $j$, use its
+unique required posting set $T_{r,j}$ if
+the head can lose. If the union of these sets
+for $j\in A$ is legal, it is the smallest
+comparison for $r:A$. It suffices to use
+that comparison, since the candidates in any
+other one are supersets of its tails and the
+absent families are downward closed. If the
+union is illegal there is no comparison.
+
+Thus the possible successor at owner $s$ is
+obtained by taking the union, over $j\in A$,
+of the $s$-blocks of $T_{r,j}$. Use this
+operation also on illegal coalitions, ignoring
+unavailable required sets there for purposes
+of the search. An ordinary test is excluded
+exactly when no sequence of these transitions
+reaches an illegal coalition. The empty
+coalition causes no problem: all its future
+images are empty and legal. At the uncolored
+query these are the only tests already
+excluded by the query block. If an extended
+path reaches an illegal coalition, stop at
+its first such coalition. Conversely the
+family reachable without any illegal
+coalition is closed under the smallest
+comparisons.
+
+Illegality is witnessed by one or two heads,
+by the conflict-graph criterion. Search the
+product graph with vertices $(r,j,k)$,
+allowing $j=k$ for a single-head conflict.
+There is an edge to $(s,u,v)$ when $u$ is
+in the $s$-block of $T_{r,j}$ and $v$ in
+that of $T_{r,k}$. Start with all ordered
+pairs of heads in the tested coalition.
+Following both entries with the same owner
+sequence is exactly membership of the pair
+in the corresponding union image. Hence
+ordinary exclusion is a polynomial
+reachability computation. There are at
+most $K$ minimal losses at the marked
+head, one per facet, so the seed checks
+also take polynomial time.
+
+This remains a partial obstruction rule.
+For instance put a loss $z{:}b$ at $x$,
+a loss $y{:}a$ at $z$, and a loss
+$(x{:}b,z{:}b)$ at $y$, with $a\ne b$.
+Query $x$ at the empty coloring. The seed
+test $b:\{z\}$ leads to $a:\{y\}$ and then
+to $b:\{x,z\}$, which has no comparison
+because the $x$-loss is invisible at $b$.
+The ordinary test therefore gives no
+obstruction. Yet every bounded word loses
+$a:\{y\}$ and $b:\{z\}$ by the row
+implications at $y$ and $z$, respectively.
+It also loses $b:\{x,z\}$: otherwise marked
+profile transfer with losing coalition
+$\{z\}$ would force the mark in the
+$x$-loss. Thus no bounded word can absorb
+on any row. Shortest-word descent would
+reach a projection, and every projection
+violates its row. All these loss lists
+have singleton primes on each facet.
+
 At width two, the entire comparison conflict
 predicate on a fixed ground is a reachability
 test in a polynomial-size labelled graph.
