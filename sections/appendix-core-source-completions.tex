@@ -826,27 +826,29 @@ the internal left vertices of each path. Every port
 has at most one potential neighbor at each owner.
 
 Represent a left vertex of owner $r$ by an $r$-cycle
-through its potential ports. Interleave a private input
-between successive ports and place each cycle predecessor
-as an $r$-posting in its successor's row. Thus all
-cycle postings in one row have different owners and
-different inputs. Use the fourth owner $c$ as observer.
-A separate chain of tester heads, starting at the query
-head, posts its next tester at $a$ and one cycle input
-at $c$ per row. Forbid the next-tester postings, so
-the Horn closure forces the whole chain and all cycle
-inputs. It also forbids private inputs at their cycle
-owners. For each variable edge, exclude its port at
-the corresponding owner when the edge is absent.
-Leave the fixed edges allowed. All rows are proper:
-cycle rows omit $c$, and tester rows use at most two
-owners.
+through its potential ports, using the predecessor at
+$r$ in the unique row of each port. The $a$-predecessor
+lies in a different path (take $m\ge2$), and the possible
+$b,d$-predecessors are distinct neighbors in the port's
+own path. Thus each row is consistent and injective.
+Use the fourth owner $c$ as observer.
 
-The tester chain is acyclic at each owner and has no
-edge entering a cycle. At the observer it reaches the
-testers from the cycle inputs, whose $c$-tails are empty.
-Each left vertex's cycle therefore needs exactly one
-allowed seed on a port. The required distinct seeds
+Start at the queried head of a separate chain of
+testers, each posting its next tester at $c$.
+For each port, give two of the testers an additional
+posting of that port, one at $a$ and one at $b$.
+All testers are forced by their $c$-postings, and
+each port is forced by the conflict of its two testers,
+independently of the guard. The tester rows supply
+only outgoing edges from the port cycles at $a,b$,
+and the $c$-chain is reached from its empty-tail end.
+Every row remains proper.
+
+Exclude a port at $a$ exactly when its variable edge
+is absent. These are the only guard exclusions: the
+$b,d$-edges of the port paths are fixed and allowed.
+Each left vertex's cycle needs an allowed port seed.
+The required distinct seeds
 are precisely a perfect matching. The queried guard
 is sufficient exactly when perfect matching fails.
 The budget has polynomial size and singleton primes.
@@ -854,10 +856,10 @@ A monotone circuit for sufficiency on this guard slice
 would dualize to one of the same size for perfect
 matching, by swapping conjunction and disjunction and
 complementing the constants, with edge presence as input.
-The logical permanent lower bound
-\cite{Razborov1985Permanent} therefore gives a
-superpolynomial monotone size lower bound at fixed
-palette on these cyclic guard sufficiency functions.
+Thus the monotone size lower bound for bipartite
+perfect matching gives size at least $2^{m^{1/3-o(1)}}$
+on these single-owner guard exclusions
+\cite[Theorem~1]{CavalarEtAl2025Matching}.
 
 The same test extends to a fixed choice of rows at all
 multiply headed inputs. Guess a subset of the rows at
