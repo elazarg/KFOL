@@ -13216,10 +13216,10 @@ other owners. Thus the sharing separation
 holds for budgets of loss size and prime
 width at most two.
 
-Without a bound on loss size, even width-two
-canonical lists can give depth-one envelopes
-requiring superpolynomial shared core circuits.
-Use a fixed CNF whose variables include edge
+Even logarithmic loss size and an acyclic posting
+graph can give depth-one envelopes requiring
+superpolynomial shared core circuits from width-two
+lists. Use a fixed CNF whose variables include edge
 variables $E_{uv}$ for a graph on $m$ vertices
 and choices $X_{j,u}$ for a vertex $u$ in each
 of $s$ clique positions $j$. Require one choice
@@ -13229,26 +13229,38 @@ $\neg X_{j,u}\lor\neg X_{\ell,v}\lor E_{uv}$
 for distinct vertices. If an edge variable may
 be true only when its edge is present, these
 clauses are satisfiable exactly when the graph
-has an $s$-clique.
+has an $s$-clique. Split long disjunctions into
+clauses of size at most three using a chain of
+fresh existential variables.
 
 For each Boolean variable $x$ use literal heads
-$P_x,N_x$. Use retained controls $c_{xy}$ for
-distinct variables and let $C$ be their set.
+$P_x,N_x$. Give the variables distinct binary
+identifiers of length $L=O(\log m)$. Use two
+retained controls $c_{j,0},c_{j,1}$ per bit
+position and let $C$ be their set. Let $C_x^+$
+contain the controls for the bits of $x$, and
+$C_x^-$ the controls for their complements.
+Then $C_x^+\cap C_y^-\ne\varnothing$ exactly
+when $x\ne y$.
+
 A binary tree of heads has one leaf per clause
 and root $i$. Each internal head has an $r$-loss
-given by a singleton posting of each child,
-forcing every tree head into the support of a
-bounded witness at $i$. Write $D$ for the
-nonroot tree heads. At each clause leaf put
-one $r$-loss on $C$ and its literal heads.
-At $P_x$ put an $r$-loss on
-$\{c_{xy}:y\ne x\}\cup\{z_x\}$, using a fresh
-retained control $z_x$. At $N_y$ put a $t$-loss
-on $\{c_{xy}:x\ne y\}\cup D$, with $t\ne r$.
-All losses are pure. At each head they consist
-of one row or at most two singleton rows, so
-the complete canonical prime lists have
-polynomial total length and width at most two.
+on $C$ together with one child, for each child.
+At each clause leaf put one $r$-loss on $C$
+and its literal heads. At $P_x$ put an $r$-loss
+on $C_x^+\cup\{z_x\}$, using a fresh retained
+control $z_x$. At $N_y$ put a $t$-loss on
+$C_y^-$, with $t\ne r$. All dependencies point
+from tree heads toward their children or literal
+heads, or from those heads to retained inputs.
+Every row has size $O(\log m)$. The primes
+at an internal head on a facet seeing $r$
+are the singleton exclusions at controls in
+$C$ and the pair excluding its two children.
+At every other head the sole row gives
+singleton primes on the facets seeing its
+owner. Thus the complete canonical lists
+have polynomial total length and width two.
 
 On the probe for $i$, post all of $C$ at $r$.
 Also post $z_x$ there precisely when $x$ is an
@@ -13256,16 +13268,17 @@ edge variable for an absent edge. Choose an
 observer different from $r$. All retained
 controls can be added to a prospective
 completion's support without adding loss
-requirements. A clause generator escapes
-the probe exactly when some literal head of
-that clause is selected. A positive-head
-generator escapes exactly when its $z_x$ is
-unposted. The negative-head generators and
-the tree generators always escape. Each
-negative-head generator meets every tree
-singleton in $D$ and every clause generator
-in $C$. It meets a positive-head generator
-exactly when their variables are distinct.
+requirements. Each tree generator escapes
+the probe only if its child is in the support,
+so the witness at $i$ must retain all tree
+heads. A clause generator escapes exactly
+when some literal head of that clause is
+selected. A positive-head generator escapes
+exactly when its $z_x$ is unposted. The
+negative-head generators always escape.
+They meet all tree and clause generators
+in $C$, and meet a positive-head generator
+exactly when the variables are distinct.
 Thus the depth-one witness exists exactly
 when the selected literals extend to a satisfying
 assignment with true edge variables allowed
