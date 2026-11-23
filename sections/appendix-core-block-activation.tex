@@ -9186,6 +9186,24 @@ affect any ancestor set counted in this formula,
 because its target is unreachable from those
 seeds.
 
+Equivalently, for each foreign owner one only needs
+its source strongly connected components containing
+query seeds and no empty-tail seeds. Indeed every
+ancestor of a target $v$ in the formula is reached
+in the old graph, since the terminal budget has
+every tail reached. If the ancestor graph has a
+source component, it is also a source component of
+the full graph: any predecessor would itself be
+an ancestor. It must contain a query seed, as it
+has no incoming arc and no empty-tail seed reaches
+$v$. Its own ancestor block is just the component,
+and is contained in $L_s(v)$. Conversely every
+source component containing a query seed but no
+empty-tail seed is itself one of the displayed
+ancestor blocks. Thus these source components
+generate the same forbidden sets before removing
+redundancies between different owners and singletons.
+
 These graphs give an obstruction size independent
 of the palette. At a fixed query, suppose each
 component's minimal activated internal losses are
@@ -9228,6 +9246,30 @@ This is sound because a witness for the full
 budget would fit the selected rows. It is
 complete under minimized activated injectivity,
 without bounding the number of projected rows.
+
+At small palettes a second choice of certificate
+is linear in the component sizes. For each owner
+used by the query on $C$, keep in its graph an
+inward and an outward spanning tree of every
+strongly connected component, one entering arc
+for every nonsource component, and one seed row
+for each source component containing an empty-tail
+seed. These rows preserve the strongly connected
+partition, the source status and the presence of
+empty-tail seeds in source components. If there
+are $d$ components of which $a$ are sources, the
+cost is at most $2(|C|-d)+(d-a)+a\le2|C|$ rows
+at that owner. Together with the reachability
+scaffold, this preserves the source-component
+formula and the terminal heads. Writing $k_C$
+for the number of owners used by the query on
+$C$, the certificate can therefore be bounded by
+\[
+ \sum_C \bigl(|C|\min(K,|C|)
+                 +\min\{|C|^2,2|C|k_C\}\bigr).
+\]
+In particular it is linear in the total number of
+inputs for fixed $K$.
 
 At input prime width two, a different symbolic
 sweep avoids the support-size exponent when the
