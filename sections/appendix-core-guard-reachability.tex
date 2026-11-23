@@ -2590,6 +2590,42 @@ scope $T$ above. The prime-guard product can
 therefore use one factor per boundary of an
 actual disagreement reach.
 
+These distinct boundaries can be enumerated with
+polynomial delay, also when restricted to probes
+enabling a guard. Maintain an internally reachable
+set $T$ and a set of inputs committed to remain
+outside it, each with its boundary label fixed.
+Start with the head alone and no exterior
+commitments. Run the least closure from $T$,
+using the guard menus and the fixed labels at
+committed inputs. Reject the branch if closure
+adjoins a committed input. Otherwise every
+new input is reached from $T$ by an internal
+path, and the resulting set is admissible
+with its boundary respecting all commitments.
+In particular, it already extends the current
+decisions to some valid scope.
+
+Pick an uncommitted exterior input receiving
+an arrow from the resulting set. Either add it
+to $T$ or commit it to remain exterior with
+the unique label of its incoming arrows from
+$T$. That label is unique and allowed by
+stability. Every reachable scope extending the
+current decisions follows exactly one branch:
+the inclusion branch preserves internal paths,
+and in the exterior branch the arrow from
+$T$ forces the chosen boundary posting. If no
+such input remains, output the boundary. No
+larger internally reachable scope can follow
+these decisions, since a path to a new input
+would first have to leave $T$ at a committed
+input. Each nonrejected node has a valid
+completion, each branch settles at least one
+new input, and closure takes polynomial time.
+Depth-first traversal therefore enumerates the
+distinct boundaries with polynomial delay.
+
 Using only the proper scopes detects exactly
 the failing guards with a counterprobe of
 proper disagreement reach. A failed factor
