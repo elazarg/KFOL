@@ -5237,6 +5237,97 @@ The guarantee is for canonical observer-agreeing lists;
 the reduction may have terminal candidates with empty
 outputs.
 
+Checking the nonempty-output promise is already
+coNP-complete for three owners and width-one canonical
+primes. An empty output has an atomic witness: shrink
+every input menu to an atom and use monotonicity of
+source reconstruction. Hence nonemptiness is in coNP.
+
+For hardness use 3-SAT with clauses of length at most
+three, with no unit clauses, in which every three-literal
+clause has mixed signs. This variant follows from ordinary 3-SAT by
+replacing an all-positive clause $(p\lor q\lor r)$ by
+$(p\lor q\lor\neg z)\land(z\lor r)$ with a fresh $z$,
+and dually for an all-negative clause. Replace a unit
+literal $\ell$ by $(\ell\lor z)\land(\ell\lor
+eg z)$
+with a fresh $z$. Remove duplicate clauses, and discard unused variables.
+Conjoin a positive binary clause on two fresh variables,
+which preserves satisfiability. Take three
+anchor inputs $u_a,u_b,u_c$. The sole loss at $u_a$
+posts $u_b:b$, the sole loss at $u_b$ posts $u_c:c$,
+and the sole loss at $u_c$ posts $u_a:a$. On an atomic
+valuation with empty output all three anchors must
+therefore have their designated colors. Take one
+input per variable, with sole loss $u_c:c$. These
+inputs must then have color $a$ or $b$, representing
+false and true.
+
+For a clause use one new head. Give each literal a
+distinct observer $k$ different from the color of
+its satisfying assignment. Such an assignment of
+observers exists: each literal offers two choices,
+and one can assign observer $c$ to a literal while
+leaving distinct choices for the remaining literals.
+In a mixed triple give $c$ to a literal of the
+majority sign. For the literal assigned
+$k$, add a loss at the clause head posting both
+anchors of colors other than $k$, and the variable
+at its satisfying color. This loss is visible only
+on facet $k$, so there is at most one minimal
+loss per head and facet throughout the construction.
+The canonical primes are singleton exclusions for
+the postings of that loss, or the empty guard on
+facets with no loss. Observer agreement holds
+because each row is used on every facet that sees it.
+
+An empty atomic output now gives a satisfying
+assignment: each clause head must be colored at
+an observer whose assigned literal is satisfied.
+Conversely color the anchors and variables as
+specified by a satisfying assignment, and color
+each clause head at the observer of one satisfied
+literal. Every source loses its own color, giving
+an empty output. The instances have no proper exact block with a
+core inner operation. To see this, use the forcing
+rules on any proposed block containing a pair.
+Two anchors force the third by comparing their
+singleton losses, using the second inside rule.
+A clause head and an anchor force a second anchor
+by the first inside rule: a clause has at least two
+different observing colors, so its rows collectively
+post all three anchors. Two distinct clause heads
+differ on some facet, where a row of one supplies
+the other. Neither row posts any clause head, and
+different rows on the same facet have the same size.
+The second rule therefore forces two anchors.
+A clause head and a variable force two anchors
+using the clause's row on facet $c$. If that row
+posts the variable use the first rule. Otherwise
+the variable supplies its mark on the row, since
+its sole loss posts $u_c:c$, so use the second rule.
+
+For two variables, the pair residual is union.
+A clause row for one variable posts exactly one
+of the pair, so it is ambiguous there. The outside
+forcing rule then forces that clause head into
+any exact block with core inner operation containing
+the pair. For a variable paired with $u_a$ or $u_c$,
+their singleton losses differ, and the second
+inside rule forces another anchor. For a variable
+paired with $u_b$ the residual is union. Use the extra positive
+clause on two fresh variables with observers $a,c$.
+Its rows both post $u_b:b$; at least one of them
+uses a variable different from the variable in
+the pair. This forces the clause head as before.
+
+Once a block contains all anchors, every clause
+head is forced by the rule for two differently
+colored postings in an outside loss. The first
+inside rule then adds each variable because it
+occurs in a clause. Thus any pair forces the full
+set, proving the claimed irreducibility.
+
 For a core operation, the least blocks containing pairs
 give a compact description of all exact blocks. Denote the
 least block containing $x,y$ by $B(x,y)$. A nonempty
