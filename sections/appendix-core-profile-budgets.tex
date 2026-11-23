@@ -155,6 +155,67 @@ by the number of explicit constraints even when the
 number of inputs or owners varies. A succinct prime
 budget may describe exponentially many such rows.
 
+\paragraph{Fixed palette and few explicit bounds.}
+For fixed $K$ and $m$, feasibility under $m$ explicit
+output bounds is polynomial-time even with arbitrarily
+many explicit signed profile tests and positive winner
+requirements. The depth bound alone depends on the
+number of requests. To avoid that dependence, use the
+profile relation of the bounded terms, which is closed
+under the mixed owner gates.
+
+First check that the bounded relation is nonempty.
+At each owner, keep the listed coalitions and the full
+coalition. For every pair from this list determine
+whether the first test implies the second in all bounded
+terms, by testing one positive and one negative sign.
+Close the listed positives and the full coalition under
+these implications. Reject if the closure meets a listed
+negative. Also test all choices of one closed positive
+coalition per owner jointly against the bounds. Each of
+these tests uses at most $K$ signs. If they all succeed,
+the profile-relation theorem
+(\cref{core:thm:profile-relations}) gives a bounded
+term with the requested signs: on the listed coordinates,
+the closure satisfies all forced bits, same-owner
+implications and rainbow exclusions. Testing one test
+per owner suffices because the full coalitions pad any
+smaller selection.
+
+Every subquery so far uses at most $K$ signs and
+$m$ rows, hence has a witness of constant depth.
+Input choices at the leaves and gate labels can
+therefore be enumerated in polynomial time. To check
+positive winners, use the greatest bounded word under
+the signed requests, described below. At a requested
+valuation, test whether any demanded owner's singleton
+is forced there by the positive requests. For each such
+owner, rerun the signed procedure with the original
+positives and that one singleton forbidden. If a singleton
+is forced, it determines the greatest word's value.
+Otherwise its value is the greatest word under the
+bounds alone, and the requested winner there can be
+tested with a single positive winner requirement and
+no signs. All positive requests can be checked this
+way, because their witnesses lie below the same greatest
+word.
+
+The palette restriction matters even without output
+bounds. With an unbounded palette, positive profile
+feasibility alone is coNP-complete. A certificate of
+failure is a rainbow selection with empty intersection,
+by the profile classification
+(\cref{core:thm:profiles}). For hardness, use one owner
+per variable of a CNF formula and one input per clause.
+At each owner request two coalitions, each consisting
+of the clauses not satisfied by one of that variable's
+two assignments alone. A rainbow selection over every
+variable has empty intersection exactly when the
+selected assignment satisfies all clauses. Partial
+selections can be padded by choosing values for the
+remaining variables. Thus all requested profiles are
+jointly feasible exactly when the CNF is unsatisfiable.
+
 \paragraph{Greatest bounded operation under profile demands.}
 Fix any source bound admitting a nonempty bounded
 word, and let $G$ be its greatest core minorant.
