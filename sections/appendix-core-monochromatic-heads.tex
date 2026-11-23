@@ -557,27 +557,56 @@ $A$. Conversely a word on $A$ automatically
 wins the $k$-test on $A$ and ignores all outside
 postings and heads.
 
-If also every foreign tail in those rows is
-disjoint from $A$, the projected budget is pure
-at $k$. Let $c$ be the Horn closure on $A$ with
-a rule $t_k\to j$ for each row at $j\in A$.
-The signed demand is feasible exactly when
+Containment can be checked after removing redundant
+projected rows. It suffices that, for every row
+headed at $j\in A$, some row at $j$ has its $k$-tail
+contained in $A$ and projects to a subpattern of
+the first row. Prune using just those rows with
+contained $k$-tails. The pruned word uses only $A$,
+so omission on their projections enforces the other
+projected rows by antitonicity. Conversely any word
+on $A$ satisfying the projected budget still fits the
+full budget. From canonical primes, a counterexample
+to this condition gives one loss row. Testing for a
+contained-tail representative is a ground search:
+allow its projected postings, forbid outside
+$k$-postings and leave the other outside postings
+free. A loss in this ground exists exactly when it
+hits the primes of some observer facet.
+
+Two Horn closures give bounds even without the
+representative condition. Both are on $A$ and
+only use rows headed in $A$. Let $c_-$ use
+$t_k\cap A\to j$ from every row at $j$. Let $c_+$
+use just those rows whose $k$-tail lies in $A$ and
+whose foreign tails avoid $A$. Then
 \[
-                     c(A\cap B)\ne A.
+ \begin{array}{ll}
+ c_-(A\cap B)\ne A &\Longrightarrow\text{the signed test succeeds},\\
+ c_+(A\cap B)= A &\Longrightarrow\text{the signed test fails}.
+ \end{array}
 \]
-Indeed the greatest bounded operation is the
-native trace of
-\cref{core:thm:conditional-component-capture}.
-Its source mark at an input outside $B$ survives
-exactly when that input lies outside the closure.
-Such a mark certifies the losing profile. If
-every input is in the closure, no bounded word
-can supply a foreign winner on that pure probe.
-This also handles a zero trace. On canonical
-primes the containment of the tails is checked
-by their union of postings, and the Horn steps
-are the projected row searches of
-\emph{Unions of one-owner traces from prime guards}.
+For the first implication the native trace for
+$c_-$ respects every projected loss: its source
+bits depend only on the $k$-block, so the projected
+$k$-tails suffice. A vertex outside the closure
+supplies a mark at the pure $k$-coloring of
+$A\cap B$, certifying the losing profile. For
+the second implication prune any witness using
+just the selected rows for $c_+$. The resulting
+word on $A$ is bounded by this pure budget and
+would lose the same profile. Its greatest bounded
+operation is the native trace of
+\cref{core:thm:conditional-component-capture},
+which has no such mark if the closure is full.
+This argument includes a zero trace. When all rows
+headed in $A$ meet the two restrictions, the
+closures agree and the test is exact. More generally
+they only need to give the same answer at $A\cap B$.
+On prime lists both Horn steps are ground searches
+as in \emph{Unions of one-owner traces from prime
+guards}; the extra restrictions for $c_+$ just
+forbid particular postings.
 
 With several demands per owner, apply the support
 reduction to each tuple selecting one coalition per
