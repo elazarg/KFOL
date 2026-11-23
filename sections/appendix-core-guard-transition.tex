@@ -254,6 +254,55 @@ would require $x{:}c$. This leaves a superset
 of $c:\{z\}$ again. The gap persists even after
 iterating the seed replacements.
 
+\paragraph{Propagating omissions between valuations.}
+The surviving seed example can be detected directly
+by relating several valuations of the whole term.
+For every menu valuation $v$, initialize an upper
+bound $U(v)$ from the source guards: keep $k$ if
+some input containing $k$ has no required loss
+at the passive $k$-pattern of $v$. Iterate the
+following two deletions.
+\begin{enumerate}
+\item Replace $U(v)$ by the union of the inputs
+$v_j$ contained in $U(v)$.
+\item If $k\notin U(v)$, intersect the bounds of
+$v$ and $w$ whenever $w$ agrees with $v$ on all
+inputs omitting $k$, and assign the intersection
+to both.
+\end{enumerate}
+The first rule is whole-input provenance
+(\cref{core:prop:whole-inputs}). The second is
+omission independence (\cref{core:prop:omission}).
+The bounds continue to contain the outputs of all
+bounded terms. An empty bound or the deletion of
+a requested winner therefore refutes feasibility.
+
+More precisely, at stabilization, if all entries
+are nonempty, the entire table $v\mapsto U(v)$ is
+the greatest table below the guard bounds obeying
+these two laws. Every table obeying the laws is
+preserved by the same deletion argument, and the
+stable table itself obeys both laws by the two
+fixed-point conditions. Thus the procedure decides
+compatibility with those laws and any requested
+positive entries exactly. At fixed palette there
+are single exponentially many menu valuations,
+pairs of valuations and possible deletions. Initial
+bounds can be read from the original primes.
+
+For the earlier budget at $x,y,z$, write atomic
+valuations as triples of owners. At $(c,a,b)$ the
+losses at $x$ and $z$ leave only $a$. Omitting $b$
+forces the same value at $(c,a,c)$. Now omitting
+$c$ there forces that value also at $(a,a,c)$.
+On the other hand at $(a,b,c)$ the losses at $x$
+and $y$ leave only $c$. Omitting $b$ there forces
+$c$ at $(a,a,c)$ as well, so its bound becomes
+empty. This argument uses the new omissions
+created by the intersections, which can apply
+even when the reset and seed refinements leave
+comparison-free alternatives.
+
 \paragraph{Computing the excluded coalitions by comparisons.}
 A single comparison determines all its admissible
 antecedents. For an observer-$r$ coloring $t$,
