@@ -3024,6 +3024,62 @@ unavailable head. The earlier lower bound
 with two injective rows per head already
 applies to this larger acyclic class.
 
+\paragraph{One succinct exceptional head is hard for guard checking.}
+With canonical primes in place of explicit losses,
+guard implication is coNP-complete even for acyclic
+width-two budgets with only one multiply headed input.
+The queried guard is empty. The other rows are
+injective, and all repetitions are confined to one
+owner at the exceptional head. Membership follows
+by guessing a probe and applying the acyclic
+availability circuit.
+
+For hardness, use one signal input per literal of a
+CNF formula, and choose distinct owners $a,b,c$.
+Use the monotone circuit that activates its output
+when every literal of some clause is falsified:
+a clause's conjunction reads the opposite literal
+signals, and the output is their disjunction. Embed
+this circuit using the OR, AND and relay rules of
+\emph{Monotone computation in guard exclusions}.
+The tester chain permanently activates the
+$b$-postings at the relays. Use no optional
+exclusions and remove the input testers; the
+exceptional head now supplies the input signals.
+Every circuit head other than the output has a
+single row, and the output has no row.
+
+At the exceptional query head, on foreign facets,
+give one binary prime per variable consisting of
+the $c$-postings of its two literal signals, and
+one singleton prime for the first tester at $c$.
+The facet omitting $c$ is unconditional. These
+are canonical pure-owner primes: a minimal loss
+picks one literal signal per variable and the
+first tester, all at $c$. The graph stays acyclic
+because this head reads only the initial testers
+and signals of the circuit construction.
+
+At a counterexample to the empty guard on the
+$c$-facet, a blocking set chooses one of these
+rows and contains the query head. Every posting
+in its chosen row must be internal because the
+probe cannot post $c$. Thus the tester and the
+chosen literal signals activate in the Horn
+test for that choice of row. The empty guard
+allows the $a,b$-postings at all relays and
+gate targets, so the conflict rules compute
+the indicated circuit. The least solution
+reaches an unheaded input exactly when the
+chosen assignment falsifies a clause. Hence
+some chosen row yields a blocker on an enabled
+probe exactly when the CNF is satisfiable.
+The guard is sufficient precisely for
+unsatisfiable formulas. This uses only a
+polynomial-size prime list at the exceptional
+head, where the explicit row list has one row
+per assignment.
+
 Acyclicity of the disagreeing arrows at a probe does
 not suffice for projection deletion. Take three heads
 $h,x,z$, with respective sole losses
