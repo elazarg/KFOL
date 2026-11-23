@@ -2877,6 +2877,54 @@ to the singleton $z:r$ when $y$ loses under that
 posting, and the new singleton can then propagate
 to any head captured by $h$.
 
+A saturation by empty and singleton fixings can also
+be run directly on complete canonical prime lists.
+Start with the empty and singleton losses read from
+the lists. At each round close these constraints by
+the singleton graph formula, including deletion of
+predecessors of dead heads. For each empty or singleton
+fixing $q$, let $D(q)$ consist of the unposted inputs
+whose source loses under $q$ in this graph bound.
+Every bounded word is independent of all of $D(q)$
+once $q$ is fixed. Thus at an unposted head $i$, add
+$q$ as a loss whenever some original loss at $i$
+uses only postings of $q$ and postings at inputs
+in $D(q)$.
+
+This test uses no mixed loss enumeration. On each
+original observer facet allow exactly the postings
+of $q$ visible there and all visible postings at
+$D(q)\setminus\{i\}$. The ground contains a minimal
+original loss if and only if it hits every original
+prime, by consensus. To prove soundness, impose $q$
+and set each of the captured inputs to its posting
+in that loss. The function stays the same because
+the cofactor at $q$ ignores those inputs. It is now
+also independent of $i$ by the original loss, so
+the cofactor at $q$ already ignores $i$. The new
+loss follows. The argument can infer a singleton
+at a different input from every posting in the
+original row; for instance a loss fixing $y:s,z:t$
+can be transferred to $v:r$ if both $y$ and $z$ lose
+under $v:r$.
+
+The rules are monotone on the set of inferred
+constraints and terminate after at most
+$K|V|^2+|V|$ strict additions. Scanning all fixings,
+heads and facets at each round is polynomial.
+A newly inferred loss missing from the original
+candidate is an explicit core obstruction. One
+can instead add all inferred losses to the budget
+without changing its greatest minorant. On every
+facet seeing an added singleton loss, adjoin its
+posting to every prime and minimize by inclusion.
+An empty loss replaces the list by the empty
+family. The singleton update is exact because a
+guard must both contain an old prime and exclude
+the new losing posting. Thus this strengthened
+budget still has complete explicit prime lists,
+with no increase in the number of guards.
+
 \paragraph{Substitution through the full palette.}
 For a word, a consistent background need not be proper
 to test whether it blocks every occurrence of an unposted
