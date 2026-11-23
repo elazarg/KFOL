@@ -9984,6 +9984,44 @@ under every owner update and, since all its own
 updates were safe, returns the ordinary
 saturation.
 
+If the disagreement graph has no monochromatic
+cycle, saturation records exactly the postings
+already found by projection deletion. To see this,
+first run projection deletion to stability and
+record every disagreeing posting at an available
+input. If an eligible safe $r$-support could still
+delete a row, some residual row would have an
+$r$-posting in that support. Its input cannot be
+available, since that posting would have deleted
+the row already. Each unavailable member of
+the support has a residual row, and safety gives
+an $r$-arrow from that member to another member.
+Following these arrows stays among unavailable
+members and must find a monochromatic disagreement
+cycle. In particular, on an acyclic disagreement
+graph safe folds add no power to projection
+deletion, even though a bounded witness may still
+use a fold that is not safe on its own, as in the
+paired-loss example above.
+
+The component computation has a single-update
+form when all internal disagreement arrows of a
+component have one label $r$. After the downstream
+components are processed, take the greatest safe
+$r$-support in this component and record it.
+This suffices for owner $r$: the union of that
+support with any subsequently safe $r$-support
+would already have been safe before the update,
+since every newly deleted row has a posting in
+the first support. Updates at any other owner
+can only record disagreeing postings of
+row-free inputs, and these postings delete no
+row within the component. So after the $r$-update,
+record the eligible postings of the remaining
+owners at all row-free inputs and pass these
+records upstream. For a component with no internal
+arrows, only the row-free step is needed.
+
 The saturation state also localizes the query statuses
 that must be kept. Let $D$ be the final recorded set at
 $q$ and let $S_r$ be the greatest safe $r$-support in
