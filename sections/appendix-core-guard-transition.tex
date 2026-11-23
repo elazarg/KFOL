@@ -140,57 +140,66 @@ headed. The reset comparisons alone do not
 see the implication at $z$, which uses the
 same owner's posting in its premise.
 
-\paragraph{Two comparisons for one reset implication.}
-Take distinct owners $a,b,c$. Suppose an ordinary
-comparison for $a:A$ has just one candidate later
-reset, $b:(B\cup C)$, where $B,C$ are disjoint.
-Use a second comparison, for $c:C$, with just
-$B$ posted at $b$ and $A'$ at $a$. Both comparisons
-must satisfy the loss tests of the reset rule.
-Then an occurrence of $a:A$ forces a later reset
-on $b:B$ or $a:A'$. The latter, when forced by
-the argument below, follows a $b:(B\cup C)$
-reset and hence occurs at least two positions
-after the original $a:A$ reset.
+\paragraph{Refining the tails of a reset comparison.}
+A comparison for $a:A$ can be strengthened separately at
+each of its candidate later resets $b:T$. Choose an
+auxiliary coloring $q$ with $q_b\cap A=\varnothing$.
+Require that $T$ be covered by $q_b$ and blocks $q_c$
+at owners in a set $E$ omitting $b$ and leaving at least
+two owners outside $E$. For each $c\in E$,
+require every head of $q_c$ to lose at observer $c$
+on the coloring obtained by erasing $q_c$ from $q$.
+Then replace the candidate $b:T$ by the tests
+\[
+   b:q_b,\qquad
+   s:q_s\quad(s\ne b,\ s\notin E).
+\]
+As usual discard tests whose coalitions are contained
+in the query blocks. The conditions can be checked
+for all antecedents of the original comparison by
+restricting them to those disjoint from $q_b$.
 
-Indeed let $\tau=L(a,A)$ and let $h$ be a
-$b$-helper resetting on $B\cup C$ at a later
-position $\sigma$. Evaluate on the second
-comparison, with $C$ at $c$ and all unposted
-menus omitting $c$. Immediately after position
-$\tau$ the value is not the $b$-atom: the
-$a$-helper there wins on $A$, which is
-disjoint from $B$ by the first comparison.
-The common-source property prevents that
-helper from winning on $B$ at $b$. If the
-incoming value at $\sigma$ is the $b$-atom,
-some sibling has therefore reset at $b$ on
-$B$ after $\tau$.
+To prove the rule, take the last reset on $a:A$ at
+position $\tau$ and suppose the original comparison
+forces the candidate $b:T$ at a later position $\sigma$.
+Evaluate on $q$ with owner atoms on its blocks and
+the complement of $E$ on all unposted inputs.
+Directly after $\tau$ the value cannot be the $b$-atom.
+The helper there cannot win on the disjoint block $q_b$, because
+it wins on $A$ at $a$ and the two winning tests would
+have disjoint possible sources. If the incoming value
+at $\sigma$ is the $b$-atom, a sibling therefore reset
+on $b:q_b$ after $\tau$.
 
-If $h$ omits $c$ on the second comparison,
-\cref{core:prop:omission} lets us replace the
-$C$-inputs by $b$ without affecting it. Its
-winning test on $B\cup C$ makes it the
-$b$-atom after, and hence before, that
-replacement. This again yields a reset
-on $B$ after $\tau$. Otherwise $h$ contains
-$c$. If the incoming value is not the
-$b$-atom, the gate at $\sigma$ transmits $c$.
-The comparison omits $c$ at the output,
-so a later sibling must erase it at $a$
-or $b$. These are the only other owners
-with atoms on that comparison. This
-gives the stated alternatives.
+Otherwise let $h$ be the helper at $\sigma$.
+If it omits every owner in $E$ at $q$, replace those
+blocks successively by the $b$-atom. Each replacement
+preserves the value of $h$ by the omission property
+(\cref{core:prop:omission}). The modified input has
+every member of $T$ at $b$, so monotonicity of the
+singleton winning test makes $h$ the $b$-atom there
+and hence on $q$. This gives the reset on $b:q_b$ at
+$\sigma$. If $h$ contains an owner $c\in E$, the gate
+instead transmits $c$, since its incoming value is
+not the $b$-atom. The output omits every owner in
+$E$ by the auxiliary loss tests. Consider the last
+erasure of an owner in $E$ after $\sigma$. It must
+be a sibling reset at an owner outside $E$: a reset
+at an owner in $E$ would leave that owner to erase
+later. This supplies one of the displayed tests.
 
-The two resulting tests can be used as
-the successor set of a comparison in the
-rank and closed-family tests. The same
-proofs apply, including when one alternative
-is impossible by containment in the query
-block. Verification just checks the two
-colorings and their losses in the original
-primes. Enumerating these pairs still
-takes single exponential time at fixed $K$.
+For each candidate of the original comparison one
+may independently retain it or use such a refinement.
+A present antecedent must have a later reset in the
+union of the resulting alternatives, so the same rank
+and closed-family calculations apply. At fixed palette
+there are at most $K-1$ auxiliary colorings to choose
+per comparison, and enumeration still takes single
+exponential time. The two-comparison rule is the
+special case of one original candidate $b:(B\cup C)$
+and one auxiliary block $q_c=C$, with $q_b=B$
+and only one other posted block. Its refinement
+gives the $b:B$ test and the test on that other block.
 
 \paragraph{Computing the excluded coalitions by comparisons.}
 A single comparison determines all its admissible
@@ -205,13 +214,10 @@ entire downset of $U_r(t)$ at the next stage.
 Include also the downset of $p_r$ among the
 always absent tests. The union of these downsets
 is exactly the complement of the next $W_d$.
-For the two-comparison rule the first coloring
-again determines $U_r(t)$: legality of the second
-comparison and its successor set do not depend on
-which subset of $U_r(t)$ is used. The first
-comparison ensures the required disjointness
-for all those subsets. Thus the same downset
-calculation applies to the augmented rank test.
+With refined tails the first coloring contributes the
+downset of $U_r(t)$ with the auxiliary $b$-blocks removed
+for all chosen refinements. The successor set is fixed
+on that downset.
 
 There is also a direct search for a comparison
 at an individual coalition $A$, with each later
@@ -331,6 +337,34 @@ on any row. Shortest-word descent would
 reach a projection, and every projection
 violates its row. All these loss lists
 have singleton primes on each facet.
+
+A modification separates tail refinement from the
+single-candidate two-comparison rule. Use exactly
+three owners, add a fresh head $d$ with an empty
+loss, and add the posting $d{:}c$ to the loss at $y$,
+where $c$ is the third owner. The query is still
+$x$ at the empty coloring. Under the single-candidate
+rule, $b:\{x,z\}$ enters at rank one because it has
+no comparison. Every comparison for $a:\{y\}$
+has a $b$-tail containing $\{x,z\}$ and a $c$-tail
+containing $d$, so $a:\{y\}$ enters at rank two.
+Every comparison for $b:\{z\}$ has an $a$-tail
+containing $y$. Even in a single-candidate comparison,
+a refinement must keep $y$ in that tail: it cannot
+put $y$ in the auxiliary $c$-block because its
+required loss posts at $c$. Thus $b:\{z\}$ enters
+by rank three, and the single-candidate rule does
+not obstruct its seed.
+
+With tail refinement, compare $a:\{y\}$ using
+$b:\{x,z\}$ and $c:\{d\}$. Refine the former using
+the auxiliary coloring with $x{:}c$ and $z{:}b$.
+Its $c$-loss at $x$ gives the sole replacement
+$b:\{z\}$. In turn $b:\{z\}$ has a comparison
+with sole candidate $a:\{y\}$. The $c$-test on
+$\{d\}$ has an empty comparison, so these three
+tests form a closed excluded family and the seed
+certifies failure.
 
 paragraph{Singleton primes at a monochromatic query.}
 With singleton primes the smallest comparison also suffices
@@ -515,7 +549,7 @@ where $z$ is fresh and has an empty loss.
 Let $A$ be the coalition of all these new
 comparison heads. Each possible comparison
 for $r:A$ has at least two candidate owners,
-so the two-comparison rule does not apply.
+so the single-candidate two-comparison rule does not apply.
 To keep it absent at stage two, its $s$-tail
 must include $q$ and at least one literal
 choice per variable while avoiding all the
@@ -548,13 +582,13 @@ predicates. Whenever this comparison exists,
 its needed postings use only permanently
 absent tests. Thus its first-stage absence
 persists forever. If there is no comparison,
-neither rule can make the test absent.
+there is no tail to refine.
 
 The final comparison at $r:A$ therefore
 certifies permanent absence exactly for
 satisfiable formulas. It still has two
-candidate owners, so the two-comparison
-rule cannot change that conclusion. Add a
+candidate owners, so the single-candidate
+two-comparison rule cannot change that conclusion. Add a
 fresh marked head with sole loss posting
 all of $A$ at $r$. At the uncolored query
 this seed requires $r:A$. If that test is
@@ -1630,7 +1664,8 @@ an empty successor set, and all the included cases
 stay in the family. The seed at a losing start
 therefore certifies failure. At a winning start
 the actual marked witness rules out any sound
-obstruction, giving the reduction.
+obstruction, giving the reduction. The same upper
+and lower bounds apply with general tail refinement.
 
 \paragraph{From one positive to a complete family.}
 Restart choices let an accepting instance supply the unanimous
