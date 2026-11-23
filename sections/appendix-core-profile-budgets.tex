@@ -188,6 +188,61 @@ This yields polynomial space by recursive search,
 or time $(O(K))^{m+\ell}O(1)^d$ times a polynomial
 in the explicitly supplied input using the table.
 
+\paragraph{Constructing the greatest bounded circuit.}
+The residual table also synthesizes a shared circuit
+for the greatest witness at each feasible state.
+Each state is closed under pointwise union: the
+upper bounds, positive winner tests, and either
+sign of a singleton test are all preserved when
+two witnesses are joined. Owned choice is monotone
+in both nonempty menus under inclusion, because
+enlarging a child cannot create the owner's atom
+unless that child was already that atom.
+
+In increasing residual order, start a state with
+the union of all its eligible projections and
+the results of the splits with two proper child
+states, using their greatest circuits. If it has
+no such witnesses, it is infeasible by the
+shortest-witness argument. A split with two copies
+of the current state needs no additional gate:
+its result lies below the union of its children.
+For a split with exactly one copy of the current
+state, let $H$ be the greatest circuit of the
+other child, omitting the split if that child is
+infeasible. At owner $r$ update the current
+circuit $G$ by
+\[
+            G\ \longleftarrow\ G+(G\star_r H).
+\]
+Every update is still a witness and enlarges $G$.
+
+Two sweeps through these updates suffice. At each
+valuation, a first sweep ending at an atom has
+left the initial value unchanged there, so every
+update already fixes it. If it ends at an ambiguous
+value, it stays ambiguous. On such a value each
+update simply adjoins $H$ by union, even when
+$H$ absorbs at the owned gate. The second sweep
+therefore adjoins every remaining contribution.
+The result is closed under all root splits.
+Induction over a witness tree, using monotonicity
+at each gate and the greatest circuits at proper
+child states, shows that it contains every witness.
+This proves greatestness.
+
+Sharing the completed child circuits and the
+current value at each update gives a circuit
+whose size and construction time are bounded by
+the same residual-state and split counts as the
+feasibility table, up to polynomial factors in
+the explicit input. In particular, with only $m$
+packed loss rows, the greatest bounded operation
+has a circuit constructible in single exponential
+time in $m$ at fixed palette. One can evaluate
+the resulting circuit at any original or quotient
+valuation directly.
+
 \paragraph{Packing source losses into explicit bounds.}
 Group explicitly supplied minimal source losses with
 the same observer $k$ and passive posting $t$ into
