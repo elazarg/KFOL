@@ -3188,6 +3188,63 @@ This proves the two tests are complete,
 without requiring a row on a full-palette
 intermediate coloring.
 
+\paragraph{Computing the least proper loss closure.}
+For an acyclic budget the two moves compute the
+greatest minorant by adjoining their consequences.
+Every move is sound under any bounded core word:
+at the result, the substituted controls are
+captured, so restoring their original postings
+does not change the output as a function of the
+head's menu. For several replacements, restore
+the later controls first. Each restoring step
+then still sees its prescribed control loss,
+since a control reads only earlier inputs.
+The restored fixing contains the original row
+and so captures the head as well. This argument
+also shows soundness of a simultaneous move
+replacing any subset of the original postings,
+provided all postings at the chosen observer
+are replaced and the result is consistent.
+In particular intermediate restoring fixings
+need not themselves be proper.
+
+There is a one-pass version of this larger
+move. Process heads in source order, using the
+already completed loss lists at their controls.
+For every original loss at the current head
+and each observer $k$, replace any subset of
+its postings that includes all $k$-postings,
+using any visible completed loss at each
+replaced control. Keep the consistent results
+and minimize by inclusion. These are exactly
+the completed losses on that facet. Soundness
+is the restoring argument. For completeness,
+a failed probe of the greatest minorant has
+an original loss whose mismatches are all at
+unavailable controls. Replace exactly those
+mismatches using completed losses contained
+in the probe. The result is a consistent row
+contained in the probe. This proves equality
+without a search through intermediate rows
+at the current head.
+
+In particular the least upward-closed proper
+loss family containing the budget and closed
+under just the two recognition moves is the
+family of the greatest minorant. All bounded
+terms respect the closure by soundness; once
+the closure is stable the recognition criterion
+realizes it, allowing formal zero if no source
+survives. The hidden-owner move can be needed
+even when every head has one row. At three
+owners, give $u,v$ the same loss $(x{:}a,y{:}b)$
+on retained $x,y$, and give $h$ the loss
+$(u{:}c,v{:}c)$. A single substitution at $h$
+would use all three owners. Replacing both
+hidden postings gives the missing proper loss
+$(x{:}a,y{:}b)$ at $h$ on the $c$-facet.
+
+\paragraph{Binary implementation of the substitution tests.}
 At prime width two, the tests are polynomial
 when every read input has at most one loss
 per facet, with no depth or independence
