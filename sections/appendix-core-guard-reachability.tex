@@ -2777,6 +2777,68 @@ antichain at each owner. The same cache bound up to
 constant factors in the exponent gives time
 $(m+1)^{O(W)}$ times a polynomial in the input size.
 
+The localization also preserves the selected-owner
+restriction on the support of a witness. On a branch,
+a retained register is contained in an original
+offered coalition at that owner, whether the update
+replaces it or intersects it. At a terminal projection,
+a single register must contain the input outside that
+owner's probe block; several registers must contain
+the input at all their owners, hence it disagrees
+with the probe at some owner. Starting at the mark,
+only rows headed in its disagreeing reachable set
+$R$ are needed. As in the unrestricted localization,
+every leaf of a successful tree for those rows lies
+in $R$, and the same tree omits rows outside $R$.
+Its word uses the specified masks and owned choices
+and ignores all exterior postings. Conversely a local
+word on the projected budget lifts in the same clone.
+
+For a whole prime $G$, use its least reachable set
+$U_G$ and the fixed agreeing exterior extension of
+local probes. The preceding support argument gives
+the whole-prime reduction in the selected clone,
+and free union combines the localized witnesses.
+Moreover a local decision only needs the available
+fold owners that actually occur in its projected
+losses: no other owner is ever offered. Probe
+postings at other owners, or at inputs never posted
+there in the budget, can also be erased, since they
+change neither an offer nor a terminal eligibility
+test.
+
+Consequently the full set of realizing owner
+selections can be given as a conjunction of local
+monotone predicates. For each original prime $G$,
+let $J_G$ be the owners occurring in postings on
+$U_G$ in the original losses of heads in $U_G$.
+This is an upper bound on the relevant projected
+owners and is read by scanning the prime literals.
+A selection $J$ realizes the candidate exactly when
+each local test accepts $J\cap J_G$: for every local
+probe enabling the guard, the projected budget must
+have a witness in that selected clone. As usual a
+constant-free realization also requires a positive
+bit. Monotonicity follows because allowing more
+folds preserves witnesses. One can list the
+maximal rejected selections in each local table,
+and for each rejected selection require at least
+one of its omitted owners. These clauses together
+describe exactly all realizing selections.
+
+This computation is fixed-parameter tractable in
+the largest $|U_G|$ and $|J_G|$, without bounding
+the whole palette. Enumerate projected rows using
+only the locally relevant owners and the direct
+prime probe oracle, retaining minimal proper
+losses. In a local probe test only the relevant
+postings matter; those at the observing owner
+remain forbidden. All the resulting pointed cuts
+and all local selection tables are bounded by
+functions of the two parameters. Scanning the
+original observer lists in the oracle takes only
+polynomial work in the input length.
+
 \paragraph{Relevant postings and a single-exponential bound.}
 For an arbitrary listed budget, the marked answer depends
 on the positive coloring only through postings that occur
