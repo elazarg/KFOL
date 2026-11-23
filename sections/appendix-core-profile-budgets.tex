@@ -280,6 +280,56 @@ and the packing test above finish the reduction to
 explicit rows. This extracts small exact budgets
 even when the prime clauses themselves are wide.
 
+\paragraph{Complete recognition with few packed bounds.}
+The same parameter also controls complete prime-guard
+recognition. Partition the inputs by their columns
+across the $m$ packed valuations. Let $\sigma$ replace
+each input by the union of its entire column class.
+This substitution preserves every packed valuation.
+If $G$ is the greatest core word below the bounds,
+then $G\circ\sigma$ is bounded and hence lies below
+$G$. Conversely each input increases under $\sigma$,
+and the core operations are monotone on nonempty
+menus under inclusion. At an owned gate, enlarging
+a child cannot create the owner's atom unless that
+child was already the same atom. Thus
+$G\subseteq G\circ\sigma$, and $G$ factors through
+the class unions.
+
+There are at most $(2^K-1)^m$ classes. On the
+quotient input set, use one representative column
+per class in the packed bounds. Its greatest bounded
+word is the operation induced by $G$ on the class
+unions: a quotient word lifts by substituting class
+unions, and an original bounded word descends by
+identifying inputs within each class. In particular
+nonexistence of any bounded word can be tested on
+the quotient. A value of the greatest quotient word
+at a specified valuation can be read one winner at
+a time by the explicit root-split test.
+
+For each canonical prime at a head and observer $k$,
+consider all sole-source probes that enable it.
+At the head the menu is the $k$-atom. At every other
+input the permitted menus are the neutral observer
+menu and foreign atoms whose postings the prime does
+not forbid. These choices are independent across the
+inputs. For each class compute its possible unions
+by a finite subset table, scanning the allowed menus
+of its members. Then enumerate tuples of possible
+class unions and check that the greatest quotient
+word retains $k$ on each tuple. The enumeration is
+bounded by a function of $K,m$ and the per-class scans
+are polynomial in the input size. All target losses
+already hold by the packed bounds. The prime checks
+ensure every target positive source bit holds, so
+source reconstruction gives equality of the full
+operation. Conversely any realizer is bounded and
+cannot retain a winner omitted by the greatest word.
+This gives fixed-parameter complete recognition from
+canonical primes at fixed palette, parameterized by
+the number of packed loss rows.
+
 \paragraph{Fixed palette and few explicit bounds.}
 For fixed $K$ and $m$, feasibility under $m$ explicit
 output bounds is polynomial-time even with arbitrarily
