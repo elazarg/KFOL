@@ -461,6 +461,55 @@ circuits giving lower and upper bounds on all
 source bits of the greatest bounded operation,
 even when no purity promise holds.
 
+The more permissive pass can use mixed rows by
+propagating cofactor independence. On the projected
+budget on $X_s$, fix $B=p_s\cap X_s$ at owner $s$.
+Start with an empty set $C$ of captured inputs
+outside $B$. Add $j\in X_s\setminus B$ whenever
+there is a row at $j$ whose projected postings
+are all either $s$-postings in $B$ or postings
+of any owner on $C$.
+
+Every bounded word on the projected budget is
+independent of $C$ after freezing $B$.
+Inductively, for a row justifying the next
+addition, set its postings on $C$ to the
+requested atoms. This changes neither output
+in a comparison varying only $j$. The resulting
+valuations extend the row's projected coloring,
+where its omitted mark makes the word independent
+of $j$ by colored-cofactor independence. Thus
+the original outputs agree too. With a feasible
+offer $s:D$, prune its helper to $X_s$ as before.
+If $D\subseteq B\cup C$, every input in
+$D\setminus B$ loses its source mark at the
+pure coloring of $B$. Marked profile transfer
+then rules out winning $D$ while losing $B$.
+
+Replace $L_s$ by $B\cup C$ in the more permissive
+map. The map is still monotone in the retained
+budget, and the new closure contains the pure
+one: every implication from a pure projected
+row is an instance of the new rule. The terminal
+row set therefore grows toward the exact one.
+Ground searches on the current prime lists can
+test the new rule by allowing just the indicated
+postings inside $X_s$, with exterior postings
+unrestricted. This remains a polynomial negative
+test on prime lists of arbitrary width.
+
+For a strict example take distinct $s,r$, and
+rows consisting of an empty loss at $x$, a loss
+$x{:}r$ at $y$, a loss $y{:}s$ at $z$, and a
+loss $x{:}s$ at $w$. Leave all other inputs
+unheaded and query at the empty coloring.
+Here $X_s=\{x,y\}$. The pure closure at $s$
+only derives $x$, so its permissive map deletes
+the row at $z$. Cofactor propagation captures
+$x$ and then $y$, using the foreign posting on
+the now irrelevant $x$. The refined maps retain
+every row, and certify failure at $z$.
+
 There is also a symbolic version at prime width
 two. Fix $K$. Suppose every original owner tail
 has at most two postings, and after each original
