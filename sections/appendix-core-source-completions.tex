@@ -634,6 +634,81 @@ source loss circuits are polynomial, while their
 guard sufficiency circuits can require much
 larger monotone size.
 
+\paragraph{Monotone loss circuits for bounded block width.}
+The pointed cut also gives monotone loss circuits
+when headed postings repeat. For each owner, take
+the inclusion order of all its nonempty blocks in
+minimal losses after projection to the headed
+inputs, across all exterior fixings. Let $W$ be
+the sum of the widths of these orders. For fixed
+$W$ and palette, construct the circuit from the
+canonical primes in polynomial time. The block
+lists are recovered by the width searches after
+\cref{core:thm:pointed-guard-cut}, searching with
+the whole exterior ground available.
+
+A state consists of a deletion history and a
+pointed assignment. The history records the
+upset of blocks already deleted at each owner:
+a row remains when it contains none of the
+history's minimal blocks. The actual budget at
+a probe consists of the remaining rows whose
+exterior postings are supported by that probe.
+At this state, the bit that a given head has
+some remaining row is monotone in the exterior
+postings. For each facet, choose one omitted
+posting per minimal history block visible there.
+Scan all primes on the resulting ground, leaving
+every otherwise permitted interior posting
+available and enabling exterior postings only
+when present at the probe. Existence of a hit
+for every prime is exactly existence of a
+remaining loss on that ground. Canonicity
+ensures the minimal transversal found there is
+consistent. Disjoin the scans for all choices
+and facets. This uses the same polynomial
+number of trials as the width algorithm.
+
+To evaluate infeasibility at a state, first
+require every projection to fail. For a mark
+it suffices that the marked head has a row.
+For a singleton gap with positive coalition
+$A$ at $r$, every input in $A$ must either
+head a row or already belong to the query's
+$r$-block. For a rainbow, every input in the
+intersection of its coalitions must head a
+row. These are positive tests of the input
+posting bits and the remaining-head bits.
+
+Then for every block $A$ outside its owner's
+deletion upset, extend the history by deleting
+its upset. Require that at least one of the
+two smaller states fail, with the original
+assignment or with its entry at that owner
+replaced by $A$. This conjunction of failure
+disjunctions uses no negative activation test.
+In fact one may offer a block even when it
+does not occur in any currently active row.
+If both smaller states are feasible, the
+owned-choice construction in the pointed
+cut still gives a witness on the current
+budget: every row actually removed is
+absorbed, and every surviving row obeys
+both operands. Conversely a feasible state
+with no fitting projection has a singleton
+on some active row in a shortest witness,
+so the true offer supplied by the pointed
+cut is among the trials.
+
+Each trial strictly enlarges a static deletion
+upset, even if it leaves the currently active
+rows unchanged. Minimal generators have
+total size at most $W$. Thus the state count
+is polynomial for fixed $W,K$, and the
+recursion is an acyclic monotone circuit.
+The empty-history and empty-assignment bit
+is exactly source loss in the core meet.
+
 For budgets with at most one row per head and
 injective postings on the headed inputs, guard
 implication for the core meet is polynomial,
