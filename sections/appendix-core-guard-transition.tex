@@ -249,6 +249,57 @@ the simultaneous losses, rather than an
 individual loss search, that require the
 consistency clauses in this computation.
 
+At singleton prime width, the simultaneous-loss
+coalitions on a fixed ground are the independent
+sets of an ordinary conflict graph, with some
+vertices possibly forbidden. Each head either
+cannot lose, or has one required posting set
+$T_j$. Discard a head if its set is unavailable.
+Two heads conflict if either required set posts
+the other head, or the two sets contain competing
+postings at an input. These are all the
+restrictions: the union of the remaining required
+sets is an allowed comparison whenever no such
+pair occurs.
+
+At width two no bound on the size of a minimal
+conflicting coalition is possible. In fact any
+finite hypergraph with nonempty edges can be
+represented, with the simultaneous-loss
+coalitions exactly its independent sets.
+For an edge $\{j_1,\ldots,j_q\}$ with $q\ge2$,
+use fresh controls $u_1,\ldots,u_{q-1}$ and two
+posting owners $a,b$ distinct from the observer.
+Require the following clauses at its successive
+heads, using $a$ as true and $b$ as false:
+\[
+ u_1{:}a,\qquad
+ u_{i-1}{:}b\ \lor\ u_i{:}a\quad(1<i<q),\qquad
+ u_{q-1}{:}b.
+\]
+If all heads are selected, the clauses force
+true along the chain and false at its last
+input. If head $j_i$ is missing, post the
+controls before $i$ true and the rest false,
+which satisfies all selected clauses of this
+edge. Use disjoint controls for distinct
+edges, and make singleton-edge heads never
+lose, ignoring edges already containing such
+a head. Hence any coalition avoiding full
+edges has a simultaneous proper comparison.
+
+The guards at a head use at most one posting
+owner per control, so minimization on each
+facet gives canonical lists. The description
+is linear in the incidence size at fixed
+palette. The underlying source family can
+itself be core: retain the controls, realize
+each designated head's predicate by a
+one-source completion on that head and
+the controls, and take their union. Thus
+higher-order comparison conflicts arise
+even for realizable one-layer families.
+
 \paragraph{Reset obstructions for helper tests.}
 The rank obstruction can also certify the
 repeated-tail implications needed at a safe-fold
