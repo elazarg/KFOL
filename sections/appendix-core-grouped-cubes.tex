@@ -611,6 +611,35 @@ it differs from $x$, and the prover can finish with satisfying gate
 values and a recorded true literal in every clause. This contradicts
 the claimed winning response.
 
+The lower budgets in \cref{core:prop:grouped-safety-preorder} cannot
+be replaced by the budget itself. A cut whose premises hold for every
+$Z$-safe function need not be valid on $Z$, because the formula that
+absorbs a mark may itself be unsafe on another row, where a gate above
+it absorbs in turn.
+
+\begin{proposition}[Cuts depend on the budget]
+\label{core:prop:budget-dependent-cuts}
+Let $V=\{1,2,3\}$ and $Z=\{z_1,z_2\}$ with
+\[
+ z_1=(\varnothing,\{1\},1),\qquad z_2=(\{1\},V,3).
+\]
+Put $x=\{2,3\}$ and $y=\{2\}$. The only coordinate of $x\setminus y$ is
+marked by $z_2$, and $x\preceq_Z u_{z_2}$ and $l_{z_2}\preceq_Z y$.
+Nevertheless $x\not\preceq_Z y$.
+\end{proposition}
+\begin{proof}
+The first premise is an inclusion. The initial edge of $z_1$ is
+$\{1\}\to\varnothing$, so $l_{z_2}=\{1\}\preceq_Z\varnothing\subseteq y$.
+The formula $(x_3\vee x_1)\wedge x_2$ is true at $x$ and false at $y$.
+On $z_1$ its value is $(b\vee\pv)\wedge b=b$, and on $z_2$ it is
+$(\pv\vee c)\wedge\nv=\nv$, so it is $Z$-safe. The input $x_1$ absorbs
+the mark of $z_2$ and is unsafe on $z_1$, where the outer meet absorbs it.
+\end{proof}
+
+So $\preceq_Z$ is not the least preorder on $2^V$ closed under cuts with
+premises in $\preceq_Z$, and the set of remaining rows is part of the
+state of the endpoint game.
+
 \paragraph{Recognition of complete normal forms.}
 The alternating choices remain necessary in the complexity-theoretic
 sense even when the input specifies every source bit. The reduction
@@ -769,6 +798,53 @@ enumerate one proper coloring at a time, test loss and minimality
 from the guards, and store each minimal zero once. At most four
 per head need be stored, so this also uses polynomial space.
 \end{proof}
+
+Both lists are needed for this lower bound to say something about
+structure. From the prime guards alone, recognition is already hard
+through the common-source condition of \cref{core:thm:profiles}, which
+is tested in polynomial time once the minimal winning coalitions are listed.
+
+\begin{proposition}[Prime lists hide the profile condition]
+\label{core:prop:prime-profile-hardness}
+Fix $K\ge3$ and distinct owners $a,b$. Let $H$ be a hypergraph on $V$
+whose edges have at least two vertices. Let $\Phi_a=\Phi_b$ hold on the
+transversals of $H$, and let every other profile be unanimity. Put
+$c_{k,j}(p)=\bigwedge_{r\ne k}\neg\Phi_r(\{i\ne j:p_i=r\})$.
+The prime guards of $c_{k,j}$ are the inclusion-minimal sets among
+\[
+ (e\setminus\{j\})\times\{a\}\ \cup\ (e'\setminus\{j\})\times\{b\}
+ \qquad(e,e'\text{ edges of }H),
+\]
+with the part at owner $k$ omitted when $k\in\{a,b\}$. These lists are
+canonical, agree across observers, and are computed in polynomial time.
+They are the normal form of a core operation if and only if $H$ has no
+two disjoint transversals, that is, no proper $2$-coloring. Hence
+recognition from complete canonical prime lists is coNP-hard.
+\end{proposition}
+\begin{proof}
+Unanimity never holds on a set omitting $j$, so only $a$ and $b$ matter.
+A guard is sufficient exactly when no enabled pattern posts a transversal
+at an owner in $\{a,b\}\setminus\{k\}$. If the $a$-part of a guard $G$
+contains no $e\setminus\{j\}$, post $a$ at every input outside that part
+and leave the others unposted. This pattern enables $G$ and posts a
+transversal at $a$. The same holds at $b$, so the sufficient guards are
+the supersets of the displayed sets. Observers $k,k'$ agree on the
+patterns that use neither.
+
+If $H$ has no two disjoint transversals, the profiles satisfy
+\cref{core:thm:profiles}, and their greatest completion
+(\cref{core:prop:profile-maximum}) has exactly the coefficients
+$c_{k,j}$: on a probe it omits $k$ exactly when another owner wins.
+Otherwise take disjoint transversals $A,B$ with $A\cup B=V$, enlarging
+$A$ if necessary, and give $A$ the atom of $a$ and $B$ the atom of $b$.
+Every source of $a$ is blocked by $B$ and every source of $b$ by $A$,
+so the raw meaning is empty there and no term realizes the lists.
+Hypergraph $2$-colorability is NP-complete
+\cite[SP4]{GareyJohnson1979}.
+\end{proof}
+
+With the minimal losses also listed, this family has one loss for each
+pair of minimal transversals, and the condition is tested directly.
 
 With prime lists alone and no bound on the number of losses,
 enumerating all minimal zeros gives an exponential-space upper bound.

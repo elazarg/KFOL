@@ -582,9 +582,11 @@ suffice for this failure. No enumeration premise is used.\\
 Essential-context coloring and exact source repetition in canonical extensions
 (\cref{core:prop:essential-context-coloring,core:thm:canonical-source-repetition})
  & Written proofs, uniform in $K\geq3$ and allowing all core choices and union.\\
-Two-color source interpolation (\cref{core:thm:two-repeater-hardness,core:thm:two-color-pspace})
+Two-color source interpolation (\cref{core:thm:two-repeater-hardness,core:thm:two-color-pspace,core:prop:budget-dependent-cuts,core:prop:prime-profile-hardness})
  & Written reductions from CNF unsatisfiability and quantified Boolean
- truth, with path-length bounds for the restricted endpoint problems.\\
+ truth, with path-length bounds for the restricted endpoint problems.
+ Finite checks of the endpoint recursion, the rectangle reduction and
+ the two propositions are described in \cref{app:finite-checks}.\\
 Subpower membership (\cref{core:thm:subpower-complexity})
  & Written depth bound, reduction to exact outputs, and polynomial
  one-owner support algorithm.\\
@@ -1486,6 +1488,27 @@ The independent standard-library program
 \path{checks/check_core_peeling.py} compares the row-deletion
 recursion with unpruned finite core closures, including the six-row
 obstruction; its recognizer never calls the closure oracle.
+
+Four local programs in \path{checks/characterization/} test the Boolean
+core of \cref{core:thm:two-color-pspace} independently of its proof.
+They are not part of the archive at \texttt{2099f25}.
+\path{bichain.py} generates, for a budget of marked cubes on at most
+four inputs, every pair of a Boolean function and its row values that a
+pure formula attains, and so lists the safe functions exactly.
+\path{recursion.py} compares the endpoint recursion for $P(S,A,B)$ with
+this list on $505$ random budgets of at most seven rows and all
+$52{,}480$ pairs of endpoints; they agree on all of them, $23{,}154$
+separable. \path{qbf_reduction.py} builds the rectangle instance of a
+prenex formula and evaluates the recursion with memoization. On $3{,}900$
+random formulas with at most five variables and five clauses of one or
+two literals, $1{,}473$ of them true, the game value equals the truth
+value. On $360$ random budgets on three or four inputs, closure under
+cuts with full-budget premises adds an invalid pair on $15$ and omits a
+valid pair on none; \cref{core:prop:budget-dependent-cuts} is one of the
+$15$. \path{profile_primes.py} enumerates all sufficient guards for
+$150$ random hypergraphs on three or four vertices and confirms the
+prime lists and the emptiness criterion of
+\cref{core:prop:prime-profile-hardness}.
 
 The closed hypergraph vocabulary is defined in
 \path{KFOL/Definitions/CoreHypergraphs.lean}: indexed clutters, support,
