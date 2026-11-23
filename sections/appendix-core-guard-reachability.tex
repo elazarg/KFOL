@@ -7002,6 +7002,61 @@ acyclic, the proper loss closure and repair synthesis
 apply there, even for an original cyclic budget
 that fails the exact fold-lift test.
 
+\paragraph{Reading the projected loss from canonical primes.}
+For each original head in the queried quotient
+block, and each original observer facet, ask for
+a consistent hitting set of its primes whose
+forced block atoms are contained in the quotient
+probe. Forbid native sibling postings in the
+head block. At any other owned block, forbid
+native postings unless the probe posts that
+block at its native owner. At a foreign owner,
+or any owner of a union block, forbid the
+all-input posting of that color unless it is
+the probe's requested atom. The latter
+restriction is one negative clause on the
+block's posting variables. Add the usual
+binary consistency clauses. A solution can
+be shrunk to a minimal original loss without
+violating any restriction. Conversely every
+original loss projecting inside the probe
+satisfies one of these tests. Thus the
+projection can be queried without listing
+the losses.
+
+At prime width two and block size at most
+two, every trial is $2$-SAT. Size three
+already makes projected loss existence
+NP-complete, even with one original loss
+head, a single posting owner $r$, and the
+uncolored quotient probe. Take a $3$CNF
+and make a passive input per literal
+occurrence, grouping the three occurrences
+of each clause into a block. At the original
+head put a binary prime for the pair of
+$r$-postings of each two opposite literal
+occurrences. All passive inputs are retained.
+Hitting the primes means that no two
+unposted occurrences are opposite literals.
+Projection to an uncolored probe requires
+at least one unposted occurrence in each
+clause block. Such choices exist exactly
+for satisfiable formulas. The blocks may
+all be unions or all be owned folds at
+one owner different from $r$: in either
+case a forced $r$-atom requires posting
+all three inputs. The lists are canonical
+because all postings are at one owner.
+A consistent hitting set witnesses NP
+membership.
+
+More generally, at width two one can choose
+one missing posting for each long negative
+block clause, then run $2$-SAT. This gives
+polynomial time for a fixed number of
+long clauses and a fixed-parameter test
+when their lengths are also bounded.
+
 \paragraph{Ranked quotients of disjoint folds.}
 The prime test extends to compositions of a ranked
 quotient with owned folds on disjoint input blocks.
