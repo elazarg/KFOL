@@ -1971,6 +1971,77 @@ is computed from the input configuration. Apply
 \cref{core:thm:alternating-rail-transitions}.
 \end{proof}
 
+The alternating rails also give circuit lower bounds
+for unrestricted greatest core minorants. Add a fifth
+owner $e$ and retained control inputs $z_\lambda$.
+Allow a terminal state to request a control $\lambda$:
+its $a$-group loss now requires the posting
+$z_\lambda:e$. In the positive probe keep all rails
+posted at $c$, and independently post any of the
+controls at $e$. Interpret a request as accepting
+exactly when its control is unposted.
+
+The equivalence in \cref{core:thm:alternating-rail-transitions}
+still holds under this interpretation. On a marked path,
+a request at $A_s$ has a comparison with the posted
+control as its only possible later reset outside the
+query blocks. If the control is posted in the positive
+probe, that reset is unavailable and the request
+cannot occur as a winning terminal. The other
+comparisons post no controls and force the same
+strictly later successors as before. Conversely
+take the decreasing-height witness for winning
+states, treating available requests as accepting.
+After all rail attachments, attach the projections
+of their requested controls by $\star_e$. These
+attachments suppress the new terminal losses and
+preserve the mark because none of the selected
+controls is posted in the positive. Their own
+sources have no losses. The other rail and seed
+losses stay suppressed by the original construction.
+
+For a concrete family, have the state game guess
+$s$ distinct vertices of an $m$-vertex graph and
+universally select a pair from the guess. At a
+terminal request the control of that pair, representing
+the edge. This is a finite-tree game with polynomial
+space addresses and bounded-scope machine transitions,
+implemented by ordinary tape scans as in the hardness
+proof above. The transition rules are independent of
+the edge inputs. The terminal edge index can be kept
+in a binary register. On unique addresses, replace the
+accepting-state prohibition by clauses guarded by the
+request code and edge index, requiring the posting of
+the corresponding control at $e$. There are at most
+$\binom m2$ indices and each such clause has
+$O(\log m)$ literals. The existing validity and
+transition clauses stay unchanged. Each posting
+variable has a fixed owner at a given head, including
+the new controls, so facet restriction and minimization
+give canonical lists of polynomial total size.
+The bounded mark on this slice is exactly clique on
+the control-absence bits.
+
+A shared core circuit on this slice can be simulated
+by a monotone Boolean circuit of comparable size.
+For each menu track the absence of each singleton
+flag and the presence of the mark. The singleton
+absence flags combine by conjunction at their own
+gate and disjunction at every other gate. A mark
+persists at a union if either child supplies it, and
+at an owned gate it also requires that both children
+lack the native singleton. The sole-source probe
+has no input singleton at the observer, so the
+native singleton can never supply the mark itself.
+All varying leaf flags are the control-absence bits;
+the rail flags and the mark at the head are fixed.
+Consequently the monotone clique bound of
+\cite[Theorem~3.9]{AlonBoppana1987} forces a
+superpolynomial shared core circuit for the
+unrestricted greatest minorant. This uses five
+owners and logarithmic prime width, without
+imposing any completion-depth restriction.
+
 \paragraph{Exact reset certificates on alternating rails.}
 For the alternating rail budgets, the reset-order
 obstruction is complete. Take all $a:A_s$ where
