@@ -83,17 +83,19 @@ $L(r,A)\le L(r,B)$, treating absence as $-\infty$.
 These constraints and the comparison inequalities
 have a canonical rank test. Start with $W_0$ empty.
 Place $(r,A)$ in $W_{d+1}$ when $A\not\subseteq p_r$
-and every comparison of every $(r,B)$ with
-$A\subseteq B$ has a candidate later reset in $W_d$.
-The sets increase and each is upward closed at
-its owner.
+and every comparison for that test has a
+candidate later reset in $W_d$. A comparison
+for a larger coalition is also a comparison for
+each of its subsets: unposting and the simultaneous
+loss requirement are both preserved. Thus the sets
+increase and are upward closed at each owner,
+without separate checks of larger coalitions.
 
 In an actual path with at most $d$ attachments,
 a test whose last reset is at position $\ell$
-belongs to $W_{d-\ell+1}$. Indeed all its supersets
-have a last reset at or after $\ell$, and every
-one of their comparisons has a strictly later
-reset. Backwards induction proves the bound.
+belongs to $W_{d-\ell+1}$. Every comparison of
+the test has a strictly later reset, so backwards
+induction proves the bound.
 In particular a loss at the marked head requires
 some candidate with rank at most $d$, where rank
 means the first stage at which a test enters.
@@ -189,6 +191,63 @@ block. Verification just checks the two
 colorings and their losses in the original
 primes. Enumerating these pairs still
 takes single exponential time at fixed $K$.
+
+\paragraph{Computing the excluded coalitions by comparisons.}
+A single comparison determines all its admissible
+antecedents. For an observer-$r$ coloring $t$,
+let $U_r(t)$ be its unposted heads that lose
+at $t$. It serves every nonempty $A\subseteq U_r(t)$
+as an ordinary comparison, with the same later
+reset candidates. Thus, in the downward family
+of tests absent at a given rank stage, a comparison
+whose candidates are all absent contributes the
+entire downset of $U_r(t)$ at the next stage.
+Include also the downset of $p_r$ among the
+always absent tests. The union of these downsets
+is exactly the complement of the next $W_d$.
+For the two-comparison rule the first coloring
+again determines $U_r(t)$: legality of the second
+comparison and its successor set do not depend on
+which subset of $U_r(t)$ is used. The first
+comparison ensures the required disjointness
+for all those subsets. Thus the same downset
+calculation applies to the augmented rank test.
+
+There is also a direct search for a comparison
+at an individual coalition $A$, with each later
+reset restricted to a specified downward family
+at its owner. Include the query-block subcoalitions
+among the allowed tails. Choose one maximal
+coalition from each family's list, and let
+the corresponding postings be the available
+ground, omitting the observer and all inputs of
+$A$. On that ground require hitting every prime
+at every head in $A$ and add the posting
+consistency clauses. A satisfying assignment
+is exactly a comparison using tails inside
+the chosen maxima. Conversely any allowed
+comparison lies in one such ground. At prime
+width two each trial is $2$-SAT. In particular
+with principal grounds there is just one trial.
+
+At width three, even a single such search on
+a given ground can encode 3CNF satisfiability.
+Represent each Boolean input by its two
+possible postings at different owners, and
+use a fresh head in $A$ for each clause.
+Give it the single guard listing that
+clause's postings on the comparison facet.
+Each head then loses exactly when its clause
+is hit. The clauses can be assumed to contain
+no opposing literals on one variable, and
+the other facets just hide their missing
+postings, so the lists are canonical and
+agree. A consistent simultaneous hit is a
+partial truth assignment extendible to a
+satisfying one, and conversely. Thus it is
+the simultaneous losses, rather than an
+individual loss search, that require the
+consistency clauses in this computation.
 
 \paragraph{Reset obstructions for helper tests.}
 The rank obstruction can also certify the
