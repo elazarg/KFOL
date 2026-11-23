@@ -466,6 +466,56 @@ This lower bound concerns supplied terms in
 general; the synthesized greatest circuits may
 have additional structure.
 
+\paragraph{Guard verification with few competing postings.}
+At a sole-source probe with observer $k$, an occurrence
+path is open if every foreign gate on it has a sibling
+that fails the singleton test at that gate's owner.
+The source is present at the root exactly when some
+occurrence path is open. In fact at a $k$-gate presence
+is disjunction of the child presences. At a foreign
+gate it is the same disjunction, except that a child
+atom of the gate owner suppresses it. If one child
+supplies an open path, that child already contains
+$k$ and cannot be the foreign atom. This proves the
+path rule by induction, including for an unfolded
+shared circuit.
+
+For each foreign owner $r$, mark the passive inputs
+used in any sibling subcircuit of an edge traversed
+by a source path at an $r$-gate. Syntactic occurrence
+suffices. The corresponding sibling atom bits depend
+only on $r$-postings on those inputs. Compute the marked
+sets by circuit reachability. For a proposed guard,
+retain at each passive input just the owners at which
+its posting is both permitted and marked. Call an
+input competing if it retains at least two owners.
+
+To search for a guard violation, choose one retained
+owner at each competing input, post every input with
+a unique retained owner there, and leave all other
+inputs neutral. It suffices to test these probes.
+Indeed from any losing probe, erase postings that
+are irrelevant to their owner's marked set. This
+leaves every path's blocking tests unchanged. Extend
+the resulting partial coloring by making the stated
+choices at the remaining inputs. Adding a posting
+at a neutral input can only make more sibling atom
+tests true: each test is monotone in its owner's
+block and ignores postings at every other owner.
+Thus every previously blocked path stays blocked.
+The converse follows because the constructed probes
+enable the guard. Evaluating the circuit at the
+enumerated probes implements this test without
+listing occurrence paths.
+
+With $b$ competing inputs the cost is at most
+$(K-1)^b$ times a polynomial in the circuit and
+guard sizes. Even a circuit with unbounded source
+multiplicity admits a single-probe check when
+there are no competing inputs. The two-occurrence
+hardness construction uses competing postings on
+the literal inputs.
+
 \paragraph{Fixed palette and few explicit bounds.}
 For fixed $K$ and $m$, feasibility under $m$ explicit
 output bounds is polynomial-time even with arbitrarily
