@@ -4588,6 +4588,49 @@ answer is yes precisely when $A$ is
 unsatisfiable and $B$ is satisfiable.
 The queried guard itself has width one.
 
+\paragraph{Completeness of a proposed output list.}
+Even with a promise that every listed guard is
+an output prime, deciding whether the list
+contains all output primes is coNP-complete
+for acyclic budgets at three owners, input
+prime width one and binary loss rows.
+Under the promise a counterexample is a probe
+passed by the greatest bounded predicate
+but enabling none of the listed guards.
+Projection deletion verifies it in polynomial
+time.
+
+For hardness use a CNF formula $C$ and
+the width-one gate construction on facet
+$a$. At each Boolean variable $x$, set
+$H_x=\{x:b,x:c\}$ and supply a signal for its
+enabling condition by conjoining the two
+nonposting tests at $x$. Also compute the
+formula $C$ on its two literal signals,
+which are complementary whenever $x$ is
+posted. Take a fresh row-free input $y$
+and make the output signal
+\[
+ \bigvee_x [H_x\text{ is enabled}]
+ \quad\lor\quad ([y:b\text{ is absent}]\land C).
+\]
+Use a final relay and propose the list of
+all $H_x$. Each is sufficient by the first
+disjunction. For either single deletion
+from $H_x$, post the now-allowed label
+at $x$, post every other variable, and
+post $y:b$. The output fails, proving
+that each proposed guard is prime.
+
+A probe outside the listed guards posts
+every Boolean variable. It passes exactly
+when $y:b$ is absent and its assignment
+satisfies $C$. Hence the list is complete
+if and only if $C$ is unsatisfiable.
+The proposed guards have width two, and
+the budget retains the same acyclic
+width-one and binary-row bounds.
+
 \paragraph{Small supports for a whole guard.}
 Deciding whether the empty guard has a bounded
 witness on at most a given number of inputs is
