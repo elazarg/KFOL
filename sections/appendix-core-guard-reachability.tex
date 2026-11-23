@@ -9156,6 +9156,55 @@ source-mark tests on the same inputs with at most
 two additional exclusions per prime, without
 enumerating the old losses.
 
+\paragraph{Where profile constraints create feedback.}
+On a budget with acyclic dependence, compiling one
+winning coalition $A$ adds arrows from every input
+of $A$ to every head outside $A$. In this augmented
+graph, any feedback is confined to one component.
+It consists of the inputs outside $A$ that reach
+$A$ in the original graph, together with the inputs
+in $A$ reached from outside $A$ in that graph.
+
+Indeed, every outside input that reaches $A$ can
+then use the new arrows to reach every outside
+input, so those with a return path lie in one
+component. An input in $A$ joins it precisely if
+some outside input already reaches it: after the
+last new arrow on a path into $A$, the remainder
+is an original path from outside $A$. Every cycle
+must use a new arrow, so no other component becomes
+cyclic. An empty crossing region leaves the graph
+acyclic. These statements concern the graph before
+removing redundant loss rows. Minimizing the list
+can delete arrows and split this component, but
+cannot create another one outside the region.
+
+Thus a signed query on an acyclic budget can be
+handled by the component test with only this crossing
+region as a possible nonsingleton block. The pure-loss
+addition increases prime width by at most one.
+If $A$ is predecessor-closed in the original graph,
+the direct acyclic marked test
+\cref{core:thm:acyclic-marked-source-test} suffices
+at every required losing probe.
+
+For several winning demands, all the old and new
+rows admit a common source order exactly when the
+demanded coalitions are predecessor-closed and form
+an inclusion chain. Indeed a common order must put
+every coalition before its complement, making them
+nested prefixes; predecessor-closure is necessary in
+the old graph. Conversely order the successive
+differences of the nested coalitions, then the final
+complement, and use any original topological order
+within each part. The same acyclic marked pass can
+read the old canonical lists alongside the appended
+explicit pure rows: a blocking row exists if either
+the old prime-ground search or an appended-row check
+succeeds. No joint prime expansion is needed. This
+gives a polynomial test of all the profile demands
+and any requested marks under these conditions.
+
 \paragraph{Attainable profiles at one owner on a mixed budget.}
 For an arbitrary budget $S$, fix an owner $k$.
 For each coalition $A$, let $M_A$ be the greatest
@@ -9269,19 +9318,28 @@ is obtained by deleting some of its heads.
 This follows from the displayed blocking-row
 criterion because foreign tails never post a head.
 
-Equivalently, the antecedents form the independent
-sets of an explicit hypergraph. Include a singleton
-edge for each unheaded input outside $B$. For each
-head $j\notin B$, use the common prime list of
-\cref{core:cor:common-prime-list}. Each prime $G$
-with no $k$-posting from $B$ contributes the edge
-consisting of $j$ and the inputs of its foreign
-postings. Such an edge is contained in $A$ exactly
-when this prime misses the allowed ground for a
-blocking row at $j\in A\setminus B$. Therefore
-absence of a contained edge is equivalent to
-implication. At fixed $K$ this representation
-is polynomial in the facet lists.
+The same primes give one clause list for all
+antecedents and consequents at owner $k$. For a
+common prime $G$ at head $j$, let $L(G)$ be the
+inputs of its foreign postings and $R(G)$ the
+inputs of its $k$-postings. Require
+\[
+ \{j\}\cup L(G)\subseteq A
+ \quad\Longrightarrow\quad
+ (\{j\}\cup R(G))\cap B\ne\varnothing .
+\]
+Indeed failure is exactly a prime avoiding the
+allowed ground of a putative blocking row at
+$j\in A\setminus B$. For an unheaded input its
+common list consists of the empty prime, giving
+$j\in A\Rightarrow j\in B$. The same formula
+therefore handles all inputs and all pairs $(A,B)$.
+
+At fixed $B$, discard clauses whose right side
+already meets $B$. The remaining left sides
+are the edges of the antecedent hypergraph.
+At fixed $K$ both representations are polynomial
+in the facet lists.
 
 Conversely any hypergraph whose edges consist of
 one head and a set of unheaded inputs can be read
