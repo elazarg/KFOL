@@ -572,6 +572,48 @@ The reduction supplies complete prime lists and works for
 every fixed $K\ge3$. Hence the upper bound is sharp already
 for one repeated class in the whole family.
 
+For acyclic injective budgets with at most one row per
+head, guard implication for the core meet is polynomial.
+Fix the query head $i$, observer, and guard. A posting
+is allowed if it can occur on that facet with the guard
+enabled, so in particular no posting at $i$ is allowed.
+Introduce a Boolean variable $e_j$ for choosing the
+unique row at head $j$ in a blocking subfamily. Force
+$e_i$ and forbid $e_u$ at inputs with no row. For each
+posting $u{:}r$ in the row at $j$, impose
+$e_j\Rightarrow e_u$ if the posting is not allowed.
+For each pair of rows at $j,j'$ posting the same $u$
+at different owners, impose
+$e_j\land e_{j'}\Rightarrow e_u$.
+
+This Horn system is satisfiable exactly when some
+probe enabling the guard has no bounded witness.
+Indeed, a blocking subfamily on a probe must
+contain the row at $i$. Each tail must be reachable
+in the corresponding owner's graph, so it is either
+headed in the subfamily or posted at that owner
+on the probe. The latter postings must be allowed
+and consistent, giving the Horn implications.
+Conversely, from a Horn solution take its selected
+rows and post their required tails outside the
+selected heads. The implications make these
+postings allowed and consistent. At each owner,
+every selected head is now reachable: traverse
+the source order, using an empty tail as a seed
+and a nonempty tail either as an external posting
+or as an already reached head. Thus all selected
+tails are reachable and the chosen rows form a
+blocker by \cref{core:thm:injective-blockers}.
+
+Consequently one can check every prime for this
+class in polynomial time, giving complete-family
+recognition as well. From canonical primes the
+single-row lists are recovered directly from the
+singleton clauses on each visible facet, including
+the cases of no loss or an empty loss. The count
+of rows in this result is per head, across all
+facets.
+
 The guard implication problem for the core meet is coNP-complete
 without the excess bound, even at fixed $K\ge3$, for acyclic
 injective rows and a queried empty guard. For membership, guess
@@ -604,7 +646,8 @@ present, or the set of all the visible literal postings.
 The queried empty guard is itself a prime of the prescribed
 family, since all rows at $h_1$ use $c$.
 
-Hardness persists with at most two rows per head. For a
+The polynomial bound of one row per head is sharp:
+hardness persists with at most two rows per head. For a
 three-literal clause, keep its first literal row and replace
 the other two by a row posting a fresh auxiliary head at $c$.
 Give the auxiliary those two literal rows, with the same
