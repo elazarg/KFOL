@@ -465,6 +465,85 @@ or $B$ by $u_z$. The opponent either accepts the replacement or keeps both
 endpoints. Either response deletes $z$. A pair with $A\subseteq B$ always loses.
 Depth-first evaluation uses polynomial space.
 
+\paragraph{Rectangle rows.}
+Draw two classes of vertices, left and right. A row has a vertex on one
+side, and there is an initial vertex on each side. A coordinate labels the
+cells of a rectangle $I\times J$ of left and right vertices. Put it in the
+lower endpoint at the left vertices in $I$, omit it from the upper endpoint
+at the right vertices in $J$, and elsewhere use the opposite membership.
+Thus $u_z=V$ for a left row and $l_z=\varnothing$ for a right row, and the
+initial vertices specify $X,Y$ in the same way. For a left vertex $a$ and
+a right vertex $b$, the set $l_a\setminus u_b$ consists of the labels on
+the cell $(a,b)$. Each row marks one label whose rectangle omits its own
+vertex, so its mark is in $u_z\setminus l_z$. In the recursion for $P$ a
+left row can only replace the left vertex of the current cell and a right
+row the right vertex, since the other replacement gives $A\subseteq B$.
+In the dual form, a \emph{cut} at a cell $(a,b)$ selects rows $S$ whose
+marks cover the labels on the cell, with a cut on $S\setminus\{z\}$ at
+$(z,b)$ for each left row $z\in S$ and at $(a,z)$ for each right row. A
+cell without labels has the empty cut. By the cut criterion following
+\cref{core:thm:partially-marked-cube-closure}, $P(Z,X,Y)$ fails exactly
+when $Z$ has a cut at the initial cell.
+
+\begin{theorem}[Quantified formulas as cuts]
+\label{core:thm:quantified-cube-cuts}
+Let $\Psi=Q_1x_1\cdots Q_nx_n\,\bigwedge_{c<m}C_c$ be a prenex formula
+whose clauses $C_c$ are sets of literals $x_i=s$. Use left vertices
+$\beta_i^s$ for $1\le i\le n$ and both truth values $s$, and $\gamma_c$
+for $c<m$. Use right vertices $\rho_i$ for $1\le i\le n$ and $\sigma_i^s$
+for every literal. Let $\beta_0$ and $\rho_0$ be the initial vertices, and
+write $B_i=\{\beta_i^0,\beta_i^1\}$ with $B_0=\{\beta_0\}$. The labels are
+\[
+\begin{array}{lll}
+ \text{label}&\text{rectangle}&\text{marked by}\\\hline
+ e_i^s\ (Q_i=\exists)&B_{i-1}\times\{\rho_{i-1}\}&\beta_i^s\\
+ e_i\ (Q_i=\forall)&B_{i-1}\times\{\rho_{i-1}\}&\beta_i^0\text{ and }\beta_i^1\\
+ r_i&B_i\times\{\rho_{i-1}\}&\rho_i\\
+ \pi_i^s&\{\beta_i^s\}\times\{\sigma_i^s\}&\text{no row}\\
+ \lambda_i^s&\{\gamma_c:(x_i=s)\in C_c\}\times\{\rho_n\}&\sigma_i^s\\
+ \kappa&B_n\times\{\rho_n\}&\text{every }\gamma_c .
+\end{array}
+\]
+For these $5n+m$ rows on at most $7n+1$ coordinates, $P(Z,X,Y)$ holds if
+and only if $\Psi$ is true.
+\end{theorem}
+\begin{proof}
+For an assignment $\alpha$ to $x_1,\ldots,x_i$, its cell is
+$(\beta_i^{\alpha_i},\rho_i)$. The labels on it are those of stage $i+1$
+if $i<n$, and $\kappa$ if $i=n$. We show that a cut at the initial cell
+exists exactly when $\Psi$ is false.
+
+Suppose first that the remaining formula is false at $\alpha$. Select the
+rows of all later stages, every $\gamma_c$, and every $\sigma_j^s$ with
+$x_j$ unassigned or $\alpha_j\ne s$. At a universal stage $i+1$ keep only
+a branch $\beta_{i+1}^s$ whose extension is still false, and at $i=n$ keep
+only one $\gamma_c$ with $C_c$ false. The marks cover the cell. Rectangles
+join consecutive stages only, and $\pi_j^s$ lies on the cell of
+$\beta_j^s$ and its own resource. So a selected row other than a branch of
+stage $i+1$, or than $\gamma_c$ when $i=n$, leads to a cell without labels.
+A branch $\beta_{i+1}^s$ leads to $(\beta_{i+1}^s,\rho_i)$, whose only
+label $r_{i+1}$ is marked by $\rho_{i+1}$. Drop $\sigma_{i+1}^s$ there. The
+other rows again lead to cells without labels, and $\rho_{i+1}$ leads to
+the cell of the extended assignment, where the selected rows contain those
+required. At $(\gamma_c,\rho_n)$ the labels are $\lambda_j^s$ for the
+literals of $C_c$. These are false, so their resources are selected, and
+each leads to a cell without labels. Induction on $n-i$ gives a cut.
+
+Conversely suppose that the remaining formula is true at $\alpha$, and that
+a set of rows containing no $\sigma_j^s$ with $\alpha_j=s$ has a cut at the
+cell of $\alpha$. For $i<n$ let $s$ be a value keeping the formula true,
+arbitrary at a universal stage. The label $e_{i+1}^s$ or $e_{i+1}$ is
+covered by a branch $\beta_{i+1}^s$ of this kind, so there is a cut at
+$(\beta_{i+1}^s,\rho_i)$. It cannot select $\sigma_{i+1}^s$, because
+$\pi_{i+1}^s$ on the cell $(\beta_{i+1}^s,\sigma_{i+1}^s)$ is unmarked. It
+selects $\rho_{i+1}$ to cover $r_{i+1}$, which gives a cut at the cell of
+the extended assignment on rows containing no resource of a true literal.
+For $i=n$ the label $\kappa$ is covered by some $\gamma_c$. The clause
+$C_c$ has a true literal, whose label on $(\gamma_c,\rho_n)$ could only be
+covered by its absent resource. Induction on $n-i$ gives a contradiction.
+The empty assignment and all rows satisfy the hypothesis.
+\end{proof}
+
 \begin{theorem}[Two-color interpolation is PSPACE-complete]
 \label{core:thm:two-color-pspace}
 Deciding $P(Z,X,Y)$ is PSPACE-complete even when $X\setminus Y$ is
@@ -478,22 +557,13 @@ feasibility is also PSPACE-complete for monochromatic negatives of
 size at most three.
 \end{theorem}
 \begin{proof}
-Reduce truth of a prenex quantified Boolean formula with CNF matrix
-\cite[Theorem~4.3]{StockmeyerMeyer1973}. One obtains this matrix from an arbitrary
-Boolean matrix by placing existential gate variables after its original
-prefix and imposing their defining clauses. We first
-describe how to specify the row endpoints. Draw two classes of vertices,
-left and right. Rows have a vertex on just one side, and there is an initial
-vertex on each side. A coordinate labels the cells of a rectangle $I\times J$.
-Put it in the lower endpoint at the left vertices in $I$ and omit it from
-the upper endpoint at the right vertices in $J$. Elsewhere use the opposite
-membership. Take $u_z=V$ for a left row and $l_z=\varnothing$ for a right
-row. The initial left and right vertices specify $X,Y$ in the same way.
-Thus $A\setminus B$ consists exactly of the labels on the current cell.
-Each row marks one label whose rectangle omits its own vertex on that
-side. Its mark is therefore in $u_z\setminus l_z$.
-Replacing the wrong side gives a losing cell. We describe a cell by its two
-vertices in either order.
+Truth of a prenex quantified Boolean formula with CNF matrix is
+PSPACE-complete \cite[Theorem~4.3]{StockmeyerMeyer1973}. One obtains this
+matrix from an arbitrary Boolean matrix by placing existential gate
+variables after its original prefix and imposing their defining clauses.
+\Cref{core:thm:quantified-cube-cuts} therefore gives hardness of $P$. The
+following variant of its rectangle rows also gives the three restrictions.
+We describe a cell by its two vertices in either order.
 
 Use alternating left and right levels, starting with an edge between the
 two initial vertices. Add one vertex in the next level, adjacent to the

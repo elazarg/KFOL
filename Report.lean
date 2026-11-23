@@ -54,6 +54,7 @@ public import KFOL.Core.CompletionDepthChain
 public import KFOL.Core.CompletionSuspension
 public import KFOL.Core.LayerInterpolation
 public import KFOL.Core.BichainCubeCuts
+public import KFOL.Core.BichainQuantified
 public import KFOL.Audit.Namespace
 
 /-! # Audited report statements and mathematical proof ingredients
@@ -333,6 +334,16 @@ theorem bichain_cube_cuts {Var : Type v} {Row : Type w} [DecidableEq Row]
     Bichain.CubeCut rows budget q ↔ ∀ t : Bichain.Term Var, t.IsPure →
       (∀ z ∈ budget, t.eval (rows z) ≠ .possible) → ¬ q.Holds t :=
   Bichain.cubeCut_iff rows budget q
+
+/-- `core:thm:quantified-cube-cuts`: a prenex formula is true exactly when a pure
+term omits every mark of its rows and separates the two starting endpoints. -/
+theorem quantified_cube_cuts (F : Bichain.Quantified.Formula) (hwf : F.WF) (α : ℕ → Bool) :
+    Bichain.Quantified.sat F F.n 0 α ↔
+      ∃ t : Bichain.Term Bichain.Quantified.Lab, t.IsPure ∧
+        (∀ z ∈ Bichain.Quantified.allRows F,
+          t.eval (Bichain.Quantified.rows F z) ≠ .possible) ∧
+        (Bichain.Quantified.cell F (.br 0 (α 0)) (.relay 0)).Holds t :=
+  Bichain.Quantified.sat_iff_separator F hwf α
 
 /-- `core:thm:bichain-fiber`: existence in the Boolean projection fiber. -/
 theorem bichain_projection_fiber {Var : Type v} (t : Bichain.Term (Option Var))
