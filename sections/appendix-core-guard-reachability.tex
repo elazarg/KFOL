@@ -2438,6 +2438,47 @@ word satisfying the projected rows automatically
 omits outside heads and satisfies each original
 row. The positive probe restricts to $R$ as well.
 
+This gives a partition of the probes for a fixed
+head into boxes on which the exact marked test is
+constant, for any loss budget. Given $p$ with
+disagreement reach $R$, at each input $v$ keep
+only the flags $[p_v=r]$ for labels $r$ of arrows
+from $R$ into $v$. If one flag is true this fixes
+the posting at $v$; otherwise it excludes just
+those labels. An input with no such arrow is
+unconstrained. Every probe in this box has the
+same disagreement arrows from $R$, so still
+reaches all of $R$ and never leaves it. It also
+has the same projected feasibility test on $R$:
+each posting in a projected loss was already on
+an arrow from $R$, and the pointed cut reads
+only those posting flags. If two boxes intersect,
+the common probe determines their same $R$ and
+their same flags on arrows out of $R$, so the
+boxes coincide. The partition can be intersected
+with the input menus of any guard.
+
+The nonempty boxes of a guard can be enumerated
+with polynomial delay from the posting graph.
+Start at the marked head with the guard menus,
+including the unposted option. Inspect the
+flags of outgoing arrows of reached inputs in
+a fixed order. For a flag not yet determined,
+split its destination menu into the label and
+the remaining statuses, retaining only nonempty
+branches. On a false flag, add the destination
+to the reached set. When no outgoing flag
+remains untested, the reached set is the
+disagreement reach of every probe in the
+remaining menus. The leaf menus encode exactly
+their common box intersected with the guard:
+only flags on arrows out of reached inputs
+were tested, and all such flags were fixed.
+No nonempty branch is abandoned, and each
+path inspects at most the number of arrows.
+Depth-first traversal therefore spends
+polynomial work between successive boxes.
+
 For complete prime input the reachability graph can
 be read directly from the lists: a posting occurs
 in a minimal loss exactly when it occurs in a prime
