@@ -759,49 +759,59 @@ Unroll least closure for at most one round per head.
 A posting restriction contributes a rule with the
 forbidden-posting bit as an extra positive premise;
 the conflict rules are fixed. Sufficiency is activation
-of any head with no row. For cyclic budgets and a
-growing palette there need not be such a polynomial-size
+of any head with no row. For cyclic budgets already
+at four owners there need not be such a polynomial-size
 monotone circuit, although guard implication still takes
 polynomial time by matching.
 
-To see this, use $m$ owners $r_1,\ldots,r_m$ for the
-left vertices of a bipartite graph, and $m$ inputs
-$u_1,\ldots,u_m$ for its right vertices. For each $r_i$
-make a directed cycle through the $u_j$, interleaving
-a private input between successive right vertices.
-Use the cycle predecessor as the $r_i$-posting of
-each cycle vertex's unique row. The interleaving
-ensures that postings at different owners in one
-row always use different inputs.
+Start with bipartite perfect matching on $m$ left and $m$
+right vertices. Replace each right vertex by $m$ ports
+in a path. Place one new left vertex between each pair
+of consecutive ports, adjacent to those two ports by
+fixed edges. Attach original left vertex $i$ only to
+port $i$ of each path, using the corresponding original
+edge as its presence bit. In a perfect matching the
+$m-1$ internal left vertices of a path must occupy all
+but one port. Conversely those vertices can cover all
+ports except any prescribed one. Thus this replacement
+preserves perfect matching. Label the original left
+vertices by owner $a$, and alternate owners $b,d$ on
+the internal left vertices of each path. Every port
+has at most one potential neighbor at each owner.
 
-Use another owner $c$ for a chain from the queried
-head through all cycle vertices and private inputs.
-Each row on the chain posts its successor at $c$,
-unless it is the terminal row. Insert spacer heads
-between these inputs so that no $c$-posting conflicts
-with a cycle posting in its row. Leave one further
-owner unused to make every row proper. On the
-facet omitting $c$, Horn closure from the queried
-head forces the whole chain. Forbid each private
-cycle input at its cycle owner. At each right input
-$u_j$ let exclusion of $u_j{:}r_i$ indicate absence
-of edge $(i,j)$.
+Represent a left vertex of owner $r$ by an $r$-cycle
+through its potential ports. Interleave a private input
+between successive ports and place each cycle predecessor
+as an $r$-posting in its successor's row. Thus all
+cycle postings in one row have different owners and
+different inputs. Use the fourth owner $c$ as observer.
+A separate chain of tester heads, starting at the query
+head, posts its next tester at $a$ and one cycle input
+at $c$ per row. Forbid the next-tester postings, so
+the Horn closure forces the whole chain and all cycle
+inputs. It also forbids private inputs at their cycle
+owners. For each variable edge, exclude its port at
+the corresponding owner when the edge is absent.
+Leave the fixed edges allowed. All rows are proper:
+cycle rows omit $c$, and tester rows use at most two
+owners.
 
-The $c$-chain reaches all heads from its empty-tail
-end. Each $r_i$ has exactly one unseeded cycle and
-needs a seed on a right input with the corresponding
-edge present. All other heads have empty $r_i$-tails.
-Consequently the queried guard is sufficient exactly
-when the bipartite graph has no perfect matching.
-The budget and its singleton primes have polynomial
-size in $m$. A monotone circuit for sufficiency on
-this guard slice would dualize to one of the same
-size for perfect matching: swap conjunction and
-disjunction and complement the constants, taking
-edge presence as the input. The logical permanent
-lower bound \cite{Razborov1985Permanent} therefore
-gives a superpolynomial monotone size lower bound
-for these guard sufficiency functions.
+The tester chain is acyclic at each owner and has no
+edge entering a cycle. At the observer it reaches the
+testers from the cycle inputs, whose $c$-tails are empty.
+Each left vertex's cycle therefore needs exactly one
+allowed seed on a port. The required distinct seeds
+are precisely a perfect matching. The queried guard
+is sufficient exactly when perfect matching fails.
+The budget has polynomial size and singleton primes.
+A monotone circuit for sufficiency on this guard slice
+would dualize to one of the same size for perfect
+matching, by swapping conjunction and disjunction and
+complementing the constants, with edge presence as input.
+The logical permanent lower bound
+\cite{Razborov1985Permanent} therefore gives a
+superpolynomial monotone size lower bound at fixed
+palette on these cyclic guard sufficiency functions.
 
 The same test extends to a fixed choice of rows at all
 multiply headed inputs. Guess a subset of the rows at
