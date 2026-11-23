@@ -1799,6 +1799,56 @@ are contained in the residual, since neutralizing $X$ only enlarges
 the other source coefficients. This gives the final assertion.
 \end{proof}
 
+\paragraph{Shared linear covers for arbitrary baselines.}
+The linear cover can be compiled without enumerating
+its spines. In a supplied circuit, compute the neutral
+residual of every gate once. At each marked projection
+start a signal $X$, and at passive projections start
+no signal. At an $r$-gate, process each incoming
+signal separately. Attach the sibling's neutral
+residual at $r$ when its deleted $r$-profile is
+nonzero, and otherwise pass the signal unchanged.
+Join the resulting signals by union. If neither
+incoming signal exists, leave the gate without a
+signal.
+
+This computes exactly the union of the linearized
+spines at each gate. The induction uses distributivity
+of an attachment over union in its marked argument:
+\[
+ (A+B)\star_r H=(A\star_r H)+(B\star_r H).
+\]
+If $H$ is the $r$-atom, both sides are that atom.
+Otherwise an incoming atom at $r$ skips $H$,
+and a union of nonempty menus is that atom only
+when both are that atom. These cases give the
+identity. The signal recurrence therefore implements
+the path-by-path linearization with constant work
+per original gate. Adjoining the root residual
+gives the neutral saturation by
+\cref{core:cor:interval-linear-cover}. In particular
+every circuit in $\mathcal I(C)$ for any core $C$
+has this form with linear circuit-size overhead.
+All passive residuals and intermediate signals
+are shared.
+
+Equivalently, a guard predicate is realized in
+$\mathcal I(C)$ exactly when it can be produced
+by a circuit of joins and passive owned
+attachments starting at $X$, whose output
+signal $S$ has $\partial_X S\subseteq C$.
+The empty signal represents an absent source.
+On source probes the joins are disjunctions
+and an attachment at $r$ conjoins the passive
+helper's failed $r$-singleton test. The single
+passive bound on the output signal is equivalent
+to $S\subseteq C\cup X$ by the neutral residual
+law. Thus it suffices to adjoin $C$ at the end.
+The converse is the shared linear cover just
+constructed. This bound is imposed at the final
+signal; earlier unbounded helper contributions
+may be removed by later attachments.
+
 The neutral completion is essential in the marked lemma: an arbitrary
 core operation can require repeated occurrences even for a single positive
 source probe. The interval bound makes exactly those neutral contributions
