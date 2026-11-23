@@ -635,6 +635,58 @@ prescribed source mark. This gives a
 polynomial-size core circuit and an exact
 recognition test.
 
+\paragraph{Greatest minorants of singleton loss budgets.}
+The graph criterion also computes the greatest core
+minorant of any budget of singleton losses and empty
+losses. First close the singleton edges under labelled
+transitivity away from the diagonal. Explicitly,
+$h\xrightarrow{r}u$ with $h\ne u$ belongs to the
+closure exactly when some vertex reachable from
+$h$ in the original dependency graph has an
+original $r$-edge to $u$. Reachability includes
+a path of length zero. The path criterion follows
+by first using transitivity along a simple path
+to the predecessor of the final edge, then
+propagating its label.
+
+Mark as unusable every head with an empty loss
+and every vertex of a strongly connected component
+with mixed internal labels. Also mark every head
+that can reach any of these vertices. The greatest
+minorant ignores the marked inputs. On the remaining
+inputs its only required losses are the singleton
+edges of the closed graph restricted to those inputs.
+If none remain, the minorant is the formal zero.
+
+To prove this, labelled propagation in the preceding
+criterion holds in every bounded term, regardless
+of whether the target head is used. The mixed-component
+blocker rules out its neutral marks. A term with no
+neutral mark at an input cannot use that input:
+on a neutral probe any occurrence transmits the
+sole winner, because no foreign atom occurs.
+If a loss edge reads an unusable input, that
+posting cannot affect a bounded term, so the
+edge rules out the neutral mark at its head as
+well. This proves that all the marked inputs
+are unusable and every remaining closed edge is
+a required loss.
+
+Conversely the restricted graph is transitively
+closed and has monochromatic internal components.
+The spine synthesis of the preceding criterion
+realizes it. No surviving head reads a marked
+input, so the result obeys all the original losses,
+including those at unused heads. Every bounded
+term is below it by the forced losses and the
+absence of unusable inputs. Thus one graph
+closure, a component calculation and the spine
+construction suffice for greatest-minorant synthesis.
+Its canonical prime list on each facet is also
+direct: at a surviving head there is one guard
+containing all visible closed edge postings, and
+at an unusable head there is no guard.
+
 \paragraph{When a color repeats.}
 The same graphs eliminate all rows with singleton color classes even
 when a witness must win specified coalitions. This bounds the remaining
