@@ -13174,6 +13174,48 @@ prime, since restricting the full primes
 by erasing the fixed gate exclusions and
 minimizing yields the slice primes.
 
+This circuit embedding also separates shared core
+circuits from core words. On a pure $r$-probe at
+head $i$ with observer $k\ne r$, a core word of
+size $s$ gives a monotone formula of size $O(s^2)$
+for its source bit in the absence variables.
+Indeed all foreign gates act by union: no input
+is a foreign singleton, and union and the owned
+gates cannot create one. For each subword, the
+condition that it is not the $r$-singleton is
+a monotone formula of size at most its tree size,
+with conjunction at $\star_r$ and disjunction
+at union. An occurrence of $i$ transmits the
+mark precisely when every sibling along its
+path at an $r$-gate fails the singleton test.
+Take the disjunction over the occurrences of
+$i$. For each occurrence the sibling subtrees
+on its path are disjoint, so its conjunction
+uses at most $O(s)$ formula size.
+
+Apply the circuit embedding to undirected
+$s$--$t$ connectivity on $n$ vertices. It has
+a polynomial-size monotone circuit: for each
+pair record reachability by paths of length
+at most $2^\ell$, and double the length by
+unions of two-segment tests at every
+intermediate vertex. The induced one-owner
+acyclic budget has a polynomial-size shared
+core circuit for its greatest minorant
+by the pure fold synthesis in the acyclic
+appendix. Here that minorant is the
+depth-one envelope because bounded pure
+words distribute into owned folds.
+On the gate-neutral slice its output
+source computes connectivity. By the
+monotone formula lower bound of
+\cite[Corollary~4.2]{KarchmerWigderson1990},
+any core word for the minorant has size
+$n^{\Omega(\log n)}$, even if it uses
+other owners. Thus the sharing separation
+holds for budgets of loss size and prime
+width at most two.
+
 Hardness persists even with two headed inputs and width at most
 four. Modify the preceding reduction by adding one retained input
 $z$. Keep the $r$-losses at $i$ on vertex hitting sets, and add the
