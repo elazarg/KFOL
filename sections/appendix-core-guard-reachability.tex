@@ -2599,6 +2599,62 @@ guards are therefore the wholly internal original
 primes, including $G$ at its head. The facet product
 can still be needed for the other observers.
 
+One can repeat the reduction on the projected budget
+using the same prime on facet $k$. Its prime status
+is preserved at every step. Projection along nested
+scopes is just projection to the smallest scope,
+even if one minimizes the loss rows between steps.
+Indeed, a row dropped because it contains another
+row at the same head still contains that row's
+restriction after any further projection. Every
+step preserves the result of the guard test, and
+the process stops when the recomputed scope is the
+whole current ground. Minimizing after projection
+matters because it can remove arrows within the
+current ground.
+
+The terminal scope is the smallest ground obtainable
+by such reductions, even if intermediate steps use
+larger closed scopes. To see this, for any ground
+$S$ containing the seeds let $F(S)$ be the closure
+of those seeds under the facet rules of the budget
+projected to $S$. If $S\subseteq T$, every minimal
+row on $S$ is the restriction of some minimal row
+on $T$: restrict the rows on $T$ and then minimize.
+Thus every arrow on $S$ is also an arrow on $T$,
+and $F(S)\subseteq F(T)$. Iterating from the full
+ground gives a fixed point $P$. At any step with
+current ground $T$ containing $P$, every closed
+scope contains $F(T)$ and hence $F(P)=P$. So no
+sequence of closed-scope reductions can go below
+$P$.
+
+The number of strict reductions can grow linearly
+even with three owners and loss rows of size at
+most two. Choose distinct owners $k,r,t$ and inputs
+$i,a,d_1,\ldots,d_m,b_0,\ldots,b_m$, with $m\ge1$.
+At $i$ put the singleton losses $a:r$ and $d_j:r$
+for every $j$. On facet $k$ these give one prime
+consisting of all those postings. At each $d_j$
+put the two losses
+\[
+ \{a:r,b_{j-1}:t\},\qquad \{a:r,b_j:k\},
+\]
+and put no losses elsewhere. The prime seeds
+$i,a,d_1,\ldots,d_m$. The first scope contains all
+$b_j$ for $j\ge1$ by the $k$-arrows, and omits
+$b_0$ whose only incoming label is $t$. After
+projecting away $b_0$, the first loss at $d_1$
+becomes $\{a:r\}$ and subsumes its second loss.
+Now $b_1$ has at most the incoming $t$-arrow from
+$d_2$, so it is omitted at the next step. In
+general, after deleting $b_0,\ldots,b_{h-1}$, the
+losses at $d_1,\ldots,d_h$ reduce to $\{a:r\}$,
+and the losses at $d_{h+1},\ldots,d_m$ are
+unchanged. Only $b_h$ is omitted from the next
+scope. Thus the procedure makes $m+1$ strict
+reductions before reaching the seeded ground.
+
 The closure also describes when several heads can
 share a scope under the same posting restrictions.
 For a fixed facet and exclusion set, let $U_i$ be
