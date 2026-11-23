@@ -709,6 +709,83 @@ recursion is an acyclic monotone circuit.
 The empty-history and empty-assignment bit
 is exactly source loss in the core meet.
 
+\paragraph{Monotone loss circuits with few repeated blocks.}
+The singleton edges can instead be handled by
+reachability, leaving a recursion only on repeated
+blocks. Let $d$ be the number of distinct owner--block
+pairs of size at least two after projecting away
+unheaded inputs. From an explicit list of projected
+rows with monotone activation bits, there is a
+monotone loss circuit of size $2^{O(d\log(d+1))}$
+times a polynomial in the list size and palette.
+
+For a state with a pointed assignment, first apply
+the deletion rules of
+\cref{core:thm:repeated-blocker-budgets} to stability.
+At each owner use the corresponding seed set for
+the mark, singleton gap, or rainbow assignment,
+plus active heads with nonsingleton or empty tails.
+Propagate on the active singleton edges. Retain a
+row only when every tail is reached at its owner.
+These simultaneous rounds are monotone in the
+activation bits and in the query postings, since
+the only query-dependent seeds are query blocks.
+They reach the greatest common fixed point of the
+owner deletions. Every sequential deletion preserves
+feasibility and preserves this greatest fixed point,
+so a sequential run to stabilization reaches the
+same budget and proves that the parallel closure
+preserves feasibility.
+
+On the stabilized budget use the projection test
+and the two-child pointed recurrence, with offers
+restricted to repeated blocks. This restriction
+is complete by the shortest-word argument for
+\cref{core:thm:repeated-blocker-budgets}: if there
+is no fitting projection and no feasible repeated
+offer, no shortest witness can win a repeated
+block, and the saturated singleton reachabilities
+then force descent. As for bounded block width,
+allow a static repeated offer even when it is
+currently absent. Combining the two child terms
+still proves sufficiency. In both child budgets
+delete all rows covering the offered block, then
+run the closure again with the child's assignment.
+Each repeated pair can be offered only once along
+a branch, since later budgets keep none of the
+rows it would delete. Thus at most $d$ levels of
+$2d$ branches suffice. The projection and
+failure disjunctions again use only monotone gates.
+
+At fixed $K$ and $d$, one can build the input
+row list directly from canonical primes. For each
+owner recover its possible repeated projected
+blocks by trying two required postings and up to
+$d$ omitted postings at that owner, then taking
+the union of all projected blocks still possible.
+Every repeated block $A$ is among these unions:
+require two of its postings, and omit one posting
+outside $A$ from each repeated block not contained
+in $A$. To verify a candidate block, restrict that
+owner's projected ground to $A$, pin two of its
+postings, and pin one additional posting absent
+from each proper repeated subblock that can occur.
+Try all pin sets of size at most $d+2$ and check
+that some row meets the pins and no such row omits
+any posting of $A$. The private-prime test after
+\cref{core:thm:pointed-guard-cut} checks the required
+and forbidden postings.
+
+Include singleton and empty blocks and form proper
+consistent tuples, one block per owner. There are
+polynomially many at fixed $K,d$. Use the same
+monotone activation scan as in the headed-injective
+construction: a tuple may be enabled by a smaller
+actual reduced row, which makes its constraint
+redundant. For this tuple list the only repeated
+offers are the recovered blocks, so compilation
+still has the stated branching bound.
+
 For budgets with at most one row per head and
 injective postings on the headed inputs, guard
 implication for the core meet is polynomial,
