@@ -9169,6 +9169,63 @@ $\{u_i,v_i\}$ is entirely seeded. Thus the minimal
 forbidden blocks contain $x$ and one member of each
 pair. There are $2^d$ of them from $3d$ listed rules.
 
+The same test can delete rows as well as answer an
+external comparison. After safe-fold saturation, delete
+every row with a monochromatic tail certified excluded
+by the Horn disjunction, and repeat the two steps.
+For a listed budget the number of strict rounds is
+at most the number of rows, with polynomial work per
+round.
+
+Before minimizing rows, the terminal budget is the
+greatest subfamily in which all tails are reached
+from their query seeds and no row has a tail excluded
+by the Horn disjunction. Indeed, adding rows only
+increases each Horn closure and the set of heads.
+Thus an individual row that passes both tests in a
+subfamily still passes in a larger family. In
+particular the union of any such subfamilies still
+passes, and no deletion can remove one of their
+rows. The iteration reaches this union, regardless
+of the order of deletions. Minimization can be
+deferred until the end: dropping redundant rows
+preserves the head set and every Horn closure,
+and exclusion of any block implies exclusion of its
+supersets.
+
+These deletions preserve the exact principal, even when
+the test misses some exclusions. Let $D$ be the greatest
+coefficient of the starting budget and $M$ its greatest
+atomic enlargement at $p$. The partial-budget formula
+of emph{Descending boxes from a partial loss budget}
+identifies $M$ as the greatest coefficient of the rows
+whose colorings are in the principal of $D$. Each old
+safe fold certifies an exclusion of the tail of every
+row it deletes: its support is disjoint from $p_r$ at
+its gate owner $r$, but meets the row's $r$-tail. The
+fold helper fits the current budget: it absorbs on
+the deleted rows and supplies no marked head on the
+remaining rows. Each deletion by the Horn
+disjunction also certifies such an exclusion. The
+principal is an owner box, so neither step deletes a
+protected row. Inductively the new coefficient lies
+between $D$ and $M$, which have the same principal.
+The interval monotonicity used in
+cref{core:lem:atomic-repair} gives that same principal
+for the new coefficient. It also agrees with $D$ at
+the query because $M$ does.
+
+For example let $u,v,x$ be distinct inputs, with rows
+at $u,v$ posting the other input at $s$, and one row
+at $x$ posting both $u,v$ at $r
+e s$. Query with
+$u,v$ posted at $s$. All rows survive ordinary safe-fold
+saturation. But $H_s(Vsetminus{u,v})={x}$, so the
+$r$-tail of the row at $x$ is excluded. The new deletion
+step leaves only singleton tails. Thus an injective
+residual can suffice for exactness even when ordinary
+safe-fold saturation leaves repeated tails.
+
 The Horn disjunction gives the whole monochromatic
 principal if $S_p$ is injective, since no repeated
 old tail can branch. This condition permits repeated
