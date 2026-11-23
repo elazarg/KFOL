@@ -6835,6 +6835,62 @@ to ordinary core recognition, since the canonical
 loss graph itself has no monochromatic cycle.
 Apply \cref{core:thm:complete-acyclic-guard-complexity}.
 
+\paragraph{Recovering acyclic quotients of disjoint folds.}
+The fold-lift test does not require a supplied
+partition when the quotient is acyclic. Work on
+the live inputs, discarding unused inputs once
+the lists confirm they are not read. Mark all
+pairs with reciprocal singleton losses. In
+any lift from an acyclic quotient, a nonsingleton
+owned fold contributes exactly its complete
+clique of reciprocal pairs at its native owner.
+There can be no reciprocal pair across distinct
+blocks. Indeed a singleton posting that loses
+a mark in another block must change the quotient
+control to an atom there: the head block's
+internal filter is unchanged. This gives a
+dependency in the quotient. A reciprocal pair
+would give the opposite dependency as well,
+contradicting acyclicity.
+
+Thus the partition into owned folds and singleton
+inputs is forced. Check that the marked pairs form
+disjoint complete graphs with a single owner in
+each, recover the quotient by identification,
+and check the canonical lift lists using the
+expansion rule in \emph{Quotients by unions and
+owned folds}. Test that the quotient is acyclic.
+These steps are polynomial in the prime lists.
+The candidate lies in the class of core acyclic
+fold lifts exactly when the resulting quotient
+passes acyclic recognition: identification and
+substitution preserve core termhood in the two
+directions. This test admits arbitrary acyclic
+quotients, with no ranked-spine requirement.
+
+A bound on minimal loss size in the original
+lists gives the same bound in the quotient.
+To see this, lift any minimal quotient loss
+to a minimal original loss at a chosen copy of
+its head. A posting controlling a quotient
+block at its native owner can be realized by
+posting one input there. At any other owner
+post the whole block at that owner. Leave the
+other inputs unposted. This makes each desired
+quotient posting present and ensures that
+deleting any original posting erases one of
+them. The original head block's internal
+native filters are all clear. Thus the lifted
+row is minimal and has at least as many
+postings as the quotient row. Similarly the
+lift expansion of primes never decreases their
+width. Consequently the recognition algorithm
+for acyclic budgets of bounded loss size
+applies directly to these cyclic lifts. It
+takes polynomial time at fixed loss size,
+or fixed-parameter time when both loss size
+and prime width are parameters.
+
 \paragraph{Ranked quotients of disjoint folds.}
 The prime test extends to compositions of a ranked
 quotient with owned folds on disjoint input blocks.
