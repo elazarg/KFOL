@@ -228,6 +228,85 @@ contains some listed prime. The test must pass on every facet.
 \end{proof}
 
 \paragraph{Signed tests on acyclic budgets.}
+There is an exact ordered pass with bounded helpers
+on strict prefixes. Use either a same-owner gap
+$\Phi_k(A)=1,\Phi_k(B)=0$, or one winning demand
+per represented owner. At a row $(j,t)$, try an
+owner $s$ with nonempty tail $t_s$. Ask for a
+helper on the inputs strictly before $j$, bounded
+by the earlier rows still retained, with the
+following demands:
+\begin{itemize}
+\item For a gap and $s=k$, win $k:t_k$ and lose
+$k:B$.
+\item For a gap and $s\ne k$, win both $s:t_s$
+and $k:A$.
+\item For a rainbow, win $s:t_s$ and keep the
+original demands at owners other than $s$.
+\end{itemize}
+Read coalitions on the helper's smaller input set.
+Delete the row if any such helper exists. Once
+all heads have been processed, the requested
+condition is feasible exactly when a projection
+satisfies it and omits the retained rows.
+
+To verify the forward construction, start with
+such a projection and replay the deletions in
+reverse. At a removed row its helper absorbs.
+The helper cannot add a marked source at that
+head or a later one, and it obeys every earlier
+row still present when the deletion was made.
+The respective profile conditions ensure that
+each attachment preserves the original demand.
+This argument also permits several rows at the
+same head, since a helper never uses their head.
+
+For the converse take a shortest witness on the
+terminal budget. If it absorbs at $s$ on a row
+headed by $j$, it wins $s:t_s$, hence also the
+$s$-test on the full strict prefix of $j$.
+Prune it to that prefix by discarding the
+losing child at any $s$-gate where only one
+child wins the prefix test. This preserves its
+$s$-profile on every subset of the prefix:
+discarded children lose on all such subsets.
+It also preserves its wins at other owners,
+whose profiles conjoin at a discarded branch,
+and cannot increase its $s$-profile on any
+coalition. Every earlier row stayed bounded:
+its $s$-tail is contained in the prefix, so a
+discarded child could not absorb on that row.
+At retained gates, set inclusion of the outputs
+propagates this bound. Thus the pruned word
+would have passed the row's helper test. The
+earlier terminal rows were already determined
+when the row was tested. This contradicts its
+survival. With no absorption on a row, both
+children of the root fit the terminal budget,
+and one retains the demand by the gap or
+rainbow profile rules. Shortestness forces a
+projection.
+
+This recursion uses only strict prefixes, and
+its base tests are projections. It works with
+arbitrary repeated tails in acyclic budgets,
+including those for which adding the winning
+profile as pure rows creates a cycle.
+
+The pruning argument also localizes an individual
+helper on a cyclic budget. Use the predecessor
+closure of the offered tail $t_s$, including its
+inputs, in place of the strict prefix. All rows
+headed there have their postings there, and a
+helper winning $s:t_s$ also wins on this larger
+coalition, so the same pruning applies. Conversely
+a helper on this set ignores all heads outside it.
+Thus the helper test is exact on just these
+ancestors. In the acyclic pass this can replace
+the full strict prefix by a smaller one; in a
+cycle the localized helper test may include the
+head of the offered row itself.
+
 The ordered pass has a sufficient version for
 $\Phi_k(A)=1,\ \Phi_k(B)=0$. A posting $u{:}r$
 is allowed as a helper if $u\notin B$ when $r=k$,
