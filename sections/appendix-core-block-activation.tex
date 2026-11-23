@@ -9029,6 +9029,58 @@ or enumeration of injective patterns is needed.
 The number of ground reductions and scans is
 polynomial in the lists and the palette.
 
+Allow now colored queries in nontrivial components,
+and let $c$ be the total number of inputs in those
+components that meet the query's posted support.
+When every original row's postings within its own
+component are injective, the prime-only sweep takes
+$(K+1)^{O(c)}$ times polynomial work, without a
+bound on the uncolored component sizes.
+
+For each earlier colored nontrivial component store
+its principal at the query by trying all proper
+local colorings $b$. Compute each comparison by the
+fresh-source test in the proof above. On the
+symbolic activated budget this adds one explicit
+loss, at the fresh source. In the repeated-block
+test only that row can cause branching. Each such
+branch removes it, and all remaining head, seed
+and edge searches are the same prime scans with
+the exterior restrictions. Thus each comparison
+costs polynomial work per set of exterior domains.
+
+For a later component, combine the admitted local
+colorings of earlier colored components by taking
+one coloring from each of their stored principals.
+This enumerates at most $(K+1)^c$ exterior grounds.
+On singleton and uncolored components use the
+individual restrictions above. On a colored
+component, restrict its exterior postings to
+the chosen coloring. The principal is closed
+under removing postings, so a row activates
+exactly when it is found in at least one of these
+grounds. All symbolic row searches may therefore
+take the union of their answers over the grounds.
+The other operations of the pass are polynomial;
+the local principal tables and the ground
+enumerations together give the stated bound.
+
+The exponent can count just the supports of local
+coefficients whose support meets the query posting.
+Compute each support first by the shared uncolored
+test on its activated budget. An interval word
+between $D_C$ and $D_C+Y$ cannot use an input
+outside this support and $Y$: any occurrence of such
+an input would supply its all-neutral mark, forbidden
+by the upper bound. Thus the principal ignores
+postings on unused inputs. If no posted input lies
+in the support, use the uncolored principal.
+Otherwise enumerate the local colorings on the
+support only and allow all postings outside it.
+This gives the same bound with $c$ replaced by the
+sum of these support sizes, or by its upper bound
+from the original component sizes.
+
 \begin{corollary}[Localizing monochromatic activation to one component]
 \label{core:cor:unanimity-source-component}
 Let $F$ have unanimous $a$-profile and let $q$ color every input by
