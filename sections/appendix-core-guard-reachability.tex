@@ -13216,6 +13216,82 @@ other owners. Thus the sharing separation
 holds for budgets of loss size and prime
 width at most two.
 
+Without a bound on loss size, even width-two
+canonical lists can give depth-one envelopes
+requiring superpolynomial shared core circuits.
+Use a fixed CNF whose variables include edge
+variables $E_{uv}$ for a graph on $m$ vertices
+and choices $X_{j,u}$ for a vertex $u$ in each
+of $s$ clique positions $j$. Require one choice
+per position. For distinct positions forbid
+choosing the same vertex and use clauses
+$\neg X_{j,u}\lor\neg X_{\ell,v}\lor E_{uv}$
+for distinct vertices. If an edge variable may
+be true only when its edge is present, these
+clauses are satisfiable exactly when the graph
+has an $s$-clique.
+
+For each Boolean variable $x$ use literal heads
+$P_x,N_x$. Use retained controls $c_{xy}$ for
+distinct variables and let $C$ be their set.
+A binary tree of heads has one leaf per clause
+and root $i$. Each internal head has an $r$-loss
+given by a singleton posting of each child,
+forcing every tree head into the support of a
+bounded witness at $i$. Write $D$ for the
+nonroot tree heads. At each clause leaf put
+one $r$-loss on $C$ and its literal heads.
+At $P_x$ put an $r$-loss on
+$\{c_{xy}:y\ne x\}\cup\{z_x\}$, using a fresh
+retained control $z_x$. At $N_y$ put a $t$-loss
+on $\{c_{xy}:x\ne y\}\cup D$, with $t\ne r$.
+All losses are pure. At each head they consist
+of one row or at most two singleton rows, so
+the complete canonical prime lists have
+polynomial total length and width at most two.
+
+On the probe for $i$, post all of $C$ at $r$.
+Also post $z_x$ there precisely when $x$ is an
+edge variable for an absent edge. Choose an
+observer different from $r$. All retained
+controls can be added to a prospective
+completion's support without adding loss
+requirements. A clause generator escapes
+the probe exactly when some literal head of
+that clause is selected. A positive-head
+generator escapes exactly when its $z_x$ is
+unposted. The negative-head generators and
+the tree generators always escape. Each
+negative-head generator meets every tree
+singleton in $D$ and every clause generator
+in $C$. It meets a positive-head generator
+exactly when their variables are distinct.
+Thus the depth-one witness exists exactly
+when the selected literals extend to a satisfying
+assignment with true edge variables allowed
+only on present edges. This is precisely
+clique, read on a slice with only $r$-postings.
+
+On a pure probe the non-atomic $r$-flag and
+the mark of each gate are computed by a
+constant number of monotone Boolean gates.
+At an $r$-gate the new flag is the conjunction
+of the two non-atomic flags, and the mark
+requires that conjunction and at least one
+child mark. At union and foreign gates the
+two summaries are disjunctive. Thus a shared
+core circuit for the envelope would give a
+monotone circuit of linear size in the core
+circuit size for clique. Taking
+$s=\lfloor (m/\log m)^{2/3}/4\rfloor$, the
+Alon--Boppana lower bound
+\cite[Theorem~3.9]{AlonBoppana1987} gives
+size $\exp(\Omega((m/\log m)^{1/3}))$.
+Since the constructed prime lists are
+polynomial in $m$, this rules out a
+polynomial-size shared core circuit for
+all width-two depth-one envelopes.
+
 Hardness persists even with two headed inputs and width at most
 four. Modify the preceding reduction by adding one retained input
 $z$. Keep the $r$-losses at $i$ on vertex hitting sets, and add the
