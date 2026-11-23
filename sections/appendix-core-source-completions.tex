@@ -572,9 +572,19 @@ The reduction supplies complete prime lists and works for
 every fixed $K\ge3$. Hence the upper bound is sharp already
 for one repeated class in the whole family.
 
-For injective budgets with at most one row per head,
-guard implication for the core meet is polynomial,
-including in the presence of cycles.
+For budgets with at most one row per head and
+injective postings on the headed inputs, guard
+implication for the core meet is polynomial,
+including in the presence of cycles. Postings on
+inputs that never head a row can repeat at the
+same owner. For a fixed probe, keep just the rows
+whose postings at these unheaded inputs agree with
+the probe, then erase those postings
+(\cref{core:lem:unmarked-background}). The remaining
+rows are injective, so the blocker theorem applies.
+In the search over probes every chosen row must
+therefore require its original unheaded postings,
+in addition to its reduced blocker constraints.
 Fix the query head $i$, observer, and guard. A posting
 is allowed if it can occur on that facet with the guard
 enabled, so in particular no posting at $i$ is allowed.
@@ -599,7 +609,10 @@ The implications make this coloring consistent and
 allowed.
 
 For each owner $r$, draw the $r$-edges of the selected
-rows. Every head has at most one incoming $r$-edge.
+rows after erasing their original unheaded postings.
+Those erased postings have already been enforced
+by the Horn system and the external coloring.
+Every head has at most one incoming $r$-edge.
 Outside the directed cycles, reachability follows
 by tracing predecessors to a selected empty-tail
 row, an externally posted tail, or a cycle.
@@ -640,9 +653,10 @@ variable accordingly. Run the Horn construction using
 only the guessed rows at these heads and every unique
 row at the other heads. In the least solution, replace
 directed cycles in the matching step by source strongly
-connected components of each owner's graph restricted
-to the selected heads. A head is already seeded if one
-of its selected rows has an empty tail at that owner
+connected components of each owner's reduced graph
+restricted to the selected heads. A head is already
+seeded if one of its selected rows has an empty
+reduced tail at that owner
 or has a tail posted externally at that owner.
 Every source component without such a head needs an allowed
 posting on one of its selected heads. As before, a
@@ -660,7 +674,8 @@ input are needed. In a blocker every head is reachable
 at every owner. At each owner take shortest paths
 from the seeds, and at each head not already posted
 there retain a row witnessing its empty-tail seed
-or its last path edge. These choices preserve all
+or its last path edge in the reduced graph. These
+choices preserve all
 the reachabilities by induction on distance. Every
 head is unposted at some owner, so at least one of its
 rows is retained. Because the head set stays the same,
