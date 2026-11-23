@@ -24,11 +24,11 @@ private theorem ofBool_inf : ∀ x y, ofBool (x && y) = inf (ofBool x) (ofBool y
 private theorem ofBool_sup : ∀ x y, ofBool (x || y) = sup (ofBool x) (ofBool y) := by
   decide +kernel
 
-private theorem resolves_inf : ∀ w x y z,
+theorem resolves_inf : ∀ w x y z,
     Resolves w x → Resolves y z → Resolves (inf w y) (inf x z) := by
   unfold Resolves
   decide +kernel
-private theorem resolves_sup : ∀ w x y z,
+theorem resolves_sup : ∀ w x y z,
     Resolves w x → Resolves y z → Resolves (sup w y) (sup x z) := by
   unfold Resolves
   decide +kernel

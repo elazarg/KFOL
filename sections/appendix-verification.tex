@@ -583,7 +583,9 @@ Essential-context coloring and exact source repetition in canonical extensions
 (\cref{core:prop:essential-context-coloring,core:thm:canonical-source-repetition})
  & Written proofs, uniform in $K\geq3$ and allowing all core choices and union.\\
 Quantified formulas as cuts (\cref{core:thm:quantified-cube-cuts})
- & \path{quantified_cube_cuts}\\
+ & \path{quantified_cube_cuts}. The corresponding row interpolation
+ theorem for three-role core terms is
+ \path{quantified_finite_core_interpolation}.\\
 Two-color source interpolation (\cref{core:thm:two-repeater-hardness,core:thm:two-color-pspace,core:prop:budget-dependent-cuts,core:prop:prime-profile-hardness})
  & Written reductions from CNF unsatisfiability and quantified Boolean
  truth, with path-length bounds for the restricted endpoint problems.
@@ -1492,9 +1494,8 @@ The independent standard-library program
 recursion with unpruned finite core closures, including the six-row
 obstruction; its recognizer never calls the closure oracle.
 
-Five local programs in \path{checks/characterization/} test the Boolean
+Five programs in \path{checks/characterization/} test the Boolean
 core of \cref{core:thm:two-color-pspace} independently of its proof.
-They are not part of the archive at \texttt{2099f25}.
 \path{bichain.py} generates, for a budget of marked cubes on at most
 four inputs, every pair of a Boolean function and its row values that a
 pure formula attains, and so lists the safe functions exactly.
@@ -1515,9 +1516,14 @@ including empty clauses and empty matrices. Its Lean proof is in
 truth predicate are defined there, a false formula is given an explicit
 cut, and a cut for a true formula is refuted by the invariant on released
 resources. Together with the cut theorem this gives the term statement in
-\path{Report.lean}. The Lean coordinates and vertices are indexed by all
-natural numbers; those outside the instance lie on no cell. Polynomial-time computability of the rows and the
-PSPACE-completeness of quantified truth are not formalized.
+\path{Report.lean}. In \path{KFOL/Core/BichainCoreBridge.lean}, the
+observer translation gives one pure word that preserves every endpoint and
+omission of a three-role core word, also after restriction to a positive
+coalition. The bound in \path{KFOL/Core/BichainFiniteLabels.lean} folds
+coordinates above stage $n+2$ onto representatives with the same row and
+endpoint values. The selector construction and canonical-list size bound
+for complete recognition still use the written reduction in
+\cref{core:thm:complete-guard-pspace}.
 \path{profile_primes.py} enumerates all sufficient guards for
 $150$ random hypergraphs on three or four vertices and confirms the
 prime lists and the emptiness criterion of

@@ -54,7 +54,7 @@ public import KFOL.Core.CompletionDepthChain
 public import KFOL.Core.CompletionSuspension
 public import KFOL.Core.LayerInterpolation
 public import KFOL.Core.BichainCubeCuts
-public import KFOL.Core.BichainQuantified
+public import KFOL.Core.BichainCoreBridge
 public import KFOL.Audit.Namespace
 
 /-! # Audited report statements and mathematical proof ingredients
@@ -344,6 +344,20 @@ theorem quantified_cube_cuts (F : Bichain.Quantified.Formula) (hwf : F.WF) (α :
           t.eval (Bichain.Quantified.rows F z) ≠ .possible) ∧
         (Bichain.Quantified.cell F (.br 0 (α 0)) (.relay 0)).Holds t :=
   Bichain.Quantified.sat_iff_separator F hwf α
+
+/-- A finite three-role core row instance is satisfiable exactly when the
+quantified formula is true. -/
+theorem quantified_finite_core_interpolation (F : Bichain.Quantified.Formula)
+    (hwf : F.WF) (α : ℕ → Bool) :
+    Bichain.Quantified.sat F F.n 0 α ↔
+      ∃ t : KFOL.Term (Fin 3) (Bichain.Quantified.FiniteLab F), t.IsCore ∧
+        t.eval (fun j => Bichain.Quantified.coreRows F α (.inr false) j.val) =
+          WinnerSet.singleton 1 ∧
+        t.eval (fun j => Bichain.Quantified.coreRows F α (.inr true) j.val) =
+          WinnerSet.singleton 2 ∧
+        ∀ z : {z // z ∈ Bichain.Quantified.allRows F},
+          0 ∉ (t.eval (fun j => Bichain.Quantified.coreRows F α (.inl z) j.val)).val :=
+  Bichain.Quantified.sat_iff_finite_core_interpolation F hwf α
 
 /-- `core:thm:bichain-fiber`: existence in the Boolean projection fiber. -/
 theorem bichain_projection_fiber {Var : Type v} (t : Bichain.Term (Option Var))
