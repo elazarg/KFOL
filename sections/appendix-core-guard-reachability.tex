@@ -2591,6 +2591,77 @@ The same union need not give the greatest minorant
 of a noncore candidate: the latter can have new
 prime guards requiring larger supports.
 
+For an acyclic graph of singleton losses the entire
+minorant has a direct formula. Write $i\to v$ with
+label $r$ when $v:r$ loses at $i$. At $i$, impose
+the singleton loss $v:r$ for every edge $u\to v$
+with label $r$ whose tail $u$ is reachable from $i$,
+including $u=i$. These propagated losses are
+necessary by repeated colored-cofactor substitution
+along the path and its final edge. Acyclicity ensures
+that the final input $v$ is distinct from every
+earlier input on the path.
+
+For sufficiency, start a word at $i$. Visit the other
+reachable inputs in topological order, with edges
+pointing from earlier to later inputs. For each
+visited input $v$, attach its projection by $\star_r$
+once for each label $r$ on an incoming edge from
+the reachable set. Every used head $u$ is then
+bounded: for its loss $v:r$, at least one matching
+attachment of $v$ comes after all occurrences of
+$u$ and absorbs on that loss. No later projection
+can restore the lost source. At the initial head
+$i$ these attachments lose its mark exactly on
+the propagated singleton postings. The union of
+the words for all initial heads therefore gives
+the greatest minorant. This construction is
+polynomial from canonical primes when all losses
+are singleton, since one can test every singleton
+posting and use graph reachability.
+
+For arbitrary singleton-loss graphs, a head whose
+reachable set meets a strongly connected component
+with two distinct internal labels has no bounded
+witness. To see this, retain only the internal
+edges of that component as negative rows. For each
+owner $r$, some head has an outgoing edge with a
+different label, and is a seed in the reachability
+obstruction of \cref{core:thm:injective-blockers}.
+In fact every component vertex belongs to $D_r$:
+take a forward path to such a seed and stop at the
+first seed, so every edge of the resulting path
+is labeled $r$ and can be traversed backward in
+$D_r$. All internal rows are therefore covered,
+and no head in the component can supply its
+neutral mark. A bounded word using such a head
+would supply its neutral mark, and any word using
+a predecessor must use the head by the singleton
+support bound.
+
+Conversely, a head whose reachable components
+are all internally monochromatic has a witness
+on the empty probe. Process the condensation of
+its reachable graph in topological order. Start
+with the projection of the head or, if its
+component is nonsingleton, the fold of that
+component at its internal owner. At each later
+component attach the projections at the labels
+of all incoming edges from earlier components.
+If the component is nonsingleton, then attach
+its native fold at its internal owner. Incoming
+attachments suppress the losses headed earlier,
+and the final fold supplies the internal losses:
+on any internal singleton loss probe it absorbs
+at the native owner, suppressing the mark of the
+other vertex. These operations do not reintroduce
+earlier sources. Every gate transmits the mark
+of the initial head on the empty probe. Thus
+the strongly connected components give an exact
+test for which heads can ever occur in a
+bounded word, even when the acyclic formula for
+all positive probes does not apply.
+
 The gap is unbounded even at width one. Take inputs
 $x_0,\ldots,x_d$, and let $r_1,\ldots,r_d$ alternate
 between two owners. The sole loss at $x_i$, for $i<d$,
@@ -2603,31 +2674,12 @@ Alternation then stops the closure at the next arrow.
 All original prime supports have at most three inputs.
 
 Every bounded word supplying $x_0$ uses all $d+1$
-inputs by singleton-loss reachability. Moreover the
-greatest minorant loses at $x_i$ under every later
-singleton posting $x_j:r_j$, $j>i$. This follows
-by repeated singleton-loss substitution using
-colored-cofactor independence: fixing $x_j:r_j$
-makes the cofactor ignore $x_{j-1}$, which may
-then be set to its prescribed posting to transfer
-the preceding loss. For the reverse inclusion, use
-the union over $i$ of the suffix words
-\[
- (((x_i\star_{r_{i+1}} x_{i+1})\star_{r_{i+2}}x_{i+2})
-       \cdots)\star_{r_d}x_d ,
-\]
-with the last suffix interpreted as $x_d$. Each suffix
-is bounded: the next sibling at its native atom
-suppresses the forbidden mark at each head it uses,
-and later attachments cannot restore that mark.
-At the first head of a suffix its mark survives
-exactly when no later sibling is its native atom,
-since each gate otherwise transmits the marked
-child. Thus the union supplies every bit allowed
-by the propagated losses and is the greatest
-minorant. It supplies $x_0$ on the empty probe,
-and on a facet omitting neither alternating owner
-its sole prime at $x_0$ has width $d$. Therefore
+inputs by singleton-loss reachability. The acyclic
+formula gives the greatest minorant by propagating
+all downstream singleton losses at each head. It
+supplies $x_0$ on the empty probe, and on a facet
+omitting neither alternating owner its sole prime
+at $x_0$ has width $d$. Therefore
 bounded original prime supports can coexist with
 unbounded minorant prime width and witness support.
 
