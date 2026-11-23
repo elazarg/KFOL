@@ -5201,6 +5201,60 @@ the first argument, even if the candidate itself is
 noncore. A stage that does split preserves core
 membership by the second argument.
 
+For a core operation, the least blocks containing pairs
+give a compact description of all exact blocks. Denote the
+least block containing $x,y$ by $B(x,y)$. A nonempty
+set $S$ is exact if and only if it contains $B(x,y)$
+for every $x,y\in S$. Necessity is minimality. For
+sufficiency fix $x\in S$ and take the union of the
+$B(x,y)$ over $y\in S$. These blocks share $x$, so
+successive unions are valid by the overlap join or
+containment. Their union is $S$. The singleton case
+is immediate.
+
+Call an exact block strong if it overlaps no exact
+block, where overlap requires nonempty intersection
+and both differences nonempty. To check strength it
+suffices to check overlap with the pair blocks. If
+$D$ overlaps $S$, choose $x\in S\cap D$ and
+$y\in D\setminus S$. The block $B(x,y)$ lies in $D$,
+so it meets and extends outside $S$ while missing
+every input of $S\setminus D$. Thus it overlaps $S$.
+Starting from $B(x,y)$, repeatedly adjoin any
+overlapping pair block. Each union is valid, and
+every strong superset must contain the adjoined
+block, since it meets that superset and misses a
+point of the current set. The result is therefore
+the least strong block containing $x,y$.
+
+The strong blocks form a laminar tree containing the
+singletons and the full set. Every nonsingleton strong
+block is obtained as a least strong block of a pair:
+choose inputs in distinct maximal proper strong
+subblocks. Those subblocks partition the parent,
+and no proper strong subblock of the parent can
+contain the chosen pair. Hence the pair procedure
+recovers the entire tree in polynomial time from
+the canonical primes. At each node the neutral
+residual factors through its children by the
+disjoint and nested substitution rules, giving a
+canonical hierarchy of quotients.
+
+No node quotient has a proper nonsingleton strong
+block. Indeed an exact block of the quotient lifts
+to the union of its child blocks by substituting
+their inner operations. Any exact block overlapping
+that union must lie inside the parent by strength
+of the parent. Strength of the children then forces
+the overlapping block to be a union of children,
+since it cannot be confined to one child and still
+overlap their union. By nested contraction it
+descends to an exact block of the quotient,
+contradicting strength there. Thus a proper strong
+quotient block would lift to a proper strong
+subblock of the parent strictly containing a child,
+contrary to maximality.
+
 Overlapping blocks that are both valid folds at the
 same owner $r$ can be merged. Write $U=C\cup D$ and
 take a head $j\in C\cap D$. With all other inputs
