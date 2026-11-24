@@ -7,7 +7,7 @@ public import KFOL.Core.AtomicBasis.Basis
 public import KFOL.Core.SourcePeeling
 public import KFOL.Core.FiniteRelationObstruction
 public import KFOL.Core.QuantifiedRecognition
-public import KFOL.Complexity.ExplicitTableHardness
+public import KFOL.Complexity.TablePeelingSpace
 public import KFOL.Complexity.RecognitionHardness
 public import KFOL.DependentSchedule.Results
 public import KFOL.Strategic.CoalitionMaps
@@ -670,11 +670,12 @@ theorem core_explicit_table_reduction {K : ℕ} (three : Fin 3 ↪ Fin K)
       input ∈ Cslib.Complexity.TQBFCNF :=
   Core.ExplicitTableReduction.winner_table_iff three input
 
-/-- Polynomial-space hardness for the entire explicitly listed winner table. -/
-theorem core_explicit_table_pspace_hard {K : ℕ} (three : Fin 3 ↪ Fin K) :
-    Cslib.Complexity.PSPACEHard Complexity.AddressedCompiler.rawEncoding
+/-- `core:thm:explicit-table-pspace`: completeness for the full menu table,
+including the upper bound and the polynomial-time many-one reduction. -/
+theorem core_explicit_table_pspace_complete {K : ℕ} (three : Fin 3 ↪ Fin K) :
+    Cslib.Complexity.PSPACEComplete Complexity.AddressedPoint.tableEncoding
       {p | Complexity.AddressedPoint.RawAccepts K p} :=
-  Complexity.ExplicitTableHardness.pspaceHard three
+  Complexity.TablePeelingSpace.winner_complete three
 
 /-! ## Completely disclosed sealed rounds -/
 section Rounds

@@ -347,6 +347,16 @@ import all KFOL.Complexity.AddressedSourceCorrectness
 import all KFOL.Complexity.AddressedSourceOutput
 import all KFOL.Complexity.ExplicitSourceHardness
 import all KFOL.Complexity.ExplicitTableHardness
+import all KFOL.Complexity.ExplicitSourceSpace
+import all KFOL.Complexity.TablePeelingBlocks
+import all KFOL.Complexity.TablePeelingClock
+import all KFOL.Complexity.TablePeelingFrontend
+import all KFOL.Complexity.TablePeelingGame
+import all KFOL.Complexity.TablePeelingMasks
+import all KFOL.Complexity.TablePeelingMasksMachine
+import all KFOL.Complexity.TablePeelingSemantics
+import all KFOL.Complexity.TablePeelingSpace
+import all KFOL.Core.ExactSplit
 import all KFOL.Core.AddressSize
 import all KFOL.Core.AddressedLogicalGroups
 import all KFOL.Core.AddressedPadding

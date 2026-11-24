@@ -5,8 +5,9 @@ recognition are PSPACE-complete. The proof is in
 [the report](../../overleaf/sections/appendix-core-table-recognition.tex)
 in the separate paper checkout. The [Lean theorem](../../KFOL/Core/ExplicitTableReduction.lean)
 applies to arbitrary encoded quantified CNF, proves equivalence for both tables,
-and bounds their lengths. The report's verification appendix distinguishes
-semantic proofs, machine certificates, and independent finite checks.
+and bounds their lengths. Both [machine-level classifications](../../KFOL/Complexity/TablePeelingSpace.lean)
+include the upper bound and a polynomial-time many-one reduction from
+quantified truth.
 
 ## Reproduce the finite checks
 
