@@ -1,0 +1,117 @@
+\begin{theorem}[Nested adoptions on an addressed path]
+\label{core:thm:nested-adoption-path}
+For fixed $K\ge3$ and $l\ge2$, let $L=6\cdot 2^l$. On $12l$
+inputs there is a core operation with a maximal positive whose every
+winning offer strategy has a play with at least $L-2$ changes of owner
+between adopted offers. At least $L-4$ adoptions on that play replace
+a held coalition by a disjoint one and leave every eligible projection
+blocked by a loss which no safe preparation at the parent can remove.
+These losses remain even if all rows with a posting at the owner of
+that adoption are deleted.
+\end{theorem}
+\begin{proof}
+Use distinct owners $a,b,c$, and alternate $r_j=a,b$ with $j$ even, odd.
+Make six tracks, each with two rails per bit position $0,\ldots,l-1$.
+For $0\le t<L$, let $H_t$ select in track $t\bmod6$ the rails for the
+binary digits of $\lfloor t/6\rfloor$. These addresses exhaust each
+track once. Put $H_{-1}=H_L=\varnothing$ and $P_j=H_{j-1}\cup H_j$.
+In particular $P_j\cap P_{j+1}=H_j$. Use the following marked rows.
+\begin{itemize}
+\item At each rail post at $c$ both rails of the next bit in its
+track, cyclically.
+\item For $0\le t<L-1$, at each $u\in H_t$ give a row $M_{t,u}$ posting
+$P_{t+2}$ at $r_t$ and the complementary rails of $H_t$ in its own
+track at $c$.
+\item For $d=0,1$, at each input outside $P_d$ post $P_d$ at $r_d$.
+These rows require a win on $r_d:P_d$ by
+\eqref{core:eq:total-monochromatic-source}.
+\end{itemize}
+The head is unposted in every row. Ask for any $h\in H_0$ at the empty
+coloring. Write $w_t$ for the $c$-fold of $H_t$, and define
+$t_{L-1}=w_{L-1}$ and $t_j=w_j\star_{r_j}t_{j+1}$.
+Each $w_j$ omits every cyclic mark: if it contains the head, it
+absorbs on a next-bit rail. On $M_{s,u}$ with $s\ne j$, it either
+omits the head from its support or is a different address in the same
+track and absorbs on a complementary rail. Inductively $t_j$ wins on
+$r_j:P_j$ through $w_j$ and on $r_{j+1}:P_{j+1}$ through both
+operands. On $M_{j,u}$ its suffix therefore absorbs at $r_{j+2}=r_j$,
+and on every later marked row both operands omit the mark. Thus $t_0$
+meets all the losses. At the empty probe only $h$ supplies the mark.
+The other menus are the same nonsingleton, so no foreign gate can erase
+the contribution of $h$ in $w_0$ or at its parent.
+
+As long as all cyclic rows survive, simultaneous wins at distinct
+main owners on $A,B$ require $A\cap B$ to meet every bit in some
+track. To see this, prune each $a$- or $b$-gate to a child winning its
+required test. At other gates both tests hold in both children, so
+the remaining support $D$ is nonempty and lies in $A\cap B$.
+Read each cyclic row at observer $a$. The only possible output atoms
+are $a,c$. Induction on the word shows that pruning preserves a
+$c$-atom and preserves omission of $a$: at a pruned gate an omission
+passes to both children, while at a retained $c$-gate its absorbing
+child keeps its atom. If $u\in D$ but the next bit of its track
+misses $D$, the trimmed word sees no $c$-atom on this row and passes
+the mark of $u$. Iteration around the bits proves the assertion.
+
+Against a winning strategy maintain successive protected vertices $i,i+1$,
+initially $0,1$. At each, protection means either an explicit nonempty
+register entry contained in the vertex set $P_j$, or an absent entry at
+an initial vertex $d$ whose demand rows all survive. All cyclic rows
+and all $M_{s,u}$ for $s\ge i$ are still untouched. A terminal
+projection must lie in $H_i$, since it meets both protected demands;
+there every head has its row $M_{i,u}$ until $i=L-1$.
+
+No effective $c$-offer is safe here for $i<L-1$. Its coalition $C$
+lies in a single track. A winning adopted word meets $c:C$ and the
+two protected demands, the latter implying wins on $P_i,P_{i+1}$.
+Thus $C$ meets $H_i$ and lies in its track. In particular it is disjoint
+from $P_{i+2}$, and the $c$-offer leaves every $M_{i,u}$ untouched.
+Set all of $H_i$ to the atom of $s=r_{i+1}$, its track complement to
+$c$, $P_{i+2}$ to $r_i$ and all remaining rails to $I\setminus\{s\}$.
+Only $H_i$ supplies $s$, and by source decomposition its prescribed
+rows imply that the adopted word omits $s$. Follow a branch retaining
+all three winning tests, choosing a winning child at each test's own
+gate. Its leaf belongs to $H_i$ and supplies $s$. At an $r_i$-gate
+neither child can absorb: each wins on $c:C$, whereas $P_{i+2}$,
+the $r_i$-atom set here, misses $C$. At a $c$-gate both children
+win on $P_i,P_{i+1}$, and the $c$-atoms miss their intersection.
+These exclusions use the common-source condition for singleton tests.
+An $s$-gate retains $s$, and no other owner has atoms in the input.
+The leaf's $s$ thus reaches the root, a contradiction.
+
+Decline every ineffective offer. For a remaining offer let $C\subseteq P_j$
+be its coalition at $r_j$, and $k$ the opposite protected vertex.
+All cyclic rows, as well as the opposite demand, survive adoption.
+The spanning assertion gives a whole bit set in some track of
+$C\cap P_k\subseteq P_j\cap P_k$. Each of these vertex sets contains
+at most one address in a track. Two different addresses in the same
+track disagree at a bit, so they must share the same complete address
+$H_t\subseteq C$. A vertex of the offered parity contains $H_t$ only
+at the corresponding endpoint of edge $t$. Thus $j$ is unique and
+$|j-k|=1$. In particular the offer can remove rows at only one vertex.
+For $j\le i+1$ decline, except that if the rows protecting an absent
+initial entry would be deleted, adopt to establish that entry explicitly.
+The invariant persists. The only forward offer uses $j=i+2$; adopt it
+and advance $i$. Among the protected address rows only $M_{i,u}$ can
+be removed. Finiteness forces all $L-1$ forward adoptions, with
+alternating owners.
+
+For $2\le i\le L-3$ both current entries are explicit. The swap
+is between disjoint track pairs $P_i$ and $P_{i+2}$. Covering $M_{i+1,u}$ at the parent would require a
+coalition at $r_{i+1}$ inside $P_{i+3}$, disjoint from the held
+subset of $P_i$, or one at $c$ in track $i+1$, disjoint from the
+held intersection in $H_i$. Either adoption is impossible even
+after arbitrary further deletions, by common intersection of the
+demands. The $L-4$ stated forward swaps therefore leave every
+eligible $u\in H_{i+1}$ blocked by $M_{i+1,u}$ after all the
+parent's safe preparations; this row has no posting at $r_i$.
+
+Finally take the full operation of $t_0$ and a maximal positive
+extending the requested one at $h$. Any strategy for this stronger
+query and all minimal losses also works on the given rows: each
+extends a minimal loss at the same head, and eligibility at a
+one-entry register only enlarges when the passive positive is
+weakened. A minimal loss below a surviving $M_{i+1,u}$ likewise
+survives any described preparation, since covering the smaller row
+would cover the larger, and it too has no posting at $r_i$.
+\end{proof}
