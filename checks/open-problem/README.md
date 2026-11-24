@@ -85,6 +85,15 @@ $t=2$ through $32$, with a separate exact game and SAT check at $t=2,3$.
 The lower bound is linear in the number of listed negative rows. A
 superpolynomial unconditional lower bound remains open.
 
+The same minimum is possible with an uncolored positive. In the notation
+of the report, clear its posting and add one negative with sole posting
+$q:J$ at each head in $C\cup P$. This gives $5t+4$ rows. A first
+$p$-offer now keeps the new rows at its eligible heads; their only offer
+$q:J$ has empty intersection with that coalition. The first $q:J$
+deletes all added rows, so the original forced paths and cuts apply.
+The other first $q$-offers use the original cuts directly.
+
+
 ### Why the five rows require two residuals
 
 The query has head 0 and no postings. Only owners $p$ and $q$ occur
