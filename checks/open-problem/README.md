@@ -73,8 +73,17 @@ these registers; its heads and successor conditions are checkable by
 scanning the rows. If a polynomial number of residuals per ordered
 register sufficed to certify every rejected table, guessing a failed
 positive and its cut would put the complement in NP and imply NP = PSPACE.
-The five-row example gives an unconditional obstruction to one residual.
-It leaves the minimum needed for larger specific instances open.
+There is also an unconditional family. For every $t\ge2$, one specified
+positive query with $3t+3$ inputs and $4t+2$ negative rows needs exactly
+$t$ residuals at one ordered register. Five adoptions reach that register
+in the same order on every path, with a different necessary row at its
+only eligible head. [ParametricResiduals.lean](../../KFOL/Core/ParametricResiduals.lean)
+checks the forced paths. The matching cut is proved in the report under
+“Distinct row sets at one coalition assignment”.
+[residual_family.py](residual_family.py) checks the construction for
+$t=2$ through $32$, with a separate exact game and SAT check at $t=2,3$.
+The lower bound is linear in the number of listed negative rows. A
+superpolynomial unconditional lower bound remains open.
 
 ### Why the five rows require two residuals
 
