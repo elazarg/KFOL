@@ -57,3 +57,13 @@ change literal table indices and preserve the reduction argument.
   four-input game on five rows. A SAT encoding using one residual for each
   register and order of last adoptions is unsatisfiable. Two residuals suffice
   on this instance. This check uses CaDiCaL.
+
+For fixed $K$, the table lower bound also constrains certificates at the
+blank root. With $m$ negative rows there are at most $(m+1)^K$ coalition
+registers and $K!$ orders per register. A cut lists residual row sets at
+these registers; its heads and successor conditions are checkable by
+scanning the rows. If a polynomial number of residuals per ordered
+register sufficed to certify every rejected table, guessing a failed
+positive and its cut would put the complement in NP and imply NP = PSPACE.
+The five-row example gives an unconditional obstruction to one residual.
+It leaves the minimum needed for larger specific instances open.

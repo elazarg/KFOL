@@ -39,7 +39,8 @@ theorem complete_binary {limit : A → ℕ} (poly : ComputableInPolyTime limit e
     ⟨fun x => (x.1,x.2),(unary_to_binary.comp (fst _ _)).prod (snd _ _),fun _ => Iff.rfl⟩
   exact ⟨down.mem_PSPACE unary.1,unary.2.trans up⟩
 
-private theorem arity_pos {K d : ℕ} (t : CoreTerm (Fin K) (Fin d)) : 0 < d := by
+/-- Every core word contains a variable. -/
+theorem arity_pos {K d : ℕ} (t : CoreTerm (Fin K) (Fin d)) : 0 < d := by
   induction t using Core.induction_choice with
   | var j => exact Nat.zero_lt_of_lt j.isLt
   | choice _ _ _ hx _ => exact hx

@@ -347,6 +347,7 @@ import all KFOL.Complexity.AddressedSourceCorrectness
 import all KFOL.Complexity.AddressedSourceOutput
 import all KFOL.Complexity.ExplicitSourceHardness
 import all KFOL.Complexity.ExplicitTableHardness
+import all KFOL.Complexity.ExplicitTableBinaryHeaders
 import all KFOL.Complexity.ExplicitOwnerEncoding
 import all KFOL.Complexity.ExplicitTableUniform
 import all KFOL.Complexity.TablePeelingUniform
