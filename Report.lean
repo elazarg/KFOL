@@ -55,7 +55,7 @@ public import KFOL.Core.CompletionSuspension
 public import KFOL.Core.LayerInterpolation
 public import KFOL.Core.BichainCubeCuts
 public import KFOL.Core.QuantifiedRecognition
-public import KFOL.Core.ExplicitTableReduction
+public import KFOL.Complexity.ExplicitSourceHardness
 public import KFOL.Audit.Namespace
 
 /-! # Audited report statements and mathematical proof ingredients
@@ -356,6 +356,12 @@ theorem explicit_source_table_reduction {K : ℕ} (three : Fin 3 ↪ Fin K)
         k ∈ (Core.ExplicitTableReduction.target three input (Core.Sources.probe three k j p)).val) ↔
       input ∈ Cslib.Complexity.TQBFCNF :=
   Core.ExplicitTableReduction.source_table_iff three input
+
+/-- Polynomial-space hardness for the packed Boolean source table of length n*K^n. -/
+theorem explicit_source_table_pspace_hard {K : ℕ} (three : Fin 3 ↪ Fin K) :
+    Cslib.Complexity.PSPACEHard Complexity.AddressedSourceOutput.sourceEncoding
+      (Complexity.AddressedSourceOutput.language three) :=
+  Complexity.ExplicitSourceHardness.pspaceHard three
 
 /-- `core:thm:row-recognition`: the capped baseline of a finite family of marked rows
 is a core term operation exactly when a pure term omits every mark and separates the
