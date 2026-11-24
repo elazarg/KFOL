@@ -31,10 +31,10 @@ structure Encoding (Role Rail Label Row Probe : Type*) (rows : Row → Label →
   values : Probe → Rail → WinnerSet Role
   observe : Probe → Role
   head : ∀ u, ∃ p, tag p = none ∧ observe p ∈ (values p u).val
-  owners : ∀ p u r, values p u = WinnerSet.singleton r → r = left ∨ r = right ∨ r = aux
-  posRow : ∀ p, (∃ u, values p u = WinnerSet.singleton left) →
+  owners : ∀ p u r, values p u = WinnerSet.singleton r → r = left ∨ r = right ∨ r = aux ∨ r = observe p
+  posRow : ∀ p, left ≠ observe p → (∃ u, values p u = WinnerSet.singleton left) →
     ∃ z, tag p = some z ∧ ∀ u, values p u = WinnerSet.singleton left → pos (cubeLower (rows z)) u = true
-  negRow : ∀ p, (∃ u, values p u = WinnerSet.singleton right) →
+  negRow : ∀ p, right ≠ observe p → (∃ u, values p u = WinnerSet.singleton right) →
     ∃ z, tag p = some z ∧ ∀ u, values p u = WinnerSet.singleton right → neg (cubeUpper (rows z)) u = true
 
 namespace Encoding
@@ -109,16 +109,19 @@ theorem no_word_of_cut
         t.realize (E.values p) ≠ WinnerSet.singleton r := by
       intro atom
       obtain ⟨u, hu⟩ := input_atom t _ r atom
-      obtain l | r' | aux := E.owners p u r hu
+      have unseen : r ≠ E.observe p := by
+        rintro rfl
+        exact safe p live (by rw [atom]; rfl)
+      obtain l | r' | aux | obs := E.owners p u r hu
       · subst r
-        obtain ⟨z, tag, inc⟩ := E.posRow p ⟨u, hu⟩
+        obtain ⟨z, tag, inc⟩ := E.posRow p unseen ⟨u, hu⟩
         have zmem := live z tag
         apply ihl z zmem (left_closed p z tag ⟨u, hu⟩) hy rfl t
           (E.quiet_mono (Finset.erase_subset _ _) safe)
         exact ⟨profile_mono _ _ _ (by simpa only [decide_eq_true_eq] using inc) t
           ((winnerSet_eq_singleton_iff_profile t _ _).mp atom), d.2⟩
       · subst r
-        obtain ⟨z, tag, inc⟩ := E.negRow p ⟨u, hu⟩
+        obtain ⟨z, tag, inc⟩ := E.negRow p unseen ⟨u, hu⟩
         have zmem := live z tag
         apply ihr z zmem hx (right_closed p z tag ⟨u, hu⟩) rfl t
           (E.quiet_mono (Finset.erase_subset _ _) safe)
@@ -126,6 +129,7 @@ theorem no_word_of_cut
           ((winnerSet_eq_singleton_iff_profile t _ _).mp atom)⟩
       · subst r
         exact lock hx hy (fun f xf yf => covered f ⟨xf, yf⟩) t safe d p live atom
+      · exact unseen obs
     have descend : ∀ t : Word Role Rail, E.Quiet selected t → ¬ E.Demands x y t := by
       intro t
       induction t using induction_choice with

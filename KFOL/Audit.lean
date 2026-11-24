@@ -326,6 +326,12 @@ import all KFOL.Core.OfferHistory
 import all KFOL.Core.ThreePortPadding
 import all KFOL.Core.OfferLock
 import all KFOL.Core.AddressedCubeCut
+import all KFOL.Core.AddressedRails
+import all KFOL.Core.AddressedRectangle
+import all KFOL.Core.OneOwnerSelector
+import all KFOL.Core.AddressedSelectorCap
+import all KFOL.Core.AddressedSourceTable
+import all KFOL.Core.AddressConflictColoring
 import all KFOL.Core.DecreasingPaths
 import all KFOL.Core.TransversalContexts
 import all KFOL.Core.SourceCompatibility
