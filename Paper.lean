@@ -7,6 +7,7 @@ public import KFOL.Core.AtomicBasis.Basis
 public import KFOL.Core.SourcePeeling
 public import KFOL.Core.FiniteRelationObstruction
 public import KFOL.Core.QuantifiedRecognition
+public import KFOL.Core.ExplicitTableReduction
 public import KFOL.Complexity.RecognitionHardness
 public import KFOL.DependentSchedule.Results
 public import KFOL.Strategic.CoalitionMaps
@@ -658,6 +659,16 @@ polynomial space. -/
 theorem core_recognition_pspace_hard {K : ℕ} (three : Fin 3 ↪ Fin K) :
     Cslib.Complexity.PSPACEHard guardListEncoding (coreNormalForms three) :=
   Recognition.Lists.coreNormalForms_pspaceHard three
+
+/-- The semantic reduction of `core:thm:explicit-table-pspace` for arbitrary
+encoded quantified CNF and its complete winner-set table. -/
+theorem core_explicit_table_reduction {K : ℕ} (three : Fin 3 ↪ Fin K)
+    (input : Core.ExplicitTableReduction.Input) :
+    letI := Equational.coreStructure (Fin K)
+    (∃ t : Core.ProfileBudgets.CoreTerm (Fin K) (Core.ExplicitTableReduction.Variables input),
+      ∀ v, t.realize v = Core.ExplicitTableReduction.target three input v) ↔
+      input ∈ Cslib.Complexity.TQBFCNF :=
+  Core.ExplicitTableReduction.winner_table_iff three input
 
 /-! ## Completely disclosed sealed rounds -/
 section Rounds

@@ -55,6 +55,7 @@ public import KFOL.Core.CompletionSuspension
 public import KFOL.Core.LayerInterpolation
 public import KFOL.Core.BichainCubeCuts
 public import KFOL.Core.QuantifiedRecognition
+public import KFOL.Core.ExplicitTableReduction
 public import KFOL.Audit.Namespace
 
 /-! # Audited report statements and mathematical proof ingredients
@@ -344,6 +345,17 @@ theorem quantified_cube_cuts (F : Bichain.Quantified.Formula) (hwf : F.WF) (α :
           t.eval (Bichain.Quantified.rows F z) ≠ .possible) ∧
         (Bichain.Quantified.cell F (.br 0 (α 0)) (.relay 0)).Holds t :=
   Bichain.Quantified.sat_iff_separator F hwf α
+
+/-- The source-probe presentation in `core:thm:explicit-table-pspace`:
+agreement on every input, observer and partial coloring recognizes quantified truth. -/
+theorem explicit_source_table_reduction {K : ℕ} (three : Fin 3 ↪ Fin K)
+    (input : Core.ExplicitTableReduction.Input) :
+    letI := Equational.coreStructure (Fin K)
+    (∃ t : Core.ProfileBudgets.CoreTerm (Fin K) (Core.ExplicitTableReduction.Variables input),
+      ∀ k j p, k ∈ (t.realize (Core.Sources.probe three k j p)).val ↔
+        k ∈ (Core.ExplicitTableReduction.target three input (Core.Sources.probe three k j p)).val) ↔
+      input ∈ Cslib.Complexity.TQBFCNF :=
+  Core.ExplicitTableReduction.source_table_iff three input
 
 /-- `core:thm:row-recognition`: the capped baseline of a finite family of marked rows
 is a core term operation exactly when a pure term omits every mark and separates the
