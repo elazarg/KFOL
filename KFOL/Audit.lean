@@ -320,6 +320,12 @@ import all KFOL.Core.FacetPosting
 import all KFOL.Core.ProfilePruning
 import all KFOL.Core.SquareSourceObstruction
 import all KFOL.Core.OfferLattice
+import all KFOL.Core.OfferPhase
+import all KFOL.Core.OfferPath
+import all KFOL.Core.OfferHistory
+import all KFOL.Core.ThreePortPadding
+import all KFOL.Core.OfferLock
+import all KFOL.Core.AddressedCubeCut
 import all KFOL.Core.DecreasingPaths
 import all KFOL.Core.TransversalContexts
 import all KFOL.Core.SourceCompatibility
