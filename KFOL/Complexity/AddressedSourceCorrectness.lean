@@ -45,11 +45,11 @@ theorem codes_exhaust {K d : ℕ} (pos : 0 < K) (h : Fin d) (i : Fin (K^d)) :
     · simpa only [code, dite_eq_right same, p, dite_eq_left neutral] using congrArg Fin.val neutral
     · simp [code,same,p,neutral,color]
 
-private theorem observer_digit {K d : ℕ} {r : Fin K} {h : Fin d} {p : Pattern r h}
+theorem observer_digit {K d : ℕ} {r : Fin K} {h : Fin d} {p : Pattern r h}
     {i : Fin (K^d)} (cs : Codes r h p i) : digit K i.val h.val = r.val := by
   simpa [code] using cs h
 
-private theorem flag_correct {K d : ℕ} (three : Fin 3 ↪ Fin K) (r : Fin K) (h : Fin d)
+theorem flag_correct {K d : ℕ} (three : Fin 3 ↪ Fin K) (r : Fin K) (h : Fin d)
     (p : Pattern r h) (i : Fin (K^d)) (cs : Codes r h p i) (j : Fin d) (s : Fin K) :
     probeFlag (digit K i.val h.val) (digit K i.val j.val) s.val (decide (j.val = h.val)) = true ↔
       s ∈ (probe three r h p j).val := by

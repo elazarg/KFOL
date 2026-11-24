@@ -55,7 +55,7 @@ public import KFOL.Core.CompletionSuspension
 public import KFOL.Core.LayerInterpolation
 public import KFOL.Core.BichainCubeCuts
 public import KFOL.Core.QuantifiedRecognition
-public import KFOL.Complexity.TablePeelingSpace
+public import KFOL.Complexity.ExplicitTableUniform
 public import KFOL.Audit.Namespace
 
 /-! # Audited report statements and mathematical proof ingredients
@@ -363,6 +363,12 @@ theorem explicit_source_table_pspace_complete {K : ℕ} (three : Fin 3 ↪ Fin K
     Cslib.Complexity.PSPACEComplete Complexity.AddressedSourceOutput.sourceEncoding
       (Complexity.AddressedSourceOutput.language three) :=
   Complexity.TablePeelingSpace.source_complete three
+
+/-- The packed source table is also PSPACE-complete with a binary owner count. -/
+theorem uniform_source_table_pspace_complete :
+    Cslib.Complexity.PSPACEComplete Complexity.ExplicitTableUniform.sourceEncoding
+      Complexity.UniformSourceSpace.language :=
+  Complexity.ExplicitTableUniform.source_complete
 
 /-- `core:thm:row-recognition`: the capped baseline of a finite family of marked rows
 is a core term operation exactly when a pure term omits every mark and separates the

@@ -347,6 +347,17 @@ import all KFOL.Complexity.AddressedSourceCorrectness
 import all KFOL.Complexity.AddressedSourceOutput
 import all KFOL.Complexity.ExplicitSourceHardness
 import all KFOL.Complexity.ExplicitTableHardness
+import all KFOL.Complexity.ExplicitOwnerEncoding
+import all KFOL.Complexity.ExplicitTableUniform
+import all KFOL.Complexity.TablePeelingUniform
+import all KFOL.Complexity.TablePeelingUniformGate
+import all KFOL.Complexity.TablePeelingUniformInput
+import all KFOL.Complexity.TablePeelingUniformMasks
+import all KFOL.Complexity.TablePeelingUniformRuntime
+import all KFOL.Complexity.TablePeelingWinnerUniform
+import all KFOL.Complexity.UniformSourceCorrectness
+import all KFOL.Complexity.UniformSourceSamples
+import all KFOL.Complexity.UniformSourceSpace
 import all KFOL.Complexity.ExplicitSourceSpace
 import all KFOL.Complexity.TablePeelingBlocks
 import all KFOL.Complexity.TablePeelingClock

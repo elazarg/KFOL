@@ -7,7 +7,7 @@ public import KFOL.Core.AtomicBasis.Basis
 public import KFOL.Core.SourcePeeling
 public import KFOL.Core.FiniteRelationObstruction
 public import KFOL.Core.QuantifiedRecognition
-public import KFOL.Complexity.TablePeelingSpace
+public import KFOL.Complexity.ExplicitTableUniform
 public import KFOL.Complexity.RecognitionHardness
 public import KFOL.DependentSchedule.Results
 public import KFOL.Strategic.CoalitionMaps
@@ -676,6 +676,12 @@ theorem core_explicit_table_pspace_complete {K : ℕ} (three : Fin 3 ↪ Fin K) 
     Cslib.Complexity.PSPACEComplete Complexity.AddressedPoint.tableEncoding
       {p | Complexity.AddressedPoint.RawAccepts K p} :=
   Complexity.TablePeelingSpace.winner_complete three
+
+/-- The same full-table classification holds with the owner count in binary. -/
+theorem core_uniform_table_pspace_complete :
+    Cslib.Complexity.PSPACEComplete Complexity.ExplicitTableUniform.winnerEncoding
+      Complexity.TablePeelingWinnerUniform.language :=
+  Complexity.ExplicitTableUniform.winner_complete
 
 /-! ## Completely disclosed sealed rounds -/
 section Rounds

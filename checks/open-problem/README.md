@@ -7,7 +7,8 @@ in the separate paper checkout. The [Lean theorem](../../KFOL/Core/ExplicitTable
 applies to arbitrary encoded quantified CNF, proves equivalence for both tables,
 and bounds their lengths. Both [machine-level classifications](../../KFOL/Complexity/TablePeelingSpace.lean)
 include the upper bound and a polynomial-time many-one reduction from
-quantified truth.
+quantified truth. The [uniform theorems](../../KFOL/Complexity/ExplicitTableUniform.lean)
+cover the same two tables with the owner count supplied in binary.
 
 ## Reproduce the finite checks
 
