@@ -94,7 +94,7 @@ theorem good_of_pure (three : Fin 3 ↪ Role) (R : Rows B Row) (S : Finset Row)
 
 variable [Fintype Bit] [Nonempty Bit]
 
-/-- Substituting one address fold at every logical leaf realizes the 
+/-- Substituting one address fold at every logical leaf realizes the
 baseline on every valuation, even for a rectangle admitting a cut. -/
 theorem realizes_baseline (three : Fin 3 ↪ Role) (B : Book Label Track Bit)
     (left right : CoreTerm Role Label) : ∃ base : CoreTerm Role (Option (Rail Track Bit)), ∀ z v,

@@ -117,16 +117,53 @@ class Instance:
         return ok
 
 
+def check_two_residuals(game):
+    """Validate a cut directly from its rows, without using the SAT encoding."""
+    def register(text):
+        result = [0, 0, 0]
+        for posting in text.split():
+            owner = 'pqr'.index(posting[0])
+            result[owner] = sum(1 << int(head) for head in posting[1:])
+        return tuple(result)
+
+    def row_mask(letters):
+        return sum(1 << 'ABCDE'.index(row) for row in letters)
+
+    # A slash gives two possible cut nodes at the same coalition assignment.
+    # A child with no eligible inputs can always use an empty subfamily.
+    listed = {
+        '': 'ABCDE', 'p0': 'ABCD', 'p2': 'BCD', 'p13': 'BD',
+        'q0': 'ABCE', 'q1': 'BCE', 'q23': 'CE', 'p0 q0': 'A',
+        'p2 q23': 'CD', 'p13 q1': 'BE', 'p13 q23': 'D/E',
+    }
+    cuts = {register(key): tuple(map(row_mask, choices.split('/')))
+            for key, choices in listed.items()}
+    assert game.root in cuts
+    assert max(map(len, cuts.values())) == 2
+    for assignment, choices in cuts.items():
+        for rows in choices:
+            assert all(rows & game.head[v] for v in bitids(game.eligible(assignment)))
+            for offer in game.offers:
+                if rows & game.exact[offer]:
+                    child = game.update(assignment, offer)
+                    remaining = rows & ~game.cover[offer]
+                    children = cuts.get(child, ()) if game.eligible(child) else (0,)
+                    assert any(subset & ~remaining == 0 for subset in children)
+    return len(cuts)
+
+
 def main():
     binary = shutil.which('cadical')
     if binary is None:
         binary = str(next(Path.home().glob('.elan/toolchains/*/bin/cadical')))
-    game = Instance(4, [(0, (12, 2, 0)), (1, (0, 12, 0)), (2, (10, 0, 1)),
-                        (3, (0, 5, 0)), (3, (3, 0, 4))], 0, (0, 0, 4))
+    game = Instance(4, [(0, (4, 2, 0)), (1, (0, 12, 0)), (2, (10, 0, 0)),
+                        (3, (0, 1, 0)), (3, (1, 0, 0))], 0, (0, 0, 0))
+    assert check_two_residuals(game) == 11
     assert not game.win(game.full, game.root)
     assert not game.positional(binary, copies=1)
     assert game.positional(binary, copies=2)
-    print('Five rows: rejecting; one residual per ordered register fails, two suffice.')
+    print('Five rows: one residual per ordered register fails. '
+          'Directly checked a two-residual cut on 11 eligible registers.')
 
 
 if __name__ == '__main__':

@@ -56,7 +56,15 @@ change literal table indices and preserve the reduction argument.
 - [residual_certificate.py](residual_certificate.py) checks a rejecting
   four-input game on five rows. A SAT encoding using one residual for each
   register and order of last adoptions is unsatisfiable. Two residuals suffice
-  on this instance. This check uses CaDiCaL.
+  on this instance. The [Lean proof](../../KFOL/Core/OrderedResidualObstruction.lean)
+  follows the forced paths below and checks a two-residual witness directly.
+  The Python version also checks the outcome with CaDiCaL.
+  [residual_search.py](residual_search.py) uses two overlapping copies of the
+  earlier five-row example, removing rows from each before combining them.
+  With its default seed, 964 of 2,000 labelled four- to six-input games
+  were feasible. Among the 1,036 rejections, 1,011 admitted a one-slot cut
+  and the other 25 required exactly two. The sample contains no obstruction
+  to two slots.
 
 For fixed $K$, the table lower bound also constrains certificates at the
 blank root. With $m$ negative rows there are at most $(m+1)^K$ coalition
@@ -67,3 +75,39 @@ register sufficed to certify every rejected table, guessing a failed
 positive and its cut would put the complement in NP and imply NP = PSPACE.
 The five-row example gives an unconditional obstruction to one residual.
 It leaves the minimum needed for larger specific instances open.
+
+### Why the five rows require two residuals
+
+The query has head 0 and no postings. Only owners $p$ and $q$ occur
+in the negative rows. A string of digits denotes a coalition.
+
+| Row | Head | $p$ | $q$ |
+| --- | ---: | --- | --- |
+| A | 0 | 2 | 1 |
+| B | 1 | — | 23 |
+| C | 2 | 13 | — |
+| D | 3 | — | 0 |
+| E | 3 | 0 | — |
+
+A cut must retain a row at every eligible head. Each coalition occurring
+in a retained row must lead to a child whose residual contains only
+rows the offer leaves uncovered.
+
+The blank root retains A. Adopting its $q:1$ forces B at head 1.
+B's $q:23$ then forces a row at head 3. If E was omitted from the
+root, only D can supply head 3. D's $q:0$ now demands head 0 after
+the first offer discharged A. Thus E was required. Exchanging $p$
+with $q$ and input 1 with input 2 shows that D was required too.
+
+- After D's $q:0$, head 0 forces A; its $q:1$ would leave head 1
+  uncovered unless B is retained. Adopt B's $q:23$, then C's $p:13$,
+  which head 2 forces. Only A and E could remain; head 3 requires E.
+- After E's $p:0$, head 0 forces A. Adopt A's $p:2$. Head 2 now
+  forces C; its $p:13$ would leave head 1 uncovered unless B is retained.
+  Adopt B's $q:23$, then C's $p:13$, again forced by head 2. Only D
+  could remain; head 3 requires D.
+
+Both paths finish with $q:23$ followed by $p:13$ as their last
+adoptions. No single residual at that ordered register satisfies both
+requirements. A cut on 11 eligible registers suffices: only the
+register holding $p:13$ and $q:23$ needs both D and E as alternatives.

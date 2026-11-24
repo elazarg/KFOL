@@ -321,6 +321,7 @@ import all KFOL.Core.ProfilePruning
 import all KFOL.Core.SquareSourceObstruction
 import all KFOL.Core.OfferLattice
 import all KFOL.Core.OfferPhase
+import all KFOL.Core.OrderedResidualObstruction
 import all KFOL.Core.OfferPath
 import all KFOL.Core.OfferHistory
 import all KFOL.Core.ThreePortPadding
