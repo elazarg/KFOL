@@ -620,6 +620,7 @@ import all KFOL.Strategic.Compilation
 import all KFOL.Strategic.Examples
 import all KFOL.Strategic.FiniteChoices
 import all KFOL.Strategic.Forcing
+import all KFOL.Strategic.NashWinners
 import all KFOL.Strategic.Quantified.Basic
 import all KFOL.Strategic.Quantified.Fold
 import all KFOL.Strategic.Quantified.Reduction

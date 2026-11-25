@@ -11,6 +11,7 @@ public import KFOL.Complexity.ExplicitTableUniform
 public import KFOL.Complexity.RecognitionHardness
 public import KFOL.DependentSchedule.Results
 public import KFOL.Strategic.CoalitionMaps
+public import KFOL.Strategic.NashWinners
 public import KFOL.Audit.Namespace
 
 /-! # Claims of the main paper and the report results it cites
@@ -34,6 +35,13 @@ theorem public_backward_induction :
     (∀ (r : Role) (G H : Strategic.Tree Role),
       Strategic.value (.node r G H) = WinnerSet.choice r (Strategic.value G) (Strategic.value H)) :=
   Results.public_backward_induction
+
+/-- `game:thm:adequacy`: observing the winner gives the same value under pure
+Nash and subgame-perfect equilibrium, including with repeated owners. -/
+theorem public_nash_winners (G : Strategic.Tree Role) :
+    {i | ∃ p : Strategic.Profile G, Strategic.IsNash p ∧ Strategic.winner p = i} =
+      Strategic.possibleWinners G :=
+  Strategic.nashWinners_eq_possibleWinners G
 
 theorem public_realizability [Finite Role] (three : Fin 3 ↪ Role) (A : WinnerSet Role) :
     ∃ G : Strategic.Tree Role, Strategic.value G = A :=
